@@ -13,7 +13,7 @@ import type {
 } from "../../types/scraper.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
-import { findMatchingEvent } from "../normalizer.js";
+import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // Fortuna Ekstraklasa URL
 const EKSTRAKLASA_URL =
@@ -181,12 +181,12 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       return matches;
     }, SELECTORS);
 
-    // Convert to RawScrapedOdds format
+    // Convert to RawScrapedOdds format with canonical team names
     return matchData.map((match) => ({
       bookmaker: "fortuna" as PolishBookmaker,
       eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: this.expandTeamName(match.homeTeam),
-      awayTeam: this.expandTeamName(match.awayTeam),
+      homeTeam: getCanonicalTeamName(match.homeTeam),
+      awayTeam: getCanonicalTeamName(match.awayTeam),
       homeOdds: match.homeOdds,
       drawOdds: match.drawOdds,
       awayOdds: match.awayOdds,
@@ -194,34 +194,6 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       promoDetails: undefined,
       scrapedAt: new Date(),
     }));
-  }
-
-  /**
-   * Expand abbreviated team names from Fortuna
-   * e.g., "Legia W." -> "Legia Warszawa"
-   */
-  private expandTeamName(shortName: string): string {
-    const expansions: Record<string, string> = {
-      "Legia W.": "Legia Warszawa",
-      "Korona K.": "Korona Kielce",
-      "M.Lublin": "Motor Lublin",
-      "Pogoń Sz.": "Pogoń Szczecin",
-      "Raków Cz.": "Raków Częstochowa",
-      "W.Płock": "Wisła Płock",
-      "Nieciecza": "Bruk-Bet Termalica Nieciecza",
-      "GKS Kat.": "GKS Katowice",
-      "Górnik Z.": "Górnik Zabrze",
-      "Śląsk Wr.": "Śląsk Wrocław",
-      "Lech P.": "Lech Poznań",
-      "Widzew Ł.": "Widzew Łódź",
-      "Zagłębie L.": "Zagłębie Lubin",
-      "Stal M.": "Stal Mielec",
-      "Piast G.": "Piast Gliwice",
-      "Puszcza N.": "Puszcza Niepołomice",
-      "Jagiellonia B.": "Jagiellonia Białystok",
-    };
-
-    return expansions[shortName] || shortName;
   }
 }
 

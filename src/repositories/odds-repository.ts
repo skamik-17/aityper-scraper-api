@@ -6,18 +6,7 @@
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { RawScrapedOdds } from "../types/scraper.js";
-import { getCanonicalTeamName } from "../scrapers/normalizer.js";
-
-// Normalize team name for storage
-function normalizeForStorage(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+import { getCanonicalTeamName, getNormalizedTeamName } from "../scrapers/team-matcher.js";
 
 /**
  * Insert scraped odds into database
@@ -33,10 +22,10 @@ export async function insertScrapedOdds(
   // Prepare records for insert
   const records = odds.map((o) => ({
     league_slug: leagueSlug,
-    home_team: o.homeTeam,
-    away_team: o.awayTeam,
-    home_team_normalized: normalizeForStorage(getCanonicalTeamName(o.homeTeam)),
-    away_team_normalized: normalizeForStorage(getCanonicalTeamName(o.awayTeam)),
+    home_team: getCanonicalTeamName(o.homeTeam),
+    away_team: getCanonicalTeamName(o.awayTeam),
+    home_team_normalized: getNormalizedTeamName(o.homeTeam),
+    away_team_normalized: getNormalizedTeamName(o.awayTeam),
     bookmaker: o.bookmaker,
     home_odds: o.homeOdds,
     draw_odds: o.drawOdds,
@@ -98,8 +87,8 @@ export async function getMatchOdds(
   leagueSlug: string = "ekstraklasa"
 ) {
   const supabase = getSupabase();
-  const homeNorm = normalizeForStorage(getCanonicalTeamName(homeTeam));
-  const awayNorm = normalizeForStorage(getCanonicalTeamName(awayTeam));
+  const homeNorm = getNormalizedTeamName(homeTeam);
+  const awayNorm = getNormalizedTeamName(awayTeam);
 
   const { data, error } = await supabase
     .from("latest_odds")

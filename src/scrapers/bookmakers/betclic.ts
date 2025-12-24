@@ -13,7 +13,7 @@ import type {
 } from "../../types/scraper.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
-import { findMatchingEvent } from "../normalizer.js";
+import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // Betclic Ekstraklasa URL (competition ID 221)
 const EKSTRAKLASA_URL =
@@ -176,12 +176,12 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       return matches;
     }, SELECTORS);
 
-    // Convert to RawScrapedOdds format
+    // Convert to RawScrapedOdds format with canonical team names
     return matchData.map((match) => ({
       bookmaker: "betclic" as PolishBookmaker,
       eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: match.homeTeam,
-      awayTeam: match.awayTeam,
+      homeTeam: getCanonicalTeamName(match.homeTeam),
+      awayTeam: getCanonicalTeamName(match.awayTeam),
       homeOdds: match.homeOdds,
       drawOdds: match.drawOdds,
       awayOdds: match.awayOdds,

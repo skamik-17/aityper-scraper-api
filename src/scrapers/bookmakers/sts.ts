@@ -55,15 +55,14 @@ export class STSScraper extends PlaywrightScraper {
       });
 
       // Extra delay for SPA rendering
+      await this.delay(2000);
+
+      // Set very tall viewport to force loading all matches at once
+      // STS uses lazy loading based on viewport visibility
+      await page.setViewportSize({ width: 1920, height: 5000 });
       await this.delay(3000);
 
-      // Simulate human scroll behavior
-      await page.mouse.move(500 + Math.random() * 100, 300 + Math.random() * 100);
-      await this.delay(300 + Math.random() * 300);
-      await page.mouse.wheel(0, 200 + Math.random() * 100);
-      await this.delay(500 + Math.random() * 500);
-
-      // Wait for match tiles to load
+      // Wait for initial match tiles to load
       const hasMatches = await this.waitForSelector(page, SELECTORS.matchTile, 15000);
 
       if (!hasMatches) {
@@ -72,6 +71,9 @@ export class STSScraper extends PlaywrightScraper {
           Date.now() - startTime
         );
       }
+
+      // Additional wait to ensure all matches are loaded in the large viewport
+      await this.delay(2000);
 
       // Extract match data from page
       const data = await this.extractMatchData(page);

@@ -1,15 +1,20 @@
 /**
- * Premier League Scraper Test Script
- * Run with: npx tsx backend/src/scripts/test-premier-league.ts
+ * Scraper Test Script
+ * Run with: npx tsx backend/src/scripts/test-premier-league.ts [bookmaker] [league]
  *
- * Tests all 6 bookmaker scrapers for Premier League matches.
+ * Examples:
+ *   npx tsx backend/src/scripts/test-premier-league.ts           # Test all for premier-league
+ *   npx tsx backend/src/scripts/test-premier-league.ts sts       # Test STS for premier-league
+ *   npx tsx backend/src/scripts/test-premier-league.ts sts ekstraklasa  # Test STS for ekstraklasa
+ *   npx tsx backend/src/scripts/test-premier-league.ts all ekstraklasa  # Test all for ekstraklasa
  */
 
 import { runAllScrapers, runSingleScraper } from "../scrapers/aggregator.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { ScraperResult } from "../types/scraper.js";
 
-const LEAGUE = "premier-league";
+// Default league, can be overridden via CLI
+let LEAGUE = "premier-league";
 
 async function testSingleScraper(bookmaker: PolishBookmaker): Promise<ScraperResult> {
   console.log(`\n${"=".repeat(60)}`);
@@ -102,11 +107,22 @@ async function testAllScrapers() {
 
 // Allow testing a single scraper via command line argument
 const args = process.argv.slice(2);
-if (args.length > 0) {
-  const bookmaker = args[0] as PolishBookmaker;
-  const validBookmakers: PolishBookmaker[] = [
-    "sts", "fortuna", "betclic", "superbet", "lvbet", "fuksiarz"
-  ];
+const validBookmakers: PolishBookmaker[] = [
+  "sts", "fortuna", "betclic", "superbet", "lvbet", "fuksiarz"
+];
+const validLeagues = ["premier-league", "ekstraklasa"];
+
+// Parse arguments
+const bookmakerArg = args[0];
+const leagueArg = args[1];
+
+// Set league if provided
+if (leagueArg && validLeagues.includes(leagueArg)) {
+  LEAGUE = leagueArg;
+}
+
+if (bookmakerArg && bookmakerArg !== "all") {
+  const bookmaker = bookmakerArg as PolishBookmaker;
 
   if (validBookmakers.includes(bookmaker)) {
     testSingleScraper(bookmaker)
@@ -119,7 +135,8 @@ if (args.length > 0) {
       });
   } else {
     console.error(`Invalid bookmaker: ${bookmaker}`);
-    console.error(`Valid options: ${validBookmakers.join(", ")}`);
+    console.error(`Valid options: ${validBookmakers.join(", ")}, all`);
+    console.error(`Valid leagues: ${validLeagues.join(", ")}`);
     process.exit(1);
   }
 } else {

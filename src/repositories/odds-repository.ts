@@ -22,10 +22,10 @@ export async function insertScrapedOdds(
   // Prepare records for insert
   const records = odds.map((o) => ({
     league_slug: leagueSlug,
-    home_team: getCanonicalTeamName(o.homeTeam),
-    away_team: getCanonicalTeamName(o.awayTeam),
-    home_team_normalized: getNormalizedTeamName(o.homeTeam),
-    away_team_normalized: getNormalizedTeamName(o.awayTeam),
+    home_team: getCanonicalTeamName(o.homeTeam, leagueSlug),
+    away_team: getCanonicalTeamName(o.awayTeam, leagueSlug),
+    home_team_normalized: getNormalizedTeamName(o.homeTeam, leagueSlug),
+    away_team_normalized: getNormalizedTeamName(o.awayTeam, leagueSlug),
     bookmaker: o.bookmaker,
     home_odds: o.homeOdds,
     draw_odds: o.drawOdds,
@@ -87,8 +87,8 @@ export async function getMatchOdds(
   leagueSlug: string = "ekstraklasa"
 ) {
   const supabase = getSupabase();
-  const homeNorm = getNormalizedTeamName(homeTeam);
-  const awayNorm = getNormalizedTeamName(awayTeam);
+  const homeNorm = getNormalizedTeamName(homeTeam, leagueSlug);
+  const awayNorm = getNormalizedTeamName(awayTeam, leagueSlug);
 
   const { data, error } = await supabase
     .from("latest_odds")

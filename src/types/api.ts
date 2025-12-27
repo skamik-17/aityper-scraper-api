@@ -6,10 +6,10 @@ import type { PolishBookmaker } from "../config/index.js";
 import type { MatchOdds, BookmakerStatus } from "./database.js";
 
 // Generic API response wrapper
-export interface ApiSuccessResponse<T> {
+export interface ApiSuccessResponse<T, M = Record<string, unknown>> {
   success: true;
   data: T;
-  meta?: Record<string, unknown>;
+  meta?: M;
 }
 
 export interface ApiErrorResponse {

@@ -40,7 +40,7 @@ router.get("/", async (req, res) => {
     bookmakerStatus,
   };
 
-  const response: ApiSuccessResponse<OddsResponseData> = {
+  const response: ApiSuccessResponse<OddsResponseData, OddsResponseMeta> = {
     success: true,
     data,
     meta,
@@ -81,7 +81,7 @@ router.get("/match", async (req, res) => {
     lastUpdated: match.odds[0]?.scrapedAt || new Date().toISOString(),
   };
 
-  const response: ApiSuccessResponse<MatchOddsResponseData> = {
+  const response: ApiSuccessResponse<MatchOddsResponseData, MatchOddsResponseMeta> = {
     success: true,
     data,
     meta,

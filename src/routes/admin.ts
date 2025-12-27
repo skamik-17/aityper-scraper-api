@@ -9,6 +9,8 @@ import type {
   AdminScrapeResponseData,
   AdminRunsResponseData,
   AdminRunsResponseMeta,
+  ScraperRunInfo,
+  ScraperRunResult,
 } from "../types/api.js";
 import { ApiError } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
@@ -85,7 +87,7 @@ router.get("/runs", async (req, res) => {
   const { runs, total } = await getRunsSummary(limit, offset);
 
   // Transform to API format
-  const formattedRuns = runs.map((run) => {
+  const formattedRuns: ScraperRunInfo[] = runs.map((run) => {
     const successCount = run.results.filter((r) => r.status === "success").length;
     const errorCount = run.results.filter((r) => r.status !== "success").length;
     const totalMatchesFound = run.results.reduce(
@@ -93,13 +95,22 @@ router.get("/runs", async (req, res) => {
       0
     );
 
+    // Map results with proper status typing
+    const typedResults: ScraperRunResult[] = run.results.map((r) => ({
+      bookmaker: r.bookmaker,
+      status: r.status === "success" ? "success" as const : "error" as const,
+      matchesFound: r.matchesFound,
+      durationMs: r.durationMs,
+      error: r.error,
+    }));
+
     return {
       runId: run.runId,
       league: run.league,
       startedAt: run.startedAt.toISOString(),
       completedAt: run.completedAt.toISOString(),
       totalDurationMs: run.totalDurationMs,
-      results: run.results,
+      results: typedResults,
       summary: {
         successCount,
         errorCount,
@@ -115,7 +126,7 @@ router.get("/runs", async (req, res) => {
     offset,
   };
 
-  const response: ApiSuccessResponse<AdminRunsResponseData> = {
+  const response: ApiSuccessResponse<AdminRunsResponseData, AdminRunsResponseMeta> = {
     success: true,
     data,
     meta,

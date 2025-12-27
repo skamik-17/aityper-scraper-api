@@ -63,6 +63,7 @@ export interface Database {
           scraped_at?: string;
           created_at?: string;
         };
+        Relationships: [];
       };
       scraper_runs: {
         Row: {
@@ -104,6 +105,7 @@ export interface Database {
           duration_ms?: number;
           created_at?: string;
         };
+        Relationships: [];
       };
     };
     Views: {
@@ -125,6 +127,7 @@ export interface Database {
           event_url: string | null;
           scraped_at: string;
         };
+        Relationships: [];
       };
     };
     Functions: {
@@ -133,6 +136,8 @@ export interface Database {
         Returns: void;
       };
     };
+    Enums: Record<string, never>;
+    CompositeTypes: Record<string, never>;
   };
 }
 

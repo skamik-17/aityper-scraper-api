@@ -6,7 +6,12 @@
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { RawScrapedOdds } from "../types/scraper.js";
+import type { Database } from "../types/database.js";
 import { getCanonicalTeamName, getNormalizedTeamName } from "../scrapers/team-matcher.js";
+
+// Row types from database
+type ScrapedOddsRow = Database["public"]["Tables"]["scraped_odds"]["Row"];
+type ScrapedOddsInsert = Database["public"]["Tables"]["scraped_odds"]["Insert"];
 
 /**
  * Insert scraped odds into database
@@ -20,7 +25,7 @@ export async function insertScrapedOdds(
   let errors = 0;
 
   // Prepare records for insert
-  const records = odds.map((o) => ({
+  const records: ScrapedOddsInsert[] = odds.map((o) => ({
     league_slug: leagueSlug,
     home_team: getCanonicalTeamName(o.homeTeam, leagueSlug),
     away_team: getCanonicalTeamName(o.awayTeam, leagueSlug),
@@ -120,7 +125,8 @@ export async function getLastScrapeTime(
     .eq("league_slug", leagueSlug)
     .eq("bookmaker", bookmaker)
     .order("scraped_at", { ascending: false })
-    .limit(1);
+    .limit(1)
+    .returns<Pick<ScrapedOddsRow, "scraped_at">[]>();
 
   if (error || !data || data.length === 0) {
     return null;
@@ -140,7 +146,8 @@ export async function getBookmakerStatus(leagueSlug: string = "ekstraklasa") {
     .from("scraped_odds")
     .select("bookmaker, scraped_at")
     .eq("league_slug", leagueSlug)
-    .order("scraped_at", { ascending: false });
+    .order("scraped_at", { ascending: false })
+    .returns<Pick<ScrapedOddsRow, "bookmaker" | "scraped_at">[]>();
 
   if (error) {
     console.error("[OddsRepository] getBookmakerStatus error:", error);
@@ -152,7 +159,7 @@ export async function getBookmakerStatus(leagueSlug: string = "ekstraklasa") {
   const matchCounts = new Map<PolishBookmaker, number>();
 
   for (const row of data || []) {
-    const bm = row.bookmaker as PolishBookmaker;
+    const bm = row.bookmaker;
     if (!statusMap.has(bm)) {
       statusMap.set(bm, {
         lastScrape: new Date(row.scraped_at),

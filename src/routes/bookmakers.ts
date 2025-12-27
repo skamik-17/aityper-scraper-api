@@ -67,7 +67,8 @@ router.get("/", async (_req, res) => {
 
     if (status === "available") {
       availableCount++;
-    } else if (status === "error") {
+    } else {
+      // Status is either "stale" or "error" - both count as issues
       errorCount++;
     }
 
@@ -89,7 +90,7 @@ router.get("/", async (_req, res) => {
     errorCount,
   };
 
-  const response: ApiSuccessResponse<BookmakersResponseData> = {
+  const response: ApiSuccessResponse<BookmakersResponseData, BookmakersResponseMeta> = {
     success: true,
     data,
     meta,

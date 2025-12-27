@@ -6,6 +6,11 @@
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { ScraperResult } from "../types/scraper.js";
+import type { Database } from "../types/database.js";
+
+// Row types for scraper_runs table
+type ScraperRunRow = Database["public"]["Tables"]["scraper_runs"]["Row"];
+type ScraperRunInsert = Database["public"]["Tables"]["scraper_runs"]["Insert"];
 
 export interface ScraperRunRecord {
   runId: string;
@@ -25,7 +30,7 @@ export interface ScraperRunRecord {
 export async function insertScraperRun(record: ScraperRunRecord): Promise<void> {
   const supabase = getSupabase();
 
-  const { error } = await supabase.from("scraper_runs").insert({
+  const insertData: ScraperRunInsert = {
     run_id: record.runId,
     league_slug: record.leagueSlug,
     bookmaker: record.bookmaker,
@@ -35,7 +40,9 @@ export async function insertScraperRun(record: ScraperRunRecord): Promise<void> 
     started_at: record.startedAt.toISOString(),
     completed_at: record.completedAt.toISOString(),
     duration_ms: record.durationMs,
-  });
+  };
+
+  const { error } = await supabase.from("scraper_runs").insert(insertData);
 
   if (error) {
     console.error("[ScraperRunRepository] Insert error:", error);
@@ -53,7 +60,7 @@ export async function insertScraperRuns(
 ): Promise<void> {
   const supabase = getSupabase();
 
-  const records = [];
+  const records: ScraperRunInsert[] = [];
   for (const [bookmaker, result] of results) {
     records.push({
       run_id: runId,
@@ -116,7 +123,8 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
   const { data, error } = await supabase
     .from("scraper_runs")
     .select("run_id, league_slug, bookmaker, status, matches_found, error_message, started_at, completed_at, duration_ms")
-    .order("started_at", { ascending: false });
+    .order("started_at", { ascending: false })
+    .returns<Pick<ScraperRunRow, "run_id" | "league_slug" | "bookmaker" | "status" | "matches_found" | "error_message" | "started_at" | "completed_at" | "duration_ms">[]>();
 
   if (error) {
     console.error("[ScraperRunRepository] getRunsSummary error:", error);
@@ -142,13 +150,19 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
     }
   >();
 
+  // Helper to parse UTC timestamp from Supabase
+  const parseUtcTimestamp = (ts: string) => {
+    const utcTs = ts.endsWith("Z") ? ts : `${ts}Z`;
+    return new Date(utcTs);
+  };
+
   for (const row of data || []) {
     if (!runsMap.has(row.run_id)) {
       runsMap.set(row.run_id, {
         runId: row.run_id,
         league: row.league_slug,
-        startedAt: new Date(row.started_at),
-        completedAt: new Date(row.completed_at),
+        startedAt: parseUtcTimestamp(row.started_at),
+        completedAt: parseUtcTimestamp(row.completed_at),
         totalDurationMs: 0,
         results: [],
       });
@@ -164,7 +178,7 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
     });
 
     // Update max completed_at
-    const completedAt = new Date(row.completed_at);
+    const completedAt = parseUtcTimestamp(row.completed_at);
     if (completedAt > run.completedAt) {
       run.completedAt = completedAt;
     }
@@ -191,13 +205,18 @@ export async function getLastSuccessfulScrapeTime(): Promise<Date | null> {
     .select("completed_at")
     .eq("status", "success")
     .order("completed_at", { ascending: false })
-    .limit(1);
+    .limit(1)
+    .returns<Pick<ScraperRunRow, "completed_at">[]>();
 
   if (error || !data || data.length === 0) {
     return null;
   }
 
-  return new Date(data[0].completed_at);
+  // Supabase returns UTC timestamp without 'Z' suffix, so we need to append it
+  // to ensure proper UTC parsing
+  const timestamp = data[0].completed_at;
+  const utcTimestamp = timestamp.endsWith("Z") ? timestamp : `${timestamp}Z`;
+  return new Date(utcTimestamp);
 }
 
 /**
@@ -213,7 +232,8 @@ export async function getAverageScrapeDurations(): Promise<
     .select("bookmaker, duration_ms")
     .eq("status", "success")
     .order("started_at", { ascending: false })
-    .limit(100);
+    .limit(100)
+    .returns<Pick<ScraperRunRow, "bookmaker" | "duration_ms">[]>();
 
   if (error) {
     console.error("[ScraperRunRepository] getAverageScrapeDurations error:", error);
@@ -224,7 +244,7 @@ export async function getAverageScrapeDurations(): Promise<
   const totals = new Map<PolishBookmaker, { sum: number; count: number }>();
 
   for (const row of data || []) {
-    const bm = row.bookmaker as PolishBookmaker;
+    const bm = row.bookmaker;
     const current = totals.get(bm) || { sum: 0, count: 0 };
     current.sum += row.duration_ms;
     current.count += 1;

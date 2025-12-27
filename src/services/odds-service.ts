@@ -88,9 +88,15 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
   // Determine bookmaker status
   const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
 
+  // Safely convert lastScrape to ISO string
+  let lastUpdated: string | null = null;
+  if (lastScrape && !isNaN(lastScrape.getTime())) {
+    lastUpdated = lastScrape.toISOString();
+  }
+
   return {
     matches,
-    lastUpdated: lastScrape?.toISOString() || null,
+    lastUpdated,
     bookmakerStatus,
   };
 }

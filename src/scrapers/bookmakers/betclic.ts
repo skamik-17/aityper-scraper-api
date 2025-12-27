@@ -16,9 +16,10 @@ import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // League URLs for Betclic
+// Note: URLs redirect to canonical form (e.g., anglia-premier-league-c3 -> premier-league-c3)
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.betclic.pl/pilka-nozna-sfootball/ekstraklasa-c221",
-  "premier-league": "https://www.betclic.pl/pilka-nozna-sfootball/anglia-premier-league-c5",
+  "premier-league": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3",
 };
 
 // CSS selectors for Betclic page structure
@@ -67,7 +68,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
 
       if (!hasEvents) {
         return this.createNotFoundResult(
-          "No Ekstraklasa matches found on Betclic page",
+          `No ${league} matches found on Betclic page`,
           Date.now() - startTime
         );
       }

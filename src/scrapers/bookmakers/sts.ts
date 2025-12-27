@@ -20,11 +20,14 @@ const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa:
     "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/1/46/201",
   "premier-league":
-    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/1/39/192",
+    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/1/1/17",
 };
 
 // CSS selectors for STS page structure
 const SELECTORS = {
+  // Cookie consent button - needs to be dismissed
+  cookieAccept: "[data-testid='cookie-policy-button-accept-all'], button:has-text('Akceptuj wszystkie')",
+  // Match elements
   matchTile: ".one-ticket-match-tile",
   teamHome: ".one-ticket-match-tile-event-details-desktop__team-home span",
   teamAway: ".one-ticket-match-tile-event-details-desktop__team-away span",
@@ -68,6 +71,18 @@ export class STSScraper extends PlaywrightScraper {
 
       // Extra delay for SPA rendering
       await this.delay(2000);
+
+      // Try to dismiss cookie consent if present
+      try {
+        const cookieButton = page.locator(SELECTORS.cookieAccept);
+        if (await cookieButton.isVisible({ timeout: 3000 })) {
+          await cookieButton.click();
+          console.log("[STS] Cookie consent dismissed");
+          await this.delay(1000);
+        }
+      } catch {
+        // Cookie modal might not be present, continue
+      }
 
       // Set very tall viewport to force loading all matches at once
       // STS uses lazy loading based on viewport visibility

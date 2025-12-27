@@ -16,9 +16,10 @@ import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // League URLs for Fuksiarz (with category IDs)
+// Note: League IDs change periodically - verify at fuksiarz.pl if scraping fails
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/265/1",
-  "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/39/1",
+  "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/625/1",
 };
 
 // CSS selectors for Fuksiarz page structure (discovered via DOM analysis)

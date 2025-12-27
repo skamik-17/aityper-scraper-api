@@ -115,6 +115,22 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
   Ipswich: "Ipswich Town",
   "Ipswich T.": "Ipswich Town",
   "Aston V.": "Aston Villa",
+
+  // Championship teams (appear in cup matches)
+  Leeds: "Leeds United",
+  "Leeds U.": "Leeds United",
+  "Sheffield Utd": "Sheffield United",
+  "Sheffield U.": "Sheffield United",
+  "Sheff Utd": "Sheffield United",
+  "Sheffield Wed": "Sheffield Wednesday",
+  "Sheff Wed": "Sheffield Wednesday",
+  "West Brom": "West Bromwich Albion",
+  "West Bromwich": "West Bromwich Albion",
+  "WBA": "West Bromwich Albion",
+  Luton: "Luton Town",
+  "Luton T.": "Luton Town",
+  Stoke: "Stoke City",
+  "Stoke C.": "Stoke City",
 };
 
 /**

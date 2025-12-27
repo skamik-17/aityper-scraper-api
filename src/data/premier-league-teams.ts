@@ -12,7 +12,7 @@ import type { CanonicalTeam } from "./canonical-teams.js";
 
 // Team names must match TheSportsDB API exactly for frontend matching
 export const PREMIER_LEAGUE_TEAMS: CanonicalTeam[] = [
-  // 2024/2025 season teams
+  // 2024/2025 Premier League season teams
   { id: "133604", name: "Arsenal", normalized: "arsenal" },
   { id: "133601", name: "Aston Villa", normalized: "aston villa" },
   { id: "134301", name: "AFC Bournemouth", normalized: "afc bournemouth" },
@@ -33,6 +33,17 @@ export const PREMIER_LEAGUE_TEAMS: CanonicalTeam[] = [
   { id: "133616", name: "Tottenham Hotspur", normalized: "tottenham hotspur" },
   { id: "133636", name: "West Ham United", normalized: "west ham united" },
   { id: "133599", name: "Wolverhampton Wanderers", normalized: "wolverhampton wanderers" },
+  // Championship teams (often appear in cup competitions under England)
+  { id: "133618", name: "Burnley", normalized: "burnley" },
+  { id: "133629", name: "Leeds United", normalized: "leeds united" },
+  { id: "133606", name: "Sunderland", normalized: "sunderland" },
+  { id: "133607", name: "Sheffield United", normalized: "sheffield united" },
+  { id: "133639", name: "Luton Town", normalized: "luton town" },
+  { id: "134781", name: "Middlesbrough", normalized: "middlesbrough" },
+  { id: "133637", name: "West Bromwich Albion", normalized: "west bromwich albion" },
+  { id: "133722", name: "Sheffield Wednesday", normalized: "sheffield wednesday" },
+  { id: "133624", name: "Stoke City", normalized: "stoke city" },
+  { id: "133638", name: "Watford", normalized: "watford" },
 ];
 
 /**

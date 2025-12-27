@@ -16,11 +16,12 @@ import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // League URLs for Fortuna
+// Note: Fortuna uses "pika-nozna" (not "pilka-nozna") and country/league IDs change
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa:
     "https://www.efortuna.pl/zaklady-bukmacherskie/pika-nozna/polska-3/ekstraklasa-polska",
   "premier-league":
-    "https://www.efortuna.pl/zaklady-bukmacherskie/pika-nozna/anglia-8/premier-league-anglia",
+    "https://www.efortuna.pl/zaklady-bukmacherskie/pika-nozna/anglia-2/1-anglia-1",
 };
 
 // CSS selectors for Fortuna page structure

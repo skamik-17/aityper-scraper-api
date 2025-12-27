@@ -15,9 +15,13 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// STS Ekstraklasa URL with proper ID path
-const EKSTRAKLASA_URL =
-  "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/1/46/201";
+// League URLs for STS
+const LEAGUE_URLS: Record<string, string> = {
+  ekstraklasa:
+    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/1/46/201",
+  "premier-league":
+    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/1/39/192",
+};
 
 // CSS selectors for STS page structure
 const SELECTORS = {
@@ -38,9 +42,17 @@ export class STSScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.sts, ...config, enabled: true };
   }
 
-  async scrapeEkstraklasa(): Promise<ScraperResult> {
+  async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
+    const leagueUrl = LEAGUE_URLS[league];
+    if (!leagueUrl) {
+      return this.createNotFoundResult(
+        `Unknown league: ${league}`,
+        Date.now() - startTime
+      );
+    }
 
     try {
       page = await this.initBrowser();
@@ -48,8 +60,8 @@ export class STSScraper extends PlaywrightScraper {
       // Human-like delay before navigation (1-2 seconds)
       await this.delay(1000 + Math.random() * 1000);
 
-      // Navigate to Ekstraklasa page
-      await this.navigateWithRetry(page, EKSTRAKLASA_URL, {
+      // Navigate to league page
+      await this.navigateWithRetry(page, leagueUrl, {
         timeout: 30000,
         waitUntil: "domcontentloaded",
       });
@@ -67,7 +79,7 @@ export class STSScraper extends PlaywrightScraper {
 
       if (!hasMatches) {
         return this.createNotFoundResult(
-          "No Ekstraklasa matches found on page",
+          `No ${league} matches found on page`,
           Date.now() - startTime
         );
       }
@@ -76,7 +88,7 @@ export class STSScraper extends PlaywrightScraper {
       await this.delay(2000);
 
       // Extract match data from page
-      const data = await this.extractMatchData(page);
+      const data = await this.extractMatchData(page, league);
 
       if (data.length === 0) {
         return this.createNotFoundResult(
@@ -85,7 +97,7 @@ export class STSScraper extends PlaywrightScraper {
         );
       }
 
-      console.log(`[STS] Successfully scraped ${data.length} matches`);
+      console.log(`[STS] Successfully scraped ${data.length} ${league} matches`);
 
       return {
         status: "success",
@@ -95,7 +107,7 @@ export class STSScraper extends PlaywrightScraper {
         timestamp: new Date(),
       };
     } catch (error) {
-      console.error("[STS] Scraping error:", error);
+      console.error(`[STS] Scraping error for ${league}:`, error);
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
       if (page) {
@@ -106,10 +118,11 @@ export class STSScraper extends PlaywrightScraper {
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
+    const league = match.leagueId ?? "ekstraklasa";
 
     try {
       // Get all matches first
-      const allMatches = await this.scrapeEkstraklasa();
+      const allMatches = await this.scrapeLeague(league);
 
       if (allMatches.status !== "success" || !allMatches.data) {
         return allMatches;
@@ -118,7 +131,8 @@ export class STSScraper extends PlaywrightScraper {
       // Find matching event
       const matchResult = findMatchingEvent(
         { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data
+        allMatches.data,
+        league
       );
 
       if (!matchResult) {
@@ -143,7 +157,7 @@ export class STSScraper extends PlaywrightScraper {
   /**
    * Extract match data from page using evaluate
    */
-  private async extractMatchData(page: Page): Promise<RawScrapedOdds[]> {
+  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
     const matchData = await page.evaluate((selectors) => {
       const matches: Array<{
         homeTeam: string;
@@ -208,8 +222,8 @@ export class STSScraper extends PlaywrightScraper {
     return matchData.map((match) => ({
       bookmaker: "sts" as PolishBookmaker,
       eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: getCanonicalTeamName(match.homeTeam),
-      awayTeam: getCanonicalTeamName(match.awayTeam),
+      homeTeam: getCanonicalTeamName(match.homeTeam, league),
+      awayTeam: getCanonicalTeamName(match.awayTeam, league),
       homeOdds: match.homeOdds,
       drawOdds: match.drawOdds,
       awayOdds: match.awayOdds,

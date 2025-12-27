@@ -8,10 +8,53 @@ import { CONFIG } from "../config/index.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 
+// Combined result for all leagues
+interface MultiLeagueScrapeResult {
+  leagues: Map<string, ScrapeResult>;
+  totalSuccessCount: number;
+  totalErrorCount: number;
+  totalMatchesInserted: number;
+}
+
 let scrapeTask: cron.ScheduledTask | null = null;
 let cleanupTask: cron.ScheduledTask | null = null;
 let isRunning = false;
-let lastResult: ScrapeResult | null = null;
+let lastResults: Map<string, ScrapeResult> = new Map();
+
+/**
+ * Run scrape for all enabled leagues
+ */
+async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
+  const results = new Map<string, ScrapeResult>();
+  let totalSuccessCount = 0;
+  let totalErrorCount = 0;
+  let totalMatchesInserted = 0;
+
+  // Run scrapers for each enabled league sequentially to avoid browser conflicts
+  for (const league of CONFIG.ENABLED_LEAGUES) {
+    console.log(`[Scheduler] Scraping ${league}...`);
+    try {
+      const result = await runScrapeAndPersist(league);
+      results.set(league, result);
+      totalSuccessCount += result.successCount;
+      totalErrorCount += result.errorCount;
+      totalMatchesInserted += result.matchesInserted;
+      console.log(
+        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.matchesInserted} matches`
+      );
+    } catch (error) {
+      console.error(`[Scheduler] ${league} scrape failed:`, error);
+      totalErrorCount++;
+    }
+  }
+
+  return {
+    leagues: results,
+    totalSuccessCount,
+    totalErrorCount,
+    totalMatchesInserted,
+  };
+}
 
 /**
  * Start the scheduled scraping job
@@ -25,6 +68,7 @@ export function startScheduler(): void {
   console.log(
     `[Scheduler] Starting with cron: ${CONFIG.SCRAPE_CRON} (every ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes)`
   );
+  console.log(`[Scheduler] Enabled leagues: ${CONFIG.ENABLED_LEAGUES.join(", ")}`);
 
   // Schedule scraping job
   scrapeTask = cron.schedule(
@@ -39,9 +83,10 @@ export function startScheduler(): void {
       console.log(`[Scheduler] Starting scheduled scrape at ${new Date().toISOString()}`);
 
       try {
-        lastResult = await runScrapeAndPersist();
+        const multiResult = await runAllLeaguesScrape();
+        lastResults = multiResult.leagues;
         console.log(
-          `[Scheduler] Scrape completed: ${lastResult.successCount} success, ${lastResult.errorCount} errors, ${lastResult.matchesInserted} matches`
+          `[Scheduler] All leagues completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalErrorCount} errors, ${multiResult.totalMatchesInserted} matches`
         );
       } catch (error) {
         console.error("[Scheduler] Scrape failed:", error);
@@ -77,12 +122,13 @@ export function startScheduler(): void {
 
   // Run initial scrape on startup (after a short delay)
   setTimeout(async () => {
-    console.log("[Scheduler] Running initial scrape on startup");
+    console.log("[Scheduler] Running initial scrape on startup for all leagues");
     isRunning = true;
     try {
-      lastResult = await runScrapeAndPersist();
+      const multiResult = await runAllLeaguesScrape();
+      lastResults = multiResult.leagues;
       console.log(
-        `[Scheduler] Initial scrape completed: ${lastResult.successCount} success, ${lastResult.matchesInserted} matches`
+        `[Scheduler] Initial scrape completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalMatchesInserted} matches across ${CONFIG.ENABLED_LEAGUES.length} leagues`
       );
     } catch (error) {
       console.error("[Scheduler] Initial scrape failed:", error);
@@ -113,8 +159,9 @@ export function stopScheduler(): void {
 export function getSchedulerStatus(): {
   isScheduled: boolean;
   isRunning: boolean;
-  lastResult: ScrapeResult | null;
+  lastResults: Record<string, ScrapeResult>;
   nextRun: Date | null;
+  enabledLeagues: readonly string[];
 } {
   let nextRun: Date | null = null;
 
@@ -125,26 +172,56 @@ export function getSchedulerStatus(): {
     nextRun = new Date(Math.ceil(now.getTime() / intervalMs) * intervalMs);
   }
 
+  // Convert Map to object for serialization
+  const resultsObj: Record<string, ScrapeResult> = {};
+  for (const [league, result] of lastResults) {
+    resultsObj[league] = result;
+  }
+
   return {
     isScheduled: scrapeTask !== null,
     isRunning,
-    lastResult,
+    lastResults: resultsObj,
     nextRun,
+    enabledLeagues: CONFIG.ENABLED_LEAGUES,
   };
 }
 
 /**
- * Trigger manual scrape
+ * Trigger manual scrape for all leagues
  */
-export async function triggerManualScrape(): Promise<ScrapeResult> {
+export async function triggerManualScrape(): Promise<MultiLeagueScrapeResult> {
   if (isRunning) {
     throw new Error("Scrape already in progress");
   }
 
   isRunning = true;
   try {
-    lastResult = await runScrapeAndPersist();
-    return lastResult;
+    const multiResult = await runAllLeaguesScrape();
+    lastResults = multiResult.leagues;
+    return multiResult;
+  } finally {
+    isRunning = false;
+  }
+}
+
+/**
+ * Trigger manual scrape for a specific league
+ */
+export async function triggerLeagueScrape(league: string): Promise<ScrapeResult> {
+  if (isRunning) {
+    throw new Error("Scrape already in progress");
+  }
+
+  if (!CONFIG.ENABLED_LEAGUES.includes(league as typeof CONFIG.ENABLED_LEAGUES[number])) {
+    throw new Error(`League ${league} is not enabled`);
+  }
+
+  isRunning = true;
+  try {
+    const result = await runScrapeAndPersist(league);
+    lastResults.set(league, result);
+    return result;
   } finally {
     isRunning = false;
   }

@@ -15,9 +15,11 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// Fuksiarz Ekstraklasa URL (with category ID)
-const EKSTRAKLASA_URL =
-  "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/265/1";
+// League URLs for Fuksiarz (with category IDs)
+const LEAGUE_URLS: Record<string, string> = {
+  ekstraklasa: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/265/1",
+  "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/39/1",
+};
 
 // CSS selectors for Fuksiarz page structure (discovered via DOM analysis)
 const SELECTORS = {
@@ -36,15 +38,23 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.fuksiarz, ...config, enabled: true };
   }
 
-  async scrapeEkstraklasa(): Promise<ScraperResult> {
+  async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
+    const leagueUrl = LEAGUE_URLS[league];
+    if (!leagueUrl) {
+      return this.createNotFoundResult(
+        `Unknown league: ${league}`,
+        Date.now() - startTime
+      );
+    }
 
     try {
       page = await this.initBrowser();
 
-      // Navigate to Ekstraklasa page
-      await this.navigateWithRetry(page, EKSTRAKLASA_URL, {
+      // Navigate to league page
+      await this.navigateWithRetry(page, leagueUrl, {
         timeout: 30000,
         waitUntil: "domcontentloaded",
       });
@@ -57,22 +67,22 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
       if (!hasEvents) {
         return this.createNotFoundResult(
-          "No Ekstraklasa matches found on Fuksiarz page",
+          `No ${league} matches found on Fuksiarz page`,
           Date.now() - startTime
         );
       }
 
       // Extract match data from page
-      const data = await this.extractMatchData(page);
+      const data = await this.extractMatchData(page, league);
 
       if (data.length === 0) {
         return this.createNotFoundResult(
-          "Could not parse any match data from Fuksiarz",
+          `Could not parse any ${league} match data from Fuksiarz`,
           Date.now() - startTime
         );
       }
 
-      console.log(`[Fuksiarz] Successfully scraped ${data.length} matches`);
+      console.log(`[Fuksiarz] Successfully scraped ${data.length} ${league} matches`);
 
       return {
         status: "success",
@@ -93,10 +103,11 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
+    const league = match.leagueId ?? "ekstraklasa";
 
     try {
       // Get all matches first
-      const allMatches = await this.scrapeEkstraklasa();
+      const allMatches = await this.scrapeLeague(league);
 
       if (allMatches.status !== "success" || !allMatches.data) {
         return allMatches;
@@ -105,7 +116,8 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
       // Find matching event
       const matchResult = findMatchingEvent(
         { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data
+        allMatches.data,
+        league
       );
 
       if (!matchResult) {
@@ -131,7 +143,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
    * Extract match data from page using evaluate
    * Fuksiarz uses LI elements with eventListPeriodItemPartial class
    */
-  private async extractMatchData(page: Page): Promise<RawScrapedOdds[]> {
+  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
     const matchData = await page.evaluate((selectors) => {
       const matches: Array<{
         homeTeam: string;
@@ -189,8 +201,8 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     return matchData.map((match) => ({
       bookmaker: "fuksiarz" as PolishBookmaker,
       eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: getCanonicalTeamName(match.homeTeam),
-      awayTeam: getCanonicalTeamName(match.awayTeam),
+      homeTeam: getCanonicalTeamName(match.homeTeam, league),
+      awayTeam: getCanonicalTeamName(match.awayTeam, league),
       homeOdds: match.homeOdds,
       drawOdds: match.drawOdds,
       awayOdds: match.awayOdds,

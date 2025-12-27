@@ -75,8 +75,8 @@ export async function runAllScrapers(
     }
 
     try {
-      console.log(`[Aggregator] Starting ${bookmaker} scraper`);
-      const result = await scraper.scrapeEkstraklasa();
+      console.log(`[Aggregator] Starting ${bookmaker} scraper for ${league}`);
+      const result = await scraper.scrapeLeague(league);
       console.log(
         `[Aggregator] ${bookmaker} completed: ${result.status}, ${result.data?.length || 0} matches`
       );
@@ -142,10 +142,11 @@ export async function runAllScrapers(
 }
 
 /**
- * Run a single scraper
+ * Run a single scraper for a specific league
  */
 export async function runSingleScraper(
-  bookmaker: PolishBookmaker
+  bookmaker: PolishBookmaker,
+  league: string = "ekstraklasa"
 ): Promise<ScraperResult> {
   const scraper = SCRAPERS[bookmaker];
   if (!scraper) {
@@ -159,7 +160,7 @@ export async function runSingleScraper(
   }
 
   try {
-    const result = await scraper.scrapeEkstraklasa();
+    const result = await scraper.scrapeLeague(league);
     return result;
   } finally {
     await scraper.cleanup();

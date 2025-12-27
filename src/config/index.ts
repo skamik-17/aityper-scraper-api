@@ -21,8 +21,8 @@ export const CONFIG = {
   SCRAPE_CRON: `*/${process.env.SCRAPE_INTERVAL_MINUTES || "5"} * * * *`,
   SCRAPER_TIMEOUT_MS: parseInt(process.env.SCRAPER_TIMEOUT_MS || "30000"),
 
-  // Supported leagues (future expansion)
-  ENABLED_LEAGUES: ["ekstraklasa"] as const,
+  // Supported leagues
+  ENABLED_LEAGUES: ["ekstraklasa", "premier-league"] as const,
 
   // Bookmakers
   BOOKMAKERS: [

@@ -15,9 +15,11 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// Betclic Ekstraklasa URL (competition ID 221)
-const EKSTRAKLASA_URL =
-  "https://www.betclic.pl/pilka-nozna-sfootball/ekstraklasa-c221";
+// League URLs for Betclic
+const LEAGUE_URLS: Record<string, string> = {
+  ekstraklasa: "https://www.betclic.pl/pilka-nozna-sfootball/ekstraklasa-c221",
+  "premier-league": "https://www.betclic.pl/pilka-nozna-sfootball/anglia-premier-league-c5",
+};
 
 // CSS selectors for Betclic page structure
 const SELECTORS = {
@@ -36,15 +38,23 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.betclic, ...config, enabled: true };
   }
 
-  async scrapeEkstraklasa(): Promise<ScraperResult> {
+  async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
+    const leagueUrl = LEAGUE_URLS[league];
+    if (!leagueUrl) {
+      return this.createNotFoundResult(
+        `Unknown league: ${league}`,
+        Date.now() - startTime
+      );
+    }
 
     try {
       page = await this.initBrowser();
 
-      // Navigate to Ekstraklasa page (Angular SPA needs more time)
-      await this.navigateWithRetry(page, EKSTRAKLASA_URL, {
+      // Navigate to league page (Angular SPA needs more time)
+      await this.navigateWithRetry(page, leagueUrl, {
         timeout: 30000,
         waitUntil: "domcontentloaded",
       });
@@ -63,16 +73,16 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       }
 
       // Extract match data from page
-      const data = await this.extractMatchData(page);
+      const data = await this.extractMatchData(page, league);
 
       if (data.length === 0) {
         return this.createNotFoundResult(
-          "Could not parse any match data from Betclic",
+          `Could not parse any ${league} match data from Betclic`,
           Date.now() - startTime
         );
       }
 
-      console.log(`[Betclic] Successfully scraped ${data.length} matches`);
+      console.log(`[Betclic] Successfully scraped ${data.length} ${league} matches`);
 
       return {
         status: "success",
@@ -93,10 +103,11 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
+    const league = match.leagueId ?? "ekstraklasa";
 
     try {
       // Get all matches first
-      const allMatches = await this.scrapeEkstraklasa();
+      const allMatches = await this.scrapeLeague(league);
 
       if (allMatches.status !== "success" || !allMatches.data) {
         return allMatches;
@@ -105,7 +116,8 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       // Find matching event
       const matchResult = findMatchingEvent(
         { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data
+        allMatches.data,
+        league
       );
 
       if (!matchResult) {
@@ -130,7 +142,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
   /**
    * Extract match data from page using evaluate
    */
-  private async extractMatchData(page: Page): Promise<RawScrapedOdds[]> {
+  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
     const matchData = await page.evaluate((selectors) => {
       const matches: Array<{
         homeTeam: string;
@@ -180,8 +192,8 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     return matchData.map((match) => ({
       bookmaker: "betclic" as PolishBookmaker,
       eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: getCanonicalTeamName(match.homeTeam),
-      awayTeam: getCanonicalTeamName(match.awayTeam),
+      homeTeam: getCanonicalTeamName(match.homeTeam, league),
+      awayTeam: getCanonicalTeamName(match.awayTeam, league),
       homeOdds: match.homeOdds,
       drawOdds: match.drawOdds,
       awayOdds: match.awayOdds,

@@ -19,9 +19,24 @@ export abstract class PlaywrightScraper {
   protected context: BrowserContext | null = null;
 
   /**
-   * Scrape all Ekstraklasa matches
+   * Scrape all matches for a specific league
+   * @param league - League slug (e.g., "ekstraklasa", "premier-league")
    */
-  abstract scrapeEkstraklasa(): Promise<ScraperResult>;
+  abstract scrapeLeague(league: string): Promise<ScraperResult>;
+
+  /**
+   * Scrape all Ekstraklasa matches (backwards compatibility)
+   */
+  scrapeEkstraklasa(): Promise<ScraperResult> {
+    return this.scrapeLeague("ekstraklasa");
+  }
+
+  /**
+   * Scrape all Premier League matches
+   */
+  scrapePremierLeague(): Promise<ScraperResult> {
+    return this.scrapeLeague("premier-league");
+  }
 
   /**
    * Scrape a specific match

@@ -1,0 +1,507 @@
+{
+  "url": "https://superbet-content.freetls.fastly.net/cached-superbet/hot-tournaments/offer/pl/2025-12-28",
+  "data": [
+    {
+      "link": "plsuperbetsport://competition?competition_id=23&id=74WjpntozlXnSI29J5gg3Z&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        104
+      ],
+      "title": "Serie A",
+      "sportId": 5,
+      "categoryId": 43,
+      "flagId": 43,
+      "colors": {
+        "from": "#0A521E",
+        "to": "#209140"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=23&id=74WjpntozlXnSI29J5gg3Z&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        104
+      ],
+      "title": "Serie A",
+      "sportId": 5,
+      "categoryId": 43,
+      "flagId": 43,
+      "colors": {
+        "from": "#0A521E",
+        "to": "#209140"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=132&id=br:competition:132&sport=basketball&tournament_tab=offer",
+      "tournamentIds": [
+        2177,
+        47682,
+        164,
+        32349
+      ],
+      "title": "NBA",
+      "sportId": 4,
+      "categoryId": 61,
+      "flagId": 61,
+      "colors": {
+        "from": "#2961A7",
+        "to": "#213F87"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=17&id=4jxMw0YSwneZLrSZQaWRxz&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        106
+      ],
+      "title": "Premier League",
+      "sportId": 5,
+      "categoryId": 45,
+      "flagId": 45,
+      "colors": {
+        "from": "#6D0001",
+        "to": "#C50102"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=17&id=4jxMw0YSwneZLrSZQaWRxz&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        106
+      ],
+      "title": "Premier League",
+      "sportId": 5,
+      "categoryId": 45,
+      "flagId": 45,
+      "colors": {
+        "from": "#6D0001",
+        "to": "#C50102"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=263&id=br:competition:263&sport=basketball&tournament_tab=offer",
+      "tournamentIds": [
+        151,
+        87961,
+        2200,
+        2199,
+        2201
+      ],
+      "title": "OBL",
+      "sportId": 4,
+      "categoryId": 25,
+      "flagId": 25,
+      "colors": {
+        "from": "#6D0001",
+        "to": "#C50102"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=270&id=7AQMNUnx7druv9dXcDaWGF&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        20801,
+        39180,
+        20787,
+        20765,
+        20774,
+        39205,
+        8177,
+        1501,
+        1499,
+        1498,
+        1502,
+        1500
+      ],
+      "title": "PNA 2025",
+      "sportId": 5,
+      "categoryId": 102,
+      "flagId": 102,
+      "colors": {
+        "from": "#0A521E",
+        "to": "#209140"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": "CAF"
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=270&id=7AQMNUnx7druv9dXcDaWGF&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        20801,
+        39180,
+        20787,
+        20765,
+        20774,
+        39205,
+        8177,
+        1501,
+        1499,
+        1498,
+        1502,
+        1500
+      ],
+      "title": "PNA 2025",
+      "sportId": 5,
+      "categoryId": 102,
+      "flagId": 102,
+      "colors": {
+        "from": "#0A521E",
+        "to": "#209140"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": "CAF"
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=264&id=br:competition:264&sport=basketball&tournament_tab=offer",
+      "tournamentIds": [
+        2187,
+        183,
+        46908,
+        46909
+      ],
+      "title": "ACB",
+      "sportId": 4,
+      "categoryId": 108,
+      "flagId": 108,
+      "colors": {
+        "from": "#C78615",
+        "to": "#C2661D"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=238&id=1q05wm3wnfGINh7xDAz7WI&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        4040,
+        142
+      ],
+      "title": "Primeira Liga",
+      "sportId": 5,
+      "categoryId": 7,
+      "flagId": 7,
+      "colors": {
+        "from": "#1E2635",
+        "to": "#394762"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=132&id=br:competition:132&sport=basketball&tournament_tab=offer",
+      "tournamentIds": [
+        2177,
+        47682,
+        164,
+        32349
+      ],
+      "title": "NBA",
+      "sportId": 4,
+      "categoryId": 61,
+      "flagId": 61,
+      "colors": {
+        "from": "#2961A7",
+        "to": "#213F87"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=238&id=1q05wm3wnfGINh7xDAz7WI&sport=soccer&tournament_tab=offer",
+      "tournamentIds": [
+        4040,
+        142
+      ],
+      "title": "Primeira Liga",
+      "sportId": 5,
+      "categoryId": 7,
+      "flagId": 7,
+      "colors": {
+        "from": "#1E2635",
+        "to": "#394762"
+      },
+      "locations": [
+        "prematch"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=616&tournament_tab=offer",
+      "tournamentIds": [
+        94549,
+        49315,
+        83508,
+        73359,
+        64308,
+        26913,
+        20570,
+        35706,
+        7828,
+        43891,
+        14440,
+        56419
+      ],
+      "title": "MŚ 2025",
+      "sportId": 13,
+      "categoryId": 58,
+      "flagId": 31,
+      "colors": {
+        "from": "#2961A7",
+        "to": "#213F87"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=1000000&tournament_tab=offer",
+      "tournamentIds": [
+        74710,
+        60966,
+        74049,
+        74100,
+        56959,
+        71377,
+        69562,
+        65174,
+        56575,
+        65876,
+        65868,
+        57964,
+        72155,
+        56572,
+        69563,
+        44458,
+        44458,
+        56757,
+        65867,
+        56957,
+        37252,
+        37252,
+        72872,
+        72872,
+        68730,
+        57225,
+        65184,
+        56293,
+        56293,
+        62627,
+        62624,
+        56960,
+        65873,
+        65179,
+        65180,
+        69564,
+        60968,
+        56582,
+        65182,
+        57706,
+        65178,
+        499,
+        499,
+        63015,
+        56435,
+        56581,
+        60967,
+        56574,
+        63189,
+        56578,
+        57967,
+        65866,
+        57704,
+        65176,
+        56955,
+        56583,
+        71373,
+        65181,
+        56530,
+        37267,
+        37267,
+        57227,
+        56576,
+        57226,
+        56329,
+        56329,
+        57968,
+        71376,
+        71374,
+        71378,
+        68733,
+        68732,
+        72876,
+        68731,
+        56956,
+        62625,
+        56573,
+        65871,
+        65872,
+        44507,
+        44507,
+        57969,
+        56577,
+        65173,
+        57703,
+        69561,
+        57710,
+        45282,
+        45282,
+        65177,
+        57709,
+        57970,
+        68734,
+        65175,
+        56579,
+        56529,
+        28116,
+        28116,
+        71375,
+        57224,
+        56531,
+        57707,
+        56580,
+        56958,
+        56584,
+        56436,
+        56294,
+        56294,
+        65870,
+        56434,
+        65869
+      ],
+      "title": "Skoki Narciarskie",
+      "sportId": 10,
+      "categoryId": 51,
+      "flagId": 304,
+      "colors": {
+        "from": "#6D0001",
+        "to": "#C50102"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=263&id=br:competition:263&sport=basketball&tournament_tab=offer",
+      "tournamentIds": [
+        151,
+        87961,
+        2200,
+        2199,
+        2201
+      ],
+      "title": "OBL",
+      "sportId": 4,
+      "categoryId": 25,
+      "flagId": 25,
+      "colors": {
+        "from": "#6D0001",
+        "to": "#C50102"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=1173&id=br:competition:1173&sport=voleyball&tournament_tab=offer",
+      "tournamentIds": [
+        54,
+        9813,
+        44248,
+        9812,
+        44248,
+        9812,
+        772,
+        773,
+        37672,
+        771,
+        37665,
+        770
+      ],
+      "title": "LSK",
+      "sportId": 1,
+      "categoryId": 67,
+      "flagId": 67,
+      "colors": {
+        "from": "#8D034B",
+        "to": "#BE3E81"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=234&id=br:competition:234&sport=ice-hockey&tournament_tab=offer",
+      "tournamentIds": [
+        1817,
+        139,
+        47308,
+        47463,
+        47180
+      ],
+      "title": "NHL",
+      "sportId": 3,
+      "categoryId": 92,
+      "flagId": 92,
+      "colors": {
+        "from": "#20272B",
+        "to": "#3C4851"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    },
+    {
+      "link": "plsuperbetsport://competition?competition_id=31&id=br:competition:31&sport=american-football&tournament_tab=offer",
+      "tournamentIds": [
+        2107,
+        22
+      ],
+      "title": "NFL",
+      "sportId": 12,
+      "categoryId": 57,
+      "flagId": 57,
+      "colors": {
+        "from": "#0062C5",
+        "to": "#1581DB"
+      },
+      "locations": [
+        "home"
+      ],
+      "sportTag": null
+    }
+  ]
+}

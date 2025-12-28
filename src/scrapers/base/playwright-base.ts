@@ -5,7 +5,13 @@
 
 import { chromium, Browser, Page, BrowserContext } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
-import type { ScraperResult, ScraperConfig, MatchIdentifier } from "../../types/scraper.js";
+import type {
+  ScraperResult,
+  ScraperConfig,
+  MatchIdentifier,
+  MatchDetailResult,
+  EventUrlEntry,
+} from "../../types/scraper.js";
 
 // Default browser options
 const DEFAULT_USER_AGENT =
@@ -42,6 +48,19 @@ export abstract class PlaywrightScraper {
    * Scrape a specific match
    */
   abstract scrapeMatch(match: MatchIdentifier): Promise<ScraperResult>;
+
+  /**
+   * Scrape detailed match page for extended markets (Double Chance, Over/Under, BTTS)
+   * Override in subclasses that support extended markets
+   */
+  abstract scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
+
+  /**
+   * Extract event URLs from the current listing page
+   * Returns a list of match keys (normalized team names) with their detail page URLs
+   * Override in subclasses to collect URLs during listing scrapes
+   */
+  abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
 
   /**
    * Initialize browser and create a new page with anti-detection measures
@@ -213,6 +232,64 @@ export abstract class PlaywrightScraper {
       status: "not_found",
       bookmaker: this.bookmaker,
       error: message,
+      duration,
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Create match detail error result
+   */
+  protected createMatchDetailErrorResult(
+    error: unknown,
+    duration: number
+  ): MatchDetailResult {
+    return {
+      status: "error",
+      bookmaker: this.bookmaker,
+      error: error instanceof Error ? error.message : "Unknown error",
+      duration,
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Create match detail timeout result
+   */
+  protected createMatchDetailTimeoutResult(duration: number): MatchDetailResult {
+    return {
+      status: "timeout",
+      bookmaker: this.bookmaker,
+      error: `Match detail scraping timed out after ${this.config.timeout}ms`,
+      duration,
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Create match detail not found result
+   */
+  protected createMatchDetailNotFoundResult(
+    message: string,
+    duration: number
+  ): MatchDetailResult {
+    return {
+      status: "not_found",
+      bookmaker: this.bookmaker,
+      error: message,
+      duration,
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Create not implemented result for scrapers that don't support extended markets yet
+   */
+  protected createNotImplementedResult(duration: number): MatchDetailResult {
+    return {
+      status: "error",
+      bookmaker: this.bookmaker,
+      error: `Extended market scraping not yet implemented for ${this.bookmaker}`,
       duration,
       timestamp: new Date(),
     };

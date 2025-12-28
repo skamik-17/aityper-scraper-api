@@ -1,0 +1,517 @@
+{
+  "url": "https://app.launchdarkly.com/sdk/evalx/614c50cdbbbf43269daae893/contexts/eyJhbm9ueW1vdXMiOnRydWUsImtpbmQiOiJ1c2VyIiwia2V5IjoiQU5PTllNT1VTX1VTRVItNzgwIiwicGxhdGZvcm0iOiJ3ZWIifQ",
+  "data": {
+    "global": {
+      "flagVersion": 9,
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.gaming": {
+      "flagVersion": 4,
+      "prerequisites": [
+        "global"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.gaming.bingo": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "global.gaming.casino": {
+      "flagVersion": 4,
+      "prerequisites": [
+        "global.gaming"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.gaming.live-casino": {
+      "flagVersion": 5,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "global.gaming.virtuals": {
+      "flagVersion": 4,
+      "prerequisites": [
+        "global.gaming"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.lotto": {
+      "flagVersion": 6,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "global.lotto.prepared": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "global.sport": {
+      "flagVersion": 20,
+      "prerequisites": [
+        "global"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.sport.cashout": {
+      "flagVersion": 4,
+      "prerequisites": [
+        "global.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.sport.live": {
+      "flagVersion": 12,
+      "prerequisites": [
+        "global.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.sport.prematch": {
+      "flagVersion": 11,
+      "prerequisites": [
+        "global.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "global.sport.prepared": {
+      "flagVersion": 2,
+      "prerequisites": [
+        "global.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "growth.should-send-marketing-on-deposit": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online": {
+      "flagVersion": 34,
+      "prerequisites": [
+        "global"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online-wallet-pay-safe-card-deposit": {
+      "flagVersion": 6,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.gaming": {
+      "flagVersion": 5,
+      "prerequisites": [
+        "global.gaming",
+        "online"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.gaming.bingo": {
+      "flagVersion": 5,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.gaming.casino": {
+      "flagVersion": 5,
+      "prerequisites": [
+        "global.gaming.casino",
+        "online.gaming"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.gaming.dice": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.gaming.live-casino": {
+      "flagVersion": 5,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.gaming.virtuals": {
+      "flagVersion": 5,
+      "prerequisites": [
+        "global.gaming.virtuals",
+        "online.gaming"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.lotto": {
+      "flagVersion": 5,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.sport": {
+      "flagVersion": 34,
+      "prerequisites": [
+        "global.sport",
+        "online"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.sport.cashout": {
+      "flagVersion": 7,
+      "prerequisites": [
+        "global.sport.cashout",
+        "online.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.sport.live": {
+      "flagVersion": 13,
+      "prerequisites": [
+        "global.sport.live",
+        "online.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.sport.prematch": {
+      "flagVersion": 15,
+      "prerequisites": [
+        "global.sport.prematch",
+        "online.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.wallet.agencyDeposit": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.agencyWithdrawal": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.aircashDeposit": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.bancontact": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.bankAccountRegistration": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.bankTransferDeposit": {
+      "flagVersion": 4,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.bankTransferWithdrawal": {
+      "flagVersion": 4,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.depositLimit": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.wallet.instantWithdrawal": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlineAlternativeDeposit": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlineDeposit": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.wallet.onlinePiqDeposit": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlinePiqWithdrawal": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlinePixDeposit": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlinePixWithdrawal": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.onlineWithdrawal": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "online.wallet.paySafeCardDeposit": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.paySafeCardWithdrawal": {
+      "flagVersion": 4,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.paySpotDeposit": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.paysafecard": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.transaksDeposit": {
+      "flagVersion": 4,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.transaksWithdrawal": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "online.wallet.withdrawal.halcom": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "retail": {
+      "flagVersion": 3,
+      "prerequisites": [
+        "global"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.betler-wallet": {
+      "flagVersion": 2,
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.gaming": {
+      "flagVersion": 3,
+      "prerequisites": [
+        "retail",
+        "global.gaming"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.gaming.bingo": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "retail.gaming.casino": {
+      "flagVersion": 3,
+      "prerequisites": [
+        "retail.gaming",
+        "global.gaming.casino"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.gaming.live-casino": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "retail.gaming.virtuals": {
+      "flagVersion": 3,
+      "prerequisites": [
+        "retail.gaming",
+        "global.gaming.virtuals"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.lotto": {
+      "flagVersion": 3,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "retail.sport": {
+      "flagVersion": 7,
+      "prerequisites": [
+        "retail",
+        "global.sport"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.sport.cashout": {
+      "flagVersion": 3,
+      "prerequisites": [
+        "retail.sport",
+        "global.sport.cashout"
+      ],
+      "trackEvents": false,
+      "value": true,
+      "variation": 0,
+      "version": 77
+    },
+    "retail.sport.live": {
+      "flagVersion": 7,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    },
+    "retail.sport.prematch": {
+      "flagVersion": 5,
+      "trackEvents": false,
+      "value": false,
+      "variation": 1,
+      "version": 77
+    }
+  }
+}

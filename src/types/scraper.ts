@@ -3,6 +3,12 @@
  */
 
 import type { PolishBookmaker } from "../config/index.js";
+import type {
+  Market1X2Odds,
+  MarketDoubleChanceOdds,
+  MarketBTTSOdds,
+  MarketOverUnderOdds,
+} from "./markets.js";
 
 // Scraper result status
 export type ScraperStatus =
@@ -26,6 +32,43 @@ export interface RawScrapedOdds {
   scrapedAt: Date;
   eventId?: string;
   eventUrl?: string;
+}
+
+// Extended scraped odds with all market types (from match detail page)
+export interface RawScrapedMatchOdds {
+  bookmaker: PolishBookmaker;
+  eventName: string;
+  homeTeam: string;
+  awayTeam: string;
+  eventUrl: string; // Required - match detail page URL
+  eventId?: string;
+  hasNoTaxPromo: boolean;
+  promoDetails?: string;
+  scrapedAt: Date;
+
+  // 1X2 Market (always present)
+  market1X2: Market1X2Odds;
+
+  // Additional markets (optional - may not be available on all bookmakers)
+  marketDoubleChance?: MarketDoubleChanceOdds;
+  marketOverUnder?: Record<string, MarketOverUnderOdds>; // Keys: "0.5", "1.5", etc.
+  marketBTTS?: MarketBTTSOdds;
+}
+
+// Event URL entry for listing page scraping
+export interface EventUrlEntry {
+  matchKey: string; // Normalized "homeTeam vs awayTeam" key
+  eventUrl: string; // Full URL to match detail page
+}
+
+// Match detail scraping result
+export interface MatchDetailResult {
+  status: ScraperStatus;
+  bookmaker: PolishBookmaker;
+  data?: RawScrapedMatchOdds;
+  error?: string;
+  duration: number;
+  timestamp: Date;
 }
 
 // Scraper result wrapper
@@ -79,8 +122,12 @@ export interface AggregatedOdds {
 export interface Scraper {
   bookmaker: PolishBookmaker;
   config: ScraperConfig;
+  scrapeLeague(league: string): Promise<ScraperResult>;
   scrapeEkstraklasa(): Promise<ScraperResult>;
+  scrapePremierLeague(): Promise<ScraperResult>;
   scrapeMatch(match: MatchIdentifier): Promise<ScraperResult>;
+  scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
+  extractEventUrls(page: any): Promise<EventUrlEntry[]>;
 }
 
 // Default scraper configs

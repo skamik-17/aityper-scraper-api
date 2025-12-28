@@ -1,0 +1,43 @@
+{
+  "url": "https://offer.lvbet.pl/client-api/v5/matches/bc:28660758?lang=pl",
+  "data": {
+    "match_id": "bc:28660758",
+    "teams_reversed": false,
+    "away": [
+      "Bournemouth"
+    ],
+    "away_labels": [
+      "Bournemouth"
+    ],
+    "home": [
+      "Chelsea"
+    ],
+    "home_labels": [
+      "Chelsea"
+    ],
+    "date": "2025-12-30T19:30:00+00:00",
+    "info": "",
+    "event_restriction": "not_with_same_event",
+    "integrations": {
+      "abios_enabled": false,
+      "betbuilder_id": "sc:470075",
+      "bg_betbuilder": true,
+      "score_tracker": true,
+      "scoreframe_id": 5993654,
+      "livescorepro_id": 5993654,
+      "smart_stream_id": null
+    },
+    "streams": [],
+    "sports_groups_ids": [
+      1,
+      35148,
+      37685
+    ],
+    "state": {
+      "is_pre": true,
+      "status": "open",
+      "is_live": false,
+      "markets_count": 476
+    }
+  }
+}

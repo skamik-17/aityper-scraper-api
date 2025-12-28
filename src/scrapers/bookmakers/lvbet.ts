@@ -1,6 +1,6 @@
 /**
  * LVBet Playwright Scraper
- * Scrapes odds from lvbet.pl using headless Chromium
+ * Uses Direct API calls via Playwright to get odds from LVBet.
  */
 
 import type { Page } from "playwright";
@@ -10,31 +10,19 @@ import type {
   ScraperResult,
   RawScrapedOdds,
   MatchIdentifier,
+  MatchDetailResult,
+  RawScrapedMatchOdds,
+  EventUrlEntry,
 } from "../../types/scraper.js";
+import type { MarketOverUnderOdds } from "../../types/markets.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// League URLs for LVBet
-// Note: LVBet uses dynamic IDs in URLs - use the parent country URL with filter
-const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa: "https://lvbet.pl/pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/--/1/35131/37669/",
-  "premier-league": "https://lvbet.pl/pl/zaklady-bukmacherskie/pilka-nozna/anglia/--/1/35148/",
-};
-
-// CSS selectors for LVBet page structure
-// LVBet uses "ds-" prefix design system classes
-const SELECTORS = {
-  // Cookie consent button to dismiss
-  cookieAccept: "button:has-text('Akceptuj wszystkie')",
-  // Match containers - each game row
-  gameRow: ".ds-single-game, [class*='ds-single-game']",
-  // Team names container
-  teamsContainer: ".ds-single-game__teams",
-  // Individual odds values
-  oddsValue: ".ds-odds-value",
-  // Odds group containing 1X2 odds
-  oddsGroup: ".ds-odds-group",
+// Tournament IDs for LVBet API
+const TOURNAMENT_IDS: Record<string, number> = {
+  "premier-league": 37685,
+  "ekstraklasa": 37669
 };
 
 export class LVBetPlaywrightScraper extends PlaywrightScraper {
@@ -49,204 +37,158 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-
-    const leagueUrl = LEAGUE_URLS[league];
-    if (!leagueUrl) {
-      return this.createNotFoundResult(
-        `Unknown league: ${league}`,
-        Date.now() - startTime
-      );
-    }
+    const tournamentId = TOURNAMENT_IDS[league];
+    if (!tournamentId) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
       page = await this.initBrowser();
+      await page.goto("https://lvbet.pl", { waitUntil: "domcontentloaded" });
+      
+      const apiUrl = `https://offer.lvbet.pl/client-api/v5/matches/competition-view/?sports_groups_ids=${tournamentId}&lang=pl`;
+      const apiData = await page.evaluate(async (url) => {
+        const res = await fetch(url);
+        return res.json();
+      }, apiUrl);
 
-      // Navigate to league page
-      await this.navigateWithRetry(page, leagueUrl, {
-        timeout: this.config.timeout,
-        waitUntil: "domcontentloaded",
-      });
+      if (apiData && apiData.matches) {
+        const matches: RawScrapedOdds[] = apiData.matches.map((m: any) => {
+          const homeTeam = m.home[0] || "";
+          const awayTeam = m.away[0] || "";
+          const hSlug = homeTeam.replace(/\s+/g, '').toLowerCase();
+          const aSlug = awayTeam.replace(/\s+/g, '').toLowerCase();
+          const groupPath = m.sports_groups_ids.join('/');
+          const eventUrl = `https://lvbet.pl/pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/${hSlug}vs${aSlug}/--/${groupPath}/${m.match_id}/`;
 
-      // Wait extra time for dynamic content to load
-      await this.delay(3000);
+          return {
+            bookmaker: this.bookmaker,
+            eventName: `${homeTeam} - ${awayTeam}`,
+            homeTeam: getCanonicalTeamName(homeTeam, league),
+            awayTeam: getCanonicalTeamName(awayTeam, league),
+            homeOdds: 0, drawOdds: 0, awayOdds: 0,
+            hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: eventUrl
+          };
+        });
 
-      // Try to dismiss cookie consent if present
-      try {
-        const cookieButton = page.locator(SELECTORS.cookieAccept);
-        if (await cookieButton.isVisible({ timeout: 2000 })) {
-          await cookieButton.click();
-          await this.delay(1000);
-        }
-      } catch {
-        // Cookie modal might not be present, continue
+        return { status: "success", bookmaker: this.bookmaker, data: matches, duration: Date.now() - startTime, timestamp: new Date() };
       }
 
-      // Wait for game rows to appear
-      const hasEvents = await this.waitForSelector(page, SELECTORS.gameRow, 10000);
-
-      if (!hasEvents) {
-        return this.createNotFoundResult(
-          `No ${league} matches found on LVBet page`,
-          Date.now() - startTime
-        );
-      }
-
-      // Extract match data from page
-      const data = await this.extractMatchData(page, league);
-
-      if (data.length === 0) {
-        return this.createNotFoundResult(
-          `Could not parse any ${league} match data from LVBet`,
-          Date.now() - startTime
-        );
-      }
-
-      console.log(`[LVBet] Successfully scraped ${data.length} ${league} matches`);
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data,
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
+      return this.createNotFoundResult("Could not fetch LVBet API data", Date.now() - startTime);
     } catch (error) {
-      console.error("[LVBet] Scraping error:", error);
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) {
-        await page.close();
-      }
+      if (page) await page.close();
     }
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
     const league = match.leagueId ?? "ekstraklasa";
+    const allMatches = await this.scrapeLeague(league);
+    if (allMatches.status !== "success" || !allMatches.data) return allMatches;
 
+    const matchResult = findMatchingEvent({ homeTeam: match.homeTeam, awayTeam: match.awayTeam }, allMatches.data, league);
+    if (!matchResult) return this.createNotFoundResult(`Match not found on LVBet: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
+
+    return { status: "success", bookmaker: this.bookmaker, data: [matchResult.event], duration: Date.now() - startTime, timestamp: new Date() };
+  }
+
+  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
+    const startTime = Date.now();
+    let page: Page | null = null;
     try {
-      // Get all matches first
-      const allMatches = await this.scrapeLeague(league);
+      page = await this.initBrowser();
+      const matchIdMatch = eventUrl.match(/(bc:\d+)/);
+      if (!matchIdMatch) return this.createMatchDetailNotFoundResult("Invalid LVBet event URL", Date.now() - startTime);
+      const matchId = matchIdMatch[1];
 
-      if (allMatches.status !== "success" || !allMatches.data) {
-        return allMatches;
+      const apiUrl = `https://offer.lvbet.pl/client-api/v5/markets/search/?matches_ids=${matchId}&lang=pl`;
+      await page.goto("https://lvbet.pl", { waitUntil: "domcontentloaded" });
+      const detailApiData = await page.evaluate(async (url) => {
+        const res = await fetch(url);
+        return res.json();
+      }, apiUrl);
+
+      if (Array.isArray(detailApiData) && detailApiData.length > 0) {
+        const m1X2 = { home: 0, draw: 0, away: 0 };
+        const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+        const mBTTS = { yes: 0, no: 0 };
+        const mOU: Record<string, MarketOverUnderOdds> = {};
+
+        detailApiData.forEach((m: any) => {
+          const name = m.name.toLowerCase();
+          
+          // 1X2 - Identification by primary or selections count
+          if (m.selections.length === 3 && (name.includes("wynik") || name === "mecz" || m.is_primary) && m1X2.home === 0) {
+            m.selections.forEach((s: any) => {
+              if (s.order === 0) m1X2.home = s.rate.decimal;
+              else if (s.order === 1) m1X2.draw = s.rate.decimal;
+              else if (s.order === 2) m1X2.away = s.rate.decimal;
+            });
+          }
+          // Double Chance
+          else if (m.selections.length === 3 && (name.includes("szansa") || name.includes("dwójtyp")) && mDC.homeOrDraw === 0) {
+            m.selections.forEach((s: any) => {
+              if (s.order === 0) mDC.homeOrDraw = s.rate.decimal;
+              else if (s.order === 1) mDC.homeOrAway = s.rate.decimal;
+              else if (s.order === 2) mDC.drawOrAway = s.rate.decimal;
+            });
+          }
+          // BTTS
+          else if (name.includes("obie") && name.includes("strzelą")) {
+            m.selections.forEach((s: any) => {
+              if (s.order === 0) mBTTS.yes = s.rate.decimal;
+              else if (s.order === 1) mBTTS.no = s.rate.decimal;
+            });
+          }
+          // O/U
+          else if (name.includes("suma goli") || name.includes("liczba goli")) {
+            const line = m.line;
+            if (line && line.toString().includes(".5")) {
+              const lineStr = parseFloat(line).toFixed(1);
+              if (!mOU[lineStr]) mOU[lineStr] = { over: 0, under: 0 };
+              m.selections.forEach((s: any) => {
+                if (s.name.includes("Powyżej")) mOU[lineStr].over = s.rate.decimal;
+                else if (s.name.includes("Poniżej")) mOU[lineStr].under = s.rate.decimal;
+              });
+            }
+          }
+        });
+
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: {
+            bookmaker: "lvbet",
+            eventName: "Match",
+            homeTeam: "", awayTeam: "",
+            eventUrl,
+            hasNoTaxPromo: false,
+            scrapedAt: new Date(),
+            market1X2: m1X2,
+            marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
+            marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
+            marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined
+          },
+          duration: Date.now() - startTime,
+          timestamp: new Date()
+        };
       }
 
-      // Find matching event
-      const matchResult = findMatchingEvent(
-        { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data,
-        league
-      );
-
-      if (!matchResult) {
-        return this.createNotFoundResult(
-          `Match not found on LVBet: ${match.homeTeam} vs ${match.awayTeam}`,
-          Date.now() - startTime
-        );
-      }
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: [matchResult.event],
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
+      return this.createMatchDetailNotFoundResult("Could not parse LVBet detail API data", Date.now() - startTime);
     } catch (error) {
-      return this.createErrorResult(error, Date.now() - startTime);
+      return this.createMatchDetailErrorResult(error, Date.now() - startTime);
+    } finally {
+      if (page) await page.close();
     }
   }
 
-  /**
-   * Extract match data from page using evaluate
-   * LVBet uses ds- (design system) classes
-   */
+  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
+    return [];
+  }
+
   private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: Array<{
-        homeTeam: string;
-        awayTeam: string;
-        homeOdds: number;
-        drawOdds: number;
-        awayOdds: number;
-      }> = [];
-
-      // Find all game rows using ds-single-game class
-      const gameRows = document.querySelectorAll(selectors.gameRow);
-
-      gameRows.forEach((row) => {
-        // Get team names from the teams container
-        // Teams are displayed in spans with team kit icons, extract text
-        const teamsContainer = row.querySelector(selectors.teamsContainer);
-        if (!teamsContainer) return;
-
-        // Team names are in spans, often with icon classes like ds-icon-teamkit-*
-        // Extract all text nodes from teams container
-        const teamTexts: string[] = [];
-        const walker = document.createTreeWalker(
-          teamsContainer,
-          NodeFilter.SHOW_TEXT,
-          null
-        );
-        let node;
-        while ((node = walker.nextNode())) {
-          const text = node.textContent?.trim();
-          if (text && text.length > 1) {
-            teamTexts.push(text);
-          }
-        }
-
-        // Usually first two non-empty texts are team names
-        if (teamTexts.length < 2) return;
-
-        const homeTeam = teamTexts[0];
-        const awayTeam = teamTexts[1];
-
-        if (!homeTeam || !awayTeam) return;
-
-        // Get odds values - look for ds-odds-value elements
-        const oddsElements = row.querySelectorAll(selectors.oddsValue);
-        const odds: number[] = [];
-
-        // Take first 3 odds (1X2 market)
-        for (let i = 0; i < Math.min(3, oddsElements.length); i++) {
-          const text = oddsElements[i]?.textContent?.trim() || "";
-          const val = parseFloat(text.replace(",", "."));
-          if (!isNaN(val) && val >= 1.01 && val <= 100) {
-            odds.push(val);
-          }
-        }
-
-        // Need exactly 3 valid odds
-        if (odds.length === 3) {
-          matches.push({
-            homeTeam,
-            awayTeam,
-            homeOdds: odds[0],
-            drawOdds: odds[1],
-            awayOdds: odds[2],
-          });
-        }
-      });
-
-      return matches;
-    }, SELECTORS);
-
-    // Convert to RawScrapedOdds format with canonical team names
-    return matchData.map((match) => ({
-      bookmaker: "lvbet" as PolishBookmaker,
-      eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: getCanonicalTeamName(match.homeTeam, league),
-      awayTeam: getCanonicalTeamName(match.awayTeam, league),
-      homeOdds: match.homeOdds,
-      drawOdds: match.drawOdds,
-      awayOdds: match.awayOdds,
-      hasNoTaxPromo: false, // Standard 12% tax applies
-      scrapedAt: new Date(),
-    }));
+    return [];
   }
 }
 
-// Singleton instance
-export const lvbetPlaywrightScraper = new LVBetPlaywrightScraper();
+export const lvbetScraper = new LVBetPlaywrightScraper();

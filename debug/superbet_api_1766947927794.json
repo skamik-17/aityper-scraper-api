@@ -1,0 +1,4273 @@
+{
+  "url": "https://app.launchdarkly.com/sdk/evalx/60f5666e379d910d480d6a8a/contexts/eyJhbm9ueW1vdXMiOnRydWUsImtpbmQiOiJ1c2VyIiwia2V5IjoiQU5PTllNT1VTX1VTRVItNzgwIiwicGxhdGZvcm0iOiJ3ZWIifQ",
+  "data": {
+    "ops.profileEdit": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "grtw.enable-design-survey-variant": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.cashout.track-value-requests": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pe-131-experiment-variant": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": "None",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.vpn-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.per-leg-settlement-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.ibanVerification.isEnabled": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-analytics.enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.experiment-sections": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.direct-bet-builder.add-to-betslip": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "new-market-layouts-batch-4": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "show-casino-section-in-sports-home": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-spin-ro-experiment": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.web-betting-rooms": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.hotjar": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek---sports-screen-test": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.analysis-input-limits": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": {
+        "min_chars": 100,
+        "max_chars": 500
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.supercota-superadvantage-decouple-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.fastly-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.test.isEnabledByDeviceId": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "new-casino-homepage": {
+      "version": 2480,
+      "flagVersion": 24,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops-reopen-the-chatwidget-messenger-trigger": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-soccer-outrights": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.show-homepage-winners": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "growth.should-send-marketing-on-deposit": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.use-player-cashier": {
+      "version": 2480,
+      "flagVersion": 31,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-new-market-headers": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.product.omniplay-roulette-vip-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.unified-design": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.ticket-chat-empty-screen-title-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_empty_chat_title",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "isGoToBetButtonEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.analyses-comments": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.design_v2": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sport.is-new-poland-kyc-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.use-delay-on-logout": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.stop-gap-inactivity-timer-value": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": 0,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sport.stats.switch-tabs-live": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "geolocs.enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.survey-mk": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.wallet-welcome": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-sse-parser-v2-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "cashout.use-long-polling": {
+      "version": 2480,
+      "flagVersion": 14,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "cashout.long-polling-hostname"
+      ]
+    },
+    "rba.sse-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.openMobileCashierInNewTab": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.fastly-waf": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "products-configuration": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": {
+        "availableProducts": [
+          "Casino"
+        ],
+        "landingPage": "Casino"
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.use-v3-recent-winners-api": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.deposit.useNewRomaniaBankDetails": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.deposit.isQuickDepositEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.maintenance": {
+      "version": 2480,
+      "flagVersion": 15,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isPlayerLimitsSDKEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.virtuals": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.betslip.betslip-redesign-v2-enabled": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.cashback-campaign": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.test-flag": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.isNewGameLaunchEnabled": {
+      "version": 2480,
+      "flagVersion": 28,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.quick-deposit.send-payment-provider": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.kyc.alert": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "free-to-play.calendar-game-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.market-layout.feature-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.analysis-fake-door": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.quick-deposit.send-payment-provider-dice": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "multistep-registration-a-b": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.bankAccountsManagement.isEnabled": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.redirect-invalid-competitions": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.tickets": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.use-aad-id": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.popular-superbets-on-home": {
+      "version": 2480,
+      "flagVersion": 17,
+      "value": 1,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.aplicativo": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "v2-tournaments": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "all",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.onboarding-screen": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": {
+        "show": false
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.explore-feed-anonymization": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "isLastNotificationOnAccountMenuEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.superbets-to-bet-builder-banner-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder-v1-enabled"
+      ]
+    },
+    "web.markets-observer": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.early-settlement-for-sga-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-handicap": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.generosity.is-singles-only-rule-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "stats-clickable-player-indicator": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-counter-strike": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.are-games-framed": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pam.verificationUrlV2Enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bonus.is-bonus-promo-card-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-live-events-sort": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.use-v2-recent-winners-api": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "risk.bet-ticker.bet-notes-feed-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.use-new-welcome-bonus": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.video-content-test": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.product.nsoft-greyhound-races-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.betslip.quick-betslip-web": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.bankAccountsManagement.isFaceIdRequired": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.cashback.turn.off": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": {},
+      "variation": 3,
+      "trackEvents": false
+    },
+    "new-market-layouts-batch-5": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-starting-soon-on-homepage": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "floating-deposit-button-shown": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-popular-accas-on-sports-page": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.show-price-for-locked-odds": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.live-sport-betting-room-cta-copy": {
+      "version": 2480,
+      "flagVersion": 18,
+      "value": "social_rooms_label_banner_discussion",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.deposit.sds-deposit-mode": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.use-offer-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.fetch-lotto-ball-uuids": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.chat-translations": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.topmanager": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "show-bet-boost-conflict-modal": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "pbp.generosity.is-singles-only-rule-enabled"
+      ]
+    },
+    "loyalty.supercoins.progress_missions": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-self-exclusion-lock-down-mode": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pe-163-high-hit-rate-games-section": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.superbonus-v2-welcoming-modal": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.insurance-sub-eligible-markets": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.price-boost-dedicated-pages-v2": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick-links.v2-enabled": {
+      "version": 2480,
+      "flagVersion": 14,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.superduel": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "seon.enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "event-card-stats": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.private-chat": {
+      "version": 2480,
+      "flagVersion": 19,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "btlr.isTransaksEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.sportOffer.useOfferMappingsToResolveCompetitions": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "burning-hot-quick-link-test": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.wallet": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "retail.void-and-reprice-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.micro-feeds-v2": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": {
+        "isSportEnabled": true,
+        "isSportNewBadgeVisible": true,
+        "isCompetitionEnabled": true,
+        "isCompetitionNewBadgeVisible": true
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v1-expanded-markets": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": 5,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.using-common-translations": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.specials-banner-enabled": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-is-offer-v3-enabled-betslip": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pam.is-welcome-banner-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.use-check-session-activity": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sport.stats.new.football.match.details.api": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pe-92-experiment-variant": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.web-enable-explore-mode": {
+      "version": 2480,
+      "flagVersion": 37,
+      "value": {
+        "feed_priority_list": [
+          "high_stakes",
+          "starting_soon",
+          "safer_bets",
+          "crazy_odds",
+          "popular",
+          "super_bets",
+          "big_win",
+          "top_bettors"
+        ],
+        "home": "popular",
+        "is_enabled": "true",
+        "label_new": "true"
+      },
+      "variation": 5,
+      "trackEvents": false
+    },
+    "new-market-layouts-batch-3": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.sga-early-settlement-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.follow-private-user-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_profile_private_empty",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.popular-superbets-sse-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "withdrawal-replace-cashier-with-banner-for-nonKyc": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-pariul-sansa-progresiv": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.experiment-recommended-section-qwak": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats-on-markets": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": 0,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.reffer-friend": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "loyalty.progress-banners.my-bets-page": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.gaming-leagues-segmentation": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "small-visualizations-on-tickets": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pe-124-experiment-variant": {
+      "version": 2480,
+      "flagVersion": 15,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.eurogamepromo": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-superbet-pl---default-home": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "grtw.survey.homepageRelevance": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "Control",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.split_chat": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": {
+        "split_chat": [
+          {
+            "target": "3372878",
+            "type": "single_match",
+            "suffix": "_all"
+          },
+          {
+            "type": "single_match",
+            "suffix": "_test",
+            "target": "3372898"
+          }
+        ]
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sport.stats.prematch-stats": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-is-market-picker-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.splash-screen.wb": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "grwt.floating-place-bet-button-abc-test": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": "None",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-top-10": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.generosity.is-remove-double-generosity-sa-sb-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.super-social-optin-checkbox": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sport.stats.top-players": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": 0,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "loyalty.kmp.auth_rest_client": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.posts": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": {
+        "is_post_enabled": true,
+        "config": {
+          "is_writing_enabled": true
+        }
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is_advance_filtering_enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bonus.isPushNotificationEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.omni.add-to-betslip": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder.direct-bet-builder.add-to-betslip",
+        "sports-offer.bet-builder.omni.redesign"
+      ]
+    },
+    "market-layouts-volleyball": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "goal-replays-on-live": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "player-engagement.is-content-only-promo-visible": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.web.my-bets-desktop": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.cashout.prompt-config": {
+      "version": 2480,
+      "flagVersion": 39,
+      "value": {},
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.f2p-games": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "loyalty.supercoins": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.cashout.use-new-confirmation-flow": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.promohub": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "bonus.is-promotion-hub-enabled"
+      ]
+    },
+    "super-social.write-a-comment-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_comment_input_hint",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.web-promoted-tournaments-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.show-new-superbonus-promo": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-cycling": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "free-to-play.supershot-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "additional-deposit-button-a-b-c-test": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": "DEFAULT",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "betting-from-prematch-stats": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.super-advantage": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.gaming-leagues": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isAddNewBankAccountEnabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "btlr.isInputMaskingEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.paymentIQAsAlternative": {
+      "version": 2480,
+      "flagVersion": 141,
+      "value": {
+        "isPiqEnabled": false,
+        "isNuveiEnabled": true
+      },
+      "variation": 3,
+      "trackEvents": false
+    },
+    "wallet.player-cashier-version": {
+      "version": 2480,
+      "flagVersion": 189,
+      "value": "index-2.10.2.html",
+      "variation": 35,
+      "trackEvents": false
+    },
+    "super-social.web-video-content": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": {
+        "is_upload_enabled": false,
+        "is_video_enabled": true,
+        "label_new": false
+      },
+      "variation": 3,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.multi-event.banner-location": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "martech.web-schema-markups-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "grtw.survey.generosityQuickPulse": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": "None",
+      "variation": 4,
+      "trackEvents": false
+    },
+    "retail.printed-voucher-times-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.raffle-campaign": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.isBankAccountsManagemantEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-mix-july-2024": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.sga-rearch.phase-IV-enabled": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.omni.redesign": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.phone.update.warning": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "growth.should-send-utms-btags-together": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats-localised-formation-tab": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social-standalone-web-redirect-cta": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.superbets-market-filters-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social-post-creation-and-view": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-offer-v3-home-price-boost-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.hot-user": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": {
+        "ids": ""
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.is-xjackpot-connected-to-gaming-api": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.deposit": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.configuration.is-eligibility-refreshed": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.price-boost-v-3-home-section": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ops.isWithdrawalNewPaymentStatusPageEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "maintenance-message": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "normal",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.betbuilder-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social-high-stakes": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.use-fetch": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.vouchers.for.slots": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-soccer-stats-v2": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "player-matches-tab": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-match-switcher": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isAwsWafIntegrationEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.diceroller": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports.stats.stats-checker-v2": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": 0,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "dynamic-badges-and-ribbons": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-top-10-personalized": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": "",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-type-4-august-2024": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "stats-on-ticket": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.bankAccountsManagemant.isEnabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.offer-host": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": "FASTLY",
+      "variation": 2,
+      "trackEvents": false
+    },
+    "gaming.home-preserve-scroll": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.points.giveaway": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.homepage-observer": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-popular-accas-on-sports-page-add-more-selections": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "prerender.ready-state": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.gaming-challenge-automatic-in-game-preview": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "grwt.is-PE-123-onboarding-challenge-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "new-market-layouts-batch-1": {
+      "version": 2480,
+      "flagVersion": 16,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "hot-combos-superbonus": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "loyalty.progress-banners": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "player-engagement.promohub-v2.is-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.join-the-fun": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sport.stats.h2h-final-market": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": 2,
+      "variation": 2,
+      "trackEvents": false
+    },
+    "market-layouts-handicap-july-2024": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "retail.offer-display.live.offer-client-error-logging": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.hot-and-cold": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isAlternativeRegistrationEnabled": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is-bingo-migration-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.games": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betting.produce-in-presentation-topic": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.analytics-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.resolve-sga-legs-settlement-from-legacy-property": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.hotandcold": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-staging-test-home-layout-1": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats.report-a-problem": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.qatar.competition": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social-build-your-network": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.supercota-superadvantage-decouple-enabled-v2": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pe174_is_games_with_bonus_enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "retail.offer-display.live.network-retries": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.unlock-vouchers-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pe156.is-live-page-shown-after-login": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v2-promo-banner-enabled": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": "4,12,20,3,75",
+      "variation": 8,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder-v1-enabled"
+      ]
+    },
+    "web.platform.use-multi-login-code": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "isMultistepBonusBannerEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.refer-a-friend": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "cashout.debug.log-cashed-out-zero": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "which-pe-162-onboarding-survey-variant": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "risk.limits-engine.emergency-passthrough.online": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.multi-game-clients": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-sports-test-1": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.new-retail-offer-print-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "btlr.isKycNewDesignEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.belgiumclub": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "new-goal-replays-test": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-odds-tab-expand-collapse": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.transactionHistory.download.isEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.virtual-scroll-list-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-basketball": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-top-picks-social-proof": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.disable-paste-conversation-input": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.multi-game": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-euro-regular-offer-leftovers-july-2024": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.sport-leagues-segmentation": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.web.bet-details-redesign": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ios.inbox-swiftui-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.geolocation.informationModal": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.superbonus-v2": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.price-boost-ticket-selection-config": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": {
+        "oddNameRegexes": [
+          "\\(\\s*było\\s*([\\d\\.]+)\\s*\\)\\s*$"
+        ],
+        "marketNames": [
+          "super boost",
+          "super boost (z dogrywką)"
+        ]
+      },
+      "variation": 2,
+      "trackEvents": false
+    },
+    "ssbt.is-feedback-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "social-ld-evaluation": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": "false",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-ql-testing-for-sportsbook-teams": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.withdrawable-balance.isEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.kyc.settings": {
+      "version": 2480,
+      "flagVersion": 244,
+      "value": {
+        "show": false
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts.released": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.geo_location_check": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.outrights-enabled": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "retail.offer-display.live.use-offer-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.is-price-boost-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.enable-live-service-messages": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sport.stats.new-markey-layouts": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.price-boost-v-3-dedicated-pages": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is_happy_hour_enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "which-pe-208-generosity-perception-variant": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ops.sunshine.enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pam.isCaptiveKycFlowEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer.presentation.homepage.non-final-markets-live": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-mix-august-2024": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.popular-superbets-enabled": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "betting.enable-place-betslip-call": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bonus.welcome-offer-testing": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bonus.is-promotion-hub-enabled": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "betslip-max-payout-calculation": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.event-chat-empty-screen-title-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_empty_chat_title",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-is-offer-v3-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.profile-v2": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.offer-print-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.hot-and-cold.clients": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "Disabled",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "marketing.is-inbox-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.euro-campaign": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.web-use-sds-banners": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.featured-events-enabled": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.use-betler-cms": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.analyses-offer": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-top-picks-modal": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-alt-ticket-generator": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.slowing-down-offer": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "Control",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-top-winners": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.stake-numeric-keyboard-by-default": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.cashout.multi-tenant-endpoints-enabled": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.gaming-challenge-in-game-notifications": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.use-allowances-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.withdraw.sds-withdrawal-mode": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.llm-game-discovery.llm-search.widget": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.popular-superbets-counter-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "new-market-layouts-released": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming-experiment-join-the-fun-section": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betting.use-redis-pub-sub": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.web.my-bets-redesign": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.launch-game-script-configuration": {
+      "version": 2480,
+      "flagVersion": 14,
+      "value": {
+        "scriptPath": "/static/html/launchGame_v2.1.3.html"
+      },
+      "variation": 4,
+      "trackEvents": false
+    },
+    "pbp.web.show-create-bet": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.configuration.payments-api-routing": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.web.show-barcode-scanner": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-motorsport-misc": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts.next": {
+      "version": 2480,
+      "flagVersion": 18,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "enable-experiments-logger": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.cashout.hide-market-labels": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.dark-theme-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-cross-selling-component-live-page": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ops.isMultiStepIdVerification": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-rugby": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.combinable-market-group-filter-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.fleet-mgmt-config-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v1-enabled": {
+      "version": 2480,
+      "flagVersion": 37,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-darts": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.deposit.cancelPendingWithdrawals.isEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.multi-event.feature-enabled": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder-v1-enabled"
+      ]
+    },
+    "super-social-for-you": {
+      "version": 2480,
+      "flagVersion": 18,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.clickable-metrics": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.aad-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "settings-available-from-notification-snackbar": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.is-mga-audit": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.enable-yellow-dot": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.recent-winners": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": "Control",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "match-details-market-search": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.micro-feeds": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": {
+        "isNewBadgeShown": false,
+        "areMicroFeedsEnabled": false
+      },
+      "variation": 2,
+      "trackEvents": false
+    },
+    "ops.applePayTestParams": {
+      "version": 2480,
+      "flagVersion": 26,
+      "value": {
+        "isEnabled": "false"
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is-superbox-enabled": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-ticket-details-stream-indicator-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.ftp-eligibility-modals": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "free-to-play.world-cup-designs": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports.stats.match-details-stats-goal-replays": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.voucherforticket.competitionsettings": {
+      "version": 2480,
+      "flagVersion": 17,
+      "value": {},
+      "variation": 3,
+      "trackEvents": false
+    },
+    "rba.offer-updates-logging": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts.current": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pam.has-bonus-code-on-register": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "multistepRegisterBannerPlacement": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": "bottom",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-sports-tree": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-soccer-last-batch": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "payments.enable-online-withdrawal": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.are-hot-cold-games-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.splash-screen.raffle": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-inplay-event-filtering": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.voucher-payout-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.notification-alert": {
+      "version": 2480,
+      "flagVersion": 16,
+      "value": {
+        "show": true,
+        "message": "Uwaga!!! Do 30 czerwca masz czas na wykorzystanie dostępnych voucherów."
+      },
+      "variation": 2,
+      "trackEvents": false
+    },
+    "quick_link.superprono": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-formula-1-f-1-outrights": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.host-ui.sb-club-retry-dialog-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "isRegistrationExperimentEnabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-offer-v3-popular-superbets-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.super-bonus-for-any-selection-count": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "language-switcher-in-account-menu": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.sso-auth": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-top-picks": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats-v3-search-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.deposit.kycWarning.isEnabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "use-shops-federation": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder.omni.hide-event-card-title-on-bet-slip-selections": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder.omni.redesign"
+      ]
+    },
+    "cashout.long-polling-hostname": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": "https://production-superbet-cashout-pl.freetls.fastly.net",
+      "variation": 3,
+      "trackEvents": false
+    },
+    "offer-presentation-is-offer-v3-enabled-odds-screen": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek-test-1": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.web-social-analyses": {
+      "version": 2480,
+      "flagVersion": 24,
+      "value": {
+        "is_writing_enabled": "true",
+        "label_new": "true",
+        "is_analysis_enabled": "true"
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.new-top-level-navigation": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.social-content-platform-articles": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "betting.internal-customer-accounts": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.void-and-reprice.ticket-details.make-voided-badge-clickable": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.web.copy-single-selection": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sport.stats.new.football.team.details.api": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.super-sub": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-allowances-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "loyalty.supercoins.sse": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.betslip.submit-ticket-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.web.super-advantage": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.super-cota-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.new-sports-navigation": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is-page-builder-migration-enabled": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betting.use-special-legacy-codes": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-sports-layouts": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betslip.bonus-available": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-3-column-over-market-layout": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "redesigned-market-groups": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.video-comments": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "which-quick-generosity-perception-survey-variant": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": "B",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.product.nsoft-provider-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "goal-replays-on-home": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats.federation-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.featured-tournaments-enabled": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek-testing-sports-pl": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.card_games": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-ice-hockey": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "marketing.acquisition-sources-length": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": 10,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.is-price-boost-sb-calculation-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.content-anonymization": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "risk.limits-engine.emergency-passthrough.retail": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.hot-cold-games-type": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "NONE",
+      "variation": 2,
+      "trackEvents": false
+    },
+    "web.betslip.clear-expired-events": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.betslip.is-bet-placed-recreate-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.ticket-chat-empty-screen-description-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_empty_chat_description_ticket",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "grtw.pe160.whichInspirationalCopyShown": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": "None",
+      "variation": 3,
+      "trackEvents": false
+    },
+    "pe-189-low-balance-betslip": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": "Control",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.show-seo-copy-block": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.experiment-trending-popular-source": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "cms",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.aviator": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-popular-accas-on-sports-page-social-proof": {
+      "version": 2480,
+      "flagVersion": 14,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "content-platform-migration": {
+      "version": 2480,
+      "flagVersion": 47,
+      "value": 1,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-staging-romania-defaul-layout": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.betslip.ticket-create-v2-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.product.nsoft-lucky-six-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.show-game-details": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.KYC-chat": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.is-recommended-games-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek---test-home-screen": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "app-perf.betslip.run-recreate-in-parallel": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.use-ba-prepared-tickets": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "loyalty-supercoins-survey-superspin": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isNewPaymentStatusGatewayEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-waterpolo": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.sse-handling.isEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.show-jackpot-user-journey": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.betslip.new-betslip-input-stake-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-handball": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "offer-presentation-popular-accas-on-sports-page-old-design": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.insurance-sub-odds-banner-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.lightningroulette": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.syswin.enable": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.micro-feeds-anonymization": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.withdrawal.isCancelWelcomeBonusEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.raffle-campaign.end": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": {
+        "enabled": false,
+        "winners": []
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "stats.new-match-details-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "web.new-sports-navigation"
+      ]
+    },
+    "sports-offer.bet-builder.omni.show-sport-icon-in-event-card-title-on-ticket-details": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder.omni.redesign"
+      ]
+    },
+    "sports-offer.directus-banners-enabled": {
+      "version": 2480,
+      "flagVersion": 17,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "cashout.web.logout-killswitch": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports.show-new-market-group": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "auth.request-jwt-on-login": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "monitoring.network-metrics": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "isOktoPayAndPlayPocEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-is-offer-v3-enabled-composite-endpoints": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "offer-presentation-is-offer-v3-enabled"
+      ]
+    },
+    "inbox.new-message-snackbar-notification": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "soccer-player-match-stats": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social.user-block": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.use-https-submit": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.leagues": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.jackpots": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "live-player-rankings": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "hackathon.integrate-with-super-club": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.omniplay-jackpot.visuals": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "live-tab-v2": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-is-offer-v3-enabled-event-by-id": {
+      "version": 2480,
+      "flagVersion": 16,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "offer-presentation-is-offer-v3-enabled"
+      ]
+    },
+    "new-market-layouts-batch-2": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.sse-error-logging": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-sports-layouts-napoleon-hot-tournaments": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.generosity.super-bonus-breakpoints-test": {
+      "version": 2480,
+      "flagVersion": 12,
+      "value": {},
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isAlternativeRegistrationByParamEnabled": {
+      "version": 2480,
+      "flagVersion": 10,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v1-event-card-indicator-enabled": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder-v1-enabled"
+      ]
+    },
+    "pbp.generosity.is-super-advantage-page-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "is-extended-ftd-reminder-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "isReferAFriendEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betting.use-odd-name-as-bet-team": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "shared.user-can-choose-bonus-type": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "isExitRegistrationShown": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-social-enabled": {
+      "version": 2480,
+      "flagVersion": 15,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ssbt.use-design-v2": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "rba.auto-updater-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.experiment-top-10-section": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.betslip.quick-betslip-experiment-variant": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": 1,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "market-layouts-snooker": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v1-events-list-api-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "loyalty.missions.snackbar": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.use-betting-rules-in-footer": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.host-ui.sb-club-session-feat-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.campaign-worker": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": {
+        "welcome_bonus": false
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.isTestAccount": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.ticket-streaming.sse-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pbp.cashout.unavailable-state-redesign": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.bet-builder-v1-onboarding-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false,
+      "prerequisites": [
+        "sports-offer.bet-builder-v1-enabled"
+      ]
+    },
+    "gaming.use-new-live-casino": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.ticket.supercoins-touchpoint": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": {
+        "isEnabledOnActiveTickets": false,
+        "isEnabledOnFinishedTickets": false,
+        "smallRewardPrice": 0,
+        "bigRewardPrice": 0
+      },
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.deposit.mobile.isQuickDepositEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "seo-engine.is-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sport.stats.new.football.competition.details": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "ops.isAccountReopeningEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-lock-down-mode-timer": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-e-soccer-table-tennis": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.cashout.show-return": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.turn.off.cashback": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.void-and-reprice-redesign-enabled": {
+      "version": 2480,
+      "flagVersion": 7,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "supercoins-survey-01-variant": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": "A",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "retail.offer-display.live.struct-subscription": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.is-bingo-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.event-chat-empty-screen-description-copy": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": "label_social_empty_chat_description_match",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.transactionHistory.isEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.supershot": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.notifications-position-first": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.generosity.super-advantage-pages-sports": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": "2,3,4,5,10,11,13",
+      "variation": 0,
+      "trackEvents": false
+    },
+    "quick_link.superspin": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "pbp.tickets-list-redesign": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.feed-filters": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.is-market-multi-select-enabled": {
+      "version": 2480,
+      "flagVersion": 17,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "super-score-store-test": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-is-kmp-struct-repository-enabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "social-video-home-placement": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": {
+        "label_new": false,
+        "placement": 2,
+        "is_create_enabled": true,
+        "is_home_placement_enabled": true
+      },
+      "variation": 3,
+      "trackEvents": false
+    },
+    "ops.zendesk.metadata": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": {
+        "vipManager": 28479840388242,
+        "vipType": 28479872071058,
+        "isVip": 28479805411474,
+        "kycChecked": 28479850173714,
+        "valueTier": 28479835080594,
+        "vipLevel": 28479810221842
+      },
+      "variation": 5,
+      "trackEvents": false
+    },
+    "stats-upsell-h2h-from-stats": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bonus.is-welcome-offer-enabled": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "stats.new-scoreboard": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "club.voucherforticket.competition": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.ticket.show-void-reason": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "rba.vouchers-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "retail.odd-3-decimal-places": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isLoginNewDesignEnabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.e-stop-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.ticket-redesign": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": {
+        "new_divider": false,
+        "new_footer": false,
+        "new_header": false
+      },
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-offer.is-allowances-v2-enabled": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "bex.generosity.insurance-sub-odds-banner-dismissible": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "web.new-bet-boost-display": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "club.raffle-campaign.ended": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-euro-regular-offer": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "loyalty.transactionHistory.isEnabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "new-bet-genius-player": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.isSearchMigrationEnabled": {
+      "version": 2480,
+      "flagVersion": 14,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "betslip.track-unavailable-add-for-sga": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "event-local-storage-handling-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "terms.updated.2026": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ssbt.use-sportsbook-w-platform-v2": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "bex.generosity.price-boost-v-1": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek-testing-br-home": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick_link.topmanagernew": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "captive-kyc-experiment": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-soccer-stats": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "growth.cpf-early-validation-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming.open-game-in-full-screen": {
+      "version": 2480,
+      "flagVersion": 13,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.experiment-because-you-played-section": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.copy-ticket-button-a-b-test": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "betting.enable-place-betlsip-call": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "upsell-lineups-from-stats": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-layouts-poslek-testing-sports": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "pam.kyc.framework": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-are-virtual-sports-enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "sports-offer.void-and-reprice-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "quick-link-mistrzostwa-vip": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "market-layouts-misc-basketball-badminton-tennis": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "prematch-top-players": {
+      "version": 2480,
+      "flagVersion": 5,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "web.show-live-casino-in-header": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "wallet.use-integration-test": {
+      "version": 2480,
+      "flagVersion": 4,
+      "value": "0",
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.foreignerRegister": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "retail.ticket-promotion-message": {
+      "version": 2480,
+      "flagVersion": 21,
+      "value": {},
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-cross-selling-component-odds-screen": {
+      "version": 2480,
+      "flagVersion": 11,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.in-game-overlay-type": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": "MENU_BUTTON",
+      "variation": 3,
+      "trackEvents": false
+    },
+    "pam.exclusionV2Enabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "ops.isNewRegistrationVariationEnabled": {
+      "version": 2480,
+      "flagVersion": 6,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "gaming.experiment-promotions": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "gaming-advent-calendar-enabled": {
+      "version": 2480,
+      "flagVersion": 9,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "offer-presentation-offer-v2-rest-endpoints-enabled": {
+      "version": 2480,
+      "flagVersion": 3,
+      "value": true,
+      "variation": 0,
+      "trackEvents": false
+    },
+    "wallet.withdrawal-balance.isDisabled": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "loyalty.progress-banners.recently-played-missions-tab": {
+      "version": 2480,
+      "flagVersion": 2,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false
+    },
+    "super-social.gaming-leagues-widget": {
+      "version": 2480,
+      "flagVersion": 8,
+      "value": false,
+      "variation": 1,
+      "trackEvents": false,
+      "prerequisites": [
+        "super-social.gaming-leagues"
+      ]
+    }
+  }
+}

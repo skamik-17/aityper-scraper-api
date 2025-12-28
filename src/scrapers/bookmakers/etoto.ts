@@ -10,31 +10,22 @@ import type {
   ScraperResult,
   RawScrapedOdds,
   MatchIdentifier,
+  MatchDetailResult,
+  RawScrapedMatchOdds,
+  EventUrlEntry,
 } from "../../types/scraper.js";
+import type { MarketOverUnderOdds } from "../../types/markets.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // League URLs for eToto
 const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa:
-    "https://www.etoto.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/666",
-  "premier-league":
-    "https://www.etoto.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/206",
+  ekstraklasa: "https://www.etoto.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/666",
+  "premier-league": "https://www.etoto.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/206",
 };
 
-// CSS selectors for eToto page structure
-const SELECTORS = {
-  // Cookie consent
-  cookieAccept: "button[class*='cookie'], button:has-text('Akceptuję'), button:has-text('Zgadzam się'), .accept-cookies",
-  // Match elements
-  matchCard: "[class*='event'], [class*='Event'], [class*='match'], [class*='Match'], .event-row, .match-item",
-  teamNames: "[class*='team'], [class*='Team'], [class*='participant'], [class*='Participant'], .team-name",
-  oddsButton: "[class*='odds'], [class*='Odds'], [class*='odd'], [class*='Odd'], .bet-button, .odds-value",
-  oddsValue: "[class*='value'], [class*='Value'], [class*='rate'], [class*='Rate']",
-};
-
-export class EtotoScraper extends PlaywrightScraper {
+export class EtotoPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "etoto";
   config: ScraperConfig;
 
@@ -46,203 +37,183 @@ export class EtotoScraper extends PlaywrightScraper {
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-
-    const leagueUrl = LEAGUE_URLS[league];
-    if (!leagueUrl) {
-      return this.createNotFoundResult(
-        `Unknown league: ${league}`,
-        Date.now() - startTime
-      );
-    }
+    const url = LEAGUE_URLS[league];
+    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
       page = await this.initBrowser();
+      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
+      await this.delay(3000);
 
-      // Human-like delay before navigation
-      await this.delay(1000 + Math.random() * 1000);
-
-      // Navigate to league page
-      await this.navigateWithRetry(page, leagueUrl, {
-        timeout: 30000,
-        waitUntil: "domcontentloaded",
-      });
-
-      // Extra delay for SPA rendering
-      await this.delay(3500);
-
-      // Try to dismiss cookie consent if present
+      // Handle cookies
       try {
-        const cookieButton = page.locator(SELECTORS.cookieAccept).first();
-        if (await cookieButton.isVisible({ timeout: 3000 })) {
-          await cookieButton.click();
+        const cookieBtn = page.locator("button:has-text('Zezwól na wszystkie'), button:has-text('Akceptuję')").first();
+        if (await cookieBtn.isVisible({ timeout: 5000 })) {
+          await cookieBtn.click();
           await this.delay(1000);
         }
-      } catch {
-        // Cookie modal might not be present, continue
-      }
+      } catch {}
 
-      // Set tall viewport to load all matches
       await page.setViewportSize({ width: 1920, height: 5000 });
       await this.delay(2000);
 
-      // Wait for match elements to load
-      const hasMatches = await this.waitForSelector(page, SELECTORS.matchCard, 15000);
+      const hasMatches = await this.waitForSelector(page, "a[href*='/zaklady-bukmacherskie/']", 15000);
+      if (!hasMatches) return this.createNotFoundResult(`No ${league} matches found on page`, Date.now() - startTime);
 
-      if (!hasMatches) {
-        return this.createNotFoundResult(
-          `No ${league} matches found on page`,
-          Date.now() - startTime
-        );
-      }
-
-      // Additional wait for all content to load
-      await this.delay(2000);
-
-      // Extract match data from page
       const data = await this.extractMatchData(page, league);
-
-      if (data.length === 0) {
-        return this.createNotFoundResult(
-          "Could not parse any match data",
-          Date.now() - startTime
-        );
-      }
-
-      console.log(`[eToto] Successfully scraped ${data.length} ${league} matches`);
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data,
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
+      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
     } catch (error) {
-      console.error(`[eToto] Scraping error for ${league}:`, error);
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) {
-        await page.close();
-      }
+      if (page) await page.close();
     }
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
     const league = match.leagueId ?? "ekstraklasa";
+    const allMatches = await this.scrapeLeague(league);
+    if (allMatches.status !== "success" || !allMatches.data) return allMatches;
 
+    const matchResult = findMatchingEvent({ homeTeam: match.homeTeam, awayTeam: match.awayTeam }, allMatches.data, league);
+    if (!matchResult) return this.createNotFoundResult(`Match not found on eToto: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
+
+    return { status: "success", bookmaker: this.bookmaker, data: [matchResult.event], duration: Date.now() - startTime, timestamp: new Date() };
+  }
+
+  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
+    const startTime = Date.now();
+    let page: Page | null = null;
     try {
-      const allMatches = await this.scrapeLeague(league);
+      page = await this.initBrowser();
+      await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
+      await this.delay(4000);
 
-      if (allMatches.status !== "success" || !allMatches.data) {
-        return allMatches;
-      }
+      const hasOdds = await this.waitForSelector(page, "button", 10000);
+      if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
 
-      const matchResult = findMatchingEvent(
-        { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data,
-        league
-      );
+      const matchData = await this.extractMatchDetailData(page, eventUrl);
+      if (!matchData) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
 
-      if (!matchResult) {
-        return this.createNotFoundResult(
-          `Match not found: ${match.homeTeam} vs ${match.awayTeam}`,
-          Date.now() - startTime
-        );
-      }
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: [matchResult.event],
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
+      return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
     } catch (error) {
-      return this.createErrorResult(error, Date.now() - startTime);
+      return this.createMatchDetailErrorResult(error, Date.now() - startTime);
+    } finally {
+      if (page) await page.close();
     }
   }
 
-  /**
-   * Extract match data from page using evaluate
-   */
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: Array<{
-        homeTeam: string;
-        awayTeam: string;
-        homeOdds: number;
-        drawOdds: number;
-        awayOdds: number;
-      }> = [];
-
-      const cards = document.querySelectorAll(selectors.matchCard);
-
-      cards.forEach((card) => {
-        // Get team names
-        const teamElements = card.querySelectorAll(selectors.teamNames);
-        let homeTeam = "";
-        let awayTeam = "";
-
-        if (teamElements.length >= 2) {
-          homeTeam = teamElements[0]?.textContent?.trim() || "";
-          awayTeam = teamElements[1]?.textContent?.trim() || "";
-        } else {
-          // Try to find teams from text pattern
-          const cardText = card.textContent || "";
-          const vsMatch = cardText.match(/([A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s.-]+)\s*[-–vs]+\s*([A-Za-zĄąĆćĘęŁłŃńÓóŚśŹźŻż\s.-]+)/);
-          if (vsMatch) {
-            homeTeam = vsMatch[1].trim();
-            awayTeam = vsMatch[2].trim();
+  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
+    return page.evaluate(() => {
+      const entries: EventUrlEntry[] = [];
+      document.querySelectorAll("a[href*='/zaklady-bukmacherskie/']").forEach((link: any) => {
+        const text = link.innerText.replace(/\n/g, " ");
+        const teamMatch = text.match(/([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)\s*[-–]\s*([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)/);
+        if (teamMatch && !/(boost|promo|banner|polecane|bonus|akcja)/i.test(link.href)) {
+          const h = teamMatch[1].trim();
+          const a = teamMatch[2].trim();
+          if (h.length > 2 && a.length > 2) {
+            entries.push({ matchKey: `${h} vs ${a}`, eventUrl: link.href });
           }
         }
+      });
+      return entries;
+    });
+  }
 
-        if (!homeTeam || !awayTeam) {
-          return;
-        }
+  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
+    const data = await page.evaluate(() => {
+      let hTeam = "", aTeam = "";
+      const h1 = document.querySelector("h1")?.innerText || "";
+      const h1Match = h1.match(/(.+?)\s*[-–vs.]+\s*(.+)/i);
+      if (h1Match) { hTeam = h1Match[1].trim(); aTeam = h1Match[2].trim(); }
+      if (!hTeam) return null;
 
-        // Get odds - look for 1X2 values
-        const oddsElements = card.querySelectorAll(selectors.oddsButton);
-        const odds: number[] = [];
+      const m1X2 = { home: 0, draw: 0, away: 0 };
+      const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+      const mOU: Record<string, { over: number; under: number }> = {};
+      const mBTTS = { yes: 0, no: 0 };
 
-        oddsElements.forEach((el) => {
-          const valueEl = el.querySelector(selectors.oddsValue);
-          const text = (valueEl?.textContent || el.textContent)?.trim() || "";
-          const value = parseFloat(text.replace(",", "."));
-          if (!isNaN(value) && value > 1 && value < 100) {
-            odds.push(value);
-          }
-        });
+      document.querySelectorAll("button").forEach((btn: any) => {
+        const fullText = btn.innerText.replace(/\n/g, " ").toLowerCase();
+        const valMatch = fullText.match(/(\d+[.,]\d+)/);
+        const val = valMatch ? parseFloat(valMatch[1].replace(",", ".")) : 0;
+        if (isNaN(val) || val <= 1) return;
 
-        // Need at least 3 odds for 1X2
-        if (odds.length >= 3) {
-          matches.push({
-            homeTeam,
-            awayTeam,
-            homeOdds: odds[0],
-            drawOdds: odds[1],
-            awayOdds: odds[2],
-          });
+        const label = fullText.replace(/(\d+[.,]\d+)/, "").trim();
+
+        if (label === "1" || label === hTeam.toLowerCase()) m1X2.home = val;
+        else if (label === "x" || label === "remis") m1X2.draw = val;
+        else if (label === "2" || label === aTeam.toLowerCase()) m1X2.away = val;
+        else if (label === "1x") mDC.homeOrDraw = val;
+        else if (label === "x2") mDC.drawOrAway = val;
+        else if (label === "12") mDC.homeOrAway = val;
+        else if (label === "tak" || label.includes("tak")) mBTTS.yes = val;
+        else if (label === "nie" || label.includes("nie")) mBTTS.no = val;
+
+        const ouM = label.match(/(powyżej|poniżej|over|under|ponad)\s*(\d+[.,]5)/i);
+        if (ouM) {
+          const line = parseFloat(ouM[2].replace(",", ".")).toFixed(1);
+          if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
+          if (ouM[1].includes("powyżej") || ouM[1] === "over" || ouM[1] === "ponad") mOU[line].over = val;
+          else mOU[line].under = val;
         }
       });
 
-      return matches;
-    }, SELECTORS);
+      return { homeTeam: hTeam, awayTeam: aTeam, market1X2: m1X2, marketDoubleChance: mDC, marketOverUnder: mOU, marketBTTS: mBTTS };
+    });
 
-    // Convert to RawScrapedOdds format with canonical team names
-    return matchData.map((match) => ({
-      bookmaker: "etoto" as PolishBookmaker,
-      eventName: `${match.homeTeam} - ${match.awayTeam}`,
-      homeTeam: getCanonicalTeamName(match.homeTeam, league),
-      awayTeam: getCanonicalTeamName(match.awayTeam, league),
-      homeOdds: match.homeOdds,
-      drawOdds: match.drawOdds,
-      awayOdds: match.awayOdds,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
+    if (!data) return null;
+    return {
+      bookmaker: "etoto", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
+      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
+      market1X2: data.market1X2,
+      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
+      marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
+      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
+    };
+  }
+
+  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
+    const matchData = await page.evaluate(() => {
+      const matches: any[] = [];
+      const links = Array.from(document.querySelectorAll("a[href*='/zaklady-bukmacherskie/']"));
+      
+      links.forEach((link: any) => {
+        const text = link.innerText.replace(/\n/g, " ");
+        const teamMatch = text.match(/([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)\s*[-–]\s*([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)/);
+        if (!teamMatch || /(boost|promo|banner|polecane|bonus|akcja)/i.test(link.href)) return;
+        
+        const h = teamMatch[1].trim();
+        const a = teamMatch[2].trim();
+        if (h.length < 3 || a.length < 3) return;
+
+        // Find parent container to get odds
+        let parent = link.parentElement;
+        for (let i = 0; i < 5; i++) {
+          if (!parent) break;
+          const buttons = parent.querySelectorAll("button");
+          if (buttons.length >= 3) {
+            const odds = Array.from(buttons).map(b => {
+              const m = b.innerText.match(/(\d+[.,]\d+)/);
+              return m ? parseFloat(m[1].replace(",", ".")) : 0;
+            }).filter(o => o > 1);
+            if (odds.length >= 3) {
+              matches.push({ h, a, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link.href });
+              return;
+            }
+          }
+          parent = parent.parentElement;
+        }
+      });
+      return matches;
+    });
+
+    return matchData.map(m => ({
+      bookmaker: "etoto", eventName: `${m.h} - ${m.a}`, homeTeam: getCanonicalTeamName(m.h, league), awayTeam: getCanonicalTeamName(m.a, league),
+      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: m.eventUrl
     }));
   }
 }
 
-// Singleton instance
-export const etotoScraper = new EtotoScraper();
+export const etotoScraper = new EtotoPlaywrightScraper();

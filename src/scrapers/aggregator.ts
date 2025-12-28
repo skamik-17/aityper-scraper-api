@@ -15,6 +15,14 @@ import {
   superbetPlaywrightScraper,
   lvbetPlaywrightScraper,
   fuksiarzPlaywrightScraper,
+  betfanScraper,
+  totalbetScraper,
+  forbetScraper,
+  etotoScraper,
+  bettersScraper,
+  lebullScraper,
+  betcrisScraper,
+  pzbukScraper,
 } from "./bookmakers/index.js";
 
 // Map of bookmaker to scraper instance
@@ -25,6 +33,14 @@ const SCRAPERS: Record<PolishBookmaker, PlaywrightScraper> = {
   superbet: superbetPlaywrightScraper,
   lvbet: lvbetPlaywrightScraper,
   fuksiarz: fuksiarzPlaywrightScraper,
+  betfan: betfanScraper,
+  totalbet: totalbetScraper,
+  forbet: forbetScraper,
+  etoto: etotoScraper,
+  betters: bettersScraper,
+  lebull: lebullScraper,
+  betcris: betcrisScraper,
+  pzbuk: pzbukScraper,
 };
 
 export interface AggregatedResult {

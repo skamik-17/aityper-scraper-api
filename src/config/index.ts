@@ -32,6 +32,14 @@ export const CONFIG = {
     "superbet",
     "lvbet",
     "fuksiarz",
+    "betfan",
+    "totalbet",
+    "forbet",
+    "etoto",
+    "betters",
+    "lebull",
+    "betcris",
+    "pzbuk",
   ] as const,
 } as const;
 

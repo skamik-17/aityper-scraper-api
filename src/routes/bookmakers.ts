@@ -23,6 +23,14 @@ const BOOKMAKER_NAMES: Record<PolishBookmaker, string> = {
   superbet: "Superbet",
   lvbet: "LVBet",
   fuksiarz: "Fuksiarz",
+  betfan: "BETFAN",
+  totalbet: "TOTALbet",
+  forbet: "forBET",
+  etoto: "eToto",
+  betters: "Betters",
+  lebull: "Le Bull",
+  betcris: "Betcris",
+  pzbuk: "PZBuk",
 };
 
 // Which bookmakers have no-tax promo
@@ -33,6 +41,14 @@ const HAS_NO_TAX_PROMO: Record<PolishBookmaker, boolean> = {
   superbet: false,
   lvbet: false,
   fuksiarz: false,
+  betfan: false,
+  totalbet: true, // TOTALbet often has no-tax promotions
+  forbet: false,
+  etoto: false,
+  betters: false,
+  lebull: false,
+  betcris: false,
+  pzbuk: false,
 };
 
 /**

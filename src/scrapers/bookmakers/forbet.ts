@@ -75,7 +75,6 @@ export class ForbetScraper extends PlaywrightScraper {
         const cookieButton = page.locator(SELECTORS.cookieAccept).first();
         if (await cookieButton.isVisible({ timeout: 3000 })) {
           await cookieButton.click();
-          console.log("[forBET] Cookie consent dismissed");
           await this.delay(1000);
         }
       } catch {

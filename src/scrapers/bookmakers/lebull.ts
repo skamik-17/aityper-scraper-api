@@ -20,8 +20,9 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
 // Le Bull uses iframe for betting content - these are the direct iframe URLs
 // Format: https://lebullpl-ssr.boxwebcdn.work/pl/league/{sportId}/{leagueId}
+// League IDs from /pl page's __PRELOADED_STATE__ JSON
 const IFRAME_LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa: "https://lebullpl-ssr.boxwebcdn.work/pl/league/1/1810", // Football / Ekstraklasa
+  ekstraklasa: "https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4847", // Football / Polska. Ekstraklasa
   "premier-league": "https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485", // Football / Premier League
 };
 
@@ -64,7 +65,6 @@ export class LebullScraper extends PlaywrightScraper {
       // Human-like delay before navigation
       await this.delay(500 + Math.random() * 500);
 
-      console.log(`[Le Bull] Navigating to iframe URL: ${iframeUrl}`);
 
       // Navigate directly to the iframe URL
       await this.navigateWithRetry(page, iframeUrl, {
@@ -89,10 +89,6 @@ export class LebullScraper extends PlaywrightScraper {
       const hasMatches = await this.waitForSelector(page, SELECTORS.matchWrapper, 15000);
 
       if (!hasMatches) {
-        // Log page content for debugging
-        const pageText = await page.evaluate(() => document.body.innerText.substring(0, 500));
-        console.log(`[Le Bull] Page content preview: ${pageText}`);
-
         return this.createNotFoundResult(
           `No ${league} matches found on page`,
           Date.now() - startTime

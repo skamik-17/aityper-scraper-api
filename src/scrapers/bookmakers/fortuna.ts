@@ -66,6 +66,18 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       // Wait extra time for dynamic content to load
       await this.delay(2000);
 
+      // Set tall viewport to load all lazy-loaded matches
+      await page.setViewportSize({ width: 1920, height: 3000 });
+      await this.delay(1000);
+
+      // Scroll to bottom to trigger lazy loading of all matches
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+      await this.delay(2000);
+
+      // Scroll back to top
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await this.delay(500);
+
       // Wait for odds to appear
       const hasOdds = await this.waitForSelector(page, SELECTORS.oddsValue, 10000);
 

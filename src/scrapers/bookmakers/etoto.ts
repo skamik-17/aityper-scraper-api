@@ -75,7 +75,6 @@ export class EtotoScraper extends PlaywrightScraper {
         const cookieButton = page.locator(SELECTORS.cookieAccept).first();
         if (await cookieButton.isVisible({ timeout: 3000 })) {
           await cookieButton.click();
-          console.log("[eToto] Cookie consent dismissed");
           await this.delay(1000);
         }
       } catch {

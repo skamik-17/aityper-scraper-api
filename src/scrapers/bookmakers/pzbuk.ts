@@ -87,7 +87,6 @@ export class PzbukScraper extends PlaywrightScraper {
         const cookieButton = page.locator(SELECTORS.cookieAccept);
         if (await cookieButton.isVisible({ timeout: 2000 })) {
           await cookieButton.click();
-          console.log("[PZBuk] Cookie consent dismissed");
           await this.delay(1000);
         }
       } catch {

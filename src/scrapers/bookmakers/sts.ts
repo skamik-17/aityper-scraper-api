@@ -77,7 +77,6 @@ export class STSScraper extends PlaywrightScraper {
         const cookieButton = page.locator(SELECTORS.cookieAccept);
         if (await cookieButton.isVisible({ timeout: 3000 })) {
           await cookieButton.click();
-          console.log("[STS] Cookie consent dismissed");
           await this.delay(1000);
         }
       } catch {

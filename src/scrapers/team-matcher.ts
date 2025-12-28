@@ -87,9 +87,11 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
   "Man United": "Manchester United",
   "Manchester Utd": "Manchester United",
   "Man. United": "Manchester United",
+  "Man.United": "Manchester United",
   "Man City": "Manchester City",
   "Manchester C.": "Manchester City",
   "Man. City": "Manchester City",
+  "Man.City": "Manchester City",
 
   // London teams
   Spurs: "Tottenham Hotspur",

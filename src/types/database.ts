@@ -107,6 +107,106 @@ export interface Database {
         };
         Relationships: [];
       };
+      odds_double_chance: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          home_or_draw: number | null;
+          draw_or_away: number | null;
+          home_or_away: number | null;
+          event_url: string | null;
+          scraped_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          league_slug?: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          home_or_draw?: number | null;
+          draw_or_away?: number | null;
+          home_or_away?: number | null;
+          event_url?: string | null;
+          scraped_at: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["odds_double_chance"]["Insert"]>;
+        Relationships: [];
+      };
+      odds_over_under: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          line: number;
+          over_odds: number | null;
+          under_odds: number | null;
+          event_url: string | null;
+          scraped_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          league_slug?: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          line: number;
+          over_odds?: number | null;
+          under_odds?: number | null;
+          event_url?: string | null;
+          scraped_at: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["odds_over_under"]["Insert"]>;
+        Relationships: [];
+      };
+      odds_btts: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          yes_odds: number | null;
+          no_odds: number | null;
+          event_url: string | null;
+          scraped_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          league_slug?: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          yes_odds?: number | null;
+          no_odds?: number | null;
+          event_url?: string | null;
+          scraped_at: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["odds_btts"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       latest_odds: {
@@ -124,6 +224,56 @@ export interface Database {
           has_no_tax_promo: boolean;
           promo_details: string | null;
           event_name: string | null;
+          event_url: string | null;
+          scraped_at: string;
+        };
+        Relationships: [];
+      };
+      latest_double_chance: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          home_or_draw: number | null;
+          draw_or_away: number | null;
+          home_or_away: number | null;
+          event_url: string | null;
+          scraped_at: string;
+        };
+        Relationships: [];
+      };
+      latest_over_under: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          line: number;
+          over_odds: number | null;
+          under_odds: number | null;
+          event_url: string | null;
+          scraped_at: string;
+        };
+        Relationships: [];
+      };
+      latest_btts: {
+        Row: {
+          id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          yes_odds: number | null;
+          no_odds: number | null;
           event_url: string | null;
           scraped_at: string;
         };
@@ -170,3 +320,8 @@ export interface MatchOdds {
 }
 
 export type BookmakerStatus = "available" | "error" | "stale";
+
+// Extended market types
+export type DoubleChanceRow = Database["public"]["Views"]["latest_double_chance"]["Row"];
+export type OverUnderRow = Database["public"]["Views"]["latest_over_under"]["Row"];
+export type BTTSRow = Database["public"]["Views"]["latest_btts"]["Row"];

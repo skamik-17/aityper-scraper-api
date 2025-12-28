@@ -125,6 +125,56 @@ export interface AdminRunsResponseMeta {
   offset: number;
 }
 
+// Extended markets endpoint
+export interface ExtendedMarketsResponseData {
+  homeTeam: string;
+  awayTeam: string;
+  doubleChance: Array<{
+    bookmaker: PolishBookmaker;
+    homeOrDraw: number | null;
+    drawOrAway: number | null;
+    homeOrAway: number | null;
+    eventUrl: string | null;
+    scrapedAt: string;
+  }>;
+  overUnder: Array<{
+    bookmaker: PolishBookmaker;
+    line: number;
+    overOdds: number | null;
+    underOdds: number | null;
+    eventUrl: string | null;
+    scrapedAt: string;
+  }>;
+  btts: Array<{
+    bookmaker: PolishBookmaker;
+    yesOdds: number | null;
+    noOdds: number | null;
+    eventUrl: string | null;
+    scrapedAt: string;
+  }>;
+  bestOdds: {
+    doubleChance: {
+      homeOrDraw: { bookmaker: PolishBookmaker; odds: number } | null;
+      drawOrAway: { bookmaker: PolishBookmaker; odds: number } | null;
+      homeOrAway: { bookmaker: PolishBookmaker; odds: number } | null;
+    };
+    overUnder: Record<string, {
+      over: { bookmaker: PolishBookmaker; odds: number } | null;
+      under: { bookmaker: PolishBookmaker; odds: number } | null;
+    }>;
+    btts: {
+      yes: { bookmaker: PolishBookmaker; odds: number } | null;
+      no: { bookmaker: PolishBookmaker; odds: number } | null;
+    };
+  };
+}
+
+export interface ExtendedMarketsResponseMeta {
+  league: string;
+  lastUpdated: string | null;
+  bookmakerCount: number;
+}
+
 // Error codes
 export const ERROR_CODES = {
   INVALID_PARAMS: "INVALID_PARAMS",

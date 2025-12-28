@@ -6,8 +6,9 @@
 import { v4 as uuidv4 } from "uuid";
 import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
-import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
+import type { ScraperResult, RawScrapedOdds, RawScrapedMatchOdds, MatchDetailResult } from "../types/scraper.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
+import { insertExtendedMarketOdds } from "../repositories/extended-odds-repository.js";
 import {
   stsScraper,
   fortunaScraper,
@@ -188,4 +189,154 @@ export async function runSingleScraper(
  */
 export function getScraper(bookmaker: PolishBookmaker): PlaywrightScraper | undefined {
   return SCRAPERS[bookmaker];
+}
+
+/**
+ * Extended Markets Scraping Result
+ */
+export interface ExtendedMarketsResult {
+  homeTeam: string;
+  awayTeam: string;
+  results: Map<PolishBookmaker, MatchDetailResult>;
+  summary: {
+    successCount: number;
+    errorCount: number;
+    doubleChanceCount: number;
+    overUnderCount: number;
+    bttsCount: number;
+  };
+  duration: number;
+}
+
+/**
+ * Scrape extended markets for a specific match from all bookmakers
+ * This is called on-demand when user opens a match detail page
+ */
+export async function scrapeExtendedMarketsForMatch(
+  homeTeam: string,
+  awayTeam: string,
+  eventUrls: Record<PolishBookmaker, string>,
+  league: string = "ekstraklasa"
+): Promise<ExtendedMarketsResult> {
+  const startTime = Date.now();
+  const results = new Map<PolishBookmaker, MatchDetailResult>();
+  let successCount = 0;
+  let errorCount = 0;
+  let doubleChanceCount = 0;
+  let overUnderCount = 0;
+  let bttsCount = 0;
+
+  console.log(`[Aggregator] Scraping extended markets for ${homeTeam} vs ${awayTeam}`);
+
+  // Scrape each bookmaker that has an event URL
+  const scrapePromises = Object.entries(eventUrls).map(async ([bookmakerStr, eventUrl]) => {
+    const bookmaker = bookmakerStr as PolishBookmaker;
+    const scraper = SCRAPERS[bookmaker];
+
+    if (!scraper || !eventUrl) {
+      return { bookmaker, result: null };
+    }
+
+    try {
+      console.log(`[Aggregator] Scraping extended markets from ${bookmaker}: ${eventUrl}`);
+      const result = await scraper.scrapeMatchDetails(eventUrl);
+
+      if (result.status === "success" && result.data) {
+        // Save to database
+        const saved = await insertExtendedMarketOdds(result.data, league);
+        console.log(
+          `[Aggregator] ${bookmaker} extended markets saved: DC=${saved.doubleChance}, OU=${saved.overUnder}, BTTS=${saved.btts}`
+        );
+      }
+
+      return { bookmaker, result };
+    } catch (error) {
+      console.error(`[Aggregator] ${bookmaker} extended markets failed:`, error);
+      return {
+        bookmaker,
+        result: {
+          status: "error" as const,
+          bookmaker,
+          error: error instanceof Error ? error.message : "Unknown error",
+          duration: 0,
+          timestamp: new Date(),
+        } as MatchDetailResult,
+      };
+    } finally {
+      await scraper.cleanup();
+    }
+  });
+
+  const scraperResults = await Promise.all(scrapePromises);
+
+  // Aggregate results
+  for (const { bookmaker, result } of scraperResults) {
+    if (!result) continue;
+
+    results.set(bookmaker, result);
+
+    if (result.status === "success" && result.data) {
+      successCount++;
+      if (result.data.marketDoubleChance) doubleChanceCount++;
+      if (result.data.marketOverUnder && Object.keys(result.data.marketOverUnder).length > 0) {
+        overUnderCount++;
+      }
+      if (result.data.marketBTTS) bttsCount++;
+    } else {
+      errorCount++;
+    }
+  }
+
+  const duration = Date.now() - startTime;
+  console.log(
+    `[Aggregator] Extended markets scrape completed in ${duration}ms: ${successCount} success, ${errorCount} errors`
+  );
+
+  return {
+    homeTeam,
+    awayTeam,
+    results,
+    summary: {
+      successCount,
+      errorCount,
+      doubleChanceCount,
+      overUnderCount,
+      bttsCount,
+    },
+    duration,
+  };
+}
+
+/**
+ * Scrape extended markets for a single bookmaker
+ */
+export async function scrapeSingleExtendedMarket(
+  bookmaker: PolishBookmaker,
+  eventUrl: string,
+  league: string = "ekstraklasa"
+): Promise<MatchDetailResult> {
+  const scraper = SCRAPERS[bookmaker];
+
+  if (!scraper) {
+    return {
+      status: "error",
+      bookmaker,
+      error: `No scraper configured for ${bookmaker}`,
+      duration: 0,
+      timestamp: new Date(),
+    };
+  }
+
+  try {
+    const result = await scraper.scrapeMatchDetails(eventUrl);
+
+    if (result.status === "success" && result.data) {
+      // Save to database
+      await insertExtendedMarketOdds(result.data, league);
+    }
+
+    return result;
+  } finally {
+    await scraper.cleanup();
+  }
 }

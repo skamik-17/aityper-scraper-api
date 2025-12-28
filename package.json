@@ -7,6 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "db:migrate": "./scripts/apply-migrations.sh",
     "test:scraper": "tsx -e \"console.log('Use npm run dev to start the server with scrapers')\""
   },
   "type": "module",

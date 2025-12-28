@@ -127,7 +127,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         aTeam = teamElements[1]?.textContent?.trim() || "";
       }
       if (!hTeam) {
-        const title = document.querySelector("h1, [class*='EventTitle']")?.innerText;
+        const title = document.querySelector("h1, [class*='EventTitle']")?.textContent;
         const m = title?.match(/(.+?)\s*[-–vs.]+\s*(.+)/i);
         if (m) { hTeam = m[1].trim(); aTeam = m[2].trim(); }
       }

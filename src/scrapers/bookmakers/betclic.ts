@@ -102,6 +102,22 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
+  async scrapeMatchDetails(_eventUrl: string): Promise<import("../../types/scraper.js").MatchDetailResult> {
+    // Not implemented - Betclic uses gRPC which is difficult to intercept
+    return {
+      status: "error",
+      bookmaker: this.bookmaker,
+      error: "Match details scraping not supported for Betclic",
+      duration: 0,
+      timestamp: new Date(),
+    };
+  }
+
+  async extractEventUrls(_page: import("playwright").Page): Promise<import("../../types/scraper.js").EventUrlEntry[]> {
+    // Not implemented - would require gRPC interception
+    return [];
+  }
+
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
     const league = match.leagueId ?? "ekstraklasa";

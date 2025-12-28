@@ -211,7 +211,7 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
                 if (btns.length >= 2) {
                   // Filter out the line value itself if it appears in button text
                   const vals = btns.map(b => {
-                    const matches = b.innerText.match(/(\d+[.,]\d+)/g);
+                    const matches = (b.textContent || "").match(/(\d+[.,]\d+)/g);
                     if (!matches) return 0;
                     // If multiple numbers, the last one is usually the odd
                     return parseFloat(matches[matches.length-1].replace(",", "."));

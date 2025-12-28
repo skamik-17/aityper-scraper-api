@@ -10,11 +10,11 @@ import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import {
   stsScraper,
-  fortunaPlaywrightScraper,
+  fortunaScraper,
   betclicPlaywrightScraper,
-  superbetPlaywrightScraper,
-  lvbetPlaywrightScraper,
-  fuksiarzPlaywrightScraper,
+  superbetScraper,
+  lvbetScraper,
+  fuksiarzScraper,
   betfanScraper,
   totalbetScraper,
   forbetScraper,
@@ -28,11 +28,11 @@ import {
 // Map of bookmaker to scraper instance
 const SCRAPERS: Record<PolishBookmaker, PlaywrightScraper> = {
   sts: stsScraper,
-  fortuna: fortunaPlaywrightScraper,
+  fortuna: fortunaScraper,
   betclic: betclicPlaywrightScraper,
-  superbet: superbetPlaywrightScraper,
-  lvbet: lvbetPlaywrightScraper,
-  fuksiarz: fuksiarzPlaywrightScraper,
+  superbet: superbetScraper,
+  lvbet: lvbetScraper,
+  fuksiarz: fuksiarzScraper,
   betfan: betfanScraper,
   totalbet: totalbetScraper,
   forbet: forbetScraper,

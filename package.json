@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "scrape": "tsx src/scripts/manual-scrape.ts"
+    "test:scraper": "tsx -e \"console.log('Use npm run dev to start the server with scrapers')\""
   },
   "type": "module",
   "dependencies": {

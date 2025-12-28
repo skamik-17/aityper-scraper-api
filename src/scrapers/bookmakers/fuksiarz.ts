@@ -1,9 +1,10 @@
 /**
  * Fuksiarz Playwright Scraper
- * Scrapes odds from fuksiarz.pl using headless Chromium
+ * Uses Network Interception to get odds directly from Fuksiarz REST API.
+ * All markets (1X2, DC, BTTS, O/U) are available in the events endpoint.
  */
 
-import type { Page } from "playwright";
+import type { Page, Response } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
 import type {
   ScraperConfig,
@@ -19,11 +20,22 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// League URLs for Fuksiarz
+// Category IDs for Fuksiarz API
+const CATEGORY_IDS: Record<string, number> = {
+  ekstraklasa: 265,
+  "premier-league": 625,
+};
+
+// Base URL for page navigation (needed to establish session)
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa",
   "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
 };
+
+// Cache for events data (used by scrapeMatchDetails)
+let cachedEvents: Map<string, any> = new Map();
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 60000; // 1 minute
 
 export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "fuksiarz";
@@ -34,22 +46,155 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.fuksiarz, ...config, enabled: true };
   }
 
+  private async fetchEventsData(page: Page, categoryId: number): Promise<any[]> {
+    const apiUrl = `https://fuksiarz.pl/rest/market/categories/multi/${categoryId}/events`;
+
+    try {
+      const response = await page.evaluate(async (url) => {
+        const res = await fetch(url);
+        return res.json();
+      }, apiUrl);
+
+      if (response && response.data) {
+        // Update cache
+        cacheTimestamp = Date.now();
+        for (const event of response.data) {
+          cachedEvents.set(String(event.eventId), event);
+        }
+        return response.data;
+      }
+    } catch (e) {
+      console.log(`[Fuksiarz] Direct fetch failed:`, e);
+    }
+
+    return [];
+  }
+
+  private parseEventMarkets(event: any): {
+    m1X2: { home: number; draw: number; away: number };
+    mDC: { homeOrDraw: number; drawOrAway: number; homeOrAway: number };
+    mBTTS: { yes: number; no: number };
+    mOU: Record<string, MarketOverUnderOdds>;
+  } {
+    const m1X2 = { home: 0, draw: 0, away: 0 };
+    const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+    const mBTTS = { yes: 0, no: 0 };
+    const mOU: Record<string, MarketOverUnderOdds> = {};
+
+    for (const game of event.eventGames || []) {
+      const gameName = (game.gameName || "").toLowerCase();
+      const outcomes = game.outcomes || [];
+
+      // 1X2 - gameType 1
+      if (game.gameType === 1 && gameName === "1x2" && outcomes.length === 3 && m1X2.home === 0) {
+        const sorted = [...outcomes].sort((a: any, b: any) => a.outcomePosition - b.outcomePosition);
+        m1X2.home = sorted[0]?.outcomeOdds || 0;
+        m1X2.draw = sorted[1]?.outcomeOdds || 0;
+        m1X2.away = sorted[2]?.outcomeOdds || 0;
+      }
+      // Double Chance - gameType 4
+      else if (game.gameType === 4 && gameName.includes("szansa") && outcomes.length === 3) {
+        for (const o of outcomes) {
+          const name = (o.outcomeName || "").toLowerCase();
+          if (name === "1/x") mDC.homeOrDraw = o.outcomeOdds;
+          else if (name === "x/2") mDC.drawOrAway = o.outcomeOdds;
+          else if (name === "1/2") mDC.homeOrAway = o.outcomeOdds;
+        }
+      }
+      // BTTS - gameType 98
+      else if (game.gameType === 98 && gameName.includes("obie") && gameName.includes("strzelą")) {
+        for (const o of outcomes) {
+          const name = (o.outcomeName || "").toLowerCase();
+          if (name === "tak") mBTTS.yes = o.outcomeOdds;
+          else if (name === "nie") mBTTS.no = o.outcomeOdds;
+        }
+      }
+      // Over/Under - gameType 8
+      else if (game.gameType === 8 && gameName === "liczba goli" && outcomes.length === 2) {
+        for (const o of outcomes) {
+          const name = (o.outcomeName || "").toLowerCase();
+          const lineMatch = name.match(/(\d+[.,]?\d*)/);
+          if (lineMatch) {
+            const lineVal = parseFloat(lineMatch[1].replace(",", "."));
+            if (lineVal % 1 === 0.5) {
+              const line = lineVal.toFixed(1);
+              if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
+              if (name.includes("powyżej")) {
+                mOU[line].over = o.outcomeOdds;
+              } else if (name.includes("poniżej")) {
+                mOU[line].under = o.outcomeOdds;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return { m1X2, mDC, mBTTS, mOU };
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-    const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    const categoryId = CATEGORY_IDS[league];
+    const pageUrl = LEAGUE_URLS[league];
+
+    if (!categoryId || !pageUrl) {
+      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    }
 
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(5000);
 
-      const hasEvents = await this.waitForSelector(page, ".event-tile, [class*='eventTile'], a[href*='/szczegoly/']", 15000);
-      if (!hasEvents) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      // Go to fuksiarz to establish session
+      console.log(`[Fuksiarz] Navigating to: ${pageUrl}`);
+      await this.navigateWithRetry(page, "https://fuksiarz.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+      await this.delay(2000);
 
-      const data = await this.extractMatchData(page, league);
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
+      // Fetch events data
+      const events = await this.fetchEventsData(page, categoryId);
+
+      if (events.length > 0) {
+        const matches: RawScrapedOdds[] = [];
+
+        for (const event of events) {
+          // Get team names from eventName
+          const eventNameParts = event.eventName?.split(" - ") || [];
+          const homeTeamName = eventNameParts[0]?.trim() || "";
+          const awayTeamName = eventNameParts[1]?.trim() || "";
+
+          if (!homeTeamName || !awayTeamName) continue;
+
+          // Parse markets
+          const { m1X2 } = this.parseEventMarkets(event);
+
+          if (m1X2.home <= 1 || m1X2.draw <= 1 || m1X2.away <= 1) continue;
+
+          matches.push({
+            bookmaker: this.bookmaker,
+            eventName: `${homeTeamName} - ${awayTeamName}`,
+            homeTeam: getCanonicalTeamName(homeTeamName, league),
+            awayTeam: getCanonicalTeamName(awayTeamName, league),
+            homeOdds: m1X2.home,
+            drawOdds: m1X2.draw,
+            awayOdds: m1X2.away,
+            hasNoTaxPromo: false,
+            scrapedAt: new Date(),
+            eventUrl: `https://fuksiarz.pl/szczegoly/${event.eventId}`,
+          });
+        }
+
+        console.log(`[Fuksiarz] Found ${matches.length} matches via API`);
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: matches,
+          duration: Date.now() - startTime,
+          timestamp: new Date(),
+        };
+      }
+
+      return this.createNotFoundResult("Could not fetch Fuksiarz API data", Date.now() - startTime);
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
@@ -72,16 +217,67 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
     try {
-      page = await this.initBrowser();
-      await page.setViewportSize({ width: 1920, height: 5000 });
-      await this.navigateWithRetry(page, eventUrl, { timeout: 45000, waitUntil: "domcontentloaded" });
-      await this.delay(8000);
+      // Extract event ID from URL
+      const eventIdMatch = eventUrl.match(/\/szczegoly\/(\d+)/);
+      if (!eventIdMatch) {
+        return this.createMatchDetailNotFoundResult("Invalid Fuksiarz event URL", Date.now() - startTime);
+      }
+      const eventId = eventIdMatch[1];
 
-      const matchData = await this.extractMatchDetailData(page, eventUrl);
-      if (!matchData || matchData.market1X2.home === 0) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
+      // Check cache first
+      const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
+      let event = isCacheValid ? cachedEvents.get(eventId) : null;
 
-      return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
+      // If not in cache, fetch fresh data
+      if (!event) {
+        page = await this.initBrowser();
+        await this.navigateWithRetry(page, "https://fuksiarz.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+        await this.delay(2000);
+
+        // Try to find which league this event belongs to
+        for (const [league, categoryId] of Object.entries(CATEGORY_IDS)) {
+          const events = await this.fetchEventsData(page, categoryId);
+          event = events.find((e: any) => String(e.eventId) === eventId);
+          if (event) break;
+        }
+      }
+
+      if (!event) {
+        return this.createMatchDetailNotFoundResult("Event not found in Fuksiarz API", Date.now() - startTime);
+      }
+
+      // Parse all markets from event
+      const { m1X2, mDC, mBTTS, mOU } = this.parseEventMarkets(event);
+
+      // Get team names
+      const eventNameParts = event.eventName?.split(" - ") || [];
+      const homeTeam = eventNameParts[0]?.trim() || "";
+      const awayTeam = eventNameParts[1]?.trim() || "";
+
+      console.log(`[Fuksiarz] Parsed match details for: ${homeTeam} vs ${awayTeam}`);
+      console.log(`[Fuksiarz] Markets: 1X2=${m1X2.home > 0}, DC=${mDC.homeOrDraw > 0}, BTTS=${mBTTS.yes > 0}, O/U lines=${Object.keys(mOU).length}`);
+
+      return {
+        status: "success",
+        bookmaker: this.bookmaker,
+        data: {
+          bookmaker: "fuksiarz",
+          eventName: `${homeTeam} - ${awayTeam}`,
+          homeTeam,
+          awayTeam,
+          eventUrl,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          market1X2: m1X2,
+          marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
+          marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
+          marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined,
+        },
+        duration: Date.now() - startTime,
+        timestamp: new Date(),
+      };
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
@@ -90,119 +286,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   }
 
   async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    return page.evaluate(() => {
-      const entries: EventUrlEntry[] = [];
-      const seen = new Set();
-      document.querySelectorAll("a[href*='/szczegoly/']").forEach((link: any) => {
-        const text = link.innerText.replace(/\n/g, " ");
-        const teamMatch = text.match(/([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)\s*[-–]\s*([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)/);
-        if (teamMatch) {
-          const key = `${teamMatch[1].trim()} vs ${teamMatch[2].trim()}`;
-          if (!seen.has(key)) {
-            seen.add(key);
-            entries.push({ matchKey: key, eventUrl: link.href });
-          }
-        }
-      });
-      return entries;
-    });
-  }
-
-  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
-    const data = await page.evaluate(() => {
-      let hT = "", aT = "";
-      const h1 = document.querySelector("h1");
-      if (h1) {
-        const m = h1.innerText.match(/(.+?)\s*[-–]\s*(.+)/);
-        if (m) { hT = m[1].trim(); aT = m[2].trim(); } 
-      }
-      if (!hT) return null;
-
-      const m1X2 = { home: 0, draw: 0, away: 0 };
-      const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-      const mBTTS = { yes: 0, no: 0 };
-      const mOU: Record<string, { over: number; under: number }> = {};
-
-      const sections = document.querySelectorAll(".market-row, [class*='market'], .event-details-market");
-      sections.forEach((sec: any) => {
-        const text = sec.innerText.replace(/\n/g, " ").toLowerCase();
-        const btns = Array.from(sec.querySelectorAll("button, .odds-button"));
-        
-        if ((text.includes("wynik") || text.includes("mecz")) && btns.length === 3 && m1X2.home === 0) {
-          const vals = btns.map((b: any) => parseFloat(b.innerText.match(/(\d+[.,]\d+)/)?.[1]?.replace(",", ".") || "0"));
-          if (vals[0] > 1) { m1X2.home = vals[0]; m1X2.draw = vals[1]; m1X2.away = vals[2]; }
-        }
-        else if (text.includes("szansa") && btns.length === 3) {
-          const vals = btns.map((b: any) => parseFloat(b.innerText.match(/(\d+[.,]\d+)/)?.[1]?.replace(",", ".") || "0"));
-          if (vals[0] > 1) { mDC.homeOrDraw = vals[0]; mDC.homeOrAway = vals[1]; mDC.drawOrAway = vals[2]; }
-        }
-        else if (text.includes("obie") && text.includes("strzelą")) {
-          const vals = btns.map((b: any) => parseFloat(b.innerText.match(/(\d+[.,]\d+)/)?.[1]?.replace(",", ".") || "0"));
-          if (vals[0] > 1) { mBTTS.yes = vals[0]; mBTTS.no = vals[1]; }
-        }
-        else if (text.includes("liczba goli")) {
-          const lineM = text.match(/(\d+[.,]5)/);
-          if (lineM && btns.length === 2) {
-            const line = parseFloat(lineM[1].replace(",", ".")).toFixed(1);
-            const vals = btns.map((b: any) => parseFloat(b.innerText.match(/(\d+[.,]\d+)/)?.[1]?.replace(",", ".") || "0"));
-            if (vals[0] > 1 && vals[1] > 1) {
-              mOU[line] = { under: vals[0], over: vals[1] };
-            }
-          }
-        }
-      });
-
-      return { homeTeam: hT, awayTeam: aT, market1X2: m1X2, marketDoubleChance: mDC, marketBTTS: mBTTS, marketOverUnder: mOU };
-    });
-
-    if (!data) return null;
-    return {
-      bookmaker: "fuksiarz", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
-      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
-      market1X2: data.market1X2,
-      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
-      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
-      marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
-    };
-  }
-
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate(() => {
-      const matches: any[] = [];
-      const seen = new Set();
-      document.querySelectorAll("a[href*='/szczegoly/']").forEach((link: any) => {
-        const text = link.innerText.replace(/\n/g, " ");
-        const teamMatch = text.match(/([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)\s*[-–]\s*([A-ZĄąĆćĘęŁłŃńÓóŚśŹźŻż][^-\n]+)/);
-        if (!teamMatch) return;
-        
-        const h = teamMatch[1].trim();
-        const a = teamMatch[2].trim();
-        const key = `${h} vs ${a}`;
-        if (seen.has(key)) return;
-
-        // Try to find odds in nearby buttons
-        let parent = link.parentElement;
-        for (let i = 0; i < 4; i++) {
-          if (!parent) break;
-          const btns = Array.from(parent.querySelectorAll("button, .odds-button"));
-          if (btns.length >= 3) {
-            const odds = btns.map((b: any) => parseFloat(b.innerText.match(/(\d+[.,]\d+)/)?.[1]?.replace(",", ".") || "0")).filter(o => o > 1);
-            if (odds.length >= 3) {
-              seen.add(key);
-              matches.push({ h, a, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], url: link.href });
-              return;
-            }
-          }
-          parent = parent.parentElement;
-        }
-      });
-      return matches;
-    });
-
-    return matchData.map(m => ({
-      bookmaker: "fuksiarz", eventName: `${m.h} - ${m.a}`, homeTeam: getCanonicalTeamName(m.h, league), awayTeam: getCanonicalTeamName(m.a, league),
-      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: m.url
-    }));
+    return [];
   }
 }
 

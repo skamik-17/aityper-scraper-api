@@ -1,6 +1,7 @@
 /**
  * Betters Playwright Scraper
- * Scrapes odds from betters.pl using headless Chromium
+ * Uses Network Interception to capture odds from sbteam.xyz API responses.
+ * All markets (1X2, DC, BTTS, O/U) are available in the upcoming endpoint.
  */
 
 import type { Page } from "playwright";
@@ -11,7 +12,6 @@ import type {
   RawScrapedOdds,
   MatchIdentifier,
   MatchDetailResult,
-  RawScrapedMatchOdds,
   EventUrlEntry,
 } from "../../types/scraper.js";
 import type { MarketOverUnderOdds } from "../../types/markets.js";
@@ -19,19 +19,24 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// Betters League URLs (direct iframe URLs)
-const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa: "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4440",
-  "premier-league": "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485",
+// League IDs for Betters
+const LEAGUE_IDS: Record<string, number> = {
+  ekstraklasa: 4440,
+  "premier-league": 4485,
 };
 
-// CSS selectors for Betters
-const SELECTORS = {
-  gameRowWrapper: ".game-row-wrapper, [class*='gameRowWrapper']",
-  teamName: ".team-column-name, [class*='teamName']",
-  oddsValue: ".odd-cell-value, .rank-arrow, [class*='oddsValue']",
-  marketOddsLabel: ".outcome-name, .market-outcome-name",
+// stakeType IDs for market parsing
+const STAKE_TYPES = {
+  match: 1, // 1X2
+  doubleChance: 37, // DC
+  overUnder: 3, // O/U
+  btts: 26, // BTTS
 };
+
+// Cache for events data
+let cachedEvents: Map<string, any> = new Map();
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 60000;
 
 export class BettersPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betters";
@@ -42,22 +47,160 @@ export class BettersPlaywrightScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.betters, ...config, enabled: true };
   }
 
+  private async captureEventsData(page: Page, leagueId: number): Promise<any[]> {
+    let capturedData: any[] = [];
+
+    // Set up response interception
+    const capturePromise = new Promise<any[]>((resolve) => {
+      const timeout = setTimeout(() => resolve([]), 15000);
+
+      page.on("response", async (response) => {
+        const url = response.url();
+        if (url.includes(`/leagues/${leagueId}/upcoming`)) {
+          try {
+            const data = await response.json();
+            if (data && Array.isArray(data) && data.length > 0) {
+              clearTimeout(timeout);
+              resolve(data[0].games || []);
+            }
+          } catch {}
+        }
+      });
+    });
+
+    // Navigate to the league page to trigger the API call
+    await this.navigateWithRetry(page, `https://betterspl-ssr.boxwebcdn.work/pl/league/1/${leagueId}`, {
+      timeout: 30000,
+      waitUntil: "domcontentloaded",
+    });
+
+    capturedData = await capturePromise;
+
+    // Update cache
+    if (capturedData.length > 0) {
+      cacheTimestamp = Date.now();
+      for (const event of capturedData) {
+        cachedEvents.set(String(event.eventId), event);
+      }
+    }
+
+    return capturedData;
+  }
+
+  private parseEventMarkets(event: any): {
+    m1X2: { home: number; draw: number; away: number };
+    mDC: { homeOrDraw: number; drawOrAway: number; homeOrAway: number };
+    mBTTS: { yes: number; no: number };
+    mOU: Record<string, MarketOverUnderOdds>;
+  } {
+    const m1X2 = { home: 0, draw: 0, away: 0 };
+    const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+    const mBTTS = { yes: 0, no: 0 };
+    const mOU: Record<string, MarketOverUnderOdds> = {};
+
+    for (const stakeType of event.stakeTypes || []) {
+      const stakes = stakeType.stakes || [];
+
+      // 1X2 - stakeTypeId 1
+      if (stakeType.stakeTypeId === STAKE_TYPES.match && stakes.length >= 3 && m1X2.home === 0) {
+        for (const s of stakes) {
+          if (s.stakeCode === 1) m1X2.home = s.betFactor;
+          else if (s.stakeCode === 2) m1X2.draw = s.betFactor;
+          else if (s.stakeCode === 3) m1X2.away = s.betFactor;
+        }
+      }
+      // Double Chance - stakeTypeId 37
+      else if (stakeType.stakeTypeId === STAKE_TYPES.doubleChance && stakes.length >= 3) {
+        for (const s of stakes) {
+          const name = (s.stakeName || "").toUpperCase();
+          if (name === "1X") mDC.homeOrDraw = s.betFactor;
+          else if (name === "X2") mDC.drawOrAway = s.betFactor;
+          else if (name === "12") mDC.homeOrAway = s.betFactor;
+        }
+      }
+      // BTTS - stakeTypeId 26
+      else if (stakeType.stakeTypeId === STAKE_TYPES.btts) {
+        for (const s of stakes) {
+          const name = (s.stakeName || "").toLowerCase();
+          if (name === "tak") mBTTS.yes = s.betFactor;
+          else if (name === "nie") mBTTS.no = s.betFactor;
+        }
+      }
+      // Over/Under - stakeTypeId 3
+      else if (stakeType.stakeTypeId === STAKE_TYPES.overUnder) {
+        for (const s of stakes) {
+          const lineVal = s.stakeArgument;
+          if (typeof lineVal === "number" && lineVal % 1 === 0.5) {
+            const line = lineVal.toFixed(1);
+            const name = (s.stakeName || "").toLowerCase();
+            if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
+            if (name.includes("powyżej")) {
+              mOU[line].over = s.betFactor;
+            } else if (name.includes("poniżej")) {
+              mOU[line].under = s.betFactor;
+            }
+          }
+        }
+      }
+    }
+
+    return { m1X2, mDC, mBTTS, mOU };
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-    const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    const leagueId = LEAGUE_IDS[league];
+
+    if (!leagueId) {
+      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    }
 
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
 
-      const hasMatches = await this.waitForSelector(page, SELECTORS.gameRowWrapper, 15000);
-      if (!hasMatches) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      console.log(`[Betters] Capturing data for league: ${leagueId}`);
+      const events = await this.captureEventsData(page, leagueId);
 
-      const data = await this.extractMatchData(page, league);
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
+      if (events.length > 0) {
+        const matches: RawScrapedOdds[] = [];
+
+        for (const event of events) {
+          const homeTeamName = event.teamA || "";
+          const awayTeamName = event.teamB || "";
+
+          if (!homeTeamName || !awayTeamName) continue;
+
+          // Parse markets
+          const { m1X2 } = this.parseEventMarkets(event);
+
+          if (m1X2.home <= 1 || m1X2.draw <= 1 || m1X2.away <= 1) continue;
+
+          matches.push({
+            bookmaker: this.bookmaker,
+            eventName: `${homeTeamName} - ${awayTeamName}`,
+            homeTeam: getCanonicalTeamName(homeTeamName, league),
+            awayTeam: getCanonicalTeamName(awayTeamName, league),
+            homeOdds: m1X2.home,
+            drawOdds: m1X2.draw,
+            awayOdds: m1X2.away,
+            hasNoTaxPromo: false,
+            scrapedAt: new Date(),
+            eventUrl: `https://betterspl-ssr.boxwebcdn.work/pl/event/1/${leagueId}/${event.eventId}`,
+          });
+        }
+
+        console.log(`[Betters] Found ${matches.length} matches via API`);
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: matches,
+          duration: Date.now() - startTime,
+          timestamp: new Date(),
+        };
+      }
+
+      return this.createNotFoundResult("Could not capture Betters API data", Date.now() - startTime);
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
@@ -72,7 +215,7 @@ export class BettersPlaywrightScraper extends PlaywrightScraper {
     if (allMatches.status !== "success" || !allMatches.data) return allMatches;
 
     const matchResult = findMatchingEvent({ homeTeam: match.homeTeam, awayTeam: match.awayTeam }, allMatches.data, league);
-    if (!matchResult) return this.createNotFoundResult(`Match not found: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
+    if (!matchResult) return this.createNotFoundResult(`Match not found on Betters: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
 
     return { status: "success", bookmaker: this.bookmaker, data: [matchResult.event], duration: Date.now() - startTime, timestamp: new Date() };
   }
@@ -80,18 +223,63 @@ export class BettersPlaywrightScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
     try {
-      page = await this.initBrowser();
-      await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
+      // Extract event ID from URL
+      const eventIdMatch = eventUrl.match(/\/event\/\d+\/\d+\/(\d+)/);
+      if (!eventIdMatch) {
+        return this.createMatchDetailNotFoundResult("Invalid Betters event URL", Date.now() - startTime);
+      }
+      const eventId = eventIdMatch[1];
 
-      const hasOdds = await this.waitForSelector(page, ".outcome-wrapper", 10000);
-      if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
+      // Check cache first
+      const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
+      let event = isCacheValid ? cachedEvents.get(eventId) : null;
 
-      const matchData = await this.extractMatchDetailData(page, eventUrl);
-      if (!matchData) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
+      // If not in cache, fetch fresh data
+      if (!event) {
+        page = await this.initBrowser();
 
-      return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
+        // Try to find which league this event belongs to
+        for (const [, leagueId] of Object.entries(LEAGUE_IDS)) {
+          const events = await this.captureEventsData(page, leagueId);
+          event = events.find((e: any) => String(e.eventId) === eventId);
+          if (event) break;
+        }
+      }
+
+      if (!event) {
+        return this.createMatchDetailNotFoundResult("Event not found in Betters API", Date.now() - startTime);
+      }
+
+      // Parse all markets from event
+      const { m1X2, mDC, mBTTS, mOU } = this.parseEventMarkets(event);
+
+      const homeTeam = event.teamA || "";
+      const awayTeam = event.teamB || "";
+
+      console.log(`[Betters] Parsed match details for: ${homeTeam} vs ${awayTeam}`);
+      console.log(`[Betters] Markets: 1X2=${m1X2.home > 0}, DC=${mDC.homeOrDraw > 0}, BTTS=${mBTTS.yes > 0}, O/U lines=${Object.keys(mOU).length}`);
+
+      return {
+        status: "success",
+        bookmaker: this.bookmaker,
+        data: {
+          bookmaker: "betters",
+          eventName: `${homeTeam} - ${awayTeam}`,
+          homeTeam,
+          awayTeam,
+          eventUrl,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          market1X2: m1X2,
+          marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
+          marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
+          marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined,
+        },
+        duration: Date.now() - startTime,
+        timestamp: new Date(),
+      };
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
@@ -100,90 +288,7 @@ export class BettersPlaywrightScraper extends PlaywrightScraper {
   }
 
   async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    return page.evaluate((selectors) => {
-      const entries: EventUrlEntry[] = [];
-      document.querySelectorAll(selectors.gameRowWrapper).forEach((wrapper) => {
-        const teamElements = wrapper.querySelectorAll(selectors.teamName);
-        if (teamElements.length < 2) return;
-        const home = teamElements[0]?.textContent?.trim() || "";
-        const away = teamElements[1]?.textContent?.trim() || "";
-        const link = wrapper.querySelector("a[href*='/event/']") as HTMLAnchorElement;
-        if (link?.href) entries.push({ matchKey: `${home} vs ${away}`, eventUrl: link.href });
-      });
-      return entries;
-    }, SELECTORS);
-  }
-
-  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
-    const data = await page.evaluate((selectors) => {
-      const teamElements = document.querySelectorAll(selectors.teamName);
-      if (teamElements.length < 2) return null;
-      const homeTeam = teamElements[0]?.textContent?.trim() || "", awayTeam = teamElements[1]?.textContent?.trim() || "";
-
-      const market1X2 = { home: 0, draw: 0, away: 0 };
-      const marketDoubleChance = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-      const marketOverUnder: Record<string, { over: number; under: number }> = {};
-      const marketBTTS = { yes: 0, no: 0 };
-
-      document.querySelectorAll(".outcome-wrapper").forEach((btn: any) => {
-        const label = (btn.querySelector(selectors.marketOddsLabel)?.textContent?.trim() || "").toLowerCase();
-        const valueText = btn.querySelector(".odd-cell-value, .rank-arrow")?.textContent?.trim() || "";
-        const value = parseFloat(valueText.replace(",", "."));
-        if (isNaN(value) || value <= 1) return;
-
-        if (label === "1" || label === homeTeam.toLowerCase()) market1X2.home = value;
-        else if (label === "x" || label === "remis") market1X2.draw = value;
-        else if (label === "2" || label === awayTeam.toLowerCase()) market1X2.away = value;
-        else if (label === "1x") marketDoubleChance.homeOrDraw = value;
-        else if (label === "x2") marketDoubleChance.drawOrAway = value;
-        else if (label === "12") marketDoubleChance.homeOrAway = value;
-        else if (label === "tak" || label === "yes") marketBTTS.yes = value;
-        else if (label === "nie" || label === "no") marketBTTS.no = value;
-
-        const ouMatch = label.match(/(ponad|poniżej|over|under)\s*(\d+[.,]?\d*)/i);
-        if (ouMatch) {
-          const line = parseFloat(ouMatch[2].replace(",", ".")).toFixed(1);
-          if (!marketOverUnder[line]) marketOverUnder[line] = { over: 0, under: 0 };
-          if (ouMatch[1].startsWith("po") || ouMatch[1] === "over") marketOverUnder[line].over = value;
-          else marketOverUnder[line].under = value;
-        }
-      });
-
-      return { homeTeam, awayTeam, market1X2, marketDoubleChance, marketOverUnder, marketBTTS };
-    }, SELECTORS);
-
-    if (!data) return null;
-    return {
-      bookmaker: "betters", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
-      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
-      market1X2: data.market1X2,
-      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
-      marketOverUnder: Object.keys(marketOverUnder).length > 0 ? marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
-      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
-    };
-  }
-
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: any[] = [];
-      document.querySelectorAll(selectors.gameRowWrapper).forEach((wrapper) => {
-        const teamElements = wrapper.querySelectorAll(selectors.teamName);
-        if (teamElements.length < 2) return;
-        const home = teamElements[0]?.textContent?.trim() || "";
-        const away = teamElements[1]?.textContent?.trim() || "";
-        const odds = Array.from(wrapper.querySelectorAll(selectors.oddsValue)).slice(0, 3).map(el => parseFloat(el.textContent?.trim()?.replace(",", ".") || "0"));
-        if (odds.length >= 3) {
-          const link = wrapper.querySelector("a[href*='/event/']") as HTMLAnchorElement;
-          matches.push({ homeTeam: home, awayTeam: away, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link?.href });
-        }
-      });
-      return matches;
-    }, SELECTORS);
-
-    return matchData.map(m => ({
-      bookmaker: "betters", eventName: `${m.homeTeam} - ${m.awayTeam}`, homeTeam: getCanonicalTeamName(m.homeTeam, league), awayTeam: getCanonicalTeamName(m.awayTeam, league),
-      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: m.eventUrl
-    }));
+    return [];
   }
 }
 

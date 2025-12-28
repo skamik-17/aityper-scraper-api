@@ -1,6 +1,7 @@
 /**
  * forBET Playwright Scraper
- * Scrapes odds from iforbet.pl using headless Chromium
+ * Uses Network Interception to get odds directly from forBET REST API.
+ * All markets (1X2, DC, BTTS, O/U) are available in the events endpoint.
  */
 
 import type { Page } from "playwright";
@@ -11,7 +12,6 @@ import type {
   RawScrapedOdds,
   MatchIdentifier,
   MatchDetailResult,
-  RawScrapedMatchOdds,
   EventUrlEntry,
 } from "../../types/scraper.js";
 import type { MarketOverUnderOdds } from "../../types/markets.js";
@@ -19,23 +19,18 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// League URLs for forBET
-const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa: "https://www.iforbet.pl/zaklady-bukmacherskie/320/29994",
-  "premier-league": "https://www.iforbet.pl/zaklady-bukmacherskie/155/199",
+// Category IDs for forBET API
+const CATEGORY_IDS: Record<string, number> = {
+  ekstraklasa: 29994,
+  "premier-league": 199,
 };
 
-// CSS selectors for forBET
-const SELECTORS = {
-  cookieAccept: "button[class*='cookie'], button:has-text('Akceptuję')",
-  matchCard: "[data-test^='event_']",
-  eventHeader: "[data-test='event_header']",
-  outcomeRow: "[data-test='outcome_row']",
-  oddsButton: "button[data-test='outcome']",
-  marketOddsLabel: "[data-test='outcome_label']",
-};
+// Cache for events data
+let cachedEvents: Map<string, any> = new Map();
+let cacheTimestamp: number = 0;
+const CACHE_TTL = 60000;
 
-export class ForbetScraper extends PlaywrightScraper {
+export class ForbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "forbet";
   config: ScraperConfig;
 
@@ -44,28 +39,155 @@ export class ForbetScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.forbet, ...config, enabled: true };
   }
 
+  private async fetchEventsData(page: Page, categoryId: number): Promise<any[]> {
+    const apiUrl = `https://www.iforbet.pl/rest/market/categories/multi/${categoryId}/events?gamesClass=major`;
+
+    try {
+      const response = await page.evaluate(async (url) => {
+        const res = await fetch(url);
+        return res.json();
+      }, apiUrl);
+
+      if (response && response.data) {
+        const events = response.data;
+        // Update cache
+        cacheTimestamp = Date.now();
+        for (const event of events) {
+          cachedEvents.set(String(event.eventId), event);
+        }
+        return events;
+      }
+    } catch (e) {
+      console.log(`[forBET] Direct fetch failed:`, e);
+    }
+
+    return [];
+  }
+
+  private parseEventMarkets(event: any): {
+    m1X2: { home: number; draw: number; away: number };
+    mDC: { homeOrDraw: number; drawOrAway: number; homeOrAway: number };
+    mBTTS: { yes: number; no: number };
+    mOU: Record<string, MarketOverUnderOdds>;
+  } {
+    const m1X2 = { home: 0, draw: 0, away: 0 };
+    const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+    const mBTTS = { yes: 0, no: 0 };
+    const mOU: Record<string, MarketOverUnderOdds> = {};
+
+    for (const game of event.eventGames || []) {
+      const gameName = (game.gameName || "").toLowerCase();
+      const outcomes = game.outcomes || [];
+
+      // 1X2 - gameType 1
+      if (game.gameType === 1 && gameName === "1x2" && outcomes.length === 3 && m1X2.home === 0) {
+        const sorted = [...outcomes].sort((a: any, b: any) => a.outcomePosition - b.outcomePosition);
+        m1X2.home = sorted[0]?.outcomeOdds || 0;
+        m1X2.draw = sorted[1]?.outcomeOdds || 0;
+        m1X2.away = sorted[2]?.outcomeOdds || 0;
+      }
+      // Double Chance - gameType 4
+      else if (game.gameType === 4 && gameName.includes("szansa") && outcomes.length === 3) {
+        for (const o of outcomes) {
+          const name = (o.outcomeName || "").toLowerCase();
+          if (name === "1x" || name === "1/x") mDC.homeOrDraw = o.outcomeOdds;
+          else if (name === "x2" || name === "x/2") mDC.drawOrAway = o.outcomeOdds;
+          else if (name === "12" || name === "1/2") mDC.homeOrAway = o.outcomeOdds;
+        }
+      }
+      // BTTS - gameType 98
+      else if (game.gameType === 98 && gameName.includes("obie") && gameName.includes("strzelą")) {
+        for (const o of outcomes) {
+          const name = (o.outcomeName || "").toLowerCase();
+          if (name === "tak") mBTTS.yes = o.outcomeOdds;
+          else if (name === "nie") mBTTS.no = o.outcomeOdds;
+        }
+      }
+      // Over/Under - gameType 8 (format: "Poniżej/powyżej X.X goli")
+      else if (game.gameType === 8 && gameName.includes("goli") && outcomes.length === 2) {
+        const lineMatch = gameName.match(/(\d+[.,]?\d*)/);
+        if (lineMatch) {
+          const lineVal = parseFloat(lineMatch[1].replace(",", "."));
+          if (lineVal % 1 === 0.5) {
+            const line = lineVal.toFixed(1);
+            if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
+            for (const o of outcomes) {
+              const name = (o.outcomeName || "").toLowerCase();
+              if (name.includes("powyżej")) {
+                mOU[line].over = o.outcomeOdds;
+              } else if (name.includes("poniżej")) {
+                mOU[line].under = o.outcomeOdds;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return { m1X2, mDC, mBTTS, mOU };
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-    const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    const categoryId = CATEGORY_IDS[league];
+
+    if (!categoryId) {
+      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    }
 
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
 
-      try {
-        const cookieButton = page.locator(SELECTORS.cookieAccept).first();
-        if (await cookieButton.isVisible({ timeout: 3000 })) await cookieButton.click();
-      } catch {}
+      // Go to forbet to establish session
+      console.log(`[forBET] Fetching data for category: ${categoryId}`);
+      await this.navigateWithRetry(page, "https://www.iforbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+      await this.delay(2000);
 
-      const hasMatches = await this.waitForSelector(page, SELECTORS.matchCard, 15000);
-      if (!hasMatches) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      // Fetch events data
+      const events = await this.fetchEventsData(page, categoryId);
 
-      const data = await this.extractMatchData(page, league);
-      console.log(`[forBET] Scraped ${data.length} matches for ${league}`);
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
+      if (events.length > 0) {
+        const matches: RawScrapedOdds[] = [];
+
+        for (const event of events) {
+          // Get team names from eventName
+          const eventNameParts = event.eventName?.split(" - ") || [];
+          const homeTeamName = eventNameParts[0]?.trim() || "";
+          const awayTeamName = eventNameParts[1]?.trim() || "";
+
+          if (!homeTeamName || !awayTeamName) continue;
+
+          // Parse markets
+          const { m1X2 } = this.parseEventMarkets(event);
+
+          if (m1X2.home <= 1 || m1X2.draw <= 1 || m1X2.away <= 1) continue;
+
+          matches.push({
+            bookmaker: this.bookmaker,
+            eventName: `${homeTeamName} - ${awayTeamName}`,
+            homeTeam: getCanonicalTeamName(homeTeamName, league),
+            awayTeam: getCanonicalTeamName(awayTeamName, league),
+            homeOdds: m1X2.home,
+            drawOdds: m1X2.draw,
+            awayOdds: m1X2.away,
+            hasNoTaxPromo: false,
+            scrapedAt: new Date(),
+            eventUrl: `https://www.iforbet.pl/wydarzenie/${event.eventId}`,
+          });
+        }
+
+        console.log(`[forBET] Found ${matches.length} matches via API`);
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: matches,
+          duration: Date.now() - startTime,
+          timestamp: new Date(),
+        };
+      }
+
+      return this.createNotFoundResult("Could not fetch forBET API data", Date.now() - startTime);
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
@@ -80,7 +202,7 @@ export class ForbetScraper extends PlaywrightScraper {
     if (allMatches.status !== "success" || !allMatches.data) return allMatches;
 
     const matchResult = findMatchingEvent({ homeTeam: match.homeTeam, awayTeam: match.awayTeam }, allMatches.data, league);
-    if (!matchResult) return this.createNotFoundResult(`Match not found: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
+    if (!matchResult) return this.createNotFoundResult(`Match not found on forBET: ${match.homeTeam} vs ${match.awayTeam}`, Date.now() - startTime);
 
     return { status: "success", bookmaker: this.bookmaker, data: [matchResult.event], duration: Date.now() - startTime, timestamp: new Date() };
   }
@@ -88,18 +210,67 @@ export class ForbetScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
     try {
-      page = await this.initBrowser();
-      await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
+      // Extract event ID from URL
+      const eventIdMatch = eventUrl.match(/\/wydarzenie\/(\d+)/);
+      if (!eventIdMatch) {
+        return this.createMatchDetailNotFoundResult("Invalid forBET event URL", Date.now() - startTime);
+      }
+      const eventId = eventIdMatch[1];
 
-      const hasOdds = await this.waitForSelector(page, SELECTORS.oddsButton, 10000);
-      if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
+      // Check cache first
+      const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
+      let event = isCacheValid ? cachedEvents.get(eventId) : null;
 
-      const matchData = await this.extractMatchDetailData(page, eventUrl);
-      if (!matchData) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
+      // If not in cache, fetch fresh data
+      if (!event) {
+        page = await this.initBrowser();
+        await this.navigateWithRetry(page, "https://www.iforbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+        await this.delay(2000);
 
-      return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
+        // Try to find which league this event belongs to
+        for (const [, categoryId] of Object.entries(CATEGORY_IDS)) {
+          const events = await this.fetchEventsData(page, categoryId);
+          event = events.find((e: any) => String(e.eventId) === eventId);
+          if (event) break;
+        }
+      }
+
+      if (!event) {
+        return this.createMatchDetailNotFoundResult("Event not found in forBET API", Date.now() - startTime);
+      }
+
+      // Parse all markets from event
+      const { m1X2, mDC, mBTTS, mOU } = this.parseEventMarkets(event);
+
+      // Get team names
+      const eventNameParts = event.eventName?.split(" - ") || [];
+      const homeTeam = eventNameParts[0]?.trim() || "";
+      const awayTeam = eventNameParts[1]?.trim() || "";
+
+      console.log(`[forBET] Parsed match details for: ${homeTeam} vs ${awayTeam}`);
+      console.log(`[forBET] Markets: 1X2=${m1X2.home > 0}, DC=${mDC.homeOrDraw > 0}, BTTS=${mBTTS.yes > 0}, O/U lines=${Object.keys(mOU).length}`);
+
+      return {
+        status: "success",
+        bookmaker: this.bookmaker,
+        data: {
+          bookmaker: "forbet",
+          eventName: `${homeTeam} - ${awayTeam}`,
+          homeTeam,
+          awayTeam,
+          eventUrl,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          market1X2: m1X2,
+          marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
+          marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
+          marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined,
+        },
+        duration: Date.now() - startTime,
+        timestamp: new Date(),
+      };
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
@@ -108,94 +279,8 @@ export class ForbetScraper extends PlaywrightScraper {
   }
 
   async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    return page.evaluate((selectors) => {
-      const entries: EventUrlEntry[] = [];
-      document.querySelectorAll(selectors.matchCard).forEach((card) => {
-        const eventId = card.getAttribute("data-test")?.replace("event_", "");
-        const headerText = card.querySelector(selectors.eventHeader)?.textContent?.trim() || "";
-        const teamMatch = headerText.match(/^(.+?)\s*-\s*(.+)$/);
-        if (!teamMatch || !eventId) return;
-        entries.push({ matchKey: `${teamMatch[1].trim()} vs ${teamMatch[2].trim()}`, eventUrl: `https://www.iforbet.pl/zaklady-bukmacherskie/event/${eventId}` });
-      });
-      return entries;
-    }, SELECTORS);
-  }
-
-  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
-    const data = await page.evaluate((selectors) => {
-      const headerText = document.querySelector(selectors.eventHeader)?.textContent?.trim() || "";
-      const teamMatch = headerText.match(/^(.+?)\s*[-–vs.]+\s*(.+)$/);
-      if (!teamMatch) return null;
-      const hTeam = teamMatch[1].trim(), aTeam = teamMatch[2].trim();
-
-      const m1X2 = { home: 0, draw: 0, away: 0 };
-      const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-      const mOU: Record<string, { over: number; under: number }> = {};
-      const mBTTS = { yes: 0, no: 0 };
-
-      document.querySelectorAll(selectors.oddsButton).forEach((btn: any) => {
-        const label = (btn.querySelector(selectors.marketOddsLabel)?.textContent?.trim() || btn.textContent?.trim() || "").toLowerCase();
-        const valueMatch = btn.textContent?.match(/(\d+[.,]?\d*)/);
-        const value = valueMatch ? parseFloat(valueMatch[1].replace(",", ".")) : 0;
-        if (isNaN(value) || value <= 1) return;
-
-        if (label === "1" || label === hTeam.toLowerCase()) m1X2.home = value;
-        else if (label === "x" || label === "remis") m1X2.draw = value;
-        else if (label === "2" || label === aTeam.toLowerCase()) m1X2.away = value;
-        else if (label === "1x") mDC.homeOrDraw = value;
-        else if (label === "x2") mDC.drawOrAway = value;
-        else if (label === "12") mDC.homeOrAway = value;
-        else if (label === "tak" || label === "yes") mBTTS.yes = value;
-        else if (label === "nie" || label === "no") mBTTS.no = value;
-
-        const ouMatch = label.match(/(ponad|poniżej|over|under)\s*(\d+[.,]?\d*)/i);
-        if (ouMatch) {
-          const line = parseFloat(ouMatch[2].replace(",", ".")).toFixed(1);
-          if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
-          if (ouMatch[1].startsWith("po") || ouMatch[1] === "over") mOU[line].over = value;
-          else mOU[line].under = value;
-        }
-      });
-
-      return { homeTeam: hTeam, awayTeam: aTeam, market1X2: m1X2, marketDoubleChance: mDC, marketOverUnder: mOU, marketBTTS: mBTTS };
-    }, SELECTORS);
-
-    if (!data) return null;
-    return {
-      bookmaker: "forbet", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
-      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
-      market1X2: data.market1X2,
-      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
-      marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
-      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
-    };
-  }
-
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: any[] = [];
-      document.querySelectorAll(selectors.matchCard).forEach((card) => {
-        const headerText = card.querySelector(selectors.eventHeader)?.textContent?.trim() || "";
-        const teamMatch = headerText.match(/^(.+?)\s*-\s*(.+)$/);
-        const eventId = card.getAttribute("data-test")?.replace("event_", "");
-        if (!teamMatch || !eventId) return;
-        const outcomeRow = card.querySelector(selectors.outcomeRow);
-        if (!outcomeRow) return;
-        const oddsButtons = outcomeRow.querySelectorAll(selectors.oddsButton);
-        const odds = Array.from(oddsButtons).slice(0, 3).map(el => parseFloat(el.textContent?.trim()?.replace(",", ".") || "0"));
-        if (odds.length >= 3) {
-          matches.push({ homeTeam: teamMatch[1].trim(), awayTeam: teamMatch[2].trim(), homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventId });
-        }
-      });
-      return matches;
-    }, SELECTORS);
-
-    return matchData.map(m => ({
-      bookmaker: "forbet", eventName: `${m.homeTeam} - ${m.awayTeam}`, homeTeam: getCanonicalTeamName(m.homeTeam, league), awayTeam: getCanonicalTeamName(m.awayTeam, league),
-      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(),
-      eventUrl: `https://www.iforbet.pl/zaklady-bukmacherskie/event/${m.eventId}`
-    }));
+    return [];
   }
 }
 
-export const forbetScraper = new ForbetScraper();
+export const forbetScraper = new ForbetPlaywrightScraper();

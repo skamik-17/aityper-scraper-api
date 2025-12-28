@@ -22,12 +22,12 @@ const LEAGUE_URLS: Record<string, string> = {
   "premier-league": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3",
 };
 
-// CSS selectors for Betclic page structure
+// CSS selectors for Betclic page structure (updated Dec 2025)
 const SELECTORS = {
-  eventCard: "[data-qa='event-card']",
+  eventCard: "a.cardEvent",
   teamNames: ".scoreboard_contestantLabel",
-  oddsButton: ".oddValue",
-  marketGroup: "[data-qa='market-group']",
+  oddsContainer: ".market_odds",
+  oddsButton: ".btn.is-odd",
 };
 
 export class BetclicPlaywrightScraper extends PlaywrightScraper {
@@ -61,7 +61,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       });
 
       // Wait extra time for Angular to hydrate and render content
-      await this.delay(4000);
+      await this.delay(6000);
 
       // Wait for event cards to appear
       const hasEvents = await this.waitForSelector(page, SELECTORS.eventCard, 15000);
@@ -153,9 +153,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         awayOdds: number;
       }> = [];
 
-      // Find all event cards
+      // Find all event cards (a.cardEvent)
       document.querySelectorAll(selectors.eventCard).forEach((card) => {
-        // Get team names
+        // Get team names from .scoreboard_contestantLabel
         const teamElements = card.querySelectorAll(selectors.teamNames);
         if (teamElements.length < 2) return;
 
@@ -164,16 +164,12 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
 
         if (!homeTeam || !awayTeam) return;
 
-        // Get odds (1X2 market should have 3 odds)
-        const oddsElements = card.querySelectorAll(selectors.oddsButton);
-        const odds = Array.from(oddsElements)
-          .slice(0, 3)
-          .map((el) => {
-            const text = el.textContent?.trim() || "0";
-            return parseFloat(text.replace(",", "."));
-          });
+        // Extract odds from card text - look for pattern like "4,85" or "4.85"
+        const cardText = card.textContent || "";
+        const oddsMatches = cardText.match(/\d+[,\.]\d{2}/g) || [];
+        const odds = oddsMatches.slice(0, 3).map(o => parseFloat(o.replace(",", ".")));
 
-        if (odds.length < 3 || odds.some((o) => isNaN(o) || o <= 0)) {
+        if (odds.length < 3 || odds.some((o) => isNaN(o) || o <= 1)) {
           return;
         }
 

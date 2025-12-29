@@ -23,6 +23,12 @@ const COMPETITION_IDS: Record<string, number> = {
   ekstraklasa: 221, // May not have matches currently
 };
 
+// URL slugs for leagues
+const LEAGUE_SLUGS: Record<string, string> = {
+  "premier-league": "premier-league-c3",
+  ekstraklasa: "ekstraklasa-c221",
+};
+
 // gRPC endpoints
 const GRPC_BASE = "https://offering.begmedia.com/web/offering.access.api/offering.access.api.MatchService";
 const ENDPOINTS = {
@@ -123,6 +129,56 @@ function getString(fields: Map<number, any[]>, num: number): string | null {
   const f = fields.get(num)?.[0];
   if (f?.type === "bytes") {
     return f.data.toString("utf8");
+  }
+  return null;
+}
+
+function getVarint(fields: Map<number, any[]>, num: number): number | null {
+  const f = fields.get(num)?.[0];
+  if (f?.type === "varint") {
+    return f.data;
+  }
+  return null;
+}
+
+// Read varint as BigInt for large values
+function readVarintBigInt(buf: Buffer, offset: number): { value: bigint; bytesRead: number } {
+  let value = 0n;
+  let shift = 0n;
+  let bytesRead = 0;
+  while (offset + bytesRead < buf.length) {
+    const b = buf[offset + bytesRead++];
+    value |= BigInt(b & 0x7f) << shift;
+    if (!(b & 0x80)) break;
+    shift += 7n;
+  }
+  return { value, bytesRead };
+}
+
+function getVarintBigInt(fields: Map<number, any[]>, num: number, buf: Buffer): bigint | null {
+  // Re-parse to get bigint value - look for field with this number
+  let offset = 0;
+  while (offset < buf.length) {
+    const tagResult = readVarintBigInt(buf, offset);
+    offset += tagResult.bytesRead;
+    const tag = Number(tagResult.value);
+    const fieldNum = tag >> 3;
+    const wireType = tag & 0x07;
+
+    if (wireType === 0) {
+      const v = readVarintBigInt(buf, offset);
+      if (fieldNum === num) return v.value;
+      offset += v.bytesRead;
+    } else if (wireType === 2) {
+      const len = readVarint(buf, offset);
+      offset += len.bytesRead + len.value;
+    } else if (wireType === 1) {
+      offset += 8;
+    } else if (wireType === 5) {
+      offset += 4;
+    } else {
+      break;
+    }
   }
   return null;
 }
@@ -263,6 +319,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
    */
   private parseListingResponse(data: Buffer, league: string): RawScrapedOdds[] {
     const matches: RawScrapedOdds[] = [];
+    const leagueSlug = LEAGUE_SLUGS[league] || league;
 
     try {
       const root = parseFields(data);
@@ -272,12 +329,27 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       // Field 3 contains match entries
       const matchMsgs = getMessages(wrapper, 3);
 
-      for (const match of matchMsgs) {
+      // Get raw match message bytes for BigInt parsing
+      const matchRawMsgs = wrapper.get(3) || [];
+
+      for (let i = 0; i < matchMsgs.length; i++) {
+        const match = matchMsgs[i];
+        const matchRaw = matchRawMsgs[i];
+
         const matchName = getString(match, 2) || "";
         const parts = matchName.split(" - ").map((t) => t.trim());
         if (parts.length !== 2) continue;
 
         const [homeTeam, awayTeam] = parts;
+
+        // Extract match ID from field 1 as BigInt (can be very large)
+        let matchId: string | null = null;
+        if (matchRaw?.type === "bytes") {
+          const bigId = getVarintBigInt(match, 1, matchRaw.data);
+          if (bigId !== null) {
+            matchId = bigId.toString();
+          }
+        }
 
         // Field 9 contains markets
         const markets = getMessages(match, 9);
@@ -299,6 +371,13 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         }
 
         if (odds.length >= 3) {
+          // Build event URL (format: https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/team1-team2-m123456)
+          const homeSlug = homeTeam.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+          const awaySlug = awayTeam.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+          const eventUrl = matchId !== null
+            ? `https://www.betclic.pl/pilka-nozna-sfootball/${leagueSlug}/${homeSlug}-${awaySlug}-m${matchId}`
+            : undefined;
+
           matches.push({
             bookmaker: "betclic",
             eventName: matchName,
@@ -309,6 +388,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
             awayOdds: odds[2],
             hasNoTaxPromo: false,
             scrapedAt: new Date(),
+            eventUrl,
           });
         }
       }
@@ -351,7 +431,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         };
       }
 
-      const matchOdds = this.parseMatchDetailsResponse(data);
+      const matchOdds = this.parseMatchDetailsResponse(data, eventUrl);
 
       if (!matchOdds) {
         return {
@@ -385,7 +465,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
   /**
    * Parse match details response for extended markets
    */
-  private parseMatchDetailsResponse(data: Buffer): RawScrapedMatchOdds | null {
+  private parseMatchDetailsResponse(data: Buffer, eventUrl: string = ""): RawScrapedMatchOdds | null {
     try {
       // Extract all outcomes by scanning for field 12 doubles with preceding name strings
       const outcomes = this.extractAllOutcomes(data);
@@ -401,20 +481,11 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       const homeTeam = parts[0] || "";
       const awayTeam = parts[1] || "";
 
-      // Group outcomes by market type
-      const result: RawScrapedMatchOdds = {
-        bookmaker: "betclic",
-        eventName: matchName,
-        homeTeam,
-        awayTeam,
-        scrapedAt: new Date(),
-        markets: {
-          "1x2": null,
-          double_chance: null,
-          over_under: [],
-          btts: null,
-        },
-      };
+      // Initialize market data
+      const market1X2 = { home: 0, draw: 0, away: 0 };
+      const marketDoubleChance = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+      const marketOverUnder: Record<string, { over: number; under: number }> = {};
+      const marketBTTS = { yes: 0, no: 0 };
 
       // Find 1X2 outcomes
       const homeOutcome = outcomes.find(
@@ -428,11 +499,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       );
 
       if (homeOutcome && drawOutcome && awayOutcome) {
-        result.markets["1x2"] = {
-          home: homeOutcome.odds,
-          draw: drawOutcome.odds,
-          away: awayOutcome.odds,
-        };
+        market1X2.home = homeOutcome.odds;
+        market1X2.draw = drawOutcome.odds;
+        market1X2.away = awayOutcome.odds;
       }
 
       // Find Double Chance outcomes
@@ -443,11 +512,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       );
 
       if (dc1X && dcX2 && dc12) {
-        result.markets.double_chance = {
-          home_draw: dc1X.odds,
-          draw_away: dcX2.odds,
-          home_away: dc12.odds,
-        };
+        marketDoubleChance.homeOrDraw = dc1X.odds;
+        marketDoubleChance.drawOrAway = dcX2.odds;
+        marketDoubleChance.homeOrAway = dc12.odds;
       }
 
       // Find BTTS outcomes
@@ -455,10 +522,8 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       const bttsNo = outcomes.find((o) => o.name === "Nie" && o.odds > 1.5 && o.odds < 3);
 
       if (bttsYes && bttsNo) {
-        result.markets.btts = {
-          yes: bttsYes.odds,
-          no: bttsNo.odds,
-        };
+        marketBTTS.yes = bttsYes.odds;
+        marketBTTS.no = bttsNo.odds;
       }
 
       // Find Over/Under outcomes
@@ -473,15 +538,26 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
 
         if (overOutcome && underOutcome) {
-          result.markets.over_under.push({
-            line,
+          marketOverUnder[line.toFixed(1)] = {
             over: overOutcome.odds,
             under: underOutcome.odds,
-          });
+          };
         }
       }
 
-      return result;
+      return {
+        bookmaker: "betclic",
+        eventName: matchName,
+        homeTeam,
+        awayTeam,
+        eventUrl,
+        hasNoTaxPromo: false,
+        scrapedAt: new Date(),
+        market1X2,
+        marketDoubleChance: marketDoubleChance.homeOrDraw > 0 ? marketDoubleChance : undefined,
+        marketOverUnder: Object.keys(marketOverUnder).length > 0 ? marketOverUnder : undefined,
+        marketBTTS: marketBTTS.yes > 0 ? marketBTTS : undefined,
+      };
     } catch (error) {
       console.error("[Betclic] Error parsing match details:", error);
       return null;

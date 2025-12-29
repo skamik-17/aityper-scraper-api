@@ -107,6 +107,16 @@ class BrowserPool {
   }
 
   /**
+   * Remove a browser from the pool (when it's known to be invalid)
+   */
+  remove(browser: Browser): void {
+    this.pool = this.pool.filter(b => b !== browser);
+    this.available = this.available.filter(b => b !== browser);
+    console.log(`[BrowserPool] Browser removed from pool (${this.pool.length} total)`);
+    browser.close().catch(() => {});
+  }
+
+  /**
    * Close all browsers in the pool
    * Should be called at the end of a scraping cycle
    */
@@ -156,5 +166,5 @@ class BrowserPool {
   }
 }
 
-// Singleton instance with 8 browsers max (optimized for parallel extended markets)
-export const browserPool = new BrowserPool(8);
+// Singleton instance with 14 browsers max (one per scraper per league)
+export const browserPool = new BrowserPool(14);

@@ -25,6 +25,13 @@ const LEAGUE_URLS: Record<string, string> = {
   "premier-league": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
 };
 
+// Tournament IDs for Superbet API (found from network inspection)
+// These are "tournamentIds" in the new API format
+const TOURNAMENT_IDS: Record<string, number[]> = {
+  ekstraklasa: [11], // Ekstraklasa
+  "premier-league": [106], // Premier League
+};
+
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "superbet";
   config: ScraperConfig;
@@ -38,54 +45,48 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
     const startTime = Date.now();
     let page: Page | null = null;
     const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    const tournamentIds = TOURNAMENT_IDS[league];
+    if (!url || !tournamentIds) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
       page = await this.initBrowser();
-      
+
+      // Set up network interception to capture API responses
       let apiData: any = null;
       page.on("response", async (response: Response) => {
         const reqUrl = response.url();
-        // Capture events - check for multiple possible API patterns
-        const isEventsApi = reqUrl.includes("/events") && (
-          reqUrl.includes("tournamentIds=") ||
-          reqUrl.includes("categoryIds=") ||
-          reqUrl.includes("sportId=")
-        );
-        const isNotLive = !reqUrl.includes("offerState=live") && !reqUrl.includes("/live/");
-
-        if (isEventsApi && isNotLive) {
+        // Match the specific events API endpoint
+        if (reqUrl.includes("events/by-date") && reqUrl.includes("offerState=prematch") && reqUrl.includes(`tournamentIds=${tournamentIds[0]}`)) {
           try {
             const json = await response.json();
-            // Only set if we have actual data (don't overwrite with empty response)
             if (json && Array.isArray(json.data) && json.data.length > 0) {
-              console.log(`[Superbet] Captured API data: ${json.data.length} events from ${reqUrl.substring(0, 100)}...`);
+              console.log(`[Superbet] Captured ${json.data.length} events from API`);
               apiData = json;
             }
           } catch {}
         }
       });
 
-      console.log(`[Superbet] Navigating to league: ${url}`);
-      // Use domcontentloaded + manual wait to be faster than networkidle
-      await this.navigateWithRetry(page, url, { timeout: 60000, waitUntil: "domcontentloaded" });
-      
-      // Wait for API data to be captured (polling with reduced timeout)
-      for (let i = 0; i < 8; i++) {
+      // Navigate to league page to trigger API call
+      console.log(`[Superbet] Navigating to: ${url}`);
+      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
+
+      // Wait for API data with early-exit polling
+      for (let i = 0; i < 15; i++) {
         if (apiData) break;
-        await this.delay(1000);
+        await this.delay(500);
       }
 
-      if (apiData && apiData.data) {
+      if (apiData && apiData.data && apiData.data.length > 0) {
         const matches: RawScrapedOdds[] = apiData.data.map((m: any) => {
           const mainOdds = m.odds?.filter((o: any) => o.marketId === 547) || [];
           const home = mainOdds.find((o: any) => o.code === "1")?.price || 0;
           const draw = mainOdds.find((o: any) => o.code === "0")?.price || 0;
           const away = mainOdds.find((o: any) => o.code === "2")?.price || 0;
-          
-          const teams = m.matchName.split('·');
-          const hName = teams[0] || "";
-          const aName = teams[1] || "";
+
+          const teams = (m.matchName || "").split('·');
+          const hName = (teams[0] || "").trim();
+          const aName = (teams[1] || "").trim();
 
           return {
             bookmaker: this.bookmaker,
@@ -97,7 +98,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
             awayOdds: away,
             hasNoTaxPromo: false,
             scrapedAt: new Date(),
-            eventUrl: `https://superbet.pl/kursy/pilka-nozna/${m.matchName.replace(/·/g, '-vs-').toLowerCase()}-${m.eventId}`
+            eventUrl: `https://superbet.pl/zaklady-bukmacherskie/pilka-nozna/${m.eventId}`
           };
         }).filter((m: any) => m.homeOdds > 0);
 

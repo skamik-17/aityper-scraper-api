@@ -125,8 +125,8 @@ export class STSScraper extends PlaywrightScraper {
         if (await cookieButton.isVisible({ timeout: 2000 })) await cookieButton.click();
       } catch {}
 
-      // Wait for WebSocket data with early-exit polling (max 6s)
-      for (let i = 0; i < 12; i++) {
+      // Wait for WebSocket data with early-exit polling (max 8s for reliability)
+      for (let i = 0; i < 16; i++) {
         if (initialData && initialData.length > 10000) break;
         await this.delay(500);
       }

@@ -71,10 +71,34 @@ export abstract class PlaywrightScraper {
    * Uses browser pool for efficient resource management
    */
   protected async initBrowser(): Promise<Page> {
-    // Acquire browser from pool
-    this.browser = await browserPool.acquire();
+    // Try up to 2 times to get a valid browser
+    for (let attempt = 0; attempt < 2; attempt++) {
+      // Acquire browser from pool
+      this.browser = await browserPool.acquire();
 
-    // Create new context for isolation
+      try {
+        // Create new context for isolation
+        this.context = await this.browser.newContext({
+          userAgent: DEFAULT_USER_AGENT,
+          locale: "pl-PL",
+          viewport: { width: 1920, height: 1080 },
+          javaScriptEnabled: true,
+          ignoreHTTPSErrors: true,
+          bypassCSP: true,
+        });
+
+        const page = await this.context.newPage();
+        return page;
+      } catch (error) {
+        // Browser was closed or invalid, remove from pool and retry with a new one
+        console.log(`[${this.bookmaker}] Browser invalid, retrying with fresh browser...`);
+        browserPool.remove(this.browser);
+        continue;
+      }
+    }
+
+    // Last attempt - get a fresh browser
+    this.browser = await browserPool.acquire();
     this.context = await this.browser.newContext({
       userAgent: DEFAULT_USER_AGENT,
       locale: "pl-PL",
@@ -207,10 +231,15 @@ export abstract class PlaywrightScraper {
    * Create error result
    */
   protected createErrorResult(error: unknown, duration: number): ScraperResult {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[${this.bookmaker}] Scraper error: ${errorMessage}`);
+    if (error instanceof Error && error.stack) {
+      console.error(`[${this.bookmaker}] Stack:`, error.stack.split('\n').slice(0, 3).join('\n'));
+    }
     return {
       status: "error",
       bookmaker: this.bookmaker,
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: errorMessage,
       duration,
       timestamp: new Date(),
     };

@@ -146,15 +146,28 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     try {
       page = await this.initBrowser();
 
-      // Go to fuksiarz to establish session
-      console.log(`[Fuksiarz] Navigating to: ${pageUrl}`);
+      // Navigate and fetch data in a single page.evaluate to minimize browser operations
+      console.log(`[Fuksiarz] Fetching category ${categoryId} via direct API...`);
       await this.navigateWithRetry(page, "https://fuksiarz.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(2000);
 
-      // Fetch events data
-      const events = await this.fetchEventsData(page, categoryId);
+      // Fetch events data directly via API
+      const events = await page.evaluate(async (catId) => {
+        try {
+          const res = await fetch(`https://fuksiarz.pl/rest/market/categories/multi/${catId}/events`);
+          const data = await res.json();
+          return data?.data || [];
+        } catch {
+          return [];
+        }
+      }, categoryId);
 
+      // Update cache
       if (events.length > 0) {
+        cacheTimestamp = Date.now();
+        for (const event of events) {
+          cachedEvents.set(String(event.eventId), event);
+        }
+
         const matches: RawScrapedOdds[] = [];
 
         for (const event of events) {

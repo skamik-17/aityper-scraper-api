@@ -95,47 +95,50 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       await this.navigateWithRetry(page, "https://www.efortuna.pl", { timeout: 20000, waitUntil: "domcontentloaded" });
       await this.delay(1000); // Brief wait for session
 
-      // Fetch fixtures directly via API (skip UI completely)
+      // Fetch fixtures and markets in a single page.evaluate to avoid browser closure between calls
       console.log(`[Fortuna] Fetching fixtures via direct API for ${leagueConfig.tournamentId}...`);
-      const tournamentFixtures = await page.evaluate(async (tournamentId) => {
+      const result = await page.evaluate(async (tournamentId) => {
         try {
+          // Step 1: Fetch fixtures
           const fixturesRes = await fetch(
             `https://api.efortuna.pl/offer/structure/api/v1_0/prematch/tournament/${tournamentId}/fixtures`
           );
-          const fixtures = await fixturesRes.json();
-          return { fixtures: fixtures.fixtures || [] };
+          const fixturesData = await fixturesRes.json();
+          const fixtures = fixturesData.fixtures || [];
+
+          if (fixtures.length === 0) {
+            return { fixtures: [], markets: [] };
+          }
+
+          // Step 2: Fetch markets for all fixtures in parallel
+          const fixtureIds = fixtures.map((f: any) => f.id);
+          const marketPromises = fixtureIds.map(async (id: string) => {
+            try {
+              const res = await fetch(
+                `https://api.efortuna.pl/offer/markets/api/v1_0/fixture/${id}/markets/overview`
+              );
+              const data = await res.json();
+              return Array.isArray(data) ? data : [];
+            } catch {
+              return [];
+            }
+          });
+          const marketsArrays = await Promise.all(marketPromises);
+          const markets = marketsArrays.flat();
+
+          return { fixtures, markets };
         } catch {
           return null;
         }
       }, leagueConfig.tournamentId);
 
-      if (!tournamentFixtures?.fixtures?.length) {
+      if (!result?.fixtures?.length) {
         return this.createNotFoundResult(`No fixtures found for ${league}`, Date.now() - startTime);
       }
+
+      const tournamentFixtures = { fixtures: result.fixtures };
+      const allMarkets = result.markets;
       console.log(`[Fortuna] Found ${tournamentFixtures.fixtures.length} fixtures`);
-
-      // Fetch markets for all fixtures via page.evaluate (all in parallel)
-      const fixtureIds = tournamentFixtures.fixtures.map((f: FortunaFixture) => f.id);
-      console.log(`[Fortuna] Fetching markets for ${fixtureIds.length} fixtures in parallel...`);
-
-      const marketsData = await page.evaluate(async (ids: string[]) => {
-        // Fetch all markets in parallel (no batching)
-        const promises = ids.map(async (id) => {
-          try {
-            const res = await fetch(
-              `https://api.efortuna.pl/offer/markets/api/v1_0/fixture/${id}/markets/overview`
-            );
-            const data = await res.json();
-            return Array.isArray(data) ? data : [];
-          } catch {
-            return [];
-          }
-        });
-        const results = await Promise.all(promises);
-        return results.flat();
-      }, fixtureIds);
-
-      const allMarkets = marketsData;
       console.log(`[Fortuna] Total markets captured: ${allMarkets.length}`);
 
       // Parse data

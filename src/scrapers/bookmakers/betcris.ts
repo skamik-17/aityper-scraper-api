@@ -114,10 +114,10 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       // Navigate to page
       await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-      // Wait for WebSocket data (reduced timeout from 20s to 10s)
+      // Wait for WebSocket data (15s to allow polling to complete)
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(10000).then(() => null)
+        this.delay(15000).then(() => null)
       ]);
 
       if (!wsData) {
@@ -247,7 +247,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         });
       });
 
-      // Early-exit polling (check every 500ms, max 6s instead of static 10s)
+      // Early-exit polling (check every 300ms, max 12s for reliability under contention)
       const startTime = Date.now();
       const checkInterval = setInterval(() => {
         if (resolved) {
@@ -258,20 +258,20 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         const elapsed = Date.now() - startTime;
 
         // Exit early if we have good data (any games with markets) after minimum wait
-        if (elapsed >= 1500 && bestData && bestMarketCount > 0) {
+        if (elapsed >= 1000 && bestData && bestMarketCount > 0) {
           resolved = true;
           clearInterval(checkInterval);
           resolve(bestData);
           return;
         }
 
-        // Maximum timeout of 6s
-        if (elapsed >= 6000) {
+        // Maximum timeout of 12s (for parallel league scraping with browser contention)
+        if (elapsed >= 12000) {
           resolved = true;
           clearInterval(checkInterval);
           resolve(bestData);
         }
-      }, 500);
+      }, 300);
     });
   }
 
@@ -388,7 +388,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(10000).then(() => null)
+        this.delay(15000).then(() => null)
       ]);
 
       if (wsData) {

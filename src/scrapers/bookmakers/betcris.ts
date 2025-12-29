@@ -126,7 +126,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       }
 
       // Parse Swarm data
-      const matches = this.parseSwarmData(wsData, league);
+      const matches = this.parseSwarmData(wsData, league, competitionId);
 
       if (matches.length === 0) {
         console.log("[Betcris] No matches parsed from WebSocket, falling back to DOM");
@@ -256,7 +256,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     return count;
   }
 
-  private parseSwarmData(data: SwarmData, league: string): RawScrapedOdds[] {
+  private parseSwarmData(data: SwarmData, league: string, competitionId: number): RawScrapedOdds[] {
     const matches: RawScrapedOdds[] = [];
 
     for (const sport of Object.values(data.sport || {})) {
@@ -265,6 +265,9 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
       for (const region of Object.values(sport.region || {})) {
         for (const competition of Object.values(region.competition || {})) {
+          // Filter by competition ID to avoid scraping other leagues (e.g., Champions League)
+          if (competition.id !== competitionId) continue;
+
           for (const game of Object.values(competition.game || {})) {
             // Skip blocked games
             if (game.is_blocked) continue;

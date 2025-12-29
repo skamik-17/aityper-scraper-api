@@ -46,10 +46,12 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       let apiData: any = null;
       page.on("response", async (response: Response) => {
         const reqUrl = response.url();
-        if (reqUrl.includes("/events/by-date") && reqUrl.includes("tournamentIds=")) {
-          try { 
+        // Capture events by-date with tournament filter, but skip live events (which are often empty)
+        if (reqUrl.includes("/events/by-date") && reqUrl.includes("tournamentIds=") && !reqUrl.includes("offerState=live")) {
+          try {
             const json = await response.json();
-            if (json && json.data) apiData = json;
+            // Only set if we have actual data (don't overwrite with empty response)
+            if (json && Array.isArray(json.data) && json.data.length > 0) apiData = json;
           } catch {}
         }
       });

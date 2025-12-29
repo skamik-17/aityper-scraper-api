@@ -471,8 +471,8 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
         if (homeOrAway?.odds) marketDoubleChance.homeOrAway = homeOrAway.odds;
       }
 
-      // Over/Under Market
-      if (market.marketTypeId === MARKET_TYPES.OVER_UNDER || market.marketTypeName?.includes("liczba goli")) {
+      // Over/Under Market - only exact type ID (not half-time or team-specific)
+      if (market.marketTypeId === MARKET_TYPES.OVER_UNDER) {
         // Extract line from specifiers or market name
         let line = market.specifiers?.total || market.specifiers?.line;
         if (!line) {
@@ -498,8 +498,8 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
         }
       }
 
-      // BTTS Market
-      if (market.marketTypeId === MARKET_TYPES.BTTS || market.marketTypeName?.includes("obie drużyny strzelą")) {
+      // BTTS Market - only exact type ID (not half-time or combo markets)
+      if (market.marketTypeId === MARKET_TYPES.BTTS) {
         const yes = outcomes.find(o =>
           o.name?.toLowerCase() === "tak" || o.name?.toLowerCase() === "yes" ||
           o.longName?.toLowerCase() === "tak"

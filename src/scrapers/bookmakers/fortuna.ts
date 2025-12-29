@@ -36,7 +36,7 @@ const MARKET_TYPES = {
   MATCH_RESULT: "ufo:mtyp:00-00",     // Wynik meczu (1X2)
   DOUBLE_CHANCE: "ufo:mtyp:00-01",    // Mecz: dwójtyp
   OVER_UNDER: "ufo:mtyp:00-0u",       // Mecz: liczba goli
-  BTTS: "ufo:mtyp:00-02",             // Obie drużyny strzelą
+  BTTS: "ufo:mtyp:00-1c",             // Mecz: obie drużyny strzelą gola
 };
 
 // API response types
@@ -332,9 +332,10 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       let fixture: FortunaFixture | undefined;
       let markets: FortunaMarket[] = [];
 
-      if (upcomingData?.fixtures) {
-        fixture = upcomingData.fixtures.find(f => f.id === fixtureId);
-        markets = upcomingData.markets.filter(m => m.fixtureId === fixtureId);
+      const capturedUpcoming = upcomingData as FortunaUpcomingResponse | null;
+      if (capturedUpcoming?.fixtures) {
+        fixture = capturedUpcoming.fixtures.find((f) => f.id === fixtureId);
+        markets = capturedUpcoming.markets.filter((m) => m.fixtureId === fixtureId);
       }
 
       // Also use market overview data if available
@@ -342,18 +343,54 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
         markets = [...markets, ...marketOverviews.flat()];
       }
 
+      // If no markets captured via interception, fetch directly from API
+      // Use /markets endpoint instead of /markets/overview to get all extended markets
+      if (markets.length < 10) {
+        console.log(`[Fortuna] Fetching all markets directly for fixture ${fixtureId}...`);
+        const directMarkets = await page.evaluate(async (fid: string) => {
+          try {
+            const res = await fetch(
+              `https://api.efortuna.pl/offer/markets/api/v1_0/fixture/${fid}/markets`
+            );
+            const data = await res.json();
+            return Array.isArray(data) ? data : [];
+          } catch {
+            return [];
+          }
+        }, fixtureId);
+        markets = directMarkets;
+        console.log(`[Fortuna] Fetched ${markets.length} markets directly`);
+      }
+
       if (!fixture) {
-        // Try to parse from URL
-        const urlParts = eventUrl.split("/").pop()?.split("-") || [];
-        if (urlParts.length >= 2) {
-          fixture = {
-            id: fixtureId,
-            name: urlParts.slice(0, -1).join(" "),
-            tournamentId: "",
-            participants: [],
-            startDatetime: Date.now(),
-            seoName: "",
-          };
+        // Try to fetch fixture info directly from API
+        console.log(`[Fortuna] No fixture info, fetching directly...`);
+        const fixtureInfo = await page.evaluate(async (fid: string) => {
+          try {
+            const res = await fetch(
+              `https://api.efortuna.pl/offer/structure/api/v1_0/fixture/${fid}`
+            );
+            return await res.json();
+          } catch {
+            return null;
+          }
+        }, fixtureId);
+
+        if (fixtureInfo) {
+          fixture = fixtureInfo;
+        } else {
+          // Fallback: Try to parse from URL
+          const urlParts = eventUrl.split("/").pop()?.split("-") || [];
+          if (urlParts.length >= 2) {
+            fixture = {
+              id: fixtureId,
+              name: urlParts.slice(0, -1).join(" "),
+              tournamentId: "",
+              participants: [],
+              startDatetime: Date.now(),
+              seoName: "",
+            };
+          }
         }
       }
 
@@ -444,8 +481,17 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
         }
 
         if (line) {
-          const over = outcomes.find(o => o.name?.toLowerCase().includes("over") || o.longName?.toLowerCase().includes("powyżej"));
-          const under = outcomes.find(o => o.name?.toLowerCase().includes("under") || o.longName?.toLowerCase().includes("poniżej"));
+          // Fortuna uses "+ X.5" and "- X.5" format, or "powyżej"/"poniżej"
+          const over = outcomes.find(o =>
+            o.name?.startsWith("+ ") || o.name?.startsWith("+") ||
+            o.name?.toLowerCase().includes("over") ||
+            o.longName?.toLowerCase().includes("powyżej")
+          );
+          const under = outcomes.find(o =>
+            o.name?.startsWith("- ") || o.name?.startsWith("-") ||
+            o.name?.toLowerCase().includes("under") ||
+            o.longName?.toLowerCase().includes("poniżej")
+          );
           if (over?.odds && under?.odds) {
             marketOverUnder[line] = { over: over.odds, under: under.odds };
           }
@@ -454,8 +500,14 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
 
       // BTTS Market
       if (market.marketTypeId === MARKET_TYPES.BTTS || market.marketTypeName?.includes("obie drużyny strzelą")) {
-        const yes = outcomes.find(o => o.name?.toLowerCase() === "yes" || o.longName?.toLowerCase() === "tak");
-        const no = outcomes.find(o => o.name?.toLowerCase() === "no" || o.longName?.toLowerCase() === "nie");
+        const yes = outcomes.find(o =>
+          o.name?.toLowerCase() === "tak" || o.name?.toLowerCase() === "yes" ||
+          o.longName?.toLowerCase() === "tak"
+        );
+        const no = outcomes.find(o =>
+          o.name?.toLowerCase() === "nie" || o.name?.toLowerCase() === "no" ||
+          o.longName?.toLowerCase() === "nie"
+        );
         if (yes?.odds && no?.odds) {
           marketBTTS.yes = yes.odds;
           marketBTTS.no = no.odds;

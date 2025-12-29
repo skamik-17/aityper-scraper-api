@@ -1,9 +1,9 @@
 /**
  * Betcris Playwright Scraper
- * Scrapes odds from betcris.pl using headless Chromium
+ * Uses Swarm WebSocket interception to capture odds from betcris.pl
  */
 
-import type { Page } from "playwright";
+import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
 import type {
   ScraperConfig,
@@ -19,20 +19,75 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// League URLs for Betcris
-const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Poland/1978",
-  "premier-league": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/199",
+// Competition IDs for Betcris (from Swarm API)
+const COMPETITION_IDS: Record<string, number> = {
+  ekstraklasa: 1978,
+  "premier-league": 538,
 };
 
-// CSS selectors for Betcris
-const SELECTORS = {
-  matchCard: "[data-testid='game']",
-  teamName: ".comp__team-name",
-  oddsButton: "[data-testid='odd']",
-  oddsValue: ".xOddButton__coef",
-  marketOddsLabel: ".xOddButton__name",
+// League URLs for navigation
+const LEAGUE_URLS: Record<string, string> = {
+  ekstraklasa: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Poland/1978",
+  "premier-league": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
 };
+
+// Swarm market types
+const SWARM_MARKET_TYPES = {
+  MATCH_RESULT: "P1XP2",        // 1X2
+  DOUBLE_CHANCE: "P1XP2DC",     // Double Chance (sometimes just part of market name)
+  OVER_UNDER: "OverUnder",      // Total goals Over/Under
+  BTTS: "BothTeamsToScore",     // Both teams to score
+};
+
+interface SwarmGame {
+  id: number;
+  team1_name: string;
+  team2_name: string;
+  team1_id: number;
+  team2_id: number;
+  start_ts: number;
+  markets_count: number;
+  is_blocked: number;
+  game_number: number;
+  market?: Record<string, SwarmMarket>;
+}
+
+interface SwarmMarket {
+  id: number;
+  name: string;
+  type: string;
+  order: number;
+  base?: number;
+  col_count: number;
+  event?: Record<string, SwarmEvent>;
+}
+
+interface SwarmEvent {
+  id: number;
+  name: string;
+  price: number;
+  order: number;
+  type_1?: string;
+  base?: number;
+}
+
+interface SwarmData {
+  sport?: Record<string, {
+    id: number;
+    name: string;
+    alias: string;
+    region?: Record<string, {
+      id: number;
+      name: string;
+      alias: string;
+      competition?: Record<string, {
+        id: number;
+        name: string;
+        game?: Record<string, SwarmGame>;
+      }>;
+    }>;
+  }>;
+}
 
 export class BetcrisPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betcris";
@@ -46,24 +101,271 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+    const competitionId = COMPETITION_IDS[league];
     const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    if (!competitionId || !url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
 
-      const hasMatches = await this.waitForSelector(page, SELECTORS.matchCard, 15000);
-      if (!hasMatches) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      // Set up WebSocket interception
+      const wsDataPromise = this.captureSwarmData(page, competitionId);
 
-      const data = await this.extractMatchData(page, league);
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
+      // Navigate to page
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+
+      // Wait for WebSocket data (with timeout)
+      const wsData = await Promise.race([
+        wsDataPromise,
+        this.delay(20000).then(() => null)
+      ]);
+
+      if (!wsData) {
+        console.log("[Betcris] No WebSocket data captured, falling back to DOM scraping");
+        return this.scrapeLeagueDOM(page, league, startTime);
+      }
+
+      // Parse Swarm data
+      const matches = this.parseSwarmData(wsData, league);
+
+      if (matches.length === 0) {
+        console.log("[Betcris] No matches parsed from WebSocket, falling back to DOM");
+        return this.scrapeLeagueDOM(page, league, startTime);
+      }
+
+      console.log(`[Betcris] Scraped ${matches.length} matches for ${league} via WebSocket`);
+      return { status: "success", bookmaker: this.bookmaker, data: matches, duration: Date.now() - startTime, timestamp: new Date() };
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
       if (page) await page.close();
     }
+  }
+
+  private async captureSwarmData(page: Page, competitionId?: number, singleEventMode = false, targetGameNumber?: number): Promise<SwarmData | null> {
+    return new Promise((resolve) => {
+      let resolved = false;
+      let bestData: SwarmData | null = null;
+      let bestMarketCount = 0;
+
+      page.on("websocket", (ws: PlaywrightWebSocket) => {
+        // Swarm WebSocket URL
+        if (!ws.url().includes("swarm") && !ws.url().includes("trexname.com")) return;
+
+        ws.on("framereceived", (frame) => {
+          if (resolved) return;
+
+          try {
+            const payload = frame.payload.toString();
+            // Skip non-JSON frames
+            if (!payload.startsWith("{")) return;
+
+            const msg = JSON.parse(payload);
+
+            // Look for game data responses (they have sport > region > competition > game structure)
+            if (msg.code === 0 && msg.data?.data?.sport) {
+              const data = msg.data.data as SwarmData;
+
+              // Check if this response has games with markets
+              let hasGamesWithMarkets = false;
+              let gameCount = 0;
+              let totalMarkets = 0;
+              let hasTargetGame = false;
+
+              for (const sport of Object.values(data.sport || {})) {
+                for (const region of Object.values(sport.region || {})) {
+                  for (const competition of Object.values(region.competition || {})) {
+                    for (const game of Object.values(competition.game || {})) {
+                      gameCount++;
+                      const marketCount = Object.keys(game.market || {}).length;
+                      totalMarkets += marketCount;
+                      if (marketCount > 0) {
+                        hasGamesWithMarkets = true;
+                      }
+                      // Check if this is our target game
+                      if (targetGameNumber && game.game_number === targetGameNumber) {
+                        hasTargetGame = true;
+                      }
+                    }
+                  }
+                }
+              }
+
+              if (hasGamesWithMarkets && gameCount > 0) {
+                if (singleEventMode) {
+                  // For match details: look for response with target game and many markets
+                  if (targetGameNumber) {
+                    // Only consider responses containing the target game
+                    if (hasTargetGame && totalMarkets > bestMarketCount) {
+                      bestMarketCount = totalMarkets;
+                      bestData = data;
+                      // Resolve when we have the target game with extended markets
+                      if (totalMarkets >= 50) {
+                        resolved = true;
+                        resolve(data);
+                        return;
+                      }
+                    }
+                  } else {
+                    // No target game, just look for many markets
+                    if (totalMarkets > bestMarketCount) {
+                      bestMarketCount = totalMarkets;
+                      bestData = data;
+                    }
+                    if (totalMarkets >= 50) {
+                      resolved = true;
+                      resolve(data);
+                      return;
+                    }
+                  }
+                } else {
+                  // For league listing: any response with games + markets is good
+                  resolved = true;
+                  resolve(data);
+                  return;
+                }
+              }
+            }
+          } catch {
+            // Not valid JSON or parsing error
+          }
+        });
+      });
+
+      // Timeout - return best captured data
+      setTimeout(() => {
+        if (!resolved) {
+          resolved = true;
+          resolve(bestData);
+        }
+      }, 25000);
+    });
+  }
+
+  private countMarkets(data: SwarmData): number {
+    let count = 0;
+    for (const sport of Object.values(data.sport || {})) {
+      for (const region of Object.values(sport.region || {})) {
+        for (const competition of Object.values(region.competition || {})) {
+          for (const game of Object.values(competition.game || {})) {
+            count += Object.keys(game.market || {}).length;
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  private parseSwarmData(data: SwarmData, league: string): RawScrapedOdds[] {
+    const matches: RawScrapedOdds[] = [];
+
+    for (const sport of Object.values(data.sport || {})) {
+      // Only football
+      if (sport.alias !== "Soccer") continue;
+
+      for (const region of Object.values(sport.region || {})) {
+        for (const competition of Object.values(region.competition || {})) {
+          for (const game of Object.values(competition.game || {})) {
+            // Skip blocked games
+            if (game.is_blocked) continue;
+
+            const homeTeam = game.team1_name?.trim();
+            const awayTeam = game.team2_name?.trim();
+            if (!homeTeam || !awayTeam) continue;
+
+            // Find 1X2 market (P1XP2 type)
+            let homeOdds = 0, drawOdds = 0, awayOdds = 0;
+
+            for (const market of Object.values(game.market || {})) {
+              if (market.type === SWARM_MARKET_TYPES.MATCH_RESULT) {
+                for (const event of Object.values(market.event || {})) {
+                  const price = event.price;
+                  if (!price || price <= 1) continue;
+
+                  if (event.type_1 === "W1") homeOdds = price;
+                  else if (event.type_1 === "X") drawOdds = price;
+                  else if (event.type_1 === "W2") awayOdds = price;
+                }
+                break;
+              }
+            }
+
+            // Skip if no valid 1X2 odds
+            if (homeOdds <= 1 || drawOdds <= 1 || awayOdds <= 1) continue;
+
+            // Build event URL
+            const regionAlias = region.alias?.toLowerCase() || "unknown";
+            const eventUrl = `https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/${regionAlias}/${competition.id}/${game.game_number}`;
+
+            matches.push({
+              bookmaker: this.bookmaker,
+              eventName: `${homeTeam} - ${awayTeam}`,
+              homeTeam: getCanonicalTeamName(homeTeam, league),
+              awayTeam: getCanonicalTeamName(awayTeam, league),
+              homeOdds,
+              drawOdds,
+              awayOdds,
+              hasNoTaxPromo: false,
+              scrapedAt: new Date(),
+              eventUrl,
+            });
+          }
+        }
+      }
+    }
+
+    return matches;
+  }
+
+  // Fallback DOM scraping method
+  private async scrapeLeagueDOM(page: Page, league: string, startTime: number): Promise<ScraperResult> {
+    const SELECTORS = {
+      matchCard: "[data-testid='game']",
+      teamName: ".comp__team-name",
+      oddsButton: "[data-testid='odd']",
+      oddsValue: ".xOddButton__coef",
+    };
+
+    await this.delay(5000);
+    const hasMatches = await this.waitForSelector(page, SELECTORS.matchCard, 15000);
+    if (!hasMatches) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+
+    const matchData = await page.evaluate((selectors) => {
+      const matches: any[] = [];
+      document.querySelectorAll(selectors.matchCard).forEach((card) => {
+        const teamElements = card.querySelectorAll(selectors.teamName);
+        if (teamElements.length < 2) return;
+        const home = teamElements[0]?.textContent?.trim() || "";
+        const away = teamElements[1]?.textContent?.trim() || "";
+        const oddElements = card.querySelectorAll(selectors.oddsButton);
+        const odds = Array.from(oddElements).slice(0, 3).map(el => {
+          const valEl = el.querySelector(selectors.oddsValue);
+          const t = (valEl?.textContent || el.textContent)?.trim()?.match(/(\d+[.,]?\d*)/);
+          return t ? parseFloat(t[1].replace(",", ".")) : 0;
+        });
+        if (odds.length >= 3 && !odds.some(isNaN)) {
+          const link = card.querySelector("a[href*='/zaklady-bukmacherskie/']") as HTMLAnchorElement || card.closest("a") as HTMLAnchorElement;
+          matches.push({ homeTeam: home, awayTeam: away, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link?.href });
+        }
+      });
+      return matches;
+    }, SELECTORS);
+
+    const data = matchData.map(m => ({
+      bookmaker: "betcris" as const,
+      eventName: `${m.homeTeam} - ${m.awayTeam}`,
+      homeTeam: getCanonicalTeamName(m.homeTeam, league),
+      awayTeam: getCanonicalTeamName(m.awayTeam, league),
+      homeOdds: m.homeOdds,
+      drawOdds: m.drawOdds,
+      awayOdds: m.awayOdds,
+      hasNoTaxPromo: false,
+      scrapedAt: new Date(),
+      eventUrl: m.eventUrl
+    }));
+
+    console.log(`[Betcris] Scraped ${data.length} matches for ${league} via DOM`);
+    return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
@@ -81,18 +383,30 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
 
-      const hasOdds = await this.waitForSelector(page, SELECTORS.oddsButton, 10000);
-      if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
+      // Set up WebSocket interception for match details (SINGLE_GAME_VIEW has game_number=undefined)
+      // We look for a response with a single game containing many markets
+      const wsDataPromise = this.captureSwarmData(page, undefined, true);
 
-      const matchData = await this.extractMatchDetailData(page, eventUrl);
-      if (!matchData) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
+      await page.goto(eventUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-      return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
+      const wsData = await Promise.race([
+        wsDataPromise,
+        this.delay(20000).then(() => null)
+      ]);
+
+      if (wsData) {
+        const matchData = this.parseMatchDetailFromSwarm(wsData, eventUrl);
+        if (matchData) {
+          return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
+        }
+      }
+
+      // Fallback to DOM scraping
+      return this.scrapeMatchDetailsDOM(page, eventUrl, startTime);
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
@@ -100,22 +414,131 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
-  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    return page.evaluate((selectors) => {
-      const entries: EventUrlEntry[] = [];
-      document.querySelectorAll(selectors.matchCard).forEach((card) => {
-        const teamElements = card.querySelectorAll(selectors.teamName);
-        if (teamElements.length < 2) return;
-        const home = teamElements[0]?.textContent?.trim() || "";
-        const away = teamElements[1]?.textContent?.trim() || "";
-        const link = card.querySelector("a[href*='/zaklady-bukmacherskie/']") as HTMLAnchorElement || card.closest("a") as HTMLAnchorElement;
-        if (link?.href) entries.push({ matchKey: `${home} vs ${away}`, eventUrl: link.href });
-      });
-      return entries;
-    }, SELECTORS);
+  private parseMatchDetailFromSwarm(data: SwarmData, eventUrl: string): RawScrapedMatchOdds | null {
+    // Find the game with the most markets (SINGLE_GAME_VIEW typically has 100+ markets)
+    let bestGame: SwarmGame | null = null;
+    let maxMarkets = 0;
+
+    for (const sport of Object.values(data.sport || {})) {
+      for (const region of Object.values(sport.region || {})) {
+        for (const competition of Object.values(region.competition || {})) {
+          for (const game of Object.values(competition.game || {})) {
+            const marketCount = Object.keys(game.market || {}).length;
+            if (marketCount > maxMarkets) {
+              maxMarkets = marketCount;
+              bestGame = game;
+            }
+          }
+        }
+      }
+    }
+
+    if (!bestGame || maxMarkets < 10) return null;
+
+    const game = bestGame;
+    const homeTeam = game.team1_name?.trim();
+    const awayTeam = game.team2_name?.trim();
+    if (!homeTeam) return null;
+
+    // Initialize markets
+    const m1X2 = { home: 0, draw: 0, away: 0 };
+    const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+    const mOU: Record<string, MarketOverUnderOdds> = {};
+    const mBTTS = { yes: 0, no: 0 };
+
+    for (const market of Object.values(game.market || {})) {
+      const marketName = market.name?.toLowerCase() || "";
+      const marketType = market.type || "";
+
+      // 1X2 - "Wynik meczu" with P1XP2 type
+      if (marketType === SWARM_MARKET_TYPES.MATCH_RESULT || marketName.includes("wynik meczu")) {
+        for (const event of Object.values(market.event || {})) {
+          const price = event.price;
+          if (!price || price <= 1) continue;
+
+          if (event.type_1 === "W1") m1X2.home = price;
+          else if (event.type_1 === "X") m1X2.draw = price;
+          else if (event.type_1 === "W2") m1X2.away = price;
+        }
+      }
+      // Double Chance - "Podwójna szansa" or DC type
+      else if (marketName.includes("podwójna szansa") || marketName.includes("double chance")) {
+        for (const event of Object.values(market.event || {})) {
+          const price = event.price;
+          const name = event.name?.toLowerCase() || "";
+          const type1 = event.type_1?.toUpperCase() || "";
+          if (!price || price <= 1) continue;
+
+          if (type1 === "1X" || name.includes("1x") || name.includes("w1 lub x")) mDC.homeOrDraw = price;
+          else if (type1 === "X2" || name.includes("x2") || name.includes("x lub w2")) mDC.drawOrAway = price;
+          else if (type1 === "12" || name.includes("12") || name.includes("w1 lub w2")) mDC.homeOrAway = price;
+        }
+      }
+      // Over/Under - type "OverUnder" or market name containing goal keywords
+      else if (marketType === "OverUnder" ||
+               marketName.includes("suma goli") || marketName.includes("liczba goli")) {
+        // Get base/line from market.base or from event.base
+        const base = market.base;
+
+        if (base && base > 0 && base.toString().includes(".5")) {
+          const line = base.toFixed(1);
+          if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
+
+          for (const event of Object.values(market.event || {})) {
+            const price = event.price;
+            const name = event.name?.toLowerCase() || "";
+            const type1 = event.type_1?.toLowerCase() || "";
+            if (!price || price <= 1) continue;
+
+            if (type1 === "over" || name.includes("powyżej") || name.includes("ponad") || name.includes("over")) {
+              mOU[line].over = price;
+            } else if (type1 === "under" || name.includes("poniżej") || name.includes("under")) {
+              mOU[line].under = price;
+            }
+          }
+        }
+      }
+      // BTTS - "Obie drużyny strzelą"
+      else if (marketName.includes("obie") && marketName.includes("strzel")) {
+        for (const event of Object.values(market.event || {})) {
+          const price = event.price;
+          const name = event.name?.toLowerCase() || "";
+          const type1 = event.type_1?.toLowerCase() || "";
+          if (!price || price <= 1) continue;
+
+          if (type1 === "yes" || name === "tak" || name === "yes") mBTTS.yes = price;
+          else if (type1 === "no" || name === "nie" || name === "no") mBTTS.no = price;
+        }
+      }
+    }
+
+    return {
+      bookmaker: "betcris",
+      eventName: `${homeTeam} - ${awayTeam}`,
+      homeTeam,
+      awayTeam,
+      eventUrl,
+      hasNoTaxPromo: false,
+      scrapedAt: new Date(),
+      market1X2: m1X2,
+      marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
+      marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined,
+      marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
+    };
   }
 
-  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
+  private async scrapeMatchDetailsDOM(page: Page, eventUrl: string, startTime: number): Promise<MatchDetailResult> {
+    const SELECTORS = {
+      teamName: ".comp__team-name",
+      oddsButton: "[data-testid='odd']",
+      oddsValue: ".xOddButton__coef",
+      marketOddsLabel: ".xOddButton__name",
+    };
+
+    await this.delay(5000);
+    const hasOdds = await this.waitForSelector(page, SELECTORS.oddsButton, 10000);
+    if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
+
     const data = await page.evaluate((selectors) => {
       let hTeam = "", aTeam = "";
       const teamElements = document.querySelectorAll(selectors.teamName);
@@ -141,9 +564,9 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         const val = parseFloat(valueText.replace(",", "."));
         if (isNaN(val) || val <= 1) return;
 
-        if (label === "1" || label === hTeam.toLowerCase()) m1X2.home = val;
+        if (label === "1" || label === "w1" || label === hTeam.toLowerCase()) m1X2.home = val;
         else if (label === "x" || label === "remis") m1X2.draw = val;
-        else if (label === "2" || label === aTeam.toLowerCase()) m1X2.away = val;
+        else if (label === "2" || label === "w2" || label === aTeam.toLowerCase()) m1X2.away = val;
         else if (label === "1x") mDC.homeOrDraw = val;
         else if (label === "x2") mDC.drawOrAway = val;
         else if (label === "12") mDC.homeOrAway = val;
@@ -162,43 +585,47 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       return { homeTeam: hTeam, awayTeam: aTeam, market1X2: m1X2, marketDoubleChance: mDC, marketOverUnder: mOU, marketBTTS: mBTTS };
     }, SELECTORS);
 
-    if (!data) return null;
+    if (!data) return this.createMatchDetailNotFoundResult("Could not parse data", Date.now() - startTime);
+
     return {
-      bookmaker: "betcris", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
-      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
-      market1X2: data.market1X2,
-      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
-      marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
-      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
+      status: "success",
+      bookmaker: this.bookmaker,
+      data: {
+        bookmaker: "betcris",
+        eventName: `${data.homeTeam} - ${data.awayTeam}`,
+        homeTeam: data.homeTeam,
+        awayTeam: data.awayTeam,
+        eventUrl,
+        hasNoTaxPromo: false,
+        scrapedAt: new Date(),
+        market1X2: data.market1X2,
+        marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
+        marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
+        marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
+      },
+      duration: Date.now() - startTime,
+      timestamp: new Date()
     };
   }
 
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: any[] = [];
+  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
+    const SELECTORS = {
+      matchCard: "[data-testid='game']",
+      teamName: ".comp__team-name",
+    };
+
+    return page.evaluate((selectors) => {
+      const entries: EventUrlEntry[] = [];
       document.querySelectorAll(selectors.matchCard).forEach((card) => {
         const teamElements = card.querySelectorAll(selectors.teamName);
         if (teamElements.length < 2) return;
         const home = teamElements[0]?.textContent?.trim() || "";
         const away = teamElements[1]?.textContent?.trim() || "";
-        const oddElements = card.querySelectorAll(selectors.oddsButton);
-        const odds = Array.from(oddElements).slice(0, 3).map(el => {
-          const valEl = el.querySelector(selectors.oddsValue);
-          const t = (valEl?.textContent || el.textContent)?.trim()?.match(/(\d+[.,]?\d*)/);
-          return t ? parseFloat(t[1].replace(",", ".")) : 0;
-        });
-        if (odds.length >= 3 && !odds.some(isNaN)) {
-          const link = card.querySelector("a[href*='/zaklady-bukmacherskie/']") as HTMLAnchorElement || card.closest("a") as HTMLAnchorElement;
-          matches.push({ homeTeam: home, awayTeam: away, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link?.href });
-        }
+        const link = card.querySelector("a[href*='/zaklady-bukmacherskie/']") as HTMLAnchorElement || card.closest("a") as HTMLAnchorElement;
+        if (link?.href) entries.push({ matchKey: `${home} vs ${away}`, eventUrl: link.href });
       });
-      return matches;
+      return entries;
     }, SELECTORS);
-
-    return matchData.map(m => ({
-      bookmaker: "betcris", eventName: `${m.homeTeam} - ${m.awayTeam}`, homeTeam: getCanonicalTeamName(m.homeTeam, league), awayTeam: getCanonicalTeamName(m.awayTeam, league),
-      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: m.eventUrl
-    }));
   }
 }
 

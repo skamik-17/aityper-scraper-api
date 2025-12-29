@@ -1,6 +1,6 @@
 /**
  * STS Playwright Scraper
- * Scrapes odds from sts.pl using headless Chromium
+ * Uses WebSocket interception to extract odds data from sts.pl
  */
 
 import type { Page } from "playwright";
@@ -19,23 +19,46 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../types/scraper.js";
 import { PlaywrightScraper } from "../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 
-// League URLs for STS
-const LEAGUE_URLS: Record<string, string> = {
-  ekstraklasa:
-    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/1/46/201",
-  "premier-league":
-    "https://www.sts.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/1/1/17",
+// League configuration with tournament IDs for WebSocket
+const LEAGUE_CONFIG: Record<string, { url: string; tournamentId: number; countryFilter: string; tournamentFilter: string }> = {
+  ekstraklasa: {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa/175",
+    tournamentId: 46,
+    countryFilter: "polska",
+    tournamentFilter: "ekstraklasa",
+  },
+  "premier-league": {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league/175",
+    tournamentId: 17,
+    countryFilter: "angli",
+    tournamentFilter: "premier league",
+  },
 };
 
-// CSS selectors for STS
-const SELECTORS = {
-  cookieAccept: "[data-testid='cookie-policy-button-accept-all'], button:has-text('Akceptuj wszystkie')",
-  matchTile: ".one-ticket-match-tile, .one-ticket-live-match-tile",
-  teamHome: ".one-ticket-match-tile-event-details-desktop__team-home span, .live-match-tile__team-name--home",
-  teamAway: ".one-ticket-match-tile-event-details-desktop__team-away span, .live-match-tile__team-name--away",
-  oddsValue: ".odds-button__odd-value",
-  oddsButton: ".odds-button, [class*='selection'], button[class*='odd']",
-};
+// Interface for parsed fixture data
+interface STSFixture {
+  id: string;
+  home: string;
+  away: string;
+  startTime: string;
+  stsId: number;
+  tournament: string;
+  country: string;
+  eventUrl: string;
+}
+
+// Interface for parsed odds
+interface STSOdds {
+  odds1: number | null;
+  oddsX: number | null;
+  odds2: number | null;
+  odds1X: number | null;
+  oddsX2: number | null;
+  odds12: number | null;
+  bttsYes: number | null;
+  bttsNo: number | null;
+  overUnder: Record<string, { over: number; under: number }>;
+}
 
 export class STSScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "sts";
@@ -46,27 +69,74 @@ export class STSScraper extends PlaywrightScraper {
     this.config = { ...DEFAULT_SCRAPER_CONFIGS.sts, ...config, enabled: true };
   }
 
+  // Convert team name to URL slug (e.g., "Manchester United" -> "manchester-united")
+  private slugify(name: string): string {
+    return name
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
     let page: Page | null = null;
-    const url = LEAGUE_URLS[league];
-    if (!url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    const leagueConfig = LEAGUE_CONFIG[league];
+    if (!leagueConfig) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
       page = await this.initBrowser();
-      await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(4000);
+
+      // Set up WebSocket data capture
+      let initialData = "";
+      const fixtureData = new Map<string, any>();
+
+      // Listen to WebSocket messages
+      page.on("websocket", ws => {
+        if (!ws.url().includes("/sbk/api/sbk")) return;
+
+        ws.on("framereceived", frame => {
+          const data = typeof frame.payload === "string" ? frame.payload : "";
+
+          // Capture initial data (largest message)
+          if (data.includes('"s":"i_pl"') && data.length > initialData.length) {
+            initialData = data;
+          }
+
+          // Capture fixture-specific data
+          const fixtureMatch = data.match(/"s":"f_(f\d+)_pl"/);
+          if (fixtureMatch && data.length > 1000) {
+            try {
+              const lines = data.split("\n");
+              const jsonData = JSON.parse(lines[1] || lines[0]);
+              fixtureData.set(fixtureMatch[1], jsonData);
+            } catch {}
+          }
+        });
+      });
+
+      // Navigate and accept cookies
+      await this.navigateWithRetry(page, leagueConfig.url, { timeout: 30000, waitUntil: "domcontentloaded" });
+      await this.delay(3000);
 
       try {
-        const cookieButton = page.locator(SELECTORS.cookieAccept).first();
+        const cookieButton = page.locator("text=Akceptuj wszystkie").first();
         if (await cookieButton.isVisible({ timeout: 3000 })) await cookieButton.click();
-      } catch {} // Ignore errors if cookie button is not found or not visible
+      } catch {}
 
-      await page.setViewportSize({ width: 1920, height: 10000 });
-      await this.delay(2000);
+      // Wait for WebSocket data
+      await this.delay(15000);
 
-      const data = await this.extractMatchData(page, league);
-      if (data.length === 0) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      if (!initialData) {
+        return this.createNotFoundResult("No WebSocket data received", Date.now() - startTime);
+      }
+
+      // Parse the data
+      const data = this.parseWebSocketData(initialData, fixtureData, league, leagueConfig);
+      if (data.length === 0) {
+        return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
+      }
 
       return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
     } catch (error) {
@@ -74,6 +144,151 @@ export class STSScraper extends PlaywrightScraper {
     } finally {
       if (page) await page.close();
     }
+  }
+
+  private parseWebSocketData(
+    initialData: string,
+    fixtureData: Map<string, any>,
+    league: string,
+    leagueConfig: { url: string; countryFilter: string; tournamentFilter: string }
+  ): RawScrapedOdds[] {
+    try {
+      const lines = initialData.split("\n");
+      const jsonData = JSON.parse(lines[1]);
+
+      const football = jsonData.B?.S?.["1"];
+      if (!football) return [];
+
+      const results: RawScrapedOdds[] = [];
+
+      // Iterate through categories (countries) and tournaments
+      for (const [, cat] of Object.entries(football.C || {}) as [string, any][]) {
+        const countryName = (cat.n || "").toLowerCase();
+        if (!countryName.includes(leagueConfig.countryFilter)) continue;
+
+        for (const [, tourn] of Object.entries(cat.T || {}) as [string, any][]) {
+          const tournamentName = (tourn.n || "").toLowerCase();
+          if (!tournamentName.includes(leagueConfig.tournamentFilter)) continue;
+
+          // Found the target league
+          for (const [fixId, fix] of Object.entries(tourn.FX || {}) as [string, any][]) {
+            if (!fix.H?.n || !fix.A?.n) continue;
+
+            // Generate /kursy/ URL format for extended markets support
+            const homeSlug = this.slugify(fix.H.n);
+            const awaySlug = this.slugify(fix.A.n);
+
+            const fixture: STSFixture = {
+              id: fixId,
+              home: fix.H.n,
+              away: fix.A.n,
+              startTime: fix.t || "",
+              stsId: fix.sid || 0,
+              tournament: tourn.n || "",
+              country: cat.n || "",
+              eventUrl: `https://www.sts.pl/kursy/${homeSlug}-${awaySlug}/${fixId}`,
+            };
+
+            // Extract odds from fixture-specific data
+            const odds = this.extractOdds(fixture, fixtureData.get(fixId), jsonData);
+
+            if (odds.odds1 && odds.oddsX && odds.odds2) {
+              results.push({
+                bookmaker: "sts",
+                eventName: `${fixture.home} - ${fixture.away}`,
+                homeTeam: getCanonicalTeamName(fixture.home, league),
+                awayTeam: getCanonicalTeamName(fixture.away, league),
+                homeOdds: odds.odds1,
+                drawOdds: odds.oddsX,
+                awayOdds: odds.odds2,
+                hasNoTaxPromo: false,
+                scrapedAt: new Date(),
+                eventUrl: fixture.eventUrl,
+              });
+            }
+          }
+        }
+      }
+
+      return results;
+    } catch (error) {
+      console.error("[STS] Parse error:", error);
+      return [];
+    }
+  }
+
+  private extractOdds(fixture: STSFixture, fixtureJson: any, initialJson: any): STSOdds {
+    const result: STSOdds = {
+      odds1: null, oddsX: null, odds2: null,
+      odds1X: null, oddsX2: null, odds12: null,
+      bttsYes: null, bttsNo: null,
+      overUnder: {},
+    };
+
+    // Try fixture-specific data first, then initial data
+    const sources = [fixtureJson, initialJson].filter(Boolean);
+
+    for (const source of sources) {
+      // The odds are in P.{assocKey}.m.{marketId}.l.{lineId}.o.{outcomeId}.O
+      const assocKey = `1m${fixture.stsId}`;
+      const marketData = source.P?.[assocKey]?.m;
+
+      if (!marketData) continue;
+
+      // Market 1 = 1X2 (Match result)
+      const market1x2 = marketData["1"]?.l?.["1"]?.o;
+      if (market1x2) {
+        result.odds1 = market1x2["1"]?.O || null;
+        result.oddsX = market1x2["2"]?.O || null;
+        result.odds2 = market1x2["3"]?.O || null;
+      }
+
+      // Market 10 = Double Chance
+      const marketDC = marketData["10"]?.l?.["1"]?.o;
+      if (marketDC) {
+        result.odds1X = marketDC["9"]?.O || null;
+        result.oddsX2 = marketDC["11"]?.O || null;
+        result.odds12 = marketDC["10"]?.O || null;
+      }
+
+      // Market 43 = BTTS (tak/nie)
+      const marketBTTS = marketData["43"]?.l?.["1"]?.o;
+      if (marketBTTS) {
+        result.bttsYes = marketBTTS["26"]?.O || null;
+        result.bttsNo = marketBTTS["27"]?.O || null;
+      }
+
+      // Market 25 = Total Goals Over/Under (Liczba goli)
+      // Line names are "Liczba goli", actual line value is in outcome name (e.g., "+2.5")
+      // Outcome 12 = over, Outcome 13 = under
+      const marketOU = marketData["25"]?.l;
+      if (marketOU) {
+        for (const [, lineData] of Object.entries(marketOU) as [string, any][]) {
+          const outcomes = lineData.o;
+          if (!outcomes) continue;
+
+          // Get over/under outcomes
+          const overOutcome = outcomes["12"];
+          const underOutcome = outcomes["13"];
+
+          if (!overOutcome?.O || !underOutcome?.O) continue;
+
+          // Extract line value from outcome name (e.g., "+2.5" or "-2.5")
+          const outcomeName = overOutcome.n || underOutcome.n || "";
+          const lineMatch = outcomeName.match(/[+-]?(\d+[.,]5)/);
+
+          if (lineMatch) {
+            const line = parseFloat(lineMatch[1].replace(",", ".")).toFixed(1);
+            result.overUnder[line] = { over: overOutcome.O, under: underOutcome.O };
+          }
+        }
+      }
+
+      // If we found 1X2 odds, we're done
+      if (result.odds1) break;
+    }
+
+    return result;
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
@@ -91,16 +306,62 @@ export class STSScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
     let page: Page | null = null;
+
     try {
       page = await this.initBrowser();
+
+      // Extract fixture ID from URL (e.g., /kursy/team-team/f1234567 or /f1234567)
+      const urlMatch = eventUrl.match(/f(\d+)/);
+      const fixtureId = urlMatch ? `f${urlMatch[1]}` : "";
+
+      // Set up WebSocket capture for detailed match data
+      let targetFixtureJson: any = null;
+      let initialJson: any = null;
+
+      page.on("websocket", ws => {
+        if (!ws.url().includes("/sbk/api/sbk")) return;
+
+        ws.on("framereceived", frame => {
+          const data = typeof frame.payload === "string" ? frame.payload : "";
+
+          // Capture initial data for fixture info
+          if (data.includes('"s":"i_pl"') && data.length > 100000) {
+            try {
+              const lines = data.split("\n");
+              initialJson = JSON.parse(lines[1]);
+            } catch {}
+          }
+
+          // Capture ONLY the target fixture's data (has extended markets)
+          if (fixtureId && data.includes(`"s":"f_${fixtureId}_pl"`)) {
+            try {
+              const lines = data.split("\n");
+              targetFixtureJson = JSON.parse(lines[1] || lines[0]);
+            } catch {}
+          }
+        });
+      });
+
       await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(5000);
+      await this.delay(3000);
 
-      const hasOdds = await this.waitForSelector(page, SELECTORS.oddsButton, 10000);
-      if (!hasOdds) return this.createMatchDetailNotFoundResult("No odds found", Date.now() - startTime);
+      try {
+        const cookieButton = page.locator("text=Akceptuj wszystkie").first();
+        if (await cookieButton.isVisible({ timeout: 3000 })) await cookieButton.click();
+      } catch {}
 
-      const matchData = await this.extractMatchDetailData(page, eventUrl);
-      if (!matchData) return this.createMatchDetailNotFoundResult("Could not parse match data", Date.now() - startTime);
+      // Wait for fixture-specific data
+      await this.delay(10000);
+
+      if (!targetFixtureJson && !initialJson) {
+        return this.createMatchDetailNotFoundResult("No WebSocket data received", Date.now() - startTime);
+      }
+
+      // Parse match data - use fixture data for markets (has DC, BTTS, O/U)
+      const matchData = this.parseMatchDetailData(targetFixtureJson, initialJson, eventUrl, fixtureId);
+      if (!matchData) {
+        return this.createMatchDetailNotFoundResult("Could not parse match data", Date.now() - startTime);
+      }
 
       return { status: "success", bookmaker: this.bookmaker, data: matchData, duration: Date.now() - startTime, timestamp: new Date() };
     } catch (error) {
@@ -110,129 +371,70 @@ export class STSScraper extends PlaywrightScraper {
     }
   }
 
+  private parseMatchDetailData(fixtureJson: any, initialJson: any, eventUrl: string, targetFixtureId: string): RawScrapedMatchOdds | null {
+    // Find fixture info from initial data (has B.S.1... structure with team names)
+    const dataSource = initialJson || fixtureJson;
+    const football = dataSource?.B?.S?.["1"];
+    if (!football) return null;
+
+    for (const [, cat] of Object.entries(football.C || {}) as [string, any][]) {
+      for (const [, tourn] of Object.entries(cat.T || {}) as [string, any][]) {
+        for (const [fixId, fix] of Object.entries(tourn.FX || {}) as [string, any][]) {
+          // Only process the target fixture
+          if (fixId !== targetFixtureId) continue;
+          if (!fix.H?.n || !fix.A?.n) continue;
+
+          const fixture: STSFixture = {
+            id: fixId,
+            home: fix.H.n,
+            away: fix.A.n,
+            startTime: fix.t || "",
+            stsId: fix.sid || 0,
+            tournament: tourn.n || "",
+            country: cat.n || "",
+            eventUrl,
+          };
+
+          // Extract odds - fixture-specific data has extended markets (DC, BTTS, O/U)
+          const odds = this.extractOdds(fixture, fixtureJson, initialJson);
+
+          return {
+            bookmaker: "sts",
+            eventName: `${fixture.home} - ${fixture.away}`,
+            homeTeam: fixture.home,
+            awayTeam: fixture.away,
+            eventUrl,
+            hasNoTaxPromo: false,
+            scrapedAt: new Date(),
+            market1X2: {
+              home: odds.odds1 || 0,
+              draw: odds.oddsX || 0,
+              away: odds.odds2 || 0,
+            },
+            marketDoubleChance: odds.odds1X ? {
+              homeOrDraw: odds.odds1X,
+              drawOrAway: odds.oddsX2 || 0,
+              homeOrAway: odds.odds12 || 0,
+            } : undefined,
+            marketOverUnder: Object.keys(odds.overUnder).length > 0
+              ? odds.overUnder as Record<string, MarketOverUnderOdds>
+              : undefined,
+            marketBTTS: odds.bttsYes ? {
+              yes: odds.bttsYes,
+              no: odds.bttsNo || 0,
+            } : undefined,
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
   async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    return page.evaluate((selectors) => {
-      const entries: EventUrlEntry[] = [];
-      const seen = new Set<string>();
-      document.querySelectorAll(selectors.matchTile).forEach((tile) => {
-        const home = tile.querySelector(selectors.teamHome)?.textContent?.trim() || "";
-        const away = tile.querySelector(selectors.teamAway)?.textContent?.trim() || "";
-        if (!home || !away) return;
-        const key = `${home} vs ${away}`;
-        if (seen.has(key)) return;
-        
-        const link = tile.querySelector("a[href*='/zaklady-bukmacherskie/'], a[href*='/kursy/']") as HTMLAnchorElement
-                  || tile.closest("a") as HTMLAnchorElement;
-        
-        if (link?.href) {
-          seen.add(key);
-          entries.push({ matchKey: key, eventUrl: link.href });
-        }
-      });
-      return entries;
-    }, SELECTORS);
-  }
-
-  private async extractMatchDetailData(page: Page, eventUrl: string): Promise<RawScrapedMatchOdds | null> {
-    const data = await page.evaluate((selectors) => {
-      let hTeam = "", aTeam = "";
-      const teamElements = document.querySelectorAll("[class*='team-name'], [class*='participant']");
-      if (teamElements.length >= 2) {
-        hTeam = teamElements[0]?.textContent?.trim() || "";
-        aTeam = teamElements[1]?.textContent?.trim() || "";
-      }
-      if (!hTeam) {
-        const titleText = document.querySelector("h1, [class*='event-header']")?.textContent?.trim() || "";
-        const teamMatch = titleText.match(/(.+?)\s*[-–vs.]+\s*(.+)/i);
-        if (teamMatch) { hTeam = teamMatch[1].trim(); aTeam = teamMatch[2].trim(); }
-      }
-      if (!hTeam) {
-        // Try extracting from URL
-        const parts = window.location.pathname.split('/');
-        const slug = parts.find(p => p.includes('-') && !p.startsWith('f'));
-        if (slug) {
-          const teams = slug.split('-');
-          if (teams.length >= 2) {
-            hTeam = teams[0].charAt(0).toUpperCase() + teams[0].slice(1);
-            aTeam = teams[1].charAt(0).toUpperCase() + teams[1].slice(1);
-          }
-        }
-      }
-      if (!hTeam) return null;
-
-      const m1X2 = { home: 0, draw: 0, away: 0 };
-      const mDC = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-      const mOU: Record<string, { over: number; under: number }> = {};
-      const mBTTS = { yes: 0, no: 0 };
-
-      document.querySelectorAll(selectors.oddsButton).forEach((btn: any) => {
-        const text = btn.innerText.replace(/\n/g, " ").trim().toLowerCase();
-        const valMatch = text.match(/(\d+[.,]\d+)/);
-        if (!valMatch) return;
-        const val = parseFloat(valMatch[1].replace(",", "."));
-        if (val <= 1) return;
-
-        const label = text.replace(valMatch[0], "").trim();
-
-        if (label === "1" || label === hTeam.toLowerCase()) m1X2.home = val;
-        else if (label === "x" || label === "remis") m1X2.draw = val;
-        else if (label === "2" || label === aTeam.toLowerCase()) m1X2.away = val;
-        else if (label === "1x") mDC.homeOrDraw = val;
-        else if (label === "x2") mDC.drawOrAway = val;
-        else if (label === "12") mDC.homeOrAway = val;
-        else if (label === "tak") mBTTS.yes = val;
-        else if (label === "nie") mBTTS.no = val;
-        else if (label.includes("+") || label.includes("-") || label.includes("ponad") || label.includes("poniżej")) {
-          const lineMatch = label.match(/(\d+[.,]5)/);
-          if (lineMatch) {
-            const line = parseFloat(lineMatch[1].replace(",", ".")).toFixed(1);
-            if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
-            if (label.includes("+") || label.includes("ponad")) mOU[line].over = val;
-            else if (label.includes("-") || label.includes("poniżej")) mOU[line].under = val;
-          }
-        }
-      });
-
-      return { homeTeam: hTeam, awayTeam: aTeam, market1X2: m1X2, marketDoubleChance: mDC, marketOverUnder: mOU, marketBTTS: mBTTS };
-    }, SELECTORS);
-
-    if (!data) return null;
-    return {
-      bookmaker: "sts", eventName: `${data.homeTeam} - ${data.awayTeam}`, homeTeam: data.homeTeam, awayTeam: data.awayTeam,
-      eventUrl, hasNoTaxPromo: false, scrapedAt: new Date(),
-      market1X2: data.market1X2,
-      marketDoubleChance: data.marketDoubleChance.homeOrDraw > 0 ? data.marketDoubleChance : undefined,
-      marketOverUnder: Object.keys(data.marketOverUnder).length > 0 ? data.marketOverUnder as Record<string, MarketOverUnderOdds> : undefined,
-      marketBTTS: data.marketBTTS.yes > 0 ? data.marketBTTS : undefined,
-    };
-  }
-
-  private async extractMatchData(page: Page, league: string): Promise<RawScrapedOdds[]> {
-    const matchData = await page.evaluate((selectors) => {
-      const matches: any[] = [];
-      const seen = new Set<string>();
-      document.querySelectorAll(selectors.matchTile).forEach((tile) => {
-        const home = tile.querySelector(selectors.teamHome)?.textContent?.trim() || "";
-        const away = tile.querySelector(selectors.teamAway)?.textContent?.trim() || "";
-        if (!home || !away) return;
-        const key = `${home} vs ${away}`;
-        if (seen.has(key)) return;
-
-        const odds = Array.from(tile.querySelectorAll(selectors.oddsValue)).slice(0, 3).map(el => parseFloat(el.textContent?.trim()?.replace(",", ".") || "0"));
-        if (odds.length === 3 && odds.every(o => o > 1)) {
-          const link = tile.querySelector("a[href*='/zaklady-bukmacherskie/'], a[href*='/kursy/']") as HTMLAnchorElement
-                    || tile.closest("a") as HTMLAnchorElement;
-          seen.add(key);
-          matches.push({ homeTeam: home, awayTeam: away, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link?.href });
-        }
-      });
-      return matches;
-    }, SELECTORS);
-
-    return matchData.map(m => ({
-      bookmaker: "sts", eventName: `${m.homeTeam} - ${m.awayTeam}`, homeTeam: getCanonicalTeamName(m.homeTeam, league), awayTeam: getCanonicalTeamName(m.awayTeam, league),
-      homeOdds: m.homeOdds, drawOdds: m.drawOdds, awayOdds: m.awayOdds, hasNoTaxPromo: false, scrapedAt: new Date(), eventUrl: m.eventUrl
-    }));
+    // With WebSocket approach, we get URLs directly from the data
+    // This method is kept for interface compatibility
+    return [];
   }
 }
 

@@ -227,8 +227,15 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
               else if (s.order === 2) mDC.drawOrAway = s.rate?.decimal || 0;
             });
           }
-          // BTTS - "Obie drużyny strzelą"
-          else if (name.includes("obie") && name.includes("strzel") && mBTTS.yes === 0) {
+          // BTTS - "Obie drużyny strzelą gola" (exactly 2 selections, no "połowa", "wynik", or time ranges)
+          else if (
+            m.selections?.length === 2 &&
+            name.includes("obie") && name.includes("strzel") &&
+            !name.includes("połowa") && !name.includes("połow") &&
+            !name.includes("wynik") && !name.includes("w obu") &&
+            !name.includes("min.") && !name.includes("min ") &&
+            mBTTS.yes === 0
+          ) {
             m.selections?.forEach((s: any) => {
               if (s.order === 0) mBTTS.yes = s.rate?.decimal || 0;
               else if (s.order === 1) mBTTS.no = s.rate?.decimal || 0;

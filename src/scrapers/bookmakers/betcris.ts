@@ -511,10 +511,8 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
           else if (type1 === "12" || name.includes("12") || name.includes("w1 lub w2")) mDC.homeOrAway = price;
         }
       }
-      // Over/Under - type "OverUnder" or market name containing goal keywords
-      else if (marketType === "OverUnder" ||
-               marketName.includes("suma goli") || marketName.includes("liczba goli")) {
-        // Get base/line from market.base or from event.base
+      // Over/Under - exact type "OverUnder" only (not HalfTimeOverUnder, Team1OverUnder, etc.)
+      else if (marketType === "OverUnder") {
         const base = market.base;
 
         if (base && base > 0 && base.toString().includes(".5")) {
@@ -523,28 +521,23 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
           for (const event of Object.values(market.event || {})) {
             const price = event.price;
-            const name = event.name?.toLowerCase() || "";
             const type1 = event.type_1?.toLowerCase() || "";
             if (!price || price <= 1) continue;
 
-            if (type1 === "over" || name.includes("powyżej") || name.includes("ponad") || name.includes("over")) {
-              mOU[line].over = price;
-            } else if (type1 === "under" || name.includes("poniżej") || name.includes("under")) {
-              mOU[line].under = price;
-            }
+            if (type1 === "over") mOU[line].over = price;
+            else if (type1 === "under") mOU[line].under = price;
           }
         }
       }
-      // BTTS - "Obie drużyny strzelą"
-      else if (marketName.includes("obie") && marketName.includes("strzel")) {
+      // BTTS - exact type "BothTeamsToScore" only (not 1stHalf, 2ndHalf, or combo markets)
+      else if (marketType === "BothTeamsToScore") {
         for (const event of Object.values(market.event || {})) {
           const price = event.price;
-          const name = event.name?.toLowerCase() || "";
           const type1 = event.type_1?.toLowerCase() || "";
           if (!price || price <= 1) continue;
 
-          if (type1 === "yes" || name === "tak" || name === "yes") mBTTS.yes = price;
-          else if (type1 === "no" || name === "nie" || name === "no") mBTTS.no = price;
+          if (type1 === "yes") mBTTS.yes = price;
+          else if (type1 === "no") mBTTS.no = price;
         }
       }
     }

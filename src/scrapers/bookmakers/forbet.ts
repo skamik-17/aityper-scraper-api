@@ -142,7 +142,7 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
       // Go to forbet to establish session
       console.log(`[forBET] Fetching data for category: ${categoryId}`);
       await this.navigateWithRetry(page, "https://www.iforbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(2000);
+      await this.delay(500); // Reduced from 2000ms - session established quickly
 
       // Fetch events data
       const events = await this.fetchEventsData(page, categoryId);

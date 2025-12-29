@@ -18,6 +18,7 @@ import { requireAdminAuth } from "../middleware/auth.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
 import { runScrapeAndPersist } from "../services/scraper-service.js";
 import { getRunsSummary } from "../repositories/scraper-run-repository.js";
+import { scraperHealth } from "../services/scraper-health.js";
 
 const router = Router();
 
@@ -130,6 +131,31 @@ router.get("/runs", async (req, res) => {
     success: true,
     data,
     meta,
+  };
+
+  res.json(response);
+});
+
+/**
+ * GET /api/admin/scrapers/health
+ * Get health status for all scrapers
+ */
+router.get("/scrapers/health", async (_req, res) => {
+  const health = scraperHealth.getAllHealth();
+  const failing = scraperHealth.getFailingScrapers();
+
+  const response = {
+    success: true,
+    data: {
+      scrapers: health,
+      failingScrapers: failing,
+      summary: {
+        total: health.length,
+        healthy: health.filter((h) => h.status === "healthy").length,
+        degraded: health.filter((h) => h.status === "degraded").length,
+        failing: health.filter((h) => h.status === "failing").length,
+      },
+    },
   };
 
   res.json(response);

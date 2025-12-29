@@ -193,13 +193,31 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         });
       });
 
-      // Timeout - return best captured state (reduced from 20s to 10s)
-      setTimeout(() => {
-        if (!resolved) {
+      // Early-exit polling (check every 500ms, max 6s instead of static 10s)
+      const startTime = Date.now();
+      const checkInterval = setInterval(() => {
+        if (resolved) {
+          clearInterval(checkInterval);
+          return;
+        }
+
+        const elapsed = Date.now() - startTime;
+
+        // Exit early if we have good data (any events with selections) after minimum wait
+        if (elapsed >= 1500 && bestState && bestState.events?.length > 0 && bestState.selections?.length > 0) {
           resolved = true;
+          clearInterval(checkInterval);
+          resolve(bestState);
+          return;
+        }
+
+        // Maximum timeout of 6s
+        if (elapsed >= 6000) {
+          resolved = true;
+          clearInterval(checkInterval);
           resolve(bestState);
         }
-      }, 10000);
+      }, 500);
     });
   }
 

@@ -8,10 +8,11 @@ import type { PolishBookmaker } from "../config/index.js";
 import { runAllScrapers, scrapeExtendedMarketsForMatch, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
 import { insertScrapedOdds } from "../repositories/odds-repository.js";
 import { insertScraperRuns } from "../repositories/scraper-run-repository.js";
+import { scraperHealth } from "./scraper-health.js";
 import type { RawScrapedOdds } from "../types/scraper.js";
 
-// Limit concurrent match processing to balance with browser pool (6 browsers)
-const MATCH_CONCURRENCY_LIMIT = 5;
+// Increased concurrency for better parallelism with 6 browser pool
+const MATCH_CONCURRENCY_LIMIT = 6;
 
 export interface ScrapeResult {
   runId: string;
@@ -57,10 +58,14 @@ function groupOddsByMatch(
 
 /**
  * Run a full scrape cycle and persist results
+ * @param league - League to scrape
+ * @param bookmakers - Optional list of specific bookmakers
+ * @param closeBrowsers - Whether to close browsers after scraping (default true)
  */
 export async function runScrapeAndPersist(
   league: string = "ekstraklasa",
-  bookmakers?: PolishBookmaker[]
+  bookmakers?: PolishBookmaker[],
+  closeBrowsers: boolean = true
 ): Promise<ScrapeResult> {
   console.log(`[ScraperService] Starting scrape for ${league}`);
 
@@ -87,8 +92,16 @@ export async function runScrapeAndPersist(
     };
   }
 
-  // Collect errors from individual scrapers
+  // Collect errors from individual scrapers and record health stats
   for (const [bookmaker, result] of aggregated.results) {
+    // Record health metrics
+    scraperHealth.recordRun(
+      bookmaker,
+      result.status === "success",
+      result.duration,
+      result.error
+    );
+
     if (result.status !== "success" && result.error) {
       errors.push(`${bookmaker}: ${result.error}`);
     }
@@ -158,12 +171,14 @@ export async function runScrapeAndPersist(
     console.log(`[ScraperService] Extended markets scraping completed: ${extendedMarketsScraped} bookmakers scraped`);
   }
 
-  // Close all browsers in the pool at the end of the scraping cycle
-  try {
-    await closeAllBrowsers();
-    console.log("[ScraperService] Browser pool closed");
-  } catch (error) {
-    console.error("[ScraperService] Error closing browser pool:", error);
+  // Close all browsers in the pool at the end of the scraping cycle (if requested)
+  if (closeBrowsers) {
+    try {
+      await closeAllBrowsers();
+      console.log("[ScraperService] Browser pool closed");
+    } catch (error) {
+      console.error("[ScraperService] Error closing browser pool:", error);
+    }
   }
 
   // Log scraper runs

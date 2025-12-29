@@ -6,6 +6,7 @@
 import cron from "node-cron";
 import { CONFIG } from "../config/index.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
+import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 
 // Combined result for all leagues
@@ -22,7 +23,7 @@ let isRunning = false;
 let lastResults: Map<string, ScrapeResult> = new Map();
 
 /**
- * Run scrape for all enabled leagues
+ * Run scrape for all enabled leagues (in parallel for speed)
  */
 async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
   const results = new Map<string, ScrapeResult>();
@@ -30,20 +31,42 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
   let totalErrorCount = 0;
   let totalMatchesInserted = 0;
 
-  // Run scrapers for each enabled league sequentially to avoid browser conflicts
-  for (const league of CONFIG.ENABLED_LEAGUES) {
-    console.log(`[Scheduler] Scraping ${league}...`);
+  console.log(`[Scheduler] Scraping ${CONFIG.ENABLED_LEAGUES.length} leagues in parallel...`);
+
+  // Run scrapers for all leagues in parallel (don't close browsers between leagues)
+  const leaguePromises = CONFIG.ENABLED_LEAGUES.map(async (league) => {
+    console.log(`[Scheduler] Starting ${league}...`);
     try {
-      const result = await runScrapeAndPersist(league);
+      // Pass closeBrowsers: false to avoid closing browsers between parallel league scrapes
+      const result = await runScrapeAndPersist(league, undefined, false);
+      console.log(
+        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.matchesInserted} matches`
+      );
+      return { league, result, error: null };
+    } catch (error) {
+      console.error(`[Scheduler] ${league} scrape failed:`, error);
+      return { league, result: null, error };
+    }
+  });
+
+  const leagueResults = await Promise.all(leaguePromises);
+
+  // Close all browsers after all leagues are done
+  try {
+    await closeAllBrowsers();
+    console.log("[Scheduler] Browser pool closed");
+  } catch (error) {
+    console.error("[Scheduler] Error closing browser pool:", error);
+  }
+
+  // Aggregate results
+  for (const { league, result, error } of leagueResults) {
+    if (result) {
       results.set(league, result);
       totalSuccessCount += result.successCount;
       totalErrorCount += result.errorCount;
       totalMatchesInserted += result.matchesInserted;
-      console.log(
-        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.matchesInserted} matches`
-      );
-    } catch (error) {
-      console.error(`[Scheduler] ${league} scrape failed:`, error);
+    } else {
       totalErrorCount++;
     }
   }

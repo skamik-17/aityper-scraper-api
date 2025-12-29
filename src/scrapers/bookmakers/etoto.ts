@@ -139,7 +139,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
       // Go to eToto to establish session
       console.log(`[eToto] Fetching data for category: ${categoryId}`);
       await this.navigateWithRetry(page, "https://www.etoto.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(2000);
+      await this.delay(500); // Reduced from 2000ms - session established quickly
 
       // Fetch events data
       const events = await this.fetchEventsData(page, categoryId);

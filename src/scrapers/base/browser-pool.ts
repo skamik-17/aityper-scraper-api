@@ -156,5 +156,5 @@ class BrowserPool {
   }
 }
 
-// Singleton instance with 6 browsers max (balance between parallelism and memory)
-export const browserPool = new BrowserPool(6);
+// Singleton instance with 8 browsers max (optimized for parallel extended markets)
+export const browserPool = new BrowserPool(8);

@@ -46,12 +46,22 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       let apiData: any = null;
       page.on("response", async (response: Response) => {
         const reqUrl = response.url();
-        // Capture events by-date with tournament filter, but skip live events (which are often empty)
-        if (reqUrl.includes("/events/by-date") && reqUrl.includes("tournamentIds=") && !reqUrl.includes("offerState=live")) {
+        // Capture events - check for multiple possible API patterns
+        const isEventsApi = reqUrl.includes("/events") && (
+          reqUrl.includes("tournamentIds=") ||
+          reqUrl.includes("categoryIds=") ||
+          reqUrl.includes("sportId=")
+        );
+        const isNotLive = !reqUrl.includes("offerState=live") && !reqUrl.includes("/live/");
+
+        if (isEventsApi && isNotLive) {
           try {
             const json = await response.json();
             // Only set if we have actual data (don't overwrite with empty response)
-            if (json && Array.isArray(json.data) && json.data.length > 0) apiData = json;
+            if (json && Array.isArray(json.data) && json.data.length > 0) {
+              console.log(`[Superbet] Captured API data: ${json.data.length} events from ${reqUrl.substring(0, 100)}...`);
+              apiData = json;
+            }
           } catch {}
         }
       });

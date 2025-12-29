@@ -121,16 +121,16 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       ]);
 
       if (!wsData) {
-        console.log("[Betcris] No WebSocket data captured, falling back to DOM scraping");
-        return this.scrapeLeagueDOM(page, league, startTime);
+        console.log("[Betcris] No WebSocket data captured");
+        return this.createNotFoundResult("No WebSocket data captured", Date.now() - startTime);
       }
 
       // Parse Swarm data
       const matches = this.parseSwarmData(wsData, league, competitionId);
 
       if (matches.length === 0) {
-        console.log("[Betcris] No matches parsed from WebSocket, falling back to DOM");
-        return this.scrapeLeagueDOM(page, league, startTime);
+        console.log("[Betcris] No matches parsed from WebSocket");
+        return this.createNotFoundResult("No matches in WebSocket data", Date.now() - startTime);
       }
 
       console.log(`[Betcris] Scraped ${matches.length} matches for ${league} via WebSocket`);
@@ -247,13 +247,31 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         });
       });
 
-      // Timeout - return best captured data (reduced from 25s to 10s)
-      setTimeout(() => {
-        if (!resolved) {
+      // Early-exit polling (check every 500ms, max 6s instead of static 10s)
+      const startTime = Date.now();
+      const checkInterval = setInterval(() => {
+        if (resolved) {
+          clearInterval(checkInterval);
+          return;
+        }
+
+        const elapsed = Date.now() - startTime;
+
+        // Exit early if we have good data (any games with markets) after minimum wait
+        if (elapsed >= 1500 && bestData && bestMarketCount > 0) {
           resolved = true;
+          clearInterval(checkInterval);
+          resolve(bestData);
+          return;
+        }
+
+        // Maximum timeout of 6s
+        if (elapsed >= 6000) {
+          resolved = true;
+          clearInterval(checkInterval);
           resolve(bestData);
         }
-      }, 10000);
+      }, 500);
     });
   }
 
@@ -333,57 +351,6 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     }
 
     return matches;
-  }
-
-  // Fallback DOM scraping method
-  private async scrapeLeagueDOM(page: Page, league: string, startTime: number): Promise<ScraperResult> {
-    const SELECTORS = {
-      matchCard: "[data-testid='game']",
-      teamName: ".comp__team-name",
-      oddsButton: "[data-testid='odd']",
-      oddsValue: ".xOddButton__coef",
-    };
-
-    await this.delay(5000);
-    const hasMatches = await this.waitForSelector(page, SELECTORS.matchCard, 15000);
-    if (!hasMatches) return this.createNotFoundResult(`No matches found for ${league}`, Date.now() - startTime);
-
-    const matchData = await page.evaluate((selectors) => {
-      const matches: any[] = [];
-      document.querySelectorAll(selectors.matchCard).forEach((card) => {
-        const teamElements = card.querySelectorAll(selectors.teamName);
-        if (teamElements.length < 2) return;
-        const home = teamElements[0]?.textContent?.trim() || "";
-        const away = teamElements[1]?.textContent?.trim() || "";
-        const oddElements = card.querySelectorAll(selectors.oddsButton);
-        const odds = Array.from(oddElements).slice(0, 3).map(el => {
-          const valEl = el.querySelector(selectors.oddsValue);
-          const t = (valEl?.textContent || el.textContent)?.trim()?.match(/(\d+[.,]?\d*)/);
-          return t ? parseFloat(t[1].replace(",", ".")) : 0;
-        });
-        if (odds.length >= 3 && !odds.some(isNaN)) {
-          const link = card.querySelector("a[href*='/zaklady-bukmacherskie/']") as HTMLAnchorElement || card.closest("a") as HTMLAnchorElement;
-          matches.push({ homeTeam: home, awayTeam: away, homeOdds: odds[0], drawOdds: odds[1], awayOdds: odds[2], eventUrl: link?.href });
-        }
-      });
-      return matches;
-    }, SELECTORS);
-
-    const data = matchData.map(m => ({
-      bookmaker: "betcris" as const,
-      eventName: `${m.homeTeam} - ${m.awayTeam}`,
-      homeTeam: getCanonicalTeamName(m.homeTeam, league),
-      awayTeam: getCanonicalTeamName(m.awayTeam, league),
-      homeOdds: m.homeOdds,
-      drawOdds: m.drawOdds,
-      awayOdds: m.awayOdds,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
-      eventUrl: m.eventUrl
-    }));
-
-    console.log(`[Betcris] Scraped ${data.length} matches for ${league} via DOM`);
-    return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startTime, timestamp: new Date() };
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {

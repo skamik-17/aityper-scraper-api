@@ -241,10 +241,10 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
               else if (s.order === 1) mBTTS.no = s.rate?.decimal || 0;
             });
           }
-          // O/U - "Suma goli"
+          // O/U - "Suma goli" (only positive .5 lines)
           else if (name.includes("suma goli") || name.includes("liczba goli")) {
             const line = m.line;
-            if (line && line.toString().includes(".5")) {
+            if (line && parseFloat(line) > 0 && line.toString().includes(".5")) {
               const lineStr = parseFloat(line).toFixed(1);
               if (!mOU[lineStr]) mOU[lineStr] = { over: 0, under: 0 };
               m.selections?.forEach((s: any) => {
@@ -255,20 +255,47 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
           }
         });
 
+        // Filter out O/U lines with 0 odds
+        const filteredOU: Record<string, MarketOverUnderOdds> = {};
+        for (const [line, odds] of Object.entries(mOU)) {
+          if (odds.over > 0 && odds.under > 0) {
+            filteredOU[line] = odds;
+          }
+        }
+
+        // Get team names from match info API
+        let homeTeam = "";
+        let awayTeam = "";
+        let eventName = "Match";
+
+        const matchInfoUrl = `https://offer.lvbet.pl/client-api/v5/matches/${matchId}/?lang=pl`;
+        try {
+          const matchInfoRes = await page.request.fetch(matchInfoUrl);
+          const matchInfo = await matchInfoRes.json();
+          if (matchInfo?.home?.[0] && matchInfo?.away?.[0]) {
+            homeTeam = matchInfo.home[0];
+            awayTeam = matchInfo.away[0];
+            eventName = `${homeTeam} - ${awayTeam}`;
+          }
+        } catch {
+          // Use empty if API fails
+        }
+
         return {
           status: "success",
           bookmaker: this.bookmaker,
           data: {
             bookmaker: "lvbet",
-            eventName: "Match",
-            homeTeam: "", awayTeam: "",
+            eventName,
+            homeTeam,
+            awayTeam,
             eventUrl,
             hasNoTaxPromo: false,
             scrapedAt: new Date(),
             market1X2: m1X2,
             marketDoubleChance: mDC.homeOrDraw > 0 ? mDC : undefined,
             marketBTTS: mBTTS.yes > 0 ? mBTTS : undefined,
-            marketOverUnder: Object.keys(mOU).length > 0 ? mOU : undefined
+            marketOverUnder: Object.keys(filteredOU).length > 0 ? filteredOU : undefined
           },
           duration: Date.now() - startTime,
           timestamp: new Date()

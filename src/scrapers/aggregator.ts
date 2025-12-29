@@ -8,6 +8,7 @@ import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
 import type { ScraperResult, RawScrapedOdds, RawScrapedMatchOdds, MatchDetailResult } from "../types/scraper.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
+import { browserPool } from "./base/browser-pool.js";
 import { insertExtendedMarketOdds } from "../repositories/extended-odds-repository.js";
 import {
   stsScraper,
@@ -339,4 +340,12 @@ export async function scrapeSingleExtendedMarket(
   } finally {
     await scraper.cleanup();
   }
+}
+
+/**
+ * Close all browsers in the pool
+ * Should be called at the end of a full scraping cycle
+ */
+export async function closeAllBrowsers(): Promise<void> {
+  await browserPool.closeAll();
 }

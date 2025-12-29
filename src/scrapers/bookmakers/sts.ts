@@ -118,15 +118,18 @@ export class STSScraper extends PlaywrightScraper {
 
       // Navigate and accept cookies
       await this.navigateWithRetry(page, leagueConfig.url, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(3000);
+      await this.delay(1500); // Reduced from 3s
 
       try {
         const cookieButton = page.locator("text=Akceptuj wszystkie").first();
-        if (await cookieButton.isVisible({ timeout: 3000 })) await cookieButton.click();
+        if (await cookieButton.isVisible({ timeout: 2000 })) await cookieButton.click();
       } catch {}
 
-      // Wait for WebSocket data
-      await this.delay(15000);
+      // Wait for WebSocket data with early-exit polling (max 6s)
+      for (let i = 0; i < 12; i++) {
+        if (initialData && initialData.length > 10000) break;
+        await this.delay(500);
+      }
 
       if (!initialData) {
         return this.createNotFoundResult("No WebSocket data received", Date.now() - startTime);
@@ -343,15 +346,18 @@ export class STSScraper extends PlaywrightScraper {
       });
 
       await this.navigateWithRetry(page, eventUrl, { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(3000);
+      await this.delay(1500); // Reduced from 3s
 
       try {
         const cookieButton = page.locator("text=Akceptuj wszystkie").first();
-        if (await cookieButton.isVisible({ timeout: 3000 })) await cookieButton.click();
+        if (await cookieButton.isVisible({ timeout: 2000 })) await cookieButton.click();
       } catch {}
 
-      // Wait for fixture-specific data
-      await this.delay(10000);
+      // Wait for fixture-specific data with early-exit polling (max 5s)
+      for (let i = 0; i < 10; i++) {
+        if (targetFixtureJson || initialJson) break;
+        await this.delay(500);
+      }
 
       if (!targetFixtureJson && !initialJson) {
         return this.createMatchDetailNotFoundResult("No WebSocket data received", Date.now() - startTime);

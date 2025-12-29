@@ -3,11 +3,15 @@
  * Orchestrates scraping operations and database persistence
  */
 
+import pLimit from "p-limit";
 import type { PolishBookmaker } from "../config/index.js";
-import { runAllScrapers, scrapeExtendedMarketsForMatch, type AggregatedResult } from "../scrapers/aggregator.js";
+import { runAllScrapers, scrapeExtendedMarketsForMatch, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
 import { insertScrapedOdds } from "../repositories/odds-repository.js";
 import { insertScraperRuns } from "../repositories/scraper-run-repository.js";
 import type { RawScrapedOdds } from "../types/scraper.js";
+
+// Limit concurrent match processing to balance with browser pool (6 browsers)
+const MATCH_CONCURRENCY_LIMIT = 5;
 
 export interface ScrapeResult {
   runId: string;
@@ -107,37 +111,59 @@ export async function runScrapeAndPersist(
   }
 
   // Scrape extended markets (Double Chance, Over/Under, BTTS) for each match
+  // Process matches in parallel with concurrency limit for better performance
   let extendedMarketsScraped = 0;
   if (aggregated.allOdds.length > 0) {
     const matchesMap = groupOddsByMatch(aggregated.allOdds);
-    console.log(`[ScraperService] Scraping extended markets for ${matchesMap.size} matches`);
+    const matchesWithUrls = Array.from(matchesMap.values()).filter(
+      (match) => Object.keys(match.eventUrls).length > 0
+    );
 
-    for (const [, match] of matchesMap) {
-      // Only scrape if we have at least one eventUrl
-      if (Object.keys(match.eventUrls).length === 0) {
-        continue;
-      }
+    console.log(`[ScraperService] Scraping extended markets for ${matchesWithUrls.length} matches (${MATCH_CONCURRENCY_LIMIT} concurrent)`);
 
-      try {
-        const extResult = await scrapeExtendedMarketsForMatch(
-          match.homeTeam,
-          match.awayTeam,
-          match.eventUrls,
-          league
-        );
+    const limit = pLimit(MATCH_CONCURRENCY_LIMIT);
+    const matchPromises = matchesWithUrls.map((match) =>
+      limit(async () => {
+        try {
+          const extResult = await scrapeExtendedMarketsForMatch(
+            match.homeTeam,
+            match.awayTeam,
+            match.eventUrls,
+            league
+          );
+          console.log(
+            `[ScraperService] Extended markets for ${match.homeTeam} vs ${match.awayTeam}: ` +
+            `DC=${extResult.summary.doubleChanceCount}, OU=${extResult.summary.overUnderCount}, BTTS=${extResult.summary.bttsCount}`
+          );
+          return { match, extResult, error: null };
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : "Unknown error";
+          console.error(`[ScraperService] Extended markets failed for ${match.homeTeam} vs ${match.awayTeam}:`, errorMsg);
+          return { match, extResult: null, error: errorMsg };
+        }
+      })
+    );
+
+    const matchResults = await Promise.all(matchPromises);
+
+    // Aggregate results from parallel execution
+    for (const { match, extResult, error } of matchResults) {
+      if (extResult) {
         extendedMarketsScraped += extResult.summary.successCount;
-        console.log(
-          `[ScraperService] Extended markets for ${match.homeTeam} vs ${match.awayTeam}: ` +
-          `DC=${extResult.summary.doubleChanceCount}, OU=${extResult.summary.overUnderCount}, BTTS=${extResult.summary.bttsCount}`
-        );
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : "Unknown error";
-        console.error(`[ScraperService] Extended markets failed for ${match.homeTeam} vs ${match.awayTeam}:`, errorMsg);
-        errors.push(`Extended markets (${match.homeTeam} vs ${match.awayTeam}): ${errorMsg}`);
+      } else if (error) {
+        errors.push(`Extended markets (${match.homeTeam} vs ${match.awayTeam}): ${error}`);
       }
     }
 
     console.log(`[ScraperService] Extended markets scraping completed: ${extendedMarketsScraped} bookmakers scraped`);
+  }
+
+  // Close all browsers in the pool at the end of the scraping cycle
+  try {
+    await closeAllBrowsers();
+    console.log("[ScraperService] Browser pool closed");
+  } catch (error) {
+    console.error("[ScraperService] Error closing browser pool:", error);
   }
 
   // Log scraper runs

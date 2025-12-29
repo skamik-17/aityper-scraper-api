@@ -3,7 +3,7 @@
  * Abstract class providing common Playwright functionality for all scrapers
  */
 
-import { chromium, Browser, Page, BrowserContext } from "playwright";
+import { Browser, Page, BrowserContext } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
 import type {
   ScraperResult,
@@ -12,10 +12,14 @@ import type {
   MatchDetailResult,
   EventUrlEntry,
 } from "../../types/scraper.js";
+import { browserPool } from "./browser-pool.js";
 
 // Default browser options
 const DEFAULT_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+// Resource types to block for faster loading
+const BLOCKED_RESOURCE_TYPES = ["image", "stylesheet", "font", "media"];
 
 export abstract class PlaywrightScraper {
   abstract bookmaker: PolishBookmaker;
@@ -64,35 +68,34 @@ export abstract class PlaywrightScraper {
 
   /**
    * Initialize browser and create a new page with anti-detection measures
+   * Uses browser pool for efficient resource management
    */
   protected async initBrowser(): Promise<Page> {
-    if (!this.browser) {
-      this.browser = await chromium.launch({
-        headless: true,
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-accelerated-2d-canvas",
-          "--disable-gpu",
-          // Anti-detection arguments
-          "--disable-blink-features=AutomationControlled",
-          "--disable-features=IsolateOrigins,site-per-process",
-          "--window-size=1920,1080",
-        ],
-      });
+    // Acquire browser from pool
+    this.browser = await browserPool.acquire();
 
-      this.context = await this.browser.newContext({
-        userAgent: DEFAULT_USER_AGENT,
-        locale: "pl-PL",
-        viewport: { width: 1920, height: 1080 },
-        javaScriptEnabled: true,
-        ignoreHTTPSErrors: true,
-        bypassCSP: true,
+    // Create new context for isolation
+    this.context = await this.browser.newContext({
+      userAgent: DEFAULT_USER_AGENT,
+      locale: "pl-PL",
+      viewport: { width: 1920, height: 1080 },
+      javaScriptEnabled: true,
+      ignoreHTTPSErrors: true,
+      bypassCSP: true,
+    });
+
+    const page = await this.context.newPage();
+
+    // Block unnecessary resources for faster loading (unless disabled for this scraper)
+    if (!this.config.disableResourceBlocking) {
+      await page.route("**/*", (route) => {
+        const resourceType = route.request().resourceType();
+        if (BLOCKED_RESOURCE_TYPES.includes(resourceType)) {
+          return route.abort();
+        }
+        return route.continue();
       });
     }
-
-    const page = await this.context!.newPage();
 
     // Apply stealth scripts to hide automation
     await this.applyStealthScripts(page);
@@ -175,6 +178,7 @@ export abstract class PlaywrightScraper {
 
   /**
    * Clean up browser resources
+   * Closes context and releases browser back to pool (doesn't close browser)
    */
   async cleanup(): Promise<void> {
     try {
@@ -183,7 +187,8 @@ export abstract class PlaywrightScraper {
         this.context = null;
       }
       if (this.browser) {
-        await this.browser.close();
+        // Release browser back to pool instead of closing it
+        browserPool.release(this.browser);
         this.browser = null;
       }
     } catch (error) {

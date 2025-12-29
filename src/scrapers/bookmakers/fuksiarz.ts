@@ -230,15 +230,18 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
       const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
       let event = isCacheValid ? cachedEvents.get(eventId) : null;
 
-      // If not in cache, fetch fresh data
+      // If not in cache, fetch fresh data from all leagues in parallel
       if (!event) {
         page = await this.initBrowser();
         await this.navigateWithRetry(page, "https://fuksiarz.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
         await this.delay(2000);
 
-        // Try to find which league this event belongs to
-        for (const [league, categoryId] of Object.entries(CATEGORY_IDS)) {
-          const events = await this.fetchEventsData(page, categoryId);
+        // Fetch all leagues in parallel and find the event
+        const allEventsPromises = Object.values(CATEGORY_IDS).map(categoryId =>
+          this.fetchEventsData(page!, categoryId)
+        );
+        const allEventsArrays = await Promise.all(allEventsPromises);
+        for (const events of allEventsArrays) {
           event = events.find((e: any) => String(e.eventId) === eventId);
           if (event) break;
         }

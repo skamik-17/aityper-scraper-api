@@ -50,9 +50,9 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
   private async captureEventsData(page: Page, leagueId: number): Promise<any[]> {
     let capturedData: any[] = [];
 
-    // Set up response interception
+    // Set up response interception with reduced timeout for faster failure
     const capturePromise = new Promise<any[]>((resolve) => {
-      const timeout = setTimeout(() => resolve([]), 15000);
+      const timeout = setTimeout(() => resolve([]), 8000);
 
       page.on("response", async (response) => {
         const url = response.url();

@@ -219,7 +219,7 @@ function getMessages(fields: Map<number, any[]>, num: number): Map<number, any[]
 
 // ============ API Request Helpers ============
 
-async function fetchGrpcStream(url: string, body: Buffer, timeoutMs: number = 15000): Promise<Buffer> {
+async function fetchGrpcStream(url: string, body: Buffer, timeoutMs: number = 8000): Promise<Buffer> {
   const frame = Buffer.alloc(5 + body.length);
   frame[0] = 0;
   frame.writeUInt32BE(body.length, 1);

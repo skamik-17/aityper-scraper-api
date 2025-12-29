@@ -60,8 +60,8 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       // Use domcontentloaded + manual wait to be faster than networkidle
       await this.navigateWithRetry(page, url, { timeout: 60000, waitUntil: "domcontentloaded" });
       
-      // Wait for API data to be captured (polling)
-      for (let i = 0; i < 15; i++) {
+      // Wait for API data to be captured (polling with reduced timeout)
+      for (let i = 0; i < 8; i++) {
         if (apiData) break;
         await this.delay(1000);
       }
@@ -136,8 +136,8 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       console.log(`[Superbet] Navigating to details: ${eventUrl}`);
       await this.navigateWithRetry(page, eventUrl, { timeout: 60000, waitUntil: "domcontentloaded" });
       
-      // Wait for API data (polling)
-      for (let i = 0; i < 15; i++) {
+      // Wait for API data (polling with reduced timeout)
+      for (let i = 0; i < 8; i++) {
         if (detailApiData) break;
         await this.delay(1000);
       }

@@ -114,23 +114,23 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
       // Navigate to page
       await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-      // Wait for WebSocket data (with timeout)
+      // Wait for WebSocket data (with reduced timeout, no DOM fallback)
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(15000).then(() => null)
+        this.delay(10000).then(() => null)
       ]);
 
       if (!wsData || !wsData.events || wsData.events.length === 0) {
-        console.log("[PZBuk] No WebSocket data captured, falling back to DOM scraping");
-        return this.scrapeLeagueDOM(page, league, startTime);
+        console.log("[PZBuk] No WebSocket data captured");
+        return this.createNotFoundResult("No WebSocket data captured", Date.now() - startTime);
       }
 
       // Parse WebSocket data
       const matches = this.parseWebSocketData(wsData, league);
 
       if (matches.length === 0) {
-        console.log("[PZBuk] No matches parsed from WebSocket, falling back to DOM");
-        return this.scrapeLeagueDOM(page, league, startTime);
+        console.log("[PZBuk] No matches parsed from WebSocket data");
+        return this.createNotFoundResult("No matches in WebSocket data", Date.now() - startTime);
       }
 
       console.log(`[PZBuk] Scraped ${matches.length} matches for ${league} via WebSocket`);
@@ -193,13 +193,13 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         });
       });
 
-      // Timeout - return best captured state
+      // Timeout - return best captured state (reduced from 20s to 10s)
       setTimeout(() => {
         if (!resolved) {
           resolved = true;
           resolve(bestState);
         }
-      }, 20000);
+      }, 10000);
     });
   }
 
@@ -370,7 +370,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
 
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(15000).then(() => null)
+        this.delay(10000).then(() => null)
       ]);
 
       if (wsData && wsData.events?.length > 0 && wsData.markets?.length > 0) {
@@ -380,8 +380,8 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         }
       }
 
-      // Fallback to DOM scraping
-      return this.scrapeMatchDetailsDOM(page, eventUrl, startTime);
+      // No DOM fallback - return not found if WebSocket fails
+      return this.createMatchDetailNotFoundResult("No WebSocket data for match details", Date.now() - startTime);
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {

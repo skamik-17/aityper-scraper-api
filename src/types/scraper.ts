@@ -90,6 +90,7 @@ export interface ScraperConfig {
   retries: number;
   rateLimit: number; // requests per minute
   enabled: boolean;
+  disableResourceBlocking?: boolean; // Some scrapers need full page load (WebSocket-based)
 }
 
 // Match identification for scraping
@@ -167,6 +168,7 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
+    disableResourceBlocking: true, // Uses network interception for API data
   },
   lvbet: {
     bookmaker: "lvbet",
@@ -248,6 +250,7 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
+    disableResourceBlocking: true, // Uses WebSocket for Swarm API data
   },
   pzbuk: {
     bookmaker: "pzbuk",
@@ -257,5 +260,6 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
+    disableResourceBlocking: true, // Uses WebSocket for RSocket data
   },
 };

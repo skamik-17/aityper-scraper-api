@@ -114,10 +114,10 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       // Navigate to page
       await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-      // Wait for WebSocket data (with timeout)
+      // Wait for WebSocket data (reduced timeout from 20s to 10s)
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(20000).then(() => null)
+        this.delay(10000).then(() => null)
       ]);
 
       if (!wsData) {
@@ -247,13 +247,13 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         });
       });
 
-      // Timeout - return best captured data
+      // Timeout - return best captured data (reduced from 25s to 10s)
       setTimeout(() => {
         if (!resolved) {
           resolved = true;
           resolve(bestData);
         }
-      }, 25000);
+      }, 10000);
     });
   }
 
@@ -421,7 +421,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
       const wsData = await Promise.race([
         wsDataPromise,
-        this.delay(20000).then(() => null)
+        this.delay(10000).then(() => null)
       ]);
 
       if (wsData) {

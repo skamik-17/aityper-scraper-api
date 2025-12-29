@@ -24,6 +24,15 @@ export interface ApiErrorResponse {
 export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 // Health check
+export interface ScrapeStats {
+  duration: number; // milliseconds
+  successCount: number;
+  errorCount: number;
+  matchesInserted: number;
+  extendedMarketsScraped: number;
+  completedAt: string;
+}
+
 export interface HealthCheckData {
   status: "ok" | "degraded" | "error";
   timestamp: string;
@@ -31,6 +40,9 @@ export interface HealthCheckData {
   version: string;
   database: "connected" | "disconnected";
   lastScrapeRun: string | null;
+  lastScrapeDuration: number | null; // milliseconds
+  lastScrapeStats: Record<string, ScrapeStats> | null; // per league
+  totalScrapeDuration: number | null; // total across all leagues
 }
 
 // Odds endpoint

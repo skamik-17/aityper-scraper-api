@@ -26,9 +26,8 @@ const LEAGUE_URLS: Record<string, string> = {
 };
 
 // Tournament IDs for Superbet API (found from network inspection)
-// These are "tournamentIds" in the new API format
 const TOURNAMENT_IDS: Record<string, number[]> = {
-  ekstraklasa: [11], // Ekstraklasa
+  ekstraklasa: [644], // Ekstraklasa (updated Dec 2025)
   "premier-league": [106], // Premier League
 };
 
@@ -43,20 +42,21 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const url = LEAGUE_URLS[league];
     const tournamentIds = TOURNAMENT_IDS[league];
     if (!url || !tournamentIds) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Set up network interception to capture API responses
       let apiData: any = null;
       page.on("response", async (response: Response) => {
         const reqUrl = response.url();
-        // Match the specific events API endpoint
-        if (reqUrl.includes("events/by-date") && reqUrl.includes("offerState=prematch") && reqUrl.includes(`tournamentIds=${tournamentIds[0]}`)) {
+        // Match the events API endpoint (new domain: production-superbet-offer-pl.freetls.fastly.net)
+        if (reqUrl.includes("events/by-date") && reqUrl.includes("offerState=prematch") && reqUrl.includes(`tournamentIds=`) && reqUrl.includes(String(tournamentIds[0]))) {
           try {
             const json = await response.json();
             if (json && Array.isArray(json.data) && json.data.length > 0) {
@@ -110,7 +110,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -128,9 +128,10 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
       await page.setViewportSize({ width: 1920, height: 5000 });
       
       let detailApiData: any = null;
@@ -214,7 +215,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

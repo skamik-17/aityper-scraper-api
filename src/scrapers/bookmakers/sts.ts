@@ -81,12 +81,13 @@ export class STSScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const leagueConfig = LEAGUE_CONFIG[league];
     if (!leagueConfig) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Set up WebSocket data capture
       let initialData = "";
@@ -145,7 +146,7 @@ export class STSScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -308,10 +309,11 @@ export class STSScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Extract fixture ID from URL (e.g., /kursy/team-team/f1234567 or /f1234567)
       const urlMatch = eventUrl.match(/f(\d+)/);
@@ -373,7 +375,7 @@ export class STSScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

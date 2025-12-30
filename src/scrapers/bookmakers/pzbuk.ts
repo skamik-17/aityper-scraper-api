@@ -100,13 +100,14 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const leagueId = LEAGUE_IDS[league];
     const url = LEAGUE_URLS[league];
     if (!leagueId || !url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Set up WebSocket interception
       const wsDataPromise = this.captureWebSocketData(page);
@@ -138,7 +139,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -376,10 +377,11 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Set up WebSocket interception for match details (single event mode)
       const wsDataPromise = this.captureWebSocketData(page, true);
@@ -403,7 +405,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

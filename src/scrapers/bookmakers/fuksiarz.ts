@@ -135,7 +135,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const categoryId = CATEGORY_IDS[league];
     const pageUrl = LEAGUE_URLS[league];
 
@@ -144,7 +144,8 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Navigate and fetch data in a single page.evaluate to minimize browser operations
       console.log(`[Fuksiarz] Fetching category ${categoryId} via direct API...`);
@@ -211,7 +212,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -229,7 +230,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
       // Extract event ID from URL
@@ -245,7 +246,8 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
       // If not in cache, fetch fresh data from all leagues in parallel
       if (!event) {
-        page = await this.initBrowser();
+        const { page, cleanup: sessionCleanup } = await this.initBrowser();
+        cleanup = sessionCleanup;
         await this.navigateWithRetry(page, "https://fuksiarz.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
         await this.delay(2000);
 
@@ -297,7 +299,7 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

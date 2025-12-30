@@ -36,12 +36,13 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const tournamentId = TOURNAMENT_IDS[league];
     if (!tournamentId) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Step 1: Fetch match list from competition-view (using page.request.fetch to avoid context destruction)
       const matchesApiUrl = `https://offer.lvbet.pl/client-api/v5/matches/competition-view/?sports_groups_ids=${tournamentId}&lang=pl`;
@@ -156,7 +157,7 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -174,9 +175,10 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Extract match_id from URL - it's at the end of the path
       // Format: https://lvbet.pl/pl/.../match_id/ or https://lvbet.pl/pl/.../match_id
@@ -306,7 +308,7 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

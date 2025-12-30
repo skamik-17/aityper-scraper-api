@@ -100,13 +100,14 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const competitionId = COMPETITION_IDS[league];
     const url = LEAGUE_URLS[league];
     if (!competitionId || !url) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Set up WebSocket interception
       const wsDataPromise = this.captureSwarmData(page, competitionId);
@@ -138,7 +139,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -367,10 +368,11 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Extract game_id from URL: .../Soccer/England/538/28660755
       const urlParts = eventUrl.split("/");
@@ -405,7 +407,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

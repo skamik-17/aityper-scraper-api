@@ -82,18 +82,18 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let sessionCleanup: (() => Promise<void>) | null = null;
     const leagueConfig = LEAGUE_CONFIG[league];
     if (!leagueConfig) {
       return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
     }
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup } = await this.initBrowser();
+      sessionCleanup = cleanup;
 
       // Navigate to homepage just to establish session (faster than full league page)
       await this.navigateWithRetry(page, "https://www.efortuna.pl", { timeout: 20000, waitUntil: "domcontentloaded" });
-      await this.delay(1000); // Brief wait for session
 
       // Fetch fixtures and markets in a single page.evaluate to avoid browser closure between calls
       console.log(`[Fortuna] Fetching fixtures via direct API for ${leagueConfig.tournamentId}...`);
@@ -161,7 +161,7 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
       console.error("[Fortuna] Scraping error:", error);
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (sessionCleanup) await sessionCleanup();
     }
   }
 
@@ -242,7 +242,7 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let sessionCleanup: (() => Promise<void>) | null = null;
 
     try {
       // Extract fixture ID from URL first
@@ -253,11 +253,11 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
         return this.createMatchDetailNotFoundResult("Could not extract fixture ID from URL", Date.now() - startTime);
       }
 
-      page = await this.initBrowser();
+      const { page, cleanup } = await this.initBrowser();
+      sessionCleanup = cleanup;
 
       // Navigate to homepage just to establish session (faster than full match page)
       await this.navigateWithRetry(page, "https://www.efortuna.pl", { timeout: 20000, waitUntil: "domcontentloaded" });
-      await this.delay(500); // Brief wait for session
 
       // Fetch fixture info and markets directly via API
       console.log(`[Fortuna] Fetching markets directly for fixture ${fixtureId}...`);
@@ -313,7 +313,7 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (sessionCleanup) await sessionCleanup();
     }
   }
 

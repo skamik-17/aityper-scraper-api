@@ -126,7 +126,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let sessionCleanup: (() => Promise<void>) | null = null;
     const categoryId = CATEGORY_IDS[league];
 
     if (!categoryId) {
@@ -134,17 +134,30 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup } = await this.initBrowser();
+      sessionCleanup = cleanup;
 
-      // Go to TOTALbet to establish session
+      // Navigate and fetch in one operation to avoid browser closure
       console.log(`[TOTALbet] Fetching data for category: ${categoryId}`);
       await this.navigateWithRetry(page, "https://totalbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
-      await this.delay(2000);
 
-      // Fetch events data
-      const events = await this.fetchEventsData(page, categoryId);
+      // Fetch events directly via API
+      const events = await page.evaluate(async (catId) => {
+        try {
+          const res = await fetch(`https://totalbet.pl/rest/market/categories/multi/${catId}/events`);
+          const data = await res.json();
+          return data?.data || [];
+        } catch {
+          return [];
+        }
+      }, categoryId);
 
+      // Update cache and process events
       if (events.length > 0) {
+        cacheTimestamp = Date.now();
+        for (const event of events) {
+          cachedEvents.set(String(event.eventId), event);
+        }
         const matches: RawScrapedOdds[] = [];
 
         for (const event of events) {
@@ -188,7 +201,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (sessionCleanup) await sessionCleanup();
     }
   }
 
@@ -206,7 +219,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let sessionCleanup: (() => Promise<void>) | null = null;
 
     try {
       // Extract event ID from URL
@@ -220,18 +233,32 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
       let event = isCacheValid ? cachedEvents.get(eventId) : null;
 
-      // If not in cache, fetch fresh data from all leagues in parallel
+      // If not in cache, fetch fresh data from all leagues
       if (!event) {
-        page = await this.initBrowser();
-        await this.navigateWithRetry(page, "https://totalbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
-        await this.delay(2000);
+        const { page, cleanup } = await this.initBrowser();
+        sessionCleanup = cleanup;
 
-        // Fetch all leagues in parallel and find the event
-        const allEventsPromises = Object.values(CATEGORY_IDS).map(categoryId =>
-          this.fetchEventsData(page!, categoryId)
-        );
-        const allEventsArrays = await Promise.all(allEventsPromises);
-        for (const events of allEventsArrays) {
+        await this.navigateWithRetry(page, "https://totalbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+
+        // Fetch all leagues and find the event
+        const categoryIds = Object.values(CATEGORY_IDS);
+        for (const categoryId of categoryIds) {
+          const events = await page.evaluate(async (catId) => {
+            try {
+              const res = await fetch(`https://totalbet.pl/rest/market/categories/multi/${catId}/events`);
+              const data = await res.json();
+              return data?.data || [];
+            } catch {
+              return [];
+            }
+          }, categoryId);
+
+          // Update cache
+          cacheTimestamp = Date.now();
+          for (const e of events) {
+            cachedEvents.set(String(e.eventId), e);
+          }
+
           event = events.find((e: any) => String(e.eventId) === eventId);
           if (event) break;
         }
@@ -274,7 +301,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (sessionCleanup) await sessionCleanup();
     }
   }
 

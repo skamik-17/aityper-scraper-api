@@ -21,12 +21,17 @@ const DEFAULT_USER_AGENT =
 // Resource types to block for faster loading
 const BLOCKED_RESOURCE_TYPES = ["image", "stylesheet", "font", "media"];
 
+// Return type for initBrowser - includes cleanup function for proper resource management
+export interface BrowserSession {
+  page: Page;
+  browser: Browser;
+  context: BrowserContext;
+  cleanup: () => Promise<void>;
+}
+
 export abstract class PlaywrightScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
-
-  protected browser: Browser | null = null;
-  protected context: BrowserContext | null = null;
 
   /**
    * Scrape all matches for a specific league
@@ -55,30 +60,29 @@ export abstract class PlaywrightScraper {
 
   /**
    * Scrape detailed match page for extended markets (Double Chance, Over/Under, BTTS)
-   * Override in subclasses that support extended markets
    */
   abstract scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
 
   /**
    * Extract event URLs from the current listing page
-   * Returns a list of match keys (normalized team names) with their detail page URLs
-   * Override in subclasses to collect URLs during listing scrapes
    */
   abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
 
   /**
-   * Initialize browser and create a new page with anti-detection measures
-   * Uses browser pool for efficient resource management
+   * Initialize browser session with proper resource management
+   * Returns browser, context, page and a cleanup function
+   * Safe for concurrent usage across multiple leagues
    */
-  protected async initBrowser(): Promise<Page> {
+  protected async initBrowser(): Promise<BrowserSession> {
+    let browser: Browser | null = null;
+    let context: BrowserContext | null = null;
+
     // Try up to 2 times to get a valid browser
     for (let attempt = 0; attempt < 2; attempt++) {
-      // Acquire browser from pool
-      this.browser = await browserPool.acquire();
+      browser = await browserPool.acquire();
 
       try {
-        // Create new context for isolation
-        this.context = await this.browser.newContext({
+        context = await browser.newContext({
           userAgent: DEFAULT_USER_AGENT,
           locale: "pl-PL",
           viewport: { width: 1920, height: 1080 },
@@ -87,19 +91,31 @@ export abstract class PlaywrightScraper {
           bypassCSP: true,
         });
 
-        const page = await this.context.newPage();
-        return page;
+        const page = await context.newPage();
+
+        // Create cleanup function with captured references
+        const capturedBrowser = browser;
+        const capturedContext = context;
+        const cleanup = async () => {
+          try {
+            if (capturedContext) await capturedContext.close();
+            if (capturedBrowser) browserPool.release(capturedBrowser);
+          } catch (error) {
+            console.error(`[${this.bookmaker}] Error during cleanup:`, error);
+          }
+        };
+
+        return { page, browser, context, cleanup };
       } catch (error) {
-        // Browser was closed or invalid, remove from pool and retry with a new one
-        console.log(`[${this.bookmaker}] Browser invalid, retrying with fresh browser...`);
-        browserPool.remove(this.browser);
+        console.log(`[${this.bookmaker}] Browser invalid, retrying...`);
+        if (browser) browserPool.remove(browser);
         continue;
       }
     }
 
-    // Last attempt - get a fresh browser
-    this.browser = await browserPool.acquire();
-    this.context = await this.browser.newContext({
+    // Last attempt
+    browser = await browserPool.acquire();
+    context = await browser.newContext({
       userAgent: DEFAULT_USER_AGENT,
       locale: "pl-PL",
       viewport: { width: 1920, height: 1080 },
@@ -108,9 +124,8 @@ export abstract class PlaywrightScraper {
       bypassCSP: true,
     });
 
-    const page = await this.context.newPage();
+    const page = await context.newPage();
 
-    // Block unnecessary resources for faster loading (unless disabled for this scraper)
     if (!this.config.disableResourceBlocking) {
       await page.route("**/*", (route) => {
         const resourceType = route.request().resourceType();
@@ -121,10 +136,20 @@ export abstract class PlaywrightScraper {
       });
     }
 
-    // Apply stealth scripts to hide automation
     await this.applyStealthScripts(page);
 
-    return page;
+    const capturedBrowser = browser;
+    const capturedContext = context;
+    const cleanup = async () => {
+      try {
+        if (capturedContext) await capturedContext.close();
+        if (capturedBrowser) browserPool.release(capturedBrowser);
+      } catch (error) {
+        console.error(`[${this.bookmaker}] Error during cleanup:`, error);
+      }
+    };
+
+    return { page, browser, context, cleanup };
   }
 
   /**
@@ -132,12 +157,7 @@ export abstract class PlaywrightScraper {
    */
   protected async applyStealthScripts(page: Page): Promise<void> {
     await page.addInitScript(() => {
-      // Remove webdriver flag
-      Object.defineProperty(navigator, "webdriver", {
-        get: () => false,
-      });
-
-      // Add fake plugins array (Chrome normally has these)
+      Object.defineProperty(navigator, "webdriver", { get: () => false });
       Object.defineProperty(navigator, "plugins", {
         get: () => [
           { name: "Chrome PDF Plugin", filename: "internal-pdf-viewer" },
@@ -145,16 +165,10 @@ export abstract class PlaywrightScraper {
           { name: "Native Client", filename: "internal-nacl-plugin" },
         ],
       });
-
-      // Add languages array
       Object.defineProperty(navigator, "languages", {
         get: () => ["pl-PL", "pl", "en-US", "en"],
       });
-
-      // Hide automation-specific chrome properties
-      (window as unknown as { chrome: unknown }).chrome = {
-        runtime: {},
-      };
+      (window as unknown as { chrome: unknown }).chrome = { runtime: {} };
     });
   }
 
@@ -174,12 +188,8 @@ export abstract class PlaywrightScraper {
         await page.goto(url, { timeout, waitUntil });
         return;
       } catch (error) {
-        if (attempt === maxRetries) {
-          throw error;
-        }
-        // Exponential backoff
-        const delay = Math.pow(2, attempt) * 1000;
-        await this.delay(delay);
+        if (attempt === maxRetries) throw error;
+        await this.delay(Math.pow(2, attempt) * 1000);
       }
     }
   }
@@ -187,11 +197,7 @@ export abstract class PlaywrightScraper {
   /**
    * Wait for a selector with timeout
    */
-  protected async waitForSelector(
-    page: Page,
-    selector: string,
-    timeout?: number
-  ): Promise<boolean> {
+  protected async waitForSelector(page: Page, selector: string, timeout?: number): Promise<boolean> {
     try {
       await page.waitForSelector(selector, { timeout: timeout || this.config.timeout });
       return true;
@@ -201,53 +207,25 @@ export abstract class PlaywrightScraper {
   }
 
   /**
-   * Clean up browser resources
-   * Closes context and releases browser back to pool (doesn't close browser)
+   * No-op cleanup for backwards compatibility with aggregator
    */
   async cleanup(): Promise<void> {
-    try {
-      if (this.context) {
-        await this.context.close();
-        this.context = null;
-      }
-      if (this.browser) {
-        // Release browser back to pool instead of closing it
-        browserPool.release(this.browser);
-        this.browser = null;
-      }
-    } catch (error) {
-      console.error(`[${this.bookmaker}] Error during cleanup:`, error);
-    }
+    // Session-based cleanup is handled by each scraper's finally block
   }
 
-  /**
-   * Helper to delay execution
-   */
   protected delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  /**
-   * Create error result
-   */
   protected createErrorResult(error: unknown, duration: number): ScraperResult {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     console.error(`[${this.bookmaker}] Scraper error: ${errorMessage}`);
     if (error instanceof Error && error.stack) {
       console.error(`[${this.bookmaker}] Stack:`, error.stack.split('\n').slice(0, 3).join('\n'));
     }
-    return {
-      status: "error",
-      bookmaker: this.bookmaker,
-      error: errorMessage,
-      duration,
-      timestamp: new Date(),
-    };
+    return { status: "error", bookmaker: this.bookmaker, error: errorMessage, duration, timestamp: new Date() };
   }
 
-  /**
-   * Create timeout result
-   */
   protected createTimeoutResult(duration: number): ScraperResult {
     return {
       status: "timeout",
@@ -258,26 +236,11 @@ export abstract class PlaywrightScraper {
     };
   }
 
-  /**
-   * Create not found result
-   */
   protected createNotFoundResult(message: string, duration: number): ScraperResult {
-    return {
-      status: "not_found",
-      bookmaker: this.bookmaker,
-      error: message,
-      duration,
-      timestamp: new Date(),
-    };
+    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
   }
 
-  /**
-   * Create match detail error result
-   */
-  protected createMatchDetailErrorResult(
-    error: unknown,
-    duration: number
-  ): MatchDetailResult {
+  protected createMatchDetailErrorResult(error: unknown, duration: number): MatchDetailResult {
     return {
       status: "error",
       bookmaker: this.bookmaker,
@@ -287,9 +250,6 @@ export abstract class PlaywrightScraper {
     };
   }
 
-  /**
-   * Create match detail timeout result
-   */
   protected createMatchDetailTimeoutResult(duration: number): MatchDetailResult {
     return {
       status: "timeout",
@@ -300,25 +260,10 @@ export abstract class PlaywrightScraper {
     };
   }
 
-  /**
-   * Create match detail not found result
-   */
-  protected createMatchDetailNotFoundResult(
-    message: string,
-    duration: number
-  ): MatchDetailResult {
-    return {
-      status: "not_found",
-      bookmaker: this.bookmaker,
-      error: message,
-      duration,
-      timestamp: new Date(),
-    };
+  protected createMatchDetailNotFoundResult(message: string, duration: number): MatchDetailResult {
+    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
   }
 
-  /**
-   * Create not implemented result for scrapers that don't support extended markets yet
-   */
   protected createNotImplementedResult(duration: number): MatchDetailResult {
     return {
       status: "error",

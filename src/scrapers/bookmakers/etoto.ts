@@ -126,7 +126,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const categoryId = CATEGORY_IDS[league];
 
     if (!categoryId) {
@@ -134,7 +134,8 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       // Go to eToto to establish session
       console.log(`[eToto] Fetching data for category: ${categoryId}`);
@@ -188,7 +189,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -206,7 +207,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
       // Extract event ID from URL
@@ -222,7 +223,8 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
 
       // If not in cache, fetch fresh data from all leagues in parallel
       if (!event) {
-        page = await this.initBrowser();
+        const { page, cleanup: sessionCleanup } = await this.initBrowser();
+        cleanup = sessionCleanup;
         await this.navigateWithRetry(page, "https://www.etoto.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
         await this.delay(2000);
 
@@ -274,7 +276,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

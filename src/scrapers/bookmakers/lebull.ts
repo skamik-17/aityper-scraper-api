@@ -149,7 +149,7 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
     const leagueId = LEAGUE_IDS[league];
 
     if (!leagueId) {
@@ -157,7 +157,8 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      page = await this.initBrowser();
+      const { page, cleanup: sessionCleanup } = await this.initBrowser();
+      cleanup = sessionCleanup;
 
       console.log(`[LeBull] Capturing data for league: ${leagueId}`);
       const events = await this.captureEventsData(page, leagueId);
@@ -204,7 +205,7 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 
@@ -222,7 +223,7 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
 
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let page: Page | null = null;
+    let cleanup: (() => Promise<void>) | null = null;
 
     try {
       // Extract event ID from URL
@@ -238,7 +239,8 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
 
       // If not in cache, fetch fresh data
       if (!event) {
-        page = await this.initBrowser();
+        const { page, cleanup: sessionCleanup } = await this.initBrowser();
+        cleanup = sessionCleanup;
 
         // Try to find which league this event belongs to
         for (const [, leagueId] of Object.entries(LEAGUE_IDS)) {
@@ -283,7 +285,7 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     } finally {
-      if (page) await page.close();
+      if (cleanup) await cleanup();
     }
   }
 

@@ -3,7 +3,7 @@
  * Uses Network Interception to get odds directly from Superbet API.
  */
 
-import type { Page, Response } from "playwright";
+import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
 import type {
   ScraperConfig,
@@ -51,33 +51,26 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       const { page, cleanup: sessionCleanup } = await this.initBrowser();
       cleanup = sessionCleanup;
 
-      // Set up network interception to capture API responses
-      let apiData: any = null;
-      page.on("response", async (response: Response) => {
-        const reqUrl = response.url();
-        // Match the events API endpoint (new domain: production-superbet-offer-pl.freetls.fastly.net)
-        if (reqUrl.includes("events/by-date") && reqUrl.includes("offerState=prematch") && reqUrl.includes(`tournamentIds=`) && reqUrl.includes(String(tournamentIds[0]))) {
-          try {
-            const json = await response.json();
-            if (json && Array.isArray(json.data) && json.data.length > 0) {
-              console.log(`[Superbet] Captured ${json.data.length} events from API`);
-              apiData = json;
-            }
-          } catch {}
-        }
-      });
-
-      // Navigate to league page to trigger API call
+      // Navigate to establish session cookies
       console.log(`[Superbet] Navigating to: ${url}`);
       await this.navigateWithRetry(page, url, { timeout: 30000, waitUntil: "domcontentloaded" });
 
-      // Wait for API data with early-exit polling
-      for (let i = 0; i < 15; i++) {
-        if (apiData) break;
-        await this.delay(500);
-      }
+      // Fetch events directly via API
+      const tournamentId = tournamentIds[0];
+      const apiData = await page.evaluate(async (tid: number) => {
+        try {
+          const today = new Date().toISOString().split('T')[0];
+          const apiUrl = `https://production-superbet-offer-pl.freetls.fastly.net/v2/pl-PL/events/by-date?offerState=prematch&startDate=${today}+00:00:00&endDate=2027-12-30+00:00:00&sportId=5&tournamentIds=${tid}`;
+          const res = await fetch(apiUrl);
+          const json = await res.json();
+          return json;
+        } catch {
+          return null;
+        }
+      }, tournamentId);
 
       if (apiData && apiData.data && apiData.data.length > 0) {
+        console.log(`[Superbet] Captured ${apiData.data.length} events from API`);
         const matches: RawScrapedOdds[] = apiData.data.map((m: any) => {
           const mainOdds = m.odds?.filter((o: any) => o.marketId === 547) || [];
           const home = mainOdds.find((o: any) => o.code === "1")?.price || 0;
@@ -130,29 +123,31 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
     const startTime = Date.now();
     let cleanup: (() => Promise<void>) | null = null;
     try {
+      // Extract event ID from URL
+      const eventIdMatch = eventUrl.match(/\/(\d+)$/);
+      if (!eventIdMatch) {
+        return this.createMatchDetailNotFoundResult("Invalid Superbet event URL", Date.now() - startTime);
+      }
+      const eventId = eventIdMatch[1];
+
       const { page, cleanup: sessionCleanup } = await this.initBrowser();
       cleanup = sessionCleanup;
-      await page.setViewportSize({ width: 1920, height: 5000 });
-      
-      let detailApiData: any = null;
-      page.on("response", async (response: Response) => {
-        const reqUrl = response.url();
-        if (reqUrl.includes("/events/") && reqUrl.match(/\/events\/\d+$/)) {
-          try { 
-            const json = await response.json();
-            if (json && json.data) detailApiData = json;
-          } catch {}
-        }
-      });
 
-      console.log(`[Superbet] Navigating to details: ${eventUrl}`);
-      await this.navigateWithRetry(page, eventUrl, { timeout: 60000, waitUntil: "domcontentloaded" });
-      
-      // Wait for API data (polling with reduced timeout)
-      for (let i = 0; i < 8; i++) {
-        if (detailApiData) break;
-        await this.delay(1000);
-      }
+      // Navigate to establish session
+      console.log(`[Superbet] Fetching details for event: ${eventId}`);
+      await this.navigateWithRetry(page, "https://www.superbet.pl", { timeout: 30000, waitUntil: "domcontentloaded" });
+
+      // Fetch event details directly via API
+      const detailApiData = await page.evaluate(async (eid: string) => {
+        try {
+          const apiUrl = `https://production-superbet-offer-pl.freetls.fastly.net/v2/pl-PL/events/${eid}`;
+          const res = await fetch(apiUrl);
+          const json = await res.json();
+          return json;
+        } catch {
+          return null;
+        }
+      }, eventId);
 
       if (detailApiData && detailApiData.data && detailApiData.data.length > 0) {
         const matchInfo = detailApiData.data[0];

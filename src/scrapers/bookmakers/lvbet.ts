@@ -244,8 +244,8 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
               else if (s.order === 1) mBTTS.no = s.rate?.decimal || 0;
             });
           }
-          // O/U - "Suma goli" (only positive .5 lines)
-          else if (name.includes("suma goli") || name.includes("liczba goli")) {
+          // O/U - ONLY exact "Suma goli" market (not halves, teams, asian, time-based)
+          else if (name === "suma goli" || name === "liczba goli") {
             const line = m.line;
             if (line && parseFloat(line) > 0 && line.toString().includes(".5")) {
               const lineStr = parseFloat(line).toFixed(1);

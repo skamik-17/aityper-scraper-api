@@ -23,6 +23,7 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 const CATEGORY_IDS: Record<string, number> = {
   ekstraklasa: 666,
   "premier-league": 206,
+  laliga: 1165, // La Liga (from URL pattern)
 };
 
 // Cache for events data

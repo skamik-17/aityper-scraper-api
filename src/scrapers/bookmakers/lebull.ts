@@ -23,6 +23,7 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 const LEAGUE_IDS: Record<string, number> = {
   ekstraklasa: 4847,
   "premier-league": 4485,
+  laliga: 4486, // La Liga (confirmed from URL)
 };
 
 // stakeType IDs for market parsing (same as Betters - shared sbteam.xyz backend)

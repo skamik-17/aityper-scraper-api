@@ -29,6 +29,10 @@ const LEAGUE_CONFIG: Record<string, { url: string; tournamentId: string }> = {
     url: "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/anglia-2/1-anglia-1",
     tournamentId: "ufo:tour:00-03m", // Premier League
   },
+  laliga: {
+    url: "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/1-hiszpania",
+    tournamentId: "ufo:tour:00-0h7", // La Liga (confirmed from API)
+  },
 };
 
 // Fortuna API market type IDs

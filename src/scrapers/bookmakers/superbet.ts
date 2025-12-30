@@ -23,12 +23,14 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa",
   "premier-league": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
+  laliga: "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
 };
 
 // Tournament IDs for Superbet API (found from network inspection)
 const TOURNAMENT_IDS: Record<string, number[]> = {
   ekstraklasa: [644], // Ekstraklasa (updated Dec 2025)
   "premier-league": [106], // Premier League
+  laliga: [98], // La Liga (correct ID from API testing)
 };
 
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {

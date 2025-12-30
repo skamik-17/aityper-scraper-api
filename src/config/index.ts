@@ -22,7 +22,7 @@ export const CONFIG = {
   SCRAPER_TIMEOUT_MS: parseInt(process.env.SCRAPER_TIMEOUT_MS || "30000"),
 
   // Supported leagues
-  ENABLED_LEAGUES: ["ekstraklasa", "premier-league"] as const,
+  ENABLED_LEAGUES: ["ekstraklasa", "premier-league", "laliga"] as const,
 
   // Bookmakers
   BOOKMAKERS: [

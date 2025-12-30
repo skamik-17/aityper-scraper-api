@@ -136,11 +136,113 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
 };
 
 /**
+ * Explicit aliases for La Liga (bookmaker -> TheSportsDB canonical)
+ * Common abbreviations used by Polish bookmakers
+ */
+const LALIGA_ALIASES: Record<string, string> = {
+  // Real Madrid
+  Real: "Real Madrid",
+  "R. Madrid": "Real Madrid",
+  "Real Mad.": "Real Madrid",
+
+  // Barcelona
+  Barca: "Barcelona",
+  "FC Barcelona": "Barcelona",
+  "Barça": "Barcelona",
+
+  // Atletico Madrid
+  "Atl. Madrid": "Atletico Madrid",
+  Atletico: "Atletico Madrid",
+  Atleti: "Atletico Madrid",
+  "Atlético Madrid": "Atletico Madrid",
+  "Atletico Madryt": "Atletico Madrid",
+  "Atl Madrid": "Atletico Madrid",
+
+  // Athletic Bilbao
+  Athletic: "Athletic Bilbao",
+  "Ath. Bilbao": "Athletic Bilbao",
+  "Athletic Club": "Athletic Bilbao",
+
+  // Rayo Vallecano
+  Rayo: "Vallecano",
+  "Rayo Vallecano": "Vallecano",
+
+  // Celta Vigo
+  Celta: "Celta Vigo",
+  "Celta de Vigo": "Celta Vigo",
+  "RC Celta": "Celta Vigo",
+
+  // Real Sociedad
+  "Real Soc.": "Real Sociedad",
+  "R. Sociedad": "Real Sociedad",
+  Sociedad: "Real Sociedad",
+
+  // Real Betis
+  Betis: "Real Betis",
+  "R. Betis": "Real Betis",
+
+  // Deportivo Alaves
+  "Deportivo Alaves": "Alaves",
+  "Deportivo Alavés": "Alaves",
+  "D. Alaves": "Alaves",
+  Alavés: "Alaves",
+
+  // Espanyol
+  "RCD Espanyol": "Espanyol",
+  "Espanyol Barcelona": "Espanyol",
+
+  // Getafe
+  "Getafe CF": "Getafe",
+
+  // Girona
+  "Girona FC": "Girona",
+
+  // Las Palmas
+  "UD Las Palmas": "Las Palmas",
+  "U.D. Las Palmas": "Las Palmas",
+
+  // Leganes
+  "CD Leganes": "Leganes",
+  "CD Leganés": "Leganes",
+  Leganés: "Leganes",
+
+  // Mallorca
+  "RCD Mallorca": "Mallorca",
+  "Real Mallorca": "Mallorca",
+
+  // Osasuna
+  "CA Osasuna": "Osasuna",
+
+  // Sevilla
+  "Sevilla FC": "Sevilla",
+
+  // Valencia
+  "Valencia CF": "Valencia",
+
+  // Valladolid
+  "Real Valladolid": "Valladolid",
+  "R. Valladolid": "Valladolid",
+
+  // Villarreal
+  "Villarreal CF": "Villarreal",
+
+  // Elche
+  "Elche CF": "Elche",
+  "Elche Cf": "Elche",
+
+  // Levante
+  "Levante UD": "Levante",
+  "UD Levante": "Levante",
+  "Ud Levante": "Levante",
+};
+
+/**
  * Map of league to aliases
  */
 const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
   ekstraklasa: EKSTRAKLASA_ALIASES,
   "premier-league": PREMIER_LEAGUE_ALIASES,
+  laliga: LALIGA_ALIASES,
 };
 
 /**

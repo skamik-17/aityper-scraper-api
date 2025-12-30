@@ -33,6 +33,12 @@ const LEAGUE_CONFIG: Record<string, { url: string; tournamentId: number; country
     countryFilter: "angli",
     tournamentFilter: "premier league",
   },
+  laliga: {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga/175",
+    tournamentId: 8,
+    countryFilter: "hiszpan",
+    tournamentFilter: "laliga",
+  },
 };
 
 // Interface for parsed fixture data
@@ -173,6 +179,8 @@ export class STSScraper extends PlaywrightScraper {
         for (const [, tourn] of Object.entries(cat.T || {}) as [string, any][]) {
           const tournamentName = (tourn.n || "").toLowerCase();
           if (!tournamentName.includes(leagueConfig.tournamentFilter)) continue;
+          // Exclude Segunda División for La Liga
+          if (league === "laliga" && (tournamentName.includes("2") || tournamentName.includes("hypermotion"))) continue;
 
           // Found the target league
           for (const [fixId, fix] of Object.entries(tourn.FX || {}) as [string, any][]) {

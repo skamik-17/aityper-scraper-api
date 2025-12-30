@@ -22,7 +22,8 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 // Tournament IDs for LVBet API
 const TOURNAMENT_IDS: Record<string, number> = {
   "premier-league": 37685,
-  "ekstraklasa": 37669
+  "ekstraklasa": 37669,
+  "laliga": 41533, // La Liga (from URL pattern)
 };
 
 export class LVBetPlaywrightScraper extends PlaywrightScraper {

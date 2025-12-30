@@ -23,12 +23,14 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 const COMPETITION_IDS: Record<string, number> = {
   ekstraklasa: 1978,
   "premier-league": 538,
+  laliga: 545, // La Liga (confirmed from URL)
 };
 
 // League URLs for navigation
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Poland/1978",
   "premier-league": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+  laliga: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Spain/545",
 };
 
 // Swarm market types

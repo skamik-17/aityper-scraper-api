@@ -24,12 +24,14 @@ import { findMatchingEvent, getCanonicalTeamName } from "../team-matcher.js";
 const CATEGORY_IDS: Record<string, number> = {
   ekstraklasa: 265,
   "premier-league": 625,
+  laliga: 654, // La Liga (from URL pattern)
 };
 
 // Base URL for page navigation (needed to establish session)
 const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa",
   "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
+  laliga: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
 };
 
 // Cache for events data (used by scrapeMatchDetails)

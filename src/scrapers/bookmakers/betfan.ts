@@ -81,20 +81,20 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
       const gameName = (game.gameName || "").toLowerCase();
       const outcomes = game.outcomes || [];
 
-      // 1X2 - gameType 1, gameName "Mecz"
-      if (game.gameType === 1 && gameName === "mecz" && outcomes.length === 3 && m1X2.home === 0) {
+      // 1X2 - gameType 1, gameName "Mecz" or "1X2"
+      if (game.gameType === 1 && (gameName === "mecz" || gameName === "1x2") && outcomes.length === 3 && m1X2.home === 0) {
         const sorted = [...outcomes].sort((a: any, b: any) => a.outcomePosition - b.outcomePosition);
         m1X2.home = sorted[0]?.outcomeOdds || 0;
         m1X2.draw = sorted[1]?.outcomeOdds || 0;
         m1X2.away = sorted[2]?.outcomeOdds || 0;
       }
-      // Double Chance - gameType 4
-      else if (game.gameType === 4 && gameName.includes("szansa") && outcomes.length === 3) {
+      // Double Chance - gameType 4 (outcomes: "1/X", "1/2", "X/2" or "1x", "x2", "12")
+      else if (game.gameType === 4 && gameName.includes("szansa") && outcomes.length === 3 && mDC.homeOrDraw === 0) {
         for (const o of outcomes) {
-          const name = (o.outcomeName || "").toLowerCase();
-          if (name === "1x") mDC.homeOrDraw = o.outcomeOdds;
-          else if (name === "x2") mDC.drawOrAway = o.outcomeOdds;
-          else if (name === "12") mDC.homeOrAway = o.outcomeOdds;
+          const name = (o.outcomeName || "").toLowerCase().replace(/\//g, "");
+          if (name === "1x" || name === "x1") mDC.homeOrDraw = o.outcomeOdds;
+          else if (name === "x2" || name === "2x") mDC.drawOrAway = o.outcomeOdds;
+          else if (name === "12" || name === "21") mDC.homeOrAway = o.outcomeOdds;
         }
       }
       // BTTS - gameType 98
@@ -105,19 +105,25 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
           else if (name === "nie") mBTTS.no = o.outcomeOdds;
         }
       }
-      // Over/Under - gameType 8
-      else if (game.gameType === 8 && gameName === "liczba goli" && outcomes.length === 2) {
+      // Over/Under - gameType 8 (handles both "Liczba goli" and "Poniżej/powyżej X.X goli")
+      else if (game.gameType === 8 && outcomes.length === 2) {
+        // Try to get line from game name first (e.g., "Poniżej/powyżej 2.5 goli")
+        const gameLineMatch = gameName.match(/(\d+[.,]?\d*)\s*gol/);
+
         for (const o of outcomes) {
-          const name = (o.outcomeName || "").toLowerCase();
-          const lineMatch = name.match(/(\d+[.,]?\d*)/);
+          const outcomeName = (o.outcomeName || "").toLowerCase();
+          // Get line from outcome name (e.g., "Powyżej 2.5") or from game name
+          const outcomeLineMatch = outcomeName.match(/(\d+[.,]?\d*)/);
+          const lineMatch = outcomeLineMatch || gameLineMatch;
+
           if (lineMatch) {
             const lineVal = parseFloat(lineMatch[1].replace(",", "."));
             if (lineVal % 1 === 0.5) {
               const line = lineVal.toFixed(1);
               if (!mOU[line]) mOU[line] = { over: 0, under: 0 };
-              if (name.includes("powyżej")) {
+              if (outcomeName.includes("powyżej")) {
                 mOU[line].over = o.outcomeOdds;
-              } else if (name.includes("poniżej")) {
+              } else if (outcomeName.includes("poniżej")) {
                 mOU[line].under = o.outcomeOdds;
               }
             }

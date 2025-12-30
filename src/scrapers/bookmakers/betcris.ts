@@ -469,8 +469,8 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
           else if (event.type_1 === "W2") m1X2.away = price;
         }
       }
-      // Double Chance - "Podwójna szansa" or DC type
-      else if (marketName.includes("podwójna szansa") || marketName.includes("double chance")) {
+      // Double Chance - ONLY exact "Podwójna szansa" (type "1X12X2"), not halves or combos
+      else if (marketType === "1X12X2" || (marketName === "podwójna szansa" && mDC.homeOrDraw === 0)) {
         for (const event of Object.values(market.event || {})) {
           const price = event.price;
           const name = event.name?.toLowerCase() || "";

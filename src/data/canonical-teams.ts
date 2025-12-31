@@ -18,7 +18,7 @@ export interface CanonicalTeam {
 export const EKSTRAKLASA_TEAMS: CanonicalTeam[] = [
   // TheSportsDB uses English city names and ASCII characters
   { id: "134010", name: "Lech Poznan", normalized: "lech poznan" },
-  { id: "133992", name: "Legia Warsaw", normalized: "legia warsaw" },
+  { id: "133992", name: "Legia Warszawa", normalized: "legia warszawa" },
   { id: "135303", name: "Wisla Plock", normalized: "wisla plock" },
   { id: "137670", name: "Rakow Czestochowa", normalized: "rakow czestochowa" },
   {

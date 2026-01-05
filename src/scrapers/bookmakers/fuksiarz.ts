@@ -26,7 +26,7 @@ const CATEGORY_IDS: Record<string, number> = {
   "premier-league": 625,
   laliga: 654, // La Liga (from URL pattern)
   "serie-a": 635, // Serie A (confirmed from API)
-  "ligue-1": 1626, // Ligue 1 (confirmed from navigation)
+  "ligue-1": 1152, // Ligue 1 (from URL: /francja/ligue-1/1152/1)
 };
 
 // Base URL for page navigation (needed to establish session)

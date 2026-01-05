@@ -25,7 +25,7 @@ const CATEGORY_IDS: Record<string, number> = {
   "premier-league": 7124,
   laliga: 7110, // La Liga (correct ID from API categories)
   "serie-a": 7151, // Serie A (confirmed from API)
-  "ligue-1": 7127, // Ligue 1 (estimated)
+  "ligue-1": 7219, // Ligue 1 (from URL: /Pilka-nozna/7219/1)
 };
 
 // Cache for events data

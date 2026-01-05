@@ -14,7 +14,8 @@ interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
   totalSuccessCount: number;
   totalErrorCount: number;
-  totalMatchesInserted: number;
+  totalOddsRecords: number;
+  totalUniqueMatches: number;
 }
 
 let scrapeTask: cron.ScheduledTask | null = null;
@@ -29,7 +30,8 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
   const results = new Map<string, ScrapeResult>();
   let totalSuccessCount = 0;
   let totalErrorCount = 0;
-  let totalMatchesInserted = 0;
+  let totalOddsRecords = 0;
+  let totalUniqueMatches = 0;
 
   console.log(`[Scheduler] Scraping ${CONFIG.ENABLED_LEAGUES.length} leagues in parallel...`);
 
@@ -40,7 +42,7 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
       // Pass closeBrowsers: false to avoid closing browsers between parallel league scrapes
       const result = await runScrapeAndPersist(league, undefined, false);
       console.log(
-        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.matchesInserted} matches`
+        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.uniqueMatches} matches`
       );
       return { league, result, error: null };
     } catch (error) {
@@ -65,7 +67,8 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
       results.set(league, result);
       totalSuccessCount += result.successCount;
       totalErrorCount += result.errorCount;
-      totalMatchesInserted += result.matchesInserted;
+      totalOddsRecords += result.oddsRecords;
+      totalUniqueMatches += result.uniqueMatches;
     } else {
       totalErrorCount++;
     }
@@ -75,7 +78,8 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
     leagues: results,
     totalSuccessCount,
     totalErrorCount,
-    totalMatchesInserted,
+    totalOddsRecords,
+    totalUniqueMatches,
   };
 }
 
@@ -109,7 +113,7 @@ export function startScheduler(): void {
         const multiResult = await runAllLeaguesScrape();
         lastResults = multiResult.leagues;
         console.log(
-          `[Scheduler] All leagues completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalErrorCount} errors, ${multiResult.totalMatchesInserted} matches`
+          `[Scheduler] All leagues completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalErrorCount} errors, ${multiResult.totalUniqueMatches} matches`
         );
       } catch (error) {
         console.error("[Scheduler] Scrape failed:", error);
@@ -151,7 +155,7 @@ export function startScheduler(): void {
       const multiResult = await runAllLeaguesScrape();
       lastResults = multiResult.leagues;
       console.log(
-        `[Scheduler] Initial scrape completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalMatchesInserted} matches across ${CONFIG.ENABLED_LEAGUES.length} leagues`
+        `[Scheduler] Initial scrape completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalUniqueMatches} matches across ${CONFIG.ENABLED_LEAGUES.length} leagues`
       );
     } catch (error) {
       console.error("[Scheduler] Initial scrape failed:", error);

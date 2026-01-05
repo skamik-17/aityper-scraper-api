@@ -22,8 +22,10 @@ export interface ScrapeResult {
   duration: number;
   successCount: number;
   errorCount: number;
-  matchesInserted: number;
-  extendedMarketsScraped: number;
+  oddsRecords: number;              // Total rows inserted (bookmakers × matches)
+  uniqueMatches: number;            // Deduplicated match count
+  matchesWithExtendedMarkets: number; // Unique matches with extended market data
+  extendedMarketsScraped: number;   // Total bookmaker scrapes for extended markets
   errors: string[];
 }
 
@@ -67,6 +69,7 @@ export async function runScrapeAndPersist(
   bookmakers?: PolishBookmaker[],
   closeBrowsers: boolean = true
 ): Promise<ScrapeResult> {
+  const startedAt = new Date();
   console.log(`[ScraperService] Starting scrape for ${league}`);
 
   const errors: string[] = [];
@@ -78,15 +81,18 @@ export async function runScrapeAndPersist(
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : "Unknown error";
     console.error("[ScraperService] Aggregator failed:", errorMsg);
+    const completedAt = new Date();
     return {
       runId: "error",
       league,
-      startedAt: new Date(),
-      completedAt: new Date(),
-      duration: 0,
+      startedAt,
+      completedAt,
+      duration: completedAt.getTime() - startedAt.getTime(),
       successCount: 0,
       errorCount: 1,
-      matchesInserted: 0,
+      oddsRecords: 0,
+      uniqueMatches: 0,
+      matchesWithExtendedMarkets: 0,
       extendedMarketsScraped: 0,
       errors: [errorMsg],
     };
@@ -107,14 +113,19 @@ export async function runScrapeAndPersist(
     }
   }
 
+  // Calculate unique matches count
+  const uniqueMatches = new Set(
+    aggregated.allOdds.map(o => `${o.homeTeam.toLowerCase()}|${o.awayTeam.toLowerCase()}`)
+  ).size;
+
   // Persist odds to database
-  let matchesInserted = 0;
+  let oddsRecords = 0;
   if (aggregated.allOdds.length > 0) {
     try {
       const insertResult = await insertScrapedOdds(aggregated.allOdds, league);
-      matchesInserted = insertResult.inserted;
+      oddsRecords = insertResult.inserted;
       console.log(
-        `[ScraperService] Inserted ${matchesInserted} odds records, ${insertResult.errors} errors`
+        `[ScraperService] Inserted ${oddsRecords} odds records (${uniqueMatches} unique matches), ${insertResult.errors} errors`
       );
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : "Unknown error";
@@ -126,6 +137,7 @@ export async function runScrapeAndPersist(
   // Scrape extended markets (Double Chance, Over/Under, BTTS) for each match
   // Process matches in parallel with concurrency limit for better performance
   let extendedMarketsScraped = 0;
+  let matchesWithExtendedMarkets = 0;
   if (aggregated.allOdds.length > 0) {
     const matchesMap = groupOddsByMatch(aggregated.allOdds);
     const matchesWithUrls = Array.from(matchesMap.values()).filter(
@@ -161,14 +173,15 @@ export async function runScrapeAndPersist(
 
     // Aggregate results from parallel execution
     for (const { match, extResult, error } of matchResults) {
-      if (extResult) {
+      if (extResult && extResult.summary.successCount > 0) {
         extendedMarketsScraped += extResult.summary.successCount;
+        matchesWithExtendedMarkets++;
       } else if (error) {
         errors.push(`Extended markets (${match.homeTeam} vs ${match.awayTeam}): ${error}`);
       }
     }
 
-    console.log(`[ScraperService] Extended markets scraping completed: ${extendedMarketsScraped} bookmakers scraped`);
+    console.log(`[ScraperService] Extended markets completed: ${matchesWithExtendedMarkets}/${matchesWithUrls.length} matches, ${extendedMarketsScraped} bookmaker scrapes`);
   }
 
   // Close all browsers in the pool at the end of the scraping cycle (if requested)
@@ -191,15 +204,21 @@ export async function runScrapeAndPersist(
     errors.push(`Run logging: ${errorMsg}`);
   }
 
+  // Calculate actual completion time (after all work including extended markets)
+  const completedAt = new Date();
+  const duration = completedAt.getTime() - startedAt.getTime();
+
   return {
     runId: aggregated.runId,
     league,
-    startedAt: aggregated.startedAt,
-    completedAt: aggregated.completedAt,
-    duration: aggregated.totalDuration,
+    startedAt,
+    completedAt,
+    duration,
     successCount: aggregated.summary.successCount,
     errorCount: aggregated.summary.errorCount,
-    matchesInserted,
+    oddsRecords,
+    uniqueMatches,
+    matchesWithExtendedMarkets,
     extendedMarketsScraped,
     errors,
   };

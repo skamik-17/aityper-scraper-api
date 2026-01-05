@@ -15,33 +15,42 @@ router.get("/", async (_req, res) => {
   const dbConnected = await testConnection();
   const scheduler = getSchedulerStatus();
 
-  // Get the most recent scrape completion time and stats across all leagues
-  let lastScrapeRun: string | null = null;
-  let totalScrapeDuration = 0;
+  // Calculate scrape cycle timing from all leagues
+  let earliestStart: Date | null = null;
+  let latestComplete: Date | null = null;
   const lastScrapeStats: Record<string, ScrapeStats> = {};
 
   for (const [league, result] of Object.entries(scheduler.lastResults)) {
-    if (result?.completedAt) {
-      const completedAt = result.completedAt.toISOString();
-      if (!lastScrapeRun || completedAt > lastScrapeRun) {
-        lastScrapeRun = completedAt;
+    if (result?.completedAt && result?.startedAt) {
+      // Track earliest start and latest completion across all leagues
+      if (!earliestStart || result.startedAt < earliestStart) {
+        earliestStart = result.startedAt;
+      }
+      if (!latestComplete || result.completedAt > latestComplete) {
+        latestComplete = result.completedAt;
       }
 
-      // Store per-league stats
+      // Store per-league stats (duration in seconds)
       lastScrapeStats[league] = {
-        duration: result.duration,
+        startedAt: result.startedAt.toISOString(),
+        completedAt: result.completedAt.toISOString(),
+        duration: Math.round(result.duration / 1000),
         successCount: result.successCount,
         errorCount: result.errorCount,
-        matchesInserted: result.matchesInserted,
+        oddsRecords: result.oddsRecords,
+        uniqueMatches: result.uniqueMatches,
+        matchesWithExtendedMarkets: result.matchesWithExtendedMarkets,
         extendedMarketsScraped: result.extendedMarketsScraped,
-        completedAt,
       };
-
-      totalScrapeDuration += result.duration;
     }
   }
 
   const hasStats = Object.keys(lastScrapeStats).length > 0;
+
+  // Calculate actual wall-clock duration of the scrape cycle (in seconds)
+  const scrapeDuration = earliestStart && latestComplete
+    ? Math.round((latestComplete.getTime() - earliestStart.getTime()) / 1000)
+    : null;
 
   const data: HealthCheckData = {
     status: dbConnected ? "ok" : "degraded",
@@ -49,10 +58,10 @@ router.get("/", async (_req, res) => {
     uptime: Math.floor((Date.now() - startTime) / 1000),
     version: "1.0.0",
     database: dbConnected ? "connected" : "disconnected",
-    lastScrapeRun,
-    lastScrapeDuration: hasStats ? totalScrapeDuration : null,
+    lastScrapeStarted: earliestStart?.toISOString() ?? null,
+    lastScrapeCompleted: latestComplete?.toISOString() ?? null,
+    lastScrapeDuration: scrapeDuration,
     lastScrapeStats: hasStats ? lastScrapeStats : null,
-    totalScrapeDuration: hasStats ? totalScrapeDuration : null,
   };
 
   const response: ApiSuccessResponse<HealthCheckData> = {

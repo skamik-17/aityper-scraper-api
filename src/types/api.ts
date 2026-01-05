@@ -25,24 +25,27 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 // Health check
 export interface ScrapeStats {
-  duration: number; // milliseconds
+  startedAt: string;
+  completedAt: string;
+  duration: number; // seconds
   successCount: number;
   errorCount: number;
-  matchesInserted: number;
-  extendedMarketsScraped: number;
-  completedAt: string;
+  oddsRecords: number;              // Total rows inserted (bookmakers × matches)
+  uniqueMatches: number;            // Deduplicated match count
+  matchesWithExtendedMarkets: number; // Unique matches with extended market data
+  extendedMarketsScraped: number;   // Total bookmaker scrapes for extended markets
 }
 
 export interface HealthCheckData {
   status: "ok" | "degraded" | "error";
   timestamp: string;
-  uptime: number;
+  uptime: number;                     // seconds
   version: string;
   database: "connected" | "disconnected";
-  lastScrapeRun: string | null;
-  lastScrapeDuration: number | null; // milliseconds
-  lastScrapeStats: Record<string, ScrapeStats> | null; // per league
-  totalScrapeDuration: number | null; // total across all leagues
+  lastScrapeStarted: string | null;   // When scrape cycle began
+  lastScrapeCompleted: string | null; // When scrape cycle finished
+  lastScrapeDuration: number | null;  // Wall-clock time in seconds
+  lastScrapeStats: Record<string, ScrapeStats> | null;
 }
 
 // Odds endpoint

@@ -24,6 +24,8 @@ const COMPETITION_IDS: Record<string, number> = {
   ekstraklasa: 1978,
   "premier-league": 538,
   laliga: 545, // La Liga (confirmed from URL)
+  "serie-a": 543, // Serie A (confirmed from WebSocket - "Włochy")
+  "ligue-1": 548, // Ligue 1 (confirmed - Nice, Lille, Marseille, Monaco)
 };
 
 // League URLs for navigation
@@ -31,6 +33,8 @@ const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Poland/1978",
   "premier-league": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
   laliga: "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Spain/545",
+  "serie-a": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/Italy/543",
+  "ligue-1": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/France/548",
 };
 
 // Swarm market types

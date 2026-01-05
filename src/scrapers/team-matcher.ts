@@ -237,12 +237,224 @@ const LALIGA_ALIASES: Record<string, string> = {
 };
 
 /**
+ * Explicit aliases for Serie A (bookmaker -> TheSportsDB canonical)
+ * Common abbreviations used by Polish bookmakers
+ */
+const SERIE_A_ALIASES: Record<string, string> = {
+  // AC Milan
+  Milan: "AC Milan",
+  "AC Milan Mediolan": "AC Milan",
+  "A.C. Milan": "AC Milan",
+  "Ac Milan": "AC Milan",
+
+  // Inter Milan
+  Inter: "Inter Milan",
+  "Inter Mediolan": "Inter Milan",
+  Internazionale: "Inter Milan",
+  "FC Internazionale": "Inter Milan",
+  "Inter Milano": "Inter Milan",
+  "FC Inter": "Inter Milan",
+
+  // Juventus
+  Juve: "Juventus",
+  "Juventus FC": "Juventus",
+  "Juventus Turyn": "Juventus",
+  "Juventus Turin": "Juventus",
+  "Fc Juventus": "Juventus",
+
+  // Roma
+  "AS Roma": "Roma",
+  "AS Roma Rzym": "Roma",
+  "A.S. Roma": "Roma",
+  "As Roma": "Roma",
+
+  // Lazio
+  "SS Lazio": "Lazio",
+  "S.S. Lazio": "Lazio",
+  "Lazio Rzym": "Lazio",
+  "Ss Lazio": "Lazio",
+
+  // Napoli
+  "SSC Napoli": "Napoli",
+  "S.S.C. Napoli": "Napoli",
+  "SSC Neapol": "Napoli",
+  Neapol: "Napoli",
+
+  // Atalanta
+  "Atalanta BC": "Atalanta",
+  "Atalanta Bergamo": "Atalanta",
+  "Atalanta B.C.": "Atalanta",
+
+  // Fiorentina
+  "ACF Fiorentina": "Fiorentina",
+  "AC Fiorentina": "Fiorentina",
+  "Fiorentina Florencja": "Fiorentina",
+  Florencja: "Fiorentina",
+
+  // Bologna
+  "Bologna FC": "Bologna",
+  "Bologna FC 1909": "Bologna",
+
+  // Torino
+  "Torino FC": "Torino",
+  "FC Torino": "Torino",
+  "Torino Turyn": "Torino",
+  Turyn: "Torino",
+
+  // Udinese
+  "Udinese Calcio": "Udinese",
+
+  // Genoa
+  "Genoa CFC": "Genoa",
+  "Genoa FC": "Genoa",
+  Genua: "Genoa",
+
+  // Cagliari
+  "Cagliari Calcio": "Cagliari",
+
+  // Lecce
+  "US Lecce": "Lecce",
+  "U.S. Lecce": "Lecce",
+
+  // Empoli
+  "Empoli FC": "Empoli",
+
+  // Hellas Verona
+  Verona: "Hellas Verona",
+  "Hellas Verona FC": "Hellas Verona",
+  "H. Verona": "Hellas Verona",
+  "Hellas V.": "Hellas Verona",
+
+  // Venezia
+  "Venezia FC": "Venezia",
+  Wenecja: "Venezia",
+
+  // Monza
+  "AC Monza": "Monza",
+  "A.C. Monza": "Monza",
+
+  // Como
+  "Como 1907": "Como",
+  "Como FC": "Como",
+
+  // Parma
+  "Parma Calcio": "Parma",
+  "Parma Calcio 1913": "Parma",
+  "Parma FC": "Parma",
+};
+
+/**
+ * Explicit aliases for Ligue 1 (bookmaker -> TheSportsDB canonical)
+ * Common abbreviations used by Polish bookmakers
+ */
+const LIGUE_1_ALIASES: Record<string, string> = {
+  // Paris Saint-Germain (most important)
+  PSG: "Paris SG",
+  "Paris Saint-Germain": "Paris SG",
+  "Paris St Germain": "Paris SG",
+  "Paris St-Germain": "Paris SG",
+  "Paris S.G.": "Paris SG",
+  "Paris St. Germain": "Paris SG",
+
+  // Olympique Marseille
+  OM: "Marseille",
+  "Olympique Marseille": "Marseille",
+  "Olympique de Marseille": "Marseille",
+  "Olympique Marsylia": "Marseille",
+  Marsylia: "Marseille",
+
+  // Olympique Lyon
+  OL: "Lyon",
+  "Olympique Lyon": "Lyon",
+  "Olympique Lyonnais": "Lyon",
+
+  // Monaco
+  "AS Monaco": "Monaco",
+  "AS Monaco FC": "Monaco",
+
+  // Lille
+  LOSC: "Lille",
+  "LOSC Lille": "Lille",
+  "OSC Lille": "Lille",
+  "Lille OSC": "Lille",
+
+  // Nice
+  "OGC Nice": "Nice",
+  "OGC Nicea": "Nice",
+  Nicea: "Nice",
+
+  // Lens
+  "RC Lens": "Lens",
+  "Racing Lens": "Lens",
+
+  // Rennes
+  "Stade Rennais": "Rennes",
+  "Stade Rennais FC": "Rennes",
+
+  // Nantes
+  "FC Nantes": "Nantes",
+
+  // Strasbourg
+  "RC Strasbourg": "Strasbourg",
+  "RC Strasbourg Alsace": "Strasbourg",
+  Strasburg: "Strasbourg",
+
+  // Saint-Etienne
+  "AS Saint-Etienne": "Saint-Etienne",
+  ASSE: "Saint-Etienne",
+  "AS St Etienne": "Saint-Etienne",
+  "AS St-Etienne": "Saint-Etienne",
+  "St Etienne": "Saint-Etienne",
+  "St-Etienne": "Saint-Etienne",
+  "St. Etienne": "Saint-Etienne",
+
+  // Reims
+  "Stade de Reims": "Reims",
+  "Stade Reims": "Reims",
+
+  // Montpellier
+  "Montpellier HSC": "Montpellier",
+  "HSC Montpellier": "Montpellier",
+
+  // Toulouse
+  "Toulouse FC": "Toulouse",
+  TFC: "Toulouse",
+
+  // Brest
+  "Stade Brestois": "Brest",
+  "Stade Brestois 29": "Brest",
+
+  // Le Havre
+  "Le Havre AC": "Le Havre",
+  HAC: "Le Havre",
+  Havre: "Le Havre",
+
+  // Metz
+  "FC Metz": "Metz",
+
+  // Lorient
+  "FC Lorient": "Lorient",
+
+  // Angers
+  "Angers SCO": "Angers",
+  "SCO Angers": "Angers",
+
+  // Auxerre
+  "AJ Auxerre": "Auxerre",
+
+  // Paris FC (second Paris team)
+  "Paris FC (W)": "Paris FC",
+};
+
+/**
  * Map of league to aliases
  */
 const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
   ekstraklasa: EKSTRAKLASA_ALIASES,
   "premier-league": PREMIER_LEAGUE_ALIASES,
   laliga: LALIGA_ALIASES,
+  "serie-a": SERIE_A_ALIASES,
+  "ligue-1": LIGUE_1_ALIASES,
 };
 
 /**

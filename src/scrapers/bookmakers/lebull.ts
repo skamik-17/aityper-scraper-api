@@ -24,6 +24,8 @@ const LEAGUE_IDS: Record<string, number> = {
   ekstraklasa: 4847,
   "premier-league": 4485,
   laliga: 4486, // La Liga (confirmed from URL)
+  "serie-a": 4484, // Serie A (confirmed from sbteam.xyz API)
+  "ligue-1": 4610, // Ligue 1 (confirmed - same as Betters)
 };
 
 // stakeType IDs for market parsing (same as Betters - shared sbteam.xyz backend)

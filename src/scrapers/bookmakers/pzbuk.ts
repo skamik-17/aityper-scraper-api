@@ -24,6 +24,8 @@ const LEAGUE_IDS: Record<string, string> = {
   ekstraklasa: "524",
   "premier-league": "134",
   laliga: "171", // La Liga (confirmed from URL)
+  "serie-a": "148", // Serie A (confirmed from API - "Włochy - Serie A")
+  "ligue-1": "395", // Ligue 1 (confirmed from API - "Francja - Ligue 1")
 };
 
 // League page URLs for navigation
@@ -31,6 +33,8 @@ const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/524-polska-ekstraklasa",
   "premier-league": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league",
   laliga: "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/171-hiszpania-laliga",
+  "serie-a": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/148-wlochy-serie-a",
+  "ligue-1": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/395-francja-ligue-1",
 };
 
 // Market type IDs in PZBuk

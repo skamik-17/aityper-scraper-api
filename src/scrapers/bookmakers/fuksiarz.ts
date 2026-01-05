@@ -25,6 +25,8 @@ const CATEGORY_IDS: Record<string, number> = {
   ekstraklasa: 265,
   "premier-league": 625,
   laliga: 654, // La Liga (from URL pattern)
+  "serie-a": 635, // Serie A (confirmed from API)
+  "ligue-1": 1626, // Ligue 1 (confirmed from navigation)
 };
 
 // Base URL for page navigation (needed to establish session)
@@ -32,6 +34,8 @@ const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa",
   "premier-league": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
   laliga: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
+  "serie-a": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
+  "ligue-1": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
 };
 
 // Cache for events data (used by scrapeMatchDetails)

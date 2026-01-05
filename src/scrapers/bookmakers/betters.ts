@@ -24,6 +24,8 @@ const LEAGUE_IDS: Record<string, number> = {
   ekstraklasa: 4440,
   "premier-league": 4485,
   laliga: 4486, // La Liga (confirmed from URL)
+  "serie-a": 4484, // Serie A (confirmed from API - "Włochy. Serie A")
+  "ligue-1": 4610, // Ligue 1 (confirmed - Monaco vs Lorient, PSG vs Lille)
 };
 
 // stakeType IDs for market parsing

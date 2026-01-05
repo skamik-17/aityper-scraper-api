@@ -24,6 +24,8 @@ const CATEGORY_IDS: Record<string, number> = {
   ekstraklasa: 666,
   "premier-league": 206,
   laliga: 1165, // La Liga (from URL pattern)
+  "serie-a": 209, // Serie A (confirmed from API)
+  "ligue-1": 350, // Ligue 1 (confirmed from API - Toulouse - Lens)
 };
 
 // Cache for events data

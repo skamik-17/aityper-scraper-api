@@ -22,6 +22,8 @@ const COMPETITION_IDS: Record<string, number> = {
   "premier-league": 3,
   ekstraklasa: 221, // May not have matches currently
   laliga: 7, // La Liga (correct ID from website)
+  "serie-a": 6, // Serie A (confirmed from website)
+  "ligue-1": 4, // Ligue 1 (confirmed from URL)
 };
 
 // URL slugs for leagues
@@ -29,6 +31,8 @@ const LEAGUE_SLUGS: Record<string, string> = {
   "premier-league": "premier-league-c3",
   ekstraklasa: "ekstraklasa-c221",
   laliga: "la-liga-c7",
+  "serie-a": "serie-a-c6",
+  "ligue-1": "ligue-1-c4",
 };
 
 // gRPC endpoints

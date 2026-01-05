@@ -24,6 +24,8 @@ const TOURNAMENT_IDS: Record<string, number> = {
   "premier-league": 37685,
   "ekstraklasa": 37669,
   "laliga": 41533, // La Liga (from URL pattern)
+  "serie-a": 37680, // Serie A (confirmed from API)
+  "ligue-1": 37682, // Ligue 1 (estimated)
 };
 
 export class LVBetPlaywrightScraper extends PlaywrightScraper {

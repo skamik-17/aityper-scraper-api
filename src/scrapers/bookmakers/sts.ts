@@ -39,6 +39,18 @@ const LEAGUE_CONFIG: Record<string, { url: string; tournamentId: number; country
     countryFilter: "hiszpan",
     tournamentFilter: "laliga",
   },
+  "serie-a": {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a/175",
+    tournamentId: 23,
+    countryFilter: "włoch", // Use Polish character ł for matching "Włochy"
+    tournamentFilter: "serie a",
+  },
+  "ligue-1": {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1/175",
+    tournamentId: 16, // Ligue 1 (estimated)
+    countryFilter: "francj",
+    tournamentFilter: "ligue 1",
+  },
 };
 
 // Interface for parsed fixture data

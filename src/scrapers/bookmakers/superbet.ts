@@ -24,6 +24,8 @@ const LEAGUE_URLS: Record<string, string> = {
   ekstraklasa: "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa",
   "premier-league": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/anglia/premier-league",
   laliga: "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
+  "serie-a": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
+  "ligue-1": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
 };
 
 // Tournament IDs for Superbet API (found from network inspection)
@@ -31,6 +33,8 @@ const TOURNAMENT_IDS: Record<string, number[]> = {
   ekstraklasa: [644], // Ekstraklasa (updated Dec 2025)
   "premier-league": [106], // Premier League
   laliga: [98], // La Liga (correct ID from API testing)
+  "serie-a": [104], // Serie A (confirmed from API)
+  "ligue-1": [100], // Ligue 1 (confirmed from API)
 };
 
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {

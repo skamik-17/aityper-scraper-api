@@ -7,6 +7,7 @@
  */
 
 import type { PolishBookmaker } from "../config/index.js";
+import type { NormalizedMarketType, NormalizedSelection, NormalizedMarketGroup } from "./normalization.js";
 
 /**
  * Single selection within a market (e.g., "Over 2.5" with odds 1.85)
@@ -14,6 +15,8 @@ import type { PolishBookmaker } from "../config/index.js";
 export interface MarketSelection {
   /** Raw selection name from bookmaker: "1", "X", "Over 2.5", "Yes" */
   name: string;
+  /** Normalized selection name for cross-bookmaker comparison */
+  normalizedName?: NormalizedSelection;
   /** Decimal odds value */
   odds: number;
   /** Bookmaker's internal selection ID (optional) */
@@ -30,8 +33,16 @@ export interface ScrapedMarket {
   name: string;
   /** Group name for UI organization: "Main", "Goals", "1st Half", "Corners" */
   groupName?: string;
+  /** Normalized group for consistent UI grouping */
+  normalizedGroup?: NormalizedMarketGroup;
   /** Optional normalized type for filtering: "1X2", "OVER_UNDER", "BTTS", "DOUBLE_CHANCE" */
   type?: string;
+  /** Normalized market type enum for cross-bookmaker comparison */
+  normalizedType?: NormalizedMarketType;
+  /** Canonical market key for exact matching: "TOTAL_GOALS:2.5", "MATCH_WINNER" */
+  marketKey?: string;
+  /** Parameter value for parameterized markets: "2.5" for Over/Under, "-1.5" for handicaps */
+  paramValue?: string;
   /** All available selections for this market */
   selections: MarketSelection[];
 }

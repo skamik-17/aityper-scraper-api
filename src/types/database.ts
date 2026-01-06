@@ -5,6 +5,13 @@
 
 import type { PolishBookmaker } from "../config/index.js";
 
+// JSON type for market selections stored in database
+export interface MarketSelectionJson {
+  name: string;
+  odds: number;
+  normalizedName?: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -207,6 +214,52 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["odds_btts"]["Insert"]>;
         Relationships: [];
       };
+      scraped_markets: {
+        Row: {
+          id: string;
+          match_id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          group_id: string | null;
+          external_id: string | null;
+          name: string;
+          normalized_type: string;
+          market_key: string | null;
+          param_value: string | null;
+          normalized_group: string;
+          selections: MarketSelectionJson[];
+          event_url: string | null;
+          scraped_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          match_id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          group_id?: string | null;
+          external_id?: string | null;
+          name: string;
+          normalized_type: string;
+          market_key?: string | null;
+          param_value?: string | null;
+          normalized_group?: string;
+          selections: MarketSelectionJson[];
+          event_url?: string | null;
+          scraped_at: string;
+          created_at?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["scraped_markets"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: {
       latest_odds: {
@@ -274,6 +327,47 @@ export interface Database {
           bookmaker: PolishBookmaker;
           yes_odds: number | null;
           no_odds: number | null;
+          event_url: string | null;
+          scraped_at: string;
+        };
+        Relationships: [];
+      };
+      latest_markets: {
+        Row: {
+          id: string;
+          match_id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          home_team_normalized: string;
+          away_team_normalized: string;
+          bookmaker: PolishBookmaker;
+          group_id: string | null;
+          external_id: string | null;
+          name: string;
+          normalized_type: string;
+          market_key: string | null;
+          param_value: string | null;
+          normalized_group: string;
+          selections: MarketSelectionJson[];
+          event_url: string | null;
+          scraped_at: string;
+        };
+        Relationships: [];
+      };
+      market_comparison: {
+        Row: {
+          match_id: string;
+          league_slug: string;
+          home_team: string;
+          away_team: string;
+          market_key: string;
+          normalized_type: string;
+          normalized_group: string;
+          param_value: string | null;
+          bookmaker: PolishBookmaker;
+          market_name: string;
+          selections: MarketSelectionJson[];
           event_url: string | null;
           scraped_at: string;
         };

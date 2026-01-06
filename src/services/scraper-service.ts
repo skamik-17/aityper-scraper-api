@@ -3,16 +3,11 @@
  * Orchestrates scraping operations and database persistence
  */
 
-import pLimit from "p-limit";
 import type { PolishBookmaker } from "../config/index.js";
-import { runAllScrapers, scrapeExtendedMarketsForMatch, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
+import { runAllScrapers, runAllFullOfferScrapers, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
 import { insertScrapedOdds } from "../repositories/odds-repository.js";
 import { insertScraperRuns } from "../repositories/scraper-run-repository.js";
 import { scraperHealth } from "./scraper-health.js";
-import type { RawScrapedOdds } from "../types/scraper.js";
-
-// Increased concurrency for better parallelism with 6 browser pool
-const MATCH_CONCURRENCY_LIMIT = 6;
 
 export interface ScrapeResult {
   runId: string;
@@ -27,35 +22,6 @@ export interface ScrapeResult {
   matchesWithExtendedMarkets: number; // Unique matches with extended market data
   extendedMarketsScraped: number;   // Total bookmaker scrapes for extended markets
   errors: string[];
-}
-
-/**
- * Group odds by match (homeTeam + awayTeam) and collect eventUrls
- */
-function groupOddsByMatch(
-  allOdds: RawScrapedOdds[]
-): Map<string, { homeTeam: string; awayTeam: string; eventUrls: Record<PolishBookmaker, string> }> {
-  const matches = new Map<string, { homeTeam: string; awayTeam: string; eventUrls: Record<PolishBookmaker, string> }>();
-
-  for (const odds of allOdds) {
-    // Normalize key for matching
-    const key = `${odds.homeTeam.toLowerCase()}-${odds.awayTeam.toLowerCase()}`;
-
-    if (!matches.has(key)) {
-      matches.set(key, {
-        homeTeam: odds.homeTeam,
-        awayTeam: odds.awayTeam,
-        eventUrls: {} as Record<PolishBookmaker, string>,
-      });
-    }
-
-    // Add eventUrl if available
-    if (odds.eventUrl) {
-      matches.get(key)!.eventUrls[odds.bookmaker] = odds.eventUrl;
-    }
-  }
-
-  return matches;
 }
 
 /**
@@ -134,54 +100,32 @@ export async function runScrapeAndPersist(
     }
   }
 
-  // Scrape extended markets (Double Chance, Over/Under, BTTS) for each match
-  // Process matches in parallel with concurrency limit for better performance
-  let extendedMarketsScraped = 0;
-  let matchesWithExtendedMarkets = 0;
-  if (aggregated.allOdds.length > 0) {
-    const matchesMap = groupOddsByMatch(aggregated.allOdds);
-    const matchesWithUrls = Array.from(matchesMap.values()).filter(
-      (match) => Object.keys(match.eventUrls).length > 0
+  // Scrape full offer markets (all markets including 1X2, DC, O/U, BTTS, etc.)
+  // Uses new full-offer system that saves to scraped_markets table
+  let fullOfferMarketsScraped = 0;
+  let matchesWithFullOffer = 0;
+  try {
+    console.log(`[ScraperService] Starting full offer scrape for ${league}`);
+    const fullOfferResult = await runAllFullOfferScrapers(league, bookmakers);
+
+    matchesWithFullOffer = fullOfferResult.allMatches.length;
+    fullOfferMarketsScraped = fullOfferResult.summary.totalMarketsFound;
+
+    console.log(
+      `[ScraperService] Full offer completed: ${fullOfferResult.summary.successCount} bookmakers success, ` +
+      `${matchesWithFullOffer} matches, ${fullOfferMarketsScraped} markets`
     );
 
-    console.log(`[ScraperService] Scraping extended markets for ${matchesWithUrls.length} matches (${MATCH_CONCURRENCY_LIMIT} concurrent)`);
-
-    const limit = pLimit(MATCH_CONCURRENCY_LIMIT);
-    const matchPromises = matchesWithUrls.map((match) =>
-      limit(async () => {
-        try {
-          const extResult = await scrapeExtendedMarketsForMatch(
-            match.homeTeam,
-            match.awayTeam,
-            match.eventUrls,
-            league
-          );
-          console.log(
-            `[ScraperService] Extended markets for ${match.homeTeam} vs ${match.awayTeam}: ` +
-            `DC=${extResult.summary.doubleChanceCount}, OU=${extResult.summary.overUnderCount}, BTTS=${extResult.summary.bttsCount}`
-          );
-          return { match, extResult, error: null };
-        } catch (error) {
-          const errorMsg = error instanceof Error ? error.message : "Unknown error";
-          console.error(`[ScraperService] Extended markets failed for ${match.homeTeam} vs ${match.awayTeam}:`, errorMsg);
-          return { match, extResult: null, error: errorMsg };
-        }
-      })
-    );
-
-    const matchResults = await Promise.all(matchPromises);
-
-    // Aggregate results from parallel execution
-    for (const { match, extResult, error } of matchResults) {
-      if (extResult && extResult.summary.successCount > 0) {
-        extendedMarketsScraped += extResult.summary.successCount;
-        matchesWithExtendedMarkets++;
-      } else if (error) {
-        errors.push(`Extended markets (${match.homeTeam} vs ${match.awayTeam}): ${error}`);
+    // Collect errors from full offer scrapers
+    for (const [bookmaker, result] of fullOfferResult.results) {
+      if (!result.success && result.error) {
+        errors.push(`Full offer (${bookmaker}): ${result.error}`);
       }
     }
-
-    console.log(`[ScraperService] Extended markets completed: ${matchesWithExtendedMarkets}/${matchesWithUrls.length} matches, ${extendedMarketsScraped} bookmaker scrapes`);
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ScraperService] Full offer scraping failed:", errorMsg);
+    errors.push(`Full offer: ${errorMsg}`);
   }
 
   // Close all browsers in the pool at the end of the scraping cycle (if requested)
@@ -218,8 +162,8 @@ export async function runScrapeAndPersist(
     errorCount: aggregated.summary.errorCount,
     oddsRecords,
     uniqueMatches,
-    matchesWithExtendedMarkets,
-    extendedMarketsScraped,
+    matchesWithExtendedMarkets: matchesWithFullOffer,
+    extendedMarketsScraped: fullOfferMarketsScraped,
     errors,
   };
 }

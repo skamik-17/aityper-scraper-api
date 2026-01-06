@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
 import type { ScraperResult, RawScrapedOdds, RawScrapedMatchOdds, MatchDetailResult } from "../types/scraper.js";
+import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import { browserPool } from "./base/browser-pool.js";
 import { insertExtendedMarketOdds } from "../repositories/extended-odds-repository.js";
@@ -348,4 +349,151 @@ export async function scrapeSingleExtendedMarket(
  */
 export async function closeAllBrowsers(): Promise<void> {
   await browserPool.closeAll();
+}
+
+/**
+ * Full Offer Aggregated Result
+ */
+export interface FullOfferAggregatedResult {
+  runId: string;
+  league: string;
+  startedAt: Date;
+  completedAt: Date;
+  totalDuration: number;
+  results: Map<PolishBookmaker, FullOfferScraperResult>;
+  allMatches: FullMatchOffer[];
+  summary: {
+    successCount: number;
+    errorCount: number;
+    totalMatchesFound: number;
+    totalMarketsFound: number;
+  };
+}
+
+/**
+ * Run full offer scrapers for all bookmakers
+ * Scrapes ALL available markets from each bookmaker
+ */
+export async function runAllFullOfferScrapers(
+  league: string = "ekstraklasa",
+  bookmakers?: PolishBookmaker[]
+): Promise<FullOfferAggregatedResult> {
+  const runId = uuidv4();
+  const startedAt = new Date();
+  const targetBookmakers = bookmakers || CONFIG.BOOKMAKERS;
+
+  console.log(
+    `[Aggregator/FullOffer] Starting run ${runId} for ${league} with ${targetBookmakers.length} bookmakers`
+  );
+
+  // Run all scrapers in parallel
+  const scraperPromises = targetBookmakers.map(async (bookmaker) => {
+    const scraper = SCRAPERS[bookmaker];
+    if (!scraper) {
+      console.warn(`[Aggregator/FullOffer] No scraper found for ${bookmaker}`);
+      return {
+        bookmaker,
+        result: {
+          success: false,
+          bookmaker,
+          league,
+          matches: [],
+          error: `No scraper configured for ${bookmaker}`,
+        } as FullOfferScraperResult,
+      };
+    }
+
+    try {
+      console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
+      const result = await scraper.scrapeFullOffer(league);
+      console.log(
+        `[Aggregator/FullOffer] ${bookmaker} completed: success=${result.success}, ${result.matches.length} matches`
+      );
+      return { bookmaker, result };
+    } catch (error) {
+      console.error(`[Aggregator/FullOffer] ${bookmaker} failed:`, error);
+      return {
+        bookmaker,
+        result: {
+          success: false,
+          bookmaker,
+          league,
+          matches: [],
+          error: error instanceof Error ? error.message : "Unknown error",
+        } as FullOfferScraperResult,
+      };
+    } finally {
+      await scraper.cleanup();
+    }
+  });
+
+  const scraperResults = await Promise.all(scraperPromises);
+
+  const completedAt = new Date();
+  const totalDuration = completedAt.getTime() - startedAt.getTime();
+
+  // Build results map and collect all matches
+  const results = new Map<PolishBookmaker, FullOfferScraperResult>();
+  const allMatches: FullMatchOffer[] = [];
+  let successCount = 0;
+  let errorCount = 0;
+  let totalMarketsFound = 0;
+
+  for (const { bookmaker, result } of scraperResults) {
+    results.set(bookmaker, result);
+
+    if (result.success && result.matches.length > 0) {
+      successCount++;
+      allMatches.push(...result.matches);
+      totalMarketsFound += result.matches.reduce((sum, m) => sum + m.markets.length, 0);
+    } else {
+      errorCount++;
+    }
+  }
+
+  console.log(
+    `[Aggregator/FullOffer] Run ${runId} completed in ${totalDuration}ms: ${successCount} success, ${errorCount} errors, ${allMatches.length} total matches, ${totalMarketsFound} total markets`
+  );
+
+  return {
+    runId,
+    league,
+    startedAt,
+    completedAt,
+    totalDuration,
+    results,
+    allMatches,
+    summary: {
+      successCount,
+      errorCount,
+      totalMatchesFound: allMatches.length,
+      totalMarketsFound,
+    },
+  };
+}
+
+/**
+ * Run full offer scraper for a single bookmaker
+ */
+export async function runSingleFullOfferScraper(
+  bookmaker: PolishBookmaker,
+  league: string = "ekstraklasa"
+): Promise<FullOfferScraperResult> {
+  const scraper = SCRAPERS[bookmaker];
+  if (!scraper) {
+    return {
+      success: false,
+      bookmaker,
+      league,
+      matches: [],
+      error: `No scraper configured for ${bookmaker}`,
+    };
+  }
+
+  try {
+    const result = await scraper.scrapeFullOffer(league);
+    return result;
+  } finally {
+    await scraper.cleanup();
+  }
 }

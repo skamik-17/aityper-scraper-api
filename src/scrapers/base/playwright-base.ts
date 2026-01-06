@@ -12,6 +12,7 @@ import type {
   MatchDetailResult,
   EventUrlEntry,
 } from "../../types/scraper.js";
+import type { FullOfferScraperResult } from "../../types/full-offer.js";
 import { browserPool } from "./browser-pool.js";
 
 // Default browser options
@@ -67,6 +68,16 @@ export abstract class PlaywrightScraper {
    * Extract event URLs from the current listing page
    */
   abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
+
+  /**
+   * Scrape full offer (all markets) for all matches in a league
+   * This is the new primary method for full offer scraping
+   * Default implementation returns "not implemented" - subclasses should override
+   * @param league - League slug (e.g., "ekstraklasa", "premier-league")
+   */
+  scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+    return Promise.resolve(this.createFullOfferNotImplementedResult(league));
+  }
 
   /**
    * Initialize browser session with proper resource management
@@ -271,6 +282,47 @@ export abstract class PlaywrightScraper {
       error: `Extended market scraping not yet implemented for ${this.bookmaker}`,
       duration,
       timestamp: new Date(),
+    };
+  }
+
+  // Full offer helper methods
+
+  protected createFullOfferErrorResult(
+    league: string,
+    error: unknown,
+    duration: number
+  ): FullOfferScraperResult {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error(`[${this.bookmaker}] Full offer scraper error: ${errorMessage}`);
+    return {
+      success: false,
+      bookmaker: this.bookmaker,
+      league,
+      matches: [],
+      error: errorMessage,
+      duration,
+    };
+  }
+
+  protected createFullOfferTimeoutResult(league: string, duration: number): FullOfferScraperResult {
+    return {
+      success: false,
+      bookmaker: this.bookmaker,
+      league,
+      matches: [],
+      error: `Full offer scraping timed out after ${this.config.timeout}ms`,
+      duration,
+    };
+  }
+
+  protected createFullOfferNotImplementedResult(league: string): FullOfferScraperResult {
+    return {
+      success: false,
+      bookmaker: this.bookmaker,
+      league,
+      matches: [],
+      error: `Full offer scraping not yet implemented for ${this.bookmaker}`,
+      duration: 0,
     };
   }
 }

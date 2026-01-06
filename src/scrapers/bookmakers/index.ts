@@ -1,20 +1,24 @@
 /**
  * Export all bookmaker scrapers
+ *
+ * All scrapers refactored to modular directory structure.
  */
 
-export { stsScraper, STSScraper } from "./sts.js";
-export { fortunaScraper, FortunaPlaywrightScraper } from "./fortuna.js";
-export { betclicPlaywrightScraper, BetclicPlaywrightScraper } from "./betclic.js";
-export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet.js";
-export { lvbetScraper, LVBetPlaywrightScraper } from "./lvbet.js";
-export { fuksiarzScraper, FuksiarzPlaywrightScraper } from "./fuksiarz.js";
+// Modular scrapers (refactored)
+export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet/index.js";
+export { etotoScraper, EtotoPlaywrightScraper } from "./etoto/index.js";
+export { forbetScraper, ForbetPlaywrightScraper } from "./forbet/index.js";
+export { lebullScraper, LebullPlaywrightScraper } from "./lebull/index.js";
+export { fuksiarzScraper, FuksiarzPlaywrightScraper } from "./fuksiarz/index.js";
+export { betfanScraper, BetfanPlaywrightScraper } from "./betfan/index.js";
+export { betclicScraper, BetclicPlaywrightScraper } from "./betclic/index.js";
+export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet/index.js";
+export { stsScraper, STSScraper } from "./sts/index.js";
+export { betcrisScraper, BetcrisPlaywrightScraper } from "./betcris/index.js";
+export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
+export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk/index.js";
+export { lvbetScraper, LVBetPlaywrightScraper } from "./lvbet/index.js";
+export { fortunaScraper, FortunaPlaywrightScraper } from "./fortuna/index.js";
 
-// New bookmakers
-export { betfanScraper, BetfanPlaywrightScraper } from "./betfan.js";
-export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet.js";
-export { forbetScraper, ForbetPlaywrightScraper } from "./forbet.js";
-export { etotoScraper, EtotoPlaywrightScraper } from "./etoto.js";
-export { bettersScraper, BettersPlaywrightScraper } from "./betters.js";
-export { lebullScraper, LebullPlaywrightScraper } from "./lebull.js";
-export { betcrisScraper, BetcrisPlaywrightScraper } from "./betcris.js";
-export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk.js";
+// Backwards compatibility alias for betclic
+export { betclicScraper as betclicPlaywrightScraper } from "./betclic/index.js";

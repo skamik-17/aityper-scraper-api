@@ -1,0 +1,367 @@
+/**
+ * Superbet Parser Module
+ *
+ * Pure parsing logic for transforming Superbet API responses
+ * into the unified ScrapedMarket format.
+ *
+ * This module has NO Playwright dependencies - it only works with
+ * raw JSON data from the API.
+ */
+
+import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
+import type { MarketOverUnderOdds } from "../../../types/markets.js";
+import {
+  MARKET_IDS,
+  MARKET_GROUPS,
+  MARKET_TYPES,
+  SELECTION_CODES,
+  TEAM_SEPARATOR,
+} from "./constants.js";
+import type {
+  SuperbetEvent,
+  SuperbetOddsSelection,
+  ParsedTeams,
+} from "./types.js";
+
+/**
+ * Parse team names from the Superbet matchName format
+ * Format: "HomeTeam · AwayTeam"
+ */
+export function parseTeamNames(matchName: string): ParsedTeams {
+  const parts = matchName.split(TEAM_SEPARATOR);
+  return {
+    homeTeam: (parts[0] || "").trim(),
+    awayTeam: (parts[1] || "").trim(),
+  };
+}
+
+/**
+ * Get human-readable market name based on market ID and selection data
+ */
+function getMarketName(marketId: number, selection?: SuperbetOddsSelection): string {
+  switch (marketId) {
+    case MARKET_IDS.MATCH_RESULT_1X2:
+      return "Wynik meczu";
+    case MARKET_IDS.DOUBLE_CHANCE:
+    case MARKET_IDS.DOUBLE_CHANCE_ALT:
+      return "Podwojna szansa";
+    case MARKET_IDS.BTTS:
+    case MARKET_IDS.BTTS_ALT:
+      return "Obie druzyny strzelą";
+    case MARKET_IDS.TOTAL_GOALS:
+    case MARKET_IDS.TOTAL_GOALS_ALT:
+    case MARKET_IDS.TOTAL_GOALS_ALT2:
+      if (selection?.specialBetValue) {
+        return `Liczba goli ${selection.specialBetValue}`;
+      }
+      return "Liczba goli";
+    case MARKET_IDS.ASIAN_HANDICAP:
+      if (selection?.specialBetValue) {
+        return `Handicap azjatycki ${selection.specialBetValue}`;
+      }
+      return "Handicap azjatycki";
+    case MARKET_IDS.EUROPEAN_HANDICAP:
+      if (selection?.specialBetValue) {
+        return `Handicap europejski ${selection.specialBetValue}`;
+      }
+      return "Handicap europejski";
+    case MARKET_IDS.HALF_TIME_RESULT:
+      return "Wynik 1. polowy";
+    case MARKET_IDS.HALF_TIME_TOTAL:
+      if (selection?.specialBetValue) {
+        return `Liczba goli 1. polowa ${selection.specialBetValue}`;
+      }
+      return "Liczba goli 1. polowa";
+    case MARKET_IDS.HALF_TIME_BTTS:
+      return "Obie strzelą 1. polowa";
+    case MARKET_IDS.CORRECT_SCORE:
+      return "Dokladny wynik";
+    case MARKET_IDS.ODD_EVEN_GOALS:
+      return "Parzyste/Nieparzyste";
+    case MARKET_IDS.DRAW_NO_BET:
+      return "Remis = zwrot";
+    case MARKET_IDS.WIN_TO_NIL:
+      return "Wygrana do zera";
+    case MARKET_IDS.CLEAN_SHEET:
+      return "Czyste konto";
+    default:
+      return `Rynek ${marketId}`;
+  }
+}
+
+/**
+ * Get selection display name based on code and market type
+ */
+function getSelectionName(
+  code: string,
+  originalName: string | undefined,
+  marketId: number,
+  teams?: ParsedTeams
+): string {
+  // Use original name if provided and meaningful
+  if (originalName && originalName.length > 1 && !originalName.match(/^[0-9]+$/)) {
+    return originalName;
+  }
+
+  // Map codes to display names
+  switch (code) {
+    // 1X2
+    case SELECTION_CODES.HOME:
+      if (marketId === MARKET_IDS.BTTS || marketId === MARKET_IDS.BTTS_ALT) {
+        return "Tak";
+      }
+      return teams?.homeTeam || "1";
+    case SELECTION_CODES.DRAW:
+      return "Remis";
+    case SELECTION_CODES.AWAY:
+      if (marketId === MARKET_IDS.BTTS || marketId === MARKET_IDS.BTTS_ALT) {
+        return "Nie";
+      }
+      return teams?.awayTeam || "2";
+
+    // Double Chance
+    case SELECTION_CODES.HOME_OR_DRAW:
+    case SELECTION_CODES.HOME_OR_DRAW_ALT:
+      return "1X";
+    case SELECTION_CODES.DRAW_OR_AWAY:
+    case SELECTION_CODES.DRAW_OR_AWAY_ALT:
+      return "X2";
+    case SELECTION_CODES.HOME_OR_AWAY:
+      return "12";
+
+    // Over/Under
+    case SELECTION_CODES.OVER:
+      return "Powyzej";
+    case SELECTION_CODES.UNDER:
+      return "Ponizej";
+
+    // BTTS
+    case SELECTION_CODES.BTTS_YES:
+      return "Tak";
+    case SELECTION_CODES.BTTS_NO:
+      return "Nie";
+
+    default:
+      return originalName || code;
+  }
+}
+
+/**
+ * Parse 1X2 market odds from event data
+ * Used for backward compatibility with scrapeLeague
+ */
+export function parse1X2Odds(event: SuperbetEvent): {
+  home: number;
+  draw: number;
+  away: number;
+} {
+  const result = { home: 0, draw: 0, away: 0 };
+  const odds = event.odds || [];
+
+  const mainOdds = odds.filter((o) => o.marketId === MARKET_IDS.MATCH_RESULT_1X2);
+
+  for (const selection of mainOdds) {
+    if (selection.code === SELECTION_CODES.HOME) {
+      result.home = selection.price || 0;
+    } else if (selection.code === SELECTION_CODES.DRAW) {
+      result.draw = selection.price || 0;
+    } else if (selection.code === SELECTION_CODES.AWAY) {
+      result.away = selection.price || 0;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Parse Double Chance market from event odds
+ */
+export function parseDoubleChance(odds: SuperbetOddsSelection[]): {
+  homeOrDraw: number;
+  drawOrAway: number;
+  homeOrAway: number;
+} | null {
+  const result = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
+  let found = false;
+
+  const dcOdds = odds.filter(
+    (o) =>
+      o.marketId === MARKET_IDS.DOUBLE_CHANCE ||
+      o.marketId === MARKET_IDS.DOUBLE_CHANCE_ALT
+  );
+
+  for (const selection of dcOdds) {
+    const code = selection.code;
+    if (code === "10" || code === "1X") {
+      result.homeOrDraw = selection.price || 0;
+      found = true;
+    } else if (code === "02" || code === "X2") {
+      result.drawOrAway = selection.price || 0;
+      found = true;
+    } else if (code === "12") {
+      result.homeOrAway = selection.price || 0;
+      found = true;
+    }
+  }
+
+  return found ? result : null;
+}
+
+/**
+ * Parse BTTS market from event odds
+ */
+export function parseBTTS(odds: SuperbetOddsSelection[]): {
+  yes: number;
+  no: number;
+} | null {
+  const result = { yes: 0, no: 0 };
+  let found = false;
+
+  const bttsOdds = odds.filter(
+    (o) => o.marketId === MARKET_IDS.BTTS || o.marketId === MARKET_IDS.BTTS_ALT
+  );
+
+  for (const selection of bttsOdds) {
+    const code = selection.code;
+    const name = selection.name?.toLowerCase() || "";
+
+    if (code === "1" || code === "GG" || name.includes("tak")) {
+      result.yes = selection.price || 0;
+      found = true;
+    } else if (code === "2" || code === "NG" || name.includes("nie")) {
+      result.no = selection.price || 0;
+      found = true;
+    }
+  }
+
+  return found ? result : null;
+}
+
+/**
+ * Parse Over/Under markets from event odds
+ * Returns a record keyed by line (e.g., "2.5")
+ */
+export function parseOverUnder(
+  odds: SuperbetOddsSelection[]
+): Record<string, MarketOverUnderOdds> | null {
+  const result: Record<string, MarketOverUnderOdds> = {};
+
+  const ouOdds = odds.filter(
+    (o) =>
+      o.marketId === MARKET_IDS.TOTAL_GOALS ||
+      o.marketId === MARKET_IDS.TOTAL_GOALS_ALT ||
+      o.marketId === MARKET_IDS.TOTAL_GOALS_ALT2
+  );
+
+  for (const selection of ouOdds) {
+    const line = selection.specialBetValue;
+    if (!line || !line.includes(".")) continue;
+
+    const lineStr = parseFloat(line).toFixed(1);
+    if (!result[lineStr]) {
+      result[lineStr] = { over: 0, under: 0 };
+    }
+
+    const name = selection.name?.toLowerCase() || "";
+    if (selection.code === "O" || name.includes("powyżej") || name.includes("powyzej")) {
+      result[lineStr].over = selection.price || 0;
+    } else if (selection.code === "U" || name.includes("poniżej") || name.includes("ponizej")) {
+      result[lineStr].under = selection.price || 0;
+    }
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
+}
+
+/**
+ * Parse ALL markets from event odds into unified ScrapedMarket format
+ * This is the main function for full offer scraping
+ */
+export function parseAllMarkets(
+  event: SuperbetEvent,
+  teams?: ParsedTeams
+): ScrapedMarket[] {
+  const markets: ScrapedMarket[] = [];
+  const odds = event.odds || [];
+
+  if (odds.length === 0) {
+    return markets;
+  }
+
+  // Get teams from event if not provided
+  const parsedTeams = teams || parseTeamNames(event.matchName);
+
+  // Group selections by market ID and line (for O/U markets)
+  const marketGroups = new Map<string, SuperbetOddsSelection[]>();
+
+  for (const selection of odds) {
+    // Create unique key for market grouping
+    // For line markets (O/U, handicap), include the line in the key
+    let key = String(selection.marketId);
+    if (selection.specialBetValue) {
+      key += `_${selection.specialBetValue}`;
+    }
+
+    if (!marketGroups.has(key)) {
+      marketGroups.set(key, []);
+    }
+    marketGroups.get(key)!.push(selection);
+  }
+
+  // Convert each group to ScrapedMarket
+  for (const [key, selections] of marketGroups) {
+    if (selections.length === 0) continue;
+
+    const firstSelection = selections[0];
+    const marketId = firstSelection.marketId;
+    const line = firstSelection.specialBetValue;
+
+    // Get market metadata
+    const marketName = getMarketName(marketId, firstSelection);
+    const groupName = MARKET_GROUPS[marketId] || "Inne";
+    const marketType = MARKET_TYPES[marketId];
+
+    // Convert selections to MarketSelection format
+    const marketSelections: MarketSelection[] = selections
+      .map((sel) => ({
+        name: getSelectionName(sel.code, sel.name, marketId, parsedTeams),
+        odds: sel.price || 0,
+        externalId: String(sel.id),
+        status: sel.status === "active" ? "active" as const : undefined,
+      }))
+      .filter((sel) => sel.odds > 0);
+
+    // Only add markets with valid selections
+    if (marketSelections.length > 0) {
+      markets.push({
+        name: marketName,
+        groupName,
+        type: marketType,
+        selections: marketSelections,
+      });
+    }
+  }
+
+  return markets;
+}
+
+/**
+ * Validate that an event has the minimum required data
+ */
+export function isValidEvent(event: SuperbetEvent): boolean {
+  if (!event.matchName) return false;
+  if (!event.eventId) return false;
+
+  const teams = parseTeamNames(event.matchName);
+  if (!teams.homeTeam || !teams.awayTeam) return false;
+
+  return true;
+}
+
+/**
+ * Check if event has valid 1X2 odds
+ */
+export function hasValid1X2Odds(event: SuperbetEvent): boolean {
+  const odds1x2 = parse1X2Odds(event);
+  return odds1x2.home > 0 && odds1x2.draw > 0 && odds1x2.away > 0;
+}

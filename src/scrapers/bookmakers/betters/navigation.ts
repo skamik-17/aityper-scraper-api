@@ -15,7 +15,6 @@ import {
   REQUEST_TIMEOUT,
   CAPTURE_TIMEOUT,
   CACHE_TTL,
-  EXTENDED_STAKE_TYPE_IDS,
   buildLeagueUrl,
   buildEventUrl as buildEventUrlFromConstants,
 } from "./constants.js";
@@ -51,8 +50,8 @@ export function clearCache(): void {
 }
 
 /**
- * Set up route interception to inject extended stakeTypes into API requests.
- * This is the key to getting ALL markets instead of just the default 6.
+ * Set up route interception to REMOVE the stakeTypes filter from API requests.
+ * This is the key to getting ALL markets instead of just a filtered subset.
  *
  * @param page - Playwright page instance
  */
@@ -61,9 +60,9 @@ export async function setupRouteInterception(page: Page): Promise<void> {
     const url = route.request().url();
 
     try {
-      // Parse the URL and replace stakeTypes with extended list
+      // Parse the URL and REMOVE stakeTypes to get ALL available markets
       const urlObj = new URL(url);
-      urlObj.searchParams.set("stakeTypes", JSON.stringify(EXTENDED_STAKE_TYPE_IDS));
+      urlObj.searchParams.delete("stakeTypes");
 
       // Continue with modified request
       await route.continue({

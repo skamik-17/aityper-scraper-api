@@ -10,7 +10,7 @@ import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import { browserPool } from "./base/browser-pool.js";
-import { normalizeMarkets } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/market-normalizer.js";
 import { saveFullOfferMarkets } from "../repositories/full-offer-repository.js";
 import {
   stsScraper,
@@ -261,7 +261,7 @@ export async function runAllFullOfferScrapers(
       // Apply market normalization to all scraped markets
       if (result.success && result.matches.length > 0) {
         for (const match of result.matches) {
-          match.markets = normalizeMarkets(match.markets);
+          match.markets = normalizeMarketsForBookmaker(match.markets, bookmaker, match.homeTeam, match.awayTeam);
 
           // Persist normalized markets to database (non-blocking)
           try {
@@ -373,7 +373,7 @@ export async function runSingleFullOfferScraper(
     // Apply market normalization and persist
     if (result.success && result.matches.length > 0) {
       for (const match of result.matches) {
-        match.markets = normalizeMarkets(match.markets);
+        match.markets = normalizeMarketsForBookmaker(match.markets, bookmaker, match.homeTeam, match.awayTeam);
 
         // Persist normalized markets to database (non-blocking)
         try {

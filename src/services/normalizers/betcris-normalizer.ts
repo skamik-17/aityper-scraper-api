@@ -250,18 +250,25 @@ export class BetcrisNormalizer extends BaseNormalizer {
     // TOTAL GOALS MARKETS
     // ==========================================================================
 
-    // Asian total goals (main market)
+    // Asian total goals (main market) - with optional text after line
     {
-      pattern: /^azjatycka\s*suma\s*goli\s*([\d,\.]+)$/i,
+      pattern: /^azjatycka\s*suma\s*goli\s*([\d,\.]+)/i,
       type: NormalizedMarketType.TOTAL_GOALS,
       extractParam: (m) => m[1]?.replace(",", "."),
     },
 
-    // Total goals with line in name
+    // Total goals with line in name - with optional text after line
     {
-      pattern: /^liczba\s*goli\s*([\d,\.]+)$/i,
+      pattern: /^liczba\s*goli\s*([\d,\.]+)/i,
       type: NormalizedMarketType.TOTAL_GOALS,
       extractParam: (m) => m[1]?.replace(",", "."),
+    },
+
+    // "Liczba goli 3-drogowo" - 3-way total goals (exact number, not Over/Under)
+    {
+      pattern: /^liczba\s*goli\s*3-drogow/i,
+      type: NormalizedMarketType.OTHER,
+      group: NormalizedMarketGroup.GOALS,
     },
 
     // Generic "Liczba goli" without line (goes to OTHER as exact number)

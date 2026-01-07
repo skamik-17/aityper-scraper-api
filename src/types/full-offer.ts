@@ -8,6 +8,7 @@
 
 import type { PolishBookmaker } from "../config/index.js";
 import type { NormalizedMarketType, NormalizedSelection, NormalizedMarketGroup } from "./normalization.js";
+import type { MarketCategory } from "./normalized-markets.js";
 
 /**
  * Single selection within a market (e.g., "Over 2.5" with odds 1.85)
@@ -43,6 +44,8 @@ export interface ScrapedMarket {
   marketKey?: string;
   /** Parameter value for parameterized markets: "2.5" for Over/Under, "-1.5" for handicaps */
   paramValue?: string;
+  /** Market category following Superbet pattern for UI organization */
+  category?: MarketCategory;
   /** All available selections for this market */
   selections: MarketSelection[];
 }

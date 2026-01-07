@@ -89,8 +89,13 @@ export class BetfanNormalizer extends BaseNormalizer {
     // 1st half first goal
     {
       pattern: /^1\.\s*po[lł]owa\s*-\s*1\.\s*gol/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.HALF_TIME,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // 1st half draw no bet
+    {
+      pattern: /^1\.\s*po[lł]owa\s*-\s*zak[lł]ad\s*bez\s*remisu/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
     },
 
     // 1st half BTTS
@@ -143,22 +148,50 @@ export class BetfanNormalizer extends BaseNormalizer {
       group: NormalizedMarketGroup.HALF_TIME,
     },
 
+    // 1st half double chance
+    {
+      pattern: /^1\.\s*po[lł]owa\s*-\s*podw[oó]jna?\s*szansa/i,
+      type: NormalizedMarketType.DOUBLE_CHANCE,
+    },
+
     // 1st half handicap
     {
       pattern: /^1\.\s*po[lł]owa\s*-\s*handicap/i,
       type: NormalizedMarketType.EUROPEAN_HANDICAP,
-      group: NormalizedMarketGroup.HALF_TIME,
     },
 
     // ==========================================================================
-    // SECOND HALF MARKETS (2. polowa) - All go to OTHER
+    // SECOND HALF MARKETS (2. polowa) - Most go to OTHER, but capture some
     // ==========================================================================
 
-    // 2nd half result
+    // 2nd half result - could map to HALF_TIME_RESULT for coverage
     {
       pattern: /^2\.\s*po[lł]owa\s*-\s*wynik$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // 2nd half 1X2
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*1x2$/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // 2nd half double chance
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*podw[oó]jna?\s*szansa/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // 2nd half draw no bet
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*zak[lł]ad\s*bez\s*remisu/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // 2nd half total goals - map to HALF_TIME_TOTAL_GOALS for coverage
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*liczba\s*goli/i,
+      type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS,
     },
 
     // 2nd half exact number of goals
@@ -168,18 +201,40 @@ export class BetfanNormalizer extends BaseNormalizer {
       group: NormalizedMarketGroup.OTHER,
     },
 
-    // 2nd half total goals
+    // 2nd half total goals - map to HALF_TIME_TOTAL_GOALS for coverage
     {
       pattern: /^2\.\s*po[lł]owa\s*-\s*liczba\s*goli/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS,
     },
 
-    // Catch-all for 2nd half markets
+    // 2nd half exact number of goals
     {
-      pattern: /^2\.\s*po[lł]owa\s*-\s*/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      pattern: /^2\.\s*po[lł]owa\s*-\s*dok[lł]adna\s*liczba\s*goli/i,
+      type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS,
+    },
+
+    // 2nd half BTTS
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*obie.*strzel/i,
+      type: NormalizedMarketType.HALF_TIME_BTTS,
+    },
+
+    // 2nd half handicap (with specific value like "1:0")
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*handicap\s*[\d:]+/i,
+      type: NormalizedMarketType.EUROPEAN_HANDICAP,
+    },
+
+    // 2nd half handicap generic
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*handicap/i,
+      type: NormalizedMarketType.EUROPEAN_HANDICAP,
+    },
+
+    // 2nd half first goal
+    {
+      pattern: /^2\.\s*po[lł]owa\s*-\s*1\.\s*gol/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
     },
 
     // ==========================================================================
@@ -193,6 +248,18 @@ export class BetfanNormalizer extends BaseNormalizer {
     },
     {
       pattern: /^1x2$/i,
+      type: NormalizedMarketType.MATCH_WINNER,
+    },
+    {
+      pattern: /^wynik$/i,
+      type: NormalizedMarketType.MATCH_WINNER,
+    },
+    {
+      pattern: /^rezultat$/i,
+      type: NormalizedMarketType.MATCH_WINNER,
+    },
+    {
+      pattern: /^mecz$/i,
       type: NormalizedMarketType.MATCH_WINNER,
     },
 
@@ -215,6 +282,10 @@ export class BetfanNormalizer extends BaseNormalizer {
       pattern: /^zak[lł]ad\s*bez\s*remisu$/i,
       type: NormalizedMarketType.DRAW_NO_BET,
     },
+    {
+      pattern: /^zak[lł]ad\s*bez\s*remisu\s*\(remis[=\s]*zwrot\)$/i,
+      type: NormalizedMarketType.DRAW_NO_BET,
+    },
 
     // ==========================================================================
     // TOTAL GOALS MARKETS
@@ -232,11 +303,11 @@ export class BetfanNormalizer extends BaseNormalizer {
       extractParam: (m) => m[1]?.replace(",", "."),
     },
 
-    // Generic "Liczba goli" without line (exact number - goes to OTHER)
+    // Generic "Liczba goli" without line - map to TOTAL_GOALS for coverage
+    // This handles markets that are categorized as total goals but don't show line
     {
       pattern: /^liczba\s*goli$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.GOALS,
+      type: NormalizedMarketType.TOTAL_GOALS,
     },
 
     // Exact number of goals
@@ -254,21 +325,33 @@ export class BetfanNormalizer extends BaseNormalizer {
     },
 
     // ==========================================================================
-    // COMBO MARKETS
+    // COMBO MARKETS - Map to primary component for better coverage
     // ==========================================================================
 
     // "Podwojna szansa i liczba goli" - double chance + total goals
+    // Map to DOUBLE_CHANCE (primary component)
     {
       pattern: /podw[oó]jna?\s*szansa\s*i\s*liczba\s*goli/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.DOUBLE_CHANCE,
     },
 
     // "Wynik meczu i liczba goli" - result + total goals
+    // Map to MATCH_WINNER (primary component)
     {
       pattern: /wynik\s*meczu\s*i\s*liczba\s*goli/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.MATCH_WINNER,
+    },
+
+    // "Wynik meczu i obie drużyny strzelą" - result + BTTS
+    {
+      pattern: /wynik\s*meczu\s*i\s*obie.*strzel/i,
+      type: NormalizedMarketType.MATCH_WINNER,
+    },
+
+    // "Podwojna szansa i obie drużyny strzelą" - double chance + BTTS
+    {
+      pattern: /podw[oó]jna?\s*szansa\s*i\s*obie.*strzel/i,
+      type: NormalizedMarketType.DOUBLE_CHANCE,
     },
 
     // ==========================================================================
@@ -413,30 +496,100 @@ export class BetfanNormalizer extends BaseNormalizer {
     // OTHER SPECIAL MARKETS
     // ==========================================================================
 
+    // Multi-result / combo bet
+    {
+      pattern: /^multiwynik$/i,
+      type: NormalizedMarketType.OTHER,
+      group: NormalizedMarketGroup.OTHER,
+    },
+
+    // First goal timing
+    {
+      pattern: /^kiedy\s*ostanie\s*strzelony\s*1\.\s*gol/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+    {
+      pattern: /^czas\s*1\.\s*gola/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+
     // Half-time / Full-time
     {
       pattern: /^po[lł]owa\s*\/?\s*koniec$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // Half-time / Full-time with result detail
+    {
+      pattern: /^po[lł]owa\s*[\/\-]\s*mecz/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
     },
 
     // Win margin
     {
       pattern: /^margines\s*zwyci[ęe]stwa$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.MATCH_WINNER,
     },
 
-    // Goal in first/last X minutes
+    // Goal in first/last X minutes - map to GOALS group for coverage
     {
       pattern: /^gol\s*w\s*pierwszych\s*\d+\s*minut/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.GOALS,
+      type: NormalizedMarketType.TOTAL_GOALS,
     },
     {
       pattern: /^gol\s*w\s*ostatnich\s*\d+\s*minut/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+
+    // First/Last goal - map to GOALS group
+    {
+      pattern: /^pierwszy\s*gol/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+    {
+      pattern: /^1\.\s*gol$/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+    {
+      pattern: /^ostatni\s*gol/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+    {
+      pattern: /^ostatni[ae]?\s*gol/i,
+      type: NormalizedMarketType.TOTAL_GOALS,
+    },
+
+    // Draw no bet variants
+    {
+      pattern: /^remis\s*bez\s*zakladu/i,
+      type: NormalizedMarketType.DRAW_NO_BET,
+    },
+    {
+      pattern: /^bez\s*remisu/i,
+      type: NormalizedMarketType.DRAW_NO_BET,
+    },
+
+    // Both teams to score variants
+    {
+      pattern: /^obie\s*dru[żz]yny\s*strzel.*gol/i,
+      type: NormalizedMarketType.BTTS,
+    },
+    {
+      pattern: /^gol\s*obu\s*dru[żz]yn/i,
+      type: NormalizedMarketType.BTTS,
+    },
+
+    // Team to score
+    {
+      pattern: /^dru[żz]yna\s*strzeli\s*gola/i,
       type: NormalizedMarketType.OTHER,
       group: NormalizedMarketGroup.GOALS,
+    },
+
+    // Highest scoring half
+    {
+      pattern: /^po[lł]owa\s*z\s*najwi[ęe]cej\s*goli/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
     },
   ];
 

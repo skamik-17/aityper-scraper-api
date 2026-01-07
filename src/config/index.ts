@@ -15,6 +15,7 @@ export const CONFIG = {
   ADMIN_API_KEY: process.env.ADMIN_API_KEY || "dev-api-key",
 
   // Scraper settings
+  SCRAPERS_ON: process.env.SCRAPERS_ON !== "false", // Default: true, set to "false" to disable
   SCRAPE_INTERVAL_MINUTES: parseInt(
     process.env.SCRAPE_INTERVAL_MINUTES || "5"
   ),

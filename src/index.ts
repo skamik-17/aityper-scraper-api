@@ -49,6 +49,8 @@ app.get("/", (_req, res) => {
       health: "/api/health",
       odds: "/api/odds",
       match: "/api/odds/match?home=...&away=...",
+      fullOffer: "/api/odds/match/full-offer?home=...&away=...",
+      normalizedMarkets: "/api/matches/:homeTeam/:awayTeam/normalized-markets?league=...",
       bookmakers: "/api/bookmakers",
       admin: "/api/admin/*",
     },
@@ -81,17 +83,22 @@ async function start() {
     console.log("[Server] Database connected");
   }
 
-  // Start scheduler
-  if (CONFIG.NODE_ENV !== "test") {
+  // Start scheduler (if scrapers enabled)
+  if (CONFIG.NODE_ENV !== "test" && CONFIG.SCRAPERS_ON) {
     console.log("[Server] Starting scheduler...");
     startScheduler();
+  } else if (!CONFIG.SCRAPERS_ON) {
+    console.log("[Server] Scrapers disabled (SCRAPERS_ON=false)");
   }
 
   // Start listening
   app.listen(CONFIG.PORT, () => {
     console.log(`[Server] Running on http://localhost:${CONFIG.PORT}`);
     console.log(`[Server] Environment: ${CONFIG.NODE_ENV}`);
-    console.log(`[Server] Scrape interval: ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes`);
+    console.log(`[Server] Scrapers: ${CONFIG.SCRAPERS_ON ? "ON" : "OFF"}`);
+    if (CONFIG.SCRAPERS_ON) {
+      console.log(`[Server] Scrape interval: ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes`);
+    }
   });
 }
 

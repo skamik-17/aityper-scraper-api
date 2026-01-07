@@ -88,6 +88,263 @@ const STAKE_TYPE_ID_MAP: Map<
   // Half-time specific combinations
   [40390, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
 
+  // Extended total goals markets (various lines)
+  [525, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [526, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [529, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [530, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [533, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [534, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [535, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [536, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [539, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [540, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [543, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [544, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // Extended handicap markets (various lines)
+  [583, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [584, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [585, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [586, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+
+  // Half-time totals
+  [607, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [618, { type: NormalizedMarketType.HALF_TIME_BTTS, group: NormalizedMarketGroup.HALF_TIME }],
+  [647, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [650, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [651, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [652, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [653, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [654, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [655, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [656, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [657, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [658, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [659, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+
+  // European handicap variants
+  [66, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [67, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [68, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [670, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [671, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [672, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [673, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [674, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [675, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [676, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [677, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+
+  // Asian handicap variants
+  [682, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+
+  // More extended total goals (270xxx series)
+  [270586, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270587, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270588, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270589, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270590, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270591, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270618, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270619, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270621, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270825, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270826, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270827, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270828, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270829, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270830, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270831, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270832, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [270833, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // Extended handicap markets (260xxx series)
+  [261946, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [261964, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [261965, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [262063, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [262274, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [262275, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [262276, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [263683, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [263685, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [263693, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [263694, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [263695, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [263696, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [267856, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [267857, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [267860, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [267861, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268284, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268285, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268286, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268287, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268288, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268289, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268826, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [268887, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+  [268888, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+
+  // Extended combo and special markets (270xxx+ series)
+  [270665, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo market
+  [275, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [276, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [277, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [278, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [279, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [280, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [281, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [282, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [283, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [285, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [286, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [287, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [288, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+  [290, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Combo
+
+  // High-ID markets (290xxx+ series)
+  [299442, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [310988, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [310989, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [310990, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [310991, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [311019, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [311020, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [311021, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [311022, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [314168, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [314169, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // Very high ID markets (320xxx+ series)
+  [329307, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [329349, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [329350, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [329351, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [332672, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332813, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332814, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332815, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332816, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332818, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332819, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [332821, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+  [333109, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333110, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333111, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333112, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333113, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333114, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333115, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333116, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333117, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333118, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333182, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [333649, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player market
+
+  // Extended markets (330xxx+ series)
+  [339468, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [350009, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [350010, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [350076, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [350077, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [350171, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [350214, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
+
+  // Higher ID series
+  [377798, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [380258, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [380259, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // 390xxx series - half-time and combo markets
+  [390842, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [390843, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [39504, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [39505, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [39506, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [39507, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [39508, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [39593, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [39594, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+
+  // 403xxx series - extended half-time markets
+  [40317, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40379, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40380, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40381, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40382, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40383, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40384, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40385, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40386, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40387, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40388, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40389, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40390, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40393, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40394, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40397, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40398, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40414, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40415, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40421, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40422, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40423, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40424, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40425, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40426, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40427, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40428, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40429, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40431, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40493, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40494, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
+  [40495, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40496, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40497, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+  [40498, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
+
+  // 420xxx+ series - extended markets
+  [421317, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [424467, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // Very high ID markets (5000000+ series) - player/special markets
+  [5685188, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5685189, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5685190, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5699562, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5699564, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5701801, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5774055, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5774056, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [5774433, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+
+  // 1050-1082 series - combo/special markets
+  [1050, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1051, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1052, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1053, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1060, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1071, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1082, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+
+  // 1140-1205 series
+  [1140, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1141, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1204, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [1205, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+
+  // 175000+ series
+  [175092, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [175094, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [175095, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [175100, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+  [175105, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
+
+  // 274556 - specific combo market
+  [274556, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+
   // Exotic high-ID markets (often player/special markets - map to OTHER)
   // These will be handled by pattern matching if they have meaningful names
 ]);
@@ -142,24 +399,24 @@ const OTHER_STAKE_TYPE_IDS: Set<number> = new Set([
   49,     // Special markets
   50,     // Special markets
 
-  // Half-time specialty markets
-  40390,  // Half-time special combo
-  40397,  // Half-time special
+  // Half-time specialty markets (40390, 40397, 40495 are now mapped to HALF_TIME_RESULT in main map)
+  // 40390,  // Half-time special combo - now mapped
+  // 40397,  // Half-time special - now mapped
   40495,  // Half-time special
 
   // High-ID special/exotic markets
   176415, // Special market
   183254, // Special market
   217797, // Special market
-  261946, // Special market
-  270665, // Special market
-  274556, // Special market
+  // 261946, // Now mapped to ASIAN_HANDICAP
+  // 270665, // Combo market - mapped in main map
+  274556, // Special market (combo)
   313638, // Special market
   313639, // Special market
-  332815, // Special market
-  333649, // Special market
-  350009, // Special market
-  350010, // Special market
+  // 332815, // Now mapped to OTHER (player market)
+  // 333649, // Now mapped to OTHER (player market)
+  // 350009, // Now mapped to HALF_TIME_RESULT
+  // 350010, // Now mapped to HALF_TIME_RESULT
   350171, // Special market
   357318, // Special market
   5699562, // Player/special market

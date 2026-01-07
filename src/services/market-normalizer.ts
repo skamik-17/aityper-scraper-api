@@ -13,6 +13,7 @@ import {
     MARKET_TYPE_TO_GROUP,
     buildMarketKey,
 } from "../types/normalization.js";
+import { MarketCategory, MARKET_TYPE_TO_CATEGORY } from "../types/normalized-markets.js";
 import { getNormalizer } from "./normalizers/index.js";
 
 // ============================================================================
@@ -226,6 +227,8 @@ export interface NormalizationResult {
     paramValue?: string;
     /** Normalized group for UI */
     normalizedGroup: NormalizedMarketGroup;
+    /** Market category following Superbet pattern */
+    category: MarketCategory;
     /** Selections with normalized names */
     selections: MarketSelection[];
 }
@@ -267,6 +270,9 @@ export function normalizeMarket(market: ScrapedMarket): NormalizationResult {
     // Determine group
     const normalizedGroup = MARKET_TYPE_TO_GROUP[normalizedType];
 
+    // Determine category following Superbet pattern
+    const category = MARKET_TYPE_TO_CATEGORY[normalizedType] || MarketCategory.INNE;
+
     // Normalize selections
     const normalizedSelections = market.selections.map((sel) => ({
         ...sel,
@@ -278,6 +284,7 @@ export function normalizeMarket(market: ScrapedMarket): NormalizationResult {
         marketKey,
         paramValue,
         normalizedGroup,
+        category,
         selections: normalizedSelections,
     };
 }
@@ -294,6 +301,7 @@ export function applyNormalization(market: ScrapedMarket): ScrapedMarket {
         normalizedGroup: result.normalizedGroup,
         marketKey: result.marketKey,
         paramValue: result.paramValue,
+        category: result.category,
         selections: result.selections,
     };
 }
@@ -340,6 +348,7 @@ export function normalizeMarketForBookmaker(
             normalizedGroup: result.normalizedGroup,
             marketKey: result.marketKey,
             paramValue: result.paramValue,
+            category: result.category,
             selections: result.selections,
         };
     }

@@ -78,11 +78,6 @@ export class BettersNormalizer extends BaseNormalizer {
       pattern: /^1\.\s*poł(?:owa)?\s*-?\s*1x2$/i,
       type: NormalizedMarketType.HALF_TIME_RESULT,
     },
-    {
-      pattern: /^1\.\s*połowa\s*lub\s*mecz$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
-    },
 
     // ==========================================================================
     // MAIN MATCH MARKETS
@@ -161,11 +156,16 @@ export class BettersNormalizer extends BaseNormalizer {
       type: NormalizedMarketType.BTTS,
     },
 
-    // Only one team scores
+    // Only one team scores - variant of BTTS NO
     {
       pattern: /^tylko\s*jeden\s*(zesp[óo][łl]|dru[zż]yna)\s*strzeli$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.GOALS,
+      type: NormalizedMarketType.BTTS,
+    },
+
+    // Both teams to score in both halves - BTTS variant
+    {
+      pattern: /^gol\s*w\s*obu\s*po[łl]owach$/i,
+      type: NormalizedMarketType.BTTS,
     },
 
     // ==========================================================================
@@ -218,11 +218,10 @@ export class BettersNormalizer extends BaseNormalizer {
       type: NormalizedMarketType.CORRECT_SCORE,
     },
 
-    // Result and total goals (exact) - combined market
+    // Result and total goals (exact) - combined market, map to MATCH_WINNER (primary component)
     {
       pattern: /^wynik\s*i\s*suma\s*goli\s*\(dokładna\s*liczba\)$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.MATCH_WINNER,
     },
 
     // Result and total goals combo - map to MATCH_WINNER (primary component)
@@ -303,16 +302,30 @@ export class BettersNormalizer extends BaseNormalizer {
       group: NormalizedMarketGroup.GOALS,
     },
 
-    // Time of first goal
+    // Time of 1st goal
     {
       pattern: /^czas\s*1\.\s*gola$/i,
       type: NormalizedMarketType.OTHER,
       group: NormalizedMarketGroup.GOALS,
     },
 
-    // Method of first goal
+    // Time of 2nd goal
+    {
+      pattern: /^czas\s*2\.\s*gola$/i,
+      type: NormalizedMarketType.OTHER,
+      group: NormalizedMarketGroup.GOALS,
+    },
+
+    // Method of 1st goal
     {
       pattern: /^metoda\s*1\.\s*gola$/i,
+      type: NormalizedMarketType.OTHER,
+      group: NormalizedMarketGroup.GOALS,
+    },
+
+    // Goal time ranges (e.g., "gol między 1 a 10 min")
+    {
+      pattern: /^gol\s+między\s*\d+\s*a\s*\d+\s*min/i,
       type: NormalizedMarketType.OTHER,
       group: NormalizedMarketGroup.GOALS,
     },
@@ -365,10 +378,17 @@ export class BettersNormalizer extends BaseNormalizer {
       pattern: /^1\.\s*po[łl]owa\s*lub\s*mecz$/i,
       type: NormalizedMarketType.HALF_TIME_RESULT,
     },
+
+    // 1st half or 2nd half BTTS - map to HALF_TIME_BTTS
     {
       pattern: /^1\.\s*po[łl]owa\s*[\/\-]\s*2\.\s*po[łl]owa\s*obie\s*dru[żz]yny\s*strzel/i,
       type: NormalizedMarketType.HALF_TIME_BTTS,
     },
+    {
+      pattern: /^1\.\s*Po[łl]owa\s*[\/\-]\s*2\s*Po[łl]owa\s*obie\s*dru[żz]yny\s*strzel/i,
+      type: NormalizedMarketType.HALF_TIME_BTTS,
+    },
+
     // Half result or BTTS - map to HALF_TIME_RESULT (primary)
     {
       pattern: /^wynik\s*1\.\s*po[łl]owy\s*lub\s*obie\s*dru[żz]yny\s*strzel/i,
@@ -393,11 +413,7 @@ export class BettersNormalizer extends BaseNormalizer {
       pattern: /^obie\s*dru[żz]yny\s*suma\s*(powyżej|poniżej)/i,
       type: NormalizedMarketType.BTTS,
     },
-    // Goals in both halves - map to HALF_TIME_BTTS
-    {
-      pattern: /^gol\s*w\s*obu\s*po[łl]owach/i,
-      type: NormalizedMarketType.BTTS,
-    },
+
     // Both halves over/under - map to HALF_TIME_TOTAL_GOALS
     {
       pattern: /^obie\s*po[łl]owy\s*(powyżej|poniżej)/i,
@@ -414,6 +430,12 @@ export class BettersNormalizer extends BaseNormalizer {
     // Highest scoring half - map to HALF_TIME_RESULT
     {
       pattern: /^po[łl]owa\s*z\s*najwi[ęe]kszym\s*wynikiem/i,
+      type: NormalizedMarketType.HALF_TIME_RESULT,
+    },
+
+    // Most points in half: double chance - map to HALF_TIME_RESULT
+    {
+      pattern: /^najwi[ęe]cej\s*punkt[óo]w\s*w\s*po[łl]owie\s*:\s*podw[oó]jna\s*szansa/i,
       type: NormalizedMarketType.HALF_TIME_RESULT,
     },
 

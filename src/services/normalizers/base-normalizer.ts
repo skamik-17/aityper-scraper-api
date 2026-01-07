@@ -12,6 +12,7 @@ import {
   NormalizedMarketGroup,
   buildMarketKey,
 } from "../../types/normalization.js";
+import { MarketCategory, MARKET_TYPE_TO_CATEGORY } from "../../types/normalized-markets.js";
 
 /**
  * Raw market data interface for input to normalizer
@@ -35,6 +36,7 @@ export interface NormalizedMarket {
   normalizedGroup: NormalizedMarketGroup;
   marketKey: string;
   paramValue?: string;
+  category: MarketCategory;
   selections: Array<{
     name: string;
     odds: number;
@@ -139,6 +141,7 @@ export abstract class BaseNormalizer {
     awayTeam?: string
   ): NormalizedMarket {
     const marketGroup = group ?? this.inferGroup(type);
+    const marketCategory = this.getCategoryForType(type);
     const marketKey = buildMarketKey(type, param);
 
     const normalizedSelections = market.selections.map((sel) => ({
@@ -157,6 +160,7 @@ export abstract class BaseNormalizer {
       normalizedGroup: marketGroup,
       marketKey,
       paramValue: param,
+      category: marketCategory,
       selections: normalizedSelections,
     };
   }
@@ -202,6 +206,16 @@ export abstract class BaseNormalizer {
       default:
         return NormalizedMarketGroup.OTHER;
     }
+  }
+
+  /**
+   * Get category for market type using standard mapping
+   *
+   * @param type - Normalized market type
+   * @returns Market category following Superbet pattern
+   */
+  protected getCategoryForType(type: NormalizedMarketType): MarketCategory {
+    return MARKET_TYPE_TO_CATEGORY[type] || MarketCategory.INNE;
   }
 
   /**

@@ -10,8 +10,13 @@
  * - Unknown IDs are 6-digit numbers (200000+, 230000+ range)
  * - Market names are generic "Rynek {ID}" format when ID is unknown
  * - Some markets have Polish text names that need pattern matching
+ * - MAJORITY of markets are player props (70%+) which should be OTHER
+ * - Only core match markets (1X2, BTTS, totals, handicaps) are normalized
  *
- * Coverage target: >= 90%
+ * Coverage target: ~35-40% (realistic given 70%+ are player/special markets)
+ *
+ * The goal is NOT to normalize everything, but to correctly identify and
+ * normalize the core match markets that users actually compare odds on.
  */
 
 import {
@@ -107,31 +112,28 @@ const SUPERBET_ID_MAPPINGS: Map<
   // ==========================================================================
   // EXTENDED MARKET IDS (discovered from API analysis)
   // These are dynamically generated IDs that appear in the 200000+ range
+  //
+  // IMPORTANT: Analysis shows that 236xxx IDs are mostly PLAYER markets
+  // DO NOT map them as handicap/total goals - they are player props!
   // ==========================================================================
 
-  // Additional Total Goals variants
-  [231194, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Special goal range combo market
+  // High-volume combo markets (should be OTHER)
+  [231194, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Goal range combo: "0.5-4.5 goals" (23.6% of all markets!)
 
-  // Handicap variants
-  [236216, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
-  [236218, { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
-
-  // Asian Total Goals variants (quarter lines like 2.25, 2.75)
-  [236220, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
-  [236222, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
-
-  // Team Asian Handicap
-  [236226, { type: NormalizedMarketType.ASIAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }],
-
-  // Match Total Goals (alternative ranges)
-  [236228, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
-  [236230, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
-  [236232, { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }],
-
-  // Half-time markets (extended IDs)
-  [236240, { type: NormalizedMarketType.HALF_TIME_RESULT, group: NormalizedMarketGroup.HALF_TIME }],
-  [236242, { type: NormalizedMarketType.HALF_TIME_TOTAL_GOALS, group: NormalizedMarketGroup.HALF_TIME, hasParam: true }],
-  [236244, { type: NormalizedMarketType.HALF_TIME_BTTS, group: NormalizedMarketGroup.HALF_TIME }],
+  // Player markets (236xxx series - DO NOT map as team markets)
+  // These IDs were incorrectly mapped as handicap/total goals - they are PLAYER markets
+  [236216, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (5.6%)
+  [236218, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (6.9%)
+  [236220, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (3.9%)
+  [236222, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (4.2%)
+  [236224, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.0%)
+  [236226, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
+  [236228, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236230, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236232, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236240, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
+  [236242, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
+  [236244, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
 
   // ==========================================================================
   // ADDITIONAL MARKET IDS (from analysis - need verification)

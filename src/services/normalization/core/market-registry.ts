@@ -38,6 +38,8 @@ export const MAIN_MARKETS: MarketDefinition[] = [
       /^1x2$/iu,
       /^match\s*(result|winner)?$/iu,
       /^ko[ņń]cowy\s*wynik$/iu,
+      /^zwyci[eę]zca\s*meczu?$/iu,
+      /^mecz$/iu,
     ],
     bookmakerData: {
       sts: {
@@ -59,6 +61,14 @@ export const MAIN_MARKETS: MarketDefinition[] = [
     patterns: [
       /^podw[oó]jna\s*szans/iu,
       /^double\s*chance/iu,
+      /^dc$/iu,
+      /^szans[ay]\s*podw[oó]jn/iu,
+      /^dw[oó]jtyp$/iu,
+      /szansa$/iu,
+      /dw[oó]jtyp$/iu,
+      /podw[oó]jna\s*szans/iu,
+      /^mecz.*podw[oó]jna\s*szans/iu,
+      /^mecz.*dw[oó]jtyp/iu,
     ],
     bookmakerData: {
       sts: { idMappings: [10] },
@@ -75,6 +85,9 @@ export const MAIN_MARKETS: MarketDefinition[] = [
       /^remis\s*=\s*zwrot/iu,
       /^draw\s*no\s*bet/iu,
       /^dnb$/iu,
+      /^bez\s*remisu$/iu,
+      /^level\s*handicap$/iu,
+      /^zak[łl]ad\s*bez\s*remisu$/iu,
     ],
     bookmakerData: {
       sts: { idMappings: [4, 20, 77] },
@@ -100,11 +113,13 @@ export const GOALS_MARKETS: MarketDefinition[] = [
     validParameters: ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"],
     selections: ["OVER" as const, "UNDER" as const],
     patterns: [
-      /^liczba\s*(gol[ioó]w?|bramek)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
-      /^(suma\s*)?(gol[ioów]s*|bramek)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
-      /^total\s*goals?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
-      /^(powyżej|poniżej|over|under)\s*(\d+[.,]?\d*)\s*(gol[ioó]w?|bramek)?/iu,
+      /^liczba\s*(gol[ioó]w?|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^(suma\s*)?(gol[ioówae]*|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^total\s*goals?\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^(powyżej|poniżej|powyzej|ponizej|over|under)\s*[\/]?\s*(powyżej|poniżej|powyzej|ponizej|over|under)?\s*(\d+[.,]?\d*)\s*(gol[ioó]w?|bramek)?/iu,
       /^(over|under)\s*\/\s*(over|under)\s*(\d+[.,]?\d*)/iu,
+      /^o\/?u\s*(\d+[.,]?\d*)/iu,
+      /^gole?\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
     ],
     extractParam: (m) => {
       // Try to find the number in different capture groups
@@ -131,8 +146,12 @@ export const GOALS_MARKETS: MarketDefinition[] = [
     selections: ["YES" as const, "NO" as const],
     patterns: [
       /^(obie|obobie|dru[żz]yny)\s*(strzel[ąa]|gola|bramk)/iu,
-      /^(btts|gg|both\s*teams\s*to\s*score)/iu,
-      /^(obie|both).*(strzel[ąa]|score)/iu,
+      /^(btts|both\s*teams\s*to\s*score)$/iu,
+      /^(gg|ng)(\s*\/\s*(gg|ng))?$/iu,
+      /^obie\s*dru[żz]yny\s*strzel[ąa]\s*gola?$/iu,
+      /^czy\s*obie.*strzel/iu,
+      /^obie\s*dru[żz]yny\s*strzel/iu,
+      /^mecz.*obie.*strzel/iu,
     ],
     bookmakerData: {
       sts: {
@@ -211,6 +230,69 @@ export const GOALS_MARKETS: MarketDefinition[] = [
       /^odd\s*\/?\s*even$/iu,
     ],
   },
+  {
+    id: "team-total-goals",
+    type: "TEAM_TOTAL_GOALS" as const,
+    category: MarketCategory.GOLE,
+    subCategory: "team-goals",
+    labels: { pl: "Gole drużyny", en: "Team Total Goals" },
+    hasParameter: true,
+    parameterType: "decimal-line",
+    validParameters: ["0.5", "1.5", "2.5", "3.5"],
+    selections: ["OVER" as const, "UNDER" as const],
+    patterns: [
+      /^gole?\s*(gospodarzy?|go[śs]ci)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^(home|away)\s*team\s*(total\s*)?goals?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^(gospodarze?|go[śs]cie?)\s*(strzel[ąa])?\s*(over|under|o\/?u)\s*(\d+[.,]?\d*)/iu,
+    ],
+    extractParam: (m) => {
+      for (let i = 1; i < m.length; i++) {
+        const num = m[i]?.replace(",", ".");
+        if (num && /^\d+[.,]?\d*$/.test(num)) return num;
+      }
+      return undefined;
+    },
+  },
+  {
+    id: "goal-range",
+    type: "GOAL_RANGE" as const,
+    category: MarketCategory.GOLE,
+    labels: { pl: "Multigol", en: "Goal Range" },
+    hasParameter: false,
+    selections: ["HOME" as const, "AWAY" as const],
+    patterns: [
+      /^multigol/iu,
+      /^goal\s*range/iu,
+      /^przedzia[łl]\s*gol/iu,
+      /^(\d+)\s*-\s*(\d+)\s*gol/iu,
+    ],
+  },
+  {
+    id: "both-halves-goals",
+    type: "BOTH_HALVES_GOALS" as const,
+    category: MarketCategory.GOLE,
+    labels: { pl: "Gol w obu połowach", en: "Goal in Both Halves" },
+    hasParameter: false,
+    selections: ["YES" as const, "NO" as const],
+    patterns: [
+      /^gol\s*(w\s*)?(obu|obydw[uó]ch)\s*po[łl]o?w/iu,
+      /^(score|goal)\s*in\s*both\s*halves/iu,
+      /^obie\s*po[łl]o?wy\s*gol/iu,
+    ],
+  },
+  {
+    id: "winning-margin",
+    type: "WINNING_MARGIN" as const,
+    category: MarketCategory.GOLE,
+    labels: { pl: "Różnica zwycięstwa", en: "Winning Margin" },
+    hasParameter: false,
+    selections: ["HOME" as const, "AWAY" as const],
+    patterns: [
+      /^r[oó][żz]nica\s*(zwyci[eę]stwa|gol)/iu,
+      /^winning\s*margin/iu,
+      /^margines\s*(zwyci[eę]stwa|wygranej)/iu,
+    ],
+  },
 ];
 
 // ==========================================================================
@@ -237,6 +319,8 @@ export const HANDICAP_MARKETS: MarketDefinition[] = [
     patterns: [
       /^handicap\s*azjatyck/iu,
       /^asian\s*handicap/iu,
+      /^ah\s*([-+]?\d+[.,]?\d*)?$/iu,
+      /^azj[a]?\s*hand/iu,
     ],
     extractParam: (m) => {
       const lineMatch = m[0]?.match(/([-+]?\d+[.,]?\d*)/);
@@ -259,6 +343,9 @@ export const HANDICAP_MARKETS: MarketDefinition[] = [
     patterns: [
       /^handicap\s*europejsk/iu,
       /^european\s*handicap/iu,
+      /^eh\s*([-+]?\d+)?$/iu,
+      /^handicap\s*([-+]?\d+)/iu,
+      /^eur[o]?\s*hand/iu,
     ],
     extractParam: (m) => {
       const lineMatch = m[0]?.match(/([-+]?\d+)/);
@@ -290,9 +377,11 @@ export const HALF_TIME_MARKETS: MarketDefinition[] = [
       "AWAY" as const,
     ],
     patterns: [
-      /^wynik\s*1\.?\s*po[łł]/iu,
-      /^1\.?\s*po[łł].*wynik$/iu,
+      /^wynik\s*1\.?\s*po[łl]o?w/iu,
+      /^1\.?\s*po[łl]o?w.*wynik$/iu,
       /^half\s*time.*result$/iu,
+      /^ht\s*(1x2|result|wynik)/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(1x2|wynik)?$/iu,
     ],
     bookmakerData: {
       sts: { idMappings: [5] },
@@ -308,10 +397,12 @@ export const HALF_TIME_MARKETS: MarketDefinition[] = [
     validParameters: ["0.5", "1.5", "2.5"],
     selections: ["OVER" as const, "UNDER" as const],
     patterns: [
-      /^1\.?\s*po[łł].*liczba\s*gol/iu,
-      /^liczba\s*gol.*1\.?\s*po[łł]/iu,
-      /^half\s*time\s*total\s*goals/iu,
-      /^1\.?\s*po[łł].*(gol|bramk).*\s*(\d+[.,]?\d*)/iu,
+      /^1\.?\s*po[łl]o?w.*liczba\s*gol/iu,
+      /^liczba\s*gol.*1\.?\s*po[łl]o?w/iu,
+      /^half\s*time\s*(total\s*)?goals?/iu,
+      /^1\.?\s*po[łl]o?w.*(gol|bramk).*\s*(\d+[.,]?\d*)/iu,
+      /^ht\s*(over|under|o\/?u)\s*(\d+[.,]?\d*)?/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(gol|o\/?u)/iu,
     ],
     extractParam: (m) => {
       const lineMatch = m[0]?.match(/(\d+[.,]?\d*)/);
@@ -329,10 +420,46 @@ export const HALF_TIME_MARKETS: MarketDefinition[] = [
     hasParameter: false,
     selections: ["YES" as const, "NO" as const],
     patterns: [
-      /^1\.?\s*po[łł].*obie\s*strzel/iu,
-      /^obie\s*strzel.*1\.?\s*po[łł]/iu,
-      /^1\.?\s*po[łł].*(btts|gg)/iu,
+      /^1\.?\s*po[łl]o?w.*obie\s*strzel/iu,
+      /^obie\s*strzel.*1\.?\s*po[łl]o?w/iu,
+      /^1\.?\s*po[łl]o?w.*(btts|gg)/iu,
+      /^ht\s*(btts|gg|obie)/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(btts|gg|obie)/iu,
     ],
+  },
+  {
+    id: "second-half-result",
+    type: "SECOND_HALF_RESULT" as const,
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Wynik 2. połowy", en: "Second Half Result" },
+    hasParameter: false,
+    selections: ["HOME" as const, "DRAW" as const, "AWAY" as const],
+    patterns: [
+      /^wynik\s*2\.?\s*po[łl]o?w/iu,
+      /^2\.?\s*po[łl]o?w.*wynik/iu,
+      /^second\s*half\s*result/iu,
+      /^drug[aiej]\s*po[łl]ow[ay]\s*(wynik|1x2)?/iu,
+    ],
+  },
+  {
+    id: "second-half-total-goals",
+    type: "SECOND_HALF_TOTAL_GOALS" as const,
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Gole 2. połowy", en: "Second Half Total Goals" },
+    hasParameter: true,
+    parameterType: "decimal-line",
+    validParameters: ["0.5", "1.5", "2.5"],
+    selections: ["OVER" as const, "UNDER" as const],
+    patterns: [
+      /^2\.?\s*po[łl]o?w.*liczba\s*gol/iu,
+      /^liczba\s*gol.*2\.?\s*po[łl]o?w/iu,
+      /^second\s*half\s*(total\s*)?goals?/iu,
+      /^drug[aiej]\s*po[łl]ow[ay]\s*(gol|o\/?u)/iu,
+    ],
+    extractParam: (m) => {
+      const lineMatch = m[0]?.match(/(\d+[.,]?\d*)/);
+      return lineMatch?.[1]?.replace(",", ".");
+    },
   },
 ];
 
@@ -352,9 +479,11 @@ export const CORRECT_SCORE_MARKETS: MarketDefinition[] = [
     hasParameter: false,
     selections: ["HOME" as const, "DRAW" as const, "AWAY" as const],
     patterns: [
-      /^dok[lł]adn.*wynik/iu,
+      /^dok[łl]adn.*wynik/iu,
       /^correct\s*score/iu,
       /^exact\s*score/iu,
+      /^wynik\s*dok[łl]adn/iu,
+      /^cs$/iu,
     ],
     bookmakerData: {
       sts: { idMappings: [9, 17, 33, 49, 57, 98, 101, 124, 125, 126] },
@@ -480,6 +609,7 @@ export const STATISTICS_MARKETS: MarketDefinition[] = [
       /^liczba\s*(rzut[oó]w?\s*ro[żz]n|corner)/iu,
       /^(suma\s*)?(rzuty?\s*ro[żz]n[ey]?|corners?)$/iu,
       /total\s*corners?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^ro[żz]ne\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
     ],
     extractParam: (m) => m[2]?.replace(",", "."),
   },
@@ -511,6 +641,8 @@ export const STATISTICS_MARKETS: MarketDefinition[] = [
       /^liczba\s*kartek/iu,
       /^(suma\s*)?(kartk[ai]|cards?)$/iu,
       /total\s*(booking|card)s?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^[żzó][oó][łl]te\s*kartki?\s*(\d+[.,]?\d*)?/iu,
+      /^booking(s)?\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
     ],
     extractParam: (m) => m[2]?.replace(",", "."),
   },
@@ -625,10 +757,12 @@ export const COMBINATION_MARKETS: MarketDefinition[] = [
       "AWAY" as const,
     ],
     patterns: [
-      /^(1\.?\s*po[łł]|ht)\s*[\/\-]\s*(2\.?\s*po[łł]|ft|wynik|mecz)/iu,
-      /^po[łł][oó]wa\s*[\/\-]\s*(mecz|koniec|wynik)/iu,
-      /^ht\s*[\/\-]\s*ft$/iu,
+      /^(1\.?\s*po[łl]o?w|ht)\s*[\/\-]\s*(2\.?\s*po[łl]o?w|ft|wynik|mecz)/iu,
+      /^po[łl]o?w[ay]?\s*[\/\-]\s*(mecz|koniec|wynik)/iu,
+      /^ht\s*[\/\-]?\s*ft$/iu,
       /half\s*time.*full\s*time/iu,
+      /^half\s*[\/\-]\s*match$/iu,
+      /^wynik\s*1\.?\s*i\s*2\.?\s*po[łl]/iu,
     ],
     bookmakerData: {
       sts: { idMappings: [1012] },
@@ -640,14 +774,38 @@ export const COMBINATION_MARKETS: MarketDefinition[] = [
     category: MarketCategory.KOMBINACJE,
     labels: { pl: "Podwójny wynik", en: "Double Result" },
     hasParameter: false,
-    selections: [
-      "HOME" as const,
-      "DRAW" as const,
-      "AWAY" as const,
-    ],
+    selections: ["HOME" as const, "DRAW" as const, "AWAY" as const],
     patterns: [
       /^podw[oó]jny\s*wynik/iu,
       /double\s*result/iu,
+    ],
+  },
+  {
+    id: "double-chance-btts",
+    type: "DOUBLE_CHANCE_BTTS" as const,
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójna szansa + obie strzelą", en: "Double Chance & BTTS" },
+    hasParameter: false,
+    selections: ["HOME_OR_DRAW" as const, "DRAW_OR_AWAY" as const, "HOME_OR_AWAY" as const],
+    patterns: [
+      /^podw[oó]jna\s*szans.*[+&i]\s*(obie|btts|gg)/iu,
+      /^(obie|btts|gg)\s*[+&i]\s*podw[oó]jna\s*szans/iu,
+      /^dc\s*[+&i]\s*(btts|gg|obie)/iu,
+      /double\s*chance.*btts/iu,
+    ],
+  },
+  {
+    id: "double-chance-total",
+    type: "DOUBLE_CHANCE_TOTAL" as const,
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójna szansa + gole", en: "Double Chance & Total" },
+    hasParameter: true,
+    selections: ["HOME_OR_DRAW" as const, "DRAW_OR_AWAY" as const, "HOME_OR_AWAY" as const],
+    patterns: [
+      /^podw[oó]jna\s*szans.*[+&i]\s*(liczba|over|under|o\/u|\d)/iu,
+      /^(liczba|over|under|o\/u).*[+&i]\s*podw[oó]jna\s*szans/iu,
+      /^dc\s*[+&i]\s*(o\/?u|over|under|\d)/iu,
+      /double\s*chance.*(over|under|total)/iu,
     ],
   },
 ];
@@ -662,13 +820,13 @@ export const COMBINATION_MARKETS: MarketDefinition[] = [
  */
 export const MARKET_REGISTRY: MarketDefinition[] = [
   ...MAIN_MARKETS,
+  ...COMBINATION_MARKETS,
   ...GOALS_MARKETS,
   ...HANDICAP_MARKETS,
   ...HALF_TIME_MARKETS,
   ...CORRECT_SCORE_MARKETS,
   ...PLAYER_MARKETS,
   ...STATISTICS_MARKETS,
-  ...COMBINATION_MARKETS,
 ];
 
 // ==========================================================================

@@ -5,14 +5,19 @@
  * No ID mappings needed.
  */
 
-import type { BookmakerAdapter } from "../types.js";
+import type { BookmakerAdapter, NormalizedSelection } from "../types.js";
 
 export const superbetAdapter: BookmakerAdapter = {
   bookmaker: "superbet",
   bookmakerName: "Superbet",
 
-  // Superbet-specific selection overrides (if any)
   selectionOverrides: {
-    // Add Superbet-specific selection codes here if needed
+    "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
+    "^12$": "HOME_OR_AWAY" as NormalizedSelection,
+    "^gg$": "YES" as NormalizedSelection,
+    "^ng$": "NO" as NormalizedSelection,
+    "^pow\\.?": "OVER" as NormalizedSelection,
+    "^pon\\.?": "UNDER" as NormalizedSelection,
   },
 };

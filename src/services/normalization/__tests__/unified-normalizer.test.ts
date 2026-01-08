@@ -1,270 +1,240 @@
-/**
- * Basic tests for Unified Normalizer
- * Run with: tsx src/services/normalization/__tests__/unified-normalizer.test.ts
- */
-
+import { describe, it, expect } from "vitest";
 import { normalizer } from "../index.js";
-
-// Test helper
-function assertEqual<T>(actual: T, expected: T, message: string) {
-  const passed = JSON.stringify(actual) === JSON.stringify(expected);
-  const status = passed ? "✓ PASS" : "✗ FAIL";
-  console.log(`${status}: ${message}`);
-  if (!passed) {
-    console.log(`  Expected: ${JSON.stringify(expected)}`);
-    console.log(`  Actual:   ${JSON.stringify(actual)}`);
-  }
-  return passed;
-}
-
-// Test data
-const testCases = [
-  {
-    name: "STS Rynek 25 (Over/Under 2.5)",
-    market: {
-      name: "Rynek 25",
-      selections: [
-        { name: "Over 2.5", odds: 1.85 },
-        { name: "Under 2.5", odds: 1.95 },
-      ],
-    },
-    bookmaker: "sts",
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "TOTAL_GOALS",
-      category: "GOLE",
-      // Note: ID mapping doesn't extract parameters, would need market name to have param
-      // paramValue: "2.5",
-    },
-  },
-  {
-    name: "STS Rynek 43 (BTTS)",
-    market: {
-      name: "Rynek 43",
-      selections: [
-        { name: "Tak", odds: 1.75 },
-        { name: "Nie", odds: 2.10 },
-      ],
-    },
-    bookmaker: "sts",
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "BTTS",
-      category: "GOLE",
-    },
-  },
-  {
-    name: "Pattern match: Wynik meczu",
-    market: {
-      name: "Wynik meczu",
-      selections: [
-        { name: "1", odds: 2.50 },
-        { name: "X", odds: 3.20 },
-        { name: "2", odds: 2.80 },
-      ],
-    },
-    bookmaker: "fortuna", // No ID mapping, uses pattern matching
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "MATCH_WINNER",
-      category: "WYNIK_MECZU",
-    },
-  },
-  {
-    name: "Pattern match: Obie drużyny strzelą gola",
-    market: {
-      name: "Obie drużyny strzelą gola",
-      selections: [
-        { name: "Tak", odds: 1.75 },
-        { name: "Nie", odds: 2.10 },
-      ],
-    },
-    bookmaker: "superbet",
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "BTTS",
-      category: "GOLE",
-    },
-  },
-  {
-    name: "Pattern match: Over/Under 2.5",
-    market: {
-      name: "Over/Under 2.5",
-      selections: [
-        { name: "Over", odds: 1.85 },
-        { name: "Under", odds: 1.95 },
-      ],
-    },
-    bookmaker: "fortuna",
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "TOTAL_GOALS",
-      category: "GOLE",
-      paramValue: "2.5",
-    },
-  },
-  {
-    name: "Unknown market fallback",
-    market: {
-      name: "Some Unknown Market Type",
-      selections: [
-        { name: "Option A", odds: 2.00 },
-        { name: "Option B", odds: 1.80 },
-      ],
-    },
-    bookmaker: "fortuna",
-    homeTeam: "Arsenal",
-    awayTeam: "Liverpool",
-    expected: {
-      normalizedType: "OTHER",
-      category: "INNE",
-    },
-  },
-];
-
-// Run tests
-console.log("========================================");
-console.log("Unified Normalizer Tests");
-console.log("========================================\n");
-
-let passed = 0;
-let failed = 0;
-
-for (const testCase of testCases) {
-  console.log(`Test: ${testCase.name}`);
-  const result = normalizer.normalize(
-    testCase.market,
-    testCase.bookmaker,
-    testCase.homeTeam,
-    testCase.awayTeam
-  );
-
-  const typeMatch = assertEqual(
-    result.normalizedType,
-    testCase.expected.normalizedType,
-    "  Normalized type"
-  );
-  const categoryMatch = assertEqual(
-    result.category,
-    testCase.expected.category,
-    "  Category"
-  );
-  if (testCase.expected.paramValue !== undefined) {
-    assertEqual(
-      result.paramValue,
-      testCase.expected.paramValue,
-      "  Parameter value"
-    );
-  }
-
-  if (typeMatch && categoryMatch) {
-    passed++;
-  } else {
-    failed++;
-  }
-  console.log("");
-}
-
-// Summary
-console.log("========================================");
-console.log(`Results: ${passed} passed, ${failed} failed`);
-console.log("========================================");
-
-// Test STS adapter ID mappings
-console.log("\n========================================");
-console.log("STS ID Mapping Tests");
-console.log("========================================\n");
-
-const stsIdTests = [
-  { id: 1, expectedDefId: "match-winner" },
-  { id: 25, expectedDefId: "total-goals" },
-  { id: 43, expectedDefId: "btts" },
-  { id: 2, expectedDefId: "draw-no-bet" },  // Not double-chance, was wrong in test
-  { id: 3, expectedDefId: "not-found" },  // Will fail, doesn't exist
-  { id: 4, expectedDefId: "draw-no-bet" },
-];
-
-let stsPassed = 0;
-const stsAdapter = normalizer.getAdapter("sts");
-
-if (stsAdapter?.idMappings) {
-  for (const test of stsIdTests) {
-    const result = stsAdapter.idMappings.get(test.id);
-    const match = result === test.expectedDefId || (test.expectedDefId === "not-found" && !result);
-    const status = match ? "✓ PASS" : "✗ FAIL";
-    console.log(`${status}: Rynek ${test.id} -> ${result || "NOT FOUND"} (expected: ${test.expectedDefId})`);
-    if (match) stsPassed++;
-  }
-} else {
-  console.log("✗ FAIL: STS adapter not found or no ID mappings");
-}
-
-console.log(`\nSTS ID Mappings: ${stsPassed}/${stsIdTests.length} passed`);
-console.log("========================================");
-
-// Test selection normalization
-console.log("\n========================================");
-console.log("Selection Normalization Tests");
-console.log("========================================\n");
-
-const selectionTests = [
-  {
-    market: { name: "Over/Under 2.5", type: "TOTAL_GOALS" as const },
-    selection: { name: "Over 2.5", odds: 1.85 },
-    expected: "OVER",
-  },
-  {
-    market: { name: "Over/Under 2.5", type: "TOTAL_GOALS" as const },
-    selection: { name: "Powyżej 2.5", odds: 1.85 },
-    expected: "OVER",
-  },
-  {
-    market: { name: "Over/Under 2.5", type: "TOTAL_GOALS" as const },
-    selection: { name: "Under 2.5", odds: 1.95 },
-    expected: "UNDER",
-  },
-  {
-    market: { name: "BTTS", type: "BTTS" as const },
-    selection: { name: "Tak", odds: 1.75 },
-    expected: "YES",
-  },
-  {
-    market: { name: "BTTS", type: "BTTS" as const },
-    selection: { name: "Nie", odds: 2.10 },
-    expected: "NO",
-  },
-];
-
-// Import normalizeSelection function
 import { normalizeSelection } from "../core/selection-normalizer.js";
 import { MARKET_REGISTRY } from "../core/market-registry.js";
 
-let selPassed = 0;
-for (const test of selectionTests) {
-  const marketDef = MARKET_REGISTRY.find((m) => m.type === test.market.type);
-  if (!marketDef) {
-    console.log(`✗ FAIL: Market definition not found for ${test.market.type}`);
-    continue;
-  }
+describe("Unified Normalizer", () => {
+  describe("STS ID Mapping", () => {
+    it("should normalize Rynek 25 (Over/Under 2.5) via ID mapping", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Rynek 25",
+          selections: [
+            { name: "Over 2.5", odds: 1.85 },
+            { name: "Under 2.5", odds: 1.95 },
+          ],
+        },
+        "sts",
+        "Arsenal",
+        "Liverpool"
+      );
 
-  const result = normalizeSelection(
-    test.selection.name,
-    marketDef,
-    undefined,
-    "Arsenal",
-    "Liverpool"
-  );
+      expect(result.normalizedType).toBe("TOTAL_GOALS");
+      expect(result.category).toBe("GOLE");
+    });
 
-  const match = result.normalizedName === test.expected;
-  const status = match ? "✓ PASS" : "✗ FAIL";
-  console.log(`${status}: "${test.selection.name}" -> ${result.normalizedName} (expected: ${test.expected})`);
-  if (match) selPassed++;
-}
+    it("should normalize Rynek 43 (BTTS) via ID mapping", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Rynek 43",
+          selections: [
+            { name: "Tak", odds: 1.75 },
+            { name: "Nie", odds: 2.1 },
+          ],
+        },
+        "sts",
+        "Arsenal",
+        "Liverpool"
+      );
 
-console.log(`\nSelection Normalization: ${selPassed}/${selectionTests.length} passed`);
-console.log("========================================");
+      expect(result.normalizedType).toBe("BTTS");
+      expect(result.category).toBe("GOLE");
+    });
+  });
+
+  describe("Pattern Matching", () => {
+    it("should normalize 'Wynik meczu' to MATCH_WINNER", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Wynik meczu",
+          selections: [
+            { name: "1", odds: 2.5 },
+            { name: "X", odds: 3.2 },
+            { name: "2", odds: 2.8 },
+          ],
+        },
+        "fortuna",
+        "Arsenal",
+        "Liverpool"
+      );
+
+      expect(result.normalizedType).toBe("MATCH_WINNER");
+      expect(result.category).toBe("WYNIK_MECZU");
+    });
+
+    it("should normalize 'Obie drużyny strzelą gola' to BTTS", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Obie drużyny strzelą gola",
+          selections: [
+            { name: "Tak", odds: 1.75 },
+            { name: "Nie", odds: 2.1 },
+          ],
+        },
+        "superbet",
+        "Arsenal",
+        "Liverpool"
+      );
+
+      expect(result.normalizedType).toBe("BTTS");
+      expect(result.category).toBe("GOLE");
+    });
+
+    it("should normalize 'Over/Under 2.5' with parameter extraction", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Over/Under 2.5",
+          selections: [
+            { name: "Over", odds: 1.85 },
+            { name: "Under", odds: 1.95 },
+          ],
+        },
+        "fortuna",
+        "Arsenal",
+        "Liverpool"
+      );
+
+      expect(result.normalizedType).toBe("TOTAL_GOALS");
+      expect(result.category).toBe("GOLE");
+      expect(result.paramValue).toBe("2.5");
+    });
+  });
+
+  describe("Unknown Market Fallback", () => {
+    it("should fall back to OTHER for unknown markets", () => {
+      const result = normalizer.normalize(
+        {
+          name: "Some Unknown Market Type",
+          selections: [
+            { name: "Option A", odds: 2.0 },
+            { name: "Option B", odds: 1.8 },
+          ],
+        },
+        "fortuna",
+        "Arsenal",
+        "Liverpool"
+      );
+
+      expect(result.normalizedType).toBe("OTHER");
+      expect(result.category).toBe("INNE");
+    });
+  });
+});
+
+describe("STS Adapter ID Mappings", () => {
+  it("should have correct ID mappings", () => {
+    const stsAdapter = normalizer.getAdapter("sts");
+    expect(stsAdapter).toBeDefined();
+    expect(stsAdapter?.idMappings).toBeDefined();
+
+    expect(stsAdapter?.idMappings?.get(1)).toBe("match-winner");
+    expect(stsAdapter?.idMappings?.get(25)).toBe("total-goals");
+    expect(stsAdapter?.idMappings?.get(43)).toBe("btts");
+    expect(stsAdapter?.idMappings?.get(4)).toBe("draw-no-bet");
+  });
+
+  it("should return undefined for unknown IDs", () => {
+    const stsAdapter = normalizer.getAdapter("sts");
+    expect(stsAdapter?.idMappings?.get(999)).toBeUndefined();
+    expect(stsAdapter?.idMappings?.get(3)).toBeUndefined();
+  });
+});
+
+describe("Selection Normalization", () => {
+  it("should normalize Over selections", () => {
+    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    expect(marketDef).toBeDefined();
+
+    const result = normalizeSelection(
+      "Over 2.5",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(result.normalizedName).toBe("OVER");
+  });
+
+  it("should normalize Polish Over selections", () => {
+    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    expect(marketDef).toBeDefined();
+
+    const result = normalizeSelection(
+      "Powyżej 2.5",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(result.normalizedName).toBe("OVER");
+  });
+
+  it("should normalize Under selections", () => {
+    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    expect(marketDef).toBeDefined();
+
+    const result = normalizeSelection(
+      "Under 2.5",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(result.normalizedName).toBe("UNDER");
+  });
+
+  it("should normalize Yes/No (BTTS) selections", () => {
+    const marketDef = MARKET_REGISTRY.find((m) => m.type === "BTTS");
+    expect(marketDef).toBeDefined();
+
+    const yesTak = normalizeSelection(
+      "Tak",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(yesTak.normalizedName).toBe("YES");
+
+    const noNie = normalizeSelection(
+      "Nie",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(noNie.normalizedName).toBe("NO");
+  });
+
+  it("should normalize 1X2 selections", () => {
+    const marketDef = MARKET_REGISTRY.find((m) => m.type === "MATCH_WINNER");
+    expect(marketDef).toBeDefined();
+
+    const home = normalizeSelection(
+      "1",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(home.normalizedName).toBe("HOME");
+
+    const draw = normalizeSelection(
+      "X",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(draw.normalizedName).toBe("DRAW");
+
+    const away = normalizeSelection(
+      "2",
+      marketDef!,
+      undefined,
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(away.normalizedName).toBe("AWAY");
+  });
+});

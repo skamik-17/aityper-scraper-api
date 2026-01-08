@@ -26,6 +26,12 @@ export {
   normalizeSelection,
   normalizeSelections,
 } from "./core/selection-normalizer.js";
+export {
+  normalizeScraperType,
+  isValidNormalizedType,
+  getCategoryForType,
+  SCRAPER_TYPE_TO_NORMALIZED,
+} from "./core/scraper-type-mapping.js";
 
 // ==========================================================================
 // Market Registry

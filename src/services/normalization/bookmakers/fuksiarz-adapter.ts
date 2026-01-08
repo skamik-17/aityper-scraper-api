@@ -1,18 +1,12 @@
-/**
- * Fuksiarz Adapter
- *
- * Fuksiarz uses pattern matching for most markets.
- * No ID mappings needed.
- */
-
-import type { BookmakerAdapter } from "../types.js";
+import type { BookmakerAdapter, NormalizedSelection } from "../types.js";
 
 export const fuksiarzAdapter: BookmakerAdapter = {
   bookmaker: "fuksiarz",
   bookmakerName: "Fuksiarz",
 
-  // Fuksiarz-specific selection overrides (if any)
   selectionOverrides: {
-    // Add Fuksiarz-specific selection codes here if needed
+    "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
+    "^12$": "HOME_OR_AWAY" as NormalizedSelection,
   },
 };

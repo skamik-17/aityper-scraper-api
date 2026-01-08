@@ -15,11 +15,17 @@ import type {
   NormalizedMarket,
   ScrapedMarket,
   NormalizedSelectionResult,
+  NormalizedMarketType,
 } from "../types.js";
-import { MARKET_REGISTRY } from "./market-registry.js";
+import { MARKET_REGISTRY, getMarketByType } from "./market-registry.js";
 import { matchPattern } from "./pattern-engine.js";
 import { normalizeSelections } from "./selection-normalizer.js";
 import { MarketCategory } from "../types.js";
+import {
+  normalizeScraperType,
+  isValidNormalizedType,
+  getCategoryForType,
+} from "./scraper-type-mapping.js";
 
 // Re-export NormalizedSelectionResult for convenience
 type NormalizedSelection = import("../types.js").NormalizedSelection;
@@ -56,6 +62,20 @@ export class UnifiedNormalizer {
   ): NormalizedMarket {
     const adapter = this.adapters.get(bookmaker);
 
+    // Strategy 0: Use scraper's pre-normalized type if provided
+    if (market.type) {
+      const normalizedType = this.resolveScraperType(market.type);
+      if (normalizedType && normalizedType !== "OTHER") {
+        return this.createMarketFromType(
+          normalizedType,
+          market,
+          adapter,
+          homeTeam,
+          awayTeam
+        );
+      }
+    }
+
     // Strategy 1: Try ID mapping (for STS "Rynek XX" format)
     if (adapter?.idMappings) {
       const idResult = this.tryIdMapping(market.name, adapter);
@@ -85,6 +105,86 @@ export class UnifiedNormalizer {
 
     // Strategy 3: Fallback to OTHER
     return this.createFallbackMarket(market);
+  }
+
+  private resolveScraperType(scraperType: string): NormalizedMarketType | undefined {
+    if (isValidNormalizedType(scraperType)) {
+      return scraperType as NormalizedMarketType;
+    }
+    return normalizeScraperType(scraperType);
+  }
+
+  private createMarketFromType(
+    normalizedType: NormalizedMarketType,
+    market: ScrapedMarket,
+    adapter: BookmakerAdapter | undefined,
+    homeTeam: string | undefined,
+    awayTeam: string | undefined
+  ): NormalizedMarket {
+    const definition = getMarketByType(normalizedType);
+    const category = definition?.category || getCategoryForType(normalizedType);
+    
+    const paramValue = this.extractParamFromMarketName(market.name, normalizedType);
+    const marketKey = paramValue
+      ? `${normalizedType}:${paramValue}`
+      : normalizedType;
+
+    const selections = definition
+      ? normalizeSelections(
+          market.selections,
+          definition,
+          adapter?.selectionOverrides,
+          homeTeam,
+          awayTeam
+        )
+      : market.selections.map((sel) => ({
+          name: sel.name,
+          normalizedName: this.inferSelectionName(sel.name) as import("../types.js").NormalizedSelection,
+          odds: sel.odds,
+        }));
+
+    return {
+      name: market.name,
+      normalizedType,
+      marketKey,
+      category,
+      paramValue,
+      selections,
+    };
+  }
+
+  private extractParamFromMarketName(name: string, type: NormalizedMarketType): string | undefined {
+    const lineMatch = name.match(/(\d+[.,]\d+|\d+)/);
+    if (!lineMatch) return undefined;
+
+    const hasLineTypes: NormalizedMarketType[] = [
+      "TOTAL_GOALS",
+      "HALF_TIME_TOTAL_GOALS",
+      "ASIAN_HANDICAP",
+      "EUROPEAN_HANDICAP",
+      "CORNERS_TOTAL",
+      "CARDS_TOTAL",
+    ];
+
+    if (hasLineTypes.includes(type)) {
+      return lineMatch[1].replace(",", ".");
+    }
+    return undefined;
+  }
+
+  private inferSelectionName(selName: string): string {
+    const lower = selName.toLowerCase().trim();
+    if (/^(1|home|gospodarz)$/i.test(lower)) return "HOME";
+    if (/^(x|draw|remis)$/i.test(lower)) return "DRAW";
+    if (/^(2|away|go[śs]cie?)$/i.test(lower)) return "AWAY";
+    if (/^(over|powyżej|powyzej|\+)/i.test(lower)) return "OVER";
+    if (/^(under|poniżej|ponizej|-)/i.test(lower)) return "UNDER";
+    if (/^(yes|tak|gg)$/i.test(lower)) return "YES";
+    if (/^(no|nie|ng)$/i.test(lower)) return "NO";
+    if (/^1x$/i.test(lower)) return "HOME_OR_DRAW";
+    if (/^x2$/i.test(lower)) return "DRAW_OR_AWAY";
+    if (/^12$/i.test(lower)) return "HOME_OR_AWAY";
+    return "UNKNOWN";
   }
 
   /**

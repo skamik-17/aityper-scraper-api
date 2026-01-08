@@ -46,17 +46,21 @@ export enum MarketCategory {
  */
 export type NormalizedMarketType =
   // Main markets
-  | "MATCH_WINNER" // 1X2
-  | "DOUBLE_CHANCE" // 1X, X2, 12
+  | "MATCH_WINNER"
+  | "DOUBLE_CHANCE"
   | "DRAW_NO_BET"
   // Goals markets
-  | "TOTAL_GOALS" // Over/Under X.5
-  | "BTTS" // Both Teams To Score
+  | "TOTAL_GOALS"
+  | "BTTS"
   | "ODD_EVEN_GOALS"
   | "WIN_TO_NIL"
   | "CLEAN_SHEET"
   | "HOME_TEAM_TO_SCORE"
   | "AWAY_TEAM_TO_SCORE"
+  | "TEAM_TOTAL_GOALS"
+  | "GOAL_RANGE"
+  | "BOTH_HALVES_GOALS"
+  | "WINNING_MARGIN"
   // Handicap markets
   | "ASIAN_HANDICAP"
   | "EUROPEAN_HANDICAP"
@@ -64,6 +68,8 @@ export type NormalizedMarketType =
   | "HALF_TIME_RESULT"
   | "HALF_TIME_TOTAL_GOALS"
   | "HALF_TIME_BTTS"
+  | "SECOND_HALF_RESULT"
+  | "SECOND_HALF_TOTAL_GOALS"
   // Score markets
   | "CORRECT_SCORE"
   // Player markets (ZAWODNICY)
@@ -85,6 +91,8 @@ export type NormalizedMarketType =
   | "RESULT_AND_TOTAL"
   | "HALFTIME_FULLTIME"
   | "DOUBLE_RESULT"
+  | "DOUBLE_CHANCE_BTTS"
+  | "DOUBLE_CHANCE_TOTAL"
   // Fallback
   | "OTHER";
 

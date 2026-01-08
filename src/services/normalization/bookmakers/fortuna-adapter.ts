@@ -5,15 +5,17 @@
  * No ID mappings needed.
  */
 
-import type { BookmakerAdapter } from "../types.js";
+import type { BookmakerAdapter, NormalizedSelection } from "../types.js";
 
 export const fortunaAdapter: BookmakerAdapter = {
   bookmaker: "fortuna",
   bookmakerName: "Fortuna",
 
-  // Fortuna-specific selection overrides (if any)
   selectionOverrides: {
-    // Add Fortuna-specific selection codes here if needed
-    // Example: { "^1X$": "HOME_OR_DRAW" }
+    "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
+    "^12$": "HOME_OR_AWAY" as NormalizedSelection,
+    "^10$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^02$": "DRAW_OR_AWAY" as NormalizedSelection,
   },
 };

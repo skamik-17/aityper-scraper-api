@@ -28,9 +28,9 @@ const COMMON_SELECTION_PATTERNS: Array<{
   { pattern: /^(no|nie|nein|non|ng|n[ao]o|brak)$/iu, normalized: "NO" as NormalizedSelection },
 
   // 1X2 outcomes
-  { pattern: /^(1|home|gospodarz|dom|heim|casa)$/iu, normalized: "HOME" as NormalizedSelection },
-  { pattern: /^(x|draw|remis|empate|nul|unentschieden|pareggio)$/iu, normalized: "DRAW" as NormalizedSelection },
-  { pattern: /^(2|away|gość|gosc|auswärts|fuera|ospite)$/iu, normalized: "AWAY" as NormalizedSelection },
+  { pattern: /^(1|home|gospodarz|dom|heim|casa|w1)$/iu, normalized: "HOME" as NormalizedSelection },
+  { pattern: /^(x|draw|remis|empate|nul|unentschieden|pareggio|tie)$/iu, normalized: "DRAW" as NormalizedSelection },
+  { pattern: /^(2|away|gość|gosc|auswärts|fuera|ospite|w2)$/iu, normalized: "AWAY" as NormalizedSelection },
 
   // Double Chance
   { pattern: /^(1x|10|1\s*lub\s*x)$/iu, normalized: "HOME_OR_DRAW" as NormalizedSelection },

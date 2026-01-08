@@ -5,14 +5,17 @@
  * No ID mappings needed.
  */
 
-import type { BookmakerAdapter } from "../types.js";
+import type { BookmakerAdapter, NormalizedSelection } from "../types.js";
 
 export const betclicAdapter: BookmakerAdapter = {
   bookmaker: "betclic",
   bookmakerName: "Betclic",
 
-  // Betclic-specific selection overrides (if any)
   selectionOverrides: {
-    // Add Betclic-specific selection codes here if needed
+    "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
+    "^12$": "HOME_OR_AWAY" as NormalizedSelection,
+    "^powyżej": "OVER" as NormalizedSelection,
+    "^poniżej": "UNDER" as NormalizedSelection,
   },
 };

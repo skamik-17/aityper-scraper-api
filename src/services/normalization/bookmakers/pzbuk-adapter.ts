@@ -1,18 +1,17 @@
-/**
- * PZBUK Adapter
- *
- * PZBUK uses pattern matching for most markets.
- * No ID mappings needed.
- */
-
-import type { BookmakerAdapter } from "../types.js";
+import type { BookmakerAdapter, NormalizedSelection } from "../types.js";
 
 export const pzbukAdapter: BookmakerAdapter = {
   bookmaker: "pzbuk",
   bookmakerName: "PZBUK",
 
-  // PZBUK-specific selection overrides (if any)
   selectionOverrides: {
-    // Add PZBUK-specific selection codes here if needed
+    "^home$": "HOME" as NormalizedSelection,
+    "^away$": "AWAY" as NormalizedSelection,
+    "^tie$": "DRAW" as NormalizedSelection,
+    "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
+    "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
+    "^12$": "HOME_OR_AWAY" as NormalizedSelection,
+    "^over$": "OVER" as NormalizedSelection,
+    "^under$": "UNDER" as NormalizedSelection,
   },
 };

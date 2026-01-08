@@ -18,6 +18,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class BettersNormalizer extends BaseNormalizer {
   readonly bookmaker = "betters";
@@ -483,6 +488,11 @@ export class BettersNormalizer extends BaseNormalizer {
       type: NormalizedMarketType.OTHER,
       group: NormalizedMarketGroup.OTHER,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -519,41 +529,79 @@ export class BettersNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name) || /^gospod(?:arz|arze)$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name) || /^go[ść]$|^go[ść]cie$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // BETTERS-SPECIFIC: Handle handicap and coded selections
+    // ==========================================================================
+
+    // European Handicap format: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
+    }
+
+    // Handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
+      if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
+        return NormalizedSelection.HOME;
+      }
+      if (awayTeam && this.matchesTeam(teamPart, awayTeam)) {
+        return NormalizedSelection.AWAY;
+      }
+    }
+
+    // ==========================================================================
+    // BTTS-specific: Betters uses Polish "Tak"/"Nie"
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Standard 1X2 outcomes
     if (/^1$/i.test(name)) return NormalizedSelection.HOME;
     if (/^x$|^remis$/i.test(name)) return NormalizedSelection.DRAW;
     if (/^2$/i.test(name)) return NormalizedSelection.AWAY;
 
-    // Double Chance
-    if (/^1x$/i.test(name) || /^1\/x$/i.test(name)) {
+    // Enhanced Double Chance patterns (including numeric codes)
+    if (/^1x$|^1\/x$|^10$/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$/i.test(name) || /^x\/2$/i.test(name)) {
+    if (/^x2$|^x\/2$|^02$/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$/i.test(name) || /^1\/2$/i.test(name)) {
+    if (/^12$|^1\/2$/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Over/Under - Betters uses "Powyzej" and "Ponizej"
-    if (/^(pow[yi]żej|ponad|over)/i.test(name)) {
+    // Enhanced Over/Under - Betters uses "Powyzej" and "Ponizej" (Polish + English + Portuguese)
+    if (/^(pow[yi][żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-    if (/^(poni[żz]ej|under)/i.test(name)) {
+    if (/^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
-    // Yes/No (BTTS and similar)
-    if (/^tak$/i.test(name)) return NormalizedSelection.YES;
-    if (/^nie$/i.test(name)) return NormalizedSelection.NO;
+    // Enhanced Yes/No for BTTS and similar (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) return NormalizedSelection.YES;
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) return NormalizedSelection.NO;
 
-    // Odd/Even
-    if (/^nieparzyste?$/i.test(name)) return NormalizedSelection.ODD;
-    if (/^parzyste?$/i.test(name)) return NormalizedSelection.EVEN;
-
-    // Home/Away with Polish names
-    if (/^gospod(?:arz|arze)$/i.test(name)) return NormalizedSelection.HOME;
-    if (/^gość$|^goście$/i.test(name)) return NormalizedSelection.AWAY;
+    // Enhanced Odd/Even patterns
+    if (/^nieparzyst[ea]?$/i.test(name)) return NormalizedSelection.ODD;
+    if (/^parzyst[ea]?$/i.test(name)) return NormalizedSelection.EVEN;
 
     // Use common patterns as fallback
     return this.normalizeCommonSelection(name, marketType);

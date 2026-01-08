@@ -21,6 +21,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 /**
  * PZBuk market ID mappings from MARKET_TYPES constant
@@ -442,6 +447,11 @@ export class PZBukNormalizer extends BaseNormalizer {
       pattern: /^g[oó][sś]cie\s*wygr[ąa]\s*kt[oó]r[ąa]\s*kolwiek\s*pol/i,
       type: NormalizedMarketType.OTHER,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -488,6 +498,33 @@ export class PZBukNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // PZBUK-SPECIFIC: BTTS uses OVER/UNDER instead of YES/NO
+    // This is a known quirk of PZBuk's data format
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      // For BTTS markets, PZBuk uses OVER/UNDER indicators
+      // OVER = YES (both teams score), UNDER = NO (at least one team doesn't score)
+      if (/^powy/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais|\+|above)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^pon/i.test(name) || /^(poni[żz]ej|ponizej|under|menos|\-|below)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+      // Also check for + and - prefixes (numeric format)
+      if (/^\+/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^\-/i.test(name) && !name.includes("remis")) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -496,23 +533,21 @@ export class PZBukNormalizer extends BaseNormalizer {
 
     // PZBuk-specific selection patterns
 
-    // "Gospodarze" = Home
+    // "Gospodarze" = Home (enhanced pattern)
     if (/^gospodarz/i.test(name)) {
       return NormalizedSelection.HOME;
     }
 
-    // "Goscie" = Away
+    // "Goscie" = Away (enhanced pattern)
     if (/^g[óo][śs]c/i.test(name) && !name.includes("dom")) {
       return NormalizedSelection.AWAY;
     }
 
-    // Over selections
-    if (/^powy/i.test(name)) {
+    // Enhanced Over/Under selections (Polish + English + Portuguese)
+    if (/^powy/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-
-    // Under selections
-    if (/^pon/i.test(name)) {
+    if (/^pon/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
@@ -521,14 +556,22 @@ export class PZBukNormalizer extends BaseNormalizer {
       return NormalizedSelection.DRAW;
     }
 
-    // Double Chance specific
-    if (/^1x$|^1\s*lub\s*x/i.test(name)) {
+    // Enhanced Yes/No for BTTS and similar (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+      return NormalizedSelection.YES;
+    }
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
+      return NormalizedSelection.NO;
+    }
+
+    // Enhanced Double Chance patterns
+    if (/^1x$|^1\/x$|^1\s*lub\s*x/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
@@ -544,11 +587,11 @@ export class PZBukNormalizer extends BaseNormalizer {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Odd/Even
-    if (/nieparzy/i.test(name)) {
+    // Enhanced Odd/Even patterns
+    if (/nieparzy/i.test(name) || /nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzy/i.test(name) && !name.includes("nie")) {
+    if (/parzy/i.test(name) && !name.includes("nie") || /parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

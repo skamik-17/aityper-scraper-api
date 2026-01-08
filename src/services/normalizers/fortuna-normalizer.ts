@@ -22,6 +22,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 /**
  * Fortuna market ID mappings from MARKET_TYPE_IDS constant and analysis
@@ -98,11 +103,11 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-lm", { type: NormalizedMarketType.BTTS, group: NormalizedMarketGroup.GOALS }], // BTTS variant
   ["00-ln", { type: NormalizedMarketType.BTTS, group: NormalizedMarketGroup.GOALS }], // BTTS in halves
   ["00-lp", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Highest scoring half
-  ["00-lq", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
-  ["00-lr", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
+  ["00-lq", { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
+  ["00-lr", { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
 
   // Half-time/full-time combo
-  ["00-ls", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.HALF_TIME }], // HT/FT
+  ["00-ls", { type: NormalizedMarketType.HALFTIME_FULLTIME, group: NormalizedMarketGroup.OTHER }], // HT/FT
 
   // Team specific goals
   ["00-lt", { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }], // Home goals
@@ -163,11 +168,11 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-1l", { type: NormalizedMarketType.EUROPEAN_HANDICAP, group: NormalizedMarketGroup.HANDICAP, hasParam: true }], // EH variant
 
   // Special combo markets
-  ["00-lq", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + over/under combo
+  ["00-lq", { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Result + over/under combo
 
   // Team-specific markets (corners, etc.)
-  ["00-64", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Team corners
-  ["00-65", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Team corners alt
+  ["00-64", { type: NormalizedMarketType.CORNERS_TEAM, group: NormalizedMarketGroup.OTHER }], // Team corners
+  ["00-65", { type: NormalizedMarketType.CORNERS_TEAM, group: NormalizedMarketGroup.OTHER }], // Team corners alt
 
   // ==========================================================================
   // ADDITIONAL IDS FROM 2026 ANALYSIS
@@ -184,7 +189,7 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-1k", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Special combo
   ["00-27", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Special combo
   ["00-2s", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Special combo
-  ["00-1z", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
+  ["00-1z", { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
 
   // ==========================================================================
   // ADDITIONAL MEDIUM-FREQUENCY IDS
@@ -199,9 +204,9 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-k6", { type: NormalizedMarketType.TOTAL_GOALS, group: NormalizedMarketGroup.GOALS, hasParam: true }], // O/U 1.5
   ["00-bt", { type: NormalizedMarketType.BTTS, group: NormalizedMarketGroup.GOALS }], // BTTS variant
   ["00-k7", { type: NormalizedMarketType.BTTS, group: NormalizedMarketGroup.GOALS }], // BTTS variant
-  ["00-6x", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets
-  ["00-73", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets
-  ["00-6y", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets
+  ["00-6x", { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }], // Player markets
+  ["00-73", { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }], // Player markets
+  ["00-6y", { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }], // Player markets
   ["00-gv", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // High line O/U (20.5)
   ["00-hb", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // O/U 5.5 special
   ["00-2v", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Complex combo
@@ -241,15 +246,15 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-36", { type: NormalizedMarketType.BTTS, group: NormalizedMarketGroup.GOALS }], // BTTS variant
 
   // Special markets (remaining as OTHER)
-  ["00-lq", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Winning margin special
+  ["00-lq", { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }], // Winning margin special
   ["00-lo", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Multi-over selection
   ["00-1t", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Which team scores first
   ["00-1b", { type: NormalizedMarketType.ODD_EVEN_GOALS, group: NormalizedMarketGroup.GOALS }], // Odd/Even
   ["00-2m", { type: NormalizedMarketType.ODD_EVEN_GOALS, group: NormalizedMarketGroup.GOALS }], // Odd/Even variant
   ["00-0z", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Winning score combo
   ["00-25", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Total goals range
-  ["00-1n", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // HT/FT result combo
-  ["00-1j", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
+  ["00-1n", { type: NormalizedMarketType.HALFTIME_FULLTIME, group: NormalizedMarketGroup.OTHER }], // HT/FT result combo
+  ["00-1j", { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo
 
   // ==========================================================================
   // REMAINING BTTS VARIANTS
@@ -284,7 +289,7 @@ const FORTUNA_ID_MAPPINGS: Map<
   ["00-27", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Total goals range variant
   ["00-1u", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Which team scores first
   ["00-2s", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // No goal/draw variant
-  ["00-1k", { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // BTTS + O/U combo
+  ["00-1k", { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // BTTS + O/U combo
 ]);
 
 // Half-time/full-time combo type (not in standard enum but useful for categorization)
@@ -485,6 +490,11 @@ export class FortunaNormalizer extends BaseNormalizer {
       pattern: /^czyst.*konto/i,
       type: NormalizedMarketType.CLEAN_SHEET,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -531,6 +541,61 @@ export class FortunaNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // FORTUNA-SPECIFIC: Handle complex ID-based and coded selections
+    // Fortuna uses "1"/"0"/"2", "10"/"02"/"12", and handicap formats
+    // ==========================================================================
+
+    // European Handicap format: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
+    }
+
+    // Handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
+      if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
+        return NormalizedSelection.HOME;
+      }
+      if (awayTeam && this.matchesTeam(teamPart, awayTeam)) {
+        return NormalizedSelection.AWAY;
+      }
+    }
+
+    // Double Chance numeric codes: "10", "02", "12"
+    if (name === "10" || /^1x$|^1\/x$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_DRAW;
+    }
+    if (name === "02" || /^x2$|^x\/2$/i.test(name)) {
+      return NormalizedSelection.DRAW_OR_AWAY;
+    }
+    if (name === "12" || /^1\/2$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_AWAY;
+    }
+
+    // ==========================================================================
+    // BTTS-specific: Fortuna uses various formats
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      // Fortuna uses Polish "Tak"/"Nie", English "Yes"/"No"
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -550,30 +615,20 @@ export class FortunaNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
-    // Over selections - Fortuna uses "+" prefix or "powyzej"
-    if (/^\+/i.test(name) || /^powy[żż]/i.test(name)) {
+    // Enhanced Over selections - Fortuna uses "+" prefix or "powyzej" (Polish + English + Portuguese)
+    if (/^\+/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
 
-    // Under selections - Fortuna uses "-" prefix or "ponizej"
-    if (/^-/i.test(name) && !name.includes("remis") || /^poni[żż]/i.test(name)) {
+    // Enhanced Under selections - Fortuna uses "-" prefix or "ponizej" (Polish + English + Portuguese)
+    // Note: Must check for "remis" to avoid false positives on "remis - zwrot" type selections
+    if (/^-/i.test(name) && !name.includes("remis") || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
     // Remis (draw)
     if (/^remis$/i.test(name)) {
       return NormalizedSelection.DRAW;
-    }
-
-    // Double Chance specific (Fortuna uses "10", "02", "12" codes)
-    if (name === "10" || /^1x$/i.test(name)) {
-      return NormalizedSelection.HOME_OR_DRAW;
-    }
-    if (name === "02" || /^x2$/i.test(name)) {
-      return NormalizedSelection.DRAW_OR_AWAY;
-    }
-    if (name === "12") {
-      return NormalizedSelection.HOME_OR_AWAY;
     }
 
     // Double Chance with team names
@@ -589,11 +644,19 @@ export class FortunaNormalizer extends BaseNormalizer {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Odd/Even
-    if (/nieparzyste?/i.test(name)) {
+    // Enhanced Yes/No patterns (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+      return NormalizedSelection.YES;
+    }
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
+      return NormalizedSelection.NO;
+    }
+
+    // Enhanced Odd/Even patterns
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

@@ -19,6 +19,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class LVBetNormalizer extends BaseNormalizer {
   readonly bookmaker = "lvbet";
@@ -174,10 +179,17 @@ export class LVBetNormalizer extends BaseNormalizer {
       type: NormalizedMarketType.HALF_TIME_RESULT,
     },
 
-    // Half-time first/last team to score
+    // Half-time first team to score
     {
-      pattern: /^(1|2)\.\s*po[lł]ow[aąe]?\s*-?\s*(pierwsza|ostatnia)\s*dru[żz]yna.*strzeli\s*gola/i,
-      type: NormalizedMarketType.OTHER,
+      pattern: /^(1|2)\.\s*po[lł]ow[aąe]?\s*-?\s*pierwsza\s*dru[żz]yna.*strzeli\s*gola/i,
+      type: NormalizedMarketType.GOALSCORER_FIRST,
+      group: NormalizedMarketGroup.HALF_TIME,
+    },
+    // Half-time last team to score
+    {
+      pattern: /^(1|2)\.\s*po[lł]ow[aąe]?\s*-?\s*ostatnia\s*dru[żz]yna.*strzeli\s*gola/i,
+      type: NormalizedMarketType.GOALSCORER_LAST,
+      group: NormalizedMarketGroup.HALF_TIME,
     },
 
     // English half-time patterns (e.g., "1st Half Arsenal Total Goals Asian 0.75")
@@ -466,31 +478,33 @@ export class LVBetNormalizer extends BaseNormalizer {
     // First team to score
     {
       pattern: /^pierwsza\s*drużyna.*zdobędzie\s*gola/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_FIRST,
     },
     {
       pattern: /^pierwsza\s*drużyna.*strzeli\s*gola$/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_FIRST,
     },
 
     // Last team to score
     {
       pattern: /^ostatnia\s*drużyna.*zdobędzie\s*gola/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_LAST,
     },
     {
       pattern: /^ostatnia\s*drużyna.*strzeli\s*gola$/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_LAST,
     },
 
     // Half-time first/last to score
     {
       pattern: /^(1|2)\.\s*po[lł]owa\s*-?\s*pierwsza\s*drużyna.*strzeli\s*gola/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_FIRST,
+      group: NormalizedMarketGroup.HALF_TIME,
     },
     {
       pattern: /^(1|2)\.\s*po[lł]owa\s*-?\s*ostatnia\s*drużyna.*strzeli\s*gola/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.GOALSCORER_LAST,
+      group: NormalizedMarketGroup.HALF_TIME,
     },
 
     // ========================================================================
@@ -578,12 +592,12 @@ export class LVBetNormalizer extends BaseNormalizer {
     // Red card
     {
       pattern: /^(1|2)?\s*po[lł]ow[aąe]?\s*-?\s*czerwona\s*kartka/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
 
     {
       pattern: /^czerwona\s*kartka/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
 
     // Penalty
@@ -613,7 +627,7 @@ export class LVBetNormalizer extends BaseNormalizer {
     // Which half more goals
     {
       pattern: /po[lł]ow[aąe]?\s*z\s*wi[ęe]ksz.*liczb.*gol/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // Margin of victory
@@ -625,31 +639,31 @@ export class LVBetNormalizer extends BaseNormalizer {
     // Mix chances (combo markets)
     {
       pattern: /^mix\s*szans$/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.DOUBLE_RESULT,
     },
 
     // Draw in at least one half
     {
       pattern: /^remis\s*przynajmniej\s*w\s*jednej\s*z\s*po[lł]ow/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // Which half more goals
     {
       pattern: /^po[lł]owa\s*z\s*wi[ęe]ksz.*liczb.*gol/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // Win first half / win second half
     {
       pattern: /^wygra\s*pierwsz.*po[lł]ow.*\/\s*wygra\s*drug.*po[lł]ow/i,
-      type: NormalizedMarketType.MATCH_WINNER,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // BTTS per half
     {
       pattern: /^obydwie\s*dru[żz]yny\s*strzel.*-\s*1\.\s*po[lł]owa/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.HALF_TIME_BTTS,
     },
 
     // Goals in each half (range)
@@ -664,23 +678,28 @@ export class LVBetNormalizer extends BaseNormalizer {
       type: NormalizedMarketType.OTHER,
     },
 
-    // Team will be losing and win
+    // Team will be losing and win (comeback scenario)
     {
       pattern: /b[ęe]dzie\s*przegrywa.*wygra\s*mecz/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.DOUBLE_RESULT,
     },
 
     // Comeback / lead scenarios - score will occur during match
     {
       pattern: /^b[ęe]dzie\s*wynik\s*w\s*trakcie\s*meczu$/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.DOUBLE_RESULT,
     },
 
     // Player shots markets
     {
       pattern: /total\s*shots/i,
-      type: NormalizedMarketType.OTHER,
+      type: NormalizedMarketType.PLAYER_SHOTS,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -702,36 +721,27 @@ export class LVBetNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
-    // Use common selection patterns from base class
-    const common = this.normalizeCommonSelection(name, marketType);
-    if (common !== NormalizedSelection.UNKNOWN) {
-      return common;
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // LVBET-SPECIFIC: Handle handicap and coded selections
+    // ==========================================================================
+
+    // European Handicap format: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
     }
 
-    // LVBet-specific selection patterns
-
-    // Over selections with line (e.g., "Powyzej (2.5)")
-    if (/^powy[żz]ej\s*\(?[\d,\.]+\)?/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    // Under selections with line
-    if (/^poni[żz]ej\s*\(?[\d,\.]+\)?/i.test(name)) {
-      return NormalizedSelection.UNDER;
-    }
-
-    // Remis (draw)
-    if (/^remis$/i.test(name)) {
-      return NormalizedSelection.DRAW;
-    }
-
-    // "Bez goli" (no goals) - for first team to score markets
-    if (/^bez\s*goli?$/i.test(name)) {
-      return NormalizedSelection.NO;
-    }
-
-    // Selections with handicap format "Team (X.X)"
-    if (/\([-+]?\d+[.,]?\d*\)\s*$/.test(name)) {
-      const teamPart = name.replace(/\s*\([-+]?\d+[.,]?\d*\)\s*$/, "").trim();
+    // Handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
       if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
         return NormalizedSelection.HOME;
       }
@@ -740,22 +750,64 @@ export class LVBetNormalizer extends BaseNormalizer {
       }
     }
 
-    // Double Chance specific
-    if (/^1x$|^1\s*lub\s*x$/i.test(name)) {
+    // ==========================================================================
+    // BTTS-specific: LVBet uses Polish "Tak"/"Nie"
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
+    // Use common selection patterns from base class
+    const common = this.normalizeCommonSelection(name, marketType);
+    if (common !== NormalizedSelection.UNKNOWN) {
+      return common;
+    }
+
+    // LVBet-specific selection patterns
+
+    // Enhanced Over/Under selections (Polish + English + Portuguese)
+    if (/^powy[żz]ej\s*\(?[\d,\.]+\)?/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
+      return NormalizedSelection.OVER;
+    }
+    if (/^poni[żz]ej\s*\(?[\d,\.]+\)?/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+      return NormalizedSelection.UNDER;
+    }
+
+    // Remis (draw)
+    if (/^remis$/i.test(name)) {
+      return NormalizedSelection.DRAW;
+    }
+
+    // Enhanced Yes/No patterns (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+      return NormalizedSelection.YES;
+    }
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name) || /^bez\s*goli?$/i.test(name)) {
+      return NormalizedSelection.NO;
+    }
+
+    // Enhanced Double Chance patterns
+    if (/^1x$|^1\/x$|^1\s*lub\s*x/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2$/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2$/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Odd/Even
-    if (/nieparzyste?/i.test(name)) {
+    // Enhanced Odd/Even patterns
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

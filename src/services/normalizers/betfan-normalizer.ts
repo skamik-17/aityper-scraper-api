@@ -27,6 +27,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class BetfanNormalizer extends BaseNormalizer {
   readonly bookmaker = "betfan";
@@ -43,18 +48,16 @@ export class BetfanNormalizer extends BaseNormalizer {
     // Player cards
     {
       pattern: /zawodnik\s*otrzyma\s*kartk/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.PLAYER_CARDS,
     },
 
     // Player assists
     {
       pattern: /liczba\s*asyst\s*zawodnika/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.PLAYER_ASSISTS,
     },
 
-    // Player tackles
+    // Player tackles (keep as OTHER - not a specific category)
     {
       pattern: /liczba\s*udanych\s*odbior[oó]w\s*zawodnika/i,
       type: NormalizedMarketType.OTHER,
@@ -64,18 +67,16 @@ export class BetfanNormalizer extends BaseNormalizer {
     // Player shots on target
     {
       pattern: /liczba\s*strza[lł][oó]w\s*celnych\s*zawodnika/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.PLAYER_SHOTS,
     },
 
     // Player shots
     {
       pattern: /liczba\s*strza[lł][oó]w\s*zawodnika/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.PLAYER_SHOTS,
     },
 
-    // Player passes
+    // Player passes (keep as OTHER - not a specific category)
     {
       pattern: /liczba\s*poda[nń]\s*zawodnika/i,
       type: NormalizedMarketType.OTHER,
@@ -325,33 +326,31 @@ export class BetfanNormalizer extends BaseNormalizer {
     },
 
     // ==========================================================================
-    // COMBO MARKETS - Map to primary component for better coverage
+    // COMBO MARKETS - Use specific combination types
     // ==========================================================================
 
     // "Podwojna szansa i liczba goli" - double chance + total goals
-    // Map to DOUBLE_CHANCE (primary component)
     {
       pattern: /podw[oó]jna?\s*szansa\s*i\s*liczba\s*goli/i,
-      type: NormalizedMarketType.DOUBLE_CHANCE,
+      type: NormalizedMarketType.RESULT_AND_TOTAL,
     },
 
     // "Wynik meczu i liczba goli" - result + total goals
-    // Map to MATCH_WINNER (primary component)
     {
       pattern: /wynik\s*meczu\s*i\s*liczba\s*goli/i,
-      type: NormalizedMarketType.MATCH_WINNER,
+      type: NormalizedMarketType.RESULT_AND_TOTAL,
     },
 
     // "Wynik meczu i obie drużyny strzelą" - result + BTTS
     {
       pattern: /wynik\s*meczu\s*i\s*obie.*strzel/i,
-      type: NormalizedMarketType.MATCH_WINNER,
+      type: NormalizedMarketType.RESULT_AND_BTTS,
     },
 
     // "Podwojna szansa i obie drużyny strzelą" - double chance + BTTS
     {
       pattern: /podw[oó]jna?\s*szansa\s*i\s*obie.*strzel/i,
-      type: NormalizedMarketType.DOUBLE_CHANCE,
+      type: NormalizedMarketType.RESULT_AND_BTTS,
     },
 
     // ==========================================================================
@@ -437,13 +436,11 @@ export class BetfanNormalizer extends BaseNormalizer {
 
     {
       pattern: /^liczba\s*rzut[oó]w\s*ro[żz]nych$/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CORNERS_TOTAL,
     },
     {
       pattern: /^rzuty?\s*ro[żz]n/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CORNERS_TOTAL,
     },
 
     // ==========================================================================
@@ -452,13 +449,11 @@ export class BetfanNormalizer extends BaseNormalizer {
 
     {
       pattern: /^liczba\s*kartek/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
     {
-      pattern: /kartk/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      pattern: /^kartk[ai]\s*\d/i,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
 
     // ==========================================================================
@@ -516,13 +511,13 @@ export class BetfanNormalizer extends BaseNormalizer {
     // Half-time / Full-time
     {
       pattern: /^po[lł]owa\s*\/?\s*koniec$/i,
-      type: NormalizedMarketType.HALF_TIME_RESULT,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // Half-time / Full-time with result detail
     {
       pattern: /^po[lł]owa\s*[\/\-]\s*mecz/i,
-      type: NormalizedMarketType.HALF_TIME_RESULT,
+      type: NormalizedMarketType.HALFTIME_FULLTIME,
     },
 
     // Win margin
@@ -591,6 +586,13 @@ export class BetfanNormalizer extends BaseNormalizer {
       pattern: /^po[lł]owa\s*z\s*najwi[ęe]cej\s*goli/i,
       type: NormalizedMarketType.HALF_TIME_RESULT,
     },
+
+    // ==========================================================================
+    // COMMON PATTERNS (fallback)
+    // ==========================================================================
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -613,41 +615,27 @@ export class BetfanNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
-    // Standard 1X2 outcomes
-    if (/^1$/i.test(name)) return NormalizedSelection.HOME;
-    if (/^x$|^remis$/i.test(name)) return NormalizedSelection.DRAW;
-    if (/^2$/i.test(name)) return NormalizedSelection.AWAY;
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
 
-    // Double Chance
-    if (/^1x$|^1\/x$/i.test(name)) {
-      return NormalizedSelection.HOME_OR_DRAW;
-    }
-    if (/^x2$|^x\/2$/i.test(name)) {
-      return NormalizedSelection.DRAW_OR_AWAY;
-    }
-    if (/^12$|^1\/2$/i.test(name)) {
-      return NormalizedSelection.HOME_OR_AWAY;
-    }
+    // ==========================================================================
+    // BETFAN-SPECIFIC: Handle handicap and coded selections
+    // ==========================================================================
 
-    // Over/Under - BetFan uses "Powyzej" and "Ponizej" (without diacritics in API)
-    if (/^(powy[żz]ej|powyzej|ponad|over)/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    if (/^(poni[żz]ej|ponizej|under)/i.test(name)) {
-      return NormalizedSelection.UNDER;
+    // European Handicap format: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
     }
 
-    // Yes/No (BTTS and similar)
-    if (/^tak$/i.test(name)) return NormalizedSelection.YES;
-    if (/^nie$/i.test(name)) return NormalizedSelection.NO;
-
-    // Odd/Even
-    if (/^nieparzyste$/i.test(name)) return NormalizedSelection.ODD;
-    if (/^parzyste$/i.test(name)) return NormalizedSelection.EVEN;
-
-    // Handle handicap selections with line: "Team (+/-X)"
-    if (/\([-+]?\d+[.,]?\d*\)\s*$/.test(name)) {
-      const teamPart = name.replace(/\s*\([-+]?\d+[.,]?\d*\)\s*$/, "").trim();
+    // Handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
       if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
         return NormalizedSelection.HOME;
       }
@@ -655,6 +643,51 @@ export class BetfanNormalizer extends BaseNormalizer {
         return NormalizedSelection.AWAY;
       }
     }
+
+    // ==========================================================================
+    // BTTS-specific: BetFan uses Polish "Tak"/"Nie"
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
+    // Standard 1X2 outcomes
+    if (/^1$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^x$|^remis$/i.test(name)) return NormalizedSelection.DRAW;
+    if (/^2$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // Enhanced Double Chance patterns (including numeric codes)
+    if (/^1x$|^1\/x$|^10$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_DRAW;
+    }
+    if (/^x2$|^x\/2$|^02$/i.test(name)) {
+      return NormalizedSelection.DRAW_OR_AWAY;
+    }
+    if (/^12$|^1\/2$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_AWAY;
+    }
+
+    // Enhanced Over/Under - BetFan uses "Powyzej" and "Ponizej" (without diacritics in API) (Polish + English + Portuguese)
+    if (/^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
+      return NormalizedSelection.OVER;
+    }
+    if (/^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+      return NormalizedSelection.UNDER;
+    }
+
+    // Enhanced Yes/No for BTTS and similar (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) return NormalizedSelection.YES;
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) return NormalizedSelection.NO;
+
+    // Enhanced Odd/Even patterns
+    if (/^nieparzyst[ea]?$/i.test(name)) return NormalizedSelection.ODD;
+    if (/^parzyst[ea]?$/i.test(name)) return NormalizedSelection.EVEN;
 
     // Use common patterns as fallback
     return this.normalizeCommonSelection(name, marketType);

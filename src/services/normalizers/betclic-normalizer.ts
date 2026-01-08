@@ -21,6 +21,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class BetclicNormalizer extends BaseNormalizer {
   readonly bookmaker = "betclic";
@@ -238,6 +243,11 @@ export class BetclicNormalizer extends BaseNormalizer {
       pattern: /^nieparzyste\s*[\/]?\s*parzyste$/i,
       type: NormalizedMarketType.ODD_EVEN_GOALS,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -259,6 +269,10 @@ export class BetclicNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -267,21 +281,11 @@ export class BetclicNormalizer extends BaseNormalizer {
 
     // Betclic-specific selection patterns
 
-    // Over selections - "Powyżej X.5" format
-    if (/^powy[żż]ej\s*[\d.,,]+/i.test(name)) {
+    // Enhanced Over/Under selections (Polish + English + Portuguese)
+    if (/^powy[żż]ej\s*[\d.,,]+/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-
-    // Under selections - "Poniżej X.5" format
-    if (/^poni[żż]ej\s*[\d.,,]+/i.test(name)) {
-      return NormalizedSelection.UNDER;
-    }
-
-    // Standalone "Powyżej"/"Poniżej"
-    if (/^powy[żż]ej/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    if (/^poni[żż]ej/i.test(name)) {
+    if (/^poni[żż]ej\s*[\d.,,]+/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
@@ -290,14 +294,22 @@ export class BetclicNormalizer extends BaseNormalizer {
       return NormalizedSelection.DRAW;
     }
 
-    // Double Chance specific patterns
-    if (/^1x$/i.test(name)) {
+    // Enhanced Yes/No patterns (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+      return NormalizedSelection.YES;
+    }
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
+      return NormalizedSelection.NO;
+    }
+
+    // Enhanced Double Chance patterns
+    if (/^1x$|^1\/x$/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$/i.test(name)) {
+    if (/^x2$|^x\/2$/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$/i.test(name)) {
+    if (/^12$|^1\/2$/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
@@ -317,11 +329,11 @@ export class BetclicNormalizer extends BaseNormalizer {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Odd/Even
-    if (/nieparzyste?/i.test(name)) {
+    // Enhanced Odd/Even patterns
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

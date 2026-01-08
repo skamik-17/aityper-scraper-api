@@ -202,6 +202,31 @@ export abstract class BaseNormalizer {
       case NormalizedMarketType.CORRECT_SCORE:
         return NormalizedMarketGroup.SCORE;
 
+      // Player markets -> OTHER group (legacy compatibility)
+      case NormalizedMarketType.GOALSCORER_FIRST:
+      case NormalizedMarketType.GOALSCORER_LAST:
+      case NormalizedMarketType.GOALSCORER_ANYTIME:
+      case NormalizedMarketType.PLAYER_SHOTS:
+      case NormalizedMarketType.PLAYER_CARDS:
+      case NormalizedMarketType.PLAYER_ASSISTS:
+        return NormalizedMarketGroup.OTHER;
+
+      // Statistics markets -> OTHER group
+      case NormalizedMarketType.CORNERS_TOTAL:
+      case NormalizedMarketType.CORNERS_TEAM:
+      case NormalizedMarketType.CARDS_TOTAL:
+      case NormalizedMarketType.CARDS_TEAM:
+      case NormalizedMarketType.FOULS_TOTAL:
+      case NormalizedMarketType.OFFSIDES_TOTAL:
+        return NormalizedMarketGroup.OTHER;
+
+      // Combination markets -> OTHER group
+      case NormalizedMarketType.RESULT_AND_BTTS:
+      case NormalizedMarketType.RESULT_AND_TOTAL:
+      case NormalizedMarketType.HALFTIME_FULLTIME:
+      case NormalizedMarketType.DOUBLE_RESULT:
+        return NormalizedMarketGroup.OTHER;
+
       // Fallback
       default:
         return NormalizedMarketGroup.OTHER;
@@ -282,6 +307,40 @@ export abstract class BaseNormalizer {
   }
 
   /**
+   * Remove Polish diacritics from text for easier matching
+   *
+   * @param text - Text with potential diacritics
+   * @returns Text with diacritics removed
+   */
+  protected removeDiacritics(text: string): string {
+    return text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove combining diacritical marks
+      .replace(/ł/g, "l")
+      .replace(/Ł/g, "L");
+  }
+
+  /**
+   * Check if string contains any Over/Under indicator keyword
+   * Works with diacritics and various languages
+   *
+   * @param name - Selection name to check
+   * @param lookingFor - 'over' or 'under'
+   * @returns True if the keyword is found
+   */
+  protected containsOverUnderKeyword(name: string, lookingFor: "over" | "under"): boolean {
+    const normalized = this.removeDiacritics(name.toLowerCase());
+
+    if (lookingFor === "over") {
+      return /^(over|powyzej|ponad|pow)\b/i.test(normalized) ||
+             /\b(over|powyzej|ponad|pow|więcej|wiecej|więk|wiek)\b/i.test(normalized);
+    } else {
+      return /^(under|ponizej|pon)\b/i.test(normalized) ||
+             /\b(under|ponizej|pon|mniej|mn)\b/i.test(normalized);
+    }
+  }
+
+  /**
    * Common selection normalization patterns shared across bookmakers
    * Subclasses can call this as a fallback after trying bookmaker-specific patterns
    *
@@ -293,50 +352,228 @@ export abstract class BaseNormalizer {
     name: string,
     marketType: NormalizedMarketType
   ): NormalizedSelection {
-    // 1X2 outcomes
-    if (/^1$|^home$|^gospodarz$/i.test(name)) {
+    // Normalize input: lowercase, trim, remove diacritics for matching
+    const normalizedName = this.removeDiacritics(name.toLowerCase().trim());
+    const trimmedOriginal = name.trim();
+
+    // ==========================================================================
+    // MARKET-TYPE SPECIFIC SELECTIONS
+    // Check market type first to determine expected selection format
+    // ==========================================================================
+
+    // BTTS and HALF_TIME_BTTS markets use YES/NO selections
+    // Check these BEFORE Over/Under to avoid misclassification
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      // Yes indicators
+      if (/^(tak|yes|gg|si|sim|gol)\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.YES;
+      }
+      // No indicators
+      if (/^(nie|no|ng|n[ao]o|brak)\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.NO;
+      }
+      // Special case: "1" can mean YES for BTTS
+      if (/^1\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.YES;
+      }
+      // Special case: "0" or "2" can mean NO for BTTS
+      if (/^(0|2)\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
+    // TOTAL_GOALS and HALF_TIME_TOTAL_GOALS use OVER/UNDER selections
+    if (marketType === NormalizedMarketType.TOTAL_GOALS || marketType === NormalizedMarketType.HALF_TIME_TOTAL_GOALS) {
+      // Check for Over indicators
+      if (this.containsOverUnderKeyword(normalizedName, "over")) {
+        return NormalizedSelection.OVER;
+      }
+      // Check for Under indicators
+      if (this.containsOverUnderKeyword(normalizedName, "under")) {
+        return NormalizedSelection.UNDER;
+      }
+      // Numeric line indicators: "+" prefix means Over, "-" prefix means Under
+      if (/^\+[\d.,]+/.test(trimmedOriginal)) {
+        return NormalizedSelection.OVER;
+      }
+      if (/^-[\d.,]+/.test(trimmedOriginal)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Suffix indicators: "2.5+" or "2.5-"
+      if (/[\d.,]+\+$/.test(trimmedOriginal)) {
+        return NormalizedSelection.OVER;
+      }
+      if (/[\d.,]+-$/.test(trimmedOriginal)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Short codes
+      if (/^(o|over)\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.OVER;
+      }
+      if (/^(u|under)\s*$/i.test(normalizedName)) {
+        return NormalizedSelection.UNDER;
+      }
+    }
+
+    // GOALSCORER markets - keep original names (player names)
+    // These should not be normalized to standard selections
+    if (marketType === NormalizedMarketType.GOALSCORER_FIRST ||
+        marketType === NormalizedMarketType.GOALSCORER_LAST ||
+        marketType === NormalizedMarketType.GOALSCORER_ANYTIME) {
+      // Return UNKNOWN to preserve the original player name
+      // The calling code should use the original name for display
+      return NormalizedSelection.UNKNOWN;
+    }
+
+    // ==========================================================================
+    // 1X2 OUTCOMES - Single character and short codes
+    // ==========================================================================
+
+    // Home (1)
+    if (/^1$|^home$|^gospodarz$/i.test(normalizedName)) {
       return NormalizedSelection.HOME;
     }
-    if (/^x$|^draw$|^remis$/i.test(name)) {
+
+    // Draw (X)
+    if (/^x$|^0$|^draw$|^remis$/i.test(normalizedName)) {
       return NormalizedSelection.DRAW;
     }
-    if (/^2$|^away$|^gość$|^gosc$/i.test(name)) {
+
+    // Away (2)
+    if (/^2$|^away$|^gosc$|^gos[cć]$/i.test(normalizedName)) {
       return NormalizedSelection.AWAY;
     }
 
-    // Double Chance
-    if (/^1x$/i.test(name)) {
+    // ==========================================================================
+    // DOUBLE CHANCE - Two-outcome combinations
+    // ==========================================================================
+
+    // 1X or 10 (Home or Draw)
+    if (/^(1x|10)$/i.test(normalizedName) || /1\s*(lub|or|l\.|&)\s*x/i.test(normalizedName)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$/i.test(name)) {
+
+    // X2 or 02 (Draw or Away)
+    if (/^(x2|02)$/i.test(normalizedName) || /x\s*(lub|or|l\.|&)\s*2/i.test(normalizedName) || /remis\s*(lub|or)\s*2/i.test(normalizedName)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$/i.test(name)) {
+
+    // 12 (Home or Away - No Draw)
+    if (/^12$/i.test(normalizedName) || /1\s*(lub|or|l\.|&)\s*2/i.test(normalizedName)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Over/Under - match at start to handle "Ponad 2.5" etc.
-    if (/^(over|powyżej|powyzej|ponad|pow)\b/i.test(name)) {
+    // ==========================================================================
+    // OVER/UNDER - Check for keywords anywhere in the string
+    // This handles formats like:
+    // - "Over 2.5"
+    // - "2.5+"
+    // - "Powyżej 2.5"
+    // - "Powyzej (2.5)"
+    // - "Over +2.5 goals"
+    // ==========================================================================
+
+    // Check for Over indicators
+    if (this.containsOverUnderKeyword(normalizedName, "over")) {
       return NormalizedSelection.OVER;
     }
-    if (/^(under|poniżej|ponizej|pon)\b/i.test(name)) {
+
+    // Check for Under indicators
+    if (this.containsOverUnderKeyword(normalizedName, "under")) {
       return NormalizedSelection.UNDER;
     }
 
-    // Yes/No (BTTS and similar)
-    if (/^(tak|yes|gg)$/i.test(name)) {
+    // Numeric line indicators: "+" prefix means Over, "-" prefix means Under
+    // This handles selections like "+2.5" or "-2.5"
+    // Check original name (preserves the +/- signs)
+    if (/^\+[\d.,]+/.test(trimmedOriginal)) {
+      return NormalizedSelection.OVER;
+    }
+    if (/^-[\d.,]+/.test(trimmedOriginal)) {
+      return NormalizedSelection.UNDER;
+    }
+
+    // Suffix indicators: "2.5+" or "2.5-" (less common but exists)
+    if (/[\d.,]+\+$/.test(trimmedOriginal)) {
+      return NormalizedSelection.OVER;
+    }
+    if (/[\d.,]+-$/.test(trimmedOriginal)) {
+      return NormalizedSelection.UNDER;
+    }
+
+    // ==========================================================================
+    // YES/NO - BTTS and similar markets
+    // Handles multiple languages and formats
+    // ==========================================================================
+
+    // Yes indicators
+    if (/^(tak|yes|gg|si|1)\s*$/i.test(normalizedName)) {
+      // Special case: "1" could be HOME for 1X2 or YES for BTTS
+      if (normalizedName === "1" && marketType !== NormalizedMarketType.BTTS &&
+          marketType !== NormalizedMarketType.HALF_TIME_BTTS) {
+        return NormalizedSelection.HOME;
+      }
       return NormalizedSelection.YES;
     }
-    if (/^(nie|no|ng)$/i.test(name)) {
+
+    // No indicators
+    if (/^(nie|no|ng|nope|0)\s*$/i.test(normalizedName)) {
+      // Special case: "0" could be DRAW for 1X2 or NO for BTTS
+      if (normalizedName === "0" && marketType !== NormalizedMarketType.BTTS &&
+          marketType !== NormalizedMarketType.HALF_TIME_BTTS) {
+        return NormalizedSelection.DRAW;
+      }
       return NormalizedSelection.NO;
     }
 
-    // Odd/Even
-    if (/^(nieparzyste|odd)$/i.test(name)) {
+    // ==========================================================================
+    // ODD/EVEN - Parity markets
+    // ==========================================================================
+
+    if (/^(nieparzyste|odd|np)\s*$/i.test(normalizedName)) {
       return NormalizedSelection.ODD;
     }
-    if (/^(parzyste|even)$/i.test(name)) {
+    if (/^(parzyste|even|par)\s*$/i.test(normalizedName)) {
       return NormalizedSelection.EVEN;
+    }
+
+    // ==========================================================================
+    // FALLBACK: Try to extract from patterns with embedded values
+    // This handles cases where the selection includes a line value
+    // e.g., "Powyzej 2.5" should be OVER even if keyword matching failed
+    // ==========================================================================
+
+    // Extract first word/number and check if it's a line value
+    // If we find a pattern like "2.5 Over" or "Over 2.5", we already caught it above
+    // This is for edge cases
+    const words = normalizedName.split(/\s+/);
+    if (words.length >= 2) {
+      const firstWord = words[0];
+      const lastWord = words[words.length - 1];
+
+      // Check if first word is a line number (decimal)
+      if (/^[\d.,]+$/.test(firstWord)) {
+        // If format is "2.5 something" and second word suggests Over/Under
+        if (words.length > 1) {
+          const remaining = words.slice(1).join(" ");
+          if (this.containsOverUnderKeyword(remaining, "over")) {
+            return NormalizedSelection.OVER;
+          }
+          if (this.containsOverUnderKeyword(remaining, "under")) {
+            return NormalizedSelection.UNDER;
+          }
+        }
+      }
+
+      // Check if last word is a direction indicator
+      if (/^(over|powyzej|ponad|under|ponizej|mniej|wiecej)$/i.test(lastWord)) {
+        if (this.containsOverUnderKeyword(lastWord, "over")) {
+          return NormalizedSelection.OVER;
+        }
+        if (this.containsOverUnderKeyword(lastWord, "under")) {
+          return NormalizedSelection.UNDER;
+        }
+      }
     }
 
     return NormalizedSelection.UNKNOWN;

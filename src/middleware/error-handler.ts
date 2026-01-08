@@ -63,3 +63,18 @@ export function notFoundHandler(_req: Request, res: Response): void {
   };
   res.status(404).json(response);
 }
+
+/**
+ * Async handler wrapper to catch errors in async route handlers
+ * Wraps async functions to ensure errors are passed to next() instead of crashing the server
+ *
+ * @param fn - Async request handler function
+ * @returns Wrapped handler with error handling
+ */
+export function asyncHandler(
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
+) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}

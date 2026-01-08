@@ -10,7 +10,7 @@ import type {
   MatchOddsResponseData,
   MatchOddsResponseMeta,
 } from "../types/api.js";
-import { ApiError } from "../middleware/error-handler.js";
+import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { CONFIG } from "../config/index.js";
 import {
@@ -29,7 +29,7 @@ const router = Router();
  * GET /api/odds
  * Get all latest odds for all matches
  */
-router.get("/", async (req, res) => {
+router.get("/", asyncHandler(async (req, res) => {
   const league = (req.query.league as string) || "ekstraklasa";
 
   const { matches, lastUpdated, bookmakerStatus } = await getAllLatestOdds(league);
@@ -51,13 +51,13 @@ router.get("/", async (req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 /**
  * GET /api/odds/match
  * Get odds for a specific match
  */
-router.get("/match", async (req, res) => {
+router.get("/match", asyncHandler(async (req, res) => {
   const home = req.query.home as string;
   const away = req.query.away as string;
   const league = (req.query.league as string) || "ekstraklasa";
@@ -92,13 +92,13 @@ router.get("/match", async (req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 /**
  * GET /api/odds/match/full-offer
  * Get full offer with normalized markets for cross-bookmaker comparison
  */
-router.get("/match/full-offer", async (req, res) => {
+router.get("/match/full-offer", asyncHandler(async (req, res) => {
   const home = req.query.home as string;
   const away = req.query.away as string;
   const league = (req.query.league as string) || "ekstraklasa";
@@ -151,6 +151,6 @@ router.get("/match/full-offer", async (req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 export default router;

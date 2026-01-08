@@ -17,6 +17,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class TotalbetNormalizer extends BaseNormalizer {
   readonly bookmaker = "totalbet";
@@ -507,27 +512,28 @@ export class TotalbetNormalizer extends BaseNormalizer {
     // Cards markets
     {
       pattern: /suma\s*kartek/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
     {
       pattern: /kartk[ięę]/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CARDS_TOTAL,
     },
     // Player cards
     {
       pattern: /otrzyma\s*kartk[ęe]/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.PLAYER_CARDS,
     },
 
     // Corners markets
     {
       pattern: /rzut[yó]?[\s-]*ro[żz]n/i,
-      type: NormalizedMarketType.OTHER,
-      group: NormalizedMarketGroup.OTHER,
+      type: NormalizedMarketType.CORNERS_TOTAL,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -549,6 +555,63 @@ export class TotalbetNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // TOTALBET-SPECIFIC: Handle handicap and coded selections
+    // ==========================================================================
+
+    // European Handicap format: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
+    }
+
+    // Handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
+      if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
+        return NormalizedSelection.HOME;
+      }
+      if (awayTeam && this.matchesTeam(teamPart, awayTeam)) {
+        return NormalizedSelection.AWAY;
+      }
+    }
+
+    // ==========================================================================
+    // TOTAL_GOALS-specific: Must check BEFORE BTTS patterns to avoid misclassification
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.TOTAL_GOALS || marketType === NormalizedMarketType.HALF_TIME_TOTAL_GOALS) {
+      // Check for Under indicators FIRST (more specific pattern)
+      if (/^(poni[żz]ej|under)\s*\d/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Check for Over indicators (must come AFTER Under check to avoid "poni" matching "poniżej")
+      if (/^(ponad|powy[żz]ej|over)\s*\d/i.test(name) || /^(powy[żz]ej|powyzej|ponad|over|mais)/i.test(name)) {
+        return NormalizedSelection.OVER;
+      }
+    }
+
+    // ==========================================================================
+    // BTTS-specific: Totalbet uses Polish "Tak"/"Nie"
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -557,39 +620,45 @@ export class TotalbetNormalizer extends BaseNormalizer {
 
     // Totalbet-specific selection patterns
 
-    // Over selections (with line numbers)
-    if (/^(ponad|powy[żz]ej|over)\s*\d/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    // Under selections (with line numbers)
-    if (/^(poni[żz]ej|under)\s*\d/i.test(name)) {
-      return NormalizedSelection.UNDER;
-    }
-
-    // Yes/No for BTTS and similar markets
-    if (/^(tak|yes|gg)$/i.test(name)) {
-      return NormalizedSelection.YES;
-    }
-    if (/^(nie|no|ng)$/i.test(name)) {
-      return NormalizedSelection.NO;
+    // Enhanced Over/Under selections (Polish + English + Portuguese) - only for non-TOTAL_GOALS markets
+    if (marketType !== NormalizedMarketType.TOTAL_GOALS && marketType !== NormalizedMarketType.HALF_TIME_TOTAL_GOALS) {
+      // Check Under first
+      if (/^(poni[żz]ej|under)\s*\d/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Then Over (must come after Under to avoid "poni" prefix matching)
+      if (/^(ponad|powy[żz]ej|over)\s*\d/i.test(name) || /^(powy[żz]ej|powyzej|ponad|over|mais)/i.test(name)) {
+        return NormalizedSelection.OVER;
+      }
     }
 
-    // Odd/Even
-    if (/nieparzyste?/i.test(name)) {
+    // Enhanced Yes/No for BTTS and similar markets (Polish + English + variants)
+    // Only apply to BTTS markets, not TOTAL_GOALS
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
+    // Enhanced Odd/Even patterns
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 
-    // Double Chance selections
-    if (/^1x$|^1\s*lub\s*x$/i.test(name)) {
+    // Enhanced Double Chance patterns (including numeric codes)
+    if (/^1x$|^1\/x$|^1\s*lub\s*x|^10$/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2$/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2|^02$/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2$/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2$/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 

@@ -31,7 +31,16 @@ export enum MarketCategory {
   /** Correct Score markets */
   DOKLADNY_WYNIK = "DOKLADNY_WYNIK",
 
-  /** Other markets - Special markets, player props, corners, cards */
+  /** Player props - goalscorers, cards, assists */
+  ZAWODNICY = "ZAWODNICY",
+
+  /** Statistics - corners, team cards, fouls */
+  STATYSTYKI = "STATYSTYKI",
+
+  /** Combination markets - Result+BTTS, Result+O/U, HT/FT */
+  KOMBINACJE = "KOMBINACJE",
+
+  /** Other markets - truly unknown/special markets */
   INNE = "INNE",
 }
 
@@ -73,7 +82,29 @@ export const MARKET_TYPE_TO_CATEGORY: Record<string, MarketCategory> = {
   // Correct score
   CORRECT_SCORE: MarketCategory.DOKLADNY_WYNIK,
 
-  // Other
+  // Player markets -> ZAWODNICY
+  GOALSCORER_FIRST: MarketCategory.ZAWODNICY,
+  GOALSCORER_LAST: MarketCategory.ZAWODNICY,
+  GOALSCORER_ANYTIME: MarketCategory.ZAWODNICY,
+  PLAYER_SHOTS: MarketCategory.ZAWODNICY,
+  PLAYER_CARDS: MarketCategory.ZAWODNICY,
+  PLAYER_ASSISTS: MarketCategory.ZAWODNICY,
+
+  // Statistics markets -> STATYSTYKI
+  CORNERS_TOTAL: MarketCategory.STATYSTYKI,
+  CORNERS_TEAM: MarketCategory.STATYSTYKI,
+  CARDS_TOTAL: MarketCategory.STATYSTYKI,
+  CARDS_TEAM: MarketCategory.STATYSTYKI,
+  FOULS_TOTAL: MarketCategory.STATYSTYKI,
+  OFFSIDES_TOTAL: MarketCategory.STATYSTYKI,
+
+  // Combination markets -> KOMBINACJE
+  RESULT_AND_BTTS: MarketCategory.KOMBINACJE,
+  RESULT_AND_TOTAL: MarketCategory.KOMBINACJE,
+  HALFTIME_FULLTIME: MarketCategory.KOMBINACJE,
+  DOUBLE_RESULT: MarketCategory.KOMBINACJE,
+
+  // Other (fallback)
   OTHER: MarketCategory.INNE,
 };
 
@@ -196,6 +227,9 @@ export const CATEGORY_LABELS: Record<MarketCategory, string> = {
   [MarketCategory.HANDICAP]: "Handicap",
   [MarketCategory.PIERWSZA_POLOWA]: "Pierwsza połowa",
   [MarketCategory.DOKLADNY_WYNIK]: "Dokładny wynik",
+  [MarketCategory.ZAWODNICY]: "Zawodnicy",
+  [MarketCategory.STATYSTYKI]: "Statystyki",
+  [MarketCategory.KOMBINACJE]: "Kombinacje",
   [MarketCategory.INNE]: "Inne",
 };
 
@@ -208,5 +242,79 @@ export const CATEGORY_ORDER: MarketCategory[] = [
   MarketCategory.HANDICAP,
   MarketCategory.PIERWSZA_POLOWA,
   MarketCategory.DOKLADNY_WYNIK,
+  MarketCategory.ZAWODNICY,
+  MarketCategory.STATYSTYKI,
+  MarketCategory.KOMBINACJE,
   MarketCategory.INNE,
 ];
+
+// ============================================================================
+// Parametrized Market Types (New Architecture)
+// ============================================================================
+
+/**
+ * Market parameter with bookmaker odds for that specific parameter
+ * E.g., for ASIAN_HANDICAP: +0.5, +1.0, etc.
+ */
+export interface MarketParameter {
+  /** Parameter value (e.g., "+0.5", "2.5", "-1") */
+  value: string;
+
+  /** Display label for this parameter */
+  label: string;
+
+  /** Bookmakers with odds for this specific parameter */
+  bookmakers: MarketParameterBookmaker[];
+}
+
+/**
+ * Bookmaker odds for a specific market parameter
+ */
+export interface MarketParameterBookmaker {
+  /** Bookmaker code */
+  bookmaker: string;
+
+  /** Display name */
+  bookmakerName: string;
+
+  /** Selections (HOME/AWAY, OVER/UNDER, YES/NO, etc.) */
+  selections: Array<{
+    /** Selection type */
+    type: string;
+
+    /** Odds value */
+    odds: number;
+
+    /** Whether this is a no-tax promotion */
+    hasNoTaxPromo?: boolean;
+  }>;
+}
+
+/**
+ * Market with parameters - groups same market type with different parameter values
+ * E.g., one ASIAN_HANDICAP entry with all lines (+0.5, +1.0, +1.5, etc.)
+ *
+ * This is the NEW structure that replaces multiple ComparableMarketGroup entries
+ */
+export interface MarketWithParams {
+  /** Unique key for the market type (without parameter, e.g., "ASIAN_HANDICAP") */
+  marketKey: string;
+
+  /** Market type */
+  type: string;
+
+  /** Category for UI organization */
+  category: MarketCategory;
+
+  /** Main display label (e.g., "Handicap azjatycki") */
+  label: string;
+
+  /** All available parameters for this market type */
+  parameters: MarketParameter[];
+
+  /** Suggested default parameter */
+  defaultParameter?: string;
+
+  /** Whether this market has parameters (false for markets like CORRECT_SCORE) */
+  hasParameters: boolean;
+}

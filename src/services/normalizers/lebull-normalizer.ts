@@ -37,6 +37,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 /**
  * Mapping of LeBull stake type IDs to normalized market types
@@ -626,6 +631,11 @@ export class LeBullNormalizer extends BaseNormalizer {
       pattern: /czyst.*konto/i,
       type: NormalizedMarketType.CLEAN_SHEET,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -695,6 +705,50 @@ export class LeBullNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // LEBULL-SPECIFIC: Handle mixed selection formats
+    // LeBull can use team names, numeric codes, or Polish text
+    // ==========================================================================
+
+    // Handle handicap selections with team names: "Team (+1.5)" or "Team (-1.5)"
+    const handicapMatch = name.match(/^(.+?)\s*\(([+-]?\d+[.,]?\d*)\)\s*$/);
+    if (handicapMatch) {
+      const teamPart = handicapMatch[1].trim();
+      if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
+        return NormalizedSelection.HOME;
+      }
+      if (awayTeam && this.matchesTeam(teamPart, awayTeam)) {
+        return NormalizedSelection.AWAY;
+      }
+    }
+
+    // European Handicap selections: "1 (1:0)", "X (1:0)", "2 (1:0)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
+    }
+
+    // ==========================================================================
+    // BTTS-specific: LeBull uses various formats
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      // LeBull uses Polish "Tak"/"Nie", English "Yes"/"No", or sometimes numeric codes
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -703,16 +757,11 @@ export class LeBullNormalizer extends BaseNormalizer {
 
     // LeBull-specific selection patterns
 
-    // Over selections with Polish variants
-    if (/^powy[żz]ej/i.test(name)) {
+    // Enhanced Over/Under selections (Polish + English + Portuguese)
+    if (/^powy[żz]ej/i.test(name) || /^ponad/i.test(name) || /^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-    if (/^ponad/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-
-    // Under selections with Polish variants
-    if (/^poni[żz]ej/i.test(name)) {
+    if (/^poni[żz]ej/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
@@ -721,42 +770,31 @@ export class LeBullNormalizer extends BaseNormalizer {
       return NormalizedSelection.DRAW;
     }
 
-    // Yes/No for BTTS and similar markets
-    if (/^(tak|yes|gg)$/i.test(name)) {
+    // Enhanced Yes/No for BTTS and similar markets (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
       return NormalizedSelection.YES;
     }
-    if (/^(nie|no|ng|brak)$/i.test(name)) {
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
       return NormalizedSelection.NO;
     }
 
-    // Odd/Even Polish variants
-    if (/nieparzyste?a?/i.test(name)) {
+    // Enhanced Odd/Even Polish variants
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?a?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 
-    // Double Chance selections
-    if (/^1x$|^1\s*lub\s*x$/i.test(name)) {
+    // Enhanced Double Chance patterns (LeBull may use "10", "02", "12" codes)
+    if (/^1x$|^1\/x$|^1\s*lub\s*x|^10$/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2$/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2|^02$/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2$/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
-    }
-
-    // Selections with handicap format "Team (+/-X.X)"
-    if (/\([+-]?\d+[.,]?\d*\)/.test(name)) {
-      const teamPart = name.replace(/\s*\([+-]?\d+[.,]?\d*\)\s*$/, "").trim();
-      if (homeTeam && this.matchesTeam(teamPart, homeTeam)) {
-        return NormalizedSelection.HOME;
-      }
-      if (awayTeam && this.matchesTeam(teamPart, awayTeam)) {
-        return NormalizedSelection.AWAY;
-      }
     }
 
     return NormalizedSelection.UNKNOWN;

@@ -9,6 +9,7 @@ import type {
   BookmakersResponseMeta,
   BookmakerInfo,
 } from "../types/api.js";
+import { asyncHandler } from "../middleware/error-handler.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
 import { getBookmakerStatus } from "../repositories/odds-repository.js";
 import { getAverageScrapeDurations } from "../repositories/scraper-run-repository.js";
@@ -55,7 +56,7 @@ const HAS_NO_TAX_PROMO: Record<PolishBookmaker, boolean> = {
  * GET /api/bookmakers
  * Get status of all bookmakers
  */
-router.get("/", async (_req, res) => {
+router.get("/", asyncHandler(async (_req, res) => {
   const statusMap = await getBookmakerStatus();
   const avgDurations = await getAverageScrapeDurations();
 
@@ -113,6 +114,6 @@ router.get("/", async (_req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 export default router;

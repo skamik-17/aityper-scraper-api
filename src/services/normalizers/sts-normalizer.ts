@@ -22,6 +22,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 /**
  * STS market ID mappings from MARKET_IDS constant and comprehensive analysis
@@ -162,30 +167,30 @@ const STS_ID_MAPPINGS: Map<
   // PLAYER/TEAM SPECIFIC MARKETS
   // These are typically player props (cards, corners, goals, etc.)
   // ==========================================================================
-  [52, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets (49 players)
-  [53, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets (49 players)
-  [54, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Player markets (49 players)
+  [52, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }], // Player markets - goalscorer (49 players)
+  [53, { type: NormalizedMarketType.PLAYER_SHOTS, group: NormalizedMarketGroup.OTHER }], // Player markets - shots (49 players)
+  [54, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }], // Player markets - cards (49 players)
 
   // ==========================================================================
   // COMBINATION MARKETS (Result + BTTS, Result + O/U, etc.)
   // These combine multiple markets into single bets
   // ==========================================================================
-  [50, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo (+2.5 i tak/nie)
-  [51, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo (1 i -1.5, etc.)
-  [99, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
-  [807, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market (929-934)
-  [808, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market (28-33)
-  [809, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
-  [810, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [811, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [812, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Double Chance + O/U combo
-  [813, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Complex combination (17 selections)
-  [814, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [815, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [816, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market (9 selections)
-  [817, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [818, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // Combination market
-  [1012, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }], // HT/FT + O/U combo (18 selections)
+  [50, { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }], // Result + BTTS combo (+2.5 i tak/nie)
+  [51, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo (1 i -1.5, etc.)
+  [99, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
+  [807, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market (929-934)
+  [808, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market (28-33)
+  [809, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Result + O/U combo
+  [810, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [811, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [812, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Double Chance + O/U combo
+  [813, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Complex combination (17 selections)
+  [814, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [815, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [816, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market (9 selections)
+  [817, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [818, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }], // Combination market
+  [1012, { type: NormalizedMarketType.HALFTIME_FULLTIME, group: NormalizedMarketGroup.OTHER }], // HT/FT + O/U combo (18 selections)
 
   // ==========================================================================
   // SPECIAL/OTHER MARKETS
@@ -362,6 +367,11 @@ export class STSNormalizer extends BaseNormalizer {
         return lineMatch ? lineMatch[1].replace(",", ".") : undefined;
       },
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -408,6 +418,49 @@ export class STSNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // STS-SPECIFIC: Handle numeric outcome codes
+    // STS uses 1X/0/2X format for handicap selections and numeric IDs
+    // ==========================================================================
+
+    // European Handicap format: "1 (0:1)", "X (0:1)", "2 (0:1)"
+    const ehMatch = name.match(/^([1x2])\s*\(\d+:\d+\)$/i);
+    if (ehMatch) {
+      const code = ehMatch[1].toLowerCase();
+      if (code === "1") return NormalizedSelection.HOME;
+      if (code === "x") return NormalizedSelection.DRAW;
+      if (code === "2") return NormalizedSelection.AWAY;
+    }
+
+    // Double Chance numeric codes: "10", "02", "12"
+    if (/^10$|^1x$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_DRAW;
+    }
+    if (/^02$|^x2$/i.test(name)) {
+      return NormalizedSelection.DRAW_OR_AWAY;
+    }
+    if (/^12$/i.test(name)) {
+      return NormalizedSelection.HOME_OR_AWAY;
+    }
+
+    // ==========================================================================
+    // BTTS-specific: STS uses Polish "Tak"/"Nie" or sometimes numeric codes
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      // STS commonly uses "Tak" (Yes) and "Nie" (No) for BTTS
+      if (/^(tak|yes|gg|1)$/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|0)$/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -416,11 +469,11 @@ export class STSNormalizer extends BaseNormalizer {
 
     // STS-specific selection patterns
 
-    // Polish "Tak" (Yes) and "Nie" (No) for BTTS
-    if (/^tak$/i.test(name)) {
+    // Enhanced Yes/No for BTTS (Polish + English + variants)
+    if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
       return NormalizedSelection.YES;
     }
-    if (/^nie$/i.test(name)) {
+    if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
       return NormalizedSelection.NO;
     }
 
@@ -434,13 +487,11 @@ export class STSNormalizer extends BaseNormalizer {
       return NormalizedSelection.UNDER;
     }
 
-    // Over selections with line (e.g., "Powyzej (2.5)")
-    if (/^powy[żz]ej/i.test(name)) {
+    // Enhanced Over/Under patterns (Polish + English + Portuguese)
+    if (/^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-
-    // Under selections with line (e.g., "Ponizej (2.5)")
-    if (/^poni[żz]ej/i.test(name)) {
+    if (/^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
@@ -449,22 +500,22 @@ export class STSNormalizer extends BaseNormalizer {
       return NormalizedSelection.DRAW;
     }
 
-    // Double Chance specific
-    if (/^1x$|^1\s*lub\s*x/i.test(name)) {
+    // Enhanced Double Chance patterns (with "lub" = "or")
+    if (/^1x$|^1\/x$|^1\s*lub\s*x/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 
-    // Odd/Even
-    if (/nieparzyste?/i.test(name)) {
+    // Enhanced Odd/Even patterns
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

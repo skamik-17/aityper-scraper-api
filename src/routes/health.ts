@@ -5,13 +5,14 @@
 import { Router } from "express";
 import type { ApiSuccessResponse, ScrapeStats } from "../types/api.js";
 import type { HealthCheckData } from "../types/api.js";
+import { asyncHandler } from "../middleware/error-handler.js";
 import { testConnection } from "../config/database.js";
 import { getSchedulerStatus } from "../services/scheduler-service.js";
 
 const router = Router();
 const startTime = Date.now();
 
-router.get("/", async (_req, res) => {
+router.get("/", asyncHandler(async (_req, res) => {
   const dbConnected = await testConnection();
   const scheduler = getSchedulerStatus();
 
@@ -70,6 +71,6 @@ router.get("/", async (_req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 export default router;

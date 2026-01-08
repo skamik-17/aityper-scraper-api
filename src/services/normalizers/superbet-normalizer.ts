@@ -25,6 +25,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 /**
  * Comprehensive market ID mappings for Superbet
@@ -122,18 +127,18 @@ const SUPERBET_ID_MAPPINGS: Map<
 
   // Player markets (236xxx series - DO NOT map as team markets)
   // These IDs were incorrectly mapped as handicap/total goals - they are PLAYER markets
-  [236216, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (5.6%)
-  [236218, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (6.9%)
-  [236220, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (3.9%)
-  [236222, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (4.2%)
-  [236224, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.0%)
-  [236226, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
-  [236228, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
-  [236230, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
-  [236232, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
-  [236240, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
-  [236242, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
-  [236244, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
+  [236216, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (5.6%)
+  [236218, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (6.9%)
+  [236220, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (3.9%)
+  [236222, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (4.2%)
+  [236224, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.0%)
+  [236226, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
+  [236228, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236230, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236232, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.2%)
+  [236240, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
+  [236242, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.8%)
+  [236244, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals/assists (1.4%)
 
   // ==========================================================================
   // ADDITIONAL MARKET IDS (from analysis - need verification)
@@ -169,60 +174,60 @@ const SUPERBET_ID_MAPPINGS: Map<
 
   // Combo/special markets
   [542, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [200753, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // DNB + Total Goals
-  [200754, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // 1X2 + Total Goals
-  [200765, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Total Goals + BTTS
-  [200766, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Total Goals + BTTS
-  [200770, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Double Chance + Total Goals
-  [200771, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Double Chance + Total Goals
-  [200772, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // BTTS combo
+  [200753, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],  // DNB + Total Goals
+  [200754, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],  // 1X2 + Total Goals
+  [200765, { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }],  // Total Goals + BTTS
+  [200766, { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }],  // Total Goals + BTTS
+  [200770, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],  // Double Chance + Total Goals
+  [200771, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],  // Double Chance + Total Goals
+  [200772, { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }],  // BTTS combo
 
   // Player score markets
-  [233482, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233483, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233484, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233485, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [233482, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233483, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233484, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233485, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
 
   // High-frequency player markets (player goals, player props) - IDs not already mapped
-  [201787, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals
-  [236224, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals (overrides ASIAN_HANDICAP - actually a player market)
-  [236246, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Player goals
+  [201787, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals
+  [236224, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals (overrides ASIAN_HANDICAP - actually a player market)
+  [236246, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],  // Player goals
 
 
   // Time-based markets
   [200248, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],  // Time-based goals
 
-  // Corners and other stats (go to OTHER)
-  [236424, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [236426, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [236428, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [236430, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [236436, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  // Corners and other stats
+  [236424, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [236426, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [236428, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [236430, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [236436, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
 
   // Additional combo and special markets (from extended analysis)
   [201511, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [200755, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [200756, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [200773, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [200755, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [200756, { type: NormalizedMarketType.RESULT_AND_TOTAL, group: NormalizedMarketGroup.OTHER }],
+  [200773, { type: NormalizedMarketType.RESULT_AND_BTTS, group: NormalizedMarketGroup.OTHER }],
   [200571, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
 
   // Additional frequently appearing markets
-  [201506, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201507, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201512, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201513, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201519, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201590, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201597, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201666, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201803, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201804, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201805, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [201826, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233486, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233487, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [233488, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
-  [236432, { type: NormalizedMarketType.OTHER, group: NormalizedMarketGroup.OTHER }],
+  [201506, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201507, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201512, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201513, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201519, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201590, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201597, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201666, { type: NormalizedMarketType.PLAYER_CARDS, group: NormalizedMarketGroup.OTHER }],
+  [201803, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [201804, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [201805, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [201826, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233486, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233487, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [233488, { type: NormalizedMarketType.GOALSCORER_ANYTIME, group: NormalizedMarketGroup.OTHER }],
+  [236432, { type: NormalizedMarketType.CORNERS_TOTAL, group: NormalizedMarketGroup.OTHER }],
 ]);
 
 export class SuperbetNormalizer extends BaseNormalizer {
@@ -401,6 +406,11 @@ export class SuperbetNormalizer extends BaseNormalizer {
       pattern: /^nieparzyste?\s*\/?\s*parzyste?$/i,
       type: NormalizedMarketType.ODD_EVEN_GOALS,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -480,6 +490,10 @@ export class SuperbetNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
     // ==========================================================================
     // 1X2 OUTCOMES
     // ==========================================================================
@@ -529,11 +543,11 @@ export class SuperbetNormalizer extends BaseNormalizer {
       return NormalizedSelection.UNDER;
     }
 
-    // Polish variants with potential line values
-    if (/^(powyżej|powyzej|ponad)/i.test(name)) {
+    // Enhanced Polish variants with potential line values (Polish + English + Portuguese)
+    if (/^(powy[żz]ej|powyzej|poni|ponad|over|mais)/i.test(name)) {
       return NormalizedSelection.OVER;
     }
-    if (/^(poniżej|ponizej)/i.test(name)) {
+    if (/^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
       return NormalizedSelection.UNDER;
     }
 
@@ -541,10 +555,11 @@ export class SuperbetNormalizer extends BaseNormalizer {
     // BTTS (GG/NG or Tak/Nie)
     // ==========================================================================
 
-    if (/^(gg|tak|yes)$/i.test(name)) {
+    // Enhanced Yes/No patterns (Polish + English + variants)
+    if (/^(gg|tak|yes|y|sim|gol)$/i.test(name)) {
       return NormalizedSelection.YES;
     }
-    if (/^(ng|nie|no)$/i.test(name)) {
+    if (/^(ng|nie|no|n|n[ão]o|brak)$/i.test(name)) {
       return NormalizedSelection.NO;
     }
 
@@ -552,10 +567,11 @@ export class SuperbetNormalizer extends BaseNormalizer {
     // ODD/EVEN
     // ==========================================================================
 
-    if (/^nieparzyste?$/i.test(name)) {
+    // Enhanced Odd/Even patterns
+    if (/^nieparzyst[ea]?$/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/^parzyste?$/i.test(name)) {
+    if (/^parzyst[ea]?$/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 

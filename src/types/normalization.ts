@@ -34,6 +34,28 @@ export enum NormalizedMarketType {
     // Score markets
     CORRECT_SCORE = "CORRECT_SCORE",
 
+    // Player markets (ZAWODNICY)
+    GOALSCORER_FIRST = "GOALSCORER_FIRST",
+    GOALSCORER_LAST = "GOALSCORER_LAST",
+    GOALSCORER_ANYTIME = "GOALSCORER_ANYTIME",
+    PLAYER_SHOTS = "PLAYER_SHOTS",
+    PLAYER_CARDS = "PLAYER_CARDS",
+    PLAYER_ASSISTS = "PLAYER_ASSISTS",
+
+    // Statistics markets (STATYSTYKI)
+    CORNERS_TOTAL = "CORNERS_TOTAL",
+    CORNERS_TEAM = "CORNERS_TEAM",
+    CARDS_TOTAL = "CARDS_TOTAL",
+    CARDS_TEAM = "CARDS_TEAM",
+    FOULS_TOTAL = "FOULS_TOTAL",
+    OFFSIDES_TOTAL = "OFFSIDES_TOTAL",
+
+    // Combination markets (KOMBINACJE)
+    RESULT_AND_BTTS = "RESULT_AND_BTTS",
+    RESULT_AND_TOTAL = "RESULT_AND_TOTAL",
+    HALFTIME_FULLTIME = "HALFTIME_FULLTIME",
+    DOUBLE_RESULT = "DOUBLE_RESULT",
+
     // Fallback
     OTHER = "OTHER",
 }
@@ -103,6 +125,28 @@ export const MARKET_TYPE_TO_GROUP: Record<NormalizedMarketType, NormalizedMarket
     [NormalizedMarketType.HALF_TIME_BTTS]: NormalizedMarketGroup.HALF_TIME,
 
     [NormalizedMarketType.CORRECT_SCORE]: NormalizedMarketGroup.SCORE,
+
+    // Player markets -> OTHER group (legacy compatibility)
+    [NormalizedMarketType.GOALSCORER_FIRST]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.GOALSCORER_LAST]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.GOALSCORER_ANYTIME]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.PLAYER_SHOTS]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.PLAYER_CARDS]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.PLAYER_ASSISTS]: NormalizedMarketGroup.OTHER,
+
+    // Statistics markets -> OTHER group
+    [NormalizedMarketType.CORNERS_TOTAL]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.CORNERS_TEAM]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.CARDS_TOTAL]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.CARDS_TEAM]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.FOULS_TOTAL]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.OFFSIDES_TOTAL]: NormalizedMarketGroup.OTHER,
+
+    // Combination markets -> OTHER group
+    [NormalizedMarketType.RESULT_AND_BTTS]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.RESULT_AND_TOTAL]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.HALFTIME_FULLTIME]: NormalizedMarketGroup.OTHER,
+    [NormalizedMarketType.DOUBLE_RESULT]: NormalizedMarketGroup.OTHER,
 
     [NormalizedMarketType.OTHER]: NormalizedMarketGroup.OTHER,
 };

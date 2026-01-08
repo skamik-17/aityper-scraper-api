@@ -18,6 +18,11 @@ import {
   NormalizedMarketGroup,
 } from "../../types/normalization.js";
 import { BaseNormalizer, type MarketPattern } from "./base-normalizer.js";
+import {
+  PLAYER_MARKET_PATTERNS,
+  STATISTICS_MARKET_PATTERNS,
+  COMBINATION_MARKET_PATTERNS,
+} from "./common-patterns.js";
 
 export class ForbetNormalizer extends BaseNormalizer {
   readonly bookmaker = "forbet";
@@ -536,6 +541,11 @@ export class ForbetNormalizer extends BaseNormalizer {
       pattern: /kartk/i,
       type: NormalizedMarketType.OTHER,
     },
+
+    // Common patterns fallback
+    ...COMBINATION_MARKET_PATTERNS,
+    ...STATISTICS_MARKET_PATTERNS,
+    ...PLAYER_MARKET_PATTERNS,
   ];
 
   /**
@@ -557,6 +567,38 @@ export class ForbetNormalizer extends BaseNormalizer {
       return NormalizedSelection.AWAY;
     }
 
+    // Polish home/away team names (gospodarz/goście)
+    if (/^gospodarz(?:arze|y)?$/i.test(name)) return NormalizedSelection.HOME;
+    if (/^go[ść]cie|go[śś]ci$/i.test(name)) return NormalizedSelection.AWAY;
+
+    // ==========================================================================
+    // TOTAL_GOALS-specific: Must check BEFORE BTTS patterns to avoid misclassification
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.TOTAL_GOALS || marketType === NormalizedMarketType.HALF_TIME_TOTAL_GOALS) {
+      // Check for Under indicators FIRST (more specific pattern)
+      if (/^poni(ż|z)ej\s*\d/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Check for Over indicators (must come AFTER Under check to avoid "poni" matching "poniżej")
+      if (/^powy(ż|z)ej\s*\d/i.test(name) || /^ponad\s*\d/i.test(name) || /^(powy[żz]ej|powyzej|ponad|over|mais)/i.test(name)) {
+        return NormalizedSelection.OVER;
+      }
+    }
+
+    // ==========================================================================
+    // BTTS-specific: Forbet uses Polish "Tak"/"Nie"
+    // ==========================================================================
+
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|gg|y|1|sim|gol|obie)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|ng|n|0|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
     // Use common selection patterns from base class
     const common = this.normalizeCommonSelection(name, marketType);
     if (common !== NormalizedSelection.UNKNOWN) {
@@ -565,42 +607,45 @@ export class ForbetNormalizer extends BaseNormalizer {
 
     // Forbet-specific selection patterns
 
-    // Over selections with Polish variants
-    if (/^powy(ż|z)ej\s*\d/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    if (/^ponad\s*\d/i.test(name)) {
-      return NormalizedSelection.OVER;
-    }
-    // Under selections with Polish variants
-    if (/^poni(ż|z)ej\s*\d/i.test(name)) {
-      return NormalizedSelection.UNDER;
-    }
-
-    // Yes/No for BTTS and similar markets
-    if (/^(tak|yes|gg)$/i.test(name)) {
-      return NormalizedSelection.YES;
-    }
-    if (/^(nie|no|ng|brak)$/i.test(name)) {
-      return NormalizedSelection.NO;
+    // Enhanced Over/Under selections (Polish + English + Portuguese) - only for non-TOTAL_GOALS markets
+    if (marketType !== NormalizedMarketType.TOTAL_GOALS && marketType !== NormalizedMarketType.HALF_TIME_TOTAL_GOALS) {
+      // Check Under first
+      if (/^poni(ż|z)ej\s*\d/i.test(name) || /^(poni[żz]ej|ponizej|under|menos)/i.test(name)) {
+        return NormalizedSelection.UNDER;
+      }
+      // Then Over (must come after Under to avoid "poni" prefix matching)
+      if (/^powy(ż|z)ej\s*\d/i.test(name) || /^ponad\s*\d/i.test(name) || /^(powy[żz]ej|powyzej|ponad|over|mais)/i.test(name)) {
+        return NormalizedSelection.OVER;
+      }
     }
 
-    // Odd/Even Polish variants
-    if (/nieparzyste?a?/i.test(name)) {
+    // Enhanced Yes/No for BTTS and similar markets (Polish + English + variants)
+    // Only apply to BTTS markets, not TOTAL_GOALS
+    if (marketType === NormalizedMarketType.BTTS || marketType === NormalizedMarketType.HALF_TIME_BTTS) {
+      if (/^(tak|yes|y|gg|sim|gol)/i.test(name)) {
+        return NormalizedSelection.YES;
+      }
+      if (/^(nie|no|n|ng|n[ão]o|brak)/i.test(name)) {
+        return NormalizedSelection.NO;
+      }
+    }
+
+    // Enhanced Odd/Even Polish variants
+    if (/nieparzyst[ea]?/i.test(name)) {
       return NormalizedSelection.ODD;
     }
-    if (/parzyste?a?/i.test(name)) {
+    if (/parzyst[ea]?/i.test(name)) {
       return NormalizedSelection.EVEN;
     }
 
-    // Double Chance selections
-    if (/^1x$|^1\s*lub\s*x$/i.test(name)) {
+    // Enhanced Double Chance patterns
+    if (/^1x$|^1\/x$|^1\s*lub\s*x/i.test(name)) {
       return NormalizedSelection.HOME_OR_DRAW;
     }
-    if (/^x2$|^x\s*lub\s*2$/i.test(name)) {
+    if (/^x2$|^x\/2$|^x\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.DRAW_OR_AWAY;
     }
-    if (/^12$|^1\s*lub\s*2$/i.test(name)) {
+    if (/^12$|^1\/2$|^1\s*lub\s*2/i.test(name)) {
       return NormalizedSelection.HOME_OR_AWAY;
     }
 

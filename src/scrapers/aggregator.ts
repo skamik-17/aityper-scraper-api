@@ -10,7 +10,7 @@ import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import { browserPool } from "./base/browser-pool.js";
-import { normalizeMarketsForBookmaker } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { saveFullOfferMarkets } from "../repositories/full-offer-repository.js";
 import {
   stsScraper,

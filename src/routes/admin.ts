@@ -12,7 +12,7 @@ import type {
   ScraperRunInfo,
   ScraperRunResult,
 } from "../types/api.js";
-import { ApiError } from "../middleware/error-handler.js";
+import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { requireAdminAuth } from "../middleware/auth.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
@@ -29,7 +29,7 @@ router.use(requireAdminAuth);
  * POST /api/admin/scrape
  * Manually trigger a scrape run
  */
-router.post("/scrape", async (req, res) => {
+router.post("/scrape", asyncHandler(async (req, res) => {
   const body = req.body as AdminScrapeRequest;
   const league = body.league || "ekstraklasa";
   let bookmakers = body.bookmakers;
@@ -75,13 +75,13 @@ router.post("/scrape", async (req, res) => {
   };
 
   res.status(202).json(response);
-});
+}));
 
 /**
  * GET /api/admin/runs
  * Get history of scraper runs
  */
-router.get("/runs", async (req, res) => {
+router.get("/runs", asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit as string) || 20;
   const offset = parseInt(req.query.offset as string) || 0;
 
@@ -134,13 +134,13 @@ router.get("/runs", async (req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 /**
  * GET /api/admin/scrapers/health
  * Get health status for all scrapers
  */
-router.get("/scrapers/health", async (_req, res) => {
+router.get("/scrapers/health", asyncHandler(async (_req, res) => {
   const health = scraperHealth.getAllHealth();
   const failing = scraperHealth.getFailingScrapers();
 
@@ -159,6 +159,6 @@ router.get("/scrapers/health", async (_req, res) => {
   };
 
   res.json(response);
-});
+}));
 
 export default router;

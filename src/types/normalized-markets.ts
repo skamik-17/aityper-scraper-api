@@ -89,6 +89,8 @@ export const MARKET_TYPE_TO_CATEGORY: Record<string, MarketCategory> = {
   PLAYER_SHOTS: MarketCategory.ZAWODNICY,
   PLAYER_CARDS: MarketCategory.ZAWODNICY,
   PLAYER_ASSISTS: MarketCategory.ZAWODNICY,
+  HOME_TEAM_TO_SCORE: MarketCategory.ZAWODNICY,
+  AWAY_TEAM_TO_SCORE: MarketCategory.ZAWODNICY,
 
   // Statistics markets -> STATYSTYKI
   CORNERS_TOTAL: MarketCategory.STATYSTYKI,

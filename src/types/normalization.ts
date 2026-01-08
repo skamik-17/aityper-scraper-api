@@ -42,6 +42,10 @@ export enum NormalizedMarketType {
     PLAYER_CARDS = "PLAYER_CARDS",
     PLAYER_ASSISTS = "PLAYER_ASSISTS",
 
+    // Team goal markets (ZAWODNICY - team-based)
+    HOME_TEAM_TO_SCORE = "HOME_TEAM_TO_SCORE",      // "Arsenal strzeli gola"
+    AWAY_TEAM_TO_SCORE = "AWAY_TEAM_TO_SCORE",      // "Liverpool strzeli gola"
+
     // Statistics markets (STATYSTYKI)
     CORNERS_TOTAL = "CORNERS_TOTAL",
     CORNERS_TEAM = "CORNERS_TEAM",
@@ -133,6 +137,10 @@ export const MARKET_TYPE_TO_GROUP: Record<NormalizedMarketType, NormalizedMarket
     [NormalizedMarketType.PLAYER_SHOTS]: NormalizedMarketGroup.OTHER,
     [NormalizedMarketType.PLAYER_CARDS]: NormalizedMarketGroup.OTHER,
     [NormalizedMarketType.PLAYER_ASSISTS]: NormalizedMarketGroup.OTHER,
+
+    // Team goal markets -> GOALS group
+    [NormalizedMarketType.HOME_TEAM_TO_SCORE]: NormalizedMarketGroup.GOALS,
+    [NormalizedMarketType.AWAY_TEAM_TO_SCORE]: NormalizedMarketGroup.GOALS,
 
     // Statistics markets -> OTHER group
     [NormalizedMarketType.CORNERS_TOTAL]: NormalizedMarketGroup.OTHER,

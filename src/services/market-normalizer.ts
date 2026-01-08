@@ -2,7 +2,9 @@
  * Market Normalizer Service
  *
  * Transforms raw scraped market data into canonical format for cross-bookmaker comparison.
- * Implements Strategy Pattern - each bookmaker can have specific normalization rules.
+ * Now uses the unified normalization system from ./normalization/
+ *
+ * @deprecated Use normalizeMarketsForBookmaker from ./normalization/index.js directly
  */
 
 import type { ScrapedMarket, MarketSelection } from "../types/full-offer.js";
@@ -14,7 +16,7 @@ import {
     buildMarketKey,
 } from "../types/normalization.js";
 import { MarketCategory, MARKET_TYPE_TO_CATEGORY } from "../types/normalized-markets.js";
-import { getNormalizer } from "./normalizers/index.js";
+import { normalizer } from "./normalization/index.js";
 
 // ============================================================================
 // Selection Normalization Patterns
@@ -313,58 +315,28 @@ export function normalizeMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
     return markets.map(applyNormalization);
 }
 
-/**
- * Normalize a single market using bookmaker-specific normalizer if available
- * Falls back to generic normalization if no specific normalizer exists
- *
- * @param market - The scraped market to normalize
- * @param bookmaker - Bookmaker identifier for specific normalization rules
- * @param homeTeam - Home team name for selection matching
- * @param awayTeam - Away team name for selection matching
- */
 export function normalizeMarketForBookmaker(
     market: ScrapedMarket,
     bookmaker: string,
     homeTeam?: string,
     awayTeam?: string
 ): ScrapedMarket {
-    // Try bookmaker-specific normalizer first
-    const specificNormalizer = getNormalizer(bookmaker);
-    if (specificNormalizer) {
-        const result = specificNormalizer.normalize(
-            {
-                name: market.name,
-                selections: market.selections,
-                type: market.type,
-                groupName: market.groupName,
-            },
-            homeTeam,
-            awayTeam
-        );
+    const result = normalizer.normalize(market, bookmaker, homeTeam, awayTeam);
 
-        return {
-            ...market,
-            normalizedType: result.normalizedType,
-            normalizedGroup: result.normalizedGroup,
-            marketKey: result.marketKey,
-            paramValue: result.paramValue,
-            category: result.category,
-            selections: result.selections,
-        };
-    }
-
-    // Fallback to generic normalization
-    return applyNormalization(market);
+    return {
+        ...market,
+        normalizedType: result.normalizedType as NormalizedMarketType,
+        normalizedGroup: MARKET_TYPE_TO_GROUP[result.normalizedType as NormalizedMarketType] || NormalizedMarketGroup.OTHER,
+        marketKey: result.marketKey,
+        paramValue: result.paramValue,
+        category: result.category,
+        selections: result.selections.map((sel, idx) => ({
+            ...market.selections[idx],
+            normalizedName: sel.normalizedName as NormalizedSelection,
+        })),
+    };
 }
 
-/**
- * Normalize all markets for a specific bookmaker
- *
- * @param markets - The scraped markets to normalize
- * @param bookmaker - Bookmaker identifier for specific normalization rules
- * @param homeTeam - Home team name for selection matching
- * @param awayTeam - Away team name for selection matching
- */
 export function normalizeMarketsForBookmaker(
     markets: ScrapedMarket[],
     bookmaker: string,

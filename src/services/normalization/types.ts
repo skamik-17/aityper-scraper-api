@@ -1,0 +1,322 @@
+/**
+ * Normalization Types - Hybrid Architecture
+ *
+ * Central type definitions for the unified market normalization system.
+ * Single source of truth for all normalization-related types.
+ */
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+/**
+ * Market categories for UI organization (following Superbet pattern)
+ */
+export enum MarketCategory {
+  /** Match result markets - 1X2, Double Chance, Draw No Bet */
+  WYNIK_MECZU = "WYNIK_MECZU",
+
+  /** Goals markets - BTTS, Over/Under, Odd/Even, Win to Nil, Clean Sheet */
+  GOLE = "GOLE",
+
+  /** Handicap markets - Asian Handicap, European Handicap */
+  HANDICAP = "HANDICAP",
+
+  /** First half markets - HT Result, HT Goals, HT BTTS */
+  PIERWSZA_POLOWA = "PIERWSZA_POLOWA",
+
+  /** Correct Score markets */
+  DOKLADNY_WYNIK = "DOKLADNY_WYNIK",
+
+  /** Player props - goalscorers, cards, assists */
+  ZAWODNICY = "ZAWODNICY",
+
+  /** Statistics - corners, team cards, fouls */
+  STATYSTYKI = "STATYSTYKI",
+
+  /** Combination markets - Result+BTTS, Result+O/U, HT/FT */
+  KOMBINACJE = "KOMBINACJE",
+
+  /** Other markets - truly unknown/special markets */
+  INNE = "INNE",
+}
+
+/**
+ * Normalized market types
+ */
+export type NormalizedMarketType =
+  // Main markets
+  | "MATCH_WINNER" // 1X2
+  | "DOUBLE_CHANCE" // 1X, X2, 12
+  | "DRAW_NO_BET"
+  // Goals markets
+  | "TOTAL_GOALS" // Over/Under X.5
+  | "BTTS" // Both Teams To Score
+  | "ODD_EVEN_GOALS"
+  | "WIN_TO_NIL"
+  | "CLEAN_SHEET"
+  | "HOME_TEAM_TO_SCORE"
+  | "AWAY_TEAM_TO_SCORE"
+  // Handicap markets
+  | "ASIAN_HANDICAP"
+  | "EUROPEAN_HANDICAP"
+  // Half-time markets
+  | "HALF_TIME_RESULT"
+  | "HALF_TIME_TOTAL_GOALS"
+  | "HALF_TIME_BTTS"
+  // Score markets
+  | "CORRECT_SCORE"
+  // Player markets (ZAWODNICY)
+  | "GOALSCORER_FIRST"
+  | "GOALSCORER_LAST"
+  | "GOALSCORER_ANYTIME"
+  | "PLAYER_SHOTS"
+  | "PLAYER_CARDS"
+  | "PLAYER_ASSISTS"
+  // Statistics markets (STATYSTYKI)
+  | "CORNERS_TOTAL"
+  | "CORNERS_TEAM"
+  | "CARDS_TOTAL"
+  | "CARDS_TEAM"
+  | "FOULS_TOTAL"
+  | "OFFSIDES_TOTAL"
+  // Combination markets (KOMBINACJE)
+  | "RESULT_AND_BTTS"
+  | "RESULT_AND_TOTAL"
+  | "HALFTIME_FULLTIME"
+  | "DOUBLE_RESULT"
+  // Fallback
+  | "OTHER";
+
+/**
+ * Normalized selection types
+ */
+export type NormalizedSelection =
+  | "HOME"
+  | "DRAW"
+  | "AWAY"
+  | "HOME_OR_DRAW" // 1X
+  | "DRAW_OR_AWAY" // X2
+  | "HOME_OR_AWAY" // 12
+  | "OVER"
+  | "UNDER"
+  | "YES"
+  | "NO"
+  | "ODD"
+  | "EVEN"
+  | "UNKNOWN";
+
+// ============================================================================
+// Market Definition
+// ============================================================================
+
+/**
+ * Bookmaker-specific market data
+ */
+export interface BookmakerMarketData {
+  /** ID mappings for "Rynek XX" format (STS-style) */
+  idMappings?: number[];
+
+  /** Additional patterns specific to this bookmaker (e.g., different language) */
+  additionalPatterns?: RegExp[];
+
+  /** Different display name for this bookmaker */
+  displayName?: string;
+}
+
+/**
+ * Market definition - complete specification of a market type
+ *
+ * This is the single source of truth for all market definitions.
+ * Each market is defined once with all its patterns, parameters, and metadata.
+ */
+export interface MarketDefinition {
+  /** Unique ID (e.g., "total-goals") */
+  id: string;
+
+  /** Normalized type (enum value) */
+  type: NormalizedMarketType;
+
+  /** Category for UI organization */
+  category: MarketCategory;
+
+  /** Optional sub-category for finer UI grouping */
+  subCategory?: string;
+
+  /** Display labels */
+  labels: {
+    pl: string;
+    en?: string;
+  };
+
+  /** Has parameter (line value like 2.5, +1, etc.) */
+  hasParameter: boolean;
+
+  /** Parameter type if applicable */
+  parameterType?: "decimal-line" | "integer" | "handicap" | "score";
+
+  /** Valid parameter values */
+  validParameters?: string[];
+
+  /** Expected selection types */
+  selections: NormalizedSelection[];
+
+  /**
+   * Patterns to match market names
+   * Ordered by specificity (most specific first)
+   */
+  patterns: RegExp[];
+
+  /**
+   * Extract parameter from pattern match
+   * Called when a pattern matches to extract the parameter value
+   */
+  extractParam?: (match: RegExpMatchArray) => string | undefined;
+
+  /** Bookmaker-specific data */
+  bookmakerData?: Record<string, BookmakerMarketData>;
+}
+
+// ============================================================================
+// Bookmaker Adapter
+// ============================================================================
+
+/**
+ * Market-specific overrides for a bookmaker
+ */
+export interface MarketOverride {
+  /** Different patterns for this bookmaker */
+  patterns?: RegExp[];
+
+  /** Different selection logic for this bookmaker */
+  selectionLogic?: (selectionName: string) => NormalizedSelection;
+}
+
+/**
+ * Bookmaker adapter - contains only bookmaker-specific data
+ *
+ * Most logic is in MARKET_REGISTRY. Adapters only contain:
+ * - ID mappings (for STS "Rynek XX" format)
+ * - Selection overrides (bookmaker-specific codes)
+ * - Market overrides (rare, when patterns differ significantly)
+ */
+export interface BookmakerAdapter {
+  /** Bookmaker code (e.g., "sts", "fortuna") */
+  bookmaker: string;
+
+  /** Display name */
+  bookmakerName: string;
+
+  /**
+   * ID mappings: market ID → market definition ID
+   * Used for STS-style "Rynek XX" format
+   */
+  idMappings?: Map<number, string>;
+
+  /**
+   * Selection name overrides
+   * Key: regex pattern, Value: normalized selection
+   * Example: { "^1X$": "HOME_OR_DRAW" }
+   */
+  selectionOverrides?: Record<string, NormalizedSelection>;
+
+  /**
+   * Market-specific overrides
+   * Rarely used, only when a bookmaker has significantly different patterns
+   */
+  marketOverrides?: Record<string, MarketOverride>;
+}
+
+// ============================================================================
+// Normalization Result
+// ============================================================================
+
+/**
+ * Normalized selection result with odds
+ */
+export interface NormalizedSelectionResult {
+  /** Original selection name */
+  name: string;
+
+  /** Normalized selection type */
+  normalizedName: NormalizedSelection;
+
+  /** Odds value */
+  odds: number;
+}
+
+/**
+ * Normalized market result
+ */
+export interface NormalizedMarket {
+  /** Original market name */
+  name: string;
+
+  /** Market type */
+  normalizedType: NormalizedMarketType;
+
+  /** Market key (e.g., "TOTAL_GOALS:2.5") */
+  marketKey: string;
+
+  /** Category */
+  category: MarketCategory;
+
+  /** Parameter value (if applicable) */
+  paramValue?: string;
+
+  /** Normalized selections */
+  selections: NormalizedSelectionResult[];
+}
+
+// ============================================================================
+// Pattern Match Result
+// ============================================================================
+
+/**
+ * Result of pattern matching
+ */
+export interface PatternMatch {
+  /** Matching market definition */
+  definition: MarketDefinition;
+
+  /** Extracted parameter value */
+  param?: string;
+
+  /** RegExp match array for parameter extraction */
+  match: RegExpMatchArray;
+}
+
+// ============================================================================
+// Scraped Market (from existing system)
+// ============================================================================
+
+/**
+ * Market selection as scraped from bookmaker
+ */
+export interface ScrapedMarketSelection {
+  name: string;
+  odds: number;
+  /** Optional: normalized name from initial processing */
+  normalizedName?: NormalizedSelection;
+}
+
+/**
+ * Raw scraped market from bookmaker
+ */
+export interface ScrapedMarket {
+  name: string;
+  selections: ScrapedMarketSelection[];
+
+  /** Optional: type hint from scraper (e.g., Superbet provides this) */
+  type?: string;
+
+  /** Optional: group hint from scraper */
+  groupName?: string;
+
+  /** Optional: pre-normalized values */
+  normalizedType?: NormalizedMarketType;
+  normalizedGroup?: string;
+  marketKey?: string;
+  paramValue?: string;
+  category?: MarketCategory;
+}

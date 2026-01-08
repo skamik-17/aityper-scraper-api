@@ -1,12 +1,13 @@
 #!/usr/bin/env npx tsx
 /**
  * Script to clear all data from local Supabase database
- * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs | --extended]
+ * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs | --markets | --extended]
  *
  * Options:
  *   --all      Clear all tables (default)
  *   --odds     Clear only scraped_odds table
  *   --runs     Clear only scraper_runs table
+ *   --markets  Clear only scraped_markets table (full offer)
  *   --extended Clear only extended market tables (double_chance, over_under, btts)
  *   --dry-run  Show what would be deleted without actually deleting
  */
@@ -107,12 +108,17 @@ async function clearExtendedMarkets(dryRun: boolean): Promise<number> {
   return total;
 }
 
+async function clearScrapedMarkets(dryRun: boolean): Promise<number> {
+  return clearTable("scraped_markets", dryRun);
+}
+
 async function showStats(): Promise<void> {
   console.log("\nCurrent database statistics:");
   console.log("─".repeat(40));
 
   const tables = [
     "scraped_odds",
+    "scraped_markets",
     "scraper_runs",
     "odds_double_chance",
     "odds_over_under",
@@ -132,8 +138,9 @@ async function main(): Promise<void> {
   const dryRun = args.includes("--dry-run");
   const clearOdds = args.includes("--odds");
   const clearRuns = args.includes("--runs");
+  const clearMarkets = args.includes("--markets");
   const clearExtended = args.includes("--extended");
-  const clearAll = args.includes("--all") || (!clearOdds && !clearRuns && !clearExtended);
+  const clearAll = args.includes("--all") || (!clearOdds && !clearRuns && !clearMarkets && !clearExtended);
 
   console.log("╔══════════════════════════════════════════╗");
   console.log("║   Supabase Database Cleanup Script       ║");
@@ -155,6 +162,7 @@ async function main(): Promise<void> {
     const targets = [];
     if (clearOdds) targets.push("scraped_odds");
     if (clearRuns) targets.push("scraper_runs");
+    if (clearMarkets) targets.push("scraped_markets");
     if (clearExtended) targets.push("extended markets");
     console.log(`Clearing: ${targets.join(", ")}\n`);
   }
@@ -163,6 +171,10 @@ async function main(): Promise<void> {
 
   if (clearAll || clearOdds) {
     totalDeleted += await clearScrapedOdds(dryRun);
+  }
+
+  if (clearAll || clearMarkets) {
+    totalDeleted += await clearScrapedMarkets(dryRun);
   }
 
   if (clearAll || clearRuns) {

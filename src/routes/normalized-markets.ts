@@ -15,9 +15,7 @@ import {
   getFullOfferByMatch,
   getMarketCounts,
 } from "../repositories/full-offer-repository.js";
-import {
-  normalizeMarketsForBookmaker,
-} from "../services/market-normalizer.js";
+import { normalizer } from "../services/normalization/index.js";
 import { MarketCategory, CATEGORY_ORDER, CATEGORY_LABELS, type MarketWithParams } from "../types/normalized-markets.js";
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
@@ -105,21 +103,30 @@ router.get(
           selections: bookmakerData.selections,
         };
 
-        // Normalize markets for this bookmaker with team names
-        const normalizedMarkets = normalizeMarketsForBookmaker(
-          [scrapedMarket],
+        // Normalize market for this bookmaker with team names
+        const normalizedMarket = normalizer.normalize(
+          scrapedMarket,
           bookmaker,
           homeTeam,
           awayTeam
         );
 
+        // Merge original scraped market with normalized market
+        // Spread scrapedMarket last to preserve its original structure (including selections)
+        const mergedMarket: ScrapedMarket = {
+          normalizedType: normalizedMarket.normalizedType as any,
+          marketKey: normalizedMarket.marketKey,
+          paramValue: normalizedMarket.paramValue,
+          category: normalizedMarket.category,
+          // Preserve all original fields including selections in correct format
+          ...scrapedMarket,
+        };
+
         // Add to markets with bookmakers array
-        for (const normalizedMarket of normalizedMarkets) {
-          marketsWithBookmakers.push({
-            market: normalizedMarket,
-            bookmaker,
-          });
-        }
+        marketsWithBookmakers.push({
+          market: mergedMarket,
+          bookmaker,
+        });
       }
     }
 

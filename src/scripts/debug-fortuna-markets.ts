@@ -1,10 +1,5 @@
-/**
- * Debug script to analyze uncategorized Fortuna markets
- * Helps identify what the unknown ufo:mtyp:XX-XX IDs represent
- */
-
 import { fortunaScraper } from "../scrapers/bookmakers/index.js";
-import { fortunaNormalizer } from "../services/normalizers/fortuna-normalizer.js";
+import { normalizer } from "../services/normalization/index.js";
 import { NormalizedMarketType } from "../types/normalization.js";
 
 async function debugFortunaMarkets() {
@@ -27,8 +22,9 @@ async function debugFortunaMarkets() {
         for (const match of result.matches) {
             for (const market of match.markets) {
                 // Normalize to check if it's OTHER
-                const normalized = fortunaNormalizer.normalize(
+                const normalized = normalizer.normalize(
                     market,
+                    "fortuna",
                     match.homeTeam,
                     match.awayTeam
                 );

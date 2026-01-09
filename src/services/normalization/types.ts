@@ -1,275 +1,174 @@
 /**
- * Normalization Types - Hybrid Architecture
+ * Normalization Types - Canonical Source of Truth
  *
- * Central type definitions for the unified market normalization system.
- * Single source of truth for all normalization-related types.
+ * Single source of truth for ALL normalization-related types.
+ * These types are used throughout the normalization system and must match DB schema.
  */
 
 // ============================================================================
-// Enums
+// MARKET CATEGORY
 // ============================================================================
 
 /**
  * Market categories for UI organization (following Superbet pattern)
  */
-export enum MarketCategory {
+export const MarketCategory = {
   /** Match result markets - 1X2, Double Chance, Draw No Bet */
-  WYNIK_MECZU = "WYNIK_MECZU",
+  WYNIK_MECZU: "WYNIK_MECZU",
 
   /** Goals markets - BTTS, Over/Under, Odd/Even, Win to Nil, Clean Sheet */
-  GOLE = "GOLE",
+  GOLE: "GOLE",
 
   /** Handicap markets - Asian Handicap, European Handicap */
-  HANDICAP = "HANDICAP",
+  HANDICAP: "HANDICAP",
 
   /** First half markets - HT Result, HT Goals, HT BTTS */
-  PIERWSZA_POLOWA = "PIERWSZA_POLOWA",
+  PIERWSZA_POLOWA: "PIERWSZA_POLOWA",
 
   /** Correct Score markets */
-  DOKLADNY_WYNIK = "DOKLADNY_WYNIK",
+  DOKLADNY_WYNIK: "DOKLADNY_WYNIK",
 
   /** Player props - goalscorers, cards, assists */
-  ZAWODNICY = "ZAWODNICY",
+  ZAWODNICY: "ZAWODNICY",
 
   /** Statistics - corners, team cards, fouls */
-  STATYSTYKI = "STATYSTYKI",
+  STATYSTYKI: "STATYSTYKI",
 
   /** Combination markets - Result+BTTS, Result+O/U, HT/FT */
-  KOMBINACJE = "KOMBINACJE",
+  KOMBINACJE: "KOMBINACJE",
 
   /** Other markets - truly unknown/special markets */
-  INNE = "INNE",
-}
+  INNE: "INNE",
+} as const;
+export type MarketCategory = (typeof MarketCategory)[keyof typeof MarketCategory];
+
+// ============================================================================
+// VIEW TYPE
+// ============================================================================
 
 /**
- * Normalized market types
+ * View type determines how market is rendered in UI (string form shared with DB enums)
  */
-export type NormalizedMarketType =
+export const ViewType = {
+  BINARY_BUTTONS: "BINARY_BUTTONS",     // YES/NO, OVER/UNDER - 2 simple buttons
+  TRIPLE_BUTTONS: "TRIPLE_BUTTONS",     // 1X2 - 3 buttons (Home, Draw, Away)
+  PARAMETER_SLIDER: "PARAMETER_SLIDER",   // Over/Under with parameter selection (2.5, 3.5, etc.)
+  HANDICAP_SELECTOR: "HANDICAP_SELECTOR",  // Handicap markets with +/- values
+  SCORE_GRID: "SCORE_GRID",             // Correct score - grid of scores
+  PLAYER_DROPDOWN: "PLAYER_DROPDOWN",    // Goalscorer - dropdown + buttons
+  STAT_RANGE: "STAT_RANGE",              // Corners, Cards - range selector
+  COMBINATION: "COMBINATION",             // Combined markets (Result + BTTS)
+  HALFTIME_FULLTIME: "HALFTIME_FULLTIME", // 9 outcomes HT/FT grid
+} as const;
+export type ViewType = (typeof ViewType)[keyof typeof ViewType];
+
+// ============================================================================
+// PARAMETER TYPE
+// ============================================================================
+
+/**
+ * Parameter types for markets with line values
+ */
+export const ParameterType = {
+  DECIMAL: "decimal",
+  INTEGER: "integer",
+  HANDICAP: "handicap",
+  SCORE: "score",
+  PLAYER: "player",
+} as const;
+export type ParameterType = (typeof ParameterType)[keyof typeof ParameterType];
+
+// ============================================================================
+// NORMALIZED MARKET TYPE
+// ============================================================================
+
+/**
+ * Normalized market types (canonical codes used throughout system)
+ */
+export const NormalizedMarketType = {
   // Main markets
-  | "MATCH_WINNER"
-  | "DOUBLE_CHANCE"
-  | "DRAW_NO_BET"
+  MATCH_WINNER: "MATCH_WINNER",
+  DOUBLE_CHANCE: "DOUBLE_CHANCE",
+  DRAW_NO_BET: "DRAW_NO_BET",
   // Goals markets
-  | "TOTAL_GOALS"
-  | "BTTS"
-  | "ODD_EVEN_GOALS"
-  | "WIN_TO_NIL"
-  | "CLEAN_SHEET"
-  | "HOME_TEAM_TO_SCORE"
-  | "AWAY_TEAM_TO_SCORE"
-  | "TEAM_TOTAL_GOALS"
-  | "GOAL_RANGE"
-  | "BOTH_HALVES_GOALS"
-  | "WINNING_MARGIN"
+  TOTAL_GOALS: "TOTAL_GOALS",
+  BTTS: "BTTS",
+  ODD_EVEN_GOALS: "ODD_EVEN_GOALS",
+  WIN_TO_NIL: "WIN_TO_NIL",
+  CLEAN_SHEET: "CLEAN_SHEET",
+  HOME_TEAM_TO_SCORE: "HOME_TEAM_TO_SCORE",
+  AWAY_TEAM_TO_SCORE: "AWAY_TEAM_TO_SCORE",
+  TEAM_TOTAL_GOALS: "TEAM_TOTAL_GOALS",
+  GOAL_RANGE: "GOAL_RANGE",
+  BOTH_HALVES_GOALS: "BOTH_HALVES_GOALS",
+  WINNING_MARGIN: "WINNING_MARGIN",
   // Handicap markets
-  | "ASIAN_HANDICAP"
-  | "EUROPEAN_HANDICAP"
+  ASIAN_HANDICAP: "ASIAN_HANDICAP",
+  EUROPEAN_HANDICAP: "EUROPEAN_HANDICAP",
   // Half-time markets
-  | "HALF_TIME_RESULT"
-  | "HALF_TIME_TOTAL_GOALS"
-  | "HALF_TIME_BTTS"
-  | "SECOND_HALF_RESULT"
-  | "SECOND_HALF_TOTAL_GOALS"
+  HALF_TIME_RESULT: "HALF_TIME_RESULT",
+  HALF_TIME_TOTAL_GOALS: "HALF_TIME_TOTAL_GOALS",
+  HALF_TIME_BTTS: "HALF_TIME_BTTS",
+  SECOND_HALF_RESULT: "SECOND_HALF_RESULT",
+  SECOND_HALF_TOTAL_GOALS: "SECOND_HALF_TOTAL_GOALS",
   // Score markets
-  | "CORRECT_SCORE"
+  CORRECT_SCORE: "CORRECT_SCORE",
   // Player markets (ZAWODNICY)
-  | "GOALSCORER_FIRST"
-  | "GOALSCORER_LAST"
-  | "GOALSCORER_ANYTIME"
-  | "PLAYER_SHOTS"
-  | "PLAYER_CARDS"
-  | "PLAYER_ASSISTS"
+  GOALSCORER_FIRST: "GOALSCORER_FIRST",
+  GOALSCORER_LAST: "GOALSCORER_LAST",
+  GOALSCORER_ANYTIME: "GOALSCORER_ANYTIME",
+  PLAYER_SHOTS: "PLAYER_SHOTS",
+  PLAYER_CARDS: "PLAYER_CARDS",
+  PLAYER_ASSISTS: "PLAYER_ASSISTS",
   // Statistics markets (STATYSTYKI)
-  | "CORNERS_TOTAL"
-  | "CORNERS_TEAM"
-  | "CARDS_TOTAL"
-  | "CARDS_TEAM"
-  | "FOULS_TOTAL"
-  | "OFFSIDES_TOTAL"
+  CORNERS_TOTAL: "CORNERS_TOTAL",
+  CORNERS_TEAM: "CORNERS_TEAM",
+  CARDS_TOTAL: "CARDS_TOTAL",
+  CARDS_TEAM: "CARDS_TEAM",
+  FOULS_TOTAL: "FOULS_TOTAL",
+  OFFSIDES_TOTAL: "OFFSIDES_TOTAL",
   // Combination markets (KOMBINACJE)
-  | "RESULT_AND_BTTS"
-  | "RESULT_AND_TOTAL"
-  | "HALFTIME_FULLTIME"
-  | "DOUBLE_RESULT"
-  | "DOUBLE_CHANCE_BTTS"
-  | "DOUBLE_CHANCE_TOTAL"
+  RESULT_AND_BTTS: "RESULT_AND_BTTS",
+  RESULT_AND_TOTAL: "RESULT_AND_TOTAL",
+  HALFTIME_FULLTIME: "HALFTIME_FULLTIME",
+  DOUBLE_RESULT: "DOUBLE_RESULT",
+  DOUBLE_CHANCE_BTTS: "DOUBLE_CHANCE_BTTS",
+  DOUBLE_CHANCE_TOTAL: "DOUBLE_CHANCE_TOTAL",
   // Fallback
-  | "OTHER";
-
-/**
- * Normalized selection types
- */
-export type NormalizedSelection =
-  | "HOME"
-  | "DRAW"
-  | "AWAY"
-  | "HOME_OR_DRAW" // 1X
-  | "DRAW_OR_AWAY" // X2
-  | "HOME_OR_AWAY" // 12
-  | "OVER"
-  | "UNDER"
-  | "YES"
-  | "NO"
-  | "ODD"
-  | "EVEN"
-  | "UNKNOWN";
+  OTHER: "OTHER",
+} as const;
+export type NormalizedMarketType = (typeof NormalizedMarketType)[keyof typeof NormalizedMarketType];
 
 // ============================================================================
-// Market Definition - Re-exported from unified registry
+// NORMALIZED SELECTION
 // ============================================================================
 
 /**
- * Re-export from unified market registry for compatibility.
- * The canonical definition is in data/market-registry.ts
+ * Normalized selection types (canonical codes for all selections)
  */
-import type {
-  UnifiedMarketDefinition,
-  BookmakerMarketData as BookmakerMarketDataType,
-} from "../../data/market-registry.js";
-
-export type MarketDefinition = UnifiedMarketDefinition;
-export type BookmakerMarketData = BookmakerMarketDataType;
+export const NormalizedSelection = {
+  HOME: "HOME",
+  DRAW: "DRAW",
+  AWAY: "AWAY",
+  HOME_OR_DRAW: "HOME_OR_DRAW", // 1X
+  DRAW_OR_AWAY: "DRAW_OR_AWAY", // X2
+  HOME_OR_AWAY: "HOME_OR_AWAY", // 12
+  OVER: "OVER",
+  UNDER: "UNDER",
+  YES: "YES",
+  NO: "NO",
+  ODD: "ODD",
+  EVEN: "EVEN",
+  UNKNOWN: "UNKNOWN",
+} as const;
+export type NormalizedSelection = (typeof NormalizedSelection)[keyof typeof NormalizedSelection];
 
 // ============================================================================
-// Bookmaker Adapter
+// HELPER FUNCTIONS
 // ============================================================================
 
-/**
- * Market-specific overrides for a bookmaker
- */
-export interface MarketOverride {
-  /** Different patterns for this bookmaker */
-  patterns?: RegExp[];
-
-  /** Different selection logic for this bookmaker */
-  selectionLogic?: (selectionName: string) => NormalizedSelection;
-}
-
-/**
- * Bookmaker adapter - contains only bookmaker-specific data
- *
- * Most logic is in MARKET_REGISTRY. Adapters only contain:
- * - ID mappings (for STS "Rynek XX" format)
- * - Selection overrides (bookmaker-specific codes)
- * - Market overrides (rare, when patterns differ significantly)
- */
-export interface BookmakerAdapter {
-  /** Bookmaker code (e.g., "sts", "fortuna") */
-  bookmaker: string;
-
-  /** Display name */
-  bookmakerName: string;
-
-  /**
-   * ID mappings: market ID → market definition ID
-   * Used for STS-style "Rynek XX" format
-   */
-  idMappings?: Map<number, string>;
-
-  /**
-   * Selection name overrides
-   * Key: regex pattern, Value: normalized selection
-   * Example: { "^1X$": "HOME_OR_DRAW" }
-   */
-  selectionOverrides?: Record<string, NormalizedSelection>;
-
-  /**
-   * Market-specific overrides
-   * Rarely used, only when a bookmaker has significantly different patterns
-   */
-  marketOverrides?: Record<string, MarketOverride>;
-}
-
-// ============================================================================
-// Normalization Result
-// ============================================================================
-
-/**
- * Normalized selection result with odds
- */
-export interface NormalizedSelectionResult {
-  /** Original selection name */
-  name: string;
-
-  /** Normalized selection type */
-  normalizedName: NormalizedSelection;
-
-  /** Odds value */
-  odds: number;
-}
-
-/**
- * Normalized market result
- */
-export interface NormalizedMarket {
-  /** Original market name */
-  name: string;
-
-  /** Market type */
-  normalizedType: NormalizedMarketType;
-
-  /** Market key (e.g., "TOTAL_GOALS:2.5") */
-  marketKey: string;
-
-  /** Category */
-  category: MarketCategory;
-
-  /** Parameter value (if applicable) */
-  paramValue?: string;
-
-  /** Normalized selections */
-  selections: NormalizedSelectionResult[];
-}
-
-// ============================================================================
-// Pattern Match Result
-// ============================================================================
-
-/**
- * Result of pattern matching
- */
-export interface PatternMatch {
-  /** Matching market definition */
-  definition: MarketDefinition;
-
-  /** Extracted parameter value */
-  param?: string;
-
-  /** RegExp match array for parameter extraction */
-  match: RegExpMatchArray;
-}
-
-// ============================================================================
-// Scraped Market (from existing system)
-// ============================================================================
-
-/**
- * Market selection as scraped from bookmaker
- */
-export interface ScrapedMarketSelection {
-  name: string;
-  odds: number;
-  /** Optional: normalized name from initial processing */
-  normalizedName?: NormalizedSelection;
-}
-
-/**
- * Raw scraped market from bookmaker
- */
-export interface ScrapedMarket {
-  name: string;
-  selections: ScrapedMarketSelection[];
-
-  /** Optional: type hint from scraper (e.g., Superbet provides this) */
-  type?: string;
-
-  /** Optional: group hint from scraper */
-  groupName?: string;
-
-  /** Optional: pre-normalized values */
-  normalizedType?: NormalizedMarketType;
-  normalizedGroup?: string;
-  marketKey?: string;
-  paramValue?: string;
-  category?: MarketCategory;
+export function buildMarketKey(type: NormalizedMarketType, param?: string): string {
+  if (!param) return type;
+  const normalizedParam = param.replace(",", ".");
+  return `${type}:${normalizedParam}`;
 }

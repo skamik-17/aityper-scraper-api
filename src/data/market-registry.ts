@@ -8,108 +8,20 @@
  * Each market is defined once with all its properties.
  */
 
-import { MarketCategory } from "../services/normalization/types.js";
-
-// ============================================================================
-// Enums
-// ============================================================================
-
-/**
- * View type determines how market is rendered in UI
- */
-export enum ViewType {
-  BINARY_BUTTONS = 1,     // YES/NO, OVER/UNDER - 2 simple buttons
-  TRIPLE_BUTTONS = 2,     // 1X2 - 3 buttons (Home, Draw, Away)
-  PARAMETER_SLIDER = 3,   // Over/Under with parameter selection (2.5, 3.5, etc.)
-  HANDICAP_SELECTOR = 4,  // Handicap markets with +/- values
-  SCORE_GRID = 5,         // Correct score - grid of scores
-  PLAYER_DROPDOWN = 6,    // Goalscorer - dropdown + buttons
-  STAT_RANGE = 7,         // Corners, Cards - range selector
-  COMBINATION = 8,        // Combined markets (Result + BTTS)
-  HALFTIME_FULLTIME = 9,  // 9 outcomes HT/FT grid
-}
-
-/**
- * Normalized market types
- */
-export type NormalizedMarketType =
-  // Main markets
-  | "MATCH_WINNER"
-  | "DOUBLE_CHANCE"
-  | "DRAW_NO_BET"
-  // Goals markets
-  | "TOTAL_GOALS"
-  | "BTTS"
-  | "ODD_EVEN_GOALS"
-  | "WIN_TO_NIL"
-  | "CLEAN_SHEET"
-  | "HOME_TEAM_TO_SCORE"
-  | "AWAY_TEAM_TO_SCORE"
-  | "TEAM_TOTAL_GOALS"
-  | "GOAL_RANGE"
-  | "BOTH_HALVES_GOALS"
-  | "WINNING_MARGIN"
-  // Handicap markets
-  | "ASIAN_HANDICAP"
-  | "EUROPEAN_HANDICAP"
-  // Half-time markets
-  | "HALF_TIME_RESULT"
-  | "HALF_TIME_TOTAL_GOALS"
-  | "HALF_TIME_BTTS"
-  | "SECOND_HALF_RESULT"
-  | "SECOND_HALF_TOTAL_GOALS"
-  // Score markets
-  | "CORRECT_SCORE"
-  // Player markets
-  | "GOALSCORER_FIRST"
-  | "GOALSCORER_LAST"
-  | "GOALSCORER_ANYTIME"
-  | "PLAYER_SHOTS"
-  | "PLAYER_CARDS"
-  | "PLAYER_ASSISTS"
-  // Statistics markets
-  | "CORNERS_TOTAL"
-  | "CORNERS_TEAM"
-  | "CARDS_TOTAL"
-  | "CARDS_TEAM"
-  | "FOULS_TOTAL"
-  | "OFFSIDES_TOTAL"
-  // Combination markets
-  | "RESULT_AND_BTTS"
-  | "RESULT_AND_TOTAL"
-  | "HALFTIME_FULLTIME"
-  | "DOUBLE_RESULT"
-  | "DOUBLE_CHANCE_BTTS"
-  | "DOUBLE_CHANCE_TOTAL"
-  // Fallback
-  | "OTHER";
-
-/**
- * Parameter types for markets with line values
- */
-export type ParameterType = "decimal" | "integer" | "handicap" | "score" | "player";
-
-/**
- * Normalized selection types
- */
-export type NormalizedSelection =
-  | "HOME"
-  | "DRAW"
-  | "AWAY"
-  | "HOME_OR_DRAW"
-  | "DRAW_OR_AWAY"
-  | "HOME_OR_AWAY"
-  | "OVER"
-  | "UNDER"
-  | "YES"
-  | "NO"
-  | "ODD"
-  | "EVEN"
-  | "UNKNOWN";
+import {
+  MarketCategory,
+  ViewType,
+  NormalizedMarketType,
+  ParameterType,
+  NormalizedSelection,
+} from "../services/normalization/types.js";
 
 // ============================================================================
 // Interfaces
 // ============================================================================
+
+
+
 
 /**
  * Bookmaker-specific market data

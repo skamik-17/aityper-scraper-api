@@ -1,33 +1,17 @@
 import type { PolishBookmaker } from "../config/index.js";
+import type {
+  MarketCategory,
+  ViewType,
+  ParameterType,
+  NormalizedMarketType,
+  NormalizedSelection,
+} from "../services/normalization/types.js";
 
 export interface MarketSelectionJson {
   name: string;
   odds: number;
-  normalizedName?: string;
+  normalizedName?: NormalizedSelection;
 }
-
-export type ViewType =
-  | "BINARY_BUTTONS"
-  | "TRIPLE_BUTTONS"
-  | "PARAMETER_SLIDER"
-  | "HANDICAP_SELECTOR"
-  | "SCORE_GRID"
-  | "PLAYER_DROPDOWN"
-  | "STAT_RANGE"
-  | "COMBINATION"
-  | "HALFTIME_FULLTIME";
-
-export type ParameterType = "decimal" | "integer" | "handicap" | "score" | "player";
-
-export type MarketCategory =
-  | "WYNIK_MECZU"
-  | "GOLE"
-  | "HANDICAP"
-  | "PIERWSZA_POLOWA"
-  | "DOKLADNY_WYNIK"
-  | "ZAWODNICY"
-  | "STATYSTYKI"
-  | "KOMBINACJE";
 
 export interface Database {
   public: {
@@ -35,7 +19,7 @@ export interface Database {
       market_types: {
         Row: {
           id: number;
-          code: string;
+          code: NormalizedMarketType;
           name_pl: string;
           name_en: string;
           description_pl: string;
@@ -44,22 +28,22 @@ export interface Database {
           category: MarketCategory;
           has_parameter: boolean;
           param_type: ParameterType | null;
-          selections: string[];
+          selections: NormalizedSelection[];
           display_order: number;
           created_at: string;
         };
         Insert: {
           id: number;
-          code: string;
+          code: NormalizedMarketType;
           name_pl: string;
           name_en: string;
           description_pl: string;
           description_en: string;
           view_type: ViewType;
           category: MarketCategory;
-          has_parameter?: boolean;
-          param_type?: ParameterType | null;
-          selections: string[];
+          has_parameter: boolean;
+          param_type: ParameterType | null;
+          selections: NormalizedSelection[];
           display_order: number;
           created_at?: string;
         };
@@ -149,13 +133,13 @@ export interface Database {
           param_value: string | null;
           selections: MarketSelectionJson[];
           scraped_at: string;
-          market_code: string;
+          market_code: NormalizedMarketType;
           market_name_pl: string;
           market_name_en: string;
           view_type: ViewType;
           category: MarketCategory;
           has_parameter: boolean;
-          expected_selections: string[];
+          expected_selections: NormalizedSelection[];
         };
         Relationships: [];
       };
@@ -167,7 +151,7 @@ export interface Database {
           away_team: string;
           market_key: string;
           market_type_id: number;
-          market_code: string;
+          market_code: NormalizedMarketType;
           market_name_pl: string;
           market_name_en: string;
           view_type: ViewType;
@@ -198,7 +182,7 @@ export interface Database {
       get_best_odds: {
         Args: { p_match_id: string; p_market_key: string };
         Returns: {
-          selection_name: string;
+          selection_name: NormalizedSelection;
           best_odds: number;
           bookmaker: string;
           all_odds: unknown;
@@ -217,51 +201,3 @@ export interface Database {
     CompositeTypes: Record<string, never>;
   };
 }
-
-export interface OddsEntry {
-  bookmaker: PolishBookmaker;
-  marketKey: string;
-  marketCode: string;
-  marketNamePl: string;
-  paramValue: string | null;
-  selections: MarketSelectionJson[];
-  eventUrl: string | null;
-  scrapedAt: string;
-}
-
-export interface BestOdds {
-  [selectionName: string]: { bookmaker: PolishBookmaker; odds: number };
-}
-
-export interface MatchOdds {
-  matchId: string;
-  homeTeam: string;
-  awayTeam: string;
-  leagueSlug: string;
-  markets: {
-    [marketKey: string]: {
-      code: string;
-      namePl: string;
-      viewType: ViewType;
-      category: MarketCategory;
-      paramValue: string | null;
-      bookmakerOdds: {
-        [bookmaker: string]: {
-          selections: MarketSelectionJson[];
-          eventUrl: string | null;
-          scrapedAt: string;
-        };
-      };
-      bestOdds: BestOdds;
-    };
-  };
-}
-
-export type BookmakerStatus = "available" | "error" | "stale";
-
-export type OddsRow = Database["public"]["Tables"]["odds"]["Row"];
-export type OddsInsert = Database["public"]["Tables"]["odds"]["Insert"];
-export type MarketTypeRow = Database["public"]["Tables"]["market_types"]["Row"];
-export type LatestOddsRow = Database["public"]["Views"]["latest_odds"]["Row"];
-export type MarketComparisonRow = Database["public"]["Views"]["market_comparison"]["Row"];
-export type MatchesWithOddsRow = Database["public"]["Views"]["matches_with_odds"]["Row"];

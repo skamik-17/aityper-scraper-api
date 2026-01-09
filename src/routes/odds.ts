@@ -24,7 +24,8 @@ import {
   getCanonicalMarketCodes,
   getMarketDefinition,
 } from "../repositories/full-offer-repository.js";
-import { UNIFIED_MARKET_REGISTRY, ViewType } from "../data/market-registry.js";
+import type { ViewType } from "../services/normalization/types.js";
+import { UNIFIED_MARKET_REGISTRY } from "../data/market-registry.js";
 
 const router = Router();
 
@@ -178,7 +179,7 @@ router.get("/market-types", asyncHandler(async (_req, res) => {
     nameEn: m.labels.en,
     descriptionPl: m.descriptions.pl,
     descriptionEn: m.descriptions.en,
-    viewType: ViewType[m.viewType],
+    viewType: m.viewType,
     category: m.category,
     hasParameter: m.hasParameter,
     parameterType: m.parameterType,

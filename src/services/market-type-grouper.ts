@@ -202,9 +202,10 @@ export function groupMarketsByTypeWithParameters(
     const defaultParam = DEFAULT_PARAMETERS[marketType];
     const useDefault = defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0];
 
-    // Get description from market registry
+    // Get description and displayOrder from market registry
     const marketDef = getMarketByCode(marketType);
     const description = marketDef?.descriptions?.pl;
+    const displayOrder = marketDef?.displayOrder ?? 999;
 
     result.push({
       marketKey: marketType,
@@ -212,6 +213,7 @@ export function groupMarketsByTypeWithParameters(
       category: group.category,
       label: group.label,
       description,
+      displayOrder,
       parameters,
       defaultParameter: useDefault,
       hasParameters,
@@ -247,7 +249,7 @@ export function buildCategoriesWithMarketTypes(
     categoryMap.get(category)?.push(market);
   }
 
-  // Build category structure
+  // Build category structure with sorted markets
   const categories: Array<{
     name: MarketCategory;
     label: string;
@@ -258,6 +260,9 @@ export function buildCategoriesWithMarketTypes(
   for (let i = 0; i < CATEGORY_ORDER.length; i++) {
     const categoryName = CATEGORY_ORDER[i];
     const markets = categoryMap.get(categoryName) || [];
+
+    // Sort markets by displayOrder within each category
+    markets.sort((a, b) => (a.displayOrder ?? 999) - (b.displayOrder ?? 999));
 
     categories.push({
       name: categoryName,

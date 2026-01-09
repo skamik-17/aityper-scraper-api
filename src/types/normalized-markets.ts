@@ -286,6 +286,9 @@ export interface MarketWithParams {
   /** Description of what this market means (for tooltip) */
   description?: string;
 
+  /** Display order for sorting within category (from market_types table) */
+  displayOrder?: number;
+
   /** All available parameters for this market type */
   parameters: MarketParameter[];
 

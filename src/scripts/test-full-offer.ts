@@ -9,10 +9,12 @@
  * Usage:
  *   npx tsx src/scripts/test-full-offer.ts [bookmaker] [league]
  *   npx tsx src/scripts/test-full-offer.ts [bookmaker] [league] --match "west ham,nottingham"
+ *   npx tsx src/scripts/test-full-offer.ts [bookmaker] --all-leagues
  *
  * Examples:
  *   npx tsx src/scripts/test-full-offer.ts all premier-league
  *   npx tsx src/scripts/test-full-offer.ts betclic premier-league --match "west ham,nottingham"
+ *   npx tsx src/scripts/test-full-offer.ts sts --all-leagues
  */
 
 import type { PolishBookmaker } from "../config/index.js";
@@ -323,8 +325,64 @@ async function testAllScrapers(league: string, matchFilter?: string): Promise<vo
   }
 }
 
+const ALL_LEAGUES = ["ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1"];
+
+async function testAllLeagues(bookmaker: PolishBookmaker): Promise<void> {
+  console.log(`\n${"#".repeat(60)}`);
+  console.log(`# TESTING ALL LEAGUES FOR: ${bookmaker.toUpperCase()}`);
+  console.log(`# Leagues: ${ALL_LEAGUES.join(", ")}`);
+  console.log(`${"#".repeat(60)}`);
+
+  const results: TestResult[] = [];
+
+  for (const league of ALL_LEAGUES) {
+    const result = await testScraper(bookmaker, league);
+    results.push(result);
+  }
+
+  // Summary
+  console.log(`\n${"#".repeat(60)}`);
+  console.log(`# ALL LEAGUES SUMMARY FOR: ${bookmaker.toUpperCase()}`);
+  console.log(`${"#".repeat(60)}\n`);
+
+  const successful = results.filter((r) => r.success);
+  const meetsReq = results.filter((r) => r.meetsRequirement);
+  const totalMatches = results.reduce((sum, r) => sum + r.matchCount, 0);
+  const totalMarkets = results.reduce((sum, r) => sum + r.totalMarkets, 0);
+
+  console.log(`Leagues tested: ${ALL_LEAGUES.length}`);
+  console.log(`Successful: ${successful.length}/${ALL_LEAGUES.length}`);
+  console.log(`Total matches: ${totalMatches}`);
+  console.log(`Total markets: ${totalMarkets}`);
+  console.log(`Meets ≥50 requirement: ${meetsReq.length}/${successful.length}`);
+
+  console.log(`\n${"─".repeat(70)}`);
+  console.log(
+    `${"League".padEnd(18)} | ${"Status".padEnd(8)} | ${"Matches".padEnd(8)} | ${"Markets".padEnd(8)} | ${"Avg".padEnd(6)} | ${"Min".padEnd(5)} | ≥50`
+  );
+  console.log(`${"─".repeat(70)}`);
+
+  for (let i = 0; i < ALL_LEAGUES.length; i++) {
+    const league = ALL_LEAGUES[i];
+    const r = results[i];
+    const status = r.success ? "✅ OK" : "❌ FAIL";
+    const req = r.meetsRequirement ? "✅" : "⚠️";
+    console.log(
+      `${league.padEnd(18)} | ${status.padEnd(8)} | ${String(r.matchCount).padEnd(8)} | ${String(r.totalMarkets).padEnd(8)} | ${r.avgMarketsPerMatch.toFixed(1).padEnd(6)} | ${String(r.minMarkets).padEnd(5)} | ${req}`
+    );
+  }
+  console.log(`${"─".repeat(70)}`);
+}
+
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
+
+  // Parse --all-leagues flag
+  const allLeaguesIndex = args.findIndex((a) => a === "--all-leagues");
+  const testAllLeaguesFlag = allLeaguesIndex !== -1;
+  if (testAllLeaguesFlag) {
+    args.splice(allLeaguesIndex, 1); // Remove --all-leagues from args
+  }
 
   // Parse --match argument
   let matchFilter: string | undefined;
@@ -337,6 +395,12 @@ async function main(): Promise<void> {
   const bookmakerArg = args[0];
   const league = args[1] || "ekstraklasa";
 
+  // Handle --all-leagues for single bookmaker
+  if (testAllLeaguesFlag && bookmakerArg && SCRAPERS[bookmakerArg as PolishBookmaker]) {
+    await testAllLeagues(bookmakerArg as PolishBookmaker);
+    process.exit(0);
+  }
+
   if (bookmakerArg && bookmakerArg !== "all" && SCRAPERS[bookmakerArg as PolishBookmaker]) {
     // Test single scraper
     await testScraper(bookmakerArg as PolishBookmaker, league, matchFilter);
@@ -346,7 +410,10 @@ async function main(): Promise<void> {
   } else {
     console.log(`Unknown bookmaker: ${bookmakerArg}`);
     console.log(`Available: ${Object.keys(SCRAPERS).join(", ")}, all`);
-    console.log(`\nUsage: npx tsx src/scripts/test-full-offer.ts [bookmaker] [league] [--match "team1,team2"]`);
+    console.log(`\nUsage:`);
+    console.log(`  npx tsx src/scripts/test-full-offer.ts [bookmaker] [league]`);
+    console.log(`  npx tsx src/scripts/test-full-offer.ts [bookmaker] --all-leagues`);
+    console.log(`  npx tsx src/scripts/test-full-offer.ts all [league]`);
     process.exit(1);
   }
 

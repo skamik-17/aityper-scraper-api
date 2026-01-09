@@ -48,10 +48,13 @@ export const stsAdapter: BookmakerAdapter = {
     // Double Chance
     [10, "double-chance"],
 
-    // Draw No Bet / Level Handicap
+    // Draw No Bet / Level Handicap / 2-way Winner
     [4, "draw-no-bet"],
     [20, "draw-no-bet"],
     [77, "draw-no-bet"],
+    [259, "draw-no-bet"], // Zwycięzca walki
+    [314, "draw-no-bet"], // Zwycięzca meczu
+    [368, "draw-no-bet"], // Zwycięzca meczu
 
     // ========================================================================
     // GOALS MARKETS (GOLE)
@@ -101,7 +104,6 @@ export const stsAdapter: BookmakerAdapter = {
     [1233, "btts"],
     [1234, "btts"],
     [1235, "btts"],
-    [1855, "btts"],
 
     // Win to Nil
     [35, "win-to-nil"],
@@ -135,92 +137,147 @@ export const stsAdapter: BookmakerAdapter = {
     // ========================================================================
     // CORRECT SCORE
     // ========================================================================
-    [9, "correct-score"],
-    [17, "correct-score"],
-    [33, "correct-score"],
-    [49, "correct-score"],
-    [57, "correct-score"],
-    [98, "correct-score"],
+    // Market 283 = main Correct Score (IDs 1783-1817)
+    // Market 101 = 1st Half Correct Score
+    // Market 124 = 2nd Half Correct Score
+    [283, "correct-score"],
     [101, "correct-score"],
     [124, "correct-score"],
-    [125, "correct-score"],
-    [126, "correct-score"],
+    [57, "correct-score"], // Alternative correct score variant
+
+    // ========================================================================
+    // GOALSCORER MARKETS
+    // ========================================================================
+    // Market 9 = Last Goal (Ostatni gol) - NOT Correct Score!
+    [9, "goalscorer-last"],
+
+    // ========================================================================
+    // GOALS MARKETS - additional
+    // ========================================================================
+    // Market 17 = Winning Margin (Różnica zwycięstwa)
+    [17, "winning-margin"],
+    // Market 33 = Goal Range (Przedział goli)
+    [33, "goal-range"],
+    // Market 98 = HT BTTS
+    [98, "half-time-btts"],
 
     // ========================================================================
     // PLAYER MARKETS (ZAWODNICY)
     // ========================================================================
     // Goalscorer Anytime
     [52, "goalscorer-anytime"],
+    [1850, "goalscorer-anytime"], // Player goals with thresholds (1+, 2+, 3+)
 
     // Player Shots
     [53, "player-shots"],
+    [1851, "player-shots"], // Player shots with thresholds
 
     // Player Cards
     [54, "player-cards"],
 
+    // Player Assists
+    [1845, "player-assists"], // Player assists with thresholds
+
     // ========================================================================
     // COMBINATION MARKETS (KOMBINACJE)
     // ========================================================================
-    // Result + BTTS
-    [50, "result-and-btts"],
+    // Result + BTTS - selections should be: "1 i tak", "1 i nie", "X i tak", etc.
+    // NOTE: Market 49/50 contains BTTS+O/U data ("+2.5 i tak"), NOT Result+BTTS
+    // These need to be mapped to OTHER until we have a BTTS_AND_TOTAL type
+    [49, "other"], // BTTS + O/U combo (not Result+BTTS)
+    [50, "other"], // BTTS + O/U combo (not Result+BTTS)
 
     // Result + Total (many variants)
+    // NOTE: Markets 807-818 contain complex combo data
     [51, "result-and-total"],
     [99, "result-and-total"],
-    [807, "result-and-total"],
-    [808, "result-and-total"],
-    [809, "result-and-total"],
-    [810, "result-and-total"],
-    [811, "result-and-total"],
-    [812, "result-and-total"],
-    [813, "result-and-total"],
-    [814, "result-and-total"],
-    [815, "result-and-total"],
-    [816, "result-and-total"],
-    [817, "result-and-total"],
-    [818, "result-and-total"],
+    // Goal range / multi-goal markets - these are NOT result+total
+    [807, "other"],
+    [808, "other"],
+    [809, "other"],
+    [810, "other"],
+    [811, "other"],
+    [812, "other"],
+    [813, "other"],
+    [814, "other"],
+    [815, "other"],
+    [816, "other"],
+    [817, "other"],
+    [818, "other"],
 
-    // HT/FT + O/U combo
-    [1012, "halftime-fulltime"],
+    // HT/FT Result - simple 9 outcomes (1/1, 1/X, 1/2, X/1, X/X, X/2, 2/1, 2/X, 2/2)
+    // Market 58 = simple HT/FT
+    [58, "halftime-fulltime"],
+    // NOTE: Market 1012 is HT/FT + O/U combo - NOT simple HT/FT!
+    [1012, "other"], // HT/FT + O/U combo - needs separate type
+
+    // ========================================================================
+    // STATISTICS MARKETS (STATYSTYKI)
+    // ========================================================================
+    // Corners Race (Więcej rzutów rożnych)
+    [220, "corners-race"],
+    [239, "corners-race"], // 1. połowa - więcej rzutów rożnych
+
+    // First Corner (Pierwszy rzut rożny)
+    [221, "first-corner"],
+
+    // Corners Handicap
+    [225, "corners-handicap"],
+    [244, "corners-handicap"], // 1. połowa - rzuty rożne - handicap
+
+    // Cards Race (Więcej kartek)
+    [178, "cards-race"],
+    [199, "cards-race"], // 1. połowa - więcej kartek
+
+    // First Card (Pierwsza kartka)
+    [179, "first-card"],
+
+    // ========================================================================
+    // GOALS TIMING MARKETS (GOLE)
+    // ========================================================================
+    // First Team To Score
+    [44, "first-team-to-score"], // "Która drużyna strzeli gola"
+
+    // First Goal Time
+    [125, "first-goal-time"], // "1. gol - przedziały 15-minutowe"
+    [126, "first-goal-time"], // "1. gol - przedziały 10-minutowe"
+
+    // Time Period Result
+    [132, "time-period-result"], // "Wynik od 1. do 10. minuty"
+
+    // ========================================================================
+    // ADDITIONAL COMBINATION MARKETS
+    // ========================================================================
+    [258, "first-goal-and-result"], // "1. gol i wynik końcowy"
+
+    // ========================================================================
+    // ADDITIONAL PLAYER MARKETS
+    // ========================================================================
+    [1051, "player-goal-and-result"], // "Zawodnik - strzeli gola i wynik końcowy"
+    [1852, "player-shots-on-target"], // "celne strzały"
+    [1853, "player-passes"], // "podania"
 
     // ========================================================================
     // OTHER / UNKNOWN
     // ========================================================================
-    // These map to OTHER for now
-    // TODO: Add more markets to registry to cover these
-    [44, "other"], // First/Last to score
-    [178, "other"],
-    [179, "other"],
+    // These map to OTHER - remaining unmapped markets
     [185, "other"],
     [192, "other"],
     [193, "other"],
     [194, "other"],
-    [199, "other"],
     [206, "other"],
-    [220, "other"],
-    [221, "other"],
-    [225, "other"],
     [228, "other"],
     [235, "other"],
     [236, "other"],
     [237, "other"],
-    [239, "other"],
-    [244, "other"],
     [247, "other"],
     [254, "other"],
     [255, "other"],
     [256, "other"],
-    [258, "other"],
     [283, "other"],
-    [1051, "other"],
     [1263, "other"],
     [1264, "other"],
-    [1845, "other"],
-    [1850, "other"],
-    [1851, "other"],
-    [1852, "other"],
-    [1853, "other"],
-    [1855, "other"],
+    [1855, "player-cards"], // Player gets card (otrzyma kartkę)
   ]),
 
   // ==========================================================================

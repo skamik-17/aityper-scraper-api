@@ -201,7 +201,8 @@ const MAIN_MARKETS: UnifiedMarketDefinition[] = [
     ],
     bookmakerData: {
       // Market 20 = "Zakład bez remisu", Market 77 = "1. połowa - zakład bez remisu"
-      sts: { idMappings: [20, 77] },
+      // Markets 259, 314, 368 = "Zwycięzca walki"/"Zwycięzca meczu" (2-way winner)
+      sts: { idMappings: [20, 77, 259, 314, 368] },
     },
   },
 ];
@@ -484,6 +485,79 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     bookmakerData: {
       // Market 17 = "Różnica zwycięstwa"
       sts: { idMappings: [17] },
+    },
+  },
+  {
+    numericId: 46,
+    code: "FIRST_TEAM_TO_SCORE",
+    slug: "first-team-to-score",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Która drużyna strzeli gola", en: "First Team To Score" },
+    descriptions: {
+      pl: "Która drużyna strzeli pierwszego/ostatniego gola?",
+      en: "Which team will score first/last?",
+    },
+    hasParameter: false,
+    selections: ["HOME", "AWAY", "NONE", "BOTH"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 21,
+    patterns: [
+      /^kt[oó]ra\s*dru[zż]yn[ay]?\s*strzeli\s*gola/iu,
+      /^first\s*team\s*to\s*score/iu,
+      /^last\s*team\s*to\s*score/iu,
+    ],
+    bookmakerData: {
+      // Market 44 = "Która drużyna strzeli gola"
+      sts: { idMappings: [44] },
+    },
+  },
+  {
+    numericId: 47,
+    code: "FIRST_GOAL_TIME",
+    slug: "first-goal-time",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Czas pierwszego gola", en: "First Goal Time" },
+    descriptions: {
+      pl: "W którym przedziale czasowym padnie pierwszy gol?",
+      en: "In which time period will the first goal be scored?",
+    },
+    hasParameter: false,
+    selections: ["0-15", "16-30", "31-45", "46-60", "61-75", "76-90", "NONE"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 22,
+    patterns: [
+      /^1\.\s*gol\s*-?\s*przedzia[łl]/iu,
+      /^pierwszy\s*gol\s*-?\s*przedzia[łl]/iu,
+      /first\s*goal\s*time/iu,
+    ],
+    bookmakerData: {
+      // Market 125 = "1. gol - przedziały 15-minutowe"
+      // Market 126 = "1. gol - przedziały 10-minutowe"
+      sts: { idMappings: [125, 126] },
+    },
+  },
+  {
+    numericId: 48,
+    code: "TIME_PERIOD_RESULT",
+    slug: "time-period-result",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Wynik w przedziale czasowym", en: "Time Period Result" },
+    descriptions: {
+      pl: "Jaki będzie wynik w określonym przedziale czasowym?",
+      en: "What will be the result in a specific time period?",
+    },
+    hasParameter: true,
+    parameterType: "integer",
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 23,
+    patterns: [
+      /^wynik\s*(od|w)\s*\d+\.\s*(do\s*\d+\.?)?\s*minut/iu,
+      /time\s*period\s*result/iu,
+    ],
+    bookmakerData: {
+      // Market 132 = "Wynik od 1. do 10. minuty"
+      sts: { idMappings: [132] },
     },
   },
 ];
@@ -815,7 +889,8 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /goalscorer.*anytime/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [52] },
+      // Market 52 = basic goalscorer, Market 1850 = player goals with thresholds (1+, 2+, 3+)
+      sts: { idMappings: [52, 1850] },
     },
   },
   {
@@ -839,7 +914,8 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /player.*shots/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [53] },
+      // Market 53 = basic shots, Market 1851 = player shots with thresholds
+      sts: { idMappings: [53, 1851] },
     },
   },
   {
@@ -863,7 +939,8 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /player.*(to\s*(receive|get)\s*)?card/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [54] },
+      // Market 54 = basic player cards, Market 1855 = player cards with extra time
+      sts: { idMappings: [54, 1855] },
     },
   },
   {
@@ -885,6 +962,82 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /^asyst[ay]?\s*(zawodnik)?/iu,
       /player.*assist/iu,
     ],
+    bookmakerData: {
+      // Market 1845 = player assists with thresholds (1+, 2+)
+      sts: { idMappings: [1845] },
+    },
+  },
+  {
+    numericId: 50,
+    code: "PLAYER_GOAL_AND_RESULT",
+    slug: "player-goal-and-result",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Gol zawodnika i wynik", en: "Player Goal & Result" },
+    descriptions: {
+      pl: "Zawodnik strzeli gola i jaki będzie wynik meczu?",
+      en: "Player scores and what will be the match result?",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER_HOME", "PLAYER_DRAW", "PLAYER_AWAY"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 66,
+    patterns: [
+      /zawodnik.*strzeli.*gol[ay]?\s*(i|[+&])\s*wynik/iu,
+      /player.*goal.*result/iu,
+    ],
+    bookmakerData: {
+      // Market 1051 = "Zawodnik - strzeli gola i wynik końcowy"
+      sts: { idMappings: [1051] },
+    },
+  },
+  {
+    numericId: 51,
+    code: "PLAYER_SHOTS_ON_TARGET",
+    slug: "player-shots-on-target",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Celne strzały zawodnika", en: "Player Shots On Target" },
+    descriptions: {
+      pl: "Liczba celnych strzałów zawodnika",
+      en: "Player shots on target count",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 67,
+    patterns: [
+      /celne\s*strza[łl]/iu,
+      /shots?\s*on\s*target/iu,
+    ],
+    bookmakerData: {
+      // Market 1852 = "celne strzały"
+      sts: { idMappings: [1852] },
+    },
+  },
+  {
+    numericId: 52,
+    code: "PLAYER_PASSES",
+    slug: "player-passes",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Podania zawodnika", en: "Player Passes" },
+    descriptions: {
+      pl: "Liczba podań zawodnika",
+      en: "Player pass count",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 68,
+    patterns: [
+      /podan[ie]a?\s*(zawodnik)?/iu,
+      /player.*pass/iu,
+    ],
+    bookmakerData: {
+      // Market 1853 = "podania"
+      sts: { idMappings: [1853] },
+    },
   },
 ];
 
@@ -951,6 +1104,81 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
     },
   },
   {
+    numericId: 41,
+    code: "CORNERS_RACE",
+    slug: "corners-race",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Więcej rzutów rożnych", en: "Corners Race" },
+    descriptions: {
+      pl: "Która drużyna wykona więcej rzutów rożnych?",
+      en: "Which team will have more corners?",
+    },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 72,
+    patterns: [
+      /^wi[ęe]cej\s*(rzut[óo]w\s*)?ro[żz]n/iu,
+      /ro[żz]n[eyaych]*\s*-?\s*wi[ęe]cej/iu,
+      /more\s*corners/iu,
+      /corners?\s*race/iu,
+    ],
+    bookmakerData: {
+      // Market 220 = "Więcej rzutów rożnych"
+      // Market 239 = "1. połowa - więcej rzutów rożnych"
+      sts: { idMappings: [220, 239] },
+    },
+  },
+  {
+    numericId: 42,
+    code: "FIRST_CORNER",
+    slug: "first-corner",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Pierwszy rzut rożny", en: "First Corner" },
+    descriptions: {
+      pl: "Która drużyna wykona pierwszy rzut rożny?",
+      en: "Which team will take the first corner?",
+    },
+    hasParameter: false,
+    selections: ["HOME", "NONE", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 73,
+    patterns: [
+      /^1\.\s*(rzut\s*)?ro[żz]n/iu,
+      /^pierwszy\s*(rzut\s*)?ro[żz]n/iu,
+      /first\s*corner/iu,
+    ],
+    bookmakerData: {
+      // Market 221 = "1. rzut rożny"
+      sts: { idMappings: [221] },
+    },
+  },
+  {
+    numericId: 43,
+    code: "CORNERS_HANDICAP",
+    slug: "corners-handicap",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Rzuty rożne - handicap", en: "Corners Handicap" },
+    descriptions: {
+      pl: "Handicap na liczbę rzutów rożnych",
+      en: "Handicap on total corners",
+    },
+    hasParameter: true,
+    parameterType: "handicap",
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.HANDICAP_SELECTOR,
+    displayOrder: 74,
+    patterns: [
+      /ro[żz]n[eyaych]*\s*-?\s*handicap/iu,
+      /corners?\s*handicap/iu,
+    ],
+    bookmakerData: {
+      // Market 225 = "Rzuty rożne - handicap"
+      // Market 244 = "1. połowa - rzuty rożne - handicap"
+      sts: { idMappings: [225, 244] },
+    },
+  },
+  {
     numericId: 31,
     code: "CARDS_TOTAL",
     slug: "cards-total",
@@ -1005,6 +1233,56 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
       // Market 193 = "1. drużyna - dokładna liczba kartek"
       // Market 194 = "2. drużyna - dokładna liczba kartek"
       sts: { idMappings: [193, 194] },
+    },
+  },
+  {
+    numericId: 44,
+    code: "CARDS_RACE",
+    slug: "cards-race",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Więcej kartek", en: "Cards Race" },
+    descriptions: {
+      pl: "Która drużyna otrzyma więcej kartek?",
+      en: "Which team will receive more cards?",
+    },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 75,
+    patterns: [
+      /^wi[ęe]cej\s*kartek/iu,
+      /kartk[ai]\s*-?\s*wi[ęe]cej/iu,
+      /more\s*cards/iu,
+      /cards?\s*race/iu,
+    ],
+    bookmakerData: {
+      // Market 178 = "Więcej kartek"
+      // Market 199 = "1. połowa - więcej kartek"
+      sts: { idMappings: [178, 199] },
+    },
+  },
+  {
+    numericId: 45,
+    code: "FIRST_CARD",
+    slug: "first-card",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Pierwsza kartka", en: "First Card" },
+    descriptions: {
+      pl: "Która drużyna otrzyma pierwszą kartkę?",
+      en: "Which team will receive the first card?",
+    },
+    hasParameter: false,
+    selections: ["HOME", "NONE", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 76,
+    patterns: [
+      /^1\.\s*kartk/iu,
+      /^pierwsz[ay]\s*kartk/iu,
+      /first\s*(booking|card)/iu,
+    ],
+    bookmakerData: {
+      // Market 179 = "1. kartka"
+      sts: { idMappings: [179] },
     },
   },
   {
@@ -1078,7 +1356,8 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /match\s*result.*btts/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [50] },
+      // Market 49 = "Wynik końcowy i obie drużyny strzelą gola", Market 50 = standard
+      sts: { idMappings: [49, 50] },
     },
   },
   {
@@ -1199,6 +1478,30 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /^dc\s*[+&i]\s*(o\/?u|over|under|\d)/iu,
       /double\s*chance.*(over|under|total)/iu,
     ],
+  },
+  {
+    numericId: 49,
+    code: "FIRST_GOAL_AND_RESULT",
+    slug: "first-goal-and-result",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Pierwszy gol i wynik", en: "First Goal & Result" },
+    descriptions: {
+      pl: "Która drużyna strzeli pierwszego gola i jaki będzie wynik?",
+      en: "Which team scores first and what will be the result?",
+    },
+    hasParameter: false,
+    selections: ["HOME_HOME", "HOME_DRAW", "HOME_AWAY", "AWAY_HOME", "AWAY_DRAW", "AWAY_AWAY", "NONE"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 86,
+    patterns: [
+      /^1\.\s*gol\s*(i|[+&])\s*wynik/iu,
+      /^pierwszy\s*gol\s*(i|[+&])\s*wynik/iu,
+      /first\s*goal.*result/iu,
+    ],
+    bookmakerData: {
+      // Market 258 = "1. gol i wynik końcowy"
+      sts: { idMappings: [258] },
+    },
   },
 ];
 

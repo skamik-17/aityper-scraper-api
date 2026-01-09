@@ -2,6 +2,27 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// All supported Polish bookmakers (for type definitions)
+export const ALL_POLISH_BOOKMAKERS = [
+  "sts",
+  "fortuna",
+  "betclic",
+  "superbet",
+  "lvbet",
+  "fuksiarz",
+  "betfan",
+  "totalbet",
+  "forbet",
+  "etoto",
+  "betters",
+  "lebull",
+  "betcris",
+  "pzbuk",
+] as const;
+
+// Type for all Polish bookmakers (used in type definitions)
+export type PolishBookmaker = (typeof ALL_POLISH_BOOKMAKERS)[number];
+
 export const CONFIG = {
   // Server
   PORT: parseInt(process.env.PORT || "3001"),
@@ -53,8 +74,8 @@ export const CONFIG = {
 // Type for enabled leagues
 export type EnabledLeague = (typeof CONFIG.ENABLED_LEAGUES)[number];
 
-// Type for bookmakers
-export type PolishBookmaker = (typeof CONFIG.BOOKMAKERS)[number];
+// Type for enabled bookmakers (subset of PolishBookmaker)
+export type EnabledBookmaker = (typeof CONFIG.BOOKMAKERS)[number];
 
 // Validate required env vars
 export function validateConfig(): void {

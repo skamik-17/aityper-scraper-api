@@ -123,10 +123,24 @@ export const NormalizedMarketType = {
   // Statistics markets (STATYSTYKI)
   CORNERS_TOTAL: "CORNERS_TOTAL",
   CORNERS_TEAM: "CORNERS_TEAM",
+  CORNERS_RACE: "CORNERS_RACE",
+  FIRST_CORNER: "FIRST_CORNER",
+  CORNERS_HANDICAP: "CORNERS_HANDICAP",
   CARDS_TOTAL: "CARDS_TOTAL",
   CARDS_TEAM: "CARDS_TEAM",
+  CARDS_RACE: "CARDS_RACE",
+  FIRST_CARD: "FIRST_CARD",
   FOULS_TOTAL: "FOULS_TOTAL",
   OFFSIDES_TOTAL: "OFFSIDES_TOTAL",
+  // Goals timing markets
+  FIRST_TEAM_TO_SCORE: "FIRST_TEAM_TO_SCORE",
+  FIRST_GOAL_TIME: "FIRST_GOAL_TIME",
+  TIME_PERIOD_RESULT: "TIME_PERIOD_RESULT",
+  FIRST_GOAL_AND_RESULT: "FIRST_GOAL_AND_RESULT",
+  // Additional player markets
+  PLAYER_GOAL_AND_RESULT: "PLAYER_GOAL_AND_RESULT",
+  PLAYER_SHOTS_ON_TARGET: "PLAYER_SHOTS_ON_TARGET",
+  PLAYER_PASSES: "PLAYER_PASSES",
   // Combination markets (KOMBINACJE)
   RESULT_AND_BTTS: "RESULT_AND_BTTS",
   RESULT_AND_TOTAL: "RESULT_AND_TOTAL",
@@ -184,33 +198,57 @@ export interface BookmakerAdapter {
   selectionOverrides?: Record<string, NormalizedSelection>;
 }
 
+export interface BookmakerMarketData {
+  idMappings?: number[];
+  additionalPatterns?: RegExp[];
+  displayName?: string;
+}
+
 export interface MarketDefinition {
   code: string;
-  name_pl: string;
-  name_en: string;
+  slug?: string;
+  numericId?: number;
+  name_pl?: string;
+  name_en?: string;
+  labels?: { pl: string; en: string };
   category: MarketCategory;
-  view_type: ViewType;
-  patterns: string[];
+  view_type?: ViewType;
+  viewType?: ViewType;
+  patterns: (string | RegExp)[];
+  selections?: string[];
+  hasParameter?: boolean;
+  parameterType?: ParameterType;
+  extractParam?: (match: RegExpMatchArray) => string | undefined;
+  bookmakerData?: Record<string, BookmakerMarketData>;
 }
 
 export interface PatternMatch {
   definition: MarketDefinition;
   parameter?: string;
+  param?: string;
+  match?: RegExpMatchArray;
+}
+
+export interface NormalizedMarketSelection {
+  name: string;
+  normalizedName: NormalizedSelection;
+  odds: number;
 }
 
 export interface NormalizedMarket {
-  type: NormalizedMarketType;
+  name: string;
+  normalizedType: NormalizedMarketType;
+  marketKey: string;
   category: MarketCategory;
-  parameter?: string;
+  paramValue?: string;
   selections: NormalizedMarketSelection[];
 }
 
 export interface NormalizedSelectionResult {
-  normalizedType: NormalizedMarketType;
-  category: MarketCategory;
-  parameter?: string;
-  selections: NormalizedSelection[];
+  name: string;
+  normalizedName: NormalizedSelection;
+  odds: number;
 }
 
 export type NormalMarket = NormalizedMarket;
-export type ScrapedMarket = import("../../../types/full-offer.js").ScrapedMarket;
+export type ScrapedMarket = import("../../types/full-offer.js").ScrapedMarket;

@@ -92,7 +92,7 @@ export class UnifiedNormalizer {
 
     // Strategy 2: Try pattern matching (global registry)
     const patternMatch = matchPattern(market.name, MARKET_REGISTRY);
-    if (patternMatch) {
+    if (patternMatch && patternMatch.definition.slug) {
       return this.completeNormalization(
         patternMatch.definition.slug,
         market,

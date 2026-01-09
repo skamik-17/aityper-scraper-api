@@ -302,7 +302,7 @@ function normalizeSelectionWithContext(
   // ==========================================================================
   // Try to match expected selections for this market
   // ==========================================================================
-  for (const expected of marketDef.selections) {
+  for (const expected of marketDef.selections || []) {
     const expectedLower = expected.toLowerCase();
     if (
       lowerName === expectedLower ||

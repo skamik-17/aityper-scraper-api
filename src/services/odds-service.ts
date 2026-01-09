@@ -41,7 +41,7 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
         namePl: row.market_name_pl,
         viewType: row.view_type,
         category: row.category,
-        paramValue: row.param_value ?? undefined,
+        paramValue: row.param_value ?? null,
         bookmakerOdds: {},
         bestOdds: {},
       };
@@ -101,7 +101,7 @@ export async function getOddsForMatch(
         namePl: row.market_name_pl,
         viewType: row.view_type,
         category: row.category,
-        paramValue: row.param_value ?? undefined,
+        paramValue: row.param_value ?? null,
         bookmakerOdds: {},
         bestOdds: {},
       };

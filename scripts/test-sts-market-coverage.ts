@@ -4,7 +4,10 @@
  * Tests which of our 40 canonical markets are properly scraped from STS.
  * Compares STS market data against our market registry definitions.
  *
- * Run: npx tsx scripts/test-sts-market-coverage.ts
+ * Usage:
+ *   npx tsx scripts/test-sts-market-coverage.ts                    # Test default league (laliga)
+ *   npx tsx scripts/test-sts-market-coverage.ts --league ekstraklasa  # Test specific league
+ *   npx tsx scripts/test-sts-market-coverage.ts --all-leagues      # Test all 5 leagues
  */
 
 import { chromium, type Page, type WebSocket } from "playwright";
@@ -55,15 +58,39 @@ interface CoverageResult {
 const WS_URL_PATTERN = "/sbk/api/sbk";
 
 // ============================================================================
-// LEAGUE CONFIGURATION - Change this to test different leagues
+// LEAGUE CONFIGURATION
 // ============================================================================
-const TEST_LEAGUE = "laliga"; // Options: "ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1"
-const LEAGUE = LEAGUE_CONFIG[TEST_LEAGUE];
-const LEAGUE_URL = LEAGUE.url;
+const ALL_LEAGUES = ["ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1"] as const;
+type LeagueName = typeof ALL_LEAGUES[number];
 
-// Override with specific match URL if set (for testing specific matches)
-const SPECIFIC_MATCH_URL = "https://www.sts.pl/kursy/getafe-real-sociedad/f1283266?bundle=wszystkie";
-// const SPECIFIC_MATCH_URL = ""; // Set empty to use automatic match finding
+// Parse command-line arguments
+function parseArgs(): { leagues: LeagueName[]; specificMatchUrl?: string } {
+  const args = process.argv.slice(2);
+
+  // Check for --all-leagues flag
+  if (args.includes("--all-leagues")) {
+    return { leagues: [...ALL_LEAGUES] };
+  }
+
+  // Check for --league argument
+  const leagueIndex = args.findIndex(a => a === "--league");
+  if (leagueIndex !== -1 && args[leagueIndex + 1]) {
+    const league = args[leagueIndex + 1] as LeagueName;
+    if (ALL_LEAGUES.includes(league)) {
+      return { leagues: [league] };
+    }
+    console.error(`Unknown league: ${league}`);
+    console.error(`Available: ${ALL_LEAGUES.join(", ")}`);
+    process.exit(1);
+  }
+
+  // Check for --url argument (specific match URL)
+  const urlIndex = args.findIndex(a => a === "--url");
+  const specificMatchUrl = urlIndex !== -1 ? args[urlIndex + 1] : undefined;
+
+  // Default to laliga
+  return { leagues: ["laliga"], specificMatchUrl };
+}
 
 function setupWebSocketCapture(page: Page, result: WSCaptureResult): void {
   page.on("websocket", (ws: WebSocket) => {
@@ -113,13 +140,30 @@ function parseWebSocketJson(rawData: string): any | null {
 // Main Test Function
 // ============================================================================
 
-async function testSTSMarketCoverage(): Promise<void> {
-  console.log("═".repeat(80));
-  console.log("STS MARKET COVERAGE TEST");
-  console.log("═".repeat(80));
-  console.log("\nThis test compares STS markets against our 40 canonical market definitions.\n");
+interface LeagueCoverageResult {
+  league: string;
+  matchUrl: string;
+  stsMarketsCount: number;
+  coverageResults: CoverageResult[];
+  unmappedSTSMarkets: STSMarketInfo[];
+}
 
-  const browser = await chromium.launch({ headless: true });
+async function testSTSMarketCoverageForLeague(
+  leagueName: LeagueName,
+  browser: any,
+  specificMatchUrl?: string
+): Promise<LeagueCoverageResult | null> {
+  const LEAGUE = LEAGUE_CONFIG[leagueName];
+  if (!LEAGUE) {
+    console.log(`[Test] League ${leagueName} not found in config`);
+    return null;
+  }
+  const LEAGUE_URL = LEAGUE.url;
+
+  console.log(`\n${"─".repeat(80)}`);
+  console.log(`TESTING LEAGUE: ${leagueName.toUpperCase()}`);
+  console.log(`${"─".repeat(80)}`);
+
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -132,7 +176,7 @@ async function testSTSMarketCoverage(): Promise<void> {
 
   try {
     // Navigate to league page to get initial data
-    console.log(`[Test] Navigating to ${TEST_LEAGUE} page: ${LEAGUE_URL}`);
+    console.log(`[Test] Navigating to ${leagueName} page: ${LEAGUE_URL}`);
     await page.goto(LEAGUE_URL, {
       timeout: 30000,
       waitUntil: "domcontentloaded",
@@ -186,16 +230,18 @@ async function testSTSMarketCoverage(): Promise<void> {
     }
 
     // Use specific match URL if provided
-    if (SPECIFIC_MATCH_URL) {
-      matchUrl = SPECIFIC_MATCH_URL;
-      const idMatch = SPECIFIC_MATCH_URL.match(/\/(f\d+)/);
+    if (specificMatchUrl) {
+      matchUrl = specificMatchUrl;
+      const idMatch = specificMatchUrl.match(/\/(f\d+)/);
       fixtureId = idMatch?.[1] || "";
       console.log(`[Test] Using specific match URL: ${matchUrl}`);
       console.log(`[Test] Extracted fixture ID: ${fixtureId}`);
     }
 
     if (!matchUrl) {
-      throw new Error(`No ${TEST_LEAGUE} match found`);
+      console.log(`[Test] No ${leagueName} match found - skipping`);
+      await context.close();
+      return null;
     }
 
     // Navigate to match page
@@ -320,44 +366,6 @@ async function testSTSMarketCoverage(): Promise<void> {
       });
     }
 
-    // Print results
-    console.log("═".repeat(80));
-    console.log("COVERAGE SUMMARY BY STATUS");
-    console.log("═".repeat(80));
-
-    const byStatus = {
-      COVERED: coverageResults.filter(r => r.status === "COVERED"),
-      PARTIAL: coverageResults.filter(r => r.status === "PARTIAL"),
-      MISSING: coverageResults.filter(r => r.status === "MISSING"),
-      NO_MAPPING: coverageResults.filter(r => r.status === "NO_MAPPING"),
-    };
-
-    console.log(`\n✅ COVERED (${byStatus.COVERED.length} markets):`);
-    for (const r of byStatus.COVERED) {
-      console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
-      console.log(`        STS IDs: ${r.stsIdMappings.join(", ")}`);
-    }
-
-    console.log(`\n⚠️  PARTIAL (${byStatus.PARTIAL.length} markets):`);
-    for (const r of byStatus.PARTIAL) {
-      const found = r.matchedSTSMarkets.map(m => m.marketId);
-      const missing = r.stsIdMappings.filter(id => !found.includes(id));
-      console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
-      console.log(`        Found: ${found.join(", ")}`);
-      console.log(`        Missing: ${missing.join(", ")}`);
-    }
-
-    console.log(`\n❌ MISSING (${byStatus.MISSING.length} markets):`);
-    for (const r of byStatus.MISSING) {
-      console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
-      console.log(`        Expected STS IDs: ${r.stsIdMappings.join(", ")}`);
-    }
-
-    console.log(`\n⬜ NO MAPPING (${byStatus.NO_MAPPING.length} markets):`);
-    for (const r of byStatus.NO_MAPPING) {
-      console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
-    }
-
     // Show STS markets we're NOT mapping
     const mappedSTSIds = new Set<number>();
     for (const market of UNIFIED_MARKET_REGISTRY) {
@@ -369,48 +377,159 @@ async function testSTSMarketCoverage(): Promise<void> {
       .filter(m => !mappedSTSIds.has(m.marketId))
       .sort((a, b) => a.marketId - b.marketId);
 
-    console.log(`\n${"═".repeat(80)}`);
-    console.log(`UNMAPPED STS MARKETS (${unmappedSTSMarkets.length} markets not in our registry)`);
-    console.log("═".repeat(80));
-
-    for (const m of unmappedSTSMarkets) {
-      console.log(`\n   Market ${m.marketId}: "${m.lineName}" (${m.outcomeCount} outcomes)`);
-      const samples = m.sampleOutcomes.slice(0, 3).map(o =>
-        `${o.id}:"${o.name || 'NULL'}"=${o.odds}`
-      ).join(", ");
-      console.log(`        Sample: ${samples}`);
-    }
-
-    // Final stats
-    console.log(`\n${"═".repeat(80)}`);
-    console.log("FINAL STATISTICS");
-    console.log("═".repeat(80));
-    console.log(`\nOur Registry: ${UNIFIED_MARKET_REGISTRY.length} canonical markets`);
-    console.log(`STS Provides: ${stsMarkets.size} unique markets`);
-    console.log(`\nCoverage:`);
-    console.log(`  ✅ Fully Covered:  ${byStatus.COVERED.length}`);
-    console.log(`  ⚠️  Partial:        ${byStatus.PARTIAL.length}`);
-    console.log(`  ❌ Missing:        ${byStatus.MISSING.length}`);
-    console.log(`  ⬜ No STS Mapping: ${byStatus.NO_MAPPING.length}`);
-    console.log(`\nUnmapped STS markets: ${unmappedSTSMarkets.length}`);
-
-    // Save detailed report
-    const report = {
-      timestamp: new Date().toISOString(),
-      matchUrl,
-      stsMarketsCount: stsMarkets.size,
-      ourMarketsCount: UNIFIED_MARKET_REGISTRY.length,
-      coverage: coverageResults,
-      unmappedSTSMarkets: unmappedSTSMarkets,
+    // Print summary for this league
+    const byStatus = {
+      COVERED: coverageResults.filter(r => r.status === "COVERED"),
+      PARTIAL: coverageResults.filter(r => r.status === "PARTIAL"),
+      MISSING: coverageResults.filter(r => r.status === "MISSING"),
+      NO_MAPPING: coverageResults.filter(r => r.status === "NO_MAPPING"),
     };
 
-    fs.mkdirSync("./logs", { recursive: true });
-    fs.writeFileSync("./logs/sts-coverage-report.json", JSON.stringify(report, null, 2));
-    console.log(`\nDetailed report saved to: ./logs/sts-coverage-report.json`);
+    console.log(`\n[${leagueName}] Coverage: ✅${byStatus.COVERED.length} ⚠️${byStatus.PARTIAL.length} ❌${byStatus.MISSING.length} ⬜${byStatus.NO_MAPPING.length}`);
+    console.log(`[${leagueName}] STS Markets: ${stsMarkets.size}, Unmapped: ${unmappedSTSMarkets.length}`);
 
+    await context.close();
+
+    return {
+      league: leagueName,
+      matchUrl,
+      stsMarketsCount: stsMarkets.size,
+      coverageResults,
+      unmappedSTSMarkets,
+    };
+  } catch (error) {
+    console.error(`[${leagueName}] Error:`, error);
+    await context.close();
+    return null;
+  }
+}
+
+function printDetailedResults(results: LeagueCoverageResult[]): void {
+  console.log("\n" + "═".repeat(80));
+  console.log("AGGREGATED COVERAGE SUMMARY");
+  console.log("═".repeat(80));
+
+  // Aggregate all coverage results
+  const allCoverage = new Map<string, CoverageResult>();
+  const allUnmapped = new Map<number, STSMarketInfo>();
+
+  for (const result of results) {
+    for (const cr of result.coverageResults) {
+      const existing = allCoverage.get(cr.marketCode);
+      if (!existing || (cr.status === "COVERED" && existing.status !== "COVERED")) {
+        allCoverage.set(cr.marketCode, cr);
+      }
+    }
+    for (const um of result.unmappedSTSMarkets) {
+      if (!allUnmapped.has(um.marketId)) {
+        allUnmapped.set(um.marketId, um);
+      }
+    }
+  }
+
+  const coverageResults = Array.from(allCoverage.values());
+  const byStatus = {
+    COVERED: coverageResults.filter(r => r.status === "COVERED"),
+    PARTIAL: coverageResults.filter(r => r.status === "PARTIAL"),
+    MISSING: coverageResults.filter(r => r.status === "MISSING"),
+    NO_MAPPING: coverageResults.filter(r => r.status === "NO_MAPPING"),
+  };
+
+  console.log(`\n✅ COVERED (${byStatus.COVERED.length} markets):`);
+  for (const r of byStatus.COVERED) {
+    console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
+  }
+
+  console.log(`\n⚠️  PARTIAL (${byStatus.PARTIAL.length} markets):`);
+  for (const r of byStatus.PARTIAL) {
+    const found = r.matchedSTSMarkets.map(m => m.marketId);
+    const missing = r.stsIdMappings.filter(id => !found.includes(id));
+    console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
+    console.log(`        Found: ${found.join(", ")}, Missing: ${missing.join(", ")}`);
+  }
+
+  console.log(`\n❌ MISSING (${byStatus.MISSING.length} markets):`);
+  for (const r of byStatus.MISSING) {
+    console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
+  }
+
+  console.log(`\n⬜ NO MAPPING (${byStatus.NO_MAPPING.length} markets):`);
+  for (const r of byStatus.NO_MAPPING) {
+    console.log(`   [${r.numericId.toString().padStart(2)}] ${r.marketCode.padEnd(25)} (${r.label})`);
+  }
+
+  // Show unmapped STS markets
+  const unmappedSTSMarkets = Array.from(allUnmapped.values()).sort((a, b) => a.marketId - b.marketId);
+  console.log(`\n${"═".repeat(80)}`);
+  console.log(`UNMAPPED STS MARKETS (${unmappedSTSMarkets.length} across all leagues)`);
+  console.log("═".repeat(80));
+
+  for (const m of unmappedSTSMarkets) {
+    console.log(`\n   Market ${m.marketId}: "${m.lineName}" (${m.outcomeCount} outcomes)`);
+    const samples = m.sampleOutcomes.slice(0, 3).map(o =>
+      `${o.id}:"${o.name || 'NULL'}"=${o.odds}`
+    ).join(", ");
+    console.log(`        Sample: ${samples}`);
+  }
+
+  // Final stats
+  console.log(`\n${"═".repeat(80)}`);
+  console.log("FINAL STATISTICS");
+  console.log("═".repeat(80));
+  console.log(`\nLeagues tested: ${results.length}`);
+  console.log(`Our Registry: ${UNIFIED_MARKET_REGISTRY.length} canonical markets`);
+  console.log(`\nAggregated Coverage:`);
+  console.log(`  ✅ Fully Covered:  ${byStatus.COVERED.length}`);
+  console.log(`  ⚠️  Partial:        ${byStatus.PARTIAL.length}`);
+  console.log(`  ❌ Missing:        ${byStatus.MISSING.length}`);
+  console.log(`  ⬜ No STS Mapping: ${byStatus.NO_MAPPING.length}`);
+  console.log(`\nTotal unmapped STS markets: ${unmappedSTSMarkets.length}`);
+}
+
+async function main(): Promise<void> {
+  const { leagues, specificMatchUrl } = parseArgs();
+
+  console.log("═".repeat(80));
+  console.log("STS MARKET COVERAGE TEST");
+  console.log("═".repeat(80));
+  console.log(`\nTesting ${leagues.length} league(s): ${leagues.join(", ")}`);
+  console.log("This test compares STS markets against our 40 canonical market definitions.\n");
+
+  const browser = await chromium.launch({ headless: true });
+  const results: LeagueCoverageResult[] = [];
+
+  try {
+    for (const league of leagues) {
+      const result = await testSTSMarketCoverageForLeague(league, browser, specificMatchUrl);
+      if (result) {
+        results.push(result);
+
+        // Save per-league report
+        fs.mkdirSync("./logs", { recursive: true });
+        fs.writeFileSync(
+          `./logs/sts-coverage-report-${league}.json`,
+          JSON.stringify(result, null, 2)
+        );
+      }
+    }
+
+    if (results.length > 0) {
+      printDetailedResults(results);
+
+      // Save combined report
+      const combinedReport = {
+        timestamp: new Date().toISOString(),
+        leaguesTested: leagues,
+        results,
+      };
+      fs.writeFileSync("./logs/sts-coverage-report.json", JSON.stringify(combinedReport, null, 2));
+      console.log(`\nReports saved to: ./logs/sts-coverage-report*.json`);
+    } else {
+      console.log("\nNo results to report - no matches found in any league.");
+    }
   } finally {
     await browser.close();
   }
 }
 
-testSTSMarketCoverage().catch(console.error);
+main().catch(console.error);

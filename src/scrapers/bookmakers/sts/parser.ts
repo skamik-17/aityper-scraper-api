@@ -18,6 +18,8 @@ import {
   OUTCOME_DOUBLE_CHANCE,
   OUTCOME_BTTS,
   OUTCOME_OVER_UNDER,
+  CORRECT_SCORE_OUTCOMES,
+  HALF_CORRECT_SCORE_OUTCOMES,
   LEAGUE_CONFIG,
 } from "./constants.js";
 import type {
@@ -69,23 +71,54 @@ export function parseFixtures(
   const football = data.B?.S?.["1"];
   if (!football?.C) return fixtures;
 
-  // Iterate through categories (countries)
-  for (const [, cat] of Object.entries(football.C)) {
-    const countryName = (cat.n || "").toLowerCase();
-    if (!countryName.includes(config.countryFilter)) continue;
+      // Iterate through categories (countries)
+      for (const [, cat] of Object.entries(football.C)) {
+        const countryName = (cat.n || "").toLowerCase();
+        if (!countryName.includes(config.countryFilter)) continue;
 
-    // Iterate through tournaments
-    for (const [, tourn] of Object.entries(cat.T || {})) {
-      const tournamentName = (tourn.n || "").toLowerCase();
-      if (!tournamentName.includes(config.tournamentFilter)) continue;
+        // Iterate through tournaments
+        for (const [, tourn] of Object.entries(cat.T || {})) {
+          const tournamentName = (tourn.n || "").toLowerCase();
+          if (!tournamentName.includes(config.tournamentFilter)) continue;
 
-      // Exclude Segunda Division for La Liga
-      if (
-        league === "laliga" &&
-        (tournamentName.includes("2") || tournamentName.includes("hypermotion"))
-      ) {
-        continue;
-      }
+          // Exclude Segunda Division for La Liga
+          if (
+            league === "laliga" &&
+            (tournamentName.includes("2") || tournamentName.includes("hypermotion"))
+          ) {
+            continue;
+          }
+
+          // Exclude U21, U23, Cup, and non-Premier League tournaments for Premier League
+          if (league === "premier-league") {
+            // Skip U21/U23 matches
+            if (
+              tournamentName.includes("u21") ||
+              tournamentName.includes("u23") ||
+              tournamentName.includes("under 21") ||
+              tournamentName.includes("under 23")
+            ) {
+              continue;
+            }
+            // Skip Cup competitions
+            if (
+              tournamentName.includes("cup") ||
+              tournamentName.includes("puchar") ||
+              tournamentName.includes("trophy")
+            ) {
+              continue;
+            }
+            // Skip lower leagues (League 1, Championship, etc.)
+            if (
+              tournamentName.includes("league 1") ||
+              tournamentName.includes("championship") ||
+              tournamentName.includes("ligue 2") ||
+              tournamentName.includes("second") ||
+              tournamentName.includes("third")
+            ) {
+              continue;
+            }
+          }
 
       // Extract fixtures
       for (const [fixId, fix] of Object.entries(tourn.FX || {})) {
@@ -388,6 +421,21 @@ function getSelectionName(
       if (outcomeId === OUTCOME_1X2.HOME) return fixture.home;
       if (outcomeId === OUTCOME_1X2.DRAW) return "Remis";
       if (outcomeId === OUTCOME_1X2.AWAY) return fixture.away;
+      break;
+
+    case MARKET_IDS.CORRECT_SCORE:
+      // Use the full match correct score mapping
+      if (CORRECT_SCORE_OUTCOMES[outcomeId]) {
+        return CORRECT_SCORE_OUTCOMES[outcomeId];
+      }
+      break;
+
+    case MARKET_IDS.FIRST_HALF_CORRECT_SCORE:
+    case MARKET_IDS.SECOND_HALF_CORRECT_SCORE:
+      // Use the half-time correct score mapping
+      if (HALF_CORRECT_SCORE_OUTCOMES[outcomeId]) {
+        return HALF_CORRECT_SCORE_OUTCOMES[outcomeId];
+      }
       break;
   }
 

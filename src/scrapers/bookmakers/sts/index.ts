@@ -26,7 +26,7 @@ import type {
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { findMatchingEvent, getCanonicalTeamName, matchToCanonical } from "../../../utils/team-matcher.js";
 
 // Import modular components
 import { LEAGUE_CONFIG } from "./constants.js";
@@ -391,11 +391,44 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
           const markets = parseAllMarkets(fixture, fixtureJson, matchInitialJson);
 
           if (markets.length > 0) {
+            // Filter out U21/U23/youth team matches by checking team names
+            const homeTeamLower = fixture.home.toLowerCase();
+            const awayTeamLower = fixture.away.toLowerCase();
+            if (
+              homeTeamLower.includes("u21") ||
+              homeTeamLower.includes("u23") ||
+              awayTeamLower.includes("u21") ||
+              awayTeamLower.includes("u23") ||
+              homeTeamLower.includes("under 21") ||
+              homeTeamLower.includes("under 23") ||
+              awayTeamLower.includes("under 21") ||
+              awayTeamLower.includes("under 23")
+            ) {
+              console.warn(
+                `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Youth team match`
+              );
+              continue;
+            }
+
+            // Check if teams are in the league whitelist using matchToCanonical
+            const homeMatch = matchToCanonical(fixture.home, league);
+            const awayMatch = matchToCanonical(fixture.away, league);
+
+            if (!homeMatch || !awayMatch) {
+              console.warn(
+                `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Teams not in ${league} whitelist`
+              );
+              continue;
+            }
+
+            const homeCanonical = homeMatch.name;
+            const awayCanonical = awayMatch.name;
+
             matches.push({
               matchId: fixture.id,
               bookmaker: this.bookmaker,
-              homeTeam: getCanonicalTeamName(fixture.home, league),
-              awayTeam: getCanonicalTeamName(fixture.away, league),
+              homeTeam: homeCanonical,
+              awayTeam: awayCanonical,
               eventUrl: fixture.eventUrl,
               markets,
               scrapedAt: new Date(),

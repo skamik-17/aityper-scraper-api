@@ -172,3 +172,45 @@ export function buildMarketKey(type: NormalizedMarketType, param?: string): stri
   const normalizedParam = param.replace(",", ".");
   return `${type}:${normalizedParam}`;
 }
+
+// ============================================================================
+// ADDITIONAL TYPES (for normalization core)
+// ============================================================================
+
+export interface BookmakerAdapter {
+  bookmaker: string;
+  bookmakerName: string;
+  idMappings?: Map<number, string>;
+  selectionOverrides?: Record<string, NormalizedSelection>;
+}
+
+export interface MarketDefinition {
+  code: string;
+  name_pl: string;
+  name_en: string;
+  category: MarketCategory;
+  view_type: ViewType;
+  patterns: string[];
+}
+
+export interface PatternMatch {
+  definition: MarketDefinition;
+  parameter?: string;
+}
+
+export interface NormalizedMarket {
+  type: NormalizedMarketType;
+  category: MarketCategory;
+  parameter?: string;
+  selections: NormalizedMarketSelection[];
+}
+
+export interface NormalizedSelectionResult {
+  normalizedType: NormalizedMarketType;
+  category: MarketCategory;
+  parameter?: string;
+  selections: NormalizedSelection[];
+}
+
+export type NormalMarket = NormalizedMarket;
+export type ScrapedMarket = import("../../../types/full-offer.js").ScrapedMarket;

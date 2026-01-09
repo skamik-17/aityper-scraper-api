@@ -24,7 +24,7 @@ import {
   getCanonicalMarketCodes,
   getMarketDefinition,
 } from "../repositories/full-offer-repository.js";
-import type { ViewType } from "../services/normalization/types.js";
+import { ViewType } from "../services/normalization/types.js";
 import { UNIFIED_MARKET_REGISTRY } from "../data/market-registry.js";
 
 const router = Router();

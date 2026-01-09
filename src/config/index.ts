@@ -23,24 +23,30 @@ export const CONFIG = {
   SCRAPER_TIMEOUT_MS: parseInt(process.env.SCRAPER_TIMEOUT_MS || "30000"),
 
   // Supported leagues
-  ENABLED_LEAGUES: ["ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1"] as const,
+  ENABLED_LEAGUES: [
+    // "ekstraklasa",
+    // "premier-league",
+    "laliga"
+    // "serie-a",
+    // "ligue-1",
+  ] as const,
 
   // Bookmakers
   BOOKMAKERS: [
     "sts",
-    "fortuna",
-    "betclic",
-    "superbet",
-    "lvbet",
-    "fuksiarz",
-    "betfan",
-    "totalbet",
-    "forbet",
-    "etoto",
-    "betters",
-    "lebull",
-    "betcris",
-    "pzbuk",
+    // "fortuna",
+    // "betclic",
+    // "superbet",
+    // "lvbet",
+    // "fuksiarz",
+    // "betfan",
+    // "totalbet",
+    // "forbet",
+    // "etoto",
+    // "betters",
+    // "lebull",
+    // "betcris",
+    // "pzbuk",
   ] as const,
 } as const;
 

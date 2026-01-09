@@ -14,8 +14,4 @@ export type {
   ViewType,
 };
 
-export function buildMarketKey(type: NormalizedMarketType, param?: string): string {
-  if (!param) return type;
-  const normalizedParam = param.replace(",", ".");
-  return `${type}:${normalizedParam}`;
-}
+export { buildMarketKey } from "../services/normalization/types.js";

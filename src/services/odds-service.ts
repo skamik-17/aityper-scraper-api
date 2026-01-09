@@ -41,7 +41,7 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
         namePl: row.market_name_pl,
         viewType: row.view_type,
         category: row.category,
-        paramValue: row.param_value,
+        paramValue: row.param_value ?? undefined,
         bookmakerOdds: {},
         bestOdds: {},
       };
@@ -50,7 +50,7 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
     const market = match.markets[marketKey];
     market.bookmakerOdds[row.bookmaker] = {
       selections: row.selections,
-      eventUrl: row.event_url,
+      eventUrl: row.event_url ?? undefined,
       scrapedAt: row.scraped_at,
     };
 
@@ -101,7 +101,7 @@ export async function getOddsForMatch(
         namePl: row.market_name_pl,
         viewType: row.view_type,
         category: row.category,
-        paramValue: row.param_value,
+        paramValue: row.param_value ?? undefined,
         bookmakerOdds: {},
         bestOdds: {},
       };
@@ -110,7 +110,7 @@ export async function getOddsForMatch(
     const market = match.markets[marketKey];
     market.bookmakerOdds[row.bookmaker] = {
       selections: row.selections,
-      eventUrl: row.event_url,
+      eventUrl: row.event_url ?? undefined,
       scrapedAt: row.scraped_at,
     };
 

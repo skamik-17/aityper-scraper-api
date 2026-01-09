@@ -88,16 +88,19 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
   "Manchester Utd": "Manchester United",
   "Man. United": "Manchester United",
   "Man.United": "Manchester United",
+  "Manchester United ": "Manchester United", // trailing space from STS
   "Man City": "Manchester City",
   "Manchester C.": "Manchester City",
   "Man. City": "Manchester City",
   "Man.City": "Manchester City",
+  "Manchester City ": "Manchester City", // trailing space from STS
 
   // London teams
   Spurs: "Tottenham Hotspur",
   Tottenham: "Tottenham Hotspur",
   "West Ham": "West Ham United",
   "Crystal P.": "Crystal Palace",
+  "Crystal Palace ": "Crystal Palace", // trailing space from STS
 
   // Other abbreviations
   Wolves: "Wolverhampton Wanderers",
@@ -108,6 +111,7 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
   Bournemouth: "AFC Bournemouth",
   Newcastle: "Newcastle United",
   "Newcastle U.": "Newcastle United",
+  Nottingham: "Nottingham Forest", // STS uses short name
   "Nottm Forest": "Nottingham Forest",
   "Nott'm Forest": "Nottingham Forest",
   "Nottingham F.": "Nottingham Forest",
@@ -531,7 +535,8 @@ export function matchToCanonical(
   const aliases = LEAGUE_ALIASES[league] ?? {};
 
   // 1. Check explicit aliases first (fastest path for known abbreviations)
-  const aliasMatch = aliases[scrapedName];
+  // Also check trimmed version in case of trailing whitespace from scrapers
+  const aliasMatch = aliases[scrapedName] ?? aliases[scrapedName.trim()];
   if (aliasMatch) {
     return teams.find((t) => t.name === aliasMatch) ?? null;
   }

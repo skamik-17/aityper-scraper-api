@@ -16,7 +16,7 @@ import {
   getMarketCounts,
 } from "../repositories/full-offer-repository.js";
 import { normalizer } from "../services/normalization/index.js";
-import { MarketCategory, CATEGORY_ORDER, CATEGORY_LABELS, type MarketWithParams } from "../types/normalized-markets.js";
+import { MarketCategory, type MarketWithParams } from "../types/normalized-markets.js";
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
 

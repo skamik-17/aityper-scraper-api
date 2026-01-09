@@ -1,15 +1,19 @@
 #!/usr/bin/env npx tsx
 /**
  * Script to clear all data from local Supabase database
- * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs | --markets | --extended]
+ * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs] [--dry-run] [--stats]
+ *
+ * Current database structure:
+ *   - market_types: 41 seed rows (NEVER cleared)
+ *   - odds: 216,021 rows of scraped odds
+ *   - scraper_runs: 0 rows (currently unused)
  *
  * Options:
- *   --all      Clear all tables (default)
- *   --odds     Clear only scraped_odds table
+ *   --all      Clear all data tables (default)
+ *   --odds     Clear only odds table
  *   --runs     Clear only scraper_runs table
- *   --markets  Clear only scraped_markets table (full offer)
- *   --extended Clear only extended market tables (double_chance, over_under, btts)
  *   --dry-run  Show what would be deleted without actually deleting
+ *   --stats     Show current statistics only
  */
 
 import { createClient } from "@supabase/supabase-js";
@@ -22,9 +26,9 @@ const supabase = createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_SERVICE_KEY, 
   },
 });
 
-interface TableStats {
+interface TableInfo {
   name: string;
-  count: number;
+  description: string;
 }
 
 async function getTableCount(tableName: string): Promise<number> {
@@ -40,36 +44,31 @@ async function getTableCount(tableName: string): Promise<number> {
   return count ?? 0;
 }
 
-async function clearTable(tableName: string, dryRun: boolean): Promise<number> {
-  const count = await getTableCount(tableName);
+async function clearOdds(dryRun: boolean): Promise<number> {
+  const count = await getTableCount("odds");
 
   if (count === 0) {
-    console.log(`  [${tableName}] Already empty`);
+    console.log("  [odds] Already empty");
     return 0;
   }
 
   if (dryRun) {
-    console.log(`  [${tableName}] Would delete ${count} rows`);
+    console.log(`  [odds] Would delete ${count} rows`);
     return count;
   }
 
-  // Delete all rows (using a condition that matches everything)
   const { error } = await supabase
-    .from(tableName)
+    .from("odds")
     .delete()
-    .gte("created_at", "1970-01-01");
+    .gte("scraped_at", "1970-01-01");
 
   if (error) {
-    console.error(`  [${tableName}] Error: ${error.message}`);
+    console.error(`  [odds] Error: ${error.message}`);
     return 0;
   }
 
-  console.log(`  [${tableName}] Deleted ${count} rows`);
+  console.log(`  [odds] Deleted ${count} rows`);
   return count;
-}
-
-async function clearScrapedOdds(dryRun: boolean): Promise<number> {
-  return clearTable("scraped_odds", dryRun);
 }
 
 async function clearScraperRuns(dryRun: boolean): Promise<number> {
@@ -85,7 +84,6 @@ async function clearScraperRuns(dryRun: boolean): Promise<number> {
     return count;
   }
 
-  // scraper_runs uses started_at instead of created_at
   const { error } = await supabase
     .from("scraper_runs")
     .delete()
@@ -100,51 +98,69 @@ async function clearScraperRuns(dryRun: boolean): Promise<number> {
   return count;
 }
 
-async function clearExtendedMarkets(dryRun: boolean): Promise<number> {
-  let total = 0;
-  total += await clearTable("odds_double_chance", dryRun);
-  total += await clearTable("odds_over_under", dryRun);
-  total += await clearTable("odds_btts", dryRun);
-  return total;
-}
-
-async function clearScrapedMarkets(dryRun: boolean): Promise<number> {
-  return clearTable("scraped_markets", dryRun);
-}
-
 async function showStats(): Promise<void> {
   console.log("\nCurrent database statistics:");
-  console.log("─".repeat(40));
+  console.log("─".repeat(60));
 
-  const tables = [
-    "scraped_odds",
-    "scraped_markets",
-    "scraper_runs",
-    "odds_double_chance",
-    "odds_over_under",
-    "odds_btts",
+  const tables: TableInfo[] = [
+    {
+      name: "market_types",
+      description: "Canonical market types (seed data - never cleared)",
+    },
+    {
+      name: "odds",
+      description: "Scraped odds data (all scrapes)",
+    },
+    {
+      name: "scraper_runs",
+      description: "Scraper run logs (currently unused)",
+    },
   ];
 
   for (const table of tables) {
-    const count = await getTableCount(table);
-    console.log(`  ${table.padEnd(20)} ${count.toString().padStart(8)} rows`);
+    const count = await getTableCount(table.name);
+    const countStr = count.toString().padStart(10);
+    const nameStr = table.name.padEnd(20);
+    console.log(`  ${nameStr} ${countStr} rows  - ${table.description}`);
   }
 
-  console.log("─".repeat(40));
+  console.log("\nViews (auto-refreshed when tables are cleared):");
+  console.log("─".repeat(60));
+
+  const views = [
+    {
+      name: "latest_odds",
+      description: "Deduped latest odds per match/bookmaker/market",
+    },
+    {
+      name: "market_comparison",
+      description: "Sorted odds for cross-bookmaker comparison",
+    },
+    {
+      name: "matches_with_odds",
+      description: "Match summaries (likely legacy - unused)",
+    },
+  ];
+
+  for (const view of views) {
+    const nameStr = view.name.padEnd(25);
+    console.log(`  ${nameStr} - ${view.description}`);
+  }
+
+  console.log("─".repeat(60));
 }
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
-  const clearOdds = args.includes("--odds");
-  const clearRuns = args.includes("--runs");
-  const clearMarkets = args.includes("--markets");
-  const clearExtended = args.includes("--extended");
-  const clearAll = args.includes("--all") || (!clearOdds && !clearRuns && !clearMarkets && !clearExtended);
+  const showOnly = args.includes("--stats");
+  const clearOddsFlag = args.includes("--odds");
+  const clearRunsFlag = args.includes("--runs");
+  const clearAll = args.includes("--all") || (!clearOddsFlag && !clearRunsFlag && !showOnly);
 
-  console.log("╔══════════════════════════════════════════╗");
-  console.log("║   Supabase Database Cleanup Script       ║");
-  console.log("╚══════════════════════════════════════════╝");
+  console.log("╔══════════════════════════════════════════════╗");
+  console.log("║   Supabase Database Cleanup Script            ║");
+  console.log("╚══════════════════════════════════════════════╝");
   console.log();
 
   if (dryRun) {
@@ -154,35 +170,30 @@ async function main(): Promise<void> {
   // Show current stats
   await showStats();
 
+  if (showOnly) {
+    console.log("\n✅ Stats only mode - exiting without changes");
+    return;
+  }
+
   console.log();
 
   if (clearAll) {
-    console.log("Clearing ALL tables...\n");
+    console.log("Clearing ALL data tables (preserving seed data)...\n");
   } else {
-    const targets = [];
-    if (clearOdds) targets.push("scraped_odds");
-    if (clearRuns) targets.push("scraper_runs");
-    if (clearMarkets) targets.push("scraped_markets");
-    if (clearExtended) targets.push("extended markets");
+    const targets: string[] = [];
+    if (clearOddsFlag) targets.push("odds");
+    if (clearRunsFlag) targets.push("scraper_runs");
     console.log(`Clearing: ${targets.join(", ")}\n`);
   }
 
   let totalDeleted = 0;
 
-  if (clearAll || clearOdds) {
-    totalDeleted += await clearScrapedOdds(dryRun);
+  if (clearAll || clearOddsFlag) {
+    totalDeleted += await clearOdds(dryRun);
   }
 
-  if (clearAll || clearMarkets) {
-    totalDeleted += await clearScrapedMarkets(dryRun);
-  }
-
-  if (clearAll || clearRuns) {
+  if (clearAll || clearRunsFlag) {
     totalDeleted += await clearScraperRuns(dryRun);
-  }
-
-  if (clearAll || clearExtended) {
-    totalDeleted += await clearExtendedMarkets(dryRun);
   }
 
   console.log();
@@ -192,6 +203,7 @@ async function main(): Promise<void> {
     console.log("\nRun without --dry-run to actually delete data.");
   } else {
     console.log(`✅ Deleted ${totalDeleted} total rows`);
+    console.log("🔄 Views (latest_odds, market_comparison) will auto-refresh");
 
     // Show final stats
     await showStats();

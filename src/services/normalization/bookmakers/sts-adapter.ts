@@ -227,23 +227,69 @@ export const stsAdapter: BookmakerAdapter = {
   // Selection Name Overrides (STS-specific codes)
   // ==========================================================================
   selectionOverrides: {
+    // ========================================================================
+    // MATCH WINNER - STS uses "1"=HOME, "2"=AWAY, "3"=DRAW (non-standard!)
+    // ========================================================================
+    "^3$": "DRAW" as NormalizedSelection,
+
+    // ========================================================================
     // Double Chance codes (STS uses "1X", "02", "12" format)
+    // ========================================================================
     "^1x$": "HOME_OR_DRAW" as NormalizedSelection,
     "^10$": "HOME_OR_DRAW" as NormalizedSelection,
     "^x2$": "DRAW_OR_AWAY" as NormalizedSelection,
     "^02$": "DRAW_OR_AWAY" as NormalizedSelection,
     "^12$": "HOME_OR_AWAY" as NormalizedSelection,
 
+    // ========================================================================
     // Polish team terms
+    // ========================================================================
     "^gospodarz": "HOME" as NormalizedSelection,
     "^go[śćś]cie": "AWAY" as NormalizedSelection,
 
-    // European Handicap format: "1 (0:1)", "X (0:1)", "2 (0:1)"
-    // These are handled in selection-normalizer.ts context-aware logic
-    // No override needed here
-
+    // ========================================================================
     // BTTS outcome IDs (STS uses numeric IDs for selections)
+    // ========================================================================
     "^26$": "YES" as NormalizedSelection,
     "^27$": "NO" as NormalizedSelection,
+
+    // ========================================================================
+    // Over/Under - additional numeric IDs
+    // Note: IDs 12/13 not included as they conflict with Double Chance "12"
+    // STS sends "+2.5"/"-2.5" names for Over/Under which are handled by common patterns
+    // ========================================================================
+    "^4$": "OVER" as NormalizedSelection,
+    "^5$": "UNDER" as NormalizedSelection,
+
+    // ========================================================================
+    // Draw No Bet / Asian Handicap format: "1 (+X)" or "2 (-X)"
+    // ========================================================================
+    "^1\\s*\\([+-]": "HOME" as NormalizedSelection,
+    "^2\\s*\\([+-]": "AWAY" as NormalizedSelection,
+
+    // ========================================================================
+    // European Handicap format: "1 (+0.5)", "2 (-0.5)", "X (...)"
+    // ========================================================================
+    "^1\\s*\\(": "HOME" as NormalizedSelection,
+    "^2\\s*\\(": "AWAY" as NormalizedSelection,
+    "^x\\s*\\(": "DRAW" as NormalizedSelection,
+
+    // ========================================================================
+    // Clean Sheet / Win to Nil - STS numeric outcome IDs
+    // Format: 1237=Home CS, 1238=Home fails, 1239=Away CS, 1240=Away fails
+    // ========================================================================
+    "^1237$": "HOME" as NormalizedSelection,
+    "^1238$": "AWAY" as NormalizedSelection,
+    "^1239$": "AWAY" as NormalizedSelection,
+    "^1240$": "HOME" as NormalizedSelection,
+
+    // ========================================================================
+    // Result + Total combo - numeric outcome IDs
+    // ========================================================================
+    "^957$": "HOME" as NormalizedSelection,
+    "^958$": "DRAW" as NormalizedSelection,
+    "^959$": "AWAY" as NormalizedSelection,
+    "^960$": "HOME" as NormalizedSelection,
+    "^1009$": "AWAY" as NormalizedSelection,
   },
 };

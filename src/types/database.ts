@@ -7,11 +7,58 @@ import type {
   NormalizedSelection,
 } from "../services/normalization/types.js";
 
+export type {
+  MarketCategory,
+  ViewType,
+  ParameterType,
+};
+
 export interface MarketSelectionJson {
   name: string;
   odds: number;
   normalizedName?: NormalizedSelection;
 }
+
+// ============================================================================
+// SERVICE LAYER TYPES (Not directly in DB schema but used in repositories/services)
+// ============================================================================
+
+export type BookmakerStatus = "stale" | "available";
+
+export interface MatchOdds {
+  matchId: string;
+  homeTeam: string;
+  awayTeam: string;
+  leagueSlug: string;
+  markets: Record<string, MarketOdds>;
+}
+
+export interface MarketOdds {
+  code: NormalizedMarketType;
+  namePl: string;
+  viewType: ViewType;
+  category: MarketCategory;
+  paramValue: string | null;
+  bookmakerOdds: Record<string, BookmakerOddsData>;
+  bestOdds: BestOdds;
+}
+
+export interface BookmakerOddsData {
+  selections: MarketSelectionJson[];
+  eventUrl?: string;
+  scrapedAt: string;
+}
+
+export type BestOdds = Record<string, {
+  bookmaker: PolishBookmaker;
+  odds: number;
+}>;
+
+export type LatestOddsRow = Database["public"]["Views"]["latest_odds"]["Row"];
+
+export type OddsInsert = Database["public"]["Tables"]["odds"]["Insert"];
+
+export type OddsEntry = LatestOddsRow;
 
 export interface Database {
   public: {

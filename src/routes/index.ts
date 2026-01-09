@@ -16,5 +16,6 @@ router.use("/odds", oddsRouter);
 router.use("/bookmakers", bookmakersRouter);
 router.use("/admin", adminRouter);
 router.use("/matches", normalizedMarketsRouter);
+router.use("/match", oddsRouter);
 
 export default router;

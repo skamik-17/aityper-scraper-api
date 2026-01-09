@@ -23,7 +23,7 @@ export { MarketCategory };
 /**
  * Re-export NormalizedMarketType for convenience
  */
-export { NormalizedMarketType } from "./normalization.js";
+export type { NormalizedMarketType } from "./normalization.js";
 
 /**
  * Mapping from NormalizedMarketType to MarketCategory
@@ -89,7 +89,7 @@ export const MARKET_TYPE_TO_CATEGORY: Record<string, MarketCategory> = {
 /**
  * Re-export NormalizedSelection for convenience
  */
-export { NormalizedSelection } from "./normalization.js";
+export type { NormalizedSelection } from "./normalization.js";
 
 /**
  * Znormalizowany rynek z parametrami

@@ -51,7 +51,6 @@ export {
   getMarketsByCategory,
   getMarketByType,
   isCanonicalMarket,
-  ViewType,
 } from "../../data/market-registry.js";
 
 // ==========================================================================

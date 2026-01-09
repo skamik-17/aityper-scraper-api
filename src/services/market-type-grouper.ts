@@ -7,7 +7,6 @@
 
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { MarketCategory, MARKET_TYPE_TO_CATEGORY, CATEGORY_ORDER, CATEGORY_LABELS } from "../types/normalized-markets.js";
-import type { NormalizedMarketType } from "../types/normalization.js";
 import type {
   MarketWithParams,
   MarketParameter,

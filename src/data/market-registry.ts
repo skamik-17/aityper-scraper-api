@@ -200,7 +200,8 @@ const MAIN_MARKETS: UnifiedMarketDefinition[] = [
       /^zak[łl]ad\s*bez\s*remisu$/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [4, 20, 77] },
+      // Market 20 = "Zakład bez remisu", Market 77 = "1. połowa - zakład bez remisu"
+      sts: { idMappings: [20, 77] },
     },
   },
 ];
@@ -266,11 +267,11 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^mecz.*obie.*strzel/iu,
     ],
     bookmakerData: {
+      // Core BTTS markets and team-specific variants
       sts: {
         idMappings: [
           43, 47, 48, 59, 60, 61, 62, 67, 68, 69, 70, 95, 107, 109, 110,
-          112, 115, 118, 120, 121, 1232, 1233, 1234, 1235, 1224, 1229, 1855,
-          196, 197, 198, 217,
+          112, 115, 118, 120, 121, 1232, 1233, 1234, 1235, 1224, 1229,
         ],
       },
     },
@@ -356,6 +357,9 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^([\w\s\u0100-\u017F]+)\s+strzeli\s+gola?$/iu,
       /^([\w\s\u0100-\u017F]+)\s+to\s+score$/iu,
     ],
+    bookmakerData: {
+      sts: { idMappings: [1229] }, // Market 1229 = "1. drużyna - strzeli gola"
+    },
   },
   {
     numericId: 10,
@@ -376,6 +380,9 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^go[śćś]cie\s+strzel[ąa]\s+gola?$/iu,
       /^([\w\s\u0100-\u017F]+)\s+won['\u2019]t\s+score$/iu,
     ],
+    bookmakerData: {
+      sts: { idMappings: [1224] }, // Market 1224 = "2. drużyna - strzeli gola"
+    },
   },
   {
     numericId: 11,
@@ -400,6 +407,10 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^(gospodarze?|go[śs]cie?)\s*(strzel[ąa])?\s*(over|under|o\/?u)\s*(\d+[.,]?\d*)/iu,
     ],
     extractParam: extractDecimalParam,
+    bookmakerData: {
+      // Market 28 = "1. drużyna - liczba goli", Market 31 = "2. drużyna - liczba goli"
+      sts: { idMappings: [28, 31, 35, 36, 85, 88, 115, 118] },
+    },
   },
   {
     numericId: 12,
@@ -421,6 +432,10 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^przedzia[łl]\s*gol/iu,
       /^(\d+)\s*-\s*(\d+)\s*gol/iu,
     ],
+    bookmakerData: {
+      // Market 813 = "Liczba goli - przedziały", Market 816 = "Multiwynik"
+      sts: { idMappings: [813, 814, 815, 816, 817, 818, 33] },
+    },
   },
   {
     numericId: 13,
@@ -441,6 +456,10 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^(score|goal)\s*in\s*both\s*halves/iu,
       /^obie\s*po[łl]o?wy\s*gol/iu,
     ],
+    bookmakerData: {
+      // Market 69 = "Obie połowy powyżej 1.5 gola", Market 70 = "Obie połowy poniżej 1.5 gola"
+      sts: { idMappings: [66, 69, 70] },
+    },
   },
   {
     numericId: 14,
@@ -462,6 +481,10 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
       /^winning\s*margin/iu,
       /^margines\s*(zwyci[eę]stwa|wygranej)/iu,
     ],
+    bookmakerData: {
+      // Market 17 = "Różnica zwycięstwa"
+      sts: { idMappings: [17] },
+    },
   },
 ];
 
@@ -561,7 +584,7 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
       /^pierwsz[ay]\s*po[łl]ow[ay]\s*(1x2|wynik)?$/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [5] },
+      sts: { idMappings: [71] }, // Market 71 = "1. połowa" (1X2)
     },
   },
   {
@@ -593,7 +616,8 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
       return lineMatch?.[1]?.replace(",", ".");
     },
     bookmakerData: {
-      sts: { idMappings: [26, 31, 82, 85, 88] },
+      // Market 82 = "1. połowa - liczba goli", Market 31/85/88 = team-specific
+      sts: { idMappings: [31, 82, 85, 88] },
     },
   },
   {
@@ -617,6 +641,10 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
       /^ht\s*(btts|gg|obie)/iu,
       /^pierwsz[ay]\s*po[łl]ow[ay]\s*(btts|gg|obie)/iu,
     ],
+    bookmakerData: {
+      // Market 95 = "1. połowa - obie drużyny - strzelą gola"
+      sts: { idMappings: [95, 98] },
+    },
   },
   {
     numericId: 20,
@@ -638,6 +666,10 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
       /^second\s*half\s*result/iu,
       /^drug[aiej]\s*po[łl]ow[ay]\s*(wynik|1x2)?/iu,
     ],
+    bookmakerData: {
+      // Market 102 = "2. połowa" (1X2)
+      sts: { idMappings: [102] },
+    },
   },
   {
     numericId: 21,
@@ -664,6 +696,10 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     extractParam: (m) => {
       const lineMatch = m[0]?.match(/(\d+[.,]?\d*)/);
       return lineMatch?.[1]?.replace(",", ".");
+    },
+    bookmakerData: {
+      // Market 112 = "2. połowa - liczba goli", Market 115/118 = team-specific
+      sts: { idMappings: [112, 115, 118] },
     },
   },
 ];
@@ -695,7 +731,10 @@ const CORRECT_SCORE_MARKETS: UnifiedMarketDefinition[] = [
       /^cs$/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [9, 17, 33, 49, 57, 98, 101, 124, 125, 126] },
+      // Market 283 = main Correct Score (35 outcomes with IDs 1783-1817)
+      // Market 101 = 1st Half Correct Score, Market 124 = 2nd Half Correct Score
+      // Note: Market 9 is "Ostatni gol" (Last Goal), NOT Correct Score!
+      sts: { idMappings: [283, 101, 124, 57] },
     },
   },
 ];
@@ -724,6 +763,10 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /^(pierwszy|1\.?)\s*(strzelec|gol)/iu,
       /first\s*goal\s*scorer/iu,
     ],
+    bookmakerData: {
+      // Market 52 = "Strzelec pierwszego gola"
+      sts: { idMappings: [52] },
+    },
   },
   {
     numericId: 24,
@@ -744,6 +787,10 @@ const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
       /^ostatni\s*(strzelec|gol)/iu,
       /last\s*goal\s*scorer/iu,
     ],
+    bookmakerData: {
+      // Market 9 = "Ostatni gol" (Last Goal)
+      sts: { idMappings: [9] },
+    },
   },
   {
     numericId: 25,
@@ -870,6 +917,11 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
       /^ro[żz]ne\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
     ],
     extractParam: (m) => m[2]?.replace(",", "."),
+    bookmakerData: {
+      // Market 228 = "Liczba rzutów rożnych", Market 247 = "1. połowa - liczba rzutów rożnych"
+      // Market 235 = "Liczba rzutów rożnych - przedziały"
+      sts: { idMappings: [228, 235, 247, 256] },
+    },
   },
   {
     numericId: 30,
@@ -891,6 +943,12 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
       /dru[żz]yn.*(rzuty?\s*ro[żz]n|corner)/iu,
       /team.*corners?/iu,
     ],
+    bookmakerData: {
+      // Market 236 = "1. drużyna - liczba rzutów rożnych - przedziały"
+      // Market 237 = "2. drużyna - liczba rzutów rożnych - przedziały"
+      // Market 254/255 = "1. połowa - drużyna - dokładna liczba rzutów rożnych"
+      sts: { idMappings: [236, 237, 254, 255] },
+    },
   },
   {
     numericId: 31,
@@ -917,6 +975,11 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
       /^booking(s)?\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
     ],
     extractParam: (m) => m[2]?.replace(",", "."),
+    bookmakerData: {
+      // Market 185 = "Liczba kartek", Market 192 = "Dokładna liczba kartek"
+      // Market 206 = "1. połowa - liczba kartek", Market 196 = "Czerwona kartka"
+      sts: { idMappings: [185, 192, 206, 196, 197, 198, 217] },
+    },
   },
   {
     numericId: 32,
@@ -938,6 +1001,11 @@ const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
       /dru[żz]yn.*(kartk|card)/iu,
       /team.*(booking|card)s?/iu,
     ],
+    bookmakerData: {
+      // Market 193 = "1. drużyna - dokładna liczba kartek"
+      // Market 194 = "2. drużyna - dokładna liczba kartek"
+      sts: { idMappings: [193, 194] },
+    },
   },
   {
     numericId: 33,
@@ -1066,7 +1134,8 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /^wynik\s*1\.?\s*i\s*2\.?\s*po[łl]/iu,
     ],
     bookmakerData: {
-      sts: { idMappings: [1012] },
+      // Market 1012 = "Połowa/Koniec", Market 58 = "1. połowa / wynik końcowy"
+      sts: { idMappings: [1012, 58] },
     },
   },
   {

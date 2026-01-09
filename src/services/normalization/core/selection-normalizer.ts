@@ -129,6 +129,126 @@ function normalizeSelectionWithContext(
   const type = marketDef.code;
 
   // ==========================================================================
+  // CORRECT_SCORE - preserve score format as normalizedName
+  // Accepts: "0:0", "1-0", "0 - 1", numeric IDs mapped to scores
+  // ==========================================================================
+  if (type === "CORRECT_SCORE") {
+    // Match standard score formats: "0:0", "1-0", "0 - 1", "2:1", etc.
+    const scoreMatch = trimmed.match(/^(\d+)\s*[:–\-]\s*(\d+)$/);
+    if (scoreMatch) {
+      const normalizedScore = `${scoreMatch[1]}-${scoreMatch[2]}`;
+      return { name: originalName, normalizedName: normalizedScore as NormalizedSelection, odds: 0 };
+    }
+    // For any other format (like "Inny" for other), use the original name
+    return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
+  }
+
+  // ==========================================================================
+  // HALFTIME_FULLTIME - parse HT/FT combinations
+  // Input formats: "1/1", "1 / X", "X/2", "1 / 1 i +2.5", etc.
+  // ==========================================================================
+  if (type === "HALFTIME_FULLTIME") {
+    // Match HT/FT format with optional total: "1/1", "1 / X", "X / 2 i +2.5"
+    const htftMatch = trimmed.match(/^([1x2])\s*\/\s*([1x2])(?:\s*i\s*([+-]?\d+[.,]?\d*))?$/iu);
+    if (htftMatch) {
+      const htCode = htftMatch[1].toUpperCase();
+      const ftCode = htftMatch[2].toUpperCase();
+      const ht = htCode === "1" ? "HOME" : htCode === "X" ? "DRAW" : "AWAY";
+      const ft = ftCode === "1" ? "HOME" : ftCode === "X" ? "DRAW" : "AWAY";
+      const param = htftMatch[3];
+
+      if (param) {
+        // With total parameter: HOME_HOME_OVER_2.5
+        const overUnder = param.startsWith("+") || parseFloat(param.replace(",", ".")) > 0 ? "OVER" : "UNDER";
+        const lineValue = param.replace(",", ".").replace(/^[+-]/, "");
+        return { name: originalName, normalizedName: `${ht}_${ft}_${overUnder}_${lineValue}` as NormalizedSelection, odds: 0 };
+      }
+
+      // Standard HT/FT: "1/1" -> "HOME_HOME", "X/2" -> "DRAW_AWAY"
+      return { name: originalName, normalizedName: `${ht}_${ft}` as NormalizedSelection, odds: 0 };
+    }
+    // Return original if can't parse
+    return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
+  }
+
+  // ==========================================================================
+  // RESULT_AND_TOTAL - parse result + over/under combinations
+  // Input formats: "1 i +2.5", "X i -2.5", "2 i over 2.5"
+  // ==========================================================================
+  if (type === "RESULT_AND_TOTAL") {
+    // Match: "1 i +2.5", "X i -2.5", "2 i powyżej 2.5"
+    const rtMatch = trimmed.match(/^([1x2])\s*i\s*([+-]?\d+[.,]?\d*|over|under|powyżej|poniżej|pow|pon)\s*(\d+[.,]?\d*)?$/iu);
+    if (rtMatch) {
+      const resultCode = rtMatch[1].toUpperCase();
+      const result = resultCode === "1" ? "HOME" : resultCode === "X" ? "DRAW" : "AWAY";
+
+      let overUnder: string;
+      let line: string;
+
+      if (rtMatch[3]) {
+        // Format: "1 i over 2.5" or "1 i powyżej 2.5"
+        const direction = rtMatch[2].toLowerCase();
+        overUnder = /over|powyżej|pow|\+/.test(direction) ? "OVER" : "UNDER";
+        line = rtMatch[3].replace(",", ".");
+      } else {
+        // Format: "1 i +2.5" or "1 i -2.5"
+        const value = rtMatch[2].replace(",", ".");
+        overUnder = value.startsWith("+") || (value.startsWith("-") === false && parseFloat(value) > 0) ? "OVER" : "UNDER";
+        if (value.startsWith("-")) {
+          overUnder = "UNDER";
+        }
+        line = value.replace(/^[+-]/, "");
+      }
+
+      return { name: originalName, normalizedName: `${result}_${overUnder}` as NormalizedSelection, odds: 0 };
+    }
+    // Return original if can't parse
+    return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
+  }
+
+  // ==========================================================================
+  // RESULT_AND_BTTS - parse result + BTTS combinations
+  // Input formats: "1 i Tak", "X i Nie", "2 i gg"
+  // ==========================================================================
+  if (type === "RESULT_AND_BTTS") {
+    // Match: "1 i Tak", "X i Nie", "2 i gg"
+    const rbMatch = trimmed.match(/^([1x2])\s*i\s*(tak|nie|yes|no|gg|ng)$/iu);
+    if (rbMatch) {
+      const resultCode = rbMatch[1].toUpperCase();
+      const result = resultCode === "1" ? "HOME" : resultCode === "X" ? "DRAW" : "AWAY";
+      const bttsCode = rbMatch[2].toLowerCase();
+      const btts = /tak|yes|gg/.test(bttsCode) ? "YES" : "NO";
+
+      return { name: originalName, normalizedName: `${result}_${btts}` as NormalizedSelection, odds: 0 };
+    }
+    // Return original if can't parse
+    return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
+  }
+
+  // ==========================================================================
+  // PLAYER MARKETS - use player name as normalizedName
+  // (GOALSCORER_FIRST, GOALSCORER_LAST, GOALSCORER_ANYTIME, PLAYER_SHOTS, PLAYER_CARDS, PLAYER_ASSISTS)
+  // ==========================================================================
+  const playerMarketTypes = [
+    "GOALSCORER_FIRST",
+    "GOALSCORER_LAST",
+    "GOALSCORER_ANYTIME",
+    "PLAYER_SHOTS",
+    "PLAYER_CARDS",
+    "PLAYER_ASSISTS",
+  ];
+  if (playerMarketTypes.includes(type)) {
+    // For player markets, the selection name IS the canonical form (player name)
+    // Just clean up and return the player name
+    const playerName = trimmed
+      .replace(/^\d+\.\s*/, "") // Remove leading numbers like "1. "
+      .replace(/\s+/g, " ")     // Normalize whitespace
+      .trim();
+
+    return { name: originalName, normalizedName: playerName as NormalizedSelection, odds: 0 };
+  }
+
+  // ==========================================================================
   // BTTS / HALF_TIME_BTTS - Tak/Nie
   // ==========================================================================
   if (type === "BTTS" || type === "HALF_TIME_BTTS") {

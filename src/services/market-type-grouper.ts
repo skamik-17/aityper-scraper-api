@@ -13,6 +13,7 @@ import type {
   MarketParameterBookmaker,
   ComparableMarketGroup,
 } from "../types/normalized-markets.js";
+import { getMarketByCode } from "../data/market-registry.js";
 
 /**
  * Default parameters for each market type
@@ -201,11 +202,16 @@ export function groupMarketsByTypeWithParameters(
     const defaultParam = DEFAULT_PARAMETERS[marketType];
     const useDefault = defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0];
 
+    // Get description from market registry
+    const marketDef = getMarketByCode(marketType);
+    const description = marketDef?.descriptions?.pl;
+
     result.push({
       marketKey: marketType,
       type: marketType,
       category: group.category,
       label: group.label,
+      description,
       parameters,
       defaultParameter: useDefault,
       hasParameters,

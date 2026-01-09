@@ -283,6 +283,9 @@ export interface MarketWithParams {
   /** Main display label (e.g., "Handicap azjatycki") */
   label: string;
 
+  /** Description of what this market means (for tooltip) */
+  description?: string;
+
   /** All available parameters for this market type */
   parameters: MarketParameter[];
 

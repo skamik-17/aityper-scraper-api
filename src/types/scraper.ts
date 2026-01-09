@@ -8,7 +8,7 @@ import type {
   MarketDoubleChanceOdds,
   MarketBTTSOdds,
   MarketOverUnderOdds,
-} from "./markets.js";
+} from "./full-offer.js";
 
 // Scraper result status
 export type ScraperStatus =

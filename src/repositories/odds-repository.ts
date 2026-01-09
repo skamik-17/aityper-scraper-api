@@ -1,79 +1,16 @@
-/**
- * Odds Repository
- * Handles all database operations for scraped odds
- */
-
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
-import type { RawScrapedOdds } from "../types/scraper.js";
-import type { Database } from "../types/database.js";
-import { getCanonicalTeamName, getNormalizedTeamName } from "../scrapers/team-matcher.js";
+import type { Database, LatestOddsRow, OddsInsert } from "../types/database.js";
+import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
 
-// Row types from database
-type ScrapedOddsRow = Database["public"]["Tables"]["scraped_odds"]["Row"];
-type ScrapedOddsInsert = Database["public"]["Tables"]["scraped_odds"]["Insert"];
-
-/**
- * Insert scraped odds into database
- */
-export async function insertScrapedOdds(
-  odds: RawScrapedOdds[],
-  leagueSlug: string = "ekstraklasa"
-): Promise<{ inserted: number; errors: number }> {
-  const supabase = getSupabase();
-  let inserted = 0;
-  let errors = 0;
-
-  // Prepare records for insert
-  const records: ScrapedOddsInsert[] = odds.map((o) => ({
-    league_slug: leagueSlug,
-    home_team: getCanonicalTeamName(o.homeTeam, leagueSlug),
-    away_team: getCanonicalTeamName(o.awayTeam, leagueSlug),
-    home_team_normalized: getNormalizedTeamName(o.homeTeam, leagueSlug),
-    away_team_normalized: getNormalizedTeamName(o.awayTeam, leagueSlug),
-    bookmaker: o.bookmaker,
-    home_odds: o.homeOdds,
-    draw_odds: o.drawOdds,
-    away_odds: o.awayOdds,
-    has_no_tax_promo: o.hasNoTaxPromo,
-    promo_details: o.promoDetails || null,
-    event_name: o.eventName,
-    event_url: o.eventUrl || null,
-    scraped_at: o.scrapedAt.toISOString(),
-  }));
-
-  // Insert in batches to avoid timeout
-  const batchSize = 50;
-  for (let i = 0; i < records.length; i += batchSize) {
-    const batch = records.slice(i, i + batchSize);
-
-    const { error } = await supabase.from("scraped_odds").upsert(batch, {
-      onConflict: "league_slug,home_team_normalized,away_team_normalized,bookmaker,scraped_at",
-      ignoreDuplicates: true,
-    });
-
-    if (error) {
-      console.error("[OddsRepository] Insert error:", error);
-      errors += batch.length;
-    } else {
-      inserted += batch.length;
-    }
-  }
-
-  return { inserted, errors };
-}
-
-/**
- * Get latest odds for all matches
- */
-export async function getLatestOdds(leagueSlug: string = "ekstraklasa") {
+export async function getLatestOdds(leagueSlug: string = "ekstraklasa"): Promise<LatestOddsRow[]> {
   const supabase = getSupabase();
 
   const { data, error } = await supabase
     .from("latest_odds")
     .select("*")
     .eq("league_slug", leagueSlug)
-    .order("home_team_normalized");
+    .order("home_team");
 
   if (error) {
     console.error("[OddsRepository] getLatestOdds error:", error);
@@ -83,24 +20,21 @@ export async function getLatestOdds(leagueSlug: string = "ekstraklasa") {
   return data || [];
 }
 
-/**
- * Get latest odds for a specific match
- */
 export async function getMatchOdds(
   homeTeam: string,
   awayTeam: string,
   leagueSlug: string = "ekstraklasa"
-) {
+): Promise<LatestOddsRow[]> {
   const supabase = getSupabase();
-  const homeNorm = getNormalizedTeamName(homeTeam, leagueSlug);
-  const awayNorm = getNormalizedTeamName(awayTeam, leagueSlug);
+  const homeCanonical = getCanonicalTeamName(homeTeam, leagueSlug);
+  const awayCanonical = getCanonicalTeamName(awayTeam, leagueSlug);
 
   const { data, error } = await supabase
     .from("latest_odds")
     .select("*")
     .eq("league_slug", leagueSlug)
-    .eq("home_team_normalized", homeNorm)
-    .eq("away_team_normalized", awayNorm);
+    .eq("home_team", homeCanonical)
+    .eq("away_team", awayCanonical);
 
   if (error) {
     console.error("[OddsRepository] getMatchOdds error:", error);
@@ -110,9 +44,6 @@ export async function getMatchOdds(
   return data || [];
 }
 
-/**
- * Get latest scrape timestamp for a bookmaker
- */
 export async function getLastScrapeTime(
   bookmaker: PolishBookmaker,
   leagueSlug: string = "ekstraklasa"
@@ -120,13 +51,12 @@ export async function getLastScrapeTime(
   const supabase = getSupabase();
 
   const { data, error } = await supabase
-    .from("scraped_odds")
+    .from("odds")
     .select("scraped_at")
     .eq("league_slug", leagueSlug)
     .eq("bookmaker", bookmaker)
     .order("scraped_at", { ascending: false })
-    .limit(1)
-    .returns<Pick<ScrapedOddsRow, "scraped_at">[]>();
+    .limit(1);
 
   if (error || !data || data.length === 0) {
     return null;
@@ -135,31 +65,25 @@ export async function getLastScrapeTime(
   return new Date(data[0].scraped_at);
 }
 
-/**
- * Get bookmaker status summary
- */
 export async function getBookmakerStatus(leagueSlug: string = "ekstraklasa") {
   const supabase = getSupabase();
 
-  // Get latest scrape for each bookmaker
   const { data, error } = await supabase
-    .from("scraped_odds")
+    .from("odds")
     .select("bookmaker, scraped_at")
     .eq("league_slug", leagueSlug)
-    .order("scraped_at", { ascending: false })
-    .returns<Pick<ScrapedOddsRow, "bookmaker" | "scraped_at">[]>();
+    .order("scraped_at", { ascending: false });
 
   if (error) {
     console.error("[OddsRepository] getBookmakerStatus error:", error);
     throw error;
   }
 
-  // Group by bookmaker and get latest
   const statusMap = new Map<PolishBookmaker, { lastScrape: Date; matchCount: number }>();
   const matchCounts = new Map<PolishBookmaker, number>();
 
   for (const row of data || []) {
-    const bm = row.bookmaker;
+    const bm = row.bookmaker as PolishBookmaker;
     if (!statusMap.has(bm)) {
       statusMap.set(bm, {
         lastScrape: new Date(row.scraped_at),
@@ -169,27 +93,38 @@ export async function getBookmakerStatus(leagueSlug: string = "ekstraklasa") {
     matchCounts.set(bm, (matchCounts.get(bm) || 0) + 1);
   }
 
-  // Update match counts
-  for (const [bm, status] of statusMap) {
+  for (const [bm, status] of Array.from(statusMap.entries())) {
     status.matchCount = matchCounts.get(bm) || 0;
   }
 
   return statusMap;
 }
 
-/**
- * Clean up old odds data
- */
-export async function cleanupOldOdds(): Promise<{ deleted: number }> {
+export async function cleanupOldOdds(hoursToKeep: number = 24): Promise<{ deleted: number }> {
   const supabase = getSupabase();
 
-  // Use the cleanup function
-  const { error } = await supabase.rpc("cleanup_old_odds");
+  const { data, error } = await supabase.rpc("cleanup_old_odds", { hours_to_keep: hoursToKeep });
 
   if (error) {
     console.error("[OddsRepository] cleanup error:", error);
     return { deleted: 0 };
   }
 
-  return { deleted: -1 }; // -1 indicates success but count unknown
+  return { deleted: data || 0 };
+}
+
+export async function getMarketTypes() {
+  const supabase = getSupabase();
+
+  const { data, error } = await supabase
+    .from("market_types")
+    .select("*")
+    .order("display_order");
+
+  if (error) {
+    console.error("[OddsRepository] getMarketTypes error:", error);
+    throw error;
+  }
+
+  return data || [];
 }

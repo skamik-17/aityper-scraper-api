@@ -13,39 +13,79 @@ type ScraperRunRow = Database["public"]["Tables"]["scraper_runs"]["Row"];
 type ScraperRunInsert = Database["public"]["Tables"]["scraper_runs"]["Insert"];
 
 export interface ScraperRunRecord {
-  runId: string;
   leagueSlug: string;
   bookmaker: PolishBookmaker;
   status: string;
   matchesFound: number;
+  marketsSaved: number;
   errorMessage: string | null;
   startedAt: Date;
-  completedAt: Date;
-  durationMs: number;
+  finishedAt: Date | null;
+  durationMs: number | null;
 }
 
 /**
  * Insert a scraper run record
  */
-export async function insertScraperRun(record: ScraperRunRecord): Promise<void> {
+export async function insertScraperRun(record: ScraperRunRecord): Promise<number> {
   const supabase = getSupabase();
 
   const insertData: ScraperRunInsert = {
-    run_id: record.runId,
     league_slug: record.leagueSlug,
     bookmaker: record.bookmaker,
     status: record.status,
     matches_found: record.matchesFound,
+    markets_saved: record.marketsSaved,
     error_message: record.errorMessage,
     started_at: record.startedAt.toISOString(),
-    completed_at: record.completedAt.toISOString(),
+    finished_at: record.finishedAt?.toISOString() ?? null,
     duration_ms: record.durationMs,
   };
 
-  const { error } = await supabase.from("scraper_runs").insert(insertData);
+  const { data, error } = await supabase
+    .from("scraper_runs")
+    .insert(insertData)
+    .select("id")
+    .single();
 
   if (error) {
     console.error("[ScraperRunRepository] Insert error:", error);
+    throw error;
+  }
+
+  return data.id;
+}
+
+/**
+ * Update a scraper run with completion data
+ */
+export async function updateScraperRun(
+  id: number,
+  updates: {
+    status: string;
+    matchesFound?: number;
+    marketsSaved?: number;
+    errorMessage?: string | null;
+    finishedAt: Date;
+    durationMs: number;
+  }
+): Promise<void> {
+  const supabase = getSupabase();
+
+  const { error } = await supabase
+    .from("scraper_runs")
+    .update({
+      status: updates.status,
+      matches_found: updates.matchesFound,
+      markets_saved: updates.marketsSaved,
+      error_message: updates.errorMessage,
+      finished_at: updates.finishedAt.toISOString(),
+      duration_ms: updates.durationMs,
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("[ScraperRunRepository] Update error:", error);
     throw error;
   }
 }
@@ -54,7 +94,6 @@ export async function insertScraperRun(record: ScraperRunRecord): Promise<void> 
  * Insert multiple scraper run records from aggregated result
  */
 export async function insertScraperRuns(
-  runId: string,
   leagueSlug: string,
   results: Map<PolishBookmaker, ScraperResult>
 ): Promise<void> {
@@ -63,14 +102,14 @@ export async function insertScraperRuns(
   const records: ScraperRunInsert[] = [];
   for (const [bookmaker, result] of results) {
     records.push({
-      run_id: runId,
       league_slug: leagueSlug,
       bookmaker,
       status: result.status,
       matches_found: result.data?.length || 0,
+      markets_saved: 0, // Updated after saving
       error_message: result.error || null,
       started_at: result.timestamp.toISOString(),
-      completed_at: new Date().toISOString(),
+      finished_at: new Date().toISOString(),
       duration_ms: result.duration,
     });
   }
@@ -90,7 +129,7 @@ export async function getRecentRuns(
   limit: number = 20,
   offset: number = 0,
   statusFilter?: string
-) {
+): Promise<ScraperRunRow[]> {
   const supabase = getSupabase();
 
   let query = supabase
@@ -114,79 +153,93 @@ export async function getRecentRuns(
 }
 
 /**
- * Get runs grouped by run_id
+ * Get runs grouped by time window (for summary view)
  */
 export async function getRunsSummary(limit: number = 20, offset: number = 0) {
   const supabase = getSupabase();
 
-  // Get distinct run_ids with their stats
   const { data, error } = await supabase
     .from("scraper_runs")
-    .select("run_id, league_slug, bookmaker, status, matches_found, error_message, started_at, completed_at, duration_ms")
+    .select("id, league_slug, bookmaker, status, matches_found, markets_saved, error_message, started_at, finished_at, duration_ms")
     .order("started_at", { ascending: false })
-    .returns<Pick<ScraperRunRow, "run_id" | "league_slug" | "bookmaker" | "status" | "matches_found" | "error_message" | "started_at" | "completed_at" | "duration_ms">[]>();
+    .range(offset, offset + limit - 1);
 
   if (error) {
     console.error("[ScraperRunRepository] getRunsSummary error:", error);
     throw error;
   }
 
-  // Group by run_id
+  // Group by time window (within 1 minute = same batch)
   const runsMap = new Map<
     string,
     {
-      runId: string;
+      batchId: string;
       league: string;
       startedAt: Date;
-      completedAt: Date;
+      finishedAt: Date | null;
       totalDurationMs: number;
       results: Array<{
         bookmaker: PolishBookmaker;
         status: string;
         matchesFound: number;
-        durationMs: number;
+        marketsSaved: number;
+        durationMs: number | null;
         error?: string;
       }>;
     }
   >();
 
   // Helper to parse UTC timestamp from Supabase
-  const parseUtcTimestamp = (ts: string) => {
+  const parseUtcTimestamp = (ts: string | null) => {
+    if (!ts) return null;
     const utcTs = ts.endsWith("Z") ? ts : `${ts}Z`;
     return new Date(utcTs);
   };
 
+  // Generate batch ID from start time (minute-based grouping)
+  const getBatchId = (startedAt: string, leagueSlug: string) => {
+    const date = parseUtcTimestamp(startedAt);
+    if (!date) return `unknown-${leagueSlug}`;
+    // Round to minute
+    date.setSeconds(0, 0);
+    return `${date.toISOString()}-${leagueSlug}`;
+  };
+
   for (const row of data || []) {
-    if (!runsMap.has(row.run_id)) {
-      runsMap.set(row.run_id, {
-        runId: row.run_id,
+    const batchId = getBatchId(row.started_at, row.league_slug);
+    
+    if (!runsMap.has(batchId)) {
+      const startedAt = parseUtcTimestamp(row.started_at);
+      runsMap.set(batchId, {
+        batchId,
         league: row.league_slug,
-        startedAt: parseUtcTimestamp(row.started_at),
-        completedAt: parseUtcTimestamp(row.completed_at),
+        startedAt: startedAt || new Date(),
+        finishedAt: parseUtcTimestamp(row.finished_at),
         totalDurationMs: 0,
         results: [],
       });
     }
 
-    const run = runsMap.get(row.run_id)!;
+    const run = runsMap.get(batchId)!;
     run.results.push({
       bookmaker: row.bookmaker as PolishBookmaker,
       status: row.status,
       matchesFound: row.matches_found,
+      marketsSaved: row.markets_saved,
       durationMs: row.duration_ms,
       error: row.error_message || undefined,
     });
 
-    // Update max completed_at
-    const completedAt = parseUtcTimestamp(row.completed_at);
-    if (completedAt > run.completedAt) {
-      run.completedAt = completedAt;
+    // Update max finished_at
+    const finishedAt = parseUtcTimestamp(row.finished_at);
+    if (finishedAt && (!run.finishedAt || finishedAt > run.finishedAt)) {
+      run.finishedAt = finishedAt;
     }
-    run.totalDurationMs = Math.max(run.totalDurationMs, row.duration_ms);
+    run.totalDurationMs = Math.max(run.totalDurationMs, row.duration_ms || 0);
   }
 
-  // Convert to array and paginate
-  const runs = Array.from(runsMap.values()).slice(offset, offset + limit);
+  // Convert to array
+  const runs = Array.from(runsMap.values());
 
   return {
     runs,
@@ -202,19 +255,20 @@ export async function getLastSuccessfulScrapeTime(): Promise<Date | null> {
 
   const { data, error } = await supabase
     .from("scraper_runs")
-    .select("completed_at")
+    .select("finished_at")
     .eq("status", "success")
-    .order("completed_at", { ascending: false })
-    .limit(1)
-    .returns<Pick<ScraperRunRow, "completed_at">[]>();
+    .not("finished_at", "is", null)
+    .order("finished_at", { ascending: false })
+    .limit(1);
 
   if (error || !data || data.length === 0) {
     return null;
   }
 
+  const timestamp = data[0].finished_at;
+  if (!timestamp) return null;
+  
   // Supabase returns UTC timestamp without 'Z' suffix, so we need to append it
-  // to ensure proper UTC parsing
-  const timestamp = data[0].completed_at;
   const utcTimestamp = timestamp.endsWith("Z") ? timestamp : `${timestamp}Z`;
   return new Date(utcTimestamp);
 }
@@ -231,9 +285,9 @@ export async function getAverageScrapeDurations(): Promise<
     .from("scraper_runs")
     .select("bookmaker, duration_ms")
     .eq("status", "success")
+    .not("duration_ms", "is", null)
     .order("started_at", { ascending: false })
-    .limit(100)
-    .returns<Pick<ScraperRunRow, "bookmaker" | "duration_ms">[]>();
+    .limit(100);
 
   if (error) {
     console.error("[ScraperRunRepository] getAverageScrapeDurations error:", error);
@@ -244,7 +298,8 @@ export async function getAverageScrapeDurations(): Promise<
   const totals = new Map<PolishBookmaker, { sum: number; count: number }>();
 
   for (const row of data || []) {
-    const bm = row.bookmaker;
+    if (row.duration_ms === null) continue;
+    const bm = row.bookmaker as PolishBookmaker;
     const current = totals.get(bm) || { sum: 0, count: 0 };
     current.sum += row.duration_ms;
     current.count += 1;

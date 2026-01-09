@@ -15,7 +15,7 @@
 
 import type { PolishBookmaker } from "../config/index.js";
 import type { ScrapedMarket } from "../types/full-offer.js";
-import { normalizeMarketsForBookmaker } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType, NormalizedSelection } from "../types/normalization.js";
 import {
   superbetScraper,

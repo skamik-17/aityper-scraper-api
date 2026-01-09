@@ -4,7 +4,7 @@
  */
 
 import { superbetScraper, stsScraper } from "../scrapers/bookmakers/index.js";
-import { normalizeMarkets } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType } from "../types/normalization.js";
 
 async function compareBookmakers() {
@@ -32,7 +32,8 @@ async function compareBookmakers() {
             const match = result.matches[0];
             console.log(`[${name}] Match: ${match.homeTeam} vs ${match.awayTeam}`);
 
-            const normalized = normalizeMarkets(match.markets);
+            const bookmaker = name.toLowerCase() as "superbet" | "sts";
+            const normalized = normalizeMarketsForBookmaker(match.markets, bookmaker, match.homeTeam, match.awayTeam);
 
             // Only look at non-OTHER markets
             const coreMarkets = normalized.filter(m => m.normalizedType !== NormalizedMarketType.OTHER);

@@ -1,0 +1,3976 @@
+{
+  "bookmaker": "sts",
+  "extracted_at": "2026-01-08T20:55:21.812Z",
+  "total_unique_markets": 106,
+  "markets": [
+    {
+      "name": "Rynek 31",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 3.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "Rynek 118",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 6.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.08,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "Rynek 1235",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 1.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "Wynik meczu",
+      "normalized_type": "MATCH_WINNER",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "RC Strasbourg",
+          "odds": 1.55,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 4,
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "FC Metz",
+          "odds": 5.25,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 14
+    },
+    {
+      "name": "Rynek 8",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "6",
+          "odds": 1.46,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "8",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Dokladny wynik",
+      "normalized_type": "CORRECT_SCORE",
+      "normalized_group": "SCORE",
+      "selections_sample": [
+        {
+          "name": "6",
+          "odds": 1.46,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "8",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Podwojna szansa",
+      "normalized_type": "DOUBLE_CHANCE",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "1X",
+          "odds": 1.16,
+          "normalizedName": "HOME_OR_DRAW"
+        },
+        {
+          "name": "12",
+          "odds": 1.22,
+          "normalizedName": "HOME_OR_AWAY"
+        },
+        {
+          "name": "X2",
+          "odds": 2.4,
+          "normalizedName": "DRAW_OR_AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 11",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "4",
+          "odds": 1.22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 62",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 2.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 69",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 3.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.22,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 70",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.34,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 1234",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 2.2,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 68",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 5.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.13,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 14",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (0:1)",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (0:1)",
+          "odds": 3.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (0:1)",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 17",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1262",
+          "odds": 3.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1263",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1264",
+          "odds": 4.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1265",
+          "odds": 7.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1266",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1267",
+          "odds": 43,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1268",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 20",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (+0)",
+          "odds": 1.22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (-0)",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 22",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (-2.5)",
+          "odds": 4.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (+2.5)",
+          "odds": 1.2,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 0.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+0.5",
+          "odds": 1.02,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-0.5",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 4.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+4.5",
+          "odds": 4.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-4.5",
+          "odds": 1.2,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "4.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 3.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+3.5",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-3.5",
+          "odds": 1.53,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "3.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 2.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+2.5",
+          "odds": 1.58,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-2.5",
+          "odds": 2.3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "2.5",
+      "count": 11
+    },
+    {
+      "name": "Rynek 28",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 1.53,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 61",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 1.28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 3.3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 77",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (+0)",
+          "odds": 1.28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (-0)",
+          "odds": 3.25,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 79",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (+0.5)",
+          "odds": 1.15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (-0.5)",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 80",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1",
+          "odds": 1.52,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 82",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 2.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.58,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 85",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 3.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.27,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 88",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.04,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 23",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1",
+          "odds": 1.03,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1",
+          "odds": 9.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Liczba goli 5.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+5.5",
+          "odds": 7.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-5.5",
+          "odds": 1.07,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5.5",
+      "count": 10
+    },
+    {
+      "name": "Liczba goli 1.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 1.18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 4.5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1.5",
+      "count": 10
+    },
+    {
+      "name": "Obie druzyny strzelą",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.68,
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.1,
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Rynek 48",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.05,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Rynek 60",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 11.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.01,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Rynek 1232",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.43,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Rynek 1233",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 1.67,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 2.1,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Rynek 33",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1217",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1218",
+          "odds": 6.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1219",
+          "odds": 3.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1220",
+          "odds": 3.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1221",
+          "odds": 4.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1222",
+          "odds": 7.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1223",
+          "odds": 7.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 35",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1237",
+          "odds": 6.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1238",
+          "odds": 3.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1239",
+          "odds": 3.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1240",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 36",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1237",
+          "odds": 2.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1238",
+          "odds": 2.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1239",
+          "odds": 4.7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1240",
+          "odds": 9.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 40",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "24",
+          "odds": 1.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "25",
+          "odds": 1.85,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 41",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "24",
+          "odds": 1.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "25",
+          "odds": 1.85,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 42",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "24",
+          "odds": 2.12,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "25",
+          "odds": 1.67,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 44",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "231",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "232",
+          "odds": 2.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "233",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "234",
+          "odds": 1.68,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 47",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 2.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.38,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 49",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "28",
+          "odds": 2.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "29",
+          "odds": 2.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "30",
+          "odds": 4.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "32",
+          "odds": 8.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "33",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 50",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+2.5 i tak",
+          "odds": 1.95,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-2.5 i tak",
+          "odds": 8.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "+2.5 i nie",
+          "odds": 6.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-2.5 i nie",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 51",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 i -1.5",
+          "odds": 8.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 i +1.5",
+          "odds": 1.68,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i -1.5",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i +1.5",
+          "odds": 4.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i -1.5",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i +1.5",
+          "odds": 6.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 57",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "92",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "93",
+          "odds": 26,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "94",
+          "odds": 85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "95",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "96",
+          "odds": 13.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "97",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "98",
+          "odds": 85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "99",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "100",
+          "odds": 44,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "101",
+          "odds": 55,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "102",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "103",
+          "odds": 37,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "104",
+          "odds": 65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "105",
+          "odds": 225,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "106",
+          "odds": 28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "107",
+          "odds": 55,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "108",
+          "odds": 47,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "109",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "110",
+          "odds": 160,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "111",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "112",
+          "odds": 140,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "113",
+          "odds": 50,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "114",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "115",
+          "odds": 225,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "116",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "117",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "118",
+          "odds": 85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "119",
+          "odds": 14,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "120",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "121",
+          "odds": 24,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "122",
+          "odds": 12,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "123",
+          "odds": 34,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "124",
+          "odds": 60,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "125",
+          "odds": 31,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "126",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "127",
+          "odds": 175,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "128",
+          "odds": 34,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "129",
+          "odds": 35,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "130",
+          "odds": 60,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "131",
+          "odds": 29,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "132",
+          "odds": 11.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "133",
+          "odds": 70,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "134",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "135",
+          "odds": 110,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "136",
+          "odds": 22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "137",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 58",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "138",
+          "odds": 2.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "139",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "140",
+          "odds": 49,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "141",
+          "odds": 4.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "142",
+          "odds": 6.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "143",
+          "odds": 11.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "144",
+          "odds": 21,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "145",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "146",
+          "odds": 8.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 59",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 3.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.24,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 67",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 2.2,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 76",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (0:1)",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (0:1)",
+          "odds": 3.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (0:1)",
+          "odds": 1.72,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 94",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "24",
+          "odds": 1.98,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "25",
+          "odds": 1.77,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 95",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 3.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.22,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 121",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 3.05,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 1.33,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 1229",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 1.15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 5.1,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 1244",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1",
+          "odds": 1.82,
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 1.65,
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek 52",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Stambouli Benjamin",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Colin Maxime",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sobol Eduard",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Fode",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Chilwell Ben",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diallo Habib",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Asoro Joel",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hein Gauthier",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tsitaishvili Heorhii",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kouao Koffi",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deminguet Jessy",
+          "odds": 22.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nanasi Sebastian",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abuashvili Giorgi",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Enciso Julio",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Traore Boubacar",
+          "odds": 22.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Omobamidele Andrew",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Doukoure Ismael",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Barco Valentin",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lemarechal Felix",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Moreira Diego",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Oyedele Maxi",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ouattara Abdoul",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sylla Abakar",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luis Rafael",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Yegbe Terry",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mboula Urie-Michel",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Godo Martial",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Panichelli Joaquin",
+          "odds": 4.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hogsberg Lucas",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paez Kendry",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mbaye Malick",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Sadibou",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Ibou",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amo-Ameyaw Samuel",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amougou Mathis",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Alpha",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "El Mourabet Samir",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diop Moustapha",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nzingoula Rabby",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bokele Morgan",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lung Sacha",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Madjo Brian",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kodia Ghianny",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Guerti Ismael",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Munongo Believe",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lawson Yannis",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Melieres Cleo",
+          "odds": 22.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Stanley Chizurum Ogbonna",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bosey Jean-Baptiste",
+          "odds": 1.7,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 99",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 i -1.5",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 i +1.5",
+          "odds": 3.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i -1.5",
+          "odds": 3.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i +1.5",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i -1.5",
+          "odds": 7.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i +1.5",
+          "odds": 14,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 53",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Stambouli Benjamin",
+          "odds": 26,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Colin Maxime",
+          "odds": 31,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sobol Eduard",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Fode",
+          "odds": 28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Chilwell Ben",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diallo Habib",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Asoro Joel",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hein Gauthier",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tsitaishvili Heorhii",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kouao Koffi",
+          "odds": 29,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deminguet Jessy",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nanasi Sebastian",
+          "odds": 8.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abuashvili Giorgi",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Enciso Julio",
+          "odds": 7.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Traore Boubacar",
+          "odds": 22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Omobamidele Andrew",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Doukoure Ismael",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Barco Valentin",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lemarechal Felix",
+          "odds": 10.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Moreira Diego",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Oyedele Maxi",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ouattara Abdoul",
+          "odds": 12,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sylla Abakar",
+          "odds": 19,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luis Rafael",
+          "odds": 19,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Yegbe Terry",
+          "odds": 28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mboula Urie-Michel",
+          "odds": 29,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Godo Martial",
+          "odds": 6.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Panichelli Joaquin",
+          "odds": 4.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hogsberg Lucas",
+          "odds": 20,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paez Kendry",
+          "odds": 8.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mbaye Malick",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Sadibou",
+          "odds": 27,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Ibou",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amo-Ameyaw Samuel",
+          "odds": 9.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amougou Mathis",
+          "odds": 14,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Alpha",
+          "odds": 27,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "El Mourabet Samir",
+          "odds": 13.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diop Moustapha",
+          "odds": 28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nzingoula Rabby",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bokele Morgan",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lung Sacha",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Madjo Brian",
+          "odds": 14.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kodia Ghianny",
+          "odds": 9.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Guerti Ismael",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Munongo Believe",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lawson Yannis",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Melieres Cleo",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Stanley Chizurum Ogbonna",
+          "odds": 6.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bosey Jean-Baptiste",
+          "odds": 1.68,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 54",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Stambouli Benjamin",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Colin Maxime",
+          "odds": 22.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sobol Eduard",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Fode",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Chilwell Ben",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diallo Habib",
+          "odds": 4.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Asoro Joel",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hein Gauthier",
+          "odds": 4.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tsitaishvili Heorhii",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kouao Koffi",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deminguet Jessy",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nanasi Sebastian",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abuashvili Giorgi",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Enciso Julio",
+          "odds": 3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Traore Boubacar",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Omobamidele Andrew",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Doukoure Ismael",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Barco Valentin",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lemarechal Felix",
+          "odds": 4.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Moreira Diego",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Oyedele Maxi",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ouattara Abdoul",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sylla Abakar",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luis Rafael",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Yegbe Terry",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mboula Urie-Michel",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Godo Martial",
+          "odds": 2.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Panichelli Joaquin",
+          "odds": 1.95,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hogsberg Lucas",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paez Kendry",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mbaye Malick",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Sadibou",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sane Ibou",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amo-Ameyaw Samuel",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Amougou Mathis",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Toure Alpha",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "El Mourabet Samir",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Diop Moustapha",
+          "odds": 17.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nzingoula Rabby",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bokele Morgan",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lung Sacha",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Madjo Brian",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kodia Ghianny",
+          "odds": 3.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Guerti Ismael",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Munongo Believe",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lawson Yannis",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Melieres Cleo",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Stanley Chizurum Ogbonna",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bosey Jean-Baptiste",
+          "odds": 1.15,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 63",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "147",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "148",
+          "odds": 2.02,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "149",
+          "odds": 3.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 64",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "147",
+          "odds": 2.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "148",
+          "odds": 2.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "149",
+          "odds": 3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 65",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "147",
+          "odds": 3.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "148",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "149",
+          "odds": 1.98,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 66",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "241",
+          "odds": 1.62,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "242",
+          "odds": 5.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "243",
+          "odds": 13,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "244",
+          "odds": 3.75,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 71",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1",
+          "odds": 1.98,
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 2.55,
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 73",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "6",
+          "odds": 1.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7",
+          "odds": 3.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "8",
+          "odds": 3.75,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 74",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "9",
+          "odds": 1.15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10",
+          "odds": 1.44,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "11",
+          "odds": 1.72,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 75",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "4",
+          "odds": 1.28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5",
+          "odds": 3.25,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 90",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1237",
+          "odds": 3.45,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1238",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1239",
+          "odds": 3.7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1240",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 98",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "28",
+          "odds": 10.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "29",
+          "odds": 2.2,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "30",
+          "odds": 6.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31",
+          "odds": 3.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "32",
+          "odds": 27,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "33",
+          "odds": 5.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 817",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "957",
+          "odds": 1.55,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "958",
+          "odds": 1.34,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "959",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "960",
+          "odds": 14.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1009",
+          "odds": 3.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 101",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "160",
+          "odds": 3.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "161",
+          "odds": 7.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "162",
+          "odds": 65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "163",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "164",
+          "odds": 6.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "165",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "166",
+          "odds": 7.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "167",
+          "odds": 30,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "168",
+          "odds": 32,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "169",
+          "odds": 9.1,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 102",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1",
+          "odds": 1.88,
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 2.9,
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 103",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "6",
+          "odds": 1.7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "8",
+          "odds": 3.3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 104",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "9",
+          "odds": 1.17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10",
+          "odds": 1.35,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "11",
+          "odds": 1.82,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 105",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "4",
+          "odds": 1.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5",
+          "odds": 3.2,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 106",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (0:1)",
+          "odds": 3.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (0:1)",
+          "odds": 3.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (0:1)",
+          "odds": 1.82,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 107",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (+0)",
+          "odds": 1.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (-0)",
+          "odds": 3.2,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 109",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 (+0.5)",
+          "odds": 1.17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 (-0.5)",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 110",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1",
+          "odds": 1.28,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1",
+          "odds": 3.3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 112",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 1.8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 115",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "+1.5",
+          "odds": 2.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "-1.5",
+          "odds": 1.38,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 119",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1234",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1235",
+          "odds": 2.85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1236",
+          "odds": 1.8,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 120",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "24",
+          "odds": 1.92,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "25",
+          "odds": 1.8,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 124",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "160",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "161",
+          "odds": 6.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "162",
+          "odds": 41,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "163",
+          "odds": 3.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "164",
+          "odds": 6.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "165",
+          "odds": 11.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "166",
+          "odds": 7.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "167",
+          "odds": 24,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "168",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "169",
+          "odds": 5.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 125",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "180",
+          "odds": 2.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "181",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "182",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "183",
+          "odds": 8.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "184",
+          "odds": 13,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "185",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "186",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 126",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "187",
+          "odds": 3.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "188",
+          "odds": 4.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "189",
+          "odds": 5.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "190",
+          "odds": 7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "191",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "192",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "193",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "194",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "195",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "196",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 132",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1",
+          "odds": 5.6,
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 1.22,
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3",
+          "odds": 12.5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 258",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "245",
+          "odds": 1.67,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "246",
+          "odds": 9.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "247",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "248",
+          "odds": 8.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "249",
+          "odds": 9.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "250",
+          "odds": 5.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "251",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 283",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1783",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1784",
+          "odds": 8.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1785",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1786",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1787",
+          "odds": 21,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1788",
+          "odds": 49,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1789",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1790",
+          "odds": 7.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1791",
+          "odds": 8,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1792",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1793",
+          "odds": 21,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1794",
+          "odds": 49,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1795",
+          "odds": 35,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1796",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1797",
+          "odds": 14.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1798",
+          "odds": 22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1799",
+          "odds": 41,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1800",
+          "odds": 95,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1801",
+          "odds": 100,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1802",
+          "odds": 49,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1803",
+          "odds": 46,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1804",
+          "odds": 60,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1805",
+          "odds": 125,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1806",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1807",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1808",
+          "odds": 190,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1809",
+          "odds": 175,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1810",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1811",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1812",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1813",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1814",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1815",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1816",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1817",
+          "odds": 250,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 807",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "929",
+          "odds": 4.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "930",
+          "odds": 1.47,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "931",
+          "odds": 8.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "932",
+          "odds": 1.72,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "933",
+          "odds": 5.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "934",
+          "odds": 2.35,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 808",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "28",
+          "odds": 7.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "29",
+          "odds": 2.2,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "30",
+          "odds": 6.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31",
+          "odds": 4.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "32",
+          "odds": 18,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "33",
+          "odds": 5.75,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 809",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 i -1.5",
+          "odds": 4.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 i +1.5",
+          "odds": 2.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i -1.5",
+          "odds": 4.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X i +1.5",
+          "odds": 6.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i -1.5",
+          "odds": 7.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 i +1.5",
+          "odds": 9.9,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 810",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "929",
+          "odds": 3.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "930",
+          "odds": 1.65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "931",
+          "odds": 5.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "932",
+          "odds": 1.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "933",
+          "odds": 4.9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "934",
+          "odds": 2.75,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 811",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "929",
+          "odds": 1.98,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "930",
+          "odds": 2.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "931",
+          "odds": 2.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "932",
+          "odds": 2.35,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "933",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "934",
+          "odds": 7.1,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 812",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1X i -1.5",
+          "odds": 6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12 i -1.5",
+          "odds": 6.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X2 i -1.5",
+          "odds": 9,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1X i +1.5",
+          "odds": 1.36,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12 i +1.5",
+          "odds": 1.44,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X2 i +1.5",
+          "odds": 3,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 816",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "961",
+          "odds": 3.2,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "962",
+          "odds": 11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "963",
+          "odds": 13.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "964",
+          "odds": 50,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "965",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "966",
+          "odds": 12,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "967",
+          "odds": 10.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "968",
+          "odds": 32,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1007",
+          "odds": 4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 813",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "941",
+          "odds": 2.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "942",
+          "odds": 1.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "943",
+          "odds": 1.23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "944",
+          "odds": 1.11,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "945",
+          "odds": 1.06,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "946",
+          "odds": 1.85,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "947",
+          "odds": 1.42,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "948",
+          "odds": 1.26,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "949",
+          "odds": 1.19,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "950",
+          "odds": 2.02,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "951",
+          "odds": 1.65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "952",
+          "odds": 1.52,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "953",
+          "odds": 2.7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "954",
+          "odds": 2.3,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "955",
+          "odds": 4.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "956",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1008",
+          "odds": 16,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 814",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "957",
+          "odds": 1.7,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "958",
+          "odds": 1.32,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "959",
+          "odds": 1.92,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "960",
+          "odds": 5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1009",
+          "odds": 6.5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 815",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "957",
+          "odds": 1.65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "958",
+          "odds": 1.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "959",
+          "odds": 3.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "960",
+          "odds": 25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1009",
+          "odds": 2.45,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek 1224",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "26",
+          "odds": 1.52,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "27",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    },
+    {
+      "name": "Rynek 818",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "957",
+          "odds": 1.54,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "958",
+          "odds": 1.33,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "959",
+          "odds": 2.4,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "960",
+          "odds": 15,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1009",
+          "odds": 3.5,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    },
+    {
+      "name": "Rynek 1012",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1 / 1 i -3.5",
+          "odds": 5.25,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 / X i -3.5",
+          "odds": 22,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 / 2 i -3.5",
+          "odds": 65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / 1 i -3.5",
+          "odds": 6.6,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / X i -3.5",
+          "odds": 5.1,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / 2 i -3.5",
+          "odds": 7.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / 1 i -3.5",
+          "odds": 60,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / X i -3.5",
+          "odds": 23,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / 2 i -3.5",
+          "odds": 6.75,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 / 1 i +3.5",
+          "odds": 11.5,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 / X i +3.5",
+          "odds": 36,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1 / 2 i +3.5",
+          "odds": 80,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / 1 i +3.5",
+          "odds": 34,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / X i +3.5",
+          "odds": 37,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X / 2 i +3.5",
+          "odds": 44,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / 1 i +3.5",
+          "odds": 65,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / X i +3.5",
+          "odds": 36,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2 / 2 i +3.5",
+          "odds": 17,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    },
+    {
+      "name": "Rynek 1051",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Garcia Raul i 1",
+          "odds": 13,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Garcia Raul i X",
+          "odds": 10,
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Garcia Raul i 2",
+          "odds": 5.1,
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    }
+  ]
+}

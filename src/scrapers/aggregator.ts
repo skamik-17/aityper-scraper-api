@@ -15,7 +15,7 @@ import { saveFullOfferMarkets } from "../repositories/full-offer-repository.js";
 import {
   stsScraper,
   fortunaScraper,
-  betclicPlaywrightScraper,
+  betclicScraper,
   superbetScraper,
   lvbetScraper,
   fuksiarzScraper,
@@ -33,7 +33,7 @@ import {
 const SCRAPERS: Record<PolishBookmaker, PlaywrightScraper> = {
   sts: stsScraper,
   fortuna: fortunaScraper,
-  betclic: betclicPlaywrightScraper,
+  betclic: betclicScraper,
   superbet: superbetScraper,
   lvbet: lvbetScraper,
   fuksiarz: fuksiarzScraper,

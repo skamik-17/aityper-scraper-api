@@ -1,0 +1,3451 @@
+{
+  "bookmaker": "pzbuk",
+  "extracted_at": "2026-01-08T20:55:22.442Z",
+  "total_unique_markets": 91,
+  "markets": [
+    {
+      "name": "Podwojna szansa",
+      "normalized_type": "DOUBLE_CHANCE",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "1X",
+          "odds": 1.07,
+          "status": "active",
+          "externalId": "677230811",
+          "normalizedName": "HOME_OR_DRAW"
+        },
+        {
+          "name": "12",
+          "odds": 1.17,
+          "status": "active",
+          "externalId": "677230812",
+          "normalizedName": "HOME_OR_AWAY"
+        },
+        {
+          "name": "X2",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677230813",
+          "normalizedName": "DRAW_OR_AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Remis = zwrot",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "677230816",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 6.7,
+          "status": "active",
+          "externalId": "677230817",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Wynik meczu",
+      "normalized_type": "MATCH_WINNER",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.33,
+          "status": "active",
+          "externalId": "677230821",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "677230822",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 9.2,
+          "status": "active",
+          "externalId": "677230823",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Strzelec bramki",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid (0:1)",
+          "odds": 1.97,
+          "status": "active",
+          "externalId": "677237092",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:1)",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "677237093",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:1)",
+          "odds": 3.15,
+          "status": "active",
+          "externalId": "677237094",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (1:0)",
+          "odds": 1.06,
+          "status": "active",
+          "externalId": "677237098",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (1:0)",
+          "odds": 8,
+          "status": "active",
+          "externalId": "677237099",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (1:0)",
+          "odds": 26,
+          "status": "active",
+          "externalId": "677237100",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:2)",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "677237104",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:2)",
+          "odds": 3.95,
+          "status": "active",
+          "externalId": "677237105",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:2)",
+          "odds": 1.73,
+          "status": "active",
+          "externalId": "677237106",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (2:0)",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "677237110",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (2:0)",
+          "odds": 10.75,
+          "status": "active",
+          "externalId": "677237111",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (2:0)",
+          "odds": 50,
+          "status": "active",
+          "externalId": "677237112",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:3)",
+          "odds": 7.4,
+          "status": "active",
+          "externalId": "677237116",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:3)",
+          "odds": 5.7,
+          "status": "active",
+          "externalId": "677237117",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:3)",
+          "odds": 1.25,
+          "status": "active",
+          "externalId": "677237118",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 0.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 1.05,
+          "status": "active",
+          "externalId": "677237127",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 8.7,
+          "status": "active",
+          "externalId": "677237128",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "0.5",
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 1.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 1.29,
+          "status": "active",
+          "externalId": "677237131",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 3.4,
+          "status": "active",
+          "externalId": "677237132",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "1.5",
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 2.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 1.89,
+          "status": "active",
+          "externalId": "677237135",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.85,
+          "status": "active",
+          "externalId": "677237136",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "2.5",
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 3.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 3.2,
+          "status": "active",
+          "externalId": "677237139",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "677237140",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "3.5",
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 4.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 5.9,
+          "status": "active",
+          "externalId": "677237143",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.11,
+          "status": "active",
+          "externalId": "677237144",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "4.5",
+      "count": 13
+    },
+    {
+      "name": "Liczba goli 5.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Powyzej",
+          "odds": 10.25,
+          "status": "active",
+          "externalId": "677237147",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.03,
+          "status": "active",
+          "externalId": "677237148",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "5.5",
+      "count": 13
+    },
+    {
+      "name": "Dokladny wynik",
+      "normalized_type": "CORRECT_SCORE",
+      "normalized_group": "SCORE",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.3,
+          "status": "active",
+          "externalId": "677237350",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 11,
+          "status": "active",
+          "externalId": "677237351",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 4,
+          "status": "active",
+          "externalId": "677237352",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 55",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.78,
+          "status": "active",
+          "externalId": "677237362",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis",
+          "odds": 2.46,
+          "status": "active",
+          "externalId": "677237363",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "677237364",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Obie druzyny strzelą",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.31,
+          "status": "active",
+          "externalId": "677237367",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.52,
+          "status": "active",
+          "externalId": "677237368",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 62",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 2.5",
+          "odds": 6,
+          "status": "active",
+          "externalId": "677237497",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 2.5",
+          "odds": 1.09,
+          "status": "active",
+          "externalId": "677237498",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 13
+    },
+    {
+      "name": "Rynek 68",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nieparzysty",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "677237319",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "parzysty",
+          "odds": 1.78,
+          "status": "active",
+          "externalId": "677237320",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 500",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/remis & tak",
+          "odds": 5.9,
+          "status": "active",
+          "externalId": "677236903",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis & nie",
+          "odds": 1.22,
+          "status": "active",
+          "externalId": "677236904",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & tak",
+          "odds": 12,
+          "status": "active",
+          "externalId": "677236905",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & nie",
+          "odds": 1.56,
+          "status": "active",
+          "externalId": "677236906",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & tak",
+          "odds": 8.4,
+          "status": "active",
+          "externalId": "677236907",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & nie",
+          "odds": 2.16,
+          "status": "active",
+          "externalId": "677236908",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 75",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "677237079",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 10.5,
+          "status": "active",
+          "externalId": "677237080",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 170,
+          "status": "active",
+          "externalId": "677237081",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677237082",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 5.8,
+          "status": "active",
+          "externalId": "677237083",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 22,
+          "status": "active",
+          "externalId": "677237084",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 9.8,
+          "status": "active",
+          "externalId": "677237085",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 75,
+          "status": "active",
+          "externalId": "677237086",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 80,
+          "status": "active",
+          "externalId": "677237087",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 10.5,
+          "status": "active",
+          "externalId": "677237088",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 58",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid lub remis",
+          "odds": 1.08,
+          "status": "active",
+          "externalId": "677237222",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid lub Deportivo Alaves",
+          "odds": 1.45,
+          "status": "active",
+          "externalId": "677237223",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis lub Deportivo Alaves",
+          "odds": 1.83,
+          "status": "active",
+          "externalId": "677237224",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 59",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.14,
+          "status": "active",
+          "externalId": "677237227",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "677237228",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 69",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "677237265",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.12,
+          "status": "active",
+          "externalId": "677237266",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 65",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 3.05,
+          "status": "active",
+          "externalId": "677237302",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.48,
+          "status": "active",
+          "externalId": "677237303",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2+",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "677237304",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 57",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.7,
+          "status": "active",
+          "externalId": "677237356",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "677237357",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 5.9,
+          "status": "active",
+          "externalId": "677237358",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 63",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 1.5",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "677237375",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 1.5",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "677237376",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 64",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 0.5",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "677237379",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 0.5",
+          "odds": 1.24,
+          "status": "active",
+          "externalId": "677237380",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 70",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 1.24,
+          "status": "active",
+          "externalId": "677237405",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "677237406",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Rynek 71",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "677237409",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.53,
+          "status": "active",
+          "externalId": "677237410",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 12
+    },
+    {
+      "name": "Liczba goli 1. polowa 2.5",
+      "normalized_type": "HALF_TIME_TOTAL_GOALS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "677237023",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.44,
+          "status": "active",
+          "externalId": "677237024",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "2.5",
+      "count": 12
+    },
+    {
+      "name": "Rynek 60",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid (1:0)",
+          "odds": 1.07,
+          "status": "active",
+          "externalId": "677237430",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (1:0)",
+          "odds": 7,
+          "status": "active",
+          "externalId": "677237431",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (1:0)",
+          "odds": 50,
+          "status": "active",
+          "externalId": "677237432",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:1)",
+          "odds": 4.4,
+          "status": "active",
+          "externalId": "677237436",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:1)",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "677237437",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:1)",
+          "odds": 1.95,
+          "status": "active",
+          "externalId": "677237438",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:2)",
+          "odds": 13.25,
+          "status": "active",
+          "externalId": "677237442",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:2)",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "677237443",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:2)",
+          "odds": 1.19,
+          "status": "active",
+          "externalId": "677237444",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:3)",
+          "odds": 35,
+          "status": "active",
+          "externalId": "677237448",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:3)",
+          "odds": 10.25,
+          "status": "active",
+          "externalId": "677237449",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:3)",
+          "odds": 1.03,
+          "status": "active",
+          "externalId": "677237450",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 61",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid (-0.5)",
+          "odds": 1.77,
+          "status": "active",
+          "externalId": "677237485",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (+0.5)",
+          "odds": 1.95,
+          "status": "active",
+          "externalId": "677237486",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Pierwszy strzelec",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "remis",
+          "odds": 1.42,
+          "status": "active",
+          "externalId": "677230802",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "677230803",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Ostatni strzelec",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.2,
+          "status": "active",
+          "externalId": "677230806",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis",
+          "odds": 4,
+          "status": "active",
+          "externalId": "677230807",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Goscie wygrają obie polowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nieparzysty",
+          "odds": 1.96,
+          "status": "active",
+          "externalId": "677236975",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "parzysty",
+          "odds": 1.89,
+          "status": "active",
+          "externalId": "677236976",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Gospodarze wygrają ktorąkolwiek polowe",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nieparzysty",
+          "odds": 2.75,
+          "status": "active",
+          "externalId": "677236979",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "parzysty",
+          "odds": 1.48,
+          "status": "active",
+          "externalId": "677236980",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 1. polowa 0.5",
+      "normalized_type": "HALF_TIME_TOTAL_GOALS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 1.11,
+          "status": "active",
+          "externalId": "677237015",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 6,
+          "status": "active",
+          "externalId": "677237016",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "0.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 1. polowa 1.5",
+      "normalized_type": "HALF_TIME_TOTAL_GOALS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 1.55,
+          "status": "active",
+          "externalId": "677237019",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "677237020",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "1.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 1. polowa 3.5",
+      "normalized_type": "HALF_TIME_TOTAL_GOALS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "677237027",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.14,
+          "status": "active",
+          "externalId": "677237028",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "3.5",
+      "count": 11
+    },
+    {
+      "name": "Liczba goli 2. polowa 0",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "0-1",
+          "odds": 3.3,
+          "status": "active",
+          "externalId": "677237053",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 1.92,
+          "status": "active",
+          "externalId": "677237054",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4-5",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "677237055",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "6+",
+          "odds": 15,
+          "status": "active",
+          "externalId": "677237056",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 11
+    },
+    {
+      "name": "Rynek 47",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. Połowa",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "677237172",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. Połowa",
+          "odds": 2.17,
+          "status": "active",
+          "externalId": "677237173",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "równo",
+          "odds": 3.4,
+          "status": "active",
+          "externalId": "677237174",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 51",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 2.22,
+          "status": "active",
+          "externalId": "677237197",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.59,
+          "status": "active",
+          "externalId": "677237198",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 52",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "677237209",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.04,
+          "status": "active",
+          "externalId": "677237210",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 92",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1-10",
+          "odds": 4.3,
+          "status": "active",
+          "externalId": "677237239",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "11-20",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "677237240",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "21-30",
+          "odds": 5.9,
+          "status": "active",
+          "externalId": "677237241",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31-40",
+          "odds": 7.4,
+          "status": "active",
+          "externalId": "677237242",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "41-50",
+          "odds": 8.2,
+          "status": "active",
+          "externalId": "677237243",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "51-60",
+          "odds": 12.25,
+          "status": "active",
+          "externalId": "677237244",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "61-70",
+          "odds": 16,
+          "status": "active",
+          "externalId": "677237245",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "71-80",
+          "odds": 22,
+          "status": "active",
+          "externalId": "677237246",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "81-90",
+          "odds": 20,
+          "status": "active",
+          "externalId": "677237247",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 11.25,
+          "status": "active",
+          "externalId": "677237248",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 91",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1-15",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "677237256",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "16-30",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "677237257",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31-45",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "677237258",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "46-60",
+          "odds": 8.1,
+          "status": "active",
+          "externalId": "677237259",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "61-75",
+          "odds": 11.5,
+          "status": "active",
+          "externalId": "677237260",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "76-90",
+          "odds": 14,
+          "status": "active",
+          "externalId": "677237261",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 11,
+          "status": "active",
+          "externalId": "677237262",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Obie strzelą 1. polowa",
+      "normalized_type": "HALF_TIME_BTTS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.68,
+          "status": "active",
+          "externalId": "677237273",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.07,
+          "status": "active",
+          "externalId": "677237274",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 48",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. Połowa",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "677237278",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. Połowa",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "677237279",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "równo",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "677237280",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 49",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. Połowa",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "677237284",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. Połowa",
+          "odds": 3.9,
+          "status": "active",
+          "externalId": "677237285",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "równo",
+          "odds": 1.54,
+          "status": "active",
+          "externalId": "677237286",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Obie strzelą 2. polowa",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.7,
+          "status": "active",
+          "externalId": "677237289",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "677237290",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 9",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.3,
+          "status": "active",
+          "externalId": "677237336",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 11,
+          "status": "active",
+          "externalId": "677237337",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 4,
+          "status": "active",
+          "externalId": "677237338",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Gospodarze wygrają obie polowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nieparzysty",
+          "odds": 1.94,
+          "status": "active",
+          "externalId": "677237401",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Parzysty",
+          "odds": 1.91,
+          "status": "active",
+          "externalId": "677237402",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Parzyste/Nieparzyste",
+      "normalized_type": "ODD_EVEN_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "677237415",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "677237416",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.35,
+          "status": "active",
+          "externalId": "677237417",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.7,
+          "status": "active",
+          "externalId": "677237418",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Wynik 2. polowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 1.66,
+          "status": "active",
+          "externalId": "677237423",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.7,
+          "status": "active",
+          "externalId": "677237424",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "677237425",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 38,
+          "status": "active",
+          "externalId": "677237426",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 80",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid (1:0)",
+          "odds": 1.08,
+          "status": "active",
+          "externalId": "677236876",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (1:0)",
+          "odds": 6.9,
+          "status": "active",
+          "externalId": "677236877",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (1:0)",
+          "odds": 35,
+          "status": "active",
+          "externalId": "677236878",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:1)",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "677236882",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:1)",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "677236883",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:1)",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "677236884",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:2)",
+          "odds": 9.6,
+          "status": "active",
+          "externalId": "677236888",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:2)",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "677236889",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:2)",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "677236890",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid (0:3)",
+          "odds": 25,
+          "status": "active",
+          "externalId": "677236894",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis (0:3)",
+          "odds": 9.3,
+          "status": "active",
+          "externalId": "677236895",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (0:3)",
+          "odds": 1.05,
+          "status": "active",
+          "externalId": "677236896",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 503",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/remis & tak",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "677236915",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis & nie",
+          "odds": 1.28,
+          "status": "active",
+          "externalId": "677236916",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & tak",
+          "odds": 8.6,
+          "status": "active",
+          "externalId": "677236917",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & nie",
+          "odds": 1.53,
+          "status": "active",
+          "externalId": "677236918",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & tak",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "677236919",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & nie",
+          "odds": 2.47,
+          "status": "active",
+          "externalId": "677236920",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 76",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.69,
+          "status": "active",
+          "externalId": "677237122",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "677237123",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 7.7,
+          "status": "active",
+          "externalId": "677237124",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 82",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 2.5",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "677237159",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 2.5",
+          "odds": 1.17,
+          "status": "active",
+          "externalId": "677237160",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 81",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid (-0.5)",
+          "odds": 1.67,
+          "status": "active",
+          "externalId": "677237167",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves (+0.5)",
+          "odds": 2.07,
+          "status": "active",
+          "externalId": "677237168",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 87",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 4.5,
+          "status": "active",
+          "externalId": "677237269",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.17,
+          "status": "active",
+          "externalId": "677237270",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 86",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nieparzysty",
+          "odds": 2.03,
+          "status": "active",
+          "externalId": "677237293",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "parzysty",
+          "odds": 1.82,
+          "status": "active",
+          "externalId": "677237294",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 79",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.15,
+          "status": "active",
+          "externalId": "677237297",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 4.5,
+          "status": "active",
+          "externalId": "677237298",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 78",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid lub remis",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "677237308",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid lub Deportivo Alaves",
+          "odds": 1.36,
+          "status": "active",
+          "externalId": "677237309",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis lub Deportivo Alaves",
+          "odds": 1.94,
+          "status": "active",
+          "externalId": "677237310",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 85",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 3.75,
+          "status": "active",
+          "externalId": "677237314",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "677237315",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2+",
+          "odds": 2.16,
+          "status": "active",
+          "externalId": "677237316",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 83",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 2.5",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "677237477",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 2.5",
+          "odds": 1.08,
+          "status": "active",
+          "externalId": "677237478",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 84",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "ponad 0.5",
+          "odds": 3.15,
+          "status": "active",
+          "externalId": "677237501",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 0.5",
+          "odds": 1.31,
+          "status": "active",
+          "externalId": "677237502",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 88",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 1.31,
+          "status": "active",
+          "externalId": "677237505",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 3.15,
+          "status": "active",
+          "externalId": "677237506",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 89",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "677237509",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.42,
+          "status": "active",
+          "externalId": "677237510",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 90",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "677237521",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 9.6,
+          "status": "active",
+          "externalId": "677237522",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 50,
+          "status": "active",
+          "externalId": "677237523",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 3.15,
+          "status": "active",
+          "externalId": "677237524",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 9.4,
+          "status": "active",
+          "externalId": "677237525",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 55,
+          "status": "active",
+          "externalId": "677237526",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 5.3,
+          "status": "active",
+          "externalId": "677237527",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 17,
+          "status": "active",
+          "externalId": "677237528",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 105,
+          "status": "active",
+          "externalId": "677237529",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "677237530",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 77",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid",
+          "odds": 1.61,
+          "status": "active",
+          "externalId": "677237558",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "żaden",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "677237559",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "677237560",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 504",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/remis & tak",
+          "odds": 2.45,
+          "status": "active",
+          "externalId": "677236867",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis & nie",
+          "odds": 1.62,
+          "status": "active",
+          "externalId": "677236868",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & tak",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "677236869",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & nie",
+          "odds": 1.66,
+          "status": "active",
+          "externalId": "677236870",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & tak",
+          "odds": 5.3,
+          "status": "active",
+          "externalId": "677236871",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & nie",
+          "odds": 6.3,
+          "status": "active",
+          "externalId": "677236872",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 73",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & poniżej 1.5",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "677236987",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & ponad 1.5",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "677236988",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & poniżej 1.5",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677236989",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & ponad 1.5",
+          "odds": 10.25,
+          "status": "active",
+          "externalId": "677236990",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & poniżej 1.5",
+          "odds": 10.25,
+          "status": "active",
+          "externalId": "677236991",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & ponad 1.5",
+          "odds": 36,
+          "status": "active",
+          "externalId": "677236992",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 72",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & tak",
+          "odds": 15,
+          "status": "active",
+          "externalId": "677237007",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & nie",
+          "odds": 1.83,
+          "status": "active",
+          "externalId": "677237008",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & tak",
+          "odds": 9.9,
+          "status": "active",
+          "externalId": "677237009",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & nie",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "677237010",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & tak",
+          "odds": 70,
+          "status": "active",
+          "externalId": "677237011",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & nie",
+          "odds": 8.7,
+          "status": "active",
+          "externalId": "677237012",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 498",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/remis & tak",
+          "odds": 5.3,
+          "status": "active",
+          "externalId": "677237035",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis & nie",
+          "odds": 1.17,
+          "status": "active",
+          "externalId": "677237036",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & tak",
+          "odds": 6.15,
+          "status": "active",
+          "externalId": "677237037",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & nie",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "677237038",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & tak",
+          "odds": 13.75,
+          "status": "active",
+          "externalId": "677237039",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & nie",
+          "odds": 3.05,
+          "status": "active",
+          "externalId": "677237040",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Czyste konto gosci",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "ponad 2.5 & tak",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677237045",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 2.5 & tak",
+          "odds": 9.6,
+          "status": "active",
+          "externalId": "677237046",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "ponad 2.5 & nie",
+          "odds": 4.4,
+          "status": "active",
+          "externalId": "677237047",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 2.5 & nie",
+          "odds": 2.1,
+          "status": "active",
+          "externalId": "677237048",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 499",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/remis & tak",
+          "odds": 4.4,
+          "status": "active",
+          "externalId": "677237063",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis & nie",
+          "odds": 1.22,
+          "status": "active",
+          "externalId": "677237064",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & tak",
+          "odds": 5.1,
+          "status": "active",
+          "externalId": "677237065",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves & nie",
+          "odds": 1.31,
+          "status": "active",
+          "externalId": "677237066",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & tak",
+          "odds": 11.25,
+          "status": "active",
+          "externalId": "677237067",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves & nie",
+          "odds": 3.3,
+          "status": "active",
+          "externalId": "677237068",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Czyste konto gospodarzy",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & tak",
+          "odds": 3.4,
+          "status": "active",
+          "externalId": "677237327",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & nie",
+          "odds": 1.79,
+          "status": "active",
+          "externalId": "677237328",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & tak",
+          "odds": 6.7,
+          "status": "active",
+          "externalId": "677237329",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & nie",
+          "odds": 10.5,
+          "status": "active",
+          "externalId": "677237330",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & tak",
+          "odds": 20,
+          "status": "active",
+          "externalId": "677237331",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & nie",
+          "odds": 13.5,
+          "status": "active",
+          "externalId": "677237332",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 50",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nie/nie",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "677237343",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "tak/nie",
+          "odds": 6.9,
+          "status": "active",
+          "externalId": "677237344",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "tak/tak",
+          "odds": 31,
+          "status": "active",
+          "externalId": "677237345",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "nie/tak",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "677237346",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 502",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & poniżej 1.5",
+          "odds": 3.25,
+          "status": "active",
+          "externalId": "677237537",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & ponad 1.5",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677237538",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & poniżej 1.5",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "677237539",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & ponad 1.5",
+          "odds": 8.9,
+          "status": "active",
+          "externalId": "677237540",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & poniżej 1.5",
+          "odds": 9.8,
+          "status": "active",
+          "externalId": "677237541",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & ponad 1.5",
+          "odds": 24,
+          "status": "active",
+          "externalId": "677237542",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 501",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & tak",
+          "odds": 10.75,
+          "status": "active",
+          "externalId": "677237549",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & nie",
+          "odds": 1.8,
+          "status": "active",
+          "externalId": "677237550",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & tak",
+          "odds": 8.7,
+          "status": "active",
+          "externalId": "677237551",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & nie",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "677237552",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & tak",
+          "odds": 45,
+          "status": "active",
+          "externalId": "677237553",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & nie",
+          "odds": 8,
+          "status": "active",
+          "externalId": "677237554",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Przedzialy goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid & poniżej 2.5",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "677459564",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid & ponad 2.5",
+          "odds": 2.01,
+          "status": "active",
+          "externalId": "677459565",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & poniżej 2.5",
+          "odds": 5,
+          "status": "active",
+          "externalId": "677459566",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis & ponad 2.5",
+          "odds": 26,
+          "status": "active",
+          "externalId": "677459567",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & poniżej 2.5",
+          "odds": 14.25,
+          "status": "active",
+          "externalId": "677459568",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves & ponad 2.5",
+          "odds": 19,
+          "status": "active",
+          "externalId": "677459569",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 43",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "677237177",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "677237178",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 45",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 1.19,
+          "status": "active",
+          "externalId": "677237193",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 3.75,
+          "status": "active",
+          "externalId": "677237194",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 44",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 9,
+          "status": "active",
+          "externalId": "677237201",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "677237202",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 46",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 3.75,
+          "status": "active",
+          "externalId": "677237205",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.18,
+          "status": "active",
+          "externalId": "677237206",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 53",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 5,
+          "status": "active",
+          "externalId": "677237213",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.11,
+          "status": "active",
+          "externalId": "677237214",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Rynek 54",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "tak",
+          "odds": 2.3,
+          "status": "active",
+          "externalId": "677237217",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "nie",
+          "odds": 1.5,
+          "status": "active",
+          "externalId": "677237218",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 11
+    },
+    {
+      "name": "Podwojna szansa + gole 0",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/Atletico Madrid",
+          "odds": 1.87,
+          "status": "active",
+          "externalId": "677237390",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "Atletico Madrid/remis",
+          "odds": 24,
+          "status": "active",
+          "externalId": "677237391",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves",
+          "odds": 120,
+          "status": "active",
+          "externalId": "677237392",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "remis/Atletico Madrid",
+          "odds": 4.1,
+          "status": "active",
+          "externalId": "677237393",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "remis/remis",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "677237394",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves",
+          "odds": 19,
+          "status": "active",
+          "externalId": "677237395",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "Deportivo Alaves/Atletico Madrid",
+          "odds": 30,
+          "status": "active",
+          "externalId": "677237396",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "Deportivo Alaves/remis",
+          "odds": 28,
+          "status": "active",
+          "externalId": "677237397",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "Deportivo Alaves/Deportivo Alaves",
+          "odds": 19,
+          "status": "active",
+          "externalId": "677237398",
+          "normalizedName": "AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Gole gospodarzy 0.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "677236995",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.69,
+          "status": "active",
+          "externalId": "677236996",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "0.5",
+      "count": 7
+    },
+    {
+      "name": "Gole gospodarzy 1.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "677236999",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "677237000",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "1.5",
+      "count": 7
+    },
+    {
+      "name": "Wynik + liczba goli 0",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 9.1,
+          "status": "active",
+          "externalId": "677236947",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "677236948",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "677236949",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:0",
+          "odds": 6.5,
+          "status": "active",
+          "externalId": "677236950",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:0",
+          "odds": 12.25,
+          "status": "active",
+          "externalId": "677236951",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 16,
+          "status": "active",
+          "externalId": "677236952",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7.8,
+          "status": "active",
+          "externalId": "677236953",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "677236954",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:1",
+          "odds": 10.75,
+          "status": "active",
+          "externalId": "677236955",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:1",
+          "odds": 21,
+          "status": "active",
+          "externalId": "677236956",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 55,
+          "status": "active",
+          "externalId": "677236957",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 26,
+          "status": "active",
+          "externalId": "677236958",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 25,
+          "status": "active",
+          "externalId": "677236959",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2",
+          "odds": 36,
+          "status": "active",
+          "externalId": "677236960",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:2",
+          "odds": 70,
+          "status": "active",
+          "externalId": "677236961",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:3",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236962",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:3",
+          "odds": 130,
+          "status": "active",
+          "externalId": "677236963",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3",
+          "odds": 125,
+          "status": "active",
+          "externalId": "677236964",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:3",
+          "odds": 185,
+          "status": "active",
+          "externalId": "677236965",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:3",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236966",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236967",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236968",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236969",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236970",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236971",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 11.25,
+          "status": "active",
+          "externalId": "677236972",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    },
+    {
+      "name": "Podwojna szansa + gole 0",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Atletico Madrid/Atletico Madrid",
+          "odds": 1.87,
+          "status": "active",
+          "externalId": "677237390",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/remis",
+          "odds": 24,
+          "status": "active",
+          "externalId": "677237391",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Atletico Madrid/Deportivo Alaves",
+          "odds": 120,
+          "status": "active",
+          "externalId": "677237392",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Atletico Madrid",
+          "odds": 4.1,
+          "status": "active",
+          "externalId": "677237393",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/remis",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "677237394",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis/Deportivo Alaves",
+          "odds": 19,
+          "status": "active",
+          "externalId": "677237395",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves/Atletico Madrid",
+          "odds": 30,
+          "status": "active",
+          "externalId": "677237396",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves/remis",
+          "odds": 28,
+          "status": "active",
+          "externalId": "677237397",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Deportivo Alaves/Deportivo Alaves",
+          "odds": 19,
+          "status": "active",
+          "externalId": "677237398",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 4
+    },
+    {
+      "name": "Gole gospodarzy 0.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "677236995",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.69,
+          "status": "active",
+          "externalId": "677236996",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "5",
+      "count": 4
+    },
+    {
+      "name": "Gole gospodarzy 1.5",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Ponizej",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "677236999",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Ponizej",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "677237000",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": "5",
+      "count": 4
+    },
+    {
+      "name": "Wynik + liczba goli 0",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 9.1,
+          "status": "active",
+          "externalId": "677236947",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "677236948",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "677236949",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:0",
+          "odds": 6.5,
+          "status": "active",
+          "externalId": "677236950",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:0",
+          "odds": 12.25,
+          "status": "active",
+          "externalId": "677236951",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 16,
+          "status": "active",
+          "externalId": "677236952",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7.8,
+          "status": "active",
+          "externalId": "677236953",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "677236954",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:1",
+          "odds": 10.75,
+          "status": "active",
+          "externalId": "677236955",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:1",
+          "odds": 21,
+          "status": "active",
+          "externalId": "677236956",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 55,
+          "status": "active",
+          "externalId": "677236957",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 26,
+          "status": "active",
+          "externalId": "677236958",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 25,
+          "status": "active",
+          "externalId": "677236959",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2",
+          "odds": 36,
+          "status": "active",
+          "externalId": "677236960",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:2",
+          "odds": 70,
+          "status": "active",
+          "externalId": "677236961",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:3",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236962",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:3",
+          "odds": 130,
+          "status": "active",
+          "externalId": "677236963",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3",
+          "odds": 125,
+          "status": "active",
+          "externalId": "677236964",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:3",
+          "odds": 185,
+          "status": "active",
+          "externalId": "677236965",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:3",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236966",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236967",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236968",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236969",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236970",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:4",
+          "odds": 200,
+          "status": "active",
+          "externalId": "677236971",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 11.25,
+          "status": "active",
+          "externalId": "677236972",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 4
+    }
+  ]
+}

@@ -115,75 +115,20 @@ export type NormalizedSelection =
   | "UNKNOWN";
 
 // ============================================================================
-// Market Definition
+// Market Definition - Re-exported from unified registry
 // ============================================================================
 
 /**
- * Bookmaker-specific market data
+ * Re-export from unified market registry for compatibility.
+ * The canonical definition is in data/market-registry.ts
  */
-export interface BookmakerMarketData {
-  /** ID mappings for "Rynek XX" format (STS-style) */
-  idMappings?: number[];
+import type {
+  UnifiedMarketDefinition,
+  BookmakerMarketData as BookmakerMarketDataType,
+} from "../../data/market-registry.js";
 
-  /** Additional patterns specific to this bookmaker (e.g., different language) */
-  additionalPatterns?: RegExp[];
-
-  /** Different display name for this bookmaker */
-  displayName?: string;
-}
-
-/**
- * Market definition - complete specification of a market type
- *
- * This is the single source of truth for all market definitions.
- * Each market is defined once with all its patterns, parameters, and metadata.
- */
-export interface MarketDefinition {
-  /** Unique ID (e.g., "total-goals") */
-  id: string;
-
-  /** Normalized type (enum value) */
-  type: NormalizedMarketType;
-
-  /** Category for UI organization */
-  category: MarketCategory;
-
-  /** Optional sub-category for finer UI grouping */
-  subCategory?: string;
-
-  /** Display labels */
-  labels: {
-    pl: string;
-    en?: string;
-  };
-
-  /** Has parameter (line value like 2.5, +1, etc.) */
-  hasParameter: boolean;
-
-  /** Parameter type if applicable */
-  parameterType?: "decimal-line" | "integer" | "handicap" | "score";
-
-  /** Valid parameter values */
-  validParameters?: string[];
-
-  /** Expected selection types */
-  selections: NormalizedSelection[];
-
-  /**
-   * Patterns to match market names
-   * Ordered by specificity (most specific first)
-   */
-  patterns: RegExp[];
-
-  /**
-   * Extract parameter from pattern match
-   * Called when a pattern matches to extract the parameter value
-   */
-  extractParam?: (match: RegExpMatchArray) => string | undefined;
-
-  /** Bookmaker-specific data */
-  bookmakerData?: Record<string, BookmakerMarketData>;
-}
+export type MarketDefinition = UnifiedMarketDefinition;
+export type BookmakerMarketData = BookmakerMarketDataType;
 
 // ============================================================================
 // Bookmaker Adapter

@@ -9,12 +9,11 @@ import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
 import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 
-// Combined result for all leagues
 interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
   totalSuccessCount: number;
   totalErrorCount: number;
-  totalOddsRecords: number;
+  totalMarketsScraped: number;
   totalUniqueMatches: number;
 }
 
@@ -30,7 +29,7 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
   const results = new Map<string, ScrapeResult>();
   let totalSuccessCount = 0;
   let totalErrorCount = 0;
-  let totalOddsRecords = 0;
+  let totalMarketsScraped = 0;
   let totalUniqueMatches = 0;
 
   console.log(`[Scheduler] Scraping ${CONFIG.ENABLED_LEAGUES.length} leagues in parallel...`);
@@ -61,13 +60,12 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
     console.error("[Scheduler] Error closing browser pool:", error);
   }
 
-  // Aggregate results
-  for (const { league, result, error } of leagueResults) {
+  for (const { league, result } of leagueResults) {
     if (result) {
       results.set(league, result);
       totalSuccessCount += result.successCount;
       totalErrorCount += result.errorCount;
-      totalOddsRecords += result.oddsRecords;
+      totalMarketsScraped += result.marketsScraped;
       totalUniqueMatches += result.uniqueMatches;
     } else {
       totalErrorCount++;
@@ -78,7 +76,7 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
     leagues: results,
     totalSuccessCount,
     totalErrorCount,
-    totalOddsRecords,
+    totalMarketsScraped,
     totalUniqueMatches,
   };
 }

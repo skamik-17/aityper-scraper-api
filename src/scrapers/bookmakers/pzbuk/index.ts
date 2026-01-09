@@ -29,7 +29,7 @@ import type {
 } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../team-matcher.js";
+import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 
 // Import modular components
 import { LEAGUE_IDS, LEAGUE_URLS, WS_CAPTURE_TIMEOUT } from "./constants.js";

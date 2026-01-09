@@ -9,7 +9,7 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/markets.js";
+import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   PRIMARY_1X2_NAMES,
   EXCLUDED_1X2_PATTERNS,

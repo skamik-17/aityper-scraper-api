@@ -44,7 +44,7 @@ export function matchPattern(
         }
       } catch (e) {
         // Invalid regex or error in extractParam, skip this pattern
-        console.warn(`Pattern error for ${def.id}:`, e);
+        console.warn(`Pattern error for ${def.slug}:`, e);
         continue;
       }
     }
@@ -61,7 +61,7 @@ export function matchPattern(
                 return { definition: def, param, match };
               }
             } catch (e) {
-              console.warn(`Bookmaker pattern error for ${def.id}:`, e);
+              console.warn(`Bookmaker pattern error for ${def.slug}:`, e);
               continue;
             }
           }
@@ -141,7 +141,7 @@ export function matchesMarketType(
   registry: MarketDefinition[]
 ): boolean {
   const match = matchPattern(marketName, registry);
-  return match?.definition.type === marketType;
+  return match?.definition.code === marketType;
 }
 
 /**
@@ -164,7 +164,7 @@ export function getMatchingTypes(
     for (const pattern of def.patterns) {
       try {
         if (trimmed.match(pattern)) {
-          matches.push(def.type);
+          matches.push(def.code);
           break; // Found a match, move to next definition
         }
       } catch {

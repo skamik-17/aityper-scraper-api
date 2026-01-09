@@ -32,7 +32,7 @@ import type {
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../team-matcher.js";
+import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 
 // Import modular components
 import {

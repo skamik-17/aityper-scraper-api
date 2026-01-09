@@ -87,7 +87,6 @@ router.get("/runs", asyncHandler(async (req, res) => {
 
   const { runs, total } = await getRunsSummary(limit, offset);
 
-  // Transform to API format
   const formattedRuns: ScraperRunInfo[] = runs.map((run) => {
     const successCount = run.results.filter((r) => r.status === "success").length;
     const errorCount = run.results.filter((r) => r.status !== "success").length;
@@ -96,20 +95,20 @@ router.get("/runs", asyncHandler(async (req, res) => {
       0
     );
 
-    // Map results with proper status typing
     const typedResults: ScraperRunResult[] = run.results.map((r) => ({
       bookmaker: r.bookmaker,
       status: r.status === "success" ? "success" as const : "error" as const,
       matchesFound: r.matchesFound,
+      marketsSaved: r.marketsSaved,
       durationMs: r.durationMs,
       error: r.error,
     }));
 
     return {
-      runId: run.runId,
+      runId: run.batchId,
       league: run.league,
       startedAt: run.startedAt.toISOString(),
-      completedAt: run.completedAt.toISOString(),
+      completedAt: run.finishedAt?.toISOString() || run.startedAt.toISOString(),
       totalDurationMs: run.totalDurationMs,
       results: typedResults,
       summary: {

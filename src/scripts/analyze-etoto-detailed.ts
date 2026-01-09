@@ -3,7 +3,7 @@
  */
 
 import { etotoScraper } from "../scrapers/bookmakers/index.js";
-import { normalizeMarketsForBookmaker } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType } from "../types/normalization.js";
 
 async function main() {

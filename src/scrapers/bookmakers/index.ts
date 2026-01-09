@@ -19,6 +19,3 @@ export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
 export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk/index.js";
 export { lvbetScraper, LVBetPlaywrightScraper } from "./lvbet/index.js";
 export { fortunaScraper, FortunaPlaywrightScraper } from "./fortuna/index.js";
-
-// Backwards compatibility alias for betclic
-export { betclicScraper as betclicPlaywrightScraper } from "./betclic/index.js";

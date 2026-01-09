@@ -126,7 +126,7 @@ function normalizeSelectionWithContext(
   marketDef: MarketDefinition,
   originalName: string
 ): NormalizedSelectionResult {
-  const type = marketDef.type;
+  const type = marketDef.code;
 
   // ==========================================================================
   // BTTS / HALF_TIME_BTTS - Tak/Nie
@@ -189,7 +189,7 @@ function normalizeSelectionWithContext(
       lowerName.startsWith(expectedLower) ||
       expectedLower.startsWith(lowerName)
     ) {
-      return { name: originalName, normalizedName: expected, odds: 0 };
+      return { name: originalName, normalizedName: expected as NormalizedSelection, odds: 0 };
     }
   }
 

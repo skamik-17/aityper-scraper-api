@@ -1,0 +1,6181 @@
+{
+  "bookmaker": "betfan",
+  "extracted_at": "2026-01-08T20:55:22.285Z",
+  "total_unique_markets": 208,
+  "markets": [
+    {
+      "name": "Mecz",
+      "normalized_type": "MATCH_WINNER",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Motor Lublin",
+          "odds": 2.75,
+          "externalId": "1819928696",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 3.4,
+          "externalId": "1819928697",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Pogoń Szczecin",
+          "odds": 2.5,
+          "externalId": "1819928698",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 26
+    },
+    {
+      "name": "Podwójna szansa",
+      "normalized_type": "DOUBLE_CHANCE",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "1X",
+          "odds": 1.13,
+          "externalId": "1827650088",
+          "normalizedName": "HOME_OR_DRAW"
+        },
+        {
+          "name": "12",
+          "odds": 1.18,
+          "externalId": "1827650089",
+          "normalizedName": "HOME_OR_AWAY"
+        },
+        {
+          "name": "X2",
+          "odds": 2.4,
+          "externalId": "1827650090",
+          "normalizedName": "DRAW_OR_AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "Zakład bez remisu (remis=zwrot)",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "PSG",
+          "odds": 1.18,
+          "externalId": "1827650091",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lille",
+          "odds": 4.5,
+          "externalId": "1827650092",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "Obie drużyny strzelą gola",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.68,
+          "externalId": "1827658431",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.05,
+          "externalId": "1827658432",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "1. połowa - wynik",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "PSG",
+          "odds": 1.9,
+          "externalId": "1827658428",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 2.65,
+          "externalId": "1827658429",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lille",
+          "odds": 5.8,
+          "externalId": "1827658430",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "1. połowa - podwójna szansa",
+      "normalized_type": "DOUBLE_CHANCE",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "PSG/X",
+          "odds": 1.13,
+          "externalId": "1827658336",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "PSG/Lille",
+          "odds": 1.42,
+          "externalId": "1827658337",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/Lille",
+          "odds": 1.75,
+          "externalId": "1827658338",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "1. połowa - zakład bez remisu (remis=zwrot)",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "PSG",
+          "odds": 1.25,
+          "externalId": "1827658339",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lille",
+          "odds": 3.6,
+          "externalId": "1827658340",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "1. połowa - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 3.8,
+          "externalId": "1827658376",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.65,
+          "externalId": "1827658377",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2+",
+          "odds": 2.2,
+          "externalId": "1827658378",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 17
+    },
+    {
+      "name": "Obie połowy powyżej 1.5 goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.95,
+          "externalId": "1827656926",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.22,
+          "externalId": "1827656927",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "1. gol",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brak",
+          "odds": 13.5,
+          "externalId": "1827660100",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Angers",
+          "odds": 3.2,
+          "externalId": "1827660101",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia",
+          "odds": 1.56,
+          "externalId": "1827660102",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Kiedy zostanie strzelony 1. gol (przedział 10 minutowy)",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brak",
+          "odds": 12,
+          "externalId": "1827660018",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-10",
+          "odds": 4.2,
+          "externalId": "1827660019",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "11-20",
+          "odds": 4.65,
+          "externalId": "1827660020",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "21-30",
+          "odds": 5.9,
+          "externalId": "1827660021",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31-40",
+          "odds": 7.4,
+          "externalId": "1827660022",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "41-50",
+          "odds": 8.2,
+          "externalId": "1827660023",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "51-60",
+          "odds": 12,
+          "externalId": "1827660024",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "61-70",
+          "odds": 16.5,
+          "externalId": "1827660027",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "71-80",
+          "odds": 22,
+          "externalId": "1827660028",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "81-90",
+          "odds": 21,
+          "externalId": "1827660029",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Kiedy zostanie strzelony 1. gol (przedział 15 minutowy)",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brak",
+          "odds": 11.5,
+          "externalId": "1827660030",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-15",
+          "odds": 2.9,
+          "externalId": "1827660031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "16-30",
+          "odds": 3.7,
+          "externalId": "1827660032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31-45",
+          "odds": 4.65,
+          "externalId": "1827660033",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "46-60",
+          "odds": 8,
+          "externalId": "1827660034",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "61-75",
+          "odds": 11.5,
+          "externalId": "1827660035",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "76-90",
+          "odds": 14.5,
+          "externalId": "1827660036",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Dokładny wynik",
+      "normalized_type": "CORRECT_SCORE",
+      "normalized_group": "SCORE",
+      "selections_sample": [
+        {
+          "name": "0:1",
+          "odds": 6.5,
+          "externalId": "1827660088",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 6.9,
+          "externalId": "1827660089",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7,
+          "externalId": "1827660085",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 7.8,
+          "externalId": "1827660090",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:0",
+          "odds": 11,
+          "externalId": "1827660084",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:3",
+          "odds": 11,
+          "externalId": "1827660091",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:3",
+          "odds": 12.5,
+          "externalId": "1827660092",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 13,
+          "externalId": "1827660072",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 16,
+          "externalId": "1827660074",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 16.5,
+          "externalId": "1827660086",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4",
+          "odds": 23.5,
+          "externalId": "1827660094",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:4",
+          "odds": 26.5,
+          "externalId": "1827660095",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3",
+          "odds": 28,
+          "externalId": "1827660093",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 29.5,
+          "externalId": "1827660073",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:1",
+          "odds": 55,
+          "externalId": "1827660076",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2",
+          "odds": 60,
+          "externalId": "1827660077",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:4",
+          "odds": 60,
+          "externalId": "1827660096",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:5",
+          "odds": 65,
+          "externalId": "1827660097",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:5",
+          "odds": 70,
+          "externalId": "1827660098",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:3",
+          "odds": 90,
+          "externalId": "1827660087",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:0",
+          "odds": 100,
+          "externalId": "1827660075",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:6",
+          "odds": 200,
+          "externalId": "1827660099",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:1",
+          "odds": 250,
+          "externalId": "1827660079",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:2",
+          "odds": 250,
+          "externalId": "1827660080",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:0",
+          "odds": 450,
+          "externalId": "1827660078",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5:0",
+          "odds": 500,
+          "externalId": "1827660081",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5:1",
+          "odds": 500,
+          "externalId": "1827660082",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "6:0",
+          "odds": 500,
+          "externalId": "1827660083",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Multiwynik",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0:1, 0:2 lub 0:3",
+          "odds": 2.79,
+          "externalId": "1827659883",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.49,
+          "externalId": "1827659881",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "1:2, 1:3 lub 1:4",
+          "odds": 4.32,
+          "externalId": "1827659889",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0, 2:0 lub 3:0",
+          "odds": 8.72,
+          "externalId": "1827659882",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1, 3:1 lub 4:1",
+          "odds": 12.19,
+          "externalId": "1827659888",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3, 2:4, 3:4 lub 1:5",
+          "odds": 14.49,
+          "externalId": "1827659891",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4, 0:5 lub 0:6",
+          "odds": 16.35,
+          "externalId": "1827659886",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2, 4:2, 4:3 lub 5:1",
+          "odds": 42.64,
+          "externalId": "1827659890",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Inne zwycięstwo gości",
+          "odds": 52.8,
+          "externalId": "1827659893",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:0, 5:0 lub 6:0",
+          "odds": 100,
+          "externalId": "1827659884",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Inne zwycięstwo gospodarzy",
+          "odds": 100,
+          "externalId": "1827659892",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "1. połowa - dokładny wynik",
+      "normalized_type": "HALF_TIME_RESULT",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 2.55,
+          "externalId": "1827659902",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 3,
+          "externalId": "1827659905",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 6.1,
+          "externalId": "1827659899",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 6.7,
+          "externalId": "1827659906",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7.2,
+          "externalId": "1827659903",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Inny",
+          "odds": 11,
+          "externalId": "1827659898",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 16.5,
+          "externalId": "1827659907",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 29.5,
+          "externalId": "1827659900",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 35,
+          "externalId": "1827659901",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 85,
+          "externalId": "1827659904",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "2. połowa - dokładny wynik",
+      "normalized_type": "CORRECT_SCORE",
+      "normalized_group": "SCORE",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 3.35,
+          "externalId": "1827660311",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 3.35,
+          "externalId": "1827660314",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 6.1,
+          "externalId": "1827660315",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 6.2,
+          "externalId": "1827660308",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 6.5,
+          "externalId": "1827660312",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Inny",
+          "odds": 7.2,
+          "externalId": "1827660317",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 13,
+          "externalId": "1827660316",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 22.5,
+          "externalId": "1827660309",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 25,
+          "externalId": "1827660310",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 50,
+          "externalId": "1827660313",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "1. połowa/wynik końcowy - dokładny wynik",
+      "normalized_type": "HALF_TIME_RESULT",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "0-0 / 0-0",
+          "odds": 9.2,
+          "externalId": "1827659944",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 1-0",
+          "odds": 18.5,
+          "externalId": "1827659945",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 0-1",
+          "odds": 9.8,
+          "externalId": "1827659946",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 2-0",
+          "odds": 70,
+          "externalId": "1827659947",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 1-1",
+          "odds": 20,
+          "externalId": "1827659948",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 0-2",
+          "odds": 18.5,
+          "externalId": "1827659949",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 3-0",
+          "odds": 400,
+          "externalId": "1827659950",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 2-1",
+          "odds": 85,
+          "externalId": "1827659951",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 1-2",
+          "odds": 42,
+          "externalId": "1827659952",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 0-3",
+          "odds": 50,
+          "externalId": "1827659953",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-0 / 4+",
+          "odds": 35,
+          "externalId": "1827659954",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 1-0",
+          "odds": 27,
+          "externalId": "1827659955",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 2-0",
+          "odds": 50,
+          "externalId": "1827659956",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 1-1",
+          "odds": 24,
+          "externalId": "1827659957",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 3-0",
+          "odds": 200,
+          "externalId": "1827659958",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 2-1",
+          "odds": 50,
+          "externalId": "1827659959",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 1-2",
+          "odds": 43,
+          "externalId": "1827659960",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-0 / 4+",
+          "odds": 26,
+          "externalId": "1827659961",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 0-1",
+          "odds": 12,
+          "externalId": "1827659962",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 1-1",
+          "odds": 21,
+          "externalId": "1827659963",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 0-2",
+          "odds": 11.5,
+          "externalId": "1827659964",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 2-1",
+          "odds": 75,
+          "externalId": "1827659965",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 1-2",
+          "odds": 23.5,
+          "externalId": "1827659966",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 0-3",
+          "odds": 22.5,
+          "externalId": "1827659967",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1 / 4+",
+          "odds": 13.5,
+          "externalId": "1827659968",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-0 / 2-0",
+          "odds": 140,
+          "externalId": "1827659969",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-0 / 3-0",
+          "odds": 250,
+          "externalId": "1827659970",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-0 / 2-1",
+          "odds": 130,
+          "externalId": "1827659971",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-0 / 4+",
+          "odds": 60,
+          "externalId": "1827659972",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-1 / 1-1",
+          "odds": 28,
+          "externalId": "1827659973",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-1 / 2-1",
+          "odds": 60,
+          "externalId": "1827659974",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-1 / 1-2",
+          "odds": 29.5,
+          "externalId": "1827659975",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-1 / 4+",
+          "odds": 15,
+          "externalId": "1827659976",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2 / 0-2",
+          "odds": 28.5,
+          "externalId": "1827659977",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2 / 1-2",
+          "odds": 55,
+          "externalId": "1827659978",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2 / 0-3",
+          "odds": 27.5,
+          "externalId": "1827659979",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2 / 4+",
+          "odds": 13.5,
+          "externalId": "1827659980",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-0 / 3-0",
+          "odds": 500,
+          "externalId": "1827659981",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-0 / 4+",
+          "odds": 250,
+          "externalId": "1827659982",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-1 / 2-1",
+          "odds": 160,
+          "externalId": "1827659983",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-1 / 4+",
+          "odds": 42,
+          "externalId": "1827659984",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2 / 1-2",
+          "odds": 70,
+          "externalId": "1827659985",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2 / 4+",
+          "odds": 20,
+          "externalId": "1827659986",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-3 / 0-3",
+          "odds": 100,
+          "externalId": "1827659987",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-3 / 4+",
+          "odds": 27.5,
+          "externalId": "1827659988",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+ / 4+",
+          "odds": 17.5,
+          "externalId": "1827659989",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "10 minut - wynik od 1 do 10 (00:00-09:59)",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Angers",
+          "odds": 13,
+          "externalId": "1827660037",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 1.18,
+          "externalId": "1827660038",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Ol. Marsylia",
+          "odds": 6,
+          "externalId": "1827660039",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Różnica zwycięstwa",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "X",
+          "odds": 3.65,
+          "externalId": "1827660065",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Angers 3+ golami",
+          "odds": 60,
+          "externalId": "1827660066",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Angers 2 golami",
+          "odds": 19,
+          "externalId": "1827660067",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Angers 1 golem",
+          "odds": 7,
+          "externalId": "1827660068",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia 1 golem",
+          "odds": 3.45,
+          "externalId": "1827660069",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia 2 golami",
+          "odds": 4.55,
+          "externalId": "1827660070",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia 3+ golami",
+          "odds": 5,
+          "externalId": "1827660071",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 2.95,
+          "externalId": "1827659939",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.1,
+          "externalId": "1827659940",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 3.4,
+          "externalId": "1827659941",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "Liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 15.5,
+          "externalId": "1827657140",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 5.8,
+          "externalId": "1827657141",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.65,
+          "externalId": "1827657142",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3",
+          "odds": 3.55,
+          "externalId": "1827657143",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4",
+          "odds": 4.35,
+          "externalId": "1827657144",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5",
+          "odds": 6.8,
+          "externalId": "1827657145",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "6+",
+          "odds": 7.4,
+          "externalId": "1827657146",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "1. połowa - obie drużyny strzelą gola",
+      "normalized_type": "HALF_TIME_BTTS",
+      "normalized_group": "HALF_TIME",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.7,
+          "externalId": "1827657268",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.23,
+          "externalId": "1827657269",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 16
+    },
+    {
+      "name": "1. połowa - handicap 1:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 1.15,
+          "externalId": "1827657363",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 5.4,
+          "externalId": "1827657364",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 20.5,
+          "externalId": "1827657365",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 15
+    },
+    {
+      "name": "1. połowa - handicap 0:1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 5,
+          "externalId": "1827657366",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 3.15,
+          "externalId": "1827657367",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.72,
+          "externalId": "1827657368",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 15
+    },
+    {
+      "name": "1. połowa - 1. gol",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brak",
+          "odds": 3.7,
+          "externalId": "1827657333",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco",
+          "odds": 1.85,
+          "externalId": "1827657334",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient",
+          "odds": 3.6,
+          "externalId": "1827657335",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - wynik",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 1.92,
+          "externalId": "1827657154",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 2.95,
+          "externalId": "1827657155",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 4.6,
+          "externalId": "1827657156",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - podwójna szansa",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Monaco/X",
+          "odds": 1.18,
+          "externalId": "1827657280",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco/Lorient",
+          "odds": 1.35,
+          "externalId": "1827657281",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/Lorient",
+          "odds": 1.73,
+          "externalId": "1827657282",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - zakład bez remisu (remis=zwrot)",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 1.33,
+          "externalId": "1827657278",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient",
+          "odds": 3.05,
+          "externalId": "1827657279",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Poniżej 2.5",
+          "odds": 1.27,
+          "externalId": "1827657167",
+          "normalizedName": "UNDER"
+        },
+        {
+          "name": "Powyżej 2.5",
+          "odds": 3.4,
+          "externalId": "1827657168",
+          "normalizedName": "OVER"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - dokładna liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 5,
+          "externalId": "1827657287",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.95,
+          "externalId": "1827657289",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2+",
+          "odds": 1.78,
+          "externalId": "1827657290",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - obie drużyny strzelą gola",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.95,
+          "externalId": "1827657270",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.35,
+          "externalId": "1827657271",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "2. połowa - handicap 1:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 1.18,
+          "externalId": "1827657103",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 5.4,
+          "externalId": "1827657104",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 15,
+          "externalId": "1827657105",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 15
+    },
+    {
+      "name": "2. połowa - handicap 0:1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 4.05,
+          "externalId": "1827657106",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 3.3,
+          "externalId": "1827657107",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.82,
+          "externalId": "1827657108",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 15
+    },
+    {
+      "name": "2. połowa - 1. gol",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brak",
+          "odds": 5,
+          "externalId": "1827657413",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco",
+          "odds": 1.73,
+          "externalId": "1827657414",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient",
+          "odds": 3.2,
+          "externalId": "1827657415",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "Liczba goli - przedział bramkowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0-1",
+          "odds": 4.7,
+          "externalId": "1827657291",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 2.05,
+          "externalId": "1827657292",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4-6",
+          "odds": 2.52,
+          "externalId": "1827657293",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7+",
+          "odds": 19,
+          "externalId": "1827657294",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "Obie połowy poniżej 1.5 goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.05,
+          "externalId": "1827657241",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.33,
+          "externalId": "1827657242",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "1. gol i wynik meczu",
+      "normalized_type": "MATCH_WINNER",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Monaco gol i Monaco",
+          "odds": 1.72,
+          "externalId": "1827657226",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco gol i remis",
+          "odds": 9.2,
+          "externalId": "1827657227",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco gol i Lorient",
+          "odds": 23,
+          "externalId": "1827657228",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient gol i Monaco",
+          "odds": 8.8,
+          "externalId": "1827657229",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient gol i remis",
+          "odds": 9.2,
+          "externalId": "1827657230",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient gol i Lorient",
+          "odds": 5.4,
+          "externalId": "1827657231",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brak gola",
+          "odds": 16.5,
+          "externalId": "1827657232",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 15
+    },
+    {
+      "name": "1. połowa - handicap 0:2",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 15,
+          "externalId": "1827657369",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 6,
+          "externalId": "1827657370",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.15,
+          "externalId": "1827657371",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "2",
+      "count": 13
+    },
+    {
+      "name": "2. połowa - handicap 0:2",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 10.5,
+          "externalId": "1827657109",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 5.5,
+          "externalId": "1827657110",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.22,
+          "externalId": "1827657111",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "2",
+      "count": 13
+    },
+    {
+      "name": "1. połowa - handicap +0 / -0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Toulouse (0)",
+          "odds": 1.47,
+          "externalId": "1827657719",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nice (-0)",
+          "odds": 2.5,
+          "externalId": "1827657720",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 11
+    },
+    {
+      "name": "Zawodnik strzeli gola",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Aubameyang, Pierre-Emerick",
+          "odds": 2.3,
+          "externalId": "1877727834",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kondogbia, Geoffrey",
+          "odds": 7,
+          "externalId": "1877727835",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bamba, Abdoulaye",
+          "odds": 15,
+          "externalId": "1877727836",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hojbjerg, Pierre",
+          "odds": 5,
+          "externalId": "1877727837",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Emerson",
+          "odds": 7.5,
+          "externalId": "1877727838",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hanin, Florent",
+          "odds": 11.5,
+          "externalId": "1877727839",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Capelle, Pierrick",
+          "odds": 7.5,
+          "externalId": "1877727840",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Maupay, Neal",
+          "odds": 2.9,
+          "externalId": "1877727841",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lefort, Jordan",
+          "odds": 11.5,
+          "externalId": "1877727842",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Garcia, Ulisses",
+          "odds": 7.2,
+          "externalId": "1877727843",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Belkebla, Haris",
+          "odds": 10.5,
+          "externalId": "1877727844",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Murillo, Michael",
+          "odds": 7.5,
+          "externalId": "1877727845",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pavard, Benjamin",
+          "odds": 9,
+          "externalId": "1877727846",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Carlens, Arcus",
+          "odds": 11.5,
+          "externalId": "1877727847",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lirola, Pol",
+          "odds": 5.4,
+          "externalId": "1877727848",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Weah, Tim",
+          "odds": 4.1,
+          "externalId": "1877727849",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gouiri, Amine",
+          "odds": 2.65,
+          "externalId": "1877727850",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Medina, Facundo",
+          "odds": 7.8,
+          "externalId": "1877727851",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gomes, Angel",
+          "odds": 4.7,
+          "externalId": "1877727852",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "O'Riley, Matt",
+          "odds": 3.95,
+          "externalId": "1877727853",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Traore, Hamed Junior",
+          "odds": 3.3,
+          "externalId": "1877727854",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Greenwood, Mason",
+          "odds": 2.05,
+          "externalId": "1877727855",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paixao, Igor",
+          "odds": 2.65,
+          "externalId": "1877727856",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Egan-Riley, CJ",
+          "odds": 9,
+          "externalId": "1877727857",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sbai, Amine",
+          "odds": 5.4,
+          "externalId": "1877727858",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nadje, Guede",
+          "odds": 4.25,
+          "externalId": "1877727859",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ekomie, Jacques",
+          "odds": 10.5,
+          "externalId": "1877727860",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mouton, Louis",
+          "odds": 7.1,
+          "externalId": "1877727861",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Belkhdim, Yassin",
+          "odds": 7.2,
+          "externalId": "1877727862",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mughe, Francois",
+          "odds": 4.05,
+          "externalId": "1877727863",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Clement, Mathis",
+          "odds": 5.7,
+          "externalId": "1877727864",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Biumla, Emmanuel",
+          "odds": 10.5,
+          "externalId": "1877727865",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Raolisoa, Lilian",
+          "odds": 7.8,
+          "externalId": "1877727866",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kalumba, Justin-Noel",
+          "odds": 6.1,
+          "externalId": "1877727867",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sinate, Dan",
+          "odds": 9,
+          "externalId": "1877727868",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Courcoul, Marius",
+          "odds": 11,
+          "externalId": "1877727869",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Cherif, Sidiki",
+          "odds": 4.4,
+          "externalId": "1877727870",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bakola, Darryl",
+          "odds": 3.45,
+          "externalId": "1877727871",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abdallah, Keyliane",
+          "odds": 2.65,
+          "externalId": "1877727872",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Louer, Marius",
+          "odds": 11,
+          "externalId": "1877727873",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lago, Ange",
+          "odds": 2.5,
+          "externalId": "1877727874",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Vaz, Robinio",
+          "odds": 2.6,
+          "externalId": "1877727875",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Prosper, Peter",
+          "odds": 4.25,
+          "externalId": "1877727876",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Machine, Lanroy",
+          "odds": 4.45,
+          "externalId": "1877727877",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "El Baraka, Jibril",
+          "odds": 8.6,
+          "externalId": "1877727878",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mmadi, Tadjidine",
+          "odds": 2.6,
+          "externalId": "1877727879",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ouro Bang Na, Rayan",
+          "odds": 8.8,
+          "externalId": "1877727880",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Djibirin, Harouna",
+          "odds": 6.3,
+          "externalId": "1877727881",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "N'Zinga Pambani, Pladi",
+          "odds": 8.8,
+          "externalId": "1877727882",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "Strzelec 1. gola",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Aubameyang, Pierre-Emerick",
+          "odds": 5.1,
+          "externalId": "1877727884",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kondogbia, Geoffrey",
+          "odds": 14.5,
+          "externalId": "1877727885",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bamba, Abdoulaye",
+          "odds": 24,
+          "externalId": "1877727886",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hojbjerg, Pierre",
+          "odds": 11,
+          "externalId": "1877727887",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Emerson",
+          "odds": 15.5,
+          "externalId": "1877727888",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hanin, Florent",
+          "odds": 20.5,
+          "externalId": "1877727889",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Capelle, Pierrick",
+          "odds": 15.5,
+          "externalId": "1877727890",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Maupay, Neal",
+          "odds": 6.6,
+          "externalId": "1877727891",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lefort, Jordan",
+          "odds": 21,
+          "externalId": "1877727892",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Garcia, Ulisses",
+          "odds": 15,
+          "externalId": "1877727893",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Belkebla, Haris",
+          "odds": 19.5,
+          "externalId": "1877727894",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Murillo, Michael",
+          "odds": 15.5,
+          "externalId": "1877727895",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pavard, Benjamin",
+          "odds": 17.5,
+          "externalId": "1877727896",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Carlens, Arcus",
+          "odds": 20.5,
+          "externalId": "1877727897",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lirola, Pol",
+          "odds": 12,
+          "externalId": "1877727898",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Weah, Tim",
+          "odds": 9.2,
+          "externalId": "1877727899",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gouiri, Amine",
+          "odds": 6,
+          "externalId": "1877727900",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Medina, Facundo",
+          "odds": 16,
+          "externalId": "1877727901",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gomes, Angel",
+          "odds": 10.5,
+          "externalId": "1877727902",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "O'Riley, Matt",
+          "odds": 8.8,
+          "externalId": "1877727903",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Traore, Hamed Junior",
+          "odds": 7.4,
+          "externalId": "1877727904",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Greenwood, Mason",
+          "odds": 4.35,
+          "externalId": "1877727905",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paixao, Igor",
+          "odds": 5.9,
+          "externalId": "1877727906",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Egan-Riley, CJ",
+          "odds": 17.5,
+          "externalId": "1877727907",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sbai, Amine",
+          "odds": 12,
+          "externalId": "1877727908",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nadje, Guede",
+          "odds": 9.6,
+          "externalId": "1877727909",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ekomie, Jacques",
+          "odds": 19.5,
+          "externalId": "1877727910",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mouton, Louis",
+          "odds": 15,
+          "externalId": "1877727911",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Belkhdim, Yassin",
+          "odds": 15,
+          "externalId": "1877727912",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mughe, Francois",
+          "odds": 9.2,
+          "externalId": "1877727913",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Clement, Mathis",
+          "odds": 12.5,
+          "externalId": "1877727914",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Biumla, Emmanuel",
+          "odds": 19.5,
+          "externalId": "1877727915",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Raolisoa, Lilian",
+          "odds": 15.5,
+          "externalId": "1877727916",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kalumba, Justin-Noel",
+          "odds": 13,
+          "externalId": "1877727917",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Sinate, Dan",
+          "odds": 17.5,
+          "externalId": "1877727918",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Courcoul, Marius",
+          "odds": 20.5,
+          "externalId": "1877727919",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Cherif, Sidiki",
+          "odds": 9.8,
+          "externalId": "1877727920",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bakola, Darryl",
+          "odds": 7.8,
+          "externalId": "1877727921",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abdallah, Keyliane",
+          "odds": 5.9,
+          "externalId": "1877727922",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Louer, Marius",
+          "odds": 20.5,
+          "externalId": "1877727923",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lago, Ange",
+          "odds": 5.5,
+          "externalId": "1877727924",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Vaz, Robinio",
+          "odds": 5.8,
+          "externalId": "1877727925",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Prosper, Peter",
+          "odds": 9.6,
+          "externalId": "1877727926",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Machine, Lanroy",
+          "odds": 10,
+          "externalId": "1877727927",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "El Baraka, Jibril",
+          "odds": 17,
+          "externalId": "1877727928",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mmadi, Tadjidine",
+          "odds": 5.7,
+          "externalId": "1877727929",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ouro Bang Na, Rayan",
+          "odds": 17.5,
+          "externalId": "1877727930",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Djibirin, Harouna",
+          "odds": 13.5,
+          "externalId": "1877727931",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "N'Zinga Pambani, Pladi",
+          "odds": 17.5,
+          "externalId": "1877727932",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 10
+    },
+    {
+      "name": "1. połowa - handicap -0.5 / +0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco (-0.5)",
+          "odds": 2,
+          "externalId": "1827657383",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient (+0.5)",
+          "odds": 1.72,
+          "externalId": "1827657384",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 9
+    },
+    {
+      "name": "2. połowa - handicap -0.5 / +0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco (-0.5)",
+          "odds": 1.88,
+          "externalId": "1827657169",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient (+0.5)",
+          "odds": 1.82,
+          "externalId": "1827657170",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 9
+    },
+    {
+      "name": "Handicap 0:1 (bez dogrywki)",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco (0:1)",
+          "odds": 2.4,
+          "externalId": "1827657147",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (0:1)",
+          "odds": 3.85,
+          "externalId": "1827657148",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient (0:1)",
+          "odds": 2.3,
+          "externalId": "1827657149",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 9
+    },
+    {
+      "name": "1. połowa - handicap 2:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Toulouse",
+          "odds": 1.02,
+          "externalId": "1827657705",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 10,
+          "externalId": "1827657706",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Nice",
+          "odds": 55,
+          "externalId": "1827657707",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 9
+    },
+    {
+      "name": "2. połowa - handicap 2:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Toulouse",
+          "odds": 1.03,
+          "externalId": "1828924371",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 9.6,
+          "externalId": "1828924372",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Nice",
+          "odds": 38,
+          "externalId": "1828924373",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 8
+    },
+    {
+      "name": "2. połowa - handicap 0:3",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 26.5,
+          "externalId": "1827657112",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 10,
+          "externalId": "1827657113",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.04,
+          "externalId": "1827657114",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "3",
+      "count": 7
+    },
+    {
+      "name": "2. połowa - handicap +0 / -0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Toulouse (0)",
+          "odds": 1.5,
+          "externalId": "1827657503",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nice (-0)",
+          "odds": 2.45,
+          "externalId": "1827657504",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 7
+    },
+    {
+      "name": "1. połowa - handicap 0:3",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco",
+          "odds": 37,
+          "externalId": "1827657372",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 11,
+          "externalId": "1827657373",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Lorient",
+          "odds": 1.02,
+          "externalId": "1827657374",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "3",
+      "count": 6
+    },
+    {
+      "name": "Handicap -1 / +1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Monaco -1",
+          "odds": 1.88,
+          "externalId": "1827657375",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Lorient +1",
+          "odds": 1.8,
+          "externalId": "1827657376",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 6
+    },
+    {
+      "name": "1. połowa - handicap +0.5 / -0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers (+0.5)",
+          "odds": 1.67,
+          "externalId": "1827660224",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia (-0.5)",
+          "odds": 2.1,
+          "externalId": "1827660226",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 4
+    },
+    {
+      "name": "2. połowa - handicap +0.5 / -0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers (+0.5)",
+          "odds": 1.77,
+          "externalId": "1827659937",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia (-0.5)",
+          "odds": 1.95,
+          "externalId": "1827659938",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 4
+    },
+    {
+      "name": "Handicap 1:0 (bez dogrywki)",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers (1:0)",
+          "odds": 2.25,
+          "externalId": "1827659915",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (1:0)",
+          "odds": 3.6,
+          "externalId": "1827659916",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia (1:0)",
+          "odds": 2.6,
+          "externalId": "1827659917",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 4
+    },
+    {
+      "name": "Ol. Marsylia wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.6,
+          "externalId": "1827659896",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.43,
+          "externalId": "1827659897",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Le Havre strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.5,
+          "externalId": "1827657948",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.12,
+          "externalId": "1827657949",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Brest strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.3,
+          "externalId": "1827659416",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.12,
+          "externalId": "1827659417",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Ol. Marsylia wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.33,
+          "externalId": "1827660005",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3,
+          "externalId": "1827660006",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Ol. Marsylia strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.5,
+          "externalId": "1827660007",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.47,
+          "externalId": "1827660008",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Rennes strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.55,
+          "externalId": "1827657935",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.45,
+          "externalId": "1827657936",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Ol. Marsylia - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.05,
+          "externalId": "1827660047",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.4,
+          "externalId": "1827660048",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.8,
+          "externalId": "1827660049",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Handicap -0.5 / +0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Toulouse -0.5",
+          "odds": 1.85,
+          "externalId": "1827657711",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nice +0.5",
+          "odds": 1.82,
+          "externalId": "1827657712",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 3
+    },
+    {
+      "name": "1. połowa - handicap 3:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers",
+          "odds": 1.01,
+          "externalId": "1827660172",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 11,
+          "externalId": "1827660173",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Ol. Marsylia",
+          "odds": 43,
+          "externalId": "1827660174",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 3
+    },
+    {
+      "name": "Angers wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 7.2,
+          "externalId": "1827659894",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.06,
+          "externalId": "1827659895",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Angers wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.8,
+          "externalId": "1827659990",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.38,
+          "externalId": "1827659991",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Angers strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.9,
+          "externalId": "1827659992",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.1,
+          "externalId": "1827659993",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Angers - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 4.1,
+          "externalId": "1827660044",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 3.1,
+          "externalId": "1827660045",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 1.87,
+          "externalId": "1827660046",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Monaco czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.5,
+          "externalId": "1827657351",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.4,
+          "externalId": "1827657352",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Lorient czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.35,
+          "externalId": "1827657353",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.53,
+          "externalId": "1827657354",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Monaco czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.68,
+          "externalId": "1827657397",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.05,
+          "externalId": "1827657398",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Lorient czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.75,
+          "externalId": "1827657399",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.4,
+          "externalId": "1827657400",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.75,
+          "externalId": "1827657174",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.23,
+          "externalId": "1827657175",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11,
+          "externalId": "1827657233",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827657234",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.3,
+          "externalId": "1827657222",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3.2,
+          "externalId": "1827657223",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.6,
+          "externalId": "1827657235",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.43,
+          "externalId": "1827657236",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.2,
+          "externalId": "1827657224",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.6,
+          "externalId": "1827657225",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.8,
+          "externalId": "1827657237",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.15,
+          "externalId": "1827657238",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3,
+          "externalId": "1827657272",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.3,
+          "externalId": "1827657273",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 3.05,
+          "externalId": "1827657274",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.8,
+          "externalId": "1827657275",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.85,
+          "externalId": "1827657276",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.05,
+          "externalId": "1827657277",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.95,
+          "externalId": "1827657126",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.35,
+          "externalId": "1827657127",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 7.8,
+          "externalId": "1827657128",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.05,
+          "externalId": "1827657129",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Monaco - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 6.9,
+          "externalId": "1827657355",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.4,
+          "externalId": "1827657356",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827657357",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.6,
+          "externalId": "1827657358",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lorient - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.6,
+          "externalId": "1827657359",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827657360",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.45,
+          "externalId": "1827657361",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 9.4,
+          "externalId": "1827657362",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - PSG czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.45,
+          "externalId": "1827658445",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.55,
+          "externalId": "1827658446",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - PSG czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.6,
+          "externalId": "1827658491",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.2,
+          "externalId": "1827658492",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.35,
+          "externalId": "1827658267",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.28,
+          "externalId": "1827658268",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.25,
+          "externalId": "1827658315",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3.6,
+          "externalId": "1827658316",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.05,
+          "externalId": "1827658317",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.68,
+          "externalId": "1827658318",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 2.95,
+          "externalId": "1827658365",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.3,
+          "externalId": "1827658366",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 3.15,
+          "externalId": "1827658367",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.65,
+          "externalId": "1827658190",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.42,
+          "externalId": "1827658192",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "PSG - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 7.8,
+          "externalId": "1827658449",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.65,
+          "externalId": "1827658450",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827658451",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.35,
+          "externalId": "1827658452",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Lens czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.37,
+          "externalId": "1827659183",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.85,
+          "externalId": "1827659184",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Auxerre czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.3,
+          "externalId": "1827659185",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.55,
+          "externalId": "1827659186",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Lens czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.5,
+          "externalId": "1827659231",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.45,
+          "externalId": "1827659232",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Auxerre czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.7,
+          "externalId": "1827659235",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.42,
+          "externalId": "1827659236",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.45,
+          "externalId": "1827659006",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.27,
+          "externalId": "1827659007",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 12,
+          "externalId": "1827659065",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.0000000001,
+          "externalId": "1827659066",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.27,
+          "externalId": "1827659054",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3.5,
+          "externalId": "1827659055",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.1,
+          "externalId": "1827659067",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.32,
+          "externalId": "1827659068",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.25,
+          "externalId": "1827659056",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.58,
+          "externalId": "1827659057",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 6.3,
+          "externalId": "1827659069",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.08,
+          "externalId": "1827659070",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 2.95,
+          "externalId": "1827659106",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.35,
+          "externalId": "1827659107",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 3,
+          "externalId": "1827659108",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 4.2,
+          "externalId": "1827659109",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 3.2,
+          "externalId": "1827659110",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 1.82,
+          "externalId": "1827659111",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.4,
+          "externalId": "1827658949",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.5,
+          "externalId": "1827658950",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 8.4,
+          "externalId": "1827658951",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.04,
+          "externalId": "1827658952",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Lens - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 6.7,
+          "externalId": "1827659187",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.35,
+          "externalId": "1827659188",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827659189",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.65,
+          "externalId": "1827659190",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Auxerre - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.1,
+          "externalId": "1827659191",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827659192",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 5.6,
+          "externalId": "1827659193",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 16,
+          "externalId": "1827659194",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Toulouse czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.52,
+          "externalId": "1827657687",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.4,
+          "externalId": "1827657688",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Nice czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.93,
+          "externalId": "1827657689",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.78,
+          "externalId": "1827657690",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Toulouse czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.72,
+          "externalId": "1827657738",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2,
+          "externalId": "1827657739",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Nice czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.25,
+          "externalId": "1827657740",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.57,
+          "externalId": "1827657741",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.2,
+          "externalId": "1827657510",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.13,
+          "externalId": "1827657511",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 10,
+          "externalId": "1827657569",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.02,
+          "externalId": "1827657570",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.48,
+          "externalId": "1827657558",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.45,
+          "externalId": "1827657559",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.25,
+          "externalId": "1827657571",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.57,
+          "externalId": "1827657572",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.85,
+          "externalId": "1827657560",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.37,
+          "externalId": "1827657561",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.65,
+          "externalId": "1827657573",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.15,
+          "externalId": "1827657574",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.2,
+          "externalId": "1827657608",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.45,
+          "externalId": "1827657609",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.65,
+          "externalId": "1827657610",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.75,
+          "externalId": "1827657611",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.8,
+          "externalId": "1827657612",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.1,
+          "externalId": "1827657613",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.25,
+          "externalId": "1827657460",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.3,
+          "externalId": "1827657461",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 6,
+          "externalId": "1827657462",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.1,
+          "externalId": "1827657463",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Toulouse - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 4.6,
+          "externalId": "1827657691",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.85,
+          "externalId": "1827657692",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.4,
+          "externalId": "1827657693",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 3.8,
+          "externalId": "1827657694",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nice - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.65,
+          "externalId": "1827657695",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827657696",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.35,
+          "externalId": "1827657697",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 8.8,
+          "externalId": "1827657698",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Ol. Marsylia czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.4,
+          "externalId": "1827660123",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.75,
+          "externalId": "1827660124",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - handicap 3:0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers",
+          "odds": 1.03,
+          "externalId": "1827659878",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X",
+          "odds": 10.5,
+          "externalId": "1827659879",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Ol. Marsylia",
+          "odds": 32,
+          "externalId": "1827659880",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Ol. Marsylia czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.53,
+          "externalId": "1827660305",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.35,
+          "externalId": "1827660307",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Ol. Marsylia wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.05,
+          "externalId": "1827660003",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.2,
+          "externalId": "1827660004",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Ol. Marsylia - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 5.4,
+          "externalId": "1827660129",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.05,
+          "externalId": "1827660131",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827660132",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 3.15,
+          "externalId": "1827660135",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Nantes czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.72,
+          "externalId": "1827655696",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2,
+          "externalId": "1827655697",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Nantes czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.98,
+          "externalId": "1827655746",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.75,
+          "externalId": "1827655747",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 8.8,
+          "externalId": "1827655502",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.04,
+          "externalId": "1827655503",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.98,
+          "externalId": "1827655554",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.73,
+          "externalId": "1827655555",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.35,
+          "externalId": "1827655556",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.18,
+          "externalId": "1827655557",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.65,
+          "externalId": "1827655605",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.7,
+          "externalId": "1827655606",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.2,
+          "externalId": "1827655607",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.85,
+          "externalId": "1827655454",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.15,
+          "externalId": "1827655455",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Nantes - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.9,
+          "externalId": "1827655704",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827655705",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.1,
+          "externalId": "1827655706",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 7.6,
+          "externalId": "1827655707",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Rennes czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.43,
+          "externalId": "1827658064",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.6,
+          "externalId": "1827658065",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Le Havre czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.1,
+          "externalId": "1827658066",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.67,
+          "externalId": "1827658067",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Rennes czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.6,
+          "externalId": "1827658117",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.2,
+          "externalId": "1827658118",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Le Havre czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.4,
+          "externalId": "1827658119",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.5,
+          "externalId": "1827658120",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Rennes wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4.25,
+          "externalId": "1827657885",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.18,
+          "externalId": "1827657886",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Le Havre wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11,
+          "externalId": "1827657944",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827657945",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Rennes wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.37,
+          "externalId": "1827657933",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.85,
+          "externalId": "1827657934",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Le Havre wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.6,
+          "externalId": "1827657946",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.43,
+          "externalId": "1827657947",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Rennes - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.05,
+          "externalId": "1827657983",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.4,
+          "externalId": "1827657984",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.8,
+          "externalId": "1827657985",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Le Havre - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.95,
+          "externalId": "1827657986",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 3,
+          "externalId": "1827657987",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 1.95,
+          "externalId": "1827657988",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Rennes wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.8,
+          "externalId": "1827657837",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.38,
+          "externalId": "1827657838",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Le Havre wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 7,
+          "externalId": "1827657839",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.07,
+          "externalId": "1827657840",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Rennes - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 5.3,
+          "externalId": "1827658068",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3,
+          "externalId": "1827658069",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827658070",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 3.25,
+          "externalId": "1827658071",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Le Havre - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.35,
+          "externalId": "1827658072",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827658073",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.9,
+          "externalId": "1827658074",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 12,
+          "externalId": "1827658075",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Brest czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.15,
+          "externalId": "1827659530",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.62,
+          "externalId": "1827659531",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "2. połowa - Brest czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.5,
+          "externalId": "1827659580",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.47,
+          "externalId": "1827659581",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Brest wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11,
+          "externalId": "1827659412",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827659413",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Brest wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.65,
+          "externalId": "1827659414",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.42,
+          "externalId": "1827659415",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Brest - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.95,
+          "externalId": "1827659454",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.95,
+          "externalId": "1827659455",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 1.97,
+          "externalId": "1827659456",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Brest wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 7.3,
+          "externalId": "1827659279",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.06,
+          "externalId": "1827659280",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Brest - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.35,
+          "externalId": "1827659536",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827659537",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.85,
+          "externalId": "1827659538",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 11.5,
+          "externalId": "1827659539",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 2
+    },
+    {
+      "name": "Handicap +0.5 / -0.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Le Havre +0.5",
+          "odds": 1.78,
+          "externalId": "1874417650",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Monaco -0.5",
+          "odds": 1.9,
+          "externalId": "1874417651",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 2
+    },
+    {
+      "name": "1. połowa - Lille czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.5,
+          "externalId": "1827658447",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.48,
+          "externalId": "1827658448",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Lille czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.9,
+          "externalId": "1827658493",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.35,
+          "externalId": "1827658494",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11.5,
+          "externalId": "1827658326",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827658327",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.95,
+          "externalId": "1827658328",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.35,
+          "externalId": "1827658329",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.3,
+          "externalId": "1827658330",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.12,
+          "externalId": "1827658331",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.95,
+          "externalId": "1827658368",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 3,
+          "externalId": "1827658369",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 1.95,
+          "externalId": "1827658370",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 8.6,
+          "externalId": "1827658193",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.04,
+          "externalId": "1827658194",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Lille - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.35,
+          "externalId": "1827658453",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827658454",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.85,
+          "externalId": "1827658455",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 11.5,
+          "externalId": "1827658456",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "1. połowa - Angers czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.1,
+          "externalId": "1827660121",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.65,
+          "externalId": "1827660122",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Angers czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.45,
+          "externalId": "1827660300",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.5,
+          "externalId": "1827660302",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Angers wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11.5,
+          "externalId": "1827659942",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827659943",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Angers - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.2,
+          "externalId": "1827660125",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827660126",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 5.3,
+          "externalId": "1827660127",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 14,
+          "externalId": "1827660128",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Handicap +1 / -1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Angers +1",
+          "odds": 1.72,
+          "externalId": "1827660189",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Ol. Marsylia -1",
+          "odds": 1.97,
+          "externalId": "1827660191",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 1
+    },
+    {
+      "name": "1. połowa - Strasbourg czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.47,
+          "externalId": "1827657038",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.5,
+          "externalId": "1827657039",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "1. połowa - Metz czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.35,
+          "externalId": "1827657042",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.53,
+          "externalId": "1827657043",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Strasbourg czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.63,
+          "externalId": "1827657086",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.15,
+          "externalId": "1827657087",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Metz czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.75,
+          "externalId": "1827657088",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.4,
+          "externalId": "1827657089",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.65,
+          "externalId": "1827656861",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.25,
+          "externalId": "1827656862",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11.5,
+          "externalId": "1827656920",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "externalId": "1827656921",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.28,
+          "externalId": "1827656909",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3.3,
+          "externalId": "1827656910",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.75,
+          "externalId": "1827656922",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.4,
+          "externalId": "1827656923",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.2,
+          "externalId": "1827656911",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.6,
+          "externalId": "1827656912",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.1,
+          "externalId": "1827656924",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.13,
+          "externalId": "1827656925",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 2.95,
+          "externalId": "1827656959",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.3,
+          "externalId": "1827656960",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 3.05,
+          "externalId": "1827656961",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.85,
+          "externalId": "1827656962",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.9,
+          "externalId": "1827656963",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2,
+          "externalId": "1827656964",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.8,
+          "externalId": "1827656766",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.38,
+          "externalId": "1827656768",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 8,
+          "externalId": "1827656773",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.05,
+          "externalId": "1827656774",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Strasbourg - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 7,
+          "externalId": "1827657044",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.45,
+          "externalId": "1827657045",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827657046",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.55,
+          "externalId": "1827657047",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Metz - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 2.45,
+          "externalId": "1827657048",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.45,
+          "externalId": "1827657049",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 4.65,
+          "externalId": "1827657050",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 10.5,
+          "externalId": "1827657051",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "1. połowa - Paris czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.57,
+          "externalId": "1827655700",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.25,
+          "externalId": "1827655701",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Paris czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.78,
+          "externalId": "1827655748",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.93,
+          "externalId": "1827655749",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 6.7,
+          "externalId": "1827655565",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.08,
+          "externalId": "1827655566",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.68,
+          "externalId": "1827655567",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.05,
+          "externalId": "1827655568",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.5,
+          "externalId": "1827655569",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.25,
+          "externalId": "1827655570",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.4,
+          "externalId": "1827655608",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.55,
+          "externalId": "1827655609",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.4,
+          "externalId": "1827655610",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.75,
+          "externalId": "1827655456",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.23,
+          "externalId": "1827655457",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Paris - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 3.55,
+          "externalId": "1827655708",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 2.6,
+          "externalId": "1827655709",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.65,
+          "externalId": "1827655710",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 5.3,
+          "externalId": "1827655711",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Handicap +0 / -0",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Nantes 0",
+          "odds": 2.1,
+          "externalId": "1827655724",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Paris -0",
+          "odds": 1.62,
+          "externalId": "1827655725",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": "0",
+      "count": 1
+    },
+    {
+      "name": "1. połowa - Olympique Lyon czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.45,
+          "externalId": "1827659528",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.6,
+          "externalId": "1827659529",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "2. połowa - Olympique Lyon czyste konto",
+      "normalized_type": "CLEAN_SHEET",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.6,
+          "externalId": "1827659578",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.2,
+          "externalId": "1827659579",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon wygra obie połowy",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 4,
+          "externalId": "1827659399",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.2,
+          "externalId": "1827659400",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon wygra przynajmniej jedną połowę",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.33,
+          "externalId": "1827659401",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3,
+          "externalId": "1827659402",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon strzeli gola w obu połowach",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.4,
+          "externalId": "1827659403",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.5,
+          "externalId": "1827659404",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon - połowa z największą liczbą goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1. połowa",
+          "odds": 3.05,
+          "externalId": "1827659451",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2. połowa",
+          "odds": 2.35,
+          "externalId": "1827659452",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tyle samo",
+          "odds": 2.9,
+          "externalId": "1827659453",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon wygra do zera",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.75,
+          "externalId": "1827659277",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.4,
+          "externalId": "1827659278",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Olympique Lyon - liczba goli",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0",
+          "odds": 5.8,
+          "externalId": "1827659532",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1",
+          "odds": 3.15,
+          "externalId": "1827659533",
+          "normalizedName": "HOME"
+        },
+        {
+          "name": "2",
+          "odds": 3.3,
+          "externalId": "1827659534",
+          "normalizedName": "AWAY"
+        },
+        {
+          "name": "3+",
+          "odds": 2.95,
+          "externalId": "1827659535",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "1. połowa - handicap +1 / -1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Auxerre (+1)",
+          "odds": 1.48,
+          "externalId": "1874409710",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "PSG (-1)",
+          "odds": 2.45,
+          "externalId": "1874409711",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 1
+    },
+    {
+      "name": "2. połowa - handicap +1 / -1",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Auxerre (+1)",
+          "odds": 1.63,
+          "externalId": "1874409512",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "PSG (-1)",
+          "odds": 2.15,
+          "externalId": "1874409513",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "1",
+      "count": 1
+    },
+    {
+      "name": "Handicap +1.5 / -1.5",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Auxerre +1.5",
+          "odds": 1.92,
+          "externalId": "1874409708",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "PSG -1.5",
+          "odds": 1.77,
+          "externalId": "1874409709",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "5",
+      "count": 1
+    },
+    {
+      "name": "Handicap 2:0 (bez dogrywki)",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "Auxerre (2:0)",
+          "odds": 1.92,
+          "externalId": "1874409486",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X (2:0)",
+          "odds": 4.15,
+          "externalId": "1874409487",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "PSG (2:0)",
+          "odds": 2.85,
+          "externalId": "1874409488",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": "0",
+      "count": 1
+    }
+  ]
+}

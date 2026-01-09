@@ -9,7 +9,7 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/markets.js";
+import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   GAME_TYPES,
   MARKET_GROUPS,

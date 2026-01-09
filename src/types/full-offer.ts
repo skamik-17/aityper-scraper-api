@@ -7,7 +7,7 @@
  */
 
 import type { PolishBookmaker } from "../config/index.js";
-import type { NormalizedMarketType, NormalizedSelection, NormalizedMarketGroup } from "./normalization.js";
+import type { NormalizedMarketType, NormalizedSelection } from "./normalization.js";
 import type { MarketCategory } from "./normalized-markets.js";
 
 /**
@@ -34,8 +34,6 @@ export interface ScrapedMarket {
   name: string;
   /** Group name for UI organization: "Main", "Goals", "1st Half", "Corners" */
   groupName?: string;
-  /** Normalized group for consistent UI grouping */
-  normalizedGroup?: NormalizedMarketGroup;
   /** Optional normalized type for filtering: "1X2", "OVER_UNDER", "BTTS", "DOUBLE_CHANCE" */
   type?: string;
   /** Normalized market type enum for cross-bookmaker comparison */
@@ -162,4 +160,39 @@ export interface ScrapedMarketInsert {
   normalized_type?: string;
   selections: MarketSelection[];
   scraped_at: Date;
+}
+
+/**
+ * Over/Under market odds structure
+ * Used by parsers for structured O/U markets
+ */
+export interface MarketOverUnderOdds {
+  over: number;
+  under: number;
+}
+
+/**
+ * 1X2 (Match Winner) market odds structure
+ */
+export interface Market1X2Odds {
+  home: number;
+  draw: number;
+  away: number;
+}
+
+/**
+ * Double Chance market odds structure
+ */
+export interface MarketDoubleChanceOdds {
+  homeOrDraw: number;   // 1X
+  drawOrAway: number;   // X2
+  homeOrAway: number;   // 12
+}
+
+/**
+ * Both Teams To Score (BTTS) market odds structure
+ */
+export interface MarketBTTSOdds {
+  yes: number;
+  no: number;
 }

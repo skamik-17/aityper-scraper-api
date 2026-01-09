@@ -1,0 +1,5927 @@
+{
+  "bookmaker": "fortuna",
+  "extracted_at": "2026-01-08T20:55:21.839Z",
+  "total_unique_markets": 167,
+  "markets": [
+    {
+      "name": "Liczba goli",
+      "normalized_type": "TOTAL_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "mniej niż 4",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-008",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 4",
+          "odds": 3.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-008",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-26",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie/Tak",
+          "odds": 3.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-010",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tak/Tak",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-010",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tak/Nie",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-010",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nie/Nie",
+          "odds": 1.79,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-010",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0b",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton -0.5",
+          "odds": 1.83,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-002",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth +0.5",
+          "odds": 1.88,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-002",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2h",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton -1",
+          "odds": 4.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-03b",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth +1",
+          "odds": 1.17,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-03b",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2s",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 1.57,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02a",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nikt",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02a",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 2.22,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02a",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3d",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "wiecej 1.5",
+          "odds": 5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej 1.5",
+          "odds": 1.14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02q",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2g",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 1.48,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02l",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 2.48,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02l",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2e",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02u",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nikt",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02u",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02u",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 9
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-23",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "10 / +2.5",
+          "odds": 2.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02 / -2.5",
+          "odds": 3.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02 / +2.5",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12 / +2.5",
+          "odds": 1.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12 / -2.5",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10 / -2.5",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02r",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-36",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-022",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.27,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-022",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1h",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.23,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-011",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-011",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-10",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 1.5",
+          "odds": 1.64,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 1.5",
+          "odds": 2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00q",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-13",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej niż 0.5",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-009",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 0.5",
+          "odds": 1.3,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-009",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2p",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.67,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-018",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 2.12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-018",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1p",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 9.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00n",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.03,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00n",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2d",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 2.33,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-020",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 2.39,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-020",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-020",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1t",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Rowno",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-023",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Drugi",
+          "odds": 2.03,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-023",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pierwszy",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-023",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1s",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.17,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00r",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.62,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00r",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1r",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00o",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.44,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00o",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1i",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.07,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-021",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-021",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1f",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.33,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00f",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 3.05,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00f",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0z",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1/2",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1/0",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "No goal",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1/1",
+          "odds": 2.13,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/2",
+          "odds": 4.3,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/0",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/1",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00d",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1b",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Parz.",
+          "odds": 1.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00h",
+          "normalizedName": "EVEN"
+        },
+        {
+          "name": "Niep.",
+          "odds": 2.04,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00h",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2i",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 0.5",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02f",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 0.5",
+          "odds": 3.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02f",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1l",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton/- 3.5 ",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/+ 3.5 ",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0/- 3.5 ",
+          "odds": 5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0/+ 3.5 ",
+          "odds": 9.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/- 3.5 ",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/+ 3.5 ",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02v",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Parzyste/Nieparzyste",
+      "normalized_type": "ODD_EVEN_GOALS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Parz.",
+          "odds": 1.84,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01a",
+          "normalizedName": "EVEN"
+        },
+        {
+          "name": "Niep.",
+          "odds": 1.93,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01a",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2o",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.64,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-027",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.18,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-027",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1n",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton/Brighton",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Remis",
+          "odds": 5.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Bournemouth",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Bournemouth",
+          "odds": 35,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Remis",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Brighton",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Bournemouth",
+          "odds": 5.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Remis",
+          "odds": 13,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Brighton",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00v",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-5z",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Bournemouth",
+          "odds": 1.54,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-033",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-033",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-033",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-25",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nikt",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-026",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-3",
+          "odds": 1.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-026",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2",
+          "odds": 1.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-026",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-026",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 1.98,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-026",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-61",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Remis",
+          "odds": 4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-007",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Brighton",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-007",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 1.87,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-007",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1j",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton/Nie",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Tak",
+          "odds": 4.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Nie",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Tak",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Nie",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Tak",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00y",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1o",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.15,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00w",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-00w",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2n",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-029",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-029",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1g",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01n",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01n",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3j",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0:0",
+          "odds": 5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 7,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1\t",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 19,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 13,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 19,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 40,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-031",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-29",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1-3",
+          "odds": 1.33,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2",
+          "odds": 1.53,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nikt",
+          "odds": 3.15,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01m",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3b",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "wiecej 1",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02g",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej 1",
+          "odds": 3.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02g",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1u",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Rowno",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pierwszy",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Drugi",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01r",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3c",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "wiecej 1.5",
+          "odds": 3.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej 1.5",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02s",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2b",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.47,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01p",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 2.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01p",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2t",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1:2",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 4.3,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 60,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 9.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:0\t",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-032",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2f",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "X2",
+          "odds": 1.51,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01d",
+          "normalizedName": "DRAW_OR_AWAY"
+        },
+        {
+          "name": "1X",
+          "odds": 1.23,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01d",
+          "normalizedName": "HOME_OR_DRAW"
+        },
+        {
+          "name": "12",
+          "odds": 1.49,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01d",
+          "normalizedName": "HOME_OR_AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6w",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "3:3",
+          "odds": 45,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:2",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0",
+          "odds": 9.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:3",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:0",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:4",
+          "odds": 90,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:4",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:1",
+          "odds": 13,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:1",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:2",
+          "odds": 23,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:0",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1",
+          "odds": 8.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:4",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:4",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "inny",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:2",
+          "odds": 45,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:3",
+          "odds": 50,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:3",
+          "odds": 29,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3",
+          "odds": 30,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:0",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4:0",
+          "odds": 35,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:1",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01e",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1k",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak/- 2.5 ",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01j",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tak/+ 2.5 ",
+          "odds": 1.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01j",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nie/- 2.5 ",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01j",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nie/+ 2.5 ",
+          "odds": 8.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01j",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2k",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej 0.5",
+          "odds": 1.62,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01i",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "wiecej 0.5",
+          "odds": 2.16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01i",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-27",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nikt",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-3",
+          "odds": 1.36,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02d",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2",
+          "odds": 1.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02d",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Obie druzyny strzelą",
+      "normalized_type": "BTTS",
+      "normalized_group": "GOALS",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02b",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.53,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02b",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2c",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.95,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-039",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.21,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-039",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2m",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Parz.",
+          "odds": 1.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01t",
+          "normalizedName": "EVEN"
+        },
+        {
+          "name": "Niep.",
+          "odds": 2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01t",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3g",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "No",
+          "odds": 1.39,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01u",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Yes",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01u",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1e",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tylko Brighton",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Żadna",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Obie",
+          "odds": 1.49,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Tylko Bournemouth",
+          "odds": 7.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01x",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1z",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton/Nie",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Tak",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Tak",
+          "odds": 8.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Nie",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0/Tak",
+          "odds": 5.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0/Nie",
+          "odds": 5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-01y",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-39",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.26,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02o",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02o",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2y",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1X",
+          "odds": 1.28,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02p",
+          "normalizedName": "HOME_OR_DRAW"
+        },
+        {
+          "name": "12",
+          "odds": 1.41,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02p",
+          "normalizedName": "HOME_OR_AWAY"
+        },
+        {
+          "name": "X2",
+          "odds": 1.63,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02p",
+          "normalizedName": "DRAW_OR_AWAY"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3a",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Bournemouth",
+          "odds": 2.39,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nikt",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton",
+          "odds": 1.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02n",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2z",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Bournemouth",
+          "odds": 2.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02t",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton",
+          "odds": 1.48,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02t",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2q",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Bournemouth/Nie",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Tak",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/Nie",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Tak",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/Nie",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/Tak",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02e",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-38",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.83,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02k",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.88,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02k",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2j",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej 0.5",
+          "odds": 2.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02i",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "wiecej 0.5",
+          "odds": 1.66,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02i",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2r",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Remis/ - 1.5 ",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/+ 1.5 ",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/- 1.5 ",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/ + 1.5 ",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/+ 1.5 ",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/- 1.5 ",
+          "odds": 4.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02w",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-24",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "3-5",
+          "odds": 1.72,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-6",
+          "odds": 1.57,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2",
+          "odds": 2.34,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4-5",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-3",
+          "odds": 1.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4-6",
+          "odds": 2.39,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-4",
+          "odds": 1.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5-6",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-5",
+          "odds": 1.12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "7+",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-6",
+          "odds": 1.07,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 1.94,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-4",
+          "odds": 1.46,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-5",
+          "odds": 1.28,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-6",
+          "odds": 1.21,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nikt",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-4",
+          "odds": 2.11,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02x",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2w",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 2.17,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02y",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02y",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-28",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "4:0 5:0 6:0",
+          "odds": 25,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:4 0:5 0:6",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:1 3:1 4:1",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:2 1:3 1:4",
+          "odds": 8.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1:0 2:0 3:0",
+          "odds": 4.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0:1 0:2 0:3",
+          "odds": 8.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3:2 4:2 4:3 5:1",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2:3 2:4 3:4 1:5",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton wygra dowolnym innym wynikiem",
+          "odds": 40,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth wygra dowolnym innym wynikiem",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-02z",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Dokladny wynik",
+      "normalized_type": "CORRECT_SCORE",
+      "normalized_group": "SCORE",
+      "selections_sample": [
+        {
+          "name": "Brighton",
+          "odds": 1.63,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-001",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth",
+          "odds": 2.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-001",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "remis",
+          "odds": 1.92,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-001",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Remis = zwrot",
+      "normalized_type": "DRAW_NO_BET",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Bournemouth",
+          "odds": 2.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-000",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton",
+          "odds": 1.42,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-000",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Wynik meczu",
+      "normalized_type": "MATCH_WINNER",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "Bournemouth",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-005",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-005",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Brighton",
+          "odds": 1.82,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-005",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-09",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Bournemouth/o 1 gol",
+          "odds": 5.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/o 2 gole",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bournemouth/o 3 gole",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "Brighton/o 1 gol",
+          "odds": 3.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/o 2 gole",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Brighton/o 3 gole",
+          "odds": 6.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-006",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Podwojna szansa",
+      "normalized_type": "DOUBLE_CHANCE",
+      "normalized_group": "MAIN",
+      "selections_sample": [
+        {
+          "name": "X2",
+          "odds": 1.72,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-004",
+          "normalizedName": "DRAW_OR_AWAY"
+        },
+        {
+          "name": "12",
+          "odds": 1.23,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-004",
+          "normalizedName": "HOME_OR_AWAY"
+        },
+        {
+          "name": "1X",
+          "odds": 1.23,
+          "status": "active",
+          "externalId": "ufo:mkt:1pe-012-004",
+          "normalizedName": "HOME_OR_DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 8
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-64",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Poniżej 4.5 West Ham rzuty rożne",
+          "odds": 2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-05k",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 7
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6z",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "West Ham wygra , Mateus Fernandes 1+ odbiory",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-2d6",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-70",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "West Ham wygra , Pablo Felipe Pereira de Jesus strzeli gola",
+          "odds": 6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-2cd",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-65",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Poniżej 4.5 Nottingham rzuty rożne",
+          "odds": 2.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-05n",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-bv",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.03,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tf",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tf",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-37",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "West Ham -0.5",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07i",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham +0.5",
+          "odds": 1.3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07i",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-60",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07b",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 1.09,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07b",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 7.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07b",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-35",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07t",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.47,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07t",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-7a",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "11-20",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "71-80",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-10",
+          "odds": 4.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "61-70",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "51-60",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "41-50",
+          "odds": 7.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "31-40",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nie padnie następny gol",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "21--30",
+          "odds": 5.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "81-90",
+          "odds": 19,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06w",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1y",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "10/Nie",
+          "odds": 1.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Tak",
+          "odds": 5.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Nie",
+          "odds": 1.58,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Tak",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Nie",
+          "odds": 1.87,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Tak",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06v",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-m8",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ya",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ya",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-7e",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06z",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.27,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06z",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1x",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "10/Tak",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Nie",
+          "odds": 2.17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Tak",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Nie",
+          "odds": 1.82,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Nie",
+          "odds": 1.72,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Tak",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06y",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-22",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "02/Tak",
+          "odds": 2.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Nie",
+          "odds": 3.05,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Tak",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Nie",
+          "odds": 3.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Tak",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Nie",
+          "odds": 2.43,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06x",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-16",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Remis",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07h",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.49,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07h",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07h",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3+",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07h",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3h",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.07,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07f",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.71,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07f",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3e",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "2+",
+          "odds": 2.09,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-078",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-078",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.95,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-078",
+          "normalizedName": "DRAW"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-21",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "12/Tak",
+          "odds": 6.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Nie",
+          "odds": 2.04,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Tak",
+          "odds": 4.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Tak",
+          "odds": 4.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Nie",
+          "odds": 1.81,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Nie",
+          "odds": 1.81,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07e",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-19",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "nieparzysty",
+          "odds": 1.98,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07c",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "parzysty",
+          "odds": 1.84,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07c",
+          "normalizedName": "EVEN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2x",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nikt",
+          "odds": 4.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07a",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07a",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 2.21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07a",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6i",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07p",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.59,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07p",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-1w",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "12/Nie",
+          "odds": 1.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12/Tak",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Nie",
+          "odds": 1.66,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "02/Tak",
+          "odds": 6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Tak",
+          "odds": 7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "10/Nie",
+          "odds": 1.97,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07o",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2a",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nikt",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2-3",
+          "odds": 2.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-2",
+          "odds": 1.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07n",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1-3",
+          "odds": 1.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07n",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-20",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham/- 1.5",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/+ 1.5 ",
+          "odds": 6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham/+ 1.5",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham/- 1.5",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis/- 1.5 ",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham/+ 1.5",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07m",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-3i",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.84,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07k",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07k",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-33",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07j",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.58,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07j",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-7c",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-077",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-077",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-30",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.36,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-076",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-076",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-32",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 3.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-075",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-075",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-17",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-074",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3+",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-074",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Remis",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-074",
+          "normalizedName": "DRAW"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-074",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-7d",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-073",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.44,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-073",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-34",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-072",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.44,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-072",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6j",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.33,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-071",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-071",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-7b",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 1.52,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-079",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 2.42,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-079",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-31",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 2.43,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-070",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 1.52,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-070",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 6
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-71",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham wygra , Murillo 1+ strzały w światło bramki",
+          "odds": 6.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-2d4",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ld",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "2+",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nn",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1+",
+          "odds": 2.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nn",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-li",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "2+",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nm",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1+",
+          "odds": 2.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nm",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0h",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham -1.5",
+          "odds": 2.38,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n0",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham +1.5",
+          "odds": 1.52,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n0",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0n",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "7+",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0mz",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-4",
+          "odds": 3.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0mz",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5-6",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0mz",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2",
+          "odds": 6.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0mz",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0t",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Mniej niż 3.5",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n8",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Więcej niż 3.5",
+          "odds": 1.36,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n8",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0i",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej niż 10.5",
+          "odds": 1.71,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n2",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 10.5",
+          "odds": 2.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n2",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0d",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ng",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ng",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0a",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nf",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nf",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Handicap europejski",
+      "normalized_type": "EUROPEAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "3",
+          "odds": 4.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nd",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "4+",
+          "odds": 3.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nd",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1",
+          "odds": 2.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nd",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 3.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nd",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0l",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "0-8",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nc",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "12+",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nc",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "9-11",
+          "odds": 2.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nc",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0e",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 1.89,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n7",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "rowno",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n7",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.19,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n7",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0m",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "7+",
+          "odds": 3.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n6",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "5-6",
+          "odds": 3.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n6",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3-4",
+          "odds": 2.95,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n6",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-2",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n6",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Handicap azjatycki",
+      "normalized_type": "ASIAN_HANDICAP",
+      "normalized_group": "HANDICAP",
+      "selections_sample": [
+        {
+          "name": "4+",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n9",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3",
+          "odds": 4.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n9",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 3.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n9",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "0-1",
+          "odds": 2.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n9",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0c",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nk",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nk",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-07",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nj",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.04,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nj",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-06",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 5.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ni",
+          "normalizedName": "YES"
+        },
+        {
+          "name": "Nie",
+          "odds": 1.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ni",
+          "normalizedName": "NO"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-08",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.04,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nh",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 9.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nh",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ka",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tb",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-bu",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.47,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0td",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 2.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0td",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-k8",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tc",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 2.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tc",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-9a",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ta",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 3.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ta",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-k6",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "powyżej 1.5",
+          "odds": 1.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ti",
+          "normalizedName": "OVER"
+        },
+        {
+          "name": "poniżej 1.5",
+          "odds": 2.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ti",
+          "normalizedName": "UNDER"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-bt",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tg",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0tg",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-hm",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0bu",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ln",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1+",
+          "odds": 5.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0fz",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2+",
+          "odds": 40,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0fz",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3+",
+          "odds": 150,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0fz",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-hh",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0fx",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-lq",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1+",
+          "odds": 4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0fw",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ev",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1p3-064-0h8",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-k7",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.37,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0t9",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0t9",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-he",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 7.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0bv",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-la",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1+",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0bn",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 5
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-hs",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 2.55,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0oa",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-lk",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "1+",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0ob",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0f",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nikt",
+          "odds": 100,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nb",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 1.91,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nb",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 1.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0nb",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-0p",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 2.04,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n1",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Rowno",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n1",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0n1",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ks",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej niż 6.5",
+          "odds": 1.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eg",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 6.5",
+          "odds": 3.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eg",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-h7",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Mniej 10.5",
+          "odds": 1.23,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0q9",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wiecej 10.5",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0q9",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gg",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 1.58,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0qc",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.85,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0qc",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Rowno",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0qc",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-kr",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej niż 4.5",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0q6",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 4.5",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0q6",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-k9",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Tak",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0te",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6x",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Hutchinson, Omari",
+          "odds": 4.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mavropanos, Konstantinos",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Rodriguez, Guido",
+          "odds": 13,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Magassa, Soungoutou",
+          "odds": 12,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Milenkovic, Nikola",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gibbs-White, Morgan",
+          "odds": 4.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kante, Mohamadou",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Potts, Freddie",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Morato",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Fernandes, Mateus",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Earthy, George",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Cunha, Jair",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Scarles, Oliver",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "McAtee, James",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wilson, Callum",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Jesus, Igor",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bakwa, Dilane",
+          "odds": 5.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luiz, Douglas",
+          "odds": 9.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Savona, Nicolo",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bowen, Jarrod",
+          "odds": 3.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Murillo",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Dominguez, Nicolas",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Soucek, Tomas",
+          "odds": 5.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Awoniyi, Taiwo",
+          "odds": 3.5,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hudson-Odoi, Callum",
+          "odds": 4.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mayers, Ezra",
+          "odds": 25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Todibo, Jean-Clair",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kilman, Max",
+          "odds": 23,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Zinchenko, Oleksandr",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Anderson, Elliot",
+          "odds": 9.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Summerville, Crysencio",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Irving, Andy",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Golambeckis, Airidas",
+          "odds": 23,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Walker-Peters, Kyle",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Williams, Neco",
+          "odds": 9.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abbott, Zach",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Castellanos, Valentin",
+          "odds": 3.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pablo",
+          "odds": 3.05,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06s",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-73",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Zinchenko, Oleksandr",
+          "odds": 19,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Todibo, Jean-Clair",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luiz, Douglas",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Fernandes, Mateus",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Dominguez, Nicolas",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "McAtee, James",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abbott, Zach",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Savona, Nicolo",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Soucek, Tomas",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Awoniyi, Taiwo",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hudson-Odoi, Callum",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Earthy, George",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Jesus, Igor",
+          "odds": 6.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Walker-Peters, Kyle",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Murillo",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kilman, Max",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Magassa, Soungoutou",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wilson, Callum",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Cunha, Jair",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Morato",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kante, Mohamadou",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hutchinson, Omari",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gibbs-White, Morgan",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Irving, Andy",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Summerville, Crysencio",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Golambeckis, Airidas",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Williams, Neco",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bakwa, Dilane",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Scarles, Oliver",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Milenkovic, Nikola",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mayers, Ezra",
+          "odds": 29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Anderson, Elliot",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mavropanos, Konstantinos",
+          "odds": 25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bowen, Jarrod",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Potts, Freddie",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Rodriguez, Guido",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Castellanos, Valentin",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pablo",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06r",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-6y",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Jesus, Igor",
+          "odds": 6.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bakwa, Dilane",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Scarles, Oliver",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Gibbs-White, Morgan",
+          "odds": 8.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Zinchenko, Oleksandr",
+          "odds": 19,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Magassa, Soungoutou",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Earthy, George",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Savona, Nicolo",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hutchinson, Omari",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Cunha, Jair",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Fernandes, Mateus",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "McAtee, James",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Potts, Freddie",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Morato",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kante, Mohamadou",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Walker-Peters, Kyle",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Hudson-Odoi, Callum",
+          "odds": 9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mayers, Ezra",
+          "odds": 29,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Dominguez, Nicolas",
+          "odds": 16,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Anderson, Elliot",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Mavropanos, Konstantinos",
+          "odds": 25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Rodriguez, Guido",
+          "odds": 21,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Luiz, Douglas",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Williams, Neco",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Golambeckis, Airidas",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Milenkovic, Nikola",
+          "odds": 22,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Abbott, Zach",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Todibo, Jean-Clair",
+          "odds": 27,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Irving, Andy",
+          "odds": 15,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Summerville, Crysencio",
+          "odds": 10,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Bowen, Jarrod",
+          "odds": 7.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wilson, Callum",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Soucek, Tomas",
+          "odds": 11,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Awoniyi, Taiwo",
+          "odds": 7.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Murillo",
+          "odds": 24,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Kilman, Max",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Castellanos, Valentin",
+          "odds": 8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Pablo",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-06q",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 4
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-2v",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "X/1 i +0.5",
+          "odds": 25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/X i +0.5",
+          "odds": 17,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/1 i -0.5",
+          "odds": 9.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1/1 i + 0.5",
+          "odds": 4.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1/X i +0.5",
+          "odds": 14,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1/2 i +0.5",
+          "odds": 28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/X i -0.5",
+          "odds": 6.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/1 i +0.5",
+          "odds": 35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/2 i -0.5",
+          "odds": 7.4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/X a +0.5",
+          "odds": 13,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "2/2 i +0.5",
+          "odds": 3.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "X/2 i +0.5",
+          "odds": 20,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-07s",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 3
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gv",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej 22.5",
+          "odds": 1.47,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1hb",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "wiecej 22.5",
+          "odds": 2.42,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1hb",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gw",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "wiecej 10.5",
+          "odds": 2.01,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1h9",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej 10.5",
+          "odds": 1.7,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1h9",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gx",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej 10.5",
+          "odds": 1.94,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ha",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "wiecej 10.5",
+          "odds": 1.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ha",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-lf",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "2+",
+          "odds": 1.75,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1du",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3+",
+          "odds": 3.3,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1du",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "1+",
+          "odds": 1.12,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1du",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-lo",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "2+",
+          "odds": 1.52,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1dv",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "3+",
+          "odds": 2.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1dv",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-m7",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nie",
+          "odds": 1.31,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0yb",
+          "normalizedName": "NO"
+        },
+        {
+          "name": "Tak",
+          "odds": 3.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-0yb",
+          "normalizedName": "YES"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gd",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "West Ham",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1em",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Równo",
+          "odds": 18,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1em",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 1.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1em",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-kp",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "mniej niż 13.5",
+          "odds": 1.28,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ej",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "więcej niż 13.5",
+          "odds": 3.2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ej",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-l5",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 1.5",
+          "odds": 1.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eh",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 1.5",
+          "odds": 2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eh",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-kx",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 1.5",
+          "odds": 2.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eu",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 1.5",
+          "odds": 1.62,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eu",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-h3",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Mniej 3.5",
+          "odds": 1.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1er",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wiecej 3.5",
+          "odds": 2.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1er",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-ky",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 1.5",
+          "odds": 2.1,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eq",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 1.5",
+          "odds": 1.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1eq",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-h5",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Mniej 24.5",
+          "odds": 1.8,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1en",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wiecej 24.5",
+          "odds": 1.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1en",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-hb",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Mniej 4.5",
+          "odds": 1.38,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f1",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Wiecej 4.5",
+          "odds": 2.74,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f1",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-l6",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 1.5",
+          "odds": 1.65,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ew",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 1.5",
+          "odds": 2,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ew",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gh",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Rowno",
+          "odds": 4,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ev",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Nottingham",
+          "odds": 2.35,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ev",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.25,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1ev",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-kq",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "więcej niż 10.5",
+          "odds": 1.32,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f3",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "mniej niż 10.5",
+          "odds": 2.9,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f3",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    },
+    {
+      "name": "Rynek ufo:mtyp:00-gj",
+      "normalized_type": "OTHER",
+      "normalized_group": "OTHER",
+      "selections_sample": [
+        {
+          "name": "Nottingham",
+          "odds": 2.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f0",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "Równo",
+          "odds": 3.6,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f0",
+          "normalizedName": "UNKNOWN"
+        },
+        {
+          "name": "West Ham",
+          "odds": 2.45,
+          "status": "active",
+          "externalId": "ufo:mkt:1p1-04b-1f0",
+          "normalizedName": "UNKNOWN"
+        }
+      ],
+      "param_value": null,
+      "count": 1
+    }
+  ]
+}

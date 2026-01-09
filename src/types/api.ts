@@ -27,13 +27,11 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
 export interface ScrapeStats {
   startedAt: string;
   completedAt: string;
-  duration: number; // seconds
+  duration: number;
   successCount: number;
   errorCount: number;
-  oddsRecords: number;              // Total rows inserted (bookmakers × matches)
-  uniqueMatches: number;            // Deduplicated match count
-  matchesWithExtendedMarkets: number; // Unique matches with extended market data
-  extendedMarketsScraped: number;   // Total bookmaker scrapes for extended markets
+  uniqueMatches: number;
+  marketsScraped: number;
 }
 
 export interface HealthCheckData {
@@ -112,7 +110,8 @@ export interface ScraperRunResult {
   bookmaker: PolishBookmaker;
   status: "success" | "error";
   matchesFound: number;
-  durationMs: number;
+  marketsSaved: number;
+  durationMs: number | null;
   error?: string;
 }
 

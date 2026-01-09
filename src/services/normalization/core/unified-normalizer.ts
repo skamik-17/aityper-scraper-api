@@ -17,7 +17,7 @@ import type {
   NormalizedSelectionResult,
   NormalizedMarketType,
 } from "../types.js";
-import { MARKET_REGISTRY, getMarketByType } from "./market-registry.js";
+import { MARKET_REGISTRY, getMarketByType } from "../../../data/market-registry.js";
 import { matchPattern } from "./pattern-engine.js";
 import { normalizeSelections } from "./selection-normalizer.js";
 import { MarketCategory } from "../types.js";
@@ -94,7 +94,7 @@ export class UnifiedNormalizer {
     const patternMatch = matchPattern(market.name, MARKET_REGISTRY);
     if (patternMatch) {
       return this.completeNormalization(
-        patternMatch.definition.id,
+        patternMatch.definition.slug,
         market,
         adapter,
         homeTeam,
@@ -227,16 +227,16 @@ export class UnifiedNormalizer {
     awayTeam: string | undefined,
     param?: string
   ): NormalizedMarket {
-    // Find market definition
-    const definition = MARKET_REGISTRY.find((m) => m.id === definitionId);
+    // Find market definition by slug
+    const definition = MARKET_REGISTRY.find((m) => m.slug === definitionId);
     if (!definition) {
       return this.createFallbackMarket(market);
     }
 
     // Build market key
     const marketKey = param
-      ? `${definition.type}:${param}`
-      : definition.type;
+      ? `${definition.code}:${param}`
+      : definition.code;
 
     // Normalize selections
     const selections = normalizeSelections(
@@ -249,7 +249,7 @@ export class UnifiedNormalizer {
 
     return {
       name: market.name,
-      normalizedType: definition.type,
+      normalizedType: definition.code,
       marketKey,
       category: definition.category,
       paramValue: param,

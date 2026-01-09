@@ -34,23 +34,25 @@ export {
 } from "./core/scraper-type-mapping.js";
 
 // ==========================================================================
-// Market Registry
+// Market Registry (from unified registry)
 // ==========================================================================
 
 export {
   MARKET_REGISTRY,
-  MAIN_MARKETS,
-  GOALS_MARKETS,
-  HANDICAP_MARKETS,
-  HALF_TIME_MARKETS,
-  CORRECT_SCORE_MARKETS,
-  PLAYER_MARKETS,
-  STATISTICS_MARKETS,
-  COMBINATION_MARKETS,
+  UNIFIED_MARKET_REGISTRY,
+  MARKET_BY_CODE,
+  MARKET_BY_NUMERIC_ID,
+  MARKET_BY_SLUG,
+  CANONICAL_MARKET_CODES,
   getMarketById,
+  getMarketByCode,
+  getMarketBySlug,
+  getMarketByNumericId,
   getMarketsByCategory,
   getMarketByType,
-} from "./core/market-registry.js";
+  isCanonicalMarket,
+  ViewType,
+} from "../../data/market-registry.js";
 
 // ==========================================================================
 // Factory

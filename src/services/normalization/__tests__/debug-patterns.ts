@@ -3,7 +3,7 @@
  */
 
 import { matchPattern, getMatchingTypes } from "../core/pattern-engine.js";
-import { MARKET_REGISTRY } from "../core/market-registry.js";
+import { MARKET_REGISTRY } from "../../../data/market-registry.js";
 
 const testNames = [
   "Wynik meczu",

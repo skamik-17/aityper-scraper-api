@@ -31,17 +31,14 @@ router.get("/", asyncHandler(async (_req, res) => {
         latestComplete = result.completedAt;
       }
 
-      // Store per-league stats (duration in seconds)
       lastScrapeStats[league] = {
         startedAt: result.startedAt.toISOString(),
         completedAt: result.completedAt.toISOString(),
         duration: Math.round(result.duration / 1000),
         successCount: result.successCount,
         errorCount: result.errorCount,
-        oddsRecords: result.oddsRecords,
         uniqueMatches: result.uniqueMatches,
-        matchesWithExtendedMarkets: result.matchesWithExtendedMarkets,
-        extendedMarketsScraped: result.extendedMarketsScraped,
+        marketsScraped: result.marketsScraped,
       };
     }
   }

@@ -1,0 +1,1349 @@
+/**
+ * Unified Market Registry
+ *
+ * Single source of truth for ALL market definitions.
+ * Combines UI metadata (viewType, displayOrder, descriptions) with
+ * normalization metadata (patterns, extractParam, bookmakerData).
+ *
+ * Each market is defined once with all its properties.
+ */
+
+import { MarketCategory } from "../services/normalization/types.js";
+
+// ============================================================================
+// Enums
+// ============================================================================
+
+/**
+ * View type determines how market is rendered in UI
+ */
+export enum ViewType {
+  BINARY_BUTTONS = 1,     // YES/NO, OVER/UNDER - 2 simple buttons
+  TRIPLE_BUTTONS = 2,     // 1X2 - 3 buttons (Home, Draw, Away)
+  PARAMETER_SLIDER = 3,   // Over/Under with parameter selection (2.5, 3.5, etc.)
+  HANDICAP_SELECTOR = 4,  // Handicap markets with +/- values
+  SCORE_GRID = 5,         // Correct score - grid of scores
+  PLAYER_DROPDOWN = 6,    // Goalscorer - dropdown + buttons
+  STAT_RANGE = 7,         // Corners, Cards - range selector
+  COMBINATION = 8,        // Combined markets (Result + BTTS)
+  HALFTIME_FULLTIME = 9,  // 9 outcomes HT/FT grid
+}
+
+/**
+ * Normalized market types
+ */
+export type NormalizedMarketType =
+  // Main markets
+  | "MATCH_WINNER"
+  | "DOUBLE_CHANCE"
+  | "DRAW_NO_BET"
+  // Goals markets
+  | "TOTAL_GOALS"
+  | "BTTS"
+  | "ODD_EVEN_GOALS"
+  | "WIN_TO_NIL"
+  | "CLEAN_SHEET"
+  | "HOME_TEAM_TO_SCORE"
+  | "AWAY_TEAM_TO_SCORE"
+  | "TEAM_TOTAL_GOALS"
+  | "GOAL_RANGE"
+  | "BOTH_HALVES_GOALS"
+  | "WINNING_MARGIN"
+  // Handicap markets
+  | "ASIAN_HANDICAP"
+  | "EUROPEAN_HANDICAP"
+  // Half-time markets
+  | "HALF_TIME_RESULT"
+  | "HALF_TIME_TOTAL_GOALS"
+  | "HALF_TIME_BTTS"
+  | "SECOND_HALF_RESULT"
+  | "SECOND_HALF_TOTAL_GOALS"
+  // Score markets
+  | "CORRECT_SCORE"
+  // Player markets
+  | "GOALSCORER_FIRST"
+  | "GOALSCORER_LAST"
+  | "GOALSCORER_ANYTIME"
+  | "PLAYER_SHOTS"
+  | "PLAYER_CARDS"
+  | "PLAYER_ASSISTS"
+  // Statistics markets
+  | "CORNERS_TOTAL"
+  | "CORNERS_TEAM"
+  | "CARDS_TOTAL"
+  | "CARDS_TEAM"
+  | "FOULS_TOTAL"
+  | "OFFSIDES_TOTAL"
+  // Combination markets
+  | "RESULT_AND_BTTS"
+  | "RESULT_AND_TOTAL"
+  | "HALFTIME_FULLTIME"
+  | "DOUBLE_RESULT"
+  | "DOUBLE_CHANCE_BTTS"
+  | "DOUBLE_CHANCE_TOTAL"
+  // Fallback
+  | "OTHER";
+
+/**
+ * Parameter types for markets with line values
+ */
+export type ParameterType = "decimal" | "integer" | "handicap" | "score" | "player";
+
+/**
+ * Normalized selection types
+ */
+export type NormalizedSelection =
+  | "HOME"
+  | "DRAW"
+  | "AWAY"
+  | "HOME_OR_DRAW"
+  | "DRAW_OR_AWAY"
+  | "HOME_OR_AWAY"
+  | "OVER"
+  | "UNDER"
+  | "YES"
+  | "NO"
+  | "ODD"
+  | "EVEN"
+  | "UNKNOWN";
+
+// ============================================================================
+// Interfaces
+// ============================================================================
+
+/**
+ * Bookmaker-specific market data
+ */
+export interface BookmakerMarketData {
+  /** ID mappings for "Rynek XX" format (STS-style) */
+  idMappings?: number[];
+  /** Additional patterns specific to this bookmaker */
+  additionalPatterns?: RegExp[];
+  /** Different display name for this bookmaker */
+  displayName?: string;
+}
+
+/**
+ * Unified Market Definition
+ *
+ * Complete specification combining:
+ * - Database identifiers (numericId for FK, code for type)
+ * - UI metadata (viewType, displayOrder, descriptions)
+ * - Normalization metadata (patterns, extractParam, bookmakerData)
+ */
+export interface UnifiedMarketDefinition {
+  // ===== Identification =====
+  /** Numeric ID for database foreign key (1-40) */
+  numericId: number;
+  /** Canonical type code: "MATCH_WINNER", "TOTAL_GOALS", etc. */
+  code: NormalizedMarketType;
+  /** Human-readable slug: "match-winner", "total-goals" */
+  slug: string;
+
+  // ===== Category =====
+  /** Category for UI organization */
+  category: MarketCategory;
+  /** Optional sub-category for finer grouping */
+  subCategory?: string;
+
+  // ===== Labels & Descriptions =====
+  /** Display labels */
+  labels: {
+    pl: string;
+    en: string;
+  };
+  /** Descriptions for tooltips/help */
+  descriptions: {
+    pl: string;
+    en: string;
+  };
+
+  // ===== Parameters =====
+  /** Has parameter (line value like 2.5, +1, etc.) */
+  hasParameter: boolean;
+  /** Parameter type if applicable */
+  parameterType?: ParameterType;
+  /** Valid parameter values */
+  validParameters?: string[];
+
+  // ===== Selections =====
+  /** Expected selection types */
+  selections: string[];
+
+  // ===== UI =====
+  /** View type for UI rendering */
+  viewType: ViewType;
+  /** Display order within category */
+  displayOrder: number;
+
+  // ===== Pattern Matching (for normalization) =====
+  /** Patterns to match market names (ordered by specificity) */
+  patterns: RegExp[];
+  /** Extract parameter from pattern match */
+  extractParam?: (match: RegExpMatchArray) => string | undefined;
+
+  // ===== Bookmaker-specific data =====
+  /** Bookmaker-specific overrides and mappings */
+  bookmakerData?: Record<string, BookmakerMarketData>;
+}
+
+// ============================================================================
+// MARKET DEFINITIONS
+// ============================================================================
+
+// Helper for extracting decimal parameters from regex match
+const extractDecimalParam = (m: RegExpMatchArray): string | undefined => {
+  for (let i = 1; i < m.length; i++) {
+    const num = m[i]?.replace(",", ".");
+    if (num && /^\d+[.,]?\d*$/.test(num)) {
+      return num;
+    }
+  }
+  return undefined;
+};
+
+// -----------------------------------------------------------------------------
+// WYNIK MECZU (Match Result) - 3 markets
+// -----------------------------------------------------------------------------
+
+const MAIN_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 1,
+    code: "MATCH_WINNER",
+    slug: "match-winner",
+    category: MarketCategory.WYNIK_MECZU,
+    labels: { pl: "Wynik meczu", en: "Match Result" },
+    descriptions: {
+      pl: "Obstawiasz kto wygra mecz (1X2)",
+      en: "Bet on match result (1X2)",
+    },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 1,
+    patterns: [
+      /^wynik\s*mecz(u)?$/iu,
+      /^1x2$/iu,
+      /^match\s*(result|winner)?$/iu,
+      /^ko[ņń]cowy\s*wynik$/iu,
+      /^zwyci[eę]zca\s*meczu?$/iu,
+      /^mecz$/iu,
+    ],
+    bookmakerData: {
+      sts: {
+        idMappings: [1, 40, 41, 42, 63, 64, 65, 66, 71, 94, 102, 106, 119, 1244],
+      },
+    },
+  },
+  {
+    numericId: 2,
+    code: "DOUBLE_CHANCE",
+    slug: "double-chance",
+    category: MarketCategory.WYNIK_MECZU,
+    labels: { pl: "Podwójna szansa", en: "Double Chance" },
+    descriptions: {
+      pl: "Obstawiasz dwa możliwe wyniki (1X, X2, 12)",
+      en: "Bet on two possible outcomes",
+    },
+    hasParameter: false,
+    selections: ["HOME_OR_DRAW", "DRAW_OR_AWAY", "HOME_OR_AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 2,
+    patterns: [
+      /^podw[oó]jna\s*szans/iu,
+      /^double\s*chance/iu,
+      /^dc$/iu,
+      /^szans[ay]\s*podw[oó]jn/iu,
+      /^dw[oó]jtyp$/iu,
+      /szansa$/iu,
+      /dw[oó]jtyp$/iu,
+      /podw[oó]jna\s*szans/iu,
+      /^mecz.*podw[oó]jna\s*szans/iu,
+      /^mecz.*dw[oó]jtyp/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [10] },
+    },
+  },
+  {
+    numericId: 3,
+    code: "DRAW_NO_BET",
+    slug: "draw-no-bet",
+    category: MarketCategory.WYNIK_MECZU,
+    labels: { pl: "Remis bez zakładu", en: "Draw No Bet" },
+    descriptions: {
+      pl: "Przy remisie zwrot stawki",
+      en: "Stake returned if draw",
+    },
+    hasParameter: false,
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 3,
+    patterns: [
+      /^remis\s*=\s*zwrot/iu,
+      /^draw\s*no\s*bet/iu,
+      /^dnb$/iu,
+      /^bez\s*remisu$/iu,
+      /^level\s*handicap$/iu,
+      /^zak[łl]ad\s*bez\s*remisu$/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [4, 20, 77] },
+    },
+  },
+];
+
+// -----------------------------------------------------------------------------
+// GOLE (Goals) - 11 markets
+// -----------------------------------------------------------------------------
+
+const GOALS_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 4,
+    code: "TOTAL_GOALS",
+    slug: "total-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Liczba goli", en: "Total Goals" },
+    descriptions: {
+      pl: "Obstawiasz czy padnie więcej/mniej goli niż linia",
+      en: "Bet on total goals over/under a line",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 10,
+    patterns: [
+      /^liczba\s*(gol[ioó]w?|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^(suma\s*)?(gol[ioówae]*|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^total\s*goals?\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+      /^(powyżej|poniżej|powyzej|ponizej|over|under)\s*[\/]?\s*(powyżej|poniżej|powyzej|ponizej|over|under)?\s*(\d+[.,]?\d*)\s*(gol[ioó]w?|bramek)?/iu,
+      /^(over|under)\s*\/\s*(over|under)\s*(\d+[.,]?\d*)/iu,
+      /^o\/?u\s*(\d+[.,]?\d*)/iu,
+      /^gole?\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
+    ],
+    extractParam: extractDecimalParam,
+    bookmakerData: {
+      sts: {
+        idMappings: [25, 8, 11, 23, 28, 73, 74, 75, 80, 103, 104, 105],
+      },
+    },
+  },
+  {
+    numericId: 5,
+    code: "BTTS",
+    slug: "btts",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Obie strzelą", en: "Both Teams To Score" },
+    descriptions: {
+      pl: "Czy obie drużyny strzelą gola?",
+      en: "Will both teams score?",
+    },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 11,
+    patterns: [
+      /^(obie|obobie|dru[żz]yny)\s*(strzel[ąa]|gola|bramk)/iu,
+      /^(btts|both\s*teams\s*to\s*score)$/iu,
+      /^(gg|ng)(\s*\/\s*(gg|ng))?$/iu,
+      /^obie\s*dru[żz]yny\s*strzel[ąa]\s*gola?$/iu,
+      /^czy\s*obie.*strzel/iu,
+      /^obie\s*dru[żz]yny\s*strzel/iu,
+      /^mecz.*obie.*strzel/iu,
+    ],
+    bookmakerData: {
+      sts: {
+        idMappings: [
+          43, 47, 48, 59, 60, 61, 62, 67, 68, 69, 70, 95, 107, 109, 110,
+          112, 115, 118, 120, 121, 1232, 1233, 1234, 1235, 1224, 1229, 1855,
+          196, 197, 198, 217,
+        ],
+      },
+    },
+  },
+  {
+    numericId: 6,
+    code: "ODD_EVEN_GOALS",
+    slug: "odd-even-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Parzyste/Nieparzyste", en: "Odd/Even Goals" },
+    descriptions: {
+      pl: "Czy łączna liczba goli będzie parzysta czy nieparzysta?",
+      en: "Will total goals be odd or even?",
+    },
+    hasParameter: false,
+    selections: ["ODD", "EVEN"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 12,
+    patterns: [
+      /^(parzyst[ea]?\s*\/?\s*nieparzyst[ea]?|nieparzyst[ea]?\s*\/?\s*parzyst[ea]?)/iu,
+      /^odd\s*\/?\s*even$/iu,
+    ],
+  },
+  {
+    numericId: 7,
+    code: "WIN_TO_NIL",
+    slug: "win-to-nil",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Wygrana do zera", en: "Win To Nil" },
+    descriptions: {
+      pl: "Drużyna wygra nie tracąc gola",
+      en: "Team wins without conceding",
+    },
+    hasParameter: false,
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 13,
+    patterns: [
+      /^(wygran.*zer|win.*nil|to.*nil)/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [35, 90] },
+    },
+  },
+  {
+    numericId: 8,
+    code: "CLEAN_SHEET",
+    slug: "clean-sheet",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Czyste konto", en: "Clean Sheet" },
+    descriptions: {
+      pl: "Drużyna nie straci gola",
+      en: "Team keeps clean sheet",
+    },
+    hasParameter: false,
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 14,
+    patterns: [
+      /^(czyst.*kont|clean.*sheet)/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [36] },
+    },
+  },
+  {
+    numericId: 9,
+    code: "HOME_TEAM_TO_SCORE",
+    slug: "home-team-to-score",
+    category: MarketCategory.GOLE,
+    subCategory: "team-goals",
+    labels: { pl: "Gospodarz strzeli", en: "Home Team To Score" },
+    descriptions: {
+      pl: "Czy drużyna gospodarzy strzeli gola?",
+      en: "Will home team score?",
+    },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 15,
+    patterns: [
+      /^gospodarz\s+strzeli\s+gola?$/iu,
+      /^([\w\s\u0100-\u017F]+)\s+strzeli\s+gola?$/iu,
+      /^([\w\s\u0100-\u017F]+)\s+to\s+score$/iu,
+    ],
+  },
+  {
+    numericId: 10,
+    code: "AWAY_TEAM_TO_SCORE",
+    slug: "away-team-to-score",
+    category: MarketCategory.GOLE,
+    subCategory: "team-goals",
+    labels: { pl: "Gość strzeli", en: "Away Team To Score" },
+    descriptions: {
+      pl: "Czy drużyna gości strzeli gola?",
+      en: "Will away team score?",
+    },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 16,
+    patterns: [
+      /^go[śćś]cie\s+strzel[ąa]\s+gola?$/iu,
+      /^([\w\s\u0100-\u017F]+)\s+won['\u2019]t\s+score$/iu,
+    ],
+  },
+  {
+    numericId: 11,
+    code: "TEAM_TOTAL_GOALS",
+    slug: "team-total-goals",
+    category: MarketCategory.GOLE,
+    subCategory: "team-goals",
+    labels: { pl: "Gole drużyny", en: "Team Total Goals" },
+    descriptions: {
+      pl: "Liczba goli konkretnej drużyny",
+      en: "Goals scored by specific team",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["0.5", "1.5", "2.5", "3.5"],
+    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 17,
+    patterns: [
+      /^gole?\s*(gospodarzy?|go[śs]ci)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^(home|away)\s*team\s*(total\s*)?goals?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^(gospodarze?|go[śs]cie?)\s*(strzel[ąa])?\s*(over|under|o\/?u)\s*(\d+[.,]?\d*)/iu,
+    ],
+    extractParam: extractDecimalParam,
+  },
+  {
+    numericId: 12,
+    code: "GOAL_RANGE",
+    slug: "goal-range",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Przedział goli", en: "Goal Range" },
+    descriptions: {
+      pl: "W jakim przedziale będzie liczba goli?",
+      en: "Goal range bracket",
+    },
+    hasParameter: false,
+    selections: ["0-1", "2-3", "4-5", "6+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 18,
+    patterns: [
+      /^multigol/iu,
+      /^goal\s*range/iu,
+      /^przedzia[łl]\s*gol/iu,
+      /^(\d+)\s*-\s*(\d+)\s*gol/iu,
+    ],
+  },
+  {
+    numericId: 13,
+    code: "BOTH_HALVES_GOALS",
+    slug: "both-halves-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Gole w obu połowach", en: "Goals In Both Halves" },
+    descriptions: {
+      pl: "Czy padnie gol w obu połowach?",
+      en: "Will there be goals in both halves?",
+    },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 19,
+    patterns: [
+      /^gol\s*(w\s*)?(obu|obydw[uó]ch)\s*po[łl]o?w/iu,
+      /^(score|goal)\s*in\s*both\s*halves/iu,
+      /^obie\s*po[łl]o?wy\s*gol/iu,
+    ],
+  },
+  {
+    numericId: 14,
+    code: "WINNING_MARGIN",
+    slug: "winning-margin",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Margines zwycięstwa", en: "Winning Margin" },
+    descriptions: {
+      pl: "Różnica bramek zwycięzcy",
+      en: "Winner's goal difference",
+    },
+    hasParameter: true,
+    parameterType: "integer",
+    selections: ["HOME", "AWAY", "DRAW"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 20,
+    patterns: [
+      /^r[oó][żz]nica\s*(zwyci[eę]stwa|gol)/iu,
+      /^winning\s*margin/iu,
+      /^margines\s*(zwyci[eę]stwa|wygranej)/iu,
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// HANDICAP - 2 markets
+// -----------------------------------------------------------------------------
+
+const HANDICAP_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 15,
+    code: "ASIAN_HANDICAP",
+    slug: "asian-handicap",
+    category: MarketCategory.HANDICAP,
+    labels: { pl: "Handicap azjatycki", en: "Asian Handicap" },
+    descriptions: {
+      pl: "Wynik z uwzględnieniem przewagi/straty bramkowej",
+      en: "Result with goal advantage/disadvantage",
+    },
+    hasParameter: true,
+    parameterType: "handicap",
+    validParameters: [
+      "-2.5", "-2.25", "-2", "-1.75", "-1.5", "-1.25", "-1", "-0.75",
+      "-0.5", "-0.25", "0", "+0.25", "+0.5", "+0.75", "+1", "+1.25",
+      "+1.5", "+1.75", "+2", "+2.25", "+2.5",
+    ],
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.HANDICAP_SELECTOR,
+    displayOrder: 30,
+    patterns: [
+      /^handicap\s*azjatyck/iu,
+      /^asian\s*handicap/iu,
+      /^ah\s*([-+]?\d+[.,]?\d*)?$/iu,
+      /^azj[a]?\s*hand/iu,
+    ],
+    extractParam: (m) => {
+      const lineMatch = m[0]?.match(/([-+]?\d+[.,]?\d*)/);
+      return lineMatch?.[1]?.replace(",", ".");
+    },
+  },
+  {
+    numericId: 16,
+    code: "EUROPEAN_HANDICAP",
+    slug: "european-handicap",
+    category: MarketCategory.HANDICAP,
+    labels: { pl: "Handicap europejski", en: "European Handicap" },
+    descriptions: {
+      pl: "Handicap z możliwością remisu",
+      en: "Handicap with draw option",
+    },
+    hasParameter: true,
+    parameterType: "handicap",
+    validParameters: ["-3", "-2", "-1", "0", "+1", "+2", "+3"],
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.HANDICAP_SELECTOR,
+    displayOrder: 31,
+    patterns: [
+      /^handicap\s*europejsk/iu,
+      /^european\s*handicap/iu,
+      /^eh\s*([-+]?\d+)?$/iu,
+      /^handicap\s*([-+]?\d+)/iu,
+      /^eur[o]?\s*hand/iu,
+    ],
+    extractParam: (m) => {
+      const lineMatch = m[0]?.match(/([-+]?\d+)/);
+      return lineMatch?.[1];
+    },
+    bookmakerData: {
+      sts: { idMappings: [14, 22, 76, 79] },
+    },
+  },
+];
+
+// -----------------------------------------------------------------------------
+// PIERWSZA POŁOWA (Half Time) - 5 markets
+// -----------------------------------------------------------------------------
+
+const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 17,
+    code: "HALF_TIME_RESULT",
+    slug: "half-time-result",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Wynik 1. połowy", en: "Half Time Result" },
+    descriptions: {
+      pl: "Wynik po pierwszej połowie",
+      en: "Result at half time",
+    },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 40,
+    patterns: [
+      /^wynik\s*1\.?\s*po[łl]o?w/iu,
+      /^1\.?\s*po[łl]o?w.*wynik$/iu,
+      /^half\s*time.*result$/iu,
+      /^ht\s*(1x2|result|wynik)/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(1x2|wynik)?$/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [5] },
+    },
+  },
+  {
+    numericId: 18,
+    code: "HALF_TIME_TOTAL_GOALS",
+    slug: "half-time-total-goals",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Gole 1. połowy", en: "Half Time Goals" },
+    descriptions: {
+      pl: "Liczba goli w pierwszej połowie",
+      en: "Goals in first half",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["0.5", "1.5", "2.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 41,
+    patterns: [
+      /^1\.?\s*po[łl]o?w.*liczba\s*gol/iu,
+      /^liczba\s*gol.*1\.?\s*po[łl]o?w/iu,
+      /^half\s*time\s*(total\s*)?goals?/iu,
+      /^1\.?\s*po[łl]o?w.*(gol|bramk).*\s*(\d+[.,]?\d*)/iu,
+      /^ht\s*(over|under|o\/?u)\s*(\d+[.,]?\d*)?/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(gol|o\/?u)/iu,
+    ],
+    extractParam: (m) => {
+      const lineMatch = m[0]?.match(/(\d+[.,]?\d*)/);
+      return lineMatch?.[1]?.replace(",", ".");
+    },
+    bookmakerData: {
+      sts: { idMappings: [26, 31, 82, 85, 88] },
+    },
+  },
+  {
+    numericId: 19,
+    code: "HALF_TIME_BTTS",
+    slug: "half-time-btts",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "BTTS 1. połowa", en: "Half Time BTTS" },
+    descriptions: {
+      pl: "Obie strzelą w pierwszej połowie",
+      en: "Both teams score in first half",
+    },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 42,
+    patterns: [
+      /^1\.?\s*po[łl]o?w.*obie\s*strzel/iu,
+      /^obie\s*strzel.*1\.?\s*po[łl]o?w/iu,
+      /^1\.?\s*po[łl]o?w.*(btts|gg)/iu,
+      /^ht\s*(btts|gg|obie)/iu,
+      /^pierwsz[ay]\s*po[łl]ow[ay]\s*(btts|gg|obie)/iu,
+    ],
+  },
+  {
+    numericId: 20,
+    code: "SECOND_HALF_RESULT",
+    slug: "second-half-result",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Wynik 2. połowy", en: "Second Half Result" },
+    descriptions: {
+      pl: "Wynik drugiej połowy",
+      en: "Result of second half",
+    },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 43,
+    patterns: [
+      /^wynik\s*2\.?\s*po[łl]o?w/iu,
+      /^2\.?\s*po[łl]o?w.*wynik/iu,
+      /^second\s*half\s*result/iu,
+      /^drug[aiej]\s*po[łl]ow[ay]\s*(wynik|1x2)?/iu,
+    ],
+  },
+  {
+    numericId: 21,
+    code: "SECOND_HALF_TOTAL_GOALS",
+    slug: "second-half-total-goals",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Gole 2. połowy", en: "Second Half Goals" },
+    descriptions: {
+      pl: "Liczba goli w drugiej połowie",
+      en: "Goals in second half",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["0.5", "1.5", "2.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 44,
+    patterns: [
+      /^2\.?\s*po[łl]o?w.*liczba\s*gol/iu,
+      /^liczba\s*gol.*2\.?\s*po[łl]o?w/iu,
+      /^second\s*half\s*(total\s*)?goals?/iu,
+      /^drug[aiej]\s*po[łl]ow[ay]\s*(gol|o\/?u)/iu,
+    ],
+    extractParam: (m) => {
+      const lineMatch = m[0]?.match(/(\d+[.,]?\d*)/);
+      return lineMatch?.[1]?.replace(",", ".");
+    },
+  },
+];
+
+// -----------------------------------------------------------------------------
+// DOKŁADNY WYNIK (Correct Score) - 1 market
+// -----------------------------------------------------------------------------
+
+const CORRECT_SCORE_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 22,
+    code: "CORRECT_SCORE",
+    slug: "correct-score",
+    category: MarketCategory.DOKLADNY_WYNIK,
+    labels: { pl: "Dokładny wynik", en: "Correct Score" },
+    descriptions: {
+      pl: "Przewidywany dokładny wynik meczu",
+      en: "Exact final score prediction",
+    },
+    hasParameter: false,
+    selections: ["SCORE"],
+    viewType: ViewType.SCORE_GRID,
+    displayOrder: 50,
+    patterns: [
+      /^dok[łl]adn.*wynik/iu,
+      /^correct\s*score/iu,
+      /^exact\s*score/iu,
+      /^wynik\s*dok[łl]adn/iu,
+      /^cs$/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [9, 17, 33, 49, 57, 98, 101, 124, 125, 126] },
+    },
+  },
+];
+
+// -----------------------------------------------------------------------------
+// ZAWODNICY (Players) - 6 markets
+// -----------------------------------------------------------------------------
+
+const PLAYER_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 23,
+    code: "GOALSCORER_FIRST",
+    slug: "goalscorer-first",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Pierwszy strzelec", en: "First Goalscorer" },
+    descriptions: {
+      pl: "Który zawodnik strzeli pierwszego gola?",
+      en: "Which player scores first?",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 60,
+    patterns: [
+      /^(pierwszy|1\.?)\s*(strzelec|gol)/iu,
+      /first\s*goal\s*scorer/iu,
+    ],
+  },
+  {
+    numericId: 24,
+    code: "GOALSCORER_LAST",
+    slug: "goalscorer-last",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Ostatni strzelec", en: "Last Goalscorer" },
+    descriptions: {
+      pl: "Który zawodnik strzeli ostatniego gola?",
+      en: "Which player scores last?",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 61,
+    patterns: [
+      /^ostatni\s*(strzelec|gol)/iu,
+      /last\s*goal\s*scorer/iu,
+    ],
+  },
+  {
+    numericId: 25,
+    code: "GOALSCORER_ANYTIME",
+    slug: "goalscorer-anytime",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Strzelec w meczu", en: "Anytime Goalscorer" },
+    descriptions: {
+      pl: "Zawodnik strzeli gola w meczu",
+      en: "Player scores anytime in match",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 62,
+    patterns: [
+      /^strzel[ei]\s*gola?$/iu,
+      /^(zawodnik|gracz).*strzel/iu,
+      /strzelec.*(bramki|gola)/iu,
+      /anytime.*goal.*scorer/iu,
+      /goalscorer.*anytime/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [52] },
+    },
+  },
+  {
+    numericId: 26,
+    code: "PLAYER_SHOTS",
+    slug: "player-shots",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Strzały zawodnika", en: "Player Shots" },
+    descriptions: {
+      pl: "Liczba strzałów zawodnika",
+      en: "Player shot count",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 63,
+    patterns: [
+      /^(strza[łl]y|shots?)\s*(zawodnik|na\s*bramk)/iu,
+      /zawodnik.*(strza[łl]|shot)/iu,
+      /player.*shots/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [53] },
+    },
+  },
+  {
+    numericId: 27,
+    code: "PLAYER_CARDS",
+    slug: "player-cards",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Kartki zawodnika", en: "Player Cards" },
+    descriptions: {
+      pl: "Zawodnik otrzyma kartkę",
+      en: "Player receives card",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 64,
+    patterns: [
+      /^(kartk[ai]|card)\s*(zawodnik|dla)/iu,
+      /zawodnik.*(kartk[aię]|card)/iu,
+      /player.*(to\s*(receive|get)\s*)?card/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [54] },
+    },
+  },
+  {
+    numericId: 28,
+    code: "PLAYER_ASSISTS",
+    slug: "player-assists",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Asysty zawodnika", en: "Player Assists" },
+    descriptions: {
+      pl: "Zawodnik zaliczy asystę",
+      en: "Player provides assist",
+    },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 65,
+    patterns: [
+      /^asyst[ay]?\s*(zawodnik)?/iu,
+      /player.*assist/iu,
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// STATYSTYKI (Statistics) - 6 markets
+// -----------------------------------------------------------------------------
+
+const STATISTICS_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 29,
+    code: "CORNERS_TOTAL",
+    slug: "corners-total",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Rzuty rożne", en: "Total Corners" },
+    descriptions: {
+      pl: "Łączna liczba rzutów rożnych",
+      en: "Total corners in match",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["7.5", "8.5", "9.5", "10.5", "11.5", "12.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 70,
+    patterns: [
+      /^(rzuty?\s*ro[żz]n[ey]?|corners?)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^liczba\s*(rzut[oó]w?\s*ro[żz]n|corner)/iu,
+      /^(suma\s*)?(rzuty?\s*ro[żz]n[ey]?|corners?)$/iu,
+      /total\s*corners?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^ro[żz]ne\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
+    ],
+    extractParam: (m) => m[2]?.replace(",", "."),
+  },
+  {
+    numericId: 30,
+    code: "CORNERS_TEAM",
+    slug: "corners-team",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Rożne drużyny", en: "Team Corners" },
+    descriptions: {
+      pl: "Rzuty rożne konkretnej drużyny",
+      en: "Corners for specific team",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 71,
+    patterns: [
+      /(rzuty?\s*ro[żz]n[ey]?|corners?).*dru[żz]yn/iu,
+      /dru[żz]yn.*(rzuty?\s*ro[żz]n|corner)/iu,
+      /team.*corners?/iu,
+    ],
+  },
+  {
+    numericId: 31,
+    code: "CARDS_TOTAL",
+    slug: "cards-total",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Kartki w meczu", en: "Total Cards" },
+    descriptions: {
+      pl: "Łączna liczba kartek",
+      en: "Total cards in match",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["3.5", "4.5", "5.5", "6.5", "7.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 72,
+    patterns: [
+      /^(kartk[ai]|cards?)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^liczba\s*kartek/iu,
+      /^(suma\s*)?(kartk[ai]|cards?)$/iu,
+      /total\s*(booking|card)s?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
+      /^[żzó][oó][łl]te\s*kartki?\s*(\d+[.,]?\d*)?/iu,
+      /^booking(s)?\s*(o\/?u|over|under)?\s*(\d+[.,]?\d*)?/iu,
+    ],
+    extractParam: (m) => m[2]?.replace(",", "."),
+  },
+  {
+    numericId: 32,
+    code: "CARDS_TEAM",
+    slug: "cards-team",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Kartki drużyny", en: "Team Cards" },
+    descriptions: {
+      pl: "Kartki dla konkretnej drużyny",
+      en: "Cards for specific team",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 73,
+    patterns: [
+      /(kartk[ai]|cards?).*dru[żz]yn/iu,
+      /dru[żz]yn.*(kartk|card)/iu,
+      /team.*(booking|card)s?/iu,
+    ],
+  },
+  {
+    numericId: 33,
+    code: "FOULS_TOTAL",
+    slug: "fouls-total",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Faule w meczu", en: "Total Fouls" },
+    descriptions: {
+      pl: "Łączna liczba fauli",
+      en: "Total fouls in match",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 74,
+    patterns: [
+      /^faul[eiy]?\s*[-:]?\s*(\d+)?/iu,
+      /^liczba\s*faul/iu,
+      /total\s*fouls?/iu,
+    ],
+  },
+  {
+    numericId: 34,
+    code: "OFFSIDES_TOTAL",
+    slug: "offsides-total",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Spalone w meczu", en: "Total Offsides" },
+    descriptions: {
+      pl: "Łączna liczba spalonych",
+      en: "Total offsides in match",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 75,
+    patterns: [
+      /^(spalon[ey]|offside)/iu,
+      /^liczba\s*(spalon|offside)/iu,
+      /total\s*offside/iu,
+    ],
+  },
+];
+
+// -----------------------------------------------------------------------------
+// KOMBINACJE (Combinations) - 6 markets
+// -----------------------------------------------------------------------------
+
+const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
+  {
+    numericId: 35,
+    code: "RESULT_AND_BTTS",
+    slug: "result-and-btts",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Wynik + BTTS", en: "Result & BTTS" },
+    descriptions: {
+      pl: "Wynik meczu i czy obie strzelą",
+      en: "Match result and both teams score",
+    },
+    hasParameter: false,
+    selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 80,
+    patterns: [
+      /^(wynik|1x2)\s*[+&i]\s*(obie|btts|gg)/iu,
+      /^(obie|btts|gg)\s*[+&i]\s*(wynik|1x2)/iu,
+      /wynik.*obie.*strzel/iu,
+      /obie.*strzel.*wynik/iu,
+      /match\s*result.*btts/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [50] },
+    },
+  },
+  {
+    numericId: 36,
+    code: "RESULT_AND_TOTAL",
+    slug: "result-and-total",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Wynik + Gole", en: "Result & Total" },
+    descriptions: {
+      pl: "Wynik meczu i liczba goli",
+      en: "Match result and total goals",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 81,
+    patterns: [
+      /^(wynik|1x2)\s*[+&i]\s*(liczba|over|under|o\/iu|\d)/iu,
+      /^(liczba|over|under|o\/iu).*[+&i]\s*(wynik|1x2)/iu,
+      /wynik.*liczba\s*(gol|bramek)/iu,
+      /match\s*result.*(over|under|total)/iu,
+    ],
+    bookmakerData: {
+      sts: {
+        idMappings: [
+          51, 99, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816,
+          817, 818,
+        ],
+      },
+    },
+  },
+  {
+    numericId: 37,
+    code: "HALFTIME_FULLTIME",
+    slug: "halftime-fulltime",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Przerwa/Koniec", en: "HT/FT" },
+    descriptions: {
+      pl: "Wynik w przerwie i na koniec meczu",
+      en: "Half time and full time result",
+    },
+    hasParameter: false,
+    selections: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
+    viewType: ViewType.HALFTIME_FULLTIME,
+    displayOrder: 82,
+    patterns: [
+      /^(1\.?\s*po[łl]o?w|ht)\s*[\/\-]\s*(2\.?\s*po[łl]o?w|ft|wynik|mecz)/iu,
+      /^po[łl]o?w[ay]?\s*[\/\-]\s*(mecz|koniec|wynik)/iu,
+      /^ht\s*[\/\-]?\s*ft$/iu,
+      /half\s*time.*full\s*time/iu,
+      /^half\s*[\/\-]\s*match$/iu,
+      /^wynik\s*1\.?\s*i\s*2\.?\s*po[łl]/iu,
+    ],
+    bookmakerData: {
+      sts: { idMappings: [1012] },
+    },
+  },
+  {
+    numericId: 38,
+    code: "DOUBLE_RESULT",
+    slug: "double-result",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójny wynik", en: "Double Result" },
+    descriptions: {
+      pl: "Kto prowadzi w dwóch punktach czasowych",
+      en: "Who leads at two time points",
+    },
+    hasParameter: false,
+    selections: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
+    viewType: ViewType.HALFTIME_FULLTIME,
+    displayOrder: 83,
+    patterns: [
+      /^podw[oó]jny\s*wynik/iu,
+      /double\s*result/iu,
+    ],
+  },
+  {
+    numericId: 39,
+    code: "DOUBLE_CHANCE_BTTS",
+    slug: "double-chance-btts",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójna szansa + BTTS", en: "Double Chance & BTTS" },
+    descriptions: {
+      pl: "Podwójna szansa i obie strzelą",
+      en: "Double chance and both teams score",
+    },
+    hasParameter: false,
+    selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 84,
+    patterns: [
+      /^podw[oó]jna\s*szans.*[+&i]\s*(obie|btts|gg)/iu,
+      /^(obie|btts|gg)\s*[+&i]\s*podw[oó]jna\s*szans/iu,
+      /^dc\s*[+&i]\s*(btts|gg|obie)/iu,
+      /double\s*chance.*btts/iu,
+    ],
+  },
+  {
+    numericId: 40,
+    code: "DOUBLE_CHANCE_TOTAL",
+    slug: "double-chance-total",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójna szansa + Gole", en: "Double Chance & Total" },
+    descriptions: {
+      pl: "Podwójna szansa i liczba goli",
+      en: "Double chance and total goals",
+    },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["1X_OVER", "1X_UNDER", "X2_OVER", "X2_UNDER", "12_OVER", "12_UNDER"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 85,
+    patterns: [
+      /^podw[oó]jna\s*szans.*[+&i]\s*(liczba|over|under|o\/u|\d)/iu,
+      /^(liczba|over|under|o\/u).*[+&i]\s*podw[oó]jna\s*szans/iu,
+      /^dc\s*[+&i]\s*(o\/?u|over|under|\d)/iu,
+      /double\s*chance.*(over|under|total)/iu,
+    ],
+  },
+];
+
+// ============================================================================
+// COMPLETE REGISTRY
+// ============================================================================
+
+/**
+ * Complete unified market registry
+ * Contains all 40 market definitions with complete data
+ */
+export const UNIFIED_MARKET_REGISTRY: UnifiedMarketDefinition[] = [
+  ...MAIN_MARKETS,
+  ...GOALS_MARKETS,
+  ...HANDICAP_MARKETS,
+  ...HALF_TIME_MARKETS,
+  ...CORRECT_SCORE_MARKETS,
+  ...PLAYER_MARKETS,
+  ...STATISTICS_MARKETS,
+  ...COMBINATION_MARKETS,
+];
+
+// ============================================================================
+// LOOKUP MAPS
+// ============================================================================
+
+/** Map by canonical code (MATCH_WINNER, TOTAL_GOALS, etc.) */
+export const MARKET_BY_CODE = new Map<string, UnifiedMarketDefinition>(
+  UNIFIED_MARKET_REGISTRY.map((m) => [m.code, m])
+);
+
+/** Map by numeric ID (1-40) for database FK */
+export const MARKET_BY_NUMERIC_ID = new Map<number, UnifiedMarketDefinition>(
+  UNIFIED_MARKET_REGISTRY.map((m) => [m.numericId, m])
+);
+
+/** Map by slug (match-winner, total-goals, etc.) */
+export const MARKET_BY_SLUG = new Map<string, UnifiedMarketDefinition>(
+  UNIFIED_MARKET_REGISTRY.map((m) => [m.slug, m])
+);
+
+/** Set of all canonical market codes */
+export const CANONICAL_MARKET_CODES = new Set<string>(
+  UNIFIED_MARKET_REGISTRY.map((m) => m.code)
+);
+
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Get market definition by canonical code
+ */
+export function getMarketByCode(code: string): UnifiedMarketDefinition | undefined {
+  return MARKET_BY_CODE.get(code);
+}
+
+/**
+ * Get market definition by numeric ID
+ */
+export function getMarketByNumericId(id: number): UnifiedMarketDefinition | undefined {
+  return MARKET_BY_NUMERIC_ID.get(id);
+}
+
+/**
+ * Get market definition by slug
+ */
+export function getMarketBySlug(slug: string): UnifiedMarketDefinition | undefined {
+  return MARKET_BY_SLUG.get(slug);
+}
+
+/**
+ * Get numeric ID for a market code
+ */
+export function getNumericIdForCode(code: string): number | undefined {
+  return MARKET_BY_CODE.get(code)?.numericId;
+}
+
+/**
+ * Get all markets in a category
+ */
+export function getMarketsByCategory(category: MarketCategory): UnifiedMarketDefinition[] {
+  return UNIFIED_MARKET_REGISTRY.filter((m) => m.category === category);
+}
+
+/**
+ * Check if a code is a canonical market
+ */
+export function isCanonicalMarket(code: string | undefined): boolean {
+  if (!code) return false;
+  return CANONICAL_MARKET_CODES.has(code);
+}
+
+/**
+ * Get market definition by type (alias for getMarketByCode)
+ * @deprecated Use getMarketByCode instead
+ */
+export function getMarketByType(type: NormalizedMarketType): UnifiedMarketDefinition | undefined {
+  return MARKET_BY_CODE.get(type);
+}
+
+/**
+ * Get market definition by slug (id field in old system)
+ */
+export function getMarketById(slug: string): UnifiedMarketDefinition | undefined {
+  return MARKET_BY_SLUG.get(slug);
+}
+
+// ============================================================================
+// LEGACY COMPATIBILITY - Re-exports for easier migration
+// ============================================================================
+
+/** @deprecated Use UNIFIED_MARKET_REGISTRY instead */
+export const CANONICAL_MARKETS = UNIFIED_MARKET_REGISTRY;
+
+/** @deprecated Use UNIFIED_MARKET_REGISTRY instead */
+export const MARKET_REGISTRY = UNIFIED_MARKET_REGISTRY;
+
+/**
+ * Legacy interface for compatibility during migration
+ * @deprecated Use UnifiedMarketDefinition instead
+ */
+export type MarketDefinition = UnifiedMarketDefinition;
+
+/**
+ * Legacy interface for compatibility during migration
+ * @deprecated Use UnifiedMarketDefinition instead
+ */
+export type MarketDefinitionCanonical = UnifiedMarketDefinition;

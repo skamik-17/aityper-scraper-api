@@ -21,7 +21,10 @@ import {
 import {
   getFullOfferByMatch,
   getMarketCounts,
+  getCanonicalMarketCodes,
+  getMarketDefinition,
 } from "../repositories/full-offer-repository.js";
+import { UNIFIED_MARKET_REGISTRY, ViewType } from "../data/market-registry.js";
 
 const router = Router();
 
@@ -81,8 +84,18 @@ router.get("/match", asyncHandler(async (req, res) => {
   }
 
   const data: MatchOddsResponseData = { match };
+  
+  let lastUpdated: string | null = null;
+  for (const market of Object.values(match.markets)) {
+    for (const bookmakerOdds of Object.values(market.bookmakerOdds)) {
+      if (!lastUpdated || bookmakerOdds.scrapedAt > lastUpdated) {
+        lastUpdated = bookmakerOdds.scrapedAt;
+      }
+    }
+  }
+  
   const meta: MatchOddsResponseMeta = {
-    lastUpdated: match.odds[0]?.scrapedAt || new Date().toISOString(),
+    lastUpdated: lastUpdated || new Date().toISOString(),
   };
 
   const response: ApiSuccessResponse<MatchOddsResponseData, MatchOddsResponseMeta> = {
@@ -147,6 +160,40 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
       lastUpdated,
       marketCount: Object.keys(fullOffer.markets).length,
       bookmakerCounts: marketCounts,
+    },
+  };
+
+  res.json(response);
+}));
+
+/**
+ * GET /api/odds/market-types
+ * Get all canonical market type definitions (40 types)
+ */
+router.get("/market-types", asyncHandler(async (_req, res) => {
+  const marketTypes = UNIFIED_MARKET_REGISTRY.map(m => ({
+    id: m.numericId,
+    code: m.code,
+    namePl: m.labels.pl,
+    nameEn: m.labels.en,
+    descriptionPl: m.descriptions.pl,
+    descriptionEn: m.descriptions.en,
+    viewType: ViewType[m.viewType],
+    category: m.category,
+    hasParameter: m.hasParameter,
+    parameterType: m.parameterType,
+    selections: m.selections,
+    displayOrder: m.displayOrder,
+  }));
+
+  const response = {
+    success: true,
+    data: {
+      marketTypes,
+      totalCount: marketTypes.length,
+    },
+    meta: {
+      viewTypes: Object.keys(ViewType).filter(k => isNaN(Number(k))),
     },
   };
 

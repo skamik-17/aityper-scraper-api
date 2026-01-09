@@ -4,7 +4,7 @@
  */
 
 import { superbetScraper } from "../scrapers/bookmakers/index.js";
-import { normalizeMarkets } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType } from "../types/normalization.js";
 
 async function analyzeOtherMarkets() {
@@ -15,7 +15,7 @@ async function analyzeOtherMarkets() {
         if (!result.success) process.exit(1);
 
         const match = result.matches[0];
-        const normalized = normalizeMarkets(match.markets);
+        const normalized = normalizeMarketsForBookmaker(match.markets, "superbet", match.homeTeam, match.awayTeam);
 
         const otherMarkets = normalized.filter(m => m.normalizedType === NormalizedMarketType.OTHER);
 

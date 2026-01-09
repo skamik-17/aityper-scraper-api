@@ -1,40 +1,34 @@
-/**
- * Full Offer Repository
- * Handles database operations for normalized full offer markets
- * Uses scraped_markets table with market_key for cross-bookmaker comparison
- */
-
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { ScrapedMarket, MarketSelection } from "../types/full-offer.js";
-import type { NormalizedMarketType, NormalizedMarketGroup } from "../types/normalization.js";
-import { getCanonicalTeamName, getNormalizedTeamName } from "../scrapers/team-matcher.js";
+import type { NormalizedMarketType } from "../types/normalization.js";
+import { MarketCategory } from "../services/normalization/types.js";
+import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
+import { calculateBestOdds } from "../utils/market-aggregation.js";
+import { RepositoryError } from "../utils/errors.js";
+import {
+  CANONICAL_MARKET_CODES,
+  MARKET_BY_CODE,
+} from "../data/market-registry.js";
 
-// Types for database inserts
-interface ScrapedMarketInsert {
+interface OddsInsert {
   match_id: string;
   league_slug: string;
   home_team: string;
   away_team: string;
-  home_team_normalized: string;
-  away_team_normalized: string;
   bookmaker: PolishBookmaker;
-  external_id?: string;
-  name: string;
-  normalized_type: string;
-  market_key?: string;
-  param_value?: string;
-  normalized_group: string;
-  selections: MarketSelection[];
   event_url?: string;
+  market_type_id: number;
+  market_key: string;
+  param_value?: string;
+  selections: MarketSelection[];
   scraped_at: string;
 }
 
-// Types for comparison queries
 export interface MarketComparisonEntry {
   market_key: string;
   normalized_type: string;
-  normalized_group: string;
+  category: string;
   param_value?: string;
   bookmaker: PolishBookmaker;
   market_name: string;
@@ -49,7 +43,7 @@ export interface FullOfferComparison {
   awayTeam: string;
   markets: Record<string, {
     type: NormalizedMarketType;
-    group: NormalizedMarketGroup;
+    category: MarketCategory;
     name: string;
     paramValue?: string;
     bookmakerOdds: Record<PolishBookmaker, {
@@ -61,19 +55,22 @@ export interface FullOfferComparison {
   }>;
 }
 
-/**
- * Generate a match ID from team names
- */
 function generateMatchId(homeTeam: string, awayTeam: string, leagueSlug: string): string {
   const homeNorm = getNormalizedTeamName(homeTeam, leagueSlug);
   const awayNorm = getNormalizedTeamName(awayTeam, leagueSlug);
   return `${leagueSlug}:${homeNorm}:${awayNorm}`;
 }
 
-/**
- * Save full offer markets for a match from a specific bookmaker
- * Uses UPSERT to update existing records
- */
+function isCanonicalMarket(normalizedType: string | undefined): boolean {
+  if (!normalizedType) return false;
+  return CANONICAL_MARKET_CODES.has(normalizedType);
+}
+
+function getMarketTypeId(normalizedType: string): number | null {
+  const market = MARKET_BY_CODE.get(normalizedType);
+  return market?.numericId ?? null;
+}
+
 export async function saveFullOfferMarkets(
   homeTeam: string,
   awayTeam: string,
@@ -81,9 +78,9 @@ export async function saveFullOfferMarkets(
   markets: ScrapedMarket[],
   leagueSlug: string = "ekstraklasa",
   eventUrl?: string
-): Promise<{ inserted: number; errors: number }> {
+): Promise<{ inserted: number; filtered: number; errors: number }> {
   const supabase = getSupabase();
-  const result = { inserted: 0, errors: 0 };
+  const result = { inserted: 0, filtered: 0, errors: 0 };
 
   if (markets.length === 0) {
     return result;
@@ -92,46 +89,54 @@ export async function saveFullOfferMarkets(
   const matchId = generateMatchId(homeTeam, awayTeam, leagueSlug);
   const canonicalHome = getCanonicalTeamName(homeTeam, leagueSlug);
   const canonicalAway = getCanonicalTeamName(awayTeam, leagueSlug);
-  const homeNorm = getNormalizedTeamName(homeTeam, leagueSlug);
-  const awayNorm = getNormalizedTeamName(awayTeam, leagueSlug);
   const scrapedAt = new Date().toISOString();
 
-  // Build insert records and deduplicate by name
-  // (some bookmakers return duplicate market names)
-  const recordsMap = new Map<string, ScrapedMarketInsert>();
+  const recordsMap = new Map<string, OddsInsert>();
+  
   for (const market of markets) {
-    const key = market.name; // Dedupe key: same market name = same market
-    recordsMap.set(key, {
+    if (!isCanonicalMarket(market.normalizedType)) {
+      result.filtered++;
+      continue;
+    }
+
+    const marketTypeId = getMarketTypeId(market.normalizedType!);
+    if (!marketTypeId) {
+      result.filtered++;
+      continue;
+    }
+
+    const marketKey = market.marketKey || market.normalizedType!;
+    
+    recordsMap.set(marketKey, {
       match_id: matchId,
       league_slug: leagueSlug,
       home_team: canonicalHome,
       away_team: canonicalAway,
-      home_team_normalized: homeNorm,
-      away_team_normalized: awayNorm,
       bookmaker,
-      external_id: undefined,
-      name: market.name,
-      normalized_type: market.normalizedType || "OTHER",
-      market_key: market.marketKey,
-      param_value: market.paramValue,
-      normalized_group: market.normalizedGroup || "OTHER",
-      selections: market.selections,
       event_url: eventUrl,
+      market_type_id: marketTypeId,
+      market_key: marketKey,
+      param_value: market.paramValue,
+      selections: market.selections,
       scraped_at: scrapedAt,
     });
   }
+  
   const records = Array.from(recordsMap.values());
 
-  // Batch insert in chunks of 100
+  if (records.length === 0) {
+    return result;
+  }
+
   const BATCH_SIZE = 100;
   for (let i = 0; i < records.length; i += BATCH_SIZE) {
     const batch = records.slice(i, i + BATCH_SIZE);
 
-    const { error } = await supabase
-      .from("scraped_markets")
+    const { error } = await (supabase as any)
+      .from("odds")
       .upsert(batch, {
-        onConflict: "match_id,bookmaker,name,scraped_at",
-        ignoreDuplicates: false, // Update if exists
+        onConflict: "match_id,bookmaker,market_key,scraped_at",
+        ignoreDuplicates: false,
       });
 
     if (error) {
@@ -145,10 +150,6 @@ export async function saveFullOfferMarkets(
   return result;
 }
 
-/**
- * Get full offer comparison for a match
- * Groups markets by market_key for cross-bookmaker comparison
- */
 export async function getFullOfferByMatch(
   homeTeam: string,
   awayTeam: string,
@@ -159,27 +160,25 @@ export async function getFullOfferByMatch(
   const canonicalHome = getCanonicalTeamName(homeTeam, leagueSlug);
   const canonicalAway = getCanonicalTeamName(awayTeam, leagueSlug);
 
-  // Query comparable markets using the view
   const { data, error } = await supabase
     .from("market_comparison")
     .select("*")
     .eq("match_id", matchId)
-    .order("normalized_group")
+    .order("category")
     .order("market_key");
 
   if (error) {
-    console.error("[FullOfferRepo] Query error:", error);
-    return null;
+    console.error("[FullOfferRepo] getFullOfferByMatch error:", error);
+    throw new RepositoryError("Failed to get full offer", "getFullOfferByMatch", error);
   }
 
   if (!data || data.length === 0) {
-    return null;
+    return null; // No data is not an error
   }
 
-  // Group by market_key
   const marketGroups = new Map<string, {
     type: NormalizedMarketType;
-    group: NormalizedMarketGroup;
+    category: MarketCategory;
     name: string;
     paramValue?: string;
     bookmakerOdds: Record<PolishBookmaker, {
@@ -189,15 +188,15 @@ export async function getFullOfferByMatch(
     }>;
   }>();
 
-  for (const row of data) {
+  for (const row of data as any[]) {
     const marketKey = row.market_key;
     if (!marketKey) continue;
 
     if (!marketGroups.has(marketKey)) {
       marketGroups.set(marketKey, {
-        type: row.normalized_type as NormalizedMarketType,
-        group: row.normalized_group as NormalizedMarketGroup,
-        name: row.market_name,
+        type: row.market_code as NormalizedMarketType,
+        category: row.category as MarketCategory,
+        name: row.market_name_pl || row.market_name,
         paramValue: row.param_value ?? undefined,
         bookmakerOdds: {} as Record<PolishBookmaker, {
           selections: MarketSelection[];
@@ -215,27 +214,11 @@ export async function getFullOfferByMatch(
     };
   }
 
-  // Calculate best odds for each market
   const markets: FullOfferComparison["markets"] = {};
-  for (const [marketKey, group] of marketGroups) {
-    const bestOdds: Record<string, { bookmaker: PolishBookmaker; odds: number }> = {};
-
-    // Find best odds per selection
-    for (const [bookmaker, data] of Object.entries(group.bookmakerOdds)) {
-      for (const selection of data.selections) {
-        const selKey = selection.normalizedName || selection.name;
-        if (!bestOdds[selKey] || selection.odds > bestOdds[selKey].odds) {
-          bestOdds[selKey] = {
-            bookmaker: bookmaker as PolishBookmaker,
-            odds: selection.odds,
-          };
-        }
-      }
-    }
-
+  for (const [marketKey, group] of Array.from(marketGroups.entries())) {
     markets[marketKey] = {
       ...group,
-      bestOdds,
+      bestOdds: calculateBestOdds(group.bookmakerOdds),
     };
   }
 
@@ -247,9 +230,6 @@ export async function getFullOfferByMatch(
   };
 }
 
-/**
- * Get markets grouped by type for a match
- */
 export async function getMarketsByType(
   homeTeam: string,
   awayTeam: string,
@@ -263,52 +243,46 @@ export async function getMarketsByType(
     .from("market_comparison")
     .select("*")
     .eq("match_id", matchId)
-    .eq("normalized_type", marketType)
+    .eq("market_code", marketType)
     .order("market_key");
 
   if (error) {
-    console.error("[FullOfferRepo] Query by type error:", error);
-    return [];
+    console.error("[FullOfferRepo] getMarketsByType error:", error);
+    throw new RepositoryError("Failed to get markets by type", "getMarketsByType", error);
   }
 
-  return (data || []).map((row) => ({
+  return ((data || []) as any[]).map((row) => ({
     market_key: row.market_key,
-    normalized_type: row.normalized_type,
-    normalized_group: row.normalized_group,
+    normalized_type: row.market_code,
+    category: row.category,
     param_value: row.param_value ?? undefined,
     bookmaker: row.bookmaker as PolishBookmaker,
-    market_name: row.market_name,
+    market_name: row.market_name_pl || row.market_name,
     selections: row.selections as MarketSelection[],
     event_url: row.event_url ?? undefined,
     scraped_at: row.scraped_at,
   }));
 }
 
-/**
- * Delete old full offer data
- */
 export async function deleteOldFullOfferData(
   olderThanHours: number = 24
 ): Promise<number> {
   const supabase = getSupabase();
   const cutoffDate = new Date(Date.now() - olderThanHours * 60 * 60 * 1000);
 
-  const { count, error } = await supabase
-    .from("scraped_markets")
+  const { count, error } = await (supabase as any)
+    .from("odds")
     .delete({ count: "exact" })
     .lt("scraped_at", cutoffDate.toISOString());
 
   if (error) {
-    console.error("[FullOfferRepo] Delete old data error:", error);
-    return 0;
+    console.error("[FullOfferRepo] deleteOldFullOfferData error:", error);
+    throw new RepositoryError("Failed to delete old data", "deleteOldFullOfferData", error);
   }
 
   return count || 0;
 }
 
-/**
- * Get market counts per bookmaker for a match
- */
 export async function getMarketCounts(
   homeTeam: string,
   awayTeam: string,
@@ -318,26 +292,23 @@ export async function getMarketCounts(
   const matchId = generateMatchId(homeTeam, awayTeam, leagueSlug);
 
   const { data, error } = await supabase
-    .from("latest_markets")
+    .from("latest_odds")
     .select("bookmaker")
     .eq("match_id", matchId);
 
   if (error) {
-    console.error("[FullOfferRepo] Market count error:", error);
-    return {} as Record<PolishBookmaker, number>;
+    console.error("[FullOfferRepo] getMarketCounts error:", error);
+    throw new RepositoryError("Failed to get market counts", "getMarketCounts", error);
   }
 
   const counts: Record<string, number> = {};
-  for (const row of data || []) {
+  for (const row of (data || []) as any[]) {
     counts[row.bookmaker] = (counts[row.bookmaker] || 0) + 1;
   }
 
   return counts as Record<PolishBookmaker, number>;
 }
 
-/**
- * Get available bookmakers for a match
- */
 export async function getAvailableBookmakers(
   homeTeam: string,
   awayTeam: string,
@@ -345,4 +316,12 @@ export async function getAvailableBookmakers(
 ): Promise<PolishBookmaker[]> {
   const counts = await getMarketCounts(homeTeam, awayTeam, leagueSlug);
   return Object.keys(counts) as PolishBookmaker[];
+}
+
+export function getCanonicalMarketCodes(): string[] {
+  return Array.from(CANONICAL_MARKET_CODES);
+}
+
+export function getMarketDefinition(code: string) {
+  return MARKET_BY_CODE.get(code);
 }

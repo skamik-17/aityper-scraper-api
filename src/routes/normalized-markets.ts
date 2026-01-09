@@ -95,9 +95,9 @@ router.get(
         const scrapedMarket: ScrapedMarket = {
           name: marketData.name,
           type: marketData.type, // Pass type hint for normalizer
-          groupName: marketData.group, // Pass group hint for normalizer
+          groupName: marketData.category, // Pass category as group hint
           normalizedType: marketData.type,
-          normalizedGroup: marketData.group,
+          category: marketData.category,
           marketKey: marketKey,
           paramValue: marketData.paramValue,
           selections: bookmakerData.selections,

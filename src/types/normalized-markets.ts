@@ -5,44 +5,16 @@
  * These types enable cross-bookmaker comparison and organized display in UI.
  */
 
-import type { MarketType, OverUnderLine } from "./markets.js";
-
 // ============================================================================
-// Market Category Enum (Superbet Pattern)
+// Market Category (Re-exported from normalization service)
 // ============================================================================
 
 /**
  * Market categories for UI organization (following Superbet pattern)
- * Polish labels are used for frontend display
+ * Canonical definition is in services/normalization/types.ts
  */
-export enum MarketCategory {
-  /** Match result markets - 1X2, Double Chance, Draw No Bet */
-  WYNIK_MECZU = "WYNIK_MECZU",
-
-  /** Goals markets - BTTS, Over/Under, Odd/Even, Win to Nil, Clean Sheet */
-  GOLE = "GOLE",
-
-  /** Handicap markets - Asian Handicap, European Handicap */
-  HANDICAP = "HANDICAP",
-
-  /** First half markets - HT Result, HT Goals, HT BTTS */
-  PIERWSZA_POLOWA = "PIERWSZA_POLOWA",
-
-  /** Correct Score markets */
-  DOKLADNY_WYNIK = "DOKLADNY_WYNIK",
-
-  /** Player props - goalscorers, cards, assists */
-  ZAWODNICY = "ZAWODNICY",
-
-  /** Statistics - corners, team cards, fouls */
-  STATYSTYKI = "STATYSTYKI",
-
-  /** Combination markets - Result+BTTS, Result+O/U, HT/FT */
-  KOMBINACJE = "KOMBINACJE",
-
-  /** Other markets - truly unknown/special markets */
-  INNE = "INNE",
-}
+import { MarketCategory } from "../services/normalization/types.js";
+export { MarketCategory };
 
 // ============================================================================
 // Type to Category Mapping

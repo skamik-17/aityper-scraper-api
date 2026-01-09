@@ -4,7 +4,7 @@
  */
 
 import { superbetScraper } from "../scrapers/bookmakers/index.js";
-import { normalizeMarkets } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType } from "../types/normalization.js";
 
 // The IDs we want to investigate

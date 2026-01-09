@@ -9,7 +9,7 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/markets.js";
+import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import type { RawScrapedOdds, RawScrapedMatchOdds } from "../../../types/scraper.js";
 import type {
   SwarmData,
@@ -25,7 +25,7 @@ import {
   SELECTION_CODES,
   WS_CONFIG,
 } from "./constants.js";
-import { getCanonicalTeamName } from "../../team-matcher.js";
+import { getCanonicalTeamName } from "../../../utils/team-matcher.js";
 
 /**
  * Parse team names from a Swarm game

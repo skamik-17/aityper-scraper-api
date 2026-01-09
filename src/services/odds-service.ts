@@ -1,8 +1,3 @@
-/**
- * Odds Service
- * Business logic for odds data
- */
-
 import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
 import {
@@ -11,29 +6,9 @@ import {
   getBookmakerStatus,
 } from "../repositories/odds-repository.js";
 import { getLastSuccessfulScrapeTime } from "../repositories/scraper-run-repository.js";
-import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus } from "../types/database.js";
+import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, MarketSelectionJson, ViewType, MarketCategory } from "../types/database.js";
+import { updateBestOdds } from "../utils/market-aggregation.js";
 
-interface OddsRow {
-  id: string;
-  league_slug: string;
-  home_team: string;
-  away_team: string;
-  home_team_normalized: string;
-  away_team_normalized: string;
-  bookmaker: string;
-  home_odds: number;
-  draw_odds: number;
-  away_odds: number;
-  has_no_tax_promo: boolean;
-  promo_details: string | null;
-  event_name: string | null;
-  event_url: string | null;
-  scraped_at: string;
-}
-
-/**
- * Get all latest odds grouped by match
- */
 export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Promise<{
   matches: MatchOdds[];
   lastUpdated: string | null;
@@ -42,53 +17,49 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
   const oddsData = await getLatestOdds(leagueSlug);
   const lastScrape = await getLastSuccessfulScrapeTime();
 
-  // Group odds by match
-  const matchMap = new Map<string, { match: Partial<MatchOdds>; odds: OddsEntry[] }>();
+  const matchMap = new Map<string, MatchOdds>();
 
-  for (const row of oddsData as OddsRow[]) {
-    const matchKey = `${row.home_team_normalized}:${row.away_team_normalized}`;
+  for (const row of oddsData) {
+    const matchKey = row.match_id;
 
     if (!matchMap.has(matchKey)) {
       matchMap.set(matchKey, {
-        match: {
-          id: matchKey.replace(/:/g, "-vs-"),
-          homeTeam: row.home_team,
-          awayTeam: row.away_team,
-          homeTeamNormalized: row.home_team_normalized,
-          awayTeamNormalized: row.away_team_normalized,
-        },
-        odds: [],
+        matchId: matchKey,
+        homeTeam: row.home_team,
+        awayTeam: row.away_team,
+        leagueSlug: row.league_slug,
+        markets: {},
       });
     }
 
-    matchMap.get(matchKey)!.odds.push({
-      bookmaker: row.bookmaker as PolishBookmaker,
-      homeOdds: row.home_odds,
-      drawOdds: row.draw_odds,
-      awayOdds: row.away_odds,
-      hasNoTaxPromo: row.has_no_tax_promo,
-      promoDetails: row.promo_details,
+    const match = matchMap.get(matchKey)!;
+    const marketKey = row.market_key;
+
+    if (!match.markets[marketKey]) {
+      match.markets[marketKey] = {
+        code: row.market_code,
+        namePl: row.market_name_pl,
+        viewType: row.view_type,
+        category: row.category,
+        paramValue: row.param_value,
+        bookmakerOdds: {},
+        bestOdds: {},
+      };
+    }
+
+    const market = match.markets[marketKey];
+    market.bookmakerOdds[row.bookmaker] = {
+      selections: row.selections,
       eventUrl: row.event_url,
       scrapedAt: row.scraped_at,
-    });
+    };
+
+    updateBestOdds(market.bestOdds, row.bookmaker, row.selections);
   }
 
-  // Convert to MatchOdds array with best odds
-  const matches: MatchOdds[] = [];
-
-  for (const [, { match, odds }] of matchMap) {
-    const bestOdds = calculateBestOdds(odds);
-    matches.push({
-      ...(match as MatchOdds),
-      odds,
-      bestOdds,
-    });
-  }
-
-  // Determine bookmaker status
+  const matches = Array.from(matchMap.values());
   const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
 
-  // Safely convert lastScrape to ISO string
   let lastUpdated: string | null = null;
   if (lastScrape && !isNaN(lastScrape.getTime())) {
     lastUpdated = lastScrape.toISOString();
@@ -101,9 +72,6 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
   };
 }
 
-/**
- * Get odds for a specific match
- */
 export async function getOddsForMatch(
   homeTeam: string,
   awayTeam: string,
@@ -115,70 +83,43 @@ export async function getOddsForMatch(
     return null;
   }
 
-  const firstRow = oddsData[0] as OddsRow;
-  const odds: OddsEntry[] = oddsData.map((row: OddsRow) => ({
-    bookmaker: row.bookmaker as PolishBookmaker,
-    homeOdds: row.home_odds,
-    drawOdds: row.draw_odds,
-    awayOdds: row.away_odds,
-    hasNoTaxPromo: row.has_no_tax_promo,
-    promoDetails: row.promo_details,
-    eventUrl: row.event_url,
-    scrapedAt: row.scraped_at,
-  }));
-
-  const bestOdds = calculateBestOdds(odds);
-
-  return {
-    id: `${firstRow.home_team_normalized}-vs-${firstRow.away_team_normalized}`,
+  const firstRow = oddsData[0];
+  const match: MatchOdds = {
+    matchId: firstRow.match_id,
     homeTeam: firstRow.home_team,
     awayTeam: firstRow.away_team,
-    homeTeamNormalized: firstRow.home_team_normalized,
-    awayTeamNormalized: firstRow.away_team_normalized,
-    odds,
-    bestOdds,
-  };
-}
-
-/**
- * Calculate best odds for each outcome
- */
-function calculateBestOdds(odds: OddsEntry[]): BestOdds {
-  let bestHome: { bookmaker: PolishBookmaker; odds: number } = {
-    bookmaker: "sts",
-    odds: 0,
-  };
-  let bestDraw: { bookmaker: PolishBookmaker; odds: number } = {
-    bookmaker: "sts",
-    odds: 0,
-  };
-  let bestAway: { bookmaker: PolishBookmaker; odds: number } = {
-    bookmaker: "sts",
-    odds: 0,
+    leagueSlug: firstRow.league_slug,
+    markets: {},
   };
 
-  for (const entry of odds) {
-    if (entry.homeOdds > bestHome.odds) {
-      bestHome = { bookmaker: entry.bookmaker, odds: entry.homeOdds };
+  for (const row of oddsData) {
+    const marketKey = row.market_key;
+
+    if (!match.markets[marketKey]) {
+      match.markets[marketKey] = {
+        code: row.market_code,
+        namePl: row.market_name_pl,
+        viewType: row.view_type,
+        category: row.category,
+        paramValue: row.param_value,
+        bookmakerOdds: {},
+        bestOdds: {},
+      };
     }
-    if (entry.drawOdds > bestDraw.odds) {
-      bestDraw = { bookmaker: entry.bookmaker, odds: entry.drawOdds };
-    }
-    if (entry.awayOdds > bestAway.odds) {
-      bestAway = { bookmaker: entry.bookmaker, odds: entry.awayOdds };
-    }
+
+    const market = match.markets[marketKey];
+    market.bookmakerOdds[row.bookmaker] = {
+      selections: row.selections,
+      eventUrl: row.event_url,
+      scrapedAt: row.scraped_at,
+    };
+
+    updateBestOdds(market.bestOdds, row.bookmaker, row.selections);
   }
 
-  return {
-    home: bestHome,
-    draw: bestDraw,
-    away: bestAway,
-  };
+  return match;
 }
 
-/**
- * Get bookmaker status map
- */
 async function getBookmakerStatusMap(
   leagueSlug: string
 ): Promise<Record<PolishBookmaker, BookmakerStatus>> {
@@ -187,7 +128,7 @@ async function getBookmakerStatusMap(
     BookmakerStatus
   >;
   const now = new Date();
-  const staleThreshold = 60 * 60 * 1000; // 1 hour
+  const staleThreshold = 60 * 60 * 1000;
 
   try {
     const statusMap = await getBookmakerStatus(leagueSlug);
@@ -202,7 +143,6 @@ async function getBookmakerStatusMap(
       }
     }
   } catch {
-    // If error, mark all as stale
     for (const bookmaker of CONFIG.BOOKMAKERS) {
       status[bookmaker] = "stale";
     }
@@ -211,9 +151,6 @@ async function getBookmakerStatusMap(
   return status;
 }
 
-/**
- * Calculate next update time
- */
 export function getNextUpdateTime(): string {
   const now = new Date();
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60 * 1000;

@@ -7,7 +7,7 @@
 
 import { describe, it, expect } from "vitest";
 import { matchPattern, matchPatterns, extractParameter, matchesMarketType, getMatchingTypes } from "../../core/pattern-engine.js";
-import { MARKET_REGISTRY, MAIN_MARKETS, GOALS_MARKETS, HANDICAP_MARKETS, HALF_TIME_MARKETS, CORRECT_SCORE_MARKETS, PLAYER_MARKETS, STATISTICS_MARKETS, COMBINATION_MARKETS } from "../../core/market-registry.js";
+import { MARKET_REGISTRY } from "../../../../data/market-registry.js";
 import { MarketCategory } from "../../types.js";
 import { POLISH_MARKET_SAMPLES, ENGLISH_MARKET_SAMPLES } from "../fixtures/market-samples.js";
 import { PARAMETER_VALUES } from "../helpers/test-helpers.js";
@@ -18,13 +18,13 @@ import { PARAMETER_VALUES } from "../helpers/test-helpers.js";
 
 describe("Pattern Engine - Main Markets", () => {
   describe("Match Winner", () => {
-    const matchWinnerDef = MARKET_REGISTRY.find((m) => m.id === "match-winner")!;
+    const matchWinnerDef = MARKET_REGISTRY.find((m) => m.slug === "match-winner")!;
 
     test("should match Polish variations", () => {
       const variations = ["Wynik meczu", "wynik mecz", "WYNIK MECZ"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("match-winner");
+        expect(match?.definition.slug).toBe("match-winner");
         expect(match?.definition.category).toBe(MarketCategory.WYNIK_MECZU);
       });
     });
@@ -33,20 +33,20 @@ describe("Pattern Engine - Main Markets", () => {
       const variations = ["Match Result", "Match Winner", "1X2", "1x2"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("match-winner");
+        expect(match?.definition.slug).toBe("match-winner");
       });
     });
 
     test("should match Końcowy wynik", () => {
       const match = matchPattern("Końcowy wynik", MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("match-winner");
+      expect(match?.definition.slug).toBe("match-winner");
     });
 
     test("should not match similar but different markets", () => {
       const notMatch = ["Wynik 1. połowy", "Half Time Result", "Dokładny wynik"];
       notMatch.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).not.toBe("match-winner");
+        expect(match?.definition.slug).not.toBe("match-winner");
       });
     });
   });
@@ -56,7 +56,7 @@ describe("Pattern Engine - Main Markets", () => {
       const variations = ["Podwójna szansa", "podwójna szans", "Podwójna Szansa"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("double-chance");
+        expect(match?.definition.slug).toBe("double-chance");
         expect(match?.definition.category).toBe(MarketCategory.WYNIK_MECZU);
       });
     });
@@ -65,7 +65,7 @@ describe("Pattern Engine - Main Markets", () => {
       const variations = ["Double Chance", "double chance"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("double-chance");
+        expect(match?.definition.slug).toBe("double-chance");
       });
     });
   });
@@ -75,7 +75,7 @@ describe("Pattern Engine - Main Markets", () => {
       const variations = ["Remis = zwrot", "remis = zwrot", "DNB"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("draw-no-bet");
+        expect(match?.definition.slug).toBe("draw-no-bet");
       });
     });
 
@@ -83,7 +83,7 @@ describe("Pattern Engine - Main Markets", () => {
       const variations = ["Draw No Bet", "draw no bet", "DNB"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("draw-no-bet");
+        expect(match?.definition.slug).toBe("draw-no-bet");
       });
     });
   });
@@ -106,7 +106,7 @@ describe("Pattern Engine - Goals Markets", () => {
 
       testCases.forEach(({ name, expectedParam }) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("total-goals");
+        expect(match?.definition.slug).toBe("total-goals");
         expect(match?.definition.category).toBe(MarketCategory.GOLE);
         expect(match?.param).toBe(expectedParam);
       });
@@ -120,7 +120,7 @@ describe("Pattern Engine - Goals Markets", () => {
 
       testCases.forEach(({ name, expectedParam }) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("total-goals");
+        expect(match?.definition.slug).toBe("total-goals");
         expect(match?.param).toBe(expectedParam);
       });
     });
@@ -151,7 +151,7 @@ describe("Pattern Engine - Goals Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("btts");
+        expect(match?.definition.slug).toBe("btts");
         expect(match?.definition.category).toBe(MarketCategory.GOLE);
       });
     });
@@ -166,7 +166,7 @@ describe("Pattern Engine - Goals Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("btts");
+        expect(match?.definition.slug).toBe("btts");
       });
     });
 
@@ -178,7 +178,7 @@ describe("Pattern Engine - Goals Markets", () => {
       ];
       notMatch.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).not.toBe("btts");
+        expect(match?.definition.slug).not.toBe("btts");
       });
     });
   });
@@ -188,7 +188,7 @@ describe("Pattern Engine - Goals Markets", () => {
       const variations = ["Wygrana do zera", "Win to Nil"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("win-to-nil");
+        expect(match?.definition.slug).toBe("win-to-nil");
         expect(match?.definition.category).toBe(MarketCategory.GOLE);
       });
     });
@@ -199,7 +199,7 @@ describe("Pattern Engine - Goals Markets", () => {
       const variations = ["Czyste konto", "Clean Sheet"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("clean-sheet");
+        expect(match?.definition.slug).toBe("clean-sheet");
         expect(match?.definition.category).toBe(MarketCategory.GOLE);
       });
     });
@@ -214,7 +214,7 @@ describe("Pattern Engine - Goals Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("odd-even-goals");
+        expect(match?.definition.slug).toBe("odd-even-goals");
         expect(match?.definition.category).toBe(MarketCategory.GOLE);
       });
     });
@@ -223,7 +223,7 @@ describe("Pattern Engine - Goals Markets", () => {
       const variations = ["Odd/Even", "Odd / Even"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("odd-even-goals");
+        expect(match?.definition.slug).toBe("odd-even-goals");
       });
     });
   });
@@ -237,7 +237,7 @@ describe("Pattern Engine - Handicap Markets", () => {
   describe("Asian Handicap", () => {
     test("should match Polish variations", () => {
       const match = matchPattern("Handicap azjatycki", MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("asian-handicap");
+      expect(match?.definition.slug).toBe("asian-handicap");
       expect(match?.definition.category).toBe(MarketCategory.HANDICAP);
     });
 
@@ -245,7 +245,7 @@ describe("Pattern Engine - Handicap Markets", () => {
       const variations = ["Asian Handicap", "asian handicap"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("asian-handicap");
+        expect(match?.definition.slug).toBe("asian-handicap");
       });
     });
   });
@@ -253,7 +253,7 @@ describe("Pattern Engine - Handicap Markets", () => {
   describe("European Handicap", () => {
     test("should match Polish variations", () => {
       const match = matchPattern("Handicap europejski", MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("european-handicap");
+      expect(match?.definition.slug).toBe("european-handicap");
       expect(match?.definition.category).toBe(MarketCategory.HANDICAP);
     });
 
@@ -261,7 +261,7 @@ describe("Pattern Engine - Handicap Markets", () => {
       const variations = ["European Handicap", "european handicap"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("european-handicap");
+        expect(match?.definition.slug).toBe("european-handicap");
       });
     });
   });
@@ -281,7 +281,7 @@ describe("Pattern Engine - Half-Time Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("half-time-result");
+        expect(match?.definition.slug).toBe("half-time-result");
         expect(match?.definition.category).toBe(MarketCategory.PIERWSZA_POLOWA);
       });
     });
@@ -290,7 +290,7 @@ describe("Pattern Engine - Half-Time Markets", () => {
       const variations = ["Half Time Result"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("half-time-result");
+        expect(match?.definition.slug).toBe("half-time-result");
       });
     });
   });
@@ -298,7 +298,7 @@ describe("Pattern Engine - Half-Time Markets", () => {
   describe("Half Time Total Goals", () => {
     test("should match with parameter", () => {
       const match = matchPattern("1. połowa liczba goli 1.5", MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("half-time-total-goals");
+      expect(match?.definition.slug).toBe("half-time-total-goals");
       // Note: Parameter extraction extracts first number which is "1" from "1. połowa"
       // This is a known limitation of the current extractParam implementation
     });
@@ -311,7 +311,7 @@ describe("Pattern Engine - Half-Time Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("half-time-btts");
+        expect(match?.definition.slug).toBe("half-time-btts");
         expect(match?.definition.category).toBe(MarketCategory.PIERWSZA_POLOWA);
       });
     });
@@ -327,7 +327,7 @@ describe("Pattern Engine - Correct Score", () => {
     const variations = ["Dokładny wynik", "dokładn wynik"];
     variations.forEach((name) => {
       const match = matchPattern(name, MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("correct-score");
+      expect(match?.definition.slug).toBe("correct-score");
       expect(match?.definition.category).toBe(MarketCategory.DOKLADNY_WYNIK);
     });
   });
@@ -336,7 +336,7 @@ describe("Pattern Engine - Correct Score", () => {
     const variations = ["Correct Score", "Exact Score", "correct score"];
     variations.forEach((name) => {
       const match = matchPattern(name, MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("correct-score");
+      expect(match?.definition.slug).toBe("correct-score");
     });
   });
 });
@@ -355,7 +355,7 @@ describe("Pattern Engine - Player Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("goalscorer-anytime");
+        expect(match?.definition.slug).toBe("goalscorer-anytime");
         expect(match?.definition.category).toBe(MarketCategory.ZAWODNICY);
       });
     });
@@ -369,7 +369,7 @@ describe("Pattern Engine - Player Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("goalscorer-first");
+        expect(match?.definition.slug).toBe("goalscorer-first");
         expect(match?.definition.category).toBe(MarketCategory.ZAWODNICY);
       });
     });
@@ -382,7 +382,7 @@ describe("Pattern Engine - Player Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("goalscorer-last");
+        expect(match?.definition.slug).toBe("goalscorer-last");
         expect(match?.definition.category).toBe(MarketCategory.ZAWODNICY);
       });
     });
@@ -395,7 +395,7 @@ describe("Pattern Engine - Player Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("player-shots");
+        expect(match?.definition.slug).toBe("player-shots");
         expect(match?.definition.category).toBe(MarketCategory.ZAWODNICY);
       });
     });
@@ -408,7 +408,7 @@ describe("Pattern Engine - Player Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("player-cards");
+        expect(match?.definition.slug).toBe("player-cards");
         expect(match?.definition.category).toBe(MarketCategory.ZAWODNICY);
       });
     });
@@ -429,7 +429,7 @@ describe("Pattern Engine - Statistics Markets", () => {
 
       testCases.forEach(({ name, expectedParam }) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("corners-total");
+        expect(match?.definition.slug).toBe("corners-total");
         expect(match?.param).toBe(expectedParam);
         expect(match?.definition.category).toBe(MarketCategory.STATYSTYKI);
       });
@@ -439,7 +439,7 @@ describe("Pattern Engine - Statistics Markets", () => {
   describe("Cards Total", () => {
     test("should match with parameter", () => {
       const match = matchPattern("Kartki 5.5", MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("cards-total");
+      expect(match?.definition.slug).toBe("cards-total");
       expect(match?.param).toBe("5.5");
       expect(match?.definition.category).toBe(MarketCategory.STATYSTYKI);
     });
@@ -450,7 +450,7 @@ describe("Pattern Engine - Statistics Markets", () => {
       const variations = ["Faule"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("fouls-total");
+        expect(match?.definition.slug).toBe("fouls-total");
         expect(match?.definition.category).toBe(MarketCategory.STATYSTYKI);
       });
     });
@@ -461,7 +461,7 @@ describe("Pattern Engine - Statistics Markets", () => {
       const variations = ["Spalone"];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("offsides-total");
+        expect(match?.definition.slug).toBe("offsides-total");
         expect(match?.definition.category).toBe(MarketCategory.STATYSTYKI);
       });
     });
@@ -481,7 +481,7 @@ describe("Pattern Engine - Combination Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("result-and-btts");
+        expect(match?.definition.slug).toBe("result-and-btts");
         expect(match?.definition.category).toBe(MarketCategory.KOMBINACJE);
       });
     });
@@ -497,7 +497,7 @@ describe("Pattern Engine - Combination Markets", () => {
 
       testCases.forEach(({ name }) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("result-and-total");
+        expect(match?.definition.slug).toBe("result-and-total");
         expect(match?.definition.category).toBe(MarketCategory.KOMBINACJE);
       });
     });
@@ -510,7 +510,7 @@ describe("Pattern Engine - Combination Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("halftime-fulltime");
+        expect(match?.definition.slug).toBe("halftime-fulltime");
         expect(match?.definition.category).toBe(MarketCategory.KOMBINACJE);
       });
     });
@@ -523,7 +523,7 @@ describe("Pattern Engine - Combination Markets", () => {
       ];
       variations.forEach((name) => {
         const match = matchPattern(name, MARKET_REGISTRY);
-        expect(match?.definition.id).toBe("double-result");
+        expect(match?.definition.slug).toBe("double-result");
         expect(match?.definition.category).toBe(MarketCategory.KOMBINACJE);
       });
     });
@@ -538,11 +538,11 @@ describe("Pattern Engine - Pattern Priority", () => {
   test("should match more specific patterns first", () => {
     // "half time result" should match before "match winner" when appropriate
     const htResult = matchPattern("Wynik 1. połowy", MARKET_REGISTRY);
-    expect(htResult?.definition.id).toBe("half-time-result");
+    expect(htResult?.definition.slug).toBe("half-time-result");
 
     // "btts" should match
     const btts = matchPattern("Obie strzelą", MARKET_REGISTRY);
-    expect(btts?.definition.id).toBe("btts");
+    expect(btts?.definition.slug).toBe("btts");
   });
 
   test("should not confuse similar markets", () => {
@@ -554,7 +554,7 @@ describe("Pattern Engine - Pattern Priority", () => {
 
     testCases.forEach(({ name, shouldNotMatch }) => {
       const match = matchPattern(name, MARKET_REGISTRY);
-      expect(match?.definition.id).not.toBe(shouldNotMatch);
+      expect(match?.definition.slug).not.toBe(shouldNotMatch);
     });
   });
 });
@@ -582,7 +582,7 @@ describe("Pattern Engine - Parameter Extraction", () => {
     // The handicap value is typically stored separately in the market data structure
     // This test verifies the pattern matches correctly
     const match = matchPattern("Handicap azjatycki", MARKET_REGISTRY);
-    expect(match?.definition.id).toBe("asian-handicap");
+    expect(match?.definition.slug).toBe("asian-handicap");
     expect(match?.definition.hasParameter).toBe(true);
     // Parameter extraction from market name string is not implemented for handicap markets
   });
@@ -603,7 +603,7 @@ describe("Pattern Engine - Parameter Extraction", () => {
     // European handicap patterns expect integer parameters
     const match = matchPattern("Handicap europejski 0:1", MARKET_REGISTRY);
     // Should match even without extracting the integer parameter
-    expect(match?.definition.id).toBe("european-handicap");
+    expect(match?.definition.slug).toBe("european-handicap");
   });
 });
 
@@ -623,10 +623,10 @@ describe("Pattern Engine - Batch Matching", () => {
 
     const results = matchPatterns(marketNames, MARKET_REGISTRY);
 
-    expect(results[0]?.definition.id).toBe("match-winner");
-    expect(results[1]?.definition.id).toBe("btts");
-    expect(results[2]?.definition.id).toBe("total-goals");
-    expect(results[3]?.definition.id).toBe("asian-handicap");
+    expect(results[0]?.definition.slug).toBe("match-winner");
+    expect(results[1]?.definition.slug).toBe("btts");
+    expect(results[2]?.definition.slug).toBe("total-goals");
+    expect(results[3]?.definition.slug).toBe("asian-handicap");
     expect(results[4]).toBeNull();
   });
 
@@ -640,9 +640,9 @@ describe("Pattern Engine - Batch Matching", () => {
     const results = matchPatterns(marketNames, MARKET_REGISTRY);
 
     expect(results).toHaveLength(3);
-    expect(results[0]?.definition.id).toBe("match-winner");
-    expect(results[1]?.definition.id).toBe("btts");
-    expect(results[2]?.definition.id).toBe("total-goals");
+    expect(results[0]?.definition.slug).toBe("match-winner");
+    expect(results[1]?.definition.slug).toBe("btts");
+    expect(results[2]?.definition.slug).toBe("total-goals");
   });
 });
 
@@ -688,7 +688,7 @@ describe("Pattern Engine - Case Insensitivity", () => {
 
     variations.forEach((name) => {
       const match = matchPattern(name, MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("match-winner");
+      expect(match?.definition.slug).toBe("match-winner");
     });
   });
 });
@@ -708,7 +708,7 @@ describe("Pattern Engine - Whitespace Handling", () => {
 
     variations.forEach((name) => {
       const match = matchPattern(name, MARKET_REGISTRY);
-      expect(match?.definition.id).toBe("match-winner");
+      expect(match?.definition.slug).toBe("match-winner");
     });
   });
 });

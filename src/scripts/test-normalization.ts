@@ -4,8 +4,9 @@
  */
 
 import { superbetScraper } from "../scrapers/bookmakers/index.js";
-import { normalizeMarkets } from "../services/market-normalizer.js";
+import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
 import { NormalizedMarketType, NormalizedSelection } from "../types/normalization.js";
+import type { ScrapedMarket } from "../types/full-offer.js";
 
 async function testNormalization() {
     console.log("=".repeat(60));
@@ -25,7 +26,7 @@ async function testNormalization() {
         console.log(`Total markets: ${match.markets.length}`);
 
         // Apply normalization
-        const normalizedMarkets = normalizeMarkets(match.markets);
+        const normalizedMarkets = normalizeMarketsForBookmaker(match.markets, "superbet", match.homeTeam, match.awayTeam);
 
         // Statistics
         let withMarketKey = 0;

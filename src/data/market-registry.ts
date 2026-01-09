@@ -1356,8 +1356,9 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /match\s*result.*btts/iu,
     ],
     bookmakerData: {
-      // Market 49 = "Wynik końcowy i obie drużyny strzelą gola", Market 50 = standard
-      sts: { idMappings: [49, 50] },
+      // NOTE: Market 49/50 are BTTS+O/U, not Result+BTTS - no STS mapping currently
+      // Real Result+BTTS should have selections like "1 i tak", "X i nie", etc.
+      sts: { idMappings: [] },
     },
   },
   {
@@ -1382,12 +1383,9 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /match\s*result.*(over|under|total)/iu,
     ],
     bookmakerData: {
-      sts: {
-        idMappings: [
-          51, 99, 807, 808, 809, 810, 811, 812, 813, 814, 815, 816,
-          817, 818,
-        ],
-      },
+      // Market 51/99 = Result + Total combo
+      // NOTE: Markets 807-818 are complex multi-goal, not result+total
+      sts: { idMappings: [51, 99] },
     },
   },
   {
@@ -1413,8 +1411,9 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
       /^wynik\s*1\.?\s*i\s*2\.?\s*po[łl]/iu,
     ],
     bookmakerData: {
-      // Market 1012 = "Połowa/Koniec", Market 58 = "1. połowa / wynik końcowy"
-      sts: { idMappings: [1012, 58] },
+      // Market 58 = simple HT/FT (9 outcomes)
+      // NOTE: Market 1012 is HT/FT + O/U combo - NOT simple HT/FT!
+      sts: { idMappings: [58] },
     },
   },
   {

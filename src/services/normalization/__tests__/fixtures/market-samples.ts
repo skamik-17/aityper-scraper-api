@@ -324,41 +324,63 @@ export const TEST_TEAMS = {
 export const STS_ID_MAPPINGS: Array<{ id: number; expectedDefId: string }> = [
   // Match Winner
   { id: 1, expectedDefId: "match-winner" },
-  { id: 40, expectedDefId: "match-winner" },
-  { id: 41, expectedDefId: "match-winner" },
-  { id: 42, expectedDefId: "match-winner" },
-  { id: 63, expectedDefId: "match-winner" },
-  { id: 64, expectedDefId: "match-winner" },
-  { id: 65, expectedDefId: "match-winner" },
-  { id: 66, expectedDefId: "match-winner" },
-  { id: 71, expectedDefId: "match-winner" },
-  { id: 94, expectedDefId: "match-winner" },
-  { id: 102, expectedDefId: "match-winner" },
-  { id: 106, expectedDefId: "match-winner" },
-  { id: 119, expectedDefId: "match-winner" },
-  { id: 1244, expectedDefId: "match-winner" },
+
+  // Half-time / Second-half results
+  { id: 71, expectedDefId: "half-time-result" },
+  { id: 102, expectedDefId: "second-half-result" },
 
   // Double Chance
   { id: 10, expectedDefId: "double-chance" },
+  { id: 74, expectedDefId: "double-chance" },
+  { id: 104, expectedDefId: "double-chance" },
 
   // Draw No Bet
   { id: 4, expectedDefId: "draw-no-bet" },
-  { id: 20, expectedDefId: "draw-no-bet" },
-  { id: 77, expectedDefId: "draw-no-bet" },
+  { id: 11, expectedDefId: "draw-no-bet" },
+
+  // Asian Handicap
+  { id: 20, expectedDefId: "asian-handicap" },
+  { id: 22, expectedDefId: "asian-handicap" },
+  { id: 77, expectedDefId: "asian-handicap" },
+  { id: 107, expectedDefId: "asian-handicap" },
+
+  // European Handicap
+  { id: 14, expectedDefId: "european-handicap" },
+  { id: 76, expectedDefId: "european-handicap" },
+  { id: 106, expectedDefId: "european-handicap" },
+
+  // Odd/Even Goals
+  { id: 40, expectedDefId: "odd-even-goals" },
+  { id: 41, expectedDefId: "odd-even-goals" },
+  { id: 42, expectedDefId: "odd-even-goals" },
 
   // Total Goals
   { id: 25, expectedDefId: "total-goals" },
-  { id: 8, expectedDefId: "total-goals" },
-  { id: 11, expectedDefId: "total-goals" },
   { id: 23, expectedDefId: "total-goals" },
   { id: 28, expectedDefId: "total-goals" },
-  { id: 73, expectedDefId: "total-goals" },
-  { id: 74, expectedDefId: "total-goals" },
-  { id: 75, expectedDefId: "total-goals" },
+  { id: 31, expectedDefId: "total-goals" },
   { id: 80, expectedDefId: "total-goals" },
-  { id: 103, expectedDefId: "total-goals" },
-  { id: 104, expectedDefId: "total-goals" },
-  { id: 105, expectedDefId: "total-goals" },
+
+  // Half-time Total Goals
+  { id: 82, expectedDefId: "half-time-total-goals" },
+  { id: 85, expectedDefId: "half-time-total-goals" },
+  { id: 88, expectedDefId: "half-time-total-goals" },
+
+  // Second-half Total Goals
+  { id: 112, expectedDefId: "second-half-total-goals" },
+  { id: 115, expectedDefId: "second-half-total-goals" },
+  { id: 118, expectedDefId: "second-half-total-goals" },
+
+  // First Team To Score
+  { id: 8, expectedDefId: "first-team-to-score" },
+  { id: 73, expectedDefId: "first-team-to-score" },
+  { id: 103, expectedDefId: "first-team-to-score" },
+
+  // Goal Range / Exact Goals
+  { id: 33, expectedDefId: "goal-range" },
+  { id: 35, expectedDefId: "goal-range" },
+  { id: 36, expectedDefId: "goal-range" },
+  { id: 119, expectedDefId: "goal-range" },
 
   // BTTS
   { id: 43, expectedDefId: "btts" },
@@ -373,12 +395,8 @@ export const STS_ID_MAPPINGS: Array<{ id: number; expectedDefId: string }> = [
   { id: 69, expectedDefId: "btts" },
   { id: 70, expectedDefId: "btts" },
   { id: 95, expectedDefId: "btts" },
-  { id: 107, expectedDefId: "btts" },
   { id: 109, expectedDefId: "btts" },
   { id: 110, expectedDefId: "btts" },
-  { id: 112, expectedDefId: "btts" },
-  { id: 115, expectedDefId: "btts" },
-  { id: 118, expectedDefId: "btts" },
   { id: 120, expectedDefId: "btts" },
   { id: 121, expectedDefId: "btts" },
   { id: 1232, expectedDefId: "btts" },

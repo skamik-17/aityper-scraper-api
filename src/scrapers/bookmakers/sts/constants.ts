@@ -63,28 +63,64 @@ export const LEAGUE_CONFIG: Record<
 /**
  * STS Market IDs from WebSocket data structure
  * These correspond to m.{marketId} in the P.{assocKey}.m structure
+ *
+ * VERIFIED against actual STS WebSocket data (2026-01-09)
  */
 export const MARKET_IDS = {
-  // Main markets
-  MATCH_RESULT_1X2: 1, // 1X2 - Match Result (1, X, 2)
-  DOUBLE_CHANCE: 10, // Double Chance (1X, X2, 12)
+  // ==========================================================================
+  // MAIN MARKETS
+  // ==========================================================================
+  MATCH_RESULT_1X2: 1, // "Mecz" - Match Result (1, X, 2)
+  DOUBLE_CHANCE: 10, // "Podwójna szansa" - Double Chance (1X, X2, 12)
+  DRAW_NO_BET: 11, // "Zakład bez remisu" - Draw No Bet
 
-  // Goals markets
-  BTTS: 43, // Both Teams To Score (tak/nie)
-  TOTAL_GOALS: 25, // Over/Under Total Goals
+  // ==========================================================================
+  // GOALS MARKETS
+  // ==========================================================================
+  BTTS: 43, // "Obie drużyny - strzelą gola" - Both Teams To Score (tak/nie)
+  TOTAL_GOALS: 25, // "Liczba goli" - Over/Under Total Goals
+  FIRST_GOAL: 8, // "1. gol" - First Goal (which team scores first)
+  LAST_GOAL: 9, // "Ostatni gol" - Last Goal (which team scores last)
+  WIN_TO_NIL_HOME: 47, // "1. drużyna - wygra do zera"
+  WIN_TO_NIL_AWAY: 48, // "2. drużyna - wygra do zera"
+  FIRST_TEAM_TO_SCORE: 44, // "Która drużyna strzeli gola"
 
-  // Other markets (available in fixture-specific data)
-  HALF_TIME_RESULT: 71, // 1st Half Result (was incorrectly 5)
-  HALF_TIME_TOTAL: 82, // 1st Half Total Goals Over/Under (was incorrectly 26)
-  CORRECT_SCORE: 283, // Correct Score (was incorrectly 9)
-  DRAW_NO_BET: 11, // Draw No Bet (Zakład bez remisu)
-  LAST_GOAL: 9, // Last Goal (Ostatni gol) - NOT Correct Score!
-  FIRST_GOAL: 8, // First Goal (1. gol)
-  FIRST_GOALSCORER: 52, // Player to score first goal
-  ANYTIME_GOALSCORER: 54, // Player to score anytime
-  HALFTIME_FULLTIME: 58, // HT/FT Result
-  FIRST_HALF_CORRECT_SCORE: 101, // 1st Half Correct Score
-  SECOND_HALF_CORRECT_SCORE: 124, // 2nd Half Correct Score
+  // ==========================================================================
+  // HALF TIME MARKETS
+  // ==========================================================================
+  HALF_TIME_RESULT: 71, // "1. połowa" - 1st Half Result
+  HALF_TIME_TOTAL: 82, // "1. połowa - liczba goli" - 1st Half Total Goals
+  HALF_TIME_BTTS: 95, // "1. połowa - obie drużyny - strzelą gola"
+  HALF_TIME_DOUBLE_CHANCE: 74, // "1. połowa - podwójna szansa"
+  HALF_TIME_DRAW_NO_BET: 75, // "1. połowa - zakład bez remisu"
+
+  // ==========================================================================
+  // SECOND HALF MARKETS
+  // ==========================================================================
+  SECOND_HALF_RESULT: 102, // "2. połowa" - 2nd Half Result
+  SECOND_HALF_TOTAL: 112, // "2. połowa - liczba goli"
+  SECOND_HALF_BTTS: 121, // "2. połowa - obie drużyny - strzelą gola"
+
+  // ==========================================================================
+  // CORRECT SCORE
+  // ==========================================================================
+  CORRECT_SCORE: 283, // "Dokładny wynik" - Correct Score
+  FIRST_HALF_CORRECT_SCORE: 101, // "1. połowa - dokładny wynik"
+  SECOND_HALF_CORRECT_SCORE: 124, // "2. połowa - dokładny wynik"
+
+  // ==========================================================================
+  // GOALSCORER MARKETS
+  // ==========================================================================
+  FIRST_GOALSCORER: 52, // "Zawodnik - strzeli 1. gola"
+  LAST_GOALSCORER: 53, // "Zawodnik - strzeli ostatniego gola"
+  ANYTIME_GOALSCORER: 54, // "Zawodnik - strzeli gola"
+
+  // ==========================================================================
+  // COMBINATION MARKETS
+  // ==========================================================================
+  HALFTIME_FULLTIME: 58, // "1. połowa / wynik końcowy" - HT/FT Result
+  RESULT_AND_BTTS: 49, // "Wynik końcowy i obie drużyny - strzelą gola"
+  RESULT_AND_TOTAL: 51, // "Wynik końcowy i liczba goli"
 } as const;
 
 /**
@@ -213,7 +249,7 @@ export const REQUEST_TIMEOUT = 30000;
 /**
  * WebSocket data wait timeout in milliseconds
  */
-export const WS_DATA_TIMEOUT = 8000;
+export const WS_DATA_TIMEOUT = 12000;
 
 /**
  * Polling interval for WebSocket data in milliseconds

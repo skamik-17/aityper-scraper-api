@@ -29,29 +29,46 @@ export const stsAdapter: BookmakerAdapter = {
     // ========================================================================
     // MAIN MARKETS (WYNIK_MECZU)
     // ========================================================================
-    // Match Winner - 1X2
+    // Match Winner - 1X2 (ONLY market 1 is real match winner!)
     [1, "match-winner"],
-    [40, "match-winner"],
-    [41, "match-winner"],
-    [42, "match-winner"],
-    [63, "match-winner"],
-    [64, "match-winner"],
-    [65, "match-winner"],
-    [66, "match-winner"],
-    [71, "match-winner"],
-    [94, "match-winner"],
-    [102, "match-winner"],
-    [106, "match-winner"],
-    [119, "match-winner"],
-    [1244, "match-winner"],
+
+    // Half Time Result (1. połowa)
+    [71, "half-time-result"],
+
+    // Second Half Result (2. połowa)
+    [102, "other"], // TODO: Add second-half-result market type
+
+    // Odd/Even Goals (Suma goli - parzysta/nieparzysta)
+    [40, "other"], // Suma goli (odd/even)
+    [41, "other"], // 1. drużyna - suma goli
+    [42, "other"], // 2. drużyna - suma goli
+    [94, "other"], // 1. połowa - suma goli
+    [120, "other"], // 2. połowa - suma goli
+
+    // Half with more goals (Połowa z większą liczbą goli)
+    [63, "other"], // Połowa z większą liczbą goli
+    [64, "other"], // 1. drużyna - połowa z większą liczbą goli
+    [65, "other"], // 2. drużyna - połowa z większą liczbą goli
+
+    // Both halves BTTS combos
+    [66, "other"], // 1. połowa / 2. połowa - obie drużyny - strzelą gola
+
+    // 2nd half European Handicap
+    [106, "european-handicap"], // 2. połowa - handicap 1X2
+
+    // 2nd half exact goals (not match-winner!)
+    [119, "other"], // 2. połowa - dokładna liczba goli
+
+    // 1st half OR final result (NOT match-winner!)
+    [1244, "other"], // 1. połowa lub wynik końcowy
 
     // Double Chance
     [10, "double-chance"],
 
     // Draw No Bet / Level Handicap / 2-way Winner
-    [4, "draw-no-bet"],
-    [20, "draw-no-bet"],
-    [77, "draw-no-bet"],
+    [4, "draw-no-bet"],  // Zakład bez remisu
+    [20, "asian-handicap"],  // Handicap (z możliwością zwrotu) - uses "1 (+X)", "2 (-X)" format
+    [77, "asian-handicap"],  // 1. połowa - handicap
     [259, "draw-no-bet"], // Zwycięzca walki
     [314, "draw-no-bet"], // Zwycięzca meczu
     [368, "draw-no-bet"], // Zwycięzca meczu
@@ -59,58 +76,75 @@ export const stsAdapter: BookmakerAdapter = {
     // ========================================================================
     // GOALS MARKETS (GOLE)
     // ========================================================================
-    // Total Goals - various lines
-    [25, "total-goals"],
-    [8, "total-goals"],
-    [11, "total-goals"],
-    [23, "total-goals"],
-    [28, "total-goals"],
-    [73, "total-goals"],
-    [74, "total-goals"],
-    [75, "total-goals"],
-    [80, "total-goals"],
-    [103, "total-goals"],
-    [104, "total-goals"],
-    [105, "total-goals"],
+    // Total Goals - Over/Under (Liczba goli)
+    [25, "total-goals"],   // Liczba goli
+    [23, "total-goals"],   // Liczba goli (z możliwym zwrotem)
+    [28, "total-goals"],   // 1. drużyna - liczba goli
+    [31, "total-goals"],   // 2. drużyna - liczba goli
+    [80, "total-goals"],   // 1. połowa - liczba goli (z możliwym zwrotem)
 
-    // BTTS - many variants
-    [43, "btts"],
-    [47, "btts"],
-    [48, "btts"],
-    [59, "btts"],
-    [60, "btts"],
-    [61, "btts"],
-    [62, "btts"],
-    [67, "btts"],
-    [68, "btts"],
-    [69, "btts"],
-    [70, "btts"],
-    [95, "btts"],
-    [107, "btts"],
-    [109, "btts"],
-    [110, "btts"],
-    [112, "btts"],
-    [115, "btts"],
-    [118, "btts"],
-    [120, "btts"],
-    [121, "btts"],
-    [196, "btts"],
-    [197, "btts"],
-    [198, "btts"],
-    [217, "btts"],
-    [1224, "btts"],
-    [1229, "btts"],
-    [1232, "btts"],
-    [1233, "btts"],
-    [1234, "btts"],
-    [1235, "btts"],
+    // First/Last Goal markets (NOT total goals!)
+    [8, "other"],    // 1. gol (First goal - which team)
+    [73, "other"],   // 1. połowa - 1. gol
 
-    // Win to Nil
-    [35, "win-to-nil"],
-    [90, "win-to-nil"],
+    // 1st Half Double Chance / Draw No Bet (NOT total goals!)
+    [74, "other"],   // 1. połowa - podwójna szansa
+    [75, "other"],   // 1. połowa - zakład bez remisu
+
+    // 2nd Half markets (NOT total goals!)
+    [103, "other"],  // 2. połowa - 1. gol
+    [104, "other"],  // 2. połowa - podwójna szansa
+    [105, "other"],  // 2. połowa - zakład bez remisu
+    [110, "total-goals"],  // 2. połowa - liczba goli (z możliwym zwrotem)
+    [112, "total-goals"],  // 2. połowa - liczba goli
+    [115, "other"],  // 2. połowa - 1. drużyna - liczba goli
+    [118, "other"],  // 2. połowa - 2. drużyna - liczba goli
+
+    // BTTS - only REAL BTTS markets
+    [43, "btts"],    // Obie drużyny - strzelą gola
+    [95, "btts"],    // 1. połowa - obie drużyny - strzelą gola
+    [121, "btts"],   // 2. połowa - obie drużyny - strzelą gola
+
+    // Will team score? (team-specific BTTS variants)
+    [1224, "other"], // 2. drużyna - strzeli gola
+    [1229, "other"], // 1. drużyna - strzeli gola
+    [1232, "other"], // 1. połowa - 2. drużyna - strzeli gola
+    [1233, "other"], // 1. połowa - 1. drużyna - strzeli gola
+    [1234, "other"], // 2. połowa - 2. drużyna - strzeli gola
+    [1235, "other"], // 2. połowa - 1. drużyna - strzeli gola
+
+    // Win to Nil (NOT BTTS!)
+    [35, "win-to-nil"],   // 1. drużyna - dokładna liczba goli (used for win-to-nil)
+    [47, "win-to-nil"],   // 1. drużyna - wygra do zera
+    [48, "win-to-nil"],   // 2. drużyna - wygra do zera
+    [90, "other"],        // 1. połowa - dokładna liczba goli
 
     // Clean Sheet
-    [36, "clean-sheet"],
+    [36, "clean-sheet"],  // 2. drużyna - dokładna liczba goli
+
+    // Team wins both halves / at least one half (NOT BTTS!)
+    [59, "other"],   // 1. drużyna - wygra obie połowy
+    [60, "other"],   // 2. drużyna - wygra obie połowy
+    [61, "other"],   // 1. drużyna - wygra co najmniej jedną połowę
+    [62, "other"],   // 2. drużyna - wygra co najmniej jedną połowę
+
+    // Team scores in both halves (NOT BTTS!)
+    [67, "other"],   // 1. drużyna - strzeli gola w obu połowach
+    [68, "other"],   // 2. drużyna - strzeli gola w obu połowach
+
+    // Both halves over/under 1.5 (NOT BTTS!)
+    [69, "other"],   // Obie połowy powyżej 1.5 gola
+    [70, "other"],   // Obie połowy poniżej 1.5 gola
+
+    // 2nd Half Handicaps
+    [107, "asian-handicap"],     // 2. połowa - handicap (z możliwością zwrotu)
+    [109, "european-handicap"],  // 2. połowa - handicap
+
+    // Unknown BTTS-related IDs (need verification)
+    [196, "other"],
+    [197, "other"],
+    [198, "other"],
+    [217, "other"],
 
     // ========================================================================
     // HANDICAP MARKETS
@@ -124,15 +158,15 @@ export const stsAdapter: BookmakerAdapter = {
     // ========================================================================
     // HALF-TIME MARKETS
     // ========================================================================
-    // Half Time Result
-    [5, "half-time-result"],
+    // Half Time Result - NOTE: Market 5 doesn't exist in current STS data!
+    // Market 71 is the real "1. połowa" (already mapped above)
+    [5, "half-time-result"], // Keep for backward compatibility if it appears
 
     // Half Time Total Goals
-    [26, "half-time-total-goals"],
-    [31, "half-time-total-goals"],
-    [82, "half-time-total-goals"],
-    [85, "half-time-total-goals"],
-    [88, "half-time-total-goals"],
+    [26, "half-time-total-goals"],  // 1. połowa - liczba goli (legacy?)
+    [82, "half-time-total-goals"],  // 1. połowa - liczba goli
+    [85, "half-time-total-goals"],  // 1. połowa - 1. drużyna - liczba goli
+    [88, "half-time-total-goals"],  // 1. połowa - 2. drużyna - liczba goli
 
     // ========================================================================
     // CORRECT SCORE
@@ -141,15 +175,22 @@ export const stsAdapter: BookmakerAdapter = {
     // Market 101 = 1st Half Correct Score
     // Market 124 = 2nd Half Correct Score
     [283, "correct-score"],
-    [101, "correct-score"],
-    [124, "correct-score"],
-    [57, "correct-score"], // Alternative correct score variant
+    [101, "correct-score"],  // 1. połowa - dokładny wynik
+    [124, "correct-score"],  // 2. połowa - dokładny wynik
+    // Market 57 is HT/FT exact score combo - NOT simple correct score!
+    [57, "other"],  // 1. połowa / wynik końcowy - dokładny wynik
 
     // ========================================================================
     // GOALSCORER MARKETS
     // ========================================================================
-    // Market 9 = Last Goal (Ostatni gol) - NOT Correct Score!
+    // Market 9 = Last Goal (Ostatni gol)
     [9, "goalscorer-last"],
+    // Market 52 = First Goalscorer (Zawodnik - strzeli 1. gola)
+    [52, "goalscorer-first"],
+    // Market 53 = Last Goalscorer (Zawodnik - strzeli ostatniego gola)
+    [53, "goalscorer-last"],
+    // Market 54 = Anytime Goalscorer (Zawodnik - strzeli gola)
+    [54, "goalscorer-anytime"],
 
     // ========================================================================
     // GOALS MARKETS - additional
@@ -158,22 +199,17 @@ export const stsAdapter: BookmakerAdapter = {
     [17, "winning-margin"],
     // Market 33 = Goal Range (Przedział goli)
     [33, "goal-range"],
-    // Market 98 = HT BTTS
-    [98, "half-time-btts"],
+    // Market 98 = HT Result + BTTS combo (NOT simple HT BTTS!)
+    [98, "other"],  // 1. połowa - wynik i obie drużyny - strzelą gola
 
     // ========================================================================
     // PLAYER MARKETS (ZAWODNICY)
     // ========================================================================
-    // Goalscorer Anytime
-    [52, "goalscorer-anytime"],
+    // Player Goals with thresholds
     [1850, "goalscorer-anytime"], // Player goals with thresholds (1+, 2+, 3+)
 
     // Player Shots
-    [53, "player-shots"],
     [1851, "player-shots"], // Player shots with thresholds
-
-    // Player Cards
-    [54, "player-cards"],
 
     // Player Assists
     [1845, "player-assists"], // Player assists with thresholds
@@ -258,6 +294,11 @@ export const stsAdapter: BookmakerAdapter = {
     [1853, "player-passes"], // "podania"
 
     // ========================================================================
+    // DRAW NO BET - Additional
+    // ========================================================================
+    [11, "draw-no-bet"],  // Zakład bez remisu
+
+    // ========================================================================
     // OTHER / UNKNOWN
     // ========================================================================
     // These map to OTHER - remaining unmapped markets
@@ -274,7 +315,7 @@ export const stsAdapter: BookmakerAdapter = {
     [254, "other"],
     [255, "other"],
     [256, "other"],
-    [283, "other"],
+    // Note: 283 is already mapped to correct-score above - no duplicate here
     [1263, "other"],
     [1264, "other"],
     [1855, "player-cards"], // Player gets card (otrzyma kartkę)
@@ -311,15 +352,19 @@ export const stsAdapter: BookmakerAdapter = {
     "^27$": "NO" as NormalizedSelection,
 
     // ========================================================================
-    // Over/Under - additional numeric IDs
-    // Note: IDs 12/13 not included as they conflict with Double Chance "12"
-    // STS sends "+2.5"/"-2.5" names for Over/Under which are handled by common patterns
+    // Draw No Bet - numeric outcome IDs (Market 11)
+    // STS uses simple numeric IDs 4=HOME, 5=AWAY for Draw No Bet
     // ========================================================================
-    "^4$": "OVER" as NormalizedSelection,
-    "^5$": "UNDER" as NormalizedSelection,
+    "^4$": "HOME" as NormalizedSelection,
+    "^5$": "AWAY" as NormalizedSelection,
 
     // ========================================================================
-    // Draw No Bet / Asian Handicap format: "1 (+X)" or "2 (-X)"
+    // Over/Under uses +X.X/-X.X format handled by common patterns
+    // Note: IDs 12/13 are used but conflict with Double Chance "12"
+    // ========================================================================
+
+    // ========================================================================
+    // Asian Handicap format: "1 (+X)" or "2 (-X)"
     // ========================================================================
     "^1\\s*\\([+-]": "HOME" as NormalizedSelection,
     "^2\\s*\\([+-]": "AWAY" as NormalizedSelection,

@@ -12,28 +12,26 @@ import type { CanonicalTeam } from "./canonical-teams.js";
 
 // Team names must match TheSportsDB API exactly for frontend matching
 export const LALIGA_TEAMS: CanonicalTeam[] = [
-  // 2024/2025 La Liga season teams (20 teams)
+  // 2025/2026 La Liga season teams (20 teams)
   { id: "134221", name: "Alaves", normalized: "alaves" },
   { id: "133727", name: "Athletic Bilbao", normalized: "athletic bilbao" },
   { id: "133729", name: "Atletico Madrid", normalized: "atletico madrid" },
   { id: "133739", name: "Barcelona", normalized: "barcelona" },
   { id: "133937", name: "Celta Vigo", normalized: "celta vigo" },
-  { id: "133732", name: "Elche", normalized: "elche" },
+  { id: "133732", name: "Elche", normalized: "elche" }, // Promoted
   { id: "133734", name: "Espanyol", normalized: "espanyol" },
   { id: "133731", name: "Getafe", normalized: "getafe" },
   { id: "134700", name: "Girona", normalized: "girona" },
-  { id: "134259", name: "Las Palmas", normalized: "las palmas" },
-  { id: "134701", name: "Leganes", normalized: "leganes" },
-  { id: "133736", name: "Levante", normalized: "levante" },
+  { id: "133736", name: "Levante", normalized: "levante" }, // Promoted
   { id: "133733", name: "Mallorca", normalized: "mallorca" },
   { id: "133730", name: "Osasuna", normalized: "osasuna" },
+  { id: "133728", name: "Rayo Vallecano", normalized: "rayo vallecano" },
   { id: "133722", name: "Real Betis", normalized: "real betis" },
   { id: "133738", name: "Real Madrid", normalized: "real madrid" },
+  { id: "140067", name: "Real Oviedo", normalized: "real oviedo" }, // Promoted
   { id: "133724", name: "Real Sociedad", normalized: "real sociedad" },
   { id: "133735", name: "Sevilla", normalized: "sevilla" },
   { id: "133725", name: "Valencia", normalized: "valencia" },
-  { id: "133841", name: "Valladolid", normalized: "valladolid" },
-  { id: "133728", name: "Vallecano", normalized: "vallecano" },
   { id: "133740", name: "Villarreal", normalized: "villarreal" },
 ];
 

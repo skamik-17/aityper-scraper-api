@@ -229,11 +229,12 @@ export async function navigateAndCaptureMatchData(
 
     // Wait for fixture-specific data or initial data
     // The match page triggers subscription for the specific fixture
+    // Increased timeout from 5s to 10s for slower connections
     await waitForData(
       () =>
         (fixtureId && result.fixtureData.has(fixtureId)) ||
         result.initialData.length > 100000,
-      5000
+      10000
     );
 
     if (!result.fixtureData.has(fixtureId) && !result.initialData) {

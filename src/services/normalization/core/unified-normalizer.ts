@@ -17,7 +17,7 @@ import type {
   NormalizedSelectionResult,
   NormalizedMarketType,
 } from "../types.js";
-import { MARKET_REGISTRY, getMarketByType } from "../../../data/market-registry.js";
+import { MARKET_REGISTRY, getMarketByType, marketHasParameters } from "../../../data/market-registry.js";
 import { matchPattern } from "./pattern-engine.js";
 import { normalizeSelections } from "./selection-normalizer.js";
 import { MarketCategory } from "../types.js";
@@ -157,17 +157,7 @@ export class UnifiedNormalizer {
     const lineMatch = name.match(/(\d+[.,]\d+|\d+)/);
     if (!lineMatch) return undefined;
 
-    const hasLineTypes: NormalizedMarketType[] = [
-      "TOTAL_GOALS",
-      "TOTAL_GOALS_ASIAN",
-      "HALF_TIME_TOTAL_GOALS",
-      "ASIAN_HANDICAP",
-      "EUROPEAN_HANDICAP",
-      "CORNERS_TOTAL",
-      "CARDS_TOTAL",
-    ];
-
-    if (hasLineTypes.includes(type)) {
+    if (marketHasParameters(type)) {
       return lineMatch[1].replace(",", ".");
     }
     return undefined;

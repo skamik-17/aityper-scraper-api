@@ -1991,3 +1991,45 @@ export type MarketDefinition = UnifiedMarketDefinition;
  * @deprecated Use UnifiedMarketDefinition instead
  */
 export type MarketDefinitionCanonical = UnifiedMarketDefinition;
+
+// ============================================================================
+// DERIVED HELPERS (Single Source of Truth)
+// These functions replace duplicated constants across the codebase
+// ============================================================================
+
+/**
+ * Get category for a market type code
+ * Replaces: getCategoryForType() in scraper-type-mapping.ts
+ * Replaces: MARKET_TYPE_TO_CATEGORY lookup
+ */
+export function getCategoryForCode(code: string): MarketCategory {
+  return MARKET_BY_CODE.get(code)?.category ?? MarketCategory.INNE;
+}
+
+/**
+ * Check if market type has parameters
+ * Replaces: PARAMETRIZED_MARKET_TYPES Set in market-type-grouper.ts
+ * Replaces: hasLineTypes array in unified-normalizer.ts
+ */
+export function marketHasParameters(code: string): boolean {
+  return MARKET_BY_CODE.get(code)?.hasParameter ?? false;
+}
+
+/**
+ * Derived: Category labels from CATEGORY_METADATA (Polish)
+ * Replaces: CATEGORY_LABELS in normalized-markets.ts
+ */
+export const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
+  CATEGORY_METADATA.map((c) => [c.code, c.labelPl])
+);
+
+/**
+ * Derived: Category order from CATEGORY_METADATA
+ * Replaces: CATEGORY_ORDER in normalized-markets.ts
+ */
+export const CATEGORY_ORDER: string[] = CATEGORY_METADATA.map((c) => c.code);
+
+/**
+ * Re-export MarketCategory type for convenience
+ */
+export type { MarketCategory };

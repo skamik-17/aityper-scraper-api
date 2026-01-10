@@ -6,14 +6,20 @@
  */
 
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
-import { MarketCategory, MARKET_TYPE_TO_CATEGORY, CATEGORY_ORDER, CATEGORY_LABELS } from "../types/normalized-markets.js";
 import type {
   MarketWithParams,
   MarketParameter,
   MarketParameterBookmaker,
   ComparableMarketGroup,
 } from "../types/normalized-markets.js";
-import { getMarketByCode } from "../data/market-registry.js";
+import {
+  getMarketByCode,
+  getCategoryForCode,
+  marketHasParameters,
+  CATEGORY_LABELS,
+  CATEGORY_ORDER,
+} from "../data/market-registry.js";
+import { MarketCategory } from "../services/normalization/types.js";
 
 /**
  * Default parameters for each market type
@@ -28,22 +34,6 @@ const DEFAULT_PARAMETERS: Record<string, string> = {
   HALF_TIME_TOTAL_GOALS: "1.5",
   CORRECT_SCORE: "1:1",
 };
-
-/**
- * Market types that typically have parameters
- */
-const PARAMETRIZED_MARKET_TYPES: Set<string> = new Set([
-  "ASIAN_HANDICAP",
-  "EUROPEAN_HANDICAP",
-  "TOTAL_GOALS",
-  "TOTAL_GOALS_ASIAN",
-  "CORNERS_TOTAL",
-  "CORNERS_TEAM",
-  "CARDS_TOTAL",
-  "CARDS_TEAM",
-  "HALF_TIME_TOTAL_GOALS",
-  "RESULT_AND_TOTAL",
-]);
 
 /**
  * Sort parameters intelligently
@@ -97,13 +87,6 @@ function getParameterLabel(param: string, marketType: string): string {
 }
 
 /**
- * Check if a market type typically has parameters
- */
-function isParametrizedMarketType(marketType: string): boolean {
-  return PARAMETRIZED_MARKET_TYPES.has(marketType);
-}
-
-/**
  * Group markets by type and aggregate parameters
  *
  * Input: Array of markets with bookmakers (e.g., multiple ASIAN_HANDICAP markets with different lines)
@@ -127,7 +110,7 @@ export function groupMarketsByTypeWithParameters(
     if (!typeGroups.has(marketType)) {
       typeGroups.set(marketType, {
         marketType,
-        category: MARKET_TYPE_TO_CATEGORY[marketType] || MarketCategory.INNE,
+        category: getCategoryForCode(marketType),
         label: market.name || marketType,
         markets: [],
       });
@@ -206,7 +189,7 @@ export function groupMarketsByTypeWithParameters(
     const parameters: MarketParameter[] = sortedParams.map((param) => paramGroups.get(param)!);
 
     // Determine if this market type has parameters
-    const hasParameters = isParametrizedMarketType(marketType) && sortedParams.length > 1;
+    const hasParameters = marketHasParameters(marketType) && sortedParams.length > 1;
 
     // Get default parameter
     const defaultParam = DEFAULT_PARAMETERS[marketType];
@@ -251,7 +234,7 @@ export function buildCategoriesWithMarketTypes(
   const categoryMap = new Map<MarketCategory, MarketWithParams[]>();
 
   for (const category of CATEGORY_ORDER) {
-    categoryMap.set(category, []);
+    categoryMap.set(category as MarketCategory, []);
   }
 
   for (const market of marketsByType) {
@@ -268,7 +251,7 @@ export function buildCategoriesWithMarketTypes(
   }> = [];
 
   for (let i = 0; i < CATEGORY_ORDER.length; i++) {
-    const categoryName = CATEGORY_ORDER[i];
+    const categoryName = CATEGORY_ORDER[i] as MarketCategory;
     const markets = categoryMap.get(categoryName) || [];
 
     // Sort markets by displayOrder within each category

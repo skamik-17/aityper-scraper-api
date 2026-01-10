@@ -10,6 +10,7 @@
 
 import type { NormalizedMarketType } from "../types.js";
 import { MarketCategory } from "../types.js";
+import { getCategoryForCode, CANONICAL_MARKET_CODES } from "../../../data/market-registry.js";
 
 /**
  * Map of scraper type strings to normalized market types.
@@ -441,114 +442,11 @@ export function normalizeScraperType(
  * Check if a string is a valid normalized market type.
  */
 export function isValidNormalizedType(type: string): type is NormalizedMarketType {
-  const validTypes: NormalizedMarketType[] = [
-    "MATCH_WINNER",
-    "DOUBLE_CHANCE",
-    "DRAW_NO_BET",
-    "TOTAL_GOALS",
-    "TOTAL_GOALS_ASIAN",
-    "BTTS",
-    "ODD_EVEN_GOALS",
-    "WIN_TO_NIL",
-    "CLEAN_SHEET",
-    "HOME_TEAM_TO_SCORE",
-    "AWAY_TEAM_TO_SCORE",
-    "TEAM_TOTAL_GOALS",
-    "GOAL_RANGE",
-    "BOTH_HALVES_GOALS",
-    "WINNING_MARGIN",
-    "ASIAN_HANDICAP",
-    "EUROPEAN_HANDICAP",
-    "HALF_TIME_RESULT",
-    "HALF_TIME_TOTAL_GOALS",
-    "HALF_TIME_BTTS",
-    "SECOND_HALF_RESULT",
-    "SECOND_HALF_TOTAL_GOALS",
-    "CORRECT_SCORE",
-    "GOALSCORER_FIRST",
-    "GOALSCORER_LAST",
-    "GOALSCORER_ANYTIME",
-    "PLAYER_SHOTS",
-    "PLAYER_CARDS",
-    "PLAYER_ASSISTS",
-    "CORNERS_TOTAL",
-    "CORNERS_TEAM",
-    "CARDS_TOTAL",
-    "CARDS_TEAM",
-    "FOULS_TOTAL",
-    "OFFSIDES_TOTAL",
-    "RESULT_AND_BTTS",
-    "RESULT_AND_TOTAL",
-    "HALFTIME_FULLTIME",
-    "DOUBLE_RESULT",
-    "DOUBLE_CHANCE_BTTS",
-    "DOUBLE_CHANCE_TOTAL",
-    "OTHER",
-  ];
-  return validTypes.includes(type as NormalizedMarketType);
+  return CANONICAL_MARKET_CODES.has(type as NormalizedMarketType);
 }
 
 /**
  * Get category for a normalized market type.
+ * Re-exports getCategoryForCode from market-registry for compatibility.
  */
-export function getCategoryForType(type: NormalizedMarketType): MarketCategory {
-  const categoryMap: Record<NormalizedMarketType, MarketCategory> = {
-    MATCH_WINNER: MarketCategory.WYNIK_MECZU,
-    DOUBLE_CHANCE: MarketCategory.WYNIK_MECZU,
-    DRAW_NO_BET: MarketCategory.WYNIK_MECZU,
-    TOTAL_GOALS: MarketCategory.GOLE,
-    TOTAL_GOALS_ASIAN: MarketCategory.GOLE,
-    BTTS: MarketCategory.GOLE,
-    ODD_EVEN_GOALS: MarketCategory.GOLE,
-    WIN_TO_NIL: MarketCategory.GOLE,
-    CLEAN_SHEET: MarketCategory.GOLE,
-    HOME_TEAM_TO_SCORE: MarketCategory.GOLE,
-    AWAY_TEAM_TO_SCORE: MarketCategory.GOLE,
-    TEAM_TOTAL_GOALS: MarketCategory.GOLE,
-    GOAL_RANGE: MarketCategory.GOLE,
-    BOTH_HALVES_GOALS: MarketCategory.GOLE,
-    WINNING_MARGIN: MarketCategory.GOLE,
-    ASIAN_HANDICAP: MarketCategory.HANDICAP,
-    EUROPEAN_HANDICAP: MarketCategory.HANDICAP,
-    HALF_TIME_RESULT: MarketCategory.PIERWSZA_POLOWA,
-    HALF_TIME_TOTAL_GOALS: MarketCategory.PIERWSZA_POLOWA,
-    HALF_TIME_BTTS: MarketCategory.PIERWSZA_POLOWA,
-    SECOND_HALF_RESULT: MarketCategory.PIERWSZA_POLOWA,
-    SECOND_HALF_TOTAL_GOALS: MarketCategory.PIERWSZA_POLOWA,
-    CORRECT_SCORE: MarketCategory.DOKLADNY_WYNIK,
-    GOALSCORER_FIRST: MarketCategory.ZAWODNICY,
-    GOALSCORER_LAST: MarketCategory.ZAWODNICY,
-    GOALSCORER_ANYTIME: MarketCategory.ZAWODNICY,
-    PLAYER_SHOTS: MarketCategory.ZAWODNICY,
-    PLAYER_CARDS: MarketCategory.ZAWODNICY,
-    PLAYER_ASSISTS: MarketCategory.ZAWODNICY,
-    CORNERS_TOTAL: MarketCategory.STATYSTYKI,
-    CORNERS_TEAM: MarketCategory.STATYSTYKI,
-    CORNERS_RACE: MarketCategory.STATYSTYKI,
-    FIRST_CORNER: MarketCategory.STATYSTYKI,
-    CORNERS_HANDICAP: MarketCategory.STATYSTYKI,
-    CARDS_TOTAL: MarketCategory.STATYSTYKI,
-    CARDS_TEAM: MarketCategory.STATYSTYKI,
-    CARDS_RACE: MarketCategory.STATYSTYKI,
-    FIRST_CARD: MarketCategory.STATYSTYKI,
-    FOULS_TOTAL: MarketCategory.STATYSTYKI,
-    OFFSIDES_TOTAL: MarketCategory.STATYSTYKI,
-    // Goals timing markets
-    FIRST_TEAM_TO_SCORE: MarketCategory.GOLE,
-    FIRST_GOAL_TIME: MarketCategory.GOLE,
-    TIME_PERIOD_RESULT: MarketCategory.GOLE,
-    FIRST_GOAL_AND_RESULT: MarketCategory.KOMBINACJE,
-    // Additional player markets
-    PLAYER_GOAL_AND_RESULT: MarketCategory.ZAWODNICY,
-    PLAYER_SHOTS_ON_TARGET: MarketCategory.ZAWODNICY,
-    PLAYER_PASSES: MarketCategory.ZAWODNICY,
-    RESULT_AND_BTTS: MarketCategory.KOMBINACJE,
-    RESULT_AND_TOTAL: MarketCategory.KOMBINACJE,
-    HALFTIME_FULLTIME: MarketCategory.KOMBINACJE,
-    DOUBLE_RESULT: MarketCategory.KOMBINACJE,
-    DOUBLE_CHANCE_BTTS: MarketCategory.KOMBINACJE,
-    DOUBLE_CHANCE_TOTAL: MarketCategory.KOMBINACJE,
-    OTHER: MarketCategory.INNE,
-  };
-  return categoryMap[type] || MarketCategory.INNE;
-}
+export { getCategoryForCode as getCategoryForType };

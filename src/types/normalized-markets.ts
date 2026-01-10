@@ -25,68 +25,15 @@ export { MarketCategory };
  */
 export type { NormalizedMarketType } from "./normalization.js";
 
-/**
- * Mapping from NormalizedMarketType to MarketCategory
- * Follows the Superbet pattern for market organization
- */
-export const MARKET_TYPE_TO_CATEGORY: Record<string, MarketCategory> = {
-  // Match result markets
-  MATCH_WINNER: MarketCategory.WYNIK_MECZU,
-  DOUBLE_CHANCE: MarketCategory.WYNIK_MECZU,
-  DRAW_NO_BET: MarketCategory.WYNIK_MECZU,
+// ============================================================================
+// Re-exports from market-registry (Single Source of Truth)
+// ============================================================================
 
-  // Goals markets
-  TOTAL_GOALS: MarketCategory.GOLE,
-  TOTAL_GOALS_ASIAN: MarketCategory.GOLE,
-  BTTS: MarketCategory.GOLE,
-  ODD_EVEN_GOALS: MarketCategory.GOLE,
-  WIN_TO_NIL: MarketCategory.GOLE,
-  CLEAN_SHEET: MarketCategory.GOLE,
-  TEAM_TOTAL_GOALS: MarketCategory.GOLE,
-  GOAL_RANGE: MarketCategory.GOLE,
-  BOTH_HALVES_GOALS: MarketCategory.GOLE,
-  FIRST_TEAM_TO_SCORE: MarketCategory.GOLE,
-  FIRST_GOAL_TIME: MarketCategory.GOLE,
-
-  // Handicap markets
-  ASIAN_HANDICAP: MarketCategory.HANDICAP,
-  EUROPEAN_HANDICAP: MarketCategory.HANDICAP,
-
-  // First half markets
-  HALF_TIME_RESULT: MarketCategory.PIERWSZA_POLOWA,
-  HALF_TIME_TOTAL_GOALS: MarketCategory.PIERWSZA_POLOWA,
-  HALF_TIME_BTTS: MarketCategory.PIERWSZA_POLOWA,
-
-  // Correct score
-  CORRECT_SCORE: MarketCategory.DOKLADNY_WYNIK,
-
-  // Player markets -> ZAWODNICY
-  GOALSCORER_FIRST: MarketCategory.ZAWODNICY,
-  GOALSCORER_LAST: MarketCategory.ZAWODNICY,
-  GOALSCORER_ANYTIME: MarketCategory.ZAWODNICY,
-  PLAYER_SHOTS: MarketCategory.ZAWODNICY,
-  PLAYER_CARDS: MarketCategory.ZAWODNICY,
-  PLAYER_ASSISTS: MarketCategory.ZAWODNICY,
-  HOME_TEAM_TO_SCORE: MarketCategory.ZAWODNICY,
-  AWAY_TEAM_TO_SCORE: MarketCategory.ZAWODNICY,
-
-  // Statistics markets -> STATYSTYKI
-  CORNERS_TOTAL: MarketCategory.STATYSTYKI,
-  CORNERS_TEAM: MarketCategory.STATYSTYKI,
-  CARDS_TOTAL: MarketCategory.STATYSTYKI,
-  CARDS_TEAM: MarketCategory.STATYSTYKI,
-  FOULS_TOTAL: MarketCategory.STATYSTYKI,
-  OFFSIDES_TOTAL: MarketCategory.STATYSTYKI,
-
-  // Combination markets -> KOMBINACJE
-  RESULT_AND_BTTS: MarketCategory.KOMBINACJE,
-  RESULT_AND_TOTAL: MarketCategory.KOMBINACJE,
-  HALFTIME_FULLTIME: MarketCategory.KOMBINACJE,
-  DOUBLE_RESULT: MarketCategory.KOMBINACJE,
-
-  // Other (fallback)
-  OTHER: MarketCategory.INNE,
-};
+export {
+  getCategoryForCode,
+  CATEGORY_LABELS,
+  CATEGORY_ORDER,
+} from "../data/market-registry.js";
 
 // ============================================================================
 // Normalized Market Interfaces
@@ -193,40 +140,6 @@ export interface BookmakerMarketOdds {
     hasNoTaxPromo?: boolean;
   }[];
 }
-
-// ============================================================================
-// Category Labels (Polish)
-// ============================================================================
-
-/**
- * Polish labels for market categories
- */
-export const CATEGORY_LABELS: Record<MarketCategory, string> = {
-  [MarketCategory.WYNIK_MECZU]: "Wynik meczu",
-  [MarketCategory.GOLE]: "Gole",
-  [MarketCategory.HANDICAP]: "Handicap",
-  [MarketCategory.PIERWSZA_POLOWA]: "Pierwsza połowa",
-  [MarketCategory.DOKLADNY_WYNIK]: "Dokładny wynik",
-  [MarketCategory.ZAWODNICY]: "Zawodnicy",
-  [MarketCategory.STATYSTYKI]: "Statystyki",
-  [MarketCategory.KOMBINACJE]: "Kombinacje",
-  [MarketCategory.INNE]: "Inne",
-};
-
-/**
- * Sort order for categories in UI
- */
-export const CATEGORY_ORDER: MarketCategory[] = [
-  MarketCategory.WYNIK_MECZU,
-  MarketCategory.GOLE,
-  MarketCategory.HANDICAP,
-  MarketCategory.PIERWSZA_POLOWA,
-  MarketCategory.DOKLADNY_WYNIK,
-  MarketCategory.ZAWODNICY,
-  MarketCategory.STATYSTYKI,
-  MarketCategory.KOMBINACJE,
-  MarketCategory.INNE,
-];
 
 // ============================================================================
 // Parametrized Market Types (New Architecture)

@@ -188,6 +188,37 @@ export class UnifiedNormalizer {
   }
 
   /**
+   * Extract parameter value from selection names
+   *
+   * For STS-style markets where the line is in selection names like "+1.5" or "-2.5"
+   * Also handles integer lines like "+2" or "-3"
+   *
+   * @param selections - Array of scraped selections
+   * @returns Extracted parameter value or undefined
+   */
+  private extractParamFromSelections(
+    selections: ScrapedMarket["selections"]
+  ): string | undefined {
+    for (const sel of selections) {
+      // Match +X.X or -X.X format (decimal lines)
+      const decimalMatch = sel.name.match(/^[+-](\d+[.,]\d+)$/);
+      if (decimalMatch) {
+        return decimalMatch[1].replace(",", ".");
+      }
+
+      // Match +X or -X format (integer lines - convert to .5 format)
+      const integerMatch = sel.name.match(/^[+-](\d+)$/);
+      if (integerMatch) {
+        // Integer lines like +2 mean "over 2", which is typically 1.5 in standard notation
+        // But STS uses integer lines for "z możliwym zwrotem" (with possible refund)
+        // So we keep them as-is but format consistently
+        return integerMatch[1] + ".0";
+      }
+    }
+    return undefined;
+  }
+
+  /**
    * Try to match using ID mapping
    *
    * Used for STS-style "Rynek XX" format where XX is a numeric ID
@@ -233,9 +264,31 @@ export class UnifiedNormalizer {
       return this.createFallbackMarket(market);
     }
 
+    // Try to extract param if not provided
+    let extractedParam = param;
+    if (!extractedParam && definition.code) {
+      // For STS-style "Rynek XX" format, the line value is in selection names, not market name
+      const isStsRynekFormat = /^Rynek\s+\d+$/iu.test(market.name);
+
+      if (isStsRynekFormat) {
+        // Try selection extraction first for STS markets
+        extractedParam = this.extractParamFromSelections(market.selections);
+      }
+
+      // If still no param, try market name extraction (for other bookmakers)
+      if (!extractedParam) {
+        extractedParam = this.extractParamFromMarketName(market.name, definition.code as NormalizedMarketType);
+      }
+
+      // Final fallback: try selection extraction if market name didn't work
+      if (!extractedParam && !isStsRynekFormat) {
+        extractedParam = this.extractParamFromSelections(market.selections);
+      }
+    }
+
     // Build market key
-    const marketKey = param
-      ? `${definition.code}:${param}`
+    const marketKey = extractedParam
+      ? `${definition.code}:${extractedParam}`
       : definition.code;
 
     // Normalize selections
@@ -252,7 +305,7 @@ export class UnifiedNormalizer {
       normalizedType: definition.code,
       marketKey,
       category: definition.category,
-      paramValue: param,
+      paramValue: extractedParam,
       selections,
     };
   }

@@ -76,12 +76,17 @@ export const stsAdapter: BookmakerAdapter = {
     // ========================================================================
     // GOALS MARKETS (GOLE)
     // ========================================================================
-    // Total Goals - Over/Under (Liczba goli)
-    [25, "total-goals"],   // Liczba goli
-    [23, "total-goals"],   // Liczba goli (z możliwym zwrotem)
+    // Total Goals - Over/Under (Liczba goli) - decimal lines (0.5, 1.5, 2.5, etc.)
+    [25, "total-goals"],   // Liczba goli (decimal lines, no push)
+
+    // Total Goals Asian - integer lines with push/refund
+    [23, "total-goals-asian"],   // Liczba goli (z możliwym zwrotem) - integer lines (1, 2, 3, etc.)
+    [80, "total-goals-asian"],   // 1. połowa - liczba goli (z możliwym zwrotem)
+    [110, "total-goals-asian"],  // 2. połowa - liczba goli (z możliwym zwrotem)
+
+    // Team Total Goals
     [28, "total-goals"],   // 1. drużyna - liczba goli
     [31, "total-goals"],   // 2. drużyna - liczba goli
-    [80, "total-goals"],   // 1. połowa - liczba goli (z możliwym zwrotem)
 
     // First/Last Goal markets (NOT total goals!)
     [8, "other"],    // 1. gol (First goal - which team)
@@ -91,12 +96,12 @@ export const stsAdapter: BookmakerAdapter = {
     [74, "other"],   // 1. połowa - podwójna szansa
     [75, "other"],   // 1. połowa - zakład bez remisu
 
-    // 2nd Half markets (NOT total goals!)
+    // 2nd Half markets
     [103, "other"],  // 2. połowa - 1. gol
     [104, "other"],  // 2. połowa - podwójna szansa
     [105, "other"],  // 2. połowa - zakład bez remisu
-    [110, "total-goals"],  // 2. połowa - liczba goli (z możliwym zwrotem)
-    [112, "total-goals"],  // 2. połowa - liczba goli
+    // Note: [110] is already mapped to "total-goals-asian" above
+    [112, "total-goals"],  // 2. połowa - liczba goli (decimal lines)
     [115, "other"],  // 2. połowa - 1. drużyna - liczba goli
     [118, "other"],  // 2. połowa - 2. drużyna - liczba goli
 

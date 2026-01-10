@@ -25,7 +25,12 @@ import {
   getMarketDefinition,
 } from "../repositories/full-offer-repository.js";
 import { ViewType } from "../services/normalization/types.js";
-import { UNIFIED_MARKET_REGISTRY } from "../data/market-registry.js";
+import {
+  UNIFIED_MARKET_REGISTRY,
+  SHORT_LABELS,
+  SELECTION_LABELS,
+  CATEGORY_METADATA,
+} from "../data/market-registry.js";
 
 const router = Router();
 
@@ -169,20 +174,24 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
 
 /**
  * GET /api/odds/market-types
- * Get all canonical market type definitions (40 types)
+ * Get all canonical market type definitions with metadata for frontend
+ * Returns: marketTypes, selectionLabels, categories
  */
 router.get("/market-types", asyncHandler(async (_req, res) => {
   const marketTypes = UNIFIED_MARKET_REGISTRY.map(m => ({
     id: m.numericId,
     code: m.code,
+    slug: m.slug,
     namePl: m.labels.pl,
     nameEn: m.labels.en,
+    shortLabelPl: SHORT_LABELS[m.code] || m.code,
     descriptionPl: m.descriptions.pl,
     descriptionEn: m.descriptions.en,
     viewType: m.viewType,
     category: m.category,
     hasParameter: m.hasParameter,
     parameterType: m.parameterType,
+    validParameters: m.validParameters,
     selections: m.selections,
     displayOrder: m.displayOrder,
   }));
@@ -191,9 +200,11 @@ router.get("/market-types", asyncHandler(async (_req, res) => {
     success: true,
     data: {
       marketTypes,
-      totalCount: marketTypes.length,
+      selectionLabels: SELECTION_LABELS,
+      categories: CATEGORY_METADATA,
     },
     meta: {
+      totalCount: marketTypes.length,
       viewTypes: Object.keys(ViewType).filter(k => isNaN(Number(k))),
     },
   };

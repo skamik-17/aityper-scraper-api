@@ -92,6 +92,7 @@ export const NormalizedMarketType = {
   DRAW_NO_BET: "DRAW_NO_BET",
   // Goals markets
   TOTAL_GOALS: "TOTAL_GOALS",
+  TOTAL_GOALS_ASIAN: "TOTAL_GOALS_ASIAN", // Integer lines with push/refund possibility
   BTTS: "BTTS",
   ODD_EVEN_GOALS: "ODD_EVEN_GOALS",
   WIN_TO_NIL: "WIN_TO_NIL",

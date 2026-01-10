@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-01-09T23:06:51.134Z",
+  "timestamp": "2026-01-09T23:54:56.056Z",
   "leaguesTested": [
-    "laliga"
+    "premier-league"
   ],
   "results": [
     {
-      "league": "laliga",
-      "matchUrl": "https://www.sts.pl/kursy/girona-osasuna/f1282088",
-      "stsMarketsCount": 135,
+      "league": "premier-league",
+      "matchUrl": "https://www.sts.pl/kursy/wolverhampton-newcastle/f1161347",
+      "stsMarketsCount": 104,
       "coverageResults": [
         {
           "marketCode": "MATCH_WINNER",
@@ -40,17 +40,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 2.4
+                  "odds": 4.25
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 3
+                  "odds": 3.6
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 3.05
+                  "odds": 1.72
                 }
               ]
             },
@@ -62,7 +62,7 @@
                 {
                   "id": "24",
                   "name": null,
-                  "odds": 2
+                  "odds": 1.9
                 },
                 {
                   "id": "25",
@@ -79,12 +79,12 @@
                 {
                   "id": "24",
                   "name": null,
-                  "odds": 2.02
+                  "odds": 2.1
                 },
                 {
                   "id": "25",
                   "name": null,
-                  "odds": 1.8
+                  "odds": 1.68
                 }
               ]
             },
@@ -96,12 +96,12 @@
                 {
                   "id": "24",
                   "name": null,
-                  "odds": 2.1
+                  "odds": 1.92
                 },
                 {
                   "id": "25",
                   "name": null,
-                  "odds": 1.75
+                  "odds": 1.82
                 }
               ]
             },
@@ -113,17 +113,17 @@
                 {
                   "id": "147",
                   "name": null,
-                  "odds": 3.1
+                  "odds": 2.95
                 },
                 {
                   "id": "148",
                   "name": null,
-                  "odds": 2.1
+                  "odds": 2.02
                 },
                 {
                   "id": "149",
                   "name": null,
-                  "odds": 3.15
+                  "odds": 3.5
                 }
               ]
             },
@@ -135,17 +135,17 @@
                 {
                   "id": "147",
                   "name": null,
-                  "odds": 3.35
+                  "odds": 3.7
                 },
                 {
                   "id": "148",
                   "name": null,
-                  "odds": 2.55
+                  "odds": 2.75
                 },
                 {
                   "id": "149",
                   "name": null,
-                  "odds": 2.3
+                  "odds": 2.05
                 }
               ]
             },
@@ -157,17 +157,17 @@
                 {
                   "id": "147",
                   "name": null,
-                  "odds": 3.6
+                  "odds": 3
                 },
                 {
                   "id": "148",
                   "name": null,
-                  "odds": 2.7
+                  "odds": 2.35
                 },
                 {
                   "id": "149",
                   "name": null,
-                  "odds": 2.12
+                  "odds": 2.8
                 }
               ]
             },
@@ -179,22 +179,22 @@
                 {
                   "id": "241",
                   "name": null,
-                  "odds": 1.48
+                  "odds": 1.62
                 },
                 {
                   "id": "242",
                   "name": null,
-                  "odds": 6.1
+                  "odds": 5.25
                 },
                 {
                   "id": "243",
                   "name": null,
-                  "odds": 20
+                  "odds": 13.5
                 },
                 {
                   "id": "244",
                   "name": null,
-                  "odds": 4.25
+                  "odds": 3.75
                 }
               ]
             },
@@ -206,17 +206,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 3
+                  "odds": 4.4
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 2.1
+                  "odds": 2.4
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 3.6
+                  "odds": 2.2
                 }
               ]
             },
@@ -228,12 +228,12 @@
                 {
                   "id": "24",
                   "name": null,
-                  "odds": 2.15
+                  "odds": 2.02
                 },
                 {
                   "id": "25",
                   "name": null,
-                  "odds": 1.7
+                  "odds": 1.75
                 }
               ]
             },
@@ -245,17 +245,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 2.7
+                  "odds": 4
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 2.45
+                  "odds": 2.75
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 3.25
+                  "odds": 2.05
                 }
               ]
             },
@@ -267,17 +267,17 @@
                 {
                   "id": "922",
                   "name": "1 (0:1)",
-                  "odds": 8.1
+                  "odds": 13.5
                 },
                 {
                   "id": "923",
                   "name": "X (0:1)",
-                  "odds": 3.8
+                  "odds": 5
                 },
                 {
                   "id": "924",
                   "name": "2 (0:1)",
-                  "odds": 1.43
+                  "odds": 1.22
                 }
               ]
             },
@@ -289,17 +289,17 @@
                 {
                   "id": "1234",
                   "name": null,
-                  "odds": 3.45
+                  "odds": 4.25
                 },
                 {
                   "id": "1235",
                   "name": null,
-                  "odds": 2.55
+                  "odds": 2.75
                 },
                 {
                   "id": "1236",
                   "name": null,
-                  "odds": 2.25
+                  "odds": 1.9
                 }
               ]
             },
@@ -311,17 +311,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 1.95
+                  "odds": 3
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 1.67
+                  "odds": 1.85
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 2.35
+                  "odds": 1.5
                 }
               ]
             }
@@ -346,17 +346,17 @@
                 {
                   "id": "9",
                   "name": null,
-                  "odds": 1.4
+                  "odds": 2.05
                 },
                 {
                   "id": "10",
                   "name": null,
-                  "odds": 1.38
+                  "odds": 1.26
                 },
                 {
                   "id": "11",
                   "name": null,
-                  "odds": 1.58
+                  "odds": 1.22
                 }
               ]
             }
@@ -384,13 +384,13 @@
               "sampleOutcomes": [
                 {
                   "id": "925",
-                  "name": "1 (+1)",
-                  "odds": 1.15
+                  "name": "1 (+2)",
+                  "odds": 1.18
                 },
                 {
                   "id": "926",
-                  "name": "2 (-1)",
-                  "odds": 5.6
+                  "name": "2 (-2)",
+                  "odds": 4.75
                 }
               ]
             },
@@ -401,13 +401,13 @@
               "sampleOutcomes": [
                 {
                   "id": "925",
-                  "name": "1 (+0)",
-                  "odds": 1.72
+                  "name": "1 (+1)",
+                  "odds": 1.19
                 },
                 {
                   "id": "926",
-                  "name": "2 (-0)",
-                  "odds": 2.1
+                  "name": "2 (-1)",
+                  "odds": 4.1
                 }
               ]
             },
@@ -436,12 +436,12 @@
                 {
                   "id": "4",
                   "name": null,
-                  "odds": 2.67
+                  "odds": 1.96
                 },
                 {
                   "id": "5",
                   "name": null,
-                  "odds": 1.38
+                  "odds": 1.7
                 }
               ]
             },
@@ -494,12 +494,12 @@
                 {
                   "id": "12",
                   "name": "+5.5",
-                  "odds": 16
+                  "odds": 9.25
                 },
                 {
                   "id": "13",
                   "name": "-5.5",
-                  "odds": 1.02
+                  "odds": 1.05
                 }
               ]
             },
@@ -511,17 +511,17 @@
                 {
                   "id": "6",
                   "name": null,
-                  "odds": 1.92
+                  "odds": 2.6
                 },
                 {
                   "id": "7",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "8",
                   "name": null,
-                  "odds": 2.2
+                  "odds": 1.57
                 }
               ]
             },
@@ -533,12 +533,12 @@
                 {
                   "id": "4",
                   "name": null,
-                  "odds": 1.7
+                  "odds": 3.2
                 },
                 {
                   "id": "5",
                   "name": null,
-                  "odds": 2.15
+                  "odds": 1.33
                 }
               ]
             },
@@ -550,12 +550,12 @@
                 {
                   "id": "12",
                   "name": "+1",
-                  "odds": 1.1
+                  "odds": 1.04
                 },
                 {
                   "id": "13",
                   "name": "-1",
-                  "odds": 7
+                  "odds": 9
                 }
               ]
             },
@@ -567,12 +567,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.4
+                  "odds": 3.05
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.55
+                  "odds": 1.35
                 }
               ]
             },
@@ -584,17 +584,17 @@
                 {
                   "id": "6",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 3.4
                 },
                 {
                   "id": "7",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 3.15
                 },
                 {
                   "id": "8",
                   "name": null,
-                  "odds": 3
+                  "odds": 1.98
                 }
               ]
             },
@@ -606,17 +606,17 @@
                 {
                   "id": "9",
                   "name": null,
-                  "odds": 1.27
+                  "odds": 1.58
                 },
                 {
                   "id": "10",
                   "name": null,
-                  "odds": 1.65
+                  "odds": 1.5
                 },
                 {
                   "id": "11",
                   "name": null,
-                  "odds": 1.36
+                  "odds": 1.18
                 }
               ]
             },
@@ -628,12 +628,12 @@
                 {
                   "id": "4",
                   "name": null,
-                  "odds": 1.72
+                  "odds": 2.75
                 },
                 {
                   "id": "5",
                   "name": null,
-                  "odds": 2.1
+                  "odds": 1.38
                 }
               ]
             },
@@ -645,12 +645,12 @@
                 {
                   "id": "12",
                   "name": "+1",
-                  "odds": 2
+                  "odds": 1.62
                 },
                 {
                   "id": "13",
                   "name": "-1",
-                  "odds": 1.78
+                  "odds": 2.15
                 }
               ]
             },
@@ -662,17 +662,17 @@
                 {
                   "id": "6",
                   "name": null,
-                  "odds": 2.3
+                  "odds": 3
                 },
                 {
                   "id": "7",
                   "name": null,
-                  "odds": 3.45
+                  "odds": 4.25
                 },
                 {
                   "id": "8",
                   "name": null,
-                  "odds": 2.65
+                  "odds": 1.85
                 }
               ]
             },
@@ -684,17 +684,17 @@
                 {
                   "id": "9",
                   "name": null,
-                  "odds": 1.32
+                  "odds": 1.67
                 },
                 {
                   "id": "10",
                   "name": null,
-                  "odds": 1.5
+                  "odds": 1.38
                 },
                 {
                   "id": "11",
                   "name": null,
-                  "odds": 1.43
+                  "odds": 1.22
                 }
               ]
             },
@@ -706,12 +706,12 @@
                 {
                   "id": "4",
                   "name": null,
-                  "odds": 1.72
+                  "odds": 2.7
                 },
                 {
                   "id": "5",
                   "name": null,
-                  "odds": 2.05
+                  "odds": 1.4
                 }
               ]
             }
@@ -761,12 +761,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.85
+                  "odds": 1.68
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.95
+                  "odds": 2.1
                 }
               ]
             },
@@ -778,12 +778,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 3.9
+                  "odds": 8
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.24
+                  "odds": 1.07
                 }
               ]
             },
@@ -795,12 +795,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 5
+                  "odds": 3.1
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.16
+                  "odds": 1.32
                 }
               ]
             },
@@ -812,12 +812,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 7.25
+                  "odds": 10.5
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.07
+                  "odds": 1.02
                 }
               ]
             },
@@ -829,12 +829,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 9.25
+                  "odds": 4.4
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.04
+                  "odds": 1.17
                 }
               ]
             },
@@ -846,12 +846,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.72
+                  "odds": 2.4
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 2.05
+                  "odds": 1.5
                 }
               ]
             },
@@ -863,12 +863,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 2
+                  "odds": 1.38
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.75
+                  "odds": 2.8
                 }
               ]
             },
@@ -880,12 +880,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 3.8
+                  "odds": 4.7
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.24
+                  "odds": 1.15
                 }
               ]
             },
@@ -897,12 +897,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 4.6
+                  "odds": 2.5
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.17
+                  "odds": 1.47
                 }
               ]
             },
@@ -914,12 +914,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 6.1
+                  "odds": 4.4
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.1
+                  "odds": 1.18
                 }
               ]
             },
@@ -931,12 +931,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 2.2
+                  "odds": 2.75
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.62
+                  "odds": 1.4
                 }
               ]
             },
@@ -948,12 +948,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 4.75
+                  "odds": 3.9
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.18
+                  "odds": 1.22
                 }
               ]
             },
@@ -964,13 +964,13 @@
               "sampleOutcomes": [
                 {
                   "id": "925",
-                  "name": "1 (+0)",
-                  "odds": 1.72
+                  "name": "1 (+1)",
+                  "odds": 1.27
                 },
                 {
                   "id": "926",
-                  "name": "2 (-0)",
-                  "odds": 2.05
+                  "name": "2 (-1)",
+                  "odds": 3.45
                 }
               ]
             },
@@ -982,12 +982,12 @@
                 {
                   "id": "925",
                   "name": "1 (+0.5)",
-                  "odds": 1.32
+                  "odds": 1.67
                 },
                 {
                   "id": "926",
                   "name": "2 (-0.5)",
-                  "odds": 3.25
+                  "odds": 2.05
                 }
               ]
             },
@@ -999,12 +999,12 @@
                 {
                   "id": "12",
                   "name": "+1",
-                  "odds": 1.54
+                  "odds": 1.33
                 },
                 {
                   "id": "13",
                   "name": "-1",
-                  "odds": 2.45
+                  "odds": 3.05
                 }
               ]
             },
@@ -1016,12 +1016,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.25
+                  "odds": 1.9
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.6
+                  "odds": 1.8
                 }
               ]
             },
@@ -1033,12 +1033,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 4.8
+                  "odds": 5.9
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.16
+                  "odds": 1.1
                 }
               ]
             },
@@ -1050,12 +1050,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 5.75
+                  "odds": 3.15
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.12
+                  "odds": 1.3
                 }
               ]
             },
@@ -1067,7 +1067,7 @@
                 {
                   "id": "24",
                   "name": null,
-                  "odds": 2.02
+                  "odds": 1.95
                 },
                 {
                   "id": "25",
@@ -1084,12 +1084,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 3.6
+                  "odds": 3.1
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.26
+                  "odds": 1.32
                 }
               ]
             },
@@ -1101,12 +1101,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 2.35
+                  "odds": 1.65
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.57
+                  "odds": 2.1
                 }
               ]
             },
@@ -1118,12 +1118,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 2.12
+                  "odds": 2.4
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.7
+                  "odds": 1.5
                 }
               ]
             },
@@ -1135,12 +1135,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.98
+                  "odds": 1.48
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.77
+                  "odds": 2.45
                 }
               ]
             },
@@ -1152,12 +1152,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.8
+                  "odds": 2.02
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.95
+                  "odds": 1.7
                 }
               ]
             },
@@ -1169,12 +1169,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.4
+                  "odds": 1.14
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 2.8
+                  "odds": 5.25
                 }
               ]
             },
@@ -1186,12 +1186,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.3
+                  "odds": 1.44
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 3.35
+                  "odds": 2.65
                 }
               ]
             }
@@ -1227,22 +1227,22 @@
                 {
                   "id": "1237",
                   "name": null,
-                  "odds": 3.35
+                  "odds": 2.65
                 },
                 {
                   "id": "1238",
                   "name": null,
-                  "odds": 2.55
+                  "odds": 2.45
                 },
                 {
                   "id": "1239",
                   "name": null,
-                  "odds": 3.8
+                  "odds": 4.4
                 },
                 {
                   "id": "1240",
                   "name": null,
-                  "odds": 5.75
+                  "odds": 8.25
                 }
               ]
             },
@@ -1254,22 +1254,22 @@
                 {
                   "id": "1237",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 3.15
                 },
                 {
                   "id": "1238",
                   "name": null,
-                  "odds": 2.5
+                  "odds": 2.6
                 },
                 {
                   "id": "1239",
                   "name": null,
-                  "odds": 4.4
+                  "odds": 3.8
                 },
                 {
                   "id": "1240",
                   "name": null,
-                  "odds": 8
+                  "odds": 5.6
                 }
               ]
             }
@@ -1294,22 +1294,22 @@
                 {
                   "id": "1237",
                   "name": null,
-                  "odds": 2.8
+                  "odds": 5.25
                 },
                 {
                   "id": "1238",
                   "name": null,
-                  "odds": 2.45
+                  "odds": 3.1
                 },
                 {
                   "id": "1239",
                   "name": null,
-                  "odds": 4.2
+                  "odds": 3.35
                 },
                 {
                   "id": "1240",
                   "name": null,
-                  "odds": 7.6
+                  "odds": 3.15
                 }
               ]
             }
@@ -1334,12 +1334,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.3
+                  "odds": 1.44
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 3.35
+                  "odds": 2.65
                 }
               ]
             }
@@ -1364,12 +1364,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 1.4
+                  "odds": 1.14
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 2.8
+                  "odds": 5.25
                 }
               ]
             }
@@ -1401,12 +1401,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.4
+                  "odds": 3.05
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.55
+                  "odds": 1.35
                 }
               ]
             },
@@ -1418,12 +1418,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.9
+                  "odds": 1.7
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.4
+                  "odds": 2.05
                 }
               ]
             },
@@ -1435,22 +1435,22 @@
                 {
                   "id": "1237",
                   "name": null,
-                  "odds": 3.35
+                  "odds": 2.65
                 },
                 {
                   "id": "1238",
                   "name": null,
-                  "odds": 2.55
+                  "odds": 2.45
                 },
                 {
                   "id": "1239",
                   "name": null,
-                  "odds": 3.8
+                  "odds": 4.4
                 },
                 {
                   "id": "1240",
                   "name": null,
-                  "odds": 5.75
+                  "odds": 8.25
                 }
               ]
             },
@@ -1462,22 +1462,22 @@
                 {
                   "id": "1237",
                   "name": null,
-                  "odds": 2.8
+                  "odds": 5.25
                 },
                 {
                   "id": "1238",
                   "name": null,
-                  "odds": 2.45
+                  "odds": 3.1
                 },
                 {
                   "id": "1239",
                   "name": null,
-                  "odds": 4.2
+                  "odds": 3.35
                 },
                 {
                   "id": "1240",
                   "name": null,
-                  "odds": 7.6
+                  "odds": 3.15
                 }
               ]
             },
@@ -1489,12 +1489,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 6.5
+                  "odds": 7.6
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.1
+                  "odds": 1.05
                 }
               ]
             },
@@ -1506,12 +1506,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 8
+                  "odds": 4
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.07
+                  "odds": 1.2
                 }
               ]
             },
@@ -1523,12 +1523,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 4.8
+                  "odds": 5.9
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.16
+                  "odds": 1.1
                 }
               ]
             },
@@ -1540,12 +1540,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 5.75
+                  "odds": 3.15
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.12
+                  "odds": 1.3
                 }
               ]
             }
@@ -1576,17 +1576,17 @@
                 {
                   "id": "941",
                   "name": null,
-                  "odds": 1.78
+                  "odds": 2.1
                 },
                 {
                   "id": "942",
                   "name": null,
-                  "odds": 1.34
+                  "odds": 1.44
                 },
                 {
                   "id": "943",
                   "name": null,
-                  "odds": 1.17
+                  "odds": 1.2
                 },
                 {
                   "id": "944",
@@ -1596,7 +1596,7 @@
                 {
                   "id": "945",
                   "name": null,
-                  "odds": 1.08
+                  "odds": 1.06
                 }
               ]
             },
@@ -1608,108 +1608,12 @@
                 {
                   "id": "957",
                   "name": null,
-                  "odds": 1.55
+                  "odds": 1.6
                 },
                 {
                   "id": "958",
                   "name": null,
-                  "odds": 1.35
-                },
-                {
-                  "id": "959",
-                  "name": null,
-                  "odds": 2.55
-                },
-                {
-                  "id": "960",
-                  "name": null,
-                  "odds": 17
-                },
-                {
-                  "id": "1009",
-                  "name": null,
-                  "odds": 3.3
-                }
-              ]
-            },
-            {
-              "marketId": 815,
-              "lineName": "2. drużyna - liczba goli - przedziały",
-              "outcomeCount": 5,
-              "sampleOutcomes": [
-                {
-                  "id": "957",
-                  "name": null,
-                  "odds": 1.58
-                },
-                {
-                  "id": "958",
-                  "name": null,
-                  "odds": 1.42
-                },
-                {
-                  "id": "959",
-                  "name": null,
-                  "odds": 2.95
-                },
-                {
-                  "id": "960",
-                  "name": null,
-                  "odds": 25
-                },
-                {
-                  "id": "1009",
-                  "name": null,
-                  "odds": 2.8
-                }
-              ]
-            },
-            {
-              "marketId": 816,
-              "lineName": "Multiwynik",
-              "outcomeCount": 9,
-              "sampleOutcomes": [
-                {
-                  "id": "961",
-                  "name": null,
-                  "odds": 4.1
-                },
-                {
-                  "id": "962",
-                  "name": null,
-                  "odds": 5.1
-                },
-                {
-                  "id": "963",
-                  "name": null,
-                  "odds": 50
-                },
-                {
-                  "id": "964",
-                  "name": null,
-                  "odds": 50
-                },
-                {
-                  "id": "965",
-                  "name": null,
-                  "odds": 6.4
-                }
-              ]
-            },
-            {
-              "marketId": 817,
-              "lineName": "1. połowa - liczba goli - przedziały",
-              "outcomeCount": 5,
-              "sampleOutcomes": [
-                {
-                  "id": "957",
-                  "name": null,
-                  "odds": 1.62
-                },
-                {
-                  "id": "958",
-                  "name": null,
-                  "odds": 1.46
+                  "odds": 1.45
                 },
                 {
                   "id": "959",
@@ -1724,7 +1628,103 @@
                 {
                   "id": "1009",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 2.65
+                }
+              ]
+            },
+            {
+              "marketId": 815,
+              "lineName": "2. drużyna - liczba goli - przedziały",
+              "outcomeCount": 5,
+              "sampleOutcomes": [
+                {
+                  "id": "957",
+                  "name": null,
+                  "odds": 1.62
+                },
+                {
+                  "id": "958",
+                  "name": null,
+                  "odds": 1.3
+                },
+                {
+                  "id": "959",
+                  "name": null,
+                  "odds": 2
+                },
+                {
+                  "id": "960",
+                  "name": null,
+                  "odds": 6.75
+                },
+                {
+                  "id": "1009",
+                  "name": null,
+                  "odds": 5.25
+                }
+              ]
+            },
+            {
+              "marketId": 816,
+              "lineName": "Multiwynik",
+              "outcomeCount": 9,
+              "sampleOutcomes": [
+                {
+                  "id": "961",
+                  "name": null,
+                  "odds": 8.25
+                },
+                {
+                  "id": "962",
+                  "name": null,
+                  "odds": 3.4
+                },
+                {
+                  "id": "963",
+                  "name": null,
+                  "odds": 50
+                },
+                {
+                  "id": "964",
+                  "name": null,
+                  "odds": 20
+                },
+                {
+                  "id": "965",
+                  "name": null,
+                  "odds": 9.6
+                }
+              ]
+            },
+            {
+              "marketId": 817,
+              "lineName": "1. połowa - liczba goli - przedziały",
+              "outcomeCount": 5,
+              "sampleOutcomes": [
+                {
+                  "id": "957",
+                  "name": null,
+                  "odds": 1.56
+                },
+                {
+                  "id": "958",
+                  "name": null,
+                  "odds": 1.36
+                },
+                {
+                  "id": "959",
+                  "name": null,
+                  "odds": 2.55
+                },
+                {
+                  "id": "960",
+                  "name": null,
+                  "odds": 18
+                },
+                {
+                  "id": "1009",
+                  "name": null,
+                  "odds": 3.1
                 }
               ]
             },
@@ -1736,27 +1736,27 @@
                 {
                   "id": "957",
                   "name": null,
-                  "odds": 1.54
+                  "odds": 1.55
                 },
                 {
                   "id": "958",
                   "name": null,
-                  "odds": 1.33
+                  "odds": 1.3
                 },
                 {
                   "id": "959",
                   "name": null,
-                  "odds": 2.4
+                  "odds": 2.15
                 },
                 {
                   "id": "960",
                   "name": null,
-                  "odds": 16
+                  "odds": 9.75
                 },
                 {
                   "id": "1009",
                   "name": null,
-                  "odds": 3.4
+                  "odds": 4.25
                 }
               ]
             },
@@ -1768,27 +1768,27 @@
                 {
                   "id": "1217",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "1218",
                   "name": null,
-                  "odds": 4.25
+                  "odds": 5.5
                 },
                 {
                   "id": "1219",
                   "name": null,
-                  "odds": 3.2
+                  "odds": 3.7
                 },
                 {
                   "id": "1220",
                   "name": null,
-                  "odds": 4.1
+                  "odds": 3.8
                 },
                 {
                   "id": "1221",
                   "name": null,
-                  "odds": 6.1
+                  "odds": 5
                 }
               ]
             }
@@ -1815,22 +1815,22 @@
                 {
                   "id": "241",
                   "name": null,
-                  "odds": 1.48
+                  "odds": 1.62
                 },
                 {
                   "id": "242",
                   "name": null,
-                  "odds": 6.1
+                  "odds": 5.25
                 },
                 {
                   "id": "243",
                   "name": null,
-                  "odds": 20
+                  "odds": 13.5
                 },
                 {
                   "id": "244",
                   "name": null,
-                  "odds": 4.25
+                  "odds": 3.75
                 }
               ]
             },
@@ -1842,12 +1842,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 6.1
+                  "odds": 4.4
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.1
+                  "odds": 1.18
                 }
               ]
             },
@@ -1859,12 +1859,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 2.2
+                  "odds": 2.75
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.62
+                  "odds": 1.4
                 }
               ]
             }
@@ -1889,27 +1889,27 @@
                 {
                   "id": "1262",
                   "name": null,
-                  "odds": 4.2
+                  "odds": 6.25
                 },
                 {
                   "id": "1263",
                   "name": null,
-                  "odds": 7.25
+                  "odds": 13
                 },
                 {
                   "id": "1264",
                   "name": null,
-                  "odds": 12.5
+                  "odds": 32
                 },
                 {
                   "id": "1265",
                   "name": null,
-                  "odds": 4.8
+                  "odds": 3.8
                 },
                 {
                   "id": "1266",
                   "name": null,
-                  "odds": 9.6
+                  "odds": 5.1
                 }
               ]
             }
@@ -1934,22 +1934,22 @@
                 {
                   "id": "231",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "232",
                   "name": null,
-                  "odds": 3.9
+                  "odds": 8
                 },
                 {
                   "id": "233",
                   "name": null,
-                  "odds": 5
+                  "odds": 3.1
                 },
                 {
                   "id": "234",
                   "name": null,
-                  "odds": 1.85
+                  "odds": 1.68
                 }
               ]
             }
@@ -1975,27 +1975,27 @@
                 {
                   "id": "180",
                   "name": null,
-                  "odds": 3.2
+                  "odds": 2.75
                 },
                 {
                   "id": "181",
                   "name": null,
-                  "odds": 3.9
+                  "odds": 3.6
                 },
                 {
                   "id": "182",
                   "name": null,
-                  "odds": 4.7
+                  "odds": 4.6
                 },
                 {
                   "id": "183",
                   "name": null,
-                  "odds": 7.6
+                  "odds": 8.1
                 },
                 {
                   "id": "184",
                   "name": null,
-                  "odds": 10.5
+                  "odds": 12.5
                 }
               ]
             },
@@ -2007,27 +2007,27 @@
                 {
                   "id": "187",
                   "name": null,
-                  "odds": 4.5
+                  "odds": 3.8
                 },
                 {
                   "id": "188",
                   "name": null,
-                  "odds": 4.9
+                  "odds": 4.3
                 },
                 {
                   "id": "189",
                   "name": null,
-                  "odds": 5.9
+                  "odds": 5.5
                 },
                 {
                   "id": "190",
                   "name": null,
-                  "odds": 7.25
+                  "odds": 7.1
                 },
                 {
                   "id": "191",
                   "name": null,
-                  "odds": 7.6
+                  "odds": 7.9
                 }
               ]
             }
@@ -2052,17 +2052,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 11.5
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 1.17
+                  "odds": 1.2
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 10
+                  "odds": 6.25
                 }
               ]
             }
@@ -2100,17 +2100,17 @@
                 {
                   "id": "922",
                   "name": "1 (0:1)",
-                  "odds": 4.9
+                  "odds": 10.5
                 },
                 {
                   "id": "923",
                   "name": "X (0:1)",
-                  "odds": 4.2
+                  "odds": 6.25
                 },
                 {
                   "id": "924",
                   "name": "2 (0:1)",
-                  "odds": 1.58
+                  "odds": 1.22
                 }
               ]
             },
@@ -2122,12 +2122,12 @@
                 {
                   "id": "925",
                   "name": "1 (+0.5)",
-                  "odds": 1.4
+                  "odds": 2.05
                 },
                 {
                   "id": "926",
                   "name": "2 (-0.5)",
-                  "odds": 3.05
+                  "odds": 1.72
                 }
               ]
             },
@@ -2139,17 +2139,17 @@
                 {
                   "id": "922",
                   "name": "1 (0:1)",
-                  "odds": 11
+                  "odds": 19
                 },
                 {
                   "id": "923",
                   "name": "X (0:1)",
-                  "odds": 3.9
+                  "odds": 5.1
                 },
                 {
                   "id": "924",
                   "name": "2 (0:1)",
-                  "odds": 1.36
+                  "odds": 1.18
                 }
               ]
             },
@@ -2161,12 +2161,12 @@
                 {
                   "id": "925",
                   "name": "1 (+0.5)",
-                  "odds": 1.27
+                  "odds": 1.58
                 },
                 {
                   "id": "926",
                   "name": "2 (-0.5)",
-                  "odds": 3.6
+                  "odds": 2.2
                 }
               ]
             }
@@ -2191,17 +2191,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 3
+                  "odds": 4.4
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 2.1
+                  "odds": 2.4
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 3.6
+                  "odds": 2.2
                 }
               ]
             }
@@ -2229,12 +2229,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.9
+                  "odds": 1.7
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.4
+                  "odds": 2.05
                 }
               ]
             },
@@ -2246,12 +2246,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 3
+                  "odds": 2.4
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.37
+                  "odds": 1.52
                 }
               ]
             },
@@ -2263,12 +2263,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 6.5
+                  "odds": 7.6
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.1
+                  "odds": 1.05
                 }
               ]
             },
@@ -2280,12 +2280,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 8
+                  "odds": 4
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.07
+                  "odds": 1.2
                 }
               ]
             }
@@ -2311,12 +2311,12 @@
                 {
                   "id": "26",
                   "name": null,
-                  "odds": 4.75
+                  "odds": 3.9
                 },
                 {
                   "id": "27",
                   "name": null,
-                  "odds": 1.18
+                  "odds": 1.22
                 }
               ]
             },
@@ -2328,27 +2328,27 @@
                 {
                   "id": "28",
                   "name": null,
-                  "odds": 21
+                  "odds": 25
                 },
                 {
                   "id": "29",
                   "name": null,
-                  "odds": 3.3
+                  "odds": 5
                 },
                 {
                   "id": "30",
                   "name": null,
-                  "odds": 7.9
+                  "odds": 6.9
                 },
                 {
                   "id": "31",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 3.1
                 },
                 {
                   "id": "32",
                   "name": null,
-                  "odds": 26
+                  "odds": 12.5
                 }
               ]
             }
@@ -2373,17 +2373,17 @@
                 {
                   "id": "1",
                   "name": null,
-                  "odds": 2.7
+                  "odds": 4
                 },
                 {
                   "id": "2",
                   "name": null,
-                  "odds": 2.45
+                  "odds": 2.75
                 },
                 {
                   "id": "3",
                   "name": null,
-                  "odds": 3.25
+                  "odds": 2.05
                 }
               ]
             }
@@ -2410,12 +2410,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 2.25
+                  "odds": 1.9
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.6
+                  "odds": 1.8
                 }
               ]
             },
@@ -2427,12 +2427,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 4.8
+                  "odds": 5.9
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.16
+                  "odds": 1.1
                 }
               ]
             },
@@ -2444,12 +2444,12 @@
                 {
                   "id": "12",
                   "name": "+1.5",
-                  "odds": 5.75
+                  "odds": 3.15
                 },
                 {
                   "id": "13",
                   "name": "-1.5",
-                  "odds": 1.12
+                  "odds": 1.3
                 }
               ]
             }
@@ -2477,27 +2477,27 @@
                 {
                   "id": "1783",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "1784",
                   "name": null,
-                  "odds": 7.4
+                  "odds": 14
                 },
                 {
                   "id": "1785",
                   "name": null,
-                  "odds": 11
+                  "odds": 26
                 },
                 {
                   "id": "1786",
                   "name": null,
-                  "odds": 24
+                  "odds": 70
                 },
                 {
                   "id": "1787",
                   "name": null,
-                  "odds": 70
+                  "odds": 250
                 }
               ]
             },
@@ -2509,27 +2509,27 @@
                 {
                   "id": "160",
                   "name": null,
-                  "odds": 2.6
+                  "odds": 3.1
                 },
                 {
                   "id": "161",
                   "name": null,
-                  "odds": 7.5
+                  "odds": 7.1
                 },
                 {
                   "id": "162",
                   "name": null,
-                  "odds": 95
+                  "odds": 70
                 },
                 {
                   "id": "163",
                   "name": null,
-                  "odds": 4.1
+                  "odds": 6.25
                 },
                 {
                   "id": "164",
                   "name": null,
-                  "odds": 12.5
+                  "odds": 24
                 }
               ]
             },
@@ -2541,27 +2541,27 @@
                 {
                   "id": "160",
                   "name": null,
-                  "odds": 3.4
+                  "odds": 4.25
                 },
                 {
                   "id": "161",
                   "name": null,
-                  "odds": 6.5
+                  "odds": 6.4
                 },
                 {
                   "id": "162",
                   "name": null,
-                  "odds": 55
+                  "odds": 42
                 },
                 {
                   "id": "163",
                   "name": null,
-                  "odds": 4.2
+                  "odds": 6.4
                 },
                 {
                   "id": "164",
                   "name": null,
-                  "odds": 10.5
+                  "odds": 19
                 }
               ]
             },
@@ -2573,7 +2573,7 @@
                 {
                   "id": "92",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "93",
@@ -2583,17 +2583,17 @@
                 {
                   "id": "94",
                   "name": null,
-                  "odds": 37
+                  "odds": 23
                 },
                 {
                   "id": "95",
                   "name": null,
-                  "odds": 160
+                  "odds": 65
                 },
                 {
                   "id": "96",
                   "name": null,
-                  "odds": 11
+                  "odds": 20
                 }
               ]
             }
@@ -2613,32 +2613,32 @@
             {
               "marketId": 52,
               "lineName": "Zawodnik - strzeli 1. gola",
-              "outcomeCount": 44,
+              "outcomeCount": 40,
               "sampleOutcomes": [
                 {
-                  "id": "35612",
-                  "name": "Witsel Axel",
+                  "id": "69256",
+                  "name": "Trippier Kieran",
                   "odds": 22.5
                 },
                 {
-                  "id": "37318",
-                  "name": "Budimir Ante",
-                  "odds": 5
+                  "id": "101882",
+                  "name": "Schar Fabian",
+                  "odds": 15
                 },
                 {
-                  "id": "44864",
-                  "name": "Blind Daley",
-                  "odds": 35
+                  "id": "143047",
+                  "name": "Doherty Matt",
+                  "odds": 30
                 },
                 {
-                  "id": "135116",
-                  "name": "Lopez David",
-                  "odds": 25
+                  "id": "372336",
+                  "name": "Murphy Jacob",
+                  "odds": 8
                 },
                 {
-                  "id": "142092",
-                  "name": "Cruz Juan",
-                  "odds": 35
+                  "id": "560128",
+                  "name": "Joelinton",
+                  "odds": 12.5
                 }
               ]
             }
@@ -2663,17 +2663,17 @@
                 {
                   "id": "6",
                   "name": null,
-                  "odds": 1.92
+                  "odds": 2.6
                 },
                 {
                   "id": "7",
                   "name": null,
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "8",
                   "name": null,
-                  "odds": 2.2
+                  "odds": 1.57
                 }
               ]
             }
@@ -2694,59 +2694,37 @@
             {
               "marketId": 52,
               "lineName": "Zawodnik - strzeli 1. gola",
-              "outcomeCount": 44,
+              "outcomeCount": 40,
               "sampleOutcomes": [
                 {
-                  "id": "35612",
-                  "name": "Witsel Axel",
+                  "id": "69256",
+                  "name": "Trippier Kieran",
                   "odds": 22.5
                 },
                 {
-                  "id": "37318",
-                  "name": "Budimir Ante",
-                  "odds": 5
-                },
-                {
-                  "id": "44864",
-                  "name": "Blind Daley",
-                  "odds": 35
-                },
-                {
-                  "id": "135116",
-                  "name": "Lopez David",
-                  "odds": 25
-                },
-                {
-                  "id": "142092",
-                  "name": "Cruz Juan",
-                  "odds": 35
-                }
-              ]
-            },
-            {
-              "marketId": 1850,
-              "lineName": "Boyomo Flavien - gole (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "520337300",
-                  "name": "1+",
+                  "id": "101882",
+                  "name": "Schar Fabian",
                   "odds": 15
                 },
                 {
-                  "id": "553892538",
-                  "name": "3+",
-                  "odds": 400
+                  "id": "143047",
+                  "name": "Doherty Matt",
+                  "odds": 30
                 },
                 {
-                  "id": "570670157",
-                  "name": "2+",
-                  "odds": 125
+                  "id": "372336",
+                  "name": "Murphy Jacob",
+                  "odds": 8
+                },
+                {
+                  "id": "560128",
+                  "name": "Joelinton",
+                  "odds": 12.5
                 }
               ]
             }
           ],
-          "status": "COVERED"
+          "status": "PARTIAL"
         },
         {
           "marketCode": "PLAYER_SHOTS",
@@ -2762,69 +2740,37 @@
             {
               "marketId": 53,
               "lineName": "Zawodnik - strzeli ostatniego gola",
-              "outcomeCount": 44,
+              "outcomeCount": 40,
               "sampleOutcomes": [
                 {
-                  "id": "35612",
-                  "name": "Witsel Axel",
-                  "odds": 23
+                  "id": "69256",
+                  "name": "Trippier Kieran",
+                  "odds": 22
                 },
                 {
-                  "id": "37318",
-                  "name": "Budimir Ante",
-                  "odds": 5.25
+                  "id": "101882",
+                  "name": "Schar Fabian",
+                  "odds": 15
                 },
                 {
-                  "id": "44864",
-                  "name": "Blind Daley",
-                  "odds": 35
+                  "id": "143047",
+                  "name": "Doherty Matt",
+                  "odds": 29
                 },
                 {
-                  "id": "135116",
-                  "name": "Lopez David",
-                  "odds": 25
+                  "id": "372336",
+                  "name": "Murphy Jacob",
+                  "odds": 8.4
                 },
                 {
-                  "id": "142092",
-                  "name": "Cruz Juan",
-                  "odds": 37
-                }
-              ]
-            },
-            {
-              "marketId": 1851,
-              "lineName": "Vanat Vladyslav - strzały (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 6,
-              "sampleOutcomes": [
-                {
-                  "id": "1585993408",
-                  "name": "6+",
-                  "odds": 35
-                },
-                {
-                  "id": "1619548646",
-                  "name": "4+",
-                  "odds": 4.5
-                },
-                {
-                  "id": "1636326265",
-                  "name": "5+",
-                  "odds": 10
-                },
-                {
-                  "id": "1653103884",
-                  "name": "2+",
-                  "odds": 1.4
-                },
-                {
-                  "id": "1669881503",
-                  "name": "3+",
-                  "odds": 2.5
+                  "id": "560128",
+                  "name": "Joelinton",
+                  "odds": 12.5
                 }
               ]
             }
           ],
-          "status": "COVERED"
+          "status": "PARTIAL"
         },
         {
           "marketCode": "PLAYER_CARDS",
@@ -2840,49 +2786,37 @@
             {
               "marketId": 54,
               "lineName": "Zawodnik - strzeli gola",
-              "outcomeCount": 44,
+              "outcomeCount": 40,
               "sampleOutcomes": [
                 {
-                  "id": "35612",
-                  "name": "Witsel Axel",
-                  "odds": 15
+                  "id": "69256",
+                  "name": "Trippier Kieran",
+                  "odds": 11
                 },
                 {
-                  "id": "37318",
-                  "name": "Budimir Ante",
-                  "odds": 2.6
+                  "id": "101882",
+                  "name": "Schar Fabian",
+                  "odds": 7
                 },
                 {
-                  "id": "44864",
-                  "name": "Blind Daley",
-                  "odds": 30
+                  "id": "143047",
+                  "name": "Doherty Matt",
+                  "odds": 17.5
                 },
                 {
-                  "id": "135116",
-                  "name": "Lopez David",
-                  "odds": 15
+                  "id": "372336",
+                  "name": "Murphy Jacob",
+                  "odds": 3.5
                 },
                 {
-                  "id": "142092",
-                  "name": "Cruz Juan",
-                  "odds": 35
-                }
-              ]
-            },
-            {
-              "marketId": 1855,
-              "lineName": "Boyomo Flavien - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 1,
-              "sampleOutcomes": [
-                {
-                  "id": "26",
-                  "name": null,
-                  "odds": 3
+                  "id": "560128",
+                  "name": "Joelinton",
+                  "odds": 5
                 }
               ]
             }
           ],
-          "status": "COVERED"
+          "status": "PARTIAL"
         },
         {
           "marketCode": "PLAYER_ASSISTS",
@@ -2892,27 +2826,9 @@
           "stsIdMappings": [
             1845
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 1845,
-              "lineName": "Boyomo Flavien - asysty (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "520337300",
-                  "name": "1+",
-                  "odds": 12.5
-                },
-                {
-                  "id": "570670157",
-                  "name": "2+",
-                  "odds": 60
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "PLAYER_GOAL_AND_RESULT",
@@ -2931,18 +2847,18 @@
               "sampleOutcomes": [
                 {
                   "id": "1073",
-                  "name": "Garcia Raul i 1",
-                  "odds": 13.5
+                  "name": "Shahar Leo i 1",
+                  "odds": 110
                 },
                 {
                   "id": "1074",
-                  "name": "Garcia Raul i X",
-                  "odds": 10.5
+                  "name": "Shahar Leo i X",
+                  "odds": 60
                 },
                 {
                   "id": "1075",
-                  "name": "Garcia Raul i 2",
-                  "odds": 5.4
+                  "name": "Shahar Leo i 2",
+                  "odds": 11.5
                 }
               ]
             }
@@ -2957,42 +2873,9 @@
           "stsIdMappings": [
             1852
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 1852,
-              "lineName": "Boyomo Flavien - celne strzały (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 5,
-              "sampleOutcomes": [
-                {
-                  "id": "453226824",
-                  "name": "5+",
-                  "odds": 300
-                },
-                {
-                  "id": "470004443",
-                  "name": "4+",
-                  "odds": 175
-                },
-                {
-                  "id": "520337300",
-                  "name": "1+",
-                  "odds": 6
-                },
-                {
-                  "id": "553892538",
-                  "name": "3+",
-                  "odds": 75
-                },
-                {
-                  "id": "570670157",
-                  "name": "2+",
-                  "odds": 30
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "PLAYER_PASSES",
@@ -3002,42 +2885,9 @@
           "stsIdMappings": [
             1853
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 1853,
-              "lineName": "Boyomo Flavien - podania (musi wyjść w \"11\", z dogrywką)",
-              "outcomeCount": 6,
-              "sampleOutcomes": [
-                {
-                  "id": "30581560",
-                  "name": "43+",
-                  "odds": 1.45
-                },
-                {
-                  "id": "63989703",
-                  "name": "55+",
-                  "odds": 2.6
-                },
-                {
-                  "id": "97692036",
-                  "name": "47+",
-                  "odds": 1.75
-                },
-                {
-                  "id": "1909969078",
-                  "name": "63+",
-                  "odds": 4.5
-                },
-                {
-                  "id": "4157625571",
-                  "name": "59+",
-                  "odds": 3.25
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CORNERS_TOTAL",
@@ -3050,88 +2900,9 @@
             247,
             256
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 228,
-              "lineName": "Liczba rzutów rożnych",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "12",
-                  "name": "+10.5",
-                  "odds": 2.35
-                },
-                {
-                  "id": "13",
-                  "name": "-10.5",
-                  "odds": 1.55
-                }
-              ]
-            },
-            {
-              "marketId": 235,
-              "lineName": "Liczba rzutów rożnych - przedziały",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1521",
-                  "name": null,
-                  "odds": 2.35
-                },
-                {
-                  "id": "1522",
-                  "name": null,
-                  "odds": 2.7
-                },
-                {
-                  "id": "1523",
-                  "name": null,
-                  "odds": 3.1
-                }
-              ]
-            },
-            {
-              "marketId": 247,
-              "lineName": "1. połowa - liczba rzutów rożnych",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "12",
-                  "name": "+5.5",
-                  "odds": 2.75
-                },
-                {
-                  "id": "13",
-                  "name": "-5.5",
-                  "odds": 1.4
-                }
-              ]
-            },
-            {
-              "marketId": 256,
-              "lineName": "1. połowa - liczba rzutów rożnych - przedziały",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1528",
-                  "name": null,
-                  "odds": 1.78
-                },
-                {
-                  "id": "1529",
-                  "name": null,
-                  "odds": 3.1
-                },
-                {
-                  "id": "1530",
-                  "name": null,
-                  "odds": 4.25
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CORNERS_TEAM",
@@ -3144,118 +2915,9 @@
             254,
             255
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 236,
-              "lineName": "1. drużyna - liczba rzutów rożnych - przedziały",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "1524",
-                  "name": null,
-                  "odds": 5.75
-                },
-                {
-                  "id": "1525",
-                  "name": null,
-                  "odds": 3
-                },
-                {
-                  "id": "1526",
-                  "name": null,
-                  "odds": 3.1
-                },
-                {
-                  "id": "1527",
-                  "name": null,
-                  "odds": 3
-                }
-              ]
-            },
-            {
-              "marketId": 237,
-              "lineName": "2. drużyna - liczba rzutów rożnych - przedziały",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "1524",
-                  "name": null,
-                  "odds": 3.9
-                },
-                {
-                  "id": "1525",
-                  "name": null,
-                  "odds": 2.65
-                },
-                {
-                  "id": "1526",
-                  "name": null,
-                  "odds": 3.3
-                },
-                {
-                  "id": "1527",
-                  "name": null,
-                  "odds": 4.3
-                }
-              ]
-            },
-            {
-              "marketId": 254,
-              "lineName": "1. połowa - 1. drużyna - dokładna liczba rzutów rożnych",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "223",
-                  "name": null,
-                  "odds": 2.7
-                },
-                {
-                  "id": "224",
-                  "name": null,
-                  "odds": 3.7
-                },
-                {
-                  "id": "225",
-                  "name": null,
-                  "odds": 4.5
-                },
-                {
-                  "id": "226",
-                  "name": null,
-                  "odds": 3.4
-                }
-              ]
-            },
-            {
-              "marketId": 255,
-              "lineName": "1. połowa - 2. drużyna - dokładna liczba rzutów rożnych",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "223",
-                  "name": null,
-                  "odds": 2.2
-                },
-                {
-                  "id": "224",
-                  "name": null,
-                  "odds": 3.5
-                },
-                {
-                  "id": "225",
-                  "name": null,
-                  "odds": 4.9
-                },
-                {
-                  "id": "226",
-                  "name": null,
-                  "odds": 4.5
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CORNERS_RACE",
@@ -3266,54 +2928,9 @@
             220,
             239
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 220,
-              "lineName": "Więcej rzutów rożnych",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1",
-                  "name": null,
-                  "odds": 1.77
-                },
-                {
-                  "id": "2",
-                  "name": null,
-                  "odds": 7.6
-                },
-                {
-                  "id": "3",
-                  "name": null,
-                  "odds": 2.45
-                }
-              ]
-            },
-            {
-              "marketId": 239,
-              "lineName": "1. połowa - więcej rzutów rożnych",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1",
-                  "name": null,
-                  "odds": 1.95
-                },
-                {
-                  "id": "2",
-                  "name": null,
-                  "odds": 5
-                },
-                {
-                  "id": "3",
-                  "name": null,
-                  "odds": 2.5
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "FIRST_CORNER",
@@ -3323,32 +2940,9 @@
           "stsIdMappings": [
             221
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 221,
-              "lineName": "1. rzut rożny",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "6",
-                  "name": null,
-                  "odds": 1.72
-                },
-                {
-                  "id": "7",
-                  "name": null,
-                  "odds": 250
-                },
-                {
-                  "id": "8",
-                  "name": null,
-                  "odds": 2
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CORNERS_HANDICAP",
@@ -3359,44 +2953,9 @@
             225,
             244
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 225,
-              "lineName": "Rzuty rożne - handicap",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "925",
-                  "name": "1 (+0.5)",
-                  "odds": 1.48
-                },
-                {
-                  "id": "926",
-                  "name": "2 (-0.5)",
-                  "odds": 2.45
-                }
-              ]
-            },
-            {
-              "marketId": 244,
-              "lineName": "1. połowa - rzuty rożne - handicap",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "925",
-                  "name": "1 (+0.5)",
-                  "odds": 1.47
-                },
-                {
-                  "id": "926",
-                  "name": "2 (-0.5)",
-                  "odds": 2.5
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CARDS_TOTAL",
@@ -3412,144 +2971,9 @@
             198,
             217
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 185,
-              "lineName": "Liczba kartek",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "12",
-                  "name": "+5.5",
-                  "odds": 2.45
-                },
-                {
-                  "id": "13",
-                  "name": "-5.5",
-                  "odds": 1.48
-                }
-              ]
-            },
-            {
-              "marketId": 192,
-              "lineName": "Dokładna liczba kartek",
-              "outcomeCount": 10,
-              "sampleOutcomes": [
-                {
-                  "id": "213",
-                  "name": null,
-                  "odds": 2.95
-                },
-                {
-                  "id": "214",
-                  "name": null,
-                  "odds": 4.3
-                },
-                {
-                  "id": "215",
-                  "name": null,
-                  "odds": 4.4
-                },
-                {
-                  "id": "216",
-                  "name": null,
-                  "odds": 5.25
-                },
-                {
-                  "id": "217",
-                  "name": null,
-                  "odds": 7.4
-                }
-              ]
-            },
-            {
-              "marketId": 206,
-              "lineName": "1. połowa - liczba kartek",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "12",
-                  "name": "+1.5",
-                  "odds": 1.85
-                },
-                {
-                  "id": "13",
-                  "name": "-1.5",
-                  "odds": 1.85
-                }
-              ]
-            },
-            {
-              "marketId": 196,
-              "lineName": "Czerwona kartka",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "26",
-                  "name": null,
-                  "odds": 4.3
-                },
-                {
-                  "id": "27",
-                  "name": null,
-                  "odds": 1.19
-                }
-              ]
-            },
-            {
-              "marketId": 197,
-              "lineName": "1. drużyna - czerwona kartka",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "26",
-                  "name": null,
-                  "odds": 7.1
-                },
-                {
-                  "id": "27",
-                  "name": null,
-                  "odds": 1.08
-                }
-              ]
-            },
-            {
-              "marketId": 198,
-              "lineName": "2. drużyna - czerwona kartka",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "26",
-                  "name": null,
-                  "odds": 6.9
-                },
-                {
-                  "id": "27",
-                  "name": null,
-                  "odds": 1.08
-                }
-              ]
-            },
-            {
-              "marketId": 217,
-              "lineName": "1. połowa - czerwona kartka",
-              "outcomeCount": 2,
-              "sampleOutcomes": [
-                {
-                  "id": "26",
-                  "name": null,
-                  "odds": 10.5
-                },
-                {
-                  "id": "27",
-                  "name": null,
-                  "odds": 1.03
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CARDS_TEAM",
@@ -3560,64 +2984,9 @@
             193,
             194
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 193,
-              "lineName": "1. drużyna - dokładna liczba kartek",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "223",
-                  "name": null,
-                  "odds": 2.9
-                },
-                {
-                  "id": "224",
-                  "name": null,
-                  "odds": 3.1
-                },
-                {
-                  "id": "225",
-                  "name": null,
-                  "odds": 3.9
-                },
-                {
-                  "id": "226",
-                  "name": null,
-                  "odds": 4.2
-                }
-              ]
-            },
-            {
-              "marketId": 194,
-              "lineName": "2. drużyna - dokładna liczba kartek",
-              "outcomeCount": 4,
-              "sampleOutcomes": [
-                {
-                  "id": "223",
-                  "name": null,
-                  "odds": 3.2
-                },
-                {
-                  "id": "224",
-                  "name": null,
-                  "odds": 3.2
-                },
-                {
-                  "id": "225",
-                  "name": null,
-                  "odds": 3.8
-                },
-                {
-                  "id": "226",
-                  "name": null,
-                  "odds": 3.7
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "CARDS_RACE",
@@ -3628,54 +2997,9 @@
             178,
             199
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 178,
-              "lineName": "Więcej kartek",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1",
-                  "name": null,
-                  "odds": 2.4
-                },
-                {
-                  "id": "2",
-                  "name": null,
-                  "odds": 4.25
-                },
-                {
-                  "id": "3",
-                  "name": null,
-                  "odds": 2.12
-                }
-              ]
-            },
-            {
-              "marketId": 199,
-              "lineName": "1. połowa - więcej kartek",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "1",
-                  "name": null,
-                  "odds": 2.95
-                },
-                {
-                  "id": "2",
-                  "name": null,
-                  "odds": 2.45
-                },
-                {
-                  "id": "3",
-                  "name": null,
-                  "odds": 2.7
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "FIRST_CARD",
@@ -3685,32 +3009,9 @@
           "stsIdMappings": [
             179
           ],
-          "foundInSTS": true,
-          "matchedSTSMarkets": [
-            {
-              "marketId": 179,
-              "lineName": "1. kartka",
-              "outcomeCount": 3,
-              "sampleOutcomes": [
-                {
-                  "id": "6",
-                  "name": null,
-                  "odds": 1.88
-                },
-                {
-                  "id": "7",
-                  "name": null,
-                  "odds": 25
-                },
-                {
-                  "id": "8",
-                  "name": null,
-                  "odds": 1.78
-                }
-              ]
-            }
-          ],
-          "status": "COVERED"
+          "foundInSTS": false,
+          "matchedSTSMarkets": [],
+          "status": "MISSING"
         },
         {
           "marketCode": "FOULS_TOTAL",
@@ -3761,27 +3062,27 @@
                 {
                   "id": "235",
                   "name": "1 i -1.5",
-                  "odds": 7.75
+                  "odds": 14
                 },
                 {
                   "id": "236",
                   "name": "1 i +1.5",
-                  "odds": 2.95
+                  "odds": 5.1
                 },
                 {
                   "id": "237",
                   "name": "X i -1.5",
-                  "odds": 8.6
+                  "odds": 13.5
                 },
                 {
                   "id": "238",
                   "name": "X i +1.5",
-                  "odds": 4.1
+                  "odds": 4.5
                 },
                 {
                   "id": "239",
                   "name": "2 i -1.5",
-                  "odds": 9
+                  "odds": 8.25
                 }
               ]
             },
@@ -3793,27 +3094,27 @@
                 {
                   "id": "235",
                   "name": "1 i -1.5",
-                  "odds": 4.1
+                  "odds": 6.25
                 },
                 {
                   "id": "236",
                   "name": "1 i +1.5",
-                  "odds": 7.25
+                  "odds": 12
                 },
                 {
                   "id": "237",
                   "name": "X i -1.5",
-                  "odds": 2.6
+                  "odds": 3.1
                 },
                 {
                   "id": "238",
                   "name": "X i +1.5",
-                  "odds": 7.6
+                  "odds": 6.9
                 },
                 {
                   "id": "239",
                   "name": "2 i -1.5",
-                  "odds": 4.8
+                  "odds": 3.6
                 }
               ]
             }
@@ -3838,27 +3139,27 @@
                 {
                   "id": "138",
                   "name": null,
-                  "odds": 3.6
+                  "odds": 7.1
                 },
                 {
                   "id": "139",
                   "name": null,
-                  "odds": 13.5
+                  "odds": 16
                 },
                 {
                   "id": "140",
                   "name": null,
-                  "odds": 35
+                  "odds": 22
                 },
                 {
                   "id": "141",
                   "name": null,
-                  "odds": 5.5
+                  "odds": 9.4
                 },
                 {
                   "id": "142",
                   "name": null,
-                  "odds": 4.4
+                  "odds": 5.75
                 }
               ]
             }
@@ -3913,27 +3214,27 @@
                 {
                   "id": "245",
                   "name": null,
-                  "odds": 2.5
+                  "odds": 4.6
                 },
                 {
                   "id": "246",
                   "name": null,
-                  "odds": 7.9
+                  "odds": 8.75
                 },
                 {
                   "id": "247",
                   "name": null,
-                  "odds": 18
+                  "odds": 9.9
                 },
                 {
                   "id": "248",
                   "name": null,
-                  "odds": 15
+                  "odds": 21
                 },
                 {
                   "id": "249",
                   "name": null,
-                  "odds": 7.9
+                  "odds": 8.75
                 }
               ]
             }
@@ -3950,27 +3251,27 @@
             {
               "id": "28",
               "name": null,
-              "odds": 4.9
+              "odds": 7.25
             },
             {
               "id": "29",
               "name": null,
-              "odds": 3.9
+              "odds": 8
             },
             {
               "id": "30",
               "name": null,
-              "odds": 4.1
+              "odds": 4.5
             },
             {
               "id": "31",
               "name": null,
-              "odds": 8.6
+              "odds": 13.5
             },
             {
               "id": "32",
               "name": null,
-              "odds": 6.1
+              "odds": 3.2
             }
           ]
         },
@@ -3982,22 +3283,22 @@
             {
               "id": "34",
               "name": "+2.5 i tak",
-              "odds": 2.35
+              "odds": 1.98
             },
             {
               "id": "35",
               "name": "-2.5 i tak",
-              "odds": 5.9
+              "odds": 7.4
             },
             {
               "id": "36",
               "name": "+2.5 i nie",
-              "odds": 11
+              "odds": 7.5
             },
             {
               "id": "37",
               "name": "-2.5 i nie",
-              "odds": 2.15
+              "odds": 2.65
             }
           ]
         },
@@ -4009,27 +3310,27 @@
             {
               "id": "929",
               "name": null,
-              "odds": 5.9
+              "odds": 5.75
             },
             {
               "id": "930",
               "name": null,
-              "odds": 1.54
+              "odds": 2.1
             },
             {
               "id": "931",
               "name": null,
-              "odds": 12
+              "odds": 8.75
             },
             {
               "id": "932",
               "name": null,
-              "odds": 1.9
+              "odds": 1.8
             },
             {
               "id": "933",
               "name": null,
-              "odds": 6.1
+              "odds": 4.75
             }
           ]
         },
@@ -4041,27 +3342,27 @@
             {
               "id": "28",
               "name": null,
-              "odds": 14.5
+              "odds": 16
             },
             {
               "id": "29",
               "name": null,
-              "odds": 3.1
+              "odds": 4.9
             },
             {
               "id": "30",
               "name": null,
-              "odds": 6.5
+              "odds": 5.9
             },
             {
               "id": "31",
               "name": null,
-              "odds": 3.5
+              "odds": 4.25
             },
             {
               "id": "32",
               "name": null,
-              "odds": 17
+              "odds": 8.5
             }
           ]
         },
@@ -4073,27 +3374,27 @@
             {
               "id": "235",
               "name": "1 i -1.5",
-              "odds": 4.5
+              "odds": 6.75
             },
             {
               "id": "236",
               "name": "1 i +1.5",
-              "odds": 5.4
+              "odds": 8.4
             },
             {
               "id": "237",
               "name": "X i -1.5",
-              "odds": 3.4
+              "odds": 4.3
             },
             {
               "id": "238",
               "name": "X i +1.5",
-              "odds": 6.25
+              "odds": 6
             },
             {
               "id": "239",
               "name": "2 i -1.5",
-              "odds": 5.1
+              "odds": 4.2
             }
           ]
         },
@@ -4105,27 +3406,27 @@
             {
               "id": "929",
               "name": null,
-              "odds": 4.6
+              "odds": 4.7
             },
             {
               "id": "930",
               "name": null,
-              "odds": 1.75
+              "odds": 2.5
             },
             {
               "id": "931",
               "name": null,
-              "odds": 7.9
+              "odds": 6
             },
             {
               "id": "932",
               "name": null,
-              "odds": 1.8
+              "odds": 1.78
             },
             {
               "id": "933",
               "name": null,
-              "odds": 4.8
+              "odds": 3.8
             }
           ]
         },
@@ -4137,27 +3438,27 @@
             {
               "id": "929",
               "name": null,
-              "odds": 2.45
+              "odds": 3.1
             },
             {
               "id": "930",
               "name": null,
-              "odds": 2.85
+              "odds": 5.6
             },
             {
               "id": "931",
               "name": null,
-              "odds": 2.95
+              "odds": 2.4
             },
             {
               "id": "932",
               "name": null,
-              "odds": 2.3
+              "odds": 2.4
             },
             {
               "id": "933",
               "name": null,
-              "odds": 2.65
+              "odds": 2.05
             }
           ]
         },
@@ -4169,59 +3470,59 @@
             {
               "id": "935",
               "name": "1X i -1.5",
-              "odds": 4.4
+              "odds": 7.5
             },
             {
               "id": "936",
               "name": "12 i -1.5",
-              "odds": 4.5
+              "odds": 5.6
             },
             {
               "id": "937",
               "name": "X2 i -1.5",
-              "odds": 4.8
+              "odds": 5.6
             },
             {
               "id": "938",
               "name": "1X i +1.5",
-              "odds": 1.88
+              "odds": 2.6
             },
             {
               "id": "939",
               "name": "12 i +1.5",
-              "odds": 1.82
+              "odds": 1.53
             }
           ]
         },
         {
           "marketId": 1012,
           "lineName": "1. połowa / wynik końcowy i liczba goli",
-          "outcomeCount": 18,
+          "outcomeCount": 14,
           "sampleOutcomes": [
             {
               "id": "1019",
-              "name": "1 / 1 i -3.5",
-              "odds": 5.25
-            },
-            {
-              "id": "1020",
-              "name": "1 / X i -3.5",
-              "odds": 22
-            },
-            {
-              "id": "1021",
-              "name": "1 / 2 i -3.5",
-              "odds": 65
+              "name": "1 / 1 i -1.5",
+              "odds": 34
             },
             {
               "id": "1022",
-              "name": "X / 1 i -3.5",
-              "odds": 6.6
+              "name": "X / 1 i -1.5",
+              "odds": 24
             },
             {
               "id": "1023",
-              "name": "X / X i -3.5",
-              "odds": 5
+              "name": "X / X i -1.5",
+              "odds": 13.5
+            },
+            {
+              "id": "1024",
+              "name": "X / 2 i -1.5",
+              "odds": 14.5
+            },
+            {
+              "id": "1027",
+              "name": "2 / 2 i -1.5",
+              "odds": 18
             }
           ]
         }

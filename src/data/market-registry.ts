@@ -114,6 +114,17 @@ const extractDecimalParam = (m: RegExpMatchArray): string | undefined => {
   return undefined;
 };
 
+// Helper for extracting integer parameters from regex match
+const extractIntegerParam = (m: RegExpMatchArray): string | undefined => {
+  for (let i = 1; i < m.length; i++) {
+    const num = m[i]?.replace(",", ".");
+    if (num && /^\d+$/.test(num)) {
+      return num;
+    }
+  }
+  return undefined;
+};
+
 // -----------------------------------------------------------------------------
 // WYNIK MECZU (Match Result) - 3 markets
 // -----------------------------------------------------------------------------
@@ -240,7 +251,34 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     extractParam: extractDecimalParam,
     bookmakerData: {
       sts: {
-        idMappings: [25, 8, 11, 23, 28, 73, 74, 75, 80, 103, 104, 105],
+        idMappings: [25], // Market 25 = "Liczba goli" (decimal lines: 0.5, 1.5, 2.5, etc.)
+      },
+    },
+  },
+  {
+    numericId: 53,
+    code: "TOTAL_GOALS_ASIAN",
+    slug: "total-goals-asian",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Liczba goli (z możliwym zwrotem)", en: "Total Goals (Asian)" },
+    descriptions: {
+      pl: "Obstawiasz czy padnie więcej/mniej goli niż linia (przy trafieniu linii zwrot stawki)",
+      en: "Bet on total goals with push/refund on exact line hit",
+    },
+    hasParameter: true,
+    parameterType: "integer",
+    validParameters: ["1", "2", "3", "4", "5", "6"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 11, // Right after TOTAL_GOALS
+    patterns: [
+      /^liczba\s*(gol[ioó]w?|bramek)\s*\(z\s*mo[żz]liw[yą]m?\s*zwrotem\)/iu,
+      /^total\s*goals?\s*\(asian\)/iu,
+    ],
+    extractParam: extractIntegerParam,
+    bookmakerData: {
+      sts: {
+        idMappings: [23, 80, 110], // Market 23 = main, 80 = 1st half, 110 = 2nd half
       },
     },
   },
@@ -1546,6 +1584,94 @@ export const MARKET_BY_SLUG = new Map<string, UnifiedMarketDefinition>(
 export const CANONICAL_MARKET_CODES = new Set<string>(
   UNIFIED_MARKET_REGISTRY.map((m) => m.code)
 );
+
+// ============================================================================
+// METADATA FOR FRONTEND API
+// ============================================================================
+
+/**
+ * Short labels for compact UI display (AKO coupon badges, etc.)
+ */
+export const SHORT_LABELS: Record<string, string> = {
+  MATCH_WINNER: "1X2",
+  DOUBLE_CHANCE: "DC",
+  DRAW_NO_BET: "DNB",
+  TOTAL_GOALS: "O/U",
+  TOTAL_GOALS_ASIAN: "O/U (A)",
+  BTTS: "BTTS",
+  ODD_EVEN_GOALS: "P/N",
+  WIN_TO_NIL: "WTN",
+  CLEAN_SHEET: "CS",
+  ASIAN_HANDICAP: "AH",
+  EUROPEAN_HANDICAP: "EH",
+  HALF_TIME_RESULT: "HT",
+  HALF_TIME_TOTAL_GOALS: "HT O/U",
+  HALF_TIME_BTTS: "HT BTTS",
+  CORRECT_SCORE: "CS",
+  GOALSCORER_FIRST: "1st",
+  GOALSCORER_LAST: "Last",
+  GOALSCORER_ANYTIME: "Any",
+  PLAYER_SHOTS: "Shots",
+  PLAYER_CARDS: "Cards",
+  PLAYER_ASSISTS: "Assists",
+  CORNERS_TOTAL: "Corners",
+  CORNERS_TEAM: "C Team",
+  CARDS_TOTAL: "Cards",
+  CARDS_TEAM: "Cards T",
+  FOULS_TOTAL: "Fouls",
+  OFFSIDES_TOTAL: "Offsides",
+  RESULT_AND_BTTS: "R+BTTS",
+  RESULT_AND_TOTAL: "R+O/U",
+  HALFTIME_FULLTIME: "HT/FT",
+  DOUBLE_RESULT: "2xR",
+  HOME_TEAM_TO_SCORE: "H Score",
+  AWAY_TEAM_TO_SCORE: "A Score",
+  WINNING_MARGIN: "Margin",
+  FIRST_GOAL: "1st Goal",
+  EXACT_GOALS: "Exact",
+  TEAM_TOTAL_GOALS: "Team O/U",
+  HIGHEST_SCORING_HALF: "Best Half",
+  FIRST_GOAL_AND_RESULT: "1G+R",
+  OTHER: "Other",
+};
+
+/**
+ * Selection labels (Polish) for bet buttons
+ */
+export const SELECTION_LABELS: Record<string, string> = {
+  HOME: "1",
+  DRAW: "X",
+  AWAY: "2",
+  HOME_OR_DRAW: "1X",
+  DRAW_OR_AWAY: "X2",
+  HOME_OR_AWAY: "12",
+  OVER: "Ponad",
+  UNDER: "Poniżej",
+  YES: "Tak",
+  NO: "Nie",
+  ODD: "Nieparzyste",
+  EVEN: "Parzyste",
+  UNKNOWN: "?",
+};
+
+/**
+ * Category metadata with Polish labels and display order
+ */
+export const CATEGORY_METADATA: Array<{
+  code: string;
+  labelPl: string;
+  order: number;
+}> = [
+  { code: "WYNIK_MECZU", labelPl: "Wynik meczu", order: 1 },
+  { code: "GOLE", labelPl: "Gole", order: 2 },
+  { code: "HANDICAP", labelPl: "Handicap", order: 3 },
+  { code: "PIERWSZA_POLOWA", labelPl: "Pierwsza połowa", order: 4 },
+  { code: "DOKLADNY_WYNIK", labelPl: "Dokładny wynik", order: 5 },
+  { code: "ZAWODNICY", labelPl: "Zawodnicy", order: 6 },
+  { code: "STATYSTYKI", labelPl: "Statystyki", order: 7 },
+  { code: "KOMBINACJE", labelPl: "Kombinacje", order: 8 },
+  { code: "INNE", labelPl: "Inne", order: 9 },
+];
 
 // ============================================================================
 // HELPER FUNCTIONS

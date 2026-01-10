@@ -485,6 +485,7 @@ export function getCategoryForType(type: NormalizedMarketType): MarketCategory {
     DOUBLE_CHANCE: MarketCategory.WYNIK_MECZU,
     DRAW_NO_BET: MarketCategory.WYNIK_MECZU,
     TOTAL_GOALS: MarketCategory.GOLE,
+    TOTAL_GOALS_ASIAN: MarketCategory.GOLE,
     BTTS: MarketCategory.GOLE,
     ODD_EVEN_GOALS: MarketCategory.GOLE,
     WIN_TO_NIL: MarketCategory.GOLE,

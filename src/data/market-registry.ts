@@ -77,16 +77,37 @@ export interface UnifiedMarketDefinition {
   parameterType?: ParameterType;
   /** Valid parameter values */
   validParameters?: string[];
+  /** How to format parameter for display: "decimal" (2.5), "integer" (2), "handicap" (+0.5) */
+  parameterFormat?: "decimal" | "integer" | "handicap";
 
   // ===== Selections =====
   /** Expected selection types */
   selections: string[];
+  /** Order for UI display (defaults to selections order) */
+  selectionOrder?: string[];
 
   // ===== UI =====
   /** View type for UI rendering */
   viewType: ViewType;
   /** Display order within category */
   displayOrder: number;
+  /** Configuration for complex views (SCORE_GRID, HALFTIME_FULLTIME, etc.) */
+  viewConfig?: {
+    gridSize?: number;
+    maxHomeGoals?: number;
+    maxAwayGoals?: number;
+    scoreFormat?: string;
+    htLabels?: string[];
+    ftLabels?: string[];
+    labelFormat?: string;
+  };
+
+  // ===== Description Templates =====
+  /**
+   * Templates for outcome descriptions (Polish)
+   * Placeholders: {homeTeam}, {awayTeam}, {param}
+   */
+  descriptionTemplates?: Record<string, string>;
 
   // ===== Pattern Matching (for normalization) =====
   /** Patterns to match market names (ordered by specificity) */
@@ -142,8 +163,14 @@ const MAIN_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 1,
+    descriptionTemplates: {
+      HOME: "Wygrana {homeTeam}",
+      DRAW: "Remis",
+      AWAY: "Wygrana {awayTeam}",
+    },
     patterns: [
       /^wynik\s*mecz(u)?$/iu,
       /^1x2$/iu,
@@ -170,8 +197,14 @@ const MAIN_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME_OR_DRAW", "DRAW_OR_AWAY", "HOME_OR_AWAY"],
+    selectionOrder: ["HOME_OR_DRAW", "HOME_OR_AWAY", "DRAW_OR_AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 2,
+    descriptionTemplates: {
+      HOME_OR_DRAW: "{homeTeam} nie przegra",
+      DRAW_OR_AWAY: "{awayTeam} nie przegra",
+      HOME_OR_AWAY: "Brak remisu",
+    },
     patterns: [
       /^podw[oó]jna\s*szans/iu,
       /^double\s*chance/iu,
@@ -200,8 +233,13 @@ const MAIN_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 3,
+    descriptionTemplates: {
+      HOME: "Wygrana {homeTeam} (remis zwrot)",
+      AWAY: "Wygrana {awayTeam} (remis zwrot)",
+    },
     patterns: [
       /^remis\s*=\s*zwrot/iu,
       /^draw\s*no\s*bet/iu,
@@ -235,10 +273,16 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "decimal",
+    parameterFormat: "decimal",
     validParameters: ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"],
     selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 10,
+    descriptionTemplates: {
+      OVER: "Ponad {param} bramek",
+      UNDER: "Poniżej {param} bramek",
+    },
     patterns: [
       /^liczba\s*(gol[ioó]w?|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
       /^(suma\s*)?(gol[ioówae]*|bramek)\s*[-:]?\s*(\d+[.,]?\d*)?$/iu,
@@ -267,10 +311,16 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "integer",
+    parameterFormat: "integer",
     validParameters: ["1", "2", "3", "4", "5", "6"],
     selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 11, // Right after TOTAL_GOALS
+    descriptionTemplates: {
+      OVER: "Ponad {param} bramek (ze zwrotem)",
+      UNDER: "Poniżej {param} bramek (ze zwrotem)",
+    },
     patterns: [
       /^liczba\s*(gol[ioó]w?|bramek)\s*\(z\s*mo[żz]liw[yą]m?\s*zwrotem\)/iu,
       /^total\s*goals?\s*\(asian\)/iu,
@@ -294,8 +344,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 11,
+    descriptionTemplates: {
+      YES: "Obie drużyny strzelą",
+      NO: "Co najmniej jedna drużyna nie strzeli",
+    },
     patterns: [
       /^(obie|obobie|dru[żz]yny)\s*(strzel[ąa]|gola|bramk)/iu,
       /^(btts|both\s*teams\s*to\s*score)$/iu,
@@ -327,8 +382,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["ODD", "EVEN"],
+    selectionOrder: ["ODD", "EVEN"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 12,
+    descriptionTemplates: {
+      ODD: "Nieparzysta liczba bramek",
+      EVEN: "Parzysta liczba bramek",
+    },
     patterns: [
       /^(parzyst[ea]?\s*\/?\s*nieparzyst[ea]?|nieparzyst[ea]?\s*\/?\s*parzyst[ea]?)/iu,
       /^odd\s*\/?\s*even$/iu,
@@ -346,8 +406,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 13,
+    descriptionTemplates: {
+      HOME: "{homeTeam} wygra do zera",
+      AWAY: "{awayTeam} wygra do zera",
+    },
     patterns: [
       /^(wygran.*zer|win.*nil|to.*nil)/iu,
     ],
@@ -367,8 +432,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 14,
+    descriptionTemplates: {
+      HOME: "{homeTeam} zachowa czyste konto",
+      AWAY: "{awayTeam} zachowa czyste konto",
+    },
     patterns: [
       /^(czyst.*kont|clean.*sheet)/iu,
     ],
@@ -389,8 +459,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 15,
+    descriptionTemplates: {
+      YES: "{homeTeam} strzeli gola",
+      NO: "{homeTeam} nie strzeli gola",
+    },
     patterns: [
       /^gospodarz\s+strzeli\s+gola?$/iu,
       /^([\w\s\u0100-\u017F]+)\s+strzeli\s+gola?$/iu,
@@ -413,8 +488,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 16,
+    descriptionTemplates: {
+      YES: "{awayTeam} strzeli gola",
+      NO: "{awayTeam} nie strzeli gola",
+    },
     patterns: [
       /^go[śćś]cie\s+strzel[ąa]\s+gola?$/iu,
       /^([\w\s\u0100-\u017F]+)\s+won['\u2019]t\s+score$/iu,
@@ -436,10 +516,18 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "decimal",
+    parameterFormat: "decimal",
     validParameters: ["0.5", "1.5", "2.5", "3.5"],
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    selectionOrder: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 17,
+    descriptionTemplates: {
+      HOME_OVER: "{homeTeam} ponad {param} goli",
+      HOME_UNDER: "{homeTeam} poniżej {param} goli",
+      AWAY_OVER: "{awayTeam} ponad {param} goli",
+      AWAY_UNDER: "{awayTeam} poniżej {param} goli",
+    },
     patterns: [
       /^gole?\s*(gospodarzy?|go[śs]ci)\s*[-:]?\s*(\d+[.,]?\d*)/iu,
       /^(home|away)\s*team\s*(total\s*)?goals?\s*[-:]?\s*(\d+[.,]?\d*)/iu,
@@ -463,8 +551,15 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["0-1", "2-3", "4-5", "6+"],
+    selectionOrder: ["0-1", "2-3", "4-5", "6+"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 18,
+    descriptionTemplates: {
+      "0-1": "0-1 bramek",
+      "2-3": "2-3 bramki",
+      "4-5": "4-5 bramek",
+      "6+": "6 lub więcej bramek",
+    },
     patterns: [
       /^multigol/iu,
       /^goal\s*range/iu,
@@ -488,8 +583,13 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 19,
+    descriptionTemplates: {
+      YES: "Gole w obu połowach",
+      NO: "Brak goli w jednej z połów",
+    },
     patterns: [
       /^gol\s*(w\s*)?(obu|obydw[uó]ch)\s*po[łl]o?w/iu,
       /^(score|goal)\s*in\s*both\s*halves/iu,
@@ -512,9 +612,16 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "integer",
+    parameterFormat: "integer",
     selections: ["HOME", "AWAY", "DRAW"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 20,
+    descriptionTemplates: {
+      HOME: "{homeTeam} wygra różnicą {param} goli",
+      AWAY: "{awayTeam} wygra różnicą {param} goli",
+      DRAW: "Remis",
+    },
     patterns: [
       /^r[oó][żz]nica\s*(zwyci[eę]stwa|gol)/iu,
       /^winning\s*margin/iu,
@@ -537,8 +644,14 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE", "BOTH"],
+    selectionOrder: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 21,
+    descriptionTemplates: {
+      HOME: "{homeTeam} strzeli pierwsza",
+      AWAY: "{awayTeam} strzeli pierwsza",
+      NONE: "Brak goli",
+    },
     patterns: [
       /^kt[oó]ra\s*dru[zż]yn[ay]?\s*strzeli\s*gola/iu,
       /^first\s*team\s*to\s*score/iu,
@@ -561,8 +674,18 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["0-15", "16-30", "31-45", "46-60", "61-75", "76-90", "NONE"],
+    selectionOrder: ["0-15", "16-30", "31-45", "46-60", "61-75", "76-90", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 22,
+    descriptionTemplates: {
+      "0-15": "Pierwszy gol 0-15 min",
+      "16-30": "Pierwszy gol 16-30 min",
+      "31-45": "Pierwszy gol 31-45 min",
+      "46-60": "Pierwszy gol 46-60 min",
+      "61-75": "Pierwszy gol 61-75 min",
+      "76-90": "Pierwszy gol 76-90 min",
+      "NONE": "Brak goli",
+    },
     patterns: [
       /^1\.\s*gol\s*-?\s*przedzia[łl]/iu,
       /^pierwszy\s*gol\s*-?\s*przedzia[łl]/iu,
@@ -586,9 +709,16 @@ const GOALS_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "integer",
+    parameterFormat: "integer",
     selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 23,
+    descriptionTemplates: {
+      HOME: "{homeTeam} prowadzi w {param}. minucie",
+      DRAW: "Remis w {param}. minucie",
+      AWAY: "{awayTeam} prowadzi w {param}. minucie",
+    },
     patterns: [
       /^wynik\s*(od|w)\s*\d+\.\s*(do\s*\d+\.?)?\s*minut/iu,
       /time\s*period\s*result/iu,
@@ -617,14 +747,20 @@ const HANDICAP_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "handicap",
+    parameterFormat: "handicap",
     validParameters: [
       "-2.5", "-2.25", "-2", "-1.75", "-1.5", "-1.25", "-1", "-0.75",
       "-0.5", "-0.25", "0", "+0.25", "+0.5", "+0.75", "+1", "+1.25",
       "+1.5", "+1.75", "+2", "+2.25", "+2.5",
     ],
     selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
     displayOrder: 30,
+    descriptionTemplates: {
+      HOME: "{homeTeam} ({param})",
+      AWAY: "{awayTeam} ({param})",
+    },
     patterns: [
       /^handicap\s*azjatyck/iu,
       /^asian\s*handicap/iu,
@@ -648,10 +784,17 @@ const HANDICAP_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "handicap",
+    parameterFormat: "handicap",
     validParameters: ["-3", "-2", "-1", "0", "+1", "+2", "+3"],
     selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
     displayOrder: 31,
+    descriptionTemplates: {
+      HOME: "{homeTeam} ({param})",
+      DRAW: "Remis z handicapem ({param})",
+      AWAY: "{awayTeam} ({param})",
+    },
     patterns: [
       /^handicap\s*europejsk/iu,
       /^european\s*handicap/iu,
@@ -686,8 +829,14 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 40,
+    descriptionTemplates: {
+      HOME: "{homeTeam} prowadzi po 1. połowie",
+      DRAW: "Remis po 1. połowie",
+      AWAY: "{awayTeam} prowadzi po 1. połowie",
+    },
     patterns: [
       /^wynik\s*1\.?\s*po[łl]o?w/iu,
       /^1\.?\s*po[łl]o?w.*wynik$/iu,
@@ -711,10 +860,16 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "decimal",
+    parameterFormat: "decimal",
     validParameters: ["0.5", "1.5", "2.5"],
     selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 41,
+    descriptionTemplates: {
+      OVER: "Ponad {param} bramek w 1. połowie",
+      UNDER: "Poniżej {param} bramek w 1. połowie",
+    },
     patterns: [
       /^1\.?\s*po[łl]o?w.*liczba\s*gol/iu,
       /^liczba\s*gol.*1\.?\s*po[łl]o?w/iu,
@@ -744,8 +899,13 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 42,
+    descriptionTemplates: {
+      YES: "Obie strzelą w 1. połowie",
+      NO: "Co najmniej jedna nie strzeli w 1. połowie",
+    },
     patterns: [
       /^1\.?\s*po[łl]o?w.*obie\s*strzel/iu,
       /^obie\s*strzel.*1\.?\s*po[łl]o?w/iu,
@@ -770,8 +930,14 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 43,
+    descriptionTemplates: {
+      HOME: "{homeTeam} wygra 2. połowę",
+      DRAW: "Remis w 2. połowie",
+      AWAY: "{awayTeam} wygra 2. połowę",
+    },
     patterns: [
       /^wynik\s*2\.?\s*po[łl]o?w/iu,
       /^2\.?\s*po[łl]o?w.*wynik/iu,
@@ -795,10 +961,16 @@ const HALF_TIME_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "decimal",
+    parameterFormat: "decimal",
     validParameters: ["0.5", "1.5", "2.5"],
     selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 44,
+    descriptionTemplates: {
+      OVER: "Ponad {param} bramek w 2. połowie",
+      UNDER: "Poniżej {param} bramek w 2. połowie",
+    },
     patterns: [
       /^2\.?\s*po[łl]o?w.*liczba\s*gol/iu,
       /^liczba\s*gol.*2\.?\s*po[łl]o?w/iu,
@@ -835,6 +1007,14 @@ const CORRECT_SCORE_MARKETS: UnifiedMarketDefinition[] = [
     selections: ["SCORE"],
     viewType: ViewType.SCORE_GRID,
     displayOrder: 50,
+    viewConfig: {
+      maxHomeGoals: 5,
+      maxAwayGoals: 5,
+      scoreFormat: "{home}:{away}",
+    },
+    descriptionTemplates: {
+      SCORE: "Dokładny wynik {param}",
+    },
     patterns: [
       /^dok[łl]adn.*wynik/iu,
       /^correct\s*score/iu,
@@ -1384,8 +1564,17 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
+    selectionOrder: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
     viewType: ViewType.COMBINATION,
     displayOrder: 80,
+    descriptionTemplates: {
+      HOME_YES: "{homeTeam} wygra i obie strzelą",
+      HOME_NO: "{homeTeam} wygra i co najmniej jedna nie strzeli",
+      DRAW_YES: "Remis i obie strzelą",
+      DRAW_NO: "Remis i co najmniej jedna nie strzeli",
+      AWAY_YES: "{awayTeam} wygra i obie strzelą",
+      AWAY_NO: "{awayTeam} wygra i co najmniej jedna nie strzeli",
+    },
     patterns: [
       /^(wynik|1x2)\s*[+&i]\s*(obie|btts|gg)/iu,
       /^(obie|btts|gg)\s*[+&i]\s*(wynik|1x2)/iu,
@@ -1411,9 +1600,19 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: true,
     parameterType: "decimal",
+    parameterFormat: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    selectionOrder: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.COMBINATION,
     displayOrder: 81,
+    descriptionTemplates: {
+      HOME_OVER: "{homeTeam} wygra i ponad {param} bramek",
+      HOME_UNDER: "{homeTeam} wygra i poniżej {param} bramek",
+      DRAW_OVER: "Remis i ponad {param} bramek",
+      DRAW_UNDER: "Remis i poniżej {param} bramek",
+      AWAY_OVER: "{awayTeam} wygra i ponad {param} bramek",
+      AWAY_UNDER: "{awayTeam} wygra i poniżej {param} bramek",
+    },
     patterns: [
       /^(wynik|1x2)\s*[+&i]\s*(liczba|over|under|o\/iu|\d)/iu,
       /^(liczba|over|under|o\/iu).*[+&i]\s*(wynik|1x2)/iu,
@@ -1438,8 +1637,26 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
+    selectionOrder: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
     viewType: ViewType.HALFTIME_FULLTIME,
     displayOrder: 82,
+    viewConfig: {
+      gridSize: 3,
+      htLabels: ["1", "X", "2"],
+      ftLabels: ["1", "X", "2"],
+      labelFormat: "{ht}/{ft}",
+    },
+    descriptionTemplates: {
+      "1/1": "{homeTeam} prowadzi / {homeTeam} wygrywa",
+      "1/X": "{homeTeam} prowadzi / Remis",
+      "1/2": "{homeTeam} prowadzi / {awayTeam} wygrywa",
+      "X/1": "Remis / {homeTeam} wygrywa",
+      "X/X": "Remis / Remis",
+      "X/2": "Remis / {awayTeam} wygrywa",
+      "2/1": "{awayTeam} prowadzi / {homeTeam} wygrywa",
+      "2/X": "{awayTeam} prowadzi / Remis",
+      "2/2": "{awayTeam} prowadzi / {awayTeam} wygrywa",
+    },
     patterns: [
       /^(1\.?\s*po[łl]o?w|ht)\s*[\/\-]\s*(2\.?\s*po[łl]o?w|ft|wynik|mecz)/iu,
       /^po[łl]o?w[ay]?\s*[\/\-]\s*(mecz|koniec|wynik)/iu,
@@ -1466,8 +1683,26 @@ const COMBINATION_MARKETS: UnifiedMarketDefinition[] = [
     },
     hasParameter: false,
     selections: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
+    selectionOrder: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
     viewType: ViewType.HALFTIME_FULLTIME,
     displayOrder: 83,
+    viewConfig: {
+      gridSize: 3,
+      htLabels: ["1", "X", "2"],
+      ftLabels: ["1", "X", "2"],
+      labelFormat: "{ht}/{ft}",
+    },
+    descriptionTemplates: {
+      "1/1": "{homeTeam} prowadzi / {homeTeam} wygrywa",
+      "1/X": "{homeTeam} prowadzi / Remis",
+      "1/2": "{homeTeam} prowadzi / {awayTeam} wygrywa",
+      "X/1": "Remis / {homeTeam} wygrywa",
+      "X/X": "Remis / Remis",
+      "X/2": "Remis / {awayTeam} wygrywa",
+      "2/1": "{awayTeam} prowadzi / {homeTeam} wygrywa",
+      "2/X": "{awayTeam} prowadzi / Remis",
+      "2/2": "{awayTeam} prowadzi / {awayTeam} wygrywa",
+    },
     patterns: [
       /^podw[oó]jny\s*wynik/iu,
       /double\s*result/iu,

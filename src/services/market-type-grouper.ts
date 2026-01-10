@@ -22,6 +22,7 @@ const DEFAULT_PARAMETERS: Record<string, string> = {
   ASIAN_HANDICAP: "0",
   EUROPEAN_HANDICAP: "-1",
   TOTAL_GOALS: "2.5",
+  TOTAL_GOALS_ASIAN: "2.0",
   CORNERS_TOTAL: "8.5",
   CARDS_TOTAL: "4.5",
   HALF_TIME_TOTAL_GOALS: "1.5",
@@ -35,6 +36,7 @@ const PARAMETRIZED_MARKET_TYPES: Set<string> = new Set([
   "ASIAN_HANDICAP",
   "EUROPEAN_HANDICAP",
   "TOTAL_GOALS",
+  "TOTAL_GOALS_ASIAN",
   "CORNERS_TOTAL",
   "CORNERS_TEAM",
   "CARDS_TOTAL",
@@ -80,6 +82,14 @@ function getParameterLabel(param: string, marketType: string): string {
     const num = parseFloat(param);
     if (!isNaN(num)) {
       return num > 0 ? `+${param}` : param;
+    }
+  }
+
+  // For Asian total goals, format as integer (1 instead of 1.0)
+  if (marketType === "TOTAL_GOALS_ASIAN") {
+    const num = parseFloat(param);
+    if (!isNaN(num) && Number.isInteger(num)) {
+      return num.toString();
     }
   }
 

@@ -191,8 +191,12 @@ router.get("/market-types", asyncHandler(async (_req, res) => {
     category: m.category,
     hasParameter: m.hasParameter,
     parameterType: m.parameterType,
+    parameterFormat: m.parameterFormat || null,
     validParameters: m.validParameters,
     selections: m.selections,
+    selectionOrder: m.selectionOrder || m.selections,
+    descriptionTemplates: m.descriptionTemplates || {},
+    viewConfig: m.viewConfig || null,
     displayOrder: m.displayOrder,
   }));
 

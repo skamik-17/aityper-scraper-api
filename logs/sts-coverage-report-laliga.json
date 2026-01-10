@@ -430,12 +430,12 @@
             {
               "id": "4",
               "name": null,
-              "odds": 2.67
+              "odds": 1.4
             },
             {
               "id": "5",
               "name": null,
-              "odds": 1.38
+              "odds": 2.6
             }
           ]
         },
@@ -465,18 +465,7 @@
       "label": "Liczba goli",
       "category": "GOLE",
       "stsIdMappings": [
-        25,
-        8,
-        11,
-        23,
-        28,
-        73,
-        74,
-        75,
-        80,
-        103,
-        104,
-        105
+        25
       ],
       "foundInSTS": true,
       "matchedSTSMarkets": [
@@ -496,46 +485,22 @@
               "odds": 1.02
             }
           ]
-        },
-        {
-          "marketId": 8,
-          "lineName": "1. gol",
-          "outcomeCount": 3,
-          "sampleOutcomes": [
-            {
-              "id": "6",
-              "name": null,
-              "odds": 1.92
-            },
-            {
-              "id": "7",
-              "name": null,
-              "odds": 8.6
-            },
-            {
-              "id": "8",
-              "name": null,
-              "odds": 2.2
-            }
-          ]
-        },
-        {
-          "marketId": 11,
-          "lineName": "Zakład bez remisu",
-          "outcomeCount": 2,
-          "sampleOutcomes": [
-            {
-              "id": "4",
-              "name": null,
-              "odds": 1.7
-            },
-            {
-              "id": "5",
-              "name": null,
-              "odds": 2.15
-            }
-          ]
-        },
+        }
+      ],
+      "status": "COVERED"
+    },
+    {
+      "marketCode": "TOTAL_GOALS_ASIAN",
+      "numericId": 53,
+      "label": "Liczba goli (z możliwym zwrotem)",
+      "category": "GOLE",
+      "stsIdMappings": [
+        23,
+        80,
+        110
+      ],
+      "foundInSTS": true,
+      "matchedSTSMarkets": [
         {
           "marketId": 23,
           "lineName": "Liczba goli (z możliwym zwrotem)",
@@ -550,84 +515,6 @@
               "id": "13",
               "name": "-1",
               "odds": 7
-            }
-          ]
-        },
-        {
-          "marketId": 28,
-          "lineName": "1. drużyna - liczba goli",
-          "outcomeCount": 2,
-          "sampleOutcomes": [
-            {
-              "id": "12",
-              "name": "+1.5",
-              "odds": 2.4
-            },
-            {
-              "id": "13",
-              "name": "-1.5",
-              "odds": 1.55
-            }
-          ]
-        },
-        {
-          "marketId": 73,
-          "lineName": "1. połowa - 1. gol",
-          "outcomeCount": 3,
-          "sampleOutcomes": [
-            {
-              "id": "6",
-              "name": null,
-              "odds": 2.6
-            },
-            {
-              "id": "7",
-              "name": null,
-              "odds": 2.6
-            },
-            {
-              "id": "8",
-              "name": null,
-              "odds": 3
-            }
-          ]
-        },
-        {
-          "marketId": 74,
-          "lineName": "1. połowa - podwójna szansa",
-          "outcomeCount": 3,
-          "sampleOutcomes": [
-            {
-              "id": "9",
-              "name": null,
-              "odds": 1.27
-            },
-            {
-              "id": "10",
-              "name": null,
-              "odds": 1.65
-            },
-            {
-              "id": "11",
-              "name": null,
-              "odds": 1.36
-            }
-          ]
-        },
-        {
-          "marketId": 75,
-          "lineName": "1. połowa - zakład bez remisu",
-          "outcomeCount": 2,
-          "sampleOutcomes": [
-            {
-              "id": "4",
-              "name": null,
-              "odds": 1.72
-            },
-            {
-              "id": "5",
-              "name": null,
-              "odds": 2.1
             }
           ]
         },
@@ -649,63 +536,19 @@
           ]
         },
         {
-          "marketId": 103,
-          "lineName": "2. połowa - 1. gol",
-          "outcomeCount": 3,
-          "sampleOutcomes": [
-            {
-              "id": "6",
-              "name": null,
-              "odds": 2.3
-            },
-            {
-              "id": "7",
-              "name": null,
-              "odds": 3.45
-            },
-            {
-              "id": "8",
-              "name": null,
-              "odds": 2.65
-            }
-          ]
-        },
-        {
-          "marketId": 104,
-          "lineName": "2. połowa - podwójna szansa",
-          "outcomeCount": 3,
-          "sampleOutcomes": [
-            {
-              "id": "9",
-              "name": null,
-              "odds": 1.32
-            },
-            {
-              "id": "10",
-              "name": null,
-              "odds": 1.5
-            },
-            {
-              "id": "11",
-              "name": null,
-              "odds": 1.43
-            }
-          ]
-        },
-        {
-          "marketId": 105,
-          "lineName": "2. połowa - zakład bez remisu",
+          "marketId": 110,
+          "lineName": "2. połowa - liczba goli (z możliwym zwrotem)",
           "outcomeCount": 2,
           "sampleOutcomes": [
             {
-              "id": "4",
-              "name": null,
-              "odds": 1.72
+              "id": "12",
+              "name": "+1",
+              "odds": 1.54
             },
             {
-              "id": "5",
-              "name": null,
-              "odds": 2.05
+              "id": "13",
+              "name": "-1",
+              "odds": 2.45
             }
           ]
         }
@@ -3937,6 +3780,45 @@
   ],
   "unmappedSTSMarkets": [
     {
+      "marketId": 8,
+      "lineName": "1. gol",
+      "outcomeCount": 3,
+      "sampleOutcomes": [
+        {
+          "id": "6",
+          "name": null,
+          "odds": 1.92
+        },
+        {
+          "id": "7",
+          "name": null,
+          "odds": 8.6
+        },
+        {
+          "id": "8",
+          "name": null,
+          "odds": 2.2
+        }
+      ]
+    },
+    {
+      "marketId": 11,
+      "lineName": "Zakład bez remisu",
+      "outcomeCount": 2,
+      "sampleOutcomes": [
+        {
+          "id": "4",
+          "name": null,
+          "odds": 1.7
+        },
+        {
+          "id": "5",
+          "name": null,
+          "odds": 2.15
+        }
+      ]
+    },
+    {
       "marketId": 49,
       "lineName": "Wynik końcowy i obie drużyny - strzelą gola",
       "outcomeCount": 6,
@@ -3992,6 +3874,128 @@
           "id": "37",
           "name": "-2.5 i nie",
           "odds": 2.15
+        }
+      ]
+    },
+    {
+      "marketId": 73,
+      "lineName": "1. połowa - 1. gol",
+      "outcomeCount": 3,
+      "sampleOutcomes": [
+        {
+          "id": "6",
+          "name": null,
+          "odds": 2.6
+        },
+        {
+          "id": "7",
+          "name": null,
+          "odds": 2.6
+        },
+        {
+          "id": "8",
+          "name": null,
+          "odds": 3
+        }
+      ]
+    },
+    {
+      "marketId": 74,
+      "lineName": "1. połowa - podwójna szansa",
+      "outcomeCount": 3,
+      "sampleOutcomes": [
+        {
+          "id": "9",
+          "name": null,
+          "odds": 1.27
+        },
+        {
+          "id": "10",
+          "name": null,
+          "odds": 1.65
+        },
+        {
+          "id": "11",
+          "name": null,
+          "odds": 1.36
+        }
+      ]
+    },
+    {
+      "marketId": 75,
+      "lineName": "1. połowa - zakład bez remisu",
+      "outcomeCount": 2,
+      "sampleOutcomes": [
+        {
+          "id": "4",
+          "name": null,
+          "odds": 1.72
+        },
+        {
+          "id": "5",
+          "name": null,
+          "odds": 2.1
+        }
+      ]
+    },
+    {
+      "marketId": 103,
+      "lineName": "2. połowa - 1. gol",
+      "outcomeCount": 3,
+      "sampleOutcomes": [
+        {
+          "id": "6",
+          "name": null,
+          "odds": 2.3
+        },
+        {
+          "id": "7",
+          "name": null,
+          "odds": 3.45
+        },
+        {
+          "id": "8",
+          "name": null,
+          "odds": 2.65
+        }
+      ]
+    },
+    {
+      "marketId": 104,
+      "lineName": "2. połowa - podwójna szansa",
+      "outcomeCount": 3,
+      "sampleOutcomes": [
+        {
+          "id": "9",
+          "name": null,
+          "odds": 1.32
+        },
+        {
+          "id": "10",
+          "name": null,
+          "odds": 1.5
+        },
+        {
+          "id": "11",
+          "name": null,
+          "odds": 1.43
+        }
+      ]
+    },
+    {
+      "marketId": 105,
+      "lineName": "2. połowa - zakład bez remisu",
+      "outcomeCount": 2,
+      "sampleOutcomes": [
+        {
+          "id": "4",
+          "name": null,
+          "odds": 1.72
+        },
+        {
+          "id": "5",
+          "name": null,
+          "odds": 2.05
         }
       ]
     },

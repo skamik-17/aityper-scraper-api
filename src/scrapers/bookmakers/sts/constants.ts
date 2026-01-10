@@ -78,7 +78,8 @@ export const MARKET_IDS = {
   // GOALS MARKETS
   // ==========================================================================
   BTTS: 43, // "Obie drużyny - strzelą gola" - Both Teams To Score (tak/nie)
-  TOTAL_GOALS: 25, // "Liczba goli" - Over/Under Total Goals
+  TOTAL_GOALS: 25, // "Liczba goli" - Over/Under Total Goals (decimal lines: 0.5, 1.5, 2.5...)
+  TOTAL_GOALS_ASIAN: 23, // "Liczba goli (z możliwym zwrotem)" - Asian Total Goals (integer lines: 1, 2, 3...)
   FIRST_GOAL: 8, // "1. gol" - First Goal (which team scores first)
   LAST_GOAL: 9, // "Ostatni gol" - Last Goal (which team scores last)
   WIN_TO_NIL_HOME: 47, // "1. drużyna - wygra do zera"
@@ -208,6 +209,7 @@ export const MARKET_GROUPS: Record<number, string> = {
   [MARKET_IDS.DRAW_NO_BET]: "Wynik meczu",
   [MARKET_IDS.BTTS]: "Gole",
   [MARKET_IDS.TOTAL_GOALS]: "Gole",
+  [MARKET_IDS.TOTAL_GOALS_ASIAN]: "Gole",
   [MARKET_IDS.FIRST_GOAL]: "Gole",
   [MARKET_IDS.LAST_GOAL]: "Gole",
   [MARKET_IDS.CORRECT_SCORE]: "Dokladny wynik",
@@ -229,6 +231,7 @@ export const MARKET_TYPES: Record<number, string> = {
   [MARKET_IDS.DRAW_NO_BET]: "DRAW_NO_BET",
   [MARKET_IDS.BTTS]: "BTTS",
   [MARKET_IDS.TOTAL_GOALS]: "OVER_UNDER",
+  [MARKET_IDS.TOTAL_GOALS_ASIAN]: "OVER_UNDER_ASIAN",
   [MARKET_IDS.FIRST_GOAL]: "FIRST_GOAL",
   [MARKET_IDS.LAST_GOAL]: "LAST_GOAL",
   [MARKET_IDS.CORRECT_SCORE]: "CORRECT_SCORE",

@@ -58,7 +58,18 @@ export const SCRAPER_TYPE_TO_NORMALIZED: Record<string, NormalizedMarketType> = 
   "totalgoals": "TOTAL_GOALS",
   "liczba_goli": "TOTAL_GOALS",
   "suma_goli": "TOTAL_GOALS",
-  
+
+  // Total Goals Asian (integer lines with push/refund)
+  "over_under_asian": "TOTAL_GOALS_ASIAN",
+  "over-under-asian": "TOTAL_GOALS_ASIAN",
+  "overunderasian": "TOTAL_GOALS_ASIAN",
+  "total_goals_asian": "TOTAL_GOALS_ASIAN",
+  "total-goals-asian": "TOTAL_GOALS_ASIAN",
+  "totalgoalsasian": "TOTAL_GOALS_ASIAN",
+  "asian_total": "TOTAL_GOALS_ASIAN",
+  "asian-total": "TOTAL_GOALS_ASIAN",
+  "liczba_goli_zwrot": "TOTAL_GOALS_ASIAN",
+
   // BTTS
   "btts": "BTTS",
   "both_teams_to_score": "BTTS",
@@ -435,6 +446,7 @@ export function isValidNormalizedType(type: string): type is NormalizedMarketTyp
     "DOUBLE_CHANCE",
     "DRAW_NO_BET",
     "TOTAL_GOALS",
+    "TOTAL_GOALS_ASIAN",
     "BTTS",
     "ODD_EVEN_GOALS",
     "WIN_TO_NIL",

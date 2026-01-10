@@ -282,10 +282,10 @@ export function parseAllMarkets(
         const selections = parseLineSelections(marketId, line, fixture);
 
         if (selections.length > 0) {
-          // For line markets (O/U), include line in name
+          // For line markets (O/U), include line in name to ensure unique keys
           let finalName = marketName;
-          if (marketId === MARKET_IDS.TOTAL_GOALS) {
-            const lineValue = extractLineFromSelections(line);
+          if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN) {
+            const lineValue = extractLineFromSelections(line, marketId);
             if (lineValue) {
               finalName = `${marketName} ${lineValue}`;
             }
@@ -336,6 +336,8 @@ function getMarketName(marketId: number, market: STSMarket): string {
       return "Obie druzyny strzelą";
     case MARKET_IDS.TOTAL_GOALS:
       return "Liczba goli";
+    case MARKET_IDS.TOTAL_GOALS_ASIAN:
+      return "Liczba goli (zwrot)";
     case MARKET_IDS.HALF_TIME_RESULT:
       return "Wynik 1. polowy";
     case MARKET_IDS.HALF_TIME_TOTAL:
@@ -413,6 +415,7 @@ function getSelectionName(
       break;
 
     case MARKET_IDS.TOTAL_GOALS:
+    case MARKET_IDS.TOTAL_GOALS_ASIAN:
       if (outcomeId === OUTCOME_OVER_UNDER.OVER) return "Powyzej";
       if (outcomeId === OUTCOME_OVER_UNDER.UNDER) return "Ponizej";
       break;
@@ -443,16 +446,27 @@ function getSelectionName(
 }
 
 /**
- * Extract line value from outcome names in a line (e.g., "2.5" from "+2.5")
+ * Extract line value from outcome names in a line
+ * - For TOTAL_GOALS (market 25): decimal lines like "2.5" from "+2.5"
+ * - For TOTAL_GOALS_ASIAN (market 23): integer lines like "1", "2" from "+1", "+2"
  */
-function extractLineFromSelections(line: STSMarketLine): string | null {
+function extractLineFromSelections(line: STSMarketLine, marketId: number): string | null {
   if (!line.o) return null;
 
   for (const [, outcome] of Object.entries(line.o) as [string, STSOutcome][]) {
     if (outcome.n) {
-      const match = outcome.n.match(/[+-]?(\d+[.,]5)/);
-      if (match) {
-        return parseFloat(match[1].replace(",", ".")).toFixed(1);
+      // For Asian Total Goals, extract integer lines (e.g., "+1", "+2", "-3")
+      if (marketId === MARKET_IDS.TOTAL_GOALS_ASIAN) {
+        const intMatch = outcome.n.match(/[+-]?(\d+)(?![.,]\d)/);
+        if (intMatch) {
+          return intMatch[1];
+        }
+      }
+
+      // For regular Total Goals, extract decimal lines (e.g., "+2.5", "-1.5")
+      const decMatch = outcome.n.match(/[+-]?(\d+[.,]5)/);
+      if (decMatch) {
+        return parseFloat(decMatch[1].replace(",", ".")).toFixed(1);
       }
     }
   }

@@ -159,6 +159,7 @@ export class UnifiedNormalizer {
 
     const hasLineTypes: NormalizedMarketType[] = [
       "TOTAL_GOALS",
+      "TOTAL_GOALS_ASIAN",
       "HALF_TIME_TOTAL_GOALS",
       "ASIAN_HANDICAP",
       "EUROPEAN_HANDICAP",

@@ -37,10 +37,16 @@ export const MARKET_TYPE_TO_CATEGORY: Record<string, MarketCategory> = {
 
   // Goals markets
   TOTAL_GOALS: MarketCategory.GOLE,
+  TOTAL_GOALS_ASIAN: MarketCategory.GOLE,
   BTTS: MarketCategory.GOLE,
   ODD_EVEN_GOALS: MarketCategory.GOLE,
   WIN_TO_NIL: MarketCategory.GOLE,
   CLEAN_SHEET: MarketCategory.GOLE,
+  TEAM_TOTAL_GOALS: MarketCategory.GOLE,
+  GOAL_RANGE: MarketCategory.GOLE,
+  BOTH_HALVES_GOALS: MarketCategory.GOLE,
+  FIRST_TEAM_TO_SCORE: MarketCategory.GOLE,
+  FIRST_GOAL_TIME: MarketCategory.GOLE,
 
   // Handicap markets
   ASIAN_HANDICAP: MarketCategory.HANDICAP,

@@ -1,9 +1,3 @@
-/**
- * Bookmaker Adapters Index
- *
- * Exports all bookmaker adapters for easy importing.
- */
-
 export { stsAdapter } from "./sts-adapter.js";
 export { fortunaAdapter } from "./fortuna-adapter.js";
 export { superbetAdapter } from "./superbet-adapter.js";
@@ -18,3 +12,18 @@ export { lebullAdapter } from "./lebull-adapter.js";
 export { lvbetAdapter } from "./lvbet-adapter.js";
 export { pzbukAdapter } from "./pzbuk-adapter.js";
 export { totalbetAdapter } from "./totalbet-adapter.js";
+
+export { stsNormalizer } from "./sts-normalizer.js";
+export { fortunaNormalizer } from "./fortuna-normalizer.js";
+export { superbetNormalizer } from "./superbet-normalizer.js";
+export { betclicNormalizer } from "./betclic-normalizer.js";
+export { betcrisNormalizer } from "./betcris-normalizer.js";
+export { betfanNormalizer } from "./betfan-normalizer.js";
+export { bettersNormalizer } from "./betters-normalizer.js";
+export { etotoNormalizer } from "./etoto-normalizer.js";
+export { forbetNormalizer } from "./forbet-normalizer.js";
+export { fuksiarzNormalizer } from "./fuksiarz-normalizer.js";
+export { lebullNormalizer } from "./lebull-normalizer.js";
+export { lvbetNormalizer } from "./lvbet-normalizer.js";
+export { pzbukNormalizer } from "./pzbuk-normalizer.js";
+export { totalbetNormalizer } from "./totalbet-normalizer.js";

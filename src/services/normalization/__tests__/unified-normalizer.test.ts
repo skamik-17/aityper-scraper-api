@@ -80,10 +80,10 @@ describe("Unified Normalizer", () => {
       expect(result.category).toBe("GOLE");
     });
 
-    it("should normalize 'Over/Under 2.5' with parameter extraction", () => {
+    it("should normalize 'Liczba goli 2.5' with parameter extraction", () => {
       const result = normalizer.normalize(
         {
-          name: "Over/Under 2.5",
+          name: "Liczba goli 2.5",
           selections: [
             { name: "Over", odds: 1.85 },
             { name: "Under", odds: 1.95 },
@@ -121,28 +121,32 @@ describe("Unified Normalizer", () => {
   });
 });
 
-describe("STS Adapter ID Mappings", () => {
-  it("should have correct ID mappings", () => {
-    const stsAdapter = normalizer.getAdapter("sts");
-    expect(stsAdapter).toBeDefined();
-    expect(stsAdapter?.idMappings).toBeDefined();
-
-    expect(stsAdapter?.idMappings?.get(1)).toBe("match-winner");
-    expect(stsAdapter?.idMappings?.get(25)).toBe("total-goals");
-    expect(stsAdapter?.idMappings?.get(43)).toBe("btts");
-    expect(stsAdapter?.idMappings?.get(4)).toBe("draw-no-bet");
+describe("STS Normalizer", () => {
+  it("should have a normalizer for STS", () => {
+    expect(normalizer.hasNormalizer("sts")).toBe(true);
   });
 
-  it("should return undefined for unknown IDs", () => {
-    const stsAdapter = normalizer.getAdapter("sts");
-    expect(stsAdapter?.idMappings?.get(999)).toBeUndefined();
-    expect(stsAdapter?.idMappings?.get(3)).toBeUndefined();
+  it("should normalize STS Rynek markets correctly", () => {
+    const result = normalizer.normalize(
+      {
+        name: "Rynek 1",
+        selections: [
+          { name: "1", odds: 2.0 },
+          { name: "X", odds: 3.0 },
+          { name: "2", odds: 2.5 },
+        ],
+      },
+      "sts",
+      "Arsenal",
+      "Liverpool"
+    );
+    expect(result.normalizedType).toBe("MATCH_WINNER");
   });
 });
 
 describe("Selection Normalization", () => {
   it("should normalize Over selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -156,7 +160,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Polish Over selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -170,7 +174,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Under selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.type === "TOTAL_GOALS");
+    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -184,7 +188,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Yes/No (BTTS) selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.type === "BTTS");
+    const marketDef = MARKET_REGISTRY.find((m) => m.code === "BTTS");
     expect(marketDef).toBeDefined();
 
     const yesTak = normalizeSelection(
@@ -207,7 +211,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize 1X2 selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.type === "MATCH_WINNER");
+    const marketDef = MARKET_REGISTRY.find((m) => m.code === "MATCH_WINNER");
     expect(marketDef).toBeDefined();
 
     const home = normalizeSelection(

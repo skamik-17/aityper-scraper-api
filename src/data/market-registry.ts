@@ -1999,8 +1999,6 @@ export type MarketDefinitionCanonical = UnifiedMarketDefinition;
 
 /**
  * Get category for a market type code
- * Replaces: getCategoryForType() in scraper-type-mapping.ts
- * Replaces: MARKET_TYPE_TO_CATEGORY lookup
  */
 export function getCategoryForCode(code: string): MarketCategory {
   return MARKET_BY_CODE.get(code)?.category ?? MarketCategory.INNE;
@@ -2008,8 +2006,6 @@ export function getCategoryForCode(code: string): MarketCategory {
 
 /**
  * Check if market type has parameters
- * Replaces: PARAMETRIZED_MARKET_TYPES Set in market-type-grouper.ts
- * Replaces: hasLineTypes array in unified-normalizer.ts
  */
 export function marketHasParameters(code: string): boolean {
   return MARKET_BY_CODE.get(code)?.hasParameter ?? false;

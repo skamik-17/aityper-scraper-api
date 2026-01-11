@@ -199,6 +199,86 @@ export interface BookmakerAdapter {
   selectionOverrides?: Record<string, NormalizedSelection>;
 }
 
+export interface RawBookmakerMarket {
+  /** Bookmaker-specific market ID (e.g., STS "Rynek 25" → 25) */
+  bookmakerMarketId?: string | number;
+  /** Raw market name from the bookmaker */
+  name: string;
+  /** Raw group/category name if available */
+  groupName?: string;
+  /** Raw selections with odds */
+  selections: Array<{ name: string; odds: number; externalId?: string }>;
+}
+
+/**
+ * Normalization context passed to normalizers
+ */
+export interface NormalizationContext {
+  homeTeam: string;
+  awayTeam: string;
+  sportType?: string;
+  leagueName?: string;
+}
+
+/**
+ * Output of a bookmaker normalizer
+ */
+export interface NormalizedMarketOutput {
+  /** Canonical market code (e.g., "TOTAL_GOALS", "MATCH_WINNER") */
+  marketCode: NormalizedMarketType;
+  /** Parameter value if applicable (e.g., "2.5" for over/under) */
+  paramValue?: string;
+  /** Unique market key: marketCode or marketCode:paramValue */
+  marketKey: string;
+  /** Normalized selections */
+  selections: Array<{
+    /** Canonical selection code (e.g., "HOME", "OVER", "YES") */
+    code: NormalizedSelection;
+    /** Original label for display/debug */
+    label: string;
+    /** Decimal odds */
+    odds: number;
+  }>;
+  /** Debug info for troubleshooting */
+  debug?: {
+    rawName: string;
+    rawId?: string | number;
+    matchedBy?: "id" | "name" | "pattern";
+  };
+}
+
+/**
+ * Interface for bookmaker-specific market normalizers.
+ * Each bookmaker implements this interface to handle its own market normalization.
+ * 
+ * This replaces the centralized pattern-matching approach with adapter-first normalization.
+ */
+export interface BookmakerMarketNormalizer {
+  /** Bookmaker identifier (e.g., "sts", "fortuna") */
+  bookmaker: string;
+  
+  /**
+   * Normalize a single raw market to canonical format.
+   * 
+   * @param raw - Raw market data from the scraper
+   * @param ctx - Context with team names and other metadata
+   * @returns Normalized market or null if market should be skipped/unknown
+   */
+  normalizeMarket(
+    raw: RawBookmakerMarket,
+    ctx: NormalizationContext
+  ): NormalizedMarketOutput | null;
+  
+  /**
+   * Normalize multiple markets at once (batch processing).
+   * Default implementation calls normalizeMarket for each.
+   */
+  normalizeMarkets?(
+    markets: RawBookmakerMarket[],
+    ctx: NormalizationContext
+  ): NormalizedMarketOutput[];
+}
+
 export interface BookmakerMarketData {
   idMappings?: number[];
   additionalPatterns?: RegExp[];

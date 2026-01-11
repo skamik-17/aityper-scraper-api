@@ -1,37 +1,20 @@
 /**
  * Normalization System - Public API
  *
- * Unified market normalization system with global registry and bookmaker adapters.
- *
- * Usage:
- * ```ts
- * import { normalizer } from "./services/normalization/index.js";
- *
- * const normalized = normalizer.normalize(market, "sts", "Arsenal", "Liverpool");
- * console.log(normalized.normalizedType); // "TOTAL_GOALS"
- * console.log(normalized.paramValue); // "2.5"
- * ```
+ * Adapter-first market normalization system with bookmaker-specific normalizers.
  */
 
 import type { ScrapedMarket } from "../../types/full-offer.js";
-import { normalizer as unifiedNormalizer } from "./factory.js";
+import { normalizer as normalizerFacade } from "./factory.js";
 
 // ==========================================================================
-// Core
+// Core - Selection Normalizer (still needed)
 // ==========================================================================
 
-export { UnifiedNormalizer } from "./core/unified-normalizer.js";
-export { matchPattern, matchPatterns, extractParameter } from "./core/pattern-engine.js";
 export {
   normalizeSelection,
   normalizeSelections,
 } from "./core/selection-normalizer.js";
-export {
-  normalizeScraperType,
-  isValidNormalizedType,
-  getCategoryForType,
-  SCRAPER_TYPE_TO_NORMALIZED,
-} from "./core/scraper-type-mapping.js";
 
 // ==========================================================================
 // Market Registry (from unified registry)
@@ -57,7 +40,13 @@ export {
 // Factory
 // ==========================================================================
 
-export { createNormalizer, normalizer } from "./factory.js";
+export {
+  createNormalizer,
+  normalizer,
+  getNormalizerForBookmaker,
+  getSupportedBookmakers,
+  hasNormalizer,
+} from "./factory.js";
 
 // ==========================================================================
 // Types
@@ -66,32 +55,30 @@ export { createNormalizer, normalizer } from "./factory.js";
 export * from "./types.js";
 
 // ==========================================================================
-// Bookmaker Adapters
+// Bookmaker Normalizers
 // ==========================================================================
 
-export { stsAdapter } from "./bookmakers/sts-adapter.js";
-
-// TODO: Export remaining adapters as they are created
-// export { fortunaAdapter } from "./bookmakers/fortuna-adapter.js";
-// export { superbetAdapter } from "./bookmakers/superbet-adapter.js";
-// ... etc
+export {
+  stsNormalizer,
+  fortunaNormalizer,
+  superbetNormalizer,
+  betclicNormalizer,
+  betcrisNormalizer,
+  betfanNormalizer,
+  bettersNormalizer,
+  etotoNormalizer,
+  forbetNormalizer,
+  fuksiarzNormalizer,
+  lebullNormalizer,
+  lvbetNormalizer,
+  pzbukNormalizer,
+  totalbetNormalizer,
+} from "./bookmakers/index.js";
 
 // ==========================================================================
 // Legacy API Compatibility
 // ==========================================================================
 
-/**
- * Normalize all markets for a specific bookmaker (Legacy API wrapper)
- *
- * This function maintains compatibility with the old market-normalizer.ts API
- * while using the new unified normalization system internally.
- *
- * @param markets - The scraped markets to normalize
- * @param bookmaker - Bookmaker identifier for specific normalization rules
- * @param homeTeam - Home team name for selection matching
- * @param awayTeam - Away team name for selection matching
- * @returns Array of normalized markets (ScrapedMarket format for compatibility)
- */
 export function normalizeMarketsForBookmaker(
   markets: ScrapedMarket[],
   bookmaker: string,
@@ -99,10 +86,8 @@ export function normalizeMarketsForBookmaker(
   awayTeam?: string
 ): ScrapedMarket[] {
   return markets.map((market) => {
-    const normalized = unifiedNormalizer.normalize(market, bookmaker, homeTeam, awayTeam);
+    const normalized = normalizerFacade.normalize(market, bookmaker, homeTeam, awayTeam);
 
-    // Merge normalized data with original market for compatibility
-    // Use type assertions to handle type system differences between old and new
     const merged: ScrapedMarket = {
       ...market,
       normalizedType: normalized.normalizedType as any,

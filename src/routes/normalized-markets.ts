@@ -13,18 +13,56 @@ import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import {
   getFullOfferByMatch,
-  getMarketCounts,
 } from "../repositories/full-offer-repository.js";
-import { normalizer } from "../services/normalization/index.js";
+import type {
+  RawBookmakerMarket,
+  NormalizationContext,
+  BookmakerMarketNormalizer,
+} from "../services/normalization/types.js";
+import {
+  stsNormalizer,
+  fortunaNormalizer,
+  superbetNormalizer,
+  betclicNormalizer,
+  betcrisNormalizer,
+  betfanNormalizer,
+  bettersNormalizer,
+  etotoNormalizer,
+  forbetNormalizer,
+  fuksiarzNormalizer,
+  lebullNormalizer,
+  lvbetNormalizer,
+  pzbukNormalizer,
+  totalbetNormalizer,
+} from "../services/normalization/bookmakers/index.js";
+import { getMarketMetadata, getCategoryForMarket } from "../data/market-catalog.js";
 import { MarketCategory, type MarketWithParams } from "../types/normalized-markets.js";
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
 
+const BOOKMAKER_NORMALIZERS: Record<string, BookmakerMarketNormalizer> = {
+  sts: stsNormalizer,
+  fortuna: fortunaNormalizer,
+  superbet: superbetNormalizer,
+  betclic: betclicNormalizer,
+  betcris: betcrisNormalizer,
+  betfan: betfanNormalizer,
+  betters: bettersNormalizer,
+  etoto: etotoNormalizer,
+  forbet: forbetNormalizer,
+  fuksiarz: fuksiarzNormalizer,
+  lebull: lebullNormalizer,
+  lvbet: lvbetNormalizer,
+  pzbuk: pzbukNormalizer,
+  totalbet: totalbetNormalizer,
+};
+
+function getNormalizerForBookmaker(bookmaker: string): BookmakerMarketNormalizer | null {
+  return BOOKMAKER_NORMALIZERS[bookmaker.toLowerCase()] ?? null;
+}
+
 const router = Router();
 
-/**
- * Response interface for normalized markets endpoint
- */
 interface NormalizedMarketsResponse {
   match: {
     homeTeam: string;
@@ -45,16 +83,6 @@ interface NormalizedMarketsResponse {
   };
 }
 
-/**
- * GET /api/matches/:homeTeam/:awayTeam/normalized-markets
- * Get normalized markets grouped by category for a specific match
- *
- * @param homeTeam - Home team name (e.g., "Arsenal")
- * @param awayTeam - Away team name (e.g., "Liverpool")
- * @param league - League slug (optional, default: "ekstraklasa")
- *
- * @returns Normalized markets grouped by category with statistics
- */
 router.get(
   "/:homeTeam/:awayTeam/normalized-markets",
   asyncHandler(async (req, res) => {
@@ -70,7 +98,6 @@ router.get(
       );
     }
 
-    // Get full offer from database
     const fullOfferComparison = await getFullOfferByMatch(
       homeTeam,
       awayTeam,
@@ -85,44 +112,59 @@ router.get(
       );
     }
 
-    // Convert FullOfferComparison to FullMatchOffer[] format
-    // This is needed because buildCategoryStructure expects FullMatchOffer[]
     const matchOffers: FullMatchOffer[] = [];
     const marketsWithBookmakers: Array<{ market: ScrapedMarket; bookmaker: string }> = [];
 
+    const normalizationContext: NormalizationContext = {
+      homeTeam: fullOfferComparison.homeTeam,
+      awayTeam: fullOfferComparison.awayTeam,
+    };
+
     for (const [marketKey, marketData] of Object.entries(fullOfferComparison.markets)) {
       for (const [bookmaker, bookmakerData] of Object.entries(marketData.bookmakerOdds)) {
-        const scrapedMarket: ScrapedMarket = {
+        const bookmakerNormalizer = getNormalizerForBookmaker(bookmaker);
+        
+        if (!bookmakerNormalizer) {
+          console.warn(`[normalized-markets] No normalizer found for bookmaker: ${bookmaker}`);
+          continue;
+        }
+
+        const rawMarket: RawBookmakerMarket = {
+          bookmakerMarketId: marketData.type,
           name: marketData.name,
-          type: marketData.type, // Pass type hint for normalizer
-          groupName: marketData.category, // Pass category as group hint
-          normalizedType: marketData.type,
-          category: marketData.category,
-          marketKey: marketKey,
-          paramValue: marketData.paramValue,
-          selections: bookmakerData.selections,
+          groupName: marketData.category,
+          selections: bookmakerData.selections.map(s => ({
+            name: s.name || "",
+            odds: s.odds,
+            externalId: s.externalId,
+          })),
         };
 
-        // Normalize market for this bookmaker with team names
-        const normalizedMarket = normalizer.normalize(
-          scrapedMarket,
-          bookmaker,
-          homeTeam,
-          awayTeam
-        );
+        const normalizedOutput = bookmakerNormalizer.normalizeMarket(rawMarket, normalizationContext);
 
-        // Merge original scraped market with normalized market
-        // Spread scrapedMarket last to preserve its original structure (including selections)
+        if (!normalizedOutput) {
+          continue;
+        }
+
+        const metadata = getMarketMetadata(normalizedOutput.marketCode);
+        const category = getCategoryForMarket(normalizedOutput.marketCode);
+
         const mergedMarket: ScrapedMarket = {
-          normalizedType: normalizedMarket.normalizedType as any,
-          marketKey: normalizedMarket.marketKey,
-          paramValue: normalizedMarket.paramValue,
-          category: normalizedMarket.category,
-          // Preserve all original fields including selections in correct format
-          ...scrapedMarket,
+          name: marketData.name,
+          groupName: marketData.category,
+          type: marketData.type,
+          normalizedType: normalizedOutput.marketCode,
+          marketKey: normalizedOutput.marketKey,
+          paramValue: normalizedOutput.paramValue,
+          category: category,
+          selections: normalizedOutput.selections.map((sel, idx) => ({
+            name: bookmakerData.selections[idx]?.name || sel.label,
+            normalizedName: sel.code,
+            odds: sel.odds,
+            externalId: bookmakerData.selections[idx]?.externalId,
+          })),
         };
 
-        // Add to markets with bookmakers array
         marketsWithBookmakers.push({
           market: mergedMarket,
           bookmaker,
@@ -130,13 +172,9 @@ router.get(
       }
     }
 
-    // Build category structure with market type grouping
     const categories = buildCategoriesWithMarketTypes(marketsWithBookmakers);
-
-    // Calculate statistics
     const stats = calculateStatsWithBookmaker(marketsWithBookmakers);
 
-    // Build response
     const response: NormalizedMarketsResponse = {
       match: {
         homeTeam: fullOfferComparison.homeTeam,
@@ -167,9 +205,6 @@ router.get(
   })
 );
 
-/**
- * Helper function to calculate statistics from markets with bookmaker context
- */
 function calculateStatsWithBookmaker(
   marketsWithBookmakers: Array<{ market: ScrapedMarket; bookmaker: string }>
 ): {

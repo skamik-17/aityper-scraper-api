@@ -32,14 +32,14 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   28: "TEAM_TOTAL_GOALS",
   31: "TEAM_TOTAL_GOALS",
   23: "TOTAL_GOALS_ASIAN",
-  
+
   43: "BTTS",
   121: "SECOND_HALF_BTTS",
-  
+
   8: "FIRST_TEAM_TO_SCORE",
   9: "FIRST_TEAM_TO_SCORE",
   44: "FIRST_TEAM_TO_SCORE",
-  
+
   35: "TEAM_GOAL_RANGE",
   36: "TEAM_GOAL_RANGE",
   47: "WIN_TO_NIL",
@@ -155,7 +155,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   40: "ODD_EVEN_GOALS",
   41: "ODD_EVEN_GOALS",
   42: "ODD_EVEN_GOALS",
-  
+
   59: "BOTH_HALVES_GOALS",
   60: "BOTH_HALVES_GOALS",
   61: "BOTH_HALVES_GOALS",
@@ -168,17 +168,17 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   68: "BOTH_HALVES_GOALS",
   69: "BOTH_HALVES_GOALS",
   70: "BOTH_HALVES_GOALS",
-  
+
   73: "FIRST_TEAM_TO_SCORE",
-  
+
   90: "GOAL_RANGE",
   94: "GOAL_RANGE",
   98: "GOAL_RANGE",
-  
+
   103: "FIRST_TEAM_TO_SCORE",
   104: "DOUBLE_CHANCE",
   105: "DRAW_NO_BET",
-  
+
   115: "TEAM_TOTAL_GOALS",
   118: "TEAM_TOTAL_GOALS",
   119: "TEAM_GOAL_RANGE",
@@ -217,62 +217,62 @@ const STS_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType; ex
   { pattern: /^wynik\s+meczu$/i, code: "MATCH_WINNER" },
   { pattern: /^podw[oó]jna\s+szansa$/i, code: "DOUBLE_CHANCE" },
   { pattern: /^remis\s*=\s*zwrot$/i, code: "DRAW_NO_BET" },
-  
+
   // Goals markets - with parameter extraction
   { pattern: /^liczba\s+goli\s+(\d+[.,]\d+)$/i, code: "TOTAL_GOALS", extractParam: (m) => m[1]?.replace(",", ".") },
   { pattern: /^liczba\s+goli\s+\(zwrot\)\s*(\d+)$/i, code: "TOTAL_GOALS_ASIAN", extractParam: (m) => m[1] },
   { pattern: /^obie\s+dru[zż]yny\s+strzel[aą]$/i, code: "BTTS" },
-  
+
   // Half-time markets
   { pattern: /^wynik\s+1\.\s*po[lł]owy$/i, code: "HALF_TIME_RESULT" },
   { pattern: /^liczba\s+goli\s+1\.\s*po[lł]ow[ay]$/i, code: "HALF_TIME_TOTAL_GOALS" },
   { pattern: /^obie\s+strzel[aą]\s+1\.\s*po[lł]ow[ay]$/i, code: "HALF_TIME_BTTS" },
-  
+
   // Second half markets  
   { pattern: /^wynik\s+2\.\s*po[lł]owy$/i, code: "SECOND_HALF_RESULT" },
   { pattern: /^liczba\s+goli\s+2\.\s*po[lł]ow[ay]$/i, code: "SECOND_HALF_TOTAL_GOALS" },
-  
+
   // Correct score
   { pattern: /^dok[lł]adny\s+wynik$/i, code: "CORRECT_SCORE" },
-  
+
   // Handicap markets
   { pattern: /^handicap\s+azjatycki/i, code: "ASIAN_HANDICAP" },
   { pattern: /^handicap\s+europejski/i, code: "EUROPEAN_HANDICAP" },
-  
+
   // Special markets
   { pattern: /^parzyste.*nieparzyste|^nieparzyste.*parzyste/i, code: "ODD_EVEN_GOALS" },
   { pattern: /^wygrana\s+do\s+zera/i, code: "WIN_TO_NIL" },
   { pattern: /^czyste\s+konto/i, code: "CLEAN_SHEET" },
-  
+
   // Combination markets
   { pattern: /^wynik.*i.*liczba\s+goli/i, code: "RESULT_AND_TOTAL" },
   { pattern: /^wynik.*i.*obie.*strzel/i, code: "RESULT_AND_BTTS" },
   { pattern: /^po[lł]owa.*koniec|^ht.*ft/i, code: "HALFTIME_FULLTIME" },
-  
+
   // Goalscorer markets
   { pattern: /^pierwszy.*strzelec|^strzelec.*pierwsz/i, code: "GOALSCORER_FIRST" },
   { pattern: /^ostatni.*strzelec|^strzelec.*ostatni/i, code: "GOALSCORER_LAST" },
   { pattern: /^strzelec\s+gola|^gol.*kiedykolwiek/i, code: "GOALSCORER_ANYTIME" },
-  
+
   // Corners
   { pattern: /^rz[uó]ty\s+ro[zż]ne.*suma|^suma.*rz[uó]t[oó]w\s+ro[zż]nych/i, code: "CORNERS_TOTAL" },
   { pattern: /^pierwszy\s+rz[uó]t\s+ro[zż]ny/i, code: "FIRST_CORNER" },
-  
+
   // Cards
   { pattern: /^kartki.*suma|^suma.*kartek/i, code: "CARDS_TOTAL" },
   { pattern: /^pierwsza\s+kartka/i, code: "FIRST_CARD" },
-  { pattern: /otrzyma\s+kartkę/i, code: "PLAYER_CARDS" },  
+  { pattern: /otrzyma\s+kartkę/i, code: "PLAYER_CARDS" },
   // Team scoring
   { pattern: /gospodarz.*strzeli|^dru[zż]yna\s+1.*strzeli/i, code: "HOME_TEAM_TO_SCORE" },
   { pattern: /go[sś][cć].*strzeli|^dru[zż]yna\s+2.*strzeli/i, code: "AWAY_TEAM_TO_SCORE" },
-  
+
   // First team to score
   { pattern: /^kt[oó]ra.*pierwsz.*strzeli|^pierwsz.*gol/i, code: "FIRST_TEAM_TO_SCORE" },
 ];
 
 function resolveMarketFromName(name: string): { code: NormalizedMarketType; param?: string } | null {
   const normalized = name.toLowerCase().trim();
-  
+
   for (const { pattern, code, extractParam } of STS_NAME_PATTERNS) {
     const match = normalized.match(pattern);
     if (match) {
@@ -280,7 +280,7 @@ function resolveMarketFromName(name: string): { code: NormalizedMarketType; para
       return { code, param };
     }
   }
-  
+
   return null;
 }
 
@@ -502,13 +502,13 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     let marketName = raw.name;
     let playerName: string | undefined;
-    
+
     if (raw.name.includes("|")) {
       const parts = raw.name.split("|");
       marketName = parts[0];
       playerName = parts[1];
     }
-    
+
     const stsId = raw.bookmakerMarketId
       ? Number(raw.bookmakerMarketId)
       : extractStsMarketId(marketName);
@@ -521,7 +521,7 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     }
 
     let nameParam: string | undefined;
-    
+
     if (!marketCode) {
       matchedBy = "name";
       const nameResult = resolveMarketFromName(marketName);

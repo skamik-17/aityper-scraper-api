@@ -1,12 +1,13 @@
 import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
 import {
-  getLatestOdds,
+  getAggregatedOdds,
   getMatchOdds,
   getBookmakerStatus,
 } from "../repositories/odds-repository.js";
 import { getLastSuccessfulScrapeTime } from "../repositories/scraper-run-repository.js";
 import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, MarketSelectionJson, ViewType, MarketCategory } from "../types/database.js";
+import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
 
 export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Promise<{
@@ -14,51 +15,45 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
   lastUpdated: string | null;
   bookmakerStatus: Record<PolishBookmaker, BookmakerStatus>;
 }> {
-  const oddsData = await getLatestOdds(leagueSlug);
+  const aggregatedData = await getAggregatedOdds(leagueSlug);
   const lastScrape = await getLastSuccessfulScrapeTime();
+  const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
 
-  const matchMap = new Map<string, MatchOdds>();
+  const matches: MatchOdds[] = aggregatedData.map((row) => {
+    const markets: MatchOdds["markets"] = {};
 
-  for (const row of oddsData) {
-    const matchKey = row.match_id;
+    for (const [marketKey, marketData] of Object.entries(row.markets || {})) {
+      const bestOdds: BestOdds = {};
+      const bookmakerOdds: Record<string, { selections: any[]; eventUrl?: string; scrapedAt: string }> = {};
 
-    if (!matchMap.has(matchKey)) {
-      matchMap.set(matchKey, {
-        matchId: matchKey,
-        homeTeam: row.home_team,
-        awayTeam: row.away_team,
-        leagueSlug: row.league_slug,
-        markets: {},
-      });
-    }
+      for (const [bookmaker, oddsData] of Object.entries(marketData.bookmakerOdds || {})) {
+        bookmakerOdds[bookmaker] = {
+          selections: oddsData.selections,
+          eventUrl: oddsData.eventUrl ?? undefined,
+          scrapedAt: oddsData.scrapedAt,
+        };
+        updateBestOdds(bestOdds, bookmaker as PolishBookmaker, oddsData.selections);
+      }
 
-    const match = matchMap.get(matchKey)!;
-    const marketKey = row.market_key;
-
-    if (!match.markets[marketKey]) {
-      match.markets[marketKey] = {
-        code: row.market_code,
-        namePl: row.market_name_pl,
-        viewType: row.view_type,
-        category: row.category,
-        paramValue: row.param_value ?? null,
-        bookmakerOdds: {},
-        bestOdds: {},
+      markets[marketKey] = {
+        code: marketData.code as NormalizedMarketType,
+        namePl: marketData.namePl,
+        viewType: marketData.viewType as ViewType,
+        category: marketData.category as MarketCategory,
+        paramValue: marketData.paramValue,
+        bookmakerOdds,
+        bestOdds,
       };
     }
 
-    const market = match.markets[marketKey];
-    market.bookmakerOdds[row.bookmaker] = {
-      selections: row.selections,
-      eventUrl: row.event_url ?? undefined,
-      scrapedAt: row.scraped_at,
+    return {
+      matchId: row.match_id,
+      homeTeam: row.home_team,
+      awayTeam: row.away_team,
+      leagueSlug,
+      markets,
     };
-
-    updateBestOdds(market.bestOdds, row.bookmaker, row.selections);
-  }
-
-  const matches = Array.from(matchMap.values());
-  const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
+  });
 
   let lastUpdated: string | null = null;
   if (lastScrape && !isNaN(lastScrape.getTime())) {

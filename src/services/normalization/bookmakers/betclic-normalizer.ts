@@ -240,12 +240,6 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       },
     };
   },
-
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((market) => this.normalizeMarket(market, ctx))
-      .filter((market): market is NormalizedMarketOutput => market !== null);
-  },
 };
 
 export default betclicNormalizer;

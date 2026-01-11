@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  normalizeMarketName,
   parseOverUnderLine,
   parseDecimalLine,
   parseIntegerLine,
@@ -51,15 +52,6 @@ const FORTUNA_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMar
   { pattern: /^remis\s*=\s*zwrot/, code: "DRAW_NO_BET" },
   { pattern: /^parzyste\/nieparzyste/, code: "ODD_EVEN_GOALS" },
 ];
-
-function normalizeMarketName(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 function findMarketCodeFromName(name: string): NormalizedMarketType | null {
   const normalized = normalizeMarketName(name);
@@ -199,11 +191,6 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     };
   },
 
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((m) => this.normalizeMarket(m, ctx))
-      .filter((m): m is NormalizedMarketOutput => m !== null);
-  },
 };
 
 export default fortunaNormalizer;

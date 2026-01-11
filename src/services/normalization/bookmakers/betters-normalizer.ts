@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  normalizeMarketName,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -75,19 +76,6 @@ const BETTERS_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketTy
   { pattern: /strzelec/, code: "GOALSCORER_ANYTIME" },
 ];
 
-function normalizeMarketName(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
-
-function normalizeTeamName(value: string): string {
-  return normalizeMarketName(value);
-}
-
 function extractTimePeriodParam(name: string): string | undefined {
   const normalized = normalizeMarketName(name);
   const rangeMatch = normalized.match(/(\d+)\s*[-–]\s*(\d+)/);
@@ -107,8 +95,8 @@ function resolveMarketCode(
     return { marketCode: direct, matchedBy: "name" };
   }
 
-  const home = ctx.homeTeam ? normalizeTeamName(ctx.homeTeam) : "";
-  const away = ctx.awayTeam ? normalizeTeamName(ctx.awayTeam) : "";
+  const home = ctx.homeTeam ? normalizeMarketName(ctx.homeTeam) : "";
+  const away = ctx.awayTeam ? normalizeMarketName(ctx.awayTeam) : "";
 
   const isGoalRange = /suma\s*goli[:\s]+\d+\s*[-–]\s*\d+/i.test(normalizedName);
   if (isGoalRange) {
@@ -317,11 +305,6 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
     } as NormalizedMarketOutput;
   },
 
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((market) => this.normalizeMarket(market, ctx))
-      .filter((market): market is NormalizedMarketOutput => market !== null);
-  },
 };
 
 export default bettersNormalizer;

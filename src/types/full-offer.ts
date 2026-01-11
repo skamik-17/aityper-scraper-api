@@ -111,58 +111,6 @@ export interface AggregatedFullOfferResult {
 }
 
 /**
- * Database row type for scraped_market_groups table
- */
-export interface ScrapedMarketGroupRow {
-  id: string;
-  match_id: string;
-  bookmaker: string;
-  name: string;
-  display_order: number;
-  created_at: string;
-}
-
-/**
- * Database row type for scraped_markets table
- */
-export interface ScrapedMarketRow {
-  id: string;
-  match_id: string;
-  group_id: string | null;
-  bookmaker: string;
-  external_id: string | null;
-  name: string;
-  normalized_type: string;
-  selections: MarketSelection[];
-  scraped_at: string;
-  created_at: string;
-}
-
-/**
- * Insert type for scraped_market_groups table
- */
-export interface ScrapedMarketGroupInsert {
-  match_id: string;
-  bookmaker: string;
-  name: string;
-  display_order?: number;
-}
-
-/**
- * Insert type for scraped_markets table
- */
-export interface ScrapedMarketInsert {
-  match_id: string;
-  group_id?: string;
-  bookmaker: string;
-  external_id?: string;
-  name: string;
-  normalized_type?: string;
-  selections: MarketSelection[];
-  scraped_at: Date;
-}
-
-/**
  * Over/Under market odds structure
  * Used by parsers for structured O/U markets
  */

@@ -3,21 +3,38 @@ import type { PolishBookmaker } from "../config/index.js";
 import type { Database, LatestOddsRow, OddsInsert } from "../types/database.js";
 import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
 
-export async function getLatestOdds(leagueSlug: string = "ekstraklasa"): Promise<LatestOddsRow[]> {
+export interface AggregatedMatchOdds {
+  match_id: string;
+  home_team: string;
+  away_team: string;
+  markets: Record<string, {
+    code: string;
+    namePl: string;
+    viewType: string;
+    category: string;
+    paramValue: string | null;
+    bookmakerOdds: Record<string, {
+      selections: any[];
+      eventUrl: string | null;
+      scrapedAt: string;
+    }>;
+  }>;
+  last_updated: string;
+}
+
+export async function getAggregatedOdds(leagueSlug: string = "ekstraklasa"): Promise<AggregatedMatchOdds[]> {
   const supabase = getSupabase();
 
-  const { data, error } = await supabase
-    .from("latest_odds")
-    .select("*")
-    .eq("league_slug", leagueSlug)
-    .order("home_team");
+  const { data, error } = await (supabase.rpc as any)("get_matches_with_odds", {
+    p_league_slug: leagueSlug,
+  });
 
   if (error) {
-    console.error("[OddsRepository] getLatestOdds error:", error);
+    console.error("[OddsRepository] getAggregatedOdds error:", error);
     throw error;
   }
 
-  return data || [];
+  return (data as AggregatedMatchOdds[]) || [];
 }
 
 export async function getMatchOdds(

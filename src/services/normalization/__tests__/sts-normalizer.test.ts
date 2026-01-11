@@ -234,7 +234,9 @@ describe("stsNormalizer", () => {
         },
       ];
 
-      const results = stsNormalizer.normalizeMarkets!(markets, ctx);
+      const results = markets
+        .map((m) => stsNormalizer.normalizeMarket(m, ctx))
+        .filter((m): m is NonNullable<typeof m> => m !== null);
 
       expect(results).toHaveLength(2);
       expect(results[0].marketCode).toBe("MATCH_WINNER");

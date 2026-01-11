@@ -562,15 +562,6 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       },
     };
   },
-
-  normalizeMarkets(
-    markets: RawBookmakerMarket[],
-    ctx: NormalizationContext
-  ): NormalizedMarketOutput[] {
-    return markets
-      .map((m) => this.normalizeMarket(m, ctx))
-      .filter((m): m is NormalizedMarketOutput => m !== null);
-  },
 };
 
 export default stsNormalizer;

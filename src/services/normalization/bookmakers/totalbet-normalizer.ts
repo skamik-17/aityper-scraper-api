@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  normalizeMarketName,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -52,15 +53,6 @@ const TOTALBET_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketT
   { pattern: /handicap europejski/i, code: "EUROPEAN_HANDICAP" },
   { pattern: /wynik\s*1\.?\s*polow/i, code: "HALF_TIME_RESULT" },
 ];
-
-function normalizeMarketName(value: string): string {
-  return value
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-}
 
 function resolveMarketCode(raw: RawBookmakerMarket): {
   marketCode: NormalizedMarketType;
@@ -208,11 +200,6 @@ export const totalbetNormalizer: BookmakerMarketNormalizer = {
     } as NormalizedMarketOutput;
   },
 
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((market) => this.normalizeMarket(market, ctx))
-      .filter((market): market is NormalizedMarketOutput => market !== null);
-  },
 };
 
 export default totalbetNormalizer;

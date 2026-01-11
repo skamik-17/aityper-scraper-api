@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  normalizeMarketName,
   parseOverUnderLine,
   parseDecimalLine,
   parseIntegerLine,
@@ -56,15 +57,6 @@ const GOAL_TOTAL_PATTERN = /(suma goli|liczba goli|gole|bramek|azjatycka liczba 
 const BTTS_PATTERN = /obie druzyny strzela/i;
 const HANDICAP_PATTERN = /handicap/i;
 const EUROPEAN_HANDICAP_PATTERN = /(3[-\s]?drogowy|3[-\s]?drogowo)/i;
-
-function normalizeMarketName(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 function resolveMarketCode(
   raw: RawBookmakerMarket
@@ -232,11 +224,6 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     };
   },
 
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((market) => this.normalizeMarket(market, ctx))
-      .filter((market): market is NormalizedMarketOutput => market !== null);
-  },
 };
 
 export default lvbetNormalizer;

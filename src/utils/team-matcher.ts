@@ -168,8 +168,7 @@ const LALIGA_ALIASES: Record<string, string> = {
   "Athletic Club": "Athletic Bilbao",
 
   // Rayo Vallecano
-  Rayo: "Vallecano",
-  "Rayo Vallecano": "Vallecano",
+  Rayo: "Rayo Vallecano",
 
   // Celta Vigo
   Celta: "Celta Vigo",
@@ -201,15 +200,6 @@ const LALIGA_ALIASES: Record<string, string> = {
   // Girona
   "Girona FC": "Girona",
 
-  // Las Palmas
-  "UD Las Palmas": "Las Palmas",
-  "U.D. Las Palmas": "Las Palmas",
-
-  // Leganes
-  "CD Leganes": "Leganes",
-  "CD Leganés": "Leganes",
-  Leganés: "Leganes",
-
   // Mallorca
   "RCD Mallorca": "Mallorca",
   "Real Mallorca": "Mallorca",
@@ -222,10 +212,6 @@ const LALIGA_ALIASES: Record<string, string> = {
 
   // Valencia
   "Valencia CF": "Valencia",
-
-  // Valladolid
-  "Real Valladolid": "Valladolid",
-  "R. Valladolid": "Valladolid",
 
   // Villarreal
   "Villarreal CF": "Villarreal",

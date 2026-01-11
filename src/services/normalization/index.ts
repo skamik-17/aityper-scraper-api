@@ -13,27 +13,17 @@ import { normalizer as normalizerFacade } from "./factory.js";
 
 export {
   normalizeSelection,
-  normalizeSelections,
 } from "./core/selection-normalizer.js";
 
 // ==========================================================================
-// Market Registry (from unified registry)
+// Market Catalog (essential exports only)
 // ==========================================================================
 
 export {
-  MARKET_REGISTRY,
-  UNIFIED_MARKET_REGISTRY,
+  MARKET_CATALOG,
   MARKET_BY_CODE,
-  MARKET_BY_NUMERIC_ID,
-  MARKET_BY_SLUG,
   CANONICAL_MARKET_CODES,
-  getMarketById,
   getMarketByCode,
-  getMarketBySlug,
-  getMarketByNumericId,
-  getMarketsByCategory,
-  getMarketByType,
-  isCanonicalMarket,
 } from "../../data/market-catalog.js";
 
 // ==========================================================================

@@ -10,6 +10,7 @@ import {
   buildMarketKey,
   normalize1x2Selection,
   normalizeDoubleChanceSelection,
+  normalizeMarketName,
   normalizeOddEvenSelection,
   normalizeOverUnderSelection,
   normalizeYesNoSelection,
@@ -85,15 +86,6 @@ const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
   "CARDS_TOTAL",
   "CORNERS_HANDICAP",
 ]);
-
-function normalizeMarketName(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 
 function extractSuperbetMarketId(marketName: string): number | null {
   const match = marketName.match(/^Rynek\s+(\d+)$/iu);
@@ -276,11 +268,6 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     } as NormalizedMarketOutput;
   },
 
-  normalizeMarkets(markets: RawBookmakerMarket[], ctx: NormalizationContext): NormalizedMarketOutput[] {
-    return markets
-      .map((market) => this.normalizeMarket(market, ctx))
-      .filter((market): market is NormalizedMarketOutput => market !== null);
-  },
 };
 
 export default superbetNormalizer;

@@ -223,21 +223,10 @@ export function buildMarketKey(type: NormalizedMarketType, param?: string): stri
 // ADDITIONAL TYPES (for normalization core)
 // ============================================================================
 
-export interface BookmakerAdapter {
-  bookmaker: string;
-  bookmakerName: string;
-  idMappings?: Map<number, string>;
-  selectionOverrides?: Record<string, NormalizedSelection>;
-}
-
 export interface RawBookmakerMarket {
-  /** Bookmaker-specific market ID (e.g., STS "Rynek 25" → 25) */
   bookmakerMarketId?: string | number;
-  /** Raw market name from the bookmaker */
   name: string;
-  /** Raw group/category name if available */
   groupName?: string;
-  /** Raw selections with odds */
   selections: Array<{ name: string; odds: number; externalId?: string }>;
 }
 
@@ -334,13 +323,6 @@ export interface MarketDefinition {
   bookmakerData?: Record<string, BookmakerMarketData>;
 }
 
-export interface PatternMatch {
-  definition: MarketDefinition;
-  parameter?: string;
-  param?: string;
-  match?: RegExpMatchArray;
-}
-
 export interface NormalizedMarketSelection {
   name: string;
   normalizedName: NormalizedSelection;
@@ -362,5 +344,4 @@ export interface NormalizedSelectionResult {
   odds: number;
 }
 
-export type NormalMarket = NormalizedMarket;
 export type ScrapedMarket = import("../../types/full-offer.js").ScrapedMarket;

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { normalizer } from "../index.js";
 import { normalizeSelection } from "../core/selection-normalizer.js";
-import { MARKET_REGISTRY } from "../../../data/market-catalog.js";
+import { MARKET_CATALOG } from "../../../data/market-catalog.js";
 
 describe("Unified Normalizer", () => {
   describe("STS ID Mapping", () => {
@@ -146,7 +146,7 @@ describe("STS Normalizer", () => {
 
 describe("Selection Normalization", () => {
   it("should normalize Over selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
+    const marketDef = MARKET_CATALOG.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -160,7 +160,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Polish Over selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
+    const marketDef = MARKET_CATALOG.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -174,7 +174,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Under selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.code === "TOTAL_GOALS");
+    const marketDef = MARKET_CATALOG.find((m) => m.code === "TOTAL_GOALS");
     expect(marketDef).toBeDefined();
 
     const result = normalizeSelection(
@@ -188,7 +188,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize Yes/No (BTTS) selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.code === "BTTS");
+    const marketDef = MARKET_CATALOG.find((m) => m.code === "BTTS");
     expect(marketDef).toBeDefined();
 
     const yesTak = normalizeSelection(
@@ -211,7 +211,7 @@ describe("Selection Normalization", () => {
   });
 
   it("should normalize 1X2 selections", () => {
-    const marketDef = MARKET_REGISTRY.find((m) => m.code === "MATCH_WINNER");
+    const marketDef = MARKET_CATALOG.find((m) => m.code === "MATCH_WINNER");
     expect(marketDef).toBeDefined();
 
     const home = normalizeSelection(

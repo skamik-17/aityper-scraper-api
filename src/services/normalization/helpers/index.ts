@@ -1,5 +1,18 @@
 import type { NormalizedSelection } from "../types.js";
 
+/**
+ * Normalizes a market name by removing diacritics, converting to lowercase,
+ * and collapsing whitespace. Used across all bookmaker normalizers.
+ */
+export function normalizeMarketName(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function buildMarketKey(marketCode: string, paramValue?: string): string {
   if (!paramValue) return marketCode;
   return `${marketCode}:${paramValue.replace(",", ".")}`;

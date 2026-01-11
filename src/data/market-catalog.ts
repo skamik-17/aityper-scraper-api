@@ -1117,68 +1117,21 @@ export const CATEGORY_ORDER: MarketCategory[] = [
 ];
 
 // ============================================================================
-// Legacy Compatibility Aliases (for migration from market-registry.ts)
+// Legacy Compatibility Aliases (minimal set - only used exports)
 // ============================================================================
 
-/** Alias for MARKET_CATALOG - compatibility with market-registry.ts */
-export const UNIFIED_MARKET_REGISTRY = MARKET_CATALOG;
-
-/** Alias for MARKET_CATALOG - compatibility with market-registry.ts */
-export const MARKET_REGISTRY = MARKET_CATALOG;
-
-/** Alias for CATALOG_BY_CODE - compatibility with market-registry.ts */
 export const MARKET_BY_CODE = CATALOG_BY_CODE;
 
-/** Alias for CATALOG_BY_NUMERIC_ID - compatibility with market-registry.ts */
-export const MARKET_BY_NUMERIC_ID = CATALOG_BY_NUMERIC_ID;
-
-/** Alias for CATALOG_BY_SLUG - compatibility with market-registry.ts */
-export const MARKET_BY_SLUG = CATALOG_BY_SLUG;
-
-/** Alias for CANONICAL_CODES - compatibility with market-registry.ts */
 export const CANONICAL_MARKET_CODES = CANONICAL_CODES;
 
-/** Alias for getMarketMetadata - compatibility with market-registry.ts */
 export function getMarketByCode(code: string): MarketCatalogEntry | undefined {
   return CATALOG_BY_CODE.get(code);
 }
 
-/** Alias for getMarketMetadata - compatibility with market-registry.ts */
-export function getMarketById(id: number): MarketCatalogEntry | undefined {
-  return CATALOG_BY_NUMERIC_ID.get(id);
-}
-
-/** Alias for getMarketMetadata - compatibility with market-registry.ts */
-export function getMarketByNumericId(id: number): MarketCatalogEntry | undefined {
-  return CATALOG_BY_NUMERIC_ID.get(id);
-}
-
-/** Alias for getMarketMetadata - compatibility with market-registry.ts */
-export function getMarketBySlug(slug: string): MarketCatalogEntry | undefined {
-  return CATALOG_BY_SLUG.get(slug);
-}
-
-/** Get market by type (alias for getMarketByCode) */
-export function getMarketByType(type: string): MarketCatalogEntry | undefined {
-  return CATALOG_BY_CODE.get(type);
-}
-
-/** Alias for getCategoryForMarket - compatibility with market-registry.ts */
 export function getCategoryForCode(code: string): MarketCategory {
   return getCategoryForMarket(code);
 }
 
-/** Alias for hasParameters - compatibility with market-registry.ts */
 export function marketHasParameters(code: string): boolean {
   return hasParameters(code);
-}
-
-/** Check if a market code is canonical */
-export function isCanonicalMarket(code: string): boolean {
-  return isValidMarketCode(code);
-}
-
-/** Get all markets in a category */
-export function getMarketsByCategory(category: MarketCategory): MarketCatalogEntry[] {
-  return MARKET_CATALOG.filter((m) => m.category === category);
 }

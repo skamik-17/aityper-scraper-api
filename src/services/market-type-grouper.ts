@@ -195,10 +195,11 @@ export function groupMarketsByTypeWithParameters(
     const defaultParam = DEFAULT_PARAMETERS[marketType];
     const useDefault = defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0];
 
-    // Get description and displayOrder from market registry
+    // Get description, displayOrder, and viewType from market registry
     const marketDef = getMarketByCode(marketType);
     const description = marketDef?.descriptions?.pl;
     const displayOrder = marketDef?.displayOrder ?? 999;
+    const viewType = marketDef?.viewType;
 
     result.push({
       marketKey: marketType,
@@ -207,6 +208,7 @@ export function groupMarketsByTypeWithParameters(
       label: group.label,
       description,
       displayOrder,
+      viewType,
       parameters,
       defaultParameter: useDefault,
       hasParameters,

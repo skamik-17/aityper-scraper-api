@@ -118,14 +118,14 @@ export const stsAdapter: BookmakerAdapter = {
     [1234, "other"], // 2. połowa - 2. drużyna - strzeli gola
     [1235, "other"], // 2. połowa - 1. drużyna - strzeli gola
 
-    // Win to Nil (NOT BTTS!)
-    [35, "win-to-nil"],   // 1. drużyna - dokładna liczba goli (used for win-to-nil)
+    // Win to Nil (wygra do zera) - uses outcome IDs 26=Yes, 27=No
     [47, "win-to-nil"],   // 1. drużyna - wygra do zera
     [48, "win-to-nil"],   // 2. drużyna - wygra do zera
-    [90, "other"],        // 1. połowa - dokładna liczba goli
 
-    // Clean Sheet
-    [36, "clean-sheet"],  // 2. drużyna - dokładna liczba goli
+    // Team Exact Goals (dokładna liczba goli) - uses outcome IDs 1237-1240 (0, 1, 2, 3+)
+    [35, "other"],        // 1. drużyna - dokładna liczba goli
+    [36, "other"],        // 2. drużyna - dokładna liczba goli
+    [90, "other"],        // 1. połowa - dokładna liczba goli
 
     // Team wins both halves / at least one half (NOT BTTS!)
     [59, "other"],   // 1. drużyna - wygra obie połowy
@@ -180,10 +180,9 @@ export const stsAdapter: BookmakerAdapter = {
     // Market 101 = 1st Half Correct Score
     // Market 124 = 2nd Half Correct Score
     [283, "correct-score"],
-    [101, "correct-score"],  // 1. połowa - dokładny wynik
-    [124, "correct-score"],  // 2. połowa - dokładny wynik
-    // Market 57 is HT/FT exact score combo - NOT simple correct score!
-    [57, "other"],  // 1. połowa / wynik końcowy - dokładny wynik
+    [101, "correct-score"],
+    [124, "correct-score"],
+    [57, "other"],
 
     // ========================================================================
     // GOALSCORER MARKETS
@@ -381,14 +380,7 @@ export const stsAdapter: BookmakerAdapter = {
     "^2\\s*\\(": "AWAY" as NormalizedSelection,
     "^x\\s*\\(": "DRAW" as NormalizedSelection,
 
-    // ========================================================================
-    // Clean Sheet / Win to Nil - STS numeric outcome IDs
-    // Format: 1237=Home CS, 1238=Home fails, 1239=Away CS, 1240=Away fails
-    // ========================================================================
-    "^1237$": "HOME" as NormalizedSelection,
-    "^1238$": "AWAY" as NormalizedSelection,
-    "^1239$": "AWAY" as NormalizedSelection,
-    "^1240$": "HOME" as NormalizedSelection,
+
 
     // ========================================================================
     // Result + Total combo - numeric outcome IDs

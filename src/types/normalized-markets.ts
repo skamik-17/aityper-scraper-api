@@ -208,6 +208,9 @@ export interface MarketWithParams {
   /** Display order for sorting within category (from market_types table) */
   displayOrder?: number;
 
+  /** View type for UI rendering (TRIPLE_BUTTONS, BINARY_BUTTONS, PARAMETER_SLIDER, etc.) */
+  viewType?: string;
+
   /** All available parameters for this market type */
   parameters: MarketParameter[];
 

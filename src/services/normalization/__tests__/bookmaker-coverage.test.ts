@@ -224,7 +224,7 @@ const BOOKMAKER_TEST_DATA: BookmakerTestCase[] = [
       "Rynek 25": "TOTAL_GOALS",
       "Rynek 43": "BTTS",
       "Rynek 5": "HALF_TIME_RESULT",
-      "Rynek 9": "GOALSCORER_LAST",
+      "Rynek 9": "FIRST_TEAM_TO_SCORE",
       "Rynek 4": "DRAW_NO_BET",
     },
     selectionFormats: {
@@ -840,7 +840,7 @@ describe("Market Name Pattern Matching Coverage", () => {
       "Rynek 25": "TOTAL_GOALS",
       "Rynek 43": "BTTS",
       "Rynek 71": "HALF_TIME_RESULT",
-      "Rynek 9": "GOALSCORER_LAST",
+      "Rynek 9": "FIRST_TEAM_TO_SCORE",
       "Rynek 4": "DRAW_NO_BET",
     };
 

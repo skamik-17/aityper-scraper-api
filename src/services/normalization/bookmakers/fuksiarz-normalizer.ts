@@ -35,20 +35,10 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   99: "HALF_TIME_BTTS",
 };
 
-const DOUBLE_CHANCE_PREFIX: Record<NormalizedSelection, string | undefined> = {
+const DOUBLE_CHANCE_PREFIX: Partial<Record<NormalizedSelection, string>> = {
   HOME_OR_DRAW: "1X",
   DRAW_OR_AWAY: "X2",
   HOME_OR_AWAY: "12",
-  HOME: undefined,
-  DRAW: undefined,
-  AWAY: undefined,
-  OVER: undefined,
-  UNDER: undefined,
-  YES: undefined,
-  NO: undefined,
-  ODD: undefined,
-  EVEN: undefined,
-  UNKNOWN: undefined,
 };
 
 const TEAM_TO_SCORE_MARKETS = new Set<NormalizedMarketType>([

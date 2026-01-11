@@ -22,6 +22,7 @@ import {
   HALF_CORRECT_SCORE_OUTCOMES,
   LEAGUE_CONFIG,
 } from "./constants.js";
+import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
   STSFixture,
   STSOdds,
@@ -381,21 +382,16 @@ function parseLineSelections(
   return selections;
 }
 
-/**
- * Get selection display name based on market and outcome IDs
- */
 function getSelectionName(
   marketId: number,
   outcomeId: number,
   outcome: STSOutcome,
   fixture: STSFixture
 ): string {
-  // Use outcome name if provided and meaningful
   if (outcome.n && outcome.n.length > 1) {
     return outcome.n;
   }
 
-  // Map based on market type
   switch (marketId) {
     case MARKET_IDS.MATCH_RESULT_1X2:
       if (outcomeId === OUTCOME_1X2.HOME) return fixture.home;
@@ -416,8 +412,8 @@ function getSelectionName(
 
     case MARKET_IDS.TOTAL_GOALS:
     case MARKET_IDS.TOTAL_GOALS_ASIAN:
-      if (outcomeId === OUTCOME_OVER_UNDER.OVER) return "Powyzej";
-      if (outcomeId === OUTCOME_OVER_UNDER.UNDER) return "Ponizej";
+      if (outcomeId === OUTCOME_OVER_UNDER.OVER) return "Powyżej";
+      if (outcomeId === OUTCOME_OVER_UNDER.UNDER) return "Poniżej";
       break;
 
     case MARKET_IDS.HALF_TIME_RESULT:
@@ -427,7 +423,6 @@ function getSelectionName(
       break;
 
     case MARKET_IDS.CORRECT_SCORE:
-      // Use the full match correct score mapping
       if (CORRECT_SCORE_OUTCOMES[outcomeId]) {
         return CORRECT_SCORE_OUTCOMES[outcomeId];
       }
@@ -435,11 +430,15 @@ function getSelectionName(
 
     case MARKET_IDS.FIRST_HALF_CORRECT_SCORE:
     case MARKET_IDS.SECOND_HALF_CORRECT_SCORE:
-      // Use the half-time correct score mapping
       if (HALF_CORRECT_SCORE_OUTCOMES[outcomeId]) {
         return HALF_CORRECT_SCORE_OUTCOMES[outcomeId];
       }
       break;
+  }
+
+  const globalName = getSelectionNameByOutcomeId(outcomeId);
+  if (globalName) {
+    return globalName;
   }
 
   return outcome.n || String(outcomeId);

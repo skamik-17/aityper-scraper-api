@@ -6,60 +6,14 @@
  */
 
 import { Router } from "express";
-import type {
-  ApiSuccessResponse,
-} from "../types/api.js";
+import type { ApiSuccessResponse } from "../types/api.js";
 import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
-import {
-  getFullOfferByMatch,
-} from "../repositories/full-offer-repository.js";
-import type {
-  RawBookmakerMarket,
-  NormalizationContext,
-  BookmakerMarketNormalizer,
-} from "../services/normalization/types.js";
-import {
-  stsNormalizer,
-  fortunaNormalizer,
-  superbetNormalizer,
-  betclicNormalizer,
-  betcrisNormalizer,
-  betfanNormalizer,
-  bettersNormalizer,
-  etotoNormalizer,
-  forbetNormalizer,
-  fuksiarzNormalizer,
-  lebullNormalizer,
-  lvbetNormalizer,
-  pzbukNormalizer,
-  totalbetNormalizer,
-} from "../services/normalization/bookmakers/index.js";
-import { getMarketMetadata, getCategoryForMarket } from "../data/market-catalog.js";
+import { getFullOfferByMatch } from "../repositories/full-offer-repository.js";
+import { getCategoryForMarket } from "../data/market-catalog.js";
 import { MarketCategory, type MarketWithParams } from "../types/normalized-markets.js";
-import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
+import type { ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
-
-const BOOKMAKER_NORMALIZERS: Record<string, BookmakerMarketNormalizer> = {
-  sts: stsNormalizer,
-  fortuna: fortunaNormalizer,
-  superbet: superbetNormalizer,
-  betclic: betclicNormalizer,
-  betcris: betcrisNormalizer,
-  betfan: betfanNormalizer,
-  betters: bettersNormalizer,
-  etoto: etotoNormalizer,
-  forbet: forbetNormalizer,
-  fuksiarz: fuksiarzNormalizer,
-  lebull: lebullNormalizer,
-  lvbet: lvbetNormalizer,
-  pzbuk: pzbukNormalizer,
-  totalbet: totalbetNormalizer,
-};
-
-function getNormalizerForBookmaker(bookmaker: string): BookmakerMarketNormalizer | null {
-  return BOOKMAKER_NORMALIZERS[bookmaker.toLowerCase()] ?? null;
-}
 
 const router = Router();
 
@@ -112,56 +66,25 @@ router.get(
       );
     }
 
-    const matchOffers: FullMatchOffer[] = [];
     const marketsWithBookmakers: Array<{ market: ScrapedMarket; bookmaker: string }> = [];
-
-    const normalizationContext: NormalizationContext = {
-      homeTeam: fullOfferComparison.homeTeam,
-      awayTeam: fullOfferComparison.awayTeam,
-    };
 
     for (const [marketKey, marketData] of Object.entries(fullOfferComparison.markets)) {
       for (const [bookmaker, bookmakerData] of Object.entries(marketData.bookmakerOdds)) {
-        const bookmakerNormalizer = getNormalizerForBookmaker(bookmaker);
-        
-        if (!bookmakerNormalizer) {
-          console.warn(`[normalized-markets] No normalizer found for bookmaker: ${bookmaker}`);
-          continue;
-        }
-
-        const rawMarket: RawBookmakerMarket = {
-          bookmakerMarketId: marketData.type,
-          name: marketData.name,
-          groupName: marketData.category,
-          selections: bookmakerData.selections.map(s => ({
-            name: s.name || "",
-            odds: s.odds,
-            externalId: s.externalId,
-          })),
-        };
-
-        const normalizedOutput = bookmakerNormalizer.normalizeMarket(rawMarket, normalizationContext);
-
-        if (!normalizedOutput) {
-          continue;
-        }
-
-        const metadata = getMarketMetadata(normalizedOutput.marketCode);
-        const category = getCategoryForMarket(normalizedOutput.marketCode);
+        const category = getCategoryForMarket(marketData.type);
 
         const mergedMarket: ScrapedMarket = {
           name: marketData.name,
           groupName: marketData.category,
           type: marketData.type,
-          normalizedType: normalizedOutput.marketCode,
-          marketKey: normalizedOutput.marketKey,
-          paramValue: normalizedOutput.paramValue,
+          normalizedType: marketData.type,
+          marketKey: marketKey,
+          paramValue: marketData.paramValue,
           category: category,
-          selections: normalizedOutput.selections.map((sel, idx) => ({
-            name: bookmakerData.selections[idx]?.name || sel.label,
-            normalizedName: sel.code,
-            odds: sel.odds,
-            externalId: bookmakerData.selections[idx]?.externalId,
+          selections: bookmakerData.selections.map(s => ({
+            name: s.name || "",
+            normalizedName: s.normalizedName,
+            odds: s.odds,
+            externalId: s.externalId,
           })),
         };
 

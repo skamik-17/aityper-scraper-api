@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { normalizer } from "../index.js";
 import { normalizeSelection } from "../core/selection-normalizer.js";
-import { MARKET_REGISTRY } from "../../../data/market-registry.js";
+import { MARKET_REGISTRY } from "../../../data/market-catalog.js";
 
 describe("Unified Normalizer", () => {
   describe("STS ID Mapping", () => {

@@ -86,6 +86,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2004: "PLAYER_2_OR_MORE_GOALS",
   2005: "PLAYER_3_OR_MORE_GOALS",
   2006: "PLAYER_HAT_TRICK",
+  1855: "PLAYER_CARDS",
   2011: "TEAM_TOTAL_SCORERS",
   2153: "PLAYER_CARDS",
 
@@ -102,9 +103,12 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   235: "HALF_TIME_CORNERS_TOTAL",
   236: "CORNERS_TEAM",
   237: "CORNERS_TEAM",
+  231: "CORNERS_TEAM",
+  234: "CORNERS_TEAM",
   254: "HALF_TIME_CORNERS_TEAM",
   255: "HALF_TIME_CORNERS_TEAM",
   256: "HALF_TIME_CORNERS_RACE",
+  2097: "OTHER",
   807: "DOUBLE_CHANCE_BTTS",
   808: "RESULT_AND_BTTS",
   809: "SECOND_HALF_RESULT_AND_TOTAL",
@@ -124,6 +128,15 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   185: "CARDS_TOTAL",
   192: "CARDS_TOTAL",
   206: "CARDS_TOTAL",
+  188: "CARDS_TEAM",
+  191: "CARDS_TEAM",
+  193: "CARDS_TEAM",
+  194: "CARDS_TEAM",
+  196: "OTHER",
+  197: "OTHER",
+  198: "OTHER",
+  217: "OTHER",
+  2098: "OTHER",
 
   125: "FIRST_GOAL_TIME",
   126: "FIRST_GOAL_TIME",
@@ -177,6 +190,17 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   1234: "WINNING_MARGIN",
   1235: "WINNING_MARGIN",
   1244: "WINNING_MARGIN",
+
+  1413: "OTHER",
+  1561: "OTHER",
+  1562: "OTHER",
+  1897: "OTHER",
+  1898: "OTHER",
+  1899: "OTHER",
+  2111: "FOULS_TOTAL",
+  2112: "OTHER",
+  2113: "OTHER",
+  2114: "OTHER",
 };
 
 const STS_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
@@ -287,7 +311,10 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+
     case "FIRST_CARD":
+      if (lower === "bez gola" || lower === "brak" || lower === "żaden" || lower === "bez kartek") return "NONE" as NormalizedSelection;
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "HALF_TIME_CORNERS_RACE":
@@ -310,7 +337,14 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
     case "CORNERS_TOTAL":
+      return normalizeOverUnderSelection(trimmed);
+
     case "CARDS_TOTAL":
+    case "FOULS_TOTAL":
+    case "CARDS_TEAM":
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
       return normalizeOverUnderSelection(trimmed);
 
     case "HALF_TIME_CORNERS_TOTAL":
@@ -466,9 +500,18 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "sts",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
+    let marketName = raw.name;
+    let playerName: string | undefined;
+    
+    if (raw.name.includes("|")) {
+      const parts = raw.name.split("|");
+      marketName = parts[0];
+      playerName = parts[1];
+    }
+    
     const stsId = raw.bookmakerMarketId
       ? Number(raw.bookmakerMarketId)
-      : extractStsMarketId(raw.name);
+      : extractStsMarketId(marketName);
 
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" = "id";
@@ -481,7 +524,7 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     
     if (!marketCode) {
       matchedBy = "name";
-      const nameResult = resolveMarketFromName(raw.name);
+      const nameResult = resolveMarketFromName(marketName);
       if (nameResult) {
         marketCode = nameResult.code;
         nameParam = nameResult.param;
@@ -498,7 +541,7 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const paramValue = nameParam ?? extractParamValue(marketCode, raw);
+    const paramValue = playerName ?? nameParam ?? extractParamValue(marketCode, raw);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({

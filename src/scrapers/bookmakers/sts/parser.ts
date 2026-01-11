@@ -21,6 +21,7 @@ import {
   CORRECT_SCORE_OUTCOMES,
   HALF_CORRECT_SCORE_OUTCOMES,
   LEAGUE_CONFIG,
+  PLAYER_STAT_MARKET_IDS,
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
@@ -278,17 +279,24 @@ export function parseAllMarkets(
       const groupName = MARKET_GROUPS[marketId] || "Inne";
       const marketType = MARKET_TYPES[marketId];
 
-      // Process each line within the market
       for (const [, line] of Object.entries(market.l || {}) as [string, STSMarketLine][]) {
         const selections = parseLineSelections(marketId, line, fixture);
 
         if (selections.length > 0) {
-          // For line markets (O/U), include line in name to ensure unique keys
           let finalName = marketName;
+          
           if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN) {
             const lineValue = extractLineFromSelections(line, marketId);
             if (lineValue) {
               finalName = `${marketName} ${lineValue}`;
+            }
+          } else if (PLAYER_STAT_MARKET_IDS.has(marketId)) {
+            let playerName = extractPlayerNameFromLineName(line.n || "");
+            if (!playerName || playerName === "Zawodnik") {
+              playerName = extractPlayerNameFromOutcome(selections[0]?.name || "");
+            }
+            if (playerName) {
+              finalName = `${marketName}|${playerName}`;
             }
           }
 
@@ -444,11 +452,22 @@ function getSelectionName(
   return outcome.n || String(outcomeId);
 }
 
-/**
- * Extract line value from outcome names in a line
- * - For TOTAL_GOALS (market 25): decimal lines like "2.5" from "+2.5"
- * - For TOTAL_GOALS_ASIAN (market 23): integer lines like "1", "2" from "+1", "+2"
- */
+function extractPlayerNameFromLineName(lineName: string): string | null {
+  const dashIndex = lineName.indexOf(" - ");
+  if (dashIndex > 0) {
+    return lineName.substring(0, dashIndex).trim();
+  }
+  return null;
+}
+
+function extractPlayerNameFromOutcome(outcomeName: string): string | null {
+  const match = outcomeName.match(/^(.+?)\s+i\s+[1X2]/i);
+  if (match) {
+    return match[1].trim();
+  }
+  return null;
+}
+
 function extractLineFromSelections(line: STSMarketLine, marketId: number): string | null {
   if (!line.o) return null;
 

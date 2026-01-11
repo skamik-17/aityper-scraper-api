@@ -26,11 +26,11 @@ import {
 } from "../repositories/full-offer-repository.js";
 import { ViewType } from "../services/normalization/types.js";
 import {
-  UNIFIED_MARKET_REGISTRY,
+  MARKET_CATALOG,
   SHORT_LABELS,
   SELECTION_LABELS,
   CATEGORY_METADATA,
-} from "../data/market-registry.js";
+} from "../data/market-catalog.js";
 
 const router = Router();
 
@@ -178,7 +178,7 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
  * Returns: marketTypes, selectionLabels, categories
  */
 router.get("/market-types", asyncHandler(async (_req, res) => {
-  const marketTypes = UNIFIED_MARKET_REGISTRY.map(m => ({
+  const marketTypes = MARKET_CATALOG.map(m => ({
     id: m.numericId,
     code: m.code,
     slug: m.slug,

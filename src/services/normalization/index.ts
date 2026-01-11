@@ -34,7 +34,7 @@ export {
   getMarketsByCategory,
   getMarketByType,
   isCanonicalMarket,
-} from "../../data/market-registry.js";
+} from "../../data/market-catalog.js";
 
 // ==========================================================================
 // Factory

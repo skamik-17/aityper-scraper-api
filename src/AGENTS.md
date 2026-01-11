@@ -23,8 +23,8 @@ src/
 |------|----------|-------|
 | Config | `backend/src/config/` | ENV validation and constants |
 | Scraper orchestration | `backend/src/services/` | Scheduler and scraper service |
-| Normalization | `backend/src/services/normalization/` | Pattern engine and adapters |
-| Data registry | `backend/src/data/market-registry.ts` | Market definitions |
+| Normalization | `backend/src/services/normalization/` | Bookmaker-specific normalizers |
+| Data registry | `backend/src/data/market-catalog.ts` | Market definitions |
 
 ## CONVENTIONS
 - Keep DB logic in repositories; keep orchestration in services.

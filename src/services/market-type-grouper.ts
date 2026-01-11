@@ -18,7 +18,7 @@ import {
   marketHasParameters,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
-} from "../data/market-registry.js";
+} from "../data/market-catalog.js";
 import { MarketCategory } from "../services/normalization/types.js";
 
 /**

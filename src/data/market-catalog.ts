@@ -556,7 +556,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "player",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
+    viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 63,
   },
   {
@@ -569,7 +569,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "player",
     selections: ["YES", "NO"],
-    viewType: ViewType.PLAYER_DROPDOWN,
+    viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 64,
   },
   {
@@ -582,7 +582,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "player",
     selections: ["YES", "NO"],
-    viewType: ViewType.PLAYER_DROPDOWN,
+    viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 65,
   },
   {
@@ -608,7 +608,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "player",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
+    viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 67,
   },
   {
@@ -621,7 +621,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "player",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
+    viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 68,
   },
   {
@@ -1087,3 +1087,98 @@ export const SELECTION_LABELS: Record<string, string> = {
   "12_YES": "12 i tak", "12_NO": "12 i nie",
   "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5+": "5+",
 };
+
+// ============================================================================
+// Category Labels and Order
+// ============================================================================
+
+export const CATEGORY_LABELS: Record<MarketCategory, string> = {
+  [MarketCategory.WYNIK_MECZU]: "Wynik meczu",
+  [MarketCategory.GOLE]: "Gole",
+  [MarketCategory.HANDICAP]: "Handicap",
+  [MarketCategory.PIERWSZA_POLOWA]: "Połowy",
+  [MarketCategory.DOKLADNY_WYNIK]: "Dokładny wynik",
+  [MarketCategory.ZAWODNICY]: "Zawodnicy",
+  [MarketCategory.STATYSTYKI]: "Statystyki",
+  [MarketCategory.KOMBINACJE]: "Kombinacje",
+  [MarketCategory.INNE]: "Inne",
+};
+
+export const CATEGORY_ORDER: MarketCategory[] = [
+  MarketCategory.WYNIK_MECZU,
+  MarketCategory.GOLE,
+  MarketCategory.HANDICAP,
+  MarketCategory.PIERWSZA_POLOWA,
+  MarketCategory.DOKLADNY_WYNIK,
+  MarketCategory.ZAWODNICY,
+  MarketCategory.STATYSTYKI,
+  MarketCategory.KOMBINACJE,
+  MarketCategory.INNE,
+];
+
+// ============================================================================
+// Legacy Compatibility Aliases (for migration from market-registry.ts)
+// ============================================================================
+
+/** Alias for MARKET_CATALOG - compatibility with market-registry.ts */
+export const UNIFIED_MARKET_REGISTRY = MARKET_CATALOG;
+
+/** Alias for MARKET_CATALOG - compatibility with market-registry.ts */
+export const MARKET_REGISTRY = MARKET_CATALOG;
+
+/** Alias for CATALOG_BY_CODE - compatibility with market-registry.ts */
+export const MARKET_BY_CODE = CATALOG_BY_CODE;
+
+/** Alias for CATALOG_BY_NUMERIC_ID - compatibility with market-registry.ts */
+export const MARKET_BY_NUMERIC_ID = CATALOG_BY_NUMERIC_ID;
+
+/** Alias for CATALOG_BY_SLUG - compatibility with market-registry.ts */
+export const MARKET_BY_SLUG = CATALOG_BY_SLUG;
+
+/** Alias for CANONICAL_CODES - compatibility with market-registry.ts */
+export const CANONICAL_MARKET_CODES = CANONICAL_CODES;
+
+/** Alias for getMarketMetadata - compatibility with market-registry.ts */
+export function getMarketByCode(code: string): MarketCatalogEntry | undefined {
+  return CATALOG_BY_CODE.get(code);
+}
+
+/** Alias for getMarketMetadata - compatibility with market-registry.ts */
+export function getMarketById(id: number): MarketCatalogEntry | undefined {
+  return CATALOG_BY_NUMERIC_ID.get(id);
+}
+
+/** Alias for getMarketMetadata - compatibility with market-registry.ts */
+export function getMarketByNumericId(id: number): MarketCatalogEntry | undefined {
+  return CATALOG_BY_NUMERIC_ID.get(id);
+}
+
+/** Alias for getMarketMetadata - compatibility with market-registry.ts */
+export function getMarketBySlug(slug: string): MarketCatalogEntry | undefined {
+  return CATALOG_BY_SLUG.get(slug);
+}
+
+/** Get market by type (alias for getMarketByCode) */
+export function getMarketByType(type: string): MarketCatalogEntry | undefined {
+  return CATALOG_BY_CODE.get(type);
+}
+
+/** Alias for getCategoryForMarket - compatibility with market-registry.ts */
+export function getCategoryForCode(code: string): MarketCategory {
+  return getCategoryForMarket(code);
+}
+
+/** Alias for hasParameters - compatibility with market-registry.ts */
+export function marketHasParameters(code: string): boolean {
+  return hasParameters(code);
+}
+
+/** Check if a market code is canonical */
+export function isCanonicalMarket(code: string): boolean {
+  return isValidMarketCode(code);
+}
+
+/** Get all markets in a category */
+export function getMarketsByCategory(category: MarketCategory): MarketCatalogEntry[] {
+  return MARKET_CATALOG.filter((m) => m.category === category);
+}

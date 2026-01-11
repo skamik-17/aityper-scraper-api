@@ -122,7 +122,26 @@ export const MARKET_IDS = {
   HALFTIME_FULLTIME: 58, // "1. połowa / wynik końcowy" - HT/FT Result
   RESULT_AND_BTTS: 49, // "Wynik końcowy i obie drużyny - strzelą gola"
   RESULT_AND_TOTAL: 51, // "Wynik końcowy i liczba goli"
+
+  // ==========================================================================
+  // PLAYER STAT MARKETS (each line = one player)
+  // ==========================================================================
+  PLAYER_GOAL_AND_RESULT: 1051,
+  PLAYER_ASSISTS: 1845,
+  PLAYER_ANYTIME_GOALSCORER: 1850,
+  PLAYER_SHOTS: 1851,
+  PLAYER_SHOTS_ON_TARGET: 1852,
+  PLAYER_PASSES: 1853,
+  PLAYER_CARDS: 1855,
+  PLAYER_2_PLUS_GOALS: 2004,
+  PLAYER_3_PLUS_GOALS: 2005,
+  PLAYER_HAT_TRICK: 2006,
+  PLAYER_CARDS_ALT: 2153,
 } as const;
+
+export const PLAYER_STAT_MARKET_IDS = new Set([
+  1051, 1845, 1850, 1851, 1852, 1853, 1855, 2004, 2005, 2006, 2153,
+]);
 
 /**
  * Outcome IDs for 1X2 market

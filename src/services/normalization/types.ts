@@ -55,7 +55,8 @@ export const ViewType = {
   PARAMETER_SLIDER: "PARAMETER_SLIDER",   // Over/Under with parameter selection (2.5, 3.5, etc.)
   HANDICAP_SELECTOR: "HANDICAP_SELECTOR",  // Handicap markets with +/- values
   SCORE_GRID: "SCORE_GRID",             // Correct score - grid of scores
-  PLAYER_DROPDOWN: "PLAYER_DROPDOWN",    // Goalscorer - dropdown + buttons
+  PLAYER_DROPDOWN: "PLAYER_DROPDOWN",    // Goalscorer - dropdown + single odds per player
+  PLAYER_STAT_LINES: "PLAYER_STAT_LINES", // Player stat markets - player selector + line thresholds (1+, 2+, etc.)
   STAT_RANGE: "STAT_RANGE",              // Corners, Cards - range selector
   COMBINATION: "COMBINATION",             // Combined markets (Result + BTTS)
   HALFTIME_FULLTIME: "HALFTIME_FULLTIME", // 9 outcomes HT/FT grid
@@ -325,7 +326,7 @@ export interface MarketDefinition {
   category: MarketCategory;
   view_type?: ViewType;
   viewType?: ViewType;
-  patterns: (string | RegExp)[];
+  patterns?: (string | RegExp)[];
   selections?: string[];
   hasParameter?: boolean;
   parameterType?: ParameterType;

@@ -33,7 +33,7 @@ export {
   getCategoryForCode,
   CATEGORY_LABELS,
   CATEGORY_ORDER,
-} from "../data/market-registry.js";
+} from "../data/market-catalog.js";
 
 // ============================================================================
 // Normalized Market Interfaces

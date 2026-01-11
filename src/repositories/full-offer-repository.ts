@@ -9,7 +9,7 @@ import { RepositoryError } from "../utils/errors.js";
 import {
   CANONICAL_MARKET_CODES,
   MARKET_BY_CODE,
-} from "../data/market-registry.js";
+} from "../data/market-catalog.js";
 
 interface OddsInsert {
   match_id: string;

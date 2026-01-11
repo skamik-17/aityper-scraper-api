@@ -1,5 +1,5 @@
 #!/usr/bin/env npx tsx
-import { chromium } from "playwright";
+import { chromium, type Page } from "playwright";
 import {
   navigateAndCaptureLeagueData,
   navigateAndCaptureMatchData,
@@ -30,6 +30,17 @@ interface MarketInfo {
   normalizedCode: string | null;
   lines: LineInfo[];
   issues: string[];
+}
+
+interface FixtureCandidate {
+  league: string;
+  fixture: {
+    id: string;
+    home: string;
+    away: string;
+    eventUrl: string;
+  };
+  marketCount: number;
 }
 
 const MARKET_ID_NAMES: Record<number, string> = {
@@ -93,11 +104,24 @@ const MARKET_ID_NAMES: Record<number, string> = {
   178: "Więcej kartek",
   179: "Pierwsza kartka",
   185: "Kartki suma",
+  188: "Kartki gosp handicap",
+  191: "Kartki gości handicap",
+  192: "Kartki (zakres)",
+  193: "Kartki gosp dokładnie",
+  194: "Kartki gości dokładnie",
+  196: "Czerwona kartka",
+  197: "Czerwona kartka gosp",
+  198: "Czerwona kartka gości",
+  199: "Więcej kartek (var)",
+  206: "Kartki suma (var)",
+  217: "Czerwona kartka 1. poł",
   220: "Więcej rzutów rożnych",
   221: "Pierwszy rzut rożny",
   225: "Rzuty rożne handicap",
   228: "Rzuty rożne suma",
   235: "Rzuty rożne 1. poł",
+  231: "Rożne gosp handicap",
+  234: "Rożne gości handicap",
   236: "Rzuty rożne gosp",
   237: "Rzuty rożne gości",
   256: "Więcej rożnych 1. poł",
@@ -121,275 +145,365 @@ const MARKET_ID_NAMES: Record<number, string> = {
   2005: "Strzelec 3+ goli",
   2006: "Hat-trick",
   2011: "Liczba strzelców",
+  2097: "Rożne każda drużyna",
+  2098: "Kartki każda drużyna",
+  2111: "Faule suma",
+  2112: "Faule gosp",
+  2113: "Faule gości",
+  2114: "Gol samobójczy",
   2153: "Zawodnik (var)",
+  1413: "Rzut karny",
+  1561: "Więcej celnych strzałów",
+  1562: "Celne strzały suma",
+  1897: "Celne strzały gosp",
+  1898: "Celne strzały gości",
+  1899: "Czerwona + rzut karny",
 };
 
-const LEAGUE = process.argv[2] || "laliga";
+const ALL_LEAGUES = ["ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1"];
+
 const VERBOSE = process.argv.includes("--verbose") || process.argv.includes("-v");
 const SHOW_ISSUES = process.argv.includes("--issues") || process.argv.includes("-i");
+const SINGLE_LEAGUE = process.argv.find(arg => !arg.startsWith("-") && arg !== process.argv[0] && arg !== process.argv[1]);
+
+function countMarketsInWsData(wsData: STSWebSocketData): number {
+  const marketIds = new Set<number>();
+  for (const [, assocData] of Object.entries(wsData.P || {})) {
+    const marketData = (assocData as { m?: Record<string, unknown> }).m;
+    if (!marketData) continue;
+    for (const marketIdStr of Object.keys(marketData)) {
+      marketIds.add(parseInt(marketIdStr, 10));
+    }
+  }
+  return marketIds.size;
+}
+
+async function findBestFixture(page: Page): Promise<FixtureCandidate | null> {
+  const leagues = SINGLE_LEAGUE ? [SINGLE_LEAGUE] : ALL_LEAGUES;
+  const candidates: FixtureCandidate[] = [];
+  
+  console.log(`🔍 Scanning ${leagues.length} league(s) for best fixture...\n`);
+  
+  for (const league of leagues) {
+    try {
+      console.log(`  📍 ${league}...`);
+      const leagueCapture = await navigateAndCaptureLeagueData(page, league);
+      
+      if (!leagueCapture) {
+        console.log(`     ❌ No data`);
+        continue;
+      }
+      
+      const initialJson = parseWebSocketJson(leagueCapture.initialData);
+      if (!initialJson) {
+        console.log(`     ❌ Parse failed`);
+        continue;
+      }
+      
+      const fixtures = parseFixtures(initialJson, league);
+      if (fixtures.length === 0) {
+        console.log(`     ❌ No fixtures`);
+        continue;
+      }
+      
+      console.log(`     ✅ Found ${fixtures.length} fixtures`);
+      
+      for (const fixture of fixtures.slice(0, 3)) {
+        try {
+          const matchCapture = await navigateAndCaptureMatchData(page, fixture.eventUrl);
+          if (!matchCapture) continue;
+          
+          let wsData: STSWebSocketData | null = null;
+          
+          if (matchCapture.fixtureData.size > 0) {
+            wsData = matchCapture.fixtureData.get(fixture.id) || null;
+          }
+          
+          if (!wsData && matchCapture.initialData) {
+            wsData = parseWebSocketJson(matchCapture.initialData);
+          }
+          
+          if (wsData) {
+            const marketCount = countMarketsInWsData(wsData);
+            candidates.push({
+              league,
+              fixture: {
+                id: fixture.id,
+                home: fixture.home,
+                away: fixture.away,
+                eventUrl: fixture.eventUrl,
+              },
+              marketCount,
+            });
+            console.log(`        ${fixture.home} vs ${fixture.away}: ${marketCount} markets`);
+          }
+        } catch {
+        }
+      }
+    } catch (err) {
+      console.log(`     ❌ Error: ${err instanceof Error ? err.message : "Unknown"}`);
+    }
+  }
+  
+  if (candidates.length === 0) {
+    return null;
+  }
+  
+  candidates.sort((a, b) => b.marketCount - a.marketCount);
+  return candidates[0];
+}
+
+async function analyzeFixture(
+  page: Page,
+  candidate: FixtureCandidate
+): Promise<void> {
+  console.log(`\n${"=".repeat(100)}`);
+  console.log(`🏆 BEST FIXTURE: ${candidate.fixture.home} vs ${candidate.fixture.away}`);
+  console.log(`   League: ${candidate.league}, Markets: ${candidate.marketCount}`);
+  console.log(`${"=".repeat(100)}\n`);
+  
+  const matchCapture = await navigateAndCaptureMatchData(page, candidate.fixture.eventUrl);
+  if (!matchCapture) {
+    console.log("❌ Failed to capture match data");
+    return;
+  }
+  
+  let wsData: STSWebSocketData | null = null;
+  
+  if (matchCapture.fixtureData.size > 0) {
+    wsData = matchCapture.fixtureData.get(candidate.fixture.id) || null;
+  }
+  
+  if (!wsData && matchCapture.initialData) {
+    wsData = parseWebSocketJson(matchCapture.initialData);
+  }
+  
+  if (!wsData) {
+    console.log("❌ No market data available");
+    return;
+  }
+  
+  const ctx = { homeTeam: candidate.fixture.home, awayTeam: candidate.fixture.away };
+  const marketsMap = new Map<number, MarketInfo>();
+  
+  for (const [, assocData] of Object.entries(wsData.P || {})) {
+    const marketData = (assocData as { m?: Record<string, unknown> }).m;
+    if (!marketData) continue;
+    
+    for (const [marketIdStr, market] of Object.entries(marketData)) {
+      const marketId = parseInt(marketIdStr, 10);
+      const mkt = market as { n?: string; l?: Record<string, { n?: string; o?: Record<string, { n?: string; v?: number }> }> };
+      
+      if (!marketsMap.has(marketId)) {
+        marketsMap.set(marketId, {
+          id: marketId,
+          marketIdName: MARKET_ID_NAMES[marketId] || `(nieznany ID ${marketId})`,
+          normalizedCode: null,
+          lines: [],
+          issues: [],
+        });
+      }
+      
+      const marketInfo = marketsMap.get(marketId)!;
+      const lines = mkt.l || {};
+      
+      for (const [, line] of Object.entries(lines)) {
+        const lineName = line.n || "";
+        const outcomes = line.o || {};
+        
+        const rawSelections = Object.entries(outcomes).map(([outcomeIdStr, o]) => {
+          const outcomeId = parseInt(outcomeIdStr, 10);
+          let name = o.n || "";
+          if (!name || name.length <= 1) {
+            name = getSelectionNameByOutcomeId(outcomeId) || String(outcomeId);
+          }
+          return { name, odds: o.v || 0 };
+        });
+        
+        const testResult = stsNormalizer.normalizeMarket(
+          { 
+            name: lineName || `Rynek ${marketId}`, 
+            bookmakerMarketId: String(marketId), 
+            selections: rawSelections 
+          },
+          ctx
+        );
+        
+        if (testResult && !marketInfo.normalizedCode) {
+          marketInfo.normalizedCode = testResult.marketCode;
+        }
+        
+        const passthroughMarketTypes = [
+          "GOAL_RANGE", "TEAM_GOAL_RANGE", "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
+          "CORNERS_TEAM", "HALF_TIME_CORNERS_TEAM", "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_RACE",
+          "TIME_PERIOD_RESULT", "WINNING_MARGIN", "FIRST_GOAL_TIME", "OTHER",
+          "CARDS_TEAM", "CARDS_TOTAL", "FOULS_TOTAL",
+        ];
+        const marketCode = testResult?.marketCode || "";
+        const isPassthroughMarket = passthroughMarketTypes.includes(marketCode);
+        
+        const lineInfo: LineInfo = {
+          lineName,
+          paramValue: testResult?.paramValue,
+          selections: rawSelections.map(sel => {
+            const normalizedSel = testResult?.selections.find(s => s.label === sel.name);
+            const code = normalizedSel?.code || "NOT_NORMALIZED";
+            if (marketCode === "OTHER") {
+              return { rawName: sel.name, normalizedCode: code, isUnknown: false };
+            }
+            const isNumericPassthrough = /^\d+$/.test(code) && isPassthroughMarket;
+            const isRangePassthrough = /^\d+-\d+$/.test(code) || /^\d+\+$/.test(code);
+            return {
+              rawName: sel.name,
+              normalizedCode: code,
+              isUnknown: code === "UNKNOWN" || code === "NOT_NORMALIZED" || 
+                (/^\d+$/.test(code) && !isNumericPassthrough && !isRangePassthrough),
+            };
+          }),
+        };
+        
+        marketInfo.lines.push(lineInfo);
+      }
+    }
+  }
+
+  for (const market of marketsMap.values()) {
+    const unknownSelections = market.lines.flatMap(l => l.selections.filter(s => s.isUnknown));
+    if (unknownSelections.length > 0) {
+      const uniqueUnknown = [...new Set(unknownSelections.map(s => `${s.rawName} → ${s.normalizedCode}`))];
+      market.issues.push(`UNKNOWN_SELECTIONS: ${uniqueUnknown.slice(0, 5).join(", ")}${uniqueUnknown.length > 5 ? ` (+${uniqueUnknown.length - 5} more)` : ""}`);
+    }
+    
+    const linesWithParam = market.lines.filter(l => l.paramValue);
+    const linesWithoutParam = market.lines.filter(l => !l.paramValue);
+    if (linesWithParam.length > 0 && linesWithoutParam.length > 0) {
+      market.issues.push(`MIXED_PARAMS: ${linesWithParam.length} with param, ${linesWithoutParam.length} without (will create 'base' parameter)`);
+    }
+    
+    if (market.normalizedCode?.startsWith("PLAYER_") || market.normalizedCode?.startsWith("GOALSCORER_")) {
+      const hasPlayerInSelection = market.lines.some(l => 
+        l.selections.some(s => /[A-Z][a-z]+\s+[A-Z][a-z]+/.test(s.rawName))
+      );
+      const hasPlayerAsParam = market.lines.some(l => l.paramValue && /[A-Z][a-z]+/.test(l.paramValue));
+      const hasPlayerInLineName = market.lines.some(l => 
+        /[A-Z][a-z]+\s+[A-Z][a-z]+/.test(l.lineName)
+      );
+      
+      if (!hasPlayerInSelection && !hasPlayerAsParam && !hasPlayerInLineName) {
+        market.issues.push(`MISSING_PLAYER: Player name not preserved in selections, params, or line names`);
+      }
+    }
+  }
+
+  const markets = Array.from(marketsMap.values()).sort((a, b) => a.id - b.id);
+  const mapped = markets.filter(m => m.normalizedCode !== null);
+  const unmapped = markets.filter(m => m.normalizedCode === null);
+  const withIssues = markets.filter(m => m.issues.length > 0);
+
+  console.log("\n" + "=".repeat(100));
+  console.log(`📊 SUMMARY`);
+  console.log("=".repeat(100));
+  console.log(`Total markets: ${markets.length}`);
+  console.log(`✅ Mapped: ${mapped.length}`);
+  console.log(`❌ Unmapped: ${unmapped.length}`);
+  console.log(`⚠️  With issues: ${withIssues.length}`);
+
+  console.log("\n" + "=".repeat(100));
+  console.log(`✅ MAPPED MARKETS (${mapped.length})`);
+  console.log("=".repeat(100));
+
+  for (const m of mapped) {
+    const issueFlag = m.issues.length > 0 ? " ⚠️" : "";
+    const sampleSel = m.lines[0]?.selections.slice(0, 3).map(s => s.rawName).join(", ") || "";
+    console.log(`ID ${m.id.toString().padStart(4)}: ${m.marketIdName.padEnd(30)} → ${m.normalizedCode}${issueFlag}`);
+    
+    if (VERBOSE) {
+      console.log(`         Lines: ${m.lines.length}, Sample: [${sampleSel}]`);
+      if (m.lines[0]?.paramValue) {
+        console.log(`         ParamValue: ${m.lines[0].paramValue}`);
+      }
+    }
+  }
+
+  if (unmapped.length > 0) {
+    console.log("\n" + "=".repeat(100));
+    console.log(`❌ UNMAPPED MARKETS (${unmapped.length}) - need to add to sts-normalizer.ts`);
+    console.log("=".repeat(100));
+
+    for (const m of unmapped) {
+      const sampleSel = m.lines[0]?.selections.slice(0, 3).map(s => s.rawName).join(", ") || "";
+      console.log(`ID ${m.id.toString().padStart(4)}: ${m.marketIdName.padEnd(30)} [${sampleSel}]`);
+    }
+
+    console.log("\n📋 UNMAPPED IDS (copy to sts-normalizer.ts):");
+    console.log(unmapped.map(m => m.id).join(", "));
+  }
+
+  if (withIssues.length > 0 && (SHOW_ISSUES || VERBOSE)) {
+    console.log("\n" + "=".repeat(100));
+    console.log(`⚠️  MARKETS WITH ISSUES (${withIssues.length})`);
+    console.log("=".repeat(100));
+
+    for (const m of withIssues) {
+      console.log(`\nID ${m.id}: ${m.marketIdName} → ${m.normalizedCode || "UNMAPPED"}`);
+      for (const issue of m.issues) {
+        console.log(`   ⚠️  ${issue}`);
+      }
+      
+      if (VERBOSE) {
+        console.log(`   Lines (${m.lines.length}):`);
+        for (const line of m.lines.slice(0, 3)) {
+          const paramStr = line.paramValue ? ` [param: ${line.paramValue}]` : " [no param]";
+          console.log(`     - "${line.lineName}"${paramStr}`);
+          for (const sel of line.selections.slice(0, 5)) {
+            const flag = sel.isUnknown ? "❌" : "✅";
+            console.log(`       ${flag} "${sel.rawName}" → ${sel.normalizedCode}`);
+          }
+          if (line.selections.length > 5) {
+            console.log(`       ... and ${line.selections.length - 5} more selections`);
+          }
+        }
+        if (m.lines.length > 3) {
+          console.log(`     ... and ${m.lines.length - 3} more lines`);
+        }
+      }
+    }
+  }
+
+  console.log("\n" + "=".repeat(100));
+  console.log(`🔧 ISSUE BREAKDOWN`);
+  console.log("=".repeat(100));
+  
+  const unknownSelIssues = withIssues.filter(m => m.issues.some(i => i.includes("UNKNOWN_SELECTIONS")));
+  const mixedParamIssues = withIssues.filter(m => m.issues.some(i => i.includes("MIXED_PARAMS")));
+  const missingPlayerIssues = withIssues.filter(m => m.issues.some(i => i.includes("MISSING_PLAYER")));
+  
+  console.log(`UNKNOWN_SELECTIONS: ${unknownSelIssues.length} markets - Selections mapping to UNKNOWN`);
+  console.log(`MIXED_PARAMS: ${mixedParamIssues.length} markets - Will create unwanted 'base' parameter`);
+  console.log(`MISSING_PLAYER: ${missingPlayerIssues.length} markets - Player name not preserved`);
+
+  if (!SHOW_ISSUES && !VERBOSE && withIssues.length > 0) {
+    console.log(`\n💡 Run with --issues or --verbose to see detailed issue breakdown`);
+  }
+}
 
 async function discoverMarkets() {
-  console.log(`🔍 STS Market Discovery - ${LEAGUE}\n`);
+  console.log(`🔍 STS Market Discovery - Multi-League Scanner\n`);
   
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
-    console.log(`📍 Step 1: Navigating to ${LEAGUE} page...\n`);
+    const bestFixture = await findBestFixture(page);
     
-    const leagueCapture = await navigateAndCaptureLeagueData(page, LEAGUE);
-    if (!leagueCapture) {
-      console.log("❌ No WebSocket data captured from league page");
+    if (!bestFixture) {
+      console.log("\n❌ No fixtures found in any league");
       return;
     }
-
-    const initialJson = parseWebSocketJson(leagueCapture.initialData);
-    if (!initialJson) {
-      console.log("❌ Failed to parse WebSocket data");
-      return;
-    }
-
-    const fixtures = parseFixtures(initialJson, LEAGUE);
-    if (fixtures.length === 0) {
-      console.log("❌ No fixtures found for this league");
-      return;
-    }
-
-    console.log(`✅ Found ${fixtures.length} fixtures\n`);
     
-    const firstFixture = fixtures[0];
-    console.log(`📍 Step 2: Navigating to match: ${firstFixture.home} vs ${firstFixture.away}`);
-    console.log(`   URL: ${firstFixture.eventUrl}\n`);
-
-    const matchCapture = await navigateAndCaptureMatchData(page, firstFixture.eventUrl);
-    if (!matchCapture) {
-      console.log("❌ No WebSocket data captured from match page");
-      return;
-    }
-
-    let wsData: STSWebSocketData | null = null;
+    await analyzeFixture(page, bestFixture);
     
-    if (matchCapture.fixtureData.size > 0) {
-      const fixtureData = matchCapture.fixtureData.get(firstFixture.id);
-      if (fixtureData) {
-        wsData = fixtureData;
-        console.log("📦 Using fixture-specific data");
-      }
-    }
-    
-    if (!wsData && matchCapture.initialData) {
-      wsData = parseWebSocketJson(matchCapture.initialData);
-      console.log("📦 Using initial data (parsed)");
-    }
-    
-    if (!wsData) {
-      console.log("❌ No market data available");
-      return;
-    }
-
-    const ctx = { homeTeam: firstFixture.home, awayTeam: firstFixture.away };
-    const marketsMap = new Map<number, MarketInfo>();
-    
-    for (const [, assocData] of Object.entries(wsData.P || {})) {
-      const marketData = (assocData as { m?: Record<string, unknown> }).m;
-      if (!marketData) continue;
-      
-      for (const [marketIdStr, market] of Object.entries(marketData)) {
-        const marketId = parseInt(marketIdStr, 10);
-        const mkt = market as { n?: string; l?: Record<string, { n?: string; o?: Record<string, { n?: string; v?: number }> }> };
-        
-        if (!marketsMap.has(marketId)) {
-          marketsMap.set(marketId, {
-            id: marketId,
-            marketIdName: MARKET_ID_NAMES[marketId] || `(nieznany ID ${marketId})`,
-            normalizedCode: null,
-            lines: [],
-            issues: [],
-          });
-        }
-        
-        const marketInfo = marketsMap.get(marketId)!;
-        const lines = mkt.l || {};
-        
-        for (const [, line] of Object.entries(lines)) {
-          const lineName = line.n || "";
-          const outcomes = line.o || {};
-          
-          const rawSelections = Object.entries(outcomes).map(([outcomeIdStr, o]) => {
-            const outcomeId = parseInt(outcomeIdStr, 10);
-            let name = o.n || "";
-            if (!name || name.length <= 1) {
-              name = getSelectionNameByOutcomeId(outcomeId) || String(outcomeId);
-            }
-            return { name, odds: o.v || 0 };
-          });
-          
-          const testResult = stsNormalizer.normalizeMarket(
-            { 
-              name: lineName || `Rynek ${marketId}`, 
-              bookmakerMarketId: String(marketId), 
-              selections: rawSelections 
-            },
-            ctx
-          );
-          
-          if (testResult && !marketInfo.normalizedCode) {
-            marketInfo.normalizedCode = testResult.marketCode;
-          }
-          
-          const passthroughMarketTypes = [
-            "GOAL_RANGE", "TEAM_GOAL_RANGE", "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
-            "CORNERS_TEAM", "HALF_TIME_CORNERS_TEAM", "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_RACE",
-            "TIME_PERIOD_RESULT", "WINNING_MARGIN", "FIRST_GOAL_TIME", "OTHER",
-          ];
-          const marketCode = testResult?.marketCode || "";
-          const isPassthroughMarket = passthroughMarketTypes.includes(marketCode);
-          
-          const lineInfo: LineInfo = {
-            lineName,
-            paramValue: testResult?.paramValue,
-            selections: rawSelections.map(sel => {
-              const normalizedSel = testResult?.selections.find(s => s.label === sel.name);
-              const code = normalizedSel?.code || "NOT_NORMALIZED";
-              if (marketCode === "OTHER") {
-                return { rawName: sel.name, normalizedCode: code, isUnknown: false };
-              }
-              const isNumericPassthrough = /^\d+$/.test(code) && isPassthroughMarket;
-              const isRangePassthrough = /^\d+-\d+$/.test(code) || /^\d+\+$/.test(code);
-              return {
-                rawName: sel.name,
-                normalizedCode: code,
-                isUnknown: code === "UNKNOWN" || code === "NOT_NORMALIZED" || 
-                  (/^\d+$/.test(code) && !isNumericPassthrough && !isRangePassthrough),
-              };
-            }),
-          };
-          
-          marketInfo.lines.push(lineInfo);
-        }
-      }
-    }
-
-    for (const market of marketsMap.values()) {
-      const unknownSelections = market.lines.flatMap(l => l.selections.filter(s => s.isUnknown));
-      if (unknownSelections.length > 0) {
-        const uniqueUnknown = [...new Set(unknownSelections.map(s => `${s.rawName} → ${s.normalizedCode}`))];
-        market.issues.push(`UNKNOWN_SELECTIONS: ${uniqueUnknown.slice(0, 5).join(", ")}${uniqueUnknown.length > 5 ? ` (+${uniqueUnknown.length - 5} more)` : ""}`);
-      }
-      
-      const linesWithParam = market.lines.filter(l => l.paramValue);
-      const linesWithoutParam = market.lines.filter(l => !l.paramValue);
-      if (linesWithParam.length > 0 && linesWithoutParam.length > 0) {
-        market.issues.push(`MIXED_PARAMS: ${linesWithParam.length} with param, ${linesWithoutParam.length} without (will create 'base' parameter)`);
-      }
-      
-      if (market.normalizedCode?.startsWith("PLAYER_") || market.normalizedCode?.startsWith("GOALSCORER_")) {
-        const hasPlayerInSelection = market.lines.some(l => 
-          l.selections.some(s => /[A-Z][a-z]+\s+[A-Z][a-z]+/.test(s.rawName))
-        );
-        const hasPlayerAsParam = market.lines.some(l => l.paramValue && /[A-Z][a-z]+/.test(l.paramValue));
-        const hasPlayerInLineName = market.lines.some(l => 
-          /[A-Z][a-z]+\s+[A-Z][a-z]+/.test(l.lineName)
-        );
-        
-        if (!hasPlayerInSelection && !hasPlayerAsParam && !hasPlayerInLineName) {
-          market.issues.push(`MISSING_PLAYER: Player name not preserved in selections, params, or line names`);
-        }
-      }
-    }
-
-    const markets = Array.from(marketsMap.values()).sort((a, b) => a.id - b.id);
-    const mapped = markets.filter(m => m.normalizedCode !== null);
-    const unmapped = markets.filter(m => m.normalizedCode === null);
-    const withIssues = markets.filter(m => m.issues.length > 0);
-
-    console.log("\n" + "=".repeat(100));
-    console.log(`📊 SUMMARY`);
-    console.log("=".repeat(100));
-    console.log(`Total markets: ${markets.length}`);
-    console.log(`✅ Mapped: ${mapped.length}`);
-    console.log(`❌ Unmapped: ${unmapped.length}`);
-    console.log(`⚠️  With issues: ${withIssues.length}`);
-
-    console.log("\n" + "=".repeat(100));
-    console.log(`✅ MAPPED MARKETS (${mapped.length})`);
-    console.log("=".repeat(100));
-
-    for (const m of mapped) {
-      const issueFlag = m.issues.length > 0 ? " ⚠️" : "";
-      const sampleSel = m.lines[0]?.selections.slice(0, 3).map(s => s.rawName).join(", ") || "";
-      console.log(`ID ${m.id.toString().padStart(4)}: ${m.marketIdName.padEnd(30)} → ${m.normalizedCode}${issueFlag}`);
-      
-      if (VERBOSE) {
-        console.log(`         Lines: ${m.lines.length}, Sample: [${sampleSel}]`);
-        if (m.lines[0]?.paramValue) {
-          console.log(`         ParamValue: ${m.lines[0].paramValue}`);
-        }
-      }
-    }
-
-    if (unmapped.length > 0) {
-      console.log("\n" + "=".repeat(100));
-      console.log(`❌ UNMAPPED MARKETS (${unmapped.length}) - need to add to sts-normalizer.ts`);
-      console.log("=".repeat(100));
-
-      for (const m of unmapped) {
-        const sampleSel = m.lines[0]?.selections.slice(0, 3).map(s => s.rawName).join(", ") || "";
-        console.log(`ID ${m.id.toString().padStart(4)}: ${m.marketIdName.padEnd(30)} [${sampleSel}]`);
-      }
-
-      console.log("\n📋 UNMAPPED IDS (copy to sts-normalizer.ts):");
-      console.log(unmapped.map(m => m.id).join(", "));
-    }
-
-    if (withIssues.length > 0 && (SHOW_ISSUES || VERBOSE)) {
-      console.log("\n" + "=".repeat(100));
-      console.log(`⚠️  MARKETS WITH ISSUES (${withIssues.length})`);
-      console.log("=".repeat(100));
-
-      for (const m of withIssues) {
-        console.log(`\nID ${m.id}: ${m.marketIdName} → ${m.normalizedCode || "UNMAPPED"}`);
-        for (const issue of m.issues) {
-          console.log(`   ⚠️  ${issue}`);
-        }
-        
-        if (VERBOSE) {
-          console.log(`   Lines (${m.lines.length}):`);
-          for (const line of m.lines.slice(0, 3)) {
-            const paramStr = line.paramValue ? ` [param: ${line.paramValue}]` : " [no param]";
-            console.log(`     - "${line.lineName}"${paramStr}`);
-            for (const sel of line.selections.slice(0, 5)) {
-              const flag = sel.isUnknown ? "❌" : "✅";
-              console.log(`       ${flag} "${sel.rawName}" → ${sel.normalizedCode}`);
-            }
-            if (line.selections.length > 5) {
-              console.log(`       ... and ${line.selections.length - 5} more selections`);
-            }
-          }
-          if (m.lines.length > 3) {
-            console.log(`     ... and ${m.lines.length - 3} more lines`);
-          }
-        }
-      }
-    }
-
-    console.log("\n" + "=".repeat(100));
-    console.log(`🔧 ISSUE BREAKDOWN`);
-    console.log("=".repeat(100));
-    
-    const unknownSelIssues = withIssues.filter(m => m.issues.some(i => i.includes("UNKNOWN_SELECTIONS")));
-    const mixedParamIssues = withIssues.filter(m => m.issues.some(i => i.includes("MIXED_PARAMS")));
-    const missingPlayerIssues = withIssues.filter(m => m.issues.some(i => i.includes("MISSING_PLAYER")));
-    
-    console.log(`UNKNOWN_SELECTIONS: ${unknownSelIssues.length} markets - Selections mapping to UNKNOWN`);
-    console.log(`MIXED_PARAMS: ${mixedParamIssues.length} markets - Will create unwanted 'base' parameter`);
-    console.log(`MISSING_PLAYER: ${missingPlayerIssues.length} markets - Player name not preserved`);
-
-    if (!SHOW_ISSUES && !VERBOSE && withIssues.length > 0) {
-      console.log(`\n💡 Run with --issues or --verbose to see detailed issue breakdown`);
-    }
-
   } catch (error) {
     console.error("Error:", error);
   } finally {

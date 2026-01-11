@@ -325,3 +325,96 @@ export function getCanonicalMarketCodes(): string[] {
 export function getMarketDefinition(code: string) {
   return MARKET_BY_CODE.get(code);
 }
+
+export interface BatchSaveResult {
+  inserted: number;
+  filtered: number;
+  errors: number;
+  matchesProcessed: number;
+}
+
+export async function saveBatchFullOfferMarkets(
+  matches: Array<{
+    homeTeam: string;
+    awayTeam: string;
+    markets: ScrapedMarket[];
+    eventUrl?: string;
+  }>,
+  bookmaker: PolishBookmaker,
+  leagueSlug: string = "ekstraklasa"
+): Promise<BatchSaveResult> {
+  const supabase = getSupabase();
+  const result: BatchSaveResult = { inserted: 0, filtered: 0, errors: 0, matchesProcessed: 0 };
+
+  if (matches.length === 0) {
+    return result;
+  }
+
+  const scrapedAt = new Date().toISOString();
+  const allRecords: OddsInsert[] = [];
+
+  for (const match of matches) {
+    const matchId = generateMatchId(match.homeTeam, match.awayTeam, leagueSlug);
+    const canonicalHome = getCanonicalTeamName(match.homeTeam, leagueSlug);
+    const canonicalAway = getCanonicalTeamName(match.awayTeam, leagueSlug);
+
+    const recordsMap = new Map<string, OddsInsert>();
+
+    for (const market of match.markets) {
+      if (!isCanonicalMarket(market.normalizedType)) {
+        result.filtered++;
+        continue;
+      }
+
+      const marketTypeId = getMarketTypeId(market.normalizedType!);
+      if (!marketTypeId) {
+        result.filtered++;
+        continue;
+      }
+
+      const marketKey = market.marketKey || market.normalizedType!;
+
+      recordsMap.set(marketKey, {
+        match_id: matchId,
+        league_slug: leagueSlug,
+        home_team: canonicalHome,
+        away_team: canonicalAway,
+        bookmaker,
+        event_url: match.eventUrl,
+        market_type_id: marketTypeId,
+        market_key: marketKey,
+        param_value: market.paramValue,
+        selections: market.selections,
+        scraped_at: scrapedAt,
+      });
+    }
+
+    allRecords.push(...recordsMap.values());
+    result.matchesProcessed++;
+  }
+
+  if (allRecords.length === 0) {
+    return result;
+  }
+
+  const BATCH_SIZE = 500;
+  for (let i = 0; i < allRecords.length; i += BATCH_SIZE) {
+    const batch = allRecords.slice(i, i + BATCH_SIZE);
+
+    const { error } = await (supabase as any)
+      .from("odds")
+      .upsert(batch, {
+        onConflict: "match_id,bookmaker,market_key,scraped_at",
+        ignoreDuplicates: false,
+      });
+
+    if (error) {
+      console.error(`[FullOfferRepo] Batch insert error (batch ${Math.floor(i / BATCH_SIZE) + 1}):`, error);
+      result.errors += batch.length;
+    } else {
+      result.inserted += batch.length;
+    }
+  }
+
+  return result;
+}

@@ -1,19 +1,6 @@
-/**
- * STS Playwright Scraper
- *
- * Main entry point implementing the PlaywrightScraper interface.
- * Uses WebSocket interception to extract odds data from sts.pl
- *
- * Architecture:
- * - index.ts (this file): Orchestration and interface implementation
- * - navigation.ts: Playwright browser interactions and WebSocket capture
- * - parser.ts: Pure data transformation logic
- * - types.ts: Internal type definitions
- * - constants.ts: URLs, IDs, and configuration
- */
-
 import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
+import { isLeagueSupported } from "../../../config/leagues.js";
 import type {
   ScraperConfig,
   ScraperResult,
@@ -27,9 +14,8 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName, matchToCanonical } from "../../../utils/team-matcher.js";
+import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
-// Import modular components
-import { LEAGUE_CONFIG } from "./constants.js";
 import {
   navigateAndCaptureLeagueData,
   navigateAndCaptureMatchData,
@@ -41,13 +27,16 @@ import {
   parseFixtures,
   extractOdds,
   parseAllMarkets,
-  hasValid1X2Odds,
   oddsToMarketOverUnder,
 } from "./parser.js";
+import type { STSFixture } from "./types.js";
 
-/**
- * STS Playwright Scraper Implementation
- */
+const eventsCache = new ScraperCache<STSFixture>({
+  name: "sts-events",
+  ttl: CACHE_TTLS.EVENTS,
+  maxSize: 500,
+});
+
 export class STSPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "sts";
   config: ScraperConfig;
@@ -61,88 +50,75 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
     };
   }
 
-  /**
-   * Scrape all matches for a specific league
-   * Returns 1X2 odds for listing/comparison purposes
-   */
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    const startTime = Date.now();
-    let cleanup: (() => Promise<void>) | null = null;
-
-    // Validate league
-    if (!LEAGUE_CONFIG[league]) {
-      return this.createNotFoundResult(
-        `Unknown league: ${league}`,
-        Date.now() - startTime
-      );
-    }
-
-    try {
-      const { page, cleanup: sessionCleanup } = await this.initBrowser();
-      cleanup = sessionCleanup;
-
-      // Navigate and capture WebSocket data
-      const captureResult = await navigateAndCaptureLeagueData(page, league);
-      if (!captureResult) {
-        return this.createNotFoundResult(
-          "No WebSocket data received",
-          Date.now() - startTime
-        );
-      }
-
-      // Parse fixtures with odds
-      const parsedData = parseLeagueData(captureResult, league);
-      if (parsedData.length === 0) {
-        return this.createNotFoundResult(
-          `No matches found for ${league}`,
-          Date.now() - startTime
-        );
-      }
-
-      // Transform to RawScrapedOdds
-      const matches: RawScrapedOdds[] = parsedData.map(({ fixture, odds }) => ({
-        bookmaker: this.bookmaker,
-        eventName: `${fixture.home} - ${fixture.away}`,
-        homeTeam: getCanonicalTeamName(fixture.home, league),
-        awayTeam: getCanonicalTeamName(fixture.away, league),
-        homeOdds: odds.odds1!,
-        drawOdds: odds.oddsX!,
-        awayOdds: odds.odds2!,
-        hasNoTaxPromo: false,
-        scrapedAt: new Date(),
-        eventUrl: fixture.eventUrl,
-      }));
-
-      console.log(`[STS] Found ${matches.length} matches with valid odds`);
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: matches,
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
-    } catch (error) {
-      return this.createErrorResult(error, Date.now() - startTime);
-    } finally {
-      if (cleanup) await cleanup();
-    }
+  private updateCache(fixtures: STSFixture[]): void {
+    eventsCache.setMany(fixtures.map((f) => ({ key: f.id, value: f })));
   }
 
-  /**
-   * Scrape a specific match by team names
-   */
+  private getCachedFixture(fixtureId: string): STSFixture | undefined {
+    return eventsCache.get(fixtureId);
+  }
+
+  async scrapeLeague(league: string): Promise<ScraperResult> {
+    return this.executeLeagueScrape(
+      league,
+      (l) => isLeagueSupported(l, this.bookmaker),
+      async (page, leagueSlug) => {
+        const startTime = Date.now();
+
+        const captureResult = await navigateAndCaptureLeagueData(page, leagueSlug);
+        if (!captureResult) {
+          return this.createNotFoundResult(
+            "No WebSocket data received",
+            Date.now() - startTime
+          );
+        }
+
+        const parsedData = parseLeagueData(captureResult, leagueSlug);
+        if (parsedData.length === 0) {
+          return this.createNotFoundResult(
+            `No matches found for ${leagueSlug}`,
+            Date.now() - startTime
+          );
+        }
+
+        const fixtures = parsedData.map((d) => d.fixture);
+        this.updateCache(fixtures);
+
+        const matches: RawScrapedOdds[] = parsedData.map(({ fixture, odds }) => ({
+          bookmaker: this.bookmaker,
+          eventName: `${fixture.home} - ${fixture.away}`,
+          homeTeam: getCanonicalTeamName(fixture.home, leagueSlug),
+          awayTeam: getCanonicalTeamName(fixture.away, leagueSlug),
+          homeOdds: odds.odds1!,
+          drawOdds: odds.oddsX!,
+          awayOdds: odds.odds2!,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          eventUrl: fixture.eventUrl,
+        }));
+
+        console.log(`[STS] Found ${matches.length} matches with valid odds`);
+
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: matches,
+          duration: Date.now() - startTime,
+          timestamp: new Date(),
+        };
+      }
+    );
+  }
+
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
     const league = match.leagueId ?? "ekstraklasa";
 
-    // Get all matches from the league
     const allMatches = await this.scrapeLeague(league);
     if (allMatches.status !== "success" || !allMatches.data) {
       return allMatches;
     }
 
-    // Find the matching event
     const matchResult = findMatchingEvent(
       { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
       allMatches.data,
@@ -165,83 +141,65 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
     };
   }
 
-  /**
-   * Scrape detailed match page for extended markets
-   * Returns 1X2, Double Chance, BTTS, and Over/Under markets
-   */
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    let cleanup: (() => Promise<void>) | null = null;
+    const fixtureId = extractFixtureIdFromUrl(eventUrl);
 
-    try {
-      const { page, cleanup: sessionCleanup } = await this.initBrowser();
-      cleanup = sessionCleanup;
-
-      // Navigate and capture WebSocket data for the match
-      const captureResult = await navigateAndCaptureMatchData(page, eventUrl);
-      if (!captureResult) {
-        return this.createMatchDetailNotFoundResult(
-          "No WebSocket data received",
-          Date.now() - startTime
-        );
-      }
-
-      // Extract fixture ID for targeting
-      const fixtureId = extractFixtureIdFromUrl(eventUrl);
-
-      // Parse initial JSON to find fixture info
-      const initialJson = parseWebSocketJson(captureResult.initialData);
-      const fixtureJson = fixtureId
-        ? captureResult.fixtureData.get(fixtureId) || null
-        : null;
-
-      // Find the target fixture in the data
-      const matchData = this.findAndParseMatchData(
-        fixtureJson,
-        initialJson,
-        fixtureId,
-        eventUrl
-      );
-
-      if (!matchData) {
-        return this.createMatchDetailNotFoundResult(
-          "Could not parse match data",
-          Date.now() - startTime
-        );
-      }
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: matchData,
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
-    } catch (error) {
-      return this.createMatchDetailErrorResult(error, Date.now() - startTime);
-    } finally {
-      if (cleanup) await cleanup();
+    if (!fixtureId) {
+      return this.createMatchDetailNotFoundResult("Invalid STS event URL", Date.now() - startTime);
     }
+
+    return this.executeWithBrowser(
+      async (page) => {
+        const captureResult = await navigateAndCaptureMatchData(page, eventUrl);
+        if (!captureResult) {
+          return this.createMatchDetailNotFoundResult(
+            "No WebSocket data received",
+            Date.now() - startTime
+          );
+        }
+
+        const initialJson = parseWebSocketJson(captureResult.initialData);
+        const fixtureJson = captureResult.fixtureData.get(fixtureId) || null;
+
+        const matchData = this.findAndParseMatchData(
+          fixtureJson,
+          initialJson,
+          fixtureId,
+          eventUrl
+        );
+
+        if (!matchData) {
+          return this.createMatchDetailNotFoundResult(
+            "Could not parse match data",
+            Date.now() - startTime
+          );
+        }
+
+        return {
+          status: "success",
+          bookmaker: this.bookmaker,
+          data: matchData,
+          duration: Date.now() - startTime,
+          timestamp: new Date(),
+        };
+      },
+      (error, duration) => this.createMatchDetailErrorResult(error, duration)
+    );
   }
 
-  /**
-   * Find fixture in data and parse match details
-   */
   private findAndParseMatchData(
     fixtureJson: import("./types.js").STSWebSocketData | null,
     initialJson: import("./types.js").STSWebSocketData | null,
     targetFixtureId: string,
     eventUrl: string
   ): RawScrapedMatchOdds | null {
-    // Use the data source that contains fixture info
     const dataSource = initialJson || fixtureJson;
     if (!dataSource) return null;
 
-    // Navigate to football fixtures: B.S.1.C.{catId}.T.{tournId}.FX.{fixId}
     const footballData = dataSource.B?.S?.["1"];
     if (!footballData?.C) return null;
 
-    // Search through all categories and tournaments
     for (const [, cat] of Object.entries(footballData.C)) {
       if (!cat.T) continue;
 
@@ -249,9 +207,7 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
         if (!tourn.FX) continue;
 
         for (const [fixId, fix] of Object.entries(tourn.FX)) {
-          // Only process the target fixture
           if (fixId !== targetFixtureId) continue;
-
           if (!fix.H?.n || !fix.A?.n) continue;
 
           const fixture = {
@@ -265,7 +221,6 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
             eventUrl,
           };
 
-          // Extract odds from both sources
           const odds = extractOdds(fixture, fixtureJson, initialJson);
 
           return {
@@ -303,184 +258,149 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
     return null;
   }
 
-  /**
-   * Scrape FULL offer (all markets) for all matches in a league
-   * This is the new primary method for comprehensive market extraction
-   */
   async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
-    const startTime = Date.now();
-    let cleanup: (() => Promise<void>) | null = null;
+    return this.executeFullOfferScrape(
+      league,
+      (l) => isLeagueSupported(l, this.bookmaker),
+      async (page, leagueSlug) => {
+        const startTime = Date.now();
 
-    // Validate league
-    if (!LEAGUE_CONFIG[league]) {
-      return this.createFullOfferErrorResult(
-        league,
-        new Error(`Unknown league: ${league}`),
-        Date.now() - startTime
-      );
-    }
-
-    try {
-      const { page, cleanup: sessionCleanup } = await this.initBrowser();
-      cleanup = sessionCleanup;
-
-      // Navigate and capture WebSocket data for the league
-      const captureResult = await navigateAndCaptureLeagueData(page, league);
-      if (!captureResult) {
-        return {
-          success: false,
-          bookmaker: this.bookmaker,
-          league,
-          matches: [],
-          error: "No WebSocket data received",
-          duration: Date.now() - startTime,
-        };
-      }
-
-      // Parse initial JSON to get fixtures
-      const initialJson = parseWebSocketJson(captureResult.initialData);
-      if (!initialJson) {
-        return {
-          success: false,
-          bookmaker: this.bookmaker,
-          league,
-          matches: [],
-          error: "Failed to parse WebSocket data",
-          duration: Date.now() - startTime,
-        };
-      }
-
-      // Get all fixtures for this league
-      const fixtures = parseFixtures(initialJson, league);
-      if (fixtures.length === 0) {
-        return {
-          success: false,
-          bookmaker: this.bookmaker,
-          league,
-          matches: [],
-          error: "No fixtures found for league",
-          duration: Date.now() - startTime,
-        };
-      }
-
-      console.log(`[STS/FullOffer] Found ${fixtures.length} fixtures for ${league}`);
-
-      // For each fixture, navigate to detail page for extended markets
-      const matches: FullMatchOffer[] = [];
-
-      for (const fixture of fixtures) {
-        try {
-          // Navigate to match detail page to get fixture-specific data
-          const matchCaptureResult = await navigateAndCaptureMatchData(
-            page,
-            fixture.eventUrl
-          );
-
-          if (!matchCaptureResult) {
-            console.warn(
-              `[STS/FullOffer] No data for ${fixture.home} vs ${fixture.away}`
-            );
-            continue;
-          }
-
-          // Get fixture-specific JSON (has extended markets)
-          const fixtureJson = matchCaptureResult.fixtureData.get(fixture.id) || null;
-          const matchInitialJson = parseWebSocketJson(matchCaptureResult.initialData);
-
-          // Parse all available markets
-          const markets = parseAllMarkets(fixture, fixtureJson, matchInitialJson);
-
-          if (markets.length > 0) {
-            // Filter out U21/U23/youth team matches by checking team names
-            const homeTeamLower = fixture.home.toLowerCase();
-            const awayTeamLower = fixture.away.toLowerCase();
-            if (
-              homeTeamLower.includes("u21") ||
-              homeTeamLower.includes("u23") ||
-              awayTeamLower.includes("u21") ||
-              awayTeamLower.includes("u23") ||
-              homeTeamLower.includes("under 21") ||
-              homeTeamLower.includes("under 23") ||
-              awayTeamLower.includes("under 21") ||
-              awayTeamLower.includes("under 23")
-            ) {
-              console.warn(
-                `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Youth team match`
-              );
-              continue;
-            }
-
-            // Check if teams are in the league whitelist using matchToCanonical
-            const homeMatch = matchToCanonical(fixture.home, league);
-            const awayMatch = matchToCanonical(fixture.away, league);
-
-            if (!homeMatch || !awayMatch) {
-              console.warn(
-                `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Teams not in ${league} whitelist`
-              );
-              continue;
-            }
-
-            const homeCanonical = homeMatch.name;
-            const awayCanonical = awayMatch.name;
-
-            matches.push({
-              matchId: fixture.id,
-              bookmaker: this.bookmaker,
-              homeTeam: homeCanonical,
-              awayTeam: awayCanonical,
-              eventUrl: fixture.eventUrl,
-              markets,
-              scrapedAt: new Date(),
-            });
-
-            console.log(
-              `[STS/FullOffer] ${fixture.home} vs ${fixture.away}: ${markets.length} markets`
-            );
-          }
-
-          // Small delay between requests
-          await this.delay(200);
-        } catch (error) {
-          console.warn(
-            `[STS/FullOffer] Failed to fetch details for ${fixture.home} vs ${fixture.away}:`,
-            error
-          );
+        const captureResult = await navigateAndCaptureLeagueData(page, leagueSlug);
+        if (!captureResult) {
+          return {
+            success: false,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches: [],
+            error: "No WebSocket data received",
+            duration: Date.now() - startTime,
+          };
         }
+
+        const initialJson = parseWebSocketJson(captureResult.initialData);
+        if (!initialJson) {
+          return {
+            success: false,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches: [],
+            error: "Failed to parse WebSocket data",
+            duration: Date.now() - startTime,
+          };
+        }
+
+        const fixtures = parseFixtures(initialJson, leagueSlug);
+        if (fixtures.length === 0) {
+          return {
+            success: false,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches: [],
+            error: "No fixtures found for league",
+            duration: Date.now() - startTime,
+          };
+        }
+
+        console.log(`[STS/FullOffer] Found ${fixtures.length} fixtures for ${leagueSlug}`);
+        this.updateCache(fixtures);
+
+        const matches: FullMatchOffer[] = [];
+
+        for (const fixture of fixtures) {
+          try {
+            const matchCaptureResult = await navigateAndCaptureMatchData(
+              page,
+              fixture.eventUrl
+            );
+
+            if (!matchCaptureResult) {
+              console.warn(
+                `[STS/FullOffer] No data for ${fixture.home} vs ${fixture.away}`
+              );
+              continue;
+            }
+
+            const fixtureJson = matchCaptureResult.fixtureData.get(fixture.id) || null;
+            const matchInitialJson = parseWebSocketJson(matchCaptureResult.initialData);
+            const markets = parseAllMarkets(fixture, fixtureJson, matchInitialJson);
+
+            if (markets.length > 0) {
+              const homeTeamLower = fixture.home.toLowerCase();
+              const awayTeamLower = fixture.away.toLowerCase();
+              if (
+                homeTeamLower.includes("u21") ||
+                homeTeamLower.includes("u23") ||
+                awayTeamLower.includes("u21") ||
+                awayTeamLower.includes("u23") ||
+                homeTeamLower.includes("under 21") ||
+                homeTeamLower.includes("under 23") ||
+                awayTeamLower.includes("under 21") ||
+                awayTeamLower.includes("under 23")
+              ) {
+                console.warn(
+                  `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Youth team match`
+                );
+                continue;
+              }
+
+              const homeMatch = matchToCanonical(fixture.home, leagueSlug);
+              const awayMatch = matchToCanonical(fixture.away, leagueSlug);
+
+              if (!homeMatch || !awayMatch) {
+                console.warn(
+                  `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Teams not in ${leagueSlug} whitelist`
+                );
+                continue;
+              }
+
+              const homeCanonical = homeMatch.name;
+              const awayCanonical = awayMatch.name;
+
+              matches.push({
+                matchId: fixture.id,
+                bookmaker: this.bookmaker,
+                homeTeam: homeCanonical,
+                awayTeam: awayCanonical,
+                eventUrl: fixture.eventUrl,
+                markets,
+                scrapedAt: new Date(),
+              });
+
+              console.log(
+                `[STS/FullOffer] ${fixture.home} vs ${fixture.away}: ${markets.length} markets`
+              );
+            }
+
+            await this.delay(200);
+          } catch (error) {
+            console.warn(
+              `[STS/FullOffer] Failed to fetch details for ${fixture.home} vs ${fixture.away}:`,
+              error
+            );
+          }
+        }
+
+        const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
+        console.log(
+          `[STS/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
+        );
+
+        return {
+          success: true,
+          bookmaker: this.bookmaker,
+          league: leagueSlug,
+          matches,
+          duration: Date.now() - startTime,
+        };
       }
-
-      const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
-      console.log(
-        `[STS/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
-      );
-
-      return {
-        success: true,
-        bookmaker: this.bookmaker,
-        league,
-        matches,
-        duration: Date.now() - startTime,
-      };
-    } catch (error) {
-      return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
-    } finally {
-      if (cleanup) await cleanup();
-    }
+    );
   }
 
-  /**
-   * Extract event URLs from the current listing page
-   * Not used for STS since we get URLs from WebSocket data
-   */
-  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    // STS uses WebSocket for data fetching, not DOM scraping
-    // Event URLs are constructed from fixture data
+  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
     return [];
   }
 }
 
-// Export singleton instance
 export const stsScraper = new STSPlaywrightScraper();
 
-// Also export with legacy name for backward compatibility
 export { STSPlaywrightScraper as STSScraper };

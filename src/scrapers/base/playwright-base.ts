@@ -325,4 +325,60 @@ export abstract class PlaywrightScraper {
       duration: 0,
     };
   }
+
+  protected async executeWithBrowser<T>(
+    operation: (page: Page, session: BrowserSession) => Promise<T>,
+    errorHandler: (error: unknown, duration: number) => T
+  ): Promise<T> {
+    const startTime = Date.now();
+    let cleanup: (() => Promise<void>) | null = null;
+
+    try {
+      const session = await this.initBrowser();
+      cleanup = session.cleanup;
+      return await operation(session.page, session);
+    } catch (error) {
+      return errorHandler(error, Date.now() - startTime);
+    } finally {
+      if (cleanup) await cleanup();
+    }
+  }
+
+  protected async executeFullOfferScrape(
+    league: string,
+    leagueValidator: (league: string) => boolean,
+    scrapeLogic: (page: Page, league: string) => Promise<FullOfferScraperResult>
+  ): Promise<FullOfferScraperResult> {
+    const startTime = Date.now();
+
+    if (!leagueValidator(league)) {
+      return this.createFullOfferErrorResult(
+        league,
+        new Error(`Unknown league: ${league}`),
+        Date.now() - startTime
+      );
+    }
+
+    return this.executeWithBrowser(
+      async (page) => scrapeLogic(page, league),
+      (error, duration) => this.createFullOfferErrorResult(league, error, duration)
+    );
+  }
+
+  protected async executeLeagueScrape(
+    league: string,
+    leagueValidator: (league: string) => boolean,
+    scrapeLogic: (page: Page, league: string) => Promise<ScraperResult>
+  ): Promise<ScraperResult> {
+    const startTime = Date.now();
+
+    if (!leagueValidator(league)) {
+      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    }
+
+    return this.executeWithBrowser(
+      async (page) => scrapeLogic(page, league),
+      (error, duration) => this.createErrorResult(error, duration)
+    );
+  }
 }

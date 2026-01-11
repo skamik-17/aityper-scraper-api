@@ -10,8 +10,7 @@ import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import { browserPool } from "./base/browser-pool.js";
-import { normalizeMarketsForBookmaker } from "../services/normalization/index.js";
-import { saveFullOfferMarkets } from "../repositories/full-offer-repository.js";
+import { normalizeAndSaveMatches } from "../services/scrape-helpers.js";
 import {
   stsScraper,
   fortunaScraper,
@@ -258,29 +257,14 @@ export async function runAllFullOfferScrapers(
       console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
       const result = await scraper.scrapeFullOffer(league);
 
-      // Apply market normalization to all scraped markets
       if (result.success && result.matches.length > 0) {
-        for (const match of result.matches) {
-          match.markets = normalizeMarketsForBookmaker(match.markets, bookmaker, match.homeTeam, match.awayTeam);
-
-          // Persist normalized markets to database (non-blocking)
-          try {
-            await saveFullOfferMarkets(
-              match.homeTeam,
-              match.awayTeam,
-              bookmaker,
-              match.markets,
-              league,
-              match.eventUrl
-            );
-          } catch (dbError) {
-            console.error(`[Aggregator/FullOffer] DB save failed for ${match.homeTeam} vs ${match.awayTeam}:`, dbError);
-            // Don't fail the scrape if DB save fails
-          }
-        }
+        const saveResult = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
         console.log(
-          `[Aggregator/FullOffer] ${bookmaker} completed: success=${result.success}, ${result.matches.length} matches (normalized + saved)`
+          `[Aggregator/FullOffer] ${bookmaker} completed: ${result.matches.length} matches, ${saveResult.marketsSaved} markets saved`
         );
+        if (saveResult.errors.length > 0) {
+          console.warn(`[Aggregator/FullOffer] ${bookmaker} had ${saveResult.errors.length} errors`);
+        }
       } else {
         console.log(
           `[Aggregator/FullOffer] ${bookmaker} completed: success=${result.success}, ${result.matches.length} matches`
@@ -370,25 +354,9 @@ export async function runSingleFullOfferScraper(
   try {
     const result = await scraper.scrapeFullOffer(league);
 
-    // Apply market normalization and persist
     if (result.success && result.matches.length > 0) {
-      for (const match of result.matches) {
-        match.markets = normalizeMarketsForBookmaker(match.markets, bookmaker, match.homeTeam, match.awayTeam);
-
-        // Persist normalized markets to database (non-blocking)
-        try {
-          await saveFullOfferMarkets(
-            match.homeTeam,
-            match.awayTeam,
-            bookmaker,
-            match.markets,
-            league,
-            match.eventUrl
-          );
-        } catch (dbError) {
-          console.error(`[SingleFullOffer] DB save failed for ${match.homeTeam} vs ${match.awayTeam}:`, dbError);
-        }
-      }
+      const saveResult = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
+      console.log(`[SingleFullOffer] ${bookmaker}: ${result.matches.length} matches, ${saveResult.marketsSaved} markets saved`);
     }
 
     return result;

@@ -1,25 +1,6 @@
-/**
- * Betclic Playwright Scraper
- *
- * Main entry point implementing the PlaywrightScraper interface.
- * Uses gRPC-web API with protobuf encoding to fetch odds data.
- *
- * Architecture:
- * - index.ts (this file): Orchestration and interface implementation
- * - navigation.ts: gRPC API request handling
- * - parser.ts: Protobuf parsing and data transformation
- * - types.ts: Internal type definitions
- * - constants.ts: URLs, IDs, and configuration
- *
- * Key Features:
- * - Direct gRPC-web API access (no DOM scraping needed)
- * - Protobuf message encoding/decoding
- * - Full offer extraction with all available markets
- * - Support for very large match IDs (BigInt)
- */
-
 import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
+import { isLeagueSupported } from "../../../config/leagues.js";
 import type {
   ScraperConfig,
   ScraperResult,
@@ -33,14 +14,13 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
-// Import modular components
 import {
   fetchLeagueMatches,
   fetchMatchDetails,
   extractMatchIdFromUrl,
   buildEventUrl,
-  isLeagueSupported,
 } from "./navigation.js";
 import {
   parseListingResponse,
@@ -56,13 +36,12 @@ import {
 } from "./parser.js";
 import type { BetclicListingMatch } from "./types.js";
 
-/**
- * Betclic Playwright Scraper Implementation
- *
- * Note: Despite extending PlaywrightScraper, this scraper primarily uses
- * the gRPC-web API. Playwright is only used when DOM interaction is needed
- * (e.g., for establishing sessions in restricted scenarios).
- */
+const eventsCache = new ScraperCache<BetclicListingMatch>({
+  name: "betclic-events",
+  ttl: CACHE_TTLS.EVENTS,
+  maxSize: 500,
+});
+
 export class BetclicPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betclic";
   config: ScraperConfig;
@@ -76,15 +55,22 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     };
   }
 
-  /**
-   * Scrape all matches for a specific league
-   * Returns 1X2 odds for listing/comparison purposes
-   */
+  private updateCache(matches: BetclicListingMatch[]): void {
+    eventsCache.setMany(
+      matches
+        .filter((m) => m.matchId !== null)
+        .map((m) => ({ key: m.matchId!, value: m }))
+    );
+  }
+
+  private getCachedEvent(matchId: string): BetclicListingMatch | undefined {
+    return eventsCache.get(matchId);
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     const startTime = Date.now();
 
-    // Validate league
-    if (!isLeagueSupported(league)) {
+    if (!isLeagueSupported(league, this.bookmaker)) {
       return this.createNotFoundResult(
         `Unknown league: ${league}`,
         Date.now() - startTime
@@ -92,7 +78,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      // Fetch listing data via gRPC API
       const responseData = await fetchLeagueMatches(league);
       if (!responseData) {
         return this.createNotFoundResult(
@@ -101,7 +86,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
       }
 
-      // Parse the protobuf response
       const parsedMatches = parseListingResponse(responseData, league);
 
       if (parsedMatches.length === 0) {
@@ -111,7 +95,8 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
       }
 
-      // Transform to RawScrapedOdds format
+      this.updateCache(parsedMatches);
+
       const matches: RawScrapedOdds[] = parsedMatches
         .filter(isValidMatch)
         .map((match) => ({
@@ -144,55 +129,41 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
-  /**
-   * Scrape a specific match by team names
-   */
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
     const startTime = Date.now();
     const league = match.leagueId ?? "premier-league";
 
-    try {
-      // Get all matches from the league
-      const allMatches = await this.scrapeLeague(league);
-      if (allMatches.status !== "success" || !allMatches.data) {
-        return allMatches;
-      }
-
-      // Find the matching event
-      const matchResult = findMatchingEvent(
-        { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-        allMatches.data,
-        league
-      );
-
-      if (!matchResult) {
-        return this.createNotFoundResult(
-          `Match not found on Betclic: ${match.homeTeam} vs ${match.awayTeam}`,
-          Date.now() - startTime
-        );
-      }
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: [matchResult.event],
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
-    } catch (error) {
-      return this.createErrorResult(error, Date.now() - startTime);
+    const allMatches = await this.scrapeLeague(league);
+    if (allMatches.status !== "success" || !allMatches.data) {
+      return allMatches;
     }
+
+    const matchResult = findMatchingEvent(
+      { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
+      allMatches.data,
+      league
+    );
+
+    if (!matchResult) {
+      return this.createNotFoundResult(
+        `Match not found on Betclic: ${match.homeTeam} vs ${match.awayTeam}`,
+        Date.now() - startTime
+      );
+    }
+
+    return {
+      status: "success",
+      bookmaker: this.bookmaker,
+      data: [matchResult.event],
+      duration: Date.now() - startTime,
+      timestamp: new Date(),
+    };
   }
 
-  /**
-   * Scrape detailed match page for extended markets
-   * Returns 1X2, Double Chance, BTTS, and Over/Under markets
-   */
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
 
     try {
-      // Extract match ID from URL
       const matchId = extractMatchIdFromUrl(eventUrl);
       if (!matchId) {
         return this.createMatchDetailNotFoundResult(
@@ -201,7 +172,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
       }
 
-      // Fetch match details via gRPC API
       const responseData = await fetchMatchDetails(matchId);
       if (!responseData) {
         return this.createMatchDetailNotFoundResult(
@@ -210,7 +180,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
       }
 
-      // Parse match details
       const matchDetails = parseMatchDetailsResponse(responseData);
       if (!matchDetails) {
         return this.createMatchDetailNotFoundResult(
@@ -221,7 +190,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
 
       const { homeTeam, awayTeam, outcomes } = matchDetails;
 
-      // Extract specific markets
       const market1X2 = extract1X2Market(outcomes, homeTeam, awayTeam);
       const marketDoubleChance = extractDoubleChanceMarket(outcomes, homeTeam, awayTeam);
       const marketBTTS = extractBTTSMarket(outcomes);
@@ -254,15 +222,10 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
-  /**
-   * Scrape FULL offer (all markets) for all matches in a league
-   * This is the new primary method for comprehensive market extraction
-   */
   async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
 
-    // Validate league
-    if (!isLeagueSupported(league)) {
+    if (!isLeagueSupported(league, this.bookmaker)) {
       return this.createFullOfferErrorResult(
         league,
         new Error(`Unknown league: ${league}`),
@@ -271,7 +234,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      // Fetch listing to get all matches
       const listingData = await fetchLeagueMatches(league);
       if (!listingData) {
         return {
@@ -284,26 +246,23 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         };
       }
 
-      // Parse listing to get match IDs
       const listingMatches = parseListingResponse(listingData, league);
       console.log(`[Betclic/FullOffer] Found ${listingMatches.length} events in listing`);
 
+      this.updateCache(listingMatches);
+
       const matches: FullMatchOffer[] = [];
 
-      // Process each match and fetch full details
       for (const listingMatch of listingMatches) {
         if (!listingMatch.matchId) continue;
 
         try {
-          // Fetch detailed data for this match
           const detailData = await fetchMatchDetails(listingMatch.matchId);
 
           if (detailData) {
-            // Try parsing markets directly from protobuf structure first
             const markets = parseAllMarketsFromProto(detailData);
 
             if (markets.length > 0) {
-              // Extract team names from listing match or parse from first market
               const homeTeam = listingMatch.homeTeam;
               const awayTeam = listingMatch.awayTeam;
 
@@ -326,7 +285,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
                 `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets`
               );
             } else {
-              // Fallback: use the legacy parseMatchDetailsResponse + parseAllMarkets
               const details = parseMatchDetailsResponse(detailData);
 
               if (details && details.outcomes.length > 0) {
@@ -357,7 +315,6 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
             }
           }
 
-          // Small delay between requests to avoid rate limiting
           await this.delay(100);
         } catch (error) {
           console.warn(
@@ -384,16 +341,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
-  /**
-   * Extract event URLs from the current listing page
-   * Not used for Betclic since we use gRPC API directly
-   */
-  async extractEventUrls(page: Page): Promise<EventUrlEntry[]> {
-    // Betclic uses gRPC API for data fetching, not DOM scraping
-    // This method is kept for interface compatibility
+  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
     return [];
   }
 }
 
-// Export singleton instance
 export const betclicScraper = new BetclicPlaywrightScraper();

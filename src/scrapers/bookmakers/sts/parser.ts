@@ -277,7 +277,7 @@ export function parseAllMarkets(
       const marketId = parseInt(marketIdStr, 10);
       const marketName = getMarketName(marketId, market);
       const groupName = MARKET_GROUPS[marketId] || "Inne";
-      const marketType = MARKET_TYPES[marketId];
+      const marketType = MARKET_TYPES[marketId] ?? marketId; // Use ID as fallback for unmapped markets
 
       for (const [, line] of Object.entries(market.l || {}) as [string, STSMarketLine][]) {
         const selections = parseLineSelections(marketId, line, fixture);

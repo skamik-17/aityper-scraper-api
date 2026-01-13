@@ -1,0 +1,308 @@
+====================================================================================================
+Category: PLAYER-MARKETS
+Markets: 4
+====================================================================================================
+
+📦 MARKET ID 52: Pierwszy strzelec
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: GOALSCORER_FIRST
+   Market Key: GOALSCORER_FIRST
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "Zawodnik - strzeli 1. gola" [ID: 2736583325]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   105951     Stambouli Benjamin        Stambouli Benjamin        30.00   
+   128285     Colin Maxime              Colin Maxime              35.00   
+   186017     Sobol Eduard              Sobol Eduard              25.00   
+   369612     Toure Fode                Toure Fode                30.00   
+   754594     Chilwell Ben              Chilwell Ben              20.00   
+   865372     Diallo Habib              Diallo Habib              10.00   
+   934494     Asoro Joel                Asoro Joel                12.50   
+   995865     Hein Gauthier             Hein Gauthier             12.50   
+   ... and 41 more outcomes
+
+📤 NORMALIZED SELECTIONS (49):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    Stambouli Benjamin   Stambouli Benjamin                  30.00   
+   ✅    Colin Maxime         Colin Maxime                        35.00   
+   ✅    Sobol Eduard         Sobol Eduard                        25.00   
+   ✅    Toure Fode           Toure Fode                          30.00   
+   ✅    Chilwell Ben         Chilwell Ben                        20.00   
+   ✅    Diallo Habib         Diallo Habib                        10.00   
+   ✅    Asoro Joel           Asoro Joel                          12.50   
+   ✅    Hein Gauthier        Hein Gauthier                       12.50   
+   ✅    Tsitaishvili Heorhi  Tsitaishvili Heorhii                15.00   
+   ✅    Kouao Koffi          Kouao Koffi                         30.00   
+   ... and 39 more selections
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "2736583325": {
+      "D": 1,
+      "n": "Zawodnik - strzeli 1. gola",
+      "o": {
+        "105951": {
+          "D": 48,
+          "O": 30,
+          "n": "Stambouli Benjamin"
+        },
+        "128285": {
+          "D": 50,
+          "O": 35,
+          "n": "Colin Maxime"
+        },
+        "186017": {
+          "D": 38,
+          "O": 25,
+          "n": "Sobol Eduard"
+        },
+        "369612": {
+          "D": 41,
+          "O": 30,
+          "n": "Toure Fode"
+        },
+        "754594": {
+          "D": 30,
+          "O": 20,
+          "n": "Chilwell Ben"
+   ... (225 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 53: Ostatni strzelec
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: GOALSCORER_LAST
+   Market Key: GOALSCORER_LAST
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "Zawodnik - strzeli ostatniego gola" [ID: 4041487474]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   105951     Stambouli Benjamin        Stambouli Benjamin        30.00   
+   128285     Colin Maxime              Colin Maxime              35.00   
+   186017     Sobol Eduard              Sobol Eduard              24.00   
+   369612     Toure Fode                Toure Fode                30.00   
+   754594     Chilwell Ben              Chilwell Ben              20.00   
+   865372     Diallo Habib              Diallo Habib              9.90    
+   934494     Asoro Joel                Asoro Joel                13.00   
+   995865     Hein Gauthier             Hein Gauthier             12.00   
+   ... and 41 more outcomes
+
+📤 NORMALIZED SELECTIONS (49):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    Stambouli Benjamin   Stambouli Benjamin                  30.00   
+   ✅    Colin Maxime         Colin Maxime                        35.00   
+   ✅    Sobol Eduard         Sobol Eduard                        24.00   
+   ✅    Toure Fode           Toure Fode                          30.00   
+   ✅    Chilwell Ben         Chilwell Ben                        20.00   
+   ✅    Diallo Habib         Diallo Habib                        9.90    
+   ✅    Asoro Joel           Asoro Joel                          13.00   
+   ✅    Hein Gauthier        Hein Gauthier                       12.00   
+   ✅    Tsitaishvili Heorhi  Tsitaishvili Heorhii                15.00   
+   ✅    Kouao Koffi          Kouao Koffi                         29.00   
+   ... and 39 more selections
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "4041487474": {
+      "n": "Zawodnik - strzeli ostatniego gola",
+      "o": {
+        "105951": {
+          "D": 47,
+          "O": 30,
+          "n": "Stambouli Benjamin"
+        },
+        "128285": {
+          "D": 50,
+          "O": 35,
+          "n": "Colin Maxime"
+        },
+        "186017": {
+          "D": 35,
+          "O": 24,
+          "n": "Sobol Eduard"
+        },
+        "369612": {
+          "D": 46,
+          "O": 30,
+          "n": "Toure Fode"
+        },
+        "754594": {
+          "D": 31,
+          "O": 20,
+          "n": "Chilwell Ben"
+        },
+   ... (224 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 54: Strzelec w meczu
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: GOALSCORER_ANYTIME
+   Market Key: GOALSCORER_ANYTIME
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "Zawodnik - strzeli gola" [ID: 4041487474]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   105951     Stambouli Benjamin        Stambouli Benjamin        20.00   
+   128285     Colin Maxime              Colin Maxime              30.00   
+   186017     Sobol Eduard              Sobol Eduard              12.50   
+   369612     Toure Fode                Toure Fode                20.00   
+   754594     Chilwell Ben              Chilwell Ben              10.00   
+   865372     Diallo Habib              Diallo Habib              4.00    
+   934494     Asoro Joel                Asoro Joel                6.00    
+   995865     Hein Gauthier             Hein Gauthier             5.00    
+   ... and 41 more outcomes
+
+📤 NORMALIZED SELECTIONS (49):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    Stambouli Benjamin   Stambouli Benjamin                  20.00   
+   ✅    Colin Maxime         Colin Maxime                        30.00   
+   ✅    Sobol Eduard         Sobol Eduard                        12.50   
+   ✅    Toure Fode           Toure Fode                          20.00   
+   ✅    Chilwell Ben         Chilwell Ben                        10.00   
+   ✅    Diallo Habib         Diallo Habib                        4.00    
+   ✅    Asoro Joel           Asoro Joel                          6.00    
+   ✅    Hein Gauthier        Hein Gauthier                       5.00    
+   ✅    Tsitaishvili Heorhi  Tsitaishvili Heorhii                7.00    
+   ✅    Kouao Koffi          Kouao Koffi                         17.50   
+   ... and 39 more selections
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "4041487474": {
+      "n": "Zawodnik - strzeli gola",
+      "o": {
+        "105951": {
+          "D": 48,
+          "O": 20,
+          "n": "Stambouli Benjamin"
+        },
+        "128285": {
+          "D": 50,
+          "O": 30,
+          "n": "Colin Maxime"
+        },
+        "186017": {
+          "D": 37,
+          "O": 12.5,
+          "n": "Sobol Eduard"
+        },
+        "369612": {
+          "D": 46,
+          "O": 20,
+          "n": "Toure Fode"
+        },
+        "754594": {
+          "D": 31,
+          "O": 10,
+          "n": "Chilwell Ben"
+        },
+   ... (224 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1051: Strzelec + wynik
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: PLAYER_GOAL_AND_RESULT
+   Market Key: PLAYER_GOAL_AND_RESULT
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (49 line(s)):
+
+   Line: "Zawodnik - strzeli gola i wynik końcowy" [ID: 43187275]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   1073       Lemarechal Felix i 1      Lemarechal Felix i 1      3.80    
+   1074       Lemarechal Felix i X      Lemarechal Felix i X      24.00   
+   1075       Lemarechal Felix i 2      Lemarechal Felix i 2      47.00   
+
+   Line: "Zawodnik - strzeli gola i wynik końcowy" [ID: 143036007]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   1073       Ouattara Abdoul i 1       Ouattara Abdoul i 1       6.25    
+   1074       Ouattara Abdoul i X       Ouattara Abdoul i X       41.00   
+   1075       Ouattara Abdoul i 2       Ouattara Abdoul i 2       80.00   
+
+   Line: "Zawodnik - strzeli gola i wynik końcowy" [ID: 234542151]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   1073       Tsitaishvili Heorhii i 1  Tsitaishvili Heorhii i 1  14.50   
+   1074       Tsitaishvili Heorhii i X  Tsitaishvili Heorhii i X  23.00   
+   1075       Tsitaishvili Heorhii i 2  Tsitaishvili Heorhii i 2  17.00   
+
+   ... and 46 more lines
+
+📤 NORMALIZED SELECTIONS (3):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    Lemarechal Felix_HO  Lemarechal Felix i 1                3.80    
+   ✅    Lemarechal Felix_DR  Lemarechal Felix i X                24.00   
+   ✅    Lemarechal Felix_AW  Lemarechal Felix i 2                47.00   
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "43187275": {
+      "D": 6,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 3.8,
+          "n": "Lemarechal Felix i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 24,
+          "n": "Lemarechal Felix i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 47,
+          "n": "Lemarechal Felix i 2"
+        }
+      }
+    },
+    "143036007": {
+      "D": 13,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 6.25,
+   ... (1003 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────

@@ -206,6 +206,18 @@ function normalizeSelectionWithContext(
     return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
   }
 
+  if (type === "TOTAL_GOALS_AND_BTTS") {
+    const tgMatch = trimmed.match(/^([+-]?\d+[.,]?\d*)\s*i\s*(tak|nie|yes|no|gg|ng)$/iu);
+    if (tgMatch) {
+      const value = tgMatch[1].replace(",", ".");
+      const overUnder = value.startsWith("-") ? "UNDER" : "OVER";
+      const bttsCode = tgMatch[2].toLowerCase();
+      const btts = /tak|yes|gg/.test(bttsCode) ? "YES" : "NO";
+      return { name: originalName, normalizedName: `${overUnder}_${btts}` as NormalizedSelection, odds: 0 };
+    }
+    return { name: originalName, normalizedName: trimmed as NormalizedSelection, odds: 0 };
+  }
+
   // ==========================================================================
   // RESULT_AND_BTTS - parse result + BTTS combinations
   // Input formats: "1 i Tak", "X i Nie", "2 i gg"

@@ -1,0 +1,636 @@
+====================================================================================================
+PRIORITY: Markets Currently Mapped to OTHER
+These markets need proper normalization mappings
+====================================================================================================
+
+📦 MARKET ID 57: HT/FT - Dokładny wynik
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HT_FT_CORRECT_SCORE
+   Market Key: HT_FT_CORRECT_SCORE
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa / wynik końcowy - dokładny wynik" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   92         (empty)                   0:0 / 0:0                 16.00   
+   93         (empty)                   0:0 / 1:0                 26.00   
+   94         (empty)                   0:0 / 2:0                 85.00   
+   95         (empty)                   0:0 / 3:0                 250.00  
+   96         (empty)                   0:0 / 0:1                 13.50   
+   97         (empty)                   0:0 / 1:1                 23.00   
+   98         (empty)                   0:0 / 2:1                 85.00   
+   99         (empty)                   0:0 / 0:2                 22.00   
+   ... and 38 more outcomes
+
+📤 NORMALIZED SELECTIONS (46):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    0:0 / 0:0            0:0 / 0:0                           16.00   
+   ✅    0:0 / 1:0            0:0 / 1:0                           26.00   
+   ✅    0:0 / 2:0            0:0 / 2:0                           85.00   
+   ✅    0:0 / 3:0            0:0 / 3:0                           250.00  
+   ✅    0:0 / 0:1            0:0 / 0:1                           13.50   
+   ✅    0:0 / 1:1            0:0 / 1:1                           23.00   
+   ✅    0:0 / 2:1            0:0 / 2:1                           85.00   
+   ✅    0:0 / 0:2            0:0 / 0:2                           22.00   
+   ✅    0:0 / 1:2            0:0 / 1:2                           43.00   
+   ✅    0:0 / 0:3            0:0 / 0:3                           55.00   
+   ... and 36 more selections
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa / wynik końcowy - dokładny wynik",
+      "o": {
+        "92": {
+          "O": 16
+        },
+        "93": {
+          "O": 26
+        },
+        "94": {
+          "O": 85
+        },
+        "95": {
+          "O": 250
+        },
+        "96": {
+          "O": 13.5
+        },
+        "97": {
+          "O": 23
+        },
+        "98": {
+          "O": 85
+        },
+        "99": {
+          "O": 22
+        },
+        "100": {
+   ... (117 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 98: 1. poł - Wynik + BTTS
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HALF_TIME_RESULT_AND_BTTS
+   Market Key: HALF_TIME_RESULT_AND_BTTS
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa - wynik i obie drużyny - strzelą gola" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   28         (empty)                   1 i Tak                   10.50   
+   29         (empty)                   1 i Nie                   2.20    
+   30         (empty)                   X i Tak                   6.90    
+   31         (empty)                   X i Nie                   3.40    
+   32         (empty)                   2 i Tak                   27.00   
+   33         (empty)                   2 i Nie                   5.90    
+
+📤 NORMALIZED SELECTIONS (6):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    HOME_YES             1 i Tak                             10.50   
+   ✅    HOME_NO              1 i Nie                             2.20    
+   ✅    DRAW_YES             X i Tak                             6.90    
+   ✅    DRAW_NO              X i Nie                             3.40    
+   ✅    AWAY_YES             2 i Tak                             27.00   
+   ✅    AWAY_NO              2 i Nie                             5.90    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - wynik i obie drużyny - strzelą gola",
+      "o": {
+        "28": {
+          "O": 10.5
+        },
+        "29": {
+          "O": 2.2
+        },
+        "30": {
+          "O": 6.9
+        },
+        "31": {
+          "O": 3.4
+        },
+        "32": {
+          "O": 27
+        },
+        "33": {
+          "O": 5.9
+        }
+      }
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 816: Multiwynik
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: MULTI_RESULT
+   Market Key: MULTI_RESULT
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "Multiwynik" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   961        (empty)                   1 o 1 gol                 3.40    
+   962        (empty)                   2 o 1 gol                 11.50   
+   963        (empty)                   1 o 2+ gole               14.50   
+   964        (empty)                   2 o 2+ gole               50.00   
+   965        (empty)                   Remis 0:0                 4.20    
+   966        (empty)                   Remis 1:1                 12.50   
+   967        (empty)                   Remis 2:2                 11.00   
+   968        (empty)                   Remis 3+                  34.00   
+   ... and 1 more outcomes
+
+📤 NORMALIZED SELECTIONS (9):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    1 o 1 gol            1 o 1 gol                           3.40    
+   ✅    2 o 1 gol            2 o 1 gol                           11.50   
+   ✅    1 o 2+ gole          1 o 2+ gole                         14.50   
+   ✅    2 o 2+ gole          2 o 2+ gole                         50.00   
+   ✅    Remis 0:0            Remis 0:0                           4.20    
+   ✅    Remis 1:1            Remis 1:1                           12.50   
+   ✅    Remis 2:2            Remis 2:2                           11.00   
+   ✅    Remis 3+             Remis 3+                            34.00   
+   ✅    Inne                 Inne                                4.10    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "Multiwynik",
+      "o": {
+        "961": {
+          "O": 3.4
+        },
+        "962": {
+          "O": 11.5
+        },
+        "963": {
+          "O": 14.5
+        },
+        "964": {
+          "O": 50
+        },
+        "965": {
+          "O": 4.2
+        },
+        "966": {
+          "O": 12.5
+        },
+        "967": {
+          "O": 11
+        },
+        "968": {
+          "O": 34
+        },
+        "1007": {
+   ... (6 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1012: HT/FT + gole
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HALFTIME_FULLTIME_AND_TOTAL
+   Market Key: HALFTIME_FULLTIME_AND_TOTAL
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa / wynik końcowy i liczba goli" [ID: 3070860985]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   1019       1 / 1 i -4.5              1 / 1 i -4.5              2.85    
+   1020       1 / X i -4.5              1 / X i -4.5              18.00   
+   1021       1 / 2 i -4.5              1 / 2 i -4.5              80.00   
+   1022       X / 1 i -4.5              X / 1 i -4.5              5.40    
+   1023       X / X i -4.5              X / X i -4.5              6.90    
+   1024       X / 2 i -4.5              X / 2 i -4.5              13.50   
+   1025       2 / 1 i -4.5              2 / 1 i -4.5              39.00   
+   1026       2 / X i -4.5              2 / X i -4.5              20.00   
+   ... and 10 more outcomes
+
+📤 NORMALIZED SELECTIONS (18):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    1 / 1 i -4.5         1 / 1 i -4.5                        2.85    
+   ✅    1 / X i -4.5         1 / X i -4.5                        18.00   
+   ✅    1 / 2 i -4.5         1 / 2 i -4.5                        80.00   
+   ✅    X / 1 i -4.5         X / 1 i -4.5                        5.40    
+   ✅    X / X i -4.5         X / X i -4.5                        6.90    
+   ✅    X / 2 i -4.5         X / 2 i -4.5                        13.50   
+   ✅    2 / 1 i -4.5         2 / 1 i -4.5                        39.00   
+   ✅    2 / X i -4.5         2 / X i -4.5                        20.00   
+   ✅    2 / 2 i -4.5         2 / 2 i -4.5                        11.00   
+   ✅    1 / 1 i +4.5         1 / 1 i +4.5                        7.00    
+   ... and 8 more selections
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "3070860985": {
+      "D": 450,
+      "n": "1. połowa / wynik końcowy i liczba goli",
+      "o": {
+        "1019": {
+          "D": 1,
+          "O": 2.85,
+          "n": "1 / 1 i -4.5"
+        },
+        "1020": {
+          "D": 2,
+          "O": 18,
+          "n": "1 / X i -4.5"
+        },
+        "1021": {
+          "D": 3,
+          "O": 80,
+          "n": "1 / 2 i -4.5"
+        },
+        "1022": {
+          "D": 4,
+          "O": 5.4,
+          "n": "X / 1 i -4.5"
+        },
+        "1023": {
+          "D": 5,
+          "O": 6.9,
+          "n": "X / X i -4.5"
+   ... (70 more lines)
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1232: 1. poł - Gość strzeli
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HALF_TIME_AWAY_TO_SCORE
+   Market Key: HALF_TIME_AWAY_TO_SCORE
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa - 2. drużyna - strzeli gola" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   26         (empty)                   Tak                       2.50    
+   27         (empty)                   Nie                       1.47    
+
+📤 NORMALIZED SELECTIONS (2):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    YES                  Tak                                 2.50    
+   ✅    NO                   Nie                                 1.47    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - 2. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 2.5
+        },
+        "27": {
+          "O": 1.47
+        }
+      }
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1233: 1. poł - Gospodarz strzeli
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HALF_TIME_HOME_TO_SCORE
+   Market Key: HALF_TIME_HOME_TO_SCORE
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa - 1. drużyna - strzeli gola" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   26         (empty)                   Tak                       1.53    
+   27         (empty)                   Nie                       2.35    
+
+📤 NORMALIZED SELECTIONS (2):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    YES                  Tak                                 1.53    
+   ✅    NO                   Nie                                 2.35    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - 1. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 1.53
+        },
+        "27": {
+          "O": 2.35
+        }
+      }
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1234: 2. poł - Gość strzeli
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: SECOND_HALF_AWAY_TO_SCORE
+   Market Key: SECOND_HALF_AWAY_TO_SCORE
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "2. połowa - 2. drużyna - strzeli gola" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   26         (empty)                   Tak                       2.12    
+   27         (empty)                   Nie                       1.65    
+
+📤 NORMALIZED SELECTIONS (2):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    YES                  Tak                                 2.12    
+   ✅    NO                   Nie                                 1.65    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - 2. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 2.12
+        },
+        "27": {
+          "O": 1.65
+        }
+      }
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1235: 2. poł - Gospodarz strzeli
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: SECOND_HALF_HOME_TO_SCORE
+   Market Key: SECOND_HALF_HOME_TO_SCORE
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "2. połowa - 1. drużyna - strzeli gola" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   26         (empty)                   Tak                       1.40    
+   27         (empty)                   Nie                       2.75    
+
+📤 NORMALIZED SELECTIONS (2):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    YES                  Tak                                 1.40    
+   ✅    NO                   Nie                                 2.75    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - 1. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 1.4
+        },
+        "27": {
+          "O": 2.75
+        }
+      }
+    }
+  }
+}
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📦 MARKET ID 1244: Margines zwycięstwa (var5)
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+✅ NORMALIZED: HT_OR_FT_RESULT
+   Market Key: HT_OR_FT_RESULT
+   Param Value: none
+   Matched By: id
+
+📊 RAW DATA (1 line(s)):
+
+   Line: "1. połowa lub wynik końcowy" [ID: 1]
+   ────────────────────────────────────────────────────────────────────────────────
+   OutcomeID  Raw Name                  Mapped Name               Odds    
+   ────────── ───────────────────────── ───────────────────────── ────────
+   1          (empty)                   1                         1.37    
+   2          (empty)                   X                         1.95    
+   3          (empty)                   2                         3.40    
+
+📤 NORMALIZED SELECTIONS (3):
+   ────────────────────────────────────────────────────────────────────────────────
+   Status Code                 Original Label                      Odds    
+   ──── ──────────────────── ─────────────────────────────────── ────────
+   ✅    HOME                 1                                   1.37    
+   ✅    DRAW                 X                                   1.95    
+   ✅    AWAY                 2                                   3.40    
+
+🔧 RAW JSON (assocKey: 1m61526290):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa lub wynik końcowy",
+      "o": {
+        "1": {
+          "O": 1.37
+        },
+        "2": {
+          "O": 1.95
+        },
+        "3": {
+          "O": 3.4
+        }
+      }
+    }
+  }
+}
+
+====================================================================================================
+📊 SUMMARY
+====================================================================================================
+Total markets: 114
+✅ Mapped: 114
+❌ Unmapped: 0
+⚠️  With issues: 0
+
+====================================================================================================
+✅ MAPPED MARKETS (114)
+====================================================================================================
+    ID Polish Name                         →   Normalized Code                Sel#  Issues
+────── ─────────────────────────────────── ─── ────────────────────────────── ───── ───────────────
+     1 Wynik meczu (1X2)                   → MATCH_WINNER                   3     
+     8 Pierwszy gol                        → FIRST_TEAM_TO_SCORE            3     
+     9 Ostatni gol                         → FIRST_TEAM_TO_SCORE            3     
+    10 Podwójna szansa                     → DOUBLE_CHANCE                  3     
+    11 Remis = zwrot                       → DRAW_NO_BET                    2     
+    14 Handicap europejski                 → EUROPEAN_HANDICAP              3     
+    17 Margines zwycięstwa                 → WINNING_MARGIN                 7     
+    20 Handicap azjatycki                  → ASIAN_HANDICAP                 2     
+    22 Handicap azjatycki (alt)            → EUROPEAN_HANDICAP              2     
+    23 Liczba goli (zwrot)                 → TOTAL_GOALS_ASIAN              2     
+    25 Liczba goli                         → TOTAL_GOALS                    2     
+    28 Gole gospodarzy                     → TEAM_TOTAL_GOALS               2     
+    31 Gole gości                          → TEAM_TOTAL_GOALS               2     
+    33 Przedział goli                      → GOAL_RANGE                     7     
+    35 Wygrana do zera (gosp)              → TEAM_GOAL_RANGE                4     
+    36 Czyste konto                        → TEAM_GOAL_RANGE                4     
+    40 Parzyste/nieparzyste                → ODD_EVEN_GOALS                 2     
+    41 Parzyste/nieparzyste (gosp)         → ODD_EVEN_GOALS                 2     
+    42 Parzyste/nieparzyste (gość)         → ODD_EVEN_GOALS                 2     
+    43 Obie strzelą (BTTS)                 → BTTS                           2     
+    44 Która strzeli pierwsza              → FIRST_TEAM_TO_SCORE            4     
+    47 Wygrana do zera (gosp)              → WIN_TO_NIL                     2     
+    48 Wygrana do zera (gość)              → WIN_TO_NIL                     2     
+    49 Wynik + BTTS                        → RESULT_AND_BTTS                6     
+    50 Wynik + liczba goli                 → RESULT_AND_BTTS                4     
+    51 Wynik + liczba goli (szczeg)        → RESULT_AND_TOTAL               6     
+    52 Pierwszy strzelec                   → GOALSCORER_FIRST               49    
+    53 Ostatni strzelec                    → GOALSCORER_LAST                49    
+    54 Strzelec w meczu                    → GOALSCORER_ANYTIME             49    
+    57 HT/FT - Dokładny wynik              → HT_FT_CORRECT_SCORE            46    
+    58 Połowa/Koniec (HT/FT)               → HALFTIME_FULLTIME              9     
+    59 Gole w obu połowach (gosp)          → BOTH_HALVES_GOALS              2     
+    60 Gole w obu połowach (gość)          → BOTH_HALVES_GOALS              2     
+    61 Połowa z więcej goli                → BOTH_HALVES_GOALS              2     
+    62 (nieznany ID 62)                    → BOTH_HALVES_GOALS              2     
+    63 (nieznany ID 63)                    → BOTH_HALVES_GOALS              3     
+    64 (nieznany ID 64)                    → BOTH_HALVES_GOALS              3     
+    65 (nieznany ID 65)                    → BOTH_HALVES_GOALS              3     
+    66 (nieznany ID 66)                    → BOTH_HALVES_GOALS              4     
+    67 (nieznany ID 67)                    → BOTH_HALVES_GOALS              2     
+    68 (nieznany ID 68)                    → BOTH_HALVES_GOALS              2     
+    69 (nieznany ID 69)                    → BOTH_HALVES_GOALS              2     
+    70 (nieznany ID 70)                    → BOTH_HALVES_GOALS              2     
+    71 Wynik 1. połowy                     → HALF_TIME_RESULT               3     
+    73 Pierwszy gol 1. poł                 → FIRST_TEAM_TO_SCORE            3     
+    74 Podwójna szansa 1. poł              → DOUBLE_CHANCE                  3     
+    75 Remis = zwrot 1. poł                → DRAW_NO_BET                    2     
+    76 Handicap europejski 1. poł          → EUROPEAN_HANDICAP              3     
+    77 Handicap azjatycki 1. poł           → ASIAN_HANDICAP                 2     
+    79 Handicap europejski 1. poł (alt)    → EUROPEAN_HANDICAP              2     
+    80 Liczba goli 1. poł (alt)            → HALF_TIME_TOTAL_GOALS          2     
+    82 Liczba goli 1. połowa               → HALF_TIME_TOTAL_GOALS          2     
+    85 Gole gosp 1. połowa                 → HALF_TIME_TOTAL_GOALS          2     
+    88 Gole gości 1. połowa                → HALF_TIME_TOTAL_GOALS          2     
+    90 Przedział goli 1. poł               → HALF_TIME_GOAL_RANGE           4     
+    94 Parzyste/nieparzyste 1. poł         → ODD_EVEN_GOALS                 2     
+    95 BTTS 1. połowa                      → HALF_TIME_BTTS                 2     
+    98 1. poł - Wynik + BTTS               → HALF_TIME_RESULT_AND_BTTS      6     
+    99 Wynik + gole 1. poł                 → RESULT_AND_TOTAL               6     
+   101 Dokładny wynik 1. poł               → CORRECT_SCORE                  10    
+   102 Wynik 2. połowy                     → SECOND_HALF_RESULT             3     
+   103 Pierwszy gol 2. poł                 → FIRST_TEAM_TO_SCORE            3     
+   104 Podwójna szansa 2. poł              → DOUBLE_CHANCE                  3     
+   105 Remis = zwrot 2. poł                → DRAW_NO_BET                    2     
+   106 Handicap europejski 2. poł          → EUROPEAN_HANDICAP              3     
+   107 Handicap azjatycki 2. poł           → ASIAN_HANDICAP                 2     
+   109 Handicap europejski 2. poł (alt)    → EUROPEAN_HANDICAP              2     
+   110 Liczba goli 2. poł (alt)            → SECOND_HALF_TOTAL_GOALS        2     
+   112 Liczba goli 2. połowa               → SECOND_HALF_TOTAL_GOALS        2     
+   115 Gole gosp 2. połowa                 → TEAM_TOTAL_GOALS               2     
+   118 Gole gości 2. połowa                → TEAM_TOTAL_GOALS               2     
+   119 Przedział goli gosp 2. poł          → TEAM_GOAL_RANGE                3     
+   120 Parzyste/nieparzyste 2. poł         → ODD_EVEN_GOALS                 2     
+   121 BTTS 2. połowa                      → SECOND_HALF_BTTS               2     
+   124 Dokładny wynik 2. poł               → CORRECT_SCORE                  10    
+   125 Czas pierwszego gola                → FIRST_GOAL_TIME                7     
+   126 Czas pierwszego gola (var)          → FIRST_GOAL_TIME                10    
+   132 Wynik w X minucie                   → TIME_PERIOD_RESULT             3     
+   220 Więcej rzutów rożnych               → CORNERS_RACE                   3     
+   221 Pierwszy rzut rożny                 → FIRST_CORNER                   3     
+   225 Rzuty rożne handicap                → CORNERS_HANDICAP               2     
+   228 Rzuty rożne suma                    → CORNERS_TOTAL                  2     
+   235 Rzuty rożne 1. poł                  → HALF_TIME_CORNERS_TOTAL        3     
+   236 Rzuty rożne gosp                    → CORNERS_TEAM                   4     
+   237 Rzuty rożne gości                   → CORNERS_TEAM                   4     
+   239 Więcej rożnych (var)                → CORNERS_RACE                   3     
+   244 Rzuty rożne handicap (var)          → CORNERS_HANDICAP               2     
+   247 Rzuty rożne suma (var)              → CORNERS_TOTAL                  2     
+   254 Rożne gosp 1. poł                   → HALF_TIME_CORNERS_TEAM         4     
+   255 Rożne gości 1. poł                  → HALF_TIME_CORNERS_TEAM         4     
+   256 Więcej rożnych 1. poł               → HALF_TIME_CORNERS_RACE         3     
+   258 Pierwszy gol + wynik                → FIRST_GOAL_AND_RESULT          7     
+   283 Dokładny wynik                      → CORRECT_SCORE                  35    
+   807 DC + BTTS (var1)                    → DOUBLE_CHANCE_BTTS             6     
+   808 Wynik 2. poł + BTTS                 → RESULT_AND_BTTS                6     
+   809 Wynik 2. poł + gole                 → SECOND_HALF_RESULT_AND_TOTAL   6     
+   810 DC + BTTS (var2)                    → DOUBLE_CHANCE_BTTS             6     
+   811 DC + BTTS (var3)                    → DOUBLE_CHANCE_BTTS             6     
+   812 DC + gole                           → DOUBLE_CHANCE_TOTAL            6     
+   813 Przedział goli                      → GOAL_RANGE                     17    
+   814 Przedział goli gosp                 → TEAM_GOAL_RANGE                5     
+   815 Przedział goli gości                → TEAM_GOAL_RANGE                5     
+   816 Multiwynik                          → MULTI_RESULT                   9     
+   817 Przedział goli 1. poł (var4)        → HALF_TIME_GOAL_RANGE           5     
+   818 Przedział goli 2. poł               → SECOND_HALF_GOAL_RANGE         5     
+  1012 HT/FT + gole                        → HALFTIME_FULLTIME_AND_TOTAL    18    
+  1051 Strzelec + wynik                    → PLAYER_GOAL_AND_RESULT         3     
+  1224 Gość strzeli                        → AWAY_TEAM_TO_SCORE             2     
+  1229 Gospodarz strzeli                   → HOME_TEAM_TO_SCORE             2     
+  1232 1. poł - Gość strzeli               → HALF_TIME_AWAY_TO_SCORE        2     
+  1233 1. poł - Gospodarz strzeli          → HALF_TIME_HOME_TO_SCORE        2     
+  1234 2. poł - Gość strzeli               → SECOND_HALF_AWAY_TO_SCORE      2     
+  1235 2. poł - Gospodarz strzeli          → SECOND_HALF_HOME_TO_SCORE      2     
+  1244 Margines zwycięstwa (var5)          → HT_OR_FT_RESULT                3     

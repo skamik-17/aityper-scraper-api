@@ -44,7 +44,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   36: "TEAM_GOAL_RANGE",
   47: "WIN_TO_NIL",
   48: "WIN_TO_NIL",
-  57: "OTHER",
+  57: "HT_FT_CORRECT_SCORE",
 
   14: "EUROPEAN_HANDICAP",
   22: "EUROPEAN_HANDICAP",
@@ -53,7 +53,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   76: "EUROPEAN_HANDICAP",
   79: "EUROPEAN_HANDICAP",
   106: "EUROPEAN_HANDICAP",
-  107: "ASIAN_HANDICAP",
+  107: "SECOND_HALF_ASIAN_HANDICAP",
   109: "EUROPEAN_HANDICAP",
 
   71: "HALF_TIME_RESULT",
@@ -118,7 +118,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   813: "GOAL_RANGE",
   814: "TEAM_GOAL_RANGE",
   815: "TEAM_GOAL_RANGE",
-  816: "OTHER",
+  816: "MULTI_RESULT",
   817: "HALF_TIME_GOAL_RANGE",
   818: "SECOND_HALF_GOAL_RANGE",
 
@@ -143,7 +143,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   132: "TIME_PERIOD_RESULT",
 
   49: "RESULT_AND_BTTS",
-  50: "RESULT_AND_BTTS",
+  50: "TOTAL_GOALS_AND_BTTS",
   51: "RESULT_AND_TOTAL",
   99: "RESULT_AND_TOTAL",
   58: "HALFTIME_FULLTIME",
@@ -171,11 +171,11 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   73: "FIRST_TEAM_TO_SCORE",
 
-  90: "GOAL_RANGE",
-  94: "GOAL_RANGE",
-  98: "GOAL_RANGE",
+  90: "HALF_TIME_GOAL_RANGE",
+  94: "ODD_EVEN_GOALS",
+  98: "HALF_TIME_RESULT_AND_BTTS",
 
-  103: "FIRST_TEAM_TO_SCORE",
+  103: "SECOND_HALF_FIRST_GOAL",
   104: "DOUBLE_CHANCE",
   105: "DRAW_NO_BET",
 
@@ -184,12 +184,12 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   119: "TEAM_GOAL_RANGE",
   120: "ODD_EVEN_GOALS",
 
-  1012: "WINNING_MARGIN",
-  1232: "WINNING_MARGIN",
-  1233: "WINNING_MARGIN",
-  1234: "WINNING_MARGIN",
-  1235: "WINNING_MARGIN",
-  1244: "WINNING_MARGIN",
+  1012: "HALFTIME_FULLTIME_AND_TOTAL",
+  1232: "HALF_TIME_AWAY_TO_SCORE",
+  1233: "HALF_TIME_HOME_TO_SCORE",
+  1234: "SECOND_HALF_AWAY_TO_SCORE",
+  1235: "SECOND_HALF_HOME_TO_SCORE",
+  1244: "HT_OR_FT_RESULT",
 
   1413: "OTHER",
   1561: "OTHER",
@@ -236,8 +236,10 @@ const STS_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType; ex
   { pattern: /^dok[lł]adny\s+wynik$/i, code: "CORRECT_SCORE" },
 
   // Handicap markets
-  { pattern: /^handicap\s+azjatycki/i, code: "ASIAN_HANDICAP" },
-  { pattern: /^handicap\s+europejski/i, code: "EUROPEAN_HANDICAP" },
+  { pattern: /^handicap\s+azjatycki\s+1\.?\s*po[lł]/i, code: "ASIAN_HANDICAP" },
+  { pattern: /^handicap\s+europejski\s+1\.?\s*po[lł]/i, code: "EUROPEAN_HANDICAP" },
+  { pattern: /^handicap\s+azjatycki\s+2\.?\s*po[lł]/i, code: "SECOND_HALF_ASIAN_HANDICAP" },
+  { pattern: /^handicap\s+europejski\s+2\.?\s*po[lł]/i, code: "EUROPEAN_HANDICAP" },
 
   // Special markets
   { pattern: /^parzyste.*nieparzyste|^nieparzyste.*parzyste/i, code: "ODD_EVEN_GOALS" },
@@ -298,7 +300,13 @@ function normalizeSelectionForMarket(
   const lower = trimmed.toLowerCase();
 
   const override = STS_SELECTION_OVERRIDES[trimmed];
-  if (override) return override;
+  const goalRangeMarkets = [
+    "GOAL_RANGE",
+    "TEAM_GOAL_RANGE",
+    "HALF_TIME_GOAL_RANGE",
+    "SECOND_HALF_GOAL_RANGE",
+  ];
+  if (override && !goalRangeMarkets.includes(marketCode)) return override;
 
   if (/^1\s*\([+-]/.test(trimmed)) return "HOME";
   if (/^2\s*\([+-]/.test(trimmed)) return "AWAY";
@@ -308,6 +316,7 @@ function normalizeSelectionForMarket(
     case "MATCH_WINNER":
     case "HALF_TIME_RESULT":
     case "SECOND_HALF_RESULT":
+    case "HT_OR_FT_RESULT":
     case "DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
@@ -360,6 +369,10 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_BTTS":
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
       return normalizeYesNoSelection(trimmed);
@@ -388,6 +401,13 @@ function normalizeSelectionForMarket(
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
     }
+
+    case "HT_FT_CORRECT_SCORE":
+      return trimmed as NormalizedSelection;
+
+    case "MULTI_RESULT":
+    case "HALFTIME_FULLTIME_AND_TOTAL":
+      return trimmed as NormalizedSelection;
 
     case "HALFTIME_FULLTIME":
     case "DOUBLE_RESULT": {
@@ -436,13 +456,14 @@ function normalizeSelectionForMarket(
     }
 
     case "SECOND_HALF_RESULT_AND_TOTAL": {
-      const lower = trimmed.toLowerCase();
-      if (lower.includes("1") && lower.includes("i") && lower.includes("-")) return "HOME_OVER" as NormalizedSelection;
-      if (lower.includes("1") && lower.includes("i") && lower.includes("+")) return "HOME_UNDER" as NormalizedSelection;
-      if (lower.includes("x") && lower.includes("i") && lower.includes("-")) return "DRAW_OVER" as NormalizedSelection;
-      if (lower.includes("x") && lower.includes("i") && lower.includes("+")) return "DRAW_UNDER" as NormalizedSelection;
-      if (lower.includes("2") && lower.includes("i") && lower.includes("-")) return "AWAY_OVER" as NormalizedSelection;
-      if (lower.includes("2") && lower.includes("i") && lower.includes("+")) return "AWAY_UNDER" as NormalizedSelection;
+      const match = trimmed.match(/^([1x2])\s*i\s*([+-])/i);
+      if (match) {
+        const result = match[1].toUpperCase();
+        const overUnder = match[2] === "-" ? "OVER" : "UNDER";
+        if (result === "1") return `HOME_${overUnder}` as NormalizedSelection;
+        if (result === "X") return `DRAW_${overUnder}` as NormalizedSelection;
+        if (result === "2") return `AWAY_${overUnder}` as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
     }
 
@@ -454,7 +475,8 @@ function normalizeSelectionForMarket(
     case "TIME_PERIOD_RESULT":
       return trimmed as NormalizedSelection;
 
-    case "RESULT_AND_BTTS": {
+    case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS": {
       const l = lower;
       if (l.includes("1") && l.includes("tak")) return "HOME_YES" as NormalizedSelection;
       if (l.includes("1") && l.includes("nie")) return "HOME_NO" as NormalizedSelection;
@@ -465,11 +487,42 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "RESULT_AND_TOTAL":
+    case "TOTAL_GOALS_AND_BTTS": {
+      const l = lower;
+      const isOver = l.includes("+") || l.includes("over") || l.includes("powyżej") || l.includes("powyzej");
+      const isUnder = l.includes("-") || l.includes("under") || l.includes("poniżej") || l.includes("ponizej");
+      const isYes = l.includes("tak") || l.includes("yes");
+      const isNo = l.includes("nie") || l.includes("no");
+
+      if (isOver && isYes) return "OVER_YES" as NormalizedSelection;
+      if (isUnder && isYes) return "UNDER_YES" as NormalizedSelection;
+      if (isOver && isNo) return "OVER_NO" as NormalizedSelection;
+      if (isUnder && isNo) return "UNDER_NO" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "RESULT_AND_TOTAL": {
+      const match = trimmed.match(/^([1x2])\s*i\s*([+-])/i);
+      if (match) {
+        const result = match[1].toUpperCase();
+        const overUnder = match[2] === "-" ? "OVER" : "UNDER";
+        if (result === "1") return `HOME_${overUnder}` as NormalizedSelection;
+        if (result === "X") return `DRAW_${overUnder}` as NormalizedSelection;
+        if (result === "2") return `AWAY_${overUnder}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
     case "DOUBLE_CHANCE_TOTAL":
     case "FIRST_GOAL_AND_RESULT":
     case "FIRST_GOAL_TIME":
       return trimmed as NormalizedSelection;
+
+    case "OTHER": {
+      if (lower === "tak" || lower === "yes") return "YES";
+      if (lower === "nie" || lower === "no") return "NO";
+      return trimmed as NormalizedSelection;
+    }
 
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
@@ -484,11 +537,11 @@ function extractParamValue(
     "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS",
     "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP",
     "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "CORNERS_HANDICAP",
-    "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL",
+    "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
     "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_TEAM", "SECOND_HALF_RESULT_AND_TOTAL",
-    "TEAM_GOAL_RANGE",
-    "TEAM_TOTAL_SCORERS",
+    "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
   ];
+
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
 
@@ -509,9 +562,11 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       playerName = parts[1];
     }
 
-    const stsId = raw.bookmakerMarketId
-      ? Number(raw.bookmakerMarketId)
-      : extractStsMarketId(marketName);
+    const rawId = raw.bookmakerMarketId;
+    let stsId = rawId !== undefined && rawId !== null ? Number(rawId) : null;
+    if (!Number.isFinite(stsId)) {
+      stsId = extractStsMarketId(marketName);
+    }
 
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" = "id";

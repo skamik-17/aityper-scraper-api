@@ -206,7 +206,7 @@ function getCategoryForMarketCode(code: string): MarketCategory {
   }
   // Combination markets
   if ([
-    "RESULT_AND_BTTS", "RESULT_AND_TOTAL", "HALFTIME_FULLTIME",
+    "RESULT_AND_BTTS", "RESULT_AND_TOTAL", "TOTAL_GOALS_AND_BTTS", "HALFTIME_FULLTIME",
     "DOUBLE_RESULT", "DOUBLE_CHANCE_BTTS", "DOUBLE_CHANCE_TOTAL",
     "FIRST_TEAM_TO_SCORE", "FIRST_GOAL_TIME", "TIME_PERIOD_RESULT", "FIRST_GOAL_AND_RESULT"
   ].includes(code)) {
@@ -241,8 +241,12 @@ export function createNormalizer(): NormalizerFacade {
       };
 
       // If market has a type from scraper, include it as bookmakerMarketId for pattern matching
+      // Market.type can be a number (ID) or string (normalized type name)
       if (market.type) {
-        rawMarket.bookmakerMarketId = market.type;
+        const numericId = typeof market.type === "string" 
+          ? parseInt(market.type, 10) 
+          : Number(market.type);
+        rawMarket.bookmakerMarketId = Number.isFinite(numericId) ? numericId : market.type;
       }
 
       const output = normalizer.normalizeMarket(rawMarket, ctx);

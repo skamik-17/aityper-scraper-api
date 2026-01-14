@@ -317,8 +317,8 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     code: "FIRST_TEAM_TO_SCORE",
     slug: "first-team-to-score",
     category: MarketCategory.GOLE,
-    labels: { pl: "Która drużyna strzeli gola", en: "First Team To Score" },
-    descriptions: { pl: "Która drużyna strzeli pierwszego/ostatniego gola?", en: "Which team will score first/last?" },
+    labels: { pl: "Która drużyna strzeli pierwszego gola", en: "First Team To Score" },
+    descriptions: { pl: "Która drużyna strzeli pierwszego gola?", en: "Which team will score first?" },
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE", "BOTH"],
     selectionOrder: ["HOME", "AWAY", "NONE"],
@@ -1399,7 +1399,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selectionOrder: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 205,
-     descriptionTemplates: {
+    descriptionTemplates: {
       HOME_OVER: "{homeTeam} powyżej {param} goli w 1. połowie",
       HOME_UNDER: "{homeTeam} poniżej {param} goli w 1. połowie",
       AWAY_OVER: "{awayTeam} powyżej {param} goli w 1. połowie",
@@ -2000,6 +2000,33 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 249,
     descriptionTemplates: { OVER: "Ponad {param} goli gości w 2. połowie", UNDER: "Poniżej {param} goli gości w 2. połowie" }
+  },
+  {
+    numericId: 250,
+    code: "LAST_TEAM_TO_SCORE",
+    slug: "last-team-to-score",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Ostatni gol", en: "Last Team To Score" },
+    descriptions: { pl: "Która drużyna strzeli ostatniego gola?", en: "Which team will score the last goal?" },
+    hasParameter: false,
+    selections: ["HOME", "AWAY", "NONE", "BOTH"],
+    selectionOrder: ["HOME", "AWAY", "NONE"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 250,
+    descriptionTemplates: { HOME: "{homeTeam} strzeli ostatnia", AWAY: "{awayTeam} strzeli ostatnia", NONE: "Brak goli" },
+  },
+  {
+    numericId: 251,
+    code: "TEAMS_TO_SCORE",
+    slug: "teams-to-score",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Która drużyna strzeli", en: "Teams To Score" },
+    descriptions: { pl: "Które drużyny strzelą gola?", en: "Which teams will score?" },
+    hasParameter: false,
+    selections: ["HOME_ONLY", "AWAY_ONLY", "BOTH", "NONE"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 251,
+    descriptionTemplates: { HOME_ONLY: "Tylko {homeTeam}", AWAY_ONLY: "Tylko {awayTeam}", BOTH: "Obie drużyny", NONE: "Brak goli" },
   }
 ];
 

@@ -65,8 +65,8 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   121: "SECOND_HALF_BTTS",
 
   8: "FIRST_TEAM_TO_SCORE",
-  9: "FIRST_TEAM_TO_SCORE",
-  44: "FIRST_TEAM_TO_SCORE",
+  9: "LAST_TEAM_TO_SCORE",
+  44: "TEAMS_TO_SCORE",
   35: "HOME_EXACT_GOALS",
   36: "AWAY_EXACT_GOALS",
   47: "HOME_WIN_TO_NIL",
@@ -329,6 +329,7 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "FIRST_TEAM_TO_SCORE":
+    case "LAST_TEAM_TO_SCORE":
     case "HALF_TIME_FIRST_GOAL":
     case "FIRST_CORNER":
       if (lower === "bez gola" || lower === "brak gola" || lower === "żaden" || lower === "brak" || lower === "remis") return "NONE" as NormalizedSelection;
@@ -416,6 +417,13 @@ function normalizeSelectionForMarket(
         }
       }
       return normalizeYesNoSelection(trimmed);
+
+    case "TEAMS_TO_SCORE":
+      if (lower.includes("tylko 1.") || lower.includes("tylko gosp") || lower.includes("only home")) return "HOME_ONLY" as NormalizedSelection;
+      if (lower.includes("tylko 2.") || lower.includes("tylko goś") || lower.includes("only away")) return "AWAY_ONLY" as NormalizedSelection;
+      if (lower.includes("obie") || lower.includes("both")) return "BOTH" as NormalizedSelection;
+      if (lower.includes("brak") || lower.includes("bez") || lower.includes("no goal")) return "NONE" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
 
     case "BOTH_HALVES_TOTAL_GOALS":
       if (lower === "tak" || lower === "yes") return "OVER";

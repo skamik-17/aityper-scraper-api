@@ -354,6 +354,18 @@ VALUES
     'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal',
     ARRAY['OVER', 'UNDER'], 249),
 
+   -- 250: LAST_TEAM_TO_SCORE
+   (250, 'LAST_TEAM_TO_SCORE', 'Ostatni gol', 'Last Team To Score',
+    'Która drużyna strzeli ostatniego gola?', 'Which team will score the last goal?',
+    'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL,
+    ARRAY['HOME', 'AWAY', 'NONE', 'BOTH'], 250),
+
+   -- 251: TEAMS_TO_SCORE
+   (251, 'TEAMS_TO_SCORE', 'Która drużyna strzeli', 'Teams To Score',
+    'Które drużyny strzelą gola?', 'Which teams will score?',
+    'COMBINATION', 'GOLE', FALSE, NULL,
+    ARRAY['HOME_ONLY', 'AWAY_ONLY', 'BOTH', 'NONE'], 251),
+
    -- UPDATE 12: GOAL_RANGE
    (12, 'GOAL_RANGE', 'Przedział goli', 'Goal Range',
     'W jakim przedziale będzie liczba goli?', 'Goal range bracket',

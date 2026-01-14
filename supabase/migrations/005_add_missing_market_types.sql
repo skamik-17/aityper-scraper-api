@@ -8,7 +8,7 @@
 
 -- FIRST_TEAM_TO_SCORE (ID 46) - "Która drużyna strzeli gola"
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, category, selections, view_type, has_parameter, param_type, display_order)
-VALUES (46, 'FIRST_TEAM_TO_SCORE', 'Która drużyna strzeli gola', 'First Team To Score',
+VALUES (46, 'FIRST_TEAM_TO_SCORE', 'Która drużyna strzeli pierwszego gola', 'First Team To Score',
         'Która drużyna strzeli pierwszego gola?', 'Which team will score first?',
         'GOLE', ARRAY['HOME', 'AWAY', 'NONE', 'BOTH'], 'TRIPLE_BUTTONS', false, null, 21)
 ON CONFLICT (id) DO UPDATE SET

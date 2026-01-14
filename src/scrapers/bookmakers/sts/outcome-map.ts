@@ -56,11 +56,11 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   145: "2/X",  // AWAY/DRAW
   146: "2/2",  // AWAY/AWAY
   
-  // First team to score (Market 44)
-  231: "1",    // HOME
-  232: "2",    // AWAY
-  233: "Bez gola", // No goal
-  234: "Remis", // Draw
+  // TEAMS_TO_SCORE (Market 44)
+  231: "brak goli",
+  232: "tylko 1. drużyna",
+  233: "tylko 2. drużyna",
+  234: "obie drużyny",
   
   // Goal range outcomes (Market 33, 90, 94)
   1217: "0",

@@ -1,0 +1,69 @@
+MARKET ID 17: Margines zwycięstwa
+================================================================================
+
+NORMALIZED: WINNING_MARGIN
+Market Key: WINNING_MARGIN
+Param Value: none
+
+CATALOG CONTEXT (WINNING_MARGIN):
+----------------------------------------
+: { YES: "Gole w obu połowach", NO: "Brak goli w jednej z połów" },
+  },
+  {
+    numericId: 14,
+    code: "WINNING_MARGIN",
+    slug: "winning-margin",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Margines zwycięstwa", en: "Winning Margin" },
+    descriptions: { pl: "Różnica bramek zwycięzcy", en: "Winner's goal difference" },
+    hasParameter: true,
+    parameterType: "integer",
+    parameterFormat: "integer",
+    selections: ["HOME", "AWAY", "DRAW"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    displayOrder: 21,
+    descriptionTemplates:
+----------------------------------------
+
+RAW DATA:
+Line: Różnica zwycięstwa [ID: 2965861735]
+  1262:  -> 1 o 1 (3.9)
+  1263:  -> 1 o 2 (4.4)
+  1264:  -> 1 o 3+ (3.7)
+  1265:  -> Remis (8.75)
+  1266:  -> 2 o 1 (20)
+  1267:  -> 2 o 2 (50)
+  1268:  -> 2 o 3+ (4.6)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "2965861735": {
+      "n": "Różnica zwycięstwa",
+      "o": {
+        "1262": {
+          "O": 3.9
+        },
+        "1263": {
+          "O": 4.4
+        },
+        "1264": {
+          "O": 3.7
+        },
+        "1265": {
+          "O": 8.75
+        },
+        "1266": {
+          "O": 20
+        },
+        "1267": {
+          "O": 50
+        },
+        "1268": {
+          "O": 4.6
+        }
+      }
+    }
+  }
+}

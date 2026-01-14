@@ -1,0 +1,68 @@
+MARKET ID 258: Pierwszy gol + wynik
+================================================================================
+
+NORMALIZED: FIRST_GOAL_AND_RESULT
+Market Key: FIRST_GOAL_AND_RESULT
+Param Value: none
+
+CATALOG CONTEXT (FIRST_GOAL_AND_RESULT):
+----------------------------------------
+_UNDER"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 95,
+  },
+  {
+    numericId: 49,
+    code: "FIRST_GOAL_AND_RESULT",
+    slug: "first-goal-and-result",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Pierwszy gol i wynik", en: "First Goal & Result" },
+    descriptions: { pl: "Która drużyna strzeli pierwszego gola i jaki będzie wynik?", en: "Which team scores first and what will be the result?" },
+    hasParameter: false,
+    selections: ["HOME_HOME", "HOME_DRAW", "HOME_AWAY", "AWAY_HOME", "AWAY_DRAW", "AWAY_AWAY", "NONE"],
+    viewType: ViewType.COMBINATION,
+    displ
+----------------------------------------
+
+RAW DATA:
+Line: 1. gol i wynik końcowy [ID: 2296512168]
+  245:  -> 1 i 1 (1.54)
+  246:  -> 1 i X (10.5)
+  247:  -> 1 i 2 (29)
+  248:  -> 2 i 1 (8.25)
+  249:  -> 2 i X (10.5)
+  250:  -> 2 i 2 (6.75)
+  251:  -> Bez gola (18)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "2296512168": {
+      "D": 1,
+      "n": "1. gol i wynik końcowy",
+      "o": {
+        "245": {
+          "O": 1.54
+        },
+        "246": {
+          "O": 10.5
+        },
+        "247": {
+          "O": 29
+        },
+        "248": {
+          "O": 8.25
+        },
+        "249": {
+          "O": 10.5
+        },
+        "250": {
+          "O": 6.75
+        },
+        "251": {
+          "O": 18
+        }
+      }
+    }
+  }
+}

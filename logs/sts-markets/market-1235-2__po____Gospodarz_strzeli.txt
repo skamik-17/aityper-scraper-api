@@ -1,0 +1,47 @@
+MARKET ID 1235: 2. poł - Gospodarz strzeli
+================================================================================
+
+NORMALIZED: SECOND_HALF_HOME_TO_SCORE
+Market Key: SECOND_HALF_HOME_TO_SCORE
+Param Value: none
+
+CATALOG CONTEXT (SECOND_HALF_HOME_TO_SCORE):
+----------------------------------------
+w 2. połowie", NO: "Co najmniej jedna nie strzeli w 2. połowie" },
+  },
+  {
+    numericId: 106,
+    code: "SECOND_HALF_HOME_TO_SCORE",
+    slug: "second-half-home-to-score",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "2. połowa - gospodarz strzeli", en: "Home Team To Score (2nd Half)" },
+    descriptions: { pl: "Czy gospodarze strzelą w 2. połowie?", en: "Will the home team score in the second half?" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 50,
+    descriptionTempl
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - 1. drużyna - strzeli gola [ID: 1]
+  26:  -> Tak (1.34)
+  27:  -> Nie (3)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - 1. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 1.34
+        },
+        "27": {
+          "O": 3
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+MARKET ID 90: Przedział goli 1. poł
+================================================================================
+
+NORMALIZED: HALF_TIME_GOAL_RANGE
+Market Key: HALF_TIME_GOAL_RANGE
+Param Value: none
+
+CATALOG CONTEXT (HALF_TIME_GOAL_RANGE):
+----------------------------------------
+"5+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 25,
+  },
+  {
+    numericId: 55,
+    code: "HALF_TIME_GOAL_RANGE",
+    slug: "half-time-goal-range",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Gole 1. połowy - przedział", en: "Half Time Goal Range" },
+    descriptions: { pl: "Przedział goli w pierwszej połowie", en: "Goal range in first half" },
+    hasParameter: false,
+    selections: ["0", "1", "2", "3", "4+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 47,
+  },
+  {
+    numericId: 56,
+    code: "SECOND_HALF_GOAL_RANGE",
+    slug: "second-half
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - dokładna liczba goli [ID: 668214442]
+  1237:  -> 0 (3.6)
+  1238:  -> 1 (2.65)
+  1239:  -> 2 (3.6)
+  1240:  -> 3+ (4.7)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "668214442": {
+      "n": "1. połowa - dokładna liczba goli",
+      "o": {
+        "1237": {
+          "O": 3.6
+        },
+        "1238": {
+          "O": 2.65
+        },
+        "1239": {
+          "O": 3.6
+        },
+        "1240": {
+          "O": 4.7
+        }
+      }
+    }
+  }
+}

@@ -28,9 +28,37 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   314: "DRAW_NO_BET",
   368: "DRAW_NO_BET",
 
+  14: "EUROPEAN_HANDICAP",
+  17: "WINNING_MARGIN",
+  20: "ASIAN_HANDICAP",
+  22: "ASIAN_HANDICAP",
+  33: "EXACT_GOALS",
+  52: "GOALSCORER_FIRST",
+  53: "GOALSCORER_LAST",
+  54: "GOALSCORER_ANYTIME",
+  57: "HT_FT_CORRECT_SCORE",
+  74: "HALF_TIME_DOUBLE_CHANCE",
+  75: "HALF_TIME_DRAW_NO_BET",
+  76: "FIRST_HALF_EUROPEAN_HANDICAP",
+  77: "FIRST_HALF_ASIAN_HANDICAP",
+  79: "FIRST_HALF_ASIAN_HANDICAP",
+  80: "HALF_TIME_TOTAL_GOALS",
+  85: "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+  88: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+  95: "HALF_TIME_BTTS",
+  101: "HALF_TIME_CORRECT_SCORE",
+  102: "SECOND_HALF_RESULT",
+  106: "SECOND_HALF_EUROPEAN_HANDICAP",
+  107: "SECOND_HALF_ASIAN_HANDICAP",
+  109: "SECOND_HALF_ASIAN_HANDICAP",
+  110: "SECOND_HALF_TOTAL_GOALS",
+  112: "SECOND_HALF_TOTAL_GOALS",
+  124: "SECOND_HALF_CORRECT_SCORE",
+  1051: "PLAYER_GOAL_AND_RESULT",
+
   25: "TOTAL_GOALS",
-  28: "TEAM_TOTAL_GOALS",
-  31: "TEAM_TOTAL_GOALS",
+  28: "HOME_TEAM_TOTAL_GOALS",
+  31: "AWAY_TEAM_TOTAL_GOALS",
   23: "TOTAL_GOALS_ASIAN",
 
   43: "BTTS",
@@ -39,85 +67,37 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   8: "FIRST_TEAM_TO_SCORE",
   9: "FIRST_TEAM_TO_SCORE",
   44: "FIRST_TEAM_TO_SCORE",
-
-  35: "TEAM_GOAL_RANGE",
-  36: "TEAM_GOAL_RANGE",
-  47: "WIN_TO_NIL",
-  48: "WIN_TO_NIL",
-  57: "HT_FT_CORRECT_SCORE",
-
-  14: "EUROPEAN_HANDICAP",
-  22: "EUROPEAN_HANDICAP",
-  20: "ASIAN_HANDICAP",
-  77: "ASIAN_HANDICAP",
-  76: "EUROPEAN_HANDICAP",
-  79: "EUROPEAN_HANDICAP",
-  106: "EUROPEAN_HANDICAP",
-  107: "SECOND_HALF_ASIAN_HANDICAP",
-  109: "EUROPEAN_HANDICAP",
-
-  71: "HALF_TIME_RESULT",
-  74: "DOUBLE_CHANCE",
-  75: "DRAW_NO_BET",
-  80: "HALF_TIME_TOTAL_GOALS",
-  26: "HALF_TIME_TOTAL_GOALS",
-  82: "HALF_TIME_TOTAL_GOALS",
-  85: "HALF_TIME_TOTAL_GOALS",
-  88: "HALF_TIME_TOTAL_GOALS",
-  95: "HALF_TIME_BTTS",
-
-  102: "SECOND_HALF_RESULT",
-  110: "SECOND_HALF_TOTAL_GOALS",
-  112: "SECOND_HALF_TOTAL_GOALS",
-
-  283: "CORRECT_SCORE",
-  101: "CORRECT_SCORE",
-  124: "CORRECT_SCORE",
-
-  52: "GOALSCORER_FIRST",
-  53: "GOALSCORER_LAST",
-  54: "GOALSCORER_ANYTIME",
-  1850: "GOALSCORER_ANYTIME",
-  1851: "PLAYER_SHOTS",
-  1845: "PLAYER_ASSISTS",
-  1051: "PLAYER_GOAL_AND_RESULT",
-  1852: "PLAYER_SHOTS_ON_TARGET",
-  1853: "PLAYER_PASSES",
-  2004: "PLAYER_2_OR_MORE_GOALS",
-  2005: "PLAYER_3_OR_MORE_GOALS",
-  2006: "PLAYER_HAT_TRICK",
-  1855: "PLAYER_CARDS",
-  2011: "TEAM_TOTAL_SCORERS",
-  2153: "PLAYER_CARDS",
-
-  17: "WINNING_MARGIN",
-  33: "GOAL_RANGE",
+  35: "HOME_EXACT_GOALS",
+  36: "AWAY_EXACT_GOALS",
+  47: "HOME_WIN_TO_NIL",
+  48: "AWAY_WIN_TO_NIL",
+  236: "HOME_CORNERS_RANGE",
+  237: "AWAY_CORNERS_RANGE",
+  814: "HOME_GOAL_RANGE",
+  815: "AWAY_GOAL_RANGE",
 
   220: "CORNERS_RACE",
-  239: "CORNERS_RACE",
   221: "FIRST_CORNER",
   225: "CORNERS_HANDICAP",
-  244: "CORNERS_HANDICAP",
   228: "CORNERS_TOTAL",
-  247: "CORNERS_TOTAL",
-  235: "HALF_TIME_CORNERS_TOTAL",
-  236: "CORNERS_TEAM",
-  237: "CORNERS_TEAM",
+  235: "HALF_TIME_CORNERS_RANGE",
+  239: "HALF_TIME_CORNERS_RACE",
+  244: "HALF_TIME_CORNERS_HANDICAP",
+  247: "HALF_TIME_CORNERS_TOTAL",
+
   231: "CORNERS_TEAM",
   234: "CORNERS_TEAM",
-  254: "HALF_TIME_CORNERS_TEAM",
-  255: "HALF_TIME_CORNERS_TEAM",
-  256: "HALF_TIME_CORNERS_RACE",
+  254: "HALF_TIME_CORNERS_TEAM_RANGE",
+  255: "HALF_TIME_CORNERS_TEAM_RANGE",
+  256: "HALF_TIME_CORNERS_RANGE",
   2097: "OTHER",
-  807: "DOUBLE_CHANCE_BTTS",
-  808: "RESULT_AND_BTTS",
+  807: "HALF_TIME_DOUBLE_CHANCE_BTTS",
+  808: "SECOND_HALF_RESULT_AND_BTTS",
   809: "SECOND_HALF_RESULT_AND_TOTAL",
-  810: "DOUBLE_CHANCE_BTTS",
+  810: "SECOND_HALF_DOUBLE_CHANCE_BTTS",
   811: "DOUBLE_CHANCE_BTTS",
   812: "DOUBLE_CHANCE_TOTAL",
   813: "GOAL_RANGE",
-  814: "TEAM_GOAL_RANGE",
-  815: "TEAM_GOAL_RANGE",
   816: "MULTI_RESULT",
   817: "HALF_TIME_GOAL_RANGE",
   818: "SECOND_HALF_GOAL_RANGE",
@@ -145,7 +125,7 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   49: "RESULT_AND_BTTS",
   50: "TOTAL_GOALS_AND_BTTS",
   51: "RESULT_AND_TOTAL",
-  99: "RESULT_AND_TOTAL",
+  99: "HALF_TIME_RESULT_AND_TOTAL",
   58: "HALFTIME_FULLTIME",
   258: "FIRST_GOAL_AND_RESULT",
 
@@ -156,22 +136,22 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   41: "ODD_EVEN_GOALS",
   42: "ODD_EVEN_GOALS",
 
-  59: "BOTH_HALVES_GOALS",
-  60: "BOTH_HALVES_GOALS",
-  61: "BOTH_HALVES_GOALS",
-  62: "BOTH_HALVES_GOALS",
-  63: "BOTH_HALVES_GOALS",
-  64: "BOTH_HALVES_GOALS",
-  65: "BOTH_HALVES_GOALS",
-  66: "BOTH_HALVES_GOALS",
-  67: "BOTH_HALVES_GOALS",
-  68: "BOTH_HALVES_GOALS",
-  69: "BOTH_HALVES_GOALS",
-  70: "BOTH_HALVES_GOALS",
+  59: "HOME_WIN_BOTH_HALVES",
+  60: "AWAY_WIN_BOTH_HALVES",
+  61: "HOME_WIN_AT_LEAST_ONE_HALF",
+  62: "AWAY_WIN_AT_LEAST_ONE_HALF",
+  63: "HOME_HALF_WITH_MOST_GOALS",
+  64: "HOME_HALF_WITH_MOST_GOALS",
+  65: "AWAY_HALF_WITH_MOST_GOALS",
+  66: "BTTS_BY_HALF",
+  67: "HOME_SCORE_BOTH_HALVES",
+  68: "AWAY_SCORE_BOTH_HALVES",
+  69: "BOTH_HALVES_TOTAL_GOALS",
+  70: "BOTH_HALVES_TOTAL_GOALS",
 
-  73: "FIRST_TEAM_TO_SCORE",
+  73: "HALF_TIME_FIRST_GOAL",
 
-  90: "HALF_TIME_GOAL_RANGE",
+  90: "HALF_TIME_EXACT_GOALS",
   94: "ODD_EVEN_GOALS",
   98: "HALF_TIME_RESULT_AND_BTTS",
 
@@ -179,10 +159,10 @@ const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   104: "DOUBLE_CHANCE",
   105: "DRAW_NO_BET",
 
-  115: "TEAM_TOTAL_GOALS",
-  118: "TEAM_TOTAL_GOALS",
-  119: "TEAM_GOAL_RANGE",
-  120: "ODD_EVEN_GOALS",
+  115: "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+  118: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
+  119: "SECOND_HALF_HOME_EXACT_GOALS",
+  120: "SECOND_HALF_ODD_EVEN_GOALS",
 
   1012: "HALFTIME_FULLTIME_AND_TOTAL",
   1232: "HALF_TIME_AWAY_TO_SCORE",
@@ -294,7 +274,8 @@ function extractStsMarketId(marketName: string): number | null {
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
-  ctx: NormalizationContext
+  ctx: NormalizationContext,
+  marketName?: string
 ): NormalizedSelection {
   const trimmed = selName.trim();
   const lower = trimmed.toLowerCase();
@@ -305,6 +286,20 @@ function normalizeSelectionForMarket(
     "TEAM_GOAL_RANGE",
     "HALF_TIME_GOAL_RANGE",
     "SECOND_HALF_GOAL_RANGE",
+    "EXACT_GOALS",
+    "CORNERS_RANGE",
+    "HALF_TIME_CORNERS_RANGE",
+    "HALF_TIME_EXACT_GOALS",
+    "CORNERS_TEAM_RANGE",
+    "HALF_TIME_CORNERS_TEAM_RANGE",
+    "HOME_EXACT_GOALS",
+    "AWAY_EXACT_GOALS",
+    "HOME_GOAL_RANGE",
+    "AWAY_GOAL_RANGE",
+    "HOME_CORNERS_RANGE",
+    "AWAY_CORNERS_RANGE",
+    "SECOND_HALF_HOME_EXACT_GOALS",
+    "TEAM_TOTAL_SCORERS",
   ];
   if (override && !goalRangeMarkets.includes(marketCode)) return override;
 
@@ -318,6 +313,7 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_RESULT":
     case "HT_OR_FT_RESULT":
     case "DRAW_NO_BET":
+    case "HALF_TIME_DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
@@ -333,19 +329,43 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "FIRST_TEAM_TO_SCORE":
+    case "HALF_TIME_FIRST_GOAL":
     case "FIRST_CORNER":
-      if (lower === "bez gola" || lower === "brak gola" || lower === "żaden" || lower === "brak") return "NONE" as NormalizedSelection;
+      if (lower === "bez gola" || lower === "brak gola" || lower === "żaden" || lower === "brak" || lower === "remis") return "NONE" as NormalizedSelection;
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "DOUBLE_CHANCE":
+    case "HALF_TIME_DOUBLE_CHANCE":
       return normalizeDoubleChanceSelection(trimmed);
 
     case "TOTAL_GOALS":
     case "TOTAL_GOALS_ASIAN":
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
-    case "TEAM_TOTAL_GOALS":
     case "CORNERS_TOTAL":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
+      return normalizeOverUnderSelection(trimmed);
+
+    case "TEAM_TOTAL_GOALS":
+    case "HALF_TIME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_TEAM_TOTAL_GOALS":
+      if (marketName) {
+        const mName = marketName.toLowerCase();
+        const sel = normalizeOverUnderSelection(trimmed);
+        if (sel === "OVER" || sel === "UNDER") {
+          if (mName.includes("gosp") || mName.includes("home") || mName.includes("1")) {
+            return `HOME_${sel}` as NormalizedSelection;
+          }
+          if (mName.includes("gość") || mName.includes("gosc") || mName.includes("away") || mName.includes("2")) {
+            return `AWAY_${sel}` as NormalizedSelection;
+          }
+        }
+      }
       return normalizeOverUnderSelection(trimmed);
 
     case "CARDS_TOTAL":
@@ -373,9 +393,34 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_TO_SCORE":
     case "SECOND_HALF_HOME_TO_SCORE":
     case "SECOND_HALF_AWAY_TO_SCORE":
-    case "WIN_TO_NIL":
     case "CLEAN_SHEET":
+    case "TEAM_SCORES_BOTH_HALVES":
+    case "TEAM_WIN_AT_LEAST_ONE_HALF":
+    case "TEAM_WIN_BOTH_HALVES":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_BOTH_HALVES":
+    case "AWAY_WIN_BOTH_HALVES":
+    case "HOME_WIN_TO_NIL":
+    case "AWAY_WIN_TO_NIL":
       return normalizeYesNoSelection(trimmed);
+    
+    case "WIN_TO_NIL":
+      if (marketName) {
+        const mName = marketName.toLowerCase();
+        if (mName.includes("gosp") || mName.includes("home") || mName.includes("1")) {
+          if (lower === "tak" || lower === "yes") return "HOME" as NormalizedSelection;
+        }
+        if (mName.includes("gość") || mName.includes("gosc") || mName.includes("away") || mName.includes("2")) {
+          if (lower === "tak" || lower === "yes") return "AWAY" as NormalizedSelection;
+        }
+      }
+      return normalizeYesNoSelection(trimmed);
+
+    case "BOTH_HALVES_TOTAL_GOALS":
+      if (lower === "tak" || lower === "yes") return "OVER";
+      if (lower === "nie" || lower === "no") return "UNDER";
+      return normalizeOverUnderSelection(trimmed);
 
     case "BOTH_HALVES_GOALS":
       if (lower === "tak" || lower === "yes") return "YES";
@@ -385,19 +430,40 @@ function normalizeSelectionForMarket(
       if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "SECOND_HALF" as NormalizedSelection;
       if (lower === "bez goli" || lower === "brak goli") return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
+    
+    case "BTTS_BY_HALF":
+      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "FIRST_HALF" as NormalizedSelection;
+      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "SECOND_HALF" as NormalizedSelection;
+      if (lower.includes("obie") || lower.includes("both")) return "YES" as NormalizedSelection;
+      if (lower.includes("żadna") || lower.includes("zadna") || lower.includes("none")) return "NONE" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    
+    case "HALF_WITH_MORE_GOALS":
+    case "TEAM_HALF_WITH_MORE_GOALS":
+      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "FIRST_HALF" as NormalizedSelection;
+      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "SECOND_HALF" as NormalizedSelection;
+      if (lower === "remis" || lower === "równo") return "DRAW";
+      return trimmed as NormalizedSelection;
 
     case "ODD_EVEN_GOALS":
+    case "SECOND_HALF_ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
+    case "FIRST_HALF_ASIAN_HANDICAP":
+    case "FIRST_HALF_EUROPEAN_HANDICAP":
+    case "SECOND_HALF_ASIAN_HANDICAP":
+    case "SECOND_HALF_EUROPEAN_HANDICAP":
     case "CORNERS_HANDICAP":
+    case "HALF_TIME_CORNERS_HANDICAP":
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
-    case "CORRECT_SCORE": {
+    case "CORRECT_SCORE":
+    case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
     }
@@ -444,7 +510,9 @@ function normalizeSelectionForMarket(
       if (/^\d+-$/.test(trimmed)) return "UNDER";
       return normalizeOverUnderSelection(trimmed);
 
-    case "DOUBLE_CHANCE_BTTS": {
+    case "DOUBLE_CHANCE_BTTS":
+    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
+    case "SECOND_HALF_DOUBLE_CHANCE_BTTS": {
       const lower = trimmed.toLowerCase();
       if (lower.includes("1x") && lower.includes("tak")) return "1X_YES" as NormalizedSelection;
       if (lower.includes("1x") && lower.includes("nie")) return "1X_NO" as NormalizedSelection;
@@ -473,10 +541,17 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_GOAL_RANGE":
     case "WINNING_MARGIN":
     case "TIME_PERIOD_RESULT":
+    case "EXACT_GOALS":
+    case "HALF_TIME_EXACT_GOALS":
+    case "CORNERS_RANGE":
+    case "HALF_TIME_CORNERS_RANGE":
+    case "CORNERS_TEAM_RANGE":
+    case "HALF_TIME_CORNERS_TEAM_RANGE":
       return trimmed as NormalizedSelection;
 
     case "RESULT_AND_BTTS":
-    case "HALF_TIME_RESULT_AND_BTTS": {
+    case "HALF_TIME_RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_AND_BTTS": {
       const l = lower;
       if (l.includes("1") && l.includes("tak")) return "HOME_YES" as NormalizedSelection;
       if (l.includes("1") && l.includes("nie")) return "HOME_NO" as NormalizedSelection;
@@ -501,7 +576,8 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "RESULT_AND_TOTAL": {
+    case "RESULT_AND_TOTAL":
+    case "HALF_TIME_RESULT_AND_TOTAL": {
       const match = trimmed.match(/^([1x2])\s*i\s*([+-])/i);
       if (match) {
         const result = match[1].toUpperCase();
@@ -540,10 +616,27 @@ function extractParamValue(
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
     "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_TEAM", "SECOND_HALF_RESULT_AND_TOTAL",
     "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
+    "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_EUROPEAN_HANDICAP",
+    "SECOND_HALF_ASIAN_HANDICAP", "SECOND_HALF_EUROPEAN_HANDICAP",
+    "BOTH_HALVES_TOTAL_GOALS", "HALF_TIME_TEAM_TOTAL_GOALS",
+    "SECOND_HALF_TEAM_TOTAL_GOALS", "HALF_TIME_RESULT_AND_TOTAL",
+    "HALF_TIME_CORNERS_HANDICAP", "TEAM_WIN_AT_LEAST_ONE_HALF",
+    "TEAM_SCORES_BOTH_HALVES",
   ];
 
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
+
+  if (marketCode === "TEAM_WIN_AT_LEAST_ONE_HALF" || marketCode === "TEAM_SCORES_BOTH_HALVES") {
+    const lower = raw.name.toLowerCase();
+    if (lower.includes("1. drużyna") || lower.includes("gospodarz")) return "HOME";
+    if (lower.includes("2. drużyna") || lower.includes("gość") || lower.includes("gosc")) return "AWAY";
+  }
+
+  const rawAny = raw as any;
+  if (rawAny.lines && rawAny.lines[0]?.D) {
+    return String(rawAny.lines[0].D);
+  }
 
   const selectionNames = raw.selections.map((s) => s.name);
   return parseOverUnderLine(selectionNames);
@@ -600,7 +693,7 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx),
+      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, marketName),
       label: sel.name,
       odds: sel.odds,
     }));

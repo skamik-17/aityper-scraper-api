@@ -1,0 +1,55 @@
+MARKET ID 44: Która strzeli pierwsza
+================================================================================
+
+NORMALIZED: FIRST_TEAM_TO_SCORE
+Market Key: FIRST_TEAM_TO_SCORE
+Param Value: none
+
+CATALOG CONTEXT (FIRST_TEAM_TO_SCORE):
+----------------------------------------
+i", AWAY: "{awayTeam} wygra różnicą {param} goli", DRAW: "Remis" },
+  },
+  {
+    numericId: 46,
+    code: "FIRST_TEAM_TO_SCORE",
+    slug: "first-team-to-score",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Która drużyna strzeli gola", en: "First Team To Score" },
+    descriptions: { pl: "Która drużyna strzeli pierwszego/ostatniego gola?", en: "Which team will score first/last?" },
+    hasParameter: false,
+    selections: ["HOME", "AWAY", "NONE", "BOTH"],
+    selectionOrder: ["HOME", "AWAY", "NONE"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 22,
+    descriptionTemplates
+----------------------------------------
+
+RAW DATA:
+Line: Która drużyna strzeli gola [ID: 1]
+  231:  -> 1 (18)
+  232:  -> 2 (2.55)
+  233:  -> Bez gola (12)
+  234:  -> Remis (1.72)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Która drużyna strzeli gola",
+      "o": {
+        "231": {
+          "O": 18
+        },
+        "232": {
+          "O": 2.55
+        },
+        "233": {
+          "O": 12
+        },
+        "234": {
+          "O": 1.72
+        }
+      }
+    }
+  }
+}

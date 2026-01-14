@@ -1,0 +1,151 @@
+MARKET ID 25: Liczba goli
+================================================================================
+
+NORMALIZED: TOTAL_GOALS
+Market Key: TOTAL_GOALS
+Param Value: none
+
+CATALOG CONTEXT (TOTAL_GOALS):
+----------------------------------------
+ (remis zwrot)" },
+  },
+];
+
+const GOALS_MARKETS: MarketCatalogEntry[] = [
+  {
+    numericId: 4,
+    code: "TOTAL_GOALS",
+    slug: "total-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Liczba goli", en: "Total Goals" },
+    descriptions: { pl: "Obstawiasz czy padnie więcej/mniej goli niż linia", en: "Bet on total goals over/under a line" },
+    hasParameter: true,
+    parameterType: "decimal",
+    parameterFormat: "decimal",
+    validParameters: ["0.5", "1.5", "2.5", "3.5", "4.5", "5.5", "6.5", "7.5"],
+    selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
+   
+----------------------------------------
+
+RAW DATA:
+Line: Liczba goli [ID: 591936594]
+  12: +5.5 -> Powyżej (7.25)
+  13: -5.5 -> Poniżej (1.09)
+Line: Liczba goli [ID: 1877505958]
+  12: +1.5 -> Powyżej (1.16)
+  13: -1.5 -> Poniżej (5)
+Line: Liczba goli [ID: 2477440189]
+  12: +0.5 -> Powyżej (1.02)
+  13: -0.5 -> Poniżej (18)
+Line: Liczba goli [ID: 3070860985]
+  12: +4.5 -> Powyżej (3.9)
+  13: -4.5 -> Poniżej (1.25)
+Line: Liczba goli [ID: 3325488624]
+  12: +3.5 -> Powyżej (2.3)
+  13: -3.5 -> Poniżej (1.6)
+Line: Liczba goli [ID: 3904634503]
+  12: +2.5 -> Powyżej (1.52)
+  13: -2.5 -> Poniżej (2.5)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "591936594": {
+      "D": 550,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 7.25,
+          "n": "+5.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.09,
+          "n": "-5.5"
+        }
+      }
+    },
+    "1877505958": {
+      "D": 150,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.16,
+          "n": "+1.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 5,
+          "n": "-1.5"
+        }
+      }
+    },
+    "2477440189": {
+      "D": 50,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.02,
+          "n": "+0.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 18,
+          "n": "-0.5"
+        }
+      }
+    },
+    "3070860985": {
+      "D": 450,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 3.9,
+          "n": "+4.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.25,
+          "n": "-4.5"
+        }
+      }
+    },
+    "3325488624": {
+      "D": 350,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 2.3,
+          "n": "+3.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.6,
+          "n": "-3.5"
+        }
+      }
+    },
+    "3904634503": {
+      "D": 250,
+      "n": "Liczba goli",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.52,
+          "n": "+2.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 2.5,
+          "n": "-2.5"
+        }
+      }
+    }
+  }
+}

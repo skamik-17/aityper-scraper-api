@@ -1,0 +1,1036 @@
+MARKET ID 1051: Strzelec + wynik
+================================================================================
+
+NORMALIZED: PLAYER_GOAL_AND_RESULT
+Market Key: PLAYER_GOAL_AND_RESULT
+Param Value: none
+
+CATALOG CONTEXT (PLAYER_GOAL_AND_RESULT):
+----------------------------------------
+"],
+    viewType: ViewType.PLAYER_STAT_LINES,
+    displayOrder: 65,
+  },
+  {
+    numericId: 50,
+    code: "PLAYER_GOAL_AND_RESULT",
+    slug: "player-goal-and-result",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Gol zawodnika i wynik", en: "Player Goal & Result" },
+    descriptions: { pl: "Zawodnik strzeli gola i jaki będzie wynik meczu?", en: "Player scores and what will be the match result?" },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER_HOME", "PLAYER_DRAW", "PLAYER_AWAY"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 66,
+  },
+  
+----------------------------------------
+
+RAW DATA:
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 18715446]
+  1073: Beraldo i 1 -> Beraldo i 1 (13)
+  1074: Beraldo i X -> Beraldo i X (110)
+  1075: Beraldo i 2 -> Beraldo i 2 (225)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 22502336]
+  1073: Goffi Maxima Adeagan i 1 -> Goffi Maxima Adeagan i 1 (43)
+  1074: Goffi Maxima Adeagan i X -> Goffi Maxima Adeagan i X (85)
+  1075: Goffi Maxima Adeagan i 2 -> Goffi Maxima Adeagan i 2 (60)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 25714727]
+  1073: Dembele Ousmane i 1 -> Dembele Ousmane i 1 (2.5)
+  1074: Dembele Ousmane i X -> Dembele Ousmane i X (18)
+  1075: Dembele Ousmane i 2 -> Dembele Ousmane i 2 (36)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 51432985]
+  1073: Raghouber Ugo i 1 -> Raghouber Ugo i 1 (23)
+  1074: Raghouber Ugo i X -> Raghouber Ugo i X (45)
+  1075: Raghouber Ugo i 2 -> Raghouber Ugo i 2 (33)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 183348484]
+  1073: Ruiz Fabian i 1 -> Ruiz Fabian i 1 (5.25)
+  1074: Ruiz Fabian i X -> Ruiz Fabian i X (44)
+  1075: Ruiz Fabian i 2 -> Ruiz Fabian i 2 (90)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 201607338]
+  1073: Giroud Olivier i 1 -> Giroud Olivier i 1 (8.9)
+  1074: Giroud Olivier i X -> Giroud Olivier i X (18)
+  1075: Giroud Olivier i 2 -> Giroud Olivier i 2 (14)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 231164001]
+  1073: Kvaratskhelia Khvicha i 1 -> Kvaratskhelia Khvicha i 1 (3)
+  1074: Kvaratskhelia Khvicha i X -> Kvaratskhelia Khvicha i X (23)
+  1075: Kvaratskhelia Khvicha i 2 -> Kvaratskhelia Khvicha i 2 (46)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 423700809]
+  1073: Marquinhos i 1 -> Marquinhos i 1 (15)
+  1074: Marquinhos i X -> Marquinhos i X (140)
+  1075: Marquinhos i 2 -> Marquinhos i 2 (275)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 543502596]
+  1073: Pacho Tenorio William Joel i 1 -> Pacho Tenorio William Joel i 1 (16)
+  1074: Pacho Tenorio William Joel i X -> Pacho Tenorio William Joel i X (140)
+  1075: Pacho Tenorio William Joel i 2 -> Pacho Tenorio William Joel i 2 (275)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 560085690]
+  1073: Haraldsson Hakon Arnar i 1 -> Haraldsson Hakon Arnar i 1 (10)
+  1074: Haraldsson Hakon Arnar i X -> Haraldsson Hakon Arnar i X (20)
+  1075: Haraldsson Hakon Arnar i 2 -> Haraldsson Hakon Arnar i 2 (16)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 663032051]
+  1073: Zaire-Emery Warren i 1 -> Zaire-Emery Warren i 1 (9.4)
+  1074: Zaire-Emery Warren i X -> Zaire-Emery Warren i X (80)
+  1075: Zaire-Emery Warren i 2 -> Zaire-Emery Warren i 2 (175)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 714612788]
+  1073: Mayulu Senny i 1 -> Mayulu Senny i 1 (3.5)
+  1074: Mayulu Senny i X -> Mayulu Senny i X (27)
+  1075: Mayulu Senny i 2 -> Mayulu Senny i 2 (55)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 768305705]
+  1073: Barcola Bradley i 1 -> Barcola Bradley i 1 (2.85)
+  1074: Barcola Bradley i X -> Barcola Bradley i X (21)
+  1075: Barcola Bradley i 2 -> Barcola Bradley i 2 (44)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 812660193]
+  1073: Sahraoui Osame i 1 -> Sahraoui Osame i 1 (14.5)
+  1074: Sahraoui Osame i X -> Sahraoui Osame i X (29)
+  1075: Sahraoui Osame i 2 -> Sahraoui Osame i 2 (22)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 850240979]
+  1073: Ngoy Nathan i 1 -> Ngoy Nathan i 1 (37)
+  1074: Ngoy Nathan i X -> Ngoy Nathan i X (70)
+  1075: Ngoy Nathan i 2 -> Ngoy Nathan i 2 (50)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1073669495]
+  1073: Hernandez Lucas i 1 -> Hernandez Lucas i 1 (16)
+  1074: Hernandez Lucas i X -> Hernandez Lucas i X (140)
+  1075: Hernandez Lucas i 2 -> Hernandez Lucas i 2 (300)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1170967201]
+  1073: Neves Joao i 1 -> Neves Joao i 1 (5.5)
+  1074: Neves Joao i X -> Neves Joao i X (46)
+  1075: Neves Joao i 2 -> Neves Joao i 2 (95)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1242006686]
+  1073: Meunier Thomas i 1 -> Meunier Thomas i 1 (27)
+  1074: Meunier Thomas i X -> Meunier Thomas i X (50)
+  1075: Meunier Thomas i 2 -> Meunier Thomas i 2 (38)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1375168753]
+  1073: Diaoune Soriba i 1 -> Diaoune Soriba i 1 (12.5)
+  1074: Diaoune Soriba i X -> Diaoune Soriba i X (24)
+  1075: Diaoune Soriba i 2 -> Diaoune Soriba i 2 (18)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1536700412]
+  1073: Fernandes Rafael i 1 -> Fernandes Rafael i 1 (27)
+  1074: Fernandes Rafael i X -> Fernandes Rafael i X (50)
+  1075: Fernandes Rafael i 2 -> Fernandes Rafael i 2 (38)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1867011563]
+  1073: Vitinha i 1 -> Vitinha i 1 (8)
+  1074: Vitinha i X -> Vitinha i X (70)
+  1075: Vitinha i 2 -> Vitinha i 2 (140)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 1948372181]
+  1073: Bouaddi Ayyoub i 1 -> Bouaddi Ayyoub i 1 (31)
+  1074: Bouaddi Ayyoub i X -> Bouaddi Ayyoub i X (60)
+  1075: Bouaddi Ayyoub i 2 -> Bouaddi Ayyoub i 2 (43)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2015149525]
+  1073: Zabarnyi Illia i 1 -> Zabarnyi Illia i 1 (16)
+  1074: Zabarnyi Illia i X -> Zabarnyi Illia i X (140)
+  1075: Zabarnyi Illia i 2 -> Zabarnyi Illia i 2 (300)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2133362699]
+  1073: Jangeal Mathis i 1 -> Jangeal Mathis i 1 (3.9)
+  1074: Jangeal Mathis i X -> Jangeal Mathis i X (31)
+  1075: Jangeal Mathis i 2 -> Jangeal Mathis i 2 (65)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2167065032]
+  1073: Boly David i 1 -> Boly David i 1 (6)
+  1074: Boly David i X -> Boly David i X (50)
+  1075: Boly David i 2 -> Boly David i 2 (100)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2274847626]
+  1073: Doue Desire i 1 -> Doue Desire i 1 (2.95)
+  1074: Doue Desire i X -> Doue Desire i X (22)
+  1075: Doue Desire i 2 -> Doue Desire i 2 (46)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2487239035]
+  1073: Gomes Andre i 1 -> Gomes Andre i 1 (24)
+  1074: Gomes Andre i X -> Gomes Andre i X (47)
+  1075: Gomes Andre i 2 -> Gomes Andre i 2 (35)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2520574250]
+  1073: Broholm Marius i 1 -> Broholm Marius i 1 (10.5)
+  1074: Broholm Marius i X -> Broholm Marius i X (21)
+  1075: Broholm Marius i 2 -> Broholm Marius i 2 (16)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2527212726]
+  1073: Correia Felix i 1 -> Correia Felix i 1 (10.5)
+  1074: Correia Felix i X -> Correia Felix i X (21)
+  1075: Correia Felix i 2 -> Correia Felix i 2 (16)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2538605715]
+  1073: Bentaleb Nabil i 1 -> Bentaleb Nabil i 1 (24)
+  1074: Bentaleb Nabil i X -> Bentaleb Nabil i X (47)
+  1075: Bentaleb Nabil i 2 -> Bentaleb Nabil i 2 (34)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 2600345810]
+  1073: Slama Wassim i 1 -> Slama Wassim i 1 (4.2)
+  1074: Slama Wassim i X -> Slama Wassim i X (34)
+  1075: Slama Wassim i 2 -> Slama Wassim i 2 (70)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 3068084710]
+  1073: Verdonk Calvin i 1 -> Verdonk Calvin i 1 (33)
+  1074: Verdonk Calvin i X -> Verdonk Calvin i X (60)
+  1075: Verdonk Calvin i 2 -> Verdonk Calvin i 2 (45)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 3115846952]
+  1073: Fernandez Matias i 1 -> Fernandez Matias i 1 (11)
+  1074: Fernandez Matias i X -> Fernandez Matias i X (21)
+  1075: Fernandez Matias i 2 -> Fernandez Matias i 2 (16)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 3167120957]
+  1073: Santos Tiago i 1 -> Santos Tiago i 1 (30)
+  1074: Santos Tiago i X -> Santos Tiago i X (60)
+  1075: Santos Tiago i 2 -> Santos Tiago i 2 (42)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 3643963955]
+  1073: Ramos Goncalo i 1 -> Ramos Goncalo i 1 (2.55)
+  1074: Ramos Goncalo i X -> Ramos Goncalo i X (19)
+  1075: Ramos Goncalo i 2 -> Ramos Goncalo i 2 (38)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 3863399356]
+  1073: Costarelli Morgan i 1 -> Costarelli Morgan i 1 (43)
+  1074: Costarelli Morgan i X -> Costarelli Morgan i X (80)
+  1075: Costarelli Morgan i 2 -> Costarelli Morgan i 2 (60)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 4043812311]
+  1073: Mendes Nuno i 1 -> Mendes Nuno i 1 (9)
+  1074: Mendes Nuno i X -> Mendes Nuno i X (75)
+  1075: Mendes Nuno i 2 -> Mendes Nuno i 2 (160)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 4079169145]
+  1073: Kamara Noham i 1 -> Kamara Noham i 1 (18)
+  1074: Kamara Noham i X -> Kamara Noham i X (160)
+  1075: Kamara Noham i 2 -> Kamara Noham i 2 (325)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 4232110965]
+  1073: Khafi Yanis i 1 -> Khafi Yanis i 1 (4.1)
+  1074: Khafi Yanis i X -> Khafi Yanis i X (33)
+  1075: Khafi Yanis i 2 -> Khafi Yanis i 2 (70)
+Line: Zawodnik - strzeli gola i wynik końcowy [ID: 4280492936]
+  1073: Andre Benjamin i 1 -> Andre Benjamin i 1 (23)
+  1074: Andre Benjamin i X -> Andre Benjamin i X (44)
+  1075: Andre Benjamin i 2 -> Andre Benjamin i 2 (32)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "18715446": {
+      "D": 22,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 13,
+          "n": "Beraldo i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 110,
+          "n": "Beraldo i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 225,
+          "n": "Beraldo i 2"
+        }
+      }
+    },
+    "22502336": {
+      "D": 39,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 43,
+          "n": "Goffi Maxima Adeagan i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 85,
+          "n": "Goffi Maxima Adeagan i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 60,
+          "n": "Goffi Maxima Adeagan i 2"
+        }
+      }
+    },
+    "25714727": {
+      "D": 1,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 2.5,
+          "n": "Dembele Ousmane i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 18,
+          "n": "Dembele Ousmane i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 36,
+          "n": "Dembele Ousmane i 2"
+        }
+      }
+    },
+    "51432985": {
+      "D": 29,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 23,
+          "n": "Raghouber Ugo i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 45,
+          "n": "Raghouber Ugo i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 33,
+          "n": "Raghouber Ugo i 2"
+        }
+      }
+    },
+    "183348484": {
+      "D": 10,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 5.25,
+          "n": "Ruiz Fabian i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 44,
+          "n": "Ruiz Fabian i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 90,
+          "n": "Ruiz Fabian i 2"
+        }
+      }
+    },
+    "201607338": {
+      "D": 14,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 8.9,
+          "n": "Giroud Olivier i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 18,
+          "n": "Giroud Olivier i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 14,
+          "n": "Giroud Olivier i 2"
+        }
+      }
+    },
+    "231164001": {
+      "D": 5,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 3,
+          "n": "Kvaratskhelia Khvicha i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 23,
+          "n": "Kvaratskhelia Khvicha i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 46,
+          "n": "Kvaratskhelia Khvicha i 2"
+        }
+      }
+    },
+    "423700809": {
+      "D": 24,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 15,
+          "n": "Marquinhos i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 140,
+          "n": "Marquinhos i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 275,
+          "n": "Marquinhos i 2"
+        }
+      }
+    },
+    "543502596": {
+      "D": 25,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 16,
+          "n": "Pacho Tenorio William Joel i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 140,
+          "n": "Pacho Tenorio William Joel i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 275,
+          "n": "Pacho Tenorio William Joel i 2"
+        }
+      }
+    },
+    "560085690": {
+      "D": 17,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 10,
+          "n": "Haraldsson Hakon Arnar i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 20,
+          "n": "Haraldsson Hakon Arnar i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 16,
+          "n": "Haraldsson Hakon Arnar i 2"
+        }
+      }
+    },
+    "663032051": {
+      "D": 16,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 9.4,
+          "n": "Zaire-Emery Warren i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 80,
+          "n": "Zaire-Emery Warren i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 175,
+          "n": "Zaire-Emery Warren i 2"
+        }
+      }
+    },
+    "714612788": {
+      "D": 6,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 3.5,
+          "n": "Mayulu Senny i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 27,
+          "n": "Mayulu Senny i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 55,
+          "n": "Mayulu Senny i 2"
+        }
+      }
+    },
+    "768305705": {
+      "D": 3,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 2.85,
+          "n": "Barcola Bradley i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 21,
+          "n": "Barcola Bradley i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 44,
+          "n": "Barcola Bradley i 2"
+        }
+      }
+    },
+    "812660193": {
+      "D": 23,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 14.5,
+          "n": "Sahraoui Osame i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 29,
+          "n": "Sahraoui Osame i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 22,
+          "n": "Sahraoui Osame i 2"
+        }
+      }
+    },
+    "850240979": {
+      "D": 38,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 37,
+          "n": "Ngoy Nathan i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 70,
+          "n": "Ngoy Nathan i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 50,
+          "n": "Ngoy Nathan i 2"
+        }
+      }
+    },
+    "1073669495": {
+      "D": 26,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 16,
+          "n": "Hernandez Lucas i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 140,
+          "n": "Hernandez Lucas i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 300,
+          "n": "Hernandez Lucas i 2"
+        }
+      }
+    },
+    "1170967201": {
+      "D": 11,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 5.5,
+          "n": "Neves Joao i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 46,
+          "n": "Neves Joao i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 95,
+          "n": "Neves Joao i 2"
+        }
+      }
+    },
+    "1242006686": {
+      "D": 34,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 27,
+          "n": "Meunier Thomas i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 50,
+          "n": "Meunier Thomas i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 38,
+          "n": "Meunier Thomas i 2"
+        }
+      }
+    },
+    "1375168753": {
+      "D": 21,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 12.5,
+          "n": "Diaoune Soriba i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 24,
+          "n": "Diaoune Soriba i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 18,
+          "n": "Diaoune Soriba i 2"
+        }
+      }
+    },
+    "1536700412": {
+      "D": 33,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 27,
+          "n": "Fernandes Rafael i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 50,
+          "n": "Fernandes Rafael i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 38,
+          "n": "Fernandes Rafael i 2"
+        }
+      }
+    },
+    "1867011563": {
+      "D": 13,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 8,
+          "n": "Vitinha i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 70,
+          "n": "Vitinha i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 140,
+          "n": "Vitinha i 2"
+        }
+      }
+    },
+    "1948372181": {
+      "D": 36,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 31,
+          "n": "Bouaddi Ayyoub i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 60,
+          "n": "Bouaddi Ayyoub i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 43,
+          "n": "Bouaddi Ayyoub i 2"
+        }
+      }
+    },
+    "2015149525": {
+      "D": 27,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 16,
+          "n": "Zabarnyi Illia i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 140,
+          "n": "Zabarnyi Illia i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 300,
+          "n": "Zabarnyi Illia i 2"
+        }
+      }
+    },
+    "2133362699": {
+      "D": 7,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 3.9,
+          "n": "Jangeal Mathis i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 31,
+          "n": "Jangeal Mathis i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 65,
+          "n": "Jangeal Mathis i 2"
+        }
+      }
+    },
+    "2167065032": {
+      "D": 12,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 6,
+          "n": "Boly David i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 50,
+          "n": "Boly David i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 100,
+          "n": "Boly David i 2"
+        }
+      }
+    },
+    "2274847626": {
+      "D": 4,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 2.95,
+          "n": "Doue Desire i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 22,
+          "n": "Doue Desire i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 46,
+          "n": "Doue Desire i 2"
+        }
+      }
+    },
+    "2487239035": {
+      "D": 32,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 24,
+          "n": "Gomes Andre i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 47,
+          "n": "Gomes Andre i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 35,
+          "n": "Gomes Andre i 2"
+        }
+      }
+    },
+    "2520574250": {
+      "D": 19,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 10.5,
+          "n": "Broholm Marius i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 21,
+          "n": "Broholm Marius i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 16,
+          "n": "Broholm Marius i 2"
+        }
+      }
+    },
+    "2527212726": {
+      "D": 18,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 10.5,
+          "n": "Correia Felix i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 21,
+          "n": "Correia Felix i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 16,
+          "n": "Correia Felix i 2"
+        }
+      }
+    },
+    "2538605715": {
+      "D": 31,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 24,
+          "n": "Bentaleb Nabil i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 47,
+          "n": "Bentaleb Nabil i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 34,
+          "n": "Bentaleb Nabil i 2"
+        }
+      }
+    },
+    "2600345810": {
+      "D": 9,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 4.2,
+          "n": "Slama Wassim i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 34,
+          "n": "Slama Wassim i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 70,
+          "n": "Slama Wassim i 2"
+        }
+      }
+    },
+    "3068084710": {
+      "D": 37,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 33,
+          "n": "Verdonk Calvin i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 60,
+          "n": "Verdonk Calvin i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 45,
+          "n": "Verdonk Calvin i 2"
+        }
+      }
+    },
+    "3115846952": {
+      "D": 20,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 11,
+          "n": "Fernandez Matias i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 21,
+          "n": "Fernandez Matias i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 16,
+          "n": "Fernandez Matias i 2"
+        }
+      }
+    },
+    "3167120957": {
+      "D": 35,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 30,
+          "n": "Santos Tiago i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 60,
+          "n": "Santos Tiago i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 42,
+          "n": "Santos Tiago i 2"
+        }
+      }
+    },
+    "3643963955": {
+      "D": 2,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 2.55,
+          "n": "Ramos Goncalo i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 19,
+          "n": "Ramos Goncalo i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 38,
+          "n": "Ramos Goncalo i 2"
+        }
+      }
+    },
+    "3863399356": {
+      "D": 40,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 43,
+          "n": "Costarelli Morgan i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 80,
+          "n": "Costarelli Morgan i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 60,
+          "n": "Costarelli Morgan i 2"
+        }
+      }
+    },
+    "4043812311": {
+      "D": 15,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 9,
+          "n": "Mendes Nuno i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 75,
+          "n": "Mendes Nuno i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 160,
+          "n": "Mendes Nuno i 2"
+        }
+      }
+    },
+    "4079169145": {
+      "D": 28,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 18,
+          "n": "Kamara Noham i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 160,
+          "n": "Kamara Noham i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 325,
+          "n": "Kamara Noham i 2"
+        }
+      }
+    },
+    "4232110965": {
+      "D": 8,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 4.1,
+          "n": "Khafi Yanis i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 33,
+          "n": "Khafi Yanis i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 70,
+          "n": "Khafi Yanis i 2"
+        }
+      }
+    },
+    "4280492936": {
+      "D": 30,
+      "n": "Zawodnik - strzeli gola i wynik końcowy",
+      "o": {
+        "1073": {
+          "D": 1,
+          "O": 23,
+          "n": "Andre Benjamin i 1"
+        },
+        "1074": {
+          "D": 2,
+          "O": 44,
+          "n": "Andre Benjamin i X"
+        },
+        "1075": {
+          "D": 3,
+          "O": 32,
+          "n": "Andre Benjamin i 2"
+        }
+      }
+    }
+  }
+}

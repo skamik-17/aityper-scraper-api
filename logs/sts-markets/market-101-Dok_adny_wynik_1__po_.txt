@@ -1,0 +1,82 @@
+MARKET ID 101: Dokładny wynik 1. poł
+================================================================================
+
+NORMALIZED: CORRECT_SCORE
+Market Key: CORRECT_SCORE
+Param Value: none
+
+CATALOG CONTEXT (CORRECT_SCORE):
+----------------------------------------
+goli" },
+  },
+];
+
+const CORRECT_SCORE_MARKETS: MarketCatalogEntry[] = [
+  {
+    numericId: 100,
+    code: "CORRECT_SCORE",
+    slug: "correct-score",
+    category: MarketCategory.DOKLADNY_WYNIK,
+    labels: { pl: "Dokładny wynik", en: "Correct Score" },
+    descriptions: { pl: "Przewidywany dokładny wynik meczu", en: "Exact final score prediction" },
+    hasParameter: false,
+    selections: ["SCORE"],
+    viewType: ViewType.SCORE_GRID,
+    displayOrder: 50,
+    viewConfig: { maxHomeGoals: 5, maxAwayGoals: 5, scoreFormat: "{home}:{away}" },
+    descriptionTemplates: { SCORE: "Dokładny wynik {pa
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - dokładny wynik [ID: 1]
+  160:  -> 0:0 (3.6)
+  161:  -> 0:1 (7.4)
+  162:  -> 0:2 (65)
+  163:  -> 1:0 (3.4)
+  164:  -> 1:1 (6)
+  165:  -> 1:2 (14)
+  166:  -> 2:0 (8)
+  167:  -> 2:1 (36)
+  168:  -> 2:2 (35)
+  169:  -> Inne (7.9)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - dokładny wynik",
+      "o": {
+        "160": {
+          "O": 3.6
+        },
+        "161": {
+          "O": 7.4
+        },
+        "162": {
+          "O": 65
+        },
+        "163": {
+          "O": 3.4
+        },
+        "164": {
+          "O": 6
+        },
+        "165": {
+          "O": 14
+        },
+        "166": {
+          "O": 8
+        },
+        "167": {
+          "O": 36
+        },
+        "168": {
+          "O": 35
+        },
+        "169": {
+          "O": 7.9
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+MARKET ID 220: Więcej rzutów rożnych
+================================================================================
+
+NORMALIZED: CORNERS_RACE
+Market Key: CORNERS_RACE
+Param Value: none
+
+CATALOG CONTEXT (CORNERS_RACE):
+----------------------------------------
+Y_UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 71,
+  },
+  {
+    numericId: 41,
+    code: "CORNERS_RACE",
+    slug: "corners-race",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Więcej rzutów rożnych", en: "Corners Race" },
+    descriptions: { pl: "Która drużyna wykona więcej rzutów rożnych?", en: "Which team will have more corners?" },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 72,
+  },
+  {
+    numericId: 42,
+    code: "FIRST_CORNER",
+    slug: "first-corner",
+    category: MarketCat
+----------------------------------------
+
+RAW DATA:
+Line: Więcej rzutów rożnych [ID: 1]
+  1:  -> 1 (1.24)
+  2:  -> X (8.9)
+  3:  -> 2 (4.9)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Więcej rzutów rożnych",
+      "o": {
+        "1": {
+          "O": 1.24
+        },
+        "2": {
+          "O": 8.9
+        },
+        "3": {
+          "O": 4.9
+        }
+      }
+    }
+  }
+}

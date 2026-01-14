@@ -1,0 +1,47 @@
+MARKET ID 121: BTTS 2. połowa
+================================================================================
+
+NORMALIZED: SECOND_HALF_BTTS
+Market Key: SECOND_HALF_BTTS
+Param Value: none
+
+CATALOG CONTEXT (SECOND_HALF_BTTS):
+----------------------------------------
+amek w 2. połowie", UNDER: "Poniżej {param} bramek w 2. połowie" },
+  },
+  {
+    numericId: 22,
+    code: "SECOND_HALF_BTTS",
+    slug: "second-half-btts",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "BTTS 2. połowa", en: "Second Half BTTS" },
+    descriptions: { pl: "Obie strzelą w drugiej połowie", en: "Both teams score in second half" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 45,
+    descriptionTemplates: { YES: "Obie strzelą w 2. połowie", NO: "Co najmniej jedna 
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - obie drużyny - strzelą gola [ID: 1]
+  26:  -> Tak (3.05)
+  27:  -> Nie (1.33)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - obie drużyny - strzelą gola",
+      "o": {
+        "26": {
+          "O": 3.05
+        },
+        "27": {
+          "O": 1.33
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+MARKET ID 49: Wynik + BTTS
+================================================================================
+
+NORMALIZED: RESULT_AND_BTTS
+Market Key: RESULT_AND_BTTS
+Param Value: none
+
+CATALOG CONTEXT (RESULT_AND_BTTS):
+----------------------------------------
+yOrder: 80,
+  },
+];
+
+const COMBINATION_MARKETS: MarketCatalogEntry[] = [
+  {
+    numericId: 35,
+    code: "RESULT_AND_BTTS",
+    slug: "result-and-btts",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Wynik + BTTS", en: "Result & BTTS" },
+    descriptions: { pl: "Wynik meczu i czy obie strzelą", en: "Match result and both teams score" },
+    hasParameter: false,
+    selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
+    selectionOrder: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
+    viewType: ViewType.COMBINATION,
+    disp
+----------------------------------------
+
+RAW DATA:
+Line: Wynik końcowy i obie drużyny - strzelą gola [ID: 1]
+  28:  -> 1 i Tak (2.6)
+  29:  -> 1 i Nie (2.55)
+  30:  -> X i Tak (5.4)
+  31:  -> X i Nie (18)
+  32:  -> 2 i Tak (10)
+  33:  -> 2 i Nie (12)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Wynik końcowy i obie drużyny - strzelą gola",
+      "o": {
+        "28": {
+          "O": 2.6
+        },
+        "29": {
+          "O": 2.55
+        },
+        "30": {
+          "O": 5.4
+        },
+        "31": {
+          "O": 18
+        },
+        "32": {
+          "O": 10
+        },
+        "33": {
+          "O": 12
+        }
+      }
+    }
+  }
+}

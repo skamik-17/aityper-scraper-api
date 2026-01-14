@@ -1,0 +1,63 @@
+MARKET ID 815: Przedział goli gości
+================================================================================
+
+NORMALIZED: TEAM_GOAL_RANGE
+Market Key: TEAM_GOAL_RANGE
+Param Value: none
+
+CATALOG CONTEXT (TEAM_GOAL_RANGE):
+----------------------------------------
+: "2-3 bramki", "4-5": "4-5 bramek", "6+": "6 lub więcej bramek" },
+  },
+  {
+    numericId: 54,
+    code: "TEAM_GOAL_RANGE",
+    slug: "team-goal-range",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Gole drużyny - przedział", en: "Team Goal Range" },
+    descriptions: { pl: "Przedział goli dla konkretnej drużyny", en: "Goal range for specific team" },
+    hasParameter: false,
+    selections: ["0", "1", "2", "3", "4", "5+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 25,
+  },
+  {
+    numericId: 55,
+    code: "HALF_TIME_GOAL_RANGE",
+    slug: "half-time-goal-range",
+    ca
+----------------------------------------
+
+RAW DATA:
+Line: 2. drużyna - liczba goli - przedziały [ID: 1]
+  957:  -> 0-1 (1.67)
+  958:  -> 2-3 (1.54)
+  959:  -> 4-5 (3.7)
+  960:  -> 6+ (25)
+  1009:  -> 3+ (2.35)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "2. drużyna - liczba goli - przedziały",
+      "o": {
+        "957": {
+          "O": 1.67
+        },
+        "958": {
+          "O": 1.54
+        },
+        "959": {
+          "O": 3.7
+        },
+        "960": {
+          "O": 25
+        },
+        "1009": {
+          "O": 2.35
+        }
+      }
+    }
+  }
+}

@@ -10,9 +10,17 @@
  *   npx tsx scripts/sts-market-discovery.ts --raw              # Show raw WebSocket structure
  *   npx tsx scripts/sts-market-discovery.ts --verbose          # Show details for markets with issues
  *   npx tsx scripts/sts-market-discovery.ts --issues           # Show only markets with issues
+ *   npx tsx scripts/sts-market-discovery.ts --dir logs/out     # Output to files in directory
  */
 
 import { chromium, type Page } from "playwright";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 import {
   navigateAndCaptureLeagueData,
   navigateAndCaptureMatchData,
@@ -227,12 +235,13 @@ const args = process.argv.slice(2);
 const VERBOSE = args.includes("--verbose") || args.includes("-v");
 const SHOW_ISSUES = args.includes("--issues") || args.includes("-i");
 const SHOW_RAW = args.includes("--raw") || args.includes("-r");
+const OUTPUT_DIR = args.find((_, i) => args[i - 1] === "--dir") || null;
 const SHOW_ALL_DETAILS = args.includes("--all") || args.includes("-a");
 const MARKET_ID_ARG = args.find((_, i) => args[i - 1] === "--market" || args[i - 1] === "-m");
 const FOCUS_MARKET_ID = MARKET_ID_ARG ? parseInt(MARKET_ID_ARG, 10) : null;
-const SINGLE_LEAGUE = args.find(arg => 
-  !arg.startsWith("-") && 
-  !["--market", "-m", "--verbose", "-v", "--issues", "-i", "--raw", "-r"].includes(args[args.indexOf(arg) - 1] || "") &&
+const SINGLE_LEAGUE = args.find(arg =>
+  !arg.startsWith("-") &&
+  !["--market", "-m", "--verbose", "-v", "--issues", "-i", "--raw", "-r", "--dir"].includes(args[args.indexOf(arg) - 1] || "") &&
   ALL_LEAGUES.includes(arg)
 );
 
@@ -251,48 +260,48 @@ function countMarketsInWsData(wsData: STSWebSocketData): number {
 async function findBestFixture(page: Page): Promise<FixtureCandidate | null> {
   const leagues = SINGLE_LEAGUE ? [SINGLE_LEAGUE] : ALL_LEAGUES;
   const candidates: FixtureCandidate[] = [];
-  
+
   console.log(`\n🔍 Scanning ${leagues.length} league(s) for best fixture...\n`);
-  
+
   for (const league of leagues) {
     try {
       console.log(`  📍 ${league}...`);
       const leagueCapture = await navigateAndCaptureLeagueData(page, league);
-      
+
       if (!leagueCapture) {
         console.log(`     ❌ No data`);
         continue;
       }
-      
+
       const initialJson = parseWebSocketJson(leagueCapture.initialData);
       if (!initialJson) {
         console.log(`     ❌ Parse failed`);
         continue;
       }
-      
+
       const fixtures = parseFixtures(initialJson, league);
       if (fixtures.length === 0) {
         console.log(`     ❌ No fixtures`);
         continue;
       }
-      
+
       console.log(`     ✅ Found ${fixtures.length} fixtures`);
-      
-      for (const fixture of fixtures.slice(0, 3)) {
+
+      for (const fixture of fixtures.slice(0, 10)) {
         try {
           const matchCapture = await navigateAndCaptureMatchData(page, fixture.eventUrl);
           if (!matchCapture) continue;
-          
+
           let wsData: STSWebSocketData | null = null;
-          
+
           if (matchCapture.fixtureData.size > 0) {
             wsData = matchCapture.fixtureData.get(fixture.id) || null;
           }
-          
+
           if (!wsData && matchCapture.initialData) {
             wsData = parseWebSocketJson(matchCapture.initialData);
           }
-          
+
           if (wsData) {
             const marketCount = countMarketsInWsData(wsData);
             candidates.push({
@@ -314,11 +323,11 @@ async function findBestFixture(page: Page): Promise<FixtureCandidate | null> {
       console.log(`     ❌ Error: ${err instanceof Error ? err.message : "Unknown"}`);
     }
   }
-  
+
   if (candidates.length === 0) {
     return null;
   }
-  
+
   candidates.sort((a, b) => b.marketCount - a.marketCount);
   return candidates[0];
 }
@@ -330,24 +339,24 @@ function analyzeMarkets(
 ): Map<number, MarketAnalysis> {
   const ctx = { homeTeam, awayTeam };
   const marketsMap = new Map<number, MarketAnalysis>();
-  
+
   for (const [, assocData] of Object.entries(wsData.P || {})) {
     const marketData = (assocData as { m?: Record<string, unknown> }).m;
     if (!marketData) continue;
-    
+
     for (const [marketIdStr, market] of Object.entries(marketData)) {
       const marketId = parseInt(marketIdStr, 10);
-      
+
       if (FOCUS_MARKET_ID !== null && marketId !== FOCUS_MARKET_ID) continue;
-      
-      const mkt = market as { 
-        n?: string; 
-        l?: Record<string, { 
-          n?: string; 
-          o?: Record<string, { n?: string; v?: number; O?: number }> 
-        }> 
+
+      const mkt = market as {
+        n?: string;
+        l?: Record<string, {
+          n?: string;
+          o?: Record<string, { n?: string; v?: number; O?: number }>
+        }>
       };
-      
+
       if (!marketsMap.has(marketId)) {
         marketsMap.set(marketId, {
           id: marketId,
@@ -363,14 +372,14 @@ function analyzeMarkets(
           issues: [],
         });
       }
-      
+
       const analysis = marketsMap.get(marketId)!;
       const lines = mkt.l || {};
-      
+
       for (const [lineId, line] of Object.entries(lines)) {
         const lineName = line.n || "";
         const outcomes = line.o || {};
-        
+
         const rawOutcomes: RawOutcomeInfo[] = Object.entries(outcomes).map(([outcomeIdStr, o]) => {
           const outcomeId = parseInt(outcomeIdStr, 10);
           const rawName = o.n || "";
@@ -378,33 +387,33 @@ function analyzeMarkets(
           const odds = o.v ?? o.O ?? 0;
           return { outcomeId, rawName, mappedName, odds };
         });
-        
+
         analysis.rawLines.push({
           lineId,
           lineName,
           outcomes: rawOutcomes,
         });
-        
+
         const rawSelections = rawOutcomes.map(o => ({
           name: o.mappedName || o.rawName || String(o.outcomeId),
           odds: o.odds,
         }));
-        
+
         const testResult = stsNormalizer.normalizeMarket(
-          { 
-            name: lineName || `Rynek ${marketId}`, 
-            bookmakerMarketId: String(marketId), 
-            selections: rawSelections 
+          {
+            name: lineName || `Rynek ${marketId}`,
+            bookmakerMarketId: String(marketId),
+            selections: rawSelections
           },
           ctx
         );
-        
+
         if (testResult && !analysis.normalized.marketCode) {
           analysis.normalized.marketCode = testResult.marketCode;
           analysis.normalized.paramValue = testResult.paramValue;
           analysis.normalized.marketKey = testResult.marketKey;
           analysis.normalized.matchedBy = testResult.debug?.matchedBy as "id" | "name" | undefined;
-          
+
           const passthroughMarketTypes = [
             "GOAL_RANGE", "TEAM_GOAL_RANGE", "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
             "CORNERS_TEAM", "HALF_TIME_CORNERS_TEAM", "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_RACE",
@@ -412,16 +421,16 @@ function analyzeMarkets(
             "CARDS_TEAM", "CARDS_TOTAL", "FOULS_TOTAL", "CORRECT_SCORE",
           ];
           const isPassthroughMarket = passthroughMarketTypes.includes(testResult.marketCode);
-          
+
           analysis.normalized.selections = testResult.selections.map(sel => {
             const code = sel.code as string;
             const isScore = /^\d+-\d+$/.test(code);
             const isRange = /^\d+\+$/.test(code) || /^\d+-\d+$/.test(code);
             const isNumeric = /^\d+$/.test(code);
-            const isUnknown = 
+            const isUnknown =
               code === "UNKNOWN" ||
               (isNumeric && !isPassthroughMarket && !isRange && !isScore);
-            
+
             return {
               code,
               label: sel.label,
@@ -433,31 +442,102 @@ function analyzeMarkets(
       }
     }
   }
-  
+
   for (const analysis of marketsMap.values()) {
     const unknownSelections = analysis.normalized.selections.filter(s => s.isUnknown);
     if (unknownSelections.length > 0) {
       const uniqueUnknown = [...new Set(unknownSelections.map(s => `"${s.label}" → ${s.code}`))];
       analysis.issues.push(`UNKNOWN_SELECTIONS: ${uniqueUnknown.slice(0, 5).join(", ")}${uniqueUnknown.length > 5 ? ` (+${uniqueUnknown.length - 5} more)` : ""}`);
     }
-    
+
     const linesWithParam = analysis.rawLines.filter(l => l.lineName && l.lineName.trim() !== "");
     const uniqueLineNames = [...new Set(linesWithParam.map(l => l.lineName))];
     if (uniqueLineNames.length > 1 && !analysis.normalized.paramValue) {
       analysis.issues.push(`MULTIPLE_LINES_NO_PARAM: ${uniqueLineNames.length} different line names but no param extracted`);
     }
   }
-  
+
   return marketsMap;
 }
 
 function printMarketDetail(analysis: MarketAnalysis, wsData?: STSWebSocketData): void {
   const { id, polishName, rawLines, normalized, issues } = analysis;
-  
+
+  if (OUTPUT_DIR) {
+    const fileName = `market-${id}-${polishName.replace(/[^a-z0-9]/gi, '_')}.txt`;
+    const filePath = path.join(OUTPUT_DIR, fileName);
+    
+    if (!fs.existsSync(OUTPUT_DIR)) {
+      fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    }
+
+    let output = "";
+    output += `MARKET ID ${id}: ${polishName}\n`;
+    output += `${"=".repeat(80)}\n\n`;
+
+    if (normalized.marketCode) {
+      output += `NORMALIZED: ${normalized.marketCode}\n`;
+      output += `Market Key: ${normalized.marketKey || "N/A"}\n`;
+      output += `Param Value: ${normalized.paramValue || "none"}\n`;
+      
+      try {
+        const catalogPath = path.resolve(__dirname, "../src/data/market-catalog.ts");
+        const catalogContent = fs.readFileSync(catalogPath, "utf8");
+        const codeRegex = new RegExp(`code: "${normalized.marketCode}"`, "g");
+        const match = codeRegex.exec(catalogContent);
+        
+        if (match) {
+          const start = Math.max(0, match.index - 100);
+          const end = Math.min(catalogContent.length, match.index + 500);
+          output += `\nCATALOG CONTEXT (${normalized.marketCode}):\n`;
+          output += "----------------------------------------\n";
+          output += catalogContent.substring(start, end);
+          output += "\n----------------------------------------\n";
+        }
+      } catch (e) {
+        output += `\nError reading catalog file: ${e}\n`;
+      }
+
+    } else {
+      output += `NOT NORMALIZED (unmapped market ID)\n`;
+    }
+
+    if (issues.length > 0) {
+      output += `\nISSUES:\n`;
+      issues.forEach(i => output += ` - ${i}\n`);
+    }
+
+    output += `\nRAW DATA:\n`;
+    rawLines.forEach(line => {
+      output += `Line: ${line.lineName} [ID: ${line.lineId}]\n`;
+      line.outcomes.forEach(o => {
+        output += `  ${o.outcomeId}: ${o.rawName} -> ${o.mappedName} (${o.odds})\n`;
+      });
+    });
+
+    if (wsData) {
+       for (const [assocKey, assocData] of Object.entries(wsData.P || {})) {
+        const marketData = (assocData as { m?: Record<string, unknown> }).m;
+        if (!marketData) continue;
+    
+        const market = marketData[String(id)];
+        if (market) {
+          output += `\nRAW JSON (assocKey: ${assocKey}):\n`;
+          output += JSON.stringify(market, null, 2);
+          output += "\n";
+          break; // Found it
+        }
+      }
+    }
+
+    fs.writeFileSync(filePath, output);
+    return;
+  }
+
   console.log(`\n${"─".repeat(100)}`);
   console.log(`📦 MARKET ID ${id}: ${polishName}`);
   console.log(`${"─".repeat(100)}`);
-  
+
   if (normalized.marketCode) {
     console.log(`\n✅ NORMALIZED: ${normalized.marketCode}`);
     console.log(`   Market Key: ${normalized.marketKey || "N/A"}`);
@@ -466,56 +546,56 @@ function printMarketDetail(analysis: MarketAnalysis, wsData?: STSWebSocketData):
   } else {
     console.log(`\n❌ NOT NORMALIZED (unmapped market ID)`);
   }
-  
+
   if (issues.length > 0) {
     console.log(`\n⚠️  ISSUES:`);
     for (const issue of issues) {
       console.log(`   - ${issue}`);
     }
   }
-  
+
   console.log(`\n📊 RAW DATA (${rawLines.length} line(s)):`);
-  
+
   for (const line of rawLines.slice(0, VERBOSE ? 10 : 3)) {
     console.log(`\n   Line: "${line.lineName || "(empty)"}" [ID: ${line.lineId}]`);
     console.log(`   ${"─".repeat(80)}`);
-    
+
     console.log(`   ${"OutcomeID".padEnd(10)} ${"Raw Name".padEnd(25)} ${"Mapped Name".padEnd(25)} ${"Odds".padEnd(8)}`);
     console.log(`   ${"─".repeat(10)} ${"─".repeat(25)} ${"─".repeat(25)} ${"─".repeat(8)}`);
-    
+
     for (const outcome of line.outcomes.slice(0, VERBOSE ? 20 : 8)) {
       const rawDisplay = (outcome.rawName || "(empty)").substring(0, 24);
       const mappedDisplay = outcome.mappedName.substring(0, 24);
       console.log(`   ${String(outcome.outcomeId).padEnd(10)} ${rawDisplay.padEnd(25)} ${mappedDisplay.padEnd(25)} ${outcome.odds.toFixed(2).padEnd(8)}`);
     }
-    
+
     if (line.outcomes.length > (VERBOSE ? 20 : 8)) {
       console.log(`   ... and ${line.outcomes.length - (VERBOSE ? 20 : 8)} more outcomes`);
     }
   }
-  
+
   if (rawLines.length > (VERBOSE ? 10 : 3)) {
     console.log(`\n   ... and ${rawLines.length - (VERBOSE ? 10 : 3)} more lines`);
   }
-  
+
   if (normalized.selections.length > 0) {
     console.log(`\n📤 NORMALIZED SELECTIONS (${normalized.selections.length}):`);
     console.log(`   ${"─".repeat(80)}`);
     console.log(`   ${"Status".padEnd(4)} ${"Code".padEnd(20)} ${"Original Label".padEnd(35)} ${"Odds".padEnd(8)}`);
     console.log(`   ${"─".repeat(4)} ${"─".repeat(20)} ${"─".repeat(35)} ${"─".repeat(8)}`);
-    
+
     for (const sel of normalized.selections.slice(0, VERBOSE ? 30 : 10)) {
       const status = sel.isUnknown ? "❌" : "✅";
       const codeDisplay = sel.code.substring(0, 19);
       const labelDisplay = sel.label.substring(0, 34);
       console.log(`   ${status.padEnd(4)} ${codeDisplay.padEnd(20)} ${labelDisplay.padEnd(35)} ${sel.odds.toFixed(2).padEnd(8)}`);
     }
-    
+
     if (normalized.selections.length > (VERBOSE ? 30 : 10)) {
       console.log(`   ... and ${normalized.selections.length - (VERBOSE ? 30 : 10)} more selections`);
     }
   }
-  
+
   if (wsData && (SHOW_ALL_DETAILS || SHOW_RAW)) {
     printRawJsonInline(wsData, id);
   }
@@ -525,7 +605,7 @@ function printRawJsonInline(wsData: STSWebSocketData, marketId: number): void {
   for (const [assocKey, assocData] of Object.entries(wsData.P || {})) {
     const marketData = (assocData as { m?: Record<string, unknown> }).m;
     if (!marketData) continue;
-    
+
     const market = marketData[String(marketId)];
     if (market) {
       console.log(`\n🔧 RAW JSON (assocKey: ${assocKey}):`);
@@ -545,11 +625,11 @@ function printRawJson(wsData: STSWebSocketData, marketId: number): void {
   console.log(`\n${"=".repeat(100)}`);
   console.log(`🔧 RAW JSON FOR MARKET ID ${marketId}`);
   console.log(`${"=".repeat(100)}\n`);
-  
+
   for (const [assocKey, assocData] of Object.entries(wsData.P || {})) {
     const marketData = (assocData as { m?: Record<string, unknown> }).m;
     if (!marketData) continue;
-    
+
     const market = marketData[String(marketId)];
     if (market) {
       console.log(`AssocKey: ${assocKey}`);
@@ -557,7 +637,7 @@ function printRawJson(wsData: STSWebSocketData, marketId: number): void {
       return;
     }
   }
-  
+
   console.log(`Market ID ${marketId} not found in WebSocket data`);
 }
 
@@ -613,7 +693,7 @@ function printSummary(markets: Map<number, MarketAnalysis>): void {
       for (const issue of m.issues) {
         console.log(`   ⚠️  ${issue}`);
       }
-      
+
       if (VERBOSE || SHOW_ISSUES) {
         const unknownSels = m.normalized.selections.filter(s => s.isUnknown);
         if (unknownSels.length > 0) {
@@ -631,7 +711,7 @@ async function main() {
   console.log(`\n${"=".repeat(100)}`);
   console.log(`🔍 STS Market Discovery - Enhanced Analysis`);
   console.log(`${"=".repeat(100)}`);
-  
+
   if (FOCUS_MARKET_ID) {
     console.log(`\n🎯 Focusing on Market ID: ${FOCUS_MARKET_ID}`);
   }
@@ -641,51 +721,51 @@ async function main() {
   if (VERBOSE) {
     console.log(`📝 Verbose mode enabled`);
   }
-  
+
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
     const bestFixture = await findBestFixture(page);
-    
+
     if (!bestFixture) {
       console.log("\n❌ No fixtures found in any league");
       return;
     }
-    
+
     console.log(`\n${"=".repeat(100)}`);
     console.log(`🏆 ANALYZING: ${bestFixture.fixture.home} vs ${bestFixture.fixture.away}`);
     console.log(`   League: ${bestFixture.league}, Total Markets: ${bestFixture.marketCount}`);
     console.log(`${"=".repeat(100)}`);
-    
+
     const matchCapture = await navigateAndCaptureMatchData(page, bestFixture.fixture.eventUrl);
     if (!matchCapture) {
       console.log("❌ Failed to capture match data");
       return;
     }
-    
+
     let wsData: STSWebSocketData | null = null;
-    
+
     if (matchCapture.fixtureData.size > 0) {
       wsData = matchCapture.fixtureData.get(bestFixture.fixture.id) || null;
     }
-    
+
     if (!wsData && matchCapture.initialData) {
       wsData = parseWebSocketJson(matchCapture.initialData);
     }
-    
+
     if (!wsData) {
       console.log("❌ No WebSocket data available");
       return;
     }
-    
+
     if (SHOW_RAW && FOCUS_MARKET_ID) {
       printRawJson(wsData, FOCUS_MARKET_ID);
     }
-    
+
     const markets = analyzeMarkets(wsData, bestFixture.fixture.home, bestFixture.fixture.away);
-    
+
     if (FOCUS_MARKET_ID) {
       const market = markets.get(FOCUS_MARKET_ID);
       if (market) {
@@ -708,7 +788,7 @@ async function main() {
     } else {
       printSummary(markets);
     }
-    
+
     if (!VERBOSE && !FOCUS_MARKET_ID && !SHOW_ALL_DETAILS) {
       console.log(`\n💡 Tips:`);
       console.log(`   --market <id>  Focus on specific market ID (e.g., --market 121)`);
@@ -717,7 +797,7 @@ async function main() {
       console.log(`   --verbose      Show details for markets with issues`);
       console.log(`   --issues       Show detailed issue breakdown`);
     }
-    
+
   } catch (error) {
     console.error("Error:", error);
   } finally {

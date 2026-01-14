@@ -1,0 +1,53 @@
+MARKET ID 1244: Margines zwycięstwa (var5)
+================================================================================
+
+NORMALIZED: HT_OR_FT_RESULT
+Market Key: HT_OR_FT_RESULT
+Param Value: none
+
+CATALOG CONTEXT (HT_OR_FT_RESULT):
+----------------------------------------
+ons: [],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 97,
+  },
+  {
+    numericId: 108,
+    code: "HT_OR_FT_RESULT",
+    slug: "ht-or-ft-result",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "1. połowa lub wynik końcowy", en: "Half Time or Full Time Result" },
+    descriptions: { pl: "Wybierasz wynik 1. połowy lub końcowy", en: "Pick the half time or full time result" },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 98,
+    descriptionTemplates: { HO
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa lub wynik końcowy [ID: 1]
+  1:  -> 1 (1.28)
+  2:  -> X (2.02)
+  3:  -> 2 (3.75)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa lub wynik końcowy",
+      "o": {
+        "1": {
+          "O": 1.28
+        },
+        "2": {
+          "O": 2.02
+        },
+        "3": {
+          "O": 3.75
+        }
+      }
+    }
+  }
+}

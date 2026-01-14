@@ -1,0 +1,286 @@
+MARKET ID 54: Strzelec w meczu
+================================================================================
+
+NORMALIZED: GOALSCORER_ANYTIME
+Market Key: GOALSCORER_ANYTIME
+Param Value: none
+
+CATALOG CONTEXT (GOALSCORER_ANYTIME):
+----------------------------------------
+ER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 61,
+  },
+  {
+    numericId: 25,
+    code: "GOALSCORER_ANYTIME",
+    slug: "goalscorer-anytime",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Strzelec w meczu", en: "Anytime Goalscorer" },
+    descriptions: { pl: "Zawodnik strzeli gola w meczu", en: "Player scores anytime in match" },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 62,
+  },
+  {
+    numericId: 26,
+    code: "PLAYER_SHOTS",
+    slug: "player-shots",
+    category: 
+----------------------------------------
+
+RAW DATA:
+Line: Zawodnik - strzeli gola [ID: 4041487474]
+  39070: Giroud Olivier -> Giroud Olivier (4.5)
+  51665: Andre Benjamin -> Andre Benjamin (12.5)
+  128587: Meunier Thomas -> Meunier Thomas (15)
+  155995: Marquinhos -> Marquinhos (17.5)
+  235460: Gomes Andre -> Gomes Andre (15)
+  352370: Hernandez Lucas -> Hernandez Lucas (20)
+  361350: Dembele Ousmane -> Dembele Ousmane (2.1)
+  361780: Verdonk Calvin -> Verdonk Calvin (22.5)
+  368120: Bentaleb Nabil -> Bentaleb Nabil (15)
+  784655: Ruiz Fabian -> Ruiz Fabian (5)
+  1055229: Vitinha -> Vitinha (8)
+  1061013: Kvaratskhelia Khvicha -> Kvaratskhelia Khvicha (2.6)
+  1297972: Correia Felix -> Correia Felix (6)
+  1414159: Pacho Tenorio William Joel -> Pacho Tenorio William Joel (20)
+  1479784: Ramos Goncalo -> Ramos Goncalo (2.25)
+  1631296: Zabarnyi Illia -> Zabarnyi Illia (20)
+  1646430: Sahraoui Osame -> Sahraoui Osame (8)
+  1722070: Haraldsson Hakon Arnar -> Haraldsson Hakon Arnar (5)
+  1834794: Mendes Nuno -> Mendes Nuno (9)
+  1948356: Barcola Bradley -> Barcola Bradley (2.5)
+  2152840: Ngoy Nathan -> Ngoy Nathan (25)
+  2157426: Beraldo -> Beraldo (15)
+  2187562: Broholm Marius -> Broholm Marius (6)
+  2240523: Neves Joao -> Neves Joao (5)
+  2256607: Zaire-Emery Warren -> Zaire-Emery Warren (10)
+  2264811: Raghouber Ugo -> Raghouber Ugo (12.5)
+  2304851: Doue Desire -> Doue Desire (2.6)
+  2330937: Fernandes Rafael -> Fernandes Rafael (17.5)
+  2409135: Santos Tiago -> Santos Tiago (20)
+  2565249: Fernandez Matias -> Fernandez Matias (6)
+  2568589: Mayulu Senny -> Mayulu Senny (3)
+  2698838: Khafi Yanis -> Khafi Yanis (3.75)
+  2699064: Bouaddi Ayyoub -> Bouaddi Ayyoub (20)
+  2870283: Diaoune Soriba -> Diaoune Soriba (6)
+  2883167: Costarelli Morgan -> Costarelli Morgan (35)
+  2944617: Goffi Maxima Adeagan -> Goffi Maxima Adeagan (35)
+  2952657: Kamara Noham -> Kamara Noham (22.5)
+  2952665: Boly David -> Boly David (6)
+  2952673: Jangeal Mathis -> Jangeal Mathis (3.5)
+  2986107: Slama Wassim -> Slama Wassim (3.75)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "4041487474": {
+      "n": "Zawodnik - strzeli gola",
+      "o": {
+        "39070": {
+          "D": 11,
+          "O": 4.5,
+          "n": "Giroud Olivier"
+        },
+        "51665": {
+          "D": 24,
+          "O": 12.5,
+          "n": "Andre Benjamin"
+        },
+        "128587": {
+          "D": 29,
+          "O": 15,
+          "n": "Meunier Thomas"
+        },
+        "155995": {
+          "D": 31,
+          "O": 17.5,
+          "n": "Marquinhos"
+        },
+        "235460": {
+          "D": 28,
+          "O": 15,
+          "n": "Gomes Andre"
+        },
+        "352370": {
+          "D": 33,
+          "O": 20,
+          "n": "Hernandez Lucas"
+        },
+        "361350": {
+          "D": 2,
+          "O": 2.1,
+          "n": "Dembele Ousmane"
+        },
+        "361780": {
+          "D": 38,
+          "O": 22.5,
+          "n": "Verdonk Calvin"
+        },
+        "368120": {
+          "D": 26,
+          "O": 15,
+          "n": "Bentaleb Nabil"
+        },
+        "784655": {
+          "D": 14,
+          "O": 5,
+          "n": "Ruiz Fabian"
+        },
+        "1055229": {
+          "D": 21,
+          "O": 8,
+          "n": "Vitinha"
+        },
+        "1061013": {
+          "D": 6,
+          "O": 2.6,
+          "n": "Kvaratskhelia Khvicha"
+        },
+        "1297972": {
+          "D": 17,
+          "O": 6,
+          "n": "Correia Felix"
+        },
+        "1414159": {
+          "D": 34,
+          "O": 20,
+          "n": "Pacho Tenorio William Joel"
+        },
+        "1479784": {
+          "D": 3,
+          "O": 2.25,
+          "n": "Ramos Goncalo"
+        },
+        "1631296": {
+          "D": 36,
+          "O": 20,
+          "n": "Zabarnyi Illia"
+        },
+        "1646430": {
+          "D": 20,
+          "O": 8,
+          "n": "Sahraoui Osame"
+        },
+        "1722070": {
+          "D": 12,
+          "O": 5,
+          "n": "Haraldsson Hakon Arnar"
+        },
+        "1834794": {
+          "D": 22,
+          "O": 9,
+          "n": "Mendes Nuno"
+        },
+        "1948356": {
+          "D": 4,
+          "O": 2.5,
+          "n": "Barcola Bradley"
+        },
+        "2152840": {
+          "D": 39,
+          "O": 25,
+          "n": "Ngoy Nathan"
+        },
+        "2157426": {
+          "D": 27,
+          "O": 15,
+          "n": "Beraldo"
+        },
+        "2187562": {
+          "D": 16,
+          "O": 6,
+          "n": "Broholm Marius"
+        },
+        "2240523": {
+          "D": 13,
+          "O": 5,
+          "n": "Neves Joao"
+        },
+        "2256607": {
+          "D": 23,
+          "O": 10,
+          "n": "Zaire-Emery Warren"
+        },
+        "2264811": {
+          "D": 25,
+          "O": 12.5,
+          "n": "Raghouber Ugo"
+        },
+        "2304851": {
+          "D": 5,
+          "O": 2.6,
+          "n": "Doue Desire"
+        },
+        "2330937": {
+          "D": 30,
+          "O": 17.5,
+          "n": "Fernandes Rafael"
+        },
+        "2409135": {
+          "D": 35,
+          "O": 20,
+          "n": "Santos Tiago"
+        },
+        "2565249": {
+          "D": 19,
+          "O": 6,
+          "n": "Fernandez Matias"
+        },
+        "2568589": {
+          "D": 7,
+          "O": 3,
+          "n": "Mayulu Senny"
+        },
+        "2698838": {
+          "D": 9,
+          "O": 3.75,
+          "n": "Khafi Yanis"
+        },
+        "2699064": {
+          "D": 32,
+          "O": 20,
+          "n": "Bouaddi Ayyoub"
+        },
+        "2870283": {
+          "D": 18,
+          "O": 6,
+          "n": "Diaoune Soriba"
+        },
+        "2883167": {
+          "D": 40,
+          "O": 35,
+          "n": "Costarelli Morgan"
+        },
+        "2944617": {
+          "D": 41,
+          "O": 35,
+          "n": "Goffi Maxima Adeagan"
+        },
+        "2952657": {
+          "D": 37,
+          "O": 22.5,
+          "n": "Kamara Noham"
+        },
+        "2952665": {
+          "D": 15,
+          "O": 6,
+          "n": "Boly David"
+        },
+        "2952673": {
+          "D": 8,
+          "O": 3.5,
+          "n": "Jangeal Mathis"
+        },
+        "2986107": {
+          "D": 10,
+          "O": 3.75,
+          "n": "Slama Wassim"
+        }
+      }
+    }
+  }
+}

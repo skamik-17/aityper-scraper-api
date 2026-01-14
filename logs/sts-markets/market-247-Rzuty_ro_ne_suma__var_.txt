@@ -1,0 +1,97 @@
+MARKET ID 247: Rzuty rożne suma (var)
+================================================================================
+
+NORMALIZED: CORNERS_TOTAL
+Market Key: CORNERS_TOTAL
+Param Value: none
+
+CATALOG CONTEXT (CORNERS_TOTAL):
+----------------------------------------
+ayOrder: 49,
+  },
+];
+
+const STATISTICS_MARKETS: MarketCatalogEntry[] = [
+  {
+    numericId: 29,
+    code: "CORNERS_TOTAL",
+    slug: "corners-total",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Rzuty rożne", en: "Total Corners" },
+    descriptions: { pl: "Łączna liczba rzutów rożnych", en: "Total corners in match" },
+    hasParameter: true,
+    parameterType: "decimal",
+    validParameters: ["7.5", "8.5", "9.5", "10.5", "11.5", "12.5"],
+    selections: ["OVER", "UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 70,
+  },
+  {
+    numericId: 30,
+    code: "CORNERS_TEAM
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - liczba rzutów rożnych [ID: 591936594]
+  12: +5.5 -> Powyżej (2.75)
+  13: -5.5 -> Poniżej (1.4)
+Line: 1. połowa - liczba rzutów rożnych [ID: 3070860985]
+  12: +4.5 -> Powyżej (1.92)
+  13: -4.5 -> Poniżej (1.77)
+Line: 1. połowa - liczba rzutów rożnych [ID: 3325488624]
+  12: +3.5 -> Powyżej (1.45)
+  13: -3.5 -> Poniżej (2.55)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "591936594": {
+      "D": 550,
+      "n": "1. połowa - liczba rzutów rożnych",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 2.75,
+          "n": "+5.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.4,
+          "n": "-5.5"
+        }
+      }
+    },
+    "3070860985": {
+      "D": 450,
+      "n": "1. połowa - liczba rzutów rożnych",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.92,
+          "n": "+4.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.77,
+          "n": "-4.5"
+        }
+      }
+    },
+    "3325488624": {
+      "D": 350,
+      "n": "1. połowa - liczba rzutów rożnych",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.45,
+          "n": "+3.5"
+        },
+        "13": {
+          "D": 1,
+          "O": 2.55,
+          "n": "-3.5"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+MARKET ID 43: Obie strzelą (BTTS)
+================================================================================
+
+NORMALIZED: BTTS
+Market Key: BTTS
+Param Value: none
+
+CATALOG CONTEXT (BTTS):
+----------------------------------------
+ramek (ze zwrotem)", UNDER: "Poniżej {param} bramek (ze zwrotem)" },
+  },
+  {
+    numericId: 5,
+    code: "BTTS",
+    slug: "btts",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Obie strzelą", en: "Both Teams To Score" },
+    descriptions: { pl: "Czy obie drużyny strzelą gola?", en: "Will both teams score?" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 12,
+    descriptionTemplates: { YES: "Obie drużyny strzelą", NO: "Co najmniej jedna drużyna nie strzeli" },
+  },
+  {
+    numericId: 
+----------------------------------------
+
+RAW DATA:
+Line: Obie drużyny - strzelą gola [ID: 1]
+  26:  -> Tak (1.72)
+  27:  -> Nie (2.1)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Obie drużyny - strzelą gola",
+      "o": {
+        "26": {
+          "O": 1.72
+        },
+        "27": {
+          "O": 2.1
+        }
+      }
+    }
+  }
+}

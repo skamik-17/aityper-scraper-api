@@ -1,0 +1,51 @@
+MARKET ID 9: Ostatni gol
+================================================================================
+
+NORMALIZED: FIRST_TEAM_TO_SCORE
+Market Key: FIRST_TEAM_TO_SCORE
+Param Value: none
+
+CATALOG CONTEXT (FIRST_TEAM_TO_SCORE):
+----------------------------------------
+i", AWAY: "{awayTeam} wygra różnicą {param} goli", DRAW: "Remis" },
+  },
+  {
+    numericId: 46,
+    code: "FIRST_TEAM_TO_SCORE",
+    slug: "first-team-to-score",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Która drużyna strzeli gola", en: "First Team To Score" },
+    descriptions: { pl: "Która drużyna strzeli pierwszego/ostatniego gola?", en: "Which team will score first/last?" },
+    hasParameter: false,
+    selections: ["HOME", "AWAY", "NONE", "BOTH"],
+    selectionOrder: ["HOME", "AWAY", "NONE"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 22,
+    descriptionTemplates
+----------------------------------------
+
+RAW DATA:
+Line: Ostatni gol [ID: 1]
+  6:  -> 1 (1.4)
+  7:  -> Bez gola (18)
+  8:  -> 2 (3.1)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Ostatni gol",
+      "o": {
+        "6": {
+          "O": 1.4
+        },
+        "7": {
+          "O": 18
+        },
+        "8": {
+          "O": 3.1
+        }
+      }
+    }
+  }
+}

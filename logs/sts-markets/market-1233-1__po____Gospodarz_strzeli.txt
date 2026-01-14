@@ -1,0 +1,48 @@
+MARKET ID 1233: 1. poł - Gospodarz strzeli
+================================================================================
+
+NORMALIZED: HALF_TIME_HOME_TO_SCORE
+Market Key: HALF_TIME_HOME_TO_SCORE
+Param Value: none
+
+CATALOG CONTEXT (HALF_TIME_HOME_TO_SCORE):
+----------------------------------------
+awayTeam} wygra 1. połowę i co najmniej jedna nie strzeli",
+    },
+  },
+  {
+    numericId: 104,
+    code: "HALF_TIME_HOME_TO_SCORE",
+    slug: "half-time-home-to-score",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "1. połowa - gospodarz strzeli", en: "Home Team To Score (1st Half)" },
+    descriptions: { pl: "Czy gospodarze strzelą w 1. połowie?", en: "Will the home team score in the first half?" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 48,
+    descriptionTemplates:
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - 1. drużyna - strzeli gola [ID: 1]
+  26:  -> Tak (1.46)
+  27:  -> Nie (2.55)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - 1. drużyna - strzeli gola",
+      "o": {
+        "26": {
+          "O": 1.46
+        },
+        "27": {
+          "O": 2.55
+        }
+      }
+    }
+  }
+}

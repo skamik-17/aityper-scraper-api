@@ -1,0 +1,57 @@
+MARKET ID 221: Pierwszy rzut rożny
+================================================================================
+
+NORMALIZED: FIRST_CORNER
+Market Key: FIRST_CORNER
+Param Value: none
+
+CATALOG CONTEXT (FIRST_CORNER):
+----------------------------------------
+WAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 72,
+  },
+  {
+    numericId: 42,
+    code: "FIRST_CORNER",
+    slug: "first-corner",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Pierwszy rzut rożny", en: "First Corner" },
+    descriptions: { pl: "Która drużyna wykona pierwszy rzut rożny?", en: "Which team will take the first corner?" },
+    hasParameter: false,
+    selections: ["HOME", "NONE", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 73,
+  },
+  {
+    numericId: 43,
+    code: "CORNERS_HANDICAP",
+    slug: "corners-handicap",
+    category: M
+----------------------------------------
+
+RAW DATA:
+Line: 1. rzut rożny [ID: 1687080106]
+  6:  -> 1 (1.43)
+  7:  -> Bez gola (250)
+  8:  -> 2 (2.65)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1687080106": {
+      "n": "1. rzut rożny",
+      "o": {
+        "6": {
+          "O": 1.43
+        },
+        "7": {
+          "O": 250
+        },
+        "8": {
+          "O": 2.65
+        }
+      }
+    }
+  }
+}

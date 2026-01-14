@@ -1,0 +1,66 @@
+MARKET ID 810: DC + BTTS (var2)
+================================================================================
+
+NORMALIZED: DOUBLE_CHANCE_BTTS
+Market Key: DOUBLE_CHANCE_BTTS
+Param Value: none
+
+CATALOG CONTEXT (DOUBLE_CHANCE_BTTS):
+----------------------------------------
+, "X", "2"], ftLabels: ["1", "X", "2"], labelFormat: "{ht}/{ft}" },
+  },
+  {
+    numericId: 39,
+    code: "DOUBLE_CHANCE_BTTS",
+    slug: "double-chance-btts",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Podwójna szansa + BTTS", en: "Double Chance & BTTS" },
+    descriptions: { pl: "Podwójna szansa i obie strzelą", en: "Double chance and both teams score" },
+    hasParameter: false,
+    selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 94,
+  },
+  {
+    numericId: 40,
+    code: "DOUBLE_CHANCE_TOTAL",
+    
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - podwójna szansa i obie drużyny - strzelą gola [ID: 1]
+  929:  -> 1X i Tak (3.6)
+  930:  -> 1X i Nie (1.58)
+  931:  -> 12 i Tak (5.5)
+  932:  -> 12 i Nie (1.7)
+  933:  -> X2 i Tak (5.25)
+  934:  -> X2 i Nie (3)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - podwójna szansa i obie drużyny - strzelą gola",
+      "o": {
+        "929": {
+          "O": 3.6
+        },
+        "930": {
+          "O": 1.58
+        },
+        "931": {
+          "O": 5.5
+        },
+        "932": {
+          "O": 1.7
+        },
+        "933": {
+          "O": 5.25
+        },
+        "934": {
+          "O": 3
+        }
+      }
+    }
+  }
+}

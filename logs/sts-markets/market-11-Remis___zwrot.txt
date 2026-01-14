@@ -1,0 +1,47 @@
+MARKET ID 11: Remis = zwrot
+================================================================================
+
+NORMALIZED: DRAW_NO_BET
+Market Key: DRAW_NO_BET
+Param Value: none
+
+CATALOG CONTEXT (DRAW_NO_BET):
+----------------------------------------
+AW_OR_AWAY: "{awayTeam} nie przegra", HOME_OR_AWAY: "Brak remisu" },
+  },
+  {
+    numericId: 3,
+    code: "DRAW_NO_BET",
+    slug: "draw-no-bet",
+    category: MarketCategory.WYNIK_MECZU,
+    labels: { pl: "Remis bez zakładu", en: "Draw No Bet" },
+    descriptions: { pl: "Przy remisie zwrot stawki", en: "Stake returned if draw" },
+    hasParameter: false,
+    selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 3,
+    descriptionTemplates: { HOME: "Wygrana {homeTeam} (remis zwrot)", AWAY: "Wygrana {awayTeam} (remis zwrot)"
+----------------------------------------
+
+RAW DATA:
+Line: Zakład bez remisu [ID: 1]
+  4:  -> 1 (1.17)
+  5:  -> 2 (4.9)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "Zakład bez remisu",
+      "o": {
+        "4": {
+          "O": 1.17
+        },
+        "5": {
+          "O": 4.9
+        }
+      }
+    }
+  }
+}

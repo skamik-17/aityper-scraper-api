@@ -1,0 +1,204 @@
+MARKET ID 51: Wynik + liczba goli (szczeg)
+================================================================================
+
+NORMALIZED: RESULT_AND_TOTAL
+Market Key: RESULT_AND_TOTAL:1.5
+Param Value: 1.5
+
+CATALOG CONTEXT (RESULT_AND_TOTAL):
+----------------------------------------
+lą", AWAY_NO: "{awayTeam} wygra i co najmniej jedna nie strzeli" },
+  },
+  {
+    numericId: 36,
+    code: "RESULT_AND_TOTAL",
+    slug: "result-and-total",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Wynik + Gole", en: "Result & Total" },
+    descriptions: { pl: "Wynik meczu i liczba goli", en: "Match result and total goals" },
+    hasParameter: true,
+    parameterType: "decimal",
+    parameterFormat: "decimal",
+    selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    selectionOrder: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UN
+----------------------------------------
+
+RAW DATA:
+Line: Wynik końcowy i liczba goli [ID: 1877505958]
+  235: 1 i -1.5 -> 1 i -1.5 (8.6)
+  236: 1 i +1.5 -> 1 i +1.5 (1.53)
+  237: X i -1.5 -> X i -1.5 (18)
+  238: X i +1.5 -> X i +1.5 (5.4)
+  239: 2 i -1.5 -> 2 i -1.5 (20)
+  240: 2 i +1.5 -> 2 i +1.5 (7.4)
+Line: Wynik końcowy i liczba goli [ID: 3070860985]
+  235: 1 i -4.5 -> 1 i -4.5 (1.8)
+  236: 1 i +4.5 -> 1 i +4.5 (4.3)
+  237: X i -4.5 -> X i -4.5 (4.6)
+  238: X i +4.5 -> X i +4.5 (50)
+  239: 2 i -4.5 -> 2 i -4.5 (6.9)
+  240: 2 i +4.5 -> 2 i +4.5 (29)
+Line: Wynik końcowy i liczba goli [ID: 3325488624]
+  235: 1 i -3.5 -> 1 i -3.5 (2.35)
+  236: 1 i +3.5 -> 1 i +3.5 (2.75)
+  237: X i -3.5 -> X i -3.5 (6.25)
+  238: X i +3.5 -> X i +3.5 (13)
+  239: 2 i -3.5 -> 2 i -3.5 (8)
+  240: 2 i +3.5 -> 2 i +3.5 (19)
+Line: Wynik końcowy i liczba goli [ID: 3904634503]
+  235: 1 i -2.5 -> 1 i -2.5 (4.25)
+  236: 1 i +2.5 -> 1 i +2.5 (1.82)
+  237: X i -2.5 -> X i -2.5 (6.25)
+  238: X i +2.5 -> X i +2.5 (13)
+  239: 2 i -2.5 -> 2 i -2.5 (14.5)
+  240: 2 i +2.5 -> 2 i +2.5 (9.1)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1877505958": {
+      "D": 150,
+      "n": "Wynik końcowy i liczba goli",
+      "o": {
+        "235": {
+          "D": 1,
+          "O": 8.6,
+          "n": "1 i -1.5"
+        },
+        "236": {
+          "D": 2,
+          "O": 1.53,
+          "n": "1 i +1.5"
+        },
+        "237": {
+          "D": 3,
+          "O": 18,
+          "n": "X i -1.5"
+        },
+        "238": {
+          "D": 4,
+          "O": 5.4,
+          "n": "X i +1.5"
+        },
+        "239": {
+          "D": 5,
+          "O": 20,
+          "n": "2 i -1.5"
+        },
+        "240": {
+          "D": 6,
+          "O": 7.4,
+          "n": "2 i +1.5"
+        }
+      }
+    },
+    "3070860985": {
+      "D": 450,
+      "n": "Wynik końcowy i liczba goli",
+      "o": {
+        "235": {
+          "D": 1,
+          "O": 1.8,
+          "n": "1 i -4.5"
+        },
+        "236": {
+          "D": 2,
+          "O": 4.3,
+          "n": "1 i +4.5"
+        },
+        "237": {
+          "D": 3,
+          "O": 4.6,
+          "n": "X i -4.5"
+        },
+        "238": {
+          "D": 4,
+          "O": 50,
+          "n": "X i +4.5"
+        },
+        "239": {
+          "D": 5,
+          "O": 6.9,
+          "n": "2 i -4.5"
+        },
+        "240": {
+          "D": 6,
+          "O": 29,
+          "n": "2 i +4.5"
+        }
+      }
+    },
+    "3325488624": {
+      "D": 350,
+      "n": "Wynik końcowy i liczba goli",
+      "o": {
+        "235": {
+          "D": 1,
+          "O": 2.35,
+          "n": "1 i -3.5"
+        },
+        "236": {
+          "D": 2,
+          "O": 2.75,
+          "n": "1 i +3.5"
+        },
+        "237": {
+          "D": 3,
+          "O": 6.25,
+          "n": "X i -3.5"
+        },
+        "238": {
+          "D": 4,
+          "O": 13,
+          "n": "X i +3.5"
+        },
+        "239": {
+          "D": 5,
+          "O": 8,
+          "n": "2 i -3.5"
+        },
+        "240": {
+          "D": 6,
+          "O": 19,
+          "n": "2 i +3.5"
+        }
+      }
+    },
+    "3904634503": {
+      "D": 250,
+      "n": "Wynik końcowy i liczba goli",
+      "o": {
+        "235": {
+          "D": 1,
+          "O": 4.25,
+          "n": "1 i -2.5"
+        },
+        "236": {
+          "D": 2,
+          "O": 1.82,
+          "n": "1 i +2.5"
+        },
+        "237": {
+          "D": 3,
+          "O": 6.25,
+          "n": "X i -2.5"
+        },
+        "238": {
+          "D": 4,
+          "O": 13,
+          "n": "X i +2.5"
+        },
+        "239": {
+          "D": 5,
+          "O": 14.5,
+          "n": "2 i -2.5"
+        },
+        "240": {
+          "D": 6,
+          "O": 9.1,
+          "n": "2 i +2.5"
+        }
+      }
+    }
+  }
+}

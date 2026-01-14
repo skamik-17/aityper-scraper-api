@@ -1,0 +1,47 @@
+MARKET ID 120: Parzyste/nieparzyste 2. poł
+================================================================================
+
+NORMALIZED: ODD_EVEN_GOALS
+Market Key: ODD_EVEN_GOALS
+Param Value: none
+
+CATALOG CONTEXT (ODD_EVEN_GOALS):
+----------------------------------------
+bie drużyny strzelą", NO: "Co najmniej jedna drużyna nie strzeli" },
+  },
+  {
+    numericId: 6,
+    code: "ODD_EVEN_GOALS",
+    slug: "odd-even-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Parzyste/Nieparzyste", en: "Odd/Even Goals" },
+    descriptions: { pl: "Czy łączna liczba goli będzie parzysta czy nieparzysta?", en: "Will total goals be odd or even?" },
+    hasParameter: false,
+    selections: ["ODD", "EVEN"],
+    selectionOrder: ["ODD", "EVEN"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 13,
+    descriptionTemplates: { ODD: "Nieparzysta liczba bramek", EVEN
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - suma goli [ID: 1]
+  24:  -> Nieparzyste (1.92)
+  25:  -> Parzyste (1.82)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "2. połowa - suma goli",
+      "o": {
+        "24": {
+          "O": 1.92
+        },
+        "25": {
+          "O": 1.82
+        }
+      }
+    }
+  }
+}

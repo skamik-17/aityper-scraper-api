@@ -1,0 +1,55 @@
+MARKET ID 256: Więcej rożnych 1. poł
+================================================================================
+
+NORMALIZED: HALF_TIME_CORNERS_RACE
+Market Key: HALF_TIME_CORNERS_RACE
+Param Value: none
+
+CATALOG CONTEXT (HALF_TIME_CORNERS_RACE):
+----------------------------------------
+Y_UNDER"],
+    viewType: ViewType.STAT_RANGE,
+    displayOrder: 82,
+  },
+  {
+    numericId: 74,
+    code: "HALF_TIME_CORNERS_RACE",
+    slug: "half-time-corners-race",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Więcej rożnych 1. połowa", en: "Half Time Corners Race" },
+    descriptions: { pl: "Która drużyna wykona więcej rzutów rożnych w pierwszej połowie?", en: "Which team will have more corners in first half?" },
+    hasParameter: false,
+    selections: ["HOME", "DRAW", "AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 83,
+  },
+  {
+    numericId: 31,
+    code
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - liczba rzutów rożnych - przedziały [ID: 4013637747]
+  1528:  -> 0-2 (1.77)
+  1529:  -> 3-4 (3.2)
+  1530:  -> 5+ (4.25)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "4013637747": {
+      "n": "1. połowa - liczba rzutów rożnych - przedziały",
+      "o": {
+        "1528": {
+          "O": 1.77
+        },
+        "1529": {
+          "O": 3.2
+        },
+        "1530": {
+          "O": 4.25
+        }
+      }
+    }
+  }
+}

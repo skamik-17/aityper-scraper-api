@@ -1,0 +1,71 @@
+MARKET ID 107: Handicap azjatycki 2. poł
+================================================================================
+
+NORMALIZED: SECOND_HALF_ASIAN_HANDICAP
+Market Key: SECOND_HALF_ASIAN_HANDICAP
+Param Value: none
+
+CATALOG CONTEXT (SECOND_HALF_ASIAN_HANDICAP):
+----------------------------------------
+trzeli w 1. połowie", NO: "{awayTeam} nie strzeli w 1. połowie" },
+  },
+  {
+    numericId: 107,
+    code: "SECOND_HALF_ASIAN_HANDICAP",
+    slug: "second-half-asian-handicap",
+    category: MarketCategory.HANDICAP,
+    labels: { pl: "Handicap azjatycki 2. połowa", en: "Second Half Asian Handicap" },
+    descriptions: { pl: "Azjatycki handicap w drugiej połowie", en: "Asian handicap in second half" },
+    hasParameter: true,
+    parameterType: "handicap",
+    selections: ["HOME", "AWAY"],
+    selectionOrder: ["HOME", "AWAY"],
+    viewType: ViewType.HANDICAP_SELECTOR,
+    displayOrder: 17,
+    d
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - handicap (z możliwym zwrotem) [ID: 1603724433]
+  925: 1 (+0) -> 1 (+0) (1.24)
+  926: 2 (-0) -> 2 (-0) (3.6)
+Line: 2. połowa - handicap (z możliwym zwrotem) [ID: 2661612329]
+  925: 1 (-1) -> 1 (-1) (2.5)
+  926: 2 (+1) -> 2 (+1) (1.47)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1603724433": {
+      "n": "2. połowa - handicap (z możliwym zwrotem)",
+      "o": {
+        "925": {
+          "D": 1,
+          "O": 1.24,
+          "n": "1 (+0)"
+        },
+        "926": {
+          "D": 2,
+          "O": 3.6,
+          "n": "2 (-0)"
+        }
+      }
+    },
+    "2661612329": {
+      "D": -100,
+      "n": "2. połowa - handicap (z możliwym zwrotem)",
+      "o": {
+        "925": {
+          "D": 1,
+          "O": 2.5,
+          "n": "1 (-1)"
+        },
+        "926": {
+          "D": 2,
+          "O": 1.47,
+          "n": "2 (+1)"
+        }
+      }
+    }
+  }
+}

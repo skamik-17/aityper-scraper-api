@@ -1,0 +1,230 @@
+MARKET ID 1855: Kartki zawodnika
+================================================================================
+
+NORMALIZED: PLAYER_CARDS
+Market Key: PLAYER_CARDS
+Param Value: none
+
+CATALOG CONTEXT (PLAYER_CARDS):
+----------------------------------------
+"],
+    viewType: ViewType.PLAYER_STAT_LINES,
+    displayOrder: 63,
+  },
+  {
+    numericId: 27,
+    code: "PLAYER_CARDS",
+    slug: "player-cards",
+    category: MarketCategory.ZAWODNICY,
+    labels: { pl: "Kartki zawodnika", en: "Player Cards" },
+    descriptions: { pl: "Zawodnik otrzyma kartkę", en: "Player receives card" },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PLAYER_STAT_LINES,
+    displayOrder: 64,
+  },
+  {
+    numericId: 28,
+    code: "PLAYER_ASSISTS",
+    slug: "player-assists",
+    category: MarketCategory.ZAWODNICY,
+----------------------------------------
+
+ISSUES:
+ - MULTIPLE_LINES_NO_PARAM: 17 different line names but no param extracted
+
+RAW DATA:
+Line: Vitinha - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 512630802]
+  26:  -> Tak (7)
+Line: Dembele Ousmane - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 718678860]
+  26:  -> Tak (7)
+Line: Mbaye Ibrahim - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 719462347]
+  26:  -> Tak (7)
+Line: Marquinhos - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 859163450]
+  26:  -> Tak (7)
+Line: Zabarnyi Illia - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 916435528]
+  26:  -> Tak (7)
+Line: Mendes Nuno - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 1009027546]
+  26:  -> Tak (4.25)
+Line: Hernandez Lucas - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 1480650640]
+  26:  -> Tak (4.25)
+Line: Zaire-Emery Warren - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 1613715086]
+  26:  -> Tak (7)
+Line: Mayulu Senny - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 1784617245]
+  26:  -> Tak (7)
+Line: Neves Joao - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 2150985832]
+  26:  -> Tak (4.25)
+Line: Beraldo - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 2228889491]
+  26:  -> Tak (4.25)
+Line: Kang-in Lee - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 2581390294]
+  26:  -> Tak (7)
+Line: Ramos Goncalo - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 3302697782]
+  26:  -> Tak (7)
+Line: Ruiz Fabian - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 3863873419]
+  26:  -> Tak (7)
+Line: Doue Desire - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 3903198515]
+  26:  -> Tak (4.25)
+Line: Kvaratskhelia Khvicha - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 3936037464]
+  26:  -> Tak (7)
+Line: Pacho Tenorio William Joel - otrzyma kartkę (musi wyjść w "11", z dogrywką) [ID: 4234886069]
+  26:  -> Tak (7)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "512630802": {
+      "D": 7,
+      "n": "Vitinha - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "718678860": {
+      "D": 8,
+      "n": "Dembele Ousmane - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "719462347": {
+      "D": 14,
+      "n": "Mbaye Ibrahim - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "859163450": {
+      "D": 13,
+      "n": "Marquinhos - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "916435528": {
+      "D": 16,
+      "n": "Zabarnyi Illia - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "1009027546": {
+      "D": 4,
+      "n": "Mendes Nuno - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 4.25
+        }
+      }
+    },
+    "1480650640": {
+      "D": 5,
+      "n": "Hernandez Lucas - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 4.25
+        }
+      }
+    },
+    "1613715086": {
+      "D": 11,
+      "n": "Zaire-Emery Warren - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "1784617245": {
+      "D": 6,
+      "n": "Mayulu Senny - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "2150985832": {
+      "D": 1,
+      "n": "Neves Joao - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 4.25
+        }
+      }
+    },
+    "2228889491": {
+      "D": 2,
+      "n": "Beraldo - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 4.25
+        }
+      }
+    },
+    "2581390294": {
+      "D": 9,
+      "n": "Kang-in Lee - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "3302697782": {
+      "D": 10,
+      "n": "Ramos Goncalo - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "3863873419": {
+      "D": 15,
+      "n": "Ruiz Fabian - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "3903198515": {
+      "D": 3,
+      "n": "Doue Desire - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 4.25
+        }
+      }
+    },
+    "3936037464": {
+      "D": 12,
+      "n": "Kvaratskhelia Khvicha - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    },
+    "4234886069": {
+      "D": 17,
+      "n": "Pacho Tenorio William Joel - otrzyma kartkę (musi wyjść w \"11\", z dogrywką)",
+      "o": {
+        "26": {
+          "O": 7
+        }
+      }
+    }
+  }
+}

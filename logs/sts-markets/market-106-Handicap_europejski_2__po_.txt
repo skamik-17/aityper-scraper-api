@@ -1,0 +1,130 @@
+MARKET ID 106: Handicap europejski 2. poł
+================================================================================
+
+NORMALIZED: EUROPEAN_HANDICAP
+Market Key: EUROPEAN_HANDICAP
+Param Value: none
+
+CATALOG CONTEXT (EUROPEAN_HANDICAP):
+----------------------------------------
+es: { HOME: "{homeTeam} ({param})", AWAY: "{awayTeam} ({param})" },
+  },
+  {
+    numericId: 16,
+    code: "EUROPEAN_HANDICAP",
+    slug: "european-handicap",
+    category: MarketCategory.HANDICAP,
+    labels: { pl: "Handicap europejski", en: "European Handicap" },
+    descriptions: { pl: "Handicap z możliwością remisu", en: "Handicap with draw option" },
+    hasParameter: true,
+    parameterType: "handicap",
+    parameterFormat: "handicap",
+    validParameters: ["-3", "-2", "-1", "0", "+1", "+2", "+3"],
+    selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
+   
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - handicap 1X2 [ID: 405994240]
+  922: 1 (0:1) -> 1 (0:1) (3.4)
+  923: X (0:1) -> X (0:1) (3.2)
+  924: 2 (0:1) -> 2 (0:1) (1.95)
+Line: 2. połowa - handicap 1X2 [ID: 439549478]
+  922: 1 (0:3) -> 1 (0:3) (22)
+  923: X (0:3) -> X (0:3) (9.1)
+  924: 2 (0:3) -> 2 (0:3) (1.06)
+Line: 2. połowa - handicap 1X2 [ID: 456327097]
+  922: 1 (0:2) -> 1 (0:2) (8.75)
+  923: X (0:2) -> X (0:2) (5)
+  924: 2 (0:2) -> 2 (0:2) (1.28)
+Line: 2. połowa - handicap 1X2 [ID: 3246175732]
+  922: 1 (1:0) -> 1 (1:0) (1.14)
+  923: X (1:0) -> X (1:0) (6)
+  924: 2 (1:0) -> 2 (1:0) (19)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "405994240": {
+      "n": "2. połowa - handicap 1X2",
+      "o": {
+        "922": {
+          "D": 1,
+          "O": 3.4,
+          "n": "1 (0:1)"
+        },
+        "923": {
+          "D": 2,
+          "O": 3.2,
+          "n": "X (0:1)"
+        },
+        "924": {
+          "D": 3,
+          "O": 1.95,
+          "n": "2 (0:1)"
+        }
+      }
+    },
+    "439549478": {
+      "n": "2. połowa - handicap 1X2",
+      "o": {
+        "922": {
+          "D": 1,
+          "O": 22,
+          "n": "1 (0:3)"
+        },
+        "923": {
+          "D": 2,
+          "O": 9.1,
+          "n": "X (0:3)"
+        },
+        "924": {
+          "D": 3,
+          "O": 1.06,
+          "n": "2 (0:3)"
+        }
+      }
+    },
+    "456327097": {
+      "n": "2. połowa - handicap 1X2",
+      "o": {
+        "922": {
+          "D": 1,
+          "O": 8.75,
+          "n": "1 (0:2)"
+        },
+        "923": {
+          "D": 2,
+          "O": 5,
+          "n": "X (0:2)"
+        },
+        "924": {
+          "D": 3,
+          "O": 1.28,
+          "n": "2 (0:2)"
+        }
+      }
+    },
+    "3246175732": {
+      "n": "2. połowa - handicap 1X2",
+      "o": {
+        "922": {
+          "D": 1,
+          "O": 1.14,
+          "n": "1 (1:0)"
+        },
+        "923": {
+          "D": 2,
+          "O": 6,
+          "n": "X (1:0)"
+        },
+        "924": {
+          "D": 3,
+          "O": 19,
+          "n": "2 (1:0)"
+        }
+      }
+    }
+  }
+}

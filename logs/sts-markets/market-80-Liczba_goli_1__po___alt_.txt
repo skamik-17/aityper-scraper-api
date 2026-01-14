@@ -1,0 +1,91 @@
+MARKET ID 80: Liczba goli 1. poł (alt)
+================================================================================
+
+NORMALIZED: HALF_TIME_TOTAL_GOALS
+Market Key: HALF_TIME_TOTAL_GOALS
+Param Value: none
+
+CATALOG CONTEXT (HALF_TIME_TOTAL_GOALS):
+----------------------------------------
+"Remis po 1. połowie", AWAY: "{awayTeam} prowadzi po 1. połowie" },
+  },
+  {
+    numericId: 18,
+    code: "HALF_TIME_TOTAL_GOALS",
+    slug: "half-time-total-goals",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Gole 1. połowy", en: "Half Time Goals" },
+    descriptions: { pl: "Liczba goli w pierwszej połowie", en: "Goals in first half" },
+    hasParameter: true,
+    parameterType: "decimal",
+    parameterFormat: "decimal",
+    validParameters: ["0.5", "1.5", "2.5"],
+    selections: ["OVER", "UNDER"],
+    selectionOrder: ["OVER", "UNDER"],
+    viewType: ViewType.PARAMETER_SL
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - liczba goli (z możliwym zwrotem) [ID: 905706979]
+  12: +1 -> Powyżej (1.45)
+  13: -1 -> Poniżej (2.55)
+Line: 1. połowa - liczba goli (z możliwym zwrotem) [ID: 922484598]
+  12: +2 -> Powyżej (3.5)
+  13: -2 -> Poniżej (1.25)
+Line: 1. połowa - liczba goli (z możliwym zwrotem) [ID: 939262217]
+  12: +3 -> Powyżej (8.4)
+  13: -3 -> Poniżej (1.04)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "905706979": {
+      "D": 100,
+      "n": "1. połowa - liczba goli (z możliwym zwrotem)",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 1.45,
+          "n": "+1"
+        },
+        "13": {
+          "D": 1,
+          "O": 2.55,
+          "n": "-1"
+        }
+      }
+    },
+    "922484598": {
+      "D": 200,
+      "n": "1. połowa - liczba goli (z możliwym zwrotem)",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 3.5,
+          "n": "+2"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.25,
+          "n": "-2"
+        }
+      }
+    },
+    "939262217": {
+      "D": 300,
+      "n": "1. połowa - liczba goli (z możliwym zwrotem)",
+      "o": {
+        "12": {
+          "D": 2,
+          "O": 8.4,
+          "n": "+3"
+        },
+        "13": {
+          "D": 1,
+          "O": 1.04,
+          "n": "-3"
+        }
+      }
+    }
+  }
+}

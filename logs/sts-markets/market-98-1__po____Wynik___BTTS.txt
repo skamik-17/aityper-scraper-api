@@ -1,0 +1,60 @@
+MARKET ID 98: 1. poł - Wynik + BTTS
+================================================================================
+
+NORMALIZED: HALF_TIME_RESULT_AND_BTTS
+Market Key: HALF_TIME_RESULT_AND_BTTS
+Param Value: none
+
+CATALOG CONTEXT (HALF_TIME_RESULT_AND_BTTS):
+----------------------------------------
+w 1. połowie", NO: "Co najmniej jedna nie strzeli w 1. połowie" },
+  },
+  {
+    numericId: 103,
+    code: "HALF_TIME_RESULT_AND_BTTS",
+    slug: "half-time-result-and-btts",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Wynik 1. połowy + BTTS", en: "Half Time Result & BTTS" },
+    descriptions: { pl: "Wynik 1. połowy i czy obie strzelą", en: "Half time result and both teams score" },
+    hasParameter: false,
+    selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
+    selectionOrder: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AW
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - wynik i obie drużyny - strzelą gola [ID: 1]
+  28:  -> 1 i Tak (9.6)
+  29:  -> 1 i Nie (2.05)
+  30:  -> X i Tak (7.1)
+  31:  -> X i Nie (3.6)
+  32:  -> 2 i Tak (30)
+  33:  -> 2 i Nie (6.6)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "1. połowa - wynik i obie drużyny - strzelą gola",
+      "o": {
+        "28": {
+          "O": 9.6
+        },
+        "29": {
+          "O": 2.05
+        },
+        "30": {
+          "O": 7.1
+        },
+        "31": {
+          "O": 3.6
+        },
+        "32": {
+          "O": 30
+        },
+        "33": {
+          "O": 6.6
+        }
+      }
+    }
+  }
+}

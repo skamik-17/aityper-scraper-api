@@ -1,0 +1,49 @@
+MARKET ID 61: Połowa z więcej goli
+================================================================================
+
+NORMALIZED: BOTH_HALVES_GOALS
+Market Key: BOTH_HALVES_GOALS
+Param Value: none
+
+CATALOG CONTEXT (BOTH_HALVES_GOALS):
+----------------------------------------
+"4+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 48,
+  },
+  {
+    numericId: 13,
+    code: "BOTH_HALVES_GOALS",
+    slug: "both-halves-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Gole w obu połowach", en: "Goals In Both Halves" },
+    descriptions: { pl: "Czy padnie gol w obu połowach?", en: "Will there be goals in both halves?" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 20,
+    descriptionTemplates: { YES: "Gole w obu połowach", NO: "Brak goli w jednej z
+----------------------------------------
+
+RAW DATA:
+Line: 1. drużyna - wygra co najmniej jedną połowę [ID: 1]
+  26:  -> Tak (1.23)
+  27:  -> Nie (3.75)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1": {
+      "n": "1. drużyna - wygra co najmniej jedną połowę",
+      "o": {
+        "26": {
+          "O": 1.23
+        },
+        "27": {
+          "O": 3.75
+        }
+      }
+    }
+  }
+}

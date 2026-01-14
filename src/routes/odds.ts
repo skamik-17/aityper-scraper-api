@@ -25,6 +25,7 @@ import {
   getMarketDefinition,
 } from "../repositories/full-offer-repository.js";
 import { ViewType } from "../services/normalization/types.js";
+import { getSupabase } from "../config/database.js";
 import {
   MARKET_CATALOG,
   SHORT_LABELS,
@@ -178,27 +179,72 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
  * Returns: marketTypes, selectionLabels, categories
  */
 router.get("/market-types", asyncHandler(async (_req, res) => {
-  const marketTypes = MARKET_CATALOG.map(m => ({
-    id: m.numericId,
-    code: m.code,
-    slug: m.slug,
-    namePl: m.labels.pl,
-    nameEn: m.labels.en,
-    shortLabelPl: SHORT_LABELS[m.code] || m.code,
-    descriptionPl: m.descriptions.pl,
-    descriptionEn: m.descriptions.en,
-    viewType: m.viewType,
-    category: m.category,
-    hasParameter: m.hasParameter,
-    parameterType: m.parameterType,
-    parameterFormat: m.parameterFormat || null,
-    validParameters: m.validParameters,
-    selections: m.selections,
-    selectionOrder: m.selectionOrder || m.selections,
-    descriptionTemplates: m.descriptionTemplates || {},
-    viewConfig: m.viewConfig || null,
-    displayOrder: m.displayOrder,
-  }));
+  // Fetch latest definitions from DB to ensure runtime is in sync with migrations
+  const supabase = getSupabase();
+  const { data: dbMarkets } = await supabase
+    .from('market_types')
+    .select('*')
+    .order('display_order');
+
+  const dbMarketMap = new Map(dbMarkets?.map((m: any) => [m.code, m]) || []);
+  const fileMarketMap = new Map(MARKET_CATALOG.map(m => [m.code, m]));
+  
+  // Combine codes from both sources
+  const allCodes = new Set([...fileMarketMap.keys(), ...dbMarketMap.keys()]);
+
+  const marketTypes = Array.from(allCodes).map(code => {
+    const dbM = dbMarketMap.get(code);
+    const fileM = fileMarketMap.get(code);
+
+    if (dbM) {
+      // DB is the source of truth for structural data
+      return {
+        id: dbM.id,
+        code: dbM.code,
+        slug: fileM?.slug || dbM.code.toLowerCase().replace(/_/g, '-'),
+        namePl: dbM.name_pl,
+        nameEn: dbM.name_en,
+        shortLabelPl: SHORT_LABELS[code] || dbM.name_pl,
+        descriptionPl: dbM.description_pl,
+        descriptionEn: dbM.description_en,
+        viewType: dbM.view_type,
+        category: dbM.category,
+        hasParameter: dbM.has_parameter,
+        parameterType: dbM.param_type,
+        parameterFormat: fileM?.parameterFormat || null,
+        validParameters: fileM?.validParameters,
+        selections: dbM.selections,
+        selectionOrder: dbM.selections,
+        descriptionTemplates: fileM?.descriptionTemplates || {},
+        viewConfig: fileM?.viewConfig || null,
+        displayOrder: dbM.display_order,
+      };
+    } else if (fileM) {
+      // Fallback to file only (should be rare if migrations run)
+      return {
+        id: fileM.numericId,
+        code: fileM.code,
+        slug: fileM.slug,
+        namePl: fileM.labels.pl,
+        nameEn: fileM.labels.en,
+        shortLabelPl: SHORT_LABELS[fileM.code] || fileM.code,
+        descriptionPl: fileM.descriptions.pl,
+        descriptionEn: fileM.descriptions.en,
+        viewType: fileM.viewType,
+        category: fileM.category,
+        hasParameter: fileM.hasParameter,
+        parameterType: fileM.parameterType,
+        parameterFormat: fileM.parameterFormat || null,
+        validParameters: fileM.validParameters,
+        selections: fileM.selections,
+        selectionOrder: fileM.selectionOrder || fileM.selections,
+        descriptionTemplates: fileM.descriptionTemplates || {},
+        viewConfig: fileM.viewConfig || null,
+        displayOrder: fileM.displayOrder,
+      };
+    }
+    return null;
+  }).filter(Boolean).sort((a: any, b: any) => a.displayOrder - b.displayOrder);
 
   const response = {
     success: true,

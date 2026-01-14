@@ -1,0 +1,67 @@
+MARKET ID 33: Przedział goli
+================================================================================
+
+NORMALIZED: GOAL_RANGE
+Market Key: GOAL_RANGE
+Param Value: none
+
+CATALOG CONTEXT (GOAL_RANGE):
+----------------------------------------
+nad {param} goli", AWAY_UNDER: "{awayTeam} poniżej {param} goli" },
+  },
+  {
+    numericId: 12,
+    code: "GOAL_RANGE",
+    slug: "goal-range",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Przedział goli", en: "Goal Range" },
+    descriptions: { pl: "W jakim przedziale będzie liczba goli?", en: "Goal range bracket" },
+    hasParameter: false,
+    selections: ["0-1", "2-3", "4-5", "6+"],
+    selectionOrder: ["0-1", "2-3", "4-5", "6+"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 19,
+    descriptionTemplates: { "0-1": "0-1 bramek", "2-3": "2-3 bramki", "4-5": "4-5 bramek", 
+----------------------------------------
+
+RAW DATA:
+Line: Dokładna liczba goli [ID: 667375799]
+  1217:  -> 0 (18)
+  1218:  -> 1 (6.6)
+  1219:  -> 2 (4.1)
+  1220:  -> 3 (3.8)
+  1221:  -> 4 (4.6)
+  1222:  -> 5 (7.1)
+  1223:  -> 6+ (7.25)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "667375799": {
+      "n": "Dokładna liczba goli",
+      "o": {
+        "1217": {
+          "O": 18
+        },
+        "1218": {
+          "O": 6.6
+        },
+        "1219": {
+          "O": 4.1
+        },
+        "1220": {
+          "O": 3.8
+        },
+        "1221": {
+          "O": 4.6
+        },
+        "1222": {
+          "O": 7.1
+        },
+        "1223": {
+          "O": 7.25
+        }
+      }
+    }
+  }
+}

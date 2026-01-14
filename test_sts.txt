@@ -1,0 +1,48 @@
+
+====================================================================================================
+🔍 STS Market Discovery - Enhanced Analysis
+====================================================================================================
+
+🔍 Scanning 1 league(s) for best fixture...
+
+  📍 laliga...
+[STS/Navigation] Navigating to: https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga/175
+[STS/Navigation] Captured 2076018 bytes of initial data
+     ✅ Found 20 fixtures
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/osasuna-real-oviedo/f1283317
+[STS/Navigation] Captured match data (fixture: f1283317, initial: 2076018 bytes)
+        Osasuna vs Real Oviedo: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/espanyol-girona/f1283333
+[STS/Navigation] Captured match data (fixture: f1283333, initial: 2076018 bytes)
+        Espanyol vs Girona: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/atletico-madryt-alaves/f1283346
+[STS/Navigation] Captured match data (fixture: f1283346, initial: 2076018 bytes)
+        Atletico Madryt vs Alaves: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/elche-sevilla/f1283360
+[STS/Navigation] Captured match data (fixture: f1283360, initial: 2075587 bytes)
+        Elche vs Sevilla: 97 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/real-betis-villarreal/f1283401
+[STS/Navigation] Captured match data (fixture: f1283401, initial: 2075587 bytes)
+        Real Betis vs Villarreal: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/real-madryt-levante/f1284100
+[STS/Navigation] Captured match data (fixture: f1284100, initial: 2075587 bytes)
+        Real Madryt vs Levante: 100 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/real-sociedad-barcelona/f1284113
+[STS/Navigation] Captured match data (fixture: f1284113, initial: 2076401 bytes)
+        Real Sociedad vs Barcelona: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/mallorca-athletic-bilbao/f1284116
+[STS/Navigation] Captured match data (fixture: f1284116, initial: 2076401 bytes)
+        Mallorca vs Athletic Bilbao: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/celta-vigo-rayo-vallecano/f1284133
+[STS/Navigation] Captured match data (fixture: f1284133, initial: 2076401 bytes)
+        Celta Vigo vs Rayo Vallecano: 101 markets
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/getafe-valencia/f1284138
+[STS/Navigation] Captured match data (fixture: f1284138, initial: 2076401 bytes)
+        Getafe vs Valencia: 101 markets
+
+====================================================================================================
+🏆 ANALYZING: Osasuna vs Real Oviedo
+   League: laliga, Total Markets: 101
+====================================================================================================
+[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/osasuna-real-oviedo/f1283317
+❌ Failed to capture match data

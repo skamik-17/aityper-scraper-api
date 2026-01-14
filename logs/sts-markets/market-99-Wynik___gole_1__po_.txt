@@ -1,0 +1,75 @@
+MARKET ID 99: Wynik + gole 1. poł
+================================================================================
+
+NORMALIZED: RESULT_AND_TOTAL
+Market Key: RESULT_AND_TOTAL:1.5
+Param Value: 1.5
+
+CATALOG CONTEXT (RESULT_AND_TOTAL):
+----------------------------------------
+lą", AWAY_NO: "{awayTeam} wygra i co najmniej jedna nie strzeli" },
+  },
+  {
+    numericId: 36,
+    code: "RESULT_AND_TOTAL",
+    slug: "result-and-total",
+    category: MarketCategory.KOMBINACJE,
+    labels: { pl: "Wynik + Gole", en: "Result & Total" },
+    descriptions: { pl: "Wynik meczu i liczba goli", en: "Match result and total goals" },
+    hasParameter: true,
+    parameterType: "decimal",
+    parameterFormat: "decimal",
+    selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    selectionOrder: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UN
+----------------------------------------
+
+RAW DATA:
+Line: 1. połowa - wynik i liczba goli [ID: 1877505958]
+  235: 1 i -1.5 -> 1 i -1.5 (3.4)
+  236: 1 i +1.5 -> 1 i +1.5 (3.2)
+  237: X i -1.5 -> X i -1.5 (3.6)
+  238: X i +1.5 -> X i +1.5 (7.25)
+  239: 2 i -1.5 -> 2 i -1.5 (8)
+  240: 2 i +1.5 -> 2 i +1.5 (16)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "1877505958": {
+      "D": 150,
+      "n": "1. połowa - wynik i liczba goli",
+      "o": {
+        "235": {
+          "D": 1,
+          "O": 3.4,
+          "n": "1 i -1.5"
+        },
+        "236": {
+          "D": 2,
+          "O": 3.2,
+          "n": "1 i +1.5"
+        },
+        "237": {
+          "D": 3,
+          "O": 3.6,
+          "n": "X i -1.5"
+        },
+        "238": {
+          "D": 4,
+          "O": 7.25,
+          "n": "X i +1.5"
+        },
+        "239": {
+          "D": 5,
+          "O": 8,
+          "n": "2 i -1.5"
+        },
+        "240": {
+          "D": 6,
+          "O": 16,
+          "n": "2 i +1.5"
+        }
+      }
+    }
+  }
+}

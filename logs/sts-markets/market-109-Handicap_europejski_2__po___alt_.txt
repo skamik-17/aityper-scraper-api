@@ -1,0 +1,72 @@
+MARKET ID 109: Handicap europejski 2. poł (alt)
+================================================================================
+
+NORMALIZED: EUROPEAN_HANDICAP
+Market Key: EUROPEAN_HANDICAP:0.5
+Param Value: 0.5
+
+CATALOG CONTEXT (EUROPEAN_HANDICAP):
+----------------------------------------
+es: { HOME: "{homeTeam} ({param})", AWAY: "{awayTeam} ({param})" },
+  },
+  {
+    numericId: 16,
+    code: "EUROPEAN_HANDICAP",
+    slug: "european-handicap",
+    category: MarketCategory.HANDICAP,
+    labels: { pl: "Handicap europejski", en: "European Handicap" },
+    descriptions: { pl: "Handicap z możliwością remisu", en: "Handicap with draw option" },
+    hasParameter: true,
+    parameterType: "handicap",
+    parameterFormat: "handicap",
+    validParameters: ["-3", "-2", "-1", "0", "+1", "+2", "+3"],
+    selections: ["HOME", "DRAW", "AWAY"],
+    selectionOrder: ["HOME", "DRAW", "AWAY"],
+   
+----------------------------------------
+
+RAW DATA:
+Line: 2. połowa - handicap [ID: 2149321511]
+  925: 1 (-0.5) -> 1 (-0.5) (1.75)
+  926: 2 (+0.5) -> 2 (+0.5) (1.95)
+Line: 2. połowa - handicap [ID: 3696922512]
+  925: 1 (-1.5) -> 1 (-1.5) (3.4)
+  926: 2 (+1.5) -> 2 (+1.5) (1.28)
+
+RAW JSON (assocKey: 1m61526306):
+{
+  "l": {
+    "2149321511": {
+      "D": -50,
+      "n": "2. połowa - handicap",
+      "o": {
+        "925": {
+          "D": 1,
+          "O": 1.75,
+          "n": "1 (-0.5)"
+        },
+        "926": {
+          "D": 2,
+          "O": 1.95,
+          "n": "2 (+0.5)"
+        }
+      }
+    },
+    "3696922512": {
+      "D": -150,
+      "n": "2. połowa - handicap",
+      "o": {
+        "925": {
+          "D": 1,
+          "O": 3.4,
+          "n": "1 (-1.5)"
+        },
+        "926": {
+          "D": 2,
+          "O": 1.28,
+          "n": "2 (+1.5)"
+        }
+      }
+    }
+  }
+}

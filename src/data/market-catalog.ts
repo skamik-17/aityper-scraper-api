@@ -559,6 +559,20 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wygra 2. połowę", DRAW: "Remis w 2. połowie", AWAY: "{awayTeam} wygra 2. połowę" },
   },
   {
+    numericId: 238,
+    code: "SECOND_HALF_DOUBLE_CHANCE",
+    slug: "second-half-double-chance",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "Podwójna szansa 2. połowy", en: "Second Half Double Chance" },
+    descriptions: { pl: "Podwójna szansa w drugiej połowie", en: "Double chance in second half" },
+    hasParameter: false,
+    selections: ["HOME_OR_DRAW", "DRAW_OR_AWAY", "HOME_OR_AWAY"],
+    selectionOrder: ["HOME_OR_DRAW", "HOME_OR_AWAY", "DRAW_OR_AWAY"],
+    viewType: ViewType.TRIPLE_BUTTONS,
+    displayOrder: 43,
+    descriptionTemplates: { HOME_OR_DRAW: "{homeTeam} nie przegra 2. połowy", DRAW_OR_AWAY: "{awayTeam} nie przegra 2. połowy", HOME_OR_AWAY: "Brak remisu w 2. połowie" },
+  },
+  {
     numericId: 21,
     code: "SECOND_HALF_TOTAL_GOALS",
     slug: "second-half-total-goals",
@@ -588,6 +602,20 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 45,
     descriptionTemplates: { YES: "Obie strzelą w 2. połowie", NO: "Co najmniej jedna nie strzeli w 2. połowie" },
+  },
+  {
+    numericId: 120,
+    code: "SECOND_HALF_ODD_EVEN_GOALS",
+    slug: "second-half-odd-even-goals",
+    category: MarketCategory.PIERWSZA_POLOWA,
+    labels: { pl: "2. połowa - parzyste/nieparzyste", en: "2nd Half Odd/Even Goals" },
+    descriptions: { pl: "Czy liczba goli w 2. połowie będzie parzysta czy nieparzysta?", en: "Will total goals in second half be odd or even?" },
+    hasParameter: false,
+    selections: ["ODD", "EVEN"],
+    selectionOrder: ["ODD", "EVEN"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 46,
+    descriptionTemplates: { ODD: "Nieparzysta liczba bramek w 2. połowie", EVEN: "Parzysta liczba bramek w 2. połowie" },
   },
   {
     numericId: 106,
@@ -1147,6 +1175,20 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.STAT_RANGE,
     displayOrder: 80,
   },
+  {
+    numericId: 239,
+    code: "HALF_TIME_RED_CARD",
+    slug: "half-time-red-card",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Czerwona kartka 1. połowa", en: "1st Half Red Card" },
+    descriptions: { pl: "Czy w pierwszej połowie będzie czerwona kartka?", en: "Will there be a red card in the first half?" },
+    hasParameter: false,
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 81,
+    descriptionTemplates: { YES: "Czerwona kartka w 1. połowie", NO: "Brak czerwonej kartki w 1. połowie" },
+  },
 ];
 
 const COMBINATION_MARKETS: MarketCatalogEntry[] = [
@@ -1611,6 +1653,23 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Tak, obie połowy poniżej {param} goli", NO: "Nie, przynajmniej jedna połowa {param}+ goli" }
   },
   {
+    numericId: 253,
+    code: "BOTH_HALVES_OVER_GOALS",
+    slug: "both-halves-over-goals",
+    category: MarketCategory.GOLE,
+    labels: { pl: "Obie połowy powyżej X goli", en: "Both Halves Over X Goals" },
+    descriptions: { pl: "Czy obie połowy będą miały powyżej X goli?", en: "Will both halves have over X goals?" },
+    hasParameter: true,
+    parameterType: "decimal",
+    parameterFormat: "decimal",
+    validParameters: ["0.5", "1.5", "2.5", "3.5"],
+    selections: ["YES", "NO"],
+    selectionOrder: ["YES", "NO"],
+    viewType: ViewType.BINARY_BUTTONS,
+    displayOrder: 253,
+    descriptionTemplates: { YES: "Tak, obie połowy powyżej {param} goli", NO: "Nie, przynajmniej jedna połowa poniżej {param} goli" }
+  },
+  {
     numericId: 217,
     code: "CORNERS_TEAM_RANGE",
     slug: "corners-team-range",
@@ -1660,10 +1719,10 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Przedział rzutów rożnych", en: "Corners Range" },
     descriptions: { pl: "Przedział liczby rzutów rożnych w meczu", en: "Range of total corners" },
     hasParameter: false,
-    selections: ["0-8", "9-11", "12+"],
+    selections: ["0-3", "4-6", "7+", "0-8", "9-11", "12+"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 220,
-    descriptionTemplates: { "0-8": "0-8 rożnych", "12+": "12+ rożnych" }
+    descriptionTemplates: { "0-3": "0-3 rożnych", "4-6": "4-6 rożnych", "7+": "7+ rożnych", "0-8": "0-8 rożnych", "9-11": "9-11 rożnych", "12+": "12+ rożnych" }
   },
   {
     numericId: 221,
@@ -1673,7 +1732,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Przedział rożnych 1. połowa", en: "Corners Range 1st Half" },
     descriptions: { pl: "Przedział rożnych w 1. połowie", en: "Corners range in 1st half" },
     hasParameter: false,
-    selections: ["0-4", "5-6", "7+"],
+    selections: ["0-2", "3-4", "5+", "0-4", "5-6", "7+"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 221
   },
@@ -1688,6 +1747,34 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME_0-1", "HOME_2-3", "HOME_4+", "AWAY_0-1", "AWAY_2-3", "AWAY_4+"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 222
+  },
+  {
+    numericId: 254,
+    code: "HALF_TIME_HOME_EXACT_CORNERS",
+    slug: "half-time-home-exact-corners",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "1. połowa - gospodarz - dokładna liczba rożnych", en: "1st Half Home Exact Corners" },
+    descriptions: { pl: "Dokładna liczba rożnych gospodarzy w 1. połowie", en: "Exact corners for home team in 1st half" },
+    hasParameter: false,
+    selections: ["0", "1", "2", "3+"],
+    selectionOrder: ["0", "1", "2", "3+"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 254,
+    descriptionTemplates: { "0": "0 rożnych", "1": "1 rożny", "2": "2 rożne", "3+": "3+ rożnych" }
+  },
+  {
+    numericId: 255,
+    code: "HALF_TIME_AWAY_EXACT_CORNERS",
+    slug: "half-time-away-exact-corners",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "1. połowa - gość - dokładna liczba rożnych", en: "1st Half Away Exact Corners" },
+    descriptions: { pl: "Dokładna liczba rożnych gości w 1. połowie", en: "Exact corners for away team in 1st half" },
+    hasParameter: false,
+    selections: ["0", "1", "2", "3+"],
+    selectionOrder: ["0", "1", "2", "3+"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 255,
+    descriptionTemplates: { "0": "0 rożnych", "1": "1 rożny", "2": "2 rożne", "3+": "3+ rożnych" }
   },
   {
     numericId: 223,
@@ -1885,8 +1972,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gospodarz - przedział rożnych", en: "Home Corners Range" },
     descriptions: { pl: "Przedział rożnych gospodarzy", en: "Home team corners range" },
     hasParameter: false,
-    selections: ["0-2", "3-4", "5+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 237
   },
   {
@@ -1897,8 +1984,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gość - przedział rożnych", en: "Away Corners Range" },
     descriptions: { pl: "Przedział rożnych gości", en: "Away team corners range" },
     hasParameter: false,
-    selections: ["0-2", "3-4", "5+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 238
   },
   {

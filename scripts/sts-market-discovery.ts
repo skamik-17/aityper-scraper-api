@@ -6,6 +6,7 @@
  *   npx tsx scripts/sts-market-discovery.ts                    # Scan all leagues, find best fixture
  *   npx tsx scripts/sts-market-discovery.ts laliga             # Scan specific league
  *   npx tsx scripts/sts-market-discovery.ts --market 121       # Focus on specific market ID (full output, no truncation)
+ *   npx tsx scripts/sts-market-discovery.ts --market 116 --try-times 10  # Try up to 10 fixtures to find market
  *   npx tsx scripts/sts-market-discovery.ts --all              # Show full details for ALL markets
  *   npx tsx scripts/sts-market-discovery.ts --raw              # Show raw WebSocket structure
  *   npx tsx scripts/sts-market-discovery.ts --verbose          # Show details for markets with issues
@@ -155,6 +156,8 @@ const OUTPUT_DIR = args.find((_, i) => args[i - 1] === "--dir") || null;
 const SHOW_ALL_DETAILS = args.includes("--all") || args.includes("-a");
 const MARKET_ID_ARG = args.find((_, i) => args[i - 1] === "--market" || args[i - 1] === "-m");
 const FOCUS_MARKET_ID = MARKET_ID_ARG ? parseInt(MARKET_ID_ARG, 10) : null;
+const TRY_TIMES_ARG = args.find((_, i) => args[i - 1] === "--try-times" || args[i - 1] === "-t");
+const TRY_TIMES = TRY_TIMES_ARG ? parseInt(TRY_TIMES_ARG, 10) : 1;
 const SINGLE_LEAGUE = args.find(arg =>
   !arg.startsWith("-") &&
   !["--market", "-m", "--verbose", "-v", "--issues", "-i", "--raw", "-r", "--dir"].includes(args[args.indexOf(arg) - 1] || "") &&
@@ -203,7 +206,7 @@ async function findBestFixture(page: Page): Promise<FixtureCandidate | null> {
 
       console.log(`     ✅ Found ${fixtures.length} fixtures`);
 
-      const maxFixtures = FOCUS_MARKET_ID !== null ? 1 : 3;
+      const maxFixtures = FOCUS_MARKET_ID !== null ? TRY_TIMES : 3;
       for (const fixture of fixtures.slice(0, maxFixtures)) {
         try {
           const matchCapture = await navigateAndCaptureMatchData(page, fixture.eventUrl);
@@ -800,6 +803,9 @@ async function main() {
 
   if (FOCUS_MARKET_ID) {
     console.log(`\n🎯 Focusing on Market ID: ${FOCUS_MARKET_ID}`);
+    if (TRY_TIMES > 1) {
+      console.log(`🔄 Will try up to ${TRY_TIMES} fixtures per league`);
+    }
   }
   if (SHOW_RAW) {
     console.log(`📄 Raw JSON output enabled`);
@@ -882,6 +888,7 @@ async function main() {
     if (!VERBOSE && !FOCUS_MARKET_ID && !SHOW_ALL_DETAILS) {
       console.log(`\n💡 Tips:`);
       console.log(`   --market <id>  Focus on specific market ID (e.g., --market 121)`);
+      console.log(`   --try-times N  Try N fixtures when searching for market (use with --market)`);
       console.log(`   --all          Show full details for ALL markets`);
       console.log(`   --raw          Show raw WebSocket JSON (use with --market)`);
       console.log(`   --verbose      Show details for markets with issues`);

@@ -113,9 +113,9 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   1529: "3-4",
   1530: "5+",
 
-  // BOTH_HALVES_GOALS outcomes (92-137) - HT/FT exact score combos
-  147: "Tak",
-  148: "Nie",
+  // HOME_HALF_WITH_MOST_GOALS (Market 63) - Which half home team scores more
+  147: "1. połowa",
+  148: "2. połowa",
   149: "Remis",
 
   // Goal range outcomes for combo markets (941-960)

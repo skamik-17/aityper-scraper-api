@@ -121,11 +121,9 @@ export function parseScoreSelection(selectionName: string): string | null {
 export function parseHtFtSelection(selectionName: string): string | null {
   const match = selectionName.match(/^([1x2])\s*\/\s*([1x2])$/i);
   if (!match) return null;
-  
+
   const htCode = match[1].toUpperCase();
   const ftCode = match[2].toUpperCase();
-  const ht = htCode === "1" ? "HOME" : htCode === "X" ? "DRAW" : "AWAY";
-  const ft = ftCode === "1" ? "HOME" : ftCode === "X" ? "DRAW" : "AWAY";
-  
-  return `${ht}_${ft}`;
+
+  return `${htCode}/${ftCode}`;
 }

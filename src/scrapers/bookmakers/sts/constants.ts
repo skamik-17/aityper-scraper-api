@@ -103,6 +103,12 @@ export const MARKET_IDS = {
   SECOND_HALF_BTTS: 121, // "2. połowa - obie drużyny - strzelą gola"
 
   // ==========================================================================
+  // HANDICAP MARKETS
+  // ==========================================================================
+  EUROPEAN_HANDICAP: 14, // "Handicap 1X2" - European Handicap (multiple lines with different handicap values)
+  ASIAN_HANDICAP: 20, // "Handicap azjatycki"
+
+  // ==========================================================================
   // CORRECT SCORE
   // ==========================================================================
   CORRECT_SCORE: 283, // "Dokładny wynik" - Correct Score

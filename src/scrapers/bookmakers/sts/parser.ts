@@ -290,6 +290,11 @@ export function parseAllMarkets(
             if (lineValue) {
               finalName = `${marketName} ${lineValue}`;
             }
+          } else if (marketId === MARKET_IDS.EUROPEAN_HANDICAP || marketId === MARKET_IDS.ASIAN_HANDICAP) {
+            const handicapValue = extractHandicapFromSelections(line);
+            if (handicapValue) {
+              finalName = `${marketName} ${handicapValue}`;
+            }
           } else if (PLAYER_STAT_MARKET_IDS.has(marketId)) {
             let playerName = extractPlayerNameFromLineName(line.n || "");
             if (!playerName || playerName === "Zawodnik") {
@@ -485,6 +490,21 @@ function extractLineFromSelections(line: STSMarketLine, marketId: number): strin
       const decMatch = outcome.n.match(/[+-]?(\d+[.,]5)/);
       if (decMatch) {
         return parseFloat(decMatch[1].replace(",", ".")).toFixed(1);
+      }
+    }
+  }
+
+  return null;
+}
+
+function extractHandicapFromSelections(line: STSMarketLine): string | null {
+  if (!line.o) return null;
+
+  for (const [, outcome] of Object.entries(line.o) as [string, STSOutcome][]) {
+    if (outcome.n) {
+      const handicapMatch = outcome.n.match(/\((\d+:\d+)\)/);
+      if (handicapMatch) {
+        return handicapMatch[1];
       }
     }
   }

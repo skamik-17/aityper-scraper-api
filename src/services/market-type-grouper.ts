@@ -71,7 +71,11 @@ function getParameterLabel(param: string, marketType: string): string {
   if (marketType.includes("HANDICAP")) {
     const num = parseFloat(param);
     if (!isNaN(num)) {
-      return num > 0 ? `+${param}` : param;
+      // Only add + if param doesn't already have a sign prefix
+      if (num > 0 && !param.startsWith("+")) {
+        return `+${param}`;
+      }
+      return param;
     }
   }
 

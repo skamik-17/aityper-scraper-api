@@ -139,6 +139,12 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
 
   1009: "3+",
 
+  // HOME_GOAL_RANGE / AWAY_GOAL_RANGE (Market 814, 815)
+  957: "2-3",
+  958: "0-1",
+  959: "4-5",
+  960: "6+",
+
   961: "1 o 1 gol",
   962: "2 o 1 gol",
   963: "1 o 2+ gole",

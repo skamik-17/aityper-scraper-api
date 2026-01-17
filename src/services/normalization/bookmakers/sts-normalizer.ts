@@ -621,6 +621,14 @@ function normalizeSelectionForMarket(
       if (trimmed === "6+" || trimmed === "6 lub więcej") return "6+" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
+    case "HOME_GOAL_RANGE":
+    case "AWAY_GOAL_RANGE":
+      // Pass through range selections like "0-1", "2-3", "4-5", "6+", "3+"
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+
     case "CORNERS_RANGE":
     case "HOME_CORNERS_RANGE":
     case "AWAY_CORNERS_RANGE":
@@ -674,9 +682,27 @@ function normalizeSelectionForMarket(
     }
 
     case "DOUBLE_CHANCE_TOTAL":
-    case "FIRST_GOAL_AND_RESULT":
     case "FIRST_GOAL_TIME":
       return trimmed as NormalizedSelection;
+
+    case "FIRST_GOAL_AND_RESULT": {
+      // Map Polish STS selection names to canonical codes
+      // "1 i 1" = Home scores first, Home wins
+      // "1 i X" = Home scores first, Draw
+      // "1 i 2" = Home scores first, Away wins
+      // "2 i 1" = Away scores first, Home wins
+      // "2 i X" = Away scores first, Draw
+      // "2 i 2" = Away scores first, Away wins
+      // "Bez gola" = No goal
+      if (lower === "1 i 1") return "HOME_HOME" as NormalizedSelection;
+      if (lower === "1 i x") return "HOME_DRAW" as NormalizedSelection;
+      if (lower === "1 i 2") return "HOME_AWAY" as NormalizedSelection;
+      if (lower === "2 i 1") return "AWAY_HOME" as NormalizedSelection;
+      if (lower === "2 i x") return "AWAY_DRAW" as NormalizedSelection;
+      if (lower === "2 i 2") return "AWAY_AWAY" as NormalizedSelection;
+      if (lower === "bez gola") return "NONE" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
 
     case "OTHER": {
       if (lower === "tak" || lower === "yes") return "YES";

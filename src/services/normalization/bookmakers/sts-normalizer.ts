@@ -57,7 +57,10 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   124: "SECOND_HALF_CORRECT_SCORE",
   1051: "PLAYER_GOAL_AND_RESULT",
 
+  1851: "PLAYER_SHOTS",
+  1852: "PLAYER_SHOTS_ON_TARGET",
   1853: "PLAYER_PASSES",
+  1855: "PLAYER_CARDS",
 
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
@@ -190,8 +193,9 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2111: "FOULS_TOTAL",
   2112: "OTHER",
   2113: "OTHER",
-  2114: "OTHER",
+  2114: "OWN_GOAL",
   2097: "EACH_TEAM_TOTAL_CORNERS_OVER",
+  2153: "PLAYER_RED_CARD",
 };
 
 const STS_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
@@ -441,8 +445,10 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_RED_CARD":
     case "PENALTY_AWARDED":
     case "RED_CARD_AND_PENALTY":
+    case "OWN_GOAL":
     case "EACH_TEAM_TOTAL_CORNERS_OVER":
     case "EACH_TEAM_TOTAL_CARDS_OVER":
+    case "PLAYER_RED_CARD":
       if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && trimmed.startsWith("+")) return "OVER";
       return normalizeYesNoSelection(trimmed);
     
@@ -907,8 +913,33 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    if (stsId === 1851) {
+      const suffix = ' - strzały (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      } else if (marketName.includes(" - strzały")) {
+        playerName = marketName.split(" - strzały")[0].trim();
+      }
+    }
+
+    if (stsId === 1852) {
+      const suffix = ' - celne strzały (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      } else if (marketName.includes(" - celne strzały")) {
+        playerName = marketName.split(" - celne strzały")[0].trim();
+      }
+    }
+
     if (stsId === 1853) {
       const suffix = ' - podania (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 1855) {
+      const suffix = ' - otrzyma kartkę (musi wyjść w "11", z dogrywką)';
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
       }
@@ -945,6 +976,13 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
 
     if (stsId === 2011) {
       const suffix = ' - obronione strzały';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 2153) {
+      const suffix = ' - otrzyma czerwoną kartkę';
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
       }

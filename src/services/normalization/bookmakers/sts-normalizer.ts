@@ -113,8 +113,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   199: "CARDS_RACE",
   179: "FIRST_CARD",
   185: "CARDS_TOTAL",
-  192: "CARDS_TOTAL",
-  206: "CARDS_TOTAL",
+  192: "CARDS_EXACT_RANGE",
+  206: "HALF_TIME_CARDS_TOTAL",
   188: "CARDS_TEAM",
   191: "CARDS_TEAM",
   193: "CARDS_TEAM",
@@ -389,12 +389,19 @@ function normalizeSelectionForMarket(
       return normalizeOverUnderSelection(trimmed);
 
     case "CARDS_TOTAL":
+    case "HALF_TIME_CARDS_TOTAL":
     case "FOULS_TOTAL":
     case "CARDS_TEAM":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
       }
       return normalizeOverUnderSelection(trimmed);
+
+    case "CARDS_EXACT_RANGE":
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
 
     case "HALF_TIME_CORNERS_TOTAL":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
@@ -746,7 +753,7 @@ function extractParamValue(
   const parameterizedMarkets = [
     "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS",
     "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP",
-    "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "CORNERS_HANDICAP",
+    "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "HALF_TIME_CARDS_TOTAL", "CORNERS_HANDICAP",
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
     "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_TEAM", "SECOND_HALF_RESULT_AND_TOTAL",
     "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",

@@ -57,6 +57,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   124: "SECOND_HALF_CORRECT_SCORE",
   1051: "PLAYER_GOAL_AND_RESULT",
 
+  1853: "PLAYER_PASSES",
+
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
   31: "AWAY_TEAM_TOTAL_GOALS",
@@ -93,7 +95,6 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   254: "HALF_TIME_HOME_EXACT_CORNERS",
   255: "HALF_TIME_AWAY_EXACT_CORNERS",
   256: "HALF_TIME_CORNERS_RANGE",
-  2097: "OTHER",
   807: "HALF_TIME_DOUBLE_CHANCE_BTTS",
   808: "SECOND_HALF_RESULT_AND_BTTS",
   809: "SECOND_HALF_RESULT_AND_TOTAL",
@@ -119,7 +120,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   197: "OTHER",
   198: "OTHER",
   217: "HALF_TIME_RED_CARD",
-  2098: "OTHER",
+  2098: "EACH_TEAM_TOTAL_CARDS_OVER",
 
   125: "FIRST_GOAL_TIME",
   126: "FIRST_GOAL_TIME",
@@ -174,16 +175,23 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   1235: "SECOND_HALF_HOME_TO_SCORE",
   1244: "HT_OR_FT_RESULT",
 
-  1413: "OTHER",
-  1561: "OTHER",
+  1413: "PENALTY_AWARDED",
+  1561: "MOST_SHOTS_ON_TARGET",
   1562: "OTHER",
-  1897: "OTHER",
+  1897: "PLAYER_TACKLES",
+  2006: "PLAYER_INTERCEPTIONS",
+  2004: "PLAYER_FOULS_WON",
+  2005: "PLAYER_FOULS",
+  2011: "PLAYER_SAVES",
   1898: "OTHER",
-  1899: "OTHER",
+  1899: "RED_CARD_AND_PENALTY",
+  1845: "PLAYER_ASSISTS",
+  1850: "PLAYER_GOALS",
   2111: "FOULS_TOTAL",
   2112: "OTHER",
   2113: "OTHER",
   2114: "OTHER",
+  2097: "EACH_TEAM_TOTAL_CORNERS_OVER",
 };
 
 const STS_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
@@ -320,6 +328,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
+    case "MOST_SHOTS_ON_TARGET":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "FIRST_CARD":
@@ -430,6 +439,11 @@ function normalizeSelectionForMarket(
     case "HOME_WIN_TO_NIL":
     case "AWAY_WIN_TO_NIL":
     case "HALF_TIME_RED_CARD":
+    case "PENALTY_AWARDED":
+    case "RED_CARD_AND_PENALTY":
+    case "EACH_TEAM_TOTAL_CORNERS_OVER":
+    case "EACH_TEAM_TOTAL_CARDS_OVER":
+      if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && trimmed.startsWith("+")) return "OVER";
       return normalizeYesNoSelection(trimmed);
     
     case "WIN_TO_NIL":
@@ -538,15 +552,15 @@ function normalizeSelectionForMarket(
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_3_OR_MORE_GOALS":
     case "PLAYER_HAT_TRICK":
+    case "PLAYER_TACKLES":
+    case "PLAYER_INTERCEPTIONS":
       return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
 
     case "PLAYER_GOAL_AND_RESULT": {
       const match = trimmed.match(/^(.+?)\s+i\s+([1X2])$/i);
       if (match) {
         const result = match[2].toUpperCase();
-        const playerName = match[1].trim();
-        const resultCode = result === "1" ? "HOME" : result === "X" ? "DRAW" : "AWAY";
-        return `${playerName}_${resultCode}` as NormalizedSelection;
+        return (result === "1" ? "HOME" : result === "X" ? "DRAW" : "AWAY") as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -635,6 +649,10 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORNERS_RANGE":
     case "HALF_TIME_HOME_EXACT_CORNERS":
     case "HALF_TIME_AWAY_EXACT_CORNERS":
+    case "PLAYER_GOALS":
+    case "PLAYER_FOULS_WON":
+    case "PLAYER_FOULS":
+    case "PLAYER_SAVES":
       // Pass through numeric (0, 1, 2), range (0-2, 3-4), and plus (5+, 3+) selections
       if (/^\d+$/.test(trimmed) || /^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
@@ -737,10 +755,22 @@ function extractParamValue(
     "CARDS_TEAM",
     "CORNERS_TEAM",
     "HALF_TIME_CORNERS_HANDICAP",
+    "PLAYER_GOAL_AND_RESULT",
+    "EACH_TEAM_TOTAL_CORNERS_OVER",
+    "EACH_TEAM_TOTAL_CARDS_OVER",
   ];
 
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
+
+  if (marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") {
+    for (const sel of raw.selections) {
+      const match = sel.name.match(/^\+(\d+(?:[.,]\d+)?)$/);
+      if (match) {
+        return match[1].replace(",", ".");
+      }
+    }
+  }
 
   // Extract Corners Handicap value from selection names (e.g., "1 (-2.5)", "2 (+2.5)")
   // Format: "1 (+X)" or "1 (-X)" where X is the handicap value for HOME team
@@ -826,6 +856,15 @@ function extractParamValue(
     }
   }
 
+  if (marketCode === "PLAYER_GOAL_AND_RESULT") {
+    for (const sel of raw.selections) {
+      const match = sel.name.match(/^(.+?)\s+i\s+[1X2]$/i);
+      if (match) {
+        return match[1].trim();
+      }
+    }
+  }
+
   const rawAny = raw as any;
   if (rawAny.lines && rawAny.lines[0]?.D) {
     return String(rawAny.lines[0].D);
@@ -852,6 +891,63 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     let stsId = rawId !== undefined && rawId !== null ? Number(rawId) : null;
     if (!Number.isFinite(stsId)) {
       stsId = extractStsMarketId(marketName);
+    }
+
+    if (stsId === 1845) {
+      const suffix = ' - asysty (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 1850) {
+      const suffix = ' - gole (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 1853) {
+      const suffix = ' - podania (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 1897) {
+      const suffix = ' - odbiory (musi wyjść w "11", z dogrywką)';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      } else if (marketName.includes(" - odbiory")) {
+        playerName = marketName.split(" - odbiory")[0].trim();
+      }
+    }
+
+    if (stsId === 2004) {
+      const suffix = ' - faule wywalczone';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 2005) {
+      const suffix = ' - faule popełnione';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    if (stsId === 2006) {
+      if (marketName.includes(" - przechwyty")) {
+        playerName = marketName.split(" - przechwyty")[0].trim();
+      }
+    }
+
+    if (stsId === 2011) {
+      const suffix = ' - obronione strzały';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
     }
 
     let marketCode: NormalizedMarketType | null = null;

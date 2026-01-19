@@ -1,14 +1,28 @@
--- Fix latest_odds view: Replace DISTINCT ON with ROW_NUMBER()
--- DISTINCT ON has issues with WHERE clause pushdown in PostgreSQL,
--- causing some rows to be missing when filtering by league_slug.
--- ROW_NUMBER() in a subquery handles this correctly.
+CREATE TABLE odds (
+  id BIGSERIAL PRIMARY KEY,
+  match_id TEXT NOT NULL,
+  league_slug TEXT NOT NULL,
+  home_team TEXT NOT NULL,
+  away_team TEXT NOT NULL,
+  bookmaker TEXT NOT NULL,
+  event_url TEXT,
+  market_type_id INTEGER NOT NULL REFERENCES market_types(id),
+  market_key TEXT NOT NULL,
+  param_value TEXT,
+  selections JSONB NOT NULL,
+  scraped_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CONSTRAINT odds_unique_entry UNIQUE (match_id, bookmaker, market_key, scraped_at)
+);
 
--- Drop dependent view first
-DROP VIEW IF EXISTS market_comparison;
-DROP VIEW IF EXISTS matches_with_odds;
-DROP VIEW IF EXISTS latest_odds;
+CREATE INDEX idx_odds_match_id ON odds(match_id);
+CREATE INDEX idx_odds_league ON odds(league_slug);
+CREATE INDEX idx_odds_bookmaker ON odds(bookmaker);
+CREATE INDEX idx_odds_market_type_id ON odds(market_type_id);
+CREATE INDEX idx_odds_market_key ON odds(market_key);
+CREATE INDEX idx_odds_scraped_at ON odds(scraped_at DESC);
+CREATE INDEX idx_odds_match_market ON odds(match_id, market_key);
+CREATE INDEX idx_odds_match_league_scraped ON odds(match_id, league_slug, scraped_at DESC);
 
--- Recreate latest_odds using ROW_NUMBER() instead of DISTINCT ON
 CREATE VIEW latest_odds AS
 SELECT 
   o.id,
@@ -41,7 +55,6 @@ FROM (
 JOIN market_types mt ON o.market_type_id = mt.id
 WHERE o.rn = 1;
 
--- Recreate market_comparison view
 CREATE VIEW market_comparison AS
 SELECT 
   lo.match_id,
@@ -63,7 +76,6 @@ SELECT
 FROM latest_odds lo
 ORDER BY lo.match_id, lo.category, lo.market_key, lo.bookmaker;
 
--- Recreate matches_with_odds view
 CREATE VIEW matches_with_odds AS
 SELECT 
   match_id,

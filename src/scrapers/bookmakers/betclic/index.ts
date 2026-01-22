@@ -10,7 +10,11 @@ import type {
   RawScrapedMatchOdds,
   EventUrlEntry,
 } from "../../../types/scraper.js";
-import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
+import type {
+  FullOfferScraperResult,
+  FullMatchOffer,
+  ScrapedMarket,
+} from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
@@ -19,6 +23,7 @@ import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 import {
   fetchLeagueMatches,
   fetchMatchDetails,
+  fetchAllMarketGroups,
   extractMatchIdFromUrl,
   buildEventUrl,
 } from "./navigation.js";
@@ -27,6 +32,7 @@ import {
   parseMatchDetailsResponse,
   parseAllMarkets,
   parseAllMarketsFromProto,
+  parseAllMarketsFromMultipleResponses,
   parseTeamNames,
   extract1X2Market,
   extractDoubleChanceMarket,
@@ -257,62 +263,73 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         if (!listingMatch.matchId) continue;
 
         try {
-          const detailData = await fetchMatchDetails(listingMatch.matchId);
+          // Try multi-tab fetching first
+          let responses: Buffer[] | null = null;
+          let markets: ScrapedMarket[] = [];
 
-          if (detailData) {
-            const markets = parseAllMarketsFromProto(detailData);
+          try {
+            // Fetch markets from all 7 tabs
+            responses = await fetchAllMarketGroups(listingMatch.matchId);
 
-            if (markets.length > 0) {
-              const homeTeam = listingMatch.homeTeam;
-              const awayTeam = listingMatch.awayTeam;
-
-              matches.push({
-                matchId: listingMatch.matchId,
-                bookmaker: this.bookmaker,
-                homeTeam: getCanonicalTeamName(homeTeam, league),
-                awayTeam: getCanonicalTeamName(awayTeam, league),
-                eventUrl: buildEventUrl(
-                  listingMatch.matchId,
-                  league,
-                  homeTeam,
-                  awayTeam
-                ),
-                markets,
-                scrapedAt: new Date(),
-              });
-
+            if (responses.length > 0) {
               console.log(
-                `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets`
+                `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: fetched ${responses.length} market groups`
               );
+
+              // Parse and merge all responses
+              markets = parseAllMarketsFromMultipleResponses(responses);
             } else {
-              const details = parseMatchDetailsResponse(detailData);
+              console.log(
+                `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: no valid responses from multi-tab, trying fallback`
+              );
+            }
+          } catch (multiError) {
+            console.warn(
+              `[Betclic/FullOffer] Multi-tab fetch failed for match ${listingMatch.matchId}, falling back to single request:`,
+              multiError instanceof Error ? multiError.message : multiError
+            );
+          }
 
-              if (details && details.outcomes.length > 0) {
-                const teams = parseTeamNames(details.matchName);
-                const fallbackMarkets = parseAllMarkets(details.outcomes, teams);
+          // Fallback to single request if multi-fetch failed or returned no data
+          if (markets.length === 0) {
+            const detailData = await fetchMatchDetails(listingMatch.matchId);
 
-                if (fallbackMarkets.length > 0) {
-                  matches.push({
-                    matchId: listingMatch.matchId,
-                    bookmaker: this.bookmaker,
-                    homeTeam: getCanonicalTeamName(teams.homeTeam, league),
-                    awayTeam: getCanonicalTeamName(teams.awayTeam, league),
-                    eventUrl: buildEventUrl(
-                      listingMatch.matchId,
-                      league,
-                      teams.homeTeam,
-                      teams.awayTeam
-                    ),
-                    markets: fallbackMarkets,
-                    scrapedAt: new Date(),
-                  });
+            if (detailData) {
+              markets = parseAllMarketsFromProto(detailData);
 
-                  console.log(
-                    `[Betclic/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${fallbackMarkets.length} markets (fallback)`
-                  );
+              if (markets.length === 0) {
+                const details = parseMatchDetailsResponse(detailData);
+
+                if (details && details.outcomes.length > 0) {
+                  const teams = parseTeamNames(details.matchName);
+                  markets = parseAllMarkets(details.outcomes, teams);
                 }
               }
             }
+          }
+
+          if (markets.length > 0) {
+            const homeTeam = listingMatch.homeTeam;
+            const awayTeam = listingMatch.awayTeam;
+
+            matches.push({
+              matchId: listingMatch.matchId,
+              bookmaker: this.bookmaker,
+              homeTeam: getCanonicalTeamName(homeTeam, league),
+              awayTeam: getCanonicalTeamName(awayTeam, league),
+              eventUrl: buildEventUrl(
+                listingMatch.matchId,
+                league,
+                homeTeam,
+                awayTeam
+              ),
+              markets,
+              scrapedAt: new Date(),
+            });
+
+            console.log(
+              `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets total`
+            );
           }
 
           await this.delay(100);

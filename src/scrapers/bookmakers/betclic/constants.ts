@@ -162,3 +162,67 @@ export const OVER_UNDER_LINES = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5];
  * Character used to separate team names in matchName
  */
 export const TEAM_SEPARATOR = " - ";
+
+/**
+ * Market group filter values for multi-tab fetching.
+ *
+ * Betclic's match page has 7 tabs, each showing different market categories.
+ * The gRPC API uses a filter field (Field 2) to return markets for specific tabs.
+ *
+ * These values are used with buildMatchDetailsRequestWithFilter() to fetch
+ * markets from each tab separately, then merge the results.
+ *
+ * Note: Filter values are based on reverse engineering. If the API changes,
+ * use betclic-filter-discovery.ts to rediscover the correct values.
+ *
+ * @see backend/docs/betclic-tab-network-analysis.md
+ * @see backend/scripts/betclic-filter-discovery.ts
+ */
+export const MARKET_GROUP_FILTERS = {
+  /**
+   * Tab 1: Top (Main/Popular)
+   * Markets: 1X2, Double Chance, BTTS, popular O/U, Handicap, Correct Score, Anytime Scorer
+   */
+  TOP: 0,
+
+  /**
+   * Tab 2: Wynik (Result)
+   * Markets: 1X2, Draw No Bet, Double Chance, HT/FT, Win to Nil, Result+BTTS combos
+   */
+  WYNIK: 1,
+
+  /**
+   * Tab 3: Strzelcy (Scorers)
+   * Markets: Anytime Scorer, First/Last Scorer, 2+ Goals Scorer, Hat-trick, Assists
+   */
+  STRZELCY: 2,
+
+  /**
+   * Tab 4: Gole (Goals)
+   * Markets: Total Goals O/U, Team Goals O/U, BTTS, Goal Ranges, Half Goals, Odd/Even
+   */
+  GOLE: 3,
+
+  /**
+   * Tab 5: Metoda Gola (Goal Method)
+   * Markets: Penalty Goal, Header Goal, Free Kick Goal
+   */
+  METODA_GOLA: 4,
+
+  /**
+   * Tab 6: Wynik / Handicap (Result / Handicap)
+   * Markets: Asian Handicap, European Handicap, Correct Score, Goal Margin
+   */
+  HANDICAP: 5,
+
+  /**
+   * Tab 7: Statystyki (Statistics)
+   * Markets: Corners, Cards, Shots, Fouls, Offsides
+   */
+  STATYSTYKI: 6,
+} as const;
+
+/**
+ * Type for market group filter values
+ */
+export type MarketGroupFilter = (typeof MARKET_GROUP_FILTERS)[keyof typeof MARKET_GROUP_FILTERS];

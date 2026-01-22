@@ -10,7 +10,8 @@
  *   npx tsx scripts/betclic-market-discovery.ts --match 905675290968064   # Specific match ID
  *   npx tsx scripts/betclic-market-discovery.ts --url "https://..."       # Extract match ID from URL
  *   npx tsx scripts/betclic-market-discovery.ts --verbose                 # Show all market details
- *   npx tsx scripts/betclic-market-discovery.ts --raw                     # Show raw protobuf structure
+ *   npx tsx scripts/betclic-market-discovery.ts --raw                     # Show basic protobuf structure
+ *   npx tsx scripts/betclic-market-discovery.ts --proto                   # Show detailed protobuf analysis
  */
 
 import { fetchMatchDetails, extractMatchIdFromUrl } from "../src/scrapers/bookmakers/betclic/navigation.js";
@@ -35,6 +36,7 @@ const EXPECTED_MARKET_TYPES = [
 const args = process.argv.slice(2);
 const VERBOSE = args.includes("--verbose") || args.includes("-v");
 const SHOW_RAW = args.includes("--raw") || args.includes("-r");
+const SHOW_PROTO = args.includes("--proto") || args.includes("-p");
 const MATCH_ID_ARG = args.find((_, i) => args[i - 1] === "--match" || args[i - 1] === "-m");
 const URL_ARG = args.find((_, i) => args[i - 1] === "--url" || args[i - 1] === "-u");
 
@@ -167,6 +169,253 @@ function printRawStructure(rawData: Buffer): void {
   } catch (error) {
     console.error("Error parsing raw structure:", error);
   }
+}
+
+// ============ Proto Structure Analysis ============
+
+/** Maximum values to show per field to avoid spam */
+const MAX_VALUES_PER_FIELD = 3;
+
+/** Minimum bytes length to attempt recursive parsing */
+const MIN_BYTES_FOR_NESTED = 10;
+
+/**
+ * Get wire type name from wire type number
+ */
+function getWireTypeName(wireType: number): string {
+  switch (wireType) {
+    case 0: return "varint";
+    case 1: return "double (64-bit)";
+    case 2: return "bytes/string/message";
+    case 5: return "float (32-bit)";
+    default: return `unknown(${wireType})`;
+  }
+}
+
+/**
+ * Try to decode bytes as UTF-8 string
+ * Returns the string if readable, null otherwise
+ */
+function tryDecodeAsString(buf: Buffer): string | null {
+  try {
+    const str = buf.toString("utf8");
+    // Check if string contains mostly printable characters
+    const printableCount = str.split("").filter(c => {
+      const code = c.charCodeAt(0);
+      return (code >= 0x20 && code <= 0x7E) || // ASCII printable
+             (code >= 0xA0 && code <= 0xFF) || // Latin-1 supplement
+             (code >= 0x100 && code <= 0xFFFF); // Extended Unicode
+    }).length;
+    
+    // Consider it readable if >70% printable and length > 0
+    if (str.length > 0 && printableCount / str.length > 0.7) {
+      return str;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if bytes buffer looks like a nested protobuf message
+ */
+function looksLikeNestedMessage(buf: Buffer): boolean {
+  if (buf.length < MIN_BYTES_FOR_NESTED) return false;
+  
+  // Try to parse as protobuf - if it has valid fields, it's likely a message
+  try {
+    const fields = parseFields(buf);
+    // If we got at least one field and didn't consume all bytes as garbage, it's likely valid
+    return fields.size > 0;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Format a value for display based on its type
+ */
+function formatValue(type: string, data: unknown, maxLen: number = 50): string {
+  if (type === "varint" && typeof data === "number") {
+    return `${data}`;
+  }
+  if (type === "double" && typeof data === "number") {
+    return `${data.toFixed(4)}`;
+  }
+  if (type === "float" && typeof data === "number") {
+    return `${data.toFixed(4)}`;
+  }
+  if (type === "bytes" && Buffer.isBuffer(data)) {
+    const str = tryDecodeAsString(data);
+    if (str) {
+      const truncated = str.length > maxLen ? str.substring(0, maxLen) + "..." : str;
+      return `"${truncated}" (${data.length} bytes, string)`;
+    }
+    if (looksLikeNestedMessage(data)) {
+      return `<nested message> (${data.length} bytes)`;
+    }
+    // Show hex preview for binary data
+    const hexPreview = data.slice(0, 16).toString("hex");
+    return `[${hexPreview}${data.length > 16 ? "..." : ""}] (${data.length} bytes, binary)`;
+  }
+  return String(data);
+}
+
+interface ProtoFieldInfo {
+  fieldNum: number;
+  wireType: number;
+  values: Array<{ type: string; data: unknown }>;
+}
+
+/**
+ * Parse buffer and extract field information with wire types
+ */
+function extractFieldInfo(buf: Buffer): ProtoFieldInfo[] {
+  const fieldMap = new Map<number, ProtoFieldInfo>();
+  let offset = 0;
+
+  while (offset < buf.length) {
+    // Read tag
+    let tag = 0;
+    let shift = 0;
+    let bytesRead = 0;
+    
+    while (offset + bytesRead < buf.length) {
+      const b = buf[offset + bytesRead++];
+      tag |= (b & 0x7f) << shift;
+      if (!(b & 0x80)) break;
+      shift += 7;
+    }
+    
+    if (bytesRead === 0) break;
+    offset += bytesRead;
+
+    const fieldNum = tag >> 3;
+    const wireType = tag & 0x07;
+
+    let value: { type: string; data: unknown } | null = null;
+
+    if (wireType === 0) {
+      // Varint
+      let v = 0;
+      shift = 0;
+      bytesRead = 0;
+      while (offset + bytesRead < buf.length) {
+        const b = buf[offset + bytesRead++];
+        v |= (b & 0x7f) << shift;
+        if (!(b & 0x80)) break;
+        shift += 7;
+      }
+      offset += bytesRead;
+      value = { type: "varint", data: v };
+    } else if (wireType === 2) {
+      // Length-delimited
+      let len = 0;
+      shift = 0;
+      bytesRead = 0;
+      while (offset + bytesRead < buf.length) {
+        const b = buf[offset + bytesRead++];
+        len |= (b & 0x7f) << shift;
+        if (!(b & 0x80)) break;
+        shift += 7;
+      }
+      offset += bytesRead;
+      if (offset + len > buf.length) break;
+      const data = buf.slice(offset, offset + len);
+      offset += len;
+      value = { type: "bytes", data };
+    } else if (wireType === 5) {
+      // 32-bit float
+      if (offset + 4 > buf.length) break;
+      value = { type: "float", data: buf.readFloatLE(offset) };
+      offset += 4;
+    } else if (wireType === 1) {
+      // 64-bit double
+      if (offset + 8 > buf.length) break;
+      value = { type: "double", data: buf.readDoubleLE(offset) };
+      offset += 8;
+    } else {
+      // Unknown wire type
+      break;
+    }
+
+    if (value) {
+      if (!fieldMap.has(fieldNum)) {
+        fieldMap.set(fieldNum, { fieldNum, wireType, values: [] });
+      }
+      fieldMap.get(fieldNum)!.values.push(value);
+    }
+  }
+
+  return Array.from(fieldMap.values()).sort((a, b) => a.fieldNum - b.fieldNum);
+}
+
+/**
+ * Recursively print protobuf structure with indentation
+ */
+function printProtoStructureRecursive(buf: Buffer, indent: number = 0, maxDepth: number = 5): void {
+  if (indent > maxDepth) {
+    console.log(`${"  ".repeat(indent)}... (max depth reached)`);
+    return;
+  }
+
+  const fields = extractFieldInfo(buf);
+  const prefix = "  ".repeat(indent);
+
+  for (const field of fields) {
+    const wireTypeName = getWireTypeName(field.wireType);
+    const valueCount = field.values.length;
+    const showCount = Math.min(valueCount, MAX_VALUES_PER_FIELD);
+
+    console.log(`${prefix}Field ${field.fieldNum} [${wireTypeName}] (${valueCount} value${valueCount !== 1 ? "s" : ""}):`);
+
+    for (let i = 0; i < showCount; i++) {
+      const val = field.values[i];
+      const formatted = formatValue(val.type, val.data);
+      console.log(`${prefix}  [${i}] ${formatted}`);
+
+      // Recursively parse nested messages
+      if (val.type === "bytes" && Buffer.isBuffer(val.data) && looksLikeNestedMessage(val.data)) {
+        printProtoStructureRecursive(val.data, indent + 2, maxDepth);
+      }
+    }
+
+    if (valueCount > MAX_VALUES_PER_FIELD) {
+      console.log(`${prefix}  ... and ${valueCount - MAX_VALUES_PER_FIELD} more values`);
+    }
+  }
+}
+
+/**
+ * Print comprehensive protobuf structure analysis
+ */
+function printProtoStructure(rawData: Buffer): void {
+  console.log("\n" + "=".repeat(100));
+  console.log("PROTOBUF STRUCTURE ANALYSIS");
+  console.log("=".repeat(100));
+
+  console.log(`\nResponse size: ${rawData.length} bytes`);
+  console.log(`\n${"─".repeat(80)}`);
+  console.log("FIELD STRUCTURE (recursive):");
+  console.log(`${"─".repeat(80)}\n`);
+
+  try {
+    printProtoStructureRecursive(rawData, 0, 5);
+  } catch (error) {
+    console.error("\nError parsing protobuf structure:", error);
+  }
+
+  console.log(`\n${"─".repeat(80)}`);
+  console.log("LEGEND:");
+  console.log(`${"─".repeat(80)}`);
+  console.log("  varint          - Variable-length integer (field numbers, IDs, counts)");
+  console.log("  double (64-bit) - 64-bit floating point (odds values)");
+  console.log("  float (32-bit)  - 32-bit floating point");
+  console.log("  bytes/string/message - Length-delimited data (strings or nested messages)");
+  console.log("  <nested message> - Bytes that parse as valid protobuf (recursively shown)");
+  console.log("  (string)        - Bytes that decode as readable UTF-8 text");
+  console.log("  (binary)        - Bytes that don't decode as text (shown as hex)");
 }
 
 /**
@@ -333,7 +582,12 @@ async function main(): Promise<void> {
 
   console.log(`✅ Received ${rawData.length} bytes of data`);
 
-  // Show raw structure if requested
+  if (SHOW_PROTO) {
+    printProtoStructure(rawData);
+    console.log("\n✅ Proto structure analysis complete");
+    return;
+  }
+
   if (SHOW_RAW) {
     printRawStructure(rawData);
   }
@@ -352,7 +606,7 @@ async function main(): Promise<void> {
     console.log("  - The match has ended or been cancelled");
     console.log("  - The match ID is invalid");
     console.log("  - The API response format has changed");
-    console.log("\nTry using --raw to inspect the protobuf structure");
+    console.log("\nTry using --proto to inspect the protobuf structure");
     process.exit(1);
   }
 
@@ -375,7 +629,8 @@ async function main(): Promise<void> {
   --match <id>    Use specific match ID
   --url <url>     Extract match ID from Betclic URL
   --verbose       Show detailed market information
-  --raw           Show raw protobuf structure
+  --raw           Show raw protobuf structure (basic)
+  --proto         Show detailed protobuf structure analysis
   `);
 
   // Exit with appropriate code

@@ -22,6 +22,7 @@ import {
   REQUEST_TIMEOUT,
   MAX_RETRIES,
   RETRY_DELAY,
+  MARKET_GROUP_FILTERS,
 } from "./constants.js";
 import { encodeVarint, encodeBigVarint } from "./parser.js";
 
@@ -346,4 +347,78 @@ export function isLeagueSupported(league: string): boolean {
  */
 export function getCompetitionId(league: string): number | undefined {
   return COMPETITION_IDS[league];
+}
+
+/**
+ * Delay helper for rate limiting between requests
+ */
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Fetch markets from all market group tabs for a match
+ *
+ * This function iterates over all MARKET_GROUP_FILTERS values, fetching
+ * markets from each tab separately. This is necessary because Betclic's
+ * API returns different markets depending on the filter value.
+ *
+ * The function includes a 100ms delay between requests to avoid rate limiting,
+ * and filters out responses smaller than 100 bytes (which indicate empty/invalid data).
+ *
+ * @param matchId - Match ID as string (BigInt-compatible)
+ * @returns Array of valid response Buffers from all market groups
+ *
+ * @example
+ * ```typescript
+ * const responses = await fetchAllMarketGroups("905675290968064");
+ * const markets = parseAllMarketsFromMultipleResponses(responses);
+ * ```
+ *
+ * @see MARKET_GROUP_FILTERS in constants.ts for available filter values
+ * @see parseAllMarketsFromMultipleResponses in parser.ts for merging results
+ */
+export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
+  const responses: Buffer[] = [];
+  const filterEntries = Object.entries(MARKET_GROUP_FILTERS);
+
+  console.log(
+    `[Betclic/Navigation] Fetching ${filterEntries.length} market groups for match ${matchId}`
+  );
+
+  for (const [groupName, filterValue] of filterEntries) {
+    try {
+      console.log(`[Betclic/Navigation] Fetching group ${groupName} (filter=${filterValue})...`);
+
+      const requestBody = buildMatchDetailsRequestWithFilter(matchId, filterValue);
+      const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
+
+      // Filter out responses smaller than 100 bytes (empty/invalid data)
+      if (response.length >= 100) {
+        responses.push(response);
+        console.log(
+          `[Betclic/Navigation] Group ${groupName}: ${response.length} bytes received`
+        );
+      } else {
+        console.log(
+          `[Betclic/Navigation] Group ${groupName}: skipped (${response.length} bytes < 100)`
+        );
+      }
+    } catch (error) {
+      console.warn(
+        `[Betclic/Navigation] Failed to fetch group ${groupName}:`,
+        error instanceof Error ? error.message : error
+      );
+      // Continue with other groups even if one fails
+    }
+
+    // 100ms delay between requests to avoid rate limiting
+    await delay(100);
+  }
+
+  console.log(
+    `[Betclic/Navigation] Fetched ${responses.length}/${filterEntries.length} valid responses for match ${matchId}`
+  );
+
+  return responses;
 }

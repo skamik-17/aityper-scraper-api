@@ -807,6 +807,7 @@ function getMarketInfo(key: string): { name: string; groupName: string; type: st
 
 /**
  * Infer market type from market name
+ * Matches Polish market names to canonical market types
  */
 function inferMarketType(name: string): string {
   const lower = name.toLowerCase();
@@ -817,6 +818,14 @@ function inferMarketType(name: string): string {
   if (lower.includes("dokładny wynik") || lower.includes("dokladny wynik")) return MARKET_TYPES.CORRECT_SCORE;
   if (lower.includes("handicap")) return MARKET_TYPES.HANDICAP;
   if (lower.includes("połowa") || lower.includes("polowa")) return MARKET_TYPES.HALF_TIME_1X2;
+  if (lower.includes("rzut rożny") || lower.includes("rożne") || lower.includes("corner")) return MARKET_TYPES.CORNERS_TOTAL;
+  if (lower.includes("kartki") || lower.includes("czerwona kartka") || lower.includes("card")) return MARKET_TYPES.CARDS_TOTAL;
+  if (lower.includes("strzały") || lower.includes("celne strzały") || lower.includes("shot")) return MARKET_TYPES.MOST_SHOTS_ON_TARGET;
+  if (lower.includes("faule") || lower.includes("foul")) return MARKET_TYPES.FOULS_TOTAL;
+  if (lower.includes("rzut karny") || lower.includes("penalty")) return MARKET_TYPES.PENALTY_AWARDED;
+  if (lower.includes("głową") || lower.includes("głową") || lower.includes("header")) return MARKET_TYPES.HEADER_GOAL;
+  if (lower.includes("rzut wolny") || lower.includes("free kick")) return MARKET_TYPES.FREE_KICK_GOAL;
+  if (lower.includes("asysta") || lower.includes("asysty") || lower.includes("assist")) return MARKET_TYPES.PLAYER_ASSISTS;
   if (lower.includes("strzel")) return "GOALSCORER";
   return "OTHER";
 }

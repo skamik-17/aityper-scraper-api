@@ -136,6 +136,18 @@ export const MARKET_TYPES = {
   HALF_TIME_OVER_UNDER: "HALF_TIME_OVER_UNDER",
   CORRECT_SCORE: "CORRECT_SCORE",
   HANDICAP: "HANDICAP",
+  // Statistics markets (Statystyki tab)
+  CORNERS_TOTAL: "CORNERS_TOTAL",
+  CARDS_TOTAL: "CARDS_TOTAL",
+  MOST_SHOTS_ON_TARGET: "MOST_SHOTS_ON_TARGET",
+  FOULS_TOTAL: "FOULS_TOTAL",
+  // Goal method markets (Metoda Gola tab)
+  PENALTY_AWARDED: "PENALTY_AWARDED",
+  // Goal method - no canonical type, use descriptive string
+  HEADER_GOAL: "HEADER_GOAL",
+  FREE_KICK_GOAL: "FREE_KICK_GOAL",
+  // Player markets (Strzelcy tab)
+  PLAYER_ASSISTS: "PLAYER_ASSISTS",
 } as const;
 
 /**

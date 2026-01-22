@@ -12,11 +12,12 @@
  *   npx tsx scripts/betclic-market-discovery.ts --verbose                 # Show all market details
  *   npx tsx scripts/betclic-market-discovery.ts --raw                     # Show basic protobuf structure
  *   npx tsx scripts/betclic-market-discovery.ts --proto                   # Show detailed protobuf analysis
+ *   npx tsx scripts/betclic-market-discovery.ts --filter 5                # Test filter value (Field 2)
  */
 
-import { fetchMatchDetails, extractMatchIdFromUrl } from "../src/scrapers/bookmakers/betclic/navigation.js";
-import { parseAllMarketsFromProto, parseFields, getMessage, getString } from "../src/scrapers/bookmakers/betclic/parser.js";
-import { MARKET_TYPES, MARKET_GROUPS, PROTO_FIELDS, TEAM_SEPARATOR } from "../src/scrapers/bookmakers/betclic/constants.js";
+import { fetchMatchDetails, extractMatchIdFromUrl, fetchGrpcStream } from "../src/scrapers/bookmakers/betclic/navigation.js";
+import { parseAllMarketsFromProto, parseFields, getMessage, getString, encodeBigVarint, encodeVarint } from "../src/scrapers/bookmakers/betclic/parser.js";
+import { MARKET_TYPES, MARKET_GROUPS, PROTO_FIELDS, TEAM_SEPARATOR, ENDPOINTS } from "../src/scrapers/bookmakers/betclic/constants.js";
 import type { ScrapedMarket } from "../src/types/full-offer.js";
 
 // ============ Expected Market Types ============
@@ -39,6 +40,7 @@ const SHOW_RAW = args.includes("--raw") || args.includes("-r");
 const SHOW_PROTO = args.includes("--proto") || args.includes("-p");
 const MATCH_ID_ARG = args.find((_, i) => args[i - 1] === "--match" || args[i - 1] === "-m");
 const URL_ARG = args.find((_, i) => args[i - 1] === "--url" || args[i - 1] === "-u");
+const FILTER_ARG = args.find((_, i) => args[i - 1] === "--filter" || args[i - 1] === "-f");
 
 // Default test match from the task description
 const DEFAULT_MATCH_ID = "905675290968064";
@@ -517,9 +519,6 @@ function printSummary(analysis: MarketAnalysis, matchInfo: MatchInfo): void {
   }
 }
 
-/**
- * Print detailed market information (verbose mode)
- */
 function printDetailedMarkets(analysis: MarketAnalysis): void {
   console.log("\n" + "=".repeat(100));
   console.log("DETAILED MARKET LIST");
@@ -542,15 +541,212 @@ function printDetailedMarkets(analysis: MarketAnalysis): void {
   }
 }
 
-/**
- * Main entry point
- */
+// ============ Filter Testing Mode ============
+
+function buildMatchDetailsRequestWithFilter(matchId: string, filterValue: number): Buffer {
+  // Field 1 (match ID): tag 0x08 = field 1, wire type 0 (varint)
+  const matchIdBytes = [0x08, ...encodeBigVarint(BigInt(matchId))];
+  // Field 2 (filter): tag 0x10 = field 2, wire type 0 (varint)
+  const filterBytes = [0x10, ...encodeVarint(filterValue)];
+  return Buffer.from([...matchIdBytes, ...filterBytes]);
+}
+
+async function fetchMatchDetailsWithFilter(matchId: string, filterValue: number): Promise<Buffer | null> {
+  try {
+    console.log(`[Filter] Fetching match ${matchId} with Field 2 = ${filterValue}...`);
+    const requestBody = buildMatchDetailsRequestWithFilter(matchId, filterValue);
+    const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
+    return response;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`[Filter] Request failed: ${errorMessage}`);
+    return null;
+  }
+}
+
+interface FilterTestResult {
+  filterValue: number;
+  responseSize: number;
+  marketCount: number;
+  marketGroups: string[];
+  error?: string;
+}
+
+async function runFilterTest(matchId: string, filterValue: number): Promise<FilterTestResult> {
+  const result: FilterTestResult = {
+    filterValue,
+    responseSize: 0,
+    marketCount: 0,
+    marketGroups: [],
+  };
+
+  try {
+    const rawData = await fetchMatchDetailsWithFilter(matchId, filterValue);
+
+    if (!rawData) {
+      result.error = "No response received";
+      return result;
+    }
+
+    result.responseSize = rawData.length;
+
+    if (rawData.length < 100) {
+      result.error = "Response too small (< 100 bytes)";
+      return result;
+    }
+
+    const markets = parseAllMarketsFromProto(rawData);
+    result.marketCount = markets.length;
+
+    const groupSet = new Set<string>();
+    for (const market of markets) {
+      if (market.groupName) {
+        groupSet.add(market.groupName);
+      }
+    }
+    result.marketGroups = Array.from(groupSet).sort();
+
+    return result;
+  } catch (error) {
+    result.error = error instanceof Error ? error.message : String(error);
+    return result;
+  }
+}
+
+function printFilterTestResult(result: FilterTestResult, baselineResult?: FilterTestResult): void {
+  console.log(`\n${"─".repeat(80)}`);
+  console.log(`FILTER VALUE: ${result.filterValue}`);
+  console.log(`${"─".repeat(80)}`);
+
+  if (result.error) {
+    console.log(`  ❌ Error: ${result.error}`);
+    return;
+  }
+
+  console.log(`  Response size: ${result.responseSize} bytes`);
+  console.log(`  Markets parsed: ${result.marketCount}`);
+  console.log(`  Market groups (${result.marketGroups.length}):`);
+
+  for (const group of result.marketGroups) {
+    console.log(`    - ${group}`);
+  }
+
+  if (baselineResult && !baselineResult.error) {
+    const sizeDiff = result.responseSize - baselineResult.responseSize;
+    const marketDiff = result.marketCount - baselineResult.marketCount;
+    const sizeDiffStr = sizeDiff >= 0 ? `+${sizeDiff}` : `${sizeDiff}`;
+    const marketDiffStr = marketDiff >= 0 ? `+${marketDiff}` : `${marketDiff}`;
+
+    console.log(`\n  Comparison to baseline (no filter):`);
+    console.log(`    Size diff: ${sizeDiffStr} bytes (${((sizeDiff / baselineResult.responseSize) * 100).toFixed(1)}%)`);
+    console.log(`    Market diff: ${marketDiffStr} markets`);
+
+    const newGroups = result.marketGroups.filter((g) => !baselineResult.marketGroups.includes(g));
+    const missingGroups = baselineResult.marketGroups.filter((g) => !result.marketGroups.includes(g));
+
+    if (newGroups.length > 0) {
+      console.log(`    New groups: ${newGroups.join(", ")}`);
+    }
+    if (missingGroups.length > 0) {
+      console.log(`    Missing groups: ${missingGroups.join(", ")}`);
+    }
+  }
+}
+
+async function runFilterTestMode(matchId: string, filterValue: number): Promise<void> {
+  console.log("\n" + "=".repeat(100));
+  console.log("BETCLIC FILTER TESTING MODE");
+  console.log("=".repeat(100));
+  console.log(`\nMatch ID: ${matchId}`);
+  console.log(`Testing Field 2 with value: ${filterValue}`);
+
+  console.log("\n" + "=".repeat(100));
+  console.log("FETCHING BASELINE (no filter)");
+  console.log("=".repeat(100));
+
+  const baselineData = await fetchMatchDetails(matchId);
+  let baselineResult: FilterTestResult | undefined;
+
+  if (baselineData) {
+    const markets = parseAllMarketsFromProto(baselineData);
+    const groupSet = new Set<string>();
+    for (const market of markets) {
+      if (market.groupName) {
+        groupSet.add(market.groupName);
+      }
+    }
+
+    baselineResult = {
+      filterValue: -1,
+      responseSize: baselineData.length,
+      marketCount: markets.length,
+      marketGroups: Array.from(groupSet).sort(),
+    };
+
+    console.log(`\n  Baseline response size: ${baselineResult.responseSize} bytes`);
+    console.log(`  Baseline markets: ${baselineResult.marketCount}`);
+    console.log(`  Baseline groups (${baselineResult.marketGroups.length}):`);
+    for (const group of baselineResult.marketGroups) {
+      console.log(`    - ${group}`);
+    }
+  } else {
+    console.log("\n  ⚠️  Could not fetch baseline (no filter) - comparison will be skipped");
+  }
+
+  console.log("\n" + "=".repeat(100));
+  console.log(`TESTING FILTER VALUE: ${filterValue}`);
+  console.log("=".repeat(100));
+
+  const result = await runFilterTest(matchId, filterValue);
+  printFilterTestResult(result, baselineResult);
+
+  console.log("\n" + "=".repeat(100));
+  console.log("SUMMARY");
+  console.log("=".repeat(100));
+
+  if (result.error) {
+    console.log(`\n❌ Filter test failed: ${result.error}`);
+  } else if (baselineResult) {
+    const sizeDiff = result.responseSize - baselineResult.responseSize;
+    const marketDiff = result.marketCount - baselineResult.marketCount;
+
+    if (sizeDiff === 0 && marketDiff === 0) {
+      console.log(`\n⚠️  Filter value ${filterValue} produced identical results to baseline`);
+      console.log("   This filter value may not affect the response");
+    } else {
+      console.log(`\n✅ Filter value ${filterValue} produced different results:`);
+      console.log(`   Response size: ${result.responseSize} bytes (${sizeDiff >= 0 ? "+" : ""}${sizeDiff})`);
+      console.log(`   Markets: ${result.marketCount} (${marketDiff >= 0 ? "+" : ""}${marketDiff})`);
+    }
+  } else {
+    console.log(`\n✅ Filter test completed:`);
+    console.log(`   Response size: ${result.responseSize} bytes`);
+    console.log(`   Markets: ${result.marketCount}`);
+  }
+
+  console.log("\n" + "=".repeat(100));
+  console.log("TIPS");
+  console.log("=".repeat(100));
+  console.log(`
+  Try different filter values to discover market group filters:
+    --filter 0    Test filter value 0
+    --filter 1    Test filter value 1
+    --filter 5    Test filter value 5
+    ...
+
+  Combine with other flags:
+    --filter 5 --proto    Show protobuf structure of filtered response
+    --filter 5 --verbose  Show detailed market information
+  `);
+}
+
+// ============ Main Entry Point ============
+
 async function main(): Promise<void> {
   console.log("\n" + "=".repeat(100));
   console.log("BETCLIC MARKET DISCOVERY SCRIPT");
   console.log("=".repeat(100));
 
-  // Determine match ID
   let matchId: string;
 
   if (MATCH_ID_ARG) {
@@ -570,7 +766,17 @@ async function main(): Promise<void> {
     console.log(`URL: ${DEFAULT_MATCH_URL}`);
   }
 
-  // Fetch match data
+  if (FILTER_ARG !== undefined) {
+    const filterValue = parseInt(FILTER_ARG, 10);
+    if (isNaN(filterValue) || filterValue < 0) {
+      console.error(`\n❌ Invalid filter value: ${FILTER_ARG}`);
+      console.error("   Filter value must be a non-negative integer");
+      process.exit(1);
+    }
+    await runFilterTestMode(matchId, filterValue);
+    return;
+  }
+
   console.log("\nFetching match data from Betclic gRPC API...");
 
   const rawData = await fetchMatchDetails(matchId);
@@ -592,10 +798,8 @@ async function main(): Promise<void> {
     printRawStructure(rawData);
   }
 
-  // Extract match info
   const matchInfo = extractMatchInfo(rawData, matchId);
 
-  // Parse markets
   console.log("\nParsing markets from protobuf data...");
   const markets = parseAllMarketsFromProto(rawData);
   console.log(`✅ Parsed ${markets.length} markets`);
@@ -610,18 +814,14 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  // Analyze markets
   const analysis = analyzeMarkets(markets);
 
-  // Print summary
   printSummary(analysis, matchInfo);
 
-  // Print detailed markets if verbose
   if (VERBOSE) {
     printDetailedMarkets(analysis);
   }
 
-  // Print tips
   console.log("\n" + "=".repeat(100));
   console.log("TIPS");
   console.log("=".repeat(100));
@@ -631,9 +831,9 @@ async function main(): Promise<void> {
   --verbose       Show detailed market information
   --raw           Show raw protobuf structure (basic)
   --proto         Show detailed protobuf structure analysis
+  --filter <n>    Test filter value (Field 2 = n) in request
   `);
 
-  // Exit with appropriate code
   if (analysis.missingTypes.length > 0 || analysis.suspiciousMarkets.length > 0) {
     console.log("\n⚠️  Some issues found - review the analysis above");
   } else {

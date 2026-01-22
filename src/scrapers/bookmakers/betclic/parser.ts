@@ -913,3 +913,69 @@ export function isValidMatch(match: BetclicListingMatch): boolean {
     match.awayOdds > 0
   );
 }
+
+/**
+ * Parse markets from multiple gRPC responses and merge with deduplication
+ *
+ * This function is used for multi-tab fetching where each tab (market group)
+ * returns a separate response buffer. Markets are deduplicated by 'name:type'
+ * combination to avoid duplicates when the same market appears in multiple tabs.
+ *
+ * @param responses - Array of raw protobuf buffers from multiple market group fetches
+ * @returns Merged and deduplicated array of ScrapedMarket objects
+ */
+export function parseAllMarketsFromMultipleResponses(responses: Buffer[]): ScrapedMarket[] {
+  // Handle empty input gracefully
+  if (!responses || responses.length === 0) {
+    console.log("[Betclic/Parser] No responses to parse");
+    return [];
+  }
+
+  const allMarkets: ScrapedMarket[] = [];
+  let totalMarketsBeforeDedup = 0;
+
+  // Parse each response buffer
+  for (let i = 0; i < responses.length; i++) {
+    const response = responses[i];
+
+    // Skip empty or invalid buffers
+    if (!response || response.length === 0) {
+      continue;
+    }
+
+    try {
+      const markets = parseAllMarketsFromProto(response);
+      totalMarketsBeforeDedup += markets.length;
+      allMarkets.push(...markets);
+    } catch (error) {
+      console.warn(`[Betclic/Parser] Error parsing response ${i + 1}/${responses.length}:`, error);
+      // Continue processing remaining responses
+    }
+  }
+
+  // Deduplicate markets using 'name:type' as unique key
+  const seen = new Map<string, ScrapedMarket>();
+
+  for (const market of allMarkets) {
+    const key = `${market.name}:${market.type}`;
+
+    if (!seen.has(key)) {
+      seen.set(key, market);
+    } else {
+      // If duplicate, keep the one with more selections (more complete data)
+      const existing = seen.get(key)!;
+      if (market.selections.length > existing.selections.length) {
+        seen.set(key, market);
+      }
+    }
+  }
+
+  const dedupedMarkets = Array.from(seen.values());
+
+  console.log(
+    `[Betclic/Parser] Parsed ${responses.length} responses: ` +
+    `${totalMarketsBeforeDedup} total markets, ${dedupedMarkets.length} after deduplication`
+  );
+
+  return dedupedMarkets;
+}

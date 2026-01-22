@@ -200,6 +200,38 @@ export function buildMatchDetailsRequest(matchId: string): Buffer {
 }
 
 /**
+ * Build protobuf request for match details with market group filter
+ *
+ * This function builds a request payload that includes both the match ID
+ * and a market group filter value. The filter determines which tab's markets
+ * are returned by the API.
+ *
+ * Protobuf encoding:
+ * - Field 1 (tag 0x08): match ID as BigInt varint
+ * - Field 2 (tag 0x10): market group filter as varint
+ *
+ * @param matchId - Match ID as string (BigInt-compatible)
+ * @param marketGroup - Market group filter value from MARKET_GROUP_FILTERS
+ * @returns Encoded protobuf message with both fields
+ *
+ * @see MARKET_GROUP_FILTERS in constants.ts for valid filter values
+ * @see backend/docs/betclic-tab-network-analysis.md for filter discovery details
+ */
+export function buildMatchDetailsRequestWithFilter(
+  matchId: string,
+  marketGroup: number
+): Buffer {
+  // Tag 0x08 = field 1, wire type 0 (varint) - match ID
+  const matchIdBytes = [0x08, ...encodeBigVarint(BigInt(matchId))];
+
+  // Tag 0x10 = field 2, wire type 0 (varint) - market group filter
+  // Tag calculation: (fieldNum << 3) | wireType = (2 << 3) | 0 = 16 = 0x10
+  const filterBytes = [0x10, ...encodeVarint(marketGroup)];
+
+  return Buffer.from([...matchIdBytes, ...filterBytes]);
+}
+
+/**
  * Fetch all matches for a league
  *
  * @param league - League slug (e.g., "premier-league")

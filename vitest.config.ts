@@ -29,5 +29,6 @@ export default defineConfig({
     // Test timeout
     testTimeout: 10000,
     // Watch mode settings
-    watch: true,
-  });
+    watch: false
+  },
+});

@@ -13,10 +13,11 @@
  *   npx tsx scripts/betclic-market-discovery.ts --raw                     # Show basic protobuf structure
  *   npx tsx scripts/betclic-market-discovery.ts --proto                   # Show detailed protobuf analysis
  *   npx tsx scripts/betclic-market-discovery.ts --filter 5                # Test filter value (Field 2)
+ *   npx tsx scripts/betclic-market-discovery.ts --multi                    # Use multi-tab fetching (7 tabs)
  */
 
-import { fetchMatchDetails, extractMatchIdFromUrl, fetchGrpcStream } from "../src/scrapers/bookmakers/betclic/navigation.js";
-import { parseAllMarketsFromProto, parseFields, getMessage, getString, encodeBigVarint, encodeVarint } from "../src/scrapers/bookmakers/betclic/parser.js";
+import { fetchMatchDetails, fetchAllMarketGroups, extractMatchIdFromUrl, fetchGrpcStream } from "../src/scrapers/bookmakers/betclic/navigation.js";
+import { parseAllMarketsFromProto, parseAllMarketsFromMultipleResponses, parseFields, getMessage, getString, encodeBigVarint, encodeVarint } from "../src/scrapers/bookmakers/betclic/parser.js";
 import { MARKET_TYPES, MARKET_GROUPS, PROTO_FIELDS, TEAM_SEPARATOR, ENDPOINTS } from "../src/scrapers/bookmakers/betclic/constants.js";
 import type { ScrapedMarket } from "../src/types/full-offer.js";
 
@@ -38,6 +39,7 @@ const args = process.argv.slice(2);
 const VERBOSE = args.includes("--verbose") || args.includes("-v");
 const SHOW_RAW = args.includes("--raw") || args.includes("-r");
 const SHOW_PROTO = args.includes("--proto") || args.includes("-p");
+const USE_MULTI = args.includes("--multi");
 const MATCH_ID_ARG = args.find((_, i) => args[i - 1] === "--match" || args[i - 1] === "-m");
 const URL_ARG = args.find((_, i) => args[i - 1] === "--url" || args[i - 1] === "-u");
 const FILTER_ARG = args.find((_, i) => args[i - 1] === "--filter" || args[i - 1] === "-f");
@@ -777,32 +779,83 @@ async function main(): Promise<void> {
     return;
   }
 
-  console.log("\nFetching match data from Betclic gRPC API...");
+  let markets: ScrapedMarket[];
+  let rawData: Buffer | null = null;
+  let matchInfo: MatchInfo;
 
-  const rawData = await fetchMatchDetails(matchId);
+  if (USE_MULTI) {
+    console.log("\nFetching match data from Betclic gRPC API using multi-tab fetching (7 tabs)...");
 
-  if (!rawData) {
-    console.error("\n❌ Failed to fetch match data");
-    process.exit(1);
+    const responses = await fetchAllMarketGroups(matchId);
+
+    if (!responses || responses.length === 0) {
+      console.error("\n❌ Failed to fetch market groups");
+      process.exit(1);
+    }
+
+    console.log(`✅ Received ${responses.length} market group responses`);
+
+    let totalBytes = 0;
+    for (const res of responses) {
+      totalBytes += res.length;
+    }
+    console.log(`✅ Total ${totalBytes} bytes of data`);
+
+    if (SHOW_PROTO && responses.length > 0) {
+      console.log("\n" + "=".repeat(100));
+      console.log("PROTOBUF STRUCTURE ANALYSIS (First Response)");
+      console.log("=".repeat(100));
+      printProtoStructure(responses[0]);
+      if (responses.length > 1) {
+        console.log(`\n... and ${responses.length - 1} more responses (skipping proto analysis for brevity)`);
+      }
+      console.log("\n✅ Proto structure analysis complete");
+      return;
+    }
+
+    if (SHOW_RAW && responses.length > 0) {
+      console.log("\n" + "=".repeat(100));
+      console.log("RAW PROTOBUF STRUCTURE (First Response)");
+      console.log("=".repeat(100));
+      printRawStructure(responses[0]);
+      if (responses.length > 1) {
+        console.log(`\n... and ${responses.length - 1} more responses (skipping for brevity)`);
+      }
+    }
+
+    console.log("\nParsing markets from protobuf data...");
+    markets = parseAllMarketsFromMultipleResponses(responses);
+    console.log(`✅ Parsed ${markets.length} markets (merged from ${responses.length} responses)`);
+
+    matchInfo = extractMatchInfo(responses[0], matchId);
+  } else {
+    console.log("\nFetching match data from Betclic gRPC API...");
+
+    rawData = await fetchMatchDetails(matchId);
+
+    if (!rawData) {
+      console.error("\n❌ Failed to fetch match data");
+      process.exit(1);
+    }
+
+    console.log(`✅ Received ${rawData.length} bytes of data`);
+
+    if (SHOW_PROTO) {
+      printProtoStructure(rawData);
+      console.log("\n✅ Proto structure analysis complete");
+      return;
+    }
+
+    if (SHOW_RAW) {
+      printRawStructure(rawData);
+    }
+
+    matchInfo = extractMatchInfo(rawData, matchId);
+
+    console.log("\nParsing markets from protobuf data...");
+    markets = parseAllMarketsFromProto(rawData);
+    console.log(`✅ Parsed ${markets.length} markets`);
   }
-
-  console.log(`✅ Received ${rawData.length} bytes of data`);
-
-  if (SHOW_PROTO) {
-    printProtoStructure(rawData);
-    console.log("\n✅ Proto structure analysis complete");
-    return;
-  }
-
-  if (SHOW_RAW) {
-    printRawStructure(rawData);
-  }
-
-  const matchInfo = extractMatchInfo(rawData, matchId);
-
-  console.log("\nParsing markets from protobuf data...");
-  const markets = parseAllMarketsFromProto(rawData);
-  console.log(`✅ Parsed ${markets.length} markets`);
 
   if (markets.length === 0) {
     console.error("\n❌ No markets found in response");
@@ -810,7 +863,7 @@ async function main(): Promise<void> {
     console.log("  - The match has ended or been cancelled");
     console.log("  - The match ID is invalid");
     console.log("  - The API response format has changed");
-    console.log("\nTry using --proto to inspect the protobuf structure");
+    console.log("\nTry using --proto to inspect protobuf structure");
     process.exit(1);
   }
 
@@ -832,6 +885,7 @@ async function main(): Promise<void> {
   --raw           Show raw protobuf structure (basic)
   --proto         Show detailed protobuf structure analysis
   --filter <n>    Test filter value (Field 2 = n) in request
+  --multi         Use multi-tab fetching (7 tabs)
   `);
 
   if (analysis.missingTypes.length > 0 || analysis.suspiciousMarkets.length > 0) {

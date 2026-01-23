@@ -24,13 +24,10 @@ export default defineConfig({
         functions: 90,
         branches: 85,
         statements: 90,
-      },
+      }
     },
     // Test timeout
     testTimeout: 10000,
-    // Split tests into workers for faster execution
-    threads: true,
     // Watch mode settings
     watch: true,
-  },
-});
+  });

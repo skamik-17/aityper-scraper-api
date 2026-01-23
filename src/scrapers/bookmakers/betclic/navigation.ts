@@ -25,6 +25,8 @@ import {
   MARKET_GROUP_FILTERS,
 } from "./constants.js";
 import { encodeVarint, encodeBigVarint } from "./parser.js";
+import { BetclicPlaywrightTabScraper } from "./tab-scraper.js";
+import { createHash } from "crypto";
 
 /**
  * Fetch data from gRPC-web endpoint with retry logic
@@ -421,4 +423,159 @@ export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
   );
 
   return responses;
+}
+
+/**
+ * Calculate SHA-256 hash of a buffer for comparison
+ *
+ * This helper is used to detect if API responses are identical across
+ * different filter values, which indicates that server-side filtering
+ * is not working (as discovered in research-003).
+ *
+ * @param buffer - Buffer to hash
+ * @returns SHA-256 hash string
+ */
+function calculateBufferHash(buffer: Buffer): string {
+  return createHash("sha256").update(buffer).digest("hex");
+}
+
+/**
+ * Calculate unique hashes from an array of buffers
+ *
+ * @param buffers - Array of Buffers to compare
+ * @returns Array of unique hash strings
+ */
+function calculateBufferHashes(buffers: Buffer[]): string[] {
+  const hashes = buffers.map((buffer) => calculateBufferHash(buffer));
+  const unique = Array.from(new Set(hashes));
+  return unique;
+}
+
+/**
+ * Fetch markets using hybrid approach (API + Playwright fallback)
+ *
+ * This function implements graceful degradation:
+ * 1. First tries direct API (fetchAllMarketGroups)
+ * 2. Detects if all API responses are identical (compare buffer hashes)
+ * 3. If identical, falls back to Playwright tab clicking
+ * 4. Returns merged markets from whichever method was used
+ *
+ * This provides a robust scraping strategy that:
+ * - Uses fast API method when it works correctly
+ * - Falls back to Playwright DOM scraping when API doesn't filter properly
+ * - Handles errors gracefully with a fallback chain
+ *
+ * @param matchId - Match ID as string (BigInt-compatible)
+ * @param matchUrl - Full URL to match page (for Playwright fallback)
+ * @returns Promise<Buffer[]> - Array of response Buffers containing markets
+ *
+ * @example
+ * ```typescript
+ * const matchId = "905675290968064";
+ * const matchUrl = "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/west-ham-sunderland-m905675290968064";
+ * const responses = await fetchMarketsHybrid(matchId, matchUrl);
+ * const markets = parseAllMarketsFromMultipleResponses(responses);
+ * ```
+ */
+export async function fetchMarketsHybrid(
+  matchId: string,
+  matchUrl: string
+): Promise<Buffer[]> {
+  console.log(
+    `[Betclic/Navigation] Starting hybrid scrape for match ${matchId}`
+  );
+  console.log(`[Betclic/Navigation] Match URL: ${matchUrl}`);
+
+  let apiResponses: Buffer[] = [];
+  let methodUsed: "API" | "Playwright" = "API";
+  let apiError: Error | unknown = null;
+
+  try {
+    console.log(`[Betclic/Navigation] Trying direct API first...`);
+    apiResponses = await fetchAllMarketGroups(matchId);
+    console.log(
+      `[Betclic/Navigation] API returned ${apiResponses.length} responses`
+    );
+
+    const uniqueHashes = calculateBufferHashes(apiResponses);
+
+    if (uniqueHashes.length === 1) {
+      methodUsed = "Playwright";
+      console.log(
+        `[Betclic/Navigation] All API responses identical (${apiResponses.length} responses with same hash)`
+      );
+      console.log(
+        `[Betclic/Navigation] Server-side filtering not working, falling back to Playwright tab clicking`
+      );
+      console.log(
+        `[Betclic/Navigation] Buffer hash (first 16 chars): ${uniqueHashes[0].substring(0, 16)}...`
+      );
+    } else {
+      methodUsed = "API";
+      console.log(
+        `[Betclic/Navigation] API responses differ (${uniqueHashes.length} unique hashes), using API method`
+      );
+    }
+
+    if (methodUsed === "API") {
+      console.log(`[Betclic/Navigation] Method used: Direct API`);
+      return apiResponses;
+    }
+  } catch (error) {
+    apiError = error;
+    console.warn(
+      `[Betclic/Navigation] API fetch failed:`,
+      error instanceof Error ? error.message : error
+    );
+    methodUsed = "Playwright";
+    console.log(`[Betclic/Navigation] Falling back to Playwright (API error)`);
+  }
+
+  if (methodUsed === "Playwright") {
+    try {
+      console.log(
+        `[Betclic/Navigation] Fetching markets via Playwright tab clicking...`
+      );
+      const tabScraper = new BetclicPlaywrightTabScraper();
+      const playwrightResponses = await tabScraper.fetchMarketsWithTabClicks(
+        matchUrl
+      );
+
+      console.log(
+        `[Betclic/Navigation] Playwright returned ${playwrightResponses.length} responses`
+      );
+      console.log(`[Betclic/Navigation] Method used: Playwright tab clicking`);
+
+      if (apiResponses.length > 0) {
+        console.log(
+          `[Betclic/Navigation] Combining API responses with Playwright responses`
+        );
+        return [...apiResponses, ...playwrightResponses];
+      }
+
+      return playwrightResponses;
+    } catch (playwrightError) {
+      console.error(
+        `[Betclic/Navigation] Playwright fallback failed:`,
+        playwrightError instanceof Error ? playwrightError.message : playwrightError
+      );
+
+      if (apiResponses.length > 0) {
+        console.log(
+          `[Betclic/Navigation] Returning API responses as ultimate fallback`
+        );
+        return apiResponses;
+      }
+
+      throw new Error(
+        `Both API and Playwright methods failed. API: ${
+          apiError instanceof Error ? apiError.message : apiError
+        }, Playwright: ${
+          playwrightError instanceof Error ? playwrightError.message : playwrightError
+        }`
+      );
+    }
+  }
+
+  return apiResponses;
 }

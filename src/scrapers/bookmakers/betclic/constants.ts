@@ -238,3 +238,58 @@ export const MARKET_GROUP_FILTERS = {
  * Type for market group filter values
  */
 export type MarketGroupFilter = (typeof MARKET_GROUP_FILTERS)[keyof typeof MARKET_GROUP_FILTERS];
+
+/**
+ * CSS selectors for Betclic tab navigation.
+ * Source: Screenshot analysis of docs/betclic-screenshots/Top.png
+ */
+export const TAB_SELECTORS = {
+  container: {
+    primary: '[role="tablist"]',
+    fallback: '.market-tabs-container, div:has(> [role="tab"])',
+  } as const,
+
+  button: {
+    primary: 'button[role="tab"]',
+    fallback: 'div[role="tab"], [role="tab"]',
+  } as const,
+
+  buttonPattern: {
+    primary: 'button[role="tab"]:has-text("{{TabName}}")',
+    fallback: 'div[role="tab"]:has-text("{{TabName}}"), [role="tab"]:has-text("{{TabName}}")',
+  } as const,
+
+  tabs: {
+    TOP: 'Top',
+    WYNIK: 'Wynik',
+    STRZELCY: 'Strzelcy',
+    GOLE: 'Gole',
+    METODA_GOLA: 'Metoda gola',
+    HANDICAP: 'Wynik / Handicap',
+    STATYSTYKI: 'Statystyki',
+  } as const,
+
+  excludeTab: 'MyCombi',
+  activeIndicator: {
+    primary: 'aria-selected="true"',
+    fallback: '.is-active, .selected',
+  } as const,
+  allTabs: '[role="tab"]',
+} as const;
+
+export type TabSelectorEntry = {
+  primary: string;
+  fallback: string;
+};
+
+export type TabName = (typeof TAB_SELECTORS.tabs)[keyof typeof TAB_SELECTORS.tabs];
+
+export function getTabSelector(
+  tabName: string,
+  options: { useFallback?: boolean } = {},
+): string {
+  const pattern = options.useFallback
+    ? TAB_SELECTORS.buttonPattern.fallback
+    : TAB_SELECTORS.buttonPattern.primary;
+  return pattern.replace('{{TabName}}', tabName);
+}

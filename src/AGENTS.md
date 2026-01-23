@@ -247,10 +247,31 @@ backend/src/scrapers/bookmakers/betclic/
 ├── index.ts          # Main scraper - orchestrates fetch + parse
 ├── navigation.ts     # gRPC transport, request building, multi-fetch
 ├── parser.ts         # Protobuf decoding, market extraction, merging
-├── constants.ts      # API config, field numbers, MARKET_GROUP_FILTERS
+├── constants.ts      # API config, field numbers, MARKET_GROUP_FILTERS, TAB_SELECTORS
 ├── types.ts          # TypeScript interfaces
 └── README.md         # Comprehensive documentation
 ```
+
+### TAB_SELECTORS Pattern
+
+**Purpose:** CSS selectors for Betclic tab navigation (Playwright DOM scraping)
+
+**Source:** Screenshot analysis of `docs/betclic-screenshots/Top.png`
+
+**Structure:** All selectors follow ARIA accessibility patterns (`role="tab"`, `role="tablist"`)
+
+**Components:**
+- `container` - Primary/fallback for tab list container
+- `button` - Generic tab button selector (used by tab-scraper.ts)
+- `buttonPattern` - Template selector with placeholder `{{TabName}}` for specific tabs
+- `tabs` - Pre-computed tab names: TOP, WYNIK, STRZELCY, GOLE, METODA_GOLA, HANDICAP, STATYSTYKI
+- `excludeTab` - "MyCombi" special feature tab (not a market category)
+- `activeIndicator` - CSS/ARIA attributes for selected tab detection
+- `allTabs` - Generic selector for all tab buttons
+
+**Helper Function:** `getTabSelector(tabName, options?)` - Returns complete selector for specific tab name
+
+**Key Pattern:** Use `as const` for type safety, provide primary/fallback selectors for resilience
 
 ### Common Tasks
 

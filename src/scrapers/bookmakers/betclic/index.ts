@@ -24,6 +24,7 @@ import {
   fetchLeagueMatches,
   fetchMatchDetails,
   fetchAllMarketGroups,
+  fetchMarketsHybrid,
   extractMatchIdFromUrl,
   buildEventUrl,
 } from "./navigation.js";
@@ -263,50 +264,29 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         if (!listingMatch.matchId) continue;
 
         try {
-          // Try multi-tab fetching first
-          let responses: Buffer[] | null = null;
-          let markets: ScrapedMarket[] = [];
+          // Build full match URL for Playwright fallback
+          const matchUrl = buildEventUrl(
+            listingMatch.matchId,
+            league,
+            listingMatch.homeTeam,
+            listingMatch.awayTeam
+          );
 
-          try {
-            // Fetch markets from all 7 tabs
-            responses = await fetchAllMarketGroups(listingMatch.matchId);
+          console.log(
+            `[Betclic/FullOffer] Fetching markets for ${listingMatch.homeTeam} vs ${listingMatch.awayTeam} (ID: ${listingMatch.matchId})`
+          );
 
-            if (responses.length > 0) {
-              console.log(
-                `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: fetched ${responses.length} market groups`
-              );
+          const responses = await fetchMarketsHybrid(
+            listingMatch.matchId,
+            matchUrl
+          );
 
-              // Parse and merge all responses
-              markets = parseAllMarketsFromMultipleResponses(responses);
-            } else {
-              console.log(
-                `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: no valid responses from multi-tab, trying fallback`
-              );
-            }
-          } catch (multiError) {
-            console.warn(
-              `[Betclic/FullOffer] Multi-tab fetch failed for match ${listingMatch.matchId}, falling back to single request:`,
-              multiError instanceof Error ? multiError.message : multiError
-            );
-          }
+          console.log(
+            `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: received ${responses.length} response(s) from hybrid fetch`
+          );
 
-          // Fallback to single request if multi-fetch failed or returned no data
-          if (markets.length === 0) {
-            const detailData = await fetchMatchDetails(listingMatch.matchId);
-
-            if (detailData) {
-              markets = parseAllMarketsFromProto(detailData);
-
-              if (markets.length === 0) {
-                const details = parseMatchDetailsResponse(detailData);
-
-                if (details && details.outcomes.length > 0) {
-                  const teams = parseTeamNames(details.matchName);
-                  markets = parseAllMarkets(details.outcomes, teams);
-                }
-              }
-            }
-          }
+          // Parse and merge all responses
+          const markets = parseAllMarketsFromMultipleResponses(responses);
 
           if (markets.length > 0) {
             const homeTeam = listingMatch.homeTeam;

@@ -14,6 +14,7 @@
 
 import type { Page, Response } from "playwright";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
+import type { BrowserSession } from "../../base/playwright-base.js";
 
 export const TAB_NAMES = [
   "MyCombi",
@@ -36,6 +37,63 @@ export interface TabResponse {
   error?: string;
 }
 
+// Performance metrics tracking
+interface PerformanceMetrics {
+  matchId?: string;
+  matchStartTime: number;
+  matchDuration?: number;
+  navigationTime?: number;
+  tabs: Array<{
+    name: string;
+    startTime: number;
+    duration?: number;
+    responseSize: number;
+    hadNetworkRequest: boolean;
+  }>;
+  sessionReused: boolean;
+  totalResponses: number;
+}
+
+// Cache for browser session reuse between matches
+let cachedSession: { session: BrowserSession; lastUsed: number; matchUrl: string; isBusy: boolean } | null = null;
+const SESSION_TTL = 5 * 60 * 1000; // 5 minutes
+const SESSION_REUSE_THRESHOLD = 2 * 60 * 1000; // 2 minutes - prefer reuse within this window
+
+// Analytics and tracking domains to block
+const BLOCKED_ANALYTICS_DOMAINS = [
+  "google-analytics.com",
+  "googletagmanager.com",
+  "doubleclick.net",
+  "facebook.com",
+  "connect.facebook.net",
+  "stats.g.doubleclick.net",
+  "analytics.twitter.com",
+  "bat.bing.com",
+  "pixel.wp.com",
+  "hotjar.com",
+  "sentry.io",
+  "newrelic.com",
+  "datadoghq.com",
+  "segment.io",
+];
+
+// Script patterns to block (analytics, tracking, ads)
+const BLOCKED_SCRIPT_PATTERNS = [
+  "analytics",
+  "tracking",
+  "pixel",
+  "beacon",
+  "telemetry",
+  "floodlight",
+  "tag",
+  "gtag",
+  "_ga",
+  "gtm",
+  "fbq",
+  "hotjar",
+  "sentry",
+];
+
 export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
   bookmaker = "betclic" as const;
   config = {
@@ -46,8 +104,10 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
     retries: 3,
     timeout: 30000,
     rateLimit: 20,
-    disableResourceBlocking: true,
+    disableResourceBlocking: false,
   };
+
+  private metrics: PerformanceMetrics | null = null;
 
   async scrapeLeague(_league: string): Promise<ReturnType<typeof this.createErrorResult>> {
     return this.createErrorResult(new Error("Use BetclicPlaywrightScraper.scrapeLeague() instead - TabScraper is a specialized utility class only"), 0);
@@ -66,8 +126,51 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
   }
 
   async fetchMarketsWithTabClicks(matchUrl: string): Promise<Buffer[]> {
+    const now = Date.now();
+
+    if (cachedSession && !cachedSession.isBusy) {
+      const sessionAge = now - cachedSession.lastUsed;
+
+      if (sessionAge < SESSION_REUSE_THRESHOLD) {
+        console.log(`[Betclic/TabScraper] ℹ Reusing cached session (age: ${sessionAge}ms)`);
+
+        cachedSession.isBusy = true;
+
+        try {
+          const page = cachedSession.session.page;
+          await this.setupGrpcOnlyInterception(page);
+          const result = await this.captureTabsAndResponses(page, matchUrl, cachedSession.session);
+
+          cachedSession.lastUsed = Date.now();
+          cachedSession.matchUrl = matchUrl;
+
+          return result;
+        } finally {
+          cachedSession.isBusy = false;
+        }
+      } else {
+        console.log(`[Betclic/TabScraper] ℹ Cached session expired (${sessionAge}ms > ${SESSION_REUSE_THRESHOLD}ms), creating new session`);
+        await this.closeCachedSession();
+      }
+    }
+
     return this.executeWithBrowser(
-      async (page) => this.captureTabsAndResponses(page, matchUrl),
+      async (page, session) => {
+        await this.setupGrpcOnlyInterception(page);
+
+        const result = await this.captureTabsAndResponses(page, matchUrl, session);
+
+        cachedSession = {
+          session,
+          lastUsed: Date.now(),
+          matchUrl,
+          isBusy: false,
+        };
+
+        console.log(`[Betclic/TabScraper] ℹ Session cached for reuse (TTL: ${SESSION_TTL}ms)`);
+
+        return result;
+      },
       (error, duration) => {
         console.error(
           `[Betclic/TabScraper] Error during tab scraping:`,
@@ -78,11 +181,88 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
     );
   }
 
+  private async closeCachedSession(): Promise<void> {
+    if (cachedSession) {
+      try {
+        await cachedSession.session.cleanup();
+        console.log(`[Betclic/TabScraper] Closed expired cached session`);
+      } catch (error) {
+        console.error(`[Betclic/TabScraper] Error closing cached session:`, error);
+      } finally {
+        cachedSession = null;
+      }
+    }
+  }
+
+  async cleanup(): Promise<void> {
+    await super.cleanup();
+    await this.closeCachedSession();
+  }
+
+  private async setupGrpcOnlyInterception(page: Page): Promise<void> {
+    await page.route("**/*", (route) => {
+      const url = route.request().url();
+      const resourceType = route.request().resourceType();
+
+      // Allow gRPC API calls
+      if (url.includes("offering.begmedia.com")) {
+        return route.continue();
+      }
+
+      // Block analytics and tracking domains
+      const isBlockedDomain = BLOCKED_ANALYTICS_DOMAINS.some(domain => url.includes(domain));
+      if (isBlockedDomain) {
+        return route.abort();
+      }
+
+      // Block scripts with tracking patterns
+      if (resourceType === "script") {
+        const urlLower = url.toLowerCase();
+        const isBlockedScript = BLOCKED_SCRIPT_PATTERNS.some(pattern => urlLower.includes(pattern));
+        if (isBlockedScript && !url.includes("betclic.pl")) {
+          return route.abort();
+        }
+        // Allow essential Betclic scripts
+        if (url.includes("betclic.pl")) {
+          return route.continue();
+        }
+      }
+
+      // Block heavy resources (images, fonts, media, stylesheets)
+      if (["image", "font", "media", "stylesheet"].includes(resourceType)) {
+        return route.abort();
+      }
+
+      // Allow essential APIs
+      if (url.includes("api.") || url.includes("cdn.")) {
+        return route.continue();
+      }
+
+      // Block everything else (analytics, beacons, etc.)
+      return route.abort();
+    });
+  }
+
   private async captureTabsAndResponses(
     page: Page,
-    matchUrl: string
+    matchUrl: string,
+    session: any
   ): Promise<Buffer[]> {
-    console.log(`[Betclic/TabScraper] Navigating to: ${matchUrl}`);
+    const matchStartTime = Date.now();
+    const navigationStartTime = Date.now();
+    const sessionReused = cachedSession !== null && cachedSession.session === session;
+
+    this.metrics = {
+      matchStartTime,
+      tabs: [],
+      sessionReused,
+      totalResponses: 0,
+    };
+
+    console.log(`[Betclic/TabScraper] [${new Date().toISOString()}] Navigating to: ${matchUrl}`);
+    if (sessionReused) {
+      console.log(`[Betclic/TabScraper] ℹ Reusing browser session from previous match`);
+    }
 
     const responses = new Map<string, Buffer>();
     const tabResponses: TabResponse[] = [];
@@ -94,6 +274,7 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
         url.includes("offering.begmedia.com") &&
         url.includes("GetMatchWithNotification")
       ) {
+        this.metrics!.totalResponses++;
         console.log(`[Betclic/TabScraper] Captured gRPC response from: ${url}`);
       }
     };
@@ -106,11 +287,14 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
         waitUntil: "domcontentloaded",
       });
 
+      const navigationTime = Date.now() - navigationStartTime;
+      this.metrics!.navigationTime = navigationTime;
+
       console.log(
-        `[Betclic/TabScraper] Page loaded, waiting for initial gRPC request...`
+        `[Betclic/TabScraper] Page loaded in ${navigationTime}ms, waiting for initial gRPC request...`
       );
 
-      await this.delay(1000);
+      await this.delay(100);
 
       const tabs = await this.findTabs(page);
       console.log(
@@ -129,11 +313,13 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
 
       for (let i = 0; i < tabs.length; i++) {
         const tab = tabs[i];
+        const tabStartTime = Date.now();
         console.log(
           `[Betclic/TabScraper] [${i + 1}/${tabs.length}] Clicking tab: ${tab.name}`
         );
 
         const tabResult = await this.clickTabAndCaptureResponse(page, tab, i);
+        const tabDuration = Date.now() - tabStartTime;
 
         tabResponses.push(tabResult);
 
@@ -141,7 +327,7 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
           const responseKey = tabResult.response.toString("base64");
           responses.set(responseKey, tabResult.response);
           console.log(
-            `[Betclic/TabScraper] ✓ Captured ${tabResult.responseSize} bytes from ${tab.name}`
+            `[Betclic/TabScraper] ✓ Captured ${tabResult.responseSize} bytes from ${tab.name} (${tabDuration}ms)`
           );
         } else if (tabResult.hadNetworkRequest) {
           console.log(
@@ -153,12 +339,27 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
           );
         }
 
-        await this.delay(200);
+        if (this.metrics) {
+          this.metrics.tabs.push({
+            name: tab.name,
+            startTime: tabStartTime,
+            duration: tabDuration,
+            responseSize: tabResult.responseSize,
+            hadNetworkRequest: tabResult.hadNetworkRequest,
+          });
+        }
+
+      }
+
+      const matchDuration = Date.now() - matchStartTime;
+      if (this.metrics) {
+        this.metrics.matchDuration = matchDuration;
       }
 
       console.log(
-        `[Betclic/TabScraper] Total unique responses: ${responses.size}`
+        `[Betclic/TabScraper] [${new Date().toISOString()}] Total unique responses: ${responses.size} (Match duration: ${matchDuration}ms)`
       );
+      this.logPerformanceMetrics();
 
       return Array.from(responses.values());
     } catch (error) {
@@ -262,7 +463,7 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
       const isActive = await this.isTabActive(tab.element);
       if (!isActive) {
         await tab.element.click();
-        await this.delay(300);
+        await this.delay(50);
       }
     } catch (error) {
       result.error = error instanceof Error ? error.message : String(error);
@@ -302,6 +503,33 @@ export class BetclicPlaywrightTabScraper extends PlaywrightScraper {
   private decodeGrpcResponse(base64: string): Buffer {
     const clean = base64.replace(/[\s\n\r]/g, "");
     return Buffer.from(clean, "base64");
+  }
+
+  private logPerformanceMetrics(): void {
+    if (!this.metrics || this.metrics.tabs.length === 0) return;
+
+    const avgTabDuration =
+      this.metrics.tabs.reduce((sum, tab) => sum + (tab.duration || 0), 0) /
+      this.metrics.tabs.length;
+    const maxTabDuration = Math.max(...this.metrics.tabs.map(t => t.duration || 0));
+    const minTabDuration = Math.min(...this.metrics.tabs.map(t => t.duration || 0));
+    const totalResponseSize = this.metrics.tabs.reduce((sum, t) => sum + t.responseSize, 0);
+
+    console.log(`[Betclic/TabScraper] Performance Metrics:`);
+    console.log(`  Session Reused: ${this.metrics.sessionReused ? 'Yes ✓' : 'No'}`);
+    console.log(`  Navigation Time: ${this.metrics.navigationTime || 0}ms`);
+    console.log(`  Match Duration: ${this.metrics.matchDuration}ms`);
+    console.log(`  Tabs Processed: ${this.metrics.tabs.length}`);
+    console.log(`  Avg Tab Duration: ${Math.round(avgTabDuration)}ms`);
+    console.log(`  Min Tab Duration: ${minTabDuration}ms`);
+    console.log(`  Max Tab Duration: ${maxTabDuration}ms`);
+    console.log(`  Total Responses: ${this.metrics.totalResponses}`);
+    console.log(`  Total Response Size: ${totalResponseSize} bytes`);
+
+    const networkTabs = this.metrics.tabs.filter(t => t.hadNetworkRequest);
+    if (networkTabs.length > 0) {
+      console.log(`  Tabs with Network Requests: ${networkTabs.length}/${this.metrics.tabs.length}`);
+    }
   }
 }
 

@@ -205,33 +205,36 @@ export function buildMatchDetailsRequest(matchId: string): Buffer {
 /**
  * Build protobuf request for match details with market group filter
  *
- * This function builds a request payload that includes both the match ID
- * and a market group filter value. The filter determines which tab's markets
- * are returned by the API.
- *
- * Protobuf encoding:
- * - Field 1 (tag 0x08): match ID as BigInt varint
- * - Field 2 (tag 0x10): market group filter as varint
+ * Based on HAR analysis (2026-01-24), the correct request structure is:
+ * - Field 1 (tag 0x08): match_id as BigInt varint
+ * - Field 2 (tag 0x12): language "pl" as length-delimited string
+ * - Field 3 (tag 0x1a): category_id as length-delimited string (optional)
  *
  * @param matchId - Match ID as string (BigInt-compatible)
- * @param marketGroup - Market group filter value from MARKET_GROUP_FILTERS
- * @returns Encoded protobuf message with both fields
- *
- * @see MARKET_GROUP_FILTERS in constants.ts for valid filter values
- * @see backend/docs/betclic-tab-network-analysis.md for filter discovery details
+ * @param categoryId - Category ID string (e.g., "ca_ftb_rslt") or null for no filter
+ * @returns Encoded protobuf message
  */
 export function buildMatchDetailsRequestWithFilter(
   matchId: string,
-  marketGroup: number
+  categoryId: string | null
 ): Buffer {
-  // Tag 0x08 = field 1, wire type 0 (varint) - match ID
+  // Field 1 (tag 0x08): match_id as BigInt varint
   const matchIdBytes = [0x08, ...encodeBigVarint(BigInt(matchId))];
 
-  // Tag 0x10 = field 2, wire type 0 (varint) - market group filter
-  // Tag calculation: (fieldNum << 3) | wireType = (2 << 3) | 0 = 16 = 0x10
-  const filterBytes = [0x10, ...encodeVarint(marketGroup)];
+  // Field 2 (tag 0x12): language "pl" as length-delimited string
+  // Tag calculation: (fieldNum << 3) | wireType = (2 << 3) | 2 = 18 = 0x12
+  const langBuffer = Buffer.from("pl", "utf8");
+  const langBytes = [0x12, langBuffer.length, ...langBuffer];
 
-  return Buffer.from([...matchIdBytes, ...filterBytes]);
+  // Field 3 (tag 0x1a): category_id as length-delimited string (if provided)
+  // Tag calculation: (fieldNum << 3) | wireType = (3 << 3) | 2 = 26 = 0x1a
+  if (categoryId) {
+    const categoryBuffer = Buffer.from(categoryId, "utf8");
+    const categoryBytes = [0x1a, categoryBuffer.length, ...categoryBuffer];
+    return Buffer.from([...matchIdBytes, ...langBytes, ...categoryBytes]);
+  }
+
+  return Buffer.from([...matchIdBytes, ...langBytes]);
 }
 
 /**
@@ -361,41 +364,26 @@ function delay(ms: number): Promise<void> {
 /**
  * Fetch markets from all market group tabs for a match
  *
- * This function iterates over all MARKET_GROUP_FILTERS values, fetching
- * markets from each tab separately. This is necessary because Betclic's
- * API returns different markets depending on the filter value.
- *
- * The function includes a 100ms delay between requests to avoid rate limiting,
- * and filters out responses smaller than 100 bytes (which indicate empty/invalid data).
- *
- * @param matchId - Match ID as string (BigInt-compatible)
- * @returns Array of valid response Buffers from all market groups
- *
- * @example
- * ```typescript
- * const responses = await fetchAllMarketGroups("905675290968064");
- * const markets = parseAllMarketsFromMultipleResponses(responses);
- * ```
- *
- * @see MARKET_GROUP_FILTERS in constants.ts for available filter values
- * @see parseAllMarketsFromMultipleResponses in parser.ts for merging results
+ * Iterates over MARKET_GROUP_FILTERS category IDs, fetching markets from each tab.
+ * Includes 100ms delay between requests to avoid rate limiting.
+ * Filters out responses smaller than 100 bytes (empty/invalid data).
  */
 export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
   const responses: Buffer[] = [];
-  const filterEntries = Object.entries(MARKET_GROUP_FILTERS);
+  const filterEntries = Object.entries(MARKET_GROUP_FILTERS) as [string, string | null][];
 
   console.log(
     `[Betclic/Navigation] Fetching ${filterEntries.length} market groups for match ${matchId}`
   );
 
-  for (const [groupName, filterValue] of filterEntries) {
+  for (const [groupName, categoryId] of filterEntries) {
     try {
-      console.log(`[Betclic/Navigation] Fetching group ${groupName} (filter=${filterValue})...`);
+      const categoryDisplay = categoryId || "(no filter)";
+      console.log(`[Betclic/Navigation] Fetching group ${groupName} (category=${categoryDisplay})...`);
 
-      const requestBody = buildMatchDetailsRequestWithFilter(matchId, filterValue);
+      const requestBody = buildMatchDetailsRequestWithFilter(matchId, categoryId);
       const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
 
-      // Filter out responses smaller than 100 bytes (empty/invalid data)
       if (response.length >= 100) {
         responses.push(response);
         console.log(
@@ -411,10 +399,8 @@ export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
         `[Betclic/Navigation] Failed to fetch group ${groupName}:`,
         error instanceof Error ? error.message : error
       );
-      // Continue with other groups even if one fails
     }
 
-    // 100ms delay between requests to avoid rate limiting
     await delay(100);
   }
 

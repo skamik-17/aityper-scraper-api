@@ -179,13 +179,22 @@ export const TEAM_SEPARATOR = " - ";
  * Market group filter values for multi-tab fetching.
  *
  * Betclic's match page has 7 tabs, each showing different market categories.
- * The gRPC API uses a filter field (Field 2) to return markets for specific tabs.
+ * The gRPC API uses category ID strings in Field 3 to filter markets by tab.
  *
- * These values are used with buildMatchDetailsRequestWithFilter() to fetch
- * markets from each tab separately, then merge the results.
+ * IMPORTANT: Based on HAR analysis (2026-01-24), the correct request structure is:
+ * - Field 1 (tag 0x08): match_id as BigInt varint
+ * - Field 2 (tag 0x12): language "pl" as length-delimited string
+ * - Field 3 (tag 0x1a): category_id as length-delimited string (e.g., "ca_ftb_rslt")
  *
- * Note: Filter values are based on reverse engineering. If the API changes,
- * use betclic-filter-discovery.ts to rediscover the correct values.
+ * The initial "Top" tab request has NO category filter - it returns all popular markets.
+ * Subsequent tab clicks send requests with specific category IDs.
+ *
+ * Category IDs discovered from HAR file analysis:
+ * - Wynik (Result): "ca_ftb_rslt" (50KB response)
+ * - Strzelcy (Scorers): "ca_ftb_gsc" (544KB response - largest!)
+ * - Gole (Goals): "ca_ftb_goa" (106KB response)
+ * - Metoda Gola (Goal Method): "ca_ftb_goalm" (23KB response)
+ * - Statystyki (Statistics): "ca_ftb_prp" (218KB response)
  *
  * @see backend/docs/betclic-tab-network-analysis.md
  * @see backend/scripts/betclic-filter-discovery.ts
@@ -194,48 +203,55 @@ export const MARKET_GROUP_FILTERS = {
   /**
    * Tab 1: Top (Main/Popular)
    * Markets: 1X2, Double Chance, BTTS, popular O/U, Handicap, Correct Score, Anytime Scorer
+   * Note: Initial load has NO category filter - returns popular markets
    */
-  TOP: 0,
+  TOP: null,
 
   /**
    * Tab 2: Wynik (Result)
    * Markets: 1X2, Draw No Bet, Double Chance, HT/FT, Win to Nil, Result+BTTS combos
+   * Category ID from HAR: "ca_ftb_rslt"
    */
-  WYNIK: 1,
+  WYNIK: "ca_ftb_rslt",
 
   /**
    * Tab 3: Strzelcy (Scorers)
    * Markets: Anytime Scorer, First/Last Scorer, 2+ Goals Scorer, Hat-trick, Assists
+   * Category ID from HAR: "ca_ftb_gsc"
    */
-  STRZELCY: 2,
+  STRZELCY: "ca_ftb_gsc",
 
   /**
    * Tab 4: Gole (Goals)
    * Markets: Total Goals O/U, Team Goals O/U, BTTS, Goal Ranges, Half Goals, Odd/Even
+   * Category ID from HAR: "ca_ftb_goa"
    */
-  GOLE: 3,
+  GOLE: "ca_ftb_goa",
 
   /**
    * Tab 5: Metoda Gola (Goal Method)
    * Markets: Penalty Goal, Header Goal, Free Kick Goal
+   * Category ID from HAR: "ca_ftb_goalm"
    */
-  METODA_GOLA: 4,
+  METODA_GOLA: "ca_ftb_goalm",
 
   /**
    * Tab 6: Wynik / Handicap (Result / Handicap)
    * Markets: Asian Handicap, European Handicap, Correct Score, Goal Margin
+   * Category ID from HAR: "ca_ftb_cshcp" (Correct Score + Handicap)
    */
-  HANDICAP: 5,
+  HANDICAP: "ca_ftb_cshcp",
 
   /**
    * Tab 7: Statystyki (Statistics)
    * Markets: Corners, Cards, Shots, Fouls, Offsides
+   * Category ID from HAR: "ca_ftb_prp"
    */
-  STATYSTYKI: 6,
+  STATYSTYKI: "ca_ftb_prp",
 } as const;
 
 /**
- * Type for market group filter values
+ * Type for market group filter values (string category IDs or null for no filter)
  */
 export type MarketGroupFilter = (typeof MARKET_GROUP_FILTERS)[keyof typeof MARKET_GROUP_FILTERS];
 

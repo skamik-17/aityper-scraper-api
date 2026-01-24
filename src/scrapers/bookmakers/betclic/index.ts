@@ -30,16 +30,14 @@ import {
 } from "./navigation.js";
 import {
   parseListingResponse,
-  parseMatchDetailsResponse,
-  parseAllMarkets,
   parseAllMarketsFromProto,
   parseAllMarketsFromMultipleResponses,
   parseTeamNames,
-  extract1X2Market,
-  extractDoubleChanceMarket,
-  extractBTTSMarket,
-  extractOverUnderMarkets,
   isValidMatch,
+  extract1X2FromMarkets,
+  extractDoubleChanceFromMarkets,
+  extractBTTSFromMarkets,
+  extractOverUnderFromMarkets,
 } from "./parser.js";
 import type { BetclicListingMatch } from "./types.js";
 
@@ -187,24 +185,27 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         );
       }
 
-      const matchDetails = parseMatchDetailsResponse(responseData);
-      if (!matchDetails) {
+      const markets = parseAllMarketsFromProto(responseData);
+      if (markets.length === 0) {
         return this.createMatchDetailNotFoundResult(
           "Could not parse match data",
           Date.now() - startTime
         );
       }
 
-      const { homeTeam, awayTeam, outcomes } = matchDetails;
+      const cachedEvent = this.getCachedEvent(matchId);
+      const homeTeam = cachedEvent?.homeTeam || "";
+      const awayTeam = cachedEvent?.awayTeam || "";
+      const eventName = cachedEvent?.matchName || `${homeTeam} - ${awayTeam}`;
 
-      const market1X2 = extract1X2Market(outcomes, homeTeam, awayTeam);
-      const marketDoubleChance = extractDoubleChanceMarket(outcomes, homeTeam, awayTeam);
-      const marketBTTS = extractBTTSMarket(outcomes);
-      const marketOverUnder = extractOverUnderMarkets(outcomes);
+      const market1X2 = extract1X2FromMarkets(markets, homeTeam, awayTeam);
+      const marketDoubleChance = extractDoubleChanceFromMarkets(markets);
+      const marketBTTS = extractBTTSFromMarkets(markets);
+      const marketOverUnder = extractOverUnderFromMarkets(markets);
 
       const matchOdds: RawScrapedMatchOdds = {
         bookmaker: this.bookmaker,
-        eventName: matchDetails.matchName,
+        eventName,
         homeTeam,
         awayTeam,
         eventUrl,

@@ -6,33 +6,64 @@
  *
  * This module has NO network dependencies - it only works with
  * raw Buffer data from the gRPC API.
+ *
+ * ARCHITECTURE:
+ * - Uses recursive protobuf parsing that handles both TOP tab (flat) and other tabs (grouped)
+ * - No fallback strategies - single clean parsing path
+ * - Outputs ScrapedMarket[] compatible with the rest of the system
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type {
-  ParsedFields,
-  ProtobufFieldValue,
-  ExtractedOutcome,
-  BetclicListingMatch,
-  BetclicMatchDetails,
-  ParsedTeams,
-  Market1X2,
-  MarketDoubleChance,
-  MarketBTTS,
-  MarketOverUnder,
-  VarintReadResult,
-  BigIntVarintReadResult,
-} from "./types.js";
+import type { BetclicListingMatch, ParsedTeams } from "./types.js";
 import {
   PROTO_FIELDS,
-  OUTCOME_NAMES,
   TEAM_SEPARATOR,
-  OVER_UNDER_LINES,
-  MARKET_GROUPS,
   MARKET_TYPES,
 } from "./constants.js";
 
-// ============ Protobuf Parsing Helpers ============
+// ============================================================================
+// INTERNAL TYPES
+// ============================================================================
+
+interface RawField {
+  fieldNumber: number;
+  wireType: number;
+  value: number | bigint | string | Buffer | RawField[];
+}
+
+interface ParsedSelection {
+  id: string;
+  name: string;
+  nameLong?: string;
+  odds: number;
+}
+
+interface ParsedMarket {
+  id: string;
+  name: string;
+  nameLong?: string;
+  selections: ParsedSelection[];
+}
+
+interface ParsedMarketGroup {
+  id: string;
+  name: string;
+  markets: ParsedMarket[];
+}
+
+interface VarintReadResult {
+  value: number;
+  bytesRead: number;
+}
+
+interface BigIntVarintReadResult {
+  value: bigint;
+  bytesRead: number;
+}
+
+// ============================================================================
+// PROTOBUF LOW-LEVEL
+// ============================================================================
 
 /**
  * Read a varint from buffer at offset
@@ -98,88 +129,429 @@ export function encodeBigVarint(n: bigint): number[] {
 }
 
 /**
- * Parse all fields from a protobuf buffer
+ * Try to decode buffer as UTF-8 string
+ * Returns null if buffer contains non-printable characters
  */
-export function parseFields(buf: Buffer): ParsedFields {
-  const fields = new Map<number, ProtobufFieldValue[]>();
+function tryDecodeString(buf: Buffer): string | null {
+  try {
+    const str = buf.toString("utf8");
+    if (/^[\x20-\x7E\xA0-\xFF\u0100-\uFFFF\s]+$/.test(str) && str.length > 0) {
+      return str;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Parse protobuf buffer into field array
+ * Recursively parses nested messages
+ */
+function parseProtobuf(buf: Buffer, depth: number = 0): RawField[] {
+  const fields: RawField[] = [];
   let offset = 0;
+  const maxDepth = 15;
 
   while (offset < buf.length) {
-    const tag = readVarint(buf, offset);
-    if (tag.bytesRead === 0) break;
-    offset += tag.bytesRead;
+    const tagResult = readVarint(buf, offset);
+    if (tagResult.bytesRead === 0) break;
+    offset += tagResult.bytesRead;
 
-    const fieldNum = tag.value >> 3;
-    const wireType = tag.value & 0x07;
+    const fieldNumber = tagResult.value >> 3;
+    const wireType = tagResult.value & 0x07;
 
-    let value: ProtobufFieldValue | null = null;
+    if (fieldNumber === 0 || fieldNumber > 536870911) break;
+
+    let value: number | bigint | string | Buffer | RawField[];
 
     if (wireType === 0) {
       // Varint
-      const v = readVarint(buf, offset);
-      offset += v.bytesRead;
-      value = { type: "varint", data: v.value };
-    } else if (wireType === 2) {
-      // Length-delimited (bytes/string/embedded message)
-      const len = readVarint(buf, offset);
-      offset += len.bytesRead;
-      if (offset + len.value > buf.length) break;
-      const data = buf.slice(offset, offset + len.value);
-      offset += len.value;
-      value = { type: "bytes", data };
-    } else if (wireType === 5) {
-      // 32-bit (float)
-      if (offset + 4 > buf.length) break;
-      value = { type: "float", data: buf.readFloatLE(offset) };
-      offset += 4;
+      const result = readVarintBigInt(buf, offset);
+      offset += result.bytesRead;
+      value = result.value <= BigInt(Number.MAX_SAFE_INTEGER)
+        ? Number(result.value)
+        : result.value;
     } else if (wireType === 1) {
       // 64-bit (double)
       if (offset + 8 > buf.length) break;
-      value = { type: "double", data: buf.readDoubleLE(offset) };
+      value = buf.readDoubleLE(offset);
       offset += 8;
+    } else if (wireType === 2) {
+      // Length-delimited (bytes/string/embedded message)
+      const lenResult = readVarint(buf, offset);
+      offset += lenResult.bytesRead;
+      const len = lenResult.value;
+      if (offset + len > buf.length) break;
+      const data = buf.slice(offset, offset + len);
+      offset += len;
+
+      const str = tryDecodeString(data);
+      if (str !== null) {
+        value = str;
+      } else if (depth < maxDepth) {
+        const nested = parseProtobuf(data, depth + 1);
+        value = nested.length > 0 ? nested : data;
+      } else {
+        value = data;
+      }
+    } else if (wireType === 5) {
+      // 32-bit (float)
+      if (offset + 4 > buf.length) break;
+      value = buf.readFloatLE(offset);
+      offset += 4;
     } else {
       // Unknown wire type
       break;
     }
 
-    if (value) {
-      if (!fields.has(fieldNum)) {
-        fields.set(fieldNum, []);
-      }
-      fields.get(fieldNum)!.push(value);
-    }
+    fields.push({ fieldNumber, wireType, value });
   }
 
   return fields;
 }
 
+// ============================================================================
+// FIELD ACCESSORS
+// ============================================================================
+
+function getField(fields: RawField[], num: number): RawField | undefined {
+  return fields.find((f) => f.fieldNumber === num);
+}
+
+function getFieldValue<T>(fields: RawField[], num: number): T | undefined {
+  const field = getField(fields, num);
+  return field?.value as T | undefined;
+}
+
+function getAllFields(fields: RawField[], num: number): RawField[] {
+  return fields.filter((f) => f.fieldNumber === num);
+}
+
+// ============================================================================
+// EXTRACTION FUNCTIONS
+// ============================================================================
+
 /**
- * Get string value from parsed fields
+ * Extract a single selection from protobuf fields
+ *
+ * Selection structure:
+ * - Field 1: selection id (varint)
+ * - Field 10: short name (string)
+ * - Field 11: long name (string)
+ * - Field 12: odds (double, wireType 1)
  */
-export function getString(fields: ParsedFields, num: number): string | null {
-  const f = fields.get(num)?.[0];
-  if (f?.type === "bytes" && Buffer.isBuffer(f.data)) {
-    return f.data.toString("utf8");
+function extractSelection(selFields: RawField[]): ParsedSelection | null {
+  const id = String(getFieldValue<number | bigint>(selFields, 1) || "");
+  const name = getFieldValue<string>(selFields, 10) || "";
+  const nameLong = getFieldValue<string>(selFields, 11);
+
+  const oddsField = getField(selFields, 12);
+  let odds = 0;
+
+  if (oddsField?.wireType === 1) {
+    odds = oddsField.value as number;
   }
-  return null;
+
+  if (!name || odds <= 0 || odds > 1000) return null;
+
+  // Round to 2 decimal places
+  odds = Math.round(odds * 100) / 100;
+
+  return {
+    id,
+    name,
+    nameLong: nameLong !== name ? nameLong : undefined,
+    odds,
+  };
 }
 
 /**
- * Get varint value from parsed fields
+ * Extract market from protobuf fields
+ *
+ * Handles TWO selection patterns:
+ * 1. TOP tab: selections directly in Field 16
+ * 2. Other tabs: selections nested in Field 10 → Field 1 → Field 1
+ *
+ * Market structure:
+ * - Field 1: market id (varint)
+ * - Field 2: market name (string)
+ * - Field 3: market name long (string)
+ * - Field 16: direct selections (TOP tab)
+ * - Field 10: nested selection groups (other tabs)
  */
-export function getVarint(fields: ParsedFields, num: number): number | null {
-  const f = fields.get(num)?.[0];
-  if (f?.type === "varint" && typeof f.data === "number") {
-    return f.data;
+function extractMarket(marketFields: RawField[]): ParsedMarket | null {
+  const id = String(getFieldValue<number | bigint>(marketFields, 1) || "");
+  const name = getFieldValue<string>(marketFields, 2) || "";
+  const nameLong = getFieldValue<string>(marketFields, 3);
+
+  if (!name) return null;
+
+  const selections: ParsedSelection[] = [];
+
+  // Strategy 1: Direct selections in Field 16 (TOP tab style)
+  const directSelections = getAllFields(marketFields, 16);
+  for (const selField of directSelections) {
+    if (Array.isArray(selField.value)) {
+      const sel = extractSelection(selField.value);
+      if (sel) selections.push(sel);
+    }
   }
-  return null;
+
+  // Strategy 2: Nested selections in Field 10 (other tabs style)
+  if (selections.length === 0) {
+    const selectionGroups = getAllFields(marketFields, 10);
+
+    for (const selGroup of selectionGroups) {
+      if (Array.isArray(selGroup.value)) {
+        // Field 10 → Field 1 → Field 1 → selection
+        for (const wrapper of selGroup.value) {
+          if (wrapper.fieldNumber === 1 && Array.isArray(wrapper.value)) {
+            for (const innerWrapper of wrapper.value) {
+              if (innerWrapper.fieldNumber === 1 && Array.isArray(innerWrapper.value)) {
+                const sel = extractSelection(innerWrapper.value);
+                if (sel) selections.push(sel);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (selections.length === 0) return null;
+
+  return {
+    id,
+    name,
+    nameLong: nameLong !== name ? nameLong : undefined,
+    selections,
+  };
 }
 
 /**
- * Get BigInt varint from raw buffer for a specific field number
- * Re-parses to handle large values
+ * Extract market groups from Field 11 entries
+ *
+ * Handles TWO structures:
+ *
+ * 1. TOP tab (flat structure - no group wrapper):
+ *    Field 11 contains directly:
+ *    - Field 3: market data (id, name, selections in Field 16)
+ *
+ * 2. Other tabs (grouped structure):
+ *    Field 11 contains:
+ *    - Field 1: group id (string like "subca_ftb_bgo")
+ *    - Field 2: group name (string like "Gole - popularne")
+ *    - Field 3: market data (id, name, selections in Field 10)
  */
-export function getVarintBigInt(fields: ParsedFields, num: number, buf: Buffer): bigint | null {
+function extractMarketGroups(matchFields: RawField[]): ParsedMarketGroup[] {
+  const groups: ParsedMarketGroup[] = [];
+  const field11Entries = getAllFields(matchFields, 11);
+
+  // Collect ungrouped markets (for TOP tab)
+  const ungroupedMarkets: ParsedMarket[] = [];
+
+  for (const entry of field11Entries) {
+    if (!Array.isArray(entry.value)) continue;
+
+    const groupId = getFieldValue<string>(entry.value, 1);
+    const groupName = getFieldValue<string>(entry.value, 2);
+    const marketFields = getAllFields(entry.value, 3);
+
+    // Check if this is a grouped structure (has Field 1 and Field 2 with content)
+    const hasGroupWrapper =
+      typeof groupId === "string" &&
+      typeof groupName === "string" &&
+      groupName.length > 0;
+
+    if (hasGroupWrapper) {
+      // Grouped structure (WYNIK, STRZELCY, GOLE, etc.)
+      const markets: ParsedMarket[] = [];
+      for (const marketField of marketFields) {
+        if (Array.isArray(marketField.value)) {
+          const market = extractMarket(marketField.value);
+          if (market) markets.push(market);
+        }
+      }
+
+      if (markets.length > 0) {
+        groups.push({ id: groupId, name: groupName, markets });
+      }
+    } else {
+      // Flat structure (TOP tab) - markets directly in Field 3
+      for (const marketField of marketFields) {
+        if (Array.isArray(marketField.value)) {
+          const market = extractMarket(marketField.value);
+          if (market) ungroupedMarkets.push(market);
+        }
+      }
+    }
+  }
+
+  // Create synthetic group for TOP tab markets
+  if (ungroupedMarkets.length > 0) {
+    groups.unshift({
+      id: "top_markets",
+      name: "Top zakłady",
+      markets: ungroupedMarkets,
+    });
+  }
+
+  return groups;
+}
+
+// ============================================================================
+// MARKET TYPE INFERENCE
+// ============================================================================
+
+/**
+ * Infer market type from market name
+ * Matches Polish market names to canonical market types
+ */
+function inferMarketType(name: string): string {
+  const lower = name.toLowerCase();
+
+  // Match result
+  if (lower.includes("wynik meczu") || lower.includes("1x2")) return MARKET_TYPES.MATCH_1X2;
+  if (lower.includes("podwójna szansa") || lower.includes("podwojna szansa")) return MARKET_TYPES.DOUBLE_CHANCE;
+  if (lower.includes("remis nie obowiązuje") || lower.includes("remis zwrot")) return MARKET_TYPES.DRAW_NO_BET;
+
+  // Goals
+  if (lower.includes("obie drużyny") || lower.includes("obie druzyny") || lower.includes("btts")) return MARKET_TYPES.BTTS;
+  if ((lower.includes("gol") || lower.includes("bramk")) && (lower.includes("powyżej") || lower.includes("poniżej"))) return MARKET_TYPES.OVER_UNDER;
+  if (lower.includes("dokładny wynik") || lower.includes("dokladny wynik") || lower.includes("correct score")) return MARKET_TYPES.CORRECT_SCORE;
+
+  // Handicap
+  if (lower.includes("handicap")) return MARKET_TYPES.HANDICAP;
+
+  // Half time
+  if (lower.includes("połowa") || lower.includes("polowa") || lower.includes("1. poł") || lower.includes("przerw")) return MARKET_TYPES.HALF_TIME_1X2;
+
+  // Statistics
+  if (lower.includes("rzut rożny") || lower.includes("rożne") || lower.includes("corner") || lower.includes("róg")) return MARKET_TYPES.CORNERS_TOTAL;
+  if (lower.includes("kartki") || lower.includes("czerwona kartka") || lower.includes("żółta kartka") || lower.includes("card")) return MARKET_TYPES.CARDS_TOTAL;
+  if (lower.includes("strzały") || lower.includes("celne strzały") || lower.includes("shot")) return MARKET_TYPES.MOST_SHOTS_ON_TARGET;
+  if (lower.includes("faule") || lower.includes("foul")) return MARKET_TYPES.FOULS_TOTAL;
+  if (lower.includes("spalone") || lower.includes("offside")) return MARKET_TYPES.OFFSIDES_TOTAL;
+
+  // Goal method
+  if (lower.includes("rzut karny") || lower.includes("penalty") || lower.includes("karny")) return MARKET_TYPES.PENALTY_AWARDED;
+  if (lower.includes("głową") || lower.includes("header")) return MARKET_TYPES.HEADER_GOAL;
+  if (lower.includes("rzut wolny") || lower.includes("free kick")) return MARKET_TYPES.FREE_KICK_GOAL;
+
+  // Players
+  if (lower.includes("asysta") || lower.includes("asysty") || lower.includes("assist")) return MARKET_TYPES.PLAYER_ASSISTS;
+  if (lower.includes("strzel") || lower.includes("gola") || lower.includes("bramkę")) return MARKET_TYPES.ANYTIME_GOALSCORER;
+
+  return "OTHER";
+}
+
+// ============================================================================
+// MAIN API
+// ============================================================================
+
+/**
+ * Parse all markets from raw protobuf data into unified ScrapedMarket format
+ * This is the main function for full offer scraping
+ *
+ * @param rawData - Raw protobuf buffer from match details response
+ * @returns Array of ScrapedMarket objects
+ */
+export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
+  const rootFields = parseProtobuf(rawData);
+  const wrapperFields = getFieldValue<RawField[]>(rootFields, 1) || [];
+  const matchFields = getFieldValue<RawField[]>(wrapperFields, 1) || [];
+
+  const marketGroups = extractMarketGroups(matchFields);
+
+  const markets: ScrapedMarket[] = [];
+  for (const group of marketGroups) {
+    for (const market of group.markets) {
+      markets.push({
+        name: market.name,
+        groupName: group.name,
+        type: inferMarketType(market.name),
+        selections: market.selections.map((sel) => ({
+          name: sel.name,
+          odds: sel.odds,
+        })),
+      });
+    }
+  }
+
+  return markets;
+}
+
+/**
+ * Parse markets from multiple gRPC responses and merge with deduplication
+ *
+ * This function is used for multi-tab fetching where each tab (market group)
+ * returns a separate response buffer. Markets are deduplicated by 'name:type'
+ * combination to avoid duplicates when the same market appears in multiple tabs.
+ *
+ * @param responses - Array of raw protobuf buffers from multiple market group fetches
+ * @returns Merged and deduplicated array of ScrapedMarket objects
+ */
+export function parseAllMarketsFromMultipleResponses(responses: Buffer[]): ScrapedMarket[] {
+  if (!responses || responses.length === 0) {
+    console.log("[Betclic/Parser] No responses to parse");
+    return [];
+  }
+
+  const allMarkets: ScrapedMarket[] = [];
+  let totalMarketsBeforeDedup = 0;
+
+  for (let i = 0; i < responses.length; i++) {
+    const response = responses[i];
+
+    if (!response || response.length === 0) {
+      continue;
+    }
+
+    try {
+      const markets = parseAllMarketsFromProto(response);
+      totalMarketsBeforeDedup += markets.length;
+      allMarkets.push(...markets);
+    } catch (error) {
+      console.warn(`[Betclic/Parser] Error parsing response ${i + 1}/${responses.length}:`, error);
+    }
+  }
+
+  // Deduplicate markets using 'name:type' as unique key
+  const seen = new Map<string, ScrapedMarket>();
+
+  for (const market of allMarkets) {
+    const key = `${market.name}:${market.type}`;
+
+    if (!seen.has(key)) {
+      seen.set(key, market);
+    } else {
+      // If duplicate, keep the one with more selections
+      const existing = seen.get(key)!;
+      if (market.selections.length > existing.selections.length) {
+        seen.set(key, market);
+      }
+    }
+  }
+
+  const dedupedMarkets = Array.from(seen.values());
+
+  console.log(
+    `[Betclic/Parser] Parsed ${responses.length} responses: ` +
+      `${totalMarketsBeforeDedup} total markets, ${dedupedMarkets.length} after deduplication`
+  );
+
+  return dedupedMarkets;
+}
+
+// ============================================================================
+// LISTING RESPONSE PARSER
+// ============================================================================
+
+/**
+ * Helper to get BigInt varint from raw buffer
+ */
+function getVarintBigInt(buf: Buffer, targetField: number): bigint | null {
   let offset = 0;
 
   while (offset < buf.length) {
@@ -191,7 +563,7 @@ export function getVarintBigInt(fields: ParsedFields, num: number, buf: Buffer):
 
     if (wireType === 0) {
       const v = readVarintBigInt(buf, offset);
-      if (fieldNum === num) return v.value;
+      if (fieldNum === targetField) return v.value;
       offset += v.bytesRead;
     } else if (wireType === 2) {
       const len = readVarint(buf, offset);
@@ -209,165 +581,59 @@ export function getVarintBigInt(fields: ParsedFields, num: number, buf: Buffer):
 }
 
 /**
- * Get double value from parsed fields
- */
-export function getDouble(fields: ParsedFields, num: number): number | null {
-  const f = fields.get(num)?.[0];
-  if (f?.type === "double" && typeof f.data === "number") return f.data;
-  if (f?.type === "float" && typeof f.data === "number") return f.data;
-  return null;
-}
-
-/**
- * Get embedded message from parsed fields
- */
-export function getMessage(fields: ParsedFields, num: number): ParsedFields | null {
-  const f = fields.get(num)?.[0];
-  if (f?.type === "bytes" && Buffer.isBuffer(f.data)) {
-    try {
-      return parseFields(f.data);
-    } catch {
-      return null;
-    }
-  }
-  return null;
-}
-
-/**
- * Get all embedded messages from a repeated field
- */
-export function getMessages(fields: ParsedFields, num: number): ParsedFields[] {
-  const results: ParsedFields[] = [];
-  const arr = fields.get(num) || [];
-
-  for (const f of arr) {
-    if (f?.type === "bytes" && Buffer.isBuffer(f.data)) {
-      try {
-        results.push(parseFields(f.data));
-      } catch {
-        // Skip invalid messages
-      }
-    }
-  }
-
-  return results;
-}
-
-// ============ Team Name Parsing ============
-
-/**
- * Parse team names from Betclic matchName format
- * Format: "HomeTeam - AwayTeam"
- */
-export function parseTeamNames(matchName: string): ParsedTeams {
-  const parts = matchName.split(TEAM_SEPARATOR);
-  return {
-    homeTeam: (parts[0] || "").trim(),
-    awayTeam: (parts[1] || "").trim(),
-  };
-}
-
-// ============ Outcome Extraction ============
-
-/**
- * Extract all outcomes by scanning buffer for odds patterns
- * This is the core algorithm for parsing Betclic's protobuf structure
- */
-export function extractAllOutcomes(buf: Buffer): ExtractedOutcome[] {
-  const outcomes: ExtractedOutcome[] = [];
-  const seen = new Set<string>();
-
-  // Scan for field 12 doubles (tag 0x61 = field 12, wire type 1)
-  for (let i = 1; i < buf.length - 8; i++) {
-    if (buf[i - 1] === 0x61) {
-      const odds = buf.readDoubleLE(i);
-
-      if (odds >= 1.01 && odds < 100 && isFinite(odds)) {
-        // Search backwards for name (field 10: 0x52 or field 11: 0x5a)
-        const searchStart = Math.max(0, i - 150);
-
-        for (let j = i - 2; j >= searchStart; j--) {
-          if ((buf[j] === 0x52 || buf[j] === 0x5a) && j + 1 < i) {
-            const len = buf[j + 1];
-
-            if (len > 0 && len < 60 && j + 2 + len <= i) {
-              const str = buf.slice(j + 2, j + 2 + len).toString("utf8");
-
-              // Validate string contains printable characters
-              if (/^[\x20-\x7E\xA0-\xFF\u0100-\uFFFF]+$/.test(str) && str.length >= 2) {
-                const name = str.trim();
-                const key = `${name}:${odds.toFixed(2)}`;
-
-                if (!seen.has(key)) {
-                  seen.add(key);
-                  outcomes.push({ name, odds });
-                }
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return outcomes;
-}
-
-// ============ Listing Response Parser ============
-
-/**
  * Parse listing response for matches with 1X2 odds
  */
 export function parseListingResponse(data: Buffer, league: string): BetclicListingMatch[] {
   const matches: BetclicListingMatch[] = [];
 
   try {
-    const root = parseFields(data);
-    const wrapper = getMessage(root, PROTO_FIELDS.ROOT_WRAPPER);
-    if (!wrapper) return matches;
+    const rootFields = parseProtobuf(data);
+    const wrapperField = getField(rootFields, PROTO_FIELDS.ROOT_WRAPPER);
+    if (!wrapperField || !Array.isArray(wrapperField.value)) return matches;
+
+    const wrapperFields = wrapperField.value;
 
     // Field 3 contains match entries
-    const matchMsgs = getMessages(wrapper, PROTO_FIELDS.MATCH_ENTRIES);
+    const matchEntries = getAllFields(wrapperFields, PROTO_FIELDS.MATCH_ENTRIES);
 
-    // Get raw match message bytes for BigInt parsing
-    const matchRawMsgs = wrapper.get(PROTO_FIELDS.MATCH_ENTRIES) || [];
+    for (const matchEntry of matchEntries) {
+      if (!Array.isArray(matchEntry.value)) continue;
 
-    for (let i = 0; i < matchMsgs.length; i++) {
-      const match = matchMsgs[i];
-      const matchRaw = matchRawMsgs[i];
-
-      const matchName = getString(match, PROTO_FIELDS.MATCH_NAME) || "";
+      const matchFields = matchEntry.value;
+      const matchName = getFieldValue<string>(matchFields, PROTO_FIELDS.MATCH_NAME) || "";
       const parts = matchName.split(TEAM_SEPARATOR).map((t) => t.trim());
       if (parts.length !== 2) continue;
 
       const [homeTeam, awayTeam] = parts;
 
-      // Extract match ID from field 1 as BigInt (can be very large)
+      // Extract match ID as BigInt (can be very large)
       let matchId: string | null = null;
-      if (matchRaw?.type === "bytes" && Buffer.isBuffer(matchRaw.data)) {
-        const bigId = getVarintBigInt(match, PROTO_FIELDS.MATCH_ID, matchRaw.data);
-        if (bigId !== null) {
-          matchId = bigId.toString();
+      const idField = getField(matchFields, PROTO_FIELDS.MATCH_ID);
+      if (idField) {
+        if (typeof idField.value === "number" || typeof idField.value === "bigint") {
+          matchId = String(idField.value);
         }
       }
 
       // Field 9 contains markets
-      const markets = getMessages(match, PROTO_FIELDS.MATCH_MARKETS);
-      if (markets.length === 0) continue;
+      const marketEntries = getAllFields(matchFields, PROTO_FIELDS.MATCH_MARKETS);
+      if (marketEntries.length === 0) continue;
 
       // First market should be 1X2
-      const market = markets[0];
+      const firstMarket = marketEntries[0];
+      if (!Array.isArray(firstMarket.value)) continue;
 
       // Field 16 contains outcomes
-      const outcomes = getMessages(market, PROTO_FIELDS.MARKET_OUTCOMES);
-      if (outcomes.length < 3) continue;
+      const outcomeEntries = getAllFields(firstMarket.value, PROTO_FIELDS.MARKET_OUTCOMES);
+      if (outcomeEntries.length < 3) continue;
 
       const odds: number[] = [];
-      for (const outcome of outcomes) {
-        const outcomeOdds = getDouble(outcome, PROTO_FIELDS.OUTCOME_ODDS);
-        if (outcomeOdds && outcomeOdds > 1) {
-          odds.push(outcomeOdds);
+      for (const outcomeEntry of outcomeEntries) {
+        if (!Array.isArray(outcomeEntry.value)) continue;
+
+        const oddsField = getField(outcomeEntry.value, PROTO_FIELDS.OUTCOME_ODDS);
+        if (oddsField?.wireType === 1 && typeof oddsField.value === "number" && oddsField.value > 1) {
+          odds.push(oddsField.value);
         }
       }
 
@@ -390,524 +656,20 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
   return matches;
 }
 
-// ============ Match Details Response Parser ============
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
 
 /**
- * Parse match details response for all outcomes
+ * Parse team names from Betclic matchName format
+ * Format: "HomeTeam - AwayTeam"
  */
-export function parseMatchDetailsResponse(data: Buffer): BetclicMatchDetails | null {
-  try {
-    const outcomes = extractAllOutcomes(data);
-    if (outcomes.length === 0) return null;
-
-    // Get match info
-    const root = parseFields(data);
-    const wrapper = getMessage(root, PROTO_FIELDS.ROOT_WRAPPER);
-    const matchInfo = wrapper ? getMessage(wrapper, PROTO_FIELDS.MATCH_ID) : null;
-    const matchName = matchInfo ? getString(matchInfo, PROTO_FIELDS.MATCH_NAME) || "" : "";
-    const parts = matchName.split(TEAM_SEPARATOR).map((t) => t.trim());
-
-    return {
-      matchName,
-      homeTeam: parts[0] || "",
-      awayTeam: parts[1] || "",
-      outcomes,
-    };
-  } catch (error) {
-    console.error("[Betclic/Parser] Error parsing match details:", error);
-    return null;
-  }
-}
-
-// ============ Market Extraction from Outcomes ============
-
-/**
- * Extract 1X2 market from outcomes
- */
-export function extract1X2Market(
-  outcomes: ExtractedOutcome[],
-  homeTeam: string,
-  awayTeam: string
-): Market1X2 | null {
-  const result: Market1X2 = { home: 0, draw: 0, away: 0 };
-
-  const homeOutcome = outcomes.find(
-    (o) => o.name === homeTeam && o.odds > 1.5 && o.odds < 10
-  );
-  const drawOutcome = outcomes.find(
-    (o) =>
-      (o.name === OUTCOME_NAMES.DRAW || o.name === OUTCOME_NAMES.DRAW_ALT) &&
-      o.odds > 2 &&
-      o.odds < 10
-  );
-  const awayOutcome = outcomes.find(
-    (o) => o.name === awayTeam && o.odds > 1.5 && o.odds < 10
-  );
-
-  if (homeOutcome && drawOutcome && awayOutcome) {
-    result.home = homeOutcome.odds;
-    result.draw = drawOutcome.odds;
-    result.away = awayOutcome.odds;
-    return result;
-  }
-
-  return null;
-}
-
-/**
- * Extract Double Chance market from outcomes
- */
-export function extractDoubleChanceMarket(
-  outcomes: ExtractedOutcome[],
-  homeTeam: string,
-  awayTeam: string
-): MarketDoubleChance | null {
-  const result: MarketDoubleChance = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-  let found = false;
-
-  const dc1X = outcomes.find(
-    (o) => o.name.includes(OUTCOME_NAMES.OR_DRAW_PATTERN) && o.name.includes(homeTeam)
-  );
-  const dcX2 = outcomes.find(
-    (o) => o.name.includes(OUTCOME_NAMES.DRAW_OR_PATTERN) && o.name.includes(awayTeam)
-  );
-  const dc12 = outcomes.find(
-    (o) =>
-      o.name.includes(homeTeam) &&
-      o.name.includes(awayTeam) &&
-      o.name.includes(OUTCOME_NAMES.OR_PATTERN)
-  );
-
-  if (dc1X) {
-    result.homeOrDraw = dc1X.odds;
-    found = true;
-  }
-  if (dcX2) {
-    result.drawOrAway = dcX2.odds;
-    found = true;
-  }
-  if (dc12) {
-    result.homeOrAway = dc12.odds;
-    found = true;
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Extract BTTS market from outcomes
- */
-export function extractBTTSMarket(outcomes: ExtractedOutcome[]): MarketBTTS | null {
-  const result: MarketBTTS = { yes: 0, no: 0 };
-
-  const bttsYes = outcomes.find(
-    (o) => o.name === OUTCOME_NAMES.YES && o.odds > 1.5 && o.odds < 3
-  );
-  const bttsNo = outcomes.find(
-    (o) => o.name === OUTCOME_NAMES.NO && o.odds > 1.5 && o.odds < 3
-  );
-
-  if (bttsYes && bttsNo) {
-    result.yes = bttsYes.odds;
-    result.no = bttsNo.odds;
-    return result;
-  }
-
-  return null;
-}
-
-/**
- * Extract Over/Under markets from outcomes
- */
-export function extractOverUnderMarkets(outcomes: ExtractedOutcome[]): MarketOverUnder | null {
-  const result: MarketOverUnder = {};
-
-  for (const line of OVER_UNDER_LINES) {
-    const lineStr = line.toString().replace(".", ",");
-
-    const overOutcome = outcomes.find(
-      (o) => o.name === `${OUTCOME_NAMES.OVER_PREFIX} ${lineStr}` && o.odds > 1.01
-    );
-    const underOutcome = outcomes.find(
-      (o) => o.name === `${OUTCOME_NAMES.UNDER_PREFIX} ${lineStr}` && o.odds > 1.01
-    );
-
-    if (overOutcome && underOutcome) {
-      result[line.toFixed(1)] = {
-        over: overOutcome.odds,
-        under: underOutcome.odds,
-      };
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
-}
-
-// ============ Full Market Parsing for scrapeFullOffer ============
-
-/**
- * Parse all markets from raw protobuf data into unified ScrapedMarket format
- * This is the main function for full offer scraping
- *
- * @param rawData - Raw protobuf buffer from match details response
- * @param teams - Parsed team names (for fallback if structured parsing fails)
- * @returns Array of ScrapedMarket objects
- */
-export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
-  const markets: ScrapedMarket[] = [];
-
-  try {
-    const root = parseFields(rawData);
-    const wrapper = getMessage(root, 1);
-    if (!wrapper) return markets;
-
-    // Field 2 in wrapper contains market groups
-    const marketGroupMsgs = wrapper.get(2) || [];
-
-    for (const msgValue of marketGroupMsgs) {
-      if (msgValue.type !== "bytes" || !Buffer.isBuffer(msgValue.data)) continue;
-
-      const groupFields = parseFields(msgValue.data);
-
-      // Extract market group name (field 2)
-      const groupName = getString(groupFields, 2) || "Other";
-
-      // Look for nested market messages in fields 3-20
-      for (let fieldNum = 1; fieldNum <= 20; fieldNum++) {
-        const nestedMsgs = groupFields.get(fieldNum) || [];
-
-        for (const nested of nestedMsgs) {
-          if (nested.type !== "bytes" || !Buffer.isBuffer(nested.data)) continue;
-
-          const nestedFields = parseFields(nested.data);
-
-          // Market name is usually in field 2
-          const marketName = getString(nestedFields, 2);
-          if (!marketName) continue;
-
-          // Extract outcomes from field 16
-          const outcomesMsgs = getMessages(nestedFields, 16);
-          if (outcomesMsgs.length === 0) continue;
-
-          const selections: MarketSelection[] = [];
-
-          for (const outcomeFields of outcomesMsgs) {
-            // Outcome name - prefer field 11 (long name), fallback to field 10 (short name)
-            const outcomeName = getString(outcomeFields, 11) || getString(outcomeFields, 10) || "";
-            const odds = getDouble(outcomeFields, 12);
-
-            if (outcomeName && odds && odds > 1.0) {
-              selections.push({
-                name: outcomeName.trim(),
-                odds: odds,
-              });
-            }
-          }
-
-          if (selections.length > 0) {
-            markets.push({
-              name: marketName,
-              groupName: groupName,
-              type: inferMarketType(marketName),
-              selections: selections,
-            });
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.warn("[Betclic/Parser] Error in structured parsing, falling back to outcome scan");
-  }
-
-  // If structured parsing found markets, return them
-  if (markets.length > 0) {
-    return markets;
-  }
-
-  // Fallback: use extractAllOutcomes and group by pattern
-  return parseAllMarketsFromOutcomes(rawData);
-}
-
-/**
- * Fallback market parsing using outcome scanning
- * Groups outcomes into markets based on name patterns
- */
-function parseAllMarketsFromOutcomes(rawData: Buffer): ScrapedMarket[] {
-  const markets: ScrapedMarket[] = [];
-  const outcomes = extractAllOutcomes(rawData);
-
-  if (outcomes.length === 0) {
-    return markets;
-  }
-
-  // Group outcomes by pattern analysis
-  const groups: Map<string, ExtractedOutcome[]> = new Map();
-
-  for (const outcome of outcomes) {
-    const groupKey = categorizeOutcome(outcome.name);
-    if (!groups.has(groupKey)) {
-      groups.set(groupKey, []);
-    }
-    groups.get(groupKey)!.push(outcome);
-  }
-
-  // Convert groups to markets
-  for (const [groupKey, groupOutcomes] of groups) {
-    if (groupOutcomes.length === 0) continue;
-
-    // Special handling for Over/Under - split by line
-    if (groupKey === "over_under") {
-      const byLine = new Map<string, ExtractedOutcome[]>();
-      for (const o of groupOutcomes) {
-        const lineMatch = o.name.match(/(\d+,\d+)/);
-        const line = lineMatch ? lineMatch[1] : "default";
-        if (!byLine.has(line)) {
-          byLine.set(line, []);
-        }
-        byLine.get(line)!.push(o);
-      }
-
-      for (const [line, lineOutcomes] of byLine) {
-        if (lineOutcomes.length >= 2) {
-          markets.push({
-            name: `Liczba goli ${line.replace(",", ".")}`,
-            groupName: MARKET_GROUPS.GOALS,
-            type: MARKET_TYPES.OVER_UNDER,
-            selections: lineOutcomes.map((o) => ({
-              name: o.name,
-              odds: o.odds,
-            })),
-          });
-        }
-      }
-      continue;
-    }
-
-    // Special handling for goalscorer - split by odds range into different market types
-    if (groupKey === "goalscorer") {
-      const goalscorerMarkets = splitGoalscorerOutcomes(groupOutcomes);
-      markets.push(...goalscorerMarkets);
-      continue;
-    }
-
-    // Create market from group
-    const marketInfo = getMarketInfo(groupKey);
-    markets.push({
-      name: marketInfo.name,
-      groupName: marketInfo.groupName,
-      type: marketInfo.type,
-      selections: groupOutcomes.map((o) => ({
-        name: o.name,
-        odds: o.odds,
-      })),
-    });
-  }
-
-  return markets;
-}
-
-/**
- * Split goalscorer outcomes into multiple markets
- *
- * Strategy: Group player outcomes by the player name, creating one market per player
- * where each market contains all the different goalscorer bets for that player
- * (anytime, first, last, 2+, etc.)
- *
- * This results in many markets (one per player) which matches how bookmakers
- * typically structure their goalscorer offerings.
- */
-function splitGoalscorerOutcomes(outcomes: ExtractedOutcome[]): ScrapedMarket[] {
-  const markets: ScrapedMarket[] = [];
-
-  // Group outcomes by player name
-  const byPlayer = new Map<string, ExtractedOutcome[]>();
-
-  for (const o of outcomes) {
-    const name = o.name.trim();
-    if (!byPlayer.has(name)) {
-      byPlayer.set(name, []);
-    }
-    byPlayer.get(name)!.push(o);
-  }
-
-  // Create one market per player
-  for (const [playerName, playerOutcomes] of byPlayer) {
-    // Skip if player name looks like a team or other non-player entry
-    if (playerOutcomes.length === 0) continue;
-
-    // Sort by odds to show most likely first
-    playerOutcomes.sort((a, b) => a.odds - b.odds);
-
-    markets.push({
-      name: `Strzelec: ${playerName}`,
-      groupName: MARKET_GROUPS.OTHER,
-      type: "GOALSCORER",
-      selections: playerOutcomes.map((o) => ({
-        name: describeGoalscorerOdds(o.odds),
-        odds: o.odds,
-      })),
-    });
-  }
-
-  return markets;
-}
-
-/**
- * Describe the type of goalscorer bet based on odds
- */
-function describeGoalscorerOdds(odds: number): string {
-  if (odds < 3.0) return "Anytime scorer";
-  if (odds < 6.0) return "First/Last scorer";
-  if (odds < 12.0) return "2+ goals";
-  return "Special";
-}
-
-/**
- * Categorize an outcome name into a group key
- */
-function categorizeOutcome(name: string): string {
-  if (name.startsWith("Powyżej") || name.startsWith("Poniżej")) {
-    return "over_under";
-  }
-  if (name === "Tak" || name === "Nie") {
-    return "btts";
-  }
-  if (name.includes(" lub ")) {
-    return "double_chance";
-  }
-  if (name === "Remis" || name === "Remis ") {
-    return "match_result";
-  }
-  if (/^[0-9]+-[0-9]+$/.test(name) || /^[0-9]:[0-9]$/.test(name)) {
-    return "correct_score";
-  }
-  // Default: treat as goalscorer or other outcome
-  return "goalscorer";
-}
-
-/**
- * Get market name and group info from category key
- */
-function getMarketInfo(key: string): { name: string; groupName: string; type: string } {
-  switch (key) {
-    case "match_result":
-      return { name: "Wynik meczu", groupName: MARKET_GROUPS.MATCH_RESULT, type: MARKET_TYPES.MATCH_1X2 };
-    case "double_chance":
-      return { name: "Podwójna szansa", groupName: MARKET_GROUPS.MATCH_RESULT, type: MARKET_TYPES.DOUBLE_CHANCE };
-    case "btts":
-      return { name: "Obie drużyny strzelą", groupName: MARKET_GROUPS.GOALS, type: MARKET_TYPES.BTTS };
-    case "correct_score":
-      return { name: "Dokładny wynik", groupName: MARKET_GROUPS.CORRECT_SCORE, type: MARKET_TYPES.CORRECT_SCORE };
-    case "goalscorer":
-      return { name: "Strzelcy", groupName: MARKET_GROUPS.OTHER, type: "GOALSCORER" };
-    default:
-      return { name: "Inne", groupName: MARKET_GROUPS.OTHER, type: "OTHER" };
-  }
-}
-
-/**
- * Infer market type from market name
- * Matches Polish market names to canonical market types
- */
-function inferMarketType(name: string): string {
-  const lower = name.toLowerCase();
-  if (lower.includes("wynik meczu")) return MARKET_TYPES.MATCH_1X2;
-  if (lower.includes("podwójna szansa") || lower.includes("podwojna szansa")) return MARKET_TYPES.DOUBLE_CHANCE;
-  if (lower.includes("obie drużyny") || lower.includes("obie druzyny")) return MARKET_TYPES.BTTS;
-  if (lower.includes("gol") && (lower.includes("powyżej") || lower.includes("poniżej"))) return MARKET_TYPES.OVER_UNDER;
-  if (lower.includes("dokładny wynik") || lower.includes("dokladny wynik")) return MARKET_TYPES.CORRECT_SCORE;
-  if (lower.includes("handicap")) return MARKET_TYPES.HANDICAP;
-  if (lower.includes("połowa") || lower.includes("polowa")) return MARKET_TYPES.HALF_TIME_1X2;
-  if (lower.includes("rzut rożny") || lower.includes("rożne") || lower.includes("corner")) return MARKET_TYPES.CORNERS_TOTAL;
-  if (lower.includes("kartki") || lower.includes("czerwona kartka") || lower.includes("card")) return MARKET_TYPES.CARDS_TOTAL;
-  if (lower.includes("strzały") || lower.includes("celne strzały") || lower.includes("shot")) return MARKET_TYPES.MOST_SHOTS_ON_TARGET;
-  if (lower.includes("faule") || lower.includes("foul")) return MARKET_TYPES.FOULS_TOTAL;
-  if (lower.includes("rzut karny") || lower.includes("penalty")) return MARKET_TYPES.PENALTY_AWARDED;
-  if (lower.includes("głową") || lower.includes("głową") || lower.includes("header")) return MARKET_TYPES.HEADER_GOAL;
-  if (lower.includes("rzut wolny") || lower.includes("free kick")) return MARKET_TYPES.FREE_KICK_GOAL;
-  if (lower.includes("asysta") || lower.includes("asysty") || lower.includes("assist")) return MARKET_TYPES.PLAYER_ASSISTS;
-  if (lower.includes("strzel")) return "GOALSCORER";
-  return "OTHER";
-}
-
-/**
- * Legacy parseAllMarkets for backward compatibility
- * Now delegates to parseAllMarketsFromOutcomes with outcome data
- */
-export function parseAllMarkets(
-  outcomes: ExtractedOutcome[],
-  teams: ParsedTeams
-): ScrapedMarket[] {
-  const markets: ScrapedMarket[] = [];
-
-  if (outcomes.length === 0) {
-    return markets;
-  }
-
-  // Group outcomes by pattern analysis
-  const groups: Map<string, ExtractedOutcome[]> = new Map();
-
-  for (const outcome of outcomes) {
-    // Special handling for team names in 1X2
-    let groupKey: string;
-    if (outcome.name === teams.homeTeam || outcome.name === teams.awayTeam) {
-      groupKey = "match_result";
-    } else {
-      groupKey = categorizeOutcome(outcome.name);
-    }
-
-    if (!groups.has(groupKey)) {
-      groups.set(groupKey, []);
-    }
-    groups.get(groupKey)!.push(outcome);
-  }
-
-  // Convert groups to markets
-  for (const [groupKey, groupOutcomes] of groups) {
-    if (groupOutcomes.length === 0) continue;
-
-    // Special handling for Over/Under - split by line
-    if (groupKey === "over_under") {
-      const byLine = new Map<string, ExtractedOutcome[]>();
-      for (const o of groupOutcomes) {
-        const lineMatch = o.name.match(/(\d+,\d+)/);
-        const line = lineMatch ? lineMatch[1] : "default";
-        if (!byLine.has(line)) {
-          byLine.set(line, []);
-        }
-        byLine.get(line)!.push(o);
-      }
-
-      for (const [line, lineOutcomes] of byLine) {
-        if (lineOutcomes.length >= 2) {
-          markets.push({
-            name: `Liczba goli ${line.replace(",", ".")}`,
-            groupName: MARKET_GROUPS.GOALS,
-            type: MARKET_TYPES.OVER_UNDER,
-            selections: lineOutcomes.map((o) => ({
-              name: o.name,
-              odds: o.odds,
-            })),
-          });
-        }
-      }
-      continue;
-    }
-
-    // Create market from group
-    const marketInfo = getMarketInfo(groupKey);
-    markets.push({
-      name: marketInfo.name,
-      groupName: marketInfo.groupName,
-      type: marketInfo.type,
-      selections: groupOutcomes.map((o) => ({
-        name: o.name,
-        odds: o.odds,
-      })),
-    });
-  }
-
-  return markets;
+export function parseTeamNames(matchName: string): ParsedTeams {
+  const parts = matchName.split(TEAM_SEPARATOR);
+  return {
+    homeTeam: (parts[0] || "").trim(),
+    awayTeam: (parts[1] || "").trim(),
+  };
 }
 
 /**
@@ -923,68 +685,110 @@ export function isValidMatch(match: BetclicListingMatch): boolean {
   );
 }
 
+// ============================================================================
+// MATCH DETAILS HELPERS (for scrapeMatchDetails compatibility)
+// ============================================================================
+
 /**
- * Parse markets from multiple gRPC responses and merge with deduplication
- *
- * This function is used for multi-tab fetching where each tab (market group)
- * returns a separate response buffer. Markets are deduplicated by 'name:type'
- * combination to avoid duplicates when the same market appears in multiple tabs.
- *
- * @param responses - Array of raw protobuf buffers from multiple market group fetches
- * @returns Merged and deduplicated array of ScrapedMarket objects
+ * Extract 1X2 odds from parsed markets
  */
-export function parseAllMarketsFromMultipleResponses(responses: Buffer[]): ScrapedMarket[] {
-  // Handle empty input gracefully
-  if (!responses || responses.length === 0) {
-    console.log("[Betclic/Parser] No responses to parse");
-    return [];
-  }
-
-  const allMarkets: ScrapedMarket[] = [];
-  let totalMarketsBeforeDedup = 0;
-
-  // Parse each response buffer
-  for (let i = 0; i < responses.length; i++) {
-    const response = responses[i];
-
-    // Skip empty or invalid buffers
-    if (!response || response.length === 0) {
-      continue;
-    }
-
-    try {
-      const markets = parseAllMarketsFromProto(response);
-      totalMarketsBeforeDedup += markets.length;
-      allMarkets.push(...markets);
-    } catch (error) {
-      console.warn(`[Betclic/Parser] Error parsing response ${i + 1}/${responses.length}:`, error);
-      // Continue processing remaining responses
-    }
-  }
-
-  // Deduplicate markets using 'name:type' as unique key
-  const seen = new Map<string, ScrapedMarket>();
-
-  for (const market of allMarkets) {
-    const key = `${market.name}:${market.type}`;
-
-    if (!seen.has(key)) {
-      seen.set(key, market);
-    } else {
-      // If duplicate, keep the one with more selections (more complete data)
-      const existing = seen.get(key)!;
-      if (market.selections.length > existing.selections.length) {
-        seen.set(key, market);
-      }
-    }
-  }
-
-  const dedupedMarkets = Array.from(seen.values());
-
-  console.log(
-    `[Betclic/Parser] Parsed ${responses.length} responses: ` +
-    `${totalMarketsBeforeDedup} total markets, ${dedupedMarkets.length} after deduplication`
+export function extract1X2FromMarkets(
+  markets: ScrapedMarket[],
+  homeTeam: string,
+  awayTeam: string
+): { home: number; draw: number; away: number } | null {
+  const market = markets.find(
+    (m) => m.type === MARKET_TYPES.MATCH_1X2 || m.name.toLowerCase().includes("wynik meczu")
   );
 
-  return dedupedMarkets;
+  if (!market || market.selections.length < 3) return null;
+
+  const homeOdds = market.selections.find(
+    (s) => s.name === homeTeam || s.name === "1" || s.name.toLowerCase().includes("gospodarz")
+  )?.odds;
+
+  const drawOdds = market.selections.find(
+    (s) => s.name === "Remis" || s.name === "Remis " || s.name === "X" || s.name.toLowerCase() === "remis"
+  )?.odds;
+
+  const awayOdds = market.selections.find(
+    (s) => s.name === awayTeam || s.name === "2" || s.name.toLowerCase().includes("gość")
+  )?.odds;
+
+  if (!homeOdds || !drawOdds || !awayOdds) return null;
+
+  return { home: homeOdds, draw: drawOdds, away: awayOdds };
+}
+
+/**
+ * Extract Double Chance odds from parsed markets
+ */
+export function extractDoubleChanceFromMarkets(
+  markets: ScrapedMarket[]
+): { homeOrDraw: number; drawOrAway: number; homeOrAway: number } | null {
+  const market = markets.find(
+    (m) => m.type === MARKET_TYPES.DOUBLE_CHANCE || m.name.toLowerCase().includes("podwójna szansa")
+  );
+
+  if (!market || market.selections.length < 3) return null;
+
+  const homeOrDraw = market.selections.find((s) => s.name.includes("1X") || s.name.includes("lub Remis"))?.odds;
+  const drawOrAway = market.selections.find((s) => s.name.includes("X2") || s.name.includes("Remis lub"))?.odds;
+  const homeOrAway = market.selections.find((s) => s.name.includes("12") || (s.name.includes("lub") && !s.name.includes("Remis")))?.odds;
+
+  if (!homeOrDraw || !drawOrAway || !homeOrAway) return null;
+
+  return { homeOrDraw, drawOrAway, homeOrAway };
+}
+
+/**
+ * Extract BTTS odds from parsed markets
+ */
+export function extractBTTSFromMarkets(
+  markets: ScrapedMarket[]
+): { yes: number; no: number } | null {
+  const market = markets.find(
+    (m) => m.type === MARKET_TYPES.BTTS || m.name.toLowerCase().includes("obie drużyny")
+  );
+
+  if (!market || market.selections.length < 2) return null;
+
+  const yes = market.selections.find((s) => s.name === "Tak" || s.name.toLowerCase() === "yes")?.odds;
+  const no = market.selections.find((s) => s.name === "Nie" || s.name.toLowerCase() === "no")?.odds;
+
+  if (!yes || !no) return null;
+
+  return { yes, no };
+}
+
+/**
+ * Extract Over/Under odds from parsed markets
+ */
+export function extractOverUnderFromMarkets(
+  markets: ScrapedMarket[]
+): Record<string, { over: number; under: number }> | null {
+  const ouMarkets = markets.filter(
+    (m) => m.type === MARKET_TYPES.OVER_UNDER || m.name.toLowerCase().includes("powyżej")
+  );
+
+  if (ouMarkets.length === 0) return null;
+
+  const result: Record<string, { over: number; under: number }> = {};
+
+  for (const market of ouMarkets) {
+    // Extract line from market name (e.g., "Gole Powyżej/Poniżej 2,5")
+    const lineMatch = market.name.match(/(\d+[,\.]\d+)/);
+    if (!lineMatch) continue;
+
+    const line = lineMatch[1].replace(",", ".");
+
+    const over = market.selections.find((s) => s.name.toLowerCase().includes("powyżej"))?.odds;
+    const under = market.selections.find((s) => s.name.toLowerCase().includes("poniżej"))?.odds;
+
+    if (over && under) {
+      result[line] = { over, under };
+    }
+  }
+
+  return Object.keys(result).length > 0 ? result : null;
 }

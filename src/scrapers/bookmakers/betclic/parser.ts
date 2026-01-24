@@ -447,6 +447,98 @@ function inferMarketType(name: string): string {
 }
 
 // ============================================================================
+// OVER/UNDER MARKET SPLITTING
+// ============================================================================
+
+/**
+ * Pattern to match Over/Under selection names with line values
+ * Matches: "Powyżej 2,5", "Poniżej 3,5", "Powyżej 4,5", etc.
+ * Captures the line value (e.g., "2,5", "3,5")
+ */
+const OVER_UNDER_SELECTION_PATTERN = /^(Powyżej|Poniżej)\s+(\d+[,\.]\d+)$/i;
+
+/**
+ * Split a market with multiple Over/Under lines into separate markets per line.
+ *
+ * Betclic returns markets like "1. połowa - Rzuty rożne" with selections:
+ * - "Powyżej 2,5", "Poniżej 2,5", "Powyżej 3,5", "Poniżej 3,5", etc.
+ *
+ * This function splits them into separate markets:
+ * - "1. połowa - Rzuty rożne" with paramValue="2.5" and selections for 2.5
+ * - "1. połowa - Rzuty rożne" with paramValue="3.5" and selections for 3.5
+ *
+ * @param market - Original market with multiple O/U lines
+ * @returns Array of markets, one per line (or original if not O/U pattern)
+ */
+function splitOverUnderMarket(market: ScrapedMarket): ScrapedMarket[] {
+  // Group selections by line value
+  const lineGroups = new Map<string, MarketSelection[]>();
+  const nonOverUnderSelections: MarketSelection[] = [];
+
+  for (const selection of market.selections) {
+    const match = selection.name.match(OVER_UNDER_SELECTION_PATTERN);
+    if (match) {
+      // Normalize line: replace comma with dot (e.g., "2,5" -> "2.5")
+      const line = match[2].replace(",", ".");
+      if (!lineGroups.has(line)) {
+        lineGroups.set(line, []);
+      }
+      lineGroups.get(line)!.push(selection);
+    } else {
+      nonOverUnderSelections.push(selection);
+    }
+  }
+
+  // If no O/U patterns found or only one line, return original market
+  if (lineGroups.size <= 1) {
+    return [market];
+  }
+
+  // Create separate market for each line
+  const splitMarkets: ScrapedMarket[] = [];
+
+  for (const [line, selections] of lineGroups) {
+    // Only create market if we have both OVER and UNDER for this line
+    const hasOver = selections.some((s) => s.name.toLowerCase().includes("powyżej"));
+    const hasUnder = selections.some((s) => s.name.toLowerCase().includes("poniżej"));
+
+    if (hasOver && hasUnder) {
+      splitMarkets.push({
+        name: market.name,
+        groupName: market.groupName,
+        type: market.type,
+        paramValue: line,
+        selections: selections,
+      });
+    }
+  }
+
+  // If we couldn't split properly, return original
+  if (splitMarkets.length === 0) {
+    return [market];
+  }
+
+  return splitMarkets;
+}
+
+/**
+ * Process all markets and split Over/Under markets with multiple lines
+ *
+ * @param markets - Array of markets to process
+ * @returns Array of markets with O/U markets split by line
+ */
+function splitOverUnderMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
+  const result: ScrapedMarket[] = [];
+
+  for (const market of markets) {
+    const splitResult = splitOverUnderMarket(market);
+    result.push(...splitResult);
+  }
+
+  return result;
+}
+
+// ============================================================================
 // MAIN API
 // ============================================================================
 
@@ -479,7 +571,8 @@ export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
     }
   }
 
-  return markets;
+  // Split Over/Under markets with multiple lines into separate markets
+  return splitOverUnderMarkets(markets);
 }
 
 /**
@@ -517,16 +610,15 @@ export function parseAllMarketsFromMultipleResponses(responses: Buffer[]): Scrap
     }
   }
 
-  // Deduplicate markets using 'name:type' as unique key
+  // Deduplicate markets using 'name:type:paramValue' as unique key
   const seen = new Map<string, ScrapedMarket>();
 
   for (const market of allMarkets) {
-    const key = `${market.name}:${market.type}`;
+    const key = `${market.name}:${market.type}:${market.paramValue || ""}`;
 
     if (!seen.has(key)) {
       seen.set(key, market);
     } else {
-      // If duplicate, keep the one with more selections
       const existing = seen.get(key)!;
       if (market.selections.length > existing.selections.length) {
         seen.set(key, market);

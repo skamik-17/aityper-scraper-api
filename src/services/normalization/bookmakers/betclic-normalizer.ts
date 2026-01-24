@@ -30,8 +30,11 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "obie druzyny strzela": "BTTS",
   "dokladny wynik": "CORRECT_SCORE",
   "wynik 1 polowy": "HALF_TIME_RESULT",
+  "1. polowa wynik": "HALF_TIME_RESULT",
   "wynik 2 polowy": "SECOND_HALF_RESULT",
   "remis bez zakladu": "DRAW_NO_BET",
+  "1. polowa - pierwszy gol": "HALF_TIME_FIRST_GOAL",
+  "1. polowa - rzuty rozne": "HALF_TIME_CORNERS_TOTAL",
 };
 
 const BETCLIC_MARKET_PATTERNS: Array<{
@@ -41,19 +44,56 @@ const BETCLIC_MARKET_PATTERNS: Array<{
   { pattern: /^liczba goli\s+\d+/i, code: "TOTAL_GOALS" },
   { pattern: /^liczba goli\b/i, code: "TOTAL_GOALS" },
   { pattern: /^obie druzyny strzela/i, code: "BTTS" },
+  { pattern: /^1\. polowa - nastepny \d+ rzut rozny$/i, code: "NEXT_CORNER_1H" },
+  { pattern: /^1\. polowa - ostatni rzut rozny$/i, code: "HALF_TIME_LAST_CORNER" },
+  { pattern: /^1x2 rzuty rozne/i, code: "CORNERS_RACE" },
+  { pattern: /^1x2 strzaly/i, code: "MOST_SHOTS" },
   { pattern: /^strzelec:/i, code: "OTHER" },
+  { pattern: /^\d+\s+graczy\s+strzeli\s+pow\.\s*\d+[,.]?\d*\s+gol/i, code: "TWO_PLAYERS_COMBINED_GOALS" },
 ];
 
 function normalizeName(value: string): string {
   return value
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
+    .replace(/ł/g, "l")
+    .replace(/Ł/g, "L")
     .replace(/\s+/g, " ")
     .trim()
     .toLowerCase();
 }
 
-function resolveMarketCode(raw: RawBookmakerMarket): {
+function resolveHalfTeamGoalsMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^(\d)\. polowa gole - (.+)$/i);
+  if (!match) return null;
+
+  const half = match[1];
+  const teamPart = match[2].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (half === "1") {
+    if (isHome) return "HALF_TIME_HOME_TEAM_TOTAL_GOALS";
+    if (isAway) return "HALF_TIME_AWAY_TEAM_TOTAL_GOALS";
+  } else if (half === "2") {
+    if (isHome) return "SECOND_HALF_HOME_TEAM_TOTAL_GOALS";
+    if (isAway) return "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS";
+  }
+
+  return null;
+}
+
+function resolveMarketCode(
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): {
   marketCode: NormalizedMarketType;
   matchedBy: "id" | "name" | "pattern";
 } {
@@ -69,6 +109,11 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
   const direct = BETCLIC_MARKET_NAME_TO_CODE[normalizedName];
   if (direct) {
     return { marketCode: direct, matchedBy: "name" };
+  }
+
+  const halfTeamGoals = resolveHalfTeamGoalsMarket(normalizedName, ctx);
+  if (halfTeamGoals) {
+    return { marketCode: halfTeamGoals, matchedBy: "pattern" };
   }
 
   for (const entry of BETCLIC_MARKET_PATTERNS) {
@@ -100,6 +145,52 @@ function normalizeBetclicDoubleChance(
   return normalizeDoubleChanceSelection(selectionName);
 }
 
+function normalizeNextCornerSelection(
+  selectionName: string,
+  homeTeam: string,
+  awayTeam: string
+): NormalizedSelection {
+  const normalized = normalizeName(selectionName);
+  const home = normalizeName(homeTeam);
+  const away = normalizeName(awayTeam);
+
+  if (normalized.includes("brak") && normalized.includes("rozn")) {
+    return "NONE";
+  }
+
+  if (home && normalized.includes(home)) {
+    return "HOME";
+  }
+  if (away && normalized.includes(away)) {
+    return "AWAY";
+  }
+
+  return normalize1x2Selection(selectionName, homeTeam, awayTeam);
+}
+
+function normalizeFirstGoalSelection(
+  selectionName: string,
+  homeTeam: string,
+  awayTeam: string
+): NormalizedSelection {
+  const normalized = normalizeName(selectionName);
+  const home = normalizeName(homeTeam);
+  const away = normalizeName(awayTeam);
+
+  if (normalized.includes("brak") && normalized.includes("gol")) {
+    return "NONE";
+  }
+
+  if (home && normalized.includes(home)) {
+    return "HOME";
+  }
+  if (away && normalized.includes(away)) {
+    return "AWAY";
+  }
+
+  return normalize1x2Selection(selectionName, homeTeam, awayTeam);
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -121,7 +212,16 @@ function normalizeSelectionForMarket(
     case "FIRST_TEAM_TO_SCORE":
     case "CORNERS_RACE":
     case "CARDS_RACE":
+    case "MOST_SHOTS":
+    case "MOST_SHOTS_ON_TARGET":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+
+    case "NEXT_CORNER_1H":
+    case "HALF_TIME_LAST_CORNER":
+      return normalizeNextCornerSelection(trimmed, ctx.homeTeam, ctx.awayTeam);
+
+    case "HALF_TIME_FIRST_GOAL":
+      return normalizeFirstGoalSelection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "DOUBLE_CHANCE":
       return normalizeBetclicDoubleChance(trimmed, ctx);
@@ -131,8 +231,13 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
+    case "HALF_TIME_CORNERS_TOTAL":
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -174,9 +279,17 @@ function normalizeSelectionForMarket(
     case "PLAYER_PASSES":
       return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
 
+    case "TWO_PLAYERS_COMBINED_GOALS":
+      return trimmed as NormalizedSelection;
+
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
   }
+}
+
+function extractNextCornerParam(marketName: string): string | undefined {
+  const match = marketName.match(/nastepny\s+(\d+)\s+rzut\s+rozny/i);
+  return match ? match[1] : undefined;
 }
 
 function extractParamValue(
@@ -185,6 +298,10 @@ function extractParamValue(
 ): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
+
+  if (marketCode === "NEXT_CORNER_1H") {
+    return extractNextCornerParam(normalizeName(raw.name));
+  }
 
   const selectionNames = raw.selections.map((s) => s.name);
   const fromSelections = parseOverUnderLine(selectionNames);
@@ -212,7 +329,7 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
-    const { marketCode, matchedBy } = resolveMarketCode(raw);
+    const { marketCode, matchedBy } = resolveMarketCode(raw, ctx);
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[betclic] Market code "${marketCode}" not in catalog`);

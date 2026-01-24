@@ -398,24 +398,88 @@ function analyzeMarket(
   };
 }
 
+/**
+ * Pattern to match Over/Under selection names with line values
+ * Matches: "Powyżej 2,5", "Poniżej 3,5", etc.
+ */
+const OVER_UNDER_SELECTION_PATTERN = /^(Powyżej|Poniżej)\s+(\d+[,\.]\d+)$/i;
+
+/**
+ * Split selections by line value for Over/Under markets
+ * Returns a map of line -> selections for that line
+ */
+function splitSelectionsByLine(selections: Selection[]): Map<string, Selection[]> {
+  const lineGroups = new Map<string, Selection[]>();
+  
+  for (const selection of selections) {
+    const match = selection.name.match(OVER_UNDER_SELECTION_PATTERN);
+    if (match) {
+      // Normalize line: replace comma with dot (e.g., "2,5" -> "2.5")
+      const line = match[2].replace(",", ".");
+      if (!lineGroups.has(line)) {
+        lineGroups.set(line, []);
+      }
+      lineGroups.get(line)!.push(selection);
+    }
+  }
+  
+  return lineGroups;
+}
+
 function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext): FrontendMarketJson | null {
   if (!analysis.normalized) return null;
   
-  const scrapedMarket: ScrapedMarket = {
-    name: analysis.name,
-    groupName: analysis.groupName,
-    type: "betclic",
-    selections: analysis.rawSelections.map(s => ({
-      name: s.name,
-      odds: s.odds,
-      normalizedName: (analysis.normalized?.selections.find(ns => ns.label === s.name)?.code || undefined) as MarketSelection["normalizedName"],
-    })),
-    normalizedType: analysis.normalized.marketCode,
-    marketKey: analysis.normalized.marketKey,
-    paramValue: analysis.normalized.paramValue,
-  };
+  // Check if this is an Over/Under market with multiple lines
+  const lineGroups = splitSelectionsByLine(analysis.rawSelections);
   
-  const grouped = groupMarketsByTypeWithParameters([{ market: scrapedMarket, bookmaker: "betclic" }]);
+  // If we have multiple lines, create separate markets for each line
+  const marketsToGroup: Array<{ market: ScrapedMarket; bookmaker: string }> = [];
+  
+  if (lineGroups.size > 1) {
+    // Multiple lines - create separate market for each line
+    for (const [line, selections] of lineGroups) {
+      // Only create market if we have both OVER and UNDER for this line
+      const hasOver = selections.some(s => s.name.toLowerCase().includes("powyżej"));
+      const hasUnder = selections.some(s => s.name.toLowerCase().includes("poniżej"));
+      
+      if (hasOver && hasUnder) {
+        const scrapedMarket: ScrapedMarket = {
+          name: analysis.name,
+          groupName: analysis.groupName,
+          type: "betclic",
+          selections: selections.map(s => ({
+            name: s.name,
+            odds: s.odds,
+            normalizedName: (analysis.normalized?.selections.find(ns => ns.label === s.name)?.code || undefined) as MarketSelection["normalizedName"],
+          })),
+          normalizedType: analysis.normalized.marketCode,
+          marketKey: `${analysis.normalized.marketCode}:${line}`,
+          paramValue: line,
+        };
+        marketsToGroup.push({ market: scrapedMarket, bookmaker: "betclic" });
+      }
+    }
+  } else {
+    // Single line or no O/U pattern - use original market
+    const scrapedMarket: ScrapedMarket = {
+      name: analysis.name,
+      groupName: analysis.groupName,
+      type: "betclic",
+      selections: analysis.rawSelections.map(s => ({
+        name: s.name,
+        odds: s.odds,
+        normalizedName: (analysis.normalized?.selections.find(ns => ns.label === s.name)?.code || undefined) as MarketSelection["normalizedName"],
+      })),
+      normalizedType: analysis.normalized.marketCode,
+      marketKey: analysis.normalized.marketKey,
+      paramValue: analysis.normalized.paramValue,
+    };
+    marketsToGroup.push({ market: scrapedMarket, bookmaker: "betclic" });
+  }
+  
+  if (marketsToGroup.length === 0) return null;
+  
+  const grouped = groupMarketsByTypeWithParameters(marketsToGroup);
   if (grouped.length === 0) return null;
   
   const result = grouped[0];

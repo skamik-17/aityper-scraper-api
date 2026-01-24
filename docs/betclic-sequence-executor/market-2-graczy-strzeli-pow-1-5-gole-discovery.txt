@@ -1,0 +1,53 @@
+====================================================================================================
+BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675314241536
+Focusing on: "2 graczy strzeli pow. 1,5 gole"
+
+TAB: STRZELCY
+Group: Dwóch i trzech zawodników (subca_ftb_dat)
+
+NORMALIZED: OTHER
+Market Key: OTHER
+Param Value: none
+Matched By: pattern
+
+ISSUES:
+- UNMAPPED: Market normalized to OTHER
+
+RAW SELECTIONS (171):
+Selekcje to pary graczy, np.:
+- E. Haaland & A. Semenyo (1.88)
+- E. Haaland & P. Foden (2.05)
+- ... (171 kombinacji par graczy)
+
+FRONTEND JSON:
+{
+  "marketKey": "OTHER",
+  "type": "OTHER",
+  "category": "INNE",
+  "label": "2 graczy strzeli pow. 1,5 gole",
+  "description": "Nierozpoznany typ rynku",
+  "displayOrder": 999,
+  "viewType": "BINARY_BUTTONS",
+  "parameters": [
+    {
+      "value": "base",
+      "label": "",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "selections": [171 selekcji z parami graczy]
+        }
+      ]
+    }
+  ]
+}
+
+RAW JSON:
+{
+  "name": "2 graczy strzeli pow. 1,5 gole",
+  "groupId": "subca_ftb_dat",
+  "groupName": "Dwóch i trzech zawodników",
+  "selections": [171 selekcji z parami graczy i kursami]
+}

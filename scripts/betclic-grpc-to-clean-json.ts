@@ -4,6 +4,11 @@
  * 
  * Converts raw protobuf to human-readable structured JSON.
  * 
+ * FIXES:
+ * - TOP tab now parses correctly (different protobuf structure - no group wrapper)
+ * - No data duplication (match/tabs only at root level)
+ * - Cleaner output format
+ * 
  * Usage:
  *   npx tsx scripts/betclic-grpc-to-clean-json.ts --match 905675290968064
  *   npx tsx scripts/betclic-grpc-to-clean-json.ts --match 905675290968064 --tab HANDICAP
@@ -18,6 +23,10 @@ import {
   buildMatchDetailsRequestWithFilter,
 } from "../src/scrapers/bookmakers/betclic/navigation.js";
 import { ENDPOINTS, MARKET_GROUP_FILTERS } from "../src/scrapers/bookmakers/betclic/constants.js";
+
+// ============================================================================
+// TYPES
+// ============================================================================
 
 interface Selection {
   id: string;
@@ -59,11 +68,8 @@ interface Match {
   competition: Competition;
 }
 
-interface CleanData {
-  fetchedAt: string;
-  source: string;
-  match: Match;
-  tabs: Tab[];
+interface TabData {
+  categoryId: string | null;
   marketGroups: MarketGroup[];
   stats: {
     totalMarkets: number;
@@ -71,6 +77,29 @@ interface CleanData {
     groupsCount: number;
   };
 }
+
+interface CleanOutput {
+  fetchedAt: string;
+  match: Match;
+  tabs: Tab[];
+  data: Record<string, TabData>;
+  totals: {
+    totalMarkets: number;
+    totalSelections: number;
+    totalGroups: number;
+    tabsCount: number;
+  };
+}
+
+interface RawField {
+  fieldNumber: number;
+  wireType: number;
+  value: number | bigint | string | Buffer | RawField[];
+}
+
+// ============================================================================
+// PROTOBUF PARSING
+// ============================================================================
 
 function readVarint(buf: Buffer, offset: number): { value: number; bytesRead: number } {
   let value = 0;
@@ -96,12 +125,6 @@ function readVarintBigInt(buf: Buffer, offset: number): { value: bigint; bytesRe
     shift += 7n;
   }
   return { value, bytesRead };
-}
-
-interface RawField {
-  fieldNumber: number;
-  wireType: number;
-  value: number | bigint | string | Buffer | RawField[];
 }
 
 function parseProtobuf(buf: Buffer, depth: number = 0): RawField[] {
@@ -172,6 +195,10 @@ function tryDecodeString(buf: Buffer): string | null {
   }
 }
 
+// ============================================================================
+// FIELD HELPERS
+// ============================================================================
+
 function getField(fields: RawField[], num: number): RawField | undefined {
   return fields.find(f => f.fieldNumber === num);
 }
@@ -185,6 +212,10 @@ function getAllFields(fields: RawField[], num: number): RawField[] {
   return fields.filter(f => f.fieldNumber === num);
 }
 
+// ============================================================================
+// DATA EXTRACTION
+// ============================================================================
+
 function extractMatch(matchFields: RawField[]): Match {
   const id = String(getFieldValue<number | bigint>(matchFields, 1) || "");
   const name = getFieldValue<string>(matchFields, 2) || "";
@@ -193,12 +224,12 @@ function extractMatch(matchFields: RawField[]): Match {
   const [homeTeam, awayTeam] = name.split(" - ").map(s => s.trim());
   
   const compFields = getFieldValue<RawField[]>(matchFields, 8) || [];
-  const sportFields = getFieldValue<RawField[]>(compFields, 3) || [];
+  const sportFields = Array.isArray(compFields) ? getFieldValue<RawField[]>(compFields, 3) || [] : [];
   
   const competition: Competition = {
-    id: getFieldValue<number>(compFields, 1) || 0,
-    name: getFieldValue<string>(compFields, 2) || "",
-    sport: getFieldValue<string>(sportFields, 1) || "",
+    id: Array.isArray(compFields) ? getFieldValue<number>(compFields, 1) || 0 : 0,
+    name: Array.isArray(compFields) ? getFieldValue<string>(compFields, 2) || "" : "",
+    sport: Array.isArray(sportFields) ? getFieldValue<string>(sportFields, 1) || "" : "",
   };
 
   return { id, name, homeTeam, awayTeam, datetime, competition };
@@ -227,13 +258,30 @@ function extractSelection(selFields: RawField[]): Selection | null {
   const nameLong = getFieldValue<string>(selFields, 11);
   
   const oddsField = getField(selFields, 12);
-  const odds = oddsField?.wireType === 1 ? (oddsField.value as number) : 0;
+  let odds = 0;
+  
+  if (oddsField?.wireType === 1) {
+    // fixed64 double
+    odds = oddsField.value as number;
+  }
   
   if (!name || odds <= 0 || odds > 1000) return null;
+  
+  // Round to 2 decimal places for consistency
+  odds = Math.round(odds * 100) / 100;
   
   return { id, name, nameLong: nameLong !== name ? nameLong : undefined, odds };
 }
 
+/**
+ * Extract market from Field 3 structure
+ * Market structure:
+ * - Field 1: market id
+ * - Field 2: market name
+ * - Field 3: market name long
+ * - Field 16: selections (directly in market) - for TOP tab markets
+ * - Field 10: selection groups (nested) - for other tab markets
+ */
 function extractMarket(marketFields: RawField[]): Market | null {
   const id = String(getFieldValue<number | bigint>(marketFields, 1) || "");
   const name = getFieldValue<string>(marketFields, 2) || "";
@@ -242,16 +290,30 @@ function extractMarket(marketFields: RawField[]): Market | null {
   if (!name) return null;
   
   const selections: Selection[] = [];
-  const selectionGroups = getAllFields(marketFields, 10);
   
-  for (const selGroup of selectionGroups) {
-    if (Array.isArray(selGroup.value)) {
-      for (const wrapper of selGroup.value) {
-        if (wrapper.fieldNumber === 1 && Array.isArray(wrapper.value)) {
-          for (const innerWrapper of wrapper.value) {
-            if (innerWrapper.fieldNumber === 1 && Array.isArray(innerWrapper.value)) {
-              const sel = extractSelection(innerWrapper.value);
-              if (sel) selections.push(sel);
+  // Strategy 1: Direct selections in Field 16 (TOP tab style)
+  const directSelections = getAllFields(marketFields, 16);
+  for (const selField of directSelections) {
+    if (Array.isArray(selField.value)) {
+      const sel = extractSelection(selField.value);
+      if (sel) selections.push(sel);
+    }
+  }
+  
+  // Strategy 2: Nested selections in Field 10 (other tabs style)
+  if (selections.length === 0) {
+    const selectionGroups = getAllFields(marketFields, 10);
+    
+    for (const selGroup of selectionGroups) {
+      if (Array.isArray(selGroup.value)) {
+        // Field 10 -> Field 1 -> Field 1 -> selection
+        for (const wrapper of selGroup.value) {
+          if (wrapper.fieldNumber === 1 && Array.isArray(wrapper.value)) {
+            for (const innerWrapper of wrapper.value) {
+              if (innerWrapper.fieldNumber === 1 && Array.isArray(innerWrapper.value)) {
+                const sel = extractSelection(innerWrapper.value);
+                if (sel) selections.push(sel);
+              }
             }
           }
         }
@@ -264,37 +326,75 @@ function extractMarket(marketFields: RawField[]): Market | null {
   return { id, name, nameLong: nameLong !== name ? nameLong : undefined, selections };
 }
 
+/**
+ * Extract market groups from Field 11 entries
+ * 
+ * TWO STRUCTURES:
+ * 
+ * 1. TOP tab (flat structure - no group wrapper):
+ *    Field 11 contains directly:
+ *    - Field 3: market data (id, name, selections in Field 16)
+ *    
+ * 2. Other tabs (grouped structure):
+ *    Field 11 contains:
+ *    - Field 1: group id
+ *    - Field 2: group name  
+ *    - Field 3: market data (id, name, selections in Field 10)
+ */
 function extractMarketGroups(matchFields: RawField[]): MarketGroup[] {
   const groups: MarketGroup[] = [];
-  const groupFields = getAllFields(matchFields, 11);
+  const field11Entries = getAllFields(matchFields, 11);
   
-  for (const groupField of groupFields) {
-    if (!Array.isArray(groupField.value)) continue;
+  // Collect ungrouped markets (for TOP tab)
+  const ungroupedMarkets: Market[] = [];
+  
+  for (const entry of field11Entries) {
+    if (!Array.isArray(entry.value)) continue;
     
-    const id = getFieldValue<string>(groupField.value, 1) || "";
-    const name = getFieldValue<string>(groupField.value, 2) || "";
+    const groupId = getFieldValue<string>(entry.value, 1);
+    const groupName = getFieldValue<string>(entry.value, 2);
+    const marketFields = getAllFields(entry.value, 3);
     
-    if (!name) continue;
+    // Check if this is a grouped structure (has Field 1 and Field 2)
+    const hasGroupWrapper = typeof groupId === 'string' && typeof groupName === 'string' && groupName.length > 0;
     
-    const markets: Market[] = [];
-    const marketFields = getAllFields(groupField.value, 3);
-    
-    for (const marketField of marketFields) {
-      if (Array.isArray(marketField.value)) {
-        const market = extractMarket(marketField.value);
-        if (market) markets.push(market);
+    if (hasGroupWrapper) {
+      // Grouped structure (WYNIK, STRZELCY, etc.)
+      const markets: Market[] = [];
+      for (const marketField of marketFields) {
+        if (Array.isArray(marketField.value)) {
+          const market = extractMarket(marketField.value);
+          if (market) markets.push(market);
+        }
+      }
+      
+      if (markets.length > 0) {
+        groups.push({ id: groupId, name: groupName, markets });
+      }
+    } else {
+      // Flat structure (TOP tab) - markets directly in Field 3
+      for (const marketField of marketFields) {
+        if (Array.isArray(marketField.value)) {
+          const market = extractMarket(marketField.value);
+          if (market) ungroupedMarkets.push(market);
+        }
       }
     }
-    
-    if (markets.length > 0) {
-      groups.push({ id, name, markets });
-    }
+  }
+  
+  // If we have ungrouped markets, create a synthetic group for them
+  if (ungroupedMarkets.length > 0) {
+    groups.unshift({
+      id: "top_markets",
+      name: "Top zakłady",
+      markets: ungroupedMarkets,
+    });
   }
   
   return groups;
 }
 
-function parseToCleanStructure(buffer: Buffer, source: string): CleanData {
+function parseToTabData(buffer: Buffer, categoryId: string | null): { match: Match; tabs: Tab[]; tabData: TabData } {
   const rootFields = parseProtobuf(buffer);
   const wrapperFields = getFieldValue<RawField[]>(rootFields, 1) || [];
   const matchFields = getFieldValue<RawField[]>(wrapperFields, 1) || [];
@@ -312,11 +412,8 @@ function parseToCleanStructure(buffer: Buffer, source: string): CleanData {
     }
   }
   
-  return {
-    fetchedAt: new Date().toISOString(),
-    source,
-    match,
-    tabs,
+  const tabData: TabData = {
+    categoryId,
     marketGroups,
     stats: {
       totalMarkets,
@@ -324,17 +421,22 @@ function parseToCleanStructure(buffer: Buffer, source: string): CleanData {
       groupsCount: marketGroups.length,
     },
   };
+  
+  return { match, tabs, tabData };
 }
 
-async function fetchAndParse(matchId: string, categoryId: string | null, tabName: string): Promise<CleanData> {
+// ============================================================================
+// MAIN
+// ============================================================================
+
+async function fetchAndParse(matchId: string, categoryId: string | null, tabName: string): Promise<{ match: Match; tabs: Tab[]; tabData: TabData }> {
   const requestBody = categoryId
     ? buildMatchDetailsRequestWithFilter(matchId, categoryId)
     : buildMatchDetailsRequest(matchId);
   
   const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
-  const source = categoryId ? `${tabName} (${categoryId})` : `${tabName} (no filter)`;
   
-  return parseToCleanStructure(response, source);
+  return parseToTabData(response, categoryId);
 }
 
 async function main() {
@@ -357,7 +459,7 @@ async function main() {
   }
 
   console.log("=".repeat(80));
-  console.log("BETCLIC gRPC TO CLEAN JSON");
+  console.log("BETCLIC gRPC TO CLEAN JSON (v2)");
   console.log("=".repeat(80));
   console.log(`Match ID: ${matchId}`);
   console.log();
@@ -370,16 +472,34 @@ async function main() {
   if (fetchAll) {
     console.log("Fetching ALL tabs...\n");
     
-    const allData: Record<string, CleanData> = {};
+    let match: Match | null = null;
+    let tabs: Tab[] = [];
+    const data: Record<string, TabData> = {};
+    
+    let totalMarkets = 0;
+    let totalSelections = 0;
+    let totalGroups = 0;
     
     for (const [tabName, categoryId] of Object.entries(MARKET_GROUP_FILTERS)) {
       const categoryDisplay = categoryId || "(no filter)";
       console.log(`Fetching ${tabName} (${categoryDisplay})...`);
       
       try {
-        const data = await fetchAndParse(matchId, categoryId, tabName);
-        allData[tabName] = data;
-        console.log(`  ✓ ${data.stats.groupsCount} groups, ${data.stats.totalMarkets} markets, ${data.stats.totalSelections} selections`);
+        const result = await fetchAndParse(matchId, categoryId, tabName);
+        
+        // Use first successful response for match/tabs info
+        if (!match) {
+          match = result.match;
+          tabs = result.tabs;
+        }
+        
+        data[tabName] = result.tabData;
+        
+        totalMarkets += result.tabData.stats.totalMarkets;
+        totalSelections += result.tabData.stats.totalSelections;
+        totalGroups += result.tabData.stats.groupsCount;
+        
+        console.log(`  ✓ ${result.tabData.stats.groupsCount} groups, ${result.tabData.stats.totalMarkets} markets, ${result.tabData.stats.totalSelections} selections`);
       } catch (error) {
         console.log(`  ✗ Error: ${error instanceof Error ? error.message : error}`);
       }
@@ -387,13 +507,44 @@ async function main() {
       await new Promise(r => setTimeout(r, 100));
     }
     
+    if (!match) {
+      console.error("Failed to fetch any data");
+      process.exit(1);
+    }
+    
+    const output: CleanOutput = {
+      fetchedAt: new Date().toISOString(),
+      match,
+      tabs,
+      data,
+      totals: {
+        totalMarkets,
+        totalSelections,
+        totalGroups,
+        tabsCount: Object.keys(data).length,
+      },
+    };
+    
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-").substring(0, 19);
-    const filename = `match-${matchId}-all-clean-${timestamp}.json`;
+    const filename = `match-${matchId}-all-v2-${timestamp}.json`;
     const outputPath = path.join(outputDir, filename);
-    fs.writeFileSync(outputPath, JSON.stringify(allData, null, 2));
+    fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
     
     console.log();
     console.log("=".repeat(80));
+    console.log("SUMMARY");
+    console.log("-".repeat(80));
+    console.log(`Match: ${match.name}`);
+    console.log(`Competition: ${match.competition.name}`);
+    console.log(`Datetime: ${match.datetime}`);
+    console.log();
+    console.log("Tab Statistics:");
+    for (const [tabName, tabData] of Object.entries(data)) {
+      console.log(`  ${tabName.padEnd(15)} ${String(tabData.stats.groupsCount).padStart(3)} groups, ${String(tabData.stats.totalMarkets).padStart(4)} markets, ${String(tabData.stats.totalSelections).padStart(5)} selections`);
+    }
+    console.log("-".repeat(80));
+    console.log(`TOTAL:           ${String(totalGroups).padStart(3)} groups, ${String(totalMarkets).padStart(4)} markets, ${String(totalSelections).padStart(5)} selections`);
+    console.log();
     console.log(`Output saved to: ${outputPath}`);
     
   } else {
@@ -409,14 +560,25 @@ async function main() {
     }
     
     console.log(`Fetching ${tabName}...`);
-    const data = await fetchAndParse(matchId, categoryId ?? null, tabName);
+    const result = await fetchAndParse(matchId, categoryId ?? null, tabName);
     
-    console.log(`  ✓ ${data.stats.groupsCount} groups, ${data.stats.totalMarkets} markets, ${data.stats.totalSelections} selections`);
+    console.log(`  ✓ ${result.tabData.stats.groupsCount} groups, ${result.tabData.stats.totalMarkets} markets, ${result.tabData.stats.totalSelections} selections`);
+    
+    // For single tab, use simpler output format
+    const singleTabOutput = {
+      fetchedAt: new Date().toISOString(),
+      tab: tabName,
+      categoryId: categoryId ?? null,
+      match: result.match,
+      tabs: result.tabs,
+      marketGroups: result.tabData.marketGroups,
+      stats: result.tabData.stats,
+    };
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-").substring(0, 19);
-    const filename = `match-${matchId}-${tabName.toLowerCase()}-clean-${timestamp}.json`;
+    const filename = `match-${matchId}-${tabName.toLowerCase()}-v2-${timestamp}.json`;
     const outputPath = path.join(outputDir, filename);
-    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+    fs.writeFileSync(outputPath, JSON.stringify(singleTabOutput, null, 2));
     
     console.log();
     console.log("=".repeat(80));
@@ -425,12 +587,12 @@ async function main() {
     console.log();
     console.log("Preview:");
     console.log("-".repeat(80));
-    console.log(`Match: ${data.match.name}`);
-    console.log(`Competition: ${data.match.competition.name}`);
+    console.log(`Match: ${result.match.name}`);
+    console.log(`Competition: ${result.match.competition.name}`);
     console.log();
     
-    for (const group of data.marketGroups.slice(0, 2)) {
-      console.log(`📁 ${group.name}`);
+    for (const group of result.tabData.marketGroups.slice(0, 3)) {
+      console.log(`📁 ${group.name} (${group.markets.length} markets)`);
       for (const market of group.markets.slice(0, 2)) {
         console.log(`  📊 ${market.name}`);
         for (const sel of market.selections.slice(0, 3)) {
@@ -443,6 +605,9 @@ async function main() {
       if (group.markets.length > 2) {
         console.log(`  ... (+${group.markets.length - 2} more markets)`);
       }
+    }
+    if (result.tabData.marketGroups.length > 3) {
+      console.log(`... (+${result.tabData.marketGroups.length - 3} more groups)`);
     }
   }
   

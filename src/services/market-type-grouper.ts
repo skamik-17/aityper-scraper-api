@@ -185,15 +185,75 @@ export function groupMarketsByTypeWithParameters(
       }
     }
 
-    // Get sorted parameters
     const allParams = Array.from(paramGroups.keys());
     const sortedParams = sortParameters(allParams);
 
     // Build parameters array in sorted order
     const parameters: MarketParameter[] = sortedParams.map((param) => paramGroups.get(param)!);
 
-    // Determine if this market type has parameters
-    const hasParameters = marketHasParameters(marketType) && sortedParams.length > 1;
+    let hasParameters = marketHasParameters(marketType) && sortedParams.length > 1;
+
+    // Handle non-parameterized markets that need parameters[0] for frontend components
+    // This includes: SINGLE_SELECTION, BINARY_BUTTONS, TRIPLE_BUTTONS, PARAMETER_SLIDER, and any market without hasParameter: true
+    if (!hasParameters) {
+      const marketDef = getMarketByCode(marketType);
+      const needsParametersStructure =
+        marketDef?.viewType === "SINGLE_SELECTION" ||
+        marketDef?.viewType === "BINARY_BUTTONS" ||
+        marketDef?.viewType === "TRIPLE_BUTTONS" ||
+        marketDef?.viewType === "PARAMETER_SLIDER" ||
+        marketDef?.viewType === "COMBINATION";
+
+      if (needsParametersStructure) {
+        const bookmakersMap = new Map<string, { type: string; odds: number }[]>();
+
+        for (const [_, paramEntry] of paramGroups.entries()) {
+          for (const bmEntry of paramEntry.bookmakers) {
+            if (!bookmakersMap.has(bmEntry.bookmaker)) {
+              bookmakersMap.set(bmEntry.bookmaker, []);
+            }
+
+            // For BINARY_BUTTONS, TRIPLE_BUTTONS, PARAMETER_SLIDER, and COMBINATION, use all selections
+            // For SINGLE_SELECTION, only use YES
+            if (marketDef?.viewType === "BINARY_BUTTONS" || marketDef?.viewType === "TRIPLE_BUTTONS" || marketDef?.viewType === "PARAMETER_SLIDER" || marketDef?.viewType === "COMBINATION") {
+              for (const selection of bmEntry.selections) {
+                bookmakersMap.get(bmEntry.bookmaker)!.push({
+                  type: selection.type,
+                  odds: selection.odds,
+                });
+              }
+            } else {
+              const yesSelection = bmEntry.selections.find((s) => s.type === "YES");
+              if (yesSelection) {
+                bookmakersMap.get(bmEntry.bookmaker)!.push({
+                  type: "YES",
+                  odds: yesSelection.odds,
+                });
+              }
+            }
+          }
+        }
+
+        const parameterBookmakers: MarketParameterBookmaker[] = Array.from(bookmakersMap.entries()).map(([bookmaker, selections]) => ({
+          bookmaker,
+          bookmakerName: bookmaker,
+          selections,
+        }));
+
+        if (parameters.length === 0) {
+          parameters.push({
+            value: "",
+            label: "",
+            bookmakers: parameterBookmakers,
+          });
+        } else {
+          parameters[0].bookmakers = parameterBookmakers;
+        }
+
+        // Set hasParameters to true so frontend gets data
+        hasParameters = true;
+      }
+    }
 
     // Get default parameter
     const defaultParam = DEFAULT_PARAMETERS[marketType];

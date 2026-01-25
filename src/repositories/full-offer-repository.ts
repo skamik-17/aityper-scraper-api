@@ -21,6 +21,7 @@ interface OddsInsert {
   market_type_id: number;
   market_key: string;
   param_value?: string;
+  custom_name?: string;
   selections: MarketSelection[];
   scraped_at: string;
 }
@@ -117,6 +118,7 @@ export async function saveFullOfferMarkets(
       market_type_id: marketTypeId,
       market_key: marketKey,
       param_value: market.paramValue,
+      custom_name: market.customLabel,
       selections: market.selections,
       scraped_at: scrapedAt,
     });
@@ -384,6 +386,7 @@ export async function saveBatchFullOfferMarkets(
         market_type_id: marketTypeId,
         market_key: marketKey,
         param_value: market.paramValue,
+        custom_name: market.customLabel,
         selections: market.selections,
         scraped_at: scrapedAt,
       });

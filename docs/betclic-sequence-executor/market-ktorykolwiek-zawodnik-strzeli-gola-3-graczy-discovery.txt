@@ -1,0 +1,2504 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675391942656
+🎯 Focusing on: "Którykolwiek zawodnik strzeli gola - 3 graczy"
+
+Fetching TOP...
+  ✓ 12 markets
+Fetching WYNIK...
+  ✓ 27 markets
+Fetching STRZELCY...
+  ✓ 14 markets
+Fetching GOLE...
+  ✓ 48 markets
+Fetching METODA_GOLA...
+  ✓ 18 markets
+Fetching HANDICAP...
+  ✓ 7 markets
+Fetching STATYSTYKI...
+  ✓ 32 markets
+
+====================================================================================================
+🏆 MATCH: Arsenal - Manchester United
+====================================================================================================
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+📦 MARKET: Którykolwiek zawodnik strzeli gola - 3 graczy
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📋 TAB: STRZELCY
+   Group: Wielu strzelców (subca_ftb_mgs)
+
+✅ NORMALIZED: OTHER
+   Market Key: OTHER
+   Param Value: none
+   Matched By: pattern
+
+⚠️  ISSUES:
+   - UNMAPPED: Market normalized to OTHER
+
+📊 RAW SELECTIONS (220):
+   Name                                Odds     Normalized
+   ─────────────────────────────────── ──────── ────────────────────
+   L. Trossard / G. Jesus / V. Gyoker  1.28     L. Trossard / G. Jesus / V. Gyokeres
+   G. Jesus / V. Gyokeres / G. Martin  1.29     G. Jesus / V. Gyokeres / G. Martinelli
+   L. Trossard / V. Gyokeres / G. Mar  1.29     L. Trossard / V. Gyokeres / G. Martinelli
+   G. Jesus / V. Gyokeres / B. Saka    1.31     G. Jesus / V. Gyokeres / B. Saka
+   L. Trossard / V. Gyokeres / B. Sak  1.31     L. Trossard / V. Gyokeres / B. Saka
+   G. Jesus / V. Gyokeres / E. Eze     1.32     G. Jesus / V. Gyokeres / E. Eze
+   L. Trossard / V. Gyokeres / E. Eze  1.32     L. Trossard / V. Gyokeres / E. Eze
+   L. Trossard / G. Jesus / G. Martin  1.32     L. Trossard / G. Jesus / G. Martinelli
+   V. Gyokeres / B. Saka / G. Martine  1.33     V. Gyokeres / B. Saka / G. Martinelli
+   V. Gyokeres / E. Eze / G. Martinel  1.34     V. Gyokeres / E. Eze / G. Martinelli
+   L. Trossard / G. Jesus / B. Saka    1.34     L. Trossard / G. Jesus / B. Saka
+   V. Gyokeres / E. Eze / B. Saka      1.35     V. Gyokeres / E. Eze / B. Saka
+   L. Trossard / G. Jesus / E. Eze     1.35     L. Trossard / G. Jesus / E. Eze
+   G. Jesus / B. Saka / G. Martinelli  1.36     G. Jesus / B. Saka / G. Martinelli
+   L. Trossard / B. Saka / G. Martine  1.36     L. Trossard / B. Saka / G. Martinelli
+   G. Jesus / V. Gyokeres / B. Mbeumo  1.37     G. Jesus / V. Gyokeres / B. Mbeumo
+   L. Trossard / V. Gyokeres / B. Mbe  1.37     L. Trossard / V. Gyokeres / B. Mbeumo
+   G. Jesus / E. Eze / G. Martinelli   1.37     G. Jesus / E. Eze / G. Martinelli
+   L. Trossard / E. Eze / G. Martinel  1.37     L. Trossard / E. Eze / G. Martinelli
+   G. Jesus / V. Gyokeres / B. Sesko   1.38     G. Jesus / V. Gyokeres / B. Sesko
+   L. Trossard / V. Gyokeres / B. Ses  1.38     L. Trossard / V. Gyokeres / B. Sesko
+   G. Jesus / V. Gyokeres / D. Rice    1.39     G. Jesus / V. Gyokeres / D. Rice
+   G. Jesus / E. Eze / B. Saka         1.39     G. Jesus / E. Eze / B. Saka
+   L. Trossard / V. Gyokeres / D. Ric  1.39     L. Trossard / V. Gyokeres / D. Rice
+   L. Trossard / E. Eze / B. Saka      1.39     L. Trossard / E. Eze / B. Saka
+   G. Jesus / V. Gyokeres / M. Cunha   1.40     G. Jesus / V. Gyokeres / M. Cunha
+   L. Trossard / V. Gyokeres / M. Cun  1.40     L. Trossard / V. Gyokeres / M. Cunha
+   V. Gyokeres / B. Mbeumo / G. Marti  1.40     V. Gyokeres / B. Mbeumo / G. Martinelli
+   V. Gyokeres / B. Sesko / G. Martin  1.40     V. Gyokeres / B. Sesko / G. Martinelli
+   E. Eze / B. Saka / G. Martinelli    1.40     E. Eze / B. Saka / G. Martinelli
+   V. Gyokeres / B. Mbeumo / B. Saka   1.41     V. Gyokeres / B. Mbeumo / B. Saka
+   M. Ødegaard / G. Jesus / V. Gyoker  1.41     M. Ødegaard / G. Jesus / V. Gyokeres
+   L. Trossard / M. Ødegaard / V. Gyo  1.41     L. Trossard / M. Ødegaard / V. Gyokeres
+   L. Trossard / G. Jesus / B. Mbeumo  1.41     L. Trossard / G. Jesus / B. Mbeumo
+   V. Gyokeres / B. Saka / B. Sesko    1.42     V. Gyokeres / B. Saka / B. Sesko
+   B. Fernandes / G. Jesus / V. Gyoke  1.42     B. Fernandes / G. Jesus / V. Gyokeres
+   L. Trossard / B. Fernandes / V. Gy  1.42     L. Trossard / B. Fernandes / V. Gyokeres
+   V. Gyokeres / D. Rice / G. Martine  1.42     V. Gyokeres / D. Rice / G. Martinelli
+   V. Gyokeres / M. Cunha / G. Martin  1.42     V. Gyokeres / M. Cunha / G. Martinelli
+   L. Trossard / G. Jesus / B. Sesko   1.42     L. Trossard / G. Jesus / B. Sesko
+   V. Gyokeres / E. Eze / B. Mbeumo    1.43     V. Gyokeres / E. Eze / B. Mbeumo
+   V. Gyokeres / D. Rice / B. Saka     1.43     V. Gyokeres / D. Rice / B. Saka
+   V. Gyokeres / E. Eze / B. Sesko     1.43     V. Gyokeres / E. Eze / B. Sesko
+   L. Trossard / G. Jesus / D. Rice    1.43     L. Trossard / G. Jesus / D. Rice
+   V. Gyokeres / M. Cunha / B. Saka    1.44     V. Gyokeres / M. Cunha / B. Saka
+   M. Ødegaard / V. Gyokeres / G. Mar  1.44     M. Ødegaard / V. Gyokeres / G. Martinelli
+   L. Trossard / G. Jesus / M. Cunha   1.44     L. Trossard / G. Jesus / M. Cunha
+   G. Jesus / B. Mbeumo / G. Martinel  1.44     G. Jesus / B. Mbeumo / G. Martinelli
+   L. Trossard / B. Mbeumo / G. Marti  1.44     L. Trossard / B. Mbeumo / G. Martinelli
+   V. Gyokeres / D. Rice / E. Eze      1.45     V. Gyokeres / D. Rice / E. Eze
+   V. Gyokeres / E. Eze / M. Cunha     1.45     V. Gyokeres / E. Eze / M. Cunha
+   B. Fernandes / V. Gyokeres / G. Ma  1.45     B. Fernandes / V. Gyokeres / G. Martinelli
+   G. Jesus / B. Sesko / G. Martinell  1.45     G. Jesus / B. Sesko / G. Martinelli
+   L. Trossard / B. Sesko / G. Martin  1.45     L. Trossard / B. Sesko / G. Martinelli
+   M. Ødegaard / V. Gyokeres / B. Sak  1.46     M. Ødegaard / V. Gyokeres / B. Saka
+   G. Jesus / B. Mbeumo / B. Saka      1.46     G. Jesus / B. Mbeumo / B. Saka
+   L. Trossard / B. Mbeumo / B. Saka   1.46     L. Trossard / B. Mbeumo / B. Saka
+   L. Trossard / M. Ødegaard / G. Jes  1.46     L. Trossard / M. Ødegaard / G. Jesus
+   L. Trossard / B. Fernandes / G. Je  1.46     L. Trossard / B. Fernandes / G. Jesus
+   G. Jesus / D. Rice / G. Martinelli  1.46     G. Jesus / D. Rice / G. Martinelli
+   L. Trossard / D. Rice / G. Martine  1.46     L. Trossard / D. Rice / G. Martinelli
+   B. Fernandes / V. Gyokeres / B. Sa  1.47     B. Fernandes / V. Gyokeres / B. Saka
+   G. Jesus / B. Saka / B. Sesko       1.47     G. Jesus / B. Saka / B. Sesko
+   M. Ødegaard / V. Gyokeres / E. Eze  1.47     M. Ødegaard / V. Gyokeres / E. Eze
+   L. Trossard / B. Saka / B. Sesko    1.47     L. Trossard / B. Saka / B. Sesko
+   G. Jesus / E. Eze / B. Mbeumo       1.47     G. Jesus / E. Eze / B. Mbeumo
+   L. Trossard / E. Eze / B. Mbeumo    1.47     L. Trossard / E. Eze / B. Mbeumo
+   B. Mbeumo / B. Saka / G. Martinell  1.47     B. Mbeumo / B. Saka / G. Martinelli
+   G. Jesus / M. Cunha / G. Martinell  1.47     G. Jesus / M. Cunha / G. Martinelli
+   L. Trossard / M. Cunha / G. Martin  1.47     L. Trossard / M. Cunha / G. Martinelli
+   B. Fernandes / V. Gyokeres / E. Ez  1.48     B. Fernandes / V. Gyokeres / E. Eze
+   G. Jesus / D. Rice / B. Saka        1.48     G. Jesus / D. Rice / B. Saka
+   G. Jesus / E. Eze / B. Sesko        1.48     G. Jesus / E. Eze / B. Sesko
+   L. Trossard / D. Rice / B. Saka     1.48     L. Trossard / D. Rice / B. Saka
+   L. Trossard / E. Eze / B. Sesko     1.48     L. Trossard / E. Eze / B. Sesko
+   B. Saka / B. Sesko / G. Martinelli  1.48     B. Saka / B. Sesko / G. Martinelli
+   G. Jesus / M. Cunha / B. Saka       1.49     G. Jesus / M. Cunha / B. Saka
+   L. Trossard / M. Cunha / B. Saka    1.49     L. Trossard / M. Cunha / B. Saka
+   M. Ødegaard / G. Jesus / G. Martin  1.49     M. Ødegaard / G. Jesus / G. Martinelli
+   E. Eze / B. Mbeumo / G. Martinelli  1.49     E. Eze / B. Mbeumo / G. Martinelli
+   L. Trossard / M. Ødegaard / G. Mar  1.49     L. Trossard / M. Ødegaard / G. Martinelli
+   E. Eze / B. Mbeumo / B. Saka        1.50     E. Eze / B. Mbeumo / B. Saka
+   G. Jesus / D. Rice / E. Eze         1.50     G. Jesus / D. Rice / E. Eze
+   L. Trossard / D. Rice / E. Eze      1.50     L. Trossard / D. Rice / E. Eze
+   D. Rice / B. Saka / G. Martinelli   1.50     D. Rice / B. Saka / G. Martinelli
+   B. Fernandes / G. Jesus / G. Marti  1.50     B. Fernandes / G. Jesus / G. Martinelli
+   E. Eze / B. Sesko / G. Martinelli   1.50     E. Eze / B. Sesko / G. Martinelli
+   L. Trossard / B. Fernandes / G. Ma  1.50     L. Trossard / B. Fernandes / G. Martinelli
+   M. Ødegaard / G. Jesus / B. Saka    1.51     M. Ødegaard / G. Jesus / B. Saka
+   G. Jesus / E. Eze / M. Cunha        1.51     G. Jesus / E. Eze / M. Cunha
+   E. Eze / B. Saka / B. Sesko         1.51     E. Eze / B. Saka / B. Sesko
+   L. Trossard / M. Ødegaard / B. Sak  1.51     L. Trossard / M. Ødegaard / B. Saka
+   L. Trossard / E. Eze / M. Cunha     1.51     L. Trossard / E. Eze / M. Cunha
+   M. Cunha / B. Saka / G. Martinelli  1.51     M. Cunha / B. Saka / G. Martinelli
+   D. Rice / E. Eze / G. Martinelli    1.51     D. Rice / E. Eze / G. Martinelli
+   V. Gyokeres / B. Mbeumo / B. Sesko  1.52     V. Gyokeres / B. Mbeumo / B. Sesko
+   B. Fernandes / G. Jesus / B. Saka   1.52     B. Fernandes / G. Jesus / B. Saka
+   L. Trossard / B. Fernandes / B. Sa  1.52     L. Trossard / B. Fernandes / B. Saka
+   E. Eze / M. Cunha / G. Martinelli   1.52     E. Eze / M. Cunha / G. Martinelli
+   V. Gyokeres / D. Rice / B. Mbeumo   1.53     V. Gyokeres / D. Rice / B. Mbeumo
+   M. Ødegaard / G. Jesus / E. Eze     1.53     M. Ødegaard / G. Jesus / E. Eze
+   D. Rice / E. Eze / B. Saka          1.53     D. Rice / E. Eze / B. Saka
+   B. Fernandes / G. Jesus / E. Eze    1.53     B. Fernandes / G. Jesus / E. Eze
+   L. Trossard / M. Ødegaard / E. Eze  1.53     L. Trossard / M. Ødegaard / E. Eze
+   L. Trossard / B. Fernandes / E. Ez  1.53     L. Trossard / B. Fernandes / E. Eze
+   M. Ødegaard / B. Saka / G. Martine  1.53     M. Ødegaard / B. Saka / G. Martinelli
+   V. Gyokeres / M. Cunha / B. Mbeumo  1.54     V. Gyokeres / M. Cunha / B. Mbeumo
+   V. Gyokeres / D. Rice / B. Sesko    1.54     V. Gyokeres / D. Rice / B. Sesko
+   E. Eze / M. Cunha / B. Saka         1.54     E. Eze / M. Cunha / B. Saka
+   B. Fernandes / B. Saka / G. Martin  1.54     B. Fernandes / B. Saka / G. Martinelli
+   M. Ødegaard / E. Eze / G. Martinel  1.54     M. Ødegaard / E. Eze / G. Martinelli
+   V. Gyokeres / M. Cunha / B. Sesko   1.55     V. Gyokeres / M. Cunha / B. Sesko
+   B. Fernandes / E. Eze / G. Martine  1.55     B. Fernandes / E. Eze / G. Martinelli
+   M. Ødegaard / V. Gyokeres / B. Mbe  1.56     M. Ødegaard / V. Gyokeres / B. Mbeumo
+   M. Ødegaard / E. Eze / B. Saka      1.56     M. Ødegaard / E. Eze / B. Saka
+   B. Fernandes / V. Gyokeres / B. Mb  1.57     B. Fernandes / V. Gyokeres / B. Mbeumo
+   M. Ødegaard / V. Gyokeres / B. Ses  1.57     M. Ødegaard / V. Gyokeres / B. Sesko
+   V. Gyokeres / D. Rice / M. Cunha    1.57     V. Gyokeres / D. Rice / M. Cunha
+   B. Fernandes / E. Eze / B. Saka     1.57     B. Fernandes / E. Eze / B. Saka
+   B. Fernandes / V. Gyokeres / B. Se  1.58     B. Fernandes / V. Gyokeres / B. Sesko
+   G. Jesus / B. Mbeumo / B. Sesko     1.58     G. Jesus / B. Mbeumo / B. Sesko
+   L. Trossard / B. Mbeumo / B. Sesko  1.58     L. Trossard / B. Mbeumo / B. Sesko
+   M. Ødegaard / V. Gyokeres / D. Ric  1.59     M. Ødegaard / V. Gyokeres / D. Rice
+   G. Jesus / D. Rice / B. Mbeumo      1.59     G. Jesus / D. Rice / B. Mbeumo
+   L. Trossard / D. Rice / B. Mbeumo   1.59     L. Trossard / D. Rice / B. Mbeumo
+   M. Ødegaard / V. Gyokeres / M. Cun  1.60     M. Ødegaard / V. Gyokeres / M. Cunha
+   B. Fernandes / V. Gyokeres / D. Ri  1.60     B. Fernandes / V. Gyokeres / D. Rice
+   G. Jesus / M. Cunha / B. Mbeumo     1.60     G. Jesus / M. Cunha / B. Mbeumo
+   L. Trossard / M. Cunha / B. Mbeumo  1.60     L. Trossard / M. Cunha / B. Mbeumo
+   B. Mbeumo / B. Sesko / G. Martinel  1.60     B. Mbeumo / B. Sesko / G. Martinelli
+   B. Fernandes / V. Gyokeres / M. Cu  1.61     B. Fernandes / V. Gyokeres / M. Cunha
+   G. Jesus / D. Rice / B. Sesko       1.61     G. Jesus / D. Rice / B. Sesko
+   L. Trossard / D. Rice / B. Sesko    1.61     L. Trossard / D. Rice / B. Sesko
+   D. Rice / B. Mbeumo / G. Martinell  1.61     D. Rice / B. Mbeumo / G. Martinelli
+   B. Mbeumo / B. Saka / B. Sesko      1.62     B. Mbeumo / B. Saka / B. Sesko
+   G. Jesus / M. Cunha / B. Sesko      1.62     G. Jesus / M. Cunha / B. Sesko
+   L. Trossard / M. Cunha / B. Sesko   1.62     L. Trossard / M. Cunha / B. Sesko
+   B. Fernandes / M. Ødegaard / V. Gy  1.63     B. Fernandes / M. Ødegaard / V. Gyokeres
+   M. Ødegaard / G. Jesus / B. Mbeumo  1.63     M. Ødegaard / G. Jesus / B. Mbeumo
+   D. Rice / B. Mbeumo / B. Saka       1.63     D. Rice / B. Mbeumo / B. Saka
+   G. Jesus / D. Rice / M. Cunha       1.63     G. Jesus / D. Rice / M. Cunha
+   E. Eze / B. Mbeumo / B. Sesko       1.63     E. Eze / B. Mbeumo / B. Sesko
+   L. Trossard / M. Ødegaard / B. Mbe  1.63     L. Trossard / M. Ødegaard / B. Mbeumo
+   L. Trossard / D. Rice / M. Cunha    1.63     L. Trossard / D. Rice / M. Cunha
+   M. Cunha / B. Mbeumo / G. Martinel  1.63     M. Cunha / B. Mbeumo / G. Martinelli
+   D. Rice / B. Sesko / G. Martinelli  1.63     D. Rice / B. Sesko / G. Martinelli
+   B. Fernandes / G. Jesus / B. Mbeum  1.64     B. Fernandes / G. Jesus / B. Mbeumo
+   M. Ødegaard / G. Jesus / B. Sesko   1.64     M. Ødegaard / G. Jesus / B. Sesko
+   L. Trossard / B. Fernandes / B. Mb  1.64     L. Trossard / B. Fernandes / B. Mbeumo
+   L. Trossard / M. Ødegaard / B. Ses  1.64     L. Trossard / M. Ødegaard / B. Sesko
+   M. Cunha / B. Sesko / G. Martinell  1.64     M. Cunha / B. Sesko / G. Martinelli
+   M. Cunha / B. Mbeumo / B. Saka      1.65     M. Cunha / B. Mbeumo / B. Saka
+   D. Rice / B. Saka / B. Sesko        1.65     D. Rice / B. Saka / B. Sesko
+   B. Fernandes / G. Jesus / B. Sesko  1.65     B. Fernandes / G. Jesus / B. Sesko
+   L. Trossard / B. Fernandes / B. Se  1.65     L. Trossard / B. Fernandes / B. Sesko
+   D. Rice / E. Eze / B. Mbeumo        1.65     D. Rice / E. Eze / B. Mbeumo
+   M. Ødegaard / B. Mbeumo / G. Marti  1.65     M. Ødegaard / B. Mbeumo / G. Martinelli
+   M. Cunha / B. Saka / B. Sesko       1.66     M. Cunha / B. Saka / B. Sesko
+   M. Ødegaard / G. Jesus / D. Rice    1.66     M. Ødegaard / G. Jesus / D. Rice
+   E. Eze / M. Cunha / B. Mbeumo       1.66     E. Eze / M. Cunha / B. Mbeumo
+   D. Rice / E. Eze / B. Sesko         1.66     D. Rice / E. Eze / B. Sesko
+   L. Trossard / M. Ødegaard / D. Ric  1.66     L. Trossard / M. Ødegaard / D. Rice
+   B. Fernandes / B. Mbeumo / G. Mart  1.66     B. Fernandes / B. Mbeumo / G. Martinelli
+   D. Rice / M. Cunha / G. Martinelli  1.66     D. Rice / M. Cunha / G. Martinelli
+   M. Ødegaard / B. Mbeumo / B. Saka   1.67     M. Ødegaard / B. Mbeumo / B. Saka
+   M. Ødegaard / G. Jesus / M. Cunha   1.67     M. Ødegaard / G. Jesus / M. Cunha
+   B. Fernandes / G. Jesus / D. Rice   1.67     B. Fernandes / G. Jesus / D. Rice
+   L. Trossard / M. Ødegaard / M. Cun  1.67     L. Trossard / M. Ødegaard / M. Cunha
+   L. Trossard / B. Fernandes / D. Ri  1.67     L. Trossard / B. Fernandes / D. Rice
+   M. Ødegaard / B. Sesko / G. Martin  1.67     M. Ødegaard / B. Sesko / G. Martinelli
+   D. Rice / M. Cunha / B. Saka        1.68     D. Rice / M. Cunha / B. Saka
+   E. Eze / M. Cunha / B. Sesko        1.68     E. Eze / M. Cunha / B. Sesko
+   B. Fernandes / B. Sesko / G. Marti  1.68     B. Fernandes / B. Sesko / G. Martinelli
+   B. Fernandes / B. Mbeumo / B. Saka  1.69     B. Fernandes / B. Mbeumo / B. Saka
+   M. Ødegaard / B. Saka / B. Sesko    1.69     M. Ødegaard / B. Saka / B. Sesko
+   B. Fernandes / G. Jesus / M. Cunha  1.69     B. Fernandes / G. Jesus / M. Cunha
+   L. Trossard / B. Fernandes / M. Cu  1.69     L. Trossard / B. Fernandes / M. Cunha
+   M. Ødegaard / E. Eze / B. Mbeumo    1.69     M. Ødegaard / E. Eze / B. Mbeumo
+   M. Ødegaard / D. Rice / G. Martine  1.69     M. Ødegaard / D. Rice / G. Martinelli
+   B. Fernandes / B. Saka / B. Sesko   1.70     B. Fernandes / B. Saka / B. Sesko
+   B. Fernandes / E. Eze / B. Mbeumo   1.70     B. Fernandes / E. Eze / B. Mbeumo
+   D. Rice / E. Eze / M. Cunha         1.70     D. Rice / E. Eze / M. Cunha
+   M. Ødegaard / M. Cunha / G. Martin  1.70     M. Ødegaard / M. Cunha / G. Martinelli
+   B. Fernandes / D. Rice / G. Martin  1.70     B. Fernandes / D. Rice / G. Martinelli
+   M. Ødegaard / D. Rice / B. Saka     1.71     M. Ødegaard / D. Rice / B. Saka
+   B. Fernandes / M. Ødegaard / G. Je  1.71     B. Fernandes / M. Ødegaard / G. Jesus
+   M. Ødegaard / E. Eze / B. Sesko     1.71     M. Ødegaard / E. Eze / B. Sesko
+   L. Trossard / B. Fernandes / M. Ød  1.71     L. Trossard / B. Fernandes / M. Ødegaard
+   B. Fernandes / M. Cunha / G. Marti  1.71     B. Fernandes / M. Cunha / G. Martinelli
+   B. Fernandes / E. Eze / B. Sesko    1.72     B. Fernandes / E. Eze / B. Sesko
+   M. Ødegaard / M. Cunha / B. Saka    1.73     M. Ødegaard / M. Cunha / B. Saka
+   B. Fernandes / D. Rice / B. Saka    1.73     B. Fernandes / D. Rice / B. Saka
+   M. Ødegaard / D. Rice / E. Eze      1.73     M. Ødegaard / D. Rice / E. Eze
+   D. Rice / B. Mbeumo / B. Sesko      1.73     D. Rice / B. Mbeumo / B. Sesko
+   B. Fernandes / M. Cunha / B. Saka   1.74     B. Fernandes / M. Cunha / B. Saka
+   M. Ødegaard / E. Eze / M. Cunha     1.74     M. Ødegaard / E. Eze / M. Cunha
+   B. Fernandes / D. Rice / E. Eze     1.74     B. Fernandes / D. Rice / E. Eze
+   M. Cunha / B. Mbeumo / B. Sesko     1.75     M. Cunha / B. Mbeumo / B. Sesko
+   B. Fernandes / M. Ødegaard / G. Ma  1.75     B. Fernandes / M. Ødegaard / G. Martinelli
+   B. Fernandes / E. Eze / M. Cunha    1.76     B. Fernandes / E. Eze / M. Cunha
+   B. Fernandes / M. Ødegaard / B. Sa  1.77     B. Fernandes / M. Ødegaard / B. Saka
+   D. Rice / M. Cunha / B. Mbeumo      1.78     D. Rice / M. Cunha / B. Mbeumo
+   B. Fernandes / M. Ødegaard / E. Ez  1.79     B. Fernandes / M. Ødegaard / E. Eze
+   M. Ødegaard / B. Mbeumo / B. Sesko  1.79     M. Ødegaard / B. Mbeumo / B. Sesko
+   D. Rice / M. Cunha / B. Sesko       1.79     D. Rice / M. Cunha / B. Sesko
+   B. Fernandes / B. Mbeumo / B. Sesk  1.80     B. Fernandes / B. Mbeumo / B. Sesko
+   M. Ødegaard / D. Rice / B. Mbeumo   1.81     M. Ødegaard / D. Rice / B. Mbeumo
+   M. Ødegaard / M. Cunha / B. Mbeumo  1.83     M. Ødegaard / M. Cunha / B. Mbeumo
+   B. Fernandes / D. Rice / B. Mbeumo  1.83     B. Fernandes / D. Rice / B. Mbeumo
+   M. Ødegaard / D. Rice / B. Sesko    1.83     M. Ødegaard / D. Rice / B. Sesko
+   M. Ødegaard / M. Cunha / B. Sesko   1.84     M. Ødegaard / M. Cunha / B. Sesko
+   B. Fernandes / D. Rice / B. Sesko   1.84     B. Fernandes / D. Rice / B. Sesko
+   B. Fernandes / M. Cunha / B. Mbeum  1.85     B. Fernandes / M. Cunha / B. Mbeumo
+   B. Fernandes / M. Cunha / B. Sesko  1.86     B. Fernandes / M. Cunha / B. Sesko
+   M. Ødegaard / D. Rice / M. Cunha    1.86     M. Ødegaard / D. Rice / M. Cunha
+   B. Fernandes / D. Rice / M. Cunha   1.88     B. Fernandes / D. Rice / M. Cunha
+   B. Fernandes / M. Ødegaard / B. Mb  1.89     B. Fernandes / M. Ødegaard / B. Mbeumo
+   B. Fernandes / M. Ødegaard / B. Se  1.91     B. Fernandes / M. Ødegaard / B. Sesko
+   B. Fernandes / M. Ødegaard / D. Ri  1.92     B. Fernandes / M. Ødegaard / D. Rice
+   B. Fernandes / M. Ødegaard / M. Cu  1.94     B. Fernandes / M. Ødegaard / M. Cunha
+
+📱 FRONTEND JSON (MarketWithParams format):
+{
+  "marketKey": "OTHER",
+  "type": "OTHER",
+  "category": "INNE",
+  "label": "Którykolwiek zawodnik strzeli gola - 3 graczy",
+  "description": "Nierozpoznany typ rynku",
+  "displayOrder": 999,
+  "viewType": "BINARY_BUTTONS",
+  "parameters": [
+    {
+      "value": "base",
+      "label": "",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "bookmakerName": "betclic",
+          "selections": [
+            {
+              "type": "L. Trossard / G. Jesus / V. Gyokeres",
+              "odds": 1.28,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / G. Martinelli",
+              "odds": 1.29,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / G. Martinelli",
+              "odds": 1.29,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / B. Saka",
+              "odds": 1.31,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / B. Saka",
+              "odds": 1.31,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / E. Eze",
+              "odds": 1.32,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / E. Eze",
+              "odds": 1.32,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / G. Martinelli",
+              "odds": 1.32,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Saka / G. Martinelli",
+              "odds": 1.33,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / E. Eze / G. Martinelli",
+              "odds": 1.34,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / B. Saka",
+              "odds": 1.34,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / E. Eze / B. Saka",
+              "odds": 1.35,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / E. Eze",
+              "odds": 1.35,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Saka / G. Martinelli",
+              "odds": 1.36,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Saka / G. Martinelli",
+              "odds": 1.36,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / B. Mbeumo",
+              "odds": 1.37,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / B. Mbeumo",
+              "odds": 1.37,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / E. Eze / G. Martinelli",
+              "odds": 1.37,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / E. Eze / G. Martinelli",
+              "odds": 1.37,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / B. Sesko",
+              "odds": 1.38,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / B. Sesko",
+              "odds": 1.38,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / D. Rice",
+              "odds": 1.39,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / E. Eze / B. Saka",
+              "odds": 1.39,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / D. Rice",
+              "odds": 1.39,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / E. Eze / B. Saka",
+              "odds": 1.39,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / V. Gyokeres / M. Cunha",
+              "odds": 1.4,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / V. Gyokeres / M. Cunha",
+              "odds": 1.4,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Mbeumo / G. Martinelli",
+              "odds": 1.4,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Sesko / G. Martinelli",
+              "odds": 1.4,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Saka / G. Martinelli",
+              "odds": 1.4,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Mbeumo / B. Saka",
+              "odds": 1.41,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / V. Gyokeres",
+              "odds": 1.41,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / V. Gyokeres",
+              "odds": 1.41,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / B. Mbeumo",
+              "odds": 1.41,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Saka / B. Sesko",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / V. Gyokeres",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / V. Gyokeres",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / G. Martinelli",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / M. Cunha / G. Martinelli",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / B. Sesko",
+              "odds": 1.42,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / E. Eze / B. Mbeumo",
+              "odds": 1.43,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / B. Saka",
+              "odds": 1.43,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / E. Eze / B. Sesko",
+              "odds": 1.43,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / D. Rice",
+              "odds": 1.43,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / M. Cunha / B. Saka",
+              "odds": 1.44,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / G. Martinelli",
+              "odds": 1.44,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / G. Jesus / M. Cunha",
+              "odds": 1.44,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Mbeumo / G. Martinelli",
+              "odds": 1.44,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Mbeumo / G. Martinelli",
+              "odds": 1.44,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / E. Eze",
+              "odds": 1.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / E. Eze / M. Cunha",
+              "odds": 1.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / G. Martinelli",
+              "odds": 1.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Sesko / G. Martinelli",
+              "odds": 1.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Sesko / G. Martinelli",
+              "odds": 1.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / B. Saka",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Mbeumo / B. Saka",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Mbeumo / B. Saka",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / G. Jesus",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / G. Jesus",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / G. Martinelli",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / G. Martinelli",
+              "odds": 1.46,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / B. Saka",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Saka / B. Sesko",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / E. Eze",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Saka / B. Sesko",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / E. Eze / B. Mbeumo",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / E. Eze / B. Mbeumo",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Mbeumo / B. Saka / G. Martinelli",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / M. Cunha / G. Martinelli",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Cunha / G. Martinelli",
+              "odds": 1.47,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / E. Eze",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / B. Saka",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / E. Eze / B. Sesko",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / B. Saka",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / E. Eze / B. Sesko",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Saka / B. Sesko / G. Martinelli",
+              "odds": 1.48,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / M. Cunha / B. Saka",
+              "odds": 1.49,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Cunha / B. Saka",
+              "odds": 1.49,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / G. Martinelli",
+              "odds": 1.49,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Mbeumo / G. Martinelli",
+              "odds": 1.49,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / G. Martinelli",
+              "odds": 1.49,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Mbeumo / B. Saka",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / E. Eze",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / E. Eze",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Saka / G. Martinelli",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / G. Martinelli",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Sesko / G. Martinelli",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / G. Martinelli",
+              "odds": 1.5,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / B. Saka",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / E. Eze / M. Cunha",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Saka / B. Sesko",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / B. Saka",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / E. Eze / M. Cunha",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Saka / G. Martinelli",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / E. Eze / G. Martinelli",
+              "odds": 1.51,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / B. Mbeumo / B. Sesko",
+              "odds": 1.52,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / B. Saka",
+              "odds": 1.52,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / B. Saka",
+              "odds": 1.52,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / M. Cunha / G. Martinelli",
+              "odds": 1.52,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / B. Mbeumo",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / E. Eze",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / E. Eze / B. Saka",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / E. Eze",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / E. Eze",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / E. Eze",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Saka / G. Martinelli",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / M. Cunha / B. Mbeumo",
+              "odds": 1.54,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / B. Sesko",
+              "odds": 1.54,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / M. Cunha / B. Saka",
+              "odds": 1.54,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Saka / G. Martinelli",
+              "odds": 1.54,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / E. Eze / G. Martinelli",
+              "odds": 1.54,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / M. Cunha / B. Sesko",
+              "odds": 1.55,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / E. Eze / G. Martinelli",
+              "odds": 1.55,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / B. Mbeumo",
+              "odds": 1.56,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / E. Eze / B. Saka",
+              "odds": 1.56,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / B. Mbeumo",
+              "odds": 1.57,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / B. Sesko",
+              "odds": 1.57,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "V. Gyokeres / D. Rice / M. Cunha",
+              "odds": 1.57,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / E. Eze / B. Saka",
+              "odds": 1.57,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / B. Sesko",
+              "odds": 1.58,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / B. Mbeumo / B. Sesko",
+              "odds": 1.58,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Mbeumo / B. Sesko",
+              "odds": 1.58,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / D. Rice",
+              "odds": 1.59,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / B. Mbeumo",
+              "odds": 1.59,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / B. Mbeumo",
+              "odds": 1.59,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / V. Gyokeres / M. Cunha",
+              "odds": 1.6,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / D. Rice",
+              "odds": 1.6,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / M. Cunha / B. Mbeumo",
+              "odds": 1.6,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Cunha / B. Mbeumo",
+              "odds": 1.6,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Mbeumo / B. Sesko / G. Martinelli",
+              "odds": 1.6,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / V. Gyokeres / M. Cunha",
+              "odds": 1.61,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / B. Sesko",
+              "odds": 1.61,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / B. Sesko",
+              "odds": 1.61,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Mbeumo / G. Martinelli",
+              "odds": 1.61,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Mbeumo / B. Saka / B. Sesko",
+              "odds": 1.62,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / M. Cunha / B. Sesko",
+              "odds": 1.62,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Cunha / B. Sesko",
+              "odds": 1.62,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / V. Gyokeres",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / B. Mbeumo",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Mbeumo / B. Saka",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "G. Jesus / D. Rice / M. Cunha",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / B. Mbeumo / B. Sesko",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / B. Mbeumo",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / D. Rice / M. Cunha",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Mbeumo / G. Martinelli",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Sesko / G. Martinelli",
+              "odds": 1.63,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / B. Mbeumo",
+              "odds": 1.64,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / B. Sesko",
+              "odds": 1.64,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / B. Mbeumo",
+              "odds": 1.64,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / B. Sesko",
+              "odds": 1.64,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Sesko / G. Martinelli",
+              "odds": 1.64,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Mbeumo / B. Saka",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Saka / B. Sesko",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / B. Sesko",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / B. Sesko",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / E. Eze / B. Mbeumo",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Mbeumo / G. Martinelli",
+              "odds": 1.65,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Saka / B. Sesko",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / D. Rice",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / M. Cunha / B. Mbeumo",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / E. Eze / B. Sesko",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / D. Rice",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Mbeumo / G. Martinelli",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / M. Cunha / G. Martinelli",
+              "odds": 1.66,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Mbeumo / B. Saka",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / G. Jesus / M. Cunha",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / D. Rice",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / M. Ødegaard / M. Cunha",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / D. Rice",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Sesko / G. Martinelli",
+              "odds": 1.67,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / M. Cunha / B. Saka",
+              "odds": 1.68,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "E. Eze / M. Cunha / B. Sesko",
+              "odds": 1.68,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Sesko / G. Martinelli",
+              "odds": 1.68,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Mbeumo / B. Saka",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Saka / B. Sesko",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / G. Jesus / M. Cunha",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / M. Cunha",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / E. Eze / B. Mbeumo",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / G. Martinelli",
+              "odds": 1.69,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Saka / B. Sesko",
+              "odds": 1.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / E. Eze / B. Mbeumo",
+              "odds": 1.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / E. Eze / M. Cunha",
+              "odds": 1.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / M. Cunha / G. Martinelli",
+              "odds": 1.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / G. Martinelli",
+              "odds": 1.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / B. Saka",
+              "odds": 1.71,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / G. Jesus",
+              "odds": 1.71,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / E. Eze / B. Sesko",
+              "odds": 1.71,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "L. Trossard / B. Fernandes / M. Ødegaard",
+              "odds": 1.71,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Cunha / G. Martinelli",
+              "odds": 1.71,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / E. Eze / B. Sesko",
+              "odds": 1.72,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / M. Cunha / B. Saka",
+              "odds": 1.73,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / B. Saka",
+              "odds": 1.73,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / E. Eze",
+              "odds": 1.73,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / B. Mbeumo / B. Sesko",
+              "odds": 1.73,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Cunha / B. Saka",
+              "odds": 1.74,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / E. Eze / M. Cunha",
+              "odds": 1.74,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / E. Eze",
+              "odds": 1.74,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Cunha / B. Mbeumo / B. Sesko",
+              "odds": 1.75,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / G. Martinelli",
+              "odds": 1.75,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / E. Eze / M. Cunha",
+              "odds": 1.76,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / B. Saka",
+              "odds": 1.77,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / M. Cunha / B. Mbeumo",
+              "odds": 1.78,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / E. Eze",
+              "odds": 1.79,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / B. Mbeumo / B. Sesko",
+              "odds": 1.79,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "D. Rice / M. Cunha / B. Sesko",
+              "odds": 1.79,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / B. Mbeumo / B. Sesko",
+              "odds": 1.8,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / B. Mbeumo",
+              "odds": 1.81,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / M. Cunha / B. Mbeumo",
+              "odds": 1.83,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / B. Mbeumo",
+              "odds": 1.83,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / B. Sesko",
+              "odds": 1.83,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / M. Cunha / B. Sesko",
+              "odds": 1.84,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / B. Sesko",
+              "odds": 1.84,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Cunha / B. Mbeumo",
+              "odds": 1.85,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Cunha / B. Sesko",
+              "odds": 1.86,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "M. Ødegaard / D. Rice / M. Cunha",
+              "odds": 1.86,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / D. Rice / M. Cunha",
+              "odds": 1.88,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / B. Mbeumo",
+              "odds": 1.89,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / B. Sesko",
+              "odds": 1.91,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / D. Rice",
+              "odds": 1.92,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "B. Fernandes / M. Ødegaard / M. Cunha",
+              "odds": 1.94,
+              "hasNoTaxPromo": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "defaultParameter": "base",
+  "hasParameters": true
+}
+
+🔧 RAW JSON:
+{
+  "name": "Którykolwiek zawodnik strzeli gola - 3 graczy",
+  "groupId": "subca_ftb_mgs",
+  "groupName": "Wielu strzelców",
+  "selections": [
+    {
+      "id": "1011856696595116",
+      "name": "L. Trossard / G. Jesus / V. Gyokeres",
+      "odds": 1.28
+    },
+    {
+      "id": "1011856696595239",
+      "name": "G. Jesus / V. Gyokeres / G. Martinelli",
+      "odds": 1.29
+    },
+    {
+      "id": "1011856696595130",
+      "name": "L. Trossard / V. Gyokeres / G. Martinelli",
+      "odds": 1.29
+    },
+    {
+      "id": "1011856696595237",
+      "name": "G. Jesus / V. Gyokeres / B. Saka",
+      "odds": 1.31
+    },
+    {
+      "id": "1011856696595128",
+      "name": "L. Trossard / V. Gyokeres / B. Saka",
+      "odds": 1.31
+    },
+    {
+      "id": "1011856696595234",
+      "name": "G. Jesus / V. Gyokeres / E. Eze",
+      "odds": 1.32
+    },
+    {
+      "id": "1011856696595125",
+      "name": "L. Trossard / V. Gyokeres / E. Eze",
+      "odds": 1.32
+    },
+    {
+      "id": "1011856696595123",
+      "name": "L. Trossard / G. Jesus / G. Martinelli",
+      "odds": 1.32
+    },
+    {
+      "id": "1011856696595280",
+      "name": "V. Gyokeres / B. Saka / G. Martinelli",
+      "odds": 1.33
+    },
+    {
+      "id": "1011856696595271",
+      "name": "V. Gyokeres / E. Eze / G. Martinelli",
+      "odds": 1.34
+    },
+    {
+      "id": "1011856696595121",
+      "name": "L. Trossard / G. Jesus / B. Saka",
+      "odds": 1.34
+    },
+    {
+      "id": "1011856696595269",
+      "name": "V. Gyokeres / E. Eze / B. Saka",
+      "odds": 1.35
+    },
+    {
+      "id": "1011856696595118",
+      "name": "L. Trossard / G. Jesus / E. Eze",
+      "odds": 1.35
+    },
+    {
+      "id": "1011856696595259",
+      "name": "G. Jesus / B. Saka / G. Martinelli",
+      "odds": 1.36
+    },
+    {
+      "id": "1011856696595150",
+      "name": "L. Trossard / B. Saka / G. Martinelli",
+      "odds": 1.36
+    },
+    {
+      "id": "1011856696595236",
+      "name": "G. Jesus / V. Gyokeres / B. Mbeumo",
+      "odds": 1.37
+    },
+    {
+      "id": "1011856696595127",
+      "name": "L. Trossard / V. Gyokeres / B. Mbeumo",
+      "odds": 1.37
+    },
+    {
+      "id": "1011856696595250",
+      "name": "G. Jesus / E. Eze / G. Martinelli",
+      "odds": 1.37
+    },
+    {
+      "id": "1011856696595141",
+      "name": "L. Trossard / E. Eze / G. Martinelli",
+      "odds": 1.37
+    },
+    {
+      "id": "1011856696595238",
+      "name": "G. Jesus / V. Gyokeres / B. Sesko",
+      "odds": 1.38
+    },
+    {
+      "id": "1011856696595129",
+      "name": "L. Trossard / V. Gyokeres / B. Sesko",
+      "odds": 1.38
+    },
+    {
+      "id": "1011856696595233",
+      "name": "G. Jesus / V. Gyokeres / D. Rice",
+      "odds": 1.39
+    },
+    {
+      "id": "1011856696595248",
+      "name": "G. Jesus / E. Eze / B. Saka",
+      "odds": 1.39
+    },
+    {
+      "id": "1011856696595124",
+      "name": "L. Trossard / V. Gyokeres / D. Rice",
+      "odds": 1.39
+    },
+    {
+      "id": "1011856696595139",
+      "name": "L. Trossard / E. Eze / B. Saka",
+      "odds": 1.39
+    },
+    {
+      "id": "1011856696595235",
+      "name": "G. Jesus / V. Gyokeres / M. Cunha",
+      "odds": 1.4
+    },
+    {
+      "id": "1011856696595126",
+      "name": "L. Trossard / V. Gyokeres / M. Cunha",
+      "odds": 1.4
+    },
+    {
+      "id": "1011856696595278",
+      "name": "V. Gyokeres / B. Mbeumo / G. Martinelli",
+      "odds": 1.4
+    },
+    {
+      "id": "1011856696595281",
+      "name": "V. Gyokeres / B. Sesko / G. Martinelli",
+      "odds": 1.4
+    },
+    {
+      "id": "1011856696595305",
+      "name": "E. Eze / B. Saka / G. Martinelli",
+      "odds": 1.4
+    },
+    {
+      "id": "1011856696595276",
+      "name": "V. Gyokeres / B. Mbeumo / B. Saka",
+      "odds": 1.41
+    },
+    {
+      "id": "1011856696595197",
+      "name": "M. Ødegaard / G. Jesus / V. Gyokeres",
+      "odds": 1.41
+    },
+    {
+      "id": "1011856696595108",
+      "name": "L. Trossard / M. Ødegaard / V. Gyokeres",
+      "odds": 1.41
+    },
+    {
+      "id": "1011856696595120",
+      "name": "L. Trossard / G. Jesus / B. Mbeumo",
+      "odds": 1.41
+    },
+    {
+      "id": "1011856696595279",
+      "name": "V. Gyokeres / B. Saka / B. Sesko",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595161",
+      "name": "B. Fernandes / G. Jesus / V. Gyokeres",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595099",
+      "name": "L. Trossard / B. Fernandes / V. Gyokeres",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595266",
+      "name": "V. Gyokeres / D. Rice / G. Martinelli",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595275",
+      "name": "V. Gyokeres / M. Cunha / G. Martinelli",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595122",
+      "name": "L. Trossard / G. Jesus / B. Sesko",
+      "odds": 1.42
+    },
+    {
+      "id": "1011856696595268",
+      "name": "V. Gyokeres / E. Eze / B. Mbeumo",
+      "odds": 1.43
+    },
+    {
+      "id": "1011856696595264",
+      "name": "V. Gyokeres / D. Rice / B. Saka",
+      "odds": 1.43
+    },
+    {
+      "id": "1011856696595270",
+      "name": "V. Gyokeres / E. Eze / B. Sesko",
+      "odds": 1.43
+    },
+    {
+      "id": "1011856696595117",
+      "name": "L. Trossard / G. Jesus / D. Rice",
+      "odds": 1.43
+    },
+    {
+      "id": "1011856696595273",
+      "name": "V. Gyokeres / M. Cunha / B. Saka",
+      "odds": 1.44
+    },
+    {
+      "id": "1011856696595211",
+      "name": "M. Ødegaard / V. Gyokeres / G. Martinelli",
+      "odds": 1.44
+    },
+    {
+      "id": "1011856696595119",
+      "name": "L. Trossard / G. Jesus / M. Cunha",
+      "odds": 1.44
+    },
+    {
+      "id": "1011856696595257",
+      "name": "G. Jesus / B. Mbeumo / G. Martinelli",
+      "odds": 1.44
+    },
+    {
+      "id": "1011856696595148",
+      "name": "L. Trossard / B. Mbeumo / G. Martinelli",
+      "odds": 1.44
+    },
+    {
+      "id": "1011856696595261",
+      "name": "V. Gyokeres / D. Rice / E. Eze",
+      "odds": 1.45
+    },
+    {
+      "id": "1011856696595267",
+      "name": "V. Gyokeres / E. Eze / M. Cunha",
+      "odds": 1.45
+    },
+    {
+      "id": "1011856696595175",
+      "name": "B. Fernandes / V. Gyokeres / G. Martinelli",
+      "odds": 1.45
+    },
+    {
+      "id": "1011856696595260",
+      "name": "G. Jesus / B. Sesko / G. Martinelli",
+      "odds": 1.45
+    },
+    {
+      "id": "1011856696595151",
+      "name": "L. Trossard / B. Sesko / G. Martinelli",
+      "odds": 1.45
+    },
+    {
+      "id": "1011856696595209",
+      "name": "M. Ødegaard / V. Gyokeres / B. Saka",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595255",
+      "name": "G. Jesus / B. Mbeumo / B. Saka",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595146",
+      "name": "L. Trossard / B. Mbeumo / B. Saka",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595107",
+      "name": "L. Trossard / M. Ødegaard / G. Jesus",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595098",
+      "name": "L. Trossard / B. Fernandes / G. Jesus",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595245",
+      "name": "G. Jesus / D. Rice / G. Martinelli",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595136",
+      "name": "L. Trossard / D. Rice / G. Martinelli",
+      "odds": 1.46
+    },
+    {
+      "id": "1011856696595173",
+      "name": "B. Fernandes / V. Gyokeres / B. Saka",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595258",
+      "name": "G. Jesus / B. Saka / B. Sesko",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595206",
+      "name": "M. Ødegaard / V. Gyokeres / E. Eze",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595149",
+      "name": "L. Trossard / B. Saka / B. Sesko",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595247",
+      "name": "G. Jesus / E. Eze / B. Mbeumo",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595138",
+      "name": "L. Trossard / E. Eze / B. Mbeumo",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595314",
+      "name": "B. Mbeumo / B. Saka / G. Martinelli",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595254",
+      "name": "G. Jesus / M. Cunha / G. Martinelli",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595145",
+      "name": "L. Trossard / M. Cunha / G. Martinelli",
+      "odds": 1.47
+    },
+    {
+      "id": "1011856696595170",
+      "name": "B. Fernandes / V. Gyokeres / E. Eze",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595243",
+      "name": "G. Jesus / D. Rice / B. Saka",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595249",
+      "name": "G. Jesus / E. Eze / B. Sesko",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595134",
+      "name": "L. Trossard / D. Rice / B. Saka",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595140",
+      "name": "L. Trossard / E. Eze / B. Sesko",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595316",
+      "name": "B. Saka / B. Sesko / G. Martinelli",
+      "odds": 1.48
+    },
+    {
+      "id": "1011856696595252",
+      "name": "G. Jesus / M. Cunha / B. Saka",
+      "odds": 1.49
+    },
+    {
+      "id": "1011856696595143",
+      "name": "L. Trossard / M. Cunha / B. Saka",
+      "odds": 1.49
+    },
+    {
+      "id": "1011856696595204",
+      "name": "M. Ødegaard / G. Jesus / G. Martinelli",
+      "odds": 1.49
+    },
+    {
+      "id": "1011856696595303",
+      "name": "E. Eze / B. Mbeumo / G. Martinelli",
+      "odds": 1.49
+    },
+    {
+      "id": "1011856696595115",
+      "name": "L. Trossard / M. Ødegaard / G. Martinelli",
+      "odds": 1.49
+    },
+    {
+      "id": "1011856696595301",
+      "name": "E. Eze / B. Mbeumo / B. Saka",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595240",
+      "name": "G. Jesus / D. Rice / E. Eze",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595131",
+      "name": "L. Trossard / D. Rice / E. Eze",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595295",
+      "name": "D. Rice / B. Saka / G. Martinelli",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595168",
+      "name": "B. Fernandes / G. Jesus / G. Martinelli",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595306",
+      "name": "E. Eze / B. Sesko / G. Martinelli",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595106",
+      "name": "L. Trossard / B. Fernandes / G. Martinelli",
+      "odds": 1.5
+    },
+    {
+      "id": "1011856696595202",
+      "name": "M. Ødegaard / G. Jesus / B. Saka",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595246",
+      "name": "G. Jesus / E. Eze / M. Cunha",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595304",
+      "name": "E. Eze / B. Saka / B. Sesko",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595113",
+      "name": "L. Trossard / M. Ødegaard / B. Saka",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595137",
+      "name": "L. Trossard / E. Eze / M. Cunha",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595311",
+      "name": "M. Cunha / B. Saka / G. Martinelli",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595286",
+      "name": "D. Rice / E. Eze / G. Martinelli",
+      "odds": 1.51
+    },
+    {
+      "id": "1011856696595277",
+      "name": "V. Gyokeres / B. Mbeumo / B. Sesko",
+      "odds": 1.52
+    },
+    {
+      "id": "1011856696595166",
+      "name": "B. Fernandes / G. Jesus / B. Saka",
+      "odds": 1.52
+    },
+    {
+      "id": "1011856696595104",
+      "name": "L. Trossard / B. Fernandes / B. Saka",
+      "odds": 1.52
+    },
+    {
+      "id": "1011856696595300",
+      "name": "E. Eze / M. Cunha / G. Martinelli",
+      "odds": 1.52
+    },
+    {
+      "id": "1011856696595263",
+      "name": "V. Gyokeres / D. Rice / B. Mbeumo",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595199",
+      "name": "M. Ødegaard / G. Jesus / E. Eze",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595284",
+      "name": "D. Rice / E. Eze / B. Saka",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595163",
+      "name": "B. Fernandes / G. Jesus / E. Eze",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595110",
+      "name": "L. Trossard / M. Ødegaard / E. Eze",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595101",
+      "name": "L. Trossard / B. Fernandes / E. Eze",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595231",
+      "name": "M. Ødegaard / B. Saka / G. Martinelli",
+      "odds": 1.53
+    },
+    {
+      "id": "1011856696595272",
+      "name": "V. Gyokeres / M. Cunha / B. Mbeumo",
+      "odds": 1.54
+    },
+    {
+      "id": "1011856696595265",
+      "name": "V. Gyokeres / D. Rice / B. Sesko",
+      "odds": 1.54
+    },
+    {
+      "id": "1011856696595298",
+      "name": "E. Eze / M. Cunha / B. Saka",
+      "odds": 1.54
+    },
+    {
+      "id": "1011856696595195",
+      "name": "B. Fernandes / B. Saka / G. Martinelli",
+      "odds": 1.54
+    },
+    {
+      "id": "1011856696595222",
+      "name": "M. Ødegaard / E. Eze / G. Martinelli",
+      "odds": 1.54
+    },
+    {
+      "id": "1011856696595274",
+      "name": "V. Gyokeres / M. Cunha / B. Sesko",
+      "odds": 1.55
+    },
+    {
+      "id": "1011856696595186",
+      "name": "B. Fernandes / E. Eze / G. Martinelli",
+      "odds": 1.55
+    },
+    {
+      "id": "1011856696595208",
+      "name": "M. Ødegaard / V. Gyokeres / B. Mbeumo",
+      "odds": 1.56
+    },
+    {
+      "id": "1011856696595220",
+      "name": "M. Ødegaard / E. Eze / B. Saka",
+      "odds": 1.56
+    },
+    {
+      "id": "1011856696595172",
+      "name": "B. Fernandes / V. Gyokeres / B. Mbeumo",
+      "odds": 1.57
+    },
+    {
+      "id": "1011856696595210",
+      "name": "M. Ødegaard / V. Gyokeres / B. Sesko",
+      "odds": 1.57
+    },
+    {
+      "id": "1011856696595262",
+      "name": "V. Gyokeres / D. Rice / M. Cunha",
+      "odds": 1.57
+    },
+    {
+      "id": "1011856696595184",
+      "name": "B. Fernandes / E. Eze / B. Saka",
+      "odds": 1.57
+    },
+    {
+      "id": "1011856696595174",
+      "name": "B. Fernandes / V. Gyokeres / B. Sesko",
+      "odds": 1.58
+    },
+    {
+      "id": "1011856696595256",
+      "name": "G. Jesus / B. Mbeumo / B. Sesko",
+      "odds": 1.58
+    },
+    {
+      "id": "1011856696595147",
+      "name": "L. Trossard / B. Mbeumo / B. Sesko",
+      "odds": 1.58
+    },
+    {
+      "id": "1011856696595205",
+      "name": "M. Ødegaard / V. Gyokeres / D. Rice",
+      "odds": 1.59
+    },
+    {
+      "id": "1011856696595242",
+      "name": "G. Jesus / D. Rice / B. Mbeumo",
+      "odds": 1.59
+    },
+    {
+      "id": "1011856696595133",
+      "name": "L. Trossard / D. Rice / B. Mbeumo",
+      "odds": 1.59
+    },
+    {
+      "id": "1011856696595207",
+      "name": "M. Ødegaard / V. Gyokeres / M. Cunha",
+      "odds": 1.6
+    },
+    {
+      "id": "1011856696595169",
+      "name": "B. Fernandes / V. Gyokeres / D. Rice",
+      "odds": 1.6
+    },
+    {
+      "id": "1011856696595251",
+      "name": "G. Jesus / M. Cunha / B. Mbeumo",
+      "odds": 1.6
+    },
+    {
+      "id": "1011856696595142",
+      "name": "L. Trossard / M. Cunha / B. Mbeumo",
+      "odds": 1.6
+    },
+    {
+      "id": "1011856696595315",
+      "name": "B. Mbeumo / B. Sesko / G. Martinelli",
+      "odds": 1.6
+    },
+    {
+      "id": "1011856696595171",
+      "name": "B. Fernandes / V. Gyokeres / M. Cunha",
+      "odds": 1.61
+    },
+    {
+      "id": "1011856696595244",
+      "name": "G. Jesus / D. Rice / B. Sesko",
+      "odds": 1.61
+    },
+    {
+      "id": "1011856696595135",
+      "name": "L. Trossard / D. Rice / B. Sesko",
+      "odds": 1.61
+    },
+    {
+      "id": "1011856696595293",
+      "name": "D. Rice / B. Mbeumo / G. Martinelli",
+      "odds": 1.61
+    },
+    {
+      "id": "1011856696595313",
+      "name": "B. Mbeumo / B. Saka / B. Sesko",
+      "odds": 1.62
+    },
+    {
+      "id": "1011856696595253",
+      "name": "G. Jesus / M. Cunha / B. Sesko",
+      "odds": 1.62
+    },
+    {
+      "id": "1011856696595144",
+      "name": "L. Trossard / M. Cunha / B. Sesko",
+      "odds": 1.62
+    },
+    {
+      "id": "1011856696595153",
+      "name": "B. Fernandes / M. Ødegaard / V. Gyokeres",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595201",
+      "name": "M. Ødegaard / G. Jesus / B. Mbeumo",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595291",
+      "name": "D. Rice / B. Mbeumo / B. Saka",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595241",
+      "name": "G. Jesus / D. Rice / M. Cunha",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595302",
+      "name": "E. Eze / B. Mbeumo / B. Sesko",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595112",
+      "name": "L. Trossard / M. Ødegaard / B. Mbeumo",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595132",
+      "name": "L. Trossard / D. Rice / M. Cunha",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595309",
+      "name": "M. Cunha / B. Mbeumo / G. Martinelli",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595296",
+      "name": "D. Rice / B. Sesko / G. Martinelli",
+      "odds": 1.63
+    },
+    {
+      "id": "1011856696595165",
+      "name": "B. Fernandes / G. Jesus / B. Mbeumo",
+      "odds": 1.64
+    },
+    {
+      "id": "1011856696595203",
+      "name": "M. Ødegaard / G. Jesus / B. Sesko",
+      "odds": 1.64
+    },
+    {
+      "id": "1011856696595103",
+      "name": "L. Trossard / B. Fernandes / B. Mbeumo",
+      "odds": 1.64
+    },
+    {
+      "id": "1011856696595114",
+      "name": "L. Trossard / M. Ødegaard / B. Sesko",
+      "odds": 1.64
+    },
+    {
+      "id": "1011856696595312",
+      "name": "M. Cunha / B. Sesko / G. Martinelli",
+      "odds": 1.64
+    },
+    {
+      "id": "1011856696595307",
+      "name": "M. Cunha / B. Mbeumo / B. Saka",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595294",
+      "name": "D. Rice / B. Saka / B. Sesko",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595167",
+      "name": "B. Fernandes / G. Jesus / B. Sesko",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595105",
+      "name": "L. Trossard / B. Fernandes / B. Sesko",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595283",
+      "name": "D. Rice / E. Eze / B. Mbeumo",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595229",
+      "name": "M. Ødegaard / B. Mbeumo / G. Martinelli",
+      "odds": 1.65
+    },
+    {
+      "id": "1011856696595310",
+      "name": "M. Cunha / B. Saka / B. Sesko",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595198",
+      "name": "M. Ødegaard / G. Jesus / D. Rice",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595297",
+      "name": "E. Eze / M. Cunha / B. Mbeumo",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595285",
+      "name": "D. Rice / E. Eze / B. Sesko",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595109",
+      "name": "L. Trossard / M. Ødegaard / D. Rice",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595193",
+      "name": "B. Fernandes / B. Mbeumo / G. Martinelli",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595290",
+      "name": "D. Rice / M. Cunha / G. Martinelli",
+      "odds": 1.66
+    },
+    {
+      "id": "1011856696595227",
+      "name": "M. Ødegaard / B. Mbeumo / B. Saka",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595200",
+      "name": "M. Ødegaard / G. Jesus / M. Cunha",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595162",
+      "name": "B. Fernandes / G. Jesus / D. Rice",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595111",
+      "name": "L. Trossard / M. Ødegaard / M. Cunha",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595100",
+      "name": "L. Trossard / B. Fernandes / D. Rice",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595232",
+      "name": "M. Ødegaard / B. Sesko / G. Martinelli",
+      "odds": 1.67
+    },
+    {
+      "id": "1011856696595288",
+      "name": "D. Rice / M. Cunha / B. Saka",
+      "odds": 1.68
+    },
+    {
+      "id": "1011856696595299",
+      "name": "E. Eze / M. Cunha / B. Sesko",
+      "odds": 1.68
+    },
+    {
+      "id": "1011856696595196",
+      "name": "B. Fernandes / B. Sesko / G. Martinelli",
+      "odds": 1.68
+    },
+    {
+      "id": "1011856696595191",
+      "name": "B. Fernandes / B. Mbeumo / B. Saka",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595230",
+      "name": "M. Ødegaard / B. Saka / B. Sesko",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595164",
+      "name": "B. Fernandes / G. Jesus / M. Cunha",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595102",
+      "name": "L. Trossard / B. Fernandes / M. Cunha",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595219",
+      "name": "M. Ødegaard / E. Eze / B. Mbeumo",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595217",
+      "name": "M. Ødegaard / D. Rice / G. Martinelli",
+      "odds": 1.69
+    },
+    {
+      "id": "1011856696595194",
+      "name": "B. Fernandes / B. Saka / B. Sesko",
+      "odds": 1.7
+    },
+    {
+      "id": "1011856696595183",
+      "name": "B. Fernandes / E. Eze / B. Mbeumo",
+      "odds": 1.7
+    },
+    {
+      "id": "1011856696595282",
+      "name": "D. Rice / E. Eze / M. Cunha",
+      "odds": 1.7
+    },
+    {
+      "id": "1011856696595226",
+      "name": "M. Ødegaard / M. Cunha / G. Martinelli",
+      "odds": 1.7
+    },
+    {
+      "id": "1011856696595181",
+      "name": "B. Fernandes / D. Rice / G. Martinelli",
+      "odds": 1.7
+    },
+    {
+      "id": "1011856696595215",
+      "name": "M. Ødegaard / D. Rice / B. Saka",
+      "odds": 1.71
+    },
+    {
+      "id": "1011856696595152",
+      "name": "B. Fernandes / M. Ødegaard / G. Jesus",
+      "odds": 1.71
+    },
+    {
+      "id": "1011856696595221",
+      "name": "M. Ødegaard / E. Eze / B. Sesko",
+      "odds": 1.71
+    },
+    {
+      "id": "1011856696595097",
+      "name": "L. Trossard / B. Fernandes / M. Ødegaard",
+      "odds": 1.71
+    },
+    {
+      "id": "1011856696595190",
+      "name": "B. Fernandes / M. Cunha / G. Martinelli",
+      "odds": 1.71
+    },
+    {
+      "id": "1011856696595185",
+      "name": "B. Fernandes / E. Eze / B. Sesko",
+      "odds": 1.72
+    },
+    {
+      "id": "1011856696595224",
+      "name": "M. Ødegaard / M. Cunha / B. Saka",
+      "odds": 1.73
+    },
+    {
+      "id": "1011856696595179",
+      "name": "B. Fernandes / D. Rice / B. Saka",
+      "odds": 1.73
+    },
+    {
+      "id": "1011856696595212",
+      "name": "M. Ødegaard / D. Rice / E. Eze",
+      "odds": 1.73
+    },
+    {
+      "id": "1011856696595292",
+      "name": "D. Rice / B. Mbeumo / B. Sesko",
+      "odds": 1.73
+    },
+    {
+      "id": "1011856696595188",
+      "name": "B. Fernandes / M. Cunha / B. Saka",
+      "odds": 1.74
+    },
+    {
+      "id": "1011856696595218",
+      "name": "M. Ødegaard / E. Eze / M. Cunha",
+      "odds": 1.74
+    },
+    {
+      "id": "1011856696595176",
+      "name": "B. Fernandes / D. Rice / E. Eze",
+      "odds": 1.74
+    },
+    {
+      "id": "1011856696595308",
+      "name": "M. Cunha / B. Mbeumo / B. Sesko",
+      "odds": 1.75
+    },
+    {
+      "id": "1011856696595160",
+      "name": "B. Fernandes / M. Ødegaard / G. Martinelli",
+      "odds": 1.75
+    },
+    {
+      "id": "1011856696595182",
+      "name": "B. Fernandes / E. Eze / M. Cunha",
+      "odds": 1.76
+    },
+    {
+      "id": "1011856696595158",
+      "name": "B. Fernandes / M. Ødegaard / B. Saka",
+      "odds": 1.77
+    },
+    {
+      "id": "1011856696595287",
+      "name": "D. Rice / M. Cunha / B. Mbeumo",
+      "odds": 1.78
+    },
+    {
+      "id": "1011856696595155",
+      "name": "B. Fernandes / M. Ødegaard / E. Eze",
+      "odds": 1.79
+    },
+    {
+      "id": "1011856696595228",
+      "name": "M. Ødegaard / B. Mbeumo / B. Sesko",
+      "odds": 1.79
+    },
+    {
+      "id": "1011856696595289",
+      "name": "D. Rice / M. Cunha / B. Sesko",
+      "odds": 1.79
+    },
+    {
+      "id": "1011856696595192",
+      "name": "B. Fernandes / B. Mbeumo / B. Sesko",
+      "odds": 1.8
+    },
+    {
+      "id": "1011856696595214",
+      "name": "M. Ødegaard / D. Rice / B. Mbeumo",
+      "odds": 1.81
+    },
+    {
+      "id": "1011856696595223",
+      "name": "M. Ødegaard / M. Cunha / B. Mbeumo",
+      "odds": 1.83
+    },
+    {
+      "id": "1011856696595178",
+      "name": "B. Fernandes / D. Rice / B. Mbeumo",
+      "odds": 1.83
+    },
+    {
+      "id": "1011856696595216",
+      "name": "M. Ødegaard / D. Rice / B. Sesko",
+      "odds": 1.83
+    },
+    {
+      "id": "1011856696595225",
+      "name": "M. Ødegaard / M. Cunha / B. Sesko",
+      "odds": 1.84
+    },
+    {
+      "id": "1011856696595180",
+      "name": "B. Fernandes / D. Rice / B. Sesko",
+      "odds": 1.84
+    },
+    {
+      "id": "1011856696595187",
+      "name": "B. Fernandes / M. Cunha / B. Mbeumo",
+      "odds": 1.85
+    },
+    {
+      "id": "1011856696595189",
+      "name": "B. Fernandes / M. Cunha / B. Sesko",
+      "odds": 1.86
+    },
+    {
+      "id": "1011856696595213",
+      "name": "M. Ødegaard / D. Rice / M. Cunha",
+      "odds": 1.86
+    },
+    {
+      "id": "1011856696595177",
+      "name": "B. Fernandes / D. Rice / M. Cunha",
+      "odds": 1.88
+    },
+    {
+      "id": "1011856696595157",
+      "name": "B. Fernandes / M. Ødegaard / B. Mbeumo",
+      "odds": 1.89
+    },
+    {
+      "id": "1011856696595159",
+      "name": "B. Fernandes / M. Ødegaard / B. Sesko",
+      "odds": 1.91
+    },
+    {
+      "id": "1011856696595154",
+      "name": "B. Fernandes / M. Ødegaard / D. Rice",
+      "odds": 1.92
+    },
+    {
+      "id": "1011856696595156",
+      "name": "B. Fernandes / M. Ødegaard / M. Cunha",
+      "odds": 1.94
+    }
+  ]
+}
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.8.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.8.0
+npm notice To update run: npm install -g npm@11.8.0
+npm notice

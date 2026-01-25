@@ -149,6 +149,7 @@ function toNormalizedMarket(
     marketKey: output.marketKey,
     category,
     paramValue: output.paramValue,
+    customLabel: output.customLabel,
     selections: output.selections.map((sel) => ({
       name: sel.label,
       normalizedName: sel.code,

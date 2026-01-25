@@ -83,6 +83,7 @@ export function normalizeMarketsForBookmaker(
       normalizedType: normalized.normalizedType as any,
       marketKey: normalized.marketKey,
       paramValue: normalized.paramValue,
+      customLabel: normalized.customLabel,
       category: normalized.category,
       selections: market.selections.map((sel, idx) => ({
         ...sel,

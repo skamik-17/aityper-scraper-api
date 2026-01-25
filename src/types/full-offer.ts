@@ -44,6 +44,8 @@ export interface ScrapedMarket {
   paramValue?: string;
   /** Market category following Superbet pattern for UI organization */
   category?: MarketCategory;
+  /** Custom label to override default market catalog label (e.g., "Czerwona kartka - Arsenal") */
+  customLabel?: string;
   /** All available selections for this market */
   selections: MarketSelection[];
 }

@@ -1,0 +1,80 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675290968064
+🎯 Focusing on: "Gol z rzutu karnego"
+
+[UWAGA: API Betclic zwraca pustą odpowiedź - użyto zapisanych danych]
+
+RAW JSON (from saved file):
+{
+  "id": "1011617328713730",
+  "name": "Gol z rzutu karnego",
+  "selections": [
+    {
+      "id": "1011617328627715",
+      "name": "West Ham strzeli rzut karny",
+      "odds": 6.5
+    },
+    {
+      "id": "1011617328627716",
+      "name": "Sunderland strzeli rzut karny",
+      "odds": 7.5
+    },
+    {
+      "id": "1011617328627717",
+      "name": "Którykolwiek zawodnik strzeli rzut karny",
+      "odds": 3.8
+    },
+    {
+      "id": "1011617328627718",
+      "name": "Żaden zespół nie strzeli rzutu karnego",
+      "odds": 1.18
+    }
+  ]
+}
+
+Grupa: ca_ftb_goalm (METODA_GOLA)
+Sub-grupa: subca_ftb_pen (Rzut karny)
+
+Home team: West Ham
+Away team: Sunderland
+
+====================================================================================================
+NORMALIZED OUTPUT
+====================================================================================================
+
+{
+  "marketCode": "PENALTY_GOAL",
+  "marketKey": "PENALTY_GOAL",
+  "selections": [
+    {
+      "code": "TEAM_HOME",
+      "label": "West Ham strzeli rzut karny",
+      "odds": 6.5
+    },
+    {
+      "code": "TEAM_AWAY",
+      "label": "Sunderland strzeli rzut karny",
+      "odds": 7.5
+    },
+    {
+      "code": "ANY",
+      "label": "Którykolwiek zawodnik strzeli rzut karny",
+      "odds": 3.8
+    },
+    {
+      "code": "NONE",
+      "label": "Żaden zespół nie strzeli rzutu karnego",
+      "odds": 1.18
+    }
+  ],
+  "debug": {
+    "rawName": "Gol z rzutu karnego",
+    "rawId": "1011617328713730",
+    "matchedBy": "name"
+  }
+}
+
+OK Krok 1: Poprawna normalizacja
+OK Krok 2: Selekcje poprawnie znormalizowane

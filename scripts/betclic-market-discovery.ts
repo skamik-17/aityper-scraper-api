@@ -459,6 +459,69 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
         marketsToGroup.push({ market: scrapedMarket, bookmaker: "betclic" });
       }
     }
+  } else if (analysis.normalized.parameters && analysis.normalized.parameters.length > 0) {
+    // Market with multiple parameters (e.g., ASIAN_HANDICAP_3WAY, player pairs)
+    const isEuropeanHandicap = analysis.normalized.marketCode === "EUROPEAN_HANDICAP" ||
+                           analysis.normalized.marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
+                           analysis.normalized.marketCode === "SECOND_HALF_EUROPEAN_HANDICAP";
+
+    const isPlayerMarket = analysis.normalized.marketCode === "TWO_PLAYERS_ANYTIME" ||
+                          analysis.normalized.marketCode === "TWO_PLAYERS_COMBINED_GOALS" ||
+                          analysis.normalized.marketCode === "THREE_PLAYERS_COMBINED_GOALS" ||
+                          analysis.normalized.marketCode === "PLAYER_ASSIST_PAIRS" ||
+                          analysis.normalized.marketCode === "PLAYER_ASSIST_TRIPLE";
+
+    const paramGroups = new Map<string, Selection[]>();
+
+    if (isPlayerMarket) {
+      // Each selection (player pair) is a separate parameter
+      for (const selection of analysis.rawSelections) {
+        if (!paramGroups.has(selection.name)) {
+          paramGroups.set(selection.name, []);
+        }
+        paramGroups.get(selection.name)!.push(selection);
+      }
+    } else if (isEuropeanHandicap) {
+      for (const selection of analysis.rawSelections) {
+        const match = selection.name.match(/([+-]?\d+[.,]?\d*)/);
+        if (match) {
+          const absValue = match[1].replace(/[+-]/g, "").replace(",", ".");
+          const param = analysis.normalized.parameters.includes(absValue) ? absValue : `-${absValue}`;
+          if (!paramGroups.has(param)) {
+            paramGroups.set(param, []);
+          }
+          paramGroups.get(param)!.push(selection);
+        }
+      }
+    } else {
+      for (const selection of analysis.rawSelections) {
+        const match = selection.name.match(/([+-]?\d+[.,]?\d*)/);
+        if (match) {
+          const param = match[1].replace(",", ".");
+          if (!paramGroups.has(param)) {
+            paramGroups.set(param, []);
+          }
+          paramGroups.get(param)!.push(selection);
+        }
+      }
+    }
+
+    for (const [param, selections] of paramGroups.entries()) {
+      const scrapedMarket: ScrapedMarket = {
+        name: analysis.name,
+        groupName: analysis.groupName,
+        type: "betclic",
+        selections: selections.map(s => ({
+          name: s.name,
+          odds: s.odds,
+          normalizedName: (analysis.normalized?.selections.find(ns => ns.label === s.name)?.code || undefined) as MarketSelection["normalizedName"],
+        })),
+        normalizedType: analysis.normalized.marketCode,
+        marketKey: `${analysis.normalized.marketCode}:${param}`,
+        paramValue: param,
+      };
+      marketsToGroup.push({ market: scrapedMarket, bookmaker: "betclic" });
+    }
   } else {
     // Single line or no O/U pattern - use original market
     const scrapedMarket: ScrapedMarket = {
@@ -492,7 +555,7 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
     description: result.description || "",
     displayOrder: result.displayOrder || 999,
     viewType: result.viewType || "UNKNOWN",
-    parameters: result.parameters.map(p => ({
+    parameters: result.hasParameters ? result.parameters.map(p => ({
       value: p.value,
       label: p.label,
       bookmakers: p.bookmakers.map(bm => ({
@@ -504,8 +567,8 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
           hasNoTaxPromo: sel.hasNoTaxPromo || false,
         })),
       })),
-    })),
-    defaultParameter: result.defaultParameter || "base",
+    })) : [],
+    defaultParameter: result.hasParameters ? (result.defaultParameter || "base") : "",
     hasParameters: result.hasParameters || false,
   };
 }
@@ -753,8 +816,18 @@ async function main() {
     await new Promise(r => setTimeout(r, 100));
   }
   
+  // Deduplicate markets by name - same market may appear in multiple tabs
+  const uniqueMarkets = new Map<string, MarketAnalysis>();
+  for (const analysis of allAnalyses) {
+    const key = `${analysis.name}:${analysis.normalized?.marketCode || 'UNMAPPED'}`;
+    if (!uniqueMarkets.has(key)) {
+      uniqueMarkets.set(key, analysis);
+    }
+  }
+  const dedupedAnalyses = Array.from(uniqueMarkets.values());
+  
   if (outputJson) {
-    outputBatchJson(allAnalyses);
+    outputBatchJson(dedupedAnalyses);
     return;
   }
   
@@ -775,25 +848,34 @@ async function main() {
   
   if (specificMarket) {
     // Show details for specific market(s)
-    for (const analysis of allAnalyses) {
+    for (const analysis of dedupedAnalyses) {
       printMarketDetail(analysis, ctx);
     }
   } else if (showAll) {
     // Show all market details
-    for (const analysis of allAnalyses) {
+    for (const analysis of dedupedAnalyses) {
       printMarketDetail(analysis, ctx);
     }
-    printSummary(allAnalyses);
+    printSummary(dedupedAnalyses);
   } else if (showIssues) {
     // Show only markets with issues
-    const withIssues = allAnalyses.filter(a => a.issues.length > 0);
+    const withIssues = dedupedAnalyses.filter(a => a.issues.length > 0);
     for (const analysis of withIssues) {
       printMarketDetail(analysis, ctx);
     }
-    printSummary(allAnalyses);
+    printSummary(dedupedAnalyses);
+  } else if (specificMarket) {
+    // Show specific market
+    const targetAnalysis = dedupedAnalyses.find(a => 
+      a.name.toLowerCase() === specificMarket!.toLowerCase()
+    );
+    
+    if (targetAnalysis) {
+      printMarketDetail(targetAnalysis, ctx);
+    }
   } else {
     // Default: show summary only
-    printSummary(allAnalyses);
+    printSummary(dedupedAnalyses);
   }
   
   if (!specificMarket && !showAll && !showIssues) {

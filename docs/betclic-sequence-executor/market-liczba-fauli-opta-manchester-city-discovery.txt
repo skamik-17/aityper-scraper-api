@@ -1,0 +1,29 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675391942656
+🎯 Focusing on: "Liczba fauli (OPTA) - Manchester City"
+
+Fetching TOP...
+  ✓ 12 markets
+Fetching WYNIK...
+  ✓ 27 markets
+Fetching STRZELCY...
+  ✓ 14 markets
+Fetching GOLE...
+  ✓ 48 markets
+Fetching METODA_GOLA...
+  ✓ 18 markets
+Fetching HANDICAP...
+  ✓ 7 markets
+Fetching STATYSTYKI...
+  ✓ 32 markets
+
+====================================================================================================
+🏆 MATCH: Arsenal - Manchester United
+====================================================================================================
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.8.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.8.0
+npm notice To update run: npm install -g npm@11.8.0
+npm notice

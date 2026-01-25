@@ -1,0 +1,76 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675391942656
+🎯 Focusing on: "Gol bezpośrednio z rzutu wolnego w meczu"
+
+Fetching TOP...
+  ✓ 12 markets
+Fetching WYNIK...
+  ✓ 27 markets
+Fetching STRZELCY...
+  ✓ 14 markets
+Fetching GOLE...
+  ✓ 48 markets
+Fetching METODA_GOLA...
+  ✓ 18 markets
+Fetching HANDICAP...
+  ✓ 7 markets
+Fetching STATYSTYKI...
+  ✓ 32 markets
+
+====================================================================================================
+🏆 MATCH: Arsenal - Manchester United
+====================================================================================================
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+📦 MARKET: Gol bezpośrednio z rzutu wolnego w meczu
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📋 TAB: METODA_GOLA
+   Group: Rzuty wolne (subca_ftb_frk)
+
+✅ NORMALIZED: FREE_KICK_GOAL
+   Market Key: FREE_KICK_GOAL
+   Param Value: none
+   Matched By: name
+
+📚 CATALOG INFO:
+   Code: FREE_KICK_GOAL
+   Polish: Gol bezpośrednio z rzutu wolnego
+   ViewType: BINARY_BUTTONS
+   Has Parameter: false
+   Expected Selections: [YES, NO]
+
+📊 RAW SELECTIONS (1):
+   Name                                Odds     Normalized
+   ─────────────────────────────────── ──────── ────────────────────
+   Tak                                 8.00     YES
+
+📱 FRONTEND JSON (MarketWithParams format):
+{
+  "marketKey": "FREE_KICK_GOAL",
+  "type": "FREE_KICK_GOAL",
+  "category": "GOLE",
+  "label": "Gol bezpośrednio z rzutu wolnego",
+  "description": "Czy w meczu padnie gol bezpośrednio z rzutu wolnego?",
+  "displayOrder": 26,
+  "viewType": "BINARY_BUTTONS",
+  "parameters": [],
+  "defaultParameter": "",
+  "hasParameters": false
+}
+
+🔧 RAW JSON:
+{
+  "name": "Gol bezpośrednio z rzutu wolnego w meczu",
+  "groupId": "subca_ftb_frk",
+  "groupName": "Rzuty wolne",
+  "selections": [
+    {
+      "id": "1011645805604896",
+      "name": "Tak",
+      "odds": 8
+    }
+  ]
+}

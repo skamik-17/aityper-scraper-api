@@ -1,0 +1,184 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675391942656
+🎯 Focusing on: "Liczba goli - Manchester United"
+
+Fetching TOP...
+  ✓ 12 markets
+Fetching WYNIK...
+  ✓ 27 markets
+Fetching STRZELCY...
+  ✓ 14 markets
+Fetching GOLE...
+  ✓ 48 markets
+Fetching METODA_GOLA...
+  ✓ 18 markets
+Fetching HANDICAP...
+  ✓ 7 markets
+Fetching STATYSTYKI...
+  ✓ 32 markets
+
+====================================================================================================
+🏆 MATCH: Arsenal - Manchester United
+====================================================================================================
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+📦 MARKET: Liczba goli - Manchester United
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📋 TAB: TOP
+   Group: Top zaklady (top_markets)
+
+✅ NORMALIZED: TOTAL_GOALS
+   Market Key: TOTAL_GOALS:0.5
+   Param Value: 0.5
+   Matched By: pattern
+
+📚 CATALOG INFO:
+   Code: TOTAL_GOALS
+   Polish: Liczba goli
+   ViewType: PARAMETER_SLIDER
+   Has Parameter: true
+   Expected Selections: [OVER, UNDER]
+
+📊 RAW SELECTIONS (7):
+   Name                                Odds     Normalized
+   ─────────────────────────────────── ──────── ────────────────────
+   Powyżej 0,5                         1.53     OVER
+   Poniżej 0,5                         2.33     UNDER
+   Powyżej 1,5                         3.45     OVER
+   Poniżej 1,5                         1.25     UNDER
+   Powyżej 2,5                         7.80     OVER
+   Poniżej 2,5                         1.04     UNDER
+   Powyżej 3,5                         11.00    OVER
+
+📱 FRONTEND JSON (MarketWithParams format):
+{
+  "marketKey": "TOTAL_GOALS",
+  "type": "TOTAL_GOALS",
+  "category": "GOLE",
+  "label": "Liczba goli",
+  "description": "Obstawiasz czy padnie więcej/mniej goli niż linia",
+  "displayOrder": 10,
+  "viewType": "PARAMETER_SLIDER",
+  "parameters": [
+    {
+      "value": "0.5",
+      "label": "0.5",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "bookmakerName": "betclic",
+          "selections": [
+            {
+              "type": "OVER",
+              "odds": 1.53,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "UNDER",
+              "odds": 2.33,
+              "hasNoTaxPromo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "1.5",
+      "label": "1.5",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "bookmakerName": "betclic",
+          "selections": [
+            {
+              "type": "OVER",
+              "odds": 3.45,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "UNDER",
+              "odds": 1.25,
+              "hasNoTaxPromo": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "value": "2.5",
+      "label": "2.5",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "bookmakerName": "betclic",
+          "selections": [
+            {
+              "type": "OVER",
+              "odds": 7.8,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "UNDER",
+              "odds": 1.04,
+              "hasNoTaxPromo": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "defaultParameter": "2.5",
+  "hasParameters": true
+}
+
+🔧 RAW JSON:
+{
+  "name": "Liczba goli - Manchester United",
+  "groupId": "top_markets",
+  "groupName": "Top zaklady",
+  "selections": [
+    {
+      "id": "1000579305418823",
+      "name": "Powyżej 0,5",
+      "odds": 1.53
+    },
+    {
+      "id": "1000579305418824",
+      "name": "Poniżej 0,5",
+      "odds": 2.33
+    },
+    {
+      "id": "1000579305418825",
+      "name": "Powyżej 1,5",
+      "odds": 3.45
+    },
+    {
+      "id": "1000579305791517",
+      "name": "Poniżej 1,5",
+      "odds": 1.25
+    },
+    {
+      "id": "1000579305791518",
+      "name": "Powyżej 2,5",
+      "odds": 7.8
+    },
+    {
+      "id": "1000579305791519",
+      "name": "Poniżej 2,5",
+      "odds": 1.04
+    },
+    {
+      "id": "1000579350818852",
+      "name": "Powyżej 3,5",
+      "odds": 11
+    }
+  ]
+}
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.8.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.8.0
+npm notice To update run: npm install -g npm@11.8.0
+npm notice

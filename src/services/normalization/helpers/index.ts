@@ -1,4 +1,4 @@
-import type { NormalizedSelection } from "../types.js";
+import type { NormalizedSelection, NormalizationContext } from "../types.js";
 
 /**
  * Normalizes a market name by removing diacritics, converting to lowercase,
@@ -44,11 +44,35 @@ export function parseOverUnderLine(selectionNames: string[]): string | undefined
   for (const name of selectionNames) {
     const decMatch = name.match(/[+-]?(\d+[.,]\d+)/);
     if (decMatch) return decMatch[1].replace(",", ".");
-    
+
     const intMatch = name.match(/^[+-](\d+)$/);
     if (intMatch) return `${intMatch[1]}.0`;
   }
   return undefined;
+}
+
+export function extractMultipleHandicapLines(selectionNames: string[]): string[] | undefined {
+  const handicapSet = new Set<string>();
+  
+  for (const name of selectionNames) {
+    const match = name.match(/([+-]?\d+[.,]?\d*)/);
+    if (match) {
+      const value = match[1].replace(",", ".");
+      if (!value.startsWith("+") && !value.startsWith("-") && parseFloat(value) > 0) {
+        handicapSet.add(`+${value}`);
+      } else {
+        handicapSet.add(value);
+      }
+    }
+  }
+  
+  if (handicapSet.size === 0) return undefined;
+  
+  return Array.from(handicapSet).sort((a, b) => {
+    const numA = parseFloat(a);
+    const numB = parseFloat(b);
+    return numA - numB;
+  });
 }
 
 export function normalize1x2Selection(
@@ -126,4 +150,32 @@ export function parseHtFtSelection(selectionName: string): string | null {
   const ftCode = match[2].toUpperCase();
 
   return `${htCode}/${ftCode}`;
+}
+
+export function normalizeAsianHandicap3WaySelection(
+  selectionName: string,
+  homeTeam: string,
+  awayTeam: string
+): NormalizedSelection {
+  const normalized = selectionName.trim();
+
+  if (/^remis\s*\(/i.test(normalized)) {
+    return "DRAW";
+  }
+
+  return normalize1x2Selection(normalized, homeTeam, awayTeam);
+}
+
+export function normalizeHandicapSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const normalized = selectionName.trim().toLowerCase();
+  const home = normalizeMarketName(ctx.homeTeam);
+  const away = normalizeMarketName(ctx.awayTeam);
+
+  if (home && normalized.includes(home)) return "HOME";
+  if (away && normalized.includes(away)) return "AWAY";
+
+  return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam);
 }

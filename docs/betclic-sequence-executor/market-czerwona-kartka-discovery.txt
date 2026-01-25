@@ -1,0 +1,101 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675314241536
+🎯 Focusing on: "Czerwona kartka"
+
+Fetching TOP...
+  ✓ 14 markets
+Fetching WYNIK...
+  ✓ 48 markets
+Fetching STRZELCY...
+  ✓ 9 markets
+Fetching GOLE...
+  ✓ 83 markets
+Fetching METODA_GOLA...
+  ✓ 7 markets
+Fetching HANDICAP...
+  ✓ 15 markets
+Fetching STATYSTYKI...
+  ✓ 31 markets
+
+====================================================================================================
+🏆 MATCH: Manchester City - Wolverhampton
+====================================================================================================
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+📦 MARKET: Czerwona kartka
+────────────────────────────────────────────────────────────────────────────────────────────────────
+
+📋 TAB: STATYSTYKI
+   Group: Kartki (subca_ftb_crd)
+
+✅ NORMALIZED: OTHER
+   Market Key: OTHER
+   Param Value: none
+   Matched By: pattern
+
+⚠️  ISSUES:
+   - UNMAPPED: Market normalized to OTHER
+
+📊 RAW SELECTIONS (2):
+   Name                                Odds     Normalized
+   ─────────────────────────────────── ──────── ────────────────────
+   Tak                                 4.70     Tak
+   Nie                                 1.09     Nie
+
+📱 FRONTEND JSON (MarketWithParams format):
+{
+  "marketKey": "OTHER",
+  "type": "OTHER",
+  "category": "INNE",
+  "label": "Czerwona kartka",
+  "description": "Nierozpoznany typ rynku",
+  "displayOrder": 999,
+  "viewType": "BINARY_BUTTONS",
+  "parameters": [
+    {
+      "value": "base",
+      "label": "",
+      "bookmakers": [
+        {
+          "bookmaker": "betclic",
+          "bookmakerName": "betclic",
+          "selections": [
+            {
+              "type": "Tak",
+              "odds": 4.7,
+              "hasNoTaxPromo": false
+            },
+            {
+              "type": "Nie",
+              "odds": 1.09,
+              "hasNoTaxPromo": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "defaultParameter": "base",
+  "hasParameters": false
+}
+
+🔧 RAW JSON:
+{
+  "name": "Czerwona kartka",
+  "groupId": "subca_ftb_crd",
+  "groupName": "Kartki",
+  "selections": [
+    {
+      "id": "1010864069128226",
+      "name": "Tak",
+      "odds": 4.7
+    },
+    {
+      "id": "1010864069128227",
+      "name": "Nie",
+      "odds": 1.09
+    }
+  ]
+}

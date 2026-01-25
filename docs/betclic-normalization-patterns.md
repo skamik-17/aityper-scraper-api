@@ -126,21 +126,27 @@ Dokładny wynik - 1. połowa               -> CORRECT_SCORE_1H
 Dokładny wynik w grupie                  -> CORRECT_SCORE_GROUP
 ```
 
-### 8. Markety Statystyk
-```
-Suma rzutów rożnych (razem z dogrywką)   -> TOTAL_CORNERS
-Rzuty rożne {TEAM} (razem z dogrywką)    -> TEAM_CORNERS
-Więcej rzutów rożnych                    -> CORNERS_WINNER
-Liczba kartek                            -> TOTAL_CARDS
-Więcej kartek                            -> CARDS_WINNER
-```
+ ### 8. Markety Statystyk
+ ```
+ Suma rzutów rożnych (razem z dogrywką)   -> TOTAL_CORNERS
+ Rzuty rożne {TEAM} (razem z dogrywką)    -> TEAM_CORNERS
+ Pierwszy rzut rożny                        -> FIRST_CORNER
+ Ostatni rzut rożny                         -> LAST_CORNER
+ 1. połowa - ostatni rzut rożny             -> HALF_TIME_LAST_CORNER
+ Więcej rzutów rożnych                    -> CORNERS_WINNER
+ Liczba kartek                            -> TOTAL_CARDS
+ Więcej kartek                            -> CARDS_WINNER
+ ```
 
-### 9. Markety Strzelców
+ ### 9. Markety Strzelców
 ```
-Którykolwiek zawodnik strzeli gola       -> ANYTIME_GOALSCORER
-Którykolwiek zawodnik strzeli gola - 3 graczy -> ANYTIME_GOALSCORER_3
-Obaj gracze strzelą                      -> BOTH_PLAYERS_SCORE
-Zawodnik strzeli gola i zaliczy asystę   -> GOAL_AND_ASSIST
+Którykolwiek zawodnik strzeli gola                 -> GOALSCORER_ANYTIME
+Którykolwiek zawodnik strzeli gola - 2 graczy    -> TWO_PLAYERS_ANYTIME
+Którykolwiek zawodnik strzeli gola - 3 graczy    -> THREE_PLAYERS_ANYTIME
+Którykolwiek zawodnik zaliczy asystę            -> PLAYER_ASSIST_PAIRS
+Którykolwiek zawodnik zaliczy asystę - 3 zawodników -> PLAYER_ASSIST_TRIPLE
+Obaj gracze strzelą                              -> BOTH_PLAYERS_SCORE
+Zawodnik strzeli gola i zaliczy asystę        -> GOAL_AND_ASSIST
 ```
 
 ## Wzorce Nazw Selekcji

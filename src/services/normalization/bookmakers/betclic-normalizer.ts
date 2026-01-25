@@ -43,9 +43,14 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "wynik 2 polowy": "SECOND_HALF_RESULT",
   "2. polowa wynik": "SECOND_HALF_RESULT",
   "remis bez zakladu": "DRAW_NO_BET",
+  "remis - zwrot": "DRAW_NO_BET",
+  "remis - zwrot - 1. polowa": "HALF_TIME_DRAW_NO_BET",
   "1. polowa - pierwszy gol": "HALF_TIME_FIRST_GOAL",
   "2. polowa - pierwszy gol": "SECOND_HALF_FIRST_GOAL",
   "1. polowa - rzuty rozne": "HALF_TIME_CORNERS_TOTAL",
+  "rzuty rozne w- 1. polowa": "HALF_TIME_CORNERS_RACE",
+  "rozne nieparzyste/parzyste - 1. polowa": "HALF_TIME_CORNERS_ODD_EVEN",
+  "rzuty rozne nieparz./parz.": "CORNERS_ODD_EVEN",
   "czerwona kartka": "RED_CARD",
   "liczba kartek": "CARDS_TOTAL",
   "gol bezposrednio z rzutu wolnego": "FREE_KICK_GOAL",
@@ -64,16 +69,30 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "ktorykolwiek zawodnik zaliczy asyste - 3 zawodnik": "PLAYER_ASSIST_TRIPLE",
   "obaj gracze strzela": "TWO_PLAYERS_ANYTIME",
   "pierwszy rozny": "FIRST_CORNER",
+  "polowa z wieksza iloscia goli": "HALF_WITH_MORE_GOALS",
+  "przedzial goli": "GOAL_RANGE",
+  "przewaga dwoma bramkami lub wygrana w meczu (reg. czas)": "WIN_OR_WIN_BY_2",
+  "roznica goli": "WINNING_MARGIN",
+  "rzuty rozne - przedzialy": "CORNERS_RANGE",
+  "spalone 1x2 (opta)": "OFFSIDES_1X2",
+  "strzaly celne - 1x2 (opta)": "MOST_SHOTS_ON_TARGET",
+  "suma celnych strzalow w meczu (opta)": "TOTAL_SHOTS_ON_TARGET",
+  "suma celnych strzalow w meczu  (opta)": "TOTAL_SHOTS_ON_TARGET",
+  "suma fauli w meczu (opta)": "FOULS_TOTAL",
+  "suma spalonych w meczu (opta)": "OFFSIDES_TOTAL",
 };
 
 const BETCLIC_MARKET_PATTERNS: Array<{
   pattern: RegExp;
   code: NormalizedMarketType;
 }> = [
+  { pattern: /^posiadanie pilki gospodarzy$/i, code: "HOME_POSSESSION" },
+  { pattern: /^posiadanie pilki gosci$/i, code: "AWAY_POSSESSION" },
   { pattern: /^liczba goli\s+(?:parzysta\s*\/\s*nieparzysta|nieparzysta\s*\/\s*parzysta)/i, code: "ODD_EVEN_GOALS" },
    { pattern: /^liczba goli\s+\d+/i, code: "TOTAL_GOALS" },
    { pattern: /^pierwszy.*rożny$/i, code: "FIRST_CORNER" },
    { pattern: /^ostatni.*rożny$/i, code: "LAST_CORNER" },
+   { pattern: /^suma rzutow roznych/i, code: "CORNERS_TOTAL" },
      { pattern: /^liczba goli\b/i, code: "TOTAL_GOALS" },
       { pattern: /^gole\s+powyzej\s*\/\s*ponizej/i, code: "TOTAL_GOALS" },
        { pattern: /^gole.*powyzej.*ponizej/i, code: "TOTAL_GOALS" },
@@ -95,7 +114,9 @@ const BETCLIC_MARKET_PATTERNS: Array<{
     { pattern: /^liczba kartek\s*1\.?\s*polowa/i, code: "HALF_TIME_CARDS_TOTAL" },
      { pattern: /^podwojna szansa\s*\(1\.?\s*polowa\s+lub\s+mecz\)/i, code: "HT_OR_FT_RESULT" },
      { pattern: /^podwojna szansa.*\(.*lub.*\)/i, code: "DOUBLE_CHANCE" },
-      { pattern: /^podwojna szansa\s*(?:&|i|oraz).*oba (?:zespoly|druzyny) strzela/i, code: "DOUBLE_CHANCE_BTTS" },
+      { pattern: /^podwojna szansa,?\s*obie\s+(?:druzyny|zespoly)\s+zdobywaj[aą]\s+gole?\s*-\s*1\.?\s*polowa/i, code: "HALF_TIME_DOUBLE_CHANCE_BTTS" },
+  { pattern: /^podwojna szansa,?\s*obie\s+(?:druzyny|zespoly)\s+zdobywaj[aą]\s+gole?\s*-\s*2\.?\s*polowa/i, code: "SECOND_HALF_DOUBLE_CHANCE_BTTS" },
+  { pattern: /^podwojna szansa\s*(?:&|i|oraz).*oba (?:zespoly|druzyny) strzela/i, code: "DOUBLE_CHANCE_BTTS" },
      { pattern: /^podwojna szansa\s*(?:&|i|oraz)\s*powyzej\s*\/\s*ponizej/i, code: "DOUBLE_CHANCE_TOTAL" },
      { pattern: /^1x2 rzuty rozne/i, code: "CORNERS_RACE" },
   { pattern: /^1x2 strzaly/i, code: "MOST_SHOTS" },
@@ -109,6 +130,7 @@ const BETCLIC_MARKET_PATTERNS: Array<{
    { pattern: /^kartki\s+1x2\s*-\s*1\. polowa/i, code: "FIRST_HALF_CARDS_1X2" },
    { pattern: /^obie polowy ponizej\s+\d+[,.]?\d*\s*goli$/i, code: "BOTH_HALVES_UNDER_GOALS" },
    { pattern: /^obie polowy powyzej\s+\d+[,.]?\d*\s*goli$/i, code: "BOTH_HALVES_OVER_GOALS" },
+   { pattern: /^polowa z wieksza ilos[c]?[c]?i[a]? goli\s*-\s*.+$/i, code: "TEAM_HALF_WITH_MORE_GOALS" },
  ];
 
 function normalizeName(value: string): string {
@@ -201,6 +223,173 @@ function resolveRedCardTeamMarket(
   return teamName ? "RED_CARD_TEAM" : null;
 }
 
+function resolveTeamHalfWithMoreGoalsTeamSide(
+  normalizedName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^polowa z wieksza ilos[c]?[c]?i[a]? goli\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  if (home && teamPart.includes(home)) return "HOME";
+  if (away && teamPart.includes(away)) return "AWAY";
+
+  return null;
+}
+
+function resolveScoreBothHalvesMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^strzela w obu polowach\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return "HOME_SCORE_BOTH_HALVES";
+  if (isAway) return "AWAY_SCORE_BOTH_HALVES";
+
+  return null;
+}
+
+interface CornersTeamResult {
+  code: NormalizedMarketType;
+  teamSide: "HOME" | "AWAY";
+}
+
+function resolveCornersTeamMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): CornersTeamResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  // Pattern: "rzuty rozne {team} (razem z dogrywka)" or "rzuty rozne {team}"
+  const match = normalizedName.match(/^rzuty rozne\s+(.+?)(?:\s*\(razem z dogrywka\))?$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { code: "CORNERS_TEAM", teamSide: "HOME" };
+  if (isAway) return { code: "CORNERS_TEAM", teamSide: "AWAY" };
+
+  return null;
+}
+
+function resolveFreeKickGoalTeamMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^strzela gola bezposrednio z rzutu wolnego\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return "HOME_TEAM_FREE_KICK_GOAL";
+  if (isAway) return "AWAY_TEAM_FREE_KICK_GOAL";
+
+  return null;
+}
+
+interface TeamHeaderGoalResult {
+  teamSide: "HOME" | "AWAY";
+  teamName: string;
+}
+
+function extractTeamHeaderGoalInfo(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamHeaderGoalResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^strzela? gola glowa\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
+  if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
+
+  return null;
+}
+
+interface TeamShotsOnTargetResult {
+  teamSide: "HOME" | "AWAY";
+  teamName: string;
+}
+
+function resolveTeamShotsOnTargetMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamShotsOnTargetResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  // Pattern: "suma celnych strzalow w meczu (opta) - {teamName}"
+  const match = normalizedName.match(/^suma celnych strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
+  if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
+
+  return null;
+}
+
+interface TeamOffsidesResult {
+  code: NormalizedMarketType;
+  teamSide: "HOME" | "AWAY";
+}
+
+function resolveTeamOffsidesMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamOffsidesResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  // Pattern: "suma spalonych w meczu - {teamName} (opta)"
+  const match = normalizedName.match(/^suma spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { code: "HOME_TEAM_TOTAL_OFFSIDES", teamSide: "HOME" };
+  if (isAway) return { code: "AWAY_TEAM_TOTAL_OFFSIDES", teamSide: "AWAY" };
+
+  return null;
+}
+
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -208,6 +397,7 @@ function resolveMarketCode(
   marketCode: NormalizedMarketType;
   matchedBy: "id" | "name" | "pattern";
   teamName?: string;
+  teamSide?: "HOME" | "AWAY";
 } {
   if (raw.bookmakerMarketId !== undefined && raw.bookmakerMarketId !== null) {
     const rawId = Number(raw.bookmakerMarketId);
@@ -236,6 +426,36 @@ function resolveMarketCode(
   const redCardTeam = extractRedCardTeamName(normalizedName, ctx);
   if (redCardTeam) {
     return { marketCode: "RED_CARD_TEAM", matchedBy: "pattern", teamName: redCardTeam };
+  }
+
+  const cornersTeam = resolveCornersTeamMarket(normalizedName, ctx);
+  if (cornersTeam) {
+    return { marketCode: cornersTeam.code, matchedBy: "pattern" };
+  }
+
+  const freeKickGoalTeam = resolveFreeKickGoalTeamMarket(normalizedName, ctx);
+  if (freeKickGoalTeam) {
+    return { marketCode: freeKickGoalTeam, matchedBy: "pattern" };
+  }
+
+  const teamHeaderGoalInfo = extractTeamHeaderGoalInfo(normalizedName, ctx);
+  if (teamHeaderGoalInfo) {
+    return { marketCode: "TEAM_HEADER_GOAL", matchedBy: "pattern", teamName: teamHeaderGoalInfo.teamName, teamSide: teamHeaderGoalInfo.teamSide };
+  }
+
+  const scoreBothHalves = resolveScoreBothHalvesMarket(normalizedName, ctx);
+  if (scoreBothHalves) {
+    return { marketCode: scoreBothHalves, matchedBy: "pattern" };
+  }
+
+  const teamShotsOnTarget = resolveTeamShotsOnTargetMarket(normalizedName, ctx);
+  if (teamShotsOnTarget) {
+    return { marketCode: "TEAM_TOTAL_SHOTS_ON_TARGET", matchedBy: "pattern", teamName: teamShotsOnTarget.teamName, teamSide: teamShotsOnTarget.teamSide };
+  }
+
+  const teamOffsides = resolveTeamOffsidesMarket(normalizedName, ctx);
+  if (teamOffsides) {
+    return { marketCode: teamOffsides.code, matchedBy: "pattern", teamSide: teamOffsides.teamSide };
   }
 
   for (const entry of BETCLIC_MARKET_PATTERNS) {
@@ -498,6 +718,60 @@ function normalizeCardsTeamSelection(
   return null;
 }
 
+function normalizeCornersTeamSelection(
+  selectionName: string,
+  marketName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalizedMarketName = normalizeName(marketName);
+
+  const marketMatch = normalizedMarketName.match(/^rzuty rozne\s+(.+?)(?:\s*\(razem z dogrywka\))?$/i);
+  if (!marketMatch) return null;
+
+  const teamPart = marketMatch[1].trim();
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  const normalizedSel = normalizeName(selectionName);
+  if (normalizedSel.includes("powyzej")) {
+    return isHome ? "HOME_OVER" : isAway ? "AWAY_OVER" : null;
+  }
+  if (normalizedSel.includes("ponizej")) {
+    return isHome ? "HOME_UNDER" : isAway ? "AWAY_UNDER" : null;
+  }
+
+  return null;
+}
+
+function normalizeTeamShotsOnTargetSelection(
+  selectionName: string,
+  marketName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalizedMarketName = normalizeName(marketName);
+
+  const marketMatch = normalizedMarketName.match(/^suma celnych strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
+  if (!marketMatch) return null;
+
+  const teamPart = marketMatch[1].trim();
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  const normalizedSel = normalizeName(selectionName);
+  if (normalizedSel.includes("powyzej")) {
+    return isHome ? "HOME_OVER" : isAway ? "AWAY_OVER" : null;
+  }
+  if (normalizedSel.includes("ponizej")) {
+    return isHome ? "HOME_UNDER" : isAway ? "AWAY_UNDER" : null;
+  }
+
+  return null;
+}
+
 function normalizePenaltyGoalSelection(
   selectionName: string,
   ctx: NormalizationContext
@@ -607,6 +881,39 @@ export function normalizeFirstGoalTimeSelection(
   return normalized as NormalizedSelection;
 }
 
+function normalizeWinningMarginSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const normalized = normalizeName(selectionName);
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  if (normalized === "remis" || normalized.startsWith("remis")) {
+    return "DRAW";
+  }
+
+  const isHome = home && isTeamInSelection(normalized, home);
+  const isAway = away && isTeamInSelection(normalized, away);
+
+  if (normalized.includes("przewaga") || normalized.includes("przewag")) {
+    if (normalized.includes("3 lub wiecej") || normalized.includes("3+")) {
+      if (isHome) return "HOME_BY_3PLUS" as NormalizedSelection;
+      if (isAway) return "AWAY_BY_3PLUS" as NormalizedSelection;
+    }
+    if (normalized.includes("2 gol")) {
+      if (isHome) return "HOME_BY_2" as NormalizedSelection;
+      if (isAway) return "AWAY_BY_2" as NormalizedSelection;
+    }
+    if (normalized.includes("1 gol")) {
+      if (isHome) return "HOME_BY_1" as NormalizedSelection;
+      if (isAway) return "AWAY_BY_1" as NormalizedSelection;
+    }
+  }
+
+  return selectionName as NormalizedSelection;
+}
+
 function normalizeCorrectScoreGroupSelection(
   selectionName: string,
   homeTeam: string,
@@ -679,11 +986,14 @@ function normalizeSelectionForMarket(
     case "CLEAN_SHEET":
     case "FIRST_TEAM_TO_SCORE":
     case "CORNERS_RACE":
+    case "HALF_TIME_CORNERS_RACE":
     case "CARDS_RACE":
     case "FIRST_HALF_CARDS_1X2":
     case "FOUL_RACE":
+    case "OFFSIDES_1X2":
     case "MOST_SHOTS":
     case "MOST_SHOTS_ON_TARGET":
+    case "WIN_OR_WIN_BY_2":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
     case "FIRST_CARD":
@@ -704,6 +1014,8 @@ function normalizeSelectionForMarket(
       return normalizeBetclicDoubleChance(trimmed, ctx);
 
     case "DOUBLE_CHANCE_BTTS":
+    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
+    case "SECOND_HALF_DOUBLE_CHANCE_BTTS":
       return normalizeBetclicDoubleChanceBttsSelection(trimmed, ctx);
 
     case "DOUBLE_CHANCE_TOTAL": {
@@ -726,6 +1038,13 @@ function normalizeSelectionForMarket(
     case "CARDS_TOTAL":
     case "HALF_TIME_CARDS_TOTAL":
     case "HALF_TIME_CORNERS_TOTAL":
+    case "HOME_POSSESSION":
+    case "AWAY_POSSESSION":
+    case "TOTAL_SHOTS_ON_TARGET":
+    case "FOULS_TOTAL":
+    case "OFFSIDES_TOTAL":
+    case "HOME_TEAM_TOTAL_OFFSIDES":
+    case "AWAY_TEAM_TOTAL_OFFSIDES":
       return normalizeOverUnderSelection(trimmed);
 
     case "CARDS_TEAM": {
@@ -733,6 +1052,20 @@ function normalizeSelectionForMarket(
         ? normalizeCardsTeamSelection(trimmed, marketName, ctx)
         : null;
       return (cardsSelection ?? trimmed) as NormalizedSelection;
+    }
+
+    case "CORNERS_TEAM": {
+      const cornersSelection = marketName
+        ? normalizeCornersTeamSelection(trimmed, marketName, ctx)
+        : null;
+      return (cornersSelection ?? trimmed) as NormalizedSelection;
+    }
+
+    case "TEAM_TOTAL_SHOTS_ON_TARGET": {
+      const shotsSelection = marketName
+        ? normalizeTeamShotsOnTargetSelection(trimmed, marketName, ctx)
+        : null;
+      return (shotsSelection ?? trimmed) as NormalizedSelection;
     }
 
     case "BTTS":
@@ -749,14 +1082,22 @@ function normalizeSelectionForMarket(
     case "RED_CARD":
     case "RED_CARD_TEAM":
     case "FREE_KICK_GOAL":
+    case "HOME_TEAM_FREE_KICK_GOAL":
+    case "AWAY_TEAM_FREE_KICK_GOAL":
     case "HEADER_GOAL":
     case "HEADER_GOAL_BOTH_HALVES":
     case "HALF_TIME_HEADER_GOAL":
     case "SECOND_HALF_HEADER_GOAL":
+    case "TEAM_HEADER_GOAL":
+    case "HOME_SCORE_BOTH_HALVES":
+    case "AWAY_SCORE_BOTH_HALVES":
       return normalizeYesNoSelection(trimmed);
 
     case "TEAMS_TO_SCORE":
       return normalizeTeamsToScoreSelection(trimmed, ctx);
+
+    case "WINNING_MARGIN":
+      return normalizeWinningMarginSelection(trimmed, ctx);
 
     case "PENALTY_GOAL":
     case "HALF_TIME_PENALTY_GOAL":
@@ -787,7 +1128,34 @@ function normalizeSelectionForMarket(
     }
 
     case "ODD_EVEN_GOALS":
+    case "HALF_TIME_CORNERS_ODD_EVEN":
+    case "CORNERS_ODD_EVEN":
       return normalizeOddEvenSelection(trimmed);
+
+    case "HALF_WITH_MORE_GOALS": {
+      const normalized = normalizeName(trimmed);
+      if (normalized.includes("1. polowa") || normalized === "1") return "1st" as NormalizedSelection;
+      if (normalized.includes("2. polowa") || normalized === "2") return "2nd" as NormalizedSelection;
+      if (normalized.includes("remis") || normalized === "x") return "Draw" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "TEAM_HALF_WITH_MORE_GOALS": {
+      const normalizedMarket = marketName ? normalizeName(marketName) : "";
+      const teamSide = resolveTeamHalfWithMoreGoalsTeamSide(normalizedMarket, ctx);
+      const normalized = normalizeName(trimmed);
+
+      if (normalized.includes("1. polowa") || normalized === "1") {
+        return teamSide === "HOME" ? "HOME_1ST" : "AWAY_1ST";
+      }
+      if (normalized.includes("2. polowa") || normalized === "2") {
+        return teamSide === "HOME" ? "HOME_2ND" : "AWAY_2ND";
+      }
+      if (normalized.includes("remis") || normalized === "x") {
+        return teamSide === "HOME" ? "HOME_EQUAL" : "AWAY_EQUAL";
+      }
+      return trimmed as NormalizedSelection;
+    }
 
     case "ASIAN_HANDICAP":
       return normalizeHandicapSelection(trimmed, ctx);
@@ -870,6 +1238,30 @@ function normalizeSelectionForMarket(
     case "THREE_PLAYERS_ANYTIME":
       return trimmed as NormalizedSelection;
 
+    case "GOAL_RANGE":
+    case "TEAM_GOAL_RANGE":
+    case "HALF_TIME_GOAL_RANGE":
+    case "SECOND_HALF_GOAL_RANGE":
+    case "HOME_GOAL_RANGE":
+    case "AWAY_GOAL_RANGE":
+    case "CORNERS_RANGE": {
+      const normalized = normalizeName(trimmed);
+      // "Brak Gola" -> "0"
+      if (normalized.includes("brak") && normalized.includes("gol")) {
+        return "0" as NormalizedSelection;
+      }
+      // "7+" -> "7+"
+      if (/^\d+\+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      // "1 - 2" -> "1-2" (remove spaces around dash)
+      const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (rangeMatch) {
+        return `${rangeMatch[1]}-${rangeMatch[2]}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
   }
@@ -948,14 +1340,19 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
-    const { marketCode, matchedBy, teamName } = resolveMarketCode(raw, ctx);
+    const { marketCode, matchedBy, teamName, teamSide } = resolveMarketCode(raw, ctx);
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[betclic] Market code "${marketCode}" not in catalog`);
       return null;
     }
 
-    const { paramValue, parameters } = extractParamValue(marketCode, raw);
+    let { paramValue, parameters } = extractParamValue(marketCode, raw);
+    
+    if (marketCode === "TEAM_HEADER_GOAL" && teamSide) {
+      paramValue = teamSide;
+    }
+    
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({
@@ -964,9 +1361,12 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       odds: sel.odds,
     }));
 
-    const customLabel = marketCode === "RED_CARD_TEAM" && teamName
-      ? `Czerwona kartka - ${teamName}`
-      : undefined;
+    let customLabel: string | undefined;
+    if (marketCode === "RED_CARD_TEAM" && teamName) {
+      customLabel = `Czerwona kartka - ${teamName}`;
+    } else if (marketCode === "TEAM_HEADER_GOAL" && teamName) {
+      customLabel = `Strzelą gola głową - ${teamName}`;
+    }
 
     return {
       marketCode,

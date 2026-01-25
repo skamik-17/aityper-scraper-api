@@ -1,0 +1,18 @@
+====================================================================================================
+🔍 BETCLIC MARKET DISCOVERY
+====================================================================================================
+Match ID: 905675391942656
+🎯 Focusing on: "Suma celnych strzałów w meczu  (OPTA)"
+
+Fetching 7 tabs in parallel...
+  TOP: ✓ 12 markets
+  WYNIK: ✓ 27 markets
+  STRZELCY: ✓ 14 markets
+  GOLE: ✓ 48 markets
+  METODA_GOLA: ✓ 18 markets
+  HANDICAP: ✓ 7 markets
+  STATYSTYKI: ✓ 41 markets
+
+====================================================================================================
+🏆 MATCH: Arsenal - Manchester United
+====================================================================================================

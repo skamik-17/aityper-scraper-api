@@ -770,11 +770,13 @@ async function main() {
     ? { [specificTab]: MARKET_GROUP_FILTERS[specificTab as keyof typeof MARKET_GROUP_FILTERS] }
     : MARKET_GROUP_FILTERS;
   
-  for (const [tabName, categoryId] of Object.entries(tabsToFetch)) {
-    if (!outputJson) {
-      console.log(`Fetching ${tabName}...`);
-    }
-    
+  const tabEntries = Object.entries(tabsToFetch);
+  
+  if (!outputJson) {
+    console.log(`Fetching ${tabEntries.length} tabs in parallel...`);
+  }
+  
+  const fetchPromises = tabEntries.map(async ([tabName, categoryId]) => {
     try {
       const requestBody = categoryId
         ? buildMatchDetailsRequestWithFilter(matchId, categoryId)
@@ -783,37 +785,45 @@ async function main() {
       const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
       const { match: m, groups } = parseResponse(response);
       
-      if (!match) {
-        match = m;
-      }
-      
-      const ctx: NormalizationContext = {
-        homeTeam: match.homeTeam,
-        awayTeam: match.awayTeam,
-      };
-      
-      for (const group of groups) {
-        for (const market of group.markets) {
-          // Filter by specific market name if provided
-          if (specificMarket && !market.name.toLowerCase().includes(specificMarket.toLowerCase())) {
-            continue;
-          }
-          
-          const analysis = analyzeMarket(market, group.id, group.name, tabName, ctx);
-          allAnalyses.push(analysis);
-        }
-      }
-      
-      if (!outputJson) {
-        console.log(`  ✓ ${groups.reduce((sum, g) => sum + g.markets.length, 0)} markets`);
-      }
+      return { tabName, match: m, groups, error: null };
     } catch (error) {
+      return { tabName, match: null, groups: [], error };
+    }
+  });
+  
+  const results = await Promise.all(fetchPromises);
+  
+  for (const { tabName, match: m, groups, error } of results) {
+    if (error) {
       if (!outputJson) {
-        console.log(`  ✗ Error: ${error instanceof Error ? error.message : error}`);
+        console.log(`  ${tabName}: ✗ Error: ${error instanceof Error ? error.message : error}`);
+      }
+      continue;
+    }
+    
+    if (!match && m) {
+      match = m;
+    }
+    
+    const ctx: NormalizationContext = {
+      homeTeam: match?.homeTeam || "",
+      awayTeam: match?.awayTeam || "",
+    };
+    
+    for (const group of groups) {
+      for (const market of group.markets) {
+        if (specificMarket && !market.name.toLowerCase().includes(specificMarket.toLowerCase())) {
+          continue;
+        }
+        
+        const analysis = analyzeMarket(market, group.id, group.name, tabName, ctx);
+        allAnalyses.push(analysis);
       }
     }
     
-    await new Promise(r => setTimeout(r, 100));
+    if (!outputJson) {
+      console.log(`  ${tabName}: ✓ ${groups.reduce((sum, g) => sum + g.markets.length, 0)} markets`);
+    }
   }
   
   // Deduplicate markets by name - same market may appear in multiple tabs

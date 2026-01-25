@@ -20,6 +20,7 @@ import {
   COMPETITION_IDS,
   LEAGUE_SLUGS,
   REQUEST_TIMEOUT,
+  GRPC_READ_TIMEOUT,
   MAX_RETRIES,
   RETRY_DELAY,
   MARKET_GROUP_FILTERS,
@@ -107,15 +108,13 @@ async function fetchGrpcWithNodeHttp(
       let data = "";
       let readComplete = false;
 
-      // Set a read timeout - gRPC-web streams may stay open
-      // We collect data for a reasonable period then process what we have
       const readTimeout = setTimeout(() => {
         if (!readComplete && data.length > 0) {
           readComplete = true;
           res.destroy();
           processResponse(data, resolve, reject);
         }
-      }, 5000); // 5 second read timeout
+      }, GRPC_READ_TIMEOUT);
 
       res.on("data", (chunk: Buffer) => {
         data += chunk.toString();
@@ -364,44 +363,38 @@ function delay(ms: number): Promise<void> {
 /**
  * Fetch markets from all market group tabs for a match
  *
- * Iterates over MARKET_GROUP_FILTERS category IDs, fetching markets from each tab.
- * Includes 100ms delay between requests to avoid rate limiting.
+ * Uses parallel fetching for all tabs simultaneously.
  * Filters out responses smaller than 100 bytes (empty/invalid data).
  */
 export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
-  const responses: Buffer[] = [];
   const filterEntries = Object.entries(MARKET_GROUP_FILTERS) as [string, string | null][];
 
   console.log(
-    `[Betclic/Navigation] Fetching ${filterEntries.length} market groups for match ${matchId}`
+    `[Betclic/Navigation] Fetching ${filterEntries.length} market groups in parallel for match ${matchId}`
   );
 
-  for (const [groupName, categoryId] of filterEntries) {
+  const fetchPromises = filterEntries.map(async ([groupName, categoryId]) => {
     try {
-      const categoryDisplay = categoryId || "(no filter)";
-      console.log(`[Betclic/Navigation] Fetching group ${groupName} (category=${categoryDisplay})...`);
-
       const requestBody = buildMatchDetailsRequestWithFilter(matchId, categoryId);
       const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
-
-      if (response.length >= 100) {
-        responses.push(response);
-        console.log(
-          `[Betclic/Navigation] Group ${groupName}: ${response.length} bytes received`
-        );
-      } else {
-        console.log(
-          `[Betclic/Navigation] Group ${groupName}: skipped (${response.length} bytes < 100)`
-        );
-      }
+      return { groupName, response, success: true };
     } catch (error) {
       console.warn(
         `[Betclic/Navigation] Failed to fetch group ${groupName}:`,
         error instanceof Error ? error.message : error
       );
+      return { groupName, response: null, success: false };
     }
+  });
 
-    await delay(100);
+  const results = await Promise.all(fetchPromises);
+
+  const responses: Buffer[] = [];
+  for (const { groupName, response, success } of results) {
+    if (success && response && response.length >= 100) {
+      responses.push(response);
+      console.log(`[Betclic/Navigation] Group ${groupName}: ${response.length} bytes`);
+    }
   }
 
   console.log(

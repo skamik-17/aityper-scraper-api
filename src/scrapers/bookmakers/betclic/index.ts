@@ -313,7 +313,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
             );
           }
 
-          await this.delay(100);
+          await this.delay(50);
         } catch (error) {
           console.warn(
             `[Betclic/FullOffer] Failed to fetch details for match ${listingMatch.matchId}:`,

@@ -191,7 +191,7 @@ export function groupMarketsByTypeWithParameters(
     // Build parameters array in sorted order
     const parameters: MarketParameter[] = sortedParams.map((param) => paramGroups.get(param)!);
 
-    let hasParameters = marketHasParameters(marketType) && sortedParams.length > 1;
+    let hasParameters = marketHasParameters(marketType) && sortedParams.length >= 1;
 
     // Handle non-parameterized markets that need parameters[0] for frontend components
     // This includes: SINGLE_SELECTION, BINARY_BUTTONS, TRIPLE_BUTTONS, PARAMETER_SLIDER, and any market without hasParameter: true

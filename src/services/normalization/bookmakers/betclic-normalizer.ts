@@ -13,6 +13,7 @@ import {
   parseIntegerLine,
   parseOverUnderLine,
   extractMultipleHandicapLines,
+  extractMultipleOverUnderLines,
   normalize1x2Selection,
   normalizeDoubleChanceSelection,
   normalizeOddEvenSelection,
@@ -94,8 +95,9 @@ const BETCLIC_MARKET_PATTERNS: Array<{
     { pattern: /^liczba kartek\s*1\.?\s*polowa/i, code: "HALF_TIME_CARDS_TOTAL" },
      { pattern: /^podwojna szansa\s*\(1\.?\s*polowa\s+lub\s+mecz\)/i, code: "HT_OR_FT_RESULT" },
      { pattern: /^podwojna szansa.*\(.*lub.*\)/i, code: "DOUBLE_CHANCE" },
-    { pattern: /^podwojna szansa\s*(?:&|i|oraz).*oba (?:zespoly|druzyny) strzela/i, code: "DOUBLE_CHANCE_BTTS" },
-    { pattern: /^1x2 rzuty rozne/i, code: "CORNERS_RACE" },
+      { pattern: /^podwojna szansa\s*(?:&|i|oraz).*oba (?:zespoly|druzyny) strzela/i, code: "DOUBLE_CHANCE_BTTS" },
+     { pattern: /^podwojna szansa\s*(?:&|i|oraz)\s*powyzej\s*\/\s*ponizej/i, code: "DOUBLE_CHANCE_TOTAL" },
+     { pattern: /^1x2 rzuty rozne/i, code: "CORNERS_RACE" },
   { pattern: /^1x2 strzaly/i, code: "MOST_SHOTS" },
   { pattern: /^faule\s+1x2\s*\(opta\)/i, code: "FOUL_RACE" },
   { pattern: /^strzelec:/i, code: "OTHER" },
@@ -359,6 +361,45 @@ function normalizeBetclicDoubleChanceBttsSelection(
   }
 
   return selectionName as NormalizedSelection;
+}
+
+function normalizeBetclicDoubleChanceTotalSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const parts = selectionName.split("&");
+  if (parts.length !== 2) {
+    return selectionName as NormalizedSelection;
+  }
+
+  const dcPart = normalizeName(parts[0].trim());
+  const goalsPart = normalizeName(parts[1].trim());
+
+  const hasHomeTeam = home && isTeamInSelection(dcPart, home);
+  const hasAwayTeam = away && isTeamInSelection(dcPart, away);
+  const hasDraw = dcPart.includes("remis") || dcPart.includes("x");
+
+  let dcType: "1X" | "X2" | "12" | null = null;
+
+  if (hasHomeTeam && !hasAwayTeam) {
+    dcType = hasDraw ? "1X" : null;
+  } else if (hasAwayTeam && !hasHomeTeam) {
+    dcType = hasDraw ? "X2" : null;
+  } else if (hasHomeTeam && hasAwayTeam) {
+    dcType = "12";
+  }
+
+  const isOver = goalsPart.includes("powyzej") || goalsPart.includes("over");
+  const ouDirection = isOver ? "OVER" : "UNDER";
+
+  if (!dcType) {
+    return selectionName as NormalizedSelection;
+  }
+
+  return `${dcType}_${ouDirection}` as NormalizedSelection;
 }
 
 function normalizeNextCornerSelection(
@@ -665,6 +706,10 @@ function normalizeSelectionForMarket(
     case "DOUBLE_CHANCE_BTTS":
       return normalizeBetclicDoubleChanceBttsSelection(trimmed, ctx);
 
+    case "DOUBLE_CHANCE_TOTAL": {
+      return normalizeBetclicDoubleChanceTotalSelection(trimmed, ctx);
+    }
+
     case "HT_OR_FT_RESULT":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
 
@@ -841,21 +886,26 @@ function extractParamValue(
 ): { paramValue?: string; parameters?: string[] } {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return {};
-  
+
   const selectionNames = raw.selections.map((s) => s.name);
-  
+
   if (marketCode === "NEXT_CORNER_1H") {
     const paramValue = extractNextCornerParam(normalizeName(raw.name));
     return { paramValue };
   }
-  
+
   if (marketCode === "ASIAN_HANDICAP_3WAY" || marketCode === "ASIAN_HANDICAP" || marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" || marketCode === "EUROPEAN_HANDICAP" || marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") {
     const parameters = extractMultipleHandicapLines(selectionNames);
     return { parameters };
   }
-  
+
+  if (marketCode === "DOUBLE_CHANCE_TOTAL") {
+    const parameters = extractMultipleOverUnderLines(selectionNames);
+    return { parameters };
+  }
+
   const fromSelections = parseOverUnderLine(selectionNames);
-  
+
   switch (metadata.parameterType) {
     case "player":
       // For player markets, distinguish between:

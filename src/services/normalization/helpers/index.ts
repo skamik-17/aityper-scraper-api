@@ -53,7 +53,7 @@ export function parseOverUnderLine(selectionNames: string[]): string | undefined
 
 export function extractMultipleHandicapLines(selectionNames: string[]): string[] | undefined {
   const handicapSet = new Set<string>();
-  
+
   for (const name of selectionNames) {
     const match = name.match(/([+-]?\d+[.,]?\d*)/);
     if (match) {
@@ -65,10 +65,52 @@ export function extractMultipleHandicapLines(selectionNames: string[]): string[]
       }
     }
   }
-  
+
   if (handicapSet.size === 0) return undefined;
-  
+
   return Array.from(handicapSet).sort((a, b) => {
+    const numA = parseFloat(a);
+    const numB = parseFloat(b);
+    return numA - numB;
+  });
+}
+
+/**
+ * Extracts multiple over/under goal lines from selection names.
+ * Handles both cases where lines are in individual selections
+ * (e.g., "Powyżej 2.5", "Poniżej 2.5") and where multiple lines
+ * are listed in a single selection separated by "/" (e.g., "1,5 / 2,5 / 3,5").
+ * Converts Polish comma decimal separator to dot.
+ *
+ * @param selectionNames - Array of selection names to parse
+ * @returns Sorted array of unique goal lines (e.g., ["1.5", "2.5", "3.5"]) or undefined if none found
+ */
+export function extractMultipleOverUnderLines(selectionNames: string[]): string[] | undefined {
+  const linesSet = new Set<string>();
+
+  for (const name of selectionNames) {
+    // Case 1: Multiple lines in one selection separated by "/"
+    // e.g., "Arsenal / Remis & Powyżej 1,5 / 2,5 / 3,5 / 4,5"
+    const slashSeparated = name.split("/");
+    for (const part of slashSeparated) {
+      const trimmedPart = part.trim();
+      // Match decimal numbers with either comma or dot
+      const match = trimmedPart.match(/(\d+)[,.](\d+)/);
+      if (match) {
+        // Always normalize to dot format
+        const value = `${match[1]}.${match[2]}`;
+        linesSet.add(value);
+      }
+    }
+
+    // Case 2: Line in selection name (e.g., "Powyżej 2,5")
+    // This is handled by the loop above since a single-part string
+    // is also processed when split("/") results in [single_part]
+  }
+
+  if (linesSet.size === 0) return undefined;
+
+  return Array.from(linesSet).sort((a, b) => {
     const numA = parseFloat(a);
     const numB = parseFloat(b);
     return numA - numB;

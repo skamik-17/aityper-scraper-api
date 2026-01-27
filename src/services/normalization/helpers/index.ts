@@ -139,14 +139,14 @@ export function normalize1x2Selection(
 }
 
 export function normalizeOverUnderSelection(selectionName: string): NormalizedSelection {
-  const lower = selectionName.toLowerCase().trim();
-  
-  if (/^(over|powyżej|powyzej|ponad|\+)/i.test(lower)) return "OVER";
-  if (/^(under|poniżej|ponizej|pon|-)/i.test(lower)) return "UNDER";
-  
-  if (selectionName.startsWith("+")) return "OVER";
-  if (selectionName.startsWith("-")) return "UNDER";
-  
+  const normalized = selectionName.replace(/,/g, ".").toLowerCase().trim();
+
+  if (/^(over|powyżej|powyzej|ponad|\+)/i.test(normalized)) return "OVER";
+  if (/^(under|poniżej|ponizej|pon|-)/i.test(normalized)) return "UNDER";
+
+  if (normalized.startsWith("+")) return "OVER";
+  if (normalized.startsWith("-")) return "UNDER";
+
   return "UNKNOWN";
 }
 

@@ -110,6 +110,7 @@ Wynik i gole                             -> RESULT_TOTAL_GOALS
 Podwójna szansa & oba zespoły strzelą    -> DOUBLE_CHANCE_BTTS
 Podwójna szansa & powyżej/poniżej        -> DOUBLE_CHANCE_TOTAL
 Wynik Meczu Połowa / Cały                -> HT_FT
+Wynik/oba zespoły strzelą - 1. połowa    -> HALF_TIME_RESULT_AND_BTTS
 ```
 
 ### 6. Markety Handicap

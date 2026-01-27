@@ -30,6 +30,7 @@ const BETCLIC_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {};
 
 const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "wynik meczu": "MATCH_WINNER",
+  "wynik meczu (z wylaczeniem dogrywki)": "MATCH_WINNER_REGULAR_TIME",
   "podwojna szansa": "DOUBLE_CHANCE",
   "obie druzyny strzela": "BTTS",
   "dokladny wynik": "CORRECT_SCORE",
@@ -78,8 +79,19 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "strzaly celne - 1x2 (opta)": "MOST_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu (opta)": "TOTAL_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu  (opta)": "TOTAL_SHOTS_ON_TARGET",
-  "suma fauli w meczu (opta)": "FOULS_TOTAL",
+  "suma strzalow w meczu (opta)": "TOTAL_SHOTS",
+  "suma faulu w meczu (opta)": "FOULS_TOTAL",
   "suma spalonych w meczu (opta)": "OFFSIDES_TOTAL",
+  "wynik i gole": "RESULT_AND_TOTAL",
+  "wynik i kto zdobedzie 1. bramke": "RESULT_AND_FIRST_GOAL",
+  "wynik i liczba bramek - 1. polowa": "HALF_TIME_RESULT_AND_TOTAL",
+  "wynik meczu & oba zespoly strzela": "RESULT_AND_BTTS",
+  "wynik meczu polowa / caly": "HALFTIME_FULLTIME",
+  "wynik/oba zespoly strzela - 1. polowa": "HALF_TIME_RESULT_AND_BTTS",
+  "zawodnik strzeli gola bezposrednio z rzutu wolnego.": "PLAYER_FREE_KICK_GOAL",
+  "zawodnik strzeli gola glowa": "PLAYER_HEADER_GOAL",
+  "zawodnik strzeli gola i zaliczy asyste": "PLAYER_GOAL_AND_ASSIST",
+  "zawodnik wykorzysta rzut karny.": "PENALTY_SCORER",
 };
 
 const BETCLIC_MARKET_PATTERNS: Array<{
@@ -262,6 +274,48 @@ function resolveScoreBothHalvesMarket(
   return null;
 }
 
+function resolveWinAtLeastOneHalfMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^wygra[a-z]+ jedna z polow\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return "HOME_WIN_AT_LEAST_ONE_HALF";
+  if (isAway) return "AWAY_WIN_AT_LEAST_ONE_HALF";
+
+  return null;
+}
+
+function resolveWinBothHalvesMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^wygra[a-z]*\s+obie\s+polow[yi]\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return "HOME_WIN_BOTH_HALVES";
+  if (isAway) return "AWAY_WIN_BOTH_HALVES";
+
+  return null;
+}
+
 interface CornersTeamResult {
   code: NormalizedMarketType;
   teamSide: "HOME" | "AWAY";
@@ -350,6 +404,33 @@ function resolveTeamShotsOnTargetMarket(
 
   // Pattern: "suma celnych strzalow w meczu (opta) - {teamName}"
   const match = normalizedName.match(/^suma celnych strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
+  if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
+
+  return null;
+}
+
+interface TeamShotsResult {
+  teamSide: "HOME" | "AWAY";
+  teamName: string;
+}
+
+function resolveTeamShotsMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamShotsResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  // Pattern: "suma strzalow w meczu (opta) - {teamName}"
+  const match = normalizedName.match(/^suma strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
   if (!match) return null;
 
   const teamPart = match[1].trim();
@@ -453,9 +534,24 @@ function resolveMarketCode(
     return { marketCode: "TEAM_TOTAL_SHOTS_ON_TARGET", matchedBy: "pattern", teamName: teamShotsOnTarget.teamName, teamSide: teamShotsOnTarget.teamSide };
   }
 
+  const teamShots = resolveTeamShotsMarket(normalizedName, ctx);
+  if (teamShots) {
+    return { marketCode: "TEAM_TOTAL_SHOTS", matchedBy: "pattern", teamName: teamShots.teamName, teamSide: teamShots.teamSide };
+  }
+
   const teamOffsides = resolveTeamOffsidesMarket(normalizedName, ctx);
   if (teamOffsides) {
     return { marketCode: teamOffsides.code, matchedBy: "pattern", teamSide: teamOffsides.teamSide };
+  }
+
+  const winAtLeastOneHalf = resolveWinAtLeastOneHalfMarket(normalizedName, ctx);
+  if (winAtLeastOneHalf) {
+    return { marketCode: winAtLeastOneHalf, matchedBy: "pattern" };
+  }
+
+  const winBothHalves = resolveWinBothHalvesMarket(normalizedName, ctx);
+  if (winBothHalves) {
+    return { marketCode: winBothHalves, matchedBy: "pattern" };
   }
 
   for (const entry of BETCLIC_MARKET_PATTERNS) {
@@ -527,6 +623,36 @@ function isTeamInSelection(
   }
 
   return false;
+}
+
+/**
+ * Parses HT/FT selection from Betclic format "Team1 / Team2" or "Remis / Team"
+ * Returns format like "HOME_HOME", "DRAW_AWAY", etc.
+ */
+function parseBetclicHtFtSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  const parts = selectionName.split("/").map((part) => part.trim());
+  if (parts.length !== 2) return null;
+
+  const [htRaw, ftRaw] = parts;
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  function resolveResult(raw: string): "HOME" | "DRAW" | "AWAY" | null {
+    const normalized = normalizeName(raw);
+    if (normalized === "remis" || normalized.includes("remis")) return "DRAW";
+    if (home && isTeamInSelection(normalized, home)) return "HOME";
+    if (away && isTeamInSelection(normalized, away)) return "AWAY";
+    return null;
+  }
+
+  const ht = resolveResult(htRaw);
+  const ft = resolveResult(ftRaw);
+
+  if (!ht || !ft) return null;
+  return `${ht}_${ft}` as NormalizedSelection;
 }
 
 function normalizeBetclicDoubleChance(
@@ -620,6 +746,117 @@ function normalizeBetclicDoubleChanceTotalSelection(
   }
 
   return `${dcType}_${ouDirection}` as NormalizedSelection;
+}
+
+function normalizeResultAndTotalSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalized = normalizeName(selectionName);
+
+  const parts = normalized.split("&");
+  if (parts.length !== 2) {
+    return selectionName as NormalizedSelection;
+  }
+
+  const teamPart = parts[0].trim();
+  const goalsPart = parts[1].trim();
+
+  const isHome = home && isTeamInSelection(teamPart, home);
+  const isAway = away && isTeamInSelection(teamPart, away);
+  const isDraw = teamPart.includes("remis") || teamPart.includes("x");
+
+  const isOver = goalsPart.includes("powyzej") || goalsPart.includes("over");
+  const ouDirection = isOver ? "OVER" : "UNDER";
+
+  if (isHome && !isAway && !isDraw) {
+    return `HOME_${ouDirection}` as NormalizedSelection;
+  }
+  if (isAway && !isHome && !isDraw) {
+    return `AWAY_${ouDirection}` as NormalizedSelection;
+  }
+  if (isDraw) {
+    return `DRAW_${ouDirection}` as NormalizedSelection;
+  }
+
+  return selectionName as NormalizedSelection;
+}
+
+function normalizeResultAndFirstGoalSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalized = normalizeName(selectionName);
+
+  const parts = normalized.split("/");
+  if (parts.length !== 2) {
+    return selectionName as NormalizedSelection;
+  }
+
+  const resultPart = parts[0].trim();
+  const firstGoalPart = parts[1].trim();
+
+  let result: "HOME" | "DRAW" | "AWAY" | null = null;
+  if (home && isTeamInSelection(resultPart, home)) {
+    result = "HOME";
+  } else if (away && isTeamInSelection(resultPart, away)) {
+    result = "AWAY";
+  } else if (resultPart.includes("remis") || resultPart === "x") {
+    result = "DRAW";
+  }
+
+  let firstGoal: "HOME" | "AWAY" | "NONE" | null = null;
+  if (firstGoalPart.includes("brak") || firstGoalPart.includes("zaden") || firstGoalPart.includes("none")) {
+    firstGoal = "NONE";
+  } else if (home && isTeamInSelection(firstGoalPart, home)) {
+    firstGoal = "HOME";
+  } else if (away && isTeamInSelection(firstGoalPart, away)) {
+    firstGoal = "AWAY";
+  }
+
+  if (result && firstGoal) {
+    return `${result}_${firstGoal}` as NormalizedSelection;
+  }
+
+  return selectionName as NormalizedSelection;
+}
+
+function normalizeResultAndBttsSelection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalized = normalizeName(selectionName);
+
+  const parts = normalized.split("/");
+  if (parts.length !== 2) {
+    return selectionName as NormalizedSelection;
+  }
+
+  const resultPart = parts[0].trim();
+  const bttsPart = parts[1].trim();
+
+  let result: "HOME" | "DRAW" | "AWAY" | null = null;
+  if (resultPart.includes("remis") || resultPart === "x") {
+    result = "DRAW";
+  } else if (home && isTeamInSelection(resultPart, home)) {
+    result = "HOME";
+  } else if (away && isTeamInSelection(resultPart, away)) {
+    result = "AWAY";
+  }
+
+  const bttsValue = bttsPart.includes("tak") || bttsPart.includes("yes") ? "YES" : "NO";
+
+  if (result) {
+    return `${result}_${bttsValue}` as NormalizedSelection;
+  }
+
+  return selectionName as NormalizedSelection;
 }
 
 function normalizeNextCornerSelection(
@@ -755,6 +992,33 @@ function normalizeTeamShotsOnTargetSelection(
   const normalizedMarketName = normalizeName(marketName);
 
   const marketMatch = normalizedMarketName.match(/^suma celnych strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
+  if (!marketMatch) return null;
+
+  const teamPart = marketMatch[1].trim();
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  const normalizedSel = normalizeName(selectionName);
+  if (normalizedSel.includes("powyzej")) {
+    return isHome ? "HOME_OVER" : isAway ? "AWAY_OVER" : null;
+  }
+  if (normalizedSel.includes("ponizej")) {
+    return isHome ? "HOME_UNDER" : isAway ? "AWAY_UNDER" : null;
+  }
+
+  return null;
+}
+
+function normalizeTeamShotsSelection(
+  selectionName: string,
+  marketName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalizedMarketName = normalizeName(marketName);
+
+  const marketMatch = normalizedMarketName.match(/^suma strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
   if (!marketMatch) return null;
 
   const teamPart = marketMatch[1].trim();
@@ -979,6 +1243,7 @@ function normalizeSelectionForMarket(
 
   switch (marketCode) {
     case "MATCH_WINNER":
+    case "MATCH_WINNER_REGULAR_TIME":
     case "HALF_TIME_RESULT":
     case "SECOND_HALF_RESULT":
     case "DRAW_NO_BET":
@@ -1020,6 +1285,23 @@ function normalizeSelectionForMarket(
 
     case "DOUBLE_CHANCE_TOTAL": {
       return normalizeBetclicDoubleChanceTotalSelection(trimmed, ctx);
+    }
+
+    case "RESULT_AND_FIRST_GOAL": {
+      return normalizeResultAndFirstGoalSelection(trimmed, ctx);
+    }
+
+    case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS": {
+      return normalizeResultAndBttsSelection(trimmed, ctx);
+    }
+
+    case "RESULT_AND_TOTAL": {
+      return normalizeResultAndTotalSelection(trimmed, ctx);
+    }
+
+    case "HALF_TIME_RESULT_AND_TOTAL": {
+      return normalizeResultAndTotalSelection(trimmed, ctx);
     }
 
     case "HT_OR_FT_RESULT":
@@ -1068,6 +1350,16 @@ function normalizeSelectionForMarket(
       return (shotsSelection ?? trimmed) as NormalizedSelection;
     }
 
+    case "TOTAL_SHOTS":
+      return normalizeOverUnderSelection(trimmed);
+
+    case "TEAM_TOTAL_SHOTS": {
+      const shotsSelection = marketName
+        ? normalizeTeamShotsSelection(trimmed, marketName, ctx)
+        : null;
+      return (shotsSelection ?? trimmed) as NormalizedSelection;
+    }
+
     case "BTTS":
     case "BTTS_PENALTY":
     case "BTTS_HEAD_GOALS":
@@ -1091,6 +1383,10 @@ function normalizeSelectionForMarket(
     case "TEAM_HEADER_GOAL":
     case "HOME_SCORE_BOTH_HALVES":
     case "AWAY_SCORE_BOTH_HALVES":
+    case "HOME_WIN_BOTH_HALVES":
+    case "AWAY_WIN_BOTH_HALVES":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
       return normalizeYesNoSelection(trimmed);
 
     case "TEAMS_TO_SCORE":
@@ -1214,7 +1510,7 @@ function normalizeSelectionForMarket(
 
     case "HALFTIME_FULLTIME":
     case "DOUBLE_RESULT": {
-      const htft = parseHtFtSelection(trimmed);
+      const htft = parseHtFtSelection(trimmed) ?? parseBetclicHtFtSelection(trimmed, ctx);
       return (htft ?? trimmed) as NormalizedSelection;
     }
 
@@ -1226,6 +1522,10 @@ function normalizeSelectionForMarket(
     case "PLAYER_ASSISTS":
     case "PLAYER_SHOTS_ON_TARGET":
     case "PLAYER_PASSES":
+    case "PLAYER_FREE_KICK_GOAL":
+    case "PLAYER_HEADER_GOAL":
+    case "PLAYER_GOAL_AND_ASSIST":
+    case "PENALTY_SCORER":
       return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
 
     case "PLAYER_ASSIST_PAIRS":
@@ -1296,6 +1596,16 @@ function extractParamValue(
     return { parameters };
   }
 
+  if (marketCode === "RESULT_AND_TOTAL") {
+    const parameters = extractMultipleOverUnderLines(selectionNames);
+    return { parameters };
+  }
+
+  if (marketCode === "HALF_TIME_RESULT_AND_TOTAL") {
+    const parameters = extractMultipleOverUnderLines(selectionNames);
+    return { parameters };
+  }
+
   const fromSelections = parseOverUnderLine(selectionNames);
 
   switch (metadata.parameterType) {
@@ -1348,7 +1658,7 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
     }
 
     let { paramValue, parameters } = extractParamValue(marketCode, raw);
-    
+
     if (marketCode === "TEAM_HEADER_GOAL" && teamSide) {
       paramValue = teamSide;
     }

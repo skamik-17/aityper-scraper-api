@@ -92,7 +92,6 @@ export type ParameterType = (typeof ParameterType)[keyof typeof ParameterType];
 export const NormalizedMarketType = {
   // Main markets
   MATCH_WINNER: "MATCH_WINNER",
-  MATCH_WINNER_REGULAR_TIME: "MATCH_WINNER_REGULAR_TIME",
   DOUBLE_CHANCE: "DOUBLE_CHANCE",
   DRAW_NO_BET: "DRAW_NO_BET",
   // Goals markets

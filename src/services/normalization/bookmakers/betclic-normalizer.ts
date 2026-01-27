@@ -30,7 +30,7 @@ const BETCLIC_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {};
 
 const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "wynik meczu": "MATCH_WINNER",
-  "wynik meczu (z wylaczeniem dogrywki)": "MATCH_WINNER_REGULAR_TIME",
+  "wynik meczu (z wylaczeniem dogrywki)": "MATCH_WINNER",
   "podwojna szansa": "DOUBLE_CHANCE",
   "obie druzyny strzela": "BTTS",
   "dokladny wynik": "CORRECT_SCORE",
@@ -1243,7 +1243,6 @@ function normalizeSelectionForMarket(
 
   switch (marketCode) {
     case "MATCH_WINNER":
-    case "MATCH_WINNER_REGULAR_TIME":
     case "HALF_TIME_RESULT":
     case "SECOND_HALF_RESULT":
     case "DRAW_NO_BET":

@@ -48,20 +48,7 @@ const MAIN_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 1,
     descriptionTemplates: { HOME: "Wygrana {homeTeam}", DRAW: "Remis", AWAY: "Wygrana {awayTeam}" },
   },
-  {
-    numericId: 304,
-    code: "MATCH_WINNER_REGULAR_TIME",
-    slug: "match-winner-regular-time",
-    category: MarketCategory.WYNIK_MECZU,
-    labels: { pl: "Wynik meczu (bez dogrywki)", en: "Match Result (Regular Time)" },
-    descriptions: { pl: "Obstawiasz kto wygra mecz w regulaminowym czasie gry (bez dogrywki)", en: "Bet on match result in regular time only (excluding extra time)" },
-    hasParameter: false,
-    selections: ["HOME", "DRAW", "AWAY"],
-    selectionOrder: ["HOME", "DRAW", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
-    displayOrder: 2,
-    descriptionTemplates: { HOME: "Wygrana {homeTeam} (bez dogrywki)", DRAW: "Remis (bez dogrywki)", AWAY: "Wygrana {awayTeam} (bez dogrywki)" },
-  },
+
   {
     numericId: 2,
     code: "DOUBLE_CHANCE",
@@ -326,7 +313,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Gole w obu połowach", NO: "Brak goli w jednej z połów" },
   },
   {
-    numericId: 291,
+    numericId: 416,
     code: "BTTS_PENALTY",
     slug: "btts-penalty",
     category: MarketCategory.GOLE,
@@ -452,7 +439,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} prowadzi w {param}. minucie", DRAW: "Remis w {param}. minucie", AWAY: "{awayTeam} prowadzi w {param}. minucie" },
   },
   {
-    numericId: 267,
+    numericId: 424,
     code: "OWN_GOAL",
     slug: "own-goal",
     category: MarketCategory.GOLE,
@@ -466,7 +453,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Padnie gol samobójczy", NO: "Brak gola samobójczego" },
   },
   {
-    numericId: 268,
+    numericId: 401,
     code: "FREE_KICK_GOAL",
     slug: "free-kick-goal",
     category: MarketCategory.GOLE,
@@ -508,7 +495,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "{awayTeam} strzeli z rzutu wolnego" },
   },
   {
-    numericId: 269,
+    numericId: 402,
     code: "HEADER_GOAL",
     slug: "header-goal",
     category: MarketCategory.GOLE,
@@ -552,7 +539,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "{team} strzeli gola głową", NO: "{team} nie strzeli gola głową" },
   },
   {
-    numericId: 274,
+    numericId: 411,
     code: "PENALTY_GOAL",
     slug: "penalty-goal",
     category: MarketCategory.GOLE,
@@ -571,7 +558,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     },
   },
   {
-    numericId: 283,
+    numericId: 251,
     code: "TEAMS_TO_SCORE",
     slug: "teams-to-score",
     category: MarketCategory.GOLE,
@@ -644,7 +631,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wygra 2. połowę ({param})", DRAW: "Remis w 2. połowie ({param})", AWAY: "{awayTeam} wygra 2. połowę ({param})" },
   },
   {
-    numericId: 115,
+    numericId: 209,
     code: "FIRST_HALF_EUROPEAN_HANDICAP",
     slug: "first-half-european-handicap",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -661,7 +648,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wygra 1. połowę ({param})", DRAW: "Remis w 1. połowie ({param})", AWAY: "{awayTeam} wygra 1. połowę ({param})" },
   },
   {
-    numericId: 281,
+    numericId: 413,
     code: "ASIAN_HANDICAP_3WAY",
     slug: "asian-handicap-3way",
     category: MarketCategory.HANDICAP,
@@ -804,7 +791,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wygra 2. połowę", DRAW: "Remis w 2. połowie", AWAY: "{awayTeam} wygra 2. połowę" },
   },
   {
-    numericId: 238,
+    numericId: 425,
     code: "SECOND_HALF_DOUBLE_CHANCE",
     slug: "second-half-double-chance",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -891,7 +878,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "{awayTeam} strzeli w 2. połowie", NO: "{awayTeam} nie strzeli w 2. połowie" },
   },
   {
-    numericId: 270,
+    numericId: 403,
     code: "HALF_TIME_HEADER_GOAL",
     slug: "half-time-header-goal",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -905,7 +892,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Padnie gol głową w 1. połowie", NO: "Brak gola głową w 1. połowie" },
   },
   {
-    numericId: 271,
+    numericId: 404,
     code: "SECOND_HALF_HEADER_GOAL",
     slug: "second-half-header-goal",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -919,7 +906,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Padnie gol głową w 2. połowie", NO: "Brak gola głową w 2. połowie" },
   },
   {
-    numericId: 273,
+    numericId: 409,
     code: "HALF_TIME_PENALTY_GOAL",
     slug: "half-time-penalty-goal",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -938,7 +925,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     },
   },
   {
-    numericId: 274,
+    numericId: 412,
     code: "SECOND_HALF_PENALTY_GOAL",
     slug: "second-half-penalty-goal",
     category: MarketCategory.PIERWSZA_POLOWA,
@@ -1383,7 +1370,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 71,
   },
   {
-    numericId: 135,
+    numericId: 426,
     code: "PLAYER_TACKLES",
     slug: "player-tackles",
     category: MarketCategory.ZAWODNICY,
@@ -1396,7 +1383,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 72,
   },
   {
-    numericId: 136,
+    numericId: 427,
     code: "PLAYER_INTERCEPTIONS",
     slug: "player-interceptions",
     category: MarketCategory.ZAWODNICY,
@@ -1409,7 +1396,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 73,
   },
   {
-    numericId: 140,
+    numericId: 428,
     code: "PLAYER_FOULS_WON",
     slug: "player-fouls-won",
     category: MarketCategory.ZAWODNICY,
@@ -1422,7 +1409,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 73,
   },
   {
-    numericId: 141,
+    numericId: 429,
     code: "PLAYER_FOULS",
     slug: "player-fouls",
     category: MarketCategory.ZAWODNICY,
@@ -1435,7 +1422,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 74,
   },
   {
-    numericId: 142,
+    numericId: 430,
     code: "PLAYER_SAVES",
     slug: "player-saves",
     category: MarketCategory.ZAWODNICY,
@@ -1476,7 +1463,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { PLAYER_NAME: "{param} strzeli z rzutu wolnego" },
   },
   {
-    numericId: 305,
+    numericId: 420,
     code: "PLAYER_HEADER_GOAL",
     slug: "player-header-goal",
     category: MarketCategory.ZAWODNICY,
@@ -1564,7 +1551,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { PLAYER_TRIO: "{playerTrio} łącznie ponad {param} goli" },
   },
   {
-    numericId: 306,
+    numericId: 422,
     code: "PLAYER_GOAL_AND_ASSIST",
     slug: "player-goal-and-assist",
     category: MarketCategory.ZAWODNICY,
@@ -1648,7 +1635,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wykona pierwszy rzut rożny", NONE: "Brak rzutu rożnego", AWAY: "{awayTeam} wykona pierwszy rzut rożny" },
   },
   {
-    numericId: 272,
+    numericId: 407,
     code: "LAST_CORNER",
     slug: "last-corner",
     category: MarketCategory.STATYSTYKI,
@@ -1662,7 +1649,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wykona ostatni rzut rożny", NONE: "Brak rzutu rożnego", AWAY: "{awayTeam} wykona ostatni rzut rożny" },
   },
   {
-    numericId: 271,
+    numericId: 406,
     code: "HALF_TIME_LAST_CORNER",
     slug: "half-time-last-corner",
     category: MarketCategory.STATYSTYKI,
@@ -1676,7 +1663,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wykona ostatni rzut rożny w 1. połowie", NONE: "Brak rzutu rożnego w 1. połowie", AWAY: "{awayTeam} wykona ostatni rzut rożny w 1. połowie" },
   },
   {
-    numericId: 271,
+    numericId: 406,
     code: "HALF_TIME_LAST_CORNER",
     slug: "half-time-last-corner",
     category: MarketCategory.STATYSTYKI,
@@ -1690,7 +1677,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wykona ostatni rzut rożny w 1. połowie", NONE: "Brak rzutu rożnego w 1. połowie", AWAY: "{awayTeam} wykona ostatni rzut rożny w 1. połowie" },
   },
   {
-    numericId: 270,
+    numericId: 405,
     code: "NEXT_CORNER_1H",
     slug: "next-corner-1h",
     category: MarketCategory.STATYSTYKI,
@@ -1814,6 +1801,19 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 84,
   },
   {
+    numericId: 268,
+    code: "CARDS_EXACT_RANGE",
+    slug: "cards-exact-range",
+    category: MarketCategory.STATYSTYKI,
+    labels: { pl: "Dokładna liczba kartek", en: "Exact Card Count Range" },
+    descriptions: { pl: "W jakim przedziale będzie liczba kartek?", en: "What range will the card count fall in?" },
+    hasParameter: false,
+    selections: ["0-1", "2-3", "4-5", "6-7", "8+", "0-2", "3-4", "5-6", "7+", "9+"],
+    selectionOrder: ["0-1", "2-3", "4-5", "6-7", "8+"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 76,
+  },
+  {
     numericId: 32,
     code: "CARDS_TEAM",
     slug: "cards-team",
@@ -1864,7 +1864,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 79,
   },
   {
-    numericId: 281,
+    numericId: 414,
     code: "FOUL_RACE",
     slug: "fouls-race",
     category: MarketCategory.STATYSTYKI,
@@ -1905,7 +1905,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} - więcej spalonych", DRAW: "Remis w liczbie spalonych", AWAY: "{awayTeam} - więcej spalonych" },
   },
   {
-    numericId: 306,
+    numericId: 423,
     code: "HOME_TEAM_TOTAL_OFFSIDES",
     slug: "home-team-total-offsides",
     category: MarketCategory.STATYSTYKI,
@@ -1939,7 +1939,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { OVER: "{awayTeam} ponad {param} spalonych", UNDER: "{awayTeam} poniżej {param} spalonych" },
   },
   {
-    numericId: 239,
+    numericId: 431,
     code: "HALF_TIME_RED_CARD",
     slug: "half-time-red-card",
     category: MarketCategory.STATYSTYKI,
@@ -1953,7 +1953,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Czerwona kartka w 1. połowie", NO: "Brak czerwonej kartki w 1. połowie" },
   },
   {
-    numericId: 273,
+    numericId: 410,
     code: "RED_CARD",
     slug: "red-card",
     category: MarketCategory.STATYSTYKI,
@@ -1967,7 +1967,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Czerwona kartka w meczu", NO: "Brak czerwonej kartki w meczu" },
   },
   {
-    numericId: 281,
+    numericId: 415,
     code: "RED_CARD_TEAM",
     slug: "red-card-team",
     category: MarketCategory.STATYSTYKI,
@@ -1981,7 +1981,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "{team} otrzyma czerwoną kartkę", NO: "{team} nie otrzyma czerwonej kartki" },
   },
   {
-    numericId: 241,
+    numericId: 432,
     code: "PENALTY_AWARDED",
     slug: "penalty-awarded",
     category: MarketCategory.STATYSTYKI,
@@ -1995,7 +1995,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Rzut karny w meczu", NO: "Brak rzutu karnego w meczu" },
   },
   {
-    numericId: 260,
+    numericId: 433,
     code: "RED_CARD_AND_PENALTY",
     slug: "red-card-and-penalty",
     category: MarketCategory.STATYSTYKI,
@@ -2009,7 +2009,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Czerwona kartka i karny w meczu", NO: "Brak czerwonej kartki i karnego" },
   },
   {
-    numericId: 240,
+    numericId: 434,
     code: "MOST_SHOTS_ON_TARGET",
     slug: "most-shots-on-target",
     category: MarketCategory.STATYSTYKI,
@@ -2023,7 +2023,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} więcej celnych strzałów", DRAW: "Remis w celnych strzałach", AWAY: "{awayTeam} więcej celnych strzałów" },
   },
   {
-    numericId: 272,
+    numericId: 408,
     code: "MOST_SHOTS",
     slug: "most-shots",
     category: MarketCategory.STATYSTYKI,
@@ -2037,7 +2037,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} więcej strzałów", DRAW: "Remis w strzałach", AWAY: "{awayTeam} więcej strzałów" },
   },
   {
-    numericId: 304,
+    numericId: 419,
     code: "TOTAL_SHOTS_ON_TARGET",
     slug: "total-shots-on-target",
     category: MarketCategory.STATYSTYKI,
@@ -2054,7 +2054,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { OVER: "Ponad {param} celnych strzałów", UNDER: "Poniżej {param} celnych strzałów" },
   },
   {
-    numericId: 305,
+    numericId: 421,
     code: "TEAM_TOTAL_SHOTS_ON_TARGET",
     slug: "team-total-shots-on-target",
     category: MarketCategory.STATYSTYKI,
@@ -2309,7 +2309,7 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
 
 const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
   {
-    numericId: 291,
+    numericId: 417,
     code: "BTTS_BOTH_HALVES",
     slug: "btts-both-halves",
     category: MarketCategory.GOLE,

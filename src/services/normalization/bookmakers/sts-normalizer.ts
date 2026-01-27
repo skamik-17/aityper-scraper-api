@@ -58,7 +58,9 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   1051: "PLAYER_GOAL_AND_RESULT",
 
   1851: "PLAYER_SHOTS",
+  1263: "PLAYER_SHOTS",
   1852: "PLAYER_SHOTS_ON_TARGET",
+  1264: "PLAYER_SHOTS_ON_TARGET",
   1853: "PLAYER_PASSES",
   1855: "PLAYER_CARDS",
 
@@ -920,21 +922,41 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
-    if (stsId === 1851) {
-      const suffix = ' - strzały (musi wyjść w "11", z dogrywką)';
-      if (marketName.endsWith(suffix)) {
-        playerName = marketName.replace(suffix, "").trim();
-      } else if (marketName.includes(" - strzały")) {
+    if (stsId === 1851 || stsId === 1263) {
+      const suffixes = [
+        ' - strzały (musi wyjść w "11", z dogrywką)',
+        ' - liczba strzałów (musi wyjść w "11", z dogrywką)',
+      ];
+      for (const suffix of suffixes) {
+        if (marketName.endsWith(suffix)) {
+          playerName = marketName.replace(suffix, "").trim();
+          break;
+        }
+      }
+      if (!playerName && marketName.includes(" - strzały")) {
         playerName = marketName.split(" - strzały")[0].trim();
+      }
+      if (!playerName && marketName.includes(" - liczba strzałów")) {
+        playerName = marketName.split(" - liczba strzałów")[0].trim();
       }
     }
 
-    if (stsId === 1852) {
-      const suffix = ' - celne strzały (musi wyjść w "11", z dogrywką)';
-      if (marketName.endsWith(suffix)) {
-        playerName = marketName.replace(suffix, "").trim();
-      } else if (marketName.includes(" - celne strzały")) {
+    if (stsId === 1852 || stsId === 1264) {
+      const suffixes = [
+        ' - celne strzały (musi wyjść w "11", z dogrywką)',
+        ' - liczba celnych strzałów (musi wyjść w "11", z dogrywką)',
+      ];
+      for (const suffix of suffixes) {
+        if (marketName.endsWith(suffix)) {
+          playerName = marketName.replace(suffix, "").trim();
+          break;
+        }
+      }
+      if (!playerName && marketName.includes(" - celne strzały")) {
         playerName = marketName.split(" - celne strzały")[0].trim();
+      }
+      if (!playerName && marketName.includes(" - liczba celnych strzałów")) {
+        playerName = marketName.split(" - liczba celnych strzałów")[0].trim();
       }
     }
 

@@ -11,13 +11,16 @@ CREATE TYPE view_type AS ENUM (
 );
 
 ALTER TYPE view_type ADD VALUE IF NOT EXISTS 'PLAYER_STAT_LINES';
+ALTER TYPE view_type ADD VALUE IF NOT EXISTS 'PARAMETERIZED_COMBINATION';
+ALTER TYPE view_type ADD VALUE IF NOT EXISTS 'SINGLE_SELECTION';
 
 CREATE TYPE parameter_type AS ENUM (
   'decimal',
   'integer',
   'handicap',
   'score',
-  'player'
+  'player',
+  'team'
 );
 
 CREATE TYPE market_category AS ENUM (

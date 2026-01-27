@@ -301,6 +301,7 @@ INSERT INTO market_types (
   display_order = EXCLUDED.display_order;
 
 INSERT INTO market_types (
+  id,
   code,
   name_pl,
   name_en,
@@ -313,6 +314,7 @@ INSERT INTO market_types (
   selections,
   display_order
 ) VALUES (
+  53,
   'TOTAL_GOALS_ASIAN',
   'Liczba goli (z mozliwym zwrotem)',
   'Total Goals (Asian)',
@@ -823,4 +825,99 @@ ON CONFLICT (id) DO UPDATE SET
   selections = EXCLUDED.selections,
   display_order = EXCLUDED.display_order;
 
-COMMENT ON TABLE market_types IS 'Canonical market definitions with 64 standard types (IDs 1-64) plus OTHER (ID 99) as fallback. Categories: WYNIK_MECZU (1-3), GOLE (4-14, 46-49, 54-56, 63), HANDICAP (15-16), PIERWSZA_POLOWA (17-23, 40-48), DOKLADNY_WYNIK (22), ZAWODNICY (23-28, 50-52, 60-62, 66), STATYSTYKI (29-34, 72-74), KOMBINACJE (35-40, 49, 94-97). Last updated: Migration 007 - Added 12 new STS market types for full coverage (125/125 mapped).';
+UPDATE market_types
+SET selections = ARRAY['HOME_HOME', 'HOME_DRAW', 'HOME_AWAY', 'DRAW_HOME', 'DRAW_DRAW', 'DRAW_AWAY', 'AWAY_HOME', 'AWAY_DRAW', 'AWAY_AWAY']
+WHERE id = 37 AND code = 'HALFTIME_FULLTIME';
+
+UPDATE market_types
+SET selections = ARRAY['TWO_TEAMS', 'ONE_TEAM_HOME', 'ONE_TEAM_AWAY', 'ZERO_TEAMS'],
+    name_pl = 'Ile druzyn strzeli',
+    name_en = 'Teams To Score',
+    description_pl = 'Ile druzyn strzeli gola?',
+    description_en = 'How many teams will score?',
+    display_order = 30
+WHERE id = 251 AND code = 'TEAMS_TO_SCORE';
+
+UPDATE market_types
+SET view_type = 'PARAMETER_SLIDER'
+WHERE code = 'BOTH_HALVES_UNDER_GOALS';
+
+UPDATE market_types
+SET view_type = 'PARAMETER_SLIDER'
+WHERE code = 'BOTH_HALVES_OVER_GOALS';
+
+UPDATE market_types
+SET display_order = 68
+WHERE id = 130 AND code = 'PLAYER_GOALS';
+
+INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
+VALUES
+(294, 'WIN_OR_WIN_BY_2', 'Wygrana lub przewaga 2+ bramek', 'Win or Win by 2+ Goals', 'Wygrana lub przewaga 2+ bramek', 'Win or win by 2+ goals', 'BINARY_BUTTONS', 'WYNIK_MECZU', FALSE, NULL, ARRAY['HOME', 'AWAY'], 22),
+(416, 'BTTS_PENALTY', 'Obie strzela z rzutu karnego', 'Both Teams To Score From Penalty', 'Obie druzyny strzela z rzutu karnego', 'Both teams score from penalty', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 31),
+(417, 'BTTS_BOTH_HALVES', 'BTTS w obu polowach', 'BTTS in Both Halves', 'BTTS w obu polowach', 'BTTS in both halves', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['YES_YES', 'YES_NO', 'NO_YES', 'NO_NO'], 31),
+(292, 'BTTS_HEAD_GOALS', 'Obie strzela gola glowa', 'Both Teams To Score Head Goals', 'Obie druzyny strzela gola glowa', 'Both teams score header goals', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 32),
+(293, 'BTTS_FREE_KICK', 'Obie strzela z rzutu wolnego', 'Both Teams To Score From Free Kick', 'Obie druzyny strzela z rzutu wolnego', 'Both teams score from free kick', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 33),
+(401, 'FREE_KICK_GOAL', 'Gol bezposrednio z rzutu wolnego', 'Direct Free Kick Goal', 'Gol bezposrednio z rzutu wolnego', 'Direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 26),
+(301, 'HOME_TEAM_FREE_KICK_GOAL', 'Gol z rzutu wolnego - gospodarz', 'Home Team Direct Free Kick Goal', 'Gol z rzutu wolnego - gospodarz', 'Home team direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 27),
+(302, 'AWAY_TEAM_FREE_KICK_GOAL', 'Gol z rzutu wolnego - gosc', 'Away Team Direct Free Kick Goal', 'Gol z rzutu wolnego - gosc', 'Away team direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 28),
+(402, 'HEADER_GOAL', 'Gol glowa', 'Header Goal', 'Gol glowa w meczu', 'Header goal in match', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 27),
+(282, 'HEADER_GOAL_BOTH_HALVES', 'Gole glowa w obu polowach', 'Header Goal In Both Halves', 'Gole glowa w obu polowach', 'Header goal in both halves', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 28),
+(303, 'TEAM_HEADER_GOAL', 'Druzyna strzeli gola glowa', 'Team Header Goal', 'Druzyna strzeli gola glowa', 'Team header goal', 'BINARY_BUTTONS', 'GOLE', TRUE, 'team', ARRAY['YES', 'NO'], 29),
+(411, 'PENALTY_GOAL', 'Gol z rzutu karnego', 'Penalty Goal', 'Gol z rzutu karnego', 'Penalty goal', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 29),
+(413, 'ASIAN_HANDICAP_3WAY', 'Handicap azjatycki (3-drog)', 'Asian Handicap (3-Way)', 'Handicap azjatycki z trzema opcjami', 'Asian handicap with three options', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 32),
+-- FIRST_HALF_EUROPEAN_HANDICAP already inserted as id=209 above
+(403, 'HALF_TIME_HEADER_GOAL', 'Gol glowa - 1. polowa', 'Header Goal - 1st Half', 'Gol glowa w pierwszej polowie', 'Header goal in first half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 52),
+(404, 'SECOND_HALF_HEADER_GOAL', 'Gol glowa - 2. polowa', 'Header Goal - 2nd Half', 'Gol glowa w drugiej polowie', 'Header goal in second half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 53),
+(409, 'HALF_TIME_PENALTY_GOAL', 'Gol z rzutu karnego - 1. polowa', 'Penalty Goal - 1st Half', 'Gol z rzutu karnego w pierwszej polowie', 'Penalty goal in first half', 'COMBINATION', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 54),
+(412, 'SECOND_HALF_PENALTY_GOAL', 'Gol z rzutu karnego - 2. polowa', 'Penalty Goal - 2nd Half', 'Gol z rzutu karnego w drugiej polowie', 'Penalty goal in second half', 'COMBINATION', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 55),
+(118, 'CORRECT_SCORE_GROUP', 'Dokladny wynik w grupie', 'Correct Score Groups', 'Dokladny wynik w grupie', 'Correct score groups', 'COMBINATION', 'DOKLADNY_WYNIK', FALSE, NULL, ARRAY['HOME_WIN_GROUP_0', 'HOME_WIN_GROUP_1', 'HOME_WIN_GROUP_2', 'HOME_WIN_GROUP_3', 'DRAW', 'AWAY_WIN_GROUP_1', 'AWAY_WIN_GROUP_2', 'AWAY_WIN_GROUP_3', 'AWAY_WIN_GROUP_4', 'HOME_OTHER', 'AWAY_OTHER'], 52),
+(131, 'PLAYER_ASSIST_PAIRS', 'Asysty par zawodnikow', 'Player Assist Pairs', 'Asysty par zawodnikow', 'Player assist pairs', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['YES'], 66),
+(290, 'PLAYER_ASSIST_TRIPLE', 'Asysty tria zawodnikow', 'Player Assist Trio', 'Asysty tria zawodnikow', 'Player assist trio', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['YES'], 67),
+(146, 'PLAYER_FREE_KICK_GOAL', 'Zawodnik strzeli z rzutu wolnego', 'Player Free Kick Goal', 'Zawodnik strzeli z rzutu wolnego', 'Player free kick goal', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER_NAME'], 77),
+(420, 'PLAYER_HEADER_GOAL', 'Zawodnik strzeli gola glowa', 'Player Header Goal', 'Zawodnik strzeli gola glowa', 'Player header goal', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER_NAME'], 78),
+(147, 'TWO_PLAYERS_ANYTIME', 'Ktorykolwiek z dwoch zawodnikow strzeli gola', 'Either Of Two Players To Score', 'Ktorykolwiek z dwoch zawodnikow strzeli gola', 'Either of two players to score', 'COMBINATION', 'ZAWODNICY', FALSE, 'player', ARRAY['PLAYER_PAIR'], 79),
+(148, 'THREE_PLAYERS_ANYTIME', 'Ktorykolwiek z trzech zawodnikow strzeli gola', 'Any Of Three Players To Score', 'Ktorykolwiek z trzech zawodnikow strzeli gola', 'Any of three players to score', 'COMBINATION', 'ZAWODNICY', FALSE, 'player', ARRAY['PLAYER_TRIO'], 80),
+(144, 'TWO_PLAYERS_COMBINED_GOALS', '2 graczy - laczne gole', 'Two Players Combined Goals', '2 graczy - laczne gole', 'Two players combined goals', 'PARAMETERIZED_COMBINATION', 'ZAWODNICY', TRUE, 'decimal', ARRAY['PLAYER_PAIR'], 77),
+(145, 'THREE_PLAYERS_COMBINED_GOALS', '3 graczy - laczne gole', 'Three Players Combined Goals', '3 graczy - laczne gole', 'Three players combined goals', 'PARAMETERIZED_COMBINATION', 'ZAWODNICY', TRUE, 'decimal', ARRAY['PLAYER_TRIO'], 78),
+(422, 'PLAYER_GOAL_AND_ASSIST', 'Zawodnik strzeli gola i zaliczy asyste', 'Player Goal And Assist', 'Zawodnik strzeli gola i zaliczy asyste', 'Player goal and assist', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER_NAME'], 81),
+(310, 'PENALTY_SCORER', 'Zawodnik wykorzysta rzut karny', 'Penalty Scorer', 'Zawodnik wykorzysta rzut karny', 'Penalty scorer', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER_NAME'], 82),
+(407, 'LAST_CORNER', 'Ostatni rzut rozny', 'Last Corner', 'Ostatni rzut rozny w meczu', 'Last corner in match', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'NONE', 'AWAY'], 74),
+(406, 'HALF_TIME_LAST_CORNER', 'Ostatni rzut rozny 1. polowy', 'Last Corner 1st Half', 'Ostatni rzut rozny w pierwszej polowie', 'Last corner in first half', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'NONE', 'AWAY'], 75),
+(405, 'NEXT_CORNER_1H', 'Nastepny rzut rozny 1. polowa', 'Next Corner 1st Half', 'Nastepny rzut rozny w pierwszej polowie', 'Next corner in first half', 'TRIPLE_BUTTONS', 'STATYSTYKI', TRUE, 'integer', ARRAY['HOME', 'NONE', 'AWAY'], 74),
+(298, 'HALF_TIME_CORNERS_ODD_EVEN', 'Rozne 1. polowy - parzyste/nieparzyste', 'Half Time Corners Odd/Even', 'Parzyste/nieparzyste roznych w 1. polowie', 'Odd/even corners in first half', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['ODD', 'EVEN'], 84),
+(299, 'CORNERS_ODD_EVEN', 'Rzuty rozne - parzyste/nieparzyste', 'Corners Odd/Even', 'Parzyste/nieparzyste rzutow roznych', 'Odd/even corners', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['ODD', 'EVEN'], 85),
+(414, 'FOUL_RACE', 'Wiecej fauli', 'Fouls Race', 'Ktora druzyna popelni wiecej fauli', 'Which team commits more fouls', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 80),
+(300, 'OFFSIDES_1X2', 'Spalone 1X2', 'Offsides 1X2', 'Spalone 1X2', 'Offsides 1X2', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 82),
+(423, 'HOME_TEAM_TOTAL_OFFSIDES', 'Spalone gospodarzy', 'Home Team Total Offsides', 'Spalone gospodarzy', 'Home team total offsides', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 83),
+(307, 'AWAY_TEAM_TOTAL_OFFSIDES', 'Spalone gosci', 'Away Team Total Offsides', 'Spalone gosci', 'Away team total offsides', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 84),
+(410, 'RED_CARD', 'Czerwona kartka', 'Red Card', 'Czerwona kartka w meczu', 'Red card in match', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['YES', 'NO'], 82),
+(415, 'RED_CARD_TEAM', 'Czerwona kartka druzyny', 'Team Red Card', 'Czerwona kartka druzyny', 'Team red card', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['YES', 'NO'], 83),
+(408, 'MOST_SHOTS', 'Wiecej strzalow', 'Most Shots', 'Ktora druzyna odda wiecej strzalow', 'Which team takes more shots', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 86),
+(419, 'TOTAL_SHOTS_ON_TARGET', 'Suma celnych strzalow', 'Total Shots on Target', 'Suma celnych strzalow', 'Total shots on target', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 87),
+(421, 'TEAM_TOTAL_SHOTS_ON_TARGET', 'Celne strzaly druzyny', 'Team Shots on Target', 'Celne strzaly druzyny', 'Team shots on target', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 88),
+(308, 'TOTAL_SHOTS', 'Suma strzalow', 'Total Shots', 'Suma strzalow w meczu', 'Total shots in match', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 89),
+(309, 'TEAM_TOTAL_SHOTS', 'Strzaly druzyny', 'Team Total Shots', 'Strzaly druzyny', 'Team total shots', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 90),
+(112, 'RESULT_AND_FIRST_GOAL', 'Wynik i kto zdobedzie 1. bramke', 'Result & First Goal', 'Wynik i kto zdobedzie pierwsza bramke', 'Result and first goal scorer team', 'COMBINATION', 'KOMBINACJE', FALSE, NULL, ARRAY['HOME_HOME', 'HOME_AWAY', 'DRAW_HOME', 'DRAW_AWAY', 'DRAW_NONE', 'AWAY_HOME', 'AWAY_AWAY'], 93),
+(424, 'OWN_GOAL', 'Gol samobojczy', 'Own Goal', 'Czy w meczu padnie gol samobojczy?', 'Will there be an own goal in the match?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 25),
+(425, 'SECOND_HALF_DOUBLE_CHANCE', 'Podwojna szansa 2. polowy', 'Second Half Double Chance', 'Podwojna szansa w drugiej polowie', 'Double chance in second half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'DRAW_OR_AWAY', 'HOME_OR_AWAY'], 43),
+(426, 'PLAYER_TACKLES', 'Odbiory zawodnika', 'Player Tackles', 'Liczba udanych odbiorow zawodnika', 'Player tackles count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 72),
+(427, 'PLAYER_INTERCEPTIONS', 'Przechwyty zawodnika', 'Player Interceptions', 'Liczba przechwytow zawodnika', 'Player interceptions count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
+(428, 'PLAYER_FOULS_WON', 'Faule wywalczone', 'Player Fouls Won', 'Liczba fauli wywalczonych przez zawodnika', 'Fouls suffered by player', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
+(429, 'PLAYER_FOULS', 'Faule zawodnika', 'Player Fouls', 'Liczba fauli popelnionych przez zawodnika', 'Fouls committed by player', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 74),
+(430, 'PLAYER_SAVES', 'Obronione strzaly bramkarza', 'Goalkeeper Saves', 'Liczba obronionych strzalow przez bramkarza', 'Number of saves by goalkeeper', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['2+', '3+', '4+', '5+', '6+', '7+'], 75),
+(431, 'HALF_TIME_RED_CARD', 'Czerwona kartka 1. polowa', '1st Half Red Card', 'Czy w pierwszej polowie bedzie czerwona kartka?', 'Will there be a red card in first half?', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['YES', 'NO'], 81),
+(432, 'PENALTY_AWARDED', 'Rzut karny', 'Penalty Awarded', 'Czy zostanie podyktowany rzut karny?', 'Will a penalty be awarded?', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['YES', 'NO'], 86),
+(433, 'RED_CARD_AND_PENALTY', 'Czerwona kartka i rzut karny', 'Red Card and Penalty', 'Czerwona kartka i rzut karny w meczu', 'Red card and penalty in match', 'BINARY_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['YES', 'NO'], 87),
+(434, 'MOST_SHOTS_ON_TARGET', 'Wiecej celnych strzalow', 'Most Shots on Target', 'Ktora druzyna bedzie miala wiecej celnych strzalow?', 'Which team will have more shots on target?', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 85)
+ON CONFLICT (id) DO UPDATE SET
+  code = EXCLUDED.code,
+  name_pl = EXCLUDED.name_pl,
+  name_en = EXCLUDED.name_en,
+  description_pl = EXCLUDED.description_pl,
+  description_en = EXCLUDED.description_en,
+  view_type = EXCLUDED.view_type,
+  category = EXCLUDED.category,
+  has_parameter = EXCLUDED.has_parameter,
+  param_type = EXCLUDED.param_type,
+  selections = EXCLUDED.selections,
+  display_order = EXCLUDED.display_order;

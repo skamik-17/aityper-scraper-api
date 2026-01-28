@@ -170,6 +170,9 @@ export interface MarketParameterBookmaker {
   /** Display name */
   bookmakerName: string;
 
+  /** Raw market name from bookmaker (e.g., "Wynik meczu" for STS, "Wynik spotkania" for Betclic) */
+  rawMarketName?: string;
+
   /** Selections (HOME/AWAY, OVER/UNDER, YES/NO, etc.) */
   selections: Array<{
     /** Selection type */

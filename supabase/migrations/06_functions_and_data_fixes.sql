@@ -134,36 +134,57 @@ BEGIN
     JOIN market_types mt ON o.market_type_id = mt.id
     WHERE o.league_slug = p_league_slug
     ORDER BY o.match_id, o.bookmaker, o.market_key, o.scraped_at DESC
+  ),
+  -- Pre-aggregate bookmaker odds per market to avoid O(n²) correlated subquery
+  bookmaker_agg AS (
+    SELECT 
+      l.match_id,
+      l.market_key,
+      jsonb_object_agg(
+        l.bookmaker,
+        jsonb_build_object(
+          'selections', l.selections,
+          'eventUrl', l.event_url,
+          'scrapedAt', l.scraped_at
+        )
+      ) AS bookmaker_odds
+    FROM latest l
+    GROUP BY l.match_id, l.market_key
+  ),
+  -- Get distinct market metadata (one row per match+market)
+  market_meta AS (
+    SELECT DISTINCT ON (l.match_id, l.market_key)
+      l.match_id,
+      l.home_team,
+      l.away_team,
+      l.market_key,
+      l.market_code,
+      l.market_name_pl,
+      l.view_type,
+      l.category,
+      l.param_value,
+      l.scraped_at
+    FROM latest l
   )
   SELECT 
-    l.match_id,
-    l.home_team,
-    l.away_team,
+    m.match_id,
+    m.home_team,
+    m.away_team,
     jsonb_object_agg(
-      l.market_key,
+      m.market_key,
       jsonb_build_object(
-        'code', l.market_code,
-        'namePl', l.market_name_pl,
-        'viewType', l.view_type,
-        'category', l.category,
-        'paramValue', l.param_value,
-        'bookmakerOdds', (
-          SELECT jsonb_object_agg(
-            sub.bookmaker,
-            jsonb_build_object(
-              'selections', sub.selections,
-              'eventUrl', sub.event_url,
-              'scrapedAt', sub.scraped_at
-            )
-          )
-          FROM latest sub
-          WHERE sub.match_id = l.match_id AND sub.market_key = l.market_key
-        )
+        'code', m.market_code,
+        'namePl', m.market_name_pl,
+        'viewType', m.view_type,
+        'category', m.category,
+        'paramValue', m.param_value,
+        'bookmakerOdds', ba.bookmaker_odds
       )
     ) AS markets,
-    MAX(l.scraped_at) AS last_updated
-  FROM latest l
-  GROUP BY l.match_id, l.home_team, l.away_team;
+    MAX(m.scraped_at) AS last_updated
+  FROM market_meta m
+  JOIN bookmaker_agg ba ON ba.match_id = m.match_id AND ba.market_key = m.market_key
+  GROUP BY m.match_id, m.home_team, m.away_team;
 END;
 $$ LANGUAGE plpgsql STABLE;
 

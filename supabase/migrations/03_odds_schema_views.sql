@@ -10,6 +10,7 @@ CREATE TABLE odds (
   market_key TEXT NOT NULL,
   param_value TEXT,
   custom_name TEXT,
+  raw_market_name TEXT,
   selections JSONB NOT NULL,
   scraped_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CONSTRAINT odds_unique_entry UNIQUE (match_id, bookmaker, market_key, scraped_at)
@@ -37,6 +38,7 @@ SELECT
   o.market_key,
   o.param_value,
   o.custom_name,
+  o.raw_market_name,
   o.selections,
   o.scraped_at,
   mt.code AS market_code,
@@ -71,6 +73,7 @@ SELECT
   lo.view_type,
   lo.category,
   lo.param_value,
+  lo.raw_market_name,
   lo.bookmaker,
   lo.selections,
   lo.event_url,

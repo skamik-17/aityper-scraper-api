@@ -149,7 +149,8 @@ export function groupMarketsByTypeWithParameters(
       if (!bmEntry) {
         bmEntry = {
           bookmaker,
-          bookmakerName: bookmaker, // TODO: Use proper bookmaker name mapping
+          bookmakerName: bookmaker,
+          rawMarketName: market.name,
           selections: [],
         };
         paramEntry.bookmakers.push(bmEntry);
@@ -205,19 +206,19 @@ export function groupMarketsByTypeWithParameters(
         marketDef?.viewType === "COMBINATION";
 
       if (needsParametersStructure) {
-        const bookmakersMap = new Map<string, { type: string; odds: number }[]>();
+        const bookmakersMap = new Map<string, { rawMarketName?: string; selections: { type: string; odds: number }[] }>();
 
         for (const [_, paramEntry] of paramGroups.entries()) {
           for (const bmEntry of paramEntry.bookmakers) {
             if (!bookmakersMap.has(bmEntry.bookmaker)) {
-              bookmakersMap.set(bmEntry.bookmaker, []);
+              bookmakersMap.set(bmEntry.bookmaker, { rawMarketName: bmEntry.rawMarketName, selections: [] });
             }
 
-            // For BINARY_BUTTONS, TRIPLE_BUTTONS, PARAMETER_SLIDER, and COMBINATION, use all selections
-            // For SINGLE_SELECTION, only use YES
+            const bmData = bookmakersMap.get(bmEntry.bookmaker)!;
+
             if (marketDef?.viewType === "BINARY_BUTTONS" || marketDef?.viewType === "TRIPLE_BUTTONS" || marketDef?.viewType === "PARAMETER_SLIDER" || marketDef?.viewType === "COMBINATION") {
               for (const selection of bmEntry.selections) {
-                bookmakersMap.get(bmEntry.bookmaker)!.push({
+                bmData.selections.push({
                   type: selection.type,
                   odds: selection.odds,
                 });
@@ -225,7 +226,7 @@ export function groupMarketsByTypeWithParameters(
             } else {
               const yesSelection = bmEntry.selections.find((s) => s.type === "YES");
               if (yesSelection) {
-                bookmakersMap.get(bmEntry.bookmaker)!.push({
+                bmData.selections.push({
                   type: "YES",
                   odds: yesSelection.odds,
                 });
@@ -234,10 +235,11 @@ export function groupMarketsByTypeWithParameters(
           }
         }
 
-        const parameterBookmakers: MarketParameterBookmaker[] = Array.from(bookmakersMap.entries()).map(([bookmaker, selections]) => ({
+        const parameterBookmakers: MarketParameterBookmaker[] = Array.from(bookmakersMap.entries()).map(([bookmaker, data]) => ({
           bookmaker,
           bookmakerName: bookmaker,
-          selections,
+          rawMarketName: data.rawMarketName,
+          selections: data.selections,
         }));
 
         if (parameters.length === 0) {

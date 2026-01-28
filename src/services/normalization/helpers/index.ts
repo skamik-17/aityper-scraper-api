@@ -132,8 +132,14 @@ export function normalize1x2Selection(
   if (/^gospodarz/i.test(lower)) return "HOME";
   if (/^go[śs]ci/i.test(lower)) return "AWAY";
   
-  if (homeTeam && lower.includes(homeTeam.toLowerCase())) return "HOME";
-  if (awayTeam && lower.includes(awayTeam.toLowerCase())) return "AWAY";
+  if (homeTeam) {
+    const homeLower = homeTeam.toLowerCase();
+    if (lower.includes(homeLower) || (lower.length >= 3 && homeLower.includes(lower))) return "HOME";
+  }
+  if (awayTeam) {
+    const awayLower = awayTeam.toLowerCase();
+    if (lower.includes(awayLower) || (lower.length >= 3 && awayLower.includes(lower))) return "AWAY";
+  }
   
   return "UNKNOWN";
 }

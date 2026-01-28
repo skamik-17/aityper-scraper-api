@@ -921,3 +921,21 @@ ON CONFLICT (id) DO UPDATE SET
   param_type = EXCLUDED.param_type,
   selections = EXCLUDED.selections,
   display_order = EXCLUDED.display_order;
+
+-- First Half Cards markets (added 2026-01-28)
+INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
+VALUES
+(435, 'FIRST_HALF_CARDS_1X2', 'Kartki 1X2 - 1. połowa', 'Cards 1X2 - 1st Half', 'Która drużyna otrzyma więcej kartek w pierwszej połowie?', 'Which team will receive more cards in the first half?', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 82),
+(436, 'FIRST_HALF_FIRST_CARD', 'Pierwsza kartka - 1. połowa', 'First Card - 1st Half', 'Która drużyna otrzyma pierwszą kartkę w pierwszej połowie?', 'Which team will receive the first card in the first half?', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'NONE', 'AWAY'], 83)
+ON CONFLICT (id) DO UPDATE SET
+  code = EXCLUDED.code,
+  name_pl = EXCLUDED.name_pl,
+  name_en = EXCLUDED.name_en,
+  description_pl = EXCLUDED.description_pl,
+  description_en = EXCLUDED.description_en,
+  view_type = EXCLUDED.view_type,
+  category = EXCLUDED.category,
+  has_parameter = EXCLUDED.has_parameter,
+  param_type = EXCLUDED.param_type,
+  selections = EXCLUDED.selections,
+  display_order = EXCLUDED.display_order;

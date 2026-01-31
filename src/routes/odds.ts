@@ -174,6 +174,73 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
 }));
 
 /**
+ * POST /api/odds/batch
+ * Get odds for multiple leagues in a single request
+ */
+router.post("/batch", asyncHandler(async (req, res) => {
+  const { leagues } = req.body as { leagues?: string[] };
+
+  if (!leagues || !Array.isArray(leagues) || leagues.length === 0) {
+    throw new ApiError(
+      400,
+      ERROR_CODES.INVALID_PARAMS,
+      "Missing or empty 'leagues' array in request body"
+    );
+  }
+
+  // Fetch all leagues in parallel
+  const results = await Promise.all(
+    leagues.map(async (league) => {
+      try {
+        return { league, ...(await getAllLatestOdds(league)) };
+      } catch (error) {
+        return { league, matches: [], lastUpdated: null, bookmakerStatus: {}, error: true };
+      }
+    })
+  );
+
+  // Merge matches
+  const allMatches = results.flatMap(r => r.matches);
+
+  // Merge bookmaker status (worst status wins)
+  const mergedBookmakerStatus: Record<string, { status: string; lastScrape: string | null; error?: string }> = {};
+  for (const result of results) {
+    for (const [bookmaker, status] of Object.entries(result.bookmakerStatus || {})) {
+      const statusObj = status as { status: string; lastScrape: string | null; error?: string };
+      const existing = mergedBookmakerStatus[bookmaker];
+      if (!existing || getStatusPriority(statusObj.status) > getStatusPriority(existing.status)) {
+        mergedBookmakerStatus[bookmaker] = statusObj;
+      }
+    }
+  }
+
+  // Find most recent lastUpdated
+  const lastUpdated = results
+    .map(r => r.lastUpdated)
+    .filter(Boolean)
+    .sort()
+    .pop() || null;
+
+  const data: OddsResponseData = { matches: allMatches };
+  const meta = {
+    leagues,
+    totalMatches: allMatches.length,
+    lastUpdated,
+    nextUpdate: getNextUpdateTime(),
+    scrapeIntervalMinutes: CONFIG.SCRAPE_INTERVAL_MINUTES,
+    bookmakerStatus: mergedBookmakerStatus,
+  };
+
+  const response: ApiSuccessResponse<OddsResponseData, typeof meta> = {
+    success: true,
+    data,
+    meta,
+  };
+
+  res.json(response);
+}));
+
+/**
  * GET /api/odds/market-types
  * Get all canonical market type definitions with metadata for frontend
  * Returns: marketTypes, selectionLabels, categories
@@ -261,5 +328,14 @@ router.get("/market-types", asyncHandler(async (_req, res) => {
 
   res.json(response);
 }));
+
+function getStatusPriority(status: string): number {
+  switch (status) {
+    case 'error': return 3;
+    case 'stale': return 2;
+    case 'available': return 1;
+    default: return 0;
+  }
+}
 
 export default router;

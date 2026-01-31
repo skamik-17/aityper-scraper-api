@@ -416,8 +416,8 @@ function inferMarketType(name: string): string {
   if (lower.includes("podwójna szansa") || lower.includes("podwojna szansa")) return MARKET_TYPES.DOUBLE_CHANCE;
   if (lower.includes("remis nie obowiązuje") || lower.includes("remis zwrot")) return MARKET_TYPES.DRAW_NO_BET;
 
-  // Goals
   if (lower.includes("obie drużyny") || lower.includes("obie druzyny") || lower.includes("btts")) return MARKET_TYPES.BTTS;
+  if (lower === "liczba goli" || /^liczba goli\b/i.test(lower)) return MARKET_TYPES.TOTAL_GOALS;
   if ((lower.includes("gol") || lower.includes("bramk")) && (lower.includes("powyżej") || lower.includes("poniżej"))) return MARKET_TYPES.OVER_UNDER;
   if (lower.includes("dokładny wynik") || lower.includes("dokladny wynik") || lower.includes("correct score")) return MARKET_TYPES.CORRECT_SCORE;
 

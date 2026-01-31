@@ -183,6 +183,27 @@ function resolveHalfTeamGoalsMarket(
   return null;
 }
 
+function resolveTeamTotalGoalsMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^liczba goli\s+-\s+(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return "HOME_TEAM_TOTAL_GOALS";
+  if (isAway) return "AWAY_TEAM_TOTAL_GOALS";
+
+  return "TEAM_TOTAL_GOALS";
+}
+
 function resolveCardsTeamMarket(
   normalizedName: string,
   ctx: NormalizationContext
@@ -552,6 +573,11 @@ function resolveMarketCode(
   const winBothHalves = resolveWinBothHalvesMarket(normalizedName, ctx);
   if (winBothHalves) {
     return { marketCode: winBothHalves, matchedBy: "pattern" };
+  }
+
+  const teamTotalGoals = resolveTeamTotalGoalsMarket(normalizedName, ctx);
+  if (teamTotalGoals) {
+    return { marketCode: teamTotalGoals, matchedBy: "pattern" };
   }
 
   for (const entry of BETCLIC_MARKET_PATTERNS) {
@@ -1311,6 +1337,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
     case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
     case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":

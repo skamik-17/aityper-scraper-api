@@ -44,6 +44,14 @@ router.get(
     const awayTeam = req.params.awayTeam as string;
     const league = (req.query.league as string) || "ekstraklasa";
 
+    // Parse category query param (can be string or array)
+    const categoryParam = req.query.category;
+    const requestedCategories: string[] | null = categoryParam
+      ? Array.isArray(categoryParam)
+        ? (categoryParam as string[])
+        : [categoryParam as string]
+      : null;
+
     if (!homeTeam || !awayTeam) {
       throw new ApiError(
         400,
@@ -96,7 +104,20 @@ router.get(
     }
 
     const categories = buildCategoriesWithMarketTypes(marketsWithBookmakers);
-    const stats = calculateStatsWithBookmaker(marketsWithBookmakers);
+
+    // Filter categories if requested
+    const filteredCategories = requestedCategories
+      ? categories.filter(cat => requestedCategories.includes(cat.name))
+      : categories;
+
+    // Recalculate stats based on filtered categories
+    const filteredMarketsWithBookmakers = requestedCategories
+      ? marketsWithBookmakers.filter(({ market }) =>
+          requestedCategories.includes(market.category as string)
+        )
+      : marketsWithBookmakers;
+
+    const stats = calculateStatsWithBookmaker(filteredMarketsWithBookmakers);
 
     const response: NormalizedMarketsResponse = {
       match: {
@@ -104,7 +125,7 @@ router.get(
         awayTeam: fullOfferComparison.awayTeam,
         league,
       },
-      categories: categories.map((cat) => ({
+      categories: filteredCategories.map((cat) => ({
         name: cat.name,
         label: cat.label,
         order: cat.order,

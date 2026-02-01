@@ -166,7 +166,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   103: "SECOND_HALF_FIRST_GOAL",
   104: "SECOND_HALF_DOUBLE_CHANCE",
-  105: "DRAW_NO_BET",
+  105: "SECOND_HALF_DRAW_NO_BET",
 
   115: "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
   118: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
@@ -378,6 +378,7 @@ function normalizeSelectionForMarket(
     case "TIME_PERIOD_RESULT":
     case "DRAW_NO_BET":
     case "HALF_TIME_DRAW_NO_BET":
+    case "SECOND_HALF_DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
     case "MOST_SHOTS_ON_TARGET":

@@ -5,6 +5,7 @@
  * Usage:
  *   npx tsx scripts/sts-market-discovery.ts                    # Scan all leagues, find best fixture
  *   npx tsx scripts/sts-market-discovery.ts laliga             # Scan specific league
+ *   npx tsx scripts/sts-market-discovery.ts --url "https://www.sts.pl/kursy/real-madryt-rayo-vallecano/f1285727"  # Direct match URL
  *   npx tsx scripts/sts-market-discovery.ts --market 121       # Focus on specific market ID (full output, no truncation)
  *   npx tsx scripts/sts-market-discovery.ts --market 116 --try-times 10  # Try up to 10 fixtures to find market
  *   npx tsx scripts/sts-market-discovery.ts --all              # Show full details for ALL markets
@@ -160,9 +161,11 @@ const TRY_TIMES_ARG = args.find((_, i) => args[i - 1] === "--try-times" || args[
 const TRY_TIMES = TRY_TIMES_ARG ? parseInt(TRY_TIMES_ARG, 10) : 1;
 const SINGLE_LEAGUE = args.find(arg =>
   !arg.startsWith("-") &&
-  !["--market", "-m", "--verbose", "-v", "--issues", "-i", "--raw", "-r", "--dir"].includes(args[args.indexOf(arg) - 1] || "") &&
+  !["--market", "-m", "--verbose", "-v", "--issues", "-i", "--raw", "-r", "--dir", "--url", "-u"].includes(args[args.indexOf(arg) - 1] || "") &&
   ALL_LEAGUES.includes(arg)
 );
+const DIRECT_URL_ARG = args.find((_, i) => args[i - 1] === "--url" || args[i - 1] === "-u");
+const DIRECT_URL = DIRECT_URL_ARG ? DIRECT_URL_ARG.split("?")[0] : null;
 
 function countMarketsInWsData(wsData: STSWebSocketData): number {
   const marketIds = new Set<number>();
@@ -796,11 +799,44 @@ function printSummary(markets: Map<number, MarketAnalysis>): void {
   }
 }
 
+function parseMatchUrlInfo(url: string): { id: string; home: string; away: string } {
+  const match = url.match(/\/kursy\/([^/]+)\/(f\d+)/);
+  if (!match) {
+    return { id: "unknown", home: "Unknown", away: "Unknown" };
+  }
+  const [, slug, fixtureId] = match;
+  const parts = slug.split("-");
+  const vsIndex = parts.findIndex((p, i) => 
+    parts[i - 1] && parts[i + 1] && 
+    (parts.slice(0, i).join("-").length > 2 || i > 1)
+  );
+  
+  if (vsIndex > 0 && vsIndex < parts.length - 1) {
+    const home = parts.slice(0, vsIndex).join(" ");
+    const away = parts.slice(vsIndex).join(" ");
+    return { 
+      id: fixtureId, 
+      home: home.charAt(0).toUpperCase() + home.slice(1),
+      away: away.charAt(0).toUpperCase() + away.slice(1)
+    };
+  }
+  
+  const midpoint = Math.floor(parts.length / 2);
+  return {
+    id: fixtureId,
+    home: parts.slice(0, midpoint).join(" "),
+    away: parts.slice(midpoint).join(" ")
+  };
+}
+
 async function main() {
   console.log(`\n${"=".repeat(100)}`);
   console.log(`🔍 STS Market Discovery - Enhanced Analysis`);
   console.log(`${"=".repeat(100)}`);
 
+  if (DIRECT_URL) {
+    console.log(`\n🔗 Direct URL: ${DIRECT_URL}`);
+  }
   if (FOCUS_MARKET_ID) {
     console.log(`\n🎯 Focusing on Market ID: ${FOCUS_MARKET_ID}`);
     if (TRY_TIMES > 1) {
@@ -819,10 +855,46 @@ async function main() {
   const page = await context.newPage();
 
   try {
-    const bestFixture = await findBestFixture(page);
+    let bestFixture: FixtureCandidate | null = null;
+
+    if (DIRECT_URL) {
+      const urlInfo = parseMatchUrlInfo(DIRECT_URL);
+      console.log(`\n📍 Navigating directly to match...`);
+      
+      const matchCapture = await navigateAndCaptureMatchData(page, DIRECT_URL);
+      if (!matchCapture) {
+        console.log("❌ Failed to capture match data from URL");
+        return;
+      }
+
+      let wsData: STSWebSocketData | null = null;
+      if (matchCapture.fixtureData.size > 0) {
+        wsData = matchCapture.fixtureData.get(urlInfo.id) || matchCapture.fixtureData.values().next().value || null;
+      }
+      if (!wsData && matchCapture.initialData) {
+        wsData = parseWebSocketJson(matchCapture.initialData);
+      }
+
+      if (wsData) {
+        const marketCount = countMarketsInWsData(wsData);
+        bestFixture = {
+          league: "direct",
+          fixture: {
+            id: urlInfo.id,
+            home: urlInfo.home,
+            away: urlInfo.away,
+            eventUrl: DIRECT_URL,
+          },
+          marketCount,
+          wsData,
+        };
+      }
+    } else {
+      bestFixture = await findBestFixture(page);
+    }
 
     if (!bestFixture) {
-      console.log("\n❌ No fixtures found in any league");
+      console.log("\n❌ No fixtures found");
       return;
     }
 

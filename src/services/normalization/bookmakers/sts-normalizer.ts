@@ -288,6 +288,52 @@ function extractStsMarketId(marketName: string): number | null {
   return match ? Number(match[1]) : null;
 }
 
+function normalizeName(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/ł/g, "l")
+    .replace(/Ł/g, "L")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function isTeamInSelection(normalizedSelection: string, normalizedTeamName: string): boolean {
+  if (normalizedSelection.includes(normalizedTeamName)) return true;
+  
+  const teamParts = normalizedTeamName.split(" ");
+  const selectionParts = normalizedSelection.split(" ");
+
+  if (teamParts.length >= 2) {
+    const matchingParts = teamParts.filter(part =>
+      selectionParts.some(selPart => selPart.includes(part) || part.includes(selPart))
+    );
+    if (matchingParts.length >= 1) return true;
+  }
+
+  return false;
+}
+
+function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationContext): NormalizedSelection {
+  const normalizedSelection = normalizeName(selectionName);
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  if (normalizedSelection === "remis" || normalizedSelection.includes("remis")) {
+    return "DRAW";
+  }
+
+  if (home && isTeamInSelection(normalizedSelection, home)) {
+    return "HOME";
+  }
+  if (away && isTeamInSelection(normalizedSelection, away)) {
+    return "AWAY";
+  }
+
+  return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam);
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -335,17 +381,17 @@ function normalizeSelectionForMarket(
     case "CORNERS_RACE":
     case "CARDS_RACE":
     case "MOST_SHOTS_ON_TARGET":
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
 
     case "FIRST_CARD":
       if (lower === "bez gola" || lower === "brak" || lower === "żaden" || lower === "bez kartek") return "NONE" as NormalizedSelection;
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
 
     case "HALF_TIME_CORNERS_RACE":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
       }
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
 
     case "FIRST_TEAM_TO_SCORE":
     case "LAST_TEAM_TO_SCORE":
@@ -353,7 +399,7 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_FIRST_GOAL":
     case "FIRST_CORNER":
       if (lower === "bez gola" || lower === "brak gola" || lower === "żaden" || lower === "brak" || lower === "remis") return "NONE" as NormalizedSelection;
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
 
     case "DOUBLE_CHANCE":
     case "HALF_TIME_DOUBLE_CHANCE":
@@ -535,7 +581,7 @@ function normalizeSelectionForMarket(
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
 
     case "CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
@@ -744,7 +790,7 @@ function normalizeSelectionForMarket(
     }
 
     default:
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeSts1x2Selection(trimmed, ctx);
   }
 }
 

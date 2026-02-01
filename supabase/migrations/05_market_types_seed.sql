@@ -939,3 +939,21 @@ ON CONFLICT (id) DO UPDATE SET
   param_type = EXCLUDED.param_type,
   selections = EXCLUDED.selections,
   display_order = EXCLUDED.display_order;
+
+-- Possession markets (added 2026-02-01)
+INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
+VALUES
+(296, 'HOME_POSSESSION', 'Posiadanie piłki gospodarzy', 'Home Team Possession', 'Posiadanie piłki drużyny gospodarzy powyżej/poniżej linii', 'Home team ball possession over/under line', 'PARAMETER_SLIDER', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 93),
+(297, 'AWAY_POSSESSION', 'Posiadanie piłki gości', 'Away Team Possession', 'Posiadanie piłki drużyny gości powyżej/poniżej linii', 'Away team ball possession over/under line', 'PARAMETER_SLIDER', 'STATYSTYKI', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 94)
+ON CONFLICT (id) DO UPDATE SET
+  code = EXCLUDED.code,
+  name_pl = EXCLUDED.name_pl,
+  name_en = EXCLUDED.name_en,
+  description_pl = EXCLUDED.description_pl,
+  description_en = EXCLUDED.description_en,
+  view_type = EXCLUDED.view_type,
+  category = EXCLUDED.category,
+  has_parameter = EXCLUDED.has_parameter,
+  param_type = EXCLUDED.param_type,
+  selections = EXCLUDED.selections,
+  display_order = EXCLUDED.display_order;

@@ -681,6 +681,36 @@ function parseBetclicHtFtSelection(
   return `${ht}_${ft}` as NormalizedSelection;
 }
 
+/**
+ * Normalizes 1X2 selections for Betclic markets using proper team name matching.
+ * Handles Polish team names and abbreviations (e.g., "R. Madryt" for "Real Madrid").
+ * Falls back to normalize1x2Selection() for generic 1/X/2 patterns.
+ */
+function normalizeBetclic1x2Selection(
+  selectionName: string,
+  ctx: NormalizationContext
+): NormalizedSelection {
+  const normalizedSelection = normalizeName(selectionName);
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  // Check for draw first (Polish: "remis")
+  if (normalizedSelection === "remis" || normalizedSelection.includes("remis")) {
+    return "DRAW";
+  }
+
+  // Use isTeamInSelection for proper team name matching with abbreviations
+  if (home && isTeamInSelection(normalizedSelection, home)) {
+    return "HOME";
+  }
+  if (away && isTeamInSelection(normalizedSelection, away)) {
+    return "AWAY";
+  }
+
+  // Fallback to generic patterns (1, X, 2, Home, Away, etc.)
+  return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam);
+}
+
 function normalizeBetclicDoubleChance(
   selectionName: string,
   ctx: NormalizationContext
@@ -1284,7 +1314,7 @@ function normalizeSelectionForMarket(
     case "MOST_SHOTS":
     case "MOST_SHOTS_ON_TARGET":
     case "WIN_OR_WIN_BY_2":
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalizeBetclic1x2Selection(trimmed, ctx);
 
     case "FIRST_CARD":
     case "FIRST_HALF_FIRST_CARD":

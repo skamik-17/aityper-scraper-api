@@ -585,7 +585,12 @@ function normalizeSelectionForMarket(
       return normalizeSts1x2Selection(trimmed, ctx);
 
     case "CORRECT_SCORE":
+    case "HALF_TIME_CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
+      // Handle "Inne" (STS) → "OTHER" for correct score markets
+      if (lower === "inne" || lower === "inny" || lower === "other") {
+        return "OTHER" as NormalizedSelection;
+      }
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
     }

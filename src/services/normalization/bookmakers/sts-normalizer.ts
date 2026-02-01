@@ -762,7 +762,10 @@ function normalizeSelectionForMarket(
     }
 
     case "DOUBLE_CHANCE_TOTAL":
+      return trimmed as NormalizedSelection;
+
     case "FIRST_GOAL_TIME":
+      if (lower === "bez gola" || lower === "brak gola") return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
     case "FIRST_GOAL_AND_RESULT": {

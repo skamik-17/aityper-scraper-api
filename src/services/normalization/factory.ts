@@ -84,7 +84,7 @@ export interface NormalizerFacade {
    * Normalize a single market
    */
   normalize(
-    market: { name: string; type?: string; selections: Array<{ name: string; odds: number }> },
+    market: { name: string; type?: string; bookmakerMarketId?: string; selections: Array<{ name: string; odds: number }> },
     bookmaker: string,
     homeTeam?: string,
     awayTeam?: string
@@ -94,7 +94,7 @@ export interface NormalizerFacade {
    * Normalize multiple markets at once
    */
   normalizeBatch(
-    markets: Array<{ name: string; type?: string; selections: Array<{ name: string; odds: number }> }>,
+    markets: Array<{ name: string; type?: string; bookmakerMarketId?: string; selections: Array<{ name: string; odds: number }> }>,
     bookmaker: string,
     homeTeam?: string,
     awayTeam?: string
@@ -241,9 +241,12 @@ export function createNormalizer(): NormalizerFacade {
         selections: market.selections,
       };
 
-      // If market has a type from scraper, include it as bookmakerMarketId for pattern matching
-      // Market.type can be a number (ID) or string (normalized type name)
-      if (market.type) {
+      // Use bookmakerMarketId if available (actual ID from scraper)
+      // Fall back to market.type for backwards compatibility
+      if (market.bookmakerMarketId) {
+        const numericId = parseInt(market.bookmakerMarketId, 10);
+        rawMarket.bookmakerMarketId = Number.isFinite(numericId) ? numericId : market.bookmakerMarketId;
+      } else if (market.type) {
         const numericId = typeof market.type === "string" 
           ? parseInt(market.type, 10) 
           : Number(market.type);

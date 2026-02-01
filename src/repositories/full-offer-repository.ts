@@ -52,6 +52,7 @@ export interface FullOfferComparison {
       selections: MarketSelection[];
       eventUrl?: string;
       scrapedAt: string;
+      rawMarketName?: string;
     }>;
     bestOdds: Record<string, { bookmaker: PolishBookmaker; odds: number }>;
   }>;
@@ -189,6 +190,7 @@ export async function getFullOfferByMatch(
       selections: MarketSelection[];
       eventUrl?: string;
       scrapedAt: string;
+      rawMarketName?: string;
     }>;
   }>();
 
@@ -206,6 +208,7 @@ export async function getFullOfferByMatch(
           selections: MarketSelection[];
           eventUrl?: string;
           scrapedAt: string;
+          rawMarketName?: string;
         }>,
       });
     }
@@ -215,6 +218,7 @@ export async function getFullOfferByMatch(
       selections: row.selections as MarketSelection[],
       eventUrl: row.event_url ?? undefined,
       scrapedAt: row.scraped_at,
+      rawMarketName: row.raw_market_name ?? undefined,
     };
   }
 

@@ -60,6 +60,7 @@ interface Match {
 
 interface MarketAnalysis {
   name: string;
+  bookmakerMarketId: string;
   groupId: string;
   groupName: string;
   tabName: string;
@@ -388,6 +389,7 @@ function analyzeMarket(
   
   return {
     name: market.name,
+    bookmakerMarketId: market.id,
     groupId,
     groupName,
     tabName,
@@ -445,6 +447,7 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
       if (hasOver && hasUnder) {
         const scrapedMarket: ScrapedMarket = {
           name: analysis.name,
+          bookmakerMarketId: analysis.bookmakerMarketId,
           groupName: analysis.groupName,
           type: "betclic",
           selections: selections.map(s => ({
@@ -509,6 +512,7 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
     for (const [param, selections] of paramGroups.entries()) {
       const scrapedMarket: ScrapedMarket = {
         name: analysis.name,
+        bookmakerMarketId: analysis.bookmakerMarketId,
         groupName: analysis.groupName,
         type: "betclic",
         selections: selections.map(s => ({
@@ -526,6 +530,7 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
     // Single line or no O/U pattern - use original market
     const scrapedMarket: ScrapedMarket = {
       name: analysis.name,
+      bookmakerMarketId: analysis.bookmakerMarketId,
       groupName: analysis.groupName,
       type: "betclic",
       selections: analysis.rawSelections.map(s => ({

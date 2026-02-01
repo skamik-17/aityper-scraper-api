@@ -32,6 +32,8 @@ export interface MarketSelection {
 export interface ScrapedMarket {
   /** Market name: "Match Winner", "Total Goals 2.5", "Both Teams To Score" */
   name: string;
+  /** Raw bookmaker market identifier (e.g., "1" for STS 1X2, protobuf field 1 for Betclic) */
+  bookmakerMarketId?: string;
   /** Group name for UI organization: "Main", "Goals", "1st Half", "Corners" */
   groupName?: string;
   /** Optional normalized type for filtering: "1X2", "OVER_UNDER", "BTTS", "DOUBLE_CHANCE" */

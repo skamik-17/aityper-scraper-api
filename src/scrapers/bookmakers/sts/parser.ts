@@ -275,7 +275,7 @@ export function parseAllMarkets(
     // Process each market
     for (const [marketIdStr, market] of Object.entries(marketData) as [string, STSMarket][]) {
       const marketId = parseInt(marketIdStr, 10);
-      const marketName = getMarketName(marketId, market);
+      const marketName = getRawMarketName(marketId, market);
       const groupName = MARKET_GROUPS[marketId] || "Inne";
       const marketType = MARKET_TYPES[marketId] ?? marketId; // Use ID as fallback for unmapped markets
 
@@ -307,6 +307,7 @@ export function parseAllMarkets(
 
           markets.push({
             name: finalName,
+            bookmakerMarketId: marketIdStr,
             groupName,
             type: marketType,
             selections,
@@ -332,37 +333,15 @@ export function parseAllMarkets(
   return Array.from(uniqueMarkets.values());
 }
 
-/**
- * Get human-readable market name based on market ID
- */
-function getMarketName(marketId: number, market: STSMarket): string {
-  // Use the market's own name if available and meaningful
-  if (market.n && market.n.length > 2) {
+function getRawMarketName(marketId: number, market: STSMarket): string {
+  if (market.n && market.n.trim().length > 0) {
     return market.n;
   }
-
-  switch (marketId) {
-    case MARKET_IDS.MATCH_RESULT_1X2:
-      return "Wynik meczu";
-    case MARKET_IDS.DOUBLE_CHANCE:
-      return "Podwojna szansa";
-    case MARKET_IDS.BTTS:
-      return "Obie druzyny strzelą";
-    case MARKET_IDS.TOTAL_GOALS:
-      return "Liczba goli";
-    case MARKET_IDS.TOTAL_GOALS_ASIAN:
-      return "Liczba goli (zwrot)";
-    case MARKET_IDS.HALF_TIME_RESULT:
-      return "Wynik 1. polowy";
-    case MARKET_IDS.HALF_TIME_TOTAL:
-      return "Liczba goli 1. polowa";
-    case MARKET_IDS.CORRECT_SCORE:
-      return "Dokladny wynik";
-    case MARKET_IDS.DRAW_NO_BET:
-      return "Remis = zwrot";
-    default:
-      return `Rynek ${marketId}`;
+  const firstLine = Object.values(market.l || {})[0];
+  if (firstLine?.n && firstLine.n.trim().length > 0) {
+    return firstLine.n;
   }
+  return `[STS ID: ${marketId}]`;
 }
 
 /**

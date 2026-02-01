@@ -81,7 +81,7 @@ router.get(
         const category = getCategoryForMarket(marketData.type);
 
         const mergedMarket: ScrapedMarket = {
-          name: marketData.name,
+          name: bookmakerData.rawMarketName || marketData.name,
           groupName: marketData.category,
           type: marketData.type,
           normalizedType: marketData.type,

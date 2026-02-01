@@ -561,6 +561,7 @@ export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
     for (const market of group.markets) {
       markets.push({
         name: market.name,
+        bookmakerMarketId: market.id,
         groupName: group.name,
         type: inferMarketType(market.name),
         selections: market.selections.map((sel) => ({

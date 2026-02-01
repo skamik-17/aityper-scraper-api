@@ -521,8 +521,8 @@ function normalizeSelectionForMarket(
       return normalizeYesNoSelection(trimmed);
 
     case "TEAMS_TO_SCORE":
-      if (lower.includes("tylko 1.") || lower.includes("tylko gosp") || lower.includes("only home")) return "ONE_TEAM" as NormalizedSelection;
-      if (lower.includes("tylko 2.") || lower.includes("tylko goś") || lower.includes("only away")) return "ONE_TEAM" as NormalizedSelection;
+      if (lower.includes("tylko 1.") || lower.includes("tylko gosp") || lower.includes("only home")) return "ONE_TEAM_HOME" as NormalizedSelection;
+      if (lower.includes("tylko 2.") || lower.includes("tylko goś") || lower.includes("only away")) return "ONE_TEAM_AWAY" as NormalizedSelection;
       if (lower.includes("obie") || lower.includes("both")) return "TWO_TEAMS" as NormalizedSelection;
       if (lower.includes("brak") || lower.includes("bez") || lower.includes("no goal")) return "ZERO_TEAMS" as NormalizedSelection;
       return trimmed as NormalizedSelection;

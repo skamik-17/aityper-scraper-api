@@ -46,8 +46,8 @@ export const CONFIG = {
   // Supported leagues
   ENABLED_LEAGUES: [
     // "ekstraklasa",
-    "premier-league",
-    "laliga"
+    "premier-league"
+    // "laliga"
     // "serie-a",
     // "ligue-1",
   ] as const,
@@ -56,7 +56,7 @@ export const CONFIG = {
   BOOKMAKERS: [
     "sts",
     // "fortuna",
-    "betclic"
+    // "betclic"
     // "superbet",
     // "lvbet",
     // "fuksiarz",

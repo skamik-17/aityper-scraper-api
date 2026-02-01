@@ -249,6 +249,8 @@ export function groupMarketsByTypeWithParameters(
             bookmakers: parameterBookmakers,
           });
         } else {
+          parameters[0].value = "";
+          parameters[0].label = "";
           parameters[0].bookmakers = parameterBookmakers;
         }
 
@@ -258,8 +260,9 @@ export function groupMarketsByTypeWithParameters(
     }
 
     // Get default parameter
+    const isNonParameterized = !marketHasParameters(marketType);
     const defaultParam = DEFAULT_PARAMETERS[marketType];
-    const useDefault = defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0];
+    const useDefault = isNonParameterized ? "" : (defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0]);
 
     // Get description, displayOrder, and viewType from market registry
     const marketDef = getMarketByCode(marketType);

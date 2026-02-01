@@ -3279,6 +3279,8 @@ export const SELECTION_LABELS: Record<string, string> = {
   HOME_HOME: "1/1", HOME_DRAW: "1/X", HOME_AWAY: "1/2",
   DRAW_HOME: "X/1", DRAW_DRAW: "X/X", DRAW_AWAY: "X/2",
   AWAY_HOME: "2/1", AWAY_DRAW: "2/X", AWAY_AWAY: "2/2",
+  // TEAMS_TO_SCORE selections
+  ZERO_TEAMS: "Brak goli", ONE_TEAM_HOME: "Tylko 1", ONE_TEAM_AWAY: "Tylko 2", TWO_TEAMS: "Obie",
 };
 
 // ============================================================================

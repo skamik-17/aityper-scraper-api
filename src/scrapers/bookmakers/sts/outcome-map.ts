@@ -137,13 +137,14 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   956: "7+",
   1008: "0",
 
-  1009: "3+",
+  1009: "0", // "brak gola" - no goals scored
 
   // HOME_GOAL_RANGE / AWAY_GOAL_RANGE (Market 814, 815)
-  957: "2-3",
-  958: "0-1",
-  959: "4-5",
-  960: "6+",
+  // Corrected based on STS live page (matched by odds values)
+  957: "1-2",
+  958: "1-3",
+  959: "2-3",
+  960: "4+",
 
   961: "1 o 1 gol",
   962: "2 o 1 gol",
@@ -191,7 +192,8 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   195: "81-90",
   196: "Bez gola",
 
-  // Half with more goals (Market 63-66) - 241-244
+  // Half with more goals (Market 63-65 ONLY, NOT market 66)
+  // Market 66 (BTTS_BY_HALF) has specific case in parser.ts
   241: "1. połowa",
   242: "2. połowa",
   243: "Równo",
@@ -277,4 +279,18 @@ export function getSelectionNameByOutcomeId(outcomeId: number): string | null {
   return STS_OUTCOME_ID_TO_SELECTION[outcomeId] 
     || STS_CORRECT_SCORE_OUTCOMES[outcomeId] 
     || null;
+}
+
+const BTTS_BY_HALF_OUTCOMES: Record<number, string> = {
+  241: "nie / nie",
+  242: "tak / nie",
+  243: "tak / tak",
+  244: "nie / tak",
+};
+
+export function getSelectionNameByMarketAndOutcomeId(marketId: number, outcomeId: number): string | null {
+  if (marketId === 66) {
+    return BTTS_BY_HALF_OUTCOMES[outcomeId] || null;
+  }
+  return getSelectionNameByOutcomeId(outcomeId);
 }

@@ -285,7 +285,8 @@ export function parseAllMarkets(
         if (selections.length > 0) {
           let finalName = marketName;
           
-          if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN) {
+          if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN ||
+              marketId === MARKET_IDS.HOME_TEAM_TOTAL_GOALS || marketId === MARKET_IDS.AWAY_TEAM_TOTAL_GOALS) {
             const lineValue = extractLineFromSelections(line, marketId);
             if (lineValue) {
               finalName = `${marketName} ${lineValue}`;
@@ -400,6 +401,13 @@ function getSelectionName(
     case MARKET_IDS.BTTS:
       if (outcomeId === OUTCOME_BTTS.YES) return "Tak";
       if (outcomeId === OUTCOME_BTTS.NO) return "Nie";
+      break;
+
+    case MARKET_IDS.BTTS_BY_HALF:
+      if (outcomeId === 241) return "nie / nie";
+      if (outcomeId === 242) return "tak / nie";
+      if (outcomeId === 243) return "tak / tak";
+      if (outcomeId === 244) return "nie / tak";
       break;
 
     case MARKET_IDS.TOTAL_GOALS:

@@ -546,6 +546,10 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     
     case "BTTS_BY_HALF":
+      if (lower === "tak / nie" || lower === "tak/nie") return "1st" as NormalizedSelection;
+      if (lower === "nie / tak" || lower === "nie/tak") return "2nd" as NormalizedSelection;
+      if (lower === "tak / tak" || lower === "tak/tak") return "Both" as NormalizedSelection;
+      if (lower === "nie / nie" || lower === "nie/nie") return "None" as NormalizedSelection;
       if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1st" as NormalizedSelection;
       if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "2nd" as NormalizedSelection;
       if (lower.includes("obie") || lower.includes("both") || lower === "równo") return "Both" as NormalizedSelection;

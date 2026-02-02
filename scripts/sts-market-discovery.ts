@@ -33,7 +33,7 @@ import {
 } from "../src/scrapers/bookmakers/sts/parser.js";
 import { stsNormalizer, STS_MARKET_ID_TO_CODE } from "../src/services/normalization/bookmakers/sts-normalizer.js";
 import type { STSWebSocketData } from "../src/scrapers/bookmakers/sts/types.js";
-import { getSelectionNameByOutcomeId } from "../src/scrapers/bookmakers/sts/outcome-map.js";
+import { getSelectionNameByOutcomeId, getSelectionNameByMarketAndOutcomeId } from "../src/scrapers/bookmakers/sts/outcome-map.js";
 import {
   getMarketByCode,
   type MarketCatalogEntry,
@@ -327,7 +327,7 @@ function analyzeMarkets(
         const rawOutcomes: RawOutcomeInfo[] = Object.entries(outcomes).map(([outcomeIdStr, o]) => {
           const outcomeId = parseInt(outcomeIdStr, 10);
           const rawName = o.n || "";
-          const mappedName = getSelectionNameByOutcomeId(outcomeId) || rawName || String(outcomeId);
+          const mappedName = getSelectionNameByMarketAndOutcomeId(marketId, outcomeId) || rawName || String(outcomeId);
           const odds = o.v ?? o.O ?? 0;
           return { outcomeId, rawName, mappedName, odds };
         });

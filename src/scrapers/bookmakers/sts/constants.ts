@@ -80,6 +80,8 @@ export const MARKET_IDS = {
   BTTS: 43, // "Obie drużyny - strzelą gola" - Both Teams To Score (tak/nie)
   TOTAL_GOALS: 25, // "Liczba goli" - Over/Under Total Goals (decimal lines: 0.5, 1.5, 2.5...)
   TOTAL_GOALS_ASIAN: 23, // "Liczba goli (z możliwym zwrotem)" - Asian Total Goals (integer lines: 1, 2, 3...)
+  HOME_TEAM_TOTAL_GOALS: 28, // "1. drużyna - liczba goli" - Home Team Total Goals (decimal lines: 0.5, 1.5, 2.5...)
+  AWAY_TEAM_TOTAL_GOALS: 31, // "2. drużyna - liczba goli" - Away Team Total Goals (decimal lines: 0.5, 1.5, 2.5...)
   FIRST_GOAL: 8, // "1. gol" - First Goal (which team scores first)
   LAST_GOAL: 9, // "Ostatni gol" - Last Goal (which team scores last)
   WIN_TO_NIL_HOME: 47, // "1. drużyna - wygra do zera"
@@ -93,6 +95,7 @@ export const MARKET_IDS = {
   HALF_TIME_TOTAL: 82, // "1. połowa - liczba goli" - 1st Half Total Goals
   HALF_TIME_BTTS: 95, // "1. połowa - obie drużyny - strzelą gola"
   HALF_TIME_DOUBLE_CHANCE: 74, // "1. połowa - podwójna szansa"
+  BTTS_BY_HALF: 66, // "1. połowa / 2. połowa - obie drużyny - strzelą gola" - BTTS by half (1st, 2nd, Both, None)
   HALF_TIME_DRAW_NO_BET: 75, // "1. połowa - zakład bez remisu"
 
   // ==========================================================================

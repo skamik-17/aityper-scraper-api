@@ -10,7 +10,7 @@ import type { ApiSuccessResponse } from "../types/api.js";
 import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { getFullOfferByMatch } from "../repositories/full-offer-repository.js";
-import { getCategoryForMarket, getMarketByCode } from "../data/market-catalog.js";
+import { getCategoryForMarket } from "../data/market-catalog.js";
 import { MarketCategory, type MarketWithParams } from "../types/normalized-markets.js";
 import type { ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
@@ -80,14 +80,12 @@ router.get(
       for (const [bookmaker, bookmakerData] of Object.entries(marketData.bookmakerOdds)) {
         const category = getCategoryForMarket(marketData.type);
 
-        const marketDef = getMarketByCode(marketData.type);
-        const catalogLabel = marketDef?.labels?.pl;
         const rawName = bookmakerData.rawMarketName || marketData.name;
         const baseRawName = rawName?.replace(/\s+\d+\.5$/, "");
-        const finalName = catalogLabel || baseRawName || rawName || marketData.type;
+        const displayName = baseRawName || rawName || marketData.type;
 
         const mergedMarket: ScrapedMarket = {
-          name: finalName,
+          name: displayName,
           groupName: marketData.category,
           type: marketData.type,
           normalizedType: marketData.type,

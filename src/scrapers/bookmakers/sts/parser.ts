@@ -275,26 +275,26 @@ export function parseAllMarkets(
     // Process each market
     for (const [marketIdStr, market] of Object.entries(marketData) as [string, STSMarket][]) {
       const marketId = parseInt(marketIdStr, 10);
-      const marketName = getRawMarketName(marketId, market);
       const groupName = MARKET_GROUPS[marketId] || "Inne";
       const marketType = MARKET_TYPES[marketId] ?? marketId; // Use ID as fallback for unmapped markets
 
       for (const [, line] of Object.entries(market.l || {}) as [string, STSMarketLine][]) {
+        const rawName = line.n && line.n.trim().length > 0 ? line.n : `[STS ID: ${marketId}]`;
         const selections = parseLineSelections(marketId, line, fixture);
 
         if (selections.length > 0) {
-          let finalName = marketName;
+          let finalName = rawName;
           
           if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN ||
               marketId === MARKET_IDS.HOME_TEAM_TOTAL_GOALS || marketId === MARKET_IDS.AWAY_TEAM_TOTAL_GOALS) {
             const lineValue = extractLineFromSelections(line, marketId);
             if (lineValue) {
-              finalName = `${marketName} ${lineValue}`;
+              finalName = `${rawName} ${lineValue}`;
             }
           } else if (marketId === MARKET_IDS.EUROPEAN_HANDICAP || marketId === MARKET_IDS.ASIAN_HANDICAP) {
             const handicapValue = extractHandicapFromSelections(line);
             if (handicapValue) {
-              finalName = `${marketName} ${handicapValue}`;
+              finalName = `${rawName} ${handicapValue}`;
             }
           } else if (PLAYER_STAT_MARKET_IDS.has(marketId)) {
             let playerName = extractPlayerNameFromLineName(line.n || "");
@@ -302,7 +302,7 @@ export function parseAllMarkets(
               playerName = extractPlayerNameFromOutcome(selections[0]?.name || "");
             }
             if (playerName) {
-              finalName = `${marketName}|${playerName}`;
+              finalName = `${rawName}|${playerName}`;
             }
           }
 
@@ -334,16 +334,6 @@ export function parseAllMarkets(
   return Array.from(uniqueMarkets.values());
 }
 
-function getRawMarketName(marketId: number, market: STSMarket): string {
-  if (market.n && market.n.trim().length > 0) {
-    return market.n;
-  }
-  const firstLine = Object.values(market.l || {})[0];
-  if (firstLine?.n && firstLine.n.trim().length > 0) {
-    return firstLine.n;
-  }
-  return `[STS ID: ${marketId}]`;
-}
 
 /**
  * Parse selections from a market line

@@ -115,7 +115,7 @@ export function groupMarketsByTypeWithParameters(
       typeGroups.set(marketType, {
         marketType,
         category: getCategoryForCode(marketType),
-        label: market.name || marketType,
+        label: getMarketByCode(marketType)?.labels?.pl || market.name || marketType,
         markets: [],
       });
     }

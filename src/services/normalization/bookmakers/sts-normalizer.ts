@@ -832,10 +832,22 @@ function extractParamValue(
     "PLAYER_GOAL_AND_RESULT",
     "EACH_TEAM_TOTAL_CORNERS_OVER",
     "EACH_TEAM_TOTAL_CARDS_OVER",
+    "FIRST_GOAL_TIME",
   ];
 
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
+
+  // Extract interval type from raw market name (e.g., "1. gol - przedziały 15-minutowe" → "15min")
+  if (marketCode === "FIRST_GOAL_TIME") {
+    const intervalMatch = raw.name.match(/(\d+)-minutow/i);
+    if (intervalMatch) return `${intervalMatch[1]}min`;
+    // Fallback: infer from first selection
+    const firstName = raw.selections[0]?.name;
+    if (firstName?.match(/^\d+-15$/)) return "15min";
+    if (firstName?.match(/^\d+-10$/)) return "10min";
+    return "15min";
+  }
 
   if (marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") {
     for (const sel of raw.selections) {

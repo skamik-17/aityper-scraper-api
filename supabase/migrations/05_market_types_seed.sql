@@ -74,7 +74,7 @@ UPDATE market_types SET display_order = 90 WHERE code = 'DOUBLE_CHANCE_TOTAL';
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
 (46, 'FIRST_TEAM_TO_SCORE', 'Ktora druzyna strzeli gola', 'First Team To Score', 'Ktora druzyna strzeli pierwszego/ostatniego gola?', 'Which team will score first/last?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE', 'BOTH'], 21),
-(47, 'FIRST_GOAL_TIME', 'Czas pierwszego gola', 'First Goal Time', 'W ktorym przedziale czasowym padnie pierwszy gol?', 'In which time period will the first goal be scored?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['0-15', '16-30', '31-45', '46-60', '61-75', '76-90', 'NONE'], 22),
+(47, 'FIRST_GOAL_TIME', 'Czas pierwszego gola', 'First Goal Time', 'W ktorym przedziale czasowym padnie pierwszy gol?', 'In which time period will the first goal be scored?', 'COMBINATION', 'GOLE', TRUE, 'integer', ARRAY['1-15', '16-30', '31-45', '46-60', '61-75', '76-90', '1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', 'NONE'], 22),
 (48, 'TIME_PERIOD_RESULT', 'Wynik w przedziale czasowym', 'Time Period Result', 'Jaki bedzie wynik w okreslonym przedziale czasowym?', 'What will be the result in a specific time period?', 'TRIPLE_BUTTONS', 'GOLE', TRUE, 'integer', ARRAY['HOME', 'DRAW', 'AWAY'], 23)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
@@ -149,7 +149,9 @@ SET selections = ARRAY['HOME', 'AWAY', 'NONE', 'BOTH']
 WHERE code = 'FIRST_TEAM_TO_SCORE';
 
 UPDATE market_types
-SET selections = ARRAY['0-15', '16-30', '31-45', '46-60', '61-75', '76-90', 'NONE']
+SET selections = ARRAY['1-15', '16-30', '31-45', '46-60', '61-75', '76-90', '1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', 'NONE'],
+    has_parameter = TRUE,
+    param_type = 'integer'
 WHERE code = 'FIRST_GOAL_TIME';
 
 UPDATE market_types
@@ -172,7 +174,7 @@ ON CONFLICT (id) DO UPDATE SET
   display_order = EXCLUDED.display_order;
 
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, category, selections, view_type, has_parameter, param_type, display_order)
-VALUES (47, 'FIRST_GOAL_TIME', 'Czas pierwszego gola', 'First Goal Time', 'W ktorym przedziale czasowym padnie pierwszy gol?', 'In which time period will the first goal be scored?', 'GOLE', ARRAY['0-15', '16-30', '31-45', '46-60', '61-75', '76-90', 'NONE'], 'TRIPLE_BUTTONS', false, null, 22)
+VALUES (47, 'FIRST_GOAL_TIME', 'Czas pierwszego gola', 'First Goal Time', 'W ktorym przedziale czasowym padnie pierwszy gol?', 'In which time period will the first goal be scored?', 'GOLE', ARRAY['1-15', '16-30', '31-45', '46-60', '61-75', '76-90', '1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', 'NONE'], 'COMBINATION', true, 'integer', 22)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -601,7 +603,10 @@ SET
 WHERE code = 'AWAY_EXACT_GOALS';
 
 UPDATE market_types
-SET view_type = 'COMBINATION'
+SET view_type = 'COMBINATION',
+    has_parameter = TRUE,
+    param_type = 'integer',
+    selections = ARRAY['1-15', '16-30', '31-45', '46-60', '61-75', '76-90', '1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', 'NONE']
 WHERE code = 'FIRST_GOAL_TIME';
 
 INSERT INTO market_types (

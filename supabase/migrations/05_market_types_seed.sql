@@ -781,7 +781,8 @@ INSERT INTO market_types (id, code, name_pl, name_en, description_pl, descriptio
 VALUES
 (253, 'BOTH_HALVES_OVER_GOALS', 'Obie polowy powyzej X goli', 'Both Halves Over X Goals', 'Czy obie polowy beda mialy powyzej X goli?', 'Will both halves have over X goals?', 'BINARY_BUTTONS', 'GOLE', TRUE, 'decimal', ARRAY['YES', 'NO'], 253),
 (130, 'PLAYER_GOALS', 'Gole zawodnika', 'Player Goals', 'Liczba goli zawodnika', 'Player goal count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 66),
-(120, 'SECOND_HALF_ODD_EVEN_GOALS', '2. polowa - parzyste/nieparzyste', '2nd Half Odd/Even Goals', 'Czy liczba goli w 2. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in second half be odd or even?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 46)
+(120, 'SECOND_HALF_ODD_EVEN_GOALS', '2. polowa - parzyste/nieparzyste', '2nd Half Odd/Even Goals', 'Czy liczba goli w 2. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in second half be odd or even?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 46),
+(121, 'HALF_TIME_ODD_EVEN_GOALS', '1. polowa - parzyste/nieparzyste', '1st Half Odd/Even Goals', 'Czy liczba goli w 1. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in first half be odd or even?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 47)
 
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,

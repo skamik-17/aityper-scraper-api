@@ -149,7 +149,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   60: "AWAY_WIN_BOTH_HALVES",
   61: "HOME_WIN_AT_LEAST_ONE_HALF",
   62: "AWAY_WIN_AT_LEAST_ONE_HALF",
-  63: "HOME_HALF_WITH_MOST_GOALS",
+  63: "HALF_WITH_MORE_GOALS",
   64: "HOME_HALF_WITH_MOST_GOALS",
   65: "AWAY_HALF_WITH_MOST_GOALS",
   66: "BTTS_BY_HALF",
@@ -161,7 +161,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   73: "HALF_TIME_FIRST_GOAL",
 
   90: "HALF_TIME_EXACT_GOALS",
-  94: "ODD_EVEN_GOALS",
+  94: "HALF_TIME_ODD_EVEN_GOALS",
   98: "HALF_TIME_RESULT_AND_BTTS",
 
   103: "SECOND_HALF_FIRST_GOAL",
@@ -571,6 +571,7 @@ function normalizeSelectionForMarket(
 
     case "ODD_EVEN_GOALS":
     case "SECOND_HALF_ODD_EVEN_GOALS":
+    case "HALF_TIME_ODD_EVEN_GOALS":
     case "HOME_TEAM_ODD_EVEN_GOALS":
     case "AWAY_TEAM_ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);

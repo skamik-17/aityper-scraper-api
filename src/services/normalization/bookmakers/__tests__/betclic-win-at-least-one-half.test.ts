@@ -57,6 +57,24 @@ describe("Betclic Win At Least One Half Normalization", () => {
       expect(result?.selections[1].code).toBe("NO");
     });
 
+    it("should handle canonical away team names that include AFC prefix", () => {
+      const result = betclicNormalizer.normalizeMarket({
+        name: "Wygrają jedną z połów- Bournemouth",
+        bookmakerMarketId: undefined,
+        selections: [
+          { name: "Tak", odds: 3.2 },
+          { name: "Nie", odds: 1.3 }
+        ]
+      }, {
+        homeTeam: "Arsenal",
+        awayTeam: "AFC Bournemouth"
+      });
+
+      expect(result?.marketCode).toBe("AWAY_WIN_AT_LEAST_ONE_HALF");
+      expect(result?.selections[0].code).toBe("YES");
+      expect(result?.selections[1].code).toBe("NO");
+    });
+
     it("should handle Polish team names with diacritics", () => {
       const result = betclicNormalizer.normalizeMarket({
         name: "Wygraną jedną z połów- Lech Poznań",

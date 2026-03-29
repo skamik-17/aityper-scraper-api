@@ -307,8 +307,8 @@ function resolveWinAtLeastOneHalfMarket(
 
   const teamPart = match[1].trim();
 
-  const isHome = home && teamPart.includes(home);
-  const isAway = away && teamPart.includes(away);
+  const isHome = home && isTeamInSelection(teamPart, home);
+  const isAway = away && isTeamInSelection(teamPart, away);
 
   if (isHome) return "HOME_WIN_AT_LEAST_ONE_HALF";
   if (isAway) return "AWAY_WIN_AT_LEAST_ONE_HALF";
@@ -328,8 +328,8 @@ function resolveWinBothHalvesMarket(
 
   const teamPart = match[1].trim();
 
-  const isHome = home && teamPart.includes(home);
-  const isAway = away && teamPart.includes(away);
+  const isHome = home && isTeamInSelection(teamPart, home);
+  const isAway = away && isTeamInSelection(teamPart, away);
 
   if (isHome) return "HOME_WIN_BOTH_HALVES";
   if (isAway) return "AWAY_WIN_BOTH_HALVES";

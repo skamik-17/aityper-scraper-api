@@ -371,6 +371,21 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 33,
     descriptionTemplates: { YES: "Obie drużyny strzelą z rzutu wolnego" },
   },
+  {
+    numericId: 418,
+    code: "BTTS_2PLUS_GOALS",
+    slug: "btts-2plus-goals",
+    category: MarketCategory.GOLE,
+    subCategory: "btts",
+    labels: { pl: "Obie strzelą po 2+", en: "Both Teams To Score 2+ Goals" },
+    descriptions: { pl: "Czy obie drużyny strzelą co najmniej po 2 gole?", en: "Will both teams score at least 2 goals each?" },
+    hasParameter: false,
+    selections: ["YES"],
+    selectionOrder: ["YES"],
+    viewType: ViewType.SINGLE_SELECTION,
+    displayOrder: 34,
+    descriptionTemplates: { YES: "Obie drużyny strzelą po 2+ gole" },
+  },
 
   {
     numericId: 14,
@@ -2553,26 +2568,6 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
 ];
 
 const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
-  {
-    numericId: 417,
-    code: "BTTS_BOTH_HALVES",
-    slug: "btts-both-halves",
-    category: MarketCategory.GOLE,
-    subCategory: "btts",
-    labels: { pl: "BTTS w obu połowach", en: "BTTS in Both Halves" },
-    descriptions: { pl: "Czy obie drużyny strzelą w 1. i 2. połowie?", en: "Will both teams score in 1st AND 2nd half?" },
-    hasParameter: false,
-    selections: ["YES_YES", "YES_NO", "NO_YES", "NO_NO"],
-    selectionOrder: ["YES_YES", "YES_NO", "NO_YES", "NO_NO"],
-    viewType: ViewType.COMBINATION,
-    displayOrder: 31,
-    descriptionTemplates: {
-      YES_YES: "Obie strzelają w 1. i 2. połowie (Tak/Tak)",
-      YES_NO: "Obie strzelają w 1. ale nie w 2. połowie (Tak/Nie)",
-      NO_YES: "Obie nie strzelają w 1. ale strzelają w 2. połowie (Nie/Tak)",
-      NO_NO: "Obie nie strzelają w żadnej połowie (Nie/Nie)"
-    },
-  },
   {
     numericId: 200,
     code: "HALF_TIME_FIRST_GOAL",

@@ -33,6 +33,7 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "wynik meczu (z wylaczeniem dogrywki)": "MATCH_WINNER",
   "podwojna szansa": "DOUBLE_CHANCE",
   "obie druzyny strzela": "BTTS",
+  "oba zespoly strzela gola": "BTTS",
   "dokladny wynik": "CORRECT_SCORE",
   "dokladny wynik w grupie": "CORRECT_SCORE_GROUP",
   "dokladny wynik - 1. polowa": "HALF_TIME_CORRECT_SCORE",
@@ -108,14 +109,15 @@ const BETCLIC_MARKET_PATTERNS: Array<{
      { pattern: /^liczba goli\b/i, code: "TOTAL_GOALS" },
       { pattern: /^gole\s+powyzej\s*\/\s*ponizej/i, code: "TOTAL_GOALS" },
        { pattern: /^gole.*powyzej.*ponizej/i, code: "TOTAL_GOALS" },
-         { pattern: /^obie (?:druzyny|zespoly) strzela.*rzut.*karn/i, code: "BTTS_PENALTY" },
-         { pattern: /^obie (?:druzyny|zespoly) strzela.*gola.*glowa/i, code: "BTTS_HEAD_GOALS" },
-         { pattern: /^obie (?:druzyny|zespoly) strzela.*rzut.*woln/i, code: "BTTS_FREE_KICK" },
-         { pattern: /^obie (?:druzyny|zespoly) strzela.*1\. polowa/i, code: "HALF_TIME_BTTS" },
-        { pattern: /^obie (?:druzyny|zespoly) strzela.*2\. polowa/i, code: "SECOND_HALF_BTTS" },
-        { pattern: /^obie (?:druzyny|zespoly) strzela.*1\. i 2\. polow/i, code: "BTTS_BOTH_HALVES" },
-        { pattern: /^obie (?:druzyny|zespoly) strzela.*liczba bramek/i, code: "TOTAL_GOALS_AND_BTTS" },
-        { pattern: /^obie (?:druzyny|zespoly) strzela/i, code: "BTTS" },
+          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po \d+\+/i, code: "BTTS_2PLUS_GOALS" },
+          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn/i, code: "BTTS_PENALTY" },
+          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*gola.*glowa/i, code: "BTTS_HEAD_GOALS" },
+          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*woln/i, code: "BTTS_FREE_KICK" },
+          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*1\. polowa/i, code: "HALF_TIME_BTTS" },
+         { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*2\. polowa/i, code: "SECOND_HALF_BTTS" },
+         { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*1\. i 2\. polow/i, code: "BTTS_BY_HALF" },
+         { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*liczba bramek/i, code: "TOTAL_GOALS_AND_BTTS" },
+         { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela/i, code: "BTTS" },
       { pattern: /^gol.*rzut.*wolny/i, code: "FREE_KICK_GOAL" },
      { pattern: /^gol glowa\s*-\s*1\. polowa/i, code: "HALF_TIME_HEADER_GOAL" },
      { pattern: /^gol glowa\s*-\s*2\. polowa/i, code: "SECOND_HALF_HEADER_GOAL" },
@@ -1421,6 +1423,7 @@ function normalizeSelectionForMarket(
     case "BTTS_PENALTY":
     case "BTTS_HEAD_GOALS":
     case "BTTS_FREE_KICK":
+    case "BTTS_2PLUS_GOALS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
     case "HOME_TEAM_TO_SCORE":
@@ -1469,14 +1472,16 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "BTTS_BOTH_HALVES": {
+    case "BTTS_BY_HALF": {
       const normalized = normalizeName(trimmed);
-      // Format: "Tak / Tak", "Tak / Nie", "Nie / Tak", "Nie / Nie"
-      // Mapowanie na: YES_YES, YES_NO, NO_YES, NO_NO
-      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "YES_YES";
-      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "YES_NO";
-      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "NO_YES";
-      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "NO_NO";
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1st" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
+      if (normalized.includes("1. polowa") || normalized === "1") return "1st" as NormalizedSelection;
+      if (normalized.includes("2. polowa") || normalized === "2") return "2nd" as NormalizedSelection;
+      if (normalized.includes("obie") || normalized.includes("both") || normalized === "rowno") return "Both" as NormalizedSelection;
+      if (normalized.includes("zadnej") || normalized.includes("zadna") || normalized.includes("none") || normalized.includes("bez goli") || normalized.includes("brak goli")) return "None" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -1666,12 +1671,12 @@ function extractParamValue(
   const fromSelections = parseOverUnderLine(selectionNames);
 
   switch (metadata.parameterType) {
-    case "player":
+    case "player": {
       // For player markets, distinguish between:
       // 1. Single player markets (no parameters) - GOALSCORER_ANYTIME, etc.
       // 2. Multiple player markets with parameters - TWO_PLAYERS_COMBINED_GOALS, THREE_PLAYERS_ANYTIME
       
-       const playerMarketCodesWithParams = ["TWO_PLAYERS_COMBINED_GOALS", "THREE_PLAYERS_ANYTIME", "PLAYER_ASSIST_PAIRS", "PLAYER_ASSIST_TRIPLE", "TWO_PLAYERS_ANYTIME", "THREE_PLAYERS_COMBINED_GOALS"];
+      const playerMarketCodesWithParams = ["TWO_PLAYERS_COMBINED_GOALS", "THREE_PLAYERS_ANYTIME", "PLAYER_ASSIST_PAIRS", "PLAYER_ASSIST_TRIPLE", "TWO_PLAYERS_ANYTIME", "THREE_PLAYERS_COMBINED_GOALS"];
       const isParameterizedPlayerMarket = playerMarketCodesWithParams.includes(marketCode);
       
       if (isParameterizedPlayerMarket) {
@@ -1682,24 +1687,28 @@ function extractParamValue(
         // Single player markets - return empty parameters
         return {};
       }
-    case "handicap":
+    }
+    case "handicap": {
       const handicapValue = (
         parseHandicapLine(raw.name) ??
         parseHandicapLine(selectionNames.join(" ")) ??
         fromSelections
       );
       return { paramValue: handicapValue };
-    case "integer":
+    }
+    case "integer": {
       const integerValue = (
         parseIntegerLine(raw.name) ??
         parseIntegerLine(selectionNames.join(" ")) ??
         fromSelections
       );
       return { paramValue: integerValue };
+    }
     case "decimal":
-    default:
+    default: {
       const decimalValue = parseDecimalLine(raw.name) ?? fromSelections;
       return { paramValue: decimalValue };
+    }
   }
 }
 

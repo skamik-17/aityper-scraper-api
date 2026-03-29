@@ -863,9 +863,9 @@ INSERT INTO market_types (id, code, name_pl, name_en, description_pl, descriptio
 VALUES
 (294, 'WIN_OR_WIN_BY_2', 'Wygrana lub przewaga 2+ bramek', 'Win or Win by 2+ Goals', 'Wygrana lub przewaga 2+ bramek', 'Win or win by 2+ goals', 'BINARY_BUTTONS', 'WYNIK_MECZU', FALSE, NULL, ARRAY['HOME', 'AWAY'], 22),
 (416, 'BTTS_PENALTY', 'Obie strzela z rzutu karnego', 'Both Teams To Score From Penalty', 'Obie druzyny strzela z rzutu karnego', 'Both teams score from penalty', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 31),
-(417, 'BTTS_BOTH_HALVES', 'BTTS w obu polowach', 'BTTS in Both Halves', 'BTTS w obu polowach', 'BTTS in both halves', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['YES_YES', 'YES_NO', 'NO_YES', 'NO_NO'], 31),
 (292, 'BTTS_HEAD_GOALS', 'Obie strzela gola glowa', 'Both Teams To Score Head Goals', 'Obie druzyny strzela gola glowa', 'Both teams score header goals', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 32),
 (293, 'BTTS_FREE_KICK', 'Obie strzela z rzutu wolnego', 'Both Teams To Score From Free Kick', 'Obie druzyny strzela z rzutu wolnego', 'Both teams score from free kick', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 33),
+(418, 'BTTS_2PLUS_GOALS', 'Obie strzela po 2+', 'Both Teams To Score 2+ Goals', 'Czy obie druzyny strzela co najmniej po 2 gole?', 'Will both teams score at least 2 goals each?', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 34),
 (401, 'FREE_KICK_GOAL', 'Gol bezposrednio z rzutu wolnego', 'Direct Free Kick Goal', 'Gol bezposrednio z rzutu wolnego', 'Direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 26),
 (301, 'HOME_TEAM_FREE_KICK_GOAL', 'Gol z rzutu wolnego - gospodarz', 'Home Team Direct Free Kick Goal', 'Gol z rzutu wolnego - gospodarz', 'Home team direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 27),
 (302, 'AWAY_TEAM_FREE_KICK_GOAL', 'Gol z rzutu wolnego - gosc', 'Away Team Direct Free Kick Goal', 'Gol z rzutu wolnego - gosc', 'Away team direct free kick goal', 'SINGLE_SELECTION', 'GOLE', FALSE, NULL, ARRAY['YES'], 28),
@@ -980,7 +980,7 @@ UPDATE market_types SET sub_category = 'specjalne' WHERE code = 'WIN_OR_WIN_BY_2
 
 -- GOLE subcategories
 UPDATE market_types SET sub_category = 'linia-golowa' WHERE code IN ('TOTAL_GOALS', 'TOTAL_GOALS_ASIAN', 'BOTH_HALVES_TOTAL_GOALS', 'BOTH_HALVES_UNDER_GOALS', 'BOTH_HALVES_OVER_GOALS');
-UPDATE market_types SET sub_category = 'btts' WHERE code IN ('BTTS', 'BTTS_BOTH_HALVES', 'BTTS_BY_HALF', 'BTTS_PENALTY', 'BTTS_HEAD_GOALS', 'BTTS_FREE_KICK');
+UPDATE market_types SET sub_category = 'btts' WHERE code IN ('BTTS', 'BTTS_BY_HALF', 'BTTS_PENALTY', 'BTTS_HEAD_GOALS', 'BTTS_FREE_KICK', 'BTTS_2PLUS_GOALS');
 UPDATE market_types SET sub_category = 'parzystosc' WHERE code = 'ODD_EVEN_GOALS';
 UPDATE market_types SET sub_category = 'gole-druzyny' WHERE code IN ('HOME_TEAM_TO_SCORE', 'AWAY_TEAM_TO_SCORE', 'TEAM_TOTAL_GOALS', 'HOME_TEAM_TOTAL_GOALS', 'AWAY_TEAM_TOTAL_GOALS', 'HOME_TEAM_ODD_EVEN_GOALS', 'AWAY_TEAM_ODD_EVEN_GOALS', 'TEAM_SCORES_BOTH_HALVES', 'HOME_SCORE_BOTH_HALVES', 'AWAY_SCORE_BOTH_HALVES', 'TEAM_TOTAL_SCORERS');
 UPDATE market_types SET sub_category = 'przedzialy' WHERE code IN ('GOAL_RANGE', 'TEAM_GOAL_RANGE', 'EXACT_GOALS', 'HOME_EXACT_GOALS', 'AWAY_EXACT_GOALS', 'HOME_GOAL_RANGE', 'AWAY_GOAL_RANGE');

@@ -873,7 +873,7 @@ describe("Market Category Assignment", () => {
     { name: "Czyste konto", expectedType: "CLEAN_SHEET", category: MarketCategory.GOLE },
     { name: "Handicap azjatycki", expectedType: "ASIAN_HANDICAP", category: MarketCategory.HANDICAP },
     { name: "Handicap europejski", expectedType: "EUROPEAN_HANDICAP", category: MarketCategory.HANDICAP },
-    { name: "Wynik 1. polowy", expectedType: "HALF_TIME_RESULT", category: MarketCategory.PIERWSZA_POLOWA },
+    { name: "Wynik 1. polowy", expectedType: "HALF_TIME_RESULT", category: MarketCategory.POLOWY },
     { name: "Dokladny wynik", expectedType: "CORRECT_SCORE", category: MarketCategory.DOKLADNY_WYNIK },
     { name: "Strzelec gola", expectedType: "GOALSCORER_ANYTIME", category: MarketCategory.ZAWODNICY },
   ];

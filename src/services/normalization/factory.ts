@@ -183,7 +183,7 @@ function getCategoryForMarketCode(code: string): MarketCategory {
     "HALF_TIME_RESULT", "HALF_TIME_TOTAL_GOALS", "HALF_TIME_BTTS",
     "SECOND_HALF_RESULT", "SECOND_HALF_TOTAL_GOALS"
   ].includes(code)) {
-    return MC.PIERWSZA_POLOWA;
+    return MC.POLOWY;
   }
   // Correct score
   if (code === "CORRECT_SCORE") {

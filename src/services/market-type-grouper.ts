@@ -269,11 +269,13 @@ export function groupMarketsByTypeWithParameters(
     const description = marketDef?.descriptions?.pl;
     const displayOrder = marketDef?.displayOrder ?? 999;
     const viewType = marketDef?.viewType;
+    const subCategory = marketDef?.subCategory;
 
     result.push({
       marketKey: marketType,
       type: marketType,
       category: group.category,
+      subCategory,
       label: group.label,
       description,
       displayOrder,

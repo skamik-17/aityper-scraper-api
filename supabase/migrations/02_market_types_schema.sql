@@ -7,6 +7,7 @@ CREATE TABLE market_types (
   description_en TEXT NOT NULL,
   view_type view_type NOT NULL,
   category market_category NOT NULL,
+  sub_category TEXT,
   has_parameter BOOLEAN NOT NULL DEFAULT FALSE,
   param_type parameter_type,
   selections TEXT[] NOT NULL,

@@ -202,6 +202,9 @@ export interface MarketWithParams {
   /** Category for UI organization */
   category: MarketCategory;
 
+  /** Subcategory for finer UI grouping within a category */
+  subCategory?: string;
+
   /** Main display label (e.g., "Handicap azjatycki") */
   label: string;
 

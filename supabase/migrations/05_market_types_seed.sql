@@ -15,11 +15,11 @@ INSERT INTO market_types (id, code, name_pl, name_en, description_pl, descriptio
 (14, 'WINNING_MARGIN', 'Margines zwyciestwa', 'Winning Margin', 'Roznica bramek zwyciezcy', 'Winner''s goal difference', 'PARAMETER_SLIDER', 'GOLE', TRUE, 'integer', ARRAY['HOME', 'AWAY', 'DRAW'], 20),
 (15, 'ASIAN_HANDICAP', 'Handicap azjatycki', 'Asian Handicap', 'Wynik z uwzglednieniem przewagi/straty bramkowej', 'Result with goal advantage/disadvantage', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 30),
 (16, 'EUROPEAN_HANDICAP', 'Handicap europejski', 'European Handicap', 'Handicap z mozliwoscia remisu', 'Handicap with draw option', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 31),
-(17, 'HALF_TIME_RESULT', 'Wynik 1. polowy', 'Half Time Result', 'Wynik po pierwszej polowie', 'Result at half time', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 40),
-(18, 'HALF_TIME_TOTAL_GOALS', 'Gole 1. polowy', 'Half Time Goals', 'Liczba goli w pierwszej polowie', 'Goals in first half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 41),
-(19, 'HALF_TIME_BTTS', 'BTTS 1. polowa', 'Half Time BTTS', 'Obie strzela w pierwszej polowie', 'Both teams score in first half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 42),
-(20, 'SECOND_HALF_RESULT', 'Wynik 2. polowy', 'Second Half Result', 'Wynik drugiej polowy', 'Result of second half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 43),
-(21, 'SECOND_HALF_TOTAL_GOALS', 'Gole 2. polowy', 'Second Half Goals', 'Liczba goli w drugiej polowie', 'Goals in second half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 44),
+(17, 'HALF_TIME_RESULT', 'Wynik 1. polowy', 'Half Time Result', 'Wynik po pierwszej polowie', 'Result at half time', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 40),
+(18, 'HALF_TIME_TOTAL_GOALS', 'Gole 1. polowy', 'Half Time Goals', 'Liczba goli w pierwszej polowie', 'Goals in first half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 41),
+(19, 'HALF_TIME_BTTS', 'BTTS 1. polowa', 'Half Time BTTS', 'Obie strzela w pierwszej polowie', 'Both teams score in first half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 42),
+(20, 'SECOND_HALF_RESULT', 'Wynik 2. polowy', 'Second Half Result', 'Wynik drugiej polowy', 'Result of second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 43),
+(21, 'SECOND_HALF_TOTAL_GOALS', 'Gole 2. polowy', 'Second Half Goals', 'Liczba goli w drugiej polowie', 'Goals in second half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 44),
 (22, 'CORRECT_SCORE', 'Dokladny wynik', 'Correct Score', 'Przewidywany dokladny wynik meczu', 'Exact final score prediction', 'SCORE_GRID', 'DOKLADNY_WYNIK', FALSE, NULL, ARRAY['SCORE'], 50),
 (23, 'GOALSCORER_FIRST', 'Pierwszy strzelec', 'First Goalscorer', 'Ktory zawodnik strzeli pierwszego gola?', 'Which player scores first?', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER'], 60),
 (24, 'GOALSCORER_LAST', 'Ostatni strzelec', 'Last Goalscorer', 'Ktory zawodnik strzeli ostatniego gola?', 'Which player scores last?', 'PLAYER_DROPDOWN', 'ZAWODNICY', TRUE, 'player', ARRAY['PLAYER'], 61),
@@ -360,8 +360,8 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
-(22, 'SECOND_HALF_BTTS', 'BTTS 2. polowa', 'Second Half BTTS', 'Obie strzela w drugiej polowie', 'Both teams score in second half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 45),
-(23, 'SECOND_HALF_RESULT_AND_TOTAL', 'Wynik 2. polowy + Gole', 'Second Half Result & Total', 'Wynik drugiej polowy i liczba goli', 'Second half result and total goals', 'COMBINATION', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'DRAW_OVER', 'DRAW_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 46)
+(22, 'SECOND_HALF_BTTS', 'BTTS 2. polowa', 'Second Half BTTS', 'Obie strzela w drugiej polowie', 'Both teams score in second half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 45),
+(23, 'SECOND_HALF_RESULT_AND_TOTAL', 'Wynik 2. polowy + Gole', 'Second Half Result & Total', 'Wynik drugiej polowy i liczba goli', 'Second half result and total goals', 'COMBINATION', 'POLOWY', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'DRAW_OVER', 'DRAW_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 46)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -378,8 +378,8 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
 (54, 'TEAM_GOAL_RANGE', 'Gole druzyny - przedzial', 'Team Goal Range', 'Przedzial goli dla konkretnej druzyny', 'Goal range for specific team', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['0', '1', '2', '3', '4', '5+'], 25),
-(55, 'HALF_TIME_GOAL_RANGE', 'Gole 1. polowy - przedzial', 'Half Time Goal Range', 'Przedzial goli w pierwszej polowie', 'Goal range in first half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['0', '1', '2', '3', '4+'], 47),
-(56, 'SECOND_HALF_GOAL_RANGE', 'Gole 2. polowy - przedzial', 'Second Half Goal Range', 'Przedzial goli w drugiej polowie', 'Goal range in second half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['0', '1', '2', '3', '4+'], 48)
+(55, 'HALF_TIME_GOAL_RANGE', 'Gole 1. polowy - przedzial', 'Half Time Goal Range', 'Przedzial goli w pierwszej polowie', 'Goal range in first half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2', '3', '4+'], 47),
+(56, 'SECOND_HALF_GOAL_RANGE', 'Gole 2. polowy - przedzial', 'Second Half Goal Range', 'Przedzial goli w drugiej polowie', 'Goal range in second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2', '3', '4+'], 48)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -433,11 +433,11 @@ WHERE code IN (
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
 (100, 'CORRECT_SCORE', 'Dokladny wynik', 'Correct Score', 'Przewidywany dokladny wynik meczu', 'Exact final score prediction', 'SCORE_GRID', 'DOKLADNY_WYNIK', FALSE, NULL, ARRAY['SCORE'], 50),
-(104, 'HALF_TIME_HOME_TO_SCORE', '1. polowa - gospodarz strzeli', 'Home Team To Score (1st Half)', 'Czy gospodarze strzela w 1. polowie?', 'Will home team score in first half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 48),
-(105, 'HALF_TIME_AWAY_TO_SCORE', '1. polowa - gosc strzeli', 'Away Team To Score (1st Half)', 'Czy goscie strzela w 1. polowie?', 'Will away team score in first half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 49),
-(106, 'SECOND_HALF_HOME_TO_SCORE', '2. polowa - gospodarz strzeli', 'Home Team To Score (2nd Half)', 'Czy gospodarze strzela w 2. polowie?', 'Will home team score in second half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 50),
+(104, 'HALF_TIME_HOME_TO_SCORE', '1. polowa - gospodarz strzeli', 'Home Team To Score (1st Half)', 'Czy gospodarze strzela w 1. polowie?', 'Will home team score in first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 48),
+(105, 'HALF_TIME_AWAY_TO_SCORE', '1. polowa - gosc strzeli', 'Away Team To Score (1st Half)', 'Czy goscie strzela w 1. polowie?', 'Will away team score in first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 49),
+(106, 'SECOND_HALF_HOME_TO_SCORE', '2. polowa - gospodarz strzeli', 'Home Team To Score (2nd Half)', 'Czy gospodarze strzela w 2. polowie?', 'Will home team score in second half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 50),
 (102, 'HT_FT_CORRECT_SCORE', '1. polowa / wynik koncowy - dokladny wynik', 'HT/FT Correct Score', 'Dokladny wynik do przerwy i na koniec meczu', 'Exact score at half time and full time', 'SCORE_GRID', 'DOKLADNY_WYNIK', FALSE, NULL, ARRAY['0:0 / 0:0', '0:0 / 1:0', '0:0 / 2:0', '0:0 / 3:0', '0:0 / 0:1', '0:0 / 1:1', '0:0 / 2:1', '0:0 / 0:2', '0:0 / 1:2', '0:0 / 2:2', '0:0 / 0:3', '0:0 / 1:3', '0:0 / 2:3', '1:0 / 1:0', '1:0 / 1:1', '1:0 / 1:2', '2:0 / 2:0', '2:0 / 2:1', '2:0 / 2:2'], 50),
-(103, 'SECOND_HALF_FIRST_GOAL', 'Pierwszy gol 2. polowy', 'First Goal 2nd Half', 'Ktora druzyna strzeli pierwszego gola w 2. polowie?', 'Which team scores first in second half?', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 52),
+(103, 'SECOND_HALF_FIRST_GOAL', 'Pierwszy gol 2. polowy', 'First Goal 2nd Half', 'Ktora druzyna strzeli pierwszego gola w 2. polowie?', 'Which team scores first in second half?', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 52),
 (109, 'MULTI_RESULT', 'Multiwynik', 'Multi Result', 'Wynik meczu z dokladniejszym scenariuszem', 'Match result with extended score scenarios', 'COMBINATION', 'KOMBINACJE', FALSE, NULL, ARRAY['1 o 1 gol', '2 o 1 gol', '1 o 2+ gole', '2 o 2+ gole', 'Remis 0:0', 'Remis 1:1', 'Remis 2:2', 'Remis 3+', 'Inne'], 99),
 (111, 'TOTAL_GOALS_AND_BTTS', 'Gole + BTTS', 'Total Goals & BTTS', 'Liczba goli i czy obie strzela', 'Total goals and both teams score', 'COMBINATION', 'KOMBINACJE', TRUE, 'decimal', ARRAY['OVER_YES', 'UNDER_YES', 'OVER_NO', 'UNDER_NO'], 92),
 (107, 'SECOND_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 2. polowa', 'Second Half Asian Handicap', 'Azjatycki handicap w drugiej polowie', 'Asian handicap in second half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 16),
@@ -459,7 +459,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
-(113, 'HALF_TIME_CORRECT_SCORE', 'Dokladny wynik 1. polowy', 'Half Time Correct Score', 'Przewidywany dokladny wynik po pierwszej polowie', 'Exact score at half time', 'SCORE_GRID', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['SCORE'], 53)
+(113, 'HALF_TIME_CORRECT_SCORE', 'Dokladny wynik 1. polowy', 'Half Time Correct Score', 'Przewidywany dokladny wynik po pierwszej polowie', 'Exact score at half time', 'SCORE_GRID', 'POLOWY', FALSE, NULL, ARRAY['SCORE'], 53)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -475,7 +475,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
-(114, 'SECOND_HALF_EUROPEAN_HANDICAP', 'Handicap europejski 2. polowy', 'Second Half European Handicap', 'Handicap europejski w drugiej polowie', 'European handicap in second half', 'HANDICAP_SELECTOR', 'PIERWSZA_POLOWA', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 54)
+(114, 'SECOND_HALF_EUROPEAN_HANDICAP', 'Handicap europejski 2. polowy', 'Second Half European Handicap', 'Handicap europejski w drugiej polowie', 'European handicap in second half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 54)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -491,7 +491,7 @@ ON CONFLICT (id) DO UPDATE SET
 
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
-(115, 'SECOND_HALF_ODD_EVEN_GOALS', 'Parzyste/Nieparzyste 2. polowa', 'Second Half Odd/Even Goals', 'Parzyste/nieparzyste w drugiej polowie', 'Odd/Even goals in second half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 54)
+(115, 'SECOND_HALF_ODD_EVEN_GOALS', 'Parzyste/Nieparzyste 2. polowa', 'Second Half Odd/Even Goals', 'Parzyste/nieparzyste w drugiej polowie', 'Odd/Even goals in second half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['ODD', 'EVEN'], 54)
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
   name_pl = EXCLUDED.name_pl,
@@ -508,24 +508,24 @@ ON CONFLICT (id) DO UPDATE SET
 INSERT INTO market_types (id, code, name_pl, name_en, description_pl, description_en, view_type, category, has_parameter, param_type, selections, display_order)
 VALUES
 (74, 'HALF_TIME_CORNERS_RACE', 'Wiecej roznych 1. polowa', 'Half Time Corners Race', 'Ktora druzyna wykona wiecej rzutow roznych w pierwszej polowie?', 'Which team will have more corners in first half?', 'TRIPLE_BUTTONS', 'STATYSTYKI', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 83),
-(103, 'HALF_TIME_RESULT_AND_BTTS', 'Wynik 1. polowy + BTTS', 'Half Time Result & BTTS', 'Wynik 1. polowy i czy obie strzela', 'Half time result and both teams score', 'COMBINATION', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME_YES', 'HOME_NO', 'DRAW_YES', 'DRAW_NO', 'AWAY_YES', 'AWAY_NO'], 47),
-(104, 'HALF_TIME_HOME_TO_SCORE', '1. polowa - gospodarz strzeli', 'Home Team To Score (1st Half)', 'Czy gospodarze strzela w 1. polowie?', 'Will the home team score in the first half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 48),
-(105, 'HALF_TIME_AWAY_TO_SCORE', '1. polowa - gosc strzeli', 'Away Team To Score (1st Half)', 'Czy goscie strzela w 1. polowie?', 'Will the away team score in the first half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 49),
-(106, 'SECOND_HALF_HOME_TO_SCORE', '2. polowa - gospodarz strzeli', 'Home Team To Score (2nd Half)', 'Czy gospodarze strzela w 2. polowie?', 'Will the home team score in the second half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 50),
+(103, 'HALF_TIME_RESULT_AND_BTTS', 'Wynik 1. polowy + BTTS', 'Half Time Result & BTTS', 'Wynik 1. polowy i czy obie strzela', 'Half time result and both teams score', 'COMBINATION', 'POLOWY', FALSE, NULL, ARRAY['HOME_YES', 'HOME_NO', 'DRAW_YES', 'DRAW_NO', 'AWAY_YES', 'AWAY_NO'], 47),
+(104, 'HALF_TIME_HOME_TO_SCORE', '1. polowa - gospodarz strzeli', 'Home Team To Score (1st Half)', 'Czy gospodarze strzela w 1. polowie?', 'Will the home team score in the first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 48),
+(105, 'HALF_TIME_AWAY_TO_SCORE', '1. polowa - gosc strzeli', 'Away Team To Score (1st Half)', 'Czy goscie strzela w 1. polowie?', 'Will the away team score in the first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 49),
+(106, 'SECOND_HALF_HOME_TO_SCORE', '2. polowa - gospodarz strzeli', 'Home Team To Score (2nd Half)', 'Czy gospodarze strzela w 2. polowie?', 'Will the home team score in the second half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 50),
 (107, 'SECOND_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 2. polowa', 'Second Half Asian Handicap', 'Azjatycki handicap w drugiej polowie', 'Asian handicap in second half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 17),
-(190, 'SECOND_HALF_FIRST_GOAL', 'Pierwszy gol 2. polowy', 'First Goal 2nd Half', 'Ktora druzyna strzeli pierwszego gola w 2. polowie?', 'Which team scores first in second half?', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 52),
-(191, 'SECOND_HALF_AWAY_TO_SCORE', '2. polowa - gosc strzeli', 'Away Team To Score (2nd Half)', 'Czy goscie strzela w 2. polowie?', 'Will away team score in second half?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 51),
-(200, 'HALF_TIME_FIRST_GOAL', 'Pierwszy gol 1. polowy', 'First Goal 1st Half', 'Kto strzeli pierwszego gola w 1. polowie?', 'Who scores first in 1st half?', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 200),
-(201, 'HALF_TIME_DOUBLE_CHANCE', 'Podwojna szansa 1. polowa', 'Double Chance 1st Half', 'Podwojna szansa w pierwszej polowie', 'Double chance in first half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'HOME_OR_AWAY', 'DRAW_OR_AWAY'], 201),
-(202, 'HALF_TIME_DRAW_NO_BET', 'Remis = zwrot 1. polowa', 'Draw No Bet 1st Half', 'Zaklad bez remisu w pierwszej polowie', 'Draw no bet in first half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME', 'AWAY'], 202),
-(203, 'HALF_TIME_RESULT_AND_TOTAL', 'Wynik 1. polowy + liczba goli', '1st Half Result + Total', 'Wynik 1. polowy i liczba goli', '1st Half result and total goals', 'COMBINATION', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'DRAW_OVER', 'DRAW_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 203),
-(204, 'SECOND_HALF_CORRECT_SCORE', 'Dokladny wynik 2. polowy', 'Correct Score 2nd Half', 'Dokladny wynik drugiej polowy', 'Exact score of the second half', 'SCORE_GRID', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['SCORE'], 204),
-(205, 'HALF_TIME_TEAM_TOTAL_GOALS', 'Gole druzyny w 1. polowie', 'Team Goals 1st Half', 'Liczba goli druzyny w pierwszej polowie', 'Team goals in first half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 205),
-(206, 'SECOND_HALF_TEAM_TOTAL_GOALS', 'Gole druzyny w 2. polowie', 'Team Goals 2nd Half', 'Liczba goli druzyny w drugiej polowie', 'Team goals in second half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 206),
-(207, 'HALF_TIME_EXACT_GOALS', 'Dokladna liczba goli 1. polowa', 'Exact Goals 1st Half', 'Dokladna liczba goli w pierwszej polowie', 'Exact number of goals in first half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['0', '1', '2', '3+'], 207),
-(208, 'SECOND_HALF_EXACT_GOALS', 'Dokladna liczba goli 2. polowa', 'Exact Goals 2nd Half', 'Dokladna liczba goli w drugiej polowie', 'Exact number of goals in second half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['0', '1', '2+'], 208),
-(209, 'FIRST_HALF_EUROPEAN_HANDICAP', 'Handicap europejski 1. polowa', 'European Handicap 1st Half', 'Handicap europejski w pierwszej polowie', 'European handicap in first half', 'HANDICAP_SELECTOR', 'PIERWSZA_POLOWA', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 209),
-(210, 'FIRST_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 1. polowa', 'Asian Handicap 1st Half', 'Handicap azjatycki w pierwszej polowie', 'Asian handicap in first half', 'HANDICAP_SELECTOR', 'PIERWSZA_POLOWA', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 210),
+(190, 'SECOND_HALF_FIRST_GOAL', 'Pierwszy gol 2. polowy', 'First Goal 2nd Half', 'Ktora druzyna strzeli pierwszego gola w 2. polowie?', 'Which team scores first in second half?', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 52),
+(191, 'SECOND_HALF_AWAY_TO_SCORE', '2. polowa - gosc strzeli', 'Away Team To Score (2nd Half)', 'Czy goscie strzela w 2. polowie?', 'Will away team score in second half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 51),
+(200, 'HALF_TIME_FIRST_GOAL', 'Pierwszy gol 1. polowy', 'First Goal 1st Half', 'Kto strzeli pierwszego gola w 1. polowie?', 'Who scores first in 1st half?', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 200),
+(201, 'HALF_TIME_DOUBLE_CHANCE', 'Podwojna szansa 1. polowa', 'Double Chance 1st Half', 'Podwojna szansa w pierwszej polowie', 'Double chance in first half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'HOME_OR_AWAY', 'DRAW_OR_AWAY'], 201),
+(202, 'HALF_TIME_DRAW_NO_BET', 'Remis = zwrot 1. polowa', 'Draw No Bet 1st Half', 'Zaklad bez remisu w pierwszej polowie', 'Draw no bet in first half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY'], 202),
+(203, 'HALF_TIME_RESULT_AND_TOTAL', 'Wynik 1. polowy + liczba goli', '1st Half Result + Total', 'Wynik 1. polowy i liczba goli', '1st Half result and total goals', 'COMBINATION', 'POLOWY', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'DRAW_OVER', 'DRAW_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 203),
+(204, 'SECOND_HALF_CORRECT_SCORE', 'Dokladny wynik 2. polowy', 'Correct Score 2nd Half', 'Dokladny wynik drugiej polowy', 'Exact score of the second half', 'SCORE_GRID', 'POLOWY', FALSE, NULL, ARRAY['SCORE'], 204),
+(205, 'HALF_TIME_TEAM_TOTAL_GOALS', 'Gole druzyny w 1. polowie', 'Team Goals 1st Half', 'Liczba goli druzyny w pierwszej polowie', 'Team goals in first half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 205),
+(206, 'SECOND_HALF_TEAM_TOTAL_GOALS', 'Gole druzyny w 2. polowie', 'Team Goals 2nd Half', 'Liczba goli druzyny w drugiej polowie', 'Team goals in second half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 206),
+(207, 'HALF_TIME_EXACT_GOALS', 'Dokladna liczba goli 1. polowa', 'Exact Goals 1st Half', 'Dokladna liczba goli w pierwszej polowie', 'Exact number of goals in first half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2', '3+'], 207),
+(208, 'SECOND_HALF_EXACT_GOALS', 'Dokladna liczba goli 2. polowa', 'Exact Goals 2nd Half', 'Dokladna liczba goli w drugiej polowie', 'Exact number of goals in second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2+'], 208),
+(209, 'FIRST_HALF_EUROPEAN_HANDICAP', 'Handicap europejski 1. polowa', 'European Handicap 1st Half', 'Handicap europejski w pierwszej polowie', 'European handicap in first half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 209),
+(210, 'FIRST_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 1. polowa', 'Asian Handicap 1st Half', 'Handicap azjatycki w pierwszej polowie', 'Asian handicap in first half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 210),
 (211, 'TEAM_WIN_AT_LEAST_ONE_HALF', 'Wygra przynajmniej jedna polowe', 'To Win Either Half', 'Czy druzyna wygra przynajmniej jedna polowe?', 'Will team win at least one half?', 'BINARY_BUTTONS', 'WYNIK_MECZU', TRUE, 'decimal', ARRAY['YES', 'NO'], 211),
 (212, 'HALF_WITH_MORE_GOALS', 'Polowa z wieksza liczba goli', 'Half with Most Goals', 'W ktorej polowie padnie wiecej goli?', 'In which half will more goals be scored?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['1st', '2nd', 'Draw'], 212),
 (213, 'TEAM_HALF_WITH_MORE_GOALS', 'Polowa z wieksza liczba goli druzyny', 'Team Half with Most Goals', 'W ktorej polowie druzyna strzeli wiecej goli?', 'In which half will team score more goals?', 'COMBINATION', 'GOLE', TRUE, 'decimal', ARRAY['HOME_1ST', 'HOME_2ND', 'HOME_EQUAL', 'AWAY_1ST', 'AWAY_2ND', 'AWAY_EQUAL'], 213),
@@ -558,13 +558,13 @@ VALUES
 (240, 'AWAY_HALF_WITH_MOST_GOALS', 'Gosc - polowa z wieksza liczba goli', 'Away Half with Most Goals', 'W ktorej polowie gosc strzeli wiecej?', 'In which half will away score more?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['1st', '2nd', 'Draw'], 240),
 (241, 'HOME_SCORE_BOTH_HALVES', 'Gospodarz strzeli w obu polowach', 'Home Score Both Halves', 'Czy gospodarz strzeli w obu polowach?', 'Will home score in both halves?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 241),
 (242, 'AWAY_SCORE_BOTH_HALVES', 'Gosc strzeli w obu polowach', 'Away Score Both Halves', 'Czy gosc strzeli w obu polowach?', 'Will away score in both halves?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 242),
-(243, 'SECOND_HALF_HOME_EXACT_GOALS', '2. polowa - gospodarz - dokladna liczba goli', '2nd Half Home Exact Goals', 'Dokladna liczba goli gospodarzy w 2. polowie', 'Home exact goals in 2nd half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['0', '1', '2+'], 243),
+(243, 'SECOND_HALF_HOME_EXACT_GOALS', '2. polowa - gospodarz - dokladna liczba goli', '2nd Half Home Exact Goals', 'Dokladna liczba goli gospodarzy w 2. polowie', 'Home exact goals in 2nd half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2+'], 243),
 (244, 'HOME_TEAM_TOTAL_GOALS', 'Gole gospodarzy', 'Home Team Goals', 'Liczba goli gospodarzy', 'Home team goal count', 'PARAMETER_SLIDER', 'GOLE', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 244),
 (245, 'AWAY_TEAM_TOTAL_GOALS', 'Gole gosci', 'Away Team Goals', 'Liczba goli gosci', 'Away team goal count', 'PARAMETER_SLIDER', 'GOLE', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 245),
-(246, 'HALF_TIME_HOME_TEAM_TOTAL_GOALS', '1. polowa - gole gospodarzy', '1st Half Home Team Goals', 'Liczba goli gospodarzy w 1. polowie', 'Home team goals in 1st half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 246),
-(247, 'HALF_TIME_AWAY_TEAM_TOTAL_GOALS', '1. polowa - gole gosci', '1st Half Away Team Goals', 'Liczba goli gosci w 1. polowie', 'Away team goals in 1st half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 247),
-(248, 'SECOND_HALF_HOME_TEAM_TOTAL_GOALS', '2. polowa - gole gospodarzy', '2nd Half Home Team Goals', 'Liczba goli gospodarzy w 2. polowie', 'Home team goals in 2nd half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 248),
-(249, 'SECOND_HALF_AWAY_TEAM_TOTAL_GOALS', '2. polowa - gole gosci', '2nd Half Away Team Goals', 'Liczba goli gosci w 2. polowie', 'Away team goals in 2nd half', 'PARAMETER_SLIDER', 'PIERWSZA_POLOWA', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 249),
+(246, 'HALF_TIME_HOME_TEAM_TOTAL_GOALS', '1. polowa - gole gospodarzy', '1st Half Home Team Goals', 'Liczba goli gospodarzy w 1. polowie', 'Home team goals in 1st half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 246),
+(247, 'HALF_TIME_AWAY_TEAM_TOTAL_GOALS', '1. polowa - gole gosci', '1st Half Away Team Goals', 'Liczba goli gosci w 1. polowie', 'Away team goals in 1st half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 247),
+(248, 'SECOND_HALF_HOME_TEAM_TOTAL_GOALS', '2. polowa - gole gospodarzy', '2nd Half Home Team Goals', 'Liczba goli gospodarzy w 2. polowie', 'Home team goals in 2nd half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 248),
+(249, 'SECOND_HALF_AWAY_TEAM_TOTAL_GOALS', '2. polowa - gole gosci', '2nd Half Away Team Goals', 'Liczba goli gosci w 2. polowie', 'Away team goals in 2nd half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 249),
 (250, 'LAST_TEAM_TO_SCORE', 'Ostatni gol', 'Last Team To Score', 'Ktora druzyna strzeli ostatniego gola?', 'Which team will score the last goal?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE', 'BOTH'], 250),
 (251, 'TEAMS_TO_SCORE', 'Ktora druzyna strzeli', 'Teams To Score', 'Ktore druzyny strzela gola?', 'Which teams will score?', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['HOME_ONLY', 'AWAY_ONLY', 'BOTH', 'NONE'], 251),
 (12, 'GOAL_RANGE', 'Przedzial goli', 'Goal Range', 'W jakim przedziale bedzie liczba goli?', 'Goal range bracket', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['0', '1', '2', '3', '4', '5', '6+', '7+', '0-1', '0-2', '1-2', '1-3', '1-4', '1-5', '1-6', '2-3', '2-4', '2-5', '2-6', '3-4', '3-5', '3-6', '4-5', '4-6', '5-6', '5+'], 19)
@@ -781,8 +781,8 @@ INSERT INTO market_types (id, code, name_pl, name_en, description_pl, descriptio
 VALUES
 (253, 'BOTH_HALVES_OVER_GOALS', 'Obie polowy powyzej X goli', 'Both Halves Over X Goals', 'Czy obie polowy beda mialy powyzej X goli?', 'Will both halves have over X goals?', 'BINARY_BUTTONS', 'GOLE', TRUE, 'decimal', ARRAY['YES', 'NO'], 253),
 (130, 'PLAYER_GOALS', 'Gole zawodnika', 'Player Goals', 'Liczba goli zawodnika', 'Player goal count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 66),
-(120, 'SECOND_HALF_ODD_EVEN_GOALS', '2. polowa - parzyste/nieparzyste', '2nd Half Odd/Even Goals', 'Czy liczba goli w 2. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in second half be odd or even?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 46),
-(121, 'HALF_TIME_ODD_EVEN_GOALS', '1. polowa - parzyste/nieparzyste', '1st Half Odd/Even Goals', 'Czy liczba goli w 1. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in first half be odd or even?', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['ODD', 'EVEN'], 47)
+(120, 'SECOND_HALF_ODD_EVEN_GOALS', '2. polowa - parzyste/nieparzyste', '2nd Half Odd/Even Goals', 'Czy liczba goli w 2. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in second half be odd or even?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['ODD', 'EVEN'], 46),
+(121, 'HALF_TIME_ODD_EVEN_GOALS', '1. polowa - parzyste/nieparzyste', '1st Half Odd/Even Goals', 'Czy liczba goli w 1. polowie bedzie parzysta czy nieparzysta?', 'Will total goals in first half be odd or even?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['ODD', 'EVEN'], 47)
 
 ON CONFLICT (id) DO UPDATE SET
   code = EXCLUDED.code,
@@ -872,10 +872,10 @@ VALUES
 (411, 'PENALTY_GOAL', 'Gol z rzutu karnego', 'Penalty Goal', 'Gol z rzutu karnego', 'Penalty goal', 'COMBINATION', 'GOLE', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 29),
 (413, 'ASIAN_HANDICAP_3WAY', 'Handicap azjatycki (3-drog)', 'Asian Handicap (3-Way)', 'Handicap azjatycki z trzema opcjami', 'Asian handicap with three options', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 32),
 -- FIRST_HALF_EUROPEAN_HANDICAP already inserted as id=209 above
-(403, 'HALF_TIME_HEADER_GOAL', 'Gol glowa - 1. polowa', 'Header Goal - 1st Half', 'Gol glowa w pierwszej polowie', 'Header goal in first half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 52),
-(404, 'SECOND_HALF_HEADER_GOAL', 'Gol glowa - 2. polowa', 'Header Goal - 2nd Half', 'Gol glowa w drugiej polowie', 'Header goal in second half', 'BINARY_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['YES', 'NO'], 53),
-(409, 'HALF_TIME_PENALTY_GOAL', 'Gol z rzutu karnego - 1. polowa', 'Penalty Goal - 1st Half', 'Gol z rzutu karnego w pierwszej polowie', 'Penalty goal in first half', 'COMBINATION', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 54),
-(412, 'SECOND_HALF_PENALTY_GOAL', 'Gol z rzutu karnego - 2. polowa', 'Penalty Goal - 2nd Half', 'Gol z rzutu karnego w drugiej polowie', 'Penalty goal in second half', 'COMBINATION', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 55),
+(403, 'HALF_TIME_HEADER_GOAL', 'Gol glowa - 1. polowa', 'Header Goal - 1st Half', 'Gol glowa w pierwszej polowie', 'Header goal in first half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 52),
+(404, 'SECOND_HALF_HEADER_GOAL', 'Gol glowa - 2. polowa', 'Header Goal - 2nd Half', 'Gol glowa w drugiej polowie', 'Header goal in second half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 53),
+(409, 'HALF_TIME_PENALTY_GOAL', 'Gol z rzutu karnego - 1. polowa', 'Penalty Goal - 1st Half', 'Gol z rzutu karnego w pierwszej polowie', 'Penalty goal in first half', 'COMBINATION', 'POLOWY', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 54),
+(412, 'SECOND_HALF_PENALTY_GOAL', 'Gol z rzutu karnego - 2. polowa', 'Penalty Goal - 2nd Half', 'Gol z rzutu karnego w drugiej polowie', 'Penalty goal in second half', 'COMBINATION', 'POLOWY', FALSE, NULL, ARRAY['TEAM_HOME', 'TEAM_AWAY', 'ANY', 'NONE'], 55),
 (118, 'CORRECT_SCORE_GROUP', 'Dokladny wynik w grupie', 'Correct Score Groups', 'Dokladny wynik w grupie', 'Correct score groups', 'COMBINATION', 'DOKLADNY_WYNIK', FALSE, NULL, ARRAY['HOME_WIN_GROUP_0', 'HOME_WIN_GROUP_1', 'HOME_WIN_GROUP_2', 'HOME_WIN_GROUP_3', 'DRAW', 'AWAY_WIN_GROUP_1', 'AWAY_WIN_GROUP_2', 'AWAY_WIN_GROUP_3', 'AWAY_WIN_GROUP_4', 'HOME_OTHER', 'AWAY_OTHER'], 52),
 (131, 'PLAYER_ASSIST_PAIRS', 'Asysty par zawodnikow', 'Player Assist Pairs', 'Asysty par zawodnikow', 'Player assist pairs', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['YES'], 66),
 (290, 'PLAYER_ASSIST_TRIPLE', 'Asysty tria zawodnikow', 'Player Assist Trio', 'Asysty tria zawodnikow', 'Player assist trio', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['YES'], 67),
@@ -905,7 +905,7 @@ VALUES
 (309, 'TEAM_TOTAL_SHOTS', 'Strzaly druzyny', 'Team Total Shots', 'Strzaly druzyny', 'Team total shots', 'STAT_RANGE', 'STATYSTYKI', TRUE, 'decimal', ARRAY['HOME_OVER', 'HOME_UNDER', 'AWAY_OVER', 'AWAY_UNDER'], 90),
 (112, 'RESULT_AND_FIRST_GOAL', 'Wynik i kto zdobedzie 1. bramke', 'Result & First Goal', 'Wynik i kto zdobedzie pierwsza bramke', 'Result and first goal scorer team', 'COMBINATION', 'KOMBINACJE', FALSE, NULL, ARRAY['HOME_HOME', 'HOME_AWAY', 'DRAW_HOME', 'DRAW_AWAY', 'DRAW_NONE', 'AWAY_HOME', 'AWAY_AWAY'], 93),
 (424, 'OWN_GOAL', 'Gol samobojczy', 'Own Goal', 'Czy w meczu padnie gol samobojczy?', 'Will there be an own goal in the match?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 25),
-(425, 'SECOND_HALF_DOUBLE_CHANCE', 'Podwojna szansa 2. polowy', 'Second Half Double Chance', 'Podwojna szansa w drugiej polowie', 'Double chance in second half', 'TRIPLE_BUTTONS', 'PIERWSZA_POLOWA', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'DRAW_OR_AWAY', 'HOME_OR_AWAY'], 43),
+(425, 'SECOND_HALF_DOUBLE_CHANCE', 'Podwojna szansa 2. polowy', 'Second Half Double Chance', 'Podwojna szansa w drugiej polowie', 'Double chance in second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'DRAW_OR_AWAY', 'HOME_OR_AWAY'], 43),
 (426, 'PLAYER_TACKLES', 'Odbiory zawodnika', 'Player Tackles', 'Liczba udanych odbiorow zawodnika', 'Player tackles count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 72),
 (427, 'PLAYER_INTERCEPTIONS', 'Przechwyty zawodnika', 'Player Interceptions', 'Liczba przechwytow zawodnika', 'Player interceptions count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
 (428, 'PLAYER_FOULS_WON', 'Faule wywalczone', 'Player Fouls Won', 'Liczba fauli wywalczonych przez zawodnika', 'Fouls suffered by player', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
@@ -963,3 +963,74 @@ ON CONFLICT (id) DO UPDATE SET
   param_type = EXCLUDED.param_type,
   selections = EXCLUDED.selections,
   display_order = EXCLUDED.display_order;
+
+-- ============================================================================
+-- SUB_CATEGORY assignments (added during market category reorganization)
+-- ============================================================================
+
+-- WYNIK_MECZU subcategories
+UPDATE market_types SET sub_category = 'podstawowe' WHERE code IN ('MATCH_WINNER', 'DOUBLE_CHANCE', 'DRAW_NO_BET');
+UPDATE market_types SET sub_category = 'wygrana-polowy' WHERE code IN ('TEAM_WIN_AT_LEAST_ONE_HALF', 'HOME_WIN_AT_LEAST_ONE_HALF', 'AWAY_WIN_AT_LEAST_ONE_HALF', 'TEAM_WIN_BOTH_HALVES', 'HOME_WIN_BOTH_HALVES', 'AWAY_WIN_BOTH_HALVES');
+UPDATE market_types SET sub_category = 'czyste-konto' WHERE code IN ('HOME_WIN_TO_NIL', 'AWAY_WIN_TO_NIL');
+UPDATE market_types SET sub_category = 'specjalne' WHERE code = 'WIN_OR_WIN_BY_2' AND category = 'WYNIK_MECZU';
+
+-- GOLE subcategories
+UPDATE market_types SET sub_category = 'linia-golowa' WHERE code IN ('TOTAL_GOALS', 'TOTAL_GOALS_ASIAN', 'BOTH_HALVES_TOTAL_GOALS', 'BOTH_HALVES_UNDER_GOALS', 'BOTH_HALVES_OVER_GOALS');
+UPDATE market_types SET sub_category = 'btts' WHERE code IN ('BTTS', 'BTTS_BOTH_HALVES', 'BTTS_BY_HALF', 'BTTS_PENALTY', 'BTTS_HEAD_GOALS', 'BTTS_FREE_KICK');
+UPDATE market_types SET sub_category = 'parzystosc' WHERE code = 'ODD_EVEN_GOALS';
+UPDATE market_types SET sub_category = 'gole-druzyny' WHERE code IN ('HOME_TEAM_TO_SCORE', 'AWAY_TEAM_TO_SCORE', 'TEAM_TOTAL_GOALS', 'HOME_TEAM_TOTAL_GOALS', 'AWAY_TEAM_TOTAL_GOALS', 'HOME_TEAM_ODD_EVEN_GOALS', 'AWAY_TEAM_ODD_EVEN_GOALS', 'TEAM_SCORES_BOTH_HALVES', 'HOME_SCORE_BOTH_HALVES', 'AWAY_SCORE_BOTH_HALVES', 'TEAM_TOTAL_SCORERS');
+UPDATE market_types SET sub_category = 'przedzialy' WHERE code IN ('GOAL_RANGE', 'TEAM_GOAL_RANGE', 'EXACT_GOALS', 'HOME_EXACT_GOALS', 'AWAY_EXACT_GOALS', 'HOME_GOAL_RANGE', 'AWAY_GOAL_RANGE');
+UPDATE market_types SET sub_category = 'pierwszy-ostatni' WHERE code IN ('FIRST_TEAM_TO_SCORE', 'FIRST_GOAL_TIME', 'LAST_TEAM_TO_SCORE');
+UPDATE market_types SET sub_category = 'metoda-gola' WHERE code IN ('FREE_KICK_GOAL', 'HOME_TEAM_FREE_KICK_GOAL', 'AWAY_TEAM_FREE_KICK_GOAL', 'HEADER_GOAL', 'HEADER_GOAL_BOTH_HALVES', 'TEAM_HEADER_GOAL', 'PENALTY_GOAL', 'OWN_GOAL');
+UPDATE market_types SET sub_category = 'porownanie-polow' WHERE code IN ('BOTH_HALVES_GOALS', 'HALF_WITH_MORE_GOALS', 'TEAM_HALF_WITH_MORE_GOALS', 'HOME_HALF_WITH_MOST_GOALS', 'AWAY_HALF_WITH_MOST_GOALS');
+UPDATE market_types SET sub_category = 'specjalne' WHERE code IN ('WIN_TO_NIL', 'CLEAN_SHEET', 'WINNING_MARGIN', 'TIME_PERIOD_RESULT', 'TEAMS_TO_SCORE') AND category = 'GOLE';
+
+-- HANDICAP subcategories
+UPDATE market_types SET sub_category = 'azjatycki' WHERE code IN ('ASIAN_HANDICAP', 'ASIAN_HANDICAP_3WAY', 'SECOND_HALF_ASIAN_HANDICAP', 'FIRST_HALF_ASIAN_HANDICAP');
+UPDATE market_types SET sub_category = 'europejski' WHERE code IN ('EUROPEAN_HANDICAP', 'FIRST_HALF_EUROPEAN_HANDICAP', 'SECOND_HALF_EUROPEAN_HANDICAP');
+
+-- POLOWY subcategories
+UPDATE market_types SET sub_category = 'wynik-1h' WHERE code IN ('HALF_TIME_RESULT', 'HALF_TIME_DOUBLE_CHANCE', 'HALF_TIME_DRAW_NO_BET');
+UPDATE market_types SET sub_category = 'gole-1h' WHERE code IN ('HALF_TIME_TOTAL_GOALS', 'HALF_TIME_BTTS', 'HALF_TIME_HOME_TO_SCORE', 'HALF_TIME_AWAY_TO_SCORE', 'HALF_TIME_ODD_EVEN_GOALS', 'HALF_TIME_FIRST_GOAL', 'HALF_TIME_EXACT_GOALS', 'HALF_TIME_GOAL_RANGE', 'HALF_TIME_TEAM_TOTAL_GOALS', 'HALF_TIME_HOME_TEAM_TOTAL_GOALS', 'HALF_TIME_AWAY_TEAM_TOTAL_GOALS');
+UPDATE market_types SET sub_category = 'specjalne-1h' WHERE code IN ('HALF_TIME_HEADER_GOAL', 'HALF_TIME_PENALTY_GOAL', 'HALF_TIME_RESULT_AND_BTTS', 'HALF_TIME_RESULT_AND_TOTAL');
+UPDATE market_types SET sub_category = 'wynik-dokladny-1h' WHERE code = 'HALF_TIME_CORRECT_SCORE';
+UPDATE market_types SET sub_category = 'wynik-2h' WHERE code IN ('SECOND_HALF_RESULT', 'SECOND_HALF_DOUBLE_CHANCE', 'SECOND_HALF_DRAW_NO_BET');
+UPDATE market_types SET sub_category = 'gole-2h' WHERE code IN ('SECOND_HALF_TOTAL_GOALS', 'SECOND_HALF_BTTS', 'SECOND_HALF_HOME_TO_SCORE', 'SECOND_HALF_AWAY_TO_SCORE', 'SECOND_HALF_ODD_EVEN_GOALS', 'SECOND_HALF_FIRST_GOAL', 'SECOND_HALF_EXACT_GOALS', 'SECOND_HALF_GOAL_RANGE', 'SECOND_HALF_TEAM_TOTAL_GOALS', 'SECOND_HALF_HOME_TEAM_TOTAL_GOALS', 'SECOND_HALF_AWAY_TEAM_TOTAL_GOALS', 'SECOND_HALF_HOME_EXACT_GOALS');
+UPDATE market_types SET sub_category = 'specjalne-2h' WHERE code IN ('SECOND_HALF_HEADER_GOAL', 'SECOND_HALF_PENALTY_GOAL', 'SECOND_HALF_RESULT_AND_TOTAL');
+UPDATE market_types SET sub_category = 'wynik-dokladny-2h' WHERE code = 'SECOND_HALF_CORRECT_SCORE';
+
+-- DOKLADNY_WYNIK subcategories
+UPDATE market_types SET sub_category = 'pelny-mecz' WHERE code IN ('CORRECT_SCORE', 'CORRECT_SCORE_GROUP');
+UPDATE market_types SET sub_category = 'polowa-koniec' WHERE code = 'HT_FT_CORRECT_SCORE';
+
+-- ZAWODNICY subcategories
+UPDATE market_types SET sub_category = 'strzelcy' WHERE code IN ('GOALSCORER_FIRST', 'GOALSCORER_LAST', 'GOALSCORER_ANYTIME', 'PLAYER_GOALS', 'PLAYER_2_OR_MORE_GOALS', 'PLAYER_3_OR_MORE_GOALS', 'PLAYER_HAT_TRICK', 'TWO_PLAYERS_COMBINED_GOALS', 'THREE_PLAYERS_COMBINED_GOALS', 'TWO_PLAYERS_ANYTIME', 'THREE_PLAYERS_ANYTIME');
+UPDATE market_types SET sub_category = 'asysty' WHERE code IN ('PLAYER_ASSISTS', 'PLAYER_ASSIST_PAIRS', 'PLAYER_ASSIST_TRIPLE');
+UPDATE market_types SET sub_category = 'kartki' WHERE code IN ('PLAYER_CARDS', 'PLAYER_RED_CARD') AND category = 'ZAWODNICY';
+UPDATE market_types SET sub_category = 'strzaly' WHERE code IN ('PLAYER_SHOTS', 'PLAYER_SHOTS_ON_TARGET') AND category = 'ZAWODNICY';
+UPDATE market_types SET sub_category = 'podania' WHERE code = 'PLAYER_PASSES';
+UPDATE market_types SET sub_category = 'obrona' WHERE code IN ('PLAYER_TACKLES', 'PLAYER_INTERCEPTIONS', 'PLAYER_SAVES');
+UPDATE market_types SET sub_category = 'faule' WHERE code IN ('PLAYER_FOULS_WON', 'PLAYER_FOULS') AND category = 'ZAWODNICY';
+UPDATE market_types SET sub_category = 'metoda-gola' WHERE code IN ('PLAYER_FREE_KICK_GOAL', 'PLAYER_HEADER_GOAL', 'PENALTY_SCORER');
+UPDATE market_types SET sub_category = 'kombinacje' WHERE code IN ('PLAYER_GOAL_AND_RESULT', 'PLAYER_GOAL_AND_ASSIST');
+
+-- STATYSTYKI subcategories
+UPDATE market_types SET sub_category = 'rozne' WHERE code IN ('CORNERS_TOTAL', 'CORNERS_TEAM', 'CORNERS_RACE', 'FIRST_CORNER', 'LAST_CORNER', 'CORNERS_HANDICAP', 'CORNERS_ODD_EVEN', 'CORNERS_RANGE', 'CORNERS_TEAM_RANGE', 'HOME_CORNERS_RANGE', 'AWAY_CORNERS_RANGE', 'HALF_TIME_CORNERS_TOTAL', 'HALF_TIME_CORNERS_TEAM', 'HALF_TIME_CORNERS_RACE', 'HALF_TIME_CORNERS_ODD_EVEN', 'HALF_TIME_CORNERS_HANDICAP', 'HALF_TIME_CORNERS_RANGE', 'HALF_TIME_CORNERS_TEAM_RANGE', 'HALF_TIME_HOME_EXACT_CORNERS', 'HALF_TIME_AWAY_EXACT_CORNERS', 'HALF_TIME_LAST_CORNER', 'NEXT_CORNER_1H');
+UPDATE market_types SET sub_category = 'kartki' WHERE code IN ('CARDS_TOTAL', 'CARDS_TEAM', 'CARDS_RACE', 'FIRST_CARD', 'CARDS_EXACT_RANGE', 'HALF_TIME_CARDS_TOTAL', 'FIRST_HALF_CARDS_1X2', 'FIRST_HALF_FIRST_CARD') AND category = 'STATYSTYKI';
+UPDATE market_types SET sub_category = 'faule' WHERE code IN ('FOULS_TOTAL', 'FOUL_RACE') AND category = 'STATYSTYKI';
+UPDATE market_types SET sub_category = 'spalone' WHERE code IN ('OFFSIDES_TOTAL', 'OFFSIDES_1X2', 'HOME_TEAM_TOTAL_OFFSIDES', 'AWAY_TEAM_TOTAL_OFFSIDES');
+UPDATE market_types SET sub_category = 'strzaly' WHERE code IN ('MOST_SHOTS', 'MOST_SHOTS_ON_TARGET', 'TOTAL_SHOTS', 'TOTAL_SHOTS_ON_TARGET', 'TEAM_TOTAL_SHOTS', 'TEAM_TOTAL_SHOTS_ON_TARGET') AND category = 'STATYSTYKI';
+UPDATE market_types SET sub_category = 'posiadanie' WHERE code IN ('HOME_POSSESSION', 'AWAY_POSSESSION');
+UPDATE market_types SET sub_category = 'czerwone-kartki' WHERE code IN ('RED_CARD', 'RED_CARD_TEAM', 'HALF_TIME_RED_CARD', 'RED_CARD_AND_PENALTY');
+UPDATE market_types SET sub_category = 'specjalne' WHERE code = 'PENALTY_AWARDED' AND category = 'STATYSTYKI';
+
+-- KOMBINACJE subcategories
+UPDATE market_types SET sub_category = 'wynik-btts' WHERE code IN ('RESULT_AND_BTTS', 'DOUBLE_CHANCE_BTTS');
+UPDATE market_types SET sub_category = 'wynik-gole' WHERE code IN ('RESULT_AND_TOTAL', 'TOTAL_GOALS_AND_BTTS', 'DOUBLE_CHANCE_TOTAL');
+UPDATE market_types SET sub_category = 'polowa-koniec' WHERE code IN ('HALFTIME_FULLTIME', 'HALFTIME_FULLTIME_AND_TOTAL', 'HT_OR_FT_RESULT', 'DOUBLE_RESULT') AND category = 'KOMBINACJE';
+UPDATE market_types SET sub_category = 'pierwszy-gol' WHERE code IN ('FIRST_GOAL_AND_RESULT', 'RESULT_AND_FIRST_GOAL');
+UPDATE market_types SET sub_category = 'polowy' WHERE code IN ('HALF_TIME_DOUBLE_CHANCE_BTTS', 'SECOND_HALF_DOUBLE_CHANCE_BTTS', 'SECOND_HALF_RESULT_AND_BTTS');
+UPDATE market_types SET sub_category = 'inne' WHERE code = 'MULTI_RESULT' AND category = 'KOMBINACJE';
+
+-- INNE subcategory
+UPDATE market_types SET sub_category = 'inne' WHERE code = 'OTHER';

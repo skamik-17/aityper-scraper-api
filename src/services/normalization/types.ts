@@ -22,8 +22,8 @@ export const MarketCategory = {
   /** Handicap markets - Asian Handicap, European Handicap */
   HANDICAP: "HANDICAP",
 
-  /** First half markets - HT Result, HT Goals, HT BTTS */
-  PIERWSZA_POLOWA: "PIERWSZA_POLOWA",
+  /** Half markets - 1st half, 2nd half results and goals */
+  POLOWY: "POLOWY",
 
   /** Correct Score markets */
   DOKLADNY_WYNIK: "DOKLADNY_WYNIK",
@@ -511,6 +511,7 @@ export interface MarketDefinition {
   name_en?: string;
   labels?: { pl: string; en: string };
   category: MarketCategory;
+  subCategory?: string;
   view_type?: ViewType;
   viewType?: ViewType;
   patterns?: (string | RegExp)[];

@@ -108,8 +108,15 @@ export const MARKET_IDS = {
   // ==========================================================================
   // HANDICAP MARKETS
   // ==========================================================================
-  EUROPEAN_HANDICAP: 14, // "Handicap 1X2" - European Handicap (multiple lines with different handicap values)
-  ASIAN_HANDICAP: 20, // "Handicap azjatycki"
+  EUROPEAN_HANDICAP: 14, // "Handicap 1X2" - European Handicap (3-way, score notation like (0:1))
+  ASIAN_HANDICAP: 20, // "Handicap" - Asian Handicap (half-lines: -0.5, -1.5, -2.5)
+  ASIAN_HANDICAP_PUSH: 22, // "Handicap (z możliwym zwrotem)" - Asian Handicap (integer lines: -1, -2, 0)
+  FIRST_HALF_EUROPEAN_HANDICAP: 76, // "1. połowa - handicap 1X2"
+  FIRST_HALF_ASIAN_HANDICAP_PUSH: 77, // "1. połowa - handicap (z możliwym zwrotem)" (integer lines)
+  FIRST_HALF_ASIAN_HANDICAP: 79, // "1. połowa - handicap" (half-lines)
+  SECOND_HALF_EUROPEAN_HANDICAP: 106, // "2. połowa - handicap 1X2"
+  SECOND_HALF_ASIAN_HANDICAP_PUSH: 107, // "2. połowa - handicap (z możliwym zwrotem)" (integer lines)
+  SECOND_HALF_ASIAN_HANDICAP: 109, // "2. połowa - handicap" (half-lines)
 
   // ==========================================================================
   // CORRECT SCORE
@@ -142,17 +149,38 @@ export const MARKET_IDS = {
   PLAYER_SHOTS_ON_TARGET: 1852,
   PLAYER_PASSES: 1853,
   PLAYER_CARDS: 1855,
-  PLAYER_2_PLUS_GOALS: 2004,
-  PLAYER_3_PLUS_GOALS: 2005,
-  PLAYER_HAT_TRICK: 2006,
-  PLAYER_SAVES: 2011,
-  PLAYER_INTERCEPTIONS: 2006,
-  PLAYER_CARDS_ALT: 2153,
+  PLAYER_TACKLES: 1897,       // "Zawodnik - odbiory"
+  PLAYER_FOULS_WON: 2004,     // "Zawodnik - faule wywalczone"
+  PLAYER_FOULS: 2005,          // "Zawodnik - faule popełnione"
+  PLAYER_INTERCEPTIONS: 2006,  // "Zawodnik - przechwyty"
+  PLAYER_SAVES: 2011,          // "Zawodnik - obronione strzały"
+  PLAYER_RED_CARD: 2153,       // "Zawodnik - otrzyma czerwoną kartkę"
+
+  // ==========================================================================
+  // STATISTICS MARKETS
+  // ==========================================================================
   EACH_TEAM_CORNERS: 2097,
+  FOULS_TOTAL: 2111,           // "Suma fauli"
 } as const;
 
 export const PLAYER_STAT_MARKET_IDS = new Set([
-  1051, 1845, 1850, 1851, 1852, 1853, 1855, 2004, 2005, 2006, 2011, 2153,
+  1051, 1845, 1850, 1851, 1852, 1853, 1855,
+  1897, 2004, 2005, 2006, 2011, 2153,
+]);
+
+export const EUROPEAN_HANDICAP_IDS = new Set<number>([
+  MARKET_IDS.EUROPEAN_HANDICAP,
+  MARKET_IDS.FIRST_HALF_EUROPEAN_HANDICAP,
+  MARKET_IDS.SECOND_HALF_EUROPEAN_HANDICAP,
+]);
+
+export const ASIAN_HANDICAP_IDS = new Set<number>([
+  MARKET_IDS.ASIAN_HANDICAP,
+  MARKET_IDS.ASIAN_HANDICAP_PUSH,
+  MARKET_IDS.FIRST_HALF_ASIAN_HANDICAP,
+  MARKET_IDS.FIRST_HALF_ASIAN_HANDICAP_PUSH,
+  MARKET_IDS.SECOND_HALF_ASIAN_HANDICAP,
+  MARKET_IDS.SECOND_HALF_ASIAN_HANDICAP_PUSH,
 ]);
 
 /**
@@ -251,6 +279,13 @@ export const MARKET_GROUPS: Record<number, string> = {
   [MARKET_IDS.HALFTIME_FULLTIME]: "Polowa/Koniec",
   [MARKET_IDS.FIRST_GOALSCORER]: "Strzelcy",
   [MARKET_IDS.ANYTIME_GOALSCORER]: "Strzelcy",
+  [MARKET_IDS.PLAYER_TACKLES]: "Zawodnicy",
+  [MARKET_IDS.PLAYER_FOULS_WON]: "Zawodnicy",
+  [MARKET_IDS.PLAYER_FOULS]: "Zawodnicy",
+  [MARKET_IDS.PLAYER_INTERCEPTIONS]: "Zawodnicy",
+  [MARKET_IDS.PLAYER_SAVES]: "Zawodnicy",
+  [MARKET_IDS.PLAYER_RED_CARD]: "Zawodnicy",
+  [MARKET_IDS.FOULS_TOTAL]: "Statystyki",
 };
 
 /**
@@ -273,6 +308,13 @@ export const MARKET_TYPES: Record<number, string> = {
   [MARKET_IDS.HALFTIME_FULLTIME]: "HALFTIME_FULLTIME",
   [MARKET_IDS.FIRST_GOALSCORER]: "FIRST_GOALSCORER",
   [MARKET_IDS.ANYTIME_GOALSCORER]: "ANYTIME_GOALSCORER",
+  [MARKET_IDS.PLAYER_TACKLES]: "PLAYER_TACKLES",
+  [MARKET_IDS.PLAYER_FOULS_WON]: "PLAYER_FOULS_WON",
+  [MARKET_IDS.PLAYER_FOULS]: "PLAYER_FOULS",
+  [MARKET_IDS.PLAYER_INTERCEPTIONS]: "PLAYER_INTERCEPTIONS",
+  [MARKET_IDS.PLAYER_SAVES]: "PLAYER_SAVES",
+  [MARKET_IDS.PLAYER_RED_CARD]: "PLAYER_RED_CARD",
+  [MARKET_IDS.FOULS_TOTAL]: "FOULS_TOTAL",
 };
 
 /**

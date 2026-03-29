@@ -68,7 +68,8 @@ function getParameterLabel(param: string, marketType: string): string {
   if (param === "base") return "";
 
   // For handicap, show the line with sign
-  if (marketType.includes("HANDICAP")) {
+  // But skip score-format params like "1:0", "0:2" (European Handicap)
+  if (marketType.includes("HANDICAP") && !param.includes(":")) {
     const num = parseFloat(param);
     if (!isNaN(num)) {
       // Only add + if param doesn't already have a sign prefix

@@ -30,7 +30,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   14: "EUROPEAN_HANDICAP",
   17: "WINNING_MARGIN",
-  20: "ASIAN_HANDICAP",
+  20: "ASIAN_HANDICAP_PUSH",
   22: "ASIAN_HANDICAP",
   33: "EXACT_GOALS",
   52: "GOALSCORER_FIRST",
@@ -40,7 +40,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   74: "HALF_TIME_DOUBLE_CHANCE",
   75: "HALF_TIME_DRAW_NO_BET",
   76: "FIRST_HALF_EUROPEAN_HANDICAP",
-  77: "FIRST_HALF_ASIAN_HANDICAP",
+  77: "FIRST_HALF_ASIAN_HANDICAP_PUSH",
   79: "FIRST_HALF_ASIAN_HANDICAP",
   80: "HALF_TIME_TOTAL_GOALS",
   82: "HALF_TIME_TOTAL_GOALS",
@@ -50,7 +50,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   101: "HALF_TIME_CORRECT_SCORE",
   102: "SECOND_HALF_RESULT",
   106: "SECOND_HALF_EUROPEAN_HANDICAP",
-  107: "SECOND_HALF_ASIAN_HANDICAP",
+  107: "SECOND_HALF_ASIAN_HANDICAP_PUSH",
   109: "SECOND_HALF_ASIAN_HANDICAP",
   110: "SECOND_HALF_TOTAL_GOALS",
   112: "SECOND_HALF_TOTAL_GOALS",
@@ -228,6 +228,8 @@ const STS_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType; ex
   // Second half markets  
   { pattern: /^wynik\s+2\.\s*po[lł]owy$/i, code: "SECOND_HALF_RESULT" },
   { pattern: /^liczba\s+goli\s+2\.\s*po[lł]ow[ay]$/i, code: "SECOND_HALF_TOTAL_GOALS" },
+  { pattern: /^2\.?\s*po[lł]ow.*zak[lł]ad\s+bez\s+remisu/i, code: "SECOND_HALF_DRAW_NO_BET" },
+  { pattern: /^2\.?\s*po[lł]ow.*podw[oó]jna\s+szansa$/i, code: "SECOND_HALF_DOUBLE_CHANCE" },
 
   // Correct score
   { pattern: /^dok[lł]adny\s+wynik$/i, code: "CORRECT_SCORE" },
@@ -577,10 +579,13 @@ function normalizeSelectionForMarket(
       return normalizeOddEvenSelection(trimmed);
 
     case "ASIAN_HANDICAP":
+    case "ASIAN_HANDICAP_PUSH":
     case "EUROPEAN_HANDICAP":
     case "FIRST_HALF_ASIAN_HANDICAP":
+    case "FIRST_HALF_ASIAN_HANDICAP_PUSH":
     case "FIRST_HALF_EUROPEAN_HANDICAP":
     case "SECOND_HALF_ASIAN_HANDICAP":
+    case "SECOND_HALF_ASIAN_HANDICAP_PUSH":
     case "SECOND_HALF_EUROPEAN_HANDICAP":
     case "CORNERS_HANDICAP":
     case "HALF_TIME_CORNERS_HANDICAP":
@@ -814,13 +819,13 @@ function extractParamValue(
 ): string | undefined {
   const parameterizedMarkets = [
     "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS",
-    "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP",
+    "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP", "ASIAN_HANDICAP_PUSH",
     "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "HALF_TIME_CARDS_TOTAL", "CORNERS_HANDICAP",
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
     "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_TEAM", "SECOND_HALF_RESULT_AND_TOTAL",
     "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
-    "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_EUROPEAN_HANDICAP",
-    "SECOND_HALF_ASIAN_HANDICAP", "SECOND_HALF_EUROPEAN_HANDICAP",
+    "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_ASIAN_HANDICAP_PUSH", "FIRST_HALF_EUROPEAN_HANDICAP",
+    "SECOND_HALF_ASIAN_HANDICAP", "SECOND_HALF_ASIAN_HANDICAP_PUSH", "SECOND_HALF_EUROPEAN_HANDICAP",
     "BOTH_HALVES_TOTAL_GOALS", "BOTH_HALVES_UNDER_GOALS", "BOTH_HALVES_OVER_GOALS", "HALF_TIME_TEAM_TOTAL_GOALS",
     "SECOND_HALF_TEAM_TOTAL_GOALS", "HALF_TIME_RESULT_AND_TOTAL",
     "TEAM_WIN_AT_LEAST_ONE_HALF", "TEAM_SCORES_BOTH_HALVES",
@@ -922,23 +927,26 @@ function extractParamValue(
     }
   }
 
-  // Extract Asian Handicap value from selection names (e.g., "1 (+0)", "1 (-2)", "1 (-0.5)")
-  // Format: "1 (+X)" or "1 (-X)" where X is the handicap value for HOME team
   if (marketCode === "ASIAN_HANDICAP" ||
+      marketCode === "ASIAN_HANDICAP_PUSH" ||
       marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
-      marketCode === "SECOND_HALF_ASIAN_HANDICAP") {
-    // Find HOME selection (starts with "1")
+      marketCode === "FIRST_HALF_ASIAN_HANDICAP_PUSH" ||
+      marketCode === "SECOND_HALF_ASIAN_HANDICAP" ||
+      marketCode === "SECOND_HALF_ASIAN_HANDICAP_PUSH") {
     const homeSelection = raw.selections.find(s => /^1\s*\(/.test(s.name));
+    const awaySelection = raw.selections.find(s => /^2\s*\(/.test(s.name));
     if (homeSelection) {
-      const handicapMatch = homeSelection.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
-      if (handicapMatch) {
-        // Normalize: replace comma with dot and ensure sign prefix
-        let value = handicapMatch[1].replace(",", ".");
-        // Ensure positive values have + prefix for consistency
-        if (!value.startsWith("+") && !value.startsWith("-")) {
-          value = `+${value}`;
+      const homeMatch = homeSelection.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
+      if (homeMatch) {
+        const homeValue = ensureSign(homeMatch[1].replace(",", "."));
+        let awayValue: string;
+        if (awaySelection) {
+          const awayMatch = awaySelection.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
+          awayValue = awayMatch ? ensureSign(awayMatch[1].replace(",", ".")) : negateHandicap(homeValue);
+        } else {
+          awayValue = negateHandicap(homeValue);
         }
-        return value;
+        return `${homeValue}/${awayValue}`;
       }
     }
   }
@@ -1139,5 +1147,16 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     };
   },
 };
+
+function ensureSign(value: string): string {
+  if (!value.startsWith("+") && !value.startsWith("-")) return `+${value}`;
+  return value;
+}
+
+function negateHandicap(value: string): string {
+  if (value.startsWith("+")) return `-${value.substring(1)}`;
+  if (value.startsWith("-")) return `+${value.substring(1)}`;
+  return value;
+}
 
 export default stsNormalizer;

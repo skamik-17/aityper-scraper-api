@@ -13,8 +13,9 @@ INSERT INTO market_types (id, code, name_pl, name_en, description_pl, descriptio
 (12, 'GOAL_RANGE', 'Przedzial goli', 'Goal Range', 'W jakim przedziale bedzie liczba goli?', 'Goal range bracket', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['0-1', '2-3', '4-5', '6+'], 18),
 (13, 'BOTH_HALVES_GOALS', 'Gole w obu polowach', 'Goals In Both Halves', 'Czy padnie gol w obu polowach?', 'Will there be goals in both halves?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 19),
 (14, 'WINNING_MARGIN', 'Margines zwyciestwa', 'Winning Margin', 'Roznica bramek zwyciezcy', 'Winner''s goal difference', 'PARAMETER_SLIDER', 'GOLE', TRUE, 'integer', ARRAY['HOME', 'AWAY', 'DRAW'], 20),
-(15, 'ASIAN_HANDICAP', 'Handicap azjatycki', 'Asian Handicap', 'Wynik z uwzglednieniem przewagi/straty bramkowej', 'Result with goal advantage/disadvantage', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 30),
-(16, 'EUROPEAN_HANDICAP', 'Handicap europejski', 'European Handicap', 'Handicap z mozliwoscia remisu', 'Handicap with draw option', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 31),
+(15, 'ASIAN_HANDICAP', 'Handicap', 'Handicap', 'Handicap (linie polowkowe)', 'Handicap (half-lines)', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 30),
+(439, 'ASIAN_HANDICAP_PUSH', 'Handicap (z mozliwym zwrotem)', 'Handicap (with push)', 'Handicap z mozliwym zwrotem stawki', 'Handicap with possible stake refund', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 31),
+(16, 'EUROPEAN_HANDICAP', 'Handicap 1X2', 'European Handicap', 'Handicap z mozliwoscia remisu', 'Handicap with draw option', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 32),
 (17, 'HALF_TIME_RESULT', 'Wynik 1. polowy', 'Half Time Result', 'Wynik po pierwszej polowie', 'Result at half time', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'DRAW', 'AWAY'], 40),
 (18, 'HALF_TIME_TOTAL_GOALS', 'Gole 1. polowy', 'Half Time Goals', 'Liczba goli w pierwszej polowie', 'Goals in first half', 'PARAMETER_SLIDER', 'POLOWY', TRUE, 'decimal', ARRAY['OVER', 'UNDER'], 41),
 (19, 'HALF_TIME_BTTS', 'BTTS 1. polowa', 'Half Time BTTS', 'Obie strzela w pierwszej polowie', 'Both teams score in first half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 42),
@@ -512,7 +513,8 @@ VALUES
 (104, 'HALF_TIME_HOME_TO_SCORE', '1. polowa - gospodarz strzeli', 'Home Team To Score (1st Half)', 'Czy gospodarze strzela w 1. polowie?', 'Will the home team score in the first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 48),
 (105, 'HALF_TIME_AWAY_TO_SCORE', '1. polowa - gosc strzeli', 'Away Team To Score (1st Half)', 'Czy goscie strzela w 1. polowie?', 'Will the away team score in the first half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 49),
 (106, 'SECOND_HALF_HOME_TO_SCORE', '2. polowa - gospodarz strzeli', 'Home Team To Score (2nd Half)', 'Czy gospodarze strzela w 2. polowie?', 'Will the home team score in the second half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 50),
-(107, 'SECOND_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 2. polowa', 'Second Half Asian Handicap', 'Azjatycki handicap w drugiej polowie', 'Asian handicap in second half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 17),
+(107, 'SECOND_HALF_ASIAN_HANDICAP', 'Handicap 2. polowa', 'Second Half Handicap', 'Handicap w drugiej polowie (linie polowkowe)', 'Handicap in second half (half-lines)', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 17),
+(438, 'SECOND_HALF_ASIAN_HANDICAP_PUSH', 'Handicap 2. polowa (z mozliwym zwrotem)', 'Second Half Handicap (with push)', 'Handicap w drugiej polowie z mozliwym zwrotem stawki', 'Handicap in second half with possible stake refund', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 18),
 (190, 'SECOND_HALF_FIRST_GOAL', 'Pierwszy gol 2. polowy', 'First Goal 2nd Half', 'Ktora druzyna strzeli pierwszego gola w 2. polowie?', 'Which team scores first in second half?', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 52),
 (191, 'SECOND_HALF_AWAY_TO_SCORE', '2. polowa - gosc strzeli', 'Away Team To Score (2nd Half)', 'Czy goscie strzela w 2. polowie?', 'Will away team score in second half?', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['YES', 'NO'], 51),
 (200, 'HALF_TIME_FIRST_GOAL', 'Pierwszy gol 1. polowy', 'First Goal 1st Half', 'Kto strzeli pierwszego gola w 1. polowie?', 'Who scores first in 1st half?', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY', 'NONE'], 200),
@@ -525,7 +527,8 @@ VALUES
 (207, 'HALF_TIME_EXACT_GOALS', 'Dokladna liczba goli 1. polowa', 'Exact Goals 1st Half', 'Dokladna liczba goli w pierwszej polowie', 'Exact number of goals in first half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2', '3+'], 207),
 (208, 'SECOND_HALF_EXACT_GOALS', 'Dokladna liczba goli 2. polowa', 'Exact Goals 2nd Half', 'Dokladna liczba goli w drugiej polowie', 'Exact number of goals in second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['0', '1', '2+'], 208),
 (209, 'FIRST_HALF_EUROPEAN_HANDICAP', 'Handicap europejski 1. polowa', 'European Handicap 1st Half', 'Handicap europejski w pierwszej polowie', 'European handicap in first half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'DRAW', 'AWAY'], 209),
-(210, 'FIRST_HALF_ASIAN_HANDICAP', 'Handicap azjatycki 1. polowa', 'Asian Handicap 1st Half', 'Handicap azjatycki w pierwszej polowie', 'Asian handicap in first half', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 210),
+(210, 'FIRST_HALF_ASIAN_HANDICAP', 'Handicap 1. polowa', 'Handicap 1st Half', 'Handicap 1. polowa (linie polowkowe)', 'Handicap 1st half (half-lines)', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 210),
+(440, 'FIRST_HALF_ASIAN_HANDICAP_PUSH', 'Handicap 1. polowa (z mozliwym zwrotem)', 'Handicap 1st Half (with push)', 'Handicap 1. polowa z mozliwym zwrotem stawki', 'Handicap 1st half with possible stake refund', 'HANDICAP_SELECTOR', 'HANDICAP', TRUE, 'handicap', ARRAY['HOME', 'AWAY'], 211),
 (211, 'TEAM_WIN_AT_LEAST_ONE_HALF', 'Wygra przynajmniej jedna polowe', 'To Win Either Half', 'Czy druzyna wygra przynajmniej jedna polowe?', 'Will team win at least one half?', 'BINARY_BUTTONS', 'WYNIK_MECZU', TRUE, 'decimal', ARRAY['YES', 'NO'], 211),
 (212, 'HALF_WITH_MORE_GOALS', 'Polowa z wieksza liczba goli', 'Half with Most Goals', 'W ktorej polowie padnie wiecej goli?', 'In which half will more goals be scored?', 'TRIPLE_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['1st', '2nd', 'Draw'], 212),
 (213, 'TEAM_HALF_WITH_MORE_GOALS', 'Polowa z wieksza liczba goli druzyny', 'Team Half with Most Goals', 'W ktorej polowie druzyna strzeli wiecej goli?', 'In which half will team score more goals?', 'COMBINATION', 'GOLE', TRUE, 'decimal', ARRAY['HOME_1ST', 'HOME_2ND', 'HOME_EQUAL', 'AWAY_1ST', 'AWAY_2ND', 'AWAY_EQUAL'], 213),
@@ -907,6 +910,7 @@ VALUES
 (424, 'OWN_GOAL', 'Gol samobojczy', 'Own Goal', 'Czy w meczu padnie gol samobojczy?', 'Will there be an own goal in the match?', 'BINARY_BUTTONS', 'GOLE', FALSE, NULL, ARRAY['YES', 'NO'], 25),
 (425, 'SECOND_HALF_DOUBLE_CHANCE', 'Podwojna szansa 2. polowy', 'Second Half Double Chance', 'Podwojna szansa w drugiej polowie', 'Double chance in second half', 'TRIPLE_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME_OR_DRAW', 'DRAW_OR_AWAY', 'HOME_OR_AWAY'], 43),
 (426, 'PLAYER_TACKLES', 'Odbiory zawodnika', 'Player Tackles', 'Liczba udanych odbiorow zawodnika', 'Player tackles count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 72),
+(437, 'SECOND_HALF_DRAW_NO_BET', '2. polowa - zaklad bez remisu', 'Second Half Draw No Bet', 'Przy remisie w 2. polowie zwrot stawki', 'Stake returned if draw in second half', 'BINARY_BUTTONS', 'POLOWY', FALSE, NULL, ARRAY['HOME', 'AWAY'], 44),
 (427, 'PLAYER_INTERCEPTIONS', 'Przechwyty zawodnika', 'Player Interceptions', 'Liczba przechwytow zawodnika', 'Player interceptions count', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
 (428, 'PLAYER_FOULS_WON', 'Faule wywalczone', 'Player Fouls Won', 'Liczba fauli wywalczonych przez zawodnika', 'Fouls suffered by player', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 73),
 (429, 'PLAYER_FOULS', 'Faule zawodnika', 'Player Fouls', 'Liczba fauli popelnionych przez zawodnika', 'Fouls committed by player', 'PLAYER_STAT_LINES', 'ZAWODNICY', TRUE, 'player', ARRAY['1+', '2+', '3+', '4+'], 74),
@@ -986,7 +990,7 @@ UPDATE market_types SET sub_category = 'porownanie-polow' WHERE code IN ('BOTH_H
 UPDATE market_types SET sub_category = 'specjalne' WHERE code IN ('WIN_TO_NIL', 'CLEAN_SHEET', 'WINNING_MARGIN', 'TIME_PERIOD_RESULT', 'TEAMS_TO_SCORE') AND category = 'GOLE';
 
 -- HANDICAP subcategories
-UPDATE market_types SET sub_category = 'azjatycki' WHERE code IN ('ASIAN_HANDICAP', 'ASIAN_HANDICAP_3WAY', 'SECOND_HALF_ASIAN_HANDICAP', 'FIRST_HALF_ASIAN_HANDICAP');
+UPDATE market_types SET sub_category = 'azjatycki' WHERE code IN ('ASIAN_HANDICAP', 'ASIAN_HANDICAP_PUSH', 'ASIAN_HANDICAP_3WAY', 'SECOND_HALF_ASIAN_HANDICAP', 'SECOND_HALF_ASIAN_HANDICAP_PUSH', 'FIRST_HALF_ASIAN_HANDICAP', 'FIRST_HALF_ASIAN_HANDICAP_PUSH');
 UPDATE market_types SET sub_category = 'europejski' WHERE code IN ('EUROPEAN_HANDICAP', 'FIRST_HALF_EUROPEAN_HANDICAP', 'SECOND_HALF_EUROPEAN_HANDICAP');
 
 -- POLOWY subcategories

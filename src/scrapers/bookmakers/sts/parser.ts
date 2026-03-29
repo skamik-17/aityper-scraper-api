@@ -22,6 +22,8 @@ import {
   HALF_CORRECT_SCORE_OUTCOMES,
   LEAGUE_CONFIG,
   PLAYER_STAT_MARKET_IDS,
+  EUROPEAN_HANDICAP_IDS,
+  ASIAN_HANDICAP_IDS,
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
@@ -291,8 +293,13 @@ export function parseAllMarkets(
             if (lineValue) {
               finalName = `${rawName} ${lineValue}`;
             }
-          } else if (marketId === MARKET_IDS.EUROPEAN_HANDICAP || marketId === MARKET_IDS.ASIAN_HANDICAP) {
+          } else if (EUROPEAN_HANDICAP_IDS.has(marketId)) {
             const handicapValue = extractHandicapFromSelections(line);
+            if (handicapValue) {
+              finalName = `${rawName} ${handicapValue}`;
+            }
+          } else if (ASIAN_HANDICAP_IDS.has(marketId)) {
+            const handicapValue = extractAsianHandicapFromSelections(line);
             if (handicapValue) {
               finalName = `${rawName} ${handicapValue}`;
             }
@@ -482,6 +489,21 @@ function extractHandicapFromSelections(line: STSMarketLine): string | null {
       const handicapMatch = outcome.n.match(/\((\d+:\d+)\)/);
       if (handicapMatch) {
         return handicapMatch[1];
+      }
+    }
+  }
+
+  return null;
+}
+
+function extractAsianHandicapFromSelections(line: STSMarketLine): string | null {
+  if (!line.o) return null;
+
+  for (const [, outcome] of Object.entries(line.o) as [string, STSOutcome][]) {
+    if (outcome.n) {
+      const match = outcome.n.match(/^1\s*\(([+-]?\d+(?:[.,]\d+)?)\)/);
+      if (match) {
+        return match[1].replace(",", ".");
       }
     }
   }

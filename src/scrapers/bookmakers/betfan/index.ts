@@ -277,6 +277,7 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(event.eventId),
                   markets,
+                  startTime: detailEvent.eventStartTime ?? event.eventStartTime,
                   scrapedAt: new Date(),
                 });
                 console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`);
@@ -291,6 +292,7 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(event.eventId),
                   markets,
+                  startTime: event.eventStartTime,
                   scrapedAt: new Date(),
                 });
                 console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets (fallback)`);

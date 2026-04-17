@@ -273,6 +273,9 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                 eventUrl: buildEventUrl(event.eventId),
                 markets,
+                startTime: fullEvent.eventStart
+                  ? new Date(fullEvent.eventStart < 1_000_000_000_000 ? fullEvent.eventStart * 1000 : fullEvent.eventStart).toISOString()
+                  : undefined,
                 scrapedAt: new Date(),
               });
 

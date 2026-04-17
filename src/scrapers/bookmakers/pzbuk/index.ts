@@ -399,6 +399,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl,
                   markets,
+                  startTime: event.startingOn,
                   scrapedAt: new Date(),
                 });
 

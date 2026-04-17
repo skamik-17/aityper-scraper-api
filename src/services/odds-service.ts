@@ -51,6 +51,7 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
       homeTeam: row.home_team,
       awayTeam: row.away_team,
       leagueSlug,
+      startTime: row.start_time ?? undefined,
       markets,
     };
   });

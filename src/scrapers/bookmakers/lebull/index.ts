@@ -267,6 +267,7 @@ export class LebullPlaywrightScraper extends PlaywrightScraper {
               awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
               eventUrl: buildEventUrl(leagueId, event.eventId),
               markets,
+              startTime: event.startDate,
               scrapedAt: new Date(),
             });
 

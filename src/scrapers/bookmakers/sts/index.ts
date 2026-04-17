@@ -363,6 +363,7 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: awayCanonical,
                 eventUrl: fixture.eventUrl,
                 markets,
+                startTime: fixture.startTime,
                 scrapedAt: new Date(),
               });
 

@@ -295,6 +295,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                 eventUrl: buildEventUrl(fullEvent.eventId),
                 markets,
+                startTime: fullEvent.startTime ? new Date(fullEvent.startTime).toISOString() : undefined,
                 scrapedAt: new Date(),
               });
 

@@ -315,6 +315,7 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(fixture.id, fixture.seoName),
                   markets,
+                  startTime: new Date(fixture.startDatetime).toISOString(),
                   scrapedAt: new Date(),
                 });
 

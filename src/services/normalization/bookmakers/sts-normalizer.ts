@@ -308,9 +308,14 @@ function isTeamInSelection(normalizedSelection: string, normalizedTeamName: stri
   const selectionParts = normalizedSelection.split(" ");
 
   if (teamParts.length >= 2) {
-    const matchingParts = teamParts.filter(part =>
-      selectionParts.some(selPart => selPart.includes(part) || part.includes(selPart))
-    );
+    const matchingParts = teamParts.filter(part => {
+      if (selectionParts.includes(part)) return true;
+      // Min 4 chars for substring matching to prevent "ham" matching "wolverhampton"
+      if (part.length >= 4) {
+        return selectionParts.some(selPart => selPart.includes(part) || part.includes(selPart));
+      }
+      return false;
+    });
     if (matchingParts.length >= 1) return true;
   }
 

@@ -25,6 +25,7 @@ interface OddsInsert {
   raw_market_name?: string;
   selections: MarketSelection[];
   scraped_at: string;
+  start_time?: string;
 }
 
 export interface MarketComparisonEntry {
@@ -80,7 +81,8 @@ export async function saveFullOfferMarkets(
   bookmaker: PolishBookmaker,
   markets: ScrapedMarket[],
   leagueSlug: string = "ekstraklasa",
-  eventUrl?: string
+  eventUrl?: string,
+  startTime?: string
 ): Promise<{ inserted: number; filtered: number; errors: number }> {
   const supabase = getSupabase();
   const result = { inserted: 0, filtered: 0, errors: 0 };
@@ -124,6 +126,7 @@ export async function saveFullOfferMarkets(
       raw_market_name: market.name,
       selections: market.selections,
       scraped_at: scrapedAt,
+      start_time: startTime,
     });
   }
   
@@ -347,6 +350,7 @@ export async function saveBatchFullOfferMarkets(
     awayTeam: string;
     markets: ScrapedMarket[];
     eventUrl?: string;
+    startTime?: string;
   }>,
   bookmaker: PolishBookmaker,
   leagueSlug: string = "ekstraklasa"
@@ -396,6 +400,7 @@ export async function saveBatchFullOfferMarkets(
         raw_market_name: market.name,
         selections: market.selections,
         scraped_at: scrapedAt,
+        start_time: match.startTime,
       });
     }
 

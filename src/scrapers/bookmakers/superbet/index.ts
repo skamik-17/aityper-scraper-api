@@ -284,6 +284,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(fullEvent.eventId),
                   markets,
+                  startTime: fullEvent.startTime,
                   scrapedAt: new Date(),
                 });
 

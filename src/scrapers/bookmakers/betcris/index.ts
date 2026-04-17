@@ -333,6 +333,7 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl,
                   markets: allMarkets,
+                  startTime: fullGame.start_ts ? new Date(fullGame.start_ts * 1000).toISOString() : undefined,
                   scrapedAt: new Date(),
                 });
 

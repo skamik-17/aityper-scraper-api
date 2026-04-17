@@ -621,11 +621,16 @@ function isTeamInSelection(
       const abbreviations = TEAM_ABBREVIATIONS[part] || [];
       if (abbreviations.some(abbr => selectionParts.includes(abbr))) return true;
 
-      const partialMatches = selectionParts.filter(selPart =>
-        selPart.includes(part) || part.includes(selPart)
-      );
+      // Only allow substring matching for parts with 4+ characters
+      // to prevent false positives like "ham" matching inside "wolverhampton"
+      if (part.length >= 4) {
+        const partialMatches = selectionParts.filter(selPart =>
+          selPart.includes(part) || part.includes(selPart)
+        );
+        if (partialMatches.length > 0) return true;
+      }
 
-      return partialMatches.length > 0;
+      return false;
     });
 
     if (matchingParts.length >= 1) {

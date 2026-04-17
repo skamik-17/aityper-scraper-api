@@ -300,6 +300,7 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(match, leagueSlug),
                   markets,
+                  startTime: match.start_time,
                   scrapedAt: new Date(),
                 });
 

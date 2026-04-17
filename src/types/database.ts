@@ -30,6 +30,7 @@ export interface MatchOdds {
   homeTeam: string;
   awayTeam: string;
   leagueSlug: string;
+  startTime?: string;
   markets: Record<string, MarketOdds>;
 }
 

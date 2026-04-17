@@ -70,6 +70,8 @@ export interface FullMatchOffer {
   markets: ScrapedMarket[];
   /** Timestamp when data was scraped */
   scrapedAt: Date;
+  /** Match kickoff time from bookmaker (ISO 8601) */
+  startTime?: string;
 }
 
 /**

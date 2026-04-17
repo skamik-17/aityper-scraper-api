@@ -281,6 +281,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
                   eventId: detailData.eventId || event.eventId,
                   eventName: detailData.eventName || event.eventName,
                   categoryId: event.categoryId,
+                  startTime: event.startTime,
                   eventGames: detailData.eventGames,
                 };
               }
@@ -297,6 +298,10 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                 eventUrl: buildEventUrl(fullEvent.eventId),
                 markets,
+                startTime:
+                  typeof fullEvent.startTime === "number"
+                    ? new Date(fullEvent.startTime).toISOString()
+                    : fullEvent.startTime,
                 scrapedAt: new Date(),
               });
 

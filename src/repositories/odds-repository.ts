@@ -7,6 +7,7 @@ export interface AggregatedMatchOdds {
   match_id: string;
   home_team: string;
   away_team: string;
+  start_time: string | null;
   markets: Record<string, {
     code: string;
     namePl: string;

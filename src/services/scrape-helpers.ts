@@ -68,7 +68,8 @@ export async function normalizeAndSaveMatches(
           bookmaker,
           match.markets,
           league,
-          match.eventUrl
+          match.eventUrl,
+          match.startTime
         );
         result.marketsSaved += saveResult.inserted;
       } catch (error) {

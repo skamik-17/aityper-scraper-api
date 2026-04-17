@@ -485,11 +485,25 @@ function buildFrontendJson(analysis: MarketAnalysis, ctx: NormalizationContext):
         paramGroups.get(selection.name)!.push(selection);
       }
     } else if (isEuropeanHandicap) {
+      // For European handicap with team names in selections (e.g. "Fulham (-1)", "Remis (Fulham -1)", "Aston Villa (+1)"):
+      // - HOME selection: param = signed value directly (e.g. "Fulham (-1)" -> "-1")
+      // - AWAY selection: param = negated value (e.g. "Aston Villa (+1)" -> "-1" because away +1 = home -1)
+      // - DRAW selection: param = signed value directly (e.g. "Remis (Fulham -1)" -> "-1")
+      const awayTeamNorm = ctx.awayTeam.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
       for (const selection of analysis.rawSelections) {
         const match = selection.name.match(/([+-]?\d+[.,]?\d*)/);
         if (match) {
-          const absValue = match[1].replace(/[+-]/g, "").replace(",", ".");
-          const param = analysis.normalized.parameters.includes(absValue) ? absValue : `-${absValue}`;
+          const signedValue = match[1].replace(",", ".");
+          const selNorm = selection.name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+          // If this is an AWAY selection, negate the value to get HOME perspective param
+          const isAwaySelection = awayTeamNorm && selNorm.includes(awayTeamNorm);
+          let param: string;
+          if (isAwaySelection) {
+            const numVal = parseFloat(signedValue);
+            param = numVal === 0 ? "0" : (numVal > 0 ? `-${numVal}` : `+${Math.abs(numVal)}`);
+          } else {
+            param = signedValue;
+          }
           if (!paramGroups.has(param)) {
             paramGroups.set(param, []);
           }

@@ -197,6 +197,9 @@ function resolveTeamTotalGoalsMarket(
 
   const teamPart = match[1].trim();
 
+  if (/^1\.?\s*polowa$/i.test(teamPart)) return "HALF_TIME_GOAL_RANGE";
+  if (/^2\.?\s*polowa$/i.test(teamPart)) return "SECOND_HALF_GOAL_RANGE";
+
   const isHome = home && teamPart.includes(home);
   const isAway = away && teamPart.includes(away);
 

@@ -307,9 +307,11 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gole 2. połowy - przedział", en: "Second Half Goal Range" },
     descriptions: { pl: "Przedział goli w drugiej połowie", en: "Goal range in second half" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3", "4+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    selections: ["0", "1-2", "1-3", "2-3", "4+"],
+    selectionOrder: ["0", "1-2", "1-3", "2-3", "4+"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 48,
+    descriptionTemplates: { "0": "Brak gola", "1-2": "1-2 gole", "1-3": "1-3 gole", "2-3": "2-3 gole", "4+": "4 lub więcej goli" },
   },
   {
     numericId: 13,

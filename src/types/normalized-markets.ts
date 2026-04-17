@@ -183,6 +183,9 @@ export interface MarketParameterBookmaker {
 
     /** Whether this is a no-tax promotion */
     hasNoTaxPromo?: boolean;
+
+    /** Optional display label override (e.g., "Gospodarze (-0.5)" for handicap per-team perspective). If set, frontend should prefer this over generic selectionLabels. */
+    label?: string;
   }>;
 }
 

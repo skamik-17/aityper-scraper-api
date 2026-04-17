@@ -468,9 +468,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     subCategory: "pierwszy-ostatni",
     labels: { pl: "Czas pierwszego gola (10 min)", en: "First Goal Time (10 min)" },
     descriptions: { pl: "W którym 10-minutowym przedziale czasowym padnie pierwszy gol?", en: "In which 10-minute period will the first goal be scored?" },
-    hasParameter: true,
-    parameterType: "integer",
-    validParameters: ["1"],
+    hasParameter: false,
     selections: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],
     selectionOrder: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],
     viewType: ViewType.COMBINATION,
@@ -485,9 +483,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     subCategory: "pierwszy-ostatni",
     labels: { pl: "Czas pierwszego gola (15 min)", en: "First Goal Time (15 min)" },
     descriptions: { pl: "W którym 15-minutowym przedziale czasowym padnie pierwszy gol?", en: "In which 15-minute period will the first goal be scored?" },
-    hasParameter: true,
-    parameterType: "integer",
-    validParameters: ["1"],
+    hasParameter: false,
     selections: ["1-15", "16-30", "31-45", "46-60", "61-75", "76-90", "NONE"],
     selectionOrder: ["1-15", "16-30", "31-45", "46-60", "61-75", "76-90", "NONE"],
     viewType: ViewType.COMBINATION,
@@ -614,7 +610,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     validParameters: ["HOME", "AWAY"],
     selections: ["YES", "NO"],
     selectionOrder: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 29,
     descriptionTemplates: { YES: "{team} strzeli gola głową", NO: "{team} nie strzeli gola głową" },
   },
@@ -2967,7 +2963,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Połowa z większą liczbą goli drużyny", en: "Team Half with Most Goals" },
     descriptions: { pl: "W której połowie drużyna strzeli więcej goli?", en: "In which half will team score more goals?" },
     hasParameter: true,
-    parameterType: "decimal",
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["HOME_1ST", "HOME_2ND", "HOME_EQUAL", "AWAY_1ST", "AWAY_2ND", "AWAY_EQUAL"],
     viewType: ViewType.COMBINATION,
     displayOrder: 213,
@@ -4002,6 +3999,11 @@ export const SELECTION_LABELS: Record<string, string> = {
   AWAY_AWAY_OVER: "2/2 +", AWAY_AWAY_UNDER: "2/2 -",
   // TEAMS_TO_SCORE selections
   ZERO_TEAMS: "Brak goli", ONE_TEAM_HOME: "Tylko 1", ONE_TEAM_AWAY: "Tylko 2", TWO_TEAMS: "Obie",
+  // PENALTY_GOAL selections
+  TEAM_HOME: "Gospodarze", TEAM_AWAY: "Goście", ANY: "Dowolna",
+  // TEAM_HALF_WITH_MORE_GOALS selections (short labels for buttons; team context comes from parameter)
+  HOME_1ST: "1. połowa", HOME_2ND: "2. połowa", HOME_EQUAL: "Równo",
+  AWAY_1ST: "1. połowa", AWAY_2ND: "2. połowa", AWAY_EQUAL: "Równo",
 };
 
 // ============================================================================

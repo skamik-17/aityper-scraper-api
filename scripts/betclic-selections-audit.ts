@@ -103,6 +103,7 @@ async function main() {
       bookmakerMarketId: raw.bookmakerMarketId,
       name: raw.name,
       groupName: raw.groupName,
+      paramValue: raw.paramValue,
       selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
     };
     const result = betclicNormalizer.normalizeMarket(rawForNorm, ctx);
@@ -205,7 +206,11 @@ async function main() {
     //  - catalog has large selection set (>4) — raw bookmakers typically cover a subset
     //  - market has paramValue encoding a teamSide (per-team variants expose only that team's selections)
     //  - entry is player-type (not selection-coded)
-    const hasTeamParam = result.paramValue === "HOME" || result.paramValue === "AWAY" || result.paramValue?.startsWith("HOME:") || result.paramValue?.startsWith("AWAY:");
+    const hasTeamParam =
+      result.paramValue === "HOME" ||
+      result.paramValue === "AWAY" ||
+      result.paramValue?.startsWith("HOME:") ||
+      result.paramValue?.startsWith("AWAY:");
     if (
       entry &&
       entry.selections.length > 0 &&

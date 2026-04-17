@@ -466,6 +466,8 @@ export interface RawBookmakerMarket {
   bookmakerMarketId?: string | number;
   name: string;
   groupName?: string;
+  /** Pre-extracted parameter value set by parser (e.g., after splitting multi-line markets by line) */
+  paramValue?: string;
   selections: Array<{ name: string; odds: number; externalId?: string }>;
 }
 

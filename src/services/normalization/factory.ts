@@ -239,6 +239,7 @@ export function createNormalizer(): NormalizerFacade {
       const rawMarket: RawBookmakerMarket = {
         name: market.name,
         selections: market.selections,
+        paramValue: market.paramValue,
       };
 
       // Use bookmakerMarketId if available (actual ID from scraper)

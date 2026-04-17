@@ -62,22 +62,45 @@ function sortParameters(params: string[]): string[] {
 }
 
 /**
+ * Format a handicap line value for display (e.g. "-0.5", "+0.5", "-2").
+ * Always includes explicit +/- sign.
+ */
+function formatHandicapLine(value: number): string {
+  return value >= 0 ? `+${value}` : `${value}`;
+}
+
+/**
+ * Detect if a market uses the handicap line convention (paramValue = home's signed line).
+ */
+function isLineBasedHandicap(marketType: string): boolean {
+  if (!marketType.includes("HANDICAP")) return false;
+  // CORRECT_SCORE_HANDICAP or similar score-format handicaps are excluded
+  return true;
+}
+
+/**
  * Get display label for a parameter
  */
 function getParameterLabel(param: string, marketType: string): string {
   if (param === "base") return "";
 
-  // For handicap, show the line with sign
-  // But skip score-format params like "1:0", "0:2" (European Handicap)
-  if (marketType.includes("HANDICAP") && !param.includes(":")) {
-    const num = parseFloat(param);
-    if (!isNaN(num)) {
-      // Only add + if param doesn't already have a sign prefix
-      if (num > 0 && !param.startsWith("+")) {
-        return `+${param}`;
-      }
-      return param;
+  const marketDef = getMarketByCode(marketType);
+
+  // Handicap markets: paramValue is the home team's signed line.
+  // Render as "Gospodarze (-0.5) / Goście (+0.5)" so the 2-part perspective is visible on the tab.
+  if (isLineBasedHandicap(marketType) && !param.includes(":")) {
+    const line = parseFloat(param);
+    if (!isNaN(line)) {
+      const homeLine = formatHandicapLine(line);
+      const awayLine = formatHandicapLine(-line);
+      return `Gospodarze (${homeLine}) / Goście (${awayLine})`;
     }
+  }
+
+  // For team-parameterized markets (HOME/AWAY), translate to Polish
+  if (marketDef?.parameterType === "team") {
+    if (param === "HOME") return "Gospodarze";
+    if (param === "AWAY") return "Goście";
   }
 
   // For Asian total goals, format as integer (1 instead of 1.0)
@@ -130,6 +153,7 @@ export function groupMarketsByTypeWithParameters(
   for (const [marketType, group] of typeGroups.entries()) {
     // Group by parameter
     const paramGroups = new Map<string, MarketParameter>();
+    const handicapMarket = isLineBasedHandicap(marketType);
 
     for (const { market, bookmaker, param } of group.markets) {
       const paramKey = param;
@@ -158,10 +182,22 @@ export function groupMarketsByTypeWithParameters(
       }
 
       // Create a map to track existing selections by type to prevent duplicates
-      const existingSelections = new Map<string, { type: string; odds: number; hasNoTaxPromo?: boolean }>();
+      const existingSelections = new Map<string, { type: string; odds: number; hasNoTaxPromo?: boolean; label?: string }>();
       for (const sel of bmEntry.selections) {
         existingSelections.set(sel.type, sel);
       }
+
+      // For handicap markets, compute per-team+line labels so each outcome is self-describing
+      const homeLine = handicapMarket ? parseFloat(paramKey) : NaN;
+      const buildSelectionLabel = (selType: string): string | undefined => {
+        if (!handicapMarket || isNaN(homeLine)) return undefined;
+        if (selType === "HOME") return `Gospodarze (${formatHandicapLine(homeLine)})`;
+        if (selType === "AWAY") return `Goście (${formatHandicapLine(-homeLine)})`;
+        // Draw in 3-way handicap: anchor the line to the home perspective so the reader can tell
+        // the exact goal-difference the draw bet covers (matches Betclic's own "Remis (Chelsea -2)" wording).
+        if (selType === "DRAW") return `Remis (Gospodarze ${formatHandicapLine(homeLine)})`;
+        return undefined;
+      };
 
       // Add or update selections from this market
       for (const selection of market.selections) {
@@ -177,10 +213,12 @@ export function groupMarketsByTypeWithParameters(
           }
         } else {
           // Add new selection
+          const label = buildSelectionLabel(selectionType);
           bmEntry.selections.push({
             type: selectionType,
             odds: selection.odds,
             hasNoTaxPromo: false, // TODO: Detect no-tax promotions
+            ...(label ? { label } : {}),
           });
           existingSelections.set(selectionType, bmEntry.selections[bmEntry.selections.length - 1]);
         }

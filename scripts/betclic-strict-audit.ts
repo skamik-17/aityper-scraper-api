@@ -102,6 +102,7 @@ async function main() {
       bookmakerMarketId: raw.bookmakerMarketId,
       name: raw.name,
       groupName: raw.groupName,
+      paramValue: raw.paramValue,
       selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
     };
     const result = betclicNormalizer.normalizeMarket(rawForNorm, ctx);

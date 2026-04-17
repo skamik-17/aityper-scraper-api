@@ -2082,10 +2082,17 @@ function extractParamValue(
     marketCode === "ASIAN_HANDICAP_3WAY" ||
     marketCode === "ASIAN_HANDICAP" ||
     marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
+    marketCode === "SECOND_HALF_ASIAN_HANDICAP" ||
     marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
     marketCode === "EUROPEAN_HANDICAP" ||
-    marketCode === "SECOND_HALF_EUROPEAN_HANDICAP"
+    marketCode === "SECOND_HALF_EUROPEAN_HANDICAP" ||
+    marketCode === "CORNERS_HANDICAP" ||
+    marketCode === "HALF_TIME_CORNERS_HANDICAP"
   ) {
+    // Parser pre-splits multi-line handicap markets, so raw.paramValue carries this line's value
+    if (raw.paramValue) {
+      return { paramValue: raw.paramValue };
+    }
     const parameters = extractMultipleHandicapLines(selectionNames);
     return { parameters };
   }

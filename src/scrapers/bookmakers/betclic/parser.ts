@@ -539,6 +539,82 @@ function splitOverUnderMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
 }
 
 // ============================================================================
+// HANDICAP MARKET SPLITTING
+// ============================================================================
+
+// Matches handicap line in selection name, e.g. "Chelsea (-1,5)", "Manchester United (+1.5)", "Chelsea (-4)", "Remis (Chelsea -2)"
+const HANDICAP_LINE_PATTERN = /\(([^()]*?)([+-])(\d+(?:[,.]\d+)?)\)/;
+
+function parseHandicapLineFromSelection(selectionName: string): string | null {
+  const match = selectionName.match(HANDICAP_LINE_PATTERN);
+  if (!match) return null;
+  const sign = match[2];
+  const value = match[3].replace(",", ".");
+  const num = parseFloat(value);
+  if (!isFinite(num)) return null;
+  return sign === "-" ? `-${num}` : `+${num}`;
+}
+
+/**
+ * Split a handicap market whose selections cover multiple handicap lines into
+ * separate markets, one per line. paramValue is the home team's signed line
+ * (e.g. "-1.5", "+0.5"); downstream the grouper renders both team perspectives
+ * as per-selection labels (Gospodarze (-0.5) / Goście (+0.5)).
+ *
+ * Betclic packs several handicap lines into a single market:
+ * - 2-way: "Handicap (2-drożny)" with pairs [Chelsea (-1,5), Manchester United (+1.5), ...]
+ * - 3-way: "Handicap" with trios [Chelsea (-4), Remis (Chelsea -4), Manchester United (+4), ...]
+ *
+ * Chunks are contiguous (size 2 for 2-way, size 3 for 3-way) in a consistent
+ * home → (draw) → away ordering.
+ */
+function splitHandicapMarket(market: ScrapedMarket): ScrapedMarket[] {
+  const nameLower = market.name.toLowerCase();
+  if (!nameLower.includes("handicap")) return [market];
+
+  if (market.selections.length < 4) return [market];
+
+  // Detect 3-way via "Remis" prefix in any selection
+  const has3way = market.selections.some((s) => /^remis\b/i.test(s.name.trim()));
+  const chunkSize = has3way ? 3 : 2;
+
+  if (market.selections.length % chunkSize !== 0) return [market];
+  if (market.selections.length / chunkSize < 2) return [market];
+
+  const splitMarkets: ScrapedMarket[] = [];
+  const seenLines = new Set<string>();
+
+  for (let i = 0; i < market.selections.length; i += chunkSize) {
+    const chunk = market.selections.slice(i, i + chunkSize);
+    if (chunk.length !== chunkSize) break;
+
+    const line = parseHandicapLineFromSelection(chunk[0].name);
+    if (!line) return [market];
+    if (seenLines.has(line)) return [market];
+    seenLines.add(line);
+
+    splitMarkets.push({
+      name: market.name,
+      bookmakerMarketId: market.bookmakerMarketId,
+      groupName: market.groupName,
+      type: market.type,
+      paramValue: line,
+      selections: chunk,
+    });
+  }
+
+  return splitMarkets;
+}
+
+function splitHandicapMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
+  const result: ScrapedMarket[] = [];
+  for (const market of markets) {
+    result.push(...splitHandicapMarket(market));
+  }
+  return result;
+}
+
+// ============================================================================
 // MAIN API
 // ============================================================================
 
@@ -573,7 +649,9 @@ export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
   }
 
   // Split Over/Under markets with multiple lines into separate markets
-  return splitOverUnderMarkets(markets);
+  const afterOU = splitOverUnderMarkets(markets);
+  // Split Handicap markets with multiple lines into separate markets (one per line)
+  return splitHandicapMarkets(afterOU);
 }
 
 /**

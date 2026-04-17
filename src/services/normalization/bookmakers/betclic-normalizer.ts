@@ -34,6 +34,7 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "podwojna szansa": "DOUBLE_CHANCE",
   "obie druzyny strzela": "BTTS",
   "oba zespoly strzela gola": "BTTS",
+  "oba zespoly strzela gola lub powyzej 2,5 gola w meczu": "BTTS_OR_OVER_2_5",
   "dokladny wynik": "CORRECT_SCORE",
   "dokladny wynik w grupie": "CORRECT_SCORE_GROUP",
   "dokladny wynik - 1. polowa": "HALF_TIME_CORRECT_SCORE",
@@ -59,6 +60,8 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "gol bezposrednio z rzutu wolnego w meczu": "FREE_KICK_GOAL",
   "gol glowa": "HEADER_GOAL",
   "gole glowa w obu polowach": "HEADER_GOAL_BOTH_HALVES",
+  "liczba goli - opcja i": "GOAL_RANGE",
+  "liczba goli - opcja ii": "EXACT_GOALS",
   "gol z rzutu karnego": "PENALTY_GOAL",
   "gole 1. polowa": "HALF_TIME_TOTAL_GOALS",
   "gole 2. polowa": "SECOND_HALF_TOTAL_GOALS",
@@ -109,13 +112,15 @@ const BETCLIC_MARKET_PATTERNS: Array<{
      { pattern: /^liczba goli\b/i, code: "TOTAL_GOALS" },
       { pattern: /^gole\s+powyzej\s*\/\s*ponizej/i, code: "TOTAL_GOALS" },
        { pattern: /^gole.*powyzej.*ponizej/i, code: "TOTAL_GOALS" },
-          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po \d+\+/i, code: "BTTS_2PLUS_GOALS" },
-          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn/i, code: "BTTS_PENALTY" },
+           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po \d+\+/i, code: "BTTS_2PLUS_GOALS" },
+           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn.*2\. polowa/i, code: "SECOND_HALF_BTTS_PENALTY" },
+           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn/i, code: "BTTS_PENALTY" },
           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*gola.*glowa/i, code: "BTTS_HEAD_GOALS" },
           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*woln/i, code: "BTTS_FREE_KICK" },
           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*1\. polowa/i, code: "HALF_TIME_BTTS" },
          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*2\. polowa/i, code: "SECOND_HALF_BTTS" },
          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*1\. i 2\. polow/i, code: "BTTS_BY_HALF" },
+         { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*\blub\b.*powyzej\s*2[,.]5\s*gola?\s*w\s*meczu/i, code: "BTTS_OR_OVER_2_5" },
          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*liczba bramek/i, code: "TOTAL_GOALS_AND_BTTS" },
          { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela/i, code: "BTTS" },
       { pattern: /^gol.*rzut.*wolny/i, code: "FREE_KICK_GOAL" },
@@ -196,6 +201,8 @@ function resolveTeamTotalGoalsMarket(
   if (!match) return null;
 
   const teamPart = match[1].trim();
+
+  if (/^opcja\s+[ivxlcdm]+$/i.test(teamPart)) return null;
 
   if (/^1\.?\s*polowa$/i.test(teamPart)) return "HALF_TIME_GOAL_RANGE";
   if (/^2\.?\s*polowa$/i.test(teamPart)) return "SECOND_HALF_GOAL_RANGE";
@@ -448,6 +455,11 @@ interface TeamShotsResult {
   teamName: string;
 }
 
+interface TeamTacklesResult {
+  teamSide: "HOME" | "AWAY";
+  teamName: string;
+}
+
 function resolveTeamShotsMarket(
   normalizedName: string,
   ctx: NormalizationContext
@@ -457,6 +469,27 @@ function resolveTeamShotsMarket(
 
   // Pattern: "suma strzalow w meczu (opta) - {teamName}"
   const match = normalizedName.match(/^suma strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
+  if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
+
+  return null;
+}
+
+function resolveTeamTacklesMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamTacklesResult | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+
+  const match = normalizedName.match(/^liczba odbiorow\s*\(opta\)(?:\s*\(z dogrywka\))?\s*-\s*(.+)$/i);
   if (!match) return null;
 
   const teamPart = match[1].trim();
@@ -563,6 +596,11 @@ function resolveMarketCode(
   const teamShots = resolveTeamShotsMarket(normalizedName, ctx);
   if (teamShots) {
     return { marketCode: "TEAM_TOTAL_SHOTS", matchedBy: "pattern", teamName: teamShots.teamName, teamSide: teamShots.teamSide };
+  }
+
+  const teamTackles = resolveTeamTacklesMarket(normalizedName, ctx);
+  if (teamTackles) {
+    return { marketCode: "TEAM_TOTAL_TACKLES", matchedBy: "pattern", teamName: teamTackles.teamName, teamSide: teamTackles.teamSide };
   }
 
   const teamOffsides = resolveTeamOffsidesMarket(normalizedName, ctx);
@@ -1102,6 +1140,33 @@ function normalizeTeamShotsSelection(
   return null;
 }
 
+function normalizeTeamTacklesSelection(
+  selectionName: string,
+  marketName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  const home = normalizeName(ctx.homeTeam);
+  const away = normalizeName(ctx.awayTeam);
+  const normalizedMarketName = normalizeName(marketName);
+
+  const marketMatch = normalizedMarketName.match(/^liczba odbiorow\s*\(opta\)(?:\s*\(z dogrywka\))?\s*-\s*(.+)$/i);
+  if (!marketMatch) return null;
+
+  const teamPart = marketMatch[1].trim();
+  const isHome = home && teamPart.includes(home);
+  const isAway = away && teamPart.includes(away);
+
+  const normalizedSel = normalizeName(selectionName);
+  if (normalizedSel.includes("powyzej")) {
+    return isHome ? "HOME_OVER" : isAway ? "AWAY_OVER" : null;
+  }
+  if (normalizedSel.includes("ponizej")) {
+    return isHome ? "HOME_UNDER" : isAway ? "AWAY_UNDER" : null;
+  }
+
+  return null;
+}
+
 function normalizePenaltyGoalSelection(
   selectionName: string,
   ctx: NormalizationContext
@@ -1427,8 +1492,17 @@ function normalizeSelectionForMarket(
       return (shotsSelection ?? trimmed) as NormalizedSelection;
     }
 
+    case "TEAM_TOTAL_TACKLES": {
+      const tacklesSelection = marketName
+        ? normalizeTeamTacklesSelection(trimmed, marketName, ctx)
+        : null;
+      return (tacklesSelection ?? trimmed) as NormalizedSelection;
+    }
+
     case "BTTS":
+    case "BTTS_OR_OVER_2_5":
     case "BTTS_PENALTY":
+    case "SECOND_HALF_BTTS_PENALTY":
     case "BTTS_HEAD_GOALS":
     case "BTTS_FREE_KICK":
     case "BTTS_2PLUS_GOALS":
@@ -1567,9 +1641,15 @@ function normalizeSelectionForMarket(
       return (csgSelection ?? trimmed) as NormalizedSelection;
     }
 
+    case "EXACT_GOALS":
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "SECOND_HALF_HOME_EXACT_GOALS":
     case "HALF_TIME_EXACT_GOALS":
     case "SECOND_HALF_EXACT_GOALS": {
       const sel = trimmed.trim();
+      if (/^\d+\+$/.test(sel)) return sel as NormalizedSelection;
+      if (/^\d+$/.test(sel)) return sel as NormalizedSelection;
       if (sel === "0") return "0" as NormalizedSelection;
       if (sel === "1") return "1" as NormalizedSelection;
       if (sel === "2") return "2" as NormalizedSelection;

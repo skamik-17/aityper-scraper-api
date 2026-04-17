@@ -54,7 +54,7 @@ export const CONFIG = {
 
   // Bookmakers
   BOOKMAKERS: [
-    "sts",
+    //"sts",
     // "fortuna",
     "betclic",
     // "superbet",

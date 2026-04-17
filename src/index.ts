@@ -9,7 +9,8 @@ import { CONFIG, validateConfig } from "./config/index.js";
 import { testConnection } from "./config/database.js";
 import routes from "./routes/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
-import { startScheduler, stopScheduler } from "./services/scheduler-service.js";
+import { startScheduler, startTsdbSyncJobs, stopScheduler } from "./services/scheduler-service.js";
+import { syncMarketTypes } from "./services/market-types-sync.js";
 
 // Validate configuration
 try {
@@ -81,6 +82,15 @@ async function start() {
     console.warn("[Server] Database connection failed - some features may not work");
   } else {
     console.log("[Server] Database connected");
+
+    // Align market_types table with the in-code MARKET_CATALOG so scraper
+    // inserts don't hit FK violations on newly-added market types.
+    try {
+      const { upserted } = await syncMarketTypes();
+      console.log(`[Server] Synced market_types: ${upserted} entries`);
+    } catch (error) {
+      console.error("[Server] market_types sync failed:", error);
+    }
   }
 
   // Start scheduler (if scrapers enabled)
@@ -89,6 +99,11 @@ async function start() {
     startScheduler();
   } else if (!CONFIG.SCRAPERS_ON) {
     console.log("[Server] Scrapers disabled (SCRAPERS_ON=false)");
+  }
+
+  // Always keep TSDB fixtures synced — the frontend depends on this cache.
+  if (CONFIG.NODE_ENV !== "test") {
+    startTsdbSyncJobs();
   }
 
   // Start listening

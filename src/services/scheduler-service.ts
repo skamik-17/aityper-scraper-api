@@ -8,6 +8,7 @@ import { CONFIG } from "../config/index.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
 import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
+import { syncAllEnabledLeagues, syncEmptyLeagues } from "./tsdb-sync-service.js";
 
 interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
@@ -19,6 +20,7 @@ interface MultiLeagueScrapeResult {
 
 let scrapeTask: cron.ScheduledTask | null = null;
 let cleanupTask: cron.ScheduledTask | null = null;
+let tsdbSyncTask: cron.ScheduledTask | null = null;
 let isRunning = false;
 let lastResults: Map<string, ScrapeResult> = new Map();
 
@@ -164,6 +166,48 @@ export function startScheduler(): void {
 }
 
 /**
+ * Start TSDB fixtures sync jobs. Independent of scraper scheduler — runs even
+ * when SCRAPERS_ON=false, because the frontend depends on Supabase-cached TSDB
+ * data regardless of whether odds scraping is active.
+ */
+export function startTsdbSyncJobs(): void {
+  if (tsdbSyncTask) {
+    console.log("[Scheduler] TSDB sync already running");
+    return;
+  }
+
+  tsdbSyncTask = cron.schedule(
+    "0 4 * * *",
+    async () => {
+      console.log("[Scheduler] Running daily TSDB sync");
+      try {
+        const results = await syncAllEnabledLeagues();
+        const total = results.reduce((a, r) => a + r.synced, 0);
+        console.log(`[Scheduler] TSDB sync complete, synced: ${total} fixtures`);
+      } catch (error) {
+        console.error("[Scheduler] TSDB sync failed:", error);
+      }
+    },
+    {
+      scheduled: true,
+      timezone: "Europe/Warsaw",
+    }
+  );
+
+  setTimeout(async () => {
+    try {
+      const results = await syncEmptyLeagues();
+      if (results.length > 0) {
+        const total = results.reduce((a, r) => a + r.synced, 0);
+        console.log(`[Scheduler] Initial TSDB sync complete, synced: ${total} fixtures`);
+      }
+    } catch (error) {
+      console.error("[Scheduler] Initial TSDB sync failed:", error);
+    }
+  }, 1000);
+}
+
+/**
  * Stop the scheduled scraping job
  */
 export function stopScheduler(): void {
@@ -174,6 +218,10 @@ export function stopScheduler(): void {
   if (cleanupTask) {
     cleanupTask.stop();
     cleanupTask = null;
+  }
+  if (tsdbSyncTask) {
+    tsdbSyncTask.stop();
+    tsdbSyncTask = null;
   }
   console.log("[Scheduler] Stopped");
 }

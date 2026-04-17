@@ -62,6 +62,39 @@ export async function getMatchOdds(
   return data || [];
 }
 
+export interface MatchInfoRow {
+  match_id: string;
+  home_team: string;
+  away_team: string;
+  league_slug: string;
+  start_time: string | null;
+}
+
+export async function getMatchInfoById(matchId: string): Promise<MatchInfoRow | null> {
+  const supabase = getSupabase();
+
+  const { data, error } = await (supabase.from("odds") as any)
+    .select("match_id, home_team, away_team, league_slug, start_time")
+    .eq("match_id", matchId)
+    .limit(1);
+
+  if (error) {
+    console.error("[OddsRepository] getMatchInfoById error:", error);
+    throw error;
+  }
+
+  const row = data?.[0];
+  if (!row) return null;
+
+  return {
+    match_id: row.match_id,
+    home_team: row.home_team,
+    away_team: row.away_team,
+    league_slug: row.league_slug,
+    start_time: row.start_time ?? null,
+  };
+}
+
 export async function getLastScrapeTime(
   bookmaker: PolishBookmaker,
   leagueSlug: string = "ekstraklasa"

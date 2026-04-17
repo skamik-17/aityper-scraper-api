@@ -10,12 +10,53 @@ import type { ApiSuccessResponse } from "../types/api.js";
 import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { getFullOfferByMatch } from "../repositories/full-offer-repository.js";
+import { getMatchInfoById } from "../repositories/odds-repository.js";
 import { getCategoryForMarket } from "../data/market-catalog.js";
 import { MarketCategory, type MarketWithParams } from "../types/normalized-markets.js";
 import type { ScrapedMarket } from "../types/full-offer.js";
 import { buildCategoriesWithMarketTypes } from "../services/market-type-grouper.js";
 
 const router = Router();
+
+interface MatchInfoResponse {
+  matchId: string;
+  homeTeam: string;
+  awayTeam: string;
+  leagueSlug: string;
+  startTime?: string;
+}
+
+router.get(
+  "/:matchId",
+  asyncHandler(async (req, res) => {
+    const matchId = req.params.matchId as string;
+
+    const row = await getMatchInfoById(matchId);
+    if (!row) {
+      throw new ApiError(
+        404,
+        ERROR_CODES.MATCH_NOT_FOUND,
+        `Match not found: ${matchId}`
+      );
+    }
+
+    const data: MatchInfoResponse = {
+      matchId: row.match_id,
+      homeTeam: row.home_team,
+      awayTeam: row.away_team,
+      leagueSlug: row.league_slug,
+      startTime: row.start_time ?? undefined,
+    };
+
+    const response: ApiSuccessResponse<MatchInfoResponse, {}> = {
+      success: true,
+      data,
+      meta: {},
+    };
+
+    res.json(response);
+  })
+);
 
 interface NormalizedMarketsResponse {
   match: {

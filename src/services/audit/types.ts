@@ -177,6 +177,10 @@ const VALID_FIX_STATUSES: FixStatus[] = ["applied", "failed", "noop"];
 export function isFixResult(v: unknown): v is FixResult {
   if (!isObject(v)) return false;
   if (!VALID_FIX_STATUSES.includes(v.status as FixStatus)) return false;
+  if (v.commit !== null && typeof v.commit !== "string") return false;
+  if (!Array.isArray(v.files)) return false;
+  if (!v.files.every((f) => typeof f === "string")) return false;
+  if (v.reason !== null && typeof v.reason !== "string") return false;
   return true;
 }
 

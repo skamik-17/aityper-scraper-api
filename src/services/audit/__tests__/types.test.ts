@@ -66,6 +66,21 @@ describe("isFixResult", () => {
   it("rejects unknown status", () => {
     expect(isFixResult({ status: "skipped" })).toBe(false);
   });
+  it("rejects when files is not an array", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: "not-array", reason: null })).toBe(false);
+  });
+  it("rejects when files contains non-string elements", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: ["ok", 42], reason: null })).toBe(false);
+  });
+  it("rejects when commit is wrong type (e.g. number)", () => {
+    expect(isFixResult({ status: "applied", commit: 123, files: [], reason: null })).toBe(false);
+  });
+  it("rejects when reason is wrong type (e.g. object)", () => {
+    expect(isFixResult({ status: "failed", commit: null, files: [], reason: { msg: "oops" } })).toBe(false);
+  });
+  it("accepts when reason is null and commit is null with empty files", () => {
+    expect(isFixResult({ status: "noop", commit: null, files: [], reason: null })).toBe(true);
+  });
 });
 
 describe("extractVerdictBlock", () => {

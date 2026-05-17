@@ -539,6 +539,110 @@ function splitOverUnderMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
 }
 
 // ============================================================================
+// RESULT + TOTAL MARKET SPLITTING
+// ============================================================================
+
+/**
+ * Pattern to match Result + Total selection names with line values.
+ * Matches: "Brentford & Powyżej 1,5", "Remis & Poniżej 2,5", "Crystal Palace & Powyżej 3,5"
+ * Captures the line value (e.g., "1,5", "2,5", "3,5")
+ *
+ * Used by markets like:
+ * - "Wynik i gole" (RESULT_AND_TOTAL)
+ * - "Wynik i liczba bramek - 1. połowa" (HALF_TIME_RESULT_AND_TOTAL)
+ * - "Wynik i liczba bramek - 2. połowa" (SECOND_HALF_RESULT_AND_TOTAL)
+ * - "Połowa / Cały & liczba goli" (HALFTIME_FULLTIME_AND_TOTAL)
+ */
+const RESULT_AND_TOTAL_SELECTION_PATTERN = /&\s*(Powyżej|Poniżej)\s+(\d+[,.]\d+)\s*$/i;
+
+/**
+ * Detect whether a Betclic market name represents a Result + Total combination.
+ *
+ * These markets bundle multiple Over/Under lines into a single market, with
+ * selections like "{Team|Remis} & {Powyżej|Poniżej} X,Y". We split them per
+ * line so the frontend can render each line as a separate parameter.
+ */
+function isResultAndTotalMarket(marketName: string): boolean {
+  const lower = marketName.toLowerCase();
+  return (
+    lower.includes("wynik i gole") ||
+    lower.includes("wynik i liczba bramek") ||
+    (lower.includes("połowa") && lower.includes("liczba goli")) ||
+    (lower.includes("polowa") && lower.includes("liczba goli"))
+  );
+}
+
+/**
+ * Split a Result + Total market into separate markets per line.
+ *
+ * Betclic returns markets like "Wynik i gole" with selections such as:
+ *   "Brentford & Powyżej 1,5", "Brentford & Powyżej 2,5",
+ *   "Remis & Powyżej 1,5", "Remis & Powyżej 2,5",
+ *   "Crystal Palace & Poniżej 1,5", "Crystal Palace & Poniżej 2,5"
+ *
+ * This function splits them into separate markets per line:
+ *   { paramValue: "1.5", selections: [...all 6 outcomes for line 1.5] }
+ *   { paramValue: "2.5", selections: [...all 6 outcomes for line 2.5] }
+ */
+function splitResultAndTotalMarket(market: ScrapedMarket): ScrapedMarket[] {
+  if (!isResultAndTotalMarket(market.name)) return [market];
+
+  const lineGroups = new Map<string, MarketSelection[]>();
+
+  for (const selection of market.selections) {
+    const match = selection.name.match(RESULT_AND_TOTAL_SELECTION_PATTERN);
+    if (!match) {
+      // If any selection doesn't match the pattern, bail out and return original
+      return [market];
+    }
+
+    // Normalize line: replace comma with dot (e.g., "2,5" -> "2.5")
+    const line = match[2].replace(",", ".");
+    if (!lineGroups.has(line)) {
+      lineGroups.set(line, []);
+    }
+    lineGroups.get(line)!.push(selection);
+  }
+
+  // No lines extracted - return original (defensive)
+  if (lineGroups.size === 0) return [market];
+
+  // Only one line and no need to split - keep original but tag paramValue
+  if (lineGroups.size === 1) {
+    const [line, selections] = Array.from(lineGroups.entries())[0];
+    return [{
+      name: market.name,
+      bookmakerMarketId: market.bookmakerMarketId,
+      groupName: market.groupName,
+      type: market.type,
+      paramValue: line,
+      selections,
+    }];
+  }
+
+  const splitMarkets: ScrapedMarket[] = [];
+  for (const [line, selections] of lineGroups) {
+    splitMarkets.push({
+      name: market.name,
+      bookmakerMarketId: market.bookmakerMarketId,
+      groupName: market.groupName,
+      type: market.type,
+      paramValue: line,
+      selections,
+    });
+  }
+  return splitMarkets;
+}
+
+function splitResultAndTotalMarkets(markets: ScrapedMarket[]): ScrapedMarket[] {
+  const result: ScrapedMarket[] = [];
+  for (const market of markets) {
+    result.push(...splitResultAndTotalMarket(market));
+  }
+  return result;
+}
+
+// ============================================================================
 // HANDICAP MARKET SPLITTING
 // ============================================================================
 
@@ -650,8 +754,10 @@ export function parseAllMarketsFromProto(rawData: Buffer): ScrapedMarket[] {
 
   // Split Over/Under markets with multiple lines into separate markets
   const afterOU = splitOverUnderMarkets(markets);
+  // Split Result + Total markets ("X & Powyżej Y,Y") into one market per line
+  const afterRT = splitResultAndTotalMarkets(afterOU);
   // Split Handicap markets with multiple lines into separate markets (one per line)
-  return splitHandicapMarkets(afterOU);
+  return splitHandicapMarkets(afterRT);
 }
 
 /**

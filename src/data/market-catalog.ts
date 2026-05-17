@@ -3567,9 +3567,11 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Oba zespoły strzelą z rzutu karnego - 1. połowa", en: "Both Teams To Score Penalty - 1st Half" },
     descriptions: { pl: "Czy obie drużyny strzelą z rzutu karnego w 1. połowie?", en: "Both teams score from penalty in 1st half" },
     hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    selections: ["YES"],
+    selectionOrder: ["YES"],
+    viewType: ViewType.SINGLE_SELECTION,
     displayOrder: 251,
+    descriptionTemplates: { YES: "Obie drużyny strzelą z rzutu karnego w 1. połowie" },
   },
   {
     numericId: 448,

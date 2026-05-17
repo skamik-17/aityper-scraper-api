@@ -23,6 +23,7 @@ import { betclicNormalizer } from "../src/services/normalization/bookmakers/betc
 import { MARKET_CATALOG } from "../src/data/market-catalog.js";
 import type { MarketCatalogEntry } from "../src/data/market-catalog.js";
 import type { NormalizationContext, RawBookmakerMarket } from "../src/services/normalization/types.js";
+import { isSelectionOrphan } from "../src/services/audit/selection-checks.js";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -64,13 +65,6 @@ interface SelectionIssue {
 const catalogByCode = new Map<string, MarketCatalogEntry>(
   MARKET_CATALOG.map((m) => [m.code, m]),
 );
-
-function isSelectionOrphan(code: string, entry: MarketCatalogEntry | undefined): boolean {
-  if (!entry) return true;
-  // Empty catalog selections means market accepts anything (legacy).
-  if (entry.selections.length === 0) return false;
-  return !entry.selections.includes(code);
-}
 
 async function main() {
   const args = parseArgs();

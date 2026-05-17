@@ -256,3 +256,110 @@ export function extractFixResultBlock(text: string): unknown | null {
     return null;
   }
 }
+
+// ---------------------------------------------------------------------------
+// Fix-from-audit report (output of /fix-from-audit slash command)
+// ---------------------------------------------------------------------------
+
+export interface FixFromAuditReportMeta {
+  schemaVersion: 1;
+  runIndex: number;
+  sourceReport: string;
+  sourceReportSha: string | null;
+  matchId: string;
+  homeTeam: string;
+  awayTeam: string;
+  league: string;
+  runAt: string;
+  selectedVerdicts: VerdictLevel[];
+  autoFixThreshold: number;
+  autoFixBranch: string;
+  parallel: number;
+  rejudgeEnabled: boolean;
+}
+
+export interface FixFromAuditReportSummary {
+  sourceTotalItems: number;
+  sourceActionableItems: number;
+  selectedItems: number;
+  rejudge: {
+    attempted: number;
+    generatedFix: number;
+    stillNull: number;
+    parseFailed: number;
+  };
+  fixesAttempted: number;
+  fixesSkippedLowConfidence: number;
+  fixesDispatched: number;
+  fix: {
+    applied: number;
+    failed: number;
+    noop: number;
+  };
+  finalSkip: {
+    rejudgeStillNull: number;
+    rejudgeParseFailed: number;
+    noRejudgeFlag: number;
+  };
+}
+
+export interface FixFromAuditReportItem {
+  marketIndex: number;
+  rawName: string;
+  marketCode: string;
+  originalJudge: JudgeVerdict;
+  rejudgeJudge: JudgeVerdict | null;
+  fixDispatched: boolean;
+  fixSkipReason: string | null;
+  fixResult: FixResult | null;
+}
+
+export interface FixFromAuditReport {
+  meta: FixFromAuditReportMeta;
+  summary: FixFromAuditReportSummary;
+  items: FixFromAuditReportItem[];
+}
+
+const VALID_VERDICT_LEVELS_FOR_SELECTION: VerdictLevel[] = ["OK", "MINOR", "MAJOR", "BROKEN", "parse_failed"];
+
+function isFixFromAuditReportItem(v: unknown): v is FixFromAuditReportItem {
+  if (!isObject(v)) return false;
+  if (typeof v.marketIndex !== "number") return false;
+  if (typeof v.rawName !== "string") return false;
+  if (typeof v.marketCode !== "string") return false;
+  if (!isJudgeVerdict(v.originalJudge)) return false;
+  if (v.rejudgeJudge !== null && !isJudgeVerdict(v.rejudgeJudge)) return false;
+  if (typeof v.fixDispatched !== "boolean") return false;
+  if (v.fixSkipReason !== null && typeof v.fixSkipReason !== "string") return false;
+  if (v.fixResult !== null && !isFixResult(v.fixResult)) return false;
+  return true;
+}
+
+export function isFixFromAuditReport(v: unknown): v is FixFromAuditReport {
+  if (!isObject(v)) return false;
+  if (!isObject(v.meta)) return false;
+  if (v.meta.schemaVersion !== 1) return false;
+  if (typeof v.meta.runIndex !== "number") return false;
+  if (typeof v.meta.sourceReport !== "string") return false;
+  if (v.meta.sourceReportSha !== null && typeof v.meta.sourceReportSha !== "string") return false;
+  if (typeof v.meta.matchId !== "string") return false;
+  if (typeof v.meta.homeTeam !== "string") return false;
+  if (typeof v.meta.awayTeam !== "string") return false;
+  if (typeof v.meta.league !== "string") return false;
+  if (typeof v.meta.runAt !== "string") return false;
+  if (!Array.isArray(v.meta.selectedVerdicts)) return false;
+  if (!v.meta.selectedVerdicts.every((lvl) => VALID_VERDICT_LEVELS_FOR_SELECTION.includes(lvl as VerdictLevel))) return false;
+  if (typeof v.meta.autoFixThreshold !== "number") return false;
+  if (typeof v.meta.autoFixBranch !== "string") return false;
+  if (typeof v.meta.parallel !== "number") return false;
+  if (typeof v.meta.rejudgeEnabled !== "boolean") return false;
+
+  if (!isObject(v.summary)) return false;
+  // We accept any shape on summary numeric fields if they are numbers; deep validation kept light
+  // because callers won't fabricate this — it's always written by the orchestrator itself.
+
+  if (!Array.isArray(v.items)) return false;
+  if (!v.items.every((item) => isFixFromAuditReportItem(item))) return false;
+
+  return true;
+}

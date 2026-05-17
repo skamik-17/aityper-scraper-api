@@ -4,8 +4,10 @@ import {
   isFixResult,
   extractVerdictBlock,
   extractFixResultBlock,
+  isFixFromAuditReport,
   type JudgeVerdict,
   type PrepAuditOutput,
+  type FixFromAuditReport,
 } from "../types.js";
 
 describe("isJudgeVerdict", () => {
@@ -114,5 +116,120 @@ describe("extractFixResultBlock", () => {
 
   it("returns null when no tag", () => {
     expect(extractFixResultBlock("no tag here")).toBeNull();
+  });
+});
+
+describe("isFixFromAuditReport", () => {
+  const validReport: FixFromAuditReport = {
+    meta: {
+      schemaVersion: 1,
+      runIndex: 1,
+      sourceReport: "docs/betclic-audit/2026-05-17__unknown__1008026211729408.json",
+      sourceReportSha: "af3f224",
+      matchId: "1008026211729408",
+      homeTeam: "Newcastle",
+      awayTeam: "West Ham",
+      league: "unknown",
+      runAt: "2026-05-17T18:30:00Z",
+      selectedVerdicts: ["BROKEN", "MAJOR"],
+      autoFixThreshold: 0.9,
+      autoFixBranch: "auto-fix/betclic-audit/2026-05-17",
+      parallel: 4,
+      rejudgeEnabled: true,
+    },
+    summary: {
+      sourceTotalItems: 285,
+      sourceActionableItems: 45,
+      selectedItems: 33,
+      rejudge: { attempted: 9, generatedFix: 6, stillNull: 2, parseFailed: 1 },
+      fixesAttempted: 30,
+      fixesSkippedLowConfidence: 4,
+      fixesDispatched: 26,
+      fix: { applied: 18, failed: 5, noop: 3 },
+      finalSkip: { rejudgeStillNull: 2, rejudgeParseFailed: 1, noRejudgeFlag: 0 },
+    },
+    items: [],
+  };
+
+  it("accepts a valid minimal report (empty items)", () => {
+    expect(isFixFromAuditReport(validReport)).toBe(true);
+  });
+
+  it("accepts a report with one fully populated item", () => {
+    const withItem: FixFromAuditReport = {
+      ...validReport,
+      items: [
+        {
+          marketIndex: 47,
+          rawName: "Wynik i gole",
+          marketCode: "RESULT_AND_TOTAL",
+          originalJudge: {
+            verdict: "BROKEN",
+            confidence: 0.93,
+            category: "missing_param",
+            reasoning: "x",
+            suggested_fix: null,
+          },
+          rejudgeJudge: {
+            verdict: "BROKEN",
+            confidence: 0.88,
+            category: "missing_param",
+            reasoning: "y",
+            suggested_fix: {
+              file: "betclic-normalizer.ts",
+              change_type: "add_alias",
+              description: "z",
+              patch_hint: "w",
+            },
+          },
+          fixDispatched: true,
+          fixSkipReason: null,
+          fixResult: {
+            status: "applied",
+            commit: "abc1234",
+            files: ["backend/src/services/normalization/bookmakers/betclic-normalizer.ts"],
+            reason: null,
+          },
+        },
+      ],
+    };
+    expect(isFixFromAuditReport(withItem)).toBe(true);
+  });
+
+  it("rejects wrong schemaVersion", () => {
+    const bad = { ...validReport, meta: { ...validReport.meta, schemaVersion: 2 as unknown as 1 } };
+    expect(isFixFromAuditReport(bad)).toBe(false);
+  });
+
+  it("rejects when items is not an array", () => {
+    const bad = { ...validReport, items: "nope" as unknown };
+    expect(isFixFromAuditReport(bad)).toBe(false);
+  });
+
+  it("rejects when an item has invalid originalJudge", () => {
+    const bad = {
+      ...validReport,
+      items: [
+        {
+          marketIndex: 0,
+          rawName: "x",
+          marketCode: "X",
+          originalJudge: { verdict: "BROKEN", confidence: 2.0, category: "other", reasoning: "x", suggested_fix: null },
+          rejudgeJudge: null,
+          fixDispatched: false,
+          fixSkipReason: null,
+          fixResult: null,
+        },
+      ],
+    };
+    expect(isFixFromAuditReport(bad)).toBe(false);
+  });
+
+  it("rejects when selectedVerdicts contains an invalid value", () => {
+    const bad = {
+      ...validReport,
+      meta: { ...validReport.meta, selectedVerdicts: ["MAYBE"] as unknown as FixFromAuditReport["meta"]["selectedVerdicts"] },
+    };
+    expect(isFixFromAuditReport(bad)).toBe(false);
   });
 });

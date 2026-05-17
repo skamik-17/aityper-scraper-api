@@ -8,7 +8,7 @@ import { CONFIG } from "../config/index.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
 import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
-import { syncAllEnabledLeagues, syncEmptyLeagues } from "./tsdb-sync-service.js";
+import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
 
 interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
@@ -196,7 +196,7 @@ export function startTsdbSyncJobs(): void {
 
   setTimeout(async () => {
     try {
-      const results = await syncEmptyLeagues();
+      const results = await syncStaleLeagues();
       if (results.length > 0) {
         const total = results.reduce((a, r) => a + r.synced, 0);
         console.log(`[Scheduler] Initial TSDB sync complete, synced: ${total} fixtures`);

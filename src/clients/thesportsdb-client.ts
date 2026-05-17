@@ -62,16 +62,21 @@ export interface FetchAllRoundsResult {
 
 /**
  * Fetch all rounds for a league with rate-limit-friendly batching.
- * Free tier is ~30 req/min; we use batches of 3 with 3s delay → ~60 req/min peak
- * which still respects the per-minute window with some margin across leagues.
+ * Free tier is ~30 req/min and protected by Cloudflare (1015 ban on burst).
+ * Defaults: sequential requests every 3s → 20 req/min, with a retry pass
+ * on rounds that failed (typically transient Cloudflare 1015 bans).
  */
 export async function fetchAllRounds(
   leagueId: string,
   totalRounds: number,
   season: string,
-  opts: { batchSize?: number; batchDelayMs?: number } = {}
+  opts: {
+    batchSize?: number;
+    batchDelayMs?: number;
+    retryDelayMs?: number;
+  } = {}
 ): Promise<FetchAllRoundsResult> {
-  const { batchSize = 3, batchDelayMs = 3000 } = opts;
+  const { batchSize = 1, batchDelayMs = 3000, retryDelayMs = 60000 } = opts;
   const events: TsdbEvent[] = [];
   const failedRounds: number[] = [];
 
@@ -96,6 +101,25 @@ export async function fetchAllRounds(
     if (start + batchSize <= totalRounds) {
       await new Promise((resolve) => setTimeout(resolve, batchDelayMs));
     }
+  }
+
+  if (failedRounds.length > 0 && retryDelayMs > 0) {
+    console.log(
+      `[tsdbClient] retry pass: ${failedRounds.length} round(s) failed, waiting ${retryDelayMs}ms`
+    );
+    await new Promise((resolve) => setTimeout(resolve, retryDelayMs));
+    const stillFailed: number[] = [];
+    for (const r of failedRounds) {
+      try {
+        const roundEvents = await fetchRound(leagueId, r, season);
+        events.push(...roundEvents);
+      } catch {
+        stillFailed.push(r);
+      }
+      await new Promise((resolve) => setTimeout(resolve, batchDelayMs));
+    }
+    failedRounds.length = 0;
+    failedRounds.push(...stillFailed);
   }
 
   return { events, failedRounds };

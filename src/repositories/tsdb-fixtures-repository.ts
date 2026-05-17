@@ -88,3 +88,19 @@ export async function countTsdbFixtures(leagueSlug: string): Promise<number> {
 
   return count ?? 0;
 }
+
+export async function countUpcomingTsdbFixtures(leagueSlug: string): Promise<number> {
+  const supabase = db();
+
+  const { count, error } = await supabase.from("tsdb_fixtures")
+    .select("id", { count: "exact", head: true })
+    .eq("league_slug", leagueSlug)
+    .gte("kickoff_time", new Date().toISOString());
+
+  if (error) {
+    console.error("[tsdbFixturesRepo] countUpcomingTsdbFixtures error:", error);
+    throw error;
+  }
+
+  return count ?? 0;
+}

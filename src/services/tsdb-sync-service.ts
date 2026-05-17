@@ -5,7 +5,7 @@ import {
   type TsdbEvent,
 } from "../clients/thesportsdb-client.js";
 import {
-  countTsdbFixtures,
+  countUpcomingTsdbFixtures,
   upsertTsdbFixtures,
   type TsdbFixtureRow,
 } from "../repositories/tsdb-fixtures-repository.js";
@@ -129,16 +129,18 @@ export async function syncAllEnabledLeagues(): Promise<SyncLeagueResult[]> {
 }
 
 /**
- * Startup-safe sync: runs only for leagues that currently have no cached fixtures.
+ * Startup-safe sync: re-syncs leagues whose cache has no upcoming fixtures
+ * (either fully empty, or stale — every cached kickoff is in the past).
  */
-export async function syncEmptyLeagues(): Promise<SyncLeagueResult[]> {
+export async function syncStaleLeagues(): Promise<SyncLeagueResult[]> {
   const results: SyncLeagueResult[] = [];
   for (const league of CONFIG.ENABLED_LEAGUES) {
-    const count = await countTsdbFixtures(league);
-    if (count > 0) {
-      console.log(`[tsdbSync] ${league}: ${count} fixtures cached, skipping initial sync`);
+    const upcoming = await countUpcomingTsdbFixtures(league);
+    if (upcoming > 0) {
+      console.log(`[tsdbSync] ${league}: ${upcoming} upcoming fixtures cached, skipping sync`);
       continue;
     }
+    console.log(`[tsdbSync] ${league}: 0 upcoming fixtures cached, syncing`);
     try {
       const result = await syncLeagueFixtures(league);
       results.push(result);

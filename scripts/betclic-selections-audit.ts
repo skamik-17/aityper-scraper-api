@@ -23,7 +23,7 @@ import { betclicNormalizer } from "../src/services/normalization/bookmakers/betc
 import { MARKET_CATALOG } from "../src/data/market-catalog.js";
 import type { MarketCatalogEntry } from "../src/data/market-catalog.js";
 import type { NormalizationContext, RawBookmakerMarket } from "../src/services/normalization/types.js";
-import { isSelectionOrphan } from "../src/services/audit/selection-checks.js";
+import { isSelectionOrphan, HANDICAP_CODES } from "../src/services/audit/selection-checks.js";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -166,16 +166,6 @@ async function main() {
 
     // Check: duplicate selection codes (skip legit multi-line/player markets where repeats are expected)
     const hasMultipleParams = (result.parameters?.length ?? 0) > 1;
-    // Markets that split into per-line parameters after normalization (each line is its own marketKey,
-    // but duplicated HOME/AWAY codes within one line's selection set are semantically expected):
-    const HANDICAP_CODES = new Set([
-      "ASIAN_HANDICAP", "ASIAN_HANDICAP_3WAY", "ASIAN_HANDICAP_PUSH",
-      "EUROPEAN_HANDICAP",
-      "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_ASIAN_HANDICAP_PUSH",
-      "SECOND_HALF_ASIAN_HANDICAP", "SECOND_HALF_ASIAN_HANDICAP_PUSH",
-      "FIRST_HALF_EUROPEAN_HANDICAP", "SECOND_HALF_EUROPEAN_HANDICAP",
-      "CORNERS_HANDICAP", "HALF_TIME_CORNERS_HANDICAP",
-    ]);
     const isHandicapMarket = HANDICAP_CODES.has(result.marketCode);
     for (const [code, labels] of codeOccurrences) {
       if (labels.length <= 1) continue;

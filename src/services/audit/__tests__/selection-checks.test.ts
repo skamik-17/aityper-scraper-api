@@ -3,7 +3,7 @@ import { isSelectionOrphan } from "../selection-checks.js";
 import { getMarketByCode } from "../../../data/market-catalog.js";
 
 describe("isSelectionOrphan", () => {
-  it("returns false when catalog entry is undefined (no constraint to violate)", () => {
+  it("returns true when catalog entry is undefined (no constraint to validate against)", () => {
     expect(isSelectionOrphan("OVER", undefined)).toBe(true);
   });
 

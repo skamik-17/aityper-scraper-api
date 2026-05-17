@@ -9,7 +9,8 @@
  * Output: docs/betclic-audit/.tmp/<matchId>.json (gitignored)
  *
  * Usage:
- *   npx tsx scripts/betclic-prep-audit.ts --match <id> --home "<team>" --away "<team>" --league <slug>
+ *   npx tsx scripts/betclic-prep-audit.ts --match <id> [--home "<team>"] [--away "<team>"] [--league <slug>]
+ *   When --home/--away are omitted, team names are auto-extracted from the first gRPC response.
  */
 import { fetchAllMarketGroups } from "../src/scrapers/bookmakers/betclic/navigation.js";
 import {
@@ -18,7 +19,7 @@ import {
 } from "../src/scrapers/bookmakers/betclic/parser.js";
 import { betclicNormalizer } from "../src/services/normalization/bookmakers/betclic-normalizer.js";
 import { MARKET_CATALOG, getMarketByCode } from "../src/data/market-catalog.js";
-import { isSelectionOrphan } from "../src/services/audit/selection-checks.js";
+import { isSelectionOrphan, HANDICAP_CODES } from "../src/services/audit/selection-checks.js";
 import { getRelatedCodes } from "../src/services/audit/family-codes.js";
 import type {
   PrepAuditOutput,
@@ -34,6 +35,132 @@ import type {
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 
+// Inlined protobuf utilities (duplicated from betclic-market-discovery.ts; small refactor target).
+
+interface RawField {
+  fieldNumber: number;
+  wireType: number;
+  value: number | bigint | string | Buffer | RawField[];
+}
+
+function readVarint(buf: Buffer, offset: number): { value: number; bytesRead: number } {
+  let value = 0;
+  let shift = 0;
+  let bytesRead = 0;
+  while (offset + bytesRead < buf.length) {
+    const b = buf[offset + bytesRead++];
+    value |= (b & 0x7f) << shift;
+    if (!(b & 0x80)) break;
+    shift += 7;
+  }
+  return { value, bytesRead };
+}
+
+function readVarintBigInt(buf: Buffer, offset: number): { value: bigint; bytesRead: number } {
+  let value = 0n;
+  let shift = 0n;
+  let bytesRead = 0;
+  while (offset + bytesRead < buf.length) {
+    const b = buf[offset + bytesRead++];
+    value |= BigInt(b & 0x7f) << shift;
+    if (!(b & 0x80)) break;
+    shift += 7n;
+  }
+  return { value, bytesRead };
+}
+
+function tryDecodeString(buf: Buffer): string | null {
+  try {
+    const str = buf.toString("utf8");
+    if (/^[\x20-\x7E\xA0-\xFFĀ-￿\s]+$/.test(str) && str.length > 0) {
+      return str;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function parseProtobuf(buf: Buffer, depth: number = 0): RawField[] {
+  const fields: RawField[] = [];
+  let offset = 0;
+  const maxDepth = 15;
+  while (offset < buf.length) {
+    const tagResult = readVarint(buf, offset);
+    if (tagResult.bytesRead === 0) break;
+    offset += tagResult.bytesRead;
+    const fieldNumber = tagResult.value >> 3;
+    const wireType = tagResult.value & 0x07;
+    if (fieldNumber === 0 || fieldNumber > 536870911) break;
+    let value: number | bigint | string | Buffer | RawField[];
+    if (wireType === 0) {
+      const result = readVarintBigInt(buf, offset);
+      offset += result.bytesRead;
+      value = result.value <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(result.value) : result.value;
+    } else if (wireType === 1) {
+      if (offset + 8 > buf.length) break;
+      value = buf.readDoubleLE(offset);
+      offset += 8;
+    } else if (wireType === 2) {
+      const lenResult = readVarint(buf, offset);
+      offset += lenResult.bytesRead;
+      const len = lenResult.value;
+      if (offset + len > buf.length) break;
+      const data = buf.slice(offset, offset + len);
+      offset += len;
+      const str = tryDecodeString(data);
+      if (str !== null) {
+        value = str;
+      } else if (depth < maxDepth) {
+        const nested = parseProtobuf(data, depth + 1);
+        value = nested.length > 0 ? nested : data;
+      } else {
+        value = data;
+      }
+    } else if (wireType === 5) {
+      if (offset + 4 > buf.length) break;
+      value = buf.readFloatLE(offset);
+      offset += 4;
+    } else {
+      break;
+    }
+    fields.push({ fieldNumber, wireType, value });
+  }
+  return fields;
+}
+
+function getField(fields: RawField[], num: number): RawField | undefined {
+  return fields.find((f) => f.fieldNumber === num);
+}
+
+function getAllFields(fields: RawField[], num: number): RawField[] {
+  return fields.filter((f) => f.fieldNumber === num);
+}
+
+async function extractTeamsFromFirstResponse(
+  responses: Buffer[],
+): Promise<{ home: string; away: string } | null> {
+  for (const buf of responses) {
+    if (!buf || buf.length === 0) continue;
+    try {
+      const root = parseProtobuf(buf);
+      const wrapper = root.find((f) => f.fieldNumber === 1);
+      if (!wrapper || !Array.isArray(wrapper.value)) continue;
+      const matchField = (wrapper.value as RawField[]).find((f) => f.fieldNumber === 1);
+      if (!matchField || !Array.isArray(matchField.value)) continue;
+      const nameField = (matchField.value as RawField[]).find((f) => f.fieldNumber === 2);
+      if (nameField?.wireType !== 2 || typeof nameField.value !== "string") continue;
+      const [home, away] = nameField.value.split(" - ").map((s) => s.trim());
+      if (home && away) return { home, away };
+    } catch {
+      // Skip malformed buffers; try next response.
+    }
+  }
+  return null;
+}
+
+// End of inlined protobuf utilities.
+
 interface Args {
   matchId: string;
   home: string;
@@ -42,7 +169,7 @@ interface Args {
   out: string;
 }
 
-function parseArgs(): Args {
+function parseArgs(): Omit<Args, "home" | "away"> & { home?: string; away?: string } {
   const argv = process.argv.slice(2);
   const get = (flag: string): string | undefined => {
     const i = argv.indexOf(flag);
@@ -56,21 +183,13 @@ function parseArgs(): Args {
   const out =
     get("--out") ??
     resolve(process.cwd(), `../docs/betclic-audit/.tmp/${matchId ?? "unknown"}.json`);
-  if (!matchId || !home || !away) {
-    console.error("Usage: --match <id> --home <team> --away <team> [--league <slug>] [--out <path>]");
+  if (!matchId) {
+    console.error("Usage: --match <id> [--home <team>] [--away <team>] [--league <slug>] [--out <path>]");
     process.exit(1);
   }
   return { matchId, home, away, league, out };
 }
 
-const HANDICAP_CODES = new Set([
-  "ASIAN_HANDICAP", "ASIAN_HANDICAP_3WAY", "ASIAN_HANDICAP_PUSH",
-  "EUROPEAN_HANDICAP",
-  "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_ASIAN_HANDICAP_PUSH",
-  "SECOND_HALF_ASIAN_HANDICAP", "SECOND_HALF_ASIAN_HANDICAP_PUSH",
-  "FIRST_HALF_EUROPEAN_HANDICAP", "SECOND_HALF_EUROPEAN_HANDICAP",
-  "CORNERS_HANDICAP", "HALF_TIME_CORNERS_HANDICAP",
-]);
 
 function detectParamFormat(paramValue: string | null | undefined): MechanicalFlags["param_format"] {
   if (!paramValue) return "none";
@@ -83,10 +202,28 @@ function detectParamFormat(paramValue: string | null | undefined): MechanicalFla
 }
 
 async function main() {
-  const args = parseArgs();
-  console.error(`[prep-audit] match=${args.matchId} ${args.home} vs ${args.away} (${args.league})`);
+  const rawArgs = parseArgs();
 
-  const responses = await fetchAllMarketGroups(args.matchId);
+  const responses = await fetchAllMarketGroups(rawArgs.matchId);
+
+  // Resolve team names: use explicit args if provided, otherwise extract from gRPC response.
+  let resolvedHome = rawArgs.home;
+  let resolvedAway = rawArgs.away;
+  if (!resolvedHome || !resolvedAway) {
+    const extracted = await extractTeamsFromFirstResponse(responses);
+    resolvedHome = resolvedHome ?? extracted?.home ?? "Unknown Home";
+    resolvedAway = resolvedAway ?? extracted?.away ?? "Unknown Away";
+  }
+
+  const args: Args = {
+    matchId: rawArgs.matchId,
+    home: resolvedHome,
+    away: resolvedAway,
+    league: rawArgs.league,
+    out: rawArgs.out,
+  };
+
+  console.error(`[prep-audit] match=${args.matchId} ${args.home} vs ${args.away} (${args.league})`);
   console.error(`[prep-audit] Fetched ${responses.length} tab responses`);
 
   // Raw all-tabs count (no dedup) — for reporting only.

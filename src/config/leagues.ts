@@ -126,6 +126,15 @@ export const LEAGUES: LeagueConfig[] = [
       pzbuk: { id: "395" },
     },
   },
+  {
+    slug: "world-cup-2026",
+    displayName: "World Cup 2026",
+    displayNamePl: "Mundial 2026",
+    country: "World",
+    bookmakers: {
+      // Filled in incrementally by later scraper tasks.
+    },
+  },
 ];
 
 const leaguesBySlug = new Map<string, LeagueConfig>(

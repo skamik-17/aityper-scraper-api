@@ -437,6 +437,70 @@ const LIGUE_1_ALIASES: Record<string, string> = {
 };
 
 /**
+ * Explicit aliases for World Cup 2026 (bookmaker Polish names → TheSportsDB canonical).
+ * Seed set; expanded with real scraped variants during scraper wiring.
+ */
+const WORLD_CUP_ALIASES: Record<string, string> = {
+  "Algieria": "Algeria",
+  "Argentyna": "Argentina",
+  "Australia": "Australia",
+  "Austria": "Austria",
+  "Belgia": "Belgium",
+  "Bośnia i Hercegowina": "Bosnia-Herzegovina",
+  "Bosnia i Hercegowina": "Bosnia-Herzegovina",
+  "Brazylia": "Brazil",
+  "Kanada": "Canada",
+  "Republika Zielonego Przylądka": "Cape Verde",
+  "Wyspy Zielonego Przylądka": "Cape Verde",
+  "Kolumbia": "Colombia",
+  "Chorwacja": "Croatia",
+  "Curaçao": "Curaçao",
+  "Curacao": "Curaçao",
+  "Czechy": "Czech Republic",
+  "DR Konga": "DR Congo",
+  "Demokratyczna Republika Konga": "DR Congo",
+  "Kongo": "DR Congo",
+  "Ekwador": "Ecuador",
+  "Egipt": "Egypt",
+  "Anglia": "England",
+  "Francja": "France",
+  "Niemcy": "Germany",
+  "Ghana": "Ghana",
+  "Haiti": "Haiti",
+  "Iran": "Iran",
+  "Irak": "Iraq",
+  "Wybrzeże Kości Słoniowej": "Ivory Coast",
+  "Japonia": "Japan",
+  "Jordania": "Jordan",
+  "Meksyk": "Mexico",
+  "Maroko": "Morocco",
+  "Holandia": "Netherlands",
+  "Niderlandy": "Netherlands",
+  "Nowa Zelandia": "New Zealand",
+  "Norwegia": "Norway",
+  "Panama": "Panama",
+  "Paragwaj": "Paraguay",
+  "Portugalia": "Portugal",
+  "Katar": "Qatar",
+  "Arabia Saudyjska": "Saudi Arabia",
+  "Szkocja": "Scotland",
+  "Senegal": "Senegal",
+  "Republika Południowej Afryki": "South Africa",
+  "RPA": "South Africa",
+  "Korea Południowa": "South Korea",
+  "Korea Płd.": "South Korea",
+  "Hiszpania": "Spain",
+  "Szwecja": "Sweden",
+  "Szwajcaria": "Switzerland",
+  "Tunezja": "Tunisia",
+  "Turcja": "Turkey",
+  "Stany Zjednoczone": "USA",
+  "USA": "USA",
+  "Urugwaj": "Uruguay",
+  "Uzbekistan": "Uzbekistan",
+};
+
+/**
  * Map of league to aliases
  */
 const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
@@ -445,6 +509,7 @@ const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
   laliga: LALIGA_ALIASES,
   "serie-a": SERIE_A_ALIASES,
   "ligue-1": LIGUE_1_ALIASES,
+  "world-cup-2026": WORLD_CUP_ALIASES,
 };
 
 /**
@@ -483,7 +548,7 @@ function getFuseForLeague(league: string): Fuse<CanonicalTeam> | null {
  * - Remove special characters
  * - Normalize whitespace
  */
-function normalize(name: string): string {
+export function normalize(name: string): string {
   return name
     .replace(/Ł/g, "L")
     .replace(/ł/g, "l")

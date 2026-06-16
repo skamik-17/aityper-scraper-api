@@ -20,6 +20,7 @@ export const COMPETITION_IDS: Record<string, number> = {
   laliga: 545,
   "serie-a": 543,
   "ligue-1": 548,
+  "world-cup-2026": 2969,
 };
 
 /**
@@ -32,6 +33,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: `${BASE_URL}/zaklady-bukmacherskie/match/Soccer/Spain/545`,
   "serie-a": `${BASE_URL}/zaklady-bukmacherskie/match/Soccer/Italy/543`,
   "ligue-1": `${BASE_URL}/zaklady-bukmacherskie/match/Soccer/France/548`,
+  "world-cup-2026": `${BASE_URL}/zaklady-bukmacherskie/match/Soccer/World/2969`,
 };
 
 /**
@@ -44,6 +46,7 @@ export const REGION_ALIASES: Record<string, string> = {
   laliga: "Spain",
   "serie-a": "Italy",
   "ligue-1": "France",
+  "world-cup-2026": "World",
 };
 
 /**

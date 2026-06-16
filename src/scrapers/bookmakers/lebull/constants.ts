@@ -26,6 +26,7 @@ export const LEAGUE_IDS: Record<string, number> = {
   laliga: 4486,
   "serie-a": 4484,
   "ligue-1": 4610,
+  "world-cup-2026": 52530,
 };
 
 /**
@@ -37,6 +38,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: `${BASE_URL}/pl/league/${SPORT_ID}/4486`,
   "serie-a": `${BASE_URL}/pl/league/${SPORT_ID}/4484`,
   "ligue-1": `${BASE_URL}/pl/league/${SPORT_ID}/4610`,
+  "world-cup-2026": `${BASE_URL}/pl/league/${SPORT_ID}/52530`,
 };
 
 /**

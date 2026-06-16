@@ -133,6 +133,21 @@ export const LEAGUES: LeagueConfig[] = [
     country: "World",
     bookmakers: {
       sts: { id: 16, url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/kwalifikacje-ms---europa/1/3/11" },
+      fortuna: { id: "ufo:tour:00-2h1" },
+      betclic: { id: 1 },
+      superbet: { id: 1432 },
+      lvbet: { id: 37392 },
+      fuksiarz: { id: 174616 },
+      betfan: { id: 535035 },
+      forbet: { id: 73181 },
+      etoto: { id: 15850 },
+      betters: { id: 52530 },
+      lebull: { id: 52530 },
+      betcris: { id: 2969 },
+      pzbuk: { id: "1810" },
+      // totalbet: site migrated to a UUID-based platform; the existing scraper
+      // targets the legacy numeric API (now 404). Needs a scraper migration
+      // before it can serve World Cup odds — intentionally omitted for now.
     },
   },
 ];

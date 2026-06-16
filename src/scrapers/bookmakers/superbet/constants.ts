@@ -25,6 +25,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
   "serie-a": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
   "ligue-1": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
+  "world-cup-2026": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/swiat/mistrzostwa-swiata",
 };
 
 /**
@@ -38,6 +39,14 @@ export const TOURNAMENT_IDS: Record<string, number[]> = {
   laliga: [98],             // La Liga (Spain)
   "serie-a": [104],         // Serie A (Italy)
   "ligue-1": [100],         // Ligue 1 (France)
+  // FIFA World Cup 2026: Superbet splits the tournament into one tournamentId
+  // per group (12 groups A-L) plus a Final placeholder (1431).
+  // The by-date API accepts a comma-separated tournamentIds list.
+  "world-cup-2026": [
+    1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, // groups A-H
+    94891, 94892, 94893, 94894,                     // groups I-L
+    1431,                                           // Final placeholder
+  ],
 };
 
 /**

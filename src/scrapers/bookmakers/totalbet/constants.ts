@@ -16,7 +16,7 @@ export const BASE_URL = "https://totalbet.pl";
 export const API_BASE_URL = "https://totalbet.pl/rest/market";
 
 /**
- * Category IDs for Totalbet API
+ * Category IDs for Totalbet API (legacy numeric platform)
  * These are used to filter events by league in API requests
  * Found via network inspection of the Totalbet website
  */
@@ -29,6 +29,19 @@ export const CATEGORY_IDS: Record<string, number> = {
 };
 
 /**
+ * Category UUIDs for the current Totalbet offer platform
+ *
+ * Totalbet migrated to a new platform that identifies categories by UUID,
+ * consumed via /dealer/bdata/v1/bet/events?category_uuid=<uuid>&category_type=sport.
+ * New leagues are wired here as their numeric ids no longer exist.
+ */
+export const CATEGORY_UUIDS: Record<string, string> = {
+  // FIFA World Cup 2026 ("Mistrzostwa Świata") tournament
+  // Path: Piłka nożna > Międzynarodowe > Mistrzostwa Świata
+  "world-cup-2026": "298d1945-aed7-4b43-ba39-3dbc23a59cd0",
+};
+
+/**
  * League URLs for navigation (used to establish session if needed)
  */
 export const LEAGUE_URLS: Record<string, string> = {
@@ -37,6 +50,8 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: `${BASE_URL}/zaklady-sportowe/Pilka-nozna/7110/1`,
   "serie-a": `${BASE_URL}/zaklady-sportowe/Pilka-nozna/7151/1`,
   "ligue-1": `${BASE_URL}/zaklady-sportowe/Pilka-nozna/7219/1`,
+  // New UUID-based offer route used by the current Totalbet platform
+  "world-cup-2026": `${BASE_URL}/league/298d1945-aed7-4b43-ba39-3dbc23a59cd0/events`,
 };
 
 /**

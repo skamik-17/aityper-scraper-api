@@ -27,6 +27,7 @@ export const CATEGORY_IDS: Record<string, number> = {
   laliga: 159,
   "serie-a": 118,
   "ligue-1": 165,
+  "world-cup-2026": 73181,
 };
 
 /**
@@ -38,6 +39,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: "https://www.iforbet.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/la-liga",
   "serie-a": "https://www.iforbet.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
   "ligue-1": "https://www.iforbet.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
+  "world-cup-2026": "https://www.iforbet.pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/mistrzostwa-swiata",
 };
 
 /**

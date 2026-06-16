@@ -23,6 +23,7 @@ export const LEAGUE_IDS: Record<string, number> = {
   laliga: 4486,
   "serie-a": 4484,
   "ligue-1": 4610,
+  "world-cup-2026": 52530,
 };
 
 /**

@@ -89,7 +89,10 @@ export async function fetchLeagueEvents(
     return null;
   }
 
-  const tournamentId = tournamentIds[0];
+  // Some competitions (e.g. World Cup) span multiple tournament ids; the
+  // by-date API accepts a comma-separated list. Single-id leagues join to
+  // themselves, so this is safe for all leagues.
+  const tournamentIdsParam = tournamentIds.join(",");
 
   try {
     const apiData = await page.evaluate(
@@ -108,7 +111,7 @@ export async function fetchLeagueEvents(
           return { data: [], error: String(err) };
         }
       },
-      { apiBaseUrl: API_BASE_URL, sportId: SPORT_ID_FOOTBALL, tid: tournamentId }
+      { apiBaseUrl: API_BASE_URL, sportId: SPORT_ID_FOOTBALL, tid: tournamentIdsParam }
     );
 
     if (apiData?.error) {

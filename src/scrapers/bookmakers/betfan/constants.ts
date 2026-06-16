@@ -25,6 +25,7 @@ export const CATEGORY_IDS: Record<string, number> = {
   laliga: 230,
   "serie-a": 215,
   "ligue-1": 214,
+  "world-cup-2026": 535035,
 };
 
 /**
@@ -36,6 +37,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: "https://betfan.pl/zaklady-pilka-nozna/hiszpania/la-liga-230",
   "serie-a": "https://betfan.pl/zaklady-pilka-nozna/wlochy/serie-a-215",
   "ligue-1": "https://betfan.pl/zaklady-pilka-nozna/francja/ligue-1-214",
+  "world-cup-2026": "https://betfan.pl/zaklady-pilka-nozna/swiat/mistrzostwa-swiata-535035",
 };
 
 /**

@@ -498,6 +498,14 @@ const WORLD_CUP_ALIASES: Record<string, string> = {
   "USA": "USA",
   "Urugwaj": "Uruguay",
   "Uzbekistan": "Uzbekistan",
+  // Variants observed across bookmakers during scraper wiring.
+  "W.K.Słoniowej": "Ivory Coast", // Fortuna abbreviation
+  "WKS": "Ivory Coast", // Fuksiarz/Superbet abbreviation
+  "Korea Płd": "South Korea", // no trailing dot (etoto)
+  "Republika Korei": "South Korea", // pzbuk
+  "DR Kongo": "DR Congo", // betfan spelling
+  "Afryka Południowa": "South Africa", // pzbuk
+  "Bosnia and Herzegovina": "Bosnia-Herzegovina", // English-name bookmakers (betters, lebull)
 };
 
 /**

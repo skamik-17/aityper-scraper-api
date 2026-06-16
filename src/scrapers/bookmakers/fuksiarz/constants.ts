@@ -24,6 +24,7 @@ export const LEAGUE_URLS: Record<string, string> = {
   laliga: "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga",
   "serie-a": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
   "ligue-1": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
+  "world-cup-2026": "https://fuksiarz.pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/mistrzostwa-swiata",
 };
 
 /**
@@ -37,6 +38,7 @@ export const CATEGORY_IDS: Record<string, number> = {
   laliga: 654,
   "serie-a": 635,
   "ligue-1": 1152,
+  "world-cup-2026": 174616,
 };
 
 /**

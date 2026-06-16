@@ -53,6 +53,7 @@ export const COMPETITION_IDS: Record<string, number> = {
   laliga: 7,
   "serie-a": 6,
   "ligue-1": 4,
+  "world-cup-2026": 1,
 };
 
 /**
@@ -64,6 +65,7 @@ export const LEAGUE_SLUGS: Record<string, string> = {
   laliga: "la-liga-c7",
   "serie-a": "serie-a-c6",
   "ligue-1": "ligue-1-c4",
+  "world-cup-2026": "ms-c1",
 };
 
 /**

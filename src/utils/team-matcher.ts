@@ -506,6 +506,8 @@ const WORLD_CUP_ALIASES: Record<string, string> = {
   "DR Kongo": "DR Congo", // betfan spelling
   "Afryka Południowa": "South Africa", // pzbuk
   "Bosnia and Herzegovina": "Bosnia-Herzegovina", // English-name bookmakers (betters, lebull)
+  "Bośnia i Herc.": "Bosnia-Herzegovina", // abbreviated form
+  "W.Ziel.Przyl.": "Cape Verde", // Wyspy Zielonego Przylądka abbreviation
 };
 
 /**

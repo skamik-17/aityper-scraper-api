@@ -83,7 +83,9 @@ export async function syncLeagueFixtures(leagueSlug: string): Promise<SyncLeague
     throw new Error(`No TSDB metadata for league: ${leagueSlug}`);
   }
 
-  const season = getCurrentSeason();
+  // Tournaments (e.g. World Cup) use a single-year season; club leagues use
+  // the cross-year season. The per-league override wins when present.
+  const season = meta.season ?? getCurrentSeason();
   console.log(`[tsdbSync] ${leagueSlug}: fetching ${meta.totalRounds} rounds (${season})`);
 
   const { events, failedRounds } = await fetchAllRounds(

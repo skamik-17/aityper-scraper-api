@@ -3,7 +3,9 @@
  * Only exposes what sync-service needs. Free tier rate limit handled via batching.
  */
 
-const BASE_URL = "https://www.thesportsdb.com/api/v1/json/3";
+// Free-tier key "123" returns full round listings (eventsround). The legacy
+// key "3" is capped (~5 events/round), which truncates fixture sync.
+const BASE_URL = "https://www.thesportsdb.com/api/v1/json/123";
 
 export interface TsdbEvent {
   idEvent: string;

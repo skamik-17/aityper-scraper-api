@@ -132,7 +132,7 @@ export const LEAGUES: LeagueConfig[] = [
     displayNamePl: "Mundial 2026",
     country: "World",
     bookmakers: {
-      // Filled in incrementally by later scraper tasks.
+      sts: { id: 16, url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/kwalifikacje-ms---europa/1/3/11" },
     },
   },
 ];

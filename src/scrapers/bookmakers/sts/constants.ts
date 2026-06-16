@@ -58,6 +58,18 @@ export const LEAGUE_CONFIG: Record<
     countryFilter: "francj",
     tournamentFilter: "ligue 1",
   },
+  // FIFA World Cup 2026. STS lists it under category "Międzynarodowe"
+  // (categoryId 3) and tournament "Mistrzostwa Świata" (tournamentId 16).
+  // The international category page reliably loads the upcoming WC fixtures.
+  // Country filter is left empty (the lowercased "międzynarodowe" carries a
+  // Polish diacritic); selection is driven by the "mistrzostwa" tournament
+  // filter, which is ASCII-safe and unique to the World Cup tournament.
+  "world-cup-2026": {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/kwalifikacje-ms---europa/1/3/11",
+    tournamentId: 16,
+    countryFilter: "",
+    tournamentFilter: "mistrzostwa",
+  },
 };
 
 /**

@@ -43,6 +43,48 @@ async function newPage(browser: Browser): Promise<Page> {
 }
 
 /**
+ * Dismiss the Betclic Commanders Act cookie CMP. It renders shortly AFTER
+ * domcontentloaded and is a two-layer flow, so we wait for the accept-all button
+ * to appear, click it, and re-check — otherwise the modal stays over the markets
+ * and ruins the screenshots. The accept-all reads "Zaakceptuj wszystko".
+ */
+async function dismissCookies(page: Page): Promise<void> {
+  const acceptSelectors = [
+    'button:has-text("Zaakceptuj wszystko")',
+    'button:has-text("Akceptuj wszystk")',
+    "#popin_tc_privacy_button_2",
+    "#popin_tc_privacy_button",
+    'button:has-text("Zaakceptuj")',
+    'button:has-text("POTWIERDŹ")',
+  ];
+  for (let attempt = 0; attempt < 5; attempt++) {
+    let clicked = false;
+    for (const sel of acceptSelectors) {
+      const btn = page.locator(sel).first();
+      try {
+        await btn.waitFor({ state: "visible", timeout: attempt === 0 ? 8000 : 1200 });
+        await btn.click({ timeout: 3000 });
+        clicked = true;
+        await page.waitForTimeout(800);
+        break;
+      } catch {
+        // This selector not visible within the window; try the next one.
+      }
+    }
+    if (!clicked) break; // No consent button visible -> dismissed or none present.
+  }
+}
+
+/** Close any one-time promo tooltip ("Zamknij") that overlays the market tiles. */
+async function closeOverlays(page: Page): Promise<void> {
+  const btn = page.locator('button:has-text("Zamknij"), [class*="tooltip" i] button').first();
+  if (await btn.isVisible().catch(() => false)) {
+    await btn.click({ timeout: 2000 }).catch(() => {});
+    await page.waitForTimeout(300);
+  }
+}
+
+/**
  * Capture every rendered market tile on the Betclic match page. Betclic renders a
  * FLAT list of `.marketBox` tiles (one per market, with title + all selections),
  * so we screenshot each tile and return its visible title for later matching.
@@ -57,28 +99,7 @@ async function captureBetclicTiles(
   console.error(`[visual-capture] Betclic: ${url}`);
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
 
-  // Best-effort cookie banner dismissal. Betclic uses a Commanders Act CMP with a
-  // two-step flow; the accept-all button reads "Zaakceptuj wszystko" (substring
-  // "akceptuj wszystk" also matches the "Akceptuj wszystkie" variant). Two passes
-  // clear both layers if present.
-  const consentSelectors = [
-    "#popin_tc_privacy_button_2",
-    "#popin_tc_privacy_button",
-    'button:has-text("Akceptuj wszystk")',
-    'button:has-text("Zaakceptuj")',
-    'button:has-text("POTWIERDŹ")',
-    'button:has-text("Zgadzam")',
-  ];
-  for (let pass = 0; pass < 2; pass++) {
-    for (const sel of consentSelectors) {
-      const btn = page.locator(sel).first();
-      if (await btn.isVisible().catch(() => false)) {
-        await btn.click({ timeout: 3000 }).catch(() => {});
-        await page.waitForTimeout(500);
-        break;
-      }
-    }
-  }
+  await dismissCookies(page);
   await page.waitForLoadState("networkidle", { timeout: 15000 }).catch(() => {});
   await page.waitForTimeout(1500);
 
@@ -98,6 +119,7 @@ async function captureBetclicTiles(
   // Enumerate + screenshot all market tiles currently visible, skipping ones we
   // already captured under another tab.
   const enumerateCurrent = async (): Promise<void> => {
+    await closeOverlays(page);
     await page.evaluate(async () => {
       for (let y = 0; y < document.body.scrollHeight; y += 700) {
         window.scrollTo(0, y);

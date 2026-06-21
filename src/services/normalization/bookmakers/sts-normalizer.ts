@@ -95,6 +95,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   244: "HALF_TIME_CORNERS_HANDICAP",
   247: "HALF_TIME_CORNERS_TOTAL",
 
+  238: "CORNERS_ODD_EVEN",
+
   231: "CORNERS_TEAM",
   234: "CORNERS_TEAM",
   254: "HALF_TIME_HOME_EXACT_CORNERS",
@@ -581,6 +583,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_ODD_EVEN_GOALS":
     case "HOME_TEAM_ODD_EVEN_GOALS":
     case "AWAY_TEAM_ODD_EVEN_GOALS":
+    case "CORNERS_ODD_EVEN":
+    case "HALF_TIME_CORNERS_ODD_EVEN":
       return normalizeOddEvenSelection(trimmed);
 
     case "ASIAN_HANDICAP":

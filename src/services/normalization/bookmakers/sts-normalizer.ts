@@ -691,7 +691,8 @@ function normalizeSelectionForMarket(
       const match = trimmed.match(/^([1x2])\s*i\s*([+-])/i);
       if (match) {
         const result = match[1].toUpperCase();
-        const overUnder = match[2] === "-" ? "OVER" : "UNDER";
+        // STS convention: "+" = OVER, "-" = UNDER (same as RESULT_AND_TOTAL)
+        const overUnder = match[2] === "+" ? "OVER" : "UNDER";
         if (result === "1") return `HOME_${overUnder}` as NormalizedSelection;
         if (result === "X") return `DRAW_${overUnder}` as NormalizedSelection;
         if (result === "2") return `AWAY_${overUnder}` as NormalizedSelection;

@@ -42,7 +42,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   76: "FIRST_HALF_EUROPEAN_HANDICAP",
   77: "FIRST_HALF_ASIAN_HANDICAP_PUSH",
   79: "FIRST_HALF_ASIAN_HANDICAP",
-  80: "HALF_TIME_TOTAL_GOALS",
+  80: "HALF_TIME_TOTAL_GOALS_ASIAN",
   82: "HALF_TIME_TOTAL_GOALS",
   85: "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
   88: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
@@ -421,6 +421,7 @@ function normalizeSelectionForMarket(
     case "TOTAL_GOALS":
     case "TOTAL_GOALS_ASIAN":
     case "HALF_TIME_TOTAL_GOALS":
+    case "HALF_TIME_TOTAL_GOALS_ASIAN":
     case "SECOND_HALF_TOTAL_GOALS":
     case "CORNERS_TOTAL":
     case "HOME_TEAM_TOTAL_GOALS":
@@ -864,7 +865,7 @@ function extractParamValue(
   raw: RawBookmakerMarket
 ): string | undefined {
   const parameterizedMarkets = [
-    "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS",
+    "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS", "HALF_TIME_TOTAL_GOALS_ASIAN",
     "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP", "ASIAN_HANDICAP_PUSH",
     "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "HALF_TIME_CARDS_TOTAL", "CORNERS_HANDICAP",
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
@@ -942,6 +943,21 @@ function extractParamValue(
       }
     }
     // Fallback: try to extract from market name like "Liczba goli (zwrot) 1"
+    const nameMatch = raw.name.match(/\s(\d+)$/);
+    if (nameMatch) {
+      return nameMatch[1];
+    }
+  }
+
+  // Extract 1st-half Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
+  // Mirrors TOTAL_GOALS_ASIAN extraction; lines are integers (1, 2, 3, etc.)
+  if (marketCode === "HALF_TIME_TOTAL_GOALS_ASIAN") {
+    for (const sel of raw.selections) {
+      const intMatch = sel.name.match(/^[+-](\d+)$/);
+      if (intMatch) {
+        return intMatch[1];
+      }
+    }
     const nameMatch = raw.name.match(/\s(\d+)$/);
     if (nameMatch) {
       return nameMatch[1];

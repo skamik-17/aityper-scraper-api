@@ -122,7 +122,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   188: "CARDS_TEAM",
   191: "CARDS_TEAM",
   193: "HOME_EXACT_CARDS",
-  194: "CARDS_TEAM",
+  194: "AWAY_EXACT_CARDS",
   196: "OTHER",
   197: "OTHER",
   198: "OTHER",

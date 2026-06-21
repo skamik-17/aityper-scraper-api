@@ -171,6 +171,66 @@ async function captureBetclicTiles(
   return { tiles, fallbackFile: null };
 }
 
+function normTeam(s: string): string {
+  return s
+    .replace(/ł/g, "l")
+    .replace(/Ł/g, "L")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+/** Resolve our internal matchId from the backend odds API by matching team names. */
+async function resolveFrontMatchId(
+  backendUrl: string,
+  league: string,
+  home: string,
+  away: string,
+): Promise<string | null> {
+  try {
+    const res = await fetch(`${backendUrl}/api/odds?league=${encodeURIComponent(league)}`);
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      data?: { matches?: Array<{ matchId: string; homeTeam: string; awayTeam: string }> };
+    };
+    const matches = json.data?.matches ?? [];
+    const h = normTeam(home);
+    const a = normTeam(away);
+    const found = matches.find((m) => normTeam(m.homeTeam) === h && normTeam(m.awayTeam) === a);
+    return found?.matchId ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Whole-page screenshot of our frontend match page (renders all categories on load). */
+async function captureFrontend(
+  page: Page,
+  frontUrl: string,
+  league: string,
+  ourMatchId: string,
+  outDir: string,
+): Promise<FrontSectionCapture[]> {
+  const url = `${frontUrl}/leagues/${league}/match/${encodeURIComponent(ourMatchId)}`;
+  console.error(`[visual-capture] frontend: ${url}`);
+  await page.goto(url, { waitUntil: "networkidle", timeout: 30000 });
+  await page.waitForTimeout(1500);
+  // Scroll through to trigger any lazy rendering, then return to top.
+  await page.evaluate(async () => {
+    for (let y = 0; y < document.body.scrollHeight; y += 600) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 80));
+    }
+    window.scrollTo(0, 0);
+  });
+  await page.waitForTimeout(500);
+  const file = "front__all.png";
+  await page.screenshot({ path: join(outDir, file), fullPage: true });
+  console.error(`[visual-capture] wrote ${file}`);
+  return [{ category: "all", file }];
+}
+
 async function main() {
   const matchId = getArg("--match");
   if (!matchId) {
@@ -186,6 +246,8 @@ async function main() {
   // built fallback may use a wrong league slug for tournaments. The simple
   // /zaklady/m<id> URL does NOT render the full offer, so it is not used.
   const url = getArg("--url") ?? buildEventUrl(matchId, league, home, away);
+  const frontUrl = getArg("--front-url") ?? "http://localhost:3000";
+  const backendUrl = getArg("--backend-url") ?? "http://localhost:3001";
   const prepPath = getArg("--prep") ?? resolve(process.cwd(), `../docs/betclic-audit/.tmp/${matchId}.json`);
   const date = new Date().toISOString().slice(0, 10);
   const outDir = getArg("--out") ?? resolve(process.cwd(), `../docs/betclic-audit/screenshots/${date}__${matchId}`);
@@ -200,9 +262,9 @@ async function main() {
 
   const browser = await chromium.launch({ headless: true });
   let betclicGroups: BetclicGroupCapture[] = [];
-  const frontSections: FrontSectionCapture[] = [];
-  const frontMatchId: string | null = null;
-  const frontendAvailable = false;
+  let frontSections: FrontSectionCapture[] = [];
+  let frontMatchId: string | null = null;
+  let frontendAvailable = false;
   try {
     const bPage = await newPage(browser);
     const { tiles, fallbackFile } = await captureBetclicTiles(bPage, url, outDir);
@@ -218,6 +280,20 @@ async function main() {
     const matched = betclicGroups.flatMap((g) => g.markets).filter((m) => m.file).length;
     const total = betclicGroups.reduce((n, g) => n + g.markets.length, 0);
     console.error(`[visual-capture] matched ${matched}/${total} markets to tiles`);
+
+    // Frontend whole-page capture (best-effort; degrades to "unavailable").
+    frontMatchId = home && away ? await resolveFrontMatchId(backendUrl, league, home, away) : null;
+    if (frontMatchId) {
+      try {
+        const fPage = await newPage(browser);
+        frontSections = await captureFrontend(fPage, frontUrl, league, frontMatchId, outDir);
+        frontendAvailable = true;
+      } catch (e) {
+        console.error(`[visual-capture] frontend capture failed:`, e);
+      }
+    } else {
+      console.error(`[visual-capture] could not resolve our matchId; skipping frontend`);
+    }
   } finally {
     await browser.close();
   }

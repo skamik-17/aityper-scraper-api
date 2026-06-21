@@ -3774,7 +3774,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Dokładna liczba kartek - gospodarze", en: "Home Exact Cards" },
     descriptions: { pl: "Dokładna liczba kartek gospodarzy", en: "Exact cards for home team" },
     hasParameter: false,
-    selections: ["0-1", "2", "3", "4+"],
+    // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
+    selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
     displayOrder: 265,
   },
@@ -3787,7 +3788,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Dokładna liczba kartek - goście", en: "Away Exact Cards" },
     descriptions: { pl: "Dokładna liczba kartek gości", en: "Exact cards for away team" },
     hasParameter: false,
-    selections: ["0-1", "2", "3", "4+"],
+    // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
+    selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
     displayOrder: 266,
   },

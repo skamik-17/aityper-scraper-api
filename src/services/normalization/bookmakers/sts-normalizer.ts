@@ -121,7 +121,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   206: "HALF_TIME_CARDS_TOTAL",
   188: "CARDS_TEAM",
   191: "CARDS_TEAM",
-  193: "CARDS_TEAM",
+  193: "HOME_EXACT_CARDS",
   194: "CARDS_TEAM",
   196: "OTHER",
   197: "OTHER",
@@ -447,6 +447,14 @@ function normalizeSelectionForMarket(
         }
       }
       return normalizeOverUnderSelection(trimmed);
+
+    case "HOME_EXACT_CARDS":
+    case "AWAY_EXACT_CARDS":
+      // STS sends "0","1","2","3+" as exact-count selections - pass through as-is
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
 
     case "CARDS_TOTAL":
     case "HALF_TIME_CARDS_TOTAL":

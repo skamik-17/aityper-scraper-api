@@ -620,8 +620,24 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
 
     case "MULTI_RESULT":
-    case "HALFTIME_FULLTIME_AND_TOTAL":
       return trimmed as NormalizedSelection;
+
+    case "HALFTIME_FULLTIME_AND_TOTAL": {
+      // Format: "<HT> / <FT> i <sign><line>"
+      // e.g. "1 / X i -2.5" → HOME_DRAW_UNDER, "2 / 2 i +2.5" → AWAY_AWAY_OVER
+      const htftMatch = trimmed.match(/^([1x2])\s*\/\s*([1x2])\s+i\s+([+-])/i);
+      if (htftMatch) {
+        const htToken = htftMatch[1].toUpperCase();
+        const ftToken = htftMatch[2].toUpperCase();
+        const sign = htftMatch[3];
+        const htCode = htToken === "1" ? "HOME" : htToken === "X" ? "DRAW" : "AWAY";
+        const ftCode = ftToken === "1" ? "HOME" : ftToken === "X" ? "DRAW" : "AWAY";
+        // STS convention: "-" = UNDER, "+" = OVER
+        const ouCode = sign === "-" ? "UNDER" : "OVER";
+        return `${htCode}_${ftCode}_${ouCode}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
 
     case "HALFTIME_FULLTIME":
     case "DOUBLE_RESULT": {
@@ -834,6 +850,7 @@ function extractParamValue(
     "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP", "ASIAN_HANDICAP_PUSH",
     "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "HALF_TIME_CARDS_TOTAL", "CORNERS_HANDICAP",
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
+    "HALFTIME_FULLTIME_AND_TOTAL",
     "HALF_TIME_CORNERS_TOTAL", "HALF_TIME_CORNERS_TEAM", "SECOND_HALF_RESULT_AND_TOTAL",
     "HALF_TIME_GOAL_RANGE", "SECOND_HALF_GOAL_RANGE",
     "FIRST_HALF_ASIAN_HANDICAP", "FIRST_HALF_ASIAN_HANDICAP_PUSH", "FIRST_HALF_EUROPEAN_HANDICAP",
@@ -959,6 +976,16 @@ function extractParamValue(
           awayValue = negateHandicap(homeValue);
         }
         return `${homeValue}/${awayValue}`;
+      }
+    }
+  }
+
+  if (marketCode === "HALFTIME_FULLTIME_AND_TOTAL") {
+    // Extract line value from first selection name, e.g. "1 / 1 i -2.5" or "1 / 1 i +2.5"
+    for (const sel of raw.selections) {
+      const lineMatch = sel.name.match(/i\s+[+-](\d+[.,]\d+)/i);
+      if (lineMatch) {
+        return lineMatch[1].replace(",", ".");
       }
     }
   }

@@ -812,8 +812,17 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "DOUBLE_CHANCE_TOTAL":
+    case "DOUBLE_CHANCE_TOTAL": {
+      // Format: "<DC> i <sign><line>" — e.g. "1X i -1.5", "12 i +1.5", "X2 i -1.5"
+      // STS convention: "-" = UNDER, "+" = OVER (same as RESULT_AND_TOTAL family)
+      const dcMatch = trimmed.match(/^(1X|12|X2)\s+i\s+([+-])/i);
+      if (dcMatch) {
+        const dcToken = dcMatch[1].toUpperCase();
+        const ouCode = dcMatch[2] === "+" ? "OVER" : "UNDER";
+        return `${dcToken}_${ouCode}` as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
+    }
 
     case "FIRST_GOAL_TIME":
     case "FIRST_GOAL_TIME_ALT":

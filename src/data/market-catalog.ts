@@ -3182,11 +3182,12 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "1. połowa - gospodarz - dokładna liczba rożnych", en: "1st Half Home Exact Corners" },
     descriptions: { pl: "Dokładna liczba rożnych gospodarzy w 1. połowie", en: "Exact corners for home team in 1st half" },
     hasParameter: false,
-    selections: ["0-1", "2", "3", "4+"],
-    selectionOrder: ["0-1", "2", "3", "4+"],
+    // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
+    selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
+    selectionOrder: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
     displayOrder: 254,
-    descriptionTemplates: { "0-1": "0-1 rożnych", "2": "2 rożne", "3": "3 rożne", "4+": "4+ rożnych" }
+    descriptionTemplates: { "0-1": "0-1 rożnych", "0": "0 rożnych", "1": "1 rożny", "2": "2 rożne", "3": "3 rożne", "3+": "3+ rożnych", "4+": "4+ rożnych" }
   },
   {
     numericId: 255,
@@ -3197,11 +3198,12 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "1. połowa - gość - dokładna liczba rożnych", en: "1st Half Away Exact Corners" },
     descriptions: { pl: "Dokładna liczba rożnych gości w 1. połowie", en: "Exact corners for away team in 1st half" },
     hasParameter: false,
-    selections: ["0-1", "2", "3", "4+"],
-    selectionOrder: ["0-1", "2", "3", "4+"],
+    // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
+    selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
+    selectionOrder: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
     displayOrder: 255,
-    descriptionTemplates: { "0-1": "0-1 rożnych", "2": "2 rożne", "3": "3 rożne", "4+": "4+ rożnych" }
+    descriptionTemplates: { "0-1": "0-1 rożnych", "0": "0 rożnych", "1": "1 rożny", "2": "2 rożne", "3": "3 rożne", "3+": "3+ rożnych", "4+": "4+ rożnych" }
   },
   {
     numericId: 223,

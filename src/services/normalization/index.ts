@@ -73,10 +73,11 @@ export function normalizeMarketsForBookmaker(
   markets: ScrapedMarket[],
   bookmaker: string,
   homeTeam?: string,
-  awayTeam?: string
+  awayTeam?: string,
+  league?: string
 ): ScrapedMarket[] {
   return markets.map((market) => {
-    const normalized = normalizerFacade.normalize(market, bookmaker, homeTeam, awayTeam);
+    const normalized = normalizerFacade.normalize(market, bookmaker, homeTeam, awayTeam, league);
 
     const merged: ScrapedMarket = {
       ...market,

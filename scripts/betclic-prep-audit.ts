@@ -244,6 +244,10 @@ async function main() {
     homeTeam: args.home,
     awayTeam: args.away,
     leagueName: args.league,
+    // Production (factory.ts) populates ctx.league; the selection mapper
+    // (helpers/index.ts) reads ctx.league for Polish->canonical team resolution.
+    // Mirror production so the audit harness matches real normalization.
+    league: args.league,
   };
 
   // First pass: normalize everything so we can detect collisions and build match context.

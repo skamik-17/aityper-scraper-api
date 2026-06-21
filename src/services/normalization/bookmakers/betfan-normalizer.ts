@@ -223,7 +223,7 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "FIRST_TEAM_TO_SCORE":
     case "TIME_PERIOD_RESULT":
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
       return normalizeBetfanDoubleChance(trimmed, ctx);
@@ -255,7 +255,7 @@ function normalizeSelectionForMarket(
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
@@ -282,7 +282,7 @@ function normalizeSelectionForMarket(
     case "CLEAN_SHEET": {
       const yesNo = normalizeYesNoSelection(trimmed);
       return yesNo === "UNKNOWN"
-        ? normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam)
+        ? normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league)
         : yesNo;
     }
 
@@ -293,7 +293,7 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
 
     default:
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   }
 }
 

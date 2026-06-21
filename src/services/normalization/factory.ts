@@ -87,7 +87,8 @@ export interface NormalizerFacade {
     market: { name: string; type?: string; bookmakerMarketId?: string; selections: Array<{ name: string; odds: number }> },
     bookmaker: string,
     homeTeam?: string,
-    awayTeam?: string
+    awayTeam?: string,
+    league?: string
   ): NormalizedMarket;
 
   /**
@@ -97,7 +98,8 @@ export interface NormalizerFacade {
     markets: Array<{ name: string; type?: string; bookmakerMarketId?: string; selections: Array<{ name: string; odds: number }> }>,
     bookmaker: string,
     homeTeam?: string,
-    awayTeam?: string
+    awayTeam?: string,
+    league?: string
   ): NormalizedMarket[];
 
   /**
@@ -222,9 +224,9 @@ function getCategoryForMarketCode(code: string): MarketCategory {
  */
 export function createNormalizer(): NormalizerFacade {
   return {
-    normalize(market, bookmaker, homeTeam, awayTeam) {
+    normalize(market, bookmaker, homeTeam, awayTeam, league) {
       const normalizer = getNormalizerForBookmaker(bookmaker);
-      
+
       if (!normalizer) {
         // No normalizer for this bookmaker - return fallback
         console.warn(`[Normalizer] No normalizer found for bookmaker: ${bookmaker}`);
@@ -234,6 +236,7 @@ export function createNormalizer(): NormalizerFacade {
       const ctx: NormalizationContext = {
         homeTeam: homeTeam || "",
         awayTeam: awayTeam || "",
+        league,
       };
 
       const rawMarket: RawBookmakerMarket = {
@@ -258,8 +261,8 @@ export function createNormalizer(): NormalizerFacade {
       return toNormalizedMarket(output, market.name, market.selections);
     },
 
-    normalizeBatch(markets, bookmaker, homeTeam, awayTeam) {
-      return markets.map((m) => this.normalize(m, bookmaker, homeTeam, awayTeam));
+    normalizeBatch(markets, bookmaker, homeTeam, awayTeam, league) {
+      return markets.map((m) => this.normalize(m, bookmaker, homeTeam, awayTeam, league));
     },
 
     getNormalizer(bookmaker) {

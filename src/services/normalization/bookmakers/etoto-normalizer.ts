@@ -155,8 +155,8 @@ function parseTeamBasedHtFt(
   if (parts.length !== 2) return null;
 
   const [htRaw, ftRaw] = parts;
-  const ht = normalize1x2Selection(htRaw, ctx.homeTeam, ctx.awayTeam);
-  const ft = normalize1x2Selection(ftRaw, ctx.homeTeam, ctx.awayTeam);
+  const ht = normalize1x2Selection(htRaw, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  const ft = normalize1x2Selection(ftRaw, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
   if (ht === "UNKNOWN" || ft === "UNKNOWN") return null;
   return `${ht}_${ft}`;
@@ -179,7 +179,7 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_RESULT":
     case "DRAW_NO_BET":
     case "FIRST_TEAM_TO_SCORE":
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
       return normalizeEtotoDoubleChance(trimmed, ctx);
@@ -211,13 +211,13 @@ function normalizeSelectionForMarket(
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "WIN_TO_NIL":
     case "CLEAN_SHEET": {
       const yesNo = normalizeYesNoSelection(trimmed);
       if (yesNo !== "UNKNOWN") return yesNo;
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
     }
 
     case "CORRECT_SCORE": {
@@ -245,7 +245,7 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
 
     default:
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   }
 }
 

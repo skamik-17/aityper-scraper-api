@@ -35,7 +35,8 @@ export async function normalizeAndSaveMatches(
         match.markets,
         bookmaker,
         match.homeTeam,
-        match.awayTeam
+        match.awayTeam,
+        league
       );
       result.matchesProcessed++;
       result.marketsNormalized += match.markets.length;

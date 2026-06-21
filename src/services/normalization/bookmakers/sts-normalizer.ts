@@ -338,7 +338,7 @@ function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationConte
     return "AWAY";
   }
 
-  return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam);
+  return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam, ctx.league);
 }
 
 function normalizeSelectionForMarket(

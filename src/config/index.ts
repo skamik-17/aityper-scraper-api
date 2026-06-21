@@ -45,14 +45,25 @@ export const CONFIG = {
 
   // Supported leagues
   ENABLED_LEAGUES: [
-    "ligue-1",
     "world-cup-2026",
   ] as const,
 
   // Bookmakers
   BOOKMAKERS: [
-    "sts", "fortuna", "betclic", "superbet", "lvbet", "fuksiarz", "betfan",
-    "totalbet", "forbet", "etoto", "betters", "lebull", "betcris", "pzbuk",
+    "sts", 
+    // "fortuna",
+    "betclic",
+    // "superbet",
+    // "lvbet",
+    // "fuksiarz",
+    // "betfan",
+    // "forbet",
+    // "etoto",
+    // "betters",
+    // "lebull",
+    // "betcris",
+    // "pzbuk",
+    // "totalbet",
   ] as const,
 } as const;
 

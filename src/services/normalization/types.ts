@@ -479,6 +479,12 @@ export interface NormalizationContext {
   awayTeam: string;
   sportType?: string;
   leagueName?: string;
+  /**
+   * League slug (e.g. "world-cup-2026"). Used to resolve selection names that
+   * differ in language from the canonical context team names (e.g. Polish
+   * national-team names → canonical English) via the team-matcher alias maps.
+   */
+  league?: string;
 }
 
 /**

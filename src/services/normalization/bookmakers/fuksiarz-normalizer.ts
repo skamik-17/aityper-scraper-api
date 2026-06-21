@@ -360,7 +360,7 @@ function normalizeFirstEventSelection(
   if (/(brak|nikt|none)/i.test(normalized)) return "NONE" as NormalizedSelection;
   if (/obie/.test(normalized)) return "BOTH" as NormalizedSelection;
 
-  const teamResult = normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+  const teamResult = normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   if (teamResult !== "UNKNOWN") return teamResult;
 
   return trimmed as NormalizedSelection;
@@ -375,14 +375,14 @@ function normalizeCombinationSelection(
   if (!left || !right) return selectionName.trim() as NormalizedSelection;
 
   if (mode === "result-total") {
-    const result = normalize1x2Selection(left, ctx.homeTeam, ctx.awayTeam);
+    const result = normalize1x2Selection(left, ctx.homeTeam, ctx.awayTeam, ctx.league);
     const ou = normalizeOverUnderSelection(right);
     if (result === "UNKNOWN" || ou === "UNKNOWN") return selectionName.trim() as NormalizedSelection;
     return `${result}_${ou}` as NormalizedSelection;
   }
 
   if (mode === "result-btts") {
-    const result = normalize1x2Selection(left, ctx.homeTeam, ctx.awayTeam);
+    const result = normalize1x2Selection(left, ctx.homeTeam, ctx.awayTeam, ctx.league);
     const yesNo = normalizeYesNoSelection(right);
     if (result === "UNKNOWN" || yesNo === "UNKNOWN") return selectionName.trim() as NormalizedSelection;
     return `${result}_${yesNo}` as NormalizedSelection;
@@ -415,9 +415,9 @@ function normalizeFirstGoalAndResultSelection(
   const [resultPart, firstPart] = trimmed.split(/\s+i\s+/i).map((part) => part.trim());
   if (!resultPart || !firstPart) return trimmed as NormalizedSelection;
 
-  const result = normalize1x2Selection(resultPart, ctx.homeTeam, ctx.awayTeam);
+  const result = normalize1x2Selection(resultPart, ctx.homeTeam, ctx.awayTeam, ctx.league);
   const teamName = firstPart.replace(/1\.\s*gol/i, "").trim();
-  const firstTeam = normalize1x2Selection(teamName, ctx.homeTeam, ctx.awayTeam);
+  const firstTeam = normalize1x2Selection(teamName, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
   if (result === "UNKNOWN" || firstTeam === "UNKNOWN") return trimmed as NormalizedSelection;
 
@@ -443,7 +443,7 @@ function normalizeSelectionForMarket(
     case "CORNERS_RACE":
     case "CARDS_RACE":
     case "TIME_PERIOD_RESULT":
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
       return normalizeDoubleChanceSelection(trimmed);
@@ -472,7 +472,7 @@ function normalizeSelectionForMarket(
       if (/\bX\b/i.test(trimmed) || /remis/i.test(trimmed)) return "DRAW";
       if (ctx.homeTeam && normalizeText(trimmed).includes(normalizeText(ctx.homeTeam))) return "HOME";
       if (ctx.awayTeam && normalizeText(trimmed).includes(normalizeText(ctx.awayTeam))) return "AWAY";
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam);
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
     }
 
     case "CORRECT_SCORE": {

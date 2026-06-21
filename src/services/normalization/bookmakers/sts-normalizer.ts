@@ -129,7 +129,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   217: "HALF_TIME_RED_CARD",
   2098: "EACH_TEAM_TOTAL_CARDS_OVER",
 
-  125: "FIRST_GOAL_TIME",
+  125: "FIRST_GOAL_TIME_ALT",
   126: "FIRST_GOAL_TIME",
   132: "TIME_PERIOD_RESULT",
 
@@ -172,7 +172,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   115: "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
   118: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
-  119: "SECOND_HALF_HOME_EXACT_GOALS",
+  119: "SECOND_HALF_EXACT_GOALS",
   120: "SECOND_HALF_ODD_EVEN_GOALS",
 
   1012: "HALFTIME_FULLTIME_AND_TOTAL",
@@ -371,6 +371,7 @@ function normalizeSelectionForMarket(
     "HOME_CORNERS_RANGE",
     "AWAY_CORNERS_RANGE",
     "SECOND_HALF_HOME_EXACT_GOALS",
+    "SECOND_HALF_EXACT_GOALS",
     "TEAM_TOTAL_SCORERS",
   ];
   if (override && !goalRangeMarkets.includes(marketCode)) return override;
@@ -789,6 +790,7 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
 
     case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT":
       if (lower === "bez gola" || lower === "brak gola") return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 

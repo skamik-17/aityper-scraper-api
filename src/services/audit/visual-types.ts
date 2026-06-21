@@ -62,10 +62,19 @@ export function extractAllVisualVerdictBlocks(text: string): unknown[] {
 
 // --- Capture manifest (written by betclic-visual-capture.ts) ---
 
+/**
+ * One captured market tile. Betclic renders a FLAT list of `.marketBox` tiles
+ * (the protobuf groupName is not a visual construct on the page), so we capture
+ * per market and map each tile to our prep market by its visible title.
+ */
+export interface MarketCapture {
+  name: string; // our prep raw market name
+  file: string | null; // screenshot filename in the manifest dir, null if no tile matched
+}
+
 export interface BetclicGroupCapture {
   groupName: string;
-  file: string; // filename relative to the manifest dir, e.g. "betclic__liczba-goli.png"
-  markets: string[]; // raw market names that belong to this Betclic group
+  markets: MarketCapture[]; // markets of this protobuf group + their captured tile (if found)
 }
 
 export interface FrontSectionCapture {
@@ -98,6 +107,42 @@ export function safeFileSlug(name: string): string {
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
   return slug || "unnamed";
+}
+
+/**
+ * Normalize a market title for matching a rendered Betclic tile title against our
+ * prep market name: lowercase, "ł"->"l", strip diacritics, drop punctuation,
+ * collapse whitespace.
+ */
+export function normalizeMarketTitle(s: string): string {
+  return s
+    .replace(/ł/g, "l")
+    .replace(/Ł/g, "L")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+/**
+ * Find the captured tile filename for a market name. Tries normalized exact match
+ * first, then a containment match either direction. Returns null when nothing fits.
+ */
+export function matchTileFile(
+  marketName: string,
+  tiles: { title: string; file: string }[],
+): string | null {
+  const target = normalizeMarketTitle(marketName);
+  if (!target) return null;
+  const exact = tiles.find((t) => normalizeMarketTitle(t.title) === target);
+  if (exact) return exact.file;
+  const partial = tiles.find((t) => {
+    const nt = normalizeMarketTitle(t.title);
+    return nt.length > 0 && (nt.includes(target) || target.includes(nt));
+  });
+  return partial?.file ?? null;
 }
 
 /** Group raw market names by Betclic groupName, preserving first-seen order. */

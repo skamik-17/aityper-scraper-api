@@ -5,6 +5,8 @@ import {
   extractAllVisualVerdictBlocks,
   safeFileSlug,
   groupMarketsByGroupName,
+  normalizeMarketTitle,
+  matchTileFile,
   type VisualVerdict,
 } from "../visual-types.js";
 
@@ -95,5 +97,29 @@ describe("groupMarketsByGroupName", () => {
   it("buckets blank groupName under '(bez grupy)'", () => {
     const map = groupMarketsByGroupName([{ name: "X", groupName: "" }]);
     expect(map.get("(bez grupy)")).toEqual(["X"]);
+  });
+});
+
+describe("normalizeMarketTitle", () => {
+  it("lowercases, strips diacritics/ł and punctuation", () => {
+    expect(normalizeMarketTitle("Gole Powyżej/Poniżej")).toBe("gole powyzej ponizej");
+    expect(normalizeMarketTitle("Podwójna Szansa")).toBe("podwojna szansa");
+  });
+});
+
+describe("matchTileFile", () => {
+  const tiles = [
+    { title: "Podwójna Szansa", file: "betclic__podwojna-szansa__1.png" },
+    { title: "Gole Powyżej/Poniżej", file: "betclic__gole__2.png" },
+    { title: "Liczba goli - Czechy", file: "betclic__liczba-goli-czechy__3.png" },
+  ];
+  it("matches by normalized exact title", () => {
+    expect(matchTileFile("Podwójna Szansa", tiles)).toBe("betclic__podwojna-szansa__1.png");
+  });
+  it("matches by containment when not exact", () => {
+    expect(matchTileFile("Liczba goli", tiles)).toBe("betclic__liczba-goli-czechy__3.png");
+  });
+  it("returns null when nothing fits", () => {
+    expect(matchTileFile("Rzuty rożne", tiles)).toBeNull();
   });
 });

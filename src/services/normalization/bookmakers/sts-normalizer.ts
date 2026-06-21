@@ -114,7 +114,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   818: "SECOND_HALF_GOAL_RANGE",
 
   178: "CARDS_RACE",
-  199: "CARDS_RACE",
+  199: "HALF_TIME_CARDS_RACE",
   179: "FIRST_CARD",
   185: "CARDS_TOTAL",
   192: "CARDS_EXACT_RANGE",
@@ -391,6 +391,7 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_DRAW_NO_BET":
     case "CORNERS_RACE":
     case "CARDS_RACE":
+    case "HALF_TIME_CARDS_RACE":
     case "MOST_SHOTS_ON_TARGET":
       return normalizeSts1x2Selection(trimmed, ctx);
 

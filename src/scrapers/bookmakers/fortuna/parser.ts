@@ -53,14 +53,24 @@ export function parseTeamNames(fixture: FortunaFixture): ParsedTeams {
   return { homeTeam: "", awayTeam: "" };
 }
 
-/**
- * Get human-readable market name based on market type ID
- */
-function getMarketName(marketTypeId: string, specifiers?: Record<string, string>): string {
-  // Check for line markets and include the line in the name
-  const line = specifiers?.total || specifiers?.line;
+/** A blank or fallback-looking API market name we should not trust. */
+function isUselessApiName(name: string): boolean {
+  const n = name.trim();
+  return n.length === 0 || /^rynek\s/i.test(n) || /:/.test(n);
+}
 
-  switch (marketTypeId) {
+/**
+ * Get human-readable market name. Prefer the API-provided name; fall back to the
+ * hard-coded switch for the core market types, then to "Rynek <id>".
+ */
+export function getMarketName(market: FortunaMarket): string {
+  const apiName = (market.name || market.marketTypeName || "").trim();
+  if (apiName && !isUselessApiName(apiName)) return apiName;
+
+  // Check for line markets and include the line in the name
+  const line = market.specifiers?.total || market.specifiers?.line;
+
+  switch (market.marketTypeId) {
     case MARKET_TYPE_IDS.MATCH_RESULT:
       return "Wynik meczu";
     case MARKET_TYPE_IDS.DOUBLE_CHANCE:
@@ -86,7 +96,7 @@ function getMarketName(marketTypeId: string, specifiers?: Record<string, string>
     case MARKET_TYPE_IDS.ODD_EVEN_GOALS:
       return "Parzyste/Nieparzyste";
     default:
-      return `Rynek ${marketTypeId}`;
+      return `Rynek ${market.marketTypeId}`;
   }
 }
 
@@ -333,7 +343,7 @@ export function parseAllMarkets(
     const marketTypeId = market.marketTypeId;
 
     // Get market metadata
-    const marketName = getMarketName(marketTypeId, market.specifiers);
+    const marketName = getMarketName(market);
     const groupName = MARKET_GROUPS[marketTypeId] || "Inne";
     const marketType = MARKET_TYPES[marketTypeId];
 

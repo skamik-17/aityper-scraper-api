@@ -52,7 +52,7 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   106: "SECOND_HALF_EUROPEAN_HANDICAP",
   107: "SECOND_HALF_ASIAN_HANDICAP_PUSH",
   109: "SECOND_HALF_ASIAN_HANDICAP",
-  110: "SECOND_HALF_TOTAL_GOALS",
+  110: "SECOND_HALF_TOTAL_GOALS_ASIAN",
   112: "SECOND_HALF_TOTAL_GOALS",
   124: "SECOND_HALF_CORRECT_SCORE",
   1051: "PLAYER_GOAL_AND_RESULT",
@@ -424,6 +424,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "HALF_TIME_TOTAL_GOALS_ASIAN":
     case "SECOND_HALF_TOTAL_GOALS":
+    case "SECOND_HALF_TOTAL_GOALS_ASIAN":
     case "CORNERS_TOTAL":
     case "HOME_TEAM_TOTAL_GOALS":
     case "AWAY_TEAM_TOTAL_GOALS":
@@ -867,7 +868,7 @@ function extractParamValue(
 ): string | undefined {
   const parameterizedMarkets = [
     "TOTAL_GOALS", "TOTAL_GOALS_ASIAN", "HALF_TIME_TOTAL_GOALS", "HALF_TIME_TOTAL_GOALS_ASIAN",
-    "SECOND_HALF_TOTAL_GOALS", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP", "ASIAN_HANDICAP_PUSH",
+    "SECOND_HALF_TOTAL_GOALS", "SECOND_HALF_TOTAL_GOALS_ASIAN", "TEAM_TOTAL_GOALS", "ASIAN_HANDICAP", "ASIAN_HANDICAP_PUSH",
     "EUROPEAN_HANDICAP", "CORNERS_TOTAL", "CARDS_TOTAL", "HALF_TIME_CARDS_TOTAL", "CORNERS_HANDICAP",
     "RESULT_AND_TOTAL", "DOUBLE_CHANCE_TOTAL", "TOTAL_GOALS_AND_BTTS",
     "HALFTIME_FULLTIME_AND_TOTAL",
@@ -953,6 +954,21 @@ function extractParamValue(
   // Extract 1st-half Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
   // Mirrors TOTAL_GOALS_ASIAN extraction; lines are integers (1, 2, 3, etc.)
   if (marketCode === "HALF_TIME_TOTAL_GOALS_ASIAN") {
+    for (const sel of raw.selections) {
+      const intMatch = sel.name.match(/^[+-](\d+)$/);
+      if (intMatch) {
+        return intMatch[1];
+      }
+    }
+    const nameMatch = raw.name.match(/\s(\d+)$/);
+    if (nameMatch) {
+      return nameMatch[1];
+    }
+  }
+
+  // Extract 2nd-half Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
+  // Mirrors HALF_TIME_TOTAL_GOALS_ASIAN extraction; lines are integers (1, 2, 3, etc.)
+  if (marketCode === "SECOND_HALF_TOTAL_GOALS_ASIAN") {
     for (const sel of raw.selections) {
       const intMatch = sel.name.match(/^[+-](\d+)$/);
       if (intMatch) {

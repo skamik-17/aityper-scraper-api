@@ -164,6 +164,20 @@ export function scrapedMarketsToRaw(markets: ScrapedMarket[]): RawAuditMarket[] 
   }));
 }
 
+/** Collapse duplicate raw markets by (name, paramValue, sorted selection names). */
+export function dedupeRawMarkets(markets: RawAuditMarket[]): RawAuditMarket[] {
+  const seen = new Set<string>();
+  const out: RawAuditMarket[] = [];
+  for (const mkt of markets) {
+    const sels = mkt.selections.map((s) => s.name).sort().join("|");
+    const key = `${mkt.name} ${mkt.paramValue ?? ""} ${sels}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(mkt);
+  }
+  return out;
+}
+
 // ---------------------------------------------------------------------------
 // Mechanical flags (shared with betclic-prep-audit.ts logic)
 // ---------------------------------------------------------------------------
@@ -673,7 +687,7 @@ export async function runScraperPrepAudit(opts: PrepRunOptions): Promise<PrepRun
     league: opts.league,
   };
 
-  const rawMarkets = scrapedMarketsToRaw(match.markets);
+  const rawMarkets = dedupeRawMarkets(scrapedMarketsToRaw(match.markets));
   const output = buildPrepAuditOutput({
     normalizer: opts.normalizer,
     ctx,

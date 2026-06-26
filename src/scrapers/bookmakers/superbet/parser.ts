@@ -362,6 +362,43 @@ export function isValidEvent(event: SuperbetEvent): boolean {
 }
 
 /**
+ * Check whether an event from the by-date listing is a genuine upcoming
+ * match that still has a full prematch offer.
+ *
+ * The by-date endpoint also returns already-played matches (status FINISHED /
+ * matchStatusLabel "END"), which carry marketCount 0-1 (only residual settled
+ * markets). Iterating those first makes the full-offer scrape report a near-empty
+ * market count even though every real upcoming match carries ~350 markets.
+ * This filter excludes settled / offer-less / kicked-off events so the first
+ * processed match reflects the true offer.
+ */
+export function isUpcomingOfferedEvent(
+  event: SuperbetEvent,
+  now: number = Date.now()
+): boolean {
+  if (!isValidEvent(event)) return false;
+
+  // No offer left (settled or closed match)
+  if (typeof event.marketCount === "number" && event.marketCount === 0) {
+    return false;
+  }
+
+  // Finished / ended match (metadata is null for not-yet-started events)
+  const status = event.metadata?.status;
+  const statusLabel = event.metadata?.matchStatusLabel;
+  if (status === "FINISHED" || statusLabel === "END") {
+    return false;
+  }
+
+  // Kickoff already in the past
+  if (typeof event.unixDateMillis === "number" && event.unixDateMillis < now) {
+    return false;
+  }
+
+  return true;
+}
+
+/**
  * Check if event has valid 1X2 odds
  */
 export function hasValid1X2Odds(event: SuperbetEvent): boolean {

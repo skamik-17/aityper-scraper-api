@@ -11,11 +11,13 @@
  * We intercept WebSocket frames to capture INITIAL_STATE messages
  * containing all events, markets, and selections.
  *
- * PZBuk loads markets lazily - initial page load only shows a subset.
- * To get all markets, we need to:
- * 1. Dismiss the cookie consent popup
- * 2. Click "Pokaż więcej" (Show more) button
- * 3. Accumulate selections from multiple WebSocket messages
+ * For a single event PZBuk streams the complete offer as a short burst of
+ * INITIAL_STATE messages right after navigation. We capture the full offer by:
+ * 1. Dismissing the cookie consent popup
+ * 2. Accumulating selections from every message (de-duplicated by id)
+ * 3. Firing one light expansion trigger (expand every group header + click
+ *    every "Pokaż więcej") to surface any genuinely lazy-loaded group
+ * 4. Resolving once the stream goes quiet (stream-silence stabilization)
  */
 
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
@@ -27,7 +29,8 @@ import {
   WS_MIN_WAIT,
   WS_MAX_WAIT,
   REQUEST_TIMEOUT,
-  MIN_SELECTIONS_FOR_FULL_OFFER,
+  MIN_CAPTURE_MS,
+  STREAM_SILENCE_MS,
 } from "./constants.js";
 
 /**
@@ -67,65 +70,80 @@ async function dismissCookieConsent(page: Page): Promise<void> {
 }
 
 /**
- * Click "Pokaż więcej" (Show more) to load all markets
- * Returns true if the button was clicked
+ * Click every visible "Pokaż więcej" (Show more) button to reveal additional
+ * markets that PZBuk keeps collapsed inside a group. There can be many such
+ * buttons (one per group/sub-section), so we keep clicking the first visible
+ * one until none remain.
+ *
+ * Returns the number of buttons clicked.
  */
-async function clickShowMore(page: Page): Promise<boolean> {
-  try {
-    const showMore = page.getByText("Pokaż więcej").first();
-    if (await showMore.isVisible({ timeout: 500 }).catch(() => false)) {
-      await showMore.click({ timeout: 5000 });
-      return true;
+async function clickAllShowMore(
+  page: Page,
+  shouldStop: () => boolean = () => false
+): Promise<number> {
+  let clicks = 0;
+  // Guard against an unexpected infinite loop if a button never disappears.
+  for (let i = 0; i < 40; i++) {
+    if (shouldStop()) break;
+    try {
+      const showMore = page.getByText("Pokaż więcej").first();
+      if (!(await showMore.isVisible({ timeout: 300 }).catch(() => false))) {
+        break;
+      }
+      await showMore.click({ timeout: 3000 }).catch(() => {});
+      clicks++;
+      // Small delay to allow lazy WebSocket subscription to respond
+      await page.waitForTimeout(60);
+    } catch {
+      break;
     }
-  } catch {
-    // Button not found or click failed
   }
-  return false;
+  return clicks;
 }
 
 /**
- * Market groups to expand to load additional data
- * These are the group headers that contain collapsed markets
+ * Expand EVERY collapsed market group header to trigger PZBuk's lazy
+ * WebSocket subscriptions.
+ *
+ * Rather than relying on a brittle hard-coded allowlist of Polish group
+ * names (which silently misses groups like "Zawodnicy"/"Popularne" and lists
+ * groups that no longer exist), we enumerate every group header in the DOM
+ * and click each one.
+ *
+ * Note: captured selections are accumulated across messages and never
+ * discarded, so even if a click toggles an already-expanded group closed, the
+ * subscription has already fired and its data has been captured. Clicking an
+ * even number of times therefore never loses data.
+ *
+ * Returns the number of headers clicked.
  */
-const MARKET_GROUPS_TO_EXPAND = [
-  "Strzelcy",       // Goalscorers - adds ~114 selections
-  "1 połowa",       // First half - adds ~59 selections
-  "Gole",           // Goals - adds ~71 selections
-  "Rzuty rożne",    // Corners - adds ~45 selections
-  "Dokładny wynik", // Exact score - adds ~37 selections
-  "Kartki",         // Cards - adds ~49 selections
-  "Drużynowe",      // Team markets - adds ~24 selections
-  "2 połowa",       // Second half - adds ~68 selections
-  "Kombo",          // Combos - adds ~74 selections
-  "Specjalne",      // Specials - adds ~12 selections
-];
+async function expandAllMarketGroups(
+  page: Page,
+  shouldStop: () => boolean = () => false
+): Promise<number> {
+  let clicks = 0;
+  try {
+    const headers = page.locator('[class*="content-box__HeaderContainer"]');
+    const count = await headers.count().catch(() => 0);
 
-/**
- * Expand all collapsed market groups to trigger WebSocket data loading
- * PZBuk loads market data lazily when groups are expanded
- */
-async function expandMarketGroups(page: Page): Promise<number> {
-  let expandedCount = 0;
-
-  for (const groupName of MARKET_GROUPS_TO_EXPAND) {
-    try {
-      // Find the group header by text content
-      const header = page.locator('[class*="content-box__HeaderContainer"]').filter({
-        hasText: groupName,
-      }).first();
-
-      if (await header.isVisible({ timeout: 500 }).catch(() => false)) {
-        await header.click();
-        expandedCount++;
-        // Small delay to allow WebSocket response
-        await page.waitForTimeout(300);
+    for (let i = 0; i < count; i++) {
+      if (shouldStop()) break;
+      try {
+        const header = headers.nth(i);
+        if (await header.isVisible({ timeout: 300 }).catch(() => false)) {
+          await header.click({ timeout: 3000 }).catch(() => {});
+          clicks++;
+          // Small delay to allow lazy WebSocket subscription to respond
+          await page.waitForTimeout(60);
+        }
+      } catch {
+        // Header not clickable - continue with the rest
       }
-    } catch {
-      // Group not found or click failed - continue with others
     }
+  } catch {
+    // No headers found - nothing to expand
   }
-
-  return expandedCount;
+  return clicks;
 }
 
 /**
@@ -191,8 +209,8 @@ export async function navigateToEventPage(
  * For single event (match details) mode, this function:
  * 1. Accumulates selections from multiple WebSocket messages
  * 2. Dismisses cookie consent popup
- * 3. Clicks "Pokaż więcej" to load all markets
- * 4. Waits for data stabilization before returning
+ * 3. Fires one expansion trigger (all group headers + all "Pokaż więcej")
+ * 4. Waits for stream-silence stabilization before returning
  *
  * @param page - Playwright page with WebSocket listeners
  * @param singleEvent - If true, wait for single event with many selections (match details mode)
@@ -211,11 +229,9 @@ export async function captureWebSocketData(
     const accumulatedSelections = new Map<string, PZBukSelection>();
     let eventData: PZBukInitialState["events"] | null = null;
     let marketData: PZBukInitialState["markets"] | null = null;
-    let showMoreClicked = false;
-    let cookieDismissed = false;
 
     // Set up WebSocket listener
-    page.on("websocket", (ws: PlaywrightWebSocket) => {
+    const wsHandler = (ws: PlaywrightWebSocket) => {
       // Only listen to the sportsbook API WebSocket
       if (!ws.url().includes(WEBSOCKET_URL_PATTERN)) return;
 
@@ -269,15 +285,6 @@ export async function captureWebSocketData(
                       selections: Array.from(accumulatedSelections.values()),
                     };
                   }
-
-                  // Immediate exit if we have a very large number of selections
-                  if (accumulatedSelections.size >= MIN_SELECTIONS_FOR_FULL_OFFER * 4) {
-                    console.log(
-                      `[PZBuk/WS] Large dataset captured: ${accumulatedSelections.size} selections`
-                    );
-                    resolved = true;
-                    resolve(bestState);
-                  }
                 }
               } else {
                 // For league listing: want multiple events
@@ -293,96 +300,126 @@ export async function captureWebSocketData(
           // Not valid JSON or parsing error - ignore
         }
       });
-    });
+    };
+    page.on("websocket", wsHandler);
 
-    // Polling with stabilization - wait for data to stop streaming in
     const startTime = Date.now();
-    const checkInterval = setInterval(async () => {
+
+    if (singleEvent) {
+      // Match-details mode.
+      //
+      // PZBuk streams the complete offer for an event over a short burst of
+      // INITIAL_STATE messages right after navigation. We capture the whole
+      // offer by waiting until that burst goes quiet (stream-silence based),
+      // which is reliable for the first event AND for subsequent events whose
+      // burst can arrive more slowly.
+      //
+      // We additionally fire a single, light "expansion" trigger (expand every
+      // group header + click every "Pokaż więcej") to surface any group that
+      // genuinely lazy-loads. Captured selections are accumulated and never
+      // discarded, so this can only add data. We deliberately avoid repeated
+      // heavy clicking, which was observed to disrupt the stream for the next
+      // event navigated on the same page.
+      void (async () => {
+        const finish = () => {
+          if (resolved) return;
+          resolved = true;
+          // Detach the websocket listener so a later capture on the same page
+          // is not processed by this (now stale) closure.
+          page.off("websocket", wsHandler);
+          console.log(
+            `[PZBuk/WS] Single-event capture complete with ${accumulatedSelections.size} selections`
+          );
+          resolve(bestState);
+        };
+
+        // Allows the expansion helpers to bail out promptly once we resolve.
+        const shouldStop = () => resolved;
+
+        // Hard safety cap independent of the loop below.
+        const hardCap = setTimeout(finish, WS_MAX_WAIT);
+
+        try {
+          // Let the initial event feed begin, then clear the cookie banner.
+          await delay(2000);
+          await dismissCookieConsent(page).catch(() => {});
+
+          let expansionTriggered = false;
+
+          // Stabilization loop: resolve when the stream has been quiet for
+          // STREAM_SILENCE_MS after the minimum capture window, or at the hard
+          // cap.
+          while (!resolved) {
+            const elapsed = Date.now() - startTime;
+            const silence = Date.now() - lastUpdateTime;
+
+            if (elapsed >= WS_MAX_WAIT) break;
+
+            // Fire the one-shot expansion trigger once the first burst has
+            // settled a little, to surface any lazy-loaded groups.
+            if (!expansionTriggered && elapsed >= 3000) {
+              expansionTriggered = true;
+              const expanded = await expandAllMarketGroups(page, shouldStop).catch(
+                () => 0
+              );
+              const shown = await clickAllShowMore(page, shouldStop).catch(
+                () => 0
+              );
+              if (expanded > 0 || shown > 0) {
+                console.log(
+                  `[PZBuk/WS] Expansion trigger: expanded ${expanded} headers, clicked ${shown} "Pokaż więcej"`
+                );
+              }
+              continue;
+            }
+
+            // Resolve once the burst has gone quiet, but never before the
+            // minimum capture window (subsequent events can stream slowly).
+            if (
+              accumulatedSelections.size > 0 &&
+              elapsed >= MIN_CAPTURE_MS &&
+              silence >= STREAM_SILENCE_MS
+            ) {
+              break;
+            }
+
+            await delay(300);
+          }
+        } catch {
+          // Best-effort - resolve with whatever we captured.
+        } finally {
+          clearTimeout(hardCap);
+          finish();
+        }
+      })();
+      return;
+    }
+
+    // League-listing mode: poll until we have a multi-event snapshot.
+    const checkInterval = setInterval(() => {
       if (resolved) {
         clearInterval(checkInterval);
         return;
       }
 
       const elapsed = Date.now() - startTime;
-      const timeSinceLastUpdate = Date.now() - lastUpdateTime;
 
-      // For single event mode (match details)
-      if (singleEvent) {
-        // Dismiss cookie consent popup after initial load
-        if (!cookieDismissed && elapsed > 1500) {
-          cookieDismissed = true;
-          try {
-            await dismissCookieConsent(page);
-          } catch {
-            // Ignore errors
-          }
-        }
-
-        // Expand market groups to load all markets (after cookie is dismissed)
-        if (cookieDismissed && !showMoreClicked && elapsed > 2000) {
-          showMoreClicked = true;
-          try {
-            const expandedCount = await expandMarketGroups(page);
-            if (expandedCount > 0) {
-              console.log(`[PZBuk/WS] Expanded ${expandedCount} market groups`);
-              // Reset the lastUpdateTime to wait for new data
-              lastUpdateTime = Date.now();
-            }
-          } catch {
-            // Ignore errors
-          }
-        }
-
-        // If we have enough selections and data has stabilized, resolve
-        if (
-          bestState &&
-          accumulatedSelections.size >= MIN_SELECTIONS_FOR_FULL_OFFER &&
-          timeSinceLastUpdate >= 3000 // Data has stabilized for 3 seconds
-        ) {
-          console.log(
-            `[PZBuk/WS] Data stabilized with ${accumulatedSelections.size} selections`
-          );
-          resolved = true;
-          clearInterval(checkInterval);
-          resolve(bestState);
-          return;
-        }
-
-        // Early exit if we have good data and waited long enough
-        // Increased minimum wait from 3s to 8s to allow for show more click
-        if (
-          elapsed >= 8000 &&
-          bestState &&
-          accumulatedSelections.size > 0 &&
-          timeSinceLastUpdate >= 2000
-        ) {
-          console.log(
-            `[PZBuk/WS] Early exit with ${accumulatedSelections.size} selections after ${elapsed}ms`
-          );
-          resolved = true;
-          clearInterval(checkInterval);
-          resolve(bestState);
-          return;
-        }
-      } else {
-        // For league listing: exit early if we have good data after minimum wait
-        if (
-          elapsed >= WS_MIN_WAIT &&
-          bestState &&
-          bestState.events?.length > 0 &&
-          bestState.selections?.length > 0
-        ) {
-          resolved = true;
-          clearInterval(checkInterval);
-          resolve(bestState);
-          return;
-        }
+      if (
+        elapsed >= WS_MIN_WAIT &&
+        bestState &&
+        bestState.events?.length > 0 &&
+        bestState.selections?.length > 0
+      ) {
+        resolved = true;
+        clearInterval(checkInterval);
+        resolve(bestState);
+        return;
       }
 
       // Maximum timeout
       if (elapsed >= WS_MAX_WAIT) {
         console.log(
-          `[PZBuk/WS] Max wait reached with ${accumulatedSelections.size || bestState?.selections?.length || 0} selections`
+          `[PZBuk/WS] Max wait reached with ${bestState?.selections?.length || 0} selections`
         );
         resolved = true;
         clearInterval(checkInterval);

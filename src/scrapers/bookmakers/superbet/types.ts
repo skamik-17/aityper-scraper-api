@@ -26,6 +26,17 @@ export interface SuperbetOddsSelection {
 }
 
 /**
+ * Live/result metadata attached to an event by the by-date API.
+ * Present (non-null) for matches that have started or finished.
+ */
+export interface SuperbetEventMetadata {
+  /** High-level status, e.g. "FINISHED" */
+  status?: string;
+  /** Short label, e.g. "END" for ended matches */
+  matchStatusLabel?: string;
+}
+
+/**
  * Single event (match) from Superbet API
  */
 export interface SuperbetEvent {
@@ -43,6 +54,14 @@ export interface SuperbetEvent {
   odds?: SuperbetOddsSelection[];
   /** Event status */
   status?: string;
+  /** Number of markets offered for this event (0 for settled/closed matches) */
+  marketCount?: number;
+  /** Kickoff time as unix epoch milliseconds (from the by-date listing) */
+  unixDateMillis?: number;
+  /** Kickoff time as ISO string */
+  utcDate?: string;
+  /** Live/result metadata; non-null once a match has started or finished */
+  metadata?: SuperbetEventMetadata | null;
 }
 
 /**

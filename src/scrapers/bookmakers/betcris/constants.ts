@@ -164,8 +164,21 @@ export const SELECTION_CODES = {
 export const WS_CONFIG = {
   /** Minimum wait time before resolving with captured data (ms) */
   MIN_WAIT_TIME: 1000,
-  /** Maximum wait time for WebSocket data (ms) */
+  /** Maximum wait time for WebSocket data (ms) - league listing mode */
   MAX_WAIT_TIME: 12000,
+  /**
+   * Maximum wait time for single-event (match details) capture (ms).
+   * Larger than the league window because the full offer is streamed across
+   * an initial snapshot plus several per-market-group subscription frames that
+   * we accumulate/union before resolving.
+   */
+  MAX_WAIT_TIME_SINGLE_EVENT: 16000,
+  /**
+   * If no new markets are unioned for this long (after MIN_WAIT_TIME), the
+   * accumulated offer is treated as complete even when the self-reported
+   * markets_count target was not exactly reached (plateau detection).
+   */
+  PLATEAU_WAIT_TIME: 3000,
   /** Polling interval for checking captured data (ms) */
   POLL_INTERVAL: 300,
   /** Minimum markets required for single event mode */

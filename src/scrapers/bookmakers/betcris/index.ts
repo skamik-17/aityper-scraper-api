@@ -215,7 +215,9 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
         const wsData = await Promise.race([
           wsDataPromise,
-          this.delay(15000).then(() => null),
+          // Allow the full-offer accumulation window (MAX_WAIT_TIME_SINGLE_EVENT)
+          // to complete before the race cuts it off.
+          this.delay(20000).then(() => null),
         ]);
 
         if (wsData) {
@@ -298,7 +300,9 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
             const matchWsData = await Promise.race([
               matchWsPromise,
-              this.delay(10000).then(() => null),
+              // Allow the full-offer accumulation window to complete; the
+              // single-event capture unions markets across several frames.
+              this.delay(20000).then(() => null),
             ]);
 
             if (matchWsData) {

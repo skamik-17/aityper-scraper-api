@@ -281,3 +281,17 @@ export const REQUEST_TIMEOUT = 30000;
  * Set to 200 to ensure we capture most markets after group expansion.
  */
 export const MIN_SELECTIONS_FOR_FULL_OFFER = 200;
+
+/**
+ * Minimum time (ms) to keep a single-event capture open before resolving.
+ * PZBuk delivers the INITIAL_STATE burst a few seconds after navigation;
+ * resolving too eagerly (especially right after a previous rapid navigation)
+ * can miss most of it. Empirically ~8s is a safe floor.
+ */
+export const MIN_CAPTURE_MS = 8000;
+
+/**
+ * How long (ms) the WebSocket stream must stay quiet (no new INITIAL_STATE
+ * data) before a single-event capture is considered complete.
+ */
+export const STREAM_SILENCE_MS = 2500;

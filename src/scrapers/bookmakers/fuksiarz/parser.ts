@@ -301,6 +301,9 @@ export function parseAllMarkets(
 
           markets.push({
             name: `${baseName} ${line}`,
+            // Carry the stable Fuksiarz game type id so the audit can match
+            // by id instead of brittle name regex
+            bookmakerMarketId: String(game.gameType),
             groupName: MARKET_GROUPS[game.gameType] || "Inne",
             type: MARKET_TYPES[game.gameType],
             selections,
@@ -321,6 +324,9 @@ export function parseAllMarkets(
       if (selections.length > 0) {
         markets.push({
           name: getMarketName(game),
+          // Carry the stable Fuksiarz game type id so the audit can match
+          // by id instead of brittle name regex
+          bookmakerMarketId: String(game.gameType),
           groupName: MARKET_GROUPS[game.gameType] || "Inne",
           type: MARKET_TYPES[game.gameType],
           selections,

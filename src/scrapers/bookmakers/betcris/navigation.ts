@@ -80,11 +80,20 @@ export async function navigateToMatchPage(
  *
  * This function sets up WebSocket interception and waits for relevant data.
  * It handles both league listing mode (filter by competition ID) and
- * single event mode (look for specific game with many markets).
+ * single event mode (look for a specific game with its full market offer).
+ *
+ * IMPORTANT: BetConstruct/Swarm streams a game's offer across several frames -
+ * an initial snapshot plus per-market-group subscription responses (All/Goals/
+ * Halves/Corners/Bookings/Player-props ...). A single frame therefore only ever
+ * contains a subset of the markets. We accumulate (union) every frame within the
+ * wait window - keyed by market id - instead of resolving on the first frame that
+ * happens to cross a market threshold. For single-event mode we resolve only once
+ * the accumulated market count reaches the game's self-reported `markets_count`
+ * (the completeness target/validator), or once growth plateaus / the window ends.
  *
  * @param page - Playwright page with active WebSocket connection
  * @param config - Capture configuration
- * @returns Promise resolving to captured SwarmData or null on timeout
+ * @returns Promise resolving to the merged SwarmData or null on timeout
  */
 export function captureSwarmData(
   page: Page,
@@ -92,124 +101,252 @@ export function captureSwarmData(
 ): Promise<SwarmData | null> {
   const { competitionId, singleEventMode = false, targetGameNumber } = config;
 
+  // Scope what is unioned into the accumulator to bound memory: in single-event
+  // mode keep only the target game, in league mode keep only the target
+  // competition. This is essential because the page (and its WebSocket) is reused
+  // across many matches during a full-offer scrape.
+  const mergeFilter: MergeFilter = {
+    competitionId: singleEventMode ? undefined : competitionId,
+    targetGameNumber: singleEventMode ? targetGameNumber : undefined,
+  };
+
   return new Promise((resolve) => {
     let resolved = false;
-    let bestData: SwarmData | null = null;
+    // Accumulator that unions markets/events across every relevant frame.
+    const merged: SwarmData = {};
     let bestMarketCount = 0;
+    let lastGrowthTime = Date.now();
 
-    // Set up WebSocket frame interception
-    page.on("websocket", (ws: PlaywrightWebSocket) => {
-      // Only intercept Swarm WebSocket connections
-      if (!ws.url().includes("swarm") && !ws.url().includes("trexname.com")) {
-        return;
-      }
+    // Track attached listeners so they can be detached on resolve. The page is
+    // reused across matches, so leaving listeners attached leaks memory/CPU.
+    const wsCleanups: Array<() => void> = [];
 
-      ws.on("framereceived", (frame) => {
-        if (resolved) return;
-
-        try {
-          const payload = frame.payload.toString();
-          // Skip non-JSON frames
-          if (!payload.startsWith("{")) return;
-
-          const msg = JSON.parse(payload);
-
-          // Look for game data responses (sport > region > competition > game structure)
-          if (msg.code === 0 && msg.data?.data?.sport) {
-            const data = msg.data.data as SwarmData;
-
-            // Analyze the response
-            const analysis = analyzeSwarmData(data, targetGameNumber);
-
-            if (analysis.hasGamesWithMarkets && analysis.gameCount > 0) {
-              // Check competition filter for league listing mode
-              let hasTargetCompetition = !competitionId;
-              if (competitionId) {
-                hasTargetCompetition = checkCompetitionExists(data, competitionId);
-              }
-
-              if (singleEventMode) {
-                // For match details: look for response with target game and many markets
-                if (targetGameNumber) {
-                  // Only consider responses containing the target game
-                  if (analysis.hasTargetGame && analysis.totalMarkets > bestMarketCount) {
-                    bestMarketCount = analysis.totalMarkets;
-                    bestData = data;
-                    // Resolve when we have the target game with extended markets
-                    if (analysis.totalMarkets >= WS_CONFIG.MIN_MARKETS_SINGLE_EVENT) {
-                      resolved = true;
-                      resolve(data);
-                      return;
-                    }
-                  }
-                } else {
-                  // No target game, just look for many markets
-                  if (analysis.totalMarkets > bestMarketCount) {
-                    bestMarketCount = analysis.totalMarkets;
-                    bestData = data;
-                  }
-                  if (analysis.totalMarkets >= WS_CONFIG.MIN_MARKETS_SINGLE_EVENT) {
-                    resolved = true;
-                    resolve(data);
-                    return;
-                  }
-                }
-              } else if (hasTargetCompetition) {
-                // For league listing: resolve when we have the target competition
-                resolved = true;
-                resolve(data);
-                return;
-              }
-            }
-          }
-        } catch {
-          // Not valid JSON or parsing error - ignore
-        }
-      });
-    });
-
-    // Early-exit polling with timeout
     const startTime = Date.now();
     const checkInterval = setInterval(() => {
       if (resolved) {
         clearInterval(checkInterval);
         return;
       }
+      tick();
+    }, WS_CONFIG.POLL_INTERVAL);
 
+    const finish = () => {
+      if (resolved) return;
+      resolved = true;
+      clearInterval(checkInterval);
+      page.off("websocket", onWebSocket);
+      for (const cleanup of wsCleanups) cleanup();
+      resolve(merged.sport ? merged : null);
+    };
+
+    // Evaluate the accumulated data and decide whether to resolve.
+    const tick = () => {
+      if (resolved) return;
       const elapsed = Date.now() - startTime;
+      if (elapsed < WS_CONFIG.MIN_WAIT_TIME) return;
 
-      // Exit early if we have good data after minimum wait
-      if (elapsed >= WS_CONFIG.MIN_WAIT_TIME && bestData && bestMarketCount > 0) {
-        resolved = true;
-        clearInterval(checkInterval);
-        resolve(bestData);
+      if (bestMarketCount > 0) {
+        if (singleEventMode) {
+          // Plateau: no new markets unioned for a while -> treat as complete.
+          if (Date.now() - lastGrowthTime >= WS_CONFIG.PLATEAU_WAIT_TIME) {
+            finish();
+            return;
+          }
+        } else {
+          // League listing only needs the target competition's base markets.
+          const hasCompetition =
+            !competitionId || checkCompetitionExists(merged, competitionId);
+          if (hasCompetition) {
+            finish();
+            return;
+          }
+        }
+      }
+
+      const maxWait = singleEventMode
+        ? WS_CONFIG.MAX_WAIT_TIME_SINGLE_EVENT
+        : WS_CONFIG.MAX_WAIT_TIME;
+      if (elapsed >= maxWait) {
+        finish();
+      }
+    };
+
+    // Frame handler shared by every Swarm WebSocket on the page.
+    const onFrame = (frame: { payload: Buffer | string }) => {
+      if (resolved) return;
+
+      try {
+        const payload = frame.payload.toString();
+        // Skip non-JSON frames
+        if (!payload.startsWith("{")) return;
+
+        const msg = JSON.parse(payload);
+
+        // Look for game data responses (sport > region > competition > game structure)
+        if (msg.code === 0 && msg.data?.data?.sport) {
+          const data = msg.data.data as SwarmData;
+
+          // Union this frame into the accumulator (markets keyed by id), scoped
+          // to the relevant game/competition only.
+          mergeSwarmData(merged, data, mergeFilter);
+
+          const stats = analyzeSwarmData(merged, targetGameNumber);
+
+          // Track the metric that drives completeness for this mode.
+          const currentBest = singleEventMode
+            ? targetGameNumber
+              ? stats.targetMarketCount
+              : stats.maxGameMarketCount
+            : stats.maxGameMarketCount;
+
+          if (currentBest > bestMarketCount) {
+            bestMarketCount = currentBest;
+            lastGrowthTime = Date.now();
+          }
+
+          if (singleEventMode) {
+            // Resolve as soon as the accumulated markets reach the game's
+            // self-reported total (full offer captured).
+            const target = targetGameNumber ? stats.targetMarketsCount : 0;
+            if (target > 0 && currentBest >= target) {
+              finish();
+              return;
+            }
+          } else if (
+            stats.hasGamesWithMarkets &&
+            (!competitionId || checkCompetitionExists(merged, competitionId))
+          ) {
+            // League listing: resolve once the target competition is present.
+            finish();
+            return;
+          }
+        }
+      } catch {
+        // Not valid JSON or parsing error - ignore
+      }
+    };
+
+    // Attach the frame handler to every relevant Swarm WebSocket on the page.
+    const onWebSocket = (ws: PlaywrightWebSocket) => {
+      // Only intercept Swarm WebSocket connections
+      if (!ws.url().includes("swarm") && !ws.url().includes("trexname.com")) {
         return;
       }
+      ws.on("framereceived", onFrame);
+      wsCleanups.push(() => ws.off("framereceived", onFrame));
+    };
 
-      // Maximum timeout
-      if (elapsed >= WS_CONFIG.MAX_WAIT_TIME) {
-        resolved = true;
-        clearInterval(checkInterval);
-        resolve(bestData);
-      }
-    }, WS_CONFIG.POLL_INTERVAL);
+    page.on("websocket", onWebSocket);
   });
 }
 
 /**
- * Analyze Swarm data structure to count games and markets
+ * Filter that scopes which competitions/games are unioned into the accumulator.
+ */
+interface MergeFilter {
+  /** Only union games belonging to this competition id (league listing mode). */
+  competitionId?: number;
+  /** Only union the game with this id/game_number (single-event mode). */
+  targetGameNumber?: number;
+}
+
+/**
+ * Deep-merge an incoming Swarm frame into an accumulator, unioning games,
+ * markets (keyed by id) and selections so the full offer is reconstructed
+ * across multiple subscription frames. The optional filter bounds memory by
+ * discarding games/competitions that are not the capture target.
+ */
+function mergeSwarmData(
+  target: SwarmData,
+  incoming: SwarmData,
+  filter: MergeFilter = {}
+): void {
+  if (!incoming.sport) return;
+  target.sport ??= {};
+
+  for (const [sportKey, sport] of Object.entries(incoming.sport)) {
+    const tSport = (target.sport[sportKey] ??= { ...sport, region: {} });
+    tSport.region ??= {};
+
+    for (const [regionKey, region] of Object.entries(sport.region || {})) {
+      const tRegion = (tSport.region[regionKey] ??= { ...region, competition: {} });
+      tRegion.competition ??= {};
+
+      for (const [compKey, comp] of Object.entries(region.competition || {})) {
+        // Skip competitions outside the requested scope (league listing mode).
+        if (filter.competitionId && comp.id !== filter.competitionId) continue;
+
+        const tComp = (tRegion.competition[compKey] ??= { ...comp, game: {} });
+        tComp.game ??= {};
+
+        for (const [gameKey, game] of Object.entries(comp.game || {})) {
+          // Skip games outside the requested scope (single-event mode).
+          if (
+            filter.targetGameNumber &&
+            game.id !== filter.targetGameNumber &&
+            game.game_number !== filter.targetGameNumber
+          ) {
+            continue;
+          }
+
+          const tGame = tComp.game[gameKey];
+          if (!tGame) {
+            tComp.game[gameKey] = { ...game, market: { ...(game.market || {}) } };
+            continue;
+          }
+
+          // Union markets by id, merging selections within shared markets.
+          tGame.market ??= {};
+          for (const [marketKey, market] of Object.entries(game.market || {})) {
+            const tMarket = tGame.market[marketKey];
+            if (!tMarket) {
+              tGame.market[marketKey] = { ...market, event: { ...(market.event || {}) } };
+            } else {
+              const mergedEvents = { ...(tMarket.event || {}), ...(market.event || {}) };
+              Object.assign(tMarket, market);
+              tMarket.event = mergedEvents;
+            }
+          }
+
+          // Refresh scalar game fields from the latest frame but keep the
+          // unioned market map and the highest self-reported markets_count.
+          const mergedMarket = tGame.market;
+          const maxMarketsCount = Math.max(
+            tGame.markets_count || 0,
+            game.markets_count || 0
+          );
+          Object.assign(tGame, game);
+          tGame.market = mergedMarket;
+          tGame.markets_count = maxMarketsCount;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Analyze accumulated Swarm data to drive capture-completeness decisions.
+ *
+ * - `maxGameMarketCount`: largest unioned market count across all games.
+ * - `targetMarketCount`: unioned market count for the target game (single-event).
+ * - `targetMarketsCount`: the target game's self-reported total markets
+ *   (used as the completeness validator).
  */
 function analyzeSwarmData(
   data: SwarmData,
   targetGameNumber?: number
 ): {
   gameCount: number;
-  totalMarkets: number;
+  maxGameMarketCount: number;
+  targetMarketCount: number;
+  targetMarketsCount: number;
   hasGamesWithMarkets: boolean;
   hasTargetGame: boolean;
 } {
   let gameCount = 0;
-  let totalMarkets = 0;
+  let maxGameMarketCount = 0;
+  let targetMarketCount = 0;
+  let targetMarketsCount = 0;
   let hasGamesWithMarkets = false;
   let hasTargetGame = false;
 
@@ -219,10 +356,12 @@ function analyzeSwarmData(
         for (const game of Object.values(competition.game || {})) {
           gameCount++;
           const marketCount = Object.keys(game.market || {}).length;
-          totalMarkets += marketCount;
 
           if (marketCount > 0) {
             hasGamesWithMarkets = true;
+          }
+          if (marketCount > maxGameMarketCount) {
+            maxGameMarketCount = marketCount;
           }
 
           // Check if this is our target game (by game_number or id)
@@ -231,13 +370,22 @@ function analyzeSwarmData(
             (game.game_number === targetGameNumber || game.id === targetGameNumber)
           ) {
             hasTargetGame = true;
+            targetMarketCount = marketCount;
+            targetMarketsCount = game.markets_count || 0;
           }
         }
       }
     }
   }
 
-  return { gameCount, totalMarkets, hasGamesWithMarkets, hasTargetGame };
+  return {
+    gameCount,
+    maxGameMarketCount,
+    targetMarketCount,
+    targetMarketsCount,
+    hasGamesWithMarkets,
+    hasTargetGame,
+  };
 }
 
 /**

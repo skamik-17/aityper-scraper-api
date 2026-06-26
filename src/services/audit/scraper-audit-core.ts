@@ -68,6 +68,21 @@ function extractIdFromUrl(url: string): string | null {
   return matches && matches.length > 0 ? matches[matches.length - 1] : null;
 }
 
+/**
+ * Slug tokens from a URL's final path segment (query stripped). E.g.
+ * ".../fifa-world-cup/norwegia-francja?tab=offer" -> ["norwegia", "francja"].
+ * Used to match a user-supplied URL (Polish slug) against a scraped eventUrl
+ * whose team names may be canonicalized differently.
+ */
+function extractSlugTokens(url: string): string[] {
+  const path = url.split("?")[0].replace(/\/+$/, "");
+  const lastSegment = path.substring(path.lastIndexOf("/") + 1);
+  return lastSegment
+    .toLowerCase()
+    .split(/[-_]/)
+    .filter((t) => t.length >= 3 && !/^\d+$/.test(t));
+}
+
 function normalizeTeam(name: string): string {
   return name
     .toLowerCase()
@@ -85,6 +100,7 @@ export async function scrapeOneMatchFullOffer(
   league: string,
   eventUrl: string,
   hint?: { home?: string; away?: string },
+  opts?: { pickRichest?: boolean },
 ): Promise<FullMatchOffer | null> {
   const result = await scraper.scrapeFullOffer(league);
   if (!result.success || result.matches.length === 0) {
@@ -92,6 +108,17 @@ export async function scrapeOneMatchFullOffer(
       `[audit-core] scrapeFullOffer(${league}) failed or empty: ${result.error ?? "no matches"}`,
     );
     return null;
+  }
+
+  // 0. Richest match: the match with the most markets. This sidesteps settled /
+  // combo / pseudo-event entries (e.g. "Dzień meczowy") that some bookmakers list
+  // first, so the audit measures a real, full-offer match. Used when no specific
+  // event URL is given, or when the caller explicitly asks for the richest match.
+  if (opts?.pickRichest || !eventUrl) {
+    const richest = result.matches.reduce((best, m) =>
+      m.markets.length > best.markets.length ? m : best,
+    );
+    return richest;
   }
 
   // 1. Exact event URL.
@@ -107,7 +134,17 @@ export async function scrapeOneMatchFullOffer(
     if (match) return match;
   }
 
-  // 3. Home/away team names.
+  // 3. URL slug tokens (handles Polish slug vs canonicalized team names).
+  const slugTokens = extractSlugTokens(eventUrl);
+  if (slugTokens.length > 0) {
+    match = result.matches.find((m) => {
+      const hay = m.eventUrl.toLowerCase();
+      return slugTokens.every((t) => hay.includes(t));
+    });
+    if (match) return match;
+  }
+
+  // 4. Home/away team names.
   const wantHome = hint?.home ? normalizeTeam(hint.home) : null;
   const wantAway = hint?.away ? normalizeTeam(hint.away) : null;
   if (wantHome && wantAway) {
@@ -120,7 +157,10 @@ export async function scrapeOneMatchFullOffer(
   }
 
   console.error(
-    `[audit-core] No match in ${league} offer matched url=${eventUrl} (${result.matches.length} candidates)`,
+    `[audit-core] No match in ${league} offer matched url=${eventUrl} (${result.matches.length} candidates).`,
+  );
+  console.error(
+    `[audit-core] Sample eventUrls: ${result.matches.slice(0, 5).map((m) => m.eventUrl).join("  |  ")}`,
   );
   return null;
 }
@@ -134,6 +174,20 @@ export function scrapedMarketsToRaw(markets: ScrapedMarket[]): RawAuditMarket[] 
     paramValue: m.paramValue,
     selections: m.selections.map((s) => ({ name: s.name, odds: s.odds })),
   }));
+}
+
+/** Collapse duplicate raw markets by (name, paramValue, sorted selection names). */
+export function dedupeRawMarkets(markets: RawAuditMarket[]): RawAuditMarket[] {
+  const seen = new Set<string>();
+  const out: RawAuditMarket[] = [];
+  for (const mkt of markets) {
+    const sels = mkt.selections.map((s) => s.name).sort().join("|");
+    const key = `${mkt.name} ${mkt.paramValue ?? ""} ${sels}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(mkt);
+  }
+  return out;
 }
 
 // ---------------------------------------------------------------------------
@@ -618,6 +672,8 @@ export interface PrepRunOptions {
   league: string;
   home?: string;
   away?: string;
+  /** Ignore eventUrl and audit the league's richest match (most markets). */
+  pickRichest?: boolean;
 }
 
 export interface PrepRunResult {
@@ -633,7 +689,7 @@ export async function runScraperPrepAudit(opts: PrepRunOptions): Promise<PrepRun
   const match = await scrapeOneMatchFullOffer(opts.scraper, opts.league, opts.eventUrl, {
     home: opts.home,
     away: opts.away,
-  });
+  }, { pickRichest: opts.pickRichest });
   if (!match) return null;
 
   const home = opts.home ?? match.homeTeam;
@@ -645,7 +701,7 @@ export async function runScraperPrepAudit(opts: PrepRunOptions): Promise<PrepRun
     league: opts.league,
   };
 
-  const rawMarkets = scrapedMarketsToRaw(match.markets);
+  const rawMarkets = dedupeRawMarkets(scrapedMarketsToRaw(match.markets));
   const output = buildPrepAuditOutput({
     normalizer: opts.normalizer,
     ctx,
@@ -679,7 +735,7 @@ export async function runScraperDiscovery(opts: DiscoveryRunOptions): Promise<vo
   const match = await scrapeOneMatchFullOffer(opts.scraper, opts.league, opts.eventUrl, {
     home: opts.home,
     away: opts.away,
-  });
+  }, { pickRichest: opts.pickRichest });
   if (!match) {
     console.error("[discovery] No match found");
     process.exitCode = 1;

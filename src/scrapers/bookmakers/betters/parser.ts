@@ -162,11 +162,10 @@ export function parseEventMarkets(event: BettersEvent): ParsedEventMarkets {
 }
 
 /**
- * Get human-readable market name based on stake type
+ * Hard-coded fallback market name (without line) for a stake type.
+ * Used only when the API does not provide a stakeTypeName.
  */
-function getMarketName(stakeType: BettersStakeType, line?: number): string {
-  const stakeTypeId = stakeType.stakeTypeId;
-
+function getFallbackMarketName(stakeTypeId: number): string {
   switch (stakeTypeId) {
     case STAKE_TYPES.MATCH_RESULT:
       return "Wynik meczu";
@@ -175,29 +174,50 @@ function getMarketName(stakeType: BettersStakeType, line?: number): string {
     case STAKE_TYPES.BTTS:
       return "Obie druzyny strzelą";
     case STAKE_TYPES.OVER_UNDER:
-      if (line !== undefined) {
-        return `Liczba goli ${line.toFixed(1)}`;
-      }
       return "Liczba goli";
     case STAKE_TYPES.HANDICAP:
-      if (line !== undefined) {
-        return `Handicap ${line > 0 ? "+" : ""}${line}`;
-      }
       return "Handicap";
     case STAKE_TYPES.HALF_TIME_RESULT:
       return "Wynik 1. polowy";
     case STAKE_TYPES.HALF_TIME_OVER_UNDER:
-      if (line !== undefined) {
-        return `Liczba goli 1. polowa ${line.toFixed(1)}`;
-      }
       return "Liczba goli 1. polowa";
     case STAKE_TYPES.CORRECT_SCORE:
       return "Dokladny wynik";
     case STAKE_TYPES.DRAW_NO_BET:
       return "Remis = zwrot";
     default:
-      return stakeType.stakeTypeName || `Rynek ${stakeTypeId}`;
+      return `Rynek ${stakeTypeId}`;
   }
+}
+
+/**
+ * Get human-readable market name based on stake type.
+ *
+ * Prefers the API-provided stakeTypeName (a real human-readable label) and only
+ * falls back to a hard-coded Polish label / "Rynek <id>" when the API name is
+ * blank. For line markets the line value is appended so that multiple lines of
+ * the same market stay distinguishable.
+ */
+export function getMarketName(stakeType: BettersStakeType, line?: number): string {
+  const stakeTypeId = stakeType.stakeTypeId;
+  const apiName = (stakeType.stakeTypeName || "").trim();
+
+  // Prefer the real API-provided name; fall back to a hard-coded label.
+  const baseName = apiName || getFallbackMarketName(stakeTypeId);
+
+  if (line !== undefined) {
+    const lineLabel =
+      stakeTypeId === STAKE_TYPES.HANDICAP
+        ? `${line > 0 ? "+" : ""}${line}`
+        : line.toFixed(1);
+
+    // Avoid duplicating the line if the API name already contains it.
+    if (!baseName.includes(lineLabel) && !baseName.includes(line.toFixed(1))) {
+      return `${baseName} ${lineLabel}`;
+    }
+  }
+
+  return baseName;
 }
 
 /**
@@ -287,6 +307,7 @@ export function parseAllMarkets(event: BettersEvent, teams?: ParsedTeams): Scrap
         if (selections.length > 0) {
           markets.push({
             name: marketName,
+            bookmakerMarketId: String(stakeTypeId),
             groupName,
             type: marketType,
             selections,
@@ -310,6 +331,7 @@ export function parseAllMarkets(event: BettersEvent, teams?: ParsedTeams): Scrap
       if (selections.length > 0) {
         markets.push({
           name: marketName,
+          bookmakerMarketId: String(stakeTypeId),
           groupName,
           type: marketType,
           selections,

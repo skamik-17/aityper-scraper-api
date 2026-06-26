@@ -318,6 +318,9 @@ export function parseAllMarkets(
     if (marketSelections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable Totalbet market-type id so the audit can match
+        // by id instead of relying on brittle name regex.
+        bookmakerMarketId: String(gameType),
         groupName,
         type: marketType,
         selections: marketSelections,

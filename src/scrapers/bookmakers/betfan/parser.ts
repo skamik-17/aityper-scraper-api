@@ -291,6 +291,9 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
     if (selections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable Betfan market-type id so the normalization audit
+        // can match by id instead of brittle name regex.
+        bookmakerMarketId: String(game.gameType),
         groupName,
         type: marketType,
         selections,

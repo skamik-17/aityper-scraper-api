@@ -42,7 +42,7 @@ export function parseTeamNames(eventName: string): ParsedTeams {
 /**
  * Get human-readable market name based on game type and game name
  */
-function getMarketName(game: ForbetGame): string {
+export function getMarketName(game: ForbetGame): string {
   const gameName = game.gameName || "";
   const gameType = game.gameType;
 
@@ -267,6 +267,9 @@ export function parseAllMarkets(
     if (selections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable forBET game type id so the normalization audit
+        // can match by id instead of brittle name regex
+        bookmakerMarketId: String(gameType),
         groupName,
         type: marketType,
         selections,

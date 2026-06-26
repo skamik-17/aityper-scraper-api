@@ -33,6 +33,7 @@ import {
   parseOverUnder,
   parseAllMarkets,
   isValidEvent,
+  isUpcomingOfferedEvent,
 } from "./parser.js";
 import type { SuperbetEvent } from "./types.js";
 
@@ -261,10 +262,22 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
 
         console.log(`[Superbet/FullOffer] Found ${apiData.data.length} events`);
 
+        // The by-date listing mixes already-played matches (status FINISHED,
+        // marketCount 0-1) in with upcoming ones. Keep only genuine upcoming
+        // events that still carry an offer, then process the soonest first so
+        // matches[0] reflects the true full offer rather than a settled match.
+        const now = Date.now();
+        const upcomingEvents = apiData.data
+          .filter((event) => isUpcomingOfferedEvent(event, now))
+          .sort((a, b) => (a.unixDateMillis ?? 0) - (b.unixDateMillis ?? 0));
+
+        console.log(
+          `[Superbet/FullOffer] ${upcomingEvents.length} upcoming events with an active offer`
+        );
+
         const matches: FullMatchOffer[] = [];
 
-        for (const event of apiData.data) {
-          if (!isValidEvent(event)) continue;
+        for (const event of upcomingEvents) {
 
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));

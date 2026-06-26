@@ -40,9 +40,19 @@ export function parseTeamNames(eventName: string): ParsedTeams {
 
 /**
  * Get human-readable market name based on game type and argument
+ *
+ * Prefers the human-readable label provided directly by the eToto API
+ * (`game.gameName`, e.g. "1x2", "Podwójna szansa", "Suma goli"). Only falls
+ * back to derived/hard-coded names when the API name is blank. This mirrors
+ * the Fortuna fix so the normalization audit receives the bookmaker's real
+ * market names instead of placeholder-replaced ones.
  */
-function getMarketName(game: EtotoGame): string {
-  const gameName = (game.gameName || "").toLowerCase();
+export function getMarketName(game: EtotoGame): string {
+  // Use the API-provided name when available.
+  const apiName = (game.gameName || "").trim();
+  if (apiName) {
+    return apiName;
+  }
 
   switch (game.gameType) {
     case GAME_TYPES.MATCH_RESULT_1X2:
@@ -315,6 +325,9 @@ export function parseAllMarkets(
 
       markets.push({
         name: uniqueName,
+        // Carry the stable eToto market-type id so the audit can match by id
+        // instead of relying on brittle name regexes.
+        bookmakerMarketId: String(game.gameType),
         groupName,
         type: marketType,
         selections,
@@ -326,6 +339,31 @@ export function parseAllMarkets(
 }
 
 /**
+ * Patterns identifying combo / specials pseudo-events that the eToto category
+ * endpoint returns alongside real matches (e.g. "Dzień meczowy 26.06 - 6 meczów").
+ * These are not real two-team fixtures: they only carry a handful of special
+ * markets, so they must be skipped — otherwise the audit measures matches[0]
+ * (this pseudo-event, ~50 markets) instead of a real match's full offer (~541).
+ */
+const COMBO_EVENT_PATTERNS: RegExp[] = [
+  // Matchday combo bets, e.g. "Dzień meczowy 26.06"
+  /dzie[nń]\s+meczow/i,
+  // A side that is just a count of matches, e.g. "6 meczów" / "6 mecze"
+  /^\d+\s*mecz/i,
+];
+
+/**
+ * Returns true when the event is a combo/specials pseudo-event rather than a
+ * real two-team fixture, based on its name (and either side of it).
+ */
+export function isComboEvent(event: EtotoEvent): boolean {
+  const eventName = event.eventName || "";
+  const teams = parseTeamNames(eventName);
+  const candidates = [eventName, teams.homeTeam, teams.awayTeam];
+  return COMBO_EVENT_PATTERNS.some((re) => candidates.some((c) => re.test(c)));
+}
+
+/**
  * Validate that an event has the minimum required data
  */
 export function isValidEvent(event: EtotoEvent): boolean {
@@ -334,6 +372,9 @@ export function isValidEvent(event: EtotoEvent): boolean {
 
   const teams = parseTeamNames(event.eventName);
   if (!teams.homeTeam || !teams.awayTeam) return false;
+
+  // Skip combo/specials pseudo-events so audits measure a real match.
+  if (isComboEvent(event)) return false;
 
   return true;
 }

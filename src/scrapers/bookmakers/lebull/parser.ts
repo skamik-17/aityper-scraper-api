@@ -40,8 +40,32 @@ export function parseTeamNames(event: LebullEvent): ParsedTeams {
 
 /**
  * Get human-readable market name based on stake type ID
+ *
+ * Prefers the API-provided market type name (stakeTypeName) when available,
+ * since it covers stake types beyond the hard-coded switch (e.g. the extended
+ * stake type IDs requested for full offers). Falls back to the curated switch
+ * and finally to a generic "Rynek <id>" placeholder only when the API name is blank.
  */
-function getMarketName(stakeTypeId: number, stake?: LebullStake): string {
+function getMarketName(
+  stakeTypeId: number,
+  stake?: LebullStake,
+  apiName?: string
+): string {
+  const apiLabel = (apiName || "").trim();
+
+  if (apiLabel) {
+    // For line markets, append the line value so distinct lines stay disambiguated
+    const lineMarketTypes: number[] = [
+      STAKE_TYPES.OVER_UNDER,
+      STAKE_TYPES.HALF_TIME_OVER_UNDER,
+      STAKE_TYPES.HANDICAP,
+    ];
+    if (stake?.stakeArgument !== undefined && lineMarketTypes.includes(stakeTypeId)) {
+      return `${apiLabel} ${stake.stakeArgument}`;
+    }
+    return apiLabel;
+  }
+
   switch (stakeTypeId) {
     case STAKE_TYPES.MATCH_RESULT:
       return "Wynik meczu";
@@ -287,7 +311,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
       // Create a market for each line
       for (const [line, lineStakes] of lineGroups) {
         const firstStake = lineStakes[0];
-        const marketName = getMarketName(stakeTypeId, firstStake);
+        const marketName = getMarketName(stakeTypeId, firstStake, stakeType.stakeTypeName);
         const groupName = MARKET_GROUPS[stakeTypeId] || "Inne";
         const marketType = MARKET_TYPES[stakeTypeId];
 
@@ -302,6 +326,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
         if (selections.length > 0) {
           markets.push({
             name: marketName,
+            bookmakerMarketId: String(stakeTypeId),
             groupName,
             type: marketType,
             selections,
@@ -310,7 +335,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
       }
     } else {
       // Non-line market - all stakes go together
-      const marketName = getMarketName(stakeTypeId);
+      const marketName = getMarketName(stakeTypeId, undefined, stakeType.stakeTypeName);
       const groupName = MARKET_GROUPS[stakeTypeId] || "Inne";
       const marketType = MARKET_TYPES[stakeTypeId];
 
@@ -325,6 +350,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
       if (selections.length > 0) {
         markets.push({
           name: marketName,
+          bookmakerMarketId: String(stakeTypeId),
           groupName,
           type: marketType,
           selections,

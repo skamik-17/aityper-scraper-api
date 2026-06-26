@@ -283,6 +283,9 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
     if (selections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable Swarm market-type code (e.g. "P1XP2", "OverUnder")
+        // so the normalization audit can match by id instead of brittle name regex.
+        bookmakerMarketId: market.type,
         groupName,
         type: marketType,
         selections,

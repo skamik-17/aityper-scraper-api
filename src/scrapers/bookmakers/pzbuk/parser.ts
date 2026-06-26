@@ -54,12 +54,23 @@ export function parseTeamNames(event: PZBukEvent): ParsedTeams {
 }
 
 /**
- * Get human-readable market name based on market type ID
+ * Get human-readable market name based on market type ID.
+ *
+ * Prefers the real API-provided name when available (from PZBukMarket.name
+ * or PZBukMarket.marketType.name) and only falls back to the hard-coded
+ * switch / "Rynek <id>" placeholder when the API name is blank.
  */
-function getMarketName(
+export function getMarketName(
   marketTypeId: string,
-  line?: number | string
+  line?: number | string,
+  apiName?: string
 ): string {
+  // Use the real API-provided market name when present
+  const trimmedApiName = apiName?.trim();
+  if (trimmedApiName) {
+    return trimmedApiName;
+  }
+
   switch (marketTypeId) {
     // Core markets
     case MARKET_TYPES.MATCH_RESULT:
@@ -597,6 +608,13 @@ export function parseAllMarkets(
   // Group selections by market type and line
   const groups = groupSelections(eventSelections);
 
+  // Build a lookup of raw markets by their id so we can recover the
+  // real API-provided market name (PZBukMarket.name / marketType.name)
+  // that would otherwise be discarded.
+  const marketById = new Map(
+    (data.markets || []).map((m) => [m.id, m])
+  );
+
   // Convert each group to ScrapedMarket
   for (const [key, selections] of Object.entries(groups)) {
     if (selections.length === 0) continue;
@@ -605,8 +623,13 @@ export function parseAllMarkets(
     const marketTypeId = firstSelection.marketTypeId;
     const line = firstSelection.points;
 
-    // Get market metadata
-    const marketName = getMarketName(marketTypeId, line);
+    // Recover the real API name from the parent market when available
+    const rawMarket = marketById.get(firstSelection.marketId);
+    const apiName = rawMarket?.name || rawMarket?.marketType?.name;
+
+    // Get market metadata - prefer the real API name, fall back to the
+    // hard-coded label switch when the API name is blank
+    const marketName = getMarketName(marketTypeId, line, apiName);
     const groupName = MARKET_GROUPS[marketTypeId] || "Inne";
     const marketType = NORMALIZED_MARKET_TYPES[marketTypeId];
 
@@ -624,6 +647,9 @@ export function parseAllMarkets(
     if (marketSelections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable market-type id so the audit can match by id
+        // instead of a brittle name regex
+        bookmakerMarketId: marketTypeId,
         groupName,
         type: marketType,
         selections: marketSelections,

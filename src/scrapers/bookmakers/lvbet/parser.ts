@@ -274,7 +274,7 @@ function convertSelections(
 /**
  * Parse a single market into ScrapedMarket format
  */
-function parseMarket(
+export function parseMarket(
   market: LVBetMarket,
   teams?: ParsedTeams
 ): ScrapedMarket | null {
@@ -298,6 +298,9 @@ function parseMarket(
 
   return {
     name: marketName,
+    // Carry the stable LVBet market id so the normalization audit can match
+    // by id instead of relying on brittle name-regex matching.
+    bookmakerMarketId: market.id != null ? String(market.id) : undefined,
     groupName: getMarketGroup(market.name || ""),
     type: getMarketType(market.name || ""),
     selections: convertSelections(validSelections, teams),

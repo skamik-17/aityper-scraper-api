@@ -335,6 +335,9 @@ export function parseAllMarkets(
     if (marketSelections.length > 0) {
       markets.push({
         name: marketName,
+        // Carry the stable Superbet market-type id so the audit can match
+        // markets by id instead of brittle name regex.
+        bookmakerMarketId: String(marketId),
         groupName,
         type: marketType,
         selections: marketSelections,

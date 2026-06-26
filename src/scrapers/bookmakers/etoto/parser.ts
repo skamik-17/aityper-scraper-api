@@ -40,9 +40,19 @@ export function parseTeamNames(eventName: string): ParsedTeams {
 
 /**
  * Get human-readable market name based on game type and argument
+ *
+ * Prefers the human-readable label provided directly by the eToto API
+ * (`game.gameName`, e.g. "1x2", "Podwójna szansa", "Suma goli"). Only falls
+ * back to derived/hard-coded names when the API name is blank. This mirrors
+ * the Fortuna fix so the normalization audit receives the bookmaker's real
+ * market names instead of placeholder-replaced ones.
  */
-function getMarketName(game: EtotoGame): string {
-  const gameName = (game.gameName || "").toLowerCase();
+export function getMarketName(game: EtotoGame): string {
+  // Use the API-provided name when available.
+  const apiName = (game.gameName || "").trim();
+  if (apiName) {
+    return apiName;
+  }
 
   switch (game.gameType) {
     case GAME_TYPES.MATCH_RESULT_1X2:
@@ -315,6 +325,9 @@ export function parseAllMarkets(
 
       markets.push({
         name: uniqueName,
+        // Carry the stable eToto market-type id so the audit can match by id
+        // instead of relying on brittle name regexes.
+        bookmakerMarketId: String(game.gameType),
         groupName,
         type: marketType,
         selections,

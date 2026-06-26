@@ -100,6 +100,7 @@ export async function scrapeOneMatchFullOffer(
   league: string,
   eventUrl: string,
   hint?: { home?: string; away?: string },
+  opts?: { pickRichest?: boolean },
 ): Promise<FullMatchOffer | null> {
   const result = await scraper.scrapeFullOffer(league);
   if (!result.success || result.matches.length === 0) {
@@ -107,6 +108,17 @@ export async function scrapeOneMatchFullOffer(
       `[audit-core] scrapeFullOffer(${league}) failed or empty: ${result.error ?? "no matches"}`,
     );
     return null;
+  }
+
+  // 0. Richest match: the match with the most markets. This sidesteps settled /
+  // combo / pseudo-event entries (e.g. "Dzień meczowy") that some bookmakers list
+  // first, so the audit measures a real, full-offer match. Used when no specific
+  // event URL is given, or when the caller explicitly asks for the richest match.
+  if (opts?.pickRichest || !eventUrl) {
+    const richest = result.matches.reduce((best, m) =>
+      m.markets.length > best.markets.length ? m : best,
+    );
+    return richest;
   }
 
   // 1. Exact event URL.
@@ -660,6 +672,8 @@ export interface PrepRunOptions {
   league: string;
   home?: string;
   away?: string;
+  /** Ignore eventUrl and audit the league's richest match (most markets). */
+  pickRichest?: boolean;
 }
 
 export interface PrepRunResult {
@@ -675,7 +689,7 @@ export async function runScraperPrepAudit(opts: PrepRunOptions): Promise<PrepRun
   const match = await scrapeOneMatchFullOffer(opts.scraper, opts.league, opts.eventUrl, {
     home: opts.home,
     away: opts.away,
-  });
+  }, { pickRichest: opts.pickRichest });
   if (!match) return null;
 
   const home = opts.home ?? match.homeTeam;
@@ -721,7 +735,7 @@ export async function runScraperDiscovery(opts: DiscoveryRunOptions): Promise<vo
   const match = await scrapeOneMatchFullOffer(opts.scraper, opts.league, opts.eventUrl, {
     home: opts.home,
     away: opts.away,
-  });
+  }, { pickRichest: opts.pickRichest });
   if (!match) {
     console.error("[discovery] No match found");
     process.exitCode = 1;

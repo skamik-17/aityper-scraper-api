@@ -31,17 +31,23 @@ async function main() {
   try {
     const result = await target.scraper.scrapeFullOffer(league);
     const matches = result.matches ?? [];
-    const first = matches[0];
+    // Report the RICHEST match (most markets) — the real, full-offer match —
+    // rather than matches[0], which can be a settled/combo/pseudo-event entry.
+    const richest = matches.reduce(
+      (best, m) => (best && best.markets.length >= m.markets.length ? best : m),
+      matches[0],
+    );
     console.log(
       JSON.stringify({
         bookmaker,
         league,
         reachable: !!result.success && matches.length > 0,
         matchCount: matches.length,
-        firstEventUrl: first?.eventUrl ?? null,
-        firstHome: first?.homeTeam ?? null,
-        firstAway: first?.awayTeam ?? null,
-        firstMarketCount: first?.markets?.length ?? 0,
+        richestEventUrl: richest?.eventUrl ?? null,
+        richestHome: richest?.homeTeam ?? null,
+        richestAway: richest?.awayTeam ?? null,
+        richestMarketCount: richest?.markets?.length ?? 0,
+        firstMarketCount: matches[0]?.markets?.length ?? 0,
         error: result.error ?? null,
       }),
     );

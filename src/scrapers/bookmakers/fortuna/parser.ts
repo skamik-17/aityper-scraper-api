@@ -361,6 +361,7 @@ export function parseAllMarkets(
     if (selections.length > 0) {
       result.push({
         name: marketName,
+        bookmakerMarketId: marketTypeId,
         groupName,
         type: marketType,
         selections,

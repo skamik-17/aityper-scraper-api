@@ -632,10 +632,16 @@ export function matchToCanonical(
     }
   }
 
-  // 5. No match found - log warning for debugging
-  console.warn(
-    `[TeamMatcher] Unknown team name: "${scrapedName}" (normalized: "${normalized}") in league: "${league}"`
-  );
+  // 5. No match found. This is expected and common: the matcher is also called on
+  // selection labels that are NOT teams (player names, scores like "0:2", outcomes
+  // like "Brak gola", correct-score/handicap/combo labels), especially now that
+  // scrapers collect the full market offer. Only log when explicitly debugging to
+  // avoid flooding the console with thousands of benign lines per scrape.
+  if (process.env.TEAM_MATCHER_DEBUG === "true") {
+    console.warn(
+      `[TeamMatcher] Unknown team name: "${scrapedName}" (normalized: "${normalized}") in league: "${league}"`
+    );
+  }
   return null;
 }
 

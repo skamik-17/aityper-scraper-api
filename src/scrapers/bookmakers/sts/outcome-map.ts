@@ -29,6 +29,12 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   12: "Powyżej",  // OVER
   13: "Poniżej",  // UNDER
   
+  // Exact cards (half-time, per team) — Markets 214, 215
+  20: "0",    // 0 cards
+  21: "1",    // 1 card
+  22: "2",    // 2 cards
+  23: "3+",   // 3+ cards
+
   // Odd/Even (Market 40, 41, 42)
   24: "Nieparzyste",  // ODD
   25: "Parzyste",     // EVEN

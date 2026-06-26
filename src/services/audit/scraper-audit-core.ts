@@ -68,6 +68,21 @@ function extractIdFromUrl(url: string): string | null {
   return matches && matches.length > 0 ? matches[matches.length - 1] : null;
 }
 
+/**
+ * Slug tokens from a URL's final path segment (query stripped). E.g.
+ * ".../fifa-world-cup/norwegia-francja?tab=offer" -> ["norwegia", "francja"].
+ * Used to match a user-supplied URL (Polish slug) against a scraped eventUrl
+ * whose team names may be canonicalized differently.
+ */
+function extractSlugTokens(url: string): string[] {
+  const path = url.split("?")[0].replace(/\/+$/, "");
+  const lastSegment = path.substring(path.lastIndexOf("/") + 1);
+  return lastSegment
+    .toLowerCase()
+    .split(/[-_]/)
+    .filter((t) => t.length >= 3 && !/^\d+$/.test(t));
+}
+
 function normalizeTeam(name: string): string {
   return name
     .toLowerCase()
@@ -107,7 +122,17 @@ export async function scrapeOneMatchFullOffer(
     if (match) return match;
   }
 
-  // 3. Home/away team names.
+  // 3. URL slug tokens (handles Polish slug vs canonicalized team names).
+  const slugTokens = extractSlugTokens(eventUrl);
+  if (slugTokens.length > 0) {
+    match = result.matches.find((m) => {
+      const hay = m.eventUrl.toLowerCase();
+      return slugTokens.every((t) => hay.includes(t));
+    });
+    if (match) return match;
+  }
+
+  // 4. Home/away team names.
   const wantHome = hint?.home ? normalizeTeam(hint.home) : null;
   const wantAway = hint?.away ? normalizeTeam(hint.away) : null;
   if (wantHome && wantAway) {
@@ -120,7 +145,10 @@ export async function scrapeOneMatchFullOffer(
   }
 
   console.error(
-    `[audit-core] No match in ${league} offer matched url=${eventUrl} (${result.matches.length} candidates)`,
+    `[audit-core] No match in ${league} offer matched url=${eventUrl} (${result.matches.length} candidates).`,
+  );
+  console.error(
+    `[audit-core] Sample eventUrls: ${result.matches.slice(0, 5).map((m) => m.eventUrl).join("  |  ")}`,
   );
   return null;
 }

@@ -16,6 +16,7 @@ import {
   normalizeDoubleChanceSelection,
   normalizeOverUnderSelection,
   normalizeYesNoSelection,
+  normalizeOddEvenSelection,
   parseScoreSelection,
   parseHtFtSelection,
 } from "../helpers/index.js";
@@ -28,7 +29,9 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   4: "HALFTIME_FULLTIME",
   5: "HALF_TIME_RESULT",
   6: "HALF_TIME_TOTAL_GOALS",
-  7: "CORRECT_SCORE",
+  // sbteam.xyz stake type 7 is "Połowa z największym wynikiem" (half with more
+  // goals), not correct score — mirrors the betters mapping (shared backend).
+  7: "HALF_WITH_MORE_GOALS",
   9: "DRAW_NO_BET",
   11: "HALF_TIME_RESULT",
   12: "HALF_TIME_TOTAL_GOALS",
@@ -56,7 +59,9 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   333182: "BTTS_BY_HALF",
   332816: "BTTS_AT_LEAST_ONE_HALF",
   262063: "BTTS_BOTH_HALVES",
-  332818: "BTTS_2PLUS_GOALS",
+  // 332818 ("Obie drużyny suma powyżej X") is routed by name + goal line in
+  // resolveMarketCode — only the 0.5/1.5 lines have catalog counterparts
+  // (BTTS / BTTS_2PLUS_GOALS), so a blanket id mapping would misroute other lines.
   332819: "BOTH_TEAMS_UNDER_GOALS",
   350077: "SECOND_HALF_RESULT_OR_BTTS",
   40414: "HOME_WIN_BOTH_HALVES",
@@ -138,6 +143,12 @@ const LEBULL_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
 };
 
 const LEBULL_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
+  // "Połowa z największym wynikiem" (1. < 2. / 1. = 2. / 1. > 2.) is a
+  // half-comparison bet, not a correct score market.
+  { pattern: /polowa\s*z\s*najwiekszym\s*wynikiem/, code: "HALF_WITH_MORE_GOALS" },
+  // "Zawodnik zostanie usunięty z boiska" (a player will be sent off) is a
+  // red-card market — must not fall through to the DRAW_NO_BET id fallback.
+  { pattern: /zawodnik\s*zostanie\s*usuniet/, code: "RED_CARD" },
   { pattern: /wynik\s*meczu\s*i\s*suma/, code: "RESULT_AND_TOTAL" },
   { pattern: /wynik\s*meczu\s*i\s*obie\s*druzyny\s*strzela/, code: "RESULT_AND_BTTS" },
   { pattern: /podwojna\s*szansa\s*i\s*obie\s*druzyny\s*strzela/, code: "DOUBLE_CHANCE_BTTS" },
@@ -156,6 +167,38 @@ const LEBULL_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketTyp
   { pattern: /strzelec/, code: "GOALSCORER_ANYTIME" },
 ];
 
+/**
+ * Extracts the time-period parameter as the END minute of the period range
+ * (e.g. "Wynik meczu w przedziale 16-30 min" -> "30"), matching the convention
+ * used by the betters normalizer so identical periods aggregate together.
+ */
+function extractTimePeriodParam(name: string): string | undefined {
+  const normalized = normalizeMarketName(name);
+  const rangeMatch = normalized.match(/(\d+)\s*[-–]\s*(\d+)/);
+  if (rangeMatch) return rangeMatch[2];
+
+  const minuteMatch = normalized.match(/\b(\d+)\b/);
+  return minuteMatch ? minuteMatch[1] : undefined;
+}
+
+/**
+ * Maps goal-time interval selections ("Od 1 do 15 min.", "Od 11 do 20 min.")
+ * to the canonical "X-Y" interval codes; "Nikt"/"Brak gola" map to NONE.
+ */
+function normalizeGoalTimeRangeSelection(selectionName: string): NormalizedSelection {
+  const normalized = normalizeMarketName(selectionName);
+
+  if (/^(nikt|zaden|zadna|brak|bez\s*gola|brak\s*gola)/.test(normalized)) return "NONE";
+
+  const wordedRange = normalized.match(/od\s*(\d+)\s*do\s*(\d+)/);
+  if (wordedRange) return `${wordedRange[1]}-${wordedRange[2]}` as NormalizedSelection;
+
+  const plainRange = normalized.match(/^(\d+)\s*[-–]\s*(\d+)/);
+  if (plainRange) return `${plainRange[1]}-${plainRange[2]}` as NormalizedSelection;
+
+  return selectionName.trim() as NormalizedSelection;
+}
+
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -169,6 +212,37 @@ function resolveMarketCode(
 
   const home = ctx.homeTeam ? normalizeMarketName(ctx.homeTeam) : "";
   const away = ctx.awayTeam ? normalizeMarketName(ctx.awayTeam) : "";
+
+  // Combo bets "team wins + goal range" (e.g. "Austria wygra i suma goli: 3-5")
+  // are Tak/Nie markets with no catalog counterpart — keep them out of GOAL_RANGE.
+  if (/wygra\s*i\s*suma\s*goli/.test(normalizedName)) {
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Suma goli parzyste/nieparzyste" is an odd/even market, not an over/under one.
+  if (/parzyst/.test(normalizedName) && /(suma|liczba)\s*goli/.test(normalizedName)) {
+    return { marketCode: "ODD_EVEN_GOALS", matchedBy: "pattern" };
+  }
+
+  // "Obie drużyny suma powyżej X" = each team scores over X goals. Only the
+  // 0.5 line (both teams score = BTTS) and the 1.5 line (both teams score 2+
+  // = BTTS_2PLUS_GOALS) have catalog counterparts; other lines fall to OTHER.
+  if (/obie\s*druzyny\s*suma\s*powyzej/.test(normalizedName)) {
+    const line = parseDecimalLine(normalizedName);
+    if (line === "0.5") return { marketCode: "BTTS", matchedBy: "pattern" };
+    if (line === "1.5") return { marketCode: "BTTS_2PLUS_GOALS", matchedBy: "pattern" };
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "<Team> wygra do zera" — resolve which side the named team is so the
+  // away-team variant does not land in HOME_WIN_TO_NIL (id fallback maps
+  // both stake types there).
+  const winToNilMatch = normalizedName.match(/^(.+?)\s*wygra\s*do\s*zera/);
+  if (winToNilMatch) {
+    const side = normalize1x2Selection(winToNilMatch[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+    if (side === "HOME") return { marketCode: "HOME_WIN_TO_NIL", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "AWAY_WIN_TO_NIL", matchedBy: "pattern" };
+  }
 
   const isGoalRange = /suma\s*goli[:\s]+\d+\s*[-–]\s*\d+/i.test(normalizedName);
   if (isGoalRange) {
@@ -225,7 +299,15 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
+    case "TIME_PERIOD_RESULT":
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
     case "FIRST_TEAM_TO_SCORE":
+    case "LAST_TEAM_TO_SCORE":
+    case "NEXT_TEAM_TO_SCORE":
+      // Catalog selections are HOME/AWAY/NONE(/BOTH); "Nikt" = nobody scores.
+      if (/^(nikt|zaden|zadna|brak|bez\s*gola|brak\s*gola)$/.test(normalized)) return "NONE";
+      if (/^ob(ie|a|ydwie)/.test(normalized)) return "BOTH" as NormalizedSelection;
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
@@ -238,6 +320,15 @@ function normalizeSelectionForMarket(
     case "TEAM_TOTAL_GOALS":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
+    case "TIME_PERIOD_TOTAL_GOALS":
+    case "TIME_BAND_TOTAL_GOALS":
+    case "TIME_SEGMENT_TOTAL_GOALS":
+    case "TIME_PERIOD_GOALS":
+    case "TOTAL_GOAL_MINUTES":
+    case "TEAM_GOAL_MINUTES_SUM":
+    case "TEAM_MINUTES_LEADING":
+    case "TEAM_MINUTES_IN_LEAD":
+    case "DRAW_MINUTES_TOTAL":
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -245,7 +336,57 @@ function normalizeSelectionForMarket(
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
     case "BOTH_HALVES_GOALS":
+    case "BTTS_2PLUS_GOALS":
+    case "BTTS_AT_LEAST_ONE_HALF":
+    case "BTTS_BOTH_HALVES":
+    case "BOTH_TEAMS_UNDER_GOALS":
+    case "BOTH_HALVES_OVER_GOALS":
+    case "BOTH_HALVES_UNDER_GOALS":
+    case "BOTH_HALVES_OVER_COMBO":
+    case "TEAM_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_BOTH_HALVES":
+    case "EACH_TEAM_WINS_ONE_HALF":
+    case "HOME_WIN_TO_NIL":
+    case "AWAY_WIN_TO_NIL":
+    case "ONE_TEAM_TO_SCORE":
+    case "SCORING_DRAW":
+    case "DRAW_IN_AT_LEAST_ONE_HALF":
+    case "BOTH_TEAMS_TO_LEAD":
+    case "HALF_TIME_GOAL":
+    case "SECOND_HALF_GOAL":
+    case "GOAL_IN_TIME_PERIOD":
+    case "SCORE_REACHED":
+    case "SCORE_OCCURS_DURING_MATCH":
+    case "SCORE_TO_OCCUR":
+    case "ANY_TEAM_WINNING_MARGIN_EXACT":
+    case "WINNING_MARGIN_ANY_EXACT":
+    case "ANY_TEAM_WIN_BY_MARGIN":
+    case "RED_CARD":
       return normalizeYesNoSelection(trimmed);
+
+    case "ODD_EVEN_GOALS":
+      return normalizeOddEvenSelection(trimmed);
+
+    case "BTTS_BY_HALF":
+      // Raw labels are "Tak/Tak", "Tak/Nie", "Nie/Tak", "Nie/Nie"
+      // (BTTS in 1st half / BTTS in 2nd half).
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1st" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+
+    case "HALF_WITH_MORE_GOALS":
+      // Raw labels compare halves: "1. > 2." (1st half higher), "1. < 2.",
+      // "1. = 2." — catalog selections are 1st/2nd/Draw.
+      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return "1st" as NormalizedSelection;
+      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return "2nd" as NormalizedSelection;
+      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return "Draw" as NormalizedSelection;
+      if (/1\.?\s*polow/.test(normalized)) return "1st" as NormalizedSelection;
+      if (/2\.?\s*polow/.test(normalized)) return "2nd" as NormalizedSelection;
+      if (/^(remis|rowno)/.test(normalized)) return "Draw" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
@@ -280,6 +421,10 @@ function normalizeSelectionForMarket(
       return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
 
     case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT":
+      // "Od 1 do 10 min." -> "1-10", "Od 16 do 30 min." -> "16-30", etc.
+      return normalizeGoalTimeRangeSelection(trimmed);
+
     case "RESULT_AND_TOTAL":
     case "RESULT_AND_BTTS":
     case "DOUBLE_CHANCE_BTTS":
@@ -295,6 +440,14 @@ function normalizeSelectionForMarket(
 function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMarket): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
+
+  // Time-period markets ("Wynik meczu w przedziale 16-30 min",
+  // "suma między 81-90+ min.") use the END minute of the period as the
+  // parameter, matching the betters convention, so identical windows
+  // aggregate across bookmakers instead of colliding in the "base" bucket.
+  if (marketCode === "TIME_PERIOD_RESULT" || marketCode === "TIME_PERIOD_TOTAL_GOALS") {
+    return extractTimePeriodParam(raw.name);
+  }
 
   const selectionNames = raw.selections.map((s) => s.name);
   const groupName = raw.groupName ?? "";

@@ -508,6 +508,7 @@ const WORLD_CUP_ALIASES: Record<string, string> = {
   "Bosnia and Herzegovina": "Bosnia-Herzegovina", // English-name bookmakers (betters, lebull)
   "Bośnia i Herc.": "Bosnia-Herzegovina", // abbreviated form
   "W.Ziel.Przyl.": "Cape Verde", // Wyspy Zielonego Przylądka abbreviation
+  "Wyspy Ziel. Przyl.": "Cape Verde", // betclic mid-length abbreviation
 };
 
 /**
@@ -521,6 +522,27 @@ const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
   "ligue-1": LIGUE_1_ALIASES,
   "world-cup-2026": WORLD_CUP_ALIASES,
 };
+
+/**
+ * Cache of alias tables keyed by normalized alias name, per league.
+ * Bookmaker fragments often arrive already lowercased / diacritic-stripped
+ * (e.g. from composite-selection splitters), which never hits the raw-keyed
+ * alias table above; this map recovers those matches.
+ */
+const normalizedAliasCache: Map<string, Record<string, string>> = new Map();
+
+function getNormalizedAliases(league: string): Record<string, string> {
+  let cached = normalizedAliasCache.get(league);
+  if (!cached) {
+    cached = {};
+    const aliases = LEAGUE_ALIASES[league] ?? {};
+    for (const [alias, canonical] of Object.entries(aliases)) {
+      cached[normalize(alias)] = canonical;
+    }
+    normalizedAliasCache.set(league, cached);
+  }
+  return cached;
+}
 
 /**
  * Cache for Fuse.js instances per league
@@ -602,8 +624,16 @@ export function matchToCanonical(
     return teams.find((t) => t.name === aliasMatch) ?? null;
   }
 
-  // 2. Check exact normalized match
   const normalized = normalize(scrapedName);
+
+  // 1b. Check aliases by normalized key (input may arrive pre-normalized,
+  // e.g. "wyspy zielonego przyladka" for the "Wyspy Zielonego Przylądka" alias)
+  const normalizedAliasMatch = getNormalizedAliases(league)[normalized];
+  if (normalizedAliasMatch) {
+    return teams.find((t) => t.name === normalizedAliasMatch) ?? null;
+  }
+
+  // 2. Check exact normalized match
   const exactMatch = teams.find((t) => t.normalized === normalized);
   if (exactMatch) {
     return exactMatch;

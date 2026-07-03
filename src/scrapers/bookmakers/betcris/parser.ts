@@ -270,6 +270,25 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
     const groupName = MARKET_GROUPS[market.type] || "Inne";
     const marketType = MARKET_TYPE_MAPPING[market.type];
 
+    // Extract the raw line value (total/handicap) so parameterized markets do
+    // not collapse into a single placeholder "base" bucket at normalization
+    // time. Swarm exposes the line on the market itself; when absent, fall
+    // back to the home-side event base (home-relative for handicap markets)
+    // or any event that carries a base.
+    let lineBase: number | undefined =
+      market.base !== undefined && market.base !== null ? market.base : undefined;
+    if (lineBase === undefined) {
+      const homeSideEvent = events.find((event) => {
+        const type1 = (event.type_1 || "").toUpperCase();
+        return type1 === "W1" || type1 === "HOME" || type1 === "OVER";
+      });
+      const anyEventWithBase = events.find(
+        (event) => event.base !== undefined && event.base !== null
+      );
+      const fallbackBase = homeSideEvent?.base ?? anyEventWithBase?.base;
+      lineBase = fallbackBase !== undefined && fallbackBase !== null ? fallbackBase : undefined;
+    }
+
     // Convert selections
     const selections: MarketSelection[] = events
       .map((event) => ({
@@ -288,6 +307,9 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
         bookmakerMarketId: market.type,
         groupName,
         type: marketType,
+        // Pre-extracted line value consumed by the betcris normalizer for
+        // parameterized markets (totals/handicaps).
+        ...(lineBase !== undefined ? { paramValue: String(lineBase) } : {}),
         selections,
       });
     }

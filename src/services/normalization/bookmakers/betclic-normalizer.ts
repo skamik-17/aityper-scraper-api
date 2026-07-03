@@ -971,13 +971,27 @@ function fragmentIsTeam(
   const target = matchToCanonical(canonicalTeam, league);
   if (!target) return false;
 
-  const tokens = fragment
-    .split(/[\s/&+,()]+/)
-    .map((t) => normalizeName(t))
-    .filter((t) => t.length >= 3 && !NON_TEAM_TOKENS.has(t) && !/^\d/.test(t));
+  const rawTokens = fragment.split(/[\s/&+,()]+/).filter((t) => {
+    const normalizedToken = normalizeName(t);
+    return (
+      normalizedToken.length >= 3 &&
+      !NON_TEAM_TOKENS.has(normalizedToken) &&
+      !/^\d/.test(normalizedToken)
+    );
+  });
 
-  for (const token of tokens) {
-    const m = matchToCanonical(token, league);
+  // Candidates: single tokens resolve one-word names ("Argentyna"), while
+  // contiguous n-grams are required for multi-word names that only resolve as
+  // a whole alias phrase (e.g. "Wyspy Zielonego Przylądka" -> Cape Verde).
+  const candidates: string[] = rawTokens.map((t) => normalizeName(t));
+  for (let size = 2; size <= 3; size++) {
+    for (let i = 0; i + size <= rawTokens.length; i++) {
+      candidates.push(rawTokens.slice(i, i + size).join(" "));
+    }
+  }
+
+  for (const candidate of candidates) {
+    const m = matchToCanonical(candidate, league);
     if (m && m.name === target.name) return true;
   }
   return false;
@@ -1991,7 +2005,14 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
-      return (score ?? trimmed) as NormalizedSelection;
+      if (score) return score as NormalizedSelection;
+      // Betclic labels the catch-all outcome "Inny" — align with the canonical
+      // OTHER code used by peers for the same score-grid column.
+      const normalized = normalizeName(trimmed);
+      if (normalized === "inny" || normalized === "inny wynik" || normalized === "pozostale") {
+        return "OTHER" as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
     }
 
     case "CORRECT_SCORE_GROUP": {
@@ -2142,23 +2163,26 @@ function extractParamValue(
     return { parameters };
   }
 
-  if (marketCode === "DOUBLE_CHANCE_TOTAL") {
+  if (
+    marketCode === "DOUBLE_CHANCE_TOTAL" ||
+    marketCode === "RESULT_AND_TOTAL" ||
+    marketCode === "HALF_TIME_RESULT_AND_TOTAL" ||
+    marketCode === "SECOND_HALF_RESULT_AND_TOTAL" ||
+    marketCode === "HALFTIME_FULLTIME_AND_TOTAL"
+  ) {
+    // Parser pre-splits Result+Total combo markets per goal line
+    // (splitResultAndTotalMarket), so raw.paramValue carries this line's value —
+    // same contract as handicaps above.
+    if (raw.paramValue) {
+      return { paramValue: raw.paramValue };
+    }
     const parameters = extractMultipleOverUnderLines(selectionNames);
-    return { parameters };
-  }
-
-  if (marketCode === "RESULT_AND_TOTAL") {
-    const parameters = extractMultipleOverUnderLines(selectionNames);
-    return { parameters };
-  }
-
-  if (marketCode === "HALF_TIME_RESULT_AND_TOTAL") {
-    const parameters = extractMultipleOverUnderLines(selectionNames);
-    return { parameters };
-  }
-
-  if (marketCode === "HALFTIME_FULLTIME_AND_TOTAL") {
-    const parameters = extractMultipleOverUnderLines(selectionNames);
+    // A single distinct line (e.g. "Algieria & Powyżej 1,5") identifies the
+    // market parameter — expose it as paramValue so the marketKey groups with
+    // peers (…:1.5) instead of falling into the unparameterized "base" bucket.
+    if (parameters && parameters.length === 1) {
+      return { paramValue: parameters[0] };
+    }
     return { parameters };
   }
 

@@ -142,7 +142,10 @@ describe("stsNormalizer", () => {
       const result = stsNormalizer.normalizeMarket(raw, ctx);
 
       expect(result).not.toBeNull();
-      expect(result!.marketCode).toBe("ASIAN_HANDICAP");
+      // STS market id 20 is the push-capable Asian Handicap variant (whole
+      // lines refund on exact margin) — remapped from plain ASIAN_HANDICAP
+      // during the 2026-06 normalization wave.
+      expect(result!.marketCode).toBe("ASIAN_HANDICAP_PUSH");
       expect(result!.selections[0].code).toBe("HOME");
       expect(result!.selections[1].code).toBe("AWAY");
     });

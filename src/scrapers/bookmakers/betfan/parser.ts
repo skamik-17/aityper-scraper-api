@@ -11,6 +11,14 @@
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
 import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import { GAME_TYPES, MARKET_GROUPS, MARKET_TYPES } from "./constants.js";
+
+/**
+ * Minimum odds value considered a real bookmaker price.
+ * Betfan publishes sentinel values like 1.0000000001 for effectively-settled
+ * outcomes; anything below the lowest real price (1.01) must be dropped
+ * instead of being surfaced as a genuine quote.
+ */
+const MIN_VALID_ODDS = 1.01;
 import type {
   BetfanEvent,
   BetfanGame,
@@ -285,7 +293,8 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
         odds: outcome.outcomeOdds || 0,
         externalId: String(outcome.outcomeId),
       }))
-      .filter((sel) => sel.odds > 0);
+      // Drop placeholder/sentinel prices (e.g. 1.0000000001) - not real quotes
+      .filter((sel) => sel.odds >= MIN_VALID_ODDS);
 
     // Only add markets with valid selections
     if (selections.length > 0) {

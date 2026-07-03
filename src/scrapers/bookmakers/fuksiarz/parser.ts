@@ -29,6 +29,20 @@ import type {
 } from "./types.js";
 
 /**
+ * Minimum decimal odds accepted from the Fuksiarz API.
+ * Suspended/inactive selections come back priced at exactly 1.00 (zero
+ * possible profit) — such placeholders must not be stored as real odds.
+ */
+const MIN_VALID_ODDS = 1.01;
+
+/**
+ * Check that a selection carries a real, offerable price.
+ */
+function hasValidOdds(sel: MarketSelection): boolean {
+  return sel.odds > MIN_VALID_ODDS;
+}
+
+/**
  * Parse team names from the Fuksiarz eventName format
  * Format: "HomeTeam - AwayTeam"
  */
@@ -292,7 +306,7 @@ export function parseAllMarkets(
             odds: outcome.outcomeOdds || 0,
             externalId: String(outcome.outcomeId),
           }))
-          .filter((sel) => sel.odds > 0);
+          .filter(hasValidOdds);
 
         if (selections.length > 0) {
           const baseName = game.gameType === GAME_TYPES.HALF_TIME_OVER_UNDER
@@ -319,7 +333,7 @@ export function parseAllMarkets(
           odds: outcome.outcomeOdds || 0,
           externalId: String(outcome.outcomeId),
         }))
-        .filter((sel) => sel.odds > 0);
+        .filter(hasValidOdds);
 
       if (selections.length > 0) {
         markets.push({

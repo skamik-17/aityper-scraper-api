@@ -357,7 +357,9 @@ function normalizeSelectionForMarket(
   const lower = trimmed.toLowerCase();
 
   const override = STS_SELECTION_OVERRIDES[trimmed];
-  const goalRangeMarkets = [
+  // Markets whose selections are raw counts/ranges ("0", "1", "2", "3+") -
+  // numeric selection-ID overrides must NOT be applied to them
+  const numericSelectionMarkets = [
     "GOAL_RANGE",
     "TEAM_GOAL_RANGE",
     "HALF_TIME_GOAL_RANGE",
@@ -377,8 +379,15 @@ function normalizeSelectionForMarket(
     "SECOND_HALF_HOME_EXACT_GOALS",
     "SECOND_HALF_EXACT_GOALS",
     "TEAM_TOTAL_SCORERS",
+    "HOME_EXACT_CARDS",
+    "AWAY_EXACT_CARDS",
+    "HALF_TIME_HOME_EXACT_CARDS",
+    "HALF_TIME_AWAY_EXACT_CARDS",
+    "CARDS_EXACT_RANGE",
+    "HALF_TIME_HOME_EXACT_CORNERS",
+    "HALF_TIME_AWAY_EXACT_CORNERS",
   ];
-  if (override && !goalRangeMarkets.includes(marketCode)) return override;
+  if (override && !numericSelectionMarkets.includes(marketCode)) return override;
 
   if (/^1\s*\([+-]/.test(trimmed)) return "HOME";
   if (/^2\s*\([+-]/.test(trimmed)) return "AWAY";
@@ -456,7 +465,10 @@ function normalizeSelectionForMarket(
 
     case "HOME_EXACT_CARDS":
     case "AWAY_EXACT_CARDS":
+    case "HALF_TIME_HOME_EXACT_CARDS":
+    case "HALF_TIME_AWAY_EXACT_CARDS":
       // STS sends "0","1","2","3+" as exact-count selections - pass through as-is
+      // (card counts are NOT team sides, so no 1X2 fallback here)
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
       }
@@ -662,6 +674,7 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
+    case "HALF_TIME_GOALSCORER_ANYTIME":
     case "PLAYER_SHOTS":
     case "PLAYER_CARDS":
     case "PLAYER_ASSISTS":
@@ -1001,15 +1014,23 @@ function extractParamValue(
   }
 
   // Extract European Handicap value from selection names (e.g., "1 (0:1)", "X (0:2)")
+  // STS uses virtual-score notation "(home:away)"; convert it to the signed
+  // home-perspective value used by other bookmakers so lines group together
+  // (e.g., "(1:0)" -> "+1", "(0:2)" -> "-2"). Verified against live odds:
+  // STS "1 (1:0)" prices identically to peers' "+1" home line.
   if (marketCode === "EUROPEAN_HANDICAP" ||
       marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
       marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") {
-    const handicapMatch = raw.selections[0]?.name?.match(/\((\d+:\d+)\)/);
+    const handicapMatch = raw.selections[0]?.name?.match(/\((\d+):(\d+)\)/);
     if (handicapMatch) {
-      return handicapMatch[1];
+      const diff = Number(handicapMatch[1]) - Number(handicapMatch[2]);
+      return diff > 0 ? `+${diff}` : String(diff);
     }
   }
 
+  // Asian handicap: emit the plain signed home-perspective value ("-2", "+1.5")
+  // matching the canonical format used by other bookmakers, so identical lines
+  // group into one column (a combined "-2/+2" string would fragment them).
   if (marketCode === "ASIAN_HANDICAP" ||
       marketCode === "ASIAN_HANDICAP_PUSH" ||
       marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
@@ -1017,19 +1038,10 @@ function extractParamValue(
       marketCode === "SECOND_HALF_ASIAN_HANDICAP" ||
       marketCode === "SECOND_HALF_ASIAN_HANDICAP_PUSH") {
     const homeSelection = raw.selections.find(s => /^1\s*\(/.test(s.name));
-    const awaySelection = raw.selections.find(s => /^2\s*\(/.test(s.name));
     if (homeSelection) {
       const homeMatch = homeSelection.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
       if (homeMatch) {
-        const homeValue = ensureSign(homeMatch[1].replace(",", "."));
-        let awayValue: string;
-        if (awaySelection) {
-          const awayMatch = awaySelection.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
-          awayValue = awayMatch ? ensureSign(awayMatch[1].replace(",", ".")) : negateHandicap(homeValue);
-        } else {
-          awayValue = negateHandicap(homeValue);
-        }
-        return `${homeValue}/${awayValue}`;
+        return ensureSign(homeMatch[1].replace(",", "."));
       }
     }
   }
@@ -1243,12 +1255,6 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
 
 function ensureSign(value: string): string {
   if (!value.startsWith("+") && !value.startsWith("-")) return `+${value}`;
-  return value;
-}
-
-function negateHandicap(value: string): string {
-  if (value.startsWith("+")) return `-${value.substring(1)}`;
-  if (value.startsWith("-")) return `+${value.substring(1)}`;
   return value;
 }
 

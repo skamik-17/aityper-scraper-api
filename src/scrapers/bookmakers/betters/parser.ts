@@ -230,8 +230,13 @@ function getSelectionName(
   homeTeam?: string,
   awayTeam?: string
 ): string {
-  // For 1X2 markets, use team names or standard labels
-  if (stakeTypeId === STAKE_TYPES.MATCH_RESULT || stakeTypeId === STAKE_TYPES.HALF_TIME_RESULT) {
+  // For the main 1X2 market, use team names or standard labels.
+  // NOTE: stake type 11 (previously also renamed here as "half time result")
+  // is actually the odd/even goals market ("suma goli parzyste/nieparzyste")
+  // on the sbteam.xyz feed — renaming its stakes by stake code corrupted the
+  // labels with team names ("Algieria"/"Remis"), so only the match-result
+  // market gets the team-name treatment.
+  if (stakeTypeId === STAKE_TYPES.MATCH_RESULT) {
     if (stakeCode === STAKE_CODES_1X2.HOME) {
       return homeTeam || "1";
     } else if (stakeCode === STAKE_CODES_1X2.DRAW) {
@@ -247,6 +252,20 @@ function getSelectionName(
   }
 
   return String(stakeCode);
+}
+
+/**
+ * Determine which side a 2-way handicap stake refers to.
+ * Betters names handicap stakes "1"/"2" (optionally "Handicap 1"/"Handicap 2");
+ * stake codes are used as a fallback.
+ */
+function getHandicapStakeSide(stake: BettersStake): "home" | "away" | null {
+  const name = (stake.stakeName || "").toLowerCase().trim();
+  if (/^(handicap\s*)?1(\b|$)/.test(name)) return "home";
+  if (/^(handicap\s*)?2(\b|$)/.test(name)) return "away";
+  if (stake.stakeCode === STAKE_CODES_1X2.HOME) return "home";
+  if (stake.stakeCode === 2 || stake.stakeCode === STAKE_CODES_1X2.AWAY) return "away";
+  return null;
 }
 
 /**
@@ -279,15 +298,24 @@ export function parseAllMarkets(event: BettersEvent, teams?: ParsedTeams): Scrap
     if (hasLines) {
       // Group by line value
       const lineGroups = new Map<number, typeof stakes>();
+      const isTwoWayHandicap = stakeTypeId === STAKE_TYPES.HANDICAP;
 
       for (const stake of stakes) {
         const line = stake.stakeArgument;
         if (typeof line !== "number") continue;
 
-        if (!lineGroups.has(line)) {
-          lineGroups.set(line, []);
+        // Betters quotes handicap lines per selected team: the away stake with
+        // stakeArgument -1.5 means "away team at -1.5", not the away side of
+        // the home -1.5 market. Regroup away-side stakes under the negated
+        // (home-perspective) line so each market pairs HOME(line) with
+        // AWAY(-line) like every other bookmaker.
+        const groupLine =
+          isTwoWayHandicap && getHandicapStakeSide(stake) === "away" ? -line : line;
+
+        if (!lineGroups.has(groupLine)) {
+          lineGroups.set(groupLine, []);
         }
-        lineGroups.get(line)!.push(stake);
+        lineGroups.get(groupLine)!.push(stake);
       }
 
       // Create a market for each line

@@ -54,7 +54,9 @@ const BETTERS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   310989: "SECOND_HALF_PENALTY_AWARDED",
   314168: "TEAM_MISSES_PENALTY",
   314169: "PENALTY_GOAL",
-  5755153: "PENALTY_MISSED",
+  // "Penalty Missed in the Match" is a Tak/Nie market -> MISSED_PENALTY
+  // (YES/NO), not PENALTY_MISSED (HOME/AWAY).
+  5755153: "MISSED_PENALTY",
   175100: "RED_CARD_TEAM",
   175105: "RED_CARD_TEAM",
   310990: "HALF_TIME_RED_CARD",
@@ -68,18 +70,25 @@ const BETTERS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   40421: "CORRECT_SCORE_COMBINATION",
   332816: "BTTS_AT_LEAST_ONE_HALF",
   262063: "BTTS_BOTH_HALVES",
-  332818: "BTTS_2PLUS_GOALS",
-  332819: "TOTAL_GOALS",
-  40414: "AWAY_WIN_BOTH_HALVES",
-  40415: "HOME_WIN_BOTH_HALVES",
-  39504: "AWAY_WIN_AT_LEAST_ONE_HALF",
-  39505: "TEAM_WIN_AT_LEAST_ONE_HALF",
+  // 332818 ("Obie drużyny suma powyżej X") is routed by name + goal line in
+  // resolveMarketCode — only the 0.5/1.5 lines have catalog counterparts
+  // (BTTS / BTTS_2PLUS_GOALS), so a blanket id mapping would misroute other lines.
+  332819: "BOTH_TEAMS_UNDER_GOALS",
+  // 40414/40415 and 39504/39505 are team-A/team-B stake-type variants
+  // (team A = home side): "Algieria wygra..." carries the lower id.
+  40414: "HOME_WIN_BOTH_HALVES",
+  40415: "AWAY_WIN_BOTH_HALVES",
+  39504: "HOME_WIN_AT_LEAST_ONE_HALF",
+  39505: "AWAY_WIN_AT_LEAST_ONE_HALF",
   30: "HALF_TIME_GOAL",
   332813: "BOTH_HALVES_OVER_GOALS",
   7: "HALF_WITH_MORE_GOALS",
   424467: "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE",
   583: "FIRST_GOAL_TIME_ALT",
   655: "FIRST_GOAL_TIME",
+  // Stake type 677 ("Czas pierwszego gola") is quoted per half
+  // (W 1. Połowie / W 2. Połowie / Brak gola), not in minute intervals.
+  677: "FIRST_GOAL_HALF",
   40317: "SECOND_GOAL_TIME",
   329307: "GOAL_IN_TIME_WINDOW",
   40380: "GOAL_IN_TIME_PERIOD",
@@ -136,7 +145,9 @@ const BETTERS_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "obie druzyny strzela": "BTTS",
   "wynik 1. polowy": "HALF_TIME_RESULT",
   "wynik 2. polowy": "SECOND_HALF_RESULT",
-  "czas pierwszego gola": "FIRST_GOAL_TIME",
+  // NOTE: "czas pierwszego gola" is intentionally NOT mapped here — betters
+  // quotes it per half (stake type 677 -> FIRST_GOAL_HALF), not in the
+  // 10-minute intervals FIRST_GOAL_TIME expects.
   "parzyste/nieparzyste": "ODD_EVEN_GOALS",
   "wygrana do zera": "WIN_TO_NIL",
   "czyste konto": "CLEAN_SHEET",
@@ -172,6 +183,44 @@ function extractTimePeriodParam(name: string): string | undefined {
   return minuteMatch ? minuteMatch[1] : undefined;
 }
 
+/**
+ * Cast helper for catalog selection codes that are not part of the shared
+ * NormalizedSelection enum (e.g. "1st", "BOTH", "1ST_HALF").
+ */
+function toSelection(code: string): NormalizedSelection {
+  return code as NormalizedSelection;
+}
+
+/**
+ * Maps goal-time interval selections ("Od 1 do 15 min.", "Od 11 do 20 min.")
+ * to the canonical "X-Y" interval codes; "Nikt"/"Brak gola" map to NONE.
+ */
+function normalizeGoalTimeRangeSelection(selectionName: string): NormalizedSelection {
+  const normalized = normalizeMarketName(selectionName);
+
+  if (/^(nikt|zaden|zadna|brak|bez\s*gola|brak\s*gola)/.test(normalized)) return "NONE";
+
+  const wordedRange = normalized.match(/od\s*(\d+)\s*do\s*(\d+)/);
+  if (wordedRange) return toSelection(`${wordedRange[1]}-${wordedRange[2]}`);
+
+  const plainRange = normalized.match(/^(\d+)\s*[-–]\s*(\d+)/);
+  if (plainRange) return toSelection(`${plainRange[1]}-${plainRange[2]}`);
+
+  return toSelection(selectionName.trim());
+}
+
+/**
+ * Resolves a team name embedded in a market name to a HOME/AWAY side.
+ * Bookmaker market names may use Polish exonyms ("Algieria") while context
+ * teams are canonical ("Algeria"), so this goes through the canonical
+ * team matcher via normalize1x2Selection.
+ */
+function resolveTeamSide(teamText: string, ctx: NormalizationContext): NormalizedSelection {
+  const trimmed = teamText.trim();
+  if (trimmed.length < 3) return "UNKNOWN";
+  return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+}
+
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -182,8 +231,97 @@ function resolveMarketCode(
     return { marketCode: direct, matchedBy: "name" };
   }
 
-  const home = ctx.homeTeam ? normalizeMarketName(ctx.homeTeam) : "";
-  const away = ctx.awayTeam ? normalizeMarketName(ctx.awayTeam) : "";
+  // --- Combo bets without a clean catalog counterpart -----------------------
+  // Keep them out of the generic "suma goli"/goal-range branches so they do
+  // not pollute TOTAL_GOALS / TEAM_TOTAL_GOALS / GOAL_RANGE parameters.
+
+  // "Austria strzeli pierwsza i suma goli" (first team to score + total goals)
+  if (/strzeli\s*pierwsz\w*\s*i\s*suma\s*goli/.test(normalizedName)) {
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Austria wygra i suma goli: 3-5" (team win + goal range, quoted as Tak/Nie)
+  if (/wygra\s*i\s*suma\s*goli/.test(normalizedName)) {
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "połowa/mecz i suma goli" (HT-or-FT + total combo) — raw selections do not
+  // map onto HALFTIME_FULLTIME_AND_TOTAL codes, so keep it out of TOTAL_GOALS.
+  if (/po[lł]owa\s*\/\s*mecz\s*i\s*suma/.test(normalizedName)) {
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Suma goli lub obie drużyny strzelą X" — only the 2.5 line has a catalog
+  // counterpart (BTTS_OR_OVER_2_5).
+  if (/suma\s*goli\s*lub\s*obie\s*druzyny\s*strzela/.test(normalizedName)) {
+    const line = parseDecimalLine(normalizedName);
+    if (line === "2.5") return { marketCode: "BTTS_OR_OVER_2_5", matchedBy: "pattern" };
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Suma goli parzyste/nieparzyste" is an odd/even market, not an over/under one.
+  if (/parzyst/.test(normalizedName) && /(suma|liczba)\s*goli/.test(normalizedName)) {
+    return { marketCode: "ODD_EVEN_GOALS", matchedBy: "pattern" };
+  }
+
+  // "Obie drużyny suma powyżej X" = each team scores over X goals. Only the
+  // 0.5 line (both teams score = BTTS) and the 1.5 line (both teams score 2+
+  // = BTTS_2PLUS_GOALS) have catalog counterparts; other lines fall to OTHER.
+  if (/obie\s*druzyny\s*suma\s*powyzej/.test(normalizedName)) {
+    const line = parseDecimalLine(normalizedName);
+    if (line === "0.5") return { marketCode: "BTTS", matchedBy: "pattern" };
+    if (line === "1.5") return { marketCode: "BTTS_2PLUS_GOALS", matchedBy: "pattern" };
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Austria. Połowa z wyższą sumą goli" — per-team half-comparison market
+  // (1.<2. / 1.=2. / 1.>2.), not a team-total-goals one.
+  if (/po[lł]owa\s*z\s*wyzsza\s*suma\s*goli/.test(normalizedName)) {
+    const prefixMatch = raw.name.match(/^([^.:]{2,40})[.:]/);
+    const side = prefixMatch ? resolveTeamSide(prefixMatch[1], ctx) : "UNKNOWN";
+    if (side === "HOME") return { marketCode: "HOME_HALF_WITH_MOST_GOALS", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "AWAY_HALF_WITH_MOST_GOALS", matchedBy: "pattern" };
+    return { marketCode: "HALF_WITH_MORE_GOALS", matchedBy: "pattern" };
+  }
+
+  // --- Team-named result markets ---------------------------------------------
+  // Betters quotes these per team ("Austria wygra do zera", Tak/Nie) and the
+  // team may be a Polish exonym — resolve the side through the canonical
+  // matcher instead of relying on stake-type-id fallbacks.
+
+  const winToNil = raw.name.match(/^(.+?)\s+wygra\s+do\s+zera/i);
+  if (winToNil) {
+    const side = resolveTeamSide(winToNil[1], ctx);
+    if (side === "HOME") return { marketCode: "HOME_WIN_TO_NIL", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "AWAY_WIN_TO_NIL", matchedBy: "pattern" };
+  }
+
+  const winOneHalf = raw.name.match(
+    /^(.+?)\s+wygra\s+(?:co\s+najmniej|przynajmniej)\s+jedn[aą]\s+po[lł]ow/i
+  );
+  if (winOneHalf) {
+    const side = resolveTeamSide(winOneHalf[1], ctx);
+    if (side === "HOME") return { marketCode: "HOME_WIN_AT_LEAST_ONE_HALF", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "AWAY_WIN_AT_LEAST_ONE_HALF", matchedBy: "pattern" };
+  }
+
+  const winBothHalves = raw.name.match(/^(.+?)\s+wygra\s+obie\s+po[lł]owy/i);
+  if (winBothHalves) {
+    const side = resolveTeamSide(winBothHalves[1], ctx);
+    if (side === "HOME") return { marketCode: "HOME_WIN_BOTH_HALVES", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "AWAY_WIN_BOTH_HALVES", matchedBy: "pattern" };
+  }
+
+  // "{Team}: wygra różnicą 1 gola lub remis" — only the home variant has a
+  // catalog code (HOME_WIN_BY_1_OR_DRAW); the away variant has no counterpart.
+  const winBy1OrDraw = raw.name.match(
+    /^(.+?)[.:]?\s+wygra\s+r[óo][żz]nic[aą]?\s+1\s+gola\s+lub\s+remis/i
+  );
+  if (winBy1OrDraw) {
+    const side = resolveTeamSide(winBy1OrDraw[1], ctx);
+    if (side === "HOME") return { marketCode: "HOME_WIN_BY_1_OR_DRAW", matchedBy: "pattern" };
+    if (side === "AWAY") return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
 
   const isGoalRange = /suma\s*goli[:\s]+\d+\s*[-–]\s*\d+/i.test(normalizedName);
   if (isGoalRange) {
@@ -191,8 +329,19 @@ function resolveMarketCode(
   }
 
   if (/suma\s*goli/.test(normalizedName)) {
-    if ((home && normalizedName.includes(home)) || (away && normalizedName.includes(away))) {
-      return { marketCode: "TEAM_TOTAL_GOALS", matchedBy: "pattern" };
+    // "Suma goli. Algieria 1.0" — total goals of a single named team. Strip
+    // the market phrase and line, then resolve the remaining team name
+    // (possibly a Polish exonym) against the match context.
+    const teamSegment = raw.name
+      .replace(/suma\s*goli/gi, " ")
+      .replace(/[+-]?\d+(?:[.,]\d+)?/g, " ")
+      .replace(/[.:,]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (teamSegment.length >= 3) {
+      const side = resolveTeamSide(teamSegment, ctx);
+      if (side === "HOME") return { marketCode: "HOME_TEAM_TOTAL_GOALS", matchedBy: "pattern" };
+      if (side === "AWAY") return { marketCode: "AWAY_TEAM_TOTAL_GOALS", matchedBy: "pattern" };
     }
     return { marketCode: "TOTAL_GOALS", matchedBy: "pattern" };
   }
@@ -240,8 +389,16 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
-    case "FIRST_TEAM_TO_SCORE":
     case "TIME_PERIOD_RESULT":
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
+    case "FIRST_TEAM_TO_SCORE":
+    case "LAST_TEAM_TO_SCORE":
+    case "NEXT_TEAM_TO_SCORE":
+    case "GOAL_RACE":
+      // Catalog selections are HOME/AWAY/NONE(/BOTH); "Nikt" = nobody scores.
+      if (/^(nikt|zaden|zadna|brak(\s*gola)?|bez\s*gola)$/.test(normalized)) return "NONE";
+      if (/^ob(ie|a|ydwie)/.test(normalized)) return toSelection("BOTH");
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
@@ -252,8 +409,20 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
+    case "TIME_PERIOD_TOTAL_GOALS":
+    case "TOTAL_GOAL_MINUTES":
+    case "TEAM_GOAL_MINUTES_SUM":
+    case "TEAM_MINUTES_IN_LEAD":
+    case "DRAW_MINUTES_TOTAL":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
+      return normalizeOverUnderSelection(trimmed);
+
+    case "TOTAL_GOALS_3WAY":
+      // Raw labels: "powyżej" / "Dokładnie" / "poniżej".
+      if (/^dok[lł]adnie/.test(normalized)) return toSelection("EXACTLY");
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -261,10 +430,100 @@ function normalizeSelectionForMarket(
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
     case "BOTH_HALVES_GOALS":
+    case "BTTS_AT_LEAST_ONE_HALF":
+    case "BTTS_BOTH_HALVES":
+    case "BTTS_2PLUS_GOALS":
+    case "BTTS_OR_OVER_2_5":
+    case "BOTH_TEAMS_UNDER_GOALS":
+    case "BOTH_HALVES_OVER_GOALS":
+    case "BOTH_HALVES_UNDER_GOALS":
+    case "BOTH_TEAMS_TO_LEAD":
+    case "ONE_TEAM_TO_SCORE":
+    case "OWN_GOAL":
+    case "SUBSTITUTE_GOAL":
+    case "HAT_TRICK":
+    case "BRACE_IN_MATCH":
+    case "SCORING_DRAW":
+    case "DRAW_IN_AT_LEAST_ONE_HALF":
+    case "TEAM_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_BOTH_HALVES":
+    case "AWAY_WIN_BOTH_HALVES":
+    case "HOME_WIN_TO_NIL":
+    case "AWAY_WIN_TO_NIL":
+    case "HOME_WIN_BY_1_OR_DRAW":
+    case "ANY_TEAM_WINNING_MARGIN":
+    case "ANY_TEAM_EXACT_WINNING_MARGIN":
+    case "ANY_TEAM_WINNING_MARGIN_2PLUS":
+    case "ANY_TEAM_WIN_BY_3PLUS":
+    case "GOAL_IN_TIME_PERIOD":
+    case "GOAL_IN_TIME_WINDOW":
+    case "GOAL_IN_90_PLUS":
+    case "HALF_TIME_GOAL":
+    case "PENALTY_AWARDED":
+    case "HALF_TIME_PENALTY_AWARDED":
+    case "SECOND_HALF_PENALTY_AWARDED":
+    case "RED_CARD_AND_PENALTY":
+    case "PENALTY_OR_RED_CARD":
+    case "RED_CARD_TEAM":
+    case "HALF_TIME_RED_CARD":
+    case "SECOND_HALF_RED_CARD":
+    case "BOTH_TEAMS_RED_CARD":
+    case "MISSED_PENALTY":
+    case "CORRECT_SCORE_COMBINATION":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);
+
+    case "HALF_WITH_MORE_GOALS":
+    case "HOME_HALF_WITH_MOST_GOALS":
+    case "AWAY_HALF_WITH_MOST_GOALS":
+      // Raw labels compare halves: "1. > 2." (1st half has more goals),
+      // "1. < 2.", "1. = 2." — catalog selections are 1st/2nd/Draw.
+      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return toSelection("1st");
+      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return toSelection("2nd");
+      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return toSelection("Draw");
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("1st");
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("2nd");
+      if (/^(remis|r[oó]wno)/.test(normalized)) return toSelection("Draw");
+      return toSelection(trimmed);
+
+    case "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE": {
+      // Raw labels combine two half comparisons, e.g. "1.<2. lub 1.>2.",
+      // "1st < 2nd or 1st = 2nd" — catalog: 1ST_OR_DRAW/1ST_OR_2ND/2ND_OR_DRAW.
+      const hasFirst = /1\.?(?:st)?\s*>\s*2|2\.?(?:nd)?\s*<\s*1/.test(trimmed);
+      const hasSecond = /1\.?(?:st)?\s*<\s*2|2\.?(?:nd)?\s*>\s*1/.test(trimmed);
+      const hasDraw = /=/.test(trimmed);
+      if (hasFirst && hasSecond) return toSelection("1ST_OR_2ND");
+      if (hasFirst && hasDraw) return toSelection("1ST_OR_DRAW");
+      if (hasSecond && hasDraw) return toSelection("2ND_OR_DRAW");
+      return toSelection(trimmed);
+    }
+
+    case "FIRST_GOAL_HALF":
+      // "W 1. Połowie" / "W 2. Połowie" / "Brak gola"
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("1ST_HALF");
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("2ND_HALF");
+      if (/brak|bez\s*gola|nikt/.test(normalized)) return "NONE";
+      return toSelection(trimmed);
+
+    case "TEAM_FIRST_GOAL_PERIOD":
+      // "W 1. Połowie" / "W 2. Połowie" / "Nie strzeli"
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("FIRST_HALF");
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("SECOND_HALF");
+      if (/nie\s*strzeli|brak|bez\s*gola/.test(normalized)) return toSelection("NO_GOAL");
+      return toSelection(trimmed);
+
+    case "SECOND_GOAL_TIME":
+      // Catalog: FIRST_HALF/SECOND_HALF. Only the exact half boundaries map;
+      // shifted variants ("Od 1 do 47 min.") stay raw.
+      if (/^od\s*1\s*do\s*45\b/.test(normalized)) return toSelection("FIRST_HALF");
+      if (/^od\s*46\s*do\s*90\b/.test(normalized)) return toSelection("SECOND_HALF");
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("FIRST_HALF");
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("SECOND_HALF");
+      return toSelection(trimmed);
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
@@ -299,6 +558,10 @@ function normalizeSelectionForMarket(
       return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
 
     case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT":
+      // "Od 1 do 15 min." -> "1-15", "Od 16 do 30 min." -> "16-30", etc.
+      return normalizeGoalTimeRangeSelection(trimmed);
+
     case "RESULT_AND_TOTAL":
     case "RESULT_AND_BTTS":
     case "DOUBLE_CHANCE_BTTS":
@@ -315,7 +578,11 @@ function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMa
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
 
-  if (marketCode === "TIME_PERIOD_RESULT") {
+  // Time-period markets ("Wynik meczu w przedziale 16-30 min",
+  // "suma między 81-90+ min.") use the END minute of the period as the
+  // parameter (same convention as lebull, which shares the sbteam.xyz feed),
+  // so identical windows aggregate instead of colliding on the goal line.
+  if (marketCode === "TIME_PERIOD_RESULT" || marketCode === "TIME_PERIOD_TOTAL_GOALS") {
     return extractTimePeriodParam(raw.name);
   }
 

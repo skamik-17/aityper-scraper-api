@@ -268,7 +268,9 @@ function convertSelections(
       externalId: String(s.id),
       status: s.status === "active" ? ("active" as const) : undefined,
     }))
-    .filter((s) => s.odds > 0);
+    // Decimal odds <= 1.0 are suspended/placeholder cells (zero payout is
+    // mathematically impossible for a real price) — never emit them.
+    .filter((s) => s.odds > 1);
 }
 
 /**
@@ -283,7 +285,7 @@ export function parseMarket(
   }
 
   const validSelections = market.selections.filter(
-    (s) => s.rate?.decimal && s.rate.decimal > 0
+    (s) => s.rate?.decimal && s.rate.decimal > 1
   );
 
   if (validSelections.length === 0) {
@@ -319,8 +321,12 @@ export function parseAllMarkets(
   const seenKeys = new Set<string>();
 
   for (const market of markets) {
-    // Create unique key to avoid duplicates
-    const key = `${market.name}_${market.line || ""}`;
+    // Create unique key to avoid duplicates. Prefer the stable market id:
+    // LVBet can expose several market instances under the same name (e.g.
+    // player lists split across instances) and deduping by name alone would
+    // silently drop all but the first instance.
+    const key =
+      market.id != null ? `id:${market.id}` : `${market.name}_${market.line || ""}`;
     if (seenKeys.has(key)) continue;
     seenKeys.add(key);
 

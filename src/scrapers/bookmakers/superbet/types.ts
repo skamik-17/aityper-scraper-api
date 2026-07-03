@@ -13,6 +13,8 @@ export interface SuperbetOddsSelection {
   id: number;
   /** Market ID this selection belongs to */
   marketId: number;
+  /** Human-readable market label provided by the API (e.g., "Liczba goli") */
+  marketName?: string;
   /** Selection code: "1", "0", "2", "O", "U", "GG", "NG", etc. */
   code: string;
   /** Display name (e.g., "Manchester United", "Remis", "Ponad 2.5") */

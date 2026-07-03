@@ -216,16 +216,251 @@ const FORBET_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
   "1/2": "HOME_OR_AWAY",
 };
 
+/**
+ * Markets whose raw selection labels collide with the generic overrides
+ * (e.g. "1/X" means a HT/FT combination, not double chance) or must be
+ * resolved from the raw market name (player pairs). For these the
+ * market-specific handling runs instead of the override table.
+ */
+const OVERRIDE_EXEMPT_MARKETS = new Set<NormalizedMarketType>([
+  "HALFTIME_FULLTIME",
+  "DOUBLE_RESULT",
+  "BOTH_PLAYERS_ANYTIME",
+  "TWO_PLAYERS_ANYTIME",
+]);
+
+/**
+ * Normalizes a forBET market/selection name for pattern matching:
+ * lowercase, diacritics stripped (incl. ł→l which NFD does not decompose),
+ * en/em dashes unified to "-", whitespace collapsed.
+ */
+function normalizeForbetName(value: string): string {
+  return value
+    .replace(/Ł/g, "L")
+    .replace(/ł/g, "l")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Resolves a team-name candidate to HOME/AWAY using the canonical team matcher.
+ */
+function resolveTeamSide(
+  candidate: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | null {
+  const trimmed = candidate.trim();
+  if (!trimmed) return null;
+  const side = normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  return side === "HOME" || side === "AWAY" ? side : null;
+}
+
+/**
+ * Detects which team a team-scoped raw market name refers to, e.g.
+ * "Austria wygra do zera", "Wyspy Zielonego Przylądka multi-gole",
+ * "Austria - liczba kartek w 1 połowie", "2. połowa - Austria czyste konto".
+ */
+function detectTeamSide(
+  rawName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | null {
+  let name = normalizeForbetName(rawName);
+  // Strip a leading half prefix ("1. połowa - ", "2. połowa - ")
+  name = name.replace(/^[12]\.?\s*polowa\s*-\s*/, "");
+  const candidate = name
+    // Cut at a spaced dash/colon separator ("Austria - liczba kartek…")
+    .replace(/\s+[-:]\s+.*$/, "")
+    // Cut at the first market keyword ("Austria wygra do zera", "… multi-gole")
+    .replace(
+      /\s+(wygra|strzeli|multi-gole|ponizej|powyzej|bedzie|otrzyma|czyste|zdobedzie|liczba)\b.*$/,
+      ""
+    )
+    .trim();
+  return resolveTeamSide(candidate, ctx);
+}
+
+/**
+ * forBET quotes team-scoped markets separately per team but the id map only
+ * points at the HOME_* (or generic) catalog code. When the raw name clearly
+ * names one of the teams, reroute to the correct home/away catalog variant.
+ */
+const FORBET_TEAM_SIDED_VARIANTS: Partial<
+  Record<NormalizedMarketType, { home: NormalizedMarketType; away: NormalizedMarketType }>
+> = {
+  HOME_TEAM_TO_SCORE: { home: "HOME_TEAM_TO_SCORE", away: "AWAY_TEAM_TO_SCORE" },
+  HOME_GOAL_RANGE: { home: "HOME_GOAL_RANGE", away: "AWAY_GOAL_RANGE" },
+  HOME_SCORE_BOTH_HALVES: { home: "HOME_SCORE_BOTH_HALVES", away: "AWAY_SCORE_BOTH_HALVES" },
+  HOME_WIN_TO_NIL: { home: "HOME_WIN_TO_NIL", away: "AWAY_WIN_TO_NIL" },
+  WIN_TO_NIL: { home: "HOME_WIN_TO_NIL", away: "AWAY_WIN_TO_NIL" },
+  TEAM_WIN_BOTH_HALVES: { home: "HOME_WIN_BOTH_HALVES", away: "AWAY_WIN_BOTH_HALVES" },
+  TEAM_WIN_AT_LEAST_ONE_HALF: {
+    home: "HOME_WIN_AT_LEAST_ONE_HALF",
+    away: "AWAY_WIN_AT_LEAST_ONE_HALF",
+  },
+  HOME_HALF_WITH_MOST_GOALS: {
+    home: "HOME_HALF_WITH_MOST_GOALS",
+    away: "AWAY_HALF_WITH_MOST_GOALS",
+  },
+  TEAM_HALF_WITH_MORE_GOALS: {
+    home: "HOME_HALF_WITH_MOST_GOALS",
+    away: "AWAY_HALF_WITH_MOST_GOALS",
+  },
+  HALF_TIME_HOME_EXACT_CARDS: {
+    home: "HALF_TIME_HOME_EXACT_CARDS",
+    away: "HALF_TIME_AWAY_EXACT_CARDS",
+  },
+  HOME_EXACT_CARDS: { home: "HOME_EXACT_CARDS", away: "AWAY_EXACT_CARDS" },
+  HALF_TIME_HOME_EXACT_CORNERS: {
+    home: "HALF_TIME_HOME_EXACT_CORNERS",
+    away: "HALF_TIME_AWAY_EXACT_CORNERS",
+  },
+  HALF_TIME_HOME_CLEAN_SHEET: {
+    home: "HALF_TIME_HOME_CLEAN_SHEET",
+    away: "HALF_TIME_AWAY_CLEAN_SHEET",
+  },
+  SECOND_HALF_HOME_CLEAN_SHEET: {
+    home: "SECOND_HALF_HOME_CLEAN_SHEET",
+    away: "SECOND_HALF_AWAY_CLEAN_SHEET",
+  },
+  HOME_TEAM_TOTAL_OFFSIDES: {
+    home: "HOME_TEAM_TOTAL_OFFSIDES",
+    away: "AWAY_TEAM_TOTAL_OFFSIDES",
+  },
+};
+
+/**
+ * Specific raw-name rules that must win over the coarse game-type id map and
+ * the generic name patterns: forBET reuses generic game-type ids for combo
+ * and special markets (e.g. gameType 5 carries "1. połowa/mecz" = HT/FT).
+ */
+function resolveForbetSpecialMarket(
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const name = normalizeForbetName(raw.name);
+
+  // Player goals special quoted as a generic goals market:
+  // "Wanner, Paul - liczba goli (z ew. dogrywką; …)"
+  if (/^[^-]+,[^-]*-\s*liczba goli/.test(name)) return "PLAYER_GOALS";
+
+  // "1. połowa/mecz" is the HT/FT market, not the plain 1st-half 1X2
+  if (/^1\.?\s*polowa\s*\/\s*mecz$/.test(name)) return "HALFTIME_FULLTIME";
+
+  // "1. połowa dokładny wynik / dokładny wynik końcowy" → HT/FT correct score
+  if (/polowa dokladny wynik\s*\/\s*dokladny wynik/.test(name)) {
+    return "HT_FT_CORRECT_SCORE";
+  }
+
+  // Double chance + BTTS combos ("2. Połowa - Podwójna szansa + obie drużyny strzelą")
+  if (/^2\.?\s*polowa.*podwojna szansa.*obie druzyny strzela/.test(name)) {
+    return "SECOND_HALF_DOUBLE_CHANCE_BTTS";
+  }
+  if (/^1\.?\s*polowa.*podwojna szansa.*obie druzyny strzela/.test(name)) {
+    return "HALF_TIME_DOUBLE_CHANCE_BTTS";
+  }
+  if (/podwojna szansa.*obie druzyny strzela/.test(name)) return "DOUBLE_CHANCE_BTTS";
+
+  // 1X2 + BTTS combos ("2. Połowa – 1X2 + obie drużyny strzelą gola")
+  if (/^2\.?\s*polowa.*1x2.*obie druzyny strzela/.test(name)) {
+    return "SECOND_HALF_RESULT_AND_BTTS";
+  }
+  if (/^1\.?\s*polowa.*1x2.*obie druzyny strzela/.test(name)) {
+    return "HALF_TIME_RESULT_AND_BTTS";
+  }
+  if (/^1x2.*obie druzyny strzela/.test(name)) return "RESULT_AND_BTTS";
+
+  // 1X2 + totals combos ("2. Połowa – 1X2 + liczba goli", "1X2 i poniżej/powyżej 2.5 goli")
+  if (/^2\.?\s*polowa.*1x2.*liczba goli/.test(name)) return "SECOND_HALF_RESULT_AND_TOTAL";
+  if (/^1\.?\s*polowa.*1x2.*liczba goli/.test(name)) return "HALF_TIME_RESULT_AND_TOTAL";
+  if (/^1x2 i (ponizej|powyzej)/.test(name)) return "RESULT_AND_TOTAL";
+
+  // Half goal-range markets ("1. Połowa - multi-gole" has range selections, not O/U)
+  if (/^1\.?\s*polowa\s*-\s*multi-gole$/.test(name)) return "HALF_TIME_GOAL_RANGE";
+  if (/^2\.?\s*polowa\s*-\s*multi-gole$/.test(name)) return "SECOND_HALF_GOAL_RANGE";
+
+  // Per-team half totals ("2. połowa - Austria poniżej/powyżej 0.5 goli")
+  const halfTeamTotal = name.match(/^([12])\.?\s*polowa\s*-\s*(.+?)\s+ponizej\/powyzej/);
+  if (halfTeamTotal) {
+    const side = resolveTeamSide(halfTeamTotal[2], ctx);
+    if (side) {
+      if (halfTeamTotal[1] === "1") {
+        return side === "HOME"
+          ? "HALF_TIME_HOME_TEAM_TOTAL_GOALS"
+          : "HALF_TIME_AWAY_TEAM_TOTAL_GOALS";
+      }
+      return side === "HOME"
+        ? "SECOND_HALF_HOME_TEAM_TOTAL_GOALS"
+        : "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS";
+    }
+    // Team not resolvable — keep it out of the full-match TOTAL_GOALS bucket
+    return "OTHER";
+  }
+
+  return null;
+}
+
+/**
+ * Parses a HT/FT selection into catalog codes ("HOME_DRAW", …).
+ * Handles both symbol form ("1/X") and team-name form ("Austria / Algieria").
+ */
+function parseHtFtToCodes(
+  selectionName: string,
+  ctx: NormalizationContext
+): string | null {
+  // The shared helper already returns catalog codes ("HOME_DRAW", ...).
+  const basic = parseHtFtSelection(selectionName);
+  if (basic) return basic;
+
+  const parts = selectionName.split("/").map((part) => part.trim());
+  if (parts.length !== 2) return null;
+
+  const ht = normalize1x2Selection(parts[0], ctx.homeTeam, ctx.awayTeam, ctx.league);
+  const ft = normalize1x2Selection(parts[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+  if (ht === "UNKNOWN" || ft === "UNKNOWN") return null;
+  return `${ht}_${ft}`;
+}
+
+/** Formats one leg of an HT/FT correct-score selection ("0-0" → "0:0", "4 +" → "4+"). */
+function formatHtFtScorePart(part: string): string {
+  const score = part.match(/^(\d+)\s*[-:]\s*(\d+)$/);
+  if (score) return `${score[1]}:${score[2]}`;
+  const plus = part.match(/^(\d+)\s*\+$/);
+  if (plus) return `${plus[1]}+`;
+  return part;
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
-  ctx: NormalizationContext
+  ctx: NormalizationContext,
+  rawMarketName?: string
 ): NormalizedSelection {
   const trimmed = selName.trim();
   const lower = trimmed.toLowerCase();
+  const normalized = normalizeForbetName(trimmed);
 
-  const override = FORBET_SELECTION_OVERRIDES[lower];
-  if (override) return override;
+  // Player-pair markets name one concrete pair in the raw market name
+  // ("R. De Paul & Lau. Martínez: obaj wymienieni zawodnicy strzelą…").
+  // Expose the pair as the selection code instead of a bare boolean YES.
+  if (marketCode === "BOTH_PLAYERS_ANYTIME" || marketCode === "TWO_PLAYERS_ANYTIME") {
+    const colonIdx = rawMarketName ? rawMarketName.indexOf(":") : -1;
+    if (rawMarketName && colonIdx > 0) {
+      const pair = rawMarketName.slice(0, colonIdx).trim();
+      if (pair && normalizeYesNoSelection(trimmed) !== "NO") {
+        return pair as NormalizedSelection;
+      }
+    }
+    return normalizeYesNoSelection(trimmed);
+  }
+
+  if (!OVERRIDE_EXEMPT_MARKETS.has(marketCode)) {
+    const override = FORBET_SELECTION_OVERRIDES[lower];
+    if (override) return override;
+  }
 
   if (/^1\s*\([+-]/.test(trimmed)) return "HOME";
   if (/^2\s*\([+-]/.test(trimmed)) return "AWAY";
@@ -238,7 +473,14 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
+    // 1X2-style markets with a "no goal" outcome ("brak", "Brak gola" → NONE)
     case "FIRST_TEAM_TO_SCORE":
+    case "LAST_TEAM_TO_SCORE":
+    case "SECOND_HALF_FIRST_GOAL":
+    case "HALF_TIME_FIRST_GOAL":
+      if (/^(brak|bez gola|zaden|zadna)/.test(normalized)) return "NONE";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
@@ -249,6 +491,10 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
       return normalizeOverUnderSelection(trimmed);
@@ -262,45 +508,257 @@ function normalizeSelectionForMarket(
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
     case "CORNERS_HANDICAP":
+    case "FIRST_HALF_EUROPEAN_HANDICAP":
+    case "SECOND_HALF_EUROPEAN_HANDICAP":
+    case "FIRST_HALF_ASIAN_HANDICAP": {
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
-      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      // Strip trailing "(0:2)" / "(+0.5)" style suffix before team matching,
+      // e.g. "Algieria (0:2)" → "Algieria"
+      const teamPart = trimmed.replace(/\s*\([^)]*\)\s*$/, "").trim();
+      if (/^(x|remis)$/i.test(teamPart)) return "DRAW";
+      return normalize1x2Selection(
+        teamPart || trimmed,
+        ctx.homeTeam,
+        ctx.awayTeam,
+        ctx.league
+      );
+    }
 
     case "CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
     }
 
-    case "HALFTIME_FULLTIME":
+    case "HT_FT_CORRECT_SCORE": {
+      // "0-0 / 1-0" → "0:0 / 1:0" (catalog format)
+      const parts = trimmed.split("/").map((part) => part.trim());
+      if (parts.length === 2) {
+        return `${formatHtFtScorePart(parts[0])} / ${formatHtFtScorePart(parts[1])}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HALFTIME_FULLTIME": {
+      const htft = parseHtFtToCodes(trimmed, ctx);
+      return (htft ?? trimmed) as NormalizedSelection;
+    }
+
     case "DOUBLE_RESULT": {
       const htft = parseHtFtSelection(trimmed);
       return (htft ?? trimmed) as NormalizedSelection;
     }
 
-    case "WINNING_MARGIN":
-    case "GOAL_RANGE":
+    case "WINNING_MARGIN": {
+      if (/^(remis|x)$/.test(normalized)) return "DRAW";
+      // "Algieria 1 golem", "Austria 2 golami", "Argentyna 3 golami lub więcej"
+      const margin = normalized.match(/^(.+?)\s+(\d+)\s+gol\w*(\s+lub\s+wiecej)?$/);
+      if (margin) {
+        const side = resolveTeamSide(margin[1], ctx);
+        if (side) {
+          const n = parseInt(margin[2], 10);
+          const by = margin[3] || n >= 3 ? "3PLUS" : String(n);
+          return `${side}_BY_${by}` as NormalizedSelection;
+        }
+      }
       return trimmed as NormalizedSelection;
+    }
+
+    case "TEAMS_TO_SCORE": {
+      // "Żadna" / "Tylko Algieria" / "Tylko Austria" / "Obie drużyny"
+      if (/^zadna/.test(normalized)) return "ZERO_TEAMS";
+      if (/^obie/.test(normalized)) return "TWO_TEAMS";
+      const only = normalized.match(/^tylko\s+(.+)$/);
+      if (only) {
+        const side = resolveTeamSide(only[1], ctx);
+        if (side === "HOME") return "ONE_TEAM_HOME";
+        if (side === "AWAY") return "ONE_TEAM_AWAY";
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HALF_WITH_MORE_GOALS":
+    case "HOME_HALF_WITH_MOST_GOALS":
+    case "AWAY_HALF_WITH_MOST_GOALS": {
+      // Catalog codes are "1st" / "2nd" / "Draw"
+      if (/^1\.?\s*polowa/.test(normalized)) return "1st" as NormalizedSelection;
+      if (/^2\.?\s*polowa/.test(normalized)) return "2nd" as NormalizedSelection;
+      if (/^(remis|x|zadna)/.test(normalized)) return "Draw" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "GOAL_RANGE":
+    case "TEAM_GOAL_RANGE":
+    case "HALF_TIME_GOAL_RANGE":
+    case "SECOND_HALF_GOAL_RANGE":
+    case "HOME_GOAL_RANGE":
+    case "AWAY_GOAL_RANGE": {
+      // "brak" → 0, "1-2" / "2-3" ranges and "4+" pass through as catalog codes
+      if (/^brak/.test(normalized)) return "0" as NormalizedSelection;
+      const range = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      const plus = trimmed.match(/^(\d+)\s*\+$/);
+      if (plus) return `${plus[1]}+` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HOME_EXACT_CARDS":
+    case "AWAY_EXACT_CARDS":
+    case "HALF_TIME_HOME_EXACT_CARDS":
+    case "HALF_TIME_AWAY_EXACT_CARDS":
+    case "HALF_TIME_HOME_EXACT_CORNERS":
+    case "HALF_TIME_AWAY_EXACT_CORNERS": {
+      // Counts are literal codes ("0", "1", "2", "3+") — never HOME/AWAY
+      if (/^brak/.test(normalized)) return "0" as NormalizedSelection;
+      if (/^\d+$/.test(trimmed)) return trimmed as NormalizedSelection;
+      const plus = trimmed.match(/^(\d+)\s*\+$/);
+      if (plus) return `${plus[1]}+` as NormalizedSelection;
+      const range = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT": {
+      // "brak" → NONE; "1-10" … "81-90" / "1-15" … "76-90" pass through
+      if (/^(brak|bez gola)/.test(normalized)) return "NONE";
+      const range = trimmed.match(/^(\d+)\s*-\s*(\d+)/);
+      if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "RESULT_AND_TOTAL":
+    case "HALF_TIME_RESULT_AND_TOTAL":
+    case "SECOND_HALF_RESULT_AND_TOTAL": {
+      // "Argentyna i powyżej 1,5" → HOME_OVER
+      const combo = trimmed.match(/^(.+?)\s+i\s+(.+)$/i);
+      if (combo) {
+        const res = normalize1x2Selection(combo[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+        const ou = normalizeOverUnderSelection(combo[2]);
+        if (res !== "UNKNOWN" && ou !== "UNKNOWN") {
+          return `${res}_${ou}` as NormalizedSelection;
+        }
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_AND_BTTS": {
+      // "remis i tak" → DRAW_YES, "Argentyna i nie" → HOME_NO
+      const combo = trimmed.match(/^(.+?)\s+i\s+(tak|nie)$/i);
+      if (combo) {
+        const res = normalize1x2Selection(combo[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+        if (res !== "UNKNOWN") {
+          return `${res}_${combo[2].toLowerCase() === "tak" ? "YES" : "NO"}` as NormalizedSelection;
+        }
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "DOUBLE_CHANCE_BTTS":
+    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
+    case "SECOND_HALF_DOUBLE_CHANCE_BTTS": {
+      // "1/X i tak" → 1X_YES
+      const combo = normalized.match(/(1\/?x|x\/?2|1\/?2)\b.*\b(tak|nie)$/);
+      if (combo) {
+        const dcRaw = combo[1].replace("/", "");
+        const dc = dcRaw === "1x" ? "1X" : dcRaw === "x2" ? "X2" : "12";
+        return `${dc}_${combo[2] === "tak" ? "YES" : "NO"}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "PLAYER_CARDS": {
+      // "Wanner, Paul 1+" → YES (catalog vocabulary for PLAYER_CARDS is YES/NO)
+      if (/1\s*\+$/.test(trimmed)) return "YES";
+      const yn = normalizeYesNoSelection(trimmed);
+      if (yn !== "UNKNOWN") return yn;
+      const threshold = trimmed.match(/(\d+)\s*\+$/);
+      if (threshold) return `${threshold[1]}+` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "PLAYER_GOALS":
+    case "PLAYER_ASSISTS":
+    case "PLAYER_PASSES":
+    case "PLAYER_SHOTS":
+    case "PLAYER_SHOTS_ON_TARGET":
+    case "PLAYER_TACKLES": {
+      // "Wanner, Paul 2+" → "2+" (player name goes into the parameter)
+      const threshold = trimmed.match(/(\d+)\s*\+$/);
+      if (threshold) return `${threshold[1]}+` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
 
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   }
 }
 
-const PARAMETERIZED_MARKETS = [
+const PLAYER_PARAM_MARKETS: NormalizedMarketType[] = [
+  "PLAYER_GOALS",
+  "PLAYER_CARDS",
+  "PLAYER_ASSISTS",
+  "PLAYER_PASSES",
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_TACKLES",
+];
+
+const EUROPEAN_HANDICAP_MARKETS: NormalizedMarketType[] = [
+  "EUROPEAN_HANDICAP",
+  "FIRST_HALF_EUROPEAN_HANDICAP",
+  "SECOND_HALF_EUROPEAN_HANDICAP",
+];
+
+const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "TOTAL_GOALS",
   "TOTAL_GOALS_ASIAN",
   "HALF_TIME_TOTAL_GOALS",
   "SECOND_HALF_TOTAL_GOALS",
   "TEAM_TOTAL_GOALS",
+  "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+  "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+  "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+  "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
   "ASIAN_HANDICAP",
+  "FIRST_HALF_ASIAN_HANDICAP",
   "EUROPEAN_HANDICAP",
+  "FIRST_HALF_EUROPEAN_HANDICAP",
+  "SECOND_HALF_EUROPEAN_HANDICAP",
   "CORNERS_TOTAL",
   "CARDS_TOTAL",
   "CORNERS_HANDICAP",
   "RESULT_AND_TOTAL",
+  "HALF_TIME_RESULT_AND_TOTAL",
+  "SECOND_HALF_RESULT_AND_TOTAL",
   "DOUBLE_CHANCE_TOTAL",
+  "BOTH_HALVES_OVER_GOALS",
+  "BOTH_HALVES_UNDER_GOALS",
+  "TIME_PERIOD_RESULT",
+  ...PLAYER_PARAM_MARKETS,
 ];
+
+/**
+ * Extracts the player name (used as parameter value) from forBET player-prop
+ * markets, e.g. "Wanner, Paul - liczba goli (…)", "Da Costa, Nuno otrzyma
+ * kartkę (…)". Falls back to stripping the "N+" suffix from a selection label.
+ */
+function extractPlayerParam(raw: RawBookmakerMarket): string | undefined {
+  const statMatch = raw.name.match(/^(.+?)\s*[-–]\s*liczba\s/i);
+  if (statMatch) return statMatch[1].trim();
+
+  const cardMatch = raw.name.match(/^(.+?)\s+otrzyma\s+kartk/i);
+  if (cardMatch) return cardMatch[1].trim();
+
+  const firstSelection = raw.selections[0]?.name?.trim() ?? "";
+  const selMatch = firstSelection.match(/^(.+?)\s+\d+\s*\+$/);
+  if (selMatch) return selMatch[1].trim();
+
+  return undefined;
+}
 
 function extractParamValue(
   marketCode: NormalizedMarketType,
@@ -308,12 +766,37 @@ function extractParamValue(
 ): string | undefined {
   if (!PARAMETERIZED_MARKETS.includes(marketCode)) return undefined;
 
+  if (PLAYER_PARAM_MARKETS.includes(marketCode)) {
+    return extractPlayerParam(raw);
+  }
+
+  // European handicap quoted as a score line ("Handicap 0:2",
+  // "1. połowa - handicap 0:2") → signed goal difference ("-2", "+1", "0")
+  if (EUROPEAN_HANDICAP_MARKETS.includes(marketCode)) {
+    const score = raw.name.match(/(\d+)\s*:\s*(\d+)/);
+    if (score) {
+      const diff = parseInt(score[1], 10) - parseInt(score[2], 10);
+      return diff > 0 ? `+${diff}` : `${diff}`;
+    }
+  }
+
+  // Time-window 1X2 ("10 minut – 1X2 od 1 do 10") → window length in minutes
+  if (marketCode === "TIME_PERIOD_RESULT") {
+    const minutes = raw.name.match(/(\d+)\s*minut/i);
+    if (minutes) return minutes[1];
+  }
+
   const nameMatch = raw.name.match(/(\d+[.,]\d+)/);
   if (nameMatch) {
     return nameMatch[1].replace(",", ".");
   }
 
-  if (marketCode === "ASIAN_HANDICAP" || marketCode === "EUROPEAN_HANDICAP" || marketCode === "CORNERS_HANDICAP") {
+  if (
+    marketCode === "ASIAN_HANDICAP" ||
+    marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
+    marketCode === "EUROPEAN_HANDICAP" ||
+    marketCode === "CORNERS_HANDICAP"
+  ) {
     const handicapMatch = raw.name.match(/([+-]?\d+[.,]?\d*)/);
     if (handicapMatch) {
       return parseHandicapLine(handicapMatch[1]);
@@ -357,7 +840,15 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" | "pattern" = "id";
 
-    if (gameTypeId !== null) {
+    // Specific raw-name rules first: forBET reuses generic game-type ids for
+    // combo/special markets, so the id map alone misroutes them.
+    const special = resolveForbetSpecialMarket(raw, ctx);
+    if (special) {
+      marketCode = special;
+      matchedBy = "pattern";
+    }
+
+    if (!marketCode && gameTypeId !== null) {
       marketCode = FORBET_MARKET_ID_TO_CODE[gameTypeId] ?? null;
     }
 
@@ -373,6 +864,17 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
+    // Team-scoped markets: reroute to the home/away catalog variant when the
+    // raw name clearly names one of the teams (forBET quotes both teams under
+    // the same game-type id pair).
+    const variant = FORBET_TEAM_SIDED_VARIANTS[marketCode];
+    if (variant) {
+      const side = detectTeamSide(raw.name, ctx);
+      if (side) {
+        marketCode = side === "HOME" ? variant.home : variant.away;
+      }
+    }
+
     if (!isValidMarketCode(marketCode)) {
       console.error(`[forbet] Market code "${marketCode}" not in catalog`);
       return null;
@@ -382,7 +884,7 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx),
+      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, raw.name),
       label: sel.name,
       odds: sel.odds,
     }));

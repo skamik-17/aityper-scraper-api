@@ -39,6 +39,26 @@ export function parseTeamNames(event: LebullEvent): ParsedTeams {
 }
 
 /**
+ * Stake types whose stakes carry a line/threshold value in stakeArgument.
+ * These are grouped by line so each line becomes a separate market, and the
+ * line value is appended to the market name so the normalizer can extract
+ * the parameter (the API market names alone are generic, e.g. the bare
+ * "Obie połowy powyżej" is sent for every goal line).
+ */
+const LINE_STAKE_TYPE_IDS: number[] = [
+  STAKE_TYPES.OVER_UNDER,
+  STAKE_TYPES.HALF_TIME_OVER_UNDER,
+  STAKE_TYPES.HANDICAP,
+  // "Obie połowy powyżej" (both halves over X goals)
+  332813,
+  // "Obie połowy poniżej" (both halves under X goals)
+  332814,
+  // "Obie drużyny suma powyżej" (each team over X goals) — the line
+  // disambiguates BTTS (0.5) from BTTS 2+ goals (1.5)
+  332818,
+];
+
+/**
  * Get human-readable market name based on stake type ID
  *
  * Prefers the API-provided market type name (stakeTypeName) when available,
@@ -55,12 +75,7 @@ function getMarketName(
 
   if (apiLabel) {
     // For line markets, append the line value so distinct lines stay disambiguated
-    const lineMarketTypes: number[] = [
-      STAKE_TYPES.OVER_UNDER,
-      STAKE_TYPES.HALF_TIME_OVER_UNDER,
-      STAKE_TYPES.HANDICAP,
-    ];
-    if (stake?.stakeArgument !== undefined && lineMarketTypes.includes(stakeTypeId)) {
+    if (stake?.stakeArgument !== undefined && LINE_STAKE_TYPE_IDS.includes(stakeTypeId)) {
       return `${apiLabel} ${stake.stakeArgument}`;
     }
     return apiLabel;
@@ -285,13 +300,8 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
 
     if (stakes.length === 0) continue;
 
-    // For line markets (O/U, handicap), group by line value
-    const lineMarketTypes: number[] = [
-      STAKE_TYPES.OVER_UNDER,
-      STAKE_TYPES.HALF_TIME_OVER_UNDER,
-      STAKE_TYPES.HANDICAP,
-    ];
-    const isLineMarket = lineMarketTypes.includes(stakeTypeId);
+    // For line markets (O/U, handicap, both-halves lines), group by line value
+    const isLineMarket = LINE_STAKE_TYPE_IDS.includes(stakeTypeId);
 
     if (isLineMarket) {
       // Group stakes by their line value

@@ -36,6 +36,18 @@ const DEFAULT_PARAMETERS: Record<string, string> = {
 };
 
 /**
+ * Canonicalize a numeric parameter value so equivalent spellings collapse
+ * into one line ("1.0" -> "1", "+0.5" -> "0.5", "2.50" -> "2.5").
+ * Non-numeric values (score formats "1:0", "base", team sides) pass through.
+ */
+function canonicalizeParamValue(param: string): string {
+  if (/^[+-]?\d+(\.\d+)?$/.test(param)) {
+    return String(parseFloat(param));
+  }
+  return param;
+}
+
+/**
  * Sort parameters intelligently
  */
 function sortParameters(params: string[]): string[] {
@@ -133,7 +145,7 @@ export function groupMarketsByTypeWithParameters(
 
   for (const { market, bookmaker } of marketsWithBookmakers) {
     const marketType = market.normalizedType || "OTHER";
-    const param = market.paramValue || "base";
+    const param = canonicalizeParamValue(market.paramValue || "base");
 
     if (!typeGroups.has(marketType)) {
       typeGroups.set(marketType, {
@@ -179,6 +191,12 @@ export function groupMarketsByTypeWithParameters(
           selections: [],
         };
         paramEntry.bookmakers.push(bmEntry);
+      } else if (bmEntry.rawMarketName !== market.name) {
+        // A DIFFERENT raw market collided on (type, param, bookmaker) — almost
+        // always a misrouted normalization (e.g. a 2nd-half combo landing in
+        // the plain full-time market). Merging would poison odds/best-odds
+        // with prices from another market, so the first raw market wins.
+        continue;
       }
 
       // Create a map to track existing selections by type to prevent duplicates
@@ -205,12 +223,9 @@ export function groupMarketsByTypeWithParameters(
 
         // Check if this selection type already exists
         if (existingSelections.has(selectionType)) {
-          // Update existing selection if odds are different (or keep first one)
-          const existing = existingSelections.get(selectionType)!;
-          // Use the higher odds to be safe, or could just skip duplicates
-          if (selection.odds > existing.odds) {
-            existing.odds = selection.odds;
-          }
+          // Duplicate selection type within the same raw market — keep the
+          // first quote. Overwriting with the higher odds silently mixed
+          // prices of different outcomes that mapped to one code.
         } else {
           // Add new selection
           const label = buildSelectionLabel(selectionType);

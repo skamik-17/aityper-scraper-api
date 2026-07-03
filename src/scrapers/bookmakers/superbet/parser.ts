@@ -37,8 +37,20 @@ export function parseTeamNames(matchName: string): ParsedTeams {
 
 /**
  * Get human-readable market name based on market ID and selection data
+ *
+ * The Superbet API provides the authoritative display label in the
+ * `marketName` field of every odds entry - prefer it whenever present.
+ * The legacy id switch below had drifted from the real Superbet id space
+ * (e.g. id 549 is "2.połowa - obie drużyny strzelą", NOT asian handicap;
+ * id 553 is "1.połowa - handicap 1x2", NOT half-time result), so only the
+ * few verified ids are kept as a fallback for responses without labels.
  */
 function getMarketName(marketId: number, selection?: SuperbetOddsSelection): string {
+  const apiName = selection?.marketName?.trim();
+  if (apiName) {
+    return apiName;
+  }
+
   switch (marketId) {
     case MARKET_IDS.MATCH_RESULT_1X2:
       return "Wynik meczu";
@@ -49,41 +61,10 @@ function getMarketName(marketId: number, selection?: SuperbetOddsSelection): str
     case MARKET_IDS.BTTS_ALT:
       return "Obie druzyny strzelą";
     case MARKET_IDS.TOTAL_GOALS:
-    case MARKET_IDS.TOTAL_GOALS_ALT:
-    case MARKET_IDS.TOTAL_GOALS_ALT2:
       if (selection?.specialBetValue) {
         return `Liczba goli ${selection.specialBetValue}`;
       }
       return "Liczba goli";
-    case MARKET_IDS.ASIAN_HANDICAP:
-      if (selection?.specialBetValue) {
-        return `Handicap azjatycki ${selection.specialBetValue}`;
-      }
-      return "Handicap azjatycki";
-    case MARKET_IDS.EUROPEAN_HANDICAP:
-      if (selection?.specialBetValue) {
-        return `Handicap europejski ${selection.specialBetValue}`;
-      }
-      return "Handicap europejski";
-    case MARKET_IDS.HALF_TIME_RESULT:
-      return "Wynik 1. polowy";
-    case MARKET_IDS.HALF_TIME_TOTAL:
-      if (selection?.specialBetValue) {
-        return `Liczba goli 1. polowa ${selection.specialBetValue}`;
-      }
-      return "Liczba goli 1. polowa";
-    case MARKET_IDS.HALF_TIME_BTTS:
-      return "Obie strzelą 1. polowa";
-    case MARKET_IDS.CORRECT_SCORE:
-      return "Dokladny wynik";
-    case MARKET_IDS.ODD_EVEN_GOALS:
-      return "Parzyste/Nieparzyste";
-    case MARKET_IDS.DRAW_NO_BET:
-      return "Remis = zwrot";
-    case MARKET_IDS.WIN_TO_NIL:
-      return "Wygrana do zera";
-    case MARKET_IDS.CLEAN_SHEET:
-      return "Czyste konto";
     default:
       return `Rynek ${marketId}`;
   }

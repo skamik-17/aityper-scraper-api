@@ -14,6 +14,7 @@ import {
   MARKET_TYPE_IDS,
   MARKET_GROUPS,
   MARKET_TYPES,
+  MARKET_TYPE_FALLBACK_LABELS,
   SELECTION_CODES,
 } from "./constants.js";
 import type {
@@ -96,7 +97,11 @@ export function getMarketName(market: FortunaMarket): string {
     case MARKET_TYPE_IDS.ODD_EVEN_GOALS:
       return "Parzyste/Nieparzyste";
     default:
-      return `Rynek ${market.marketTypeId}`;
+      // Known ids get a curated Polish label instead of the raw internal code
+      return (
+        MARKET_TYPE_FALLBACK_LABELS[market.marketTypeId] ??
+        `Rynek ${market.marketTypeId}`
+      );
   }
 }
 

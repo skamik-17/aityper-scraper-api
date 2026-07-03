@@ -29,38 +29,54 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "8": "CORRECT_SCORE",
   "10": "DOUBLE_CHANCE",
   "11": "DRAW_NO_BET",
-  "12": "GOALSCORER_FIRST",
+  // Audit: id 12 delivered match-level selections ("remis", team name),
+  // not goalscorer players — real identity unknown, park in OTHER so it
+  // cannot poison GOALSCORER_FIRST.
+  "12": "OTHER",
   "13": "GOALSCORER_LAST",
   "14": "GOALSCORER_ANYTIME",
   "17": "TOTAL_GOALS",
   "18": "HALF_TIME_TOTAL_GOALS",
-  "19": "TEAM_TOTAL_GOALS",
-  "20": "TEAM_TOTAL_GOALS",
+  // Home/away team totals are separate ids — map them to the dedicated
+  // catalog codes so OVER/UNDER selections of both teams do not collide
+  // under a single TEAM_TOTAL_GOALS key.
+  "19": "HOME_TEAM_TOTAL_GOALS",
+  "20": "AWAY_TEAM_TOTAL_GOALS",
   "21": "ODD_EVEN_GOALS",
-  "22": "SECOND_HALF_RESULT",
+  // Audit: id 22 delivered goals-count selections ("0"/"1"/"2"/"3+"),
+  // not a 2nd-half 1X2 — real identity unknown, park in OTHER.
+  "22": "OTHER",
   "23": "SECOND_HALF_TOTAL_GOALS",
-  "24": "WIN_TO_NIL",
-  "25": "WIN_TO_NIL",
-  "26": "WIN_TO_NIL",
+  // Audit: id 24 delivered "Nieparzysty"/"Parzysty" (an odd/even variant),
+  // not win-to-nil. Ids 25/26/31 were equally unverified guesses mapped to
+  // the same binary code — park all of them in OTHER; only id 28 is the
+  // confirmed Win To Nil market.
+  "24": "OTHER",
+  "25": "OTHER",
+  "26": "OTHER",
   "27": "BTTS",
   "28": "WIN_TO_NIL",
   "29": "HALF_TIME_BTTS",
   "30": "HALF_TIME_BTTS",
-  "31": "WIN_TO_NIL",
-  "32": "BOTH_HALVES_GOALS",
+  "31": "OTHER",
+  // Audit: id 32 odds (YES 11.54 / NO 1.01) are inconsistent with
+  // "goals in both halves" — real identity unknown, park in OTHER.
+  "32": "OTHER",
   "33": "CLEAN_SHEET",
   "34": "CLEAN_SHEET",
   "35": "GOAL_RANGE",
-  "36": "GOAL_RANGE",
-  "37": "TEAM_TOTAL_GOALS",
-  "38": "TEAM_TOTAL_GOALS",
+  "36": "EXACT_GOALS",
+  "37": "HOME_EXACT_GOALS",
+  "38": "AWAY_EXACT_GOALS",
   "39": "RESULT_AND_BTTS",
   "40": "RESULT_AND_TOTAL",
   "41": "DOUBLE_CHANCE_BTTS",
   "42": "DOUBLE_CHANCE_TOTAL",
   "47": "HALF_WITH_MORE_GOALS",
-  "48": "HALF_WITH_MORE_GOALS",
-  "49": "HALF_WITH_MORE_GOALS",
+  // Audit: id 49 odds pattern ("równo" @1.32) matches the away-team variant,
+  // not the match-level market; 48/49 follow PZBuk's home/away id pairing.
+  "48": "HOME_HALF_WITH_MOST_GOALS",
+  "49": "AWAY_HALF_WITH_MOST_GOALS",
   "50": "TEAMS_TO_SCORE",
   "55": "MATCH_WINNER",
   "57": "HALF_TIME_FIRST_GOAL",
@@ -99,7 +115,9 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "157": "TOTAL_GOALS",
   "159": "CORNERS_RANGE",
   "162": "ODD_EVEN_GOALS",
-  "163": "MATCH_WINNER",
+  // Audit: id 163 produced duplicated DRAW/AWAY odds far off 1X2 peers —
+  // it is not the match-winner market; park in OTHER (id 1 is the real 1X2).
+  "163": "OTHER",
   "166": "ASIAN_HANDICAP",
   "167": "TOTAL_GOALS",
   "173": "ODD_EVEN_GOALS",
@@ -117,6 +135,36 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "2186": "GOALSCORER_ANYTIME",
   "2395": "GOALSCORER_ANYTIME",
 };
+
+/**
+ * Name-based routing overrides checked BEFORE the numeric id map.
+ * The cross-bookmaker audit proved that several PZBuk market entries carry a
+ * reliable API-provided name while their numeric market-type id was
+ * mis-identified. Entries here either redirect a market to its correct
+ * catalog code or park known non-catalog markets in OTHER so they cannot
+ * poison best-odds of unrelated markets.
+ */
+const PZBUK_NAME_OVERRIDES: Array<{
+  pattern: RegExp;
+  code: NormalizedMarketType;
+}> = [
+  // "W jaki sposób rozstrzygnie się mecz?" (regular time / extra time /
+  // penalties) — no catalog equivalent; must not land in ASIAN_HANDICAP
+  { pattern: /w jaki spos[oó]b rozstrzygnie/i, code: "OTHER" },
+  // "Zakwalifikowanie się" (to qualify / advance to next stage) — no catalog
+  // equivalent; must not land in HALF_TIME_RESULT
+  { pattern: /zakwalifikowanie|awans do/i, code: "OTHER" },
+  // "1. gol" = which team scores the first goal (not a correct-score market)
+  { pattern: /^1\.\s*gol$/i, code: "FIRST_TEAM_TO_SCORE" },
+];
+
+function matchNameOverride(name: string): NormalizedMarketType | null {
+  const trimmed = name.trim();
+  for (const override of PZBUK_NAME_OVERRIDES) {
+    if (override.pattern.test(trimmed)) return override.code;
+  }
+  return null;
+}
 
 const PZBUK_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
   "Tie": "DRAW",
@@ -161,18 +209,114 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
-    case "FIRST_TEAM_TO_SCORE":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
-    case "DOUBLE_CHANCE":
-      return normalizeDoubleChanceSelection(trimmed);
+    case "FIRST_TEAM_TO_SCORE":
+    case "HALF_TIME_FIRST_GOAL": {
+      // "żaden" / "nikt" / "bez gola" = no goal, "obie" = both teams
+      if (/^(żaden|zaden|nikt|brak gola|bez gola|none|no goal)$/i.test(trimmed)) {
+        return "NONE";
+      }
+      if (/^(obie|obydwie|obie dru[zż]yny|both)$/i.test(trimmed)) {
+        return "BOTH" as NormalizedSelection;
+      }
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+    }
+
+    case "DOUBLE_CHANCE": {
+      const dc = normalizeDoubleChanceSelection(trimmed);
+      if (dc !== "UNKNOWN") return dc;
+      // PZBuk renders double chance with team names, e.g. "Argentina lub
+      // remis", "remis lub Cape Verde", "Argentina lub Cape Verde".
+      const teamOrDraw = trimmed.match(/^(.+?)\s+lub\s+remis$/i);
+      if (teamOrDraw) {
+        const side = normalize1x2Selection(
+          teamOrDraw[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league
+        );
+        if (side === "HOME") return "HOME_OR_DRAW";
+        if (side === "AWAY") return "DRAW_OR_AWAY";
+      }
+      const drawOrTeam = trimmed.match(/^remis\s+lub\s+(.+)$/i);
+      if (drawOrTeam) {
+        const side = normalize1x2Selection(
+          drawOrTeam[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league
+        );
+        if (side === "HOME") return "HOME_OR_DRAW";
+        if (side === "AWAY") return "DRAW_OR_AWAY";
+      }
+      const teamOrTeam = trimmed.match(/^(.+?)\s+lub\s+(.+)$/i);
+      if (teamOrTeam) {
+        const first = normalize1x2Selection(
+          teamOrTeam[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league
+        );
+        const second = normalize1x2Selection(
+          teamOrTeam[2].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league
+        );
+        if (
+          (first === "HOME" && second === "AWAY") ||
+          (first === "AWAY" && second === "HOME")
+        ) {
+          return "HOME_OR_AWAY";
+        }
+      }
+      return "UNKNOWN";
+    }
 
     case "TOTAL_GOALS":
     case "TOTAL_GOALS_ASIAN":
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
       return normalizeOverUnderSelection(trimmed);
+
+    case "GOAL_RANGE":
+    case "HALF_TIME_GOAL_RANGE":
+    case "EXACT_GOALS":
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "SECOND_HALF_EXACT_GOALS": {
+      // "bez gola" / "0 goli" → "0"
+      if (/^(bez gola|bez goli|brak goli|0 goli)$/i.test(trimmed)) {
+        return "0" as NormalizedSelection;
+      }
+      // Range buckets "1-2", "2-3" (also en dash / spaced variants)
+      const range = trimmed.match(/^(\d+)\s*[-–]\s*(\d+)$/);
+      if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      // Plain counts ("0", "1", "2") and open buckets ("3+", "4+")
+      if (/^\d+\+?$/.test(trimmed)) return trimmed as NormalizedSelection;
+      const plus = trimmed.match(/^(\d+)\s+lub wi[eę]cej$/i);
+      if (plus) return `${plus[1]}+` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT": {
+      // Minute buckets "1-10" / "1-15" ... "81-90" and "żaden" (no goal)
+      const range = trimmed.match(/^(\d{1,2})\s*[-–]\s*(\d{1,2})$/);
+      if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      if (/^(żaden|zaden|nikt|brak gola|bez gola|none|no goal)$/i.test(trimmed)) {
+        return "NONE";
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HALF_WITH_MORE_GOALS":
+    case "HOME_HALF_WITH_MOST_GOALS":
+    case "AWAY_HALF_WITH_MOST_GOALS": {
+      const lower = trimmed.toLowerCase();
+      if (/1\.?\s*po[łl]ow/.test(lower) || /^(1st|pierwsza)/.test(lower)) {
+        return "1st" as NormalizedSelection;
+      }
+      if (/2\.?\s*po[łl]ow/.test(lower) || /^(2nd|druga)/.test(lower)) {
+        return "2nd" as NormalizedSelection;
+      }
+      if (/^(po\s+)?(r[óo]wno|remis|equal|draw|x)$/.test(lower)) {
+        return "Draw" as NormalizedSelection;
+      }
+      return "UNKNOWN";
+    }
 
     case "BTTS":
     case "HALF_TIME_BTTS":
@@ -212,6 +356,17 @@ function normalizeSelectionForMarket(
     case "DOUBLE_CHANCE_BTTS":
     case "DOUBLE_CHANCE_TOTAL":
       return parseCombinationSelection(trimmed, ctx);
+
+    case "OTHER": {
+      // Keep OTHER selections distinguishable: normalize the common binary
+      // vocabularies, otherwise keep the raw label as the selection code so
+      // different parked sub-markets do not collapse into one UNKNOWN slot.
+      if (/^(tak|yes)$/i.test(trimmed)) return "YES";
+      if (/^(nie|no)$/i.test(trimmed)) return "NO";
+      const oddEven = normalizeOddEvenSelection(trimmed);
+      if (oddEven !== "UNKNOWN") return oddEven;
+      return trimmed as NormalizedSelection;
+    }
 
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -258,6 +413,8 @@ function extractParamValue(
     "HALF_TIME_TOTAL_GOALS",
     "SECOND_HALF_TOTAL_GOALS",
     "TEAM_TOTAL_GOALS",
+    "HOME_TEAM_TOTAL_GOALS",
+    "AWAY_TEAM_TOTAL_GOALS",
     "ASIAN_HANDICAP",
     "EUROPEAN_HANDICAP",
     "RESULT_AND_TOTAL",
@@ -290,10 +447,12 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
     raw: RawBookmakerMarket,
     ctx: NormalizationContext
   ): NormalizedMarketOutput | null {
-    let marketCode: NormalizedMarketType | null = null;
-    let matchedBy: "id" | "name" = "id";
+    // Name overrides take precedence over the numeric id map — see
+    // PZBUK_NAME_OVERRIDES for the audit rationale.
+    let marketCode: NormalizedMarketType | null = matchNameOverride(raw.name);
+    let matchedBy: "id" | "name" = marketCode ? "name" : "id";
 
-    if (raw.bookmakerMarketId) {
+    if (!marketCode && raw.bookmakerMarketId) {
       const marketId = String(raw.bookmakerMarketId);
       marketCode = PZBUK_MARKET_ID_TO_CODE[marketId] ?? null;
     }

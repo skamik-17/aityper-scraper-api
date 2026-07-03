@@ -211,10 +211,13 @@ export function parseHtFtSelection(selectionName: string): string | null {
   const match = selectionName.match(/^([1x2])\s*\/\s*([1x2])$/i);
   if (!match) return null;
 
-  const htCode = match[1].toUpperCase();
-  const ftCode = match[2].toUpperCase();
+  // Map to the catalog's HALFTIME_FULLTIME selection codes (HOME_HOME, ...),
+  // not the raw "1/1" notation — the aggregator compares codes across
+  // bookmakers, so every normalizer must emit the canonical form.
+  const toSide = (c: string) =>
+    c === "1" ? "HOME" : c.toUpperCase() === "X" ? "DRAW" : "AWAY";
 
-  return `${htCode}/${ftCode}`;
+  return `${toSide(match[1])}_${toSide(match[2])}`;
 }
 
 export function normalizeAsianHandicap3WaySelection(

@@ -81,6 +81,57 @@ export const MARKET_TYPE_IDS = {
 } as const;
 
 /**
+ * Human-readable Polish fallback labels for market type ids whose API name is
+ * blank or a raw internal code. Prevents leaking "Rynek ufo:mtyp:XX-XX"
+ * placeholders as market names when the API does not supply a display label.
+ * Only ids with confirmed identity are listed here.
+ */
+export const MARKET_TYPE_FALLBACK_LABELS: Record<string, string> = {
+  // Goals
+  "ufo:mtyp:00-24": "Przedział goli",
+  "ufo:mtyp:00-0m": "Przedział goli",
+  "ufo:mtyp:00-2i": "Liczba goli",
+  "ufo:mtyp:00-0k": "Liczba goli",
+  "ufo:mtyp:00-13": "Liczba goli",
+  "ufo:mtyp:00-0j": "Liczba goli",
+  "ufo:mtyp:00-3b": "Liczba goli",
+  "ufo:mtyp:00-hb": "Liczba goli",
+  "ufo:mtyp:00-h3": "Liczba goli",
+  "ufo:mtyp:00-0t": "Liczba goli",
+  "ufo:mtyp:00-2k": "Liczba goli",
+  "ufo:mtyp:00-10": "Liczba goli",
+  "ufo:mtyp:00-3d": "Liczba goli",
+  "ufo:mtyp:00-k6": "Liczba goli",
+  "ufo:mtyp:00-l6": "Liczba goli",
+  "ufo:mtyp:00-s6": "Liczba goli",
+  "ufo:mtyp:00-rw": "Liczba goli",
+  "ufo:mtyp:00-2j": "Liczba goli",
+  "ufo:mtyp:00-3c": "Liczba goli",
+  "ufo:mtyp:00-2s": "Która drużyna strzeli pierwszego gola",
+  "ufo:mtyp:00-o0": "Która drużyna strzeli pierwszego gola",
+  "ufo:mtyp:00-3a": "Ostatni gol",
+  "ufo:mtyp:00-1e": "Ile drużyn strzeli",
+  "ufo:mtyp:00-1t": "Połowa z większą liczbą goli",
+  "ufo:mtyp:00-1u": "Połowa z większą liczbą goli drużyny",
+  "ufo:mtyp:00-1v": "Połowa z większą liczbą goli drużyny",
+  "ufo:mtyp:00-26": "Obie drużyny strzelą w połowach",
+  "ufo:mtyp:00-m7": "Bramka rezerwowego",
+  "ufo:mtyp:00-7a": "Czas pierwszego gola",
+  // Handicaps
+  "ufo:mtyp:00-37": "Handicap (z możliwym zwrotem)",
+  "ufo:mtyp:00-re": "Handicap",
+  "ufo:mtyp:00-0h": "Handicap",
+  "ufo:mtyp:00-0b": "Handicap",
+  // Match result family
+  "ufo:mtyp:00-2z": "Remis bez zakładu",
+  "ufo:mtyp:00-3j": "Dokładny wynik",
+  // Time periods (quarter sub-markets between hydration breaks)
+  "ufo:mtyp:00-rz": "Wynik w przedziale czasowym",
+  "ufo:mtyp:00-s1": "Wynik w przedziale czasowym",
+  "ufo:mtyp:00-rx": "Wynik w przedziale czasowym",
+};
+
+/**
  * Selection codes used in Fortuna API responses
  * Maps to outcome names
  */

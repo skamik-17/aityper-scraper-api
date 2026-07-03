@@ -38,9 +38,9 @@ export const CONFIG = {
   // Scraper settings
   SCRAPERS_ON: process.env.SCRAPERS_ON !== "false", // Default: true, set to "false" to disable
   SCRAPE_INTERVAL_MINUTES: parseInt(
-    process.env.SCRAPE_INTERVAL_MINUTES || "5"
+    process.env.SCRAPE_INTERVAL_MINUTES || "30"
   ),
-  SCRAPE_CRON: `*/${process.env.SCRAPE_INTERVAL_MINUTES || "5"} * * * *`,
+  SCRAPE_CRON: `*/${process.env.SCRAPE_INTERVAL_MINUTES || "30"} * * * *`,
   SCRAPER_TIMEOUT_MS: parseInt(process.env.SCRAPER_TIMEOUT_MS || "30000"),
 
   // Supported leagues
@@ -51,19 +51,19 @@ export const CONFIG = {
   // Bookmakers
   BOOKMAKERS: [
     "sts", 
-    // "fortuna",
+    "fortuna",
     "betclic",
-    // "superbet",
-    // "lvbet",
-    // "fuksiarz",
-    // "betfan",
-    // "forbet",
-    // "etoto",
-    // "betters",
-    // "lebull",
-    // "betcris",
-    // "pzbuk",
-    // "totalbet",
+    "superbet",
+    "lvbet",
+    "fuksiarz",
+    "betfan",
+    "forbet",
+    "etoto",
+    "betters",
+    "lebull",
+    "betcris",
+    "pzbuk",
+    "totalbet",
   ] as const,
 } as const;
 

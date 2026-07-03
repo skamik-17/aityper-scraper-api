@@ -73,6 +73,14 @@ async function main() {
   const outDir = args.out ?? path.join(path.dirname(args.prep), "visual", matchIdSafe);
   fs.mkdirSync(outDir, { recursive: true });
 
+  // Severity ranking shifts between runs, so ordinal filenames from a previous
+  // run would survive as stale artifacts — clear our own outputs first.
+  for (const f of fs.readdirSync(outDir)) {
+    if (/^\d{3}__.*\.png$/.test(f) || f === "manifest.json") {
+      fs.unlinkSync(path.join(outDir, f));
+    }
+  }
+
   // Select markets: explicit refs > all > top-N by severity (prep is pre-sorted).
   let entries: PrepMarketEntry[] = prep.markets;
   if (args.refs) {

@@ -84,7 +84,7 @@ export interface NormalizerFacade {
    * Normalize a single market
    */
   normalize(
-    market: { name: string; type?: string; bookmakerMarketId?: string; selections: Array<{ name: string; odds: number }> },
+    market: { name: string; type?: string; bookmakerMarketId?: string; paramValue?: string; selections: Array<{ name: string; odds: number }> },
     bookmaker: string,
     homeTeam?: string,
     awayTeam?: string,

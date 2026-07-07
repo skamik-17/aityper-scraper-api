@@ -2,6 +2,7 @@ import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { Database, LatestOddsRow, OddsInsert } from "../types/database.js";
 import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
+import { fetchAllRows } from "../utils/supabase-pagination.js";
 
 export interface AggregatedMatchOdds {
   match_id: string;
@@ -47,19 +48,23 @@ export async function getMatchOdds(
   const homeCanonical = getCanonicalTeamName(homeTeam, leagueSlug);
   const awayCanonical = getCanonicalTeamName(awayTeam, leagueSlug);
 
-  const { data, error } = await supabase
-    .from("latest_odds")
-    .select("*")
-    .eq("league_slug", leagueSlug)
-    .eq("home_team", homeCanonical)
-    .eq("away_team", awayCanonical);
+  const { data, error } = await fetchAllRows<LatestOddsRow>((from, to) =>
+    supabase
+      .from("latest_odds")
+      .select("*")
+      .eq("league_slug", leagueSlug)
+      .eq("home_team", homeCanonical)
+      .eq("away_team", awayCanonical)
+      .order("market_key")
+      .range(from, to) as any,
+  );
 
   if (error) {
     console.error("[OddsRepository] getMatchOdds error:", error);
     throw error;
   }
 
-  return data || [];
+  return data;
 }
 
 export interface MatchInfoRow {

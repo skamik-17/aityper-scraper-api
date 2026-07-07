@@ -6,6 +6,7 @@ import { MarketCategory } from "../services/normalization/types.js";
 import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
 import { calculateBestOdds } from "../utils/market-aggregation.js";
 import { RepositoryError } from "../utils/errors.js";
+import { fetchAllRows } from "../utils/supabase-pagination.js";
 import {
   CANONICAL_MARKET_CODES,
   MARKET_BY_CODE,
@@ -168,19 +169,22 @@ export async function getFullOfferByMatch(
   const canonicalHome = getCanonicalTeamName(homeTeam, leagueSlug);
   const canonicalAway = getCanonicalTeamName(awayTeam, leagueSlug);
 
-  const { data, error } = await supabase
-    .from("market_comparison")
-    .select("*")
-    .eq("match_id", matchId)
-    .order("category")
-    .order("market_key");
+  const { data, error } = await fetchAllRows<any>((from, to) =>
+    supabase
+      .from("market_comparison")
+      .select("*")
+      .eq("match_id", matchId)
+      .order("category")
+      .order("market_key")
+      .range(from, to) as any,
+  );
 
   if (error) {
     console.error("[FullOfferRepo] getFullOfferByMatch error:", error);
     throw new RepositoryError("Failed to get full offer", "getFullOfferByMatch", error);
   }
 
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return null; // No data is not an error
   }
 
@@ -302,10 +306,14 @@ export async function getMarketCounts(
   const supabase = getSupabase();
   const matchId = generateMatchId(homeTeam, awayTeam, leagueSlug);
 
-  const { data, error } = await supabase
-    .from("latest_odds")
-    .select("bookmaker")
-    .eq("match_id", matchId);
+  const { data, error } = await fetchAllRows<{ bookmaker: string }>((from, to) =>
+    supabase
+      .from("latest_odds")
+      .select("bookmaker")
+      .eq("match_id", matchId)
+      .order("bookmaker")
+      .range(from, to) as any,
+  );
 
   if (error) {
     console.error("[FullOfferRepo] getMarketCounts error:", error);

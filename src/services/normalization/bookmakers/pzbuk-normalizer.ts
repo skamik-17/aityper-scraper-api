@@ -57,14 +57,23 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "27": "BTTS",
   "28": "WIN_TO_NIL",
   "29": "HALF_TIME_BTTS",
-  "30": "HALF_TIME_BTTS",
+  // Audit r2 (Switzerland vs Colombia): id 30 delivered YES 2.36 / NO 1.48
+  // while HALF_TIME_BTTS peers sit at YES ~5.3 / NO ~1.13 — a different BTTS
+  // variant (full-match or 2nd-half); identity unverified, park in OTHER.
+  "30": "OTHER",
   "31": "OTHER",
   // Audit: id 32 odds (YES 11.54 / NO 1.01) are inconsistent with
   // "goals in both halves" — real identity unknown, park in OTHER.
   "32": "OTHER",
-  "33": "CLEAN_SHEET",
-  "34": "CLEAN_SHEET",
-  "35": "GOAL_RANGE",
+  // Audit r2 (both matches): id 33 selections are "<team|remis> & <tak|nie>"
+  // (6 outcomes) — a Match Result + BTTS combo, not a clean sheet market.
+  "33": "RESULT_AND_BTTS",
+  // Audit r2: id 34 was the unverified "away clean sheet" pairing guess of
+  // id 33; with 33 proven to be a combo market the guess is void — park it.
+  "34": "OTHER",
+  // Audit r2 (both matches): id 35 selections are "<team|remis> & <ponad|
+  // poniżej> 4.5" — a Match Result + Total Goals combo, not goal ranges.
+  "35": "RESULT_AND_TOTAL",
   "36": "EXACT_GOALS",
   "37": "HOME_EXACT_GOALS",
   "38": "AWAY_EXACT_GOALS",
@@ -77,7 +86,11 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // not the match-level market; 48/49 follow PZBuk's home/away id pairing.
   "48": "HOME_HALF_WITH_MOST_GOALS",
   "49": "AWAY_HALF_WITH_MOST_GOALS",
-  "50": "TEAMS_TO_SCORE",
+  // Audit r2 (both matches): id 50 is a 2x2 "tak/nie x tak/nie" grid whose
+  // odds are near-identical to forbet's "1./2.Połowa - Obie drużyny strzelą
+  // gola" (BTTS per half): first slot = BTTS in 1st half, second = BTTS in
+  // 2nd half — the catalog's BTTS_BY_HALF market, not TEAMS_TO_SCORE.
+  "50": "BTTS_BY_HALF",
   "55": "MATCH_WINNER",
   "57": "HALF_TIME_FIRST_GOAL",
   "62": "HALF_TIME_TOTAL_GOALS",
@@ -86,14 +99,29 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "69": "HALF_TIME_BTTS",
   "72": "RESULT_AND_BTTS",
   "73": "RESULT_AND_TOTAL",
-  "76": "MATCH_WINNER",
-  "77": "FIRST_TEAM_TO_SCORE",
+  // Audit r2 (both matches): id 76 produced 1X2-shaped odds wildly
+  // inconsistent with all peers (Argentina: DRAW 3.39 vs peers 7.6-8.75;
+  // Switzerland: DRAW/AWAY values transposed vs peer ranges) — not a
+  // trustworthy match-winner source, park in OTHER.
+  "76": "OTHER",
+  // Audit r2 (both matches): id 77 odds (NONE ~3.2-4.4) match the 2nd-half
+  // first-goal market (betfan's confirmed 2nd-half values are near-identical),
+  // not the full-match first-team-to-score market.
+  "77": "SECOND_HALF_FIRST_GOAL",
   "78": "DOUBLE_CHANCE",
   "79": "DRAW_NO_BET",
-  "81": "ASIAN_HANDICAP",
-  "82": "TOTAL_GOALS",
-  "83": "TOTAL_GOALS",
-  "84": "TOTAL_GOALS",
+  // Audit r2: ids 81/155/166 landed in ASIAN_HANDICAP with UNKNOWN
+  // selections (id 155 even carried match-resolution selections) — the
+  // handicap guess is wrong; park all three in OTHER. Genuine
+  // resolution-method entries are re-routed by detectMarketBySelections.
+  "81": "OTHER",
+  // Audit r2 (both matches): ids 82/83/84/129/141/142/157/167 were one
+  // guess-wave mapped to TOTAL_GOALS, but their O/U odds do not match the
+  // param they surface under (e.g. "0.5" rows shaped like 2.5/3.5 lines) —
+  // the id->line pairing is untrustworthy, park the family in OTHER.
+  "82": "OTHER",
+  "83": "OTHER",
+  "84": "OTHER",
   "85": "SECOND_HALF_EXACT_GOALS",
   "86": "ODD_EVEN_GOALS",
   "90": "CORRECT_SCORE",
@@ -102,24 +130,24 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "126": "MATCH_WINNER",
   "127": "FIRST_TEAM_TO_SCORE",
   "128": "TOTAL_SHOTS",
-  "129": "TOTAL_GOALS",
+  "129": "OTHER",
   "133": "GOAL_RANGE",
   "134": "GOAL_RANGE",
   "139": "MATCH_WINNER",
-  "141": "TOTAL_GOALS",
-  "142": "TOTAL_GOALS",
+  "141": "OTHER",
+  "142": "OTHER",
   "147": "HALF_TIME_HOME_EXACT_CARDS",
   "152": "MATCH_WINNER",
-  "155": "ASIAN_HANDICAP",
+  "155": "OTHER",
   "156": "CORNERS_TOTAL",
-  "157": "TOTAL_GOALS",
+  "157": "OTHER",
   "159": "CORNERS_RANGE",
   "162": "ODD_EVEN_GOALS",
   // Audit: id 163 produced duplicated DRAW/AWAY odds far off 1X2 peers —
   // it is not the match-winner market; park in OTHER (id 1 is the real 1X2).
   "163": "OTHER",
-  "166": "ASIAN_HANDICAP",
-  "167": "TOTAL_GOALS",
+  "166": "OTHER",
+  "167": "OTHER",
   "173": "ODD_EVEN_GOALS",
   "498": "DOUBLE_CHANCE_BTTS",
   "501": "RESULT_AND_BTTS",
@@ -149,11 +177,12 @@ const PZBUK_NAME_OVERRIDES: Array<{
   code: NormalizedMarketType;
 }> = [
   // "W jaki sposób rozstrzygnie się mecz?" (regular time / extra time /
-  // penalties) — no catalog equivalent; must not land in ASIAN_HANDICAP
-  { pattern: /w jaki spos[oó]b rozstrzygnie/i, code: "OTHER" },
-  // "Zakwalifikowanie się" (to qualify / advance to next stage) — no catalog
-  // equivalent; must not land in HALF_TIME_RESULT
-  { pattern: /zakwalifikowanie|awans do/i, code: "OTHER" },
+  // penalties) — catalog code added in round 1; must not land in
+  // ASIAN_HANDICAP
+  { pattern: /w jaki spos[oó]b rozstrzygnie/i, code: "MATCH_RESOLUTION_METHOD" },
+  // "Zakwalifikowanie się" (to qualify / advance to next stage) — catalog
+  // code added in round 1; must not land in HALF_TIME_RESULT
+  { pattern: /zakwalifikowanie|awans do/i, code: "TEAM_TO_QUALIFY" },
   // "1. gol" = which team scores the first goal (not a correct-score market)
   { pattern: /^1\.\s*gol$/i, code: "FIRST_TEAM_TO_SCORE" },
 ];
@@ -163,6 +192,40 @@ function matchNameOverride(name: string): NormalizedMarketType | null {
   for (const override of PZBUK_NAME_OVERRIDES) {
     if (override.pattern.test(trimmed)) return override.code;
   }
+  return null;
+}
+
+/**
+ * Detect well-known markets by their selection vocabulary when the market
+ * name is an unresolved "Rynek <id>" placeholder. The audit proved that the
+ * match-resolution market (regular time / extra time / penalties) surfaces
+ * under an opaque numeric id (e.g. 155) with a blank API name — routing it
+ * by id alone would either misroute it or lose it.
+ */
+function detectMarketBySelections(
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const names = raw.selections.map((s) => s.name.toLowerCase().trim());
+  if (names.length < 2 || names.length > 4) return null;
+
+  // Team-scoped variants (e.g. WIN_METHOD "<team> po dogrywce") must not be
+  // collapsed into the 3-way match-resolution market.
+  const homeLower = ctx.homeTeam.toLowerCase();
+  const awayLower = ctx.awayTeam.toLowerCase();
+  const mentionsTeam = names.some(
+    (n) =>
+      (homeLower.length >= 3 && n.includes(homeLower)) ||
+      (awayLower.length >= 3 && n.includes(awayLower))
+  );
+  if (mentionsTeam) return null;
+
+  const hasRegular = names.some((n) => n.includes("regulaminow"));
+  const hasExtraTime = names.some((n) => n.includes("dogryw"));
+  const hasPenalties = names.some((n) => /rzut\w* karn/.test(n));
+  const hits = [hasRegular, hasExtraTime, hasPenalties].filter(Boolean).length;
+  if (hits >= 2) return "MATCH_RESOLUTION_METHOD";
+
   return null;
 }
 
@@ -211,8 +274,35 @@ function normalizeSelectionForMarket(
     case "CLEAN_SHEET":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
+    case "MATCH_RESOLUTION_METHOD": {
+      // "w regulaminowym czasie gry" / "po dogrywce" / "po rzutach karnych"
+      if (/regulaminow/i.test(trimmed)) return "REGULAR_TIME" as NormalizedSelection;
+      if (/dogryw/i.test(trimmed)) return "EXTRA_TIME" as NormalizedSelection;
+      if (/karn/i.test(trimmed)) return "PENALTIES" as NormalizedSelection;
+      return "UNKNOWN";
+    }
+
+    case "TEAM_TO_QUALIFY":
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
+    case "BTTS_BY_HALF": {
+      // PZBuk renders the market as a "<1st half>/<2nd half>" yes/no grid:
+      // "tak/nie" = both teams score in the 1st half only, etc.
+      const grid = trimmed.toLowerCase().match(/^(tak|nie|yes|no)\s*\/\s*(tak|nie|yes|no)$/);
+      if (grid) {
+        const first = grid[1] === "tak" || grid[1] === "yes";
+        const second = grid[2] === "tak" || grid[2] === "yes";
+        if (first && second) return "Both" as NormalizedSelection;
+        if (first) return "1st" as NormalizedSelection;
+        if (second) return "2nd" as NormalizedSelection;
+        return "None" as NormalizedSelection;
+      }
+      return "UNKNOWN";
+    }
+
     case "FIRST_TEAM_TO_SCORE":
-    case "HALF_TIME_FIRST_GOAL": {
+    case "HALF_TIME_FIRST_GOAL":
+    case "SECOND_HALF_FIRST_GOAL": {
       // "żaden" / "nikt" / "bez gola" = no goal, "obie" = both teams
       if (/^(żaden|zaden|nikt|brak gola|bez gola|none|no goal)$/i.test(trimmed)) {
         return "NONE";
@@ -378,7 +468,27 @@ function parseCombinationSelection(
   ctx: NormalizationContext
 ): NormalizedSelection {
   const lower = selName.toLowerCase();
-  
+
+  // PZBuk renders result-combo selections as "<team|remis> & <tak|nie>" or
+  // "<team|remis> & <ponad|poniżej> X.Y" — split on "&" and resolve the
+  // result side against the context teams so e.g. "Argentina & tak" becomes
+  // HOME_YES instead of collapsing into a bare HOME.
+  const comboParts = selName.split(/\s*&\s*/);
+  if (comboParts.length === 2) {
+    const side = normalize1x2Selection(
+      comboParts[0].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league
+    );
+    const secondLower = comboParts[1].toLowerCase().trim();
+    let suffix: string | null = null;
+    if (/^(tak|yes)\b/.test(secondLower)) suffix = "YES";
+    else if (/^(nie|no)\b/.test(secondLower)) suffix = "NO";
+    else if (/^(ponad|powy[żz]ej|over|\+)/.test(secondLower)) suffix = "OVER";
+    else if (/^(poni[żz]ej|under|-)/.test(secondLower)) suffix = "UNDER";
+    if (suffix && (side === "HOME" || side === "DRAW" || side === "AWAY")) {
+      return `${side}_${suffix}` as NormalizedSelection;
+    }
+  }
+
   if (/1.*tak|home.*yes/i.test(lower)) return "HOME_YES" as NormalizedSelection;
   if (/1.*nie|home.*no/i.test(lower)) return "HOME_NO" as NormalizedSelection;
   if (/x.*tak|draw.*yes|remis.*tak/i.test(lower)) return "DRAW_YES" as NormalizedSelection;
@@ -423,6 +533,13 @@ function extractParamValue(
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
 
+  // Prefer the vendor-provided line (PZBuk selection "points") forwarded by
+  // the parser — it is paired with the odds structurally, unlike numbers
+  // scraped out of selection labels which the audit showed can be shifted.
+  if (raw.paramValue) {
+    return raw.paramValue.replace(",", ".");
+  }
+
   const selectionNames = raw.selections.map((s) => s.name);
   const lineFromSelections = parseOverUnderLine(selectionNames);
   if (lineFromSelections) return lineFromSelections;
@@ -451,6 +568,13 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
     // PZBUK_NAME_OVERRIDES for the audit rationale.
     let marketCode: NormalizedMarketType | null = matchNameOverride(raw.name);
     let matchedBy: "id" | "name" = marketCode ? "name" : "id";
+
+    // Selection-vocabulary detection rescues known markets hidden behind
+    // opaque numeric ids with blank API names (see detectMarketBySelections).
+    if (!marketCode) {
+      marketCode = detectMarketBySelections(raw, ctx);
+      if (marketCode) matchedBy = "name";
+    }
 
     if (!marketCode && raw.bookmakerMarketId) {
       const marketId = String(raw.bookmakerMarketId);

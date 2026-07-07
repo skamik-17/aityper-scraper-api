@@ -286,18 +286,26 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
     const marketType = MARKET_TYPES[game.gameType];
 
     // Convert outcomes to MarketSelection format
-    const selections: MarketSelection[] = outcomes
+    const allSelections: MarketSelection[] = outcomes
       .sort((a, b) => a.outcomePosition - b.outcomePosition)
       .map((outcome) => ({
         name: getSelectionName(outcome, game.gameType),
         odds: outcome.outcomeOdds || 0,
         externalId: String(outcome.outcomeId),
-      }))
-      // Drop placeholder/sentinel prices (e.g. 1.0000000001) - not real quotes
-      .filter((sel) => sel.odds >= MIN_VALID_ODDS);
+      }));
+    // Drop placeholder/sentinel prices (e.g. 1.0000000001) - not real quotes
+    const selections = allSelections.filter((sel) => sel.odds >= MIN_VALID_ODDS);
+
+    // A game whose counterpart outcomes were sentinel-priced is effectively
+    // settled: the surviving side is a capped placeholder (e.g. an identical
+    // 16.5 OVER repeated across all remaining team-goal lines), not a real
+    // quote. Keep only markets that are fully intact or still offer at least
+    // two real selections after the sentinel filter.
+    const droppedSentinels = allSelections.length - selections.length;
+    const isSettledRemnant = droppedSentinels > 0 && selections.length < 2;
 
     // Only add markets with valid selections
-    if (selections.length > 0) {
+    if (selections.length > 0 && !isSettledRemnant) {
       markets.push({
         name: marketName,
         // Carry the stable Betfan market-type id so the normalization audit

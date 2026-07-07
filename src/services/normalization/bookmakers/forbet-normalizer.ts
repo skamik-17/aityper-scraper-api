@@ -77,7 +77,7 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-30234": "HALF_TIME_SUBSTITUTION",
   38: "HALF_WITH_MORE_GOALS",
   "-239": "TEAM_HALF_WITH_MORE_GOALS",
-  "-240": "HOME_HALF_WITH_MOST_GOALS",
+  "-240": "TEAM_HALF_WITH_MORE_GOALS",
   "-30199": "MOST_SHOTS_ON_TARGET",
   "-30149": "TOTAL_SHOTS_ON_TARGET",
   "-338": "WINNING_MARGIN",
@@ -272,8 +272,10 @@ function detectTeamSide(
   // Strip a leading half prefix ("1. połowa - ", "2. połowa - ")
   name = name.replace(/^[12]\.?\s*polowa\s*-\s*/, "");
   const candidate = name
-    // Cut at a spaced dash/colon separator ("Austria - liczba kartek…")
-    .replace(/\s+[-:]\s+.*$/, "")
+    // Cut at a colon separator ("Argentyna: Liczba bramek do 30 minuty…")
+    .replace(/\s*:\s*.*$/, "")
+    // Cut at a spaced dash separator ("Austria - liczba kartek…")
+    .replace(/\s+-\s+.*$/, "")
     // Cut at the first market keyword ("Austria wygra do zera", "… multi-gole")
     .replace(
       /\s+(wygra|strzeli|multi-gole|ponizej|powyzej|bedzie|otrzyma|czyste|zdobedzie|liczba)\b.*$/,
@@ -301,14 +303,9 @@ const FORBET_TEAM_SIDED_VARIANTS: Partial<
     home: "HOME_WIN_AT_LEAST_ONE_HALF",
     away: "AWAY_WIN_AT_LEAST_ONE_HALF",
   },
-  HOME_HALF_WITH_MOST_GOALS: {
-    home: "HOME_HALF_WITH_MOST_GOALS",
-    away: "AWAY_HALF_WITH_MOST_GOALS",
-  },
-  TEAM_HALF_WITH_MORE_GOALS: {
-    home: "HOME_HALF_WITH_MOST_GOALS",
-    away: "AWAY_HALF_WITH_MOST_GOALS",
-  },
+  // NOTE: TEAM_HALF_WITH_MORE_GOALS is NOT rerouted per side — the catalog code
+  // is parameterized by team (param HOME/AWAY) with side-prefixed selections
+  // (HOME_1ST, …), which is where peer bookmakers (betclic) aggregate.
   HALF_TIME_HOME_EXACT_CARDS: {
     home: "HALF_TIME_HOME_EXACT_CARDS",
     away: "HALF_TIME_AWAY_EXACT_CARDS",
@@ -344,8 +341,11 @@ function resolveForbetSpecialMarket(
   const name = normalizeForbetName(raw.name);
 
   // Player goals special quoted as a generic goals market:
-  // "Wanner, Paul - liczba goli (z ew. dogrywką; …)"
-  if (/^[^-]+,[^-]*-\s*liczba goli/.test(name)) return "PLAYER_GOALS";
+  // "Wanner, Paul - liczba goli (…)", "Richard - liczba goli (…)".
+  // The prefix must not be a team name (guards hypothetical team totals) and
+  // cannot start with a digit (guards half-scoped names like "1. połowa - …").
+  const playerGoals = name.match(/^([^\d-][^-]*?)\s*-\s*liczba goli/);
+  if (playerGoals && !resolveTeamSide(playerGoals[1], ctx)) return "PLAYER_GOALS";
 
   // "1. połowa/mecz" is the HT/FT market, not the plain 1st-half 1X2
   if (/^1\.?\s*polowa\s*\/\s*mecz$/.test(name)) return "HALFTIME_FULLTIME";
@@ -364,6 +364,16 @@ function resolveForbetSpecialMarket(
   }
   if (/podwojna szansa.*obie druzyny strzela/.test(name)) return "DOUBLE_CHANCE_BTTS";
 
+  // Double chance + totals combo ("Podwójna szansa i poniżej/powyżej 4.5 goli")
+  // — a 6-way combo market, not plain double chance.
+  if (/^podwojna szansa i (ponizej|powyzej)/.test(name)) return "DOUBLE_CHANCE_TOTAL";
+
+  // Half-combination BTTS ("1./2.Połowa - Obie drużyny strzelą gola") is the
+  // 4-outcome BTTS-by-half market (tak/tak, tak/nie, …), not full-match BTTS.
+  if (/^1\.\s*\/\s*2\.?\s*polowa\s*-?\s*obie druzyny strzela/.test(name)) {
+    return "BTTS_BY_HALF";
+  }
+
   // 1X2 + BTTS combos ("2. Połowa – 1X2 + obie drużyny strzelą gola")
   if (/^2\.?\s*polowa.*1x2.*obie druzyny strzela/.test(name)) {
     return "SECOND_HALF_RESULT_AND_BTTS";
@@ -381,6 +391,31 @@ function resolveForbetSpecialMarket(
   // Half goal-range markets ("1. Połowa - multi-gole" has range selections, not O/U)
   if (/^1\.?\s*polowa\s*-\s*multi-gole$/.test(name)) return "HALF_TIME_GOAL_RANGE";
   if (/^2\.?\s*polowa\s*-\s*multi-gole$/.test(name)) return "SECOND_HALF_GOAL_RANGE";
+
+  // Team-less half totals ("2. połowa - poniżej/powyżej 1.5 goli") reuse the
+  // generic O/U game type (8) and must not land in full-match TOTAL_GOALS.
+  if (/^1\.?\s*polowa\s*-?\s*ponizej\/powyzej/.test(name)) return "HALF_TIME_TOTAL_GOALS";
+  if (/^2\.?\s*polowa\s*-?\s*ponizej\/powyzej/.test(name)) return "SECOND_HALF_TOTAL_GOALS";
+
+  // Goals-by-minute family ("Liczba bramek do 30/60 minuty meczu", optionally
+  // team-scoped: "Kolumbia: Liczba bramek do 60 minuty meczu"). Team-scoped
+  // variants must never leak into the whole-match by-minute buckets.
+  const byMinute = name.match(/^(?:(.+?)\s*:\s*)?liczba bramek do (\d+) minuty/);
+  if (byMinute) {
+    const minute = byMinute[2];
+    if (byMinute[1] !== undefined) {
+      const side = resolveTeamSide(byMinute[1], ctx);
+      // Unresolvable team prefix — keep it out of the match-level buckets
+      if (!side) return "OTHER";
+      if (minute === "60") return "TEAM_TOTAL_GOALS_FIRST_60MIN";
+      // TEAM_GOALS_BEFORE_MINUTE has plain OVER/UNDER selections, so it can
+      // only carry one side; away-team windows have no catalog code yet.
+      return side === "HOME" ? "TEAM_GOALS_BEFORE_MINUTE" : "OTHER";
+    }
+    if (minute === "60") return "TOTAL_GOALS_BY_60_MIN";
+    if (minute === "30") return "FIRST_30_MIN_TOTAL_GOALS";
+    return "OTHER";
+  }
 
   // Per-team half totals ("2. połowa - Austria poniżej/powyżej 0.5 goli")
   const halfTeamTotal = name.match(/^([12])\.?\s*polowa\s*-\s*(.+?)\s+ponizej\/powyzej/);
@@ -495,9 +530,22 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
+    case "FIRST_30_MIN_TOTAL_GOALS":
+    case "TOTAL_GOALS_BY_60_MIN":
+    case "TOTAL_GOALS_BY_60MIN":
+    case "TEAM_GOALS_BEFORE_MINUTE":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
       return normalizeOverUnderSelection(trimmed);
+
+    // Side-prefixed team totals by minute ("Poniżej 0.5" → HOME_UNDER/AWAY_UNDER
+    // depending on which team the raw market name is scoped to)
+    case "TEAM_TOTAL_GOALS_FIRST_60MIN": {
+      const ou = normalizeOverUnderSelection(trimmed);
+      if (ou === "UNKNOWN") return ou;
+      const side = rawMarketName ? detectTeamSide(rawMarketName, ctx) : null;
+      return side ? (`${side}_${ou}` as NormalizedSelection) : ou;
+    }
 
     case "BTTS":
     case "HALF_TIME_BTTS":
@@ -578,6 +626,19 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    // Team-scoped half comparison — catalog encodes the side in the selection
+    // codes (HOME_1ST, …) and the team in the parameter (HOME/AWAY).
+    case "TEAM_HALF_WITH_MORE_GOALS": {
+      const side = rawMarketName ? detectTeamSide(rawMarketName, ctx) : null;
+      if (!side) return trimmed as NormalizedSelection;
+      if (/^1\.?\s*polowa/.test(normalized)) return `${side}_1ST` as NormalizedSelection;
+      if (/^2\.?\s*polowa/.test(normalized)) return `${side}_2ND` as NormalizedSelection;
+      if (/^(remis|x|rowno|zadna)/.test(normalized)) {
+        return `${side}_EQUAL` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS": {
@@ -653,6 +714,46 @@ function normalizeSelectionForMarket(
         if (res !== "UNKNOWN") {
           return `${res}_${combo[2].toLowerCase() === "tak" ? "YES" : "NO"}` as NormalizedSelection;
         }
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "DOUBLE_CHANCE_TOTAL": {
+      // "Argentyna/remis i powyżej 4.5" → 1X_OVER. The DC leg names the teams
+      // ("A/remis", "A/B", "remis/B"), the totals leg is "poniżej/powyżej X".
+      // Greedy first group so team names containing " i " stay intact.
+      const combo = normalized.match(/^(.+)\s+i\s+(ponizej|powyzej)\b.*$/);
+      if (combo) {
+        const ou = combo[2] === "powyzej" ? "OVER" : "UNDER";
+        const legs = combo[1].split("/").map((part) => part.trim());
+        if (legs.length === 2) {
+          const sides = legs.map((leg) =>
+            normalize1x2Selection(leg, ctx.homeTeam, ctx.awayTeam, ctx.league)
+          );
+          const set = new Set(sides);
+          const dc =
+            set.has("HOME") && set.has("DRAW")
+              ? "1X"
+              : set.has("DRAW") && set.has("AWAY")
+                ? "X2"
+                : set.has("HOME") && set.has("AWAY")
+                  ? "12"
+                  : null;
+          if (dc) return `${dc}_${ou}` as NormalizedSelection;
+        }
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "BTTS_BY_HALF": {
+      // "tak/nie" = BTTS in 1st half only, "nie/tak" = 2nd only, "tak/tak" =
+      // both halves, "nie/nie" = neither — catalog codes 1st/2nd/Both/None.
+      const combo = normalized.match(/^(tak|nie)\s*\/\s*(tak|nie)$/);
+      if (combo) {
+        if (combo[1] === "tak") {
+          return (combo[2] === "tak" ? "Both" : "1st") as NormalizedSelection;
+        }
+        return (combo[2] === "tak" ? "2nd" : "None") as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -738,6 +839,12 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "BOTH_HALVES_OVER_GOALS",
   "BOTH_HALVES_UNDER_GOALS",
   "TIME_PERIOD_RESULT",
+  "FIRST_30_MIN_TOTAL_GOALS",
+  "TEAM_GOALS_BEFORE_MINUTE",
+  "TOTAL_GOALS_BY_60_MIN",
+  "TOTAL_GOALS_BY_60MIN",
+  "TEAM_TOTAL_GOALS_FIRST_60MIN",
+  "TEAM_HALF_WITH_MORE_GOALS",
   ...PLAYER_PARAM_MARKETS,
 ];
 
@@ -762,7 +869,8 @@ function extractPlayerParam(raw: RawBookmakerMarket): string | undefined {
 
 function extractParamValue(
   marketCode: NormalizedMarketType,
-  raw: RawBookmakerMarket
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
 ): string | undefined {
   if (!PARAMETERIZED_MARKETS.includes(marketCode)) return undefined;
 
@@ -784,23 +892,51 @@ function extractParamValue(
   if (marketCode === "TIME_PERIOD_RESULT") {
     const minutes = raw.name.match(/(\d+)\s*minut/i);
     if (minutes) return minutes[1];
+    const window = raw.name.match(/od\s*\d+\s*do\s*(\d+)/i);
+    if (window) return window[1];
   }
 
-  const nameMatch = raw.name.match(/(\d+[.,]\d+)/);
-  if (nameMatch) {
-    return nameMatch[1].replace(",", ".");
+  // Team-scoped half comparison: parameter is the team side (HOME/AWAY)
+  if (marketCode === "TEAM_HALF_WITH_MORE_GOALS") {
+    return detectTeamSide(raw.name, ctx) ?? undefined;
   }
 
+  // Goals-by-minute windows: parameter is the minute threshold
+  // ("Liczba bramek do 30 minuty meczu" → "30", matching peer bookmakers)
+  if (
+    marketCode === "FIRST_30_MIN_TOTAL_GOALS" ||
+    marketCode === "TEAM_GOALS_BEFORE_MINUTE"
+  ) {
+    const minute = raw.name.match(/do\s*(\d+)\s*minut/i);
+    if (minute) return minute[1];
+    return marketCode === "FIRST_30_MIN_TOTAL_GOALS" ? "30" : undefined;
+  }
+
+  // Handicap lines: prefer the explicit line attached to the home selection
+  // ("1 (-1.5)"). The market name alone can be misleading — "1. połowa -
+  // handicap" would otherwise yield a malformed "+1." from the half prefix,
+  // and the generic decimal scan below would drop the sign.
   if (
     marketCode === "ASIAN_HANDICAP" ||
     marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
     marketCode === "EUROPEAN_HANDICAP" ||
     marketCode === "CORNERS_HANDICAP"
   ) {
-    const handicapMatch = raw.name.match(/([+-]?\d+[.,]?\d*)/);
-    if (handicapMatch) {
-      return parseHandicapLine(handicapMatch[1]);
+    for (const sel of raw.selections) {
+      const line = sel.name.match(/^1\s*\(([+-]?\d+(?:[.,]\d+)?)\)/);
+      if (line) return parseHandicapLine(line[1]);
     }
+    const stripped = raw.name.replace(/^[12]\.?\s*po[lł]owa\s*[-–]?\s*/i, "");
+    const handicapMatch = stripped.match(/([+-]?\d+(?:[.,]\d+)?)/);
+    if (handicapMatch) return parseHandicapLine(handicapMatch[1]);
+    // No reliable signed line found — better an unparameterized entry than a
+    // line with a possibly flipped sign poisoning the handicap buckets.
+    return undefined;
+  }
+
+  const nameMatch = raw.name.match(/(\d+[.,]\d+)/);
+  if (nameMatch) {
+    return nameMatch[1].replace(",", ".");
   }
 
   const selectionNames = raw.selections.map((s) => s.name);
@@ -875,12 +1011,19 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    // TEAM_HALF_WITH_MORE_GOALS needs a resolvable team side for both the
+    // parameter (HOME/AWAY) and the side-prefixed selection codes; without it
+    // the entry would pollute the shared market under a phantom "base" bucket.
+    if (marketCode === "TEAM_HALF_WITH_MORE_GOALS" && !detectTeamSide(raw.name, ctx)) {
+      marketCode = "OTHER";
+    }
+
     if (!isValidMarketCode(marketCode)) {
       console.error(`[forbet] Market code "${marketCode}" not in catalog`);
       return null;
     }
 
-    const paramValue = extractParamValue(marketCode, raw);
+    const paramValue = extractParamValue(marketCode, raw, ctx);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({

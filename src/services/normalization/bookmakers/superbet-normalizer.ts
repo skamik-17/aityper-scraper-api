@@ -86,7 +86,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200241: "HALF_TIME_ODD_EVEN_GOALS", // "1.połowa - liczba goli nieparzysta/parzysta"
   200243: "HOME_TEAM_ODD_EVEN_GOALS", // "{home} - liczba goli nieparzysta/parzysta"
   200236: "AWAY_TEAM_ODD_EVEN_GOALS", // "{away} - liczba goli nieparzysta/parzysta"
-  200742: "OTHER", // "Liczba goli samobójczych" - no O/U own-goals catalog code
+  200742: "OWN_GOALS_TOTAL", // "Liczba goli samobójczych"
   200248: "GOAL_BY_MINUTE", // "Liczba goli - do X minuty"
   200247: "RESULT_AT_MINUTE", // "Mecz - do X minuty"
   231000: "OTHER", // "{home} wygra lub powyżej X goli" - side would be lost
@@ -108,8 +108,8 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200831: "AWAY_GOAL_RANGE", // "{away} - przedział goli"
   200820: "HALF_TIME_GOAL_RANGE", // "1. połowa - przedział goli"
   200829: "SECOND_HALF_GOAL_RANGE", // "2.Połowa - przedział goli"
-  200758: "OTHER", // "1.połowa - {home} przedział goli" - no catalog counterpart
-  200759: "OTHER", // "1.połowa - {away} przedział goli" - no catalog counterpart
+  200758: "HALF_TIME_TEAM_GOAL_RANGE", // "1.połowa - {home} przedział goli"
+  200759: "HALF_TIME_TEAM_GOAL_RANGE", // "1.połowa - {away} przedział goli"
   200760: "SECOND_HALF_TEAM_GOAL_RANGE", // "2.połowa - {home} przedział goli"
   200761: "SECOND_HALF_TEAM_GOAL_RANGE", // "2.połowa - {away} przedział goli"
   201803: "OTHER", // "Przedział goli w każdej połowie" - no catalog counterpart
@@ -151,7 +151,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   238707: "HALF_TIME_CARDS_HANDICAP", // "1. połowa - liczba kartek - handicap"
   201589: "SHOTS_HANDICAP", // "Strzały - Handicap"
   200701: "SHOTS_ON_TARGET_HANDICAP", // "Liczba celnych strzałów - handicap"
-  201613: "OTHER", // "1. połowa - liczba strzałów - handicap" - no catalog counterpart
+  201613: "HALF_TIME_SHOTS_HANDICAP", // "1. połowa - liczba strzałów - handicap"
   230932: "GOAL_KICKS_HANDICAP", // "Wybicia od bramki - handicap"
   200713: "OFFSIDES_HANDICAP", // "Liczba spalonych - handicap"
 
@@ -266,7 +266,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   230933: "GOAL_KICKS_TOTAL", // "Liczba wybić od bramki"
   230934: "HOME_TEAM_TOTAL_GOAL_KICKS", // "Liczba wybić z bramki {home}"
   230935: "AWAY_TEAM_GOAL_KICKS", // "Liczba wybić z bramki {away}"
-  230930: "OTHER", // "1. wybicie od bramki" - no catalog counterpart
+  230930: "FIRST_GOAL_KICK", // "1. wybicie od bramki"
   230942: "OTHER", // "1. połowa - liczba wybić od bramki" - no catalog counterpart
   230943: "OTHER", // HT team goal kicks - no catalog counterpart
   230944: "OTHER", // HT team goal kicks - no catalog counterpart
@@ -341,6 +341,8 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   708: "AWAY", // "{away} - liczba kartek"
   873: "HOME", // "1. połowa - {home} liczba rzutów rożnych"
   884: "AWAY", // "1. połowa - {away} liczba rzutów rożnych"
+  200758: "HOME", // "1.połowa - {home} przedział goli"
+  200759: "AWAY", // "1.połowa - {away} przedział goli"
   200760: "HOME", // "2.połowa - {home} przedział goli"
   200761: "AWAY", // "2.połowa - {away} przedział goli"
 };
@@ -348,6 +350,7 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
   "CARDS_TEAM",
   "HALF_TIME_CORNERS_TEAM",
+  "HALF_TIME_TEAM_GOAL_RANGE",
   "SECOND_HALF_TEAM_GOAL_RANGE",
 ]);
 
@@ -424,6 +427,7 @@ const HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "CARDS_HANDICAP",
   "HALF_TIME_CARDS_HANDICAP",
   "SHOTS_HANDICAP",
+  "HALF_TIME_SHOTS_HANDICAP",
   "SHOTS_ON_TARGET_HANDICAP",
   "GOAL_KICKS_HANDICAP",
   "OFFSIDES_HANDICAP",
@@ -441,6 +445,9 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "TOTAL_GOALS_ASIAN",
   "HALF_TIME_TOTAL_GOALS",
   "SECOND_HALF_TOTAL_GOALS",
+  "OWN_GOALS_TOTAL",
+  "FIRST_30_MIN_TOTAL_GOALS",
+  "TOTAL_GOALS_BY_60_MIN",
   "TEAM_TOTAL_GOALS",
   "HOME_TEAM_TOTAL_GOALS",
   "AWAY_TEAM_TOTAL_GOALS",
@@ -503,6 +510,56 @@ function extractSuperbetMarketId(marketName: string): number | null {
   return match ? Number(match[1]) : null;
 }
 
+/**
+ * Goal O/U sliders that must only ever contain plain over/under goal lines.
+ * Combined bets, exact-count variants and other-stat markets sharing goal
+ * vocabulary poison best-odds when they land here.
+ */
+const GOALS_OVER_UNDER_FAMILY = new Set<NormalizedMarketType>([
+  "TOTAL_GOALS",
+  "HALF_TIME_TOTAL_GOALS",
+  "SECOND_HALF_TOTAL_GOALS",
+  "HOME_TEAM_TOTAL_GOALS",
+  "AWAY_TEAM_TOTAL_GOALS",
+  "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+  "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+  "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+  "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
+]);
+
+/** Raw name is a combo / exact-count / non-goal stat, not an O/U goals line. */
+function isNonGoalsLineName(rawName: string): boolean {
+  const lowered = normalizeMarketName(rawName).replace(/ł/g, "l");
+  return (
+    /&|\blub\b/.test(lowered) ||
+    lowered.includes("dokladna liczba") ||
+    // Cross-stat leakage: corners/cards/offsides/shots/fouls/throw-ins/goal kicks
+    /rozn|kartk|spalon|strzal|faul|autu|wybici/.test(lowered)
+  );
+}
+
+/**
+ * Superbet's "Liczba goli - do X minuty" family carries the real minute
+ * checkpoint only in the selection names ("Powyżej 1.5 - do 40. minuty").
+ * Resolve the minute and route the market to the matching catalog code -
+ * checkpoints without a catalog counterpart (e.g. 40') must not stay in
+ * GOAL_BY_MINUTE where they would only produce UNKNOWN selections.
+ */
+function resolveGoalByMinuteCode(raw: RawBookmakerMarket): NormalizedMarketType {
+  const minutes = new Set<string>();
+  for (const sel of raw.selections) {
+    const match = sel.name.match(/do\s+(\d+)\.?\s*minut/iu);
+    if (match) minutes.add(match[1]);
+  }
+  const list = Array.from(minutes);
+  if (list.length > 0 && list.every((m) => ["1", "5", "10", "15"].includes(m))) {
+    return "GOAL_BY_MINUTE";
+  }
+  if (list.length > 0 && list.every((m) => m === "30")) return "FIRST_30_MIN_TOTAL_GOALS";
+  if (list.length > 0 && list.every((m) => m === "60")) return "TOTAL_GOALS_BY_60_MIN";
+  return "OTHER";
+}
+
 /** "nikt", "żadna", "brak gola", "bez kartki", ... -> no-outcome selection */
 function isNoneSelection(lower: string): boolean {
   return (
@@ -554,7 +611,22 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
     };
   }
 
-  const normalizedName = normalizeMarketName(raw.name);
+  // normalizeMarketName strips combining diacritics via NFD, but "ł" has no
+  // canonical decomposition and survives it. Fold it manually so patterns
+  // written with "polow"/"dokladny" actually match "połowa"/"dokładny" -
+  // without this every half-scoped name fell through to the generic
+  // full-match patterns (e.g. "1.połowa liczba goli" -> TOTAL_GOALS).
+  const normalizedName = normalizeMarketName(raw.name).replace(/ł/g, "l");
+
+  // Combined bets ("A & B", "A lub B") and exact-count variants share goal
+  // vocabulary with the O/U patterns below but are different bet shapes -
+  // never let them resolve into an O/U goals market by name.
+  if (
+    /liczba goli|przedzial goli/.test(normalizedName) &&
+    (/&|\blub\b/.test(normalizedName) || normalizedName.includes("dokladna liczba"))
+  ) {
+    return { marketCode: "OTHER", matchedBy: "name", rawId: marketId ?? undefined };
+  }
 
   // Minute-interval micro markets ("... od 10:00 do 19:59 minuty") have no
   // catalog counterpart - never let them fall through into name patterns.
@@ -654,8 +726,9 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "FIRST_OFFSIDE":
-      // The catalog defines FIRST_OFFSIDE as HOME/AWAY only - Superbet's
-      // extra "Nikt" outcome has no canonical code.
+    case "FIRST_GOAL_KICK":
+      // The catalog defines these as HOME/AWAY only - Superbet's extra
+      // "Nikt" outcome has no canonical code.
       if (isNoneSelection(lower)) return "UNKNOWN";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
@@ -734,6 +807,7 @@ function normalizeSelectionForMarket(
     case "AWAY_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":
+    case "HALF_TIME_TEAM_GOAL_RANGE":
     case "SECOND_HALF_TEAM_GOAL_RANGE":
     case "CORNERS_RANGE":
     case "HALF_TIME_CORNERS_RANGE":
@@ -1096,6 +1170,19 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
       raw.selections.every((s) => /^(tak|nie)$/i.test(s.name.trim()))
     ) {
       marketCode = "OTHER";
+    }
+
+    // Guard: goal O/U sliders accept only plain over/under goal lines.
+    // Superbet groups combo variants ("{team} - 1.połowa liczba goli &
+    // 2.połowa liczba goli", "... lub ...") and exact-count markets under
+    // ids/names that resolve to the goals family - exclude them.
+    if (GOALS_OVER_UNDER_FAMILY.has(marketCode) && isNonGoalsLineName(raw.name)) {
+      marketCode = "OTHER";
+    }
+
+    // Route minute-checkpoint goal totals by the actual minute value.
+    if (marketCode === "GOAL_BY_MINUTE") {
+      marketCode = resolveGoalByMinuteCode(raw);
     }
 
     if (!isValidMarketCode(marketCode)) {

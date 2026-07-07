@@ -424,6 +424,12 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_FIRST_GOAL":
     case "FIRST_CORNER":
       if (lower === "bez gola" || lower === "brak gola" || lower === "żaden" || lower === "brak" || lower === "remis") return "NONE" as NormalizedSelection;
+      // STS emits bare positional codes derived from GLOBAL outcome IDs
+      // (id 6 -> "1" = home team, id 8 -> "2" = away team). Map them
+      // explicitly so the result never depends on selection order or on
+      // the generic 1X2 fallback heuristics.
+      if (trimmed === "1") return "HOME";
+      if (trimmed === "2") return "AWAY";
       return normalizeSts1x2Selection(trimmed, ctx);
 
     case "DOUBLE_CHANCE":
@@ -1021,9 +1027,21 @@ function extractParamValue(
   if (marketCode === "EUROPEAN_HANDICAP" ||
       marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
       marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") {
-    const handicapMatch = raw.selections[0]?.name?.match(/\((\d+):(\d+)\)/);
-    if (handicapMatch) {
-      const diff = Number(handicapMatch[1]) - Number(handicapMatch[2]);
+    // Scan ALL selections (not only the first) - some lines carry the
+    // "(h:a)" virtual score on a subset of selection labels only
+    for (const sel of raw.selections) {
+      const handicapMatch = sel.name?.match(/\((\d+):(\d+)\)/);
+      if (handicapMatch) {
+        const diff = Number(handicapMatch[1]) - Number(handicapMatch[2]);
+        return diff > 0 ? `+${diff}` : String(diff);
+      }
+    }
+    // Fallback: the scraper appends the raw virtual score to the market
+    // name (e.g. "Handicap 1X2 0:1"). Convert every "h:a" suffix to the
+    // signed home-perspective value so no line leaks a raw "0:N" param.
+    const nameMatch = raw.name.match(/(\d+)\s*:\s*(\d+)\s*$/);
+    if (nameMatch) {
+      const diff = Number(nameMatch[1]) - Number(nameMatch[2]);
       return diff > 0 ? `+${diff}` : String(diff);
     }
   }

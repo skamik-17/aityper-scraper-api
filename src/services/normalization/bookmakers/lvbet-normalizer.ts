@@ -63,6 +63,14 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /pierwsze 10 minut.*wrzuty z autu/, code: "FIRST_PERIOD_THROW_INS" },
   { pattern: /pierwsze 10 minut.*rzuty rozne/, code: "FIRST_10_MIN_CORNERS_TOTAL" },
 
+  // --- Time-window handicaps ("1-75 min. - Handicap") ---
+  // These must never reach the generic goal-handicap family: the minute
+  // window used to be parsed as the handicap line, producing absurd
+  // ASIAN_HANDICAP params (-15/-30/-60/-75). Only the 1-15 min window has a
+  // catalog code; the wider windows are excluded until codes exist.
+  { pattern: /^1\s*-\s*15\s*min\b.*handicap|^handicap.*\b1\s*-\s*15\s*min\b/, code: "FIRST_15_MIN_HANDICAP" },
+  { pattern: /^\d+\s*-\s*\d+\s*min\b.*handicap|^handicap.*\b\d+\s*-\s*\d+\s*min\b/, code: "OTHER" },
+
   // --- Corners (rzuty rozne) ---
   { pattern: /rzuty rozne: 1\. połowa - wynik/, code: "HALF_TIME_CORNERS_RACE" },
   { pattern: /rzuty rozne: 1\. połowa - suma/, code: "HALF_TIME_CORNERS_TOTAL" },
@@ -252,6 +260,11 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /1\. gol - czas/, code: "FIRST_GOAL_TIME_ALT" },
   { pattern: /bedzie wynik w trakcie meczu/, code: "SCORE_DURING_MATCH" },
   { pattern: /dokładnie 1 gol w meczu/, code: "EXACT_GOALS_YN" },
+  // Other exact counts ("Dokładnie 3 gole w meczu") cannot share
+  // EXACT_GOALS_YN (hasParameter=false — different counts would collide on
+  // one market key) and are not over/under bets — exclude them instead of
+  // letting the generic goals patterns drop them into TOTAL_GOALS.
+  { pattern: /dokładnie \d+ gol\w* w meczu/, code: "OTHER" },
 
   // --- Win / result variants ---
   { pattern: /(?:belgia|belgium) wygra do zera/, code: "HOME_WIN_TO_NIL" },
@@ -260,9 +273,19 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /wygra przynajmniej jedna połowe/, code: "AWAY_WIN_AT_LEAST_ONE_HALF" },
   { pattern: /remis przynajmniej w jednej z połow/, code: "DRAW_AT_LEAST_ONE_HALF" },
   { pattern: /wygra pierwsza połowe \/ wygra druga połowe/, code: "HALF_TIME_SECOND_HALF_RESULT" },
-  { pattern: /druzyna wygra mecz lub bedzie prowadzic dwoma bramkami/, code: "WIN_OR_WIN_BY_2" },
+  // "LV Zaliczka" is a 3-way (HOME/DRAW/AWAY) insured-1X2 promo product; the
+  // catalog's WIN_OR_WIN_BY_2 is strictly binary HOME/AWAY, so mapping it
+  // there contaminated best odds with a structurally different bet. Excluded
+  // until a dedicated 3-way "win or 2-goal lead" code exists.
+  { pattern: /druzyna wygra mecz lub bedzie prowadzic dwoma bramkami/, code: "OTHER" },
   { pattern: /wynik - kombinacje/, code: "MULTI_RESULT" },
-  { pattern: /do przerwy\/koniec meczu/, code: "HALFTIME_FULLTIME" },
+  // "(Do przerwy / koniec meczu) i suma goli X" is an HT/FT + total-goals
+  // combo, not an over/under market — it must not fall through to
+  // TOTAL_GOALS. The HALFTIME_FULLTIME_AND_TOTAL catalog code exists, but
+  // LVBet's combo selection format is unverified, so the market is excluded
+  // rather than risking a wrong selection mapping.
+  { pattern: /do przerwy\s*\/\s*koniec meczu.*suma goli/, code: "OTHER" },
+  { pattern: /do przerwy\s*\/\s*koniec meczu/, code: "HALFTIME_FULLTIME" },
 
   // --- Both halves goals ---
   { pattern: /obie połowy powyzej/, code: "BOTH_HALVES_OVER_GOALS" },
@@ -507,12 +530,29 @@ function resolveMarketCode(
   return { code: "OTHER", matchedBy: "pattern" };
 }
 
+/**
+ * True when the catalog defines `code` as a selection of `marketCode`.
+ * Used to drop LVBet-only buckets (e.g. extended-band combos "1-4"/"2-4",
+ * "Każdy inny", "4+") that would otherwise surface as orphan selections no
+ * other bookmaker quotes.
+ */
+function isCatalogSelection(marketCode: NormalizedMarketType, code: string): boolean {
+  const metadata = getMarketMetadata(marketCode);
+  return metadata ? metadata.selections.includes(code) : false;
+}
+
+/**
+ * Maps a raw LVBet selection label to a canonical selection code.
+ * Returns null when the label has no catalog counterpart for the market —
+ * such selections are dropped instead of leaking raw text or colliding on a
+ * shared UNKNOWN code.
+ */
 function normalizeSelectionForMarket(
   selectionName: string,
   marketCode: NormalizedMarketType,
   ctx: NormalizationContext,
   rawMarketName?: string
-): NormalizedSelection {
+): NormalizedSelection | null {
   const trimmed = selectionName.trim();
 
   if (/^1\s*\(/.test(trimmed)) return "HOME";
@@ -647,23 +687,37 @@ function normalizeSelectionForMarket(
     case "HOME_GOAL_RANGE":
     case "AWAY_GOAL_RANGE": {
       const normalized = normalizeMarketName(trimmed);
-      if (/^(bez|brak)\s*gol/.test(normalized) || normalized === "0") return "0" as NormalizedSelection;
-      if (/^\d+\+$/.test(trimmed)) return trimmed as NormalizedSelection;
-      const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)\+?$/);
-      if (rangeMatch) return `${rangeMatch[1]}-${rangeMatch[2]}` as NormalizedSelection;
-      if (/^\d+$/.test(trimmed)) return trimmed as NormalizedSelection;
-      return trimmed as NormalizedSelection;
+      let code: string | null = null;
+      if (/^(bez|brak)\s*gol/.test(normalized) || normalized === "0") code = "0";
+      else if (/^\d+\+$/.test(trimmed)) code = trimmed;
+      else if (/^\d+$/.test(trimmed)) code = trimmed;
+      else {
+        const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)\+?$/);
+        if (rangeMatch) code = `${rangeMatch[1]}-${rangeMatch[2]}`;
+      }
+      // "Każdy inny" (LVBet's catch-all leftover band, spanning 0 AND 5+)
+      // and any other unparsable label has no catalog counterpart — drop it
+      // instead of leaking raw Polish text as a selection code.
+      if (code === null) return null;
+      // Only surface bands the catalog defines for this market: the team
+      // ranges only support 0/1-2/1-3/2-3/4+, so LVBet's extended-band
+      // extras (1-4, 2-4, 3-4) must not appear as orphan columns.
+      return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
     }
 
     case "SECOND_HALF_TEAM_GOAL_RANGE": {
       // Catalog selections are side-prefixed ranges (HOME_1-2, AWAY_4+, ...)
       const side = detectTeamSide(rawMarketName ?? "", ctx) ?? "HOME";
-      if (/^\d+\+$/.test(trimmed)) return `${side}_${trimmed}` as NormalizedSelection;
-      const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)\+?$/);
-      if (rangeMatch) {
-        return `${side}_${rangeMatch[1]}-${rangeMatch[2]}` as NormalizedSelection;
+      let code: string | null = null;
+      if (/^\d+\+$/.test(trimmed)) code = `${side}_${trimmed}`;
+      else {
+        const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)\+?$/);
+        if (rangeMatch) code = `${side}_${rangeMatch[1]}-${rangeMatch[2]}`;
       }
-      return trimmed as NormalizedSelection;
+      // Drop "Każdy inny"/unparsable labels and bands the catalog does not
+      // define (e.g. 2-4, 3-4) instead of leaking raw or orphan codes.
+      if (code === null) return null;
+      return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
     }
 
     case "HALF_WITH_MORE_GOALS":
@@ -689,6 +743,52 @@ function normalizeSelectionForMarket(
       if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
       if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
       return trimmed as NormalizedSelection;
+    }
+
+    case "TEAM_SCORE_BY_HALF": {
+      // "Tak/Nie" pairs = (scores in 1st half)/(scores in 2nd half); the
+      // catalog vocabulary is YES_YES/YES_NO/NO_YES/NO_NO.
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "YES_YES";
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "YES_NO";
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "NO_YES";
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "NO_NO";
+      return "UNKNOWN";
+    }
+
+    case "PENALTY_GOAL":
+    case "HALF_TIME_PENALTY_GOAL":
+    case "SECOND_HALF_PENALTY_GOAL": {
+      // Catalog vocabulary for penalty-goal markets is TEAM_HOME/TEAM_AWAY/
+      // ANY/NONE — plain HOME/AWAY codes are orphaned by the aggregator.
+      const normalized = normalizeMarketName(trimmed);
+      if (/\b(ktorakolwiek|ktorykolwiek|ktokolwiek|dowolna|dowolny|any)\b/.test(normalized)) {
+        return "ANY";
+      }
+      if (/^(nie|no|brak|zaden|zadna|nikt)\b/.test(normalized)) return "NONE";
+      const side = normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (side === "HOME") return "TEAM_HOME";
+      if (side === "AWAY") return "TEAM_AWAY";
+      return "UNKNOWN";
+    }
+
+    case "EXACT_GOALS":
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "HALF_TIME_EXACT_GOALS":
+    case "SECOND_HALF_EXACT_GOALS":
+    case "HALF_TIME_HOME_EXACT_GOALS":
+    case "SECOND_HALF_HOME_EXACT_GOALS": {
+      // Exact-goal labels are numeric ("0", "1", "2", "3", "4+") — they must
+      // NOT fall through to the 1X2 fallback, which mis-coded them as
+      // HOME/AWAY/DRAW. Only buckets the catalog defines for this market are
+      // emitted; LVBet's grouped bands ("0 lub 1", "4 do 6", "7 lub więcej")
+      // and unsupported buckets ("4+") have no catalog counterpart and are
+      // dropped rather than surfaced as UNKNOWN/orphan codes.
+      const compact = trimmed.replace(/\s+/g, "");
+      if (/^\d+\+?$/.test(compact) && isCatalogSelection(marketCode, compact)) {
+        return compact as NormalizedSelection;
+      }
+      return null;
     }
 
     case "RESULT_AND_BTTS":
@@ -771,20 +871,29 @@ function normalizeSelectionForMarket(
  * Extracts the handicap line from an LVBet market name. The scraper appends
  * the line value at the END of the name ("1. Połowa - Handicap 2",
  * "Handicap (3-drogowy) 1", "Handicap -2.5"), so the LAST number is the line.
- * Digits of the "3-drogowy" qualifier and the "1./2. Połowa" prefix are
- * stripped first so they are never mistaken for the line.
+ * Digits of the "3-drogowy" qualifier, the "1./2. Połowa" prefix and minute
+ * windows ("1-15 min.") are stripped first so they are never mistaken for
+ * the line.
+ *
+ * IMPORTANT: LVBet labels its handicap lines with the sign convention
+ * INVERTED relative to the catalog/peers — its "Handicap (3-drogowy) -1"
+ * prices exactly the outcomes peers price at "+1" (verified across the
+ * full-match, 1st-half and 2nd-half 2-way and 3-way goal handicaps, where
+ * the whole HOME/DRAW/AWAY triple matches the peers' opposite-sign bucket).
+ * The extracted line is therefore negated before being used as the param.
  */
 function parseLvbetHandicapParam(name: string): string | undefined {
   const cleaned = name
     .replace(/3[-\s]?drogow\w*/gi, "")
-    .replace(/[12]\.\s*połowa/gi, "");
+    .replace(/[12]\.\s*połowa/gi, "")
+    .replace(/\d+\s*-\s*\d+\s*min\.?/gi, "");
   const matches = cleaned.match(/[+-]?\d+(?:[.,]\d+)?/g);
   if (!matches || matches.length === 0) return undefined;
-  const value = matches[matches.length - 1].replace(",", ".");
-  if (!value.startsWith("+") && !value.startsWith("-") && parseFloat(value) > 0) {
-    return `+${value}`;
-  }
-  return value;
+  const value = parseFloat(matches[matches.length - 1].replace(",", "."));
+  if (Number.isNaN(value)) return undefined;
+  const inverted = -value;
+  if (inverted > 0) return `+${inverted}`;
+  return `${inverted}`;
 }
 
 function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMarket): string | undefined {
@@ -820,11 +929,18 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     const paramValue = extractParamValue(marketCode, raw);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name),
-      label: sel.name,
-      odds: sel.odds,
-    }));
+    // Selections that resolve to null have no catalog counterpart (grouped
+    // bands, catch-all buckets, ...) and are dropped so they never leak raw
+    // labels or orphan codes into the cross-bookmaker aggregation.
+    const selections = raw.selections.flatMap((sel) => {
+      const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name);
+      if (code === null) return [];
+      return [{ code, label: sel.name, odds: sel.odds }];
+    });
+
+    // A market whose every selection was dropped carries no usable data
+    // (e.g. LVBet's grouped-band exact-goals product) — exclude it entirely.
+    if (selections.length === 0) return null;
 
     return {
       marketCode,

@@ -16,6 +16,11 @@ const ctxB: NormalizationContext = {
   awayTeam: "Cape Verde",
   league: "world-cup-2026",
 };
+const ctxC: NormalizationContext = {
+  homeTeam: "Switzerland",
+  awayTeam: "Colombia",
+  league: "world-cup-2026",
+};
 
 function run(raw: RawBookmakerMarket, ctx: NormalizationContext) {
   const out = forbetNormalizer.normalizeMarket(raw, ctx);
@@ -211,7 +216,7 @@ describe("forbet audit fixes", () => {
     ]);
   });
 
-  it("reroutes away-team half-with-more-goals to AWAY_HALF_WITH_MOST_GOALS", () => {
+  it("maps away-team half-with-more-goals to TEAM_HALF_WITH_MORE_GOALS param AWAY", () => {
     const out = run(
       {
         bookmakerMarketId: "-240",
@@ -224,24 +229,35 @@ describe("forbet audit fixes", () => {
       },
       ctxA
     );
-    expect(out.marketCode).toBe("AWAY_HALF_WITH_MOST_GOALS");
-    expect(out.selections.map((s) => s.code)).toEqual(["1st", "2nd", "Draw"]);
+    expect(out.marketCode).toBe("TEAM_HALF_WITH_MORE_GOALS");
+    expect(out.paramValue).toBe("AWAY");
+    expect(out.selections.map((s) => s.code)).toEqual([
+      "AWAY_1ST",
+      "AWAY_2ND",
+      "AWAY_EQUAL",
+    ]);
   });
 
-  it("reroutes home-team half-with-more-goals to HOME_HALF_WITH_MOST_GOALS", () => {
+  it("maps home-team half-with-more-goals to TEAM_HALF_WITH_MORE_GOALS param HOME", () => {
     const out = run(
       {
         bookmakerMarketId: "-239",
-        name: "Algieria - połowa z większą liczbą goli",
+        name: "Argentyna - połowa z większą liczbą goli",
         selections: [
-          { name: "1 połowa", odds: 4.1 },
-          { name: "2 połowa", odds: 3.2 },
-          { name: "Remis", odds: 1.91 },
+          { name: "1 połowa", odds: 2.85 },
+          { name: "2 połowa", odds: 2.25 },
+          { name: "Remis", odds: 3.5 },
         ],
       },
-      ctxA
+      ctxB
     );
-    expect(out.marketCode).toBe("HOME_HALF_WITH_MOST_GOALS");
+    expect(out.marketCode).toBe("TEAM_HALF_WITH_MORE_GOALS");
+    expect(out.paramValue).toBe("HOME");
+    expect(out.selections.map((s) => s.code)).toEqual([
+      "HOME_1ST",
+      "HOME_2ND",
+      "HOME_EQUAL",
+    ]);
   });
 
   it("extracts signed handicap param and maps suffixed team selections", () => {
@@ -708,5 +724,201 @@ describe("forbet audit fixes", () => {
     );
     expect(half.marketCode).toBe("AWAY_WIN_AT_LEAST_ONE_HALF");
     expect(half.paramValue).toBeUndefined();
+  });
+
+  // --- Round 2 fixes (Argentina vs Cape Verde re-run, Switzerland vs Colombia) ---
+
+  it("routes team-less 2nd-half totals to SECOND_HALF_TOTAL_GOALS", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "8",
+        name: "2. połowa - poniżej/powyżej 1.5 goli",
+        selections: [
+          { name: "poniżej 1.5", odds: 1.55 },
+          { name: "powyżej 1.5", odds: 2.46 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("SECOND_HALF_TOTAL_GOALS");
+    expect(out.paramValue).toBe("1.5");
+    expect(out.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
+  });
+
+  it("routes single-name player goals prop to PLAYER_GOALS, not TOTAL_GOALS", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "8",
+        name: "Richard - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)",
+        selections: [{ name: "Richard 1+", odds: 8.4 }],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("PLAYER_GOALS");
+    expect(out.paramValue).toBe("Richard");
+    expect(out.selections.map((s) => s.code)).toEqual(["1+"]);
+  });
+
+  it("routes double chance + totals combo to DOUBLE_CHANCE_TOTAL", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "4",
+        name: "Podwójna szansa i poniżej/powyżej 4.5 goli",
+        selections: [
+          { name: "Argentyna/remis i poniżej 4.5", odds: 1.38 },
+          { name: "Argentyna/remis i powyżej 4.5", odds: 11 },
+          { name: "remis/Wyspy Zielonego Przylądka i poniżej 4.5", odds: 3.4 },
+          { name: "remis/Wyspy Zielonego Przylądka i powyżej 4.5", odds: 23 },
+          { name: "Argentyna/Wyspy Zielonego Przylądka i poniżej 4.5", odds: 1.66 },
+          { name: "Argentyna/Wyspy Zielonego Przylądka i powyżej 4.5", odds: 12 },
+        ],
+      },
+      ctxB
+    );
+    expect(out.marketCode).toBe("DOUBLE_CHANCE_TOTAL");
+    expect(out.paramValue).toBe("4.5");
+    expect(out.selections.map((s) => s.code)).toEqual([
+      "1X_UNDER",
+      "1X_OVER",
+      "X2_UNDER",
+      "X2_OVER",
+      "12_UNDER",
+      "12_OVER",
+    ]);
+  });
+
+  it("routes 1st/2nd-half BTTS combo to BTTS_BY_HALF, not BTTS", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "98",
+        name: "1./2.Połowa - Obie drużyny strzelą gola",
+        selections: [
+          { name: "nie/nie", odds: 1.32 },
+          { name: "tak/nie", odds: 5.4 },
+          { name: "nie/tak", odds: 3.9 },
+          { name: "tak/tak", odds: 20 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("BTTS_BY_HALF");
+    expect(out.selections.map((s) => s.code)).toEqual(["None", "1st", "2nd", "Both"]);
+  });
+
+  it("maps home-team goals before minute 30 with O/U codes and minute param", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30393",
+        name: "Szwajcaria: Liczba bramek do 30 minuty meczu",
+        selections: [
+          { name: "Poniżej 0.5", odds: 1.21 },
+          { name: "Powyżej 0.5", odds: 3.79 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("TEAM_GOALS_BEFORE_MINUTE");
+    expect(out.paramValue).toBe("30");
+    expect(out.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
+  });
+
+  it("excludes away-team 30-min goal window from FIRST_30_MIN_TOTAL_GOALS", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30394",
+        name: "Wyspy Zielonego Przylądka: Liczba bramek do 30 minuty meczu",
+        selections: [
+          { name: "Poniżej 0.5", odds: 1.32 },
+          { name: "Powyżej 0.5", odds: 3.01 },
+        ],
+      },
+      ctxB
+    );
+    expect(out.marketCode).toBe("OTHER");
+  });
+
+  it("keeps match-level 30-min totals in FIRST_30_MIN_TOTAL_GOALS with param 30", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30392",
+        name: "Liczba bramek do 30 minuty meczu",
+        selections: [
+          { name: "Poniżej 0.5", odds: 1.85 },
+          { name: "Powyżej 0.5", odds: 1.85 },
+        ],
+      },
+      ctxB
+    );
+    expect(out.marketCode).toBe("FIRST_30_MIN_TOTAL_GOALS");
+    expect(out.paramValue).toBe("30");
+    expect(out.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
+  });
+
+  it("maps match-level 60-min totals with O/U codes and goal-line param", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30395",
+        name: "Liczba bramek do 60 minuty meczu",
+        selections: [
+          { name: "Poniżej 2.5", odds: 1.5 },
+          { name: "Powyżej 2.5", odds: 2.36 },
+        ],
+      },
+      ctxB
+    );
+    expect(out.marketCode).toBe("TOTAL_GOALS_BY_60_MIN");
+    expect(out.paramValue).toBe("2.5");
+    expect(out.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
+  });
+
+  it("maps home-team 60-min totals to TEAM_TOTAL_GOALS_FIRST_60MIN HOME codes", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30396",
+        name: "Szwajcaria: Liczba bramek do 60 minuty meczu",
+        selections: [
+          { name: "Poniżej 0.5", odds: 1.63 },
+          { name: "Powyżej 0.5", odds: 2.1 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("TEAM_TOTAL_GOALS_FIRST_60MIN");
+    expect(out.paramValue).toBe("0.5");
+    expect(out.selections.map((s) => s.code)).toEqual(["HOME_UNDER", "HOME_OVER"]);
+  });
+
+  it("reroutes away-team 60-min totals from TOTAL_GOALS_BY_60MIN to AWAY codes", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30397",
+        name: "Kolumbia: Liczba bramek do 60 minuty meczu",
+        selections: [
+          { name: "Poniżej 0.5", odds: 1.21 },
+          { name: "Powyżej 0.5", odds: 3.8 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("TEAM_TOTAL_GOALS_FIRST_60MIN");
+    expect(out.paramValue).toBe("0.5");
+    expect(out.selections.map((s) => s.code)).toEqual(["AWAY_UNDER", "AWAY_OVER"]);
+  });
+
+  it("derives 1st-half asian handicap param from the home selection line", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-6008",
+        name: "1. połowa - handicap",
+        selections: [
+          { name: "1 (+1.5)", odds: 1.28 },
+          { name: "2 (-1.5)", odds: 3.55 },
+        ],
+      },
+      ctxC
+    );
+    expect(out.marketCode).toBe("FIRST_HALF_ASIAN_HANDICAP");
+    expect(out.paramValue).toBe("+1.5");
+    expect(out.selections.map((s) => s.code)).toEqual(["HOME", "AWAY"]);
   });
 });

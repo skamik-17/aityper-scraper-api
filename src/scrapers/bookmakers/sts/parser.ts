@@ -24,6 +24,8 @@ import {
   PLAYER_STAT_MARKET_IDS,
   EUROPEAN_HANDICAP_IDS,
   ASIAN_HANDICAP_IDS,
+  ASIAN_TOTAL_MARKET_IDS,
+  OVER_UNDER_LINE_MARKET_IDS,
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
@@ -287,10 +289,11 @@ export function parseAllMarkets(
         if (selections.length > 0) {
           let finalName = rawName;
           
-          if (marketId === MARKET_IDS.TOTAL_GOALS || marketId === MARKET_IDS.TOTAL_GOALS_ASIAN ||
-              marketId === MARKET_IDS.HOME_TEAM_TOTAL_GOALS || marketId === MARKET_IDS.AWAY_TEAM_TOTAL_GOALS) {
+          if (OVER_UNDER_LINE_MARKET_IDS.has(marketId)) {
+            // Append the line value so each O/U line survives the name-based
+            // dedup below (line names are identical across lines)
             const lineValue = extractLineFromSelections(line, marketId);
-            if (lineValue) {
+            if (lineValue && !rawName.endsWith(` ${lineValue}`)) {
               finalName = `${rawName} ${lineValue}`;
             }
           } else if (EUROPEAN_HANDICAP_IDS.has(marketId)) {
@@ -462,8 +465,9 @@ function extractLineFromSelections(line: STSMarketLine, marketId: number): strin
 
   for (const [, outcome] of Object.entries(line.o) as [string, STSOutcome][]) {
     if (outcome.n) {
-      // For Asian Total Goals, extract integer lines (e.g., "+1", "+2", "-3")
-      if (marketId === MARKET_IDS.TOTAL_GOALS_ASIAN) {
+      // For Asian Total Goals (full match, HT, 2nd half), extract integer
+      // lines (e.g., "+1", "+2", "-3")
+      if (ASIAN_TOTAL_MARKET_IDS.has(marketId)) {
         const intMatch = outcome.n.match(/[+-]?(\d+)(?![.,]\d)/);
         if (intMatch) {
           return intMatch[1];

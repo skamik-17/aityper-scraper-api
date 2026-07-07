@@ -156,7 +156,11 @@ const BETCLIC_MARKET_PATTERNS: Array<{
      { pattern: /^liczba goli\b/i, code: "TOTAL_GOALS" },
       { pattern: /^gole\s+powyzej\s*\/\s*ponizej/i, code: "TOTAL_GOALS" },
        { pattern: /^gole.*powyzej.*ponizej/i, code: "TOTAL_GOALS" },
-           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po \d+\+/i, code: "BTTS_2PLUS_GOALS" },
+           // Only the exact 2+ threshold maps to the dedicated BTTS_2PLUS_GOALS code;
+           // other thresholds (3+, 4+, ...) are a different market and must not merge
+           // into the 2+ odds — they route to parameterized BOTH_TEAMS_OVER_GOALS.
+           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po 2\+/i, code: "BTTS_2PLUS_GOALS" },
+           { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela po \d+\+/i, code: "BOTH_TEAMS_OVER_GOALS" },
            { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn.*1\. polowa/i, code: "HALF_TIME_BTTS_PENALTY" },
            { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn.*2\. polowa/i, code: "SECOND_HALF_BTTS_PENALTY" },
            { pattern: /^ob(?:a|ie) (?:druzyny|zespoly) strzela.*rzut.*karn/i, code: "BTTS_PENALTY" },
@@ -262,7 +266,11 @@ function resolveTeamTotalGoalsMarket(
   if (isHome) return "HOME_TEAM_TOTAL_GOALS";
   if (isAway) return "AWAY_TEAM_TOTAL_GOALS";
 
-  return "TEAM_TOTAL_GOALS";
+  // Team suffix did not resolve to either side. Mapping to TEAM_TOTAL_GOALS
+  // would emit plain OVER/UNDER (invalid for that code's HOME_/AWAY_ vocabulary)
+  // and let an unattributed team line poison cross-team best-odds comparison.
+  // Exclude instead of guessing.
+  return "OTHER";
 }
 
 function resolveCardsTeamMarket(
@@ -1863,6 +1871,7 @@ function normalizeSelectionForMarket(
     case "BTTS_HEAD_GOALS":
     case "BTTS_FREE_KICK":
     case "BTTS_2PLUS_GOALS":
+    case "BOTH_TEAMS_OVER_GOALS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
     case "HAT_TRICK":
@@ -2242,6 +2251,15 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
     }
 
     let { paramValue, parameters } = extractParamValue(marketCode, raw);
+
+    // "Oba zespoly strzela po N+ gole" = each team scores N or more,
+    // i.e. both teams over (N - 0.5) goals on the decimal slider.
+    if (marketCode === "BOTH_TEAMS_OVER_GOALS") {
+      const thresholdMatch = normalizeName(raw.name).match(/strzela po (\d+)\+/);
+      if (thresholdMatch) {
+        paramValue = (Number(thresholdMatch[1]) - 0.5).toString();
+      }
+    }
 
     if (marketCode === "TEAM_HEADER_GOAL" && teamSide) {
       paramValue = teamSide;

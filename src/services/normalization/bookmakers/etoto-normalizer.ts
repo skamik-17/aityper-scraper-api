@@ -48,6 +48,12 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-8049]: "ANY_TEAM_TO_WIN", // "Którakolwiek drużyna wygra"
   [-2976]: "TIME_PERIOD_RESULT", // "10' - 1X2 od 1 do 10"
 
+  // --- Tournament / knockout resolution ---
+  [18]: "TEAM_TO_QUALIFY", // "Awans" (selections are the two team names)
+  [170]: "WIN_METHOD", // "Metoda zwycięstwa" ("<team> w reg. czasie/po dogrywce/po rzutach karnych")
+  [-342]: "EXTRA_TIME", // "Dogrywka" (Tak/Nie)
+  [-192]: "PENALTY_SHOOTOUT", // "Seria rzutów karnych" (Tak/Nie)
+
   // --- BTTS / team-to-score ---
   [98]: "BTTS", // "Obie strzelą"
   [120]: "HALF_TIME_BTTS", // "1. połowa - obie strzelą"
@@ -164,7 +170,10 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-8043]: "WIN_OR_BTTS", // "<away> wygra lub obie strzelą"
   [-8040]: "WIN_OR_UNDER", // "<away> wygra lub poniżej X"
   [-8037]: "DRAW_OR_OVER_2_5", // "Remis lub powyżej 2.5"
+  [-8038]: "DRAW_OR_UNDER_2_5", // "Remis lub poniżej 2.5"
   [-8045]: "DRAW_OR_CLEAN_SHEET", // "Remis lub którakolwiek drużyna czyste konto"
+  [-8044]: "TEAM_WIN_OR_CLEAN_SHEET", // "<home> wygra lub którakolwiek drużyna czyste konto"
+  [-8046]: "TEAM_WIN_OR_CLEAN_SHEET", // "<away> wygra lub którakolwiek drużyna czyste konto"
 
   // --- Corners ---
   [160]: "CORNERS_RACE", // "Kto więcej rzutów rożnych"
@@ -302,10 +311,68 @@ function normalizeEtotoName(value: string): string {
     .trim();
 }
 
-function resolveMarketCodeFromName(rawName: string): {
+/**
+ * Team-scoped raw names ("<team> wygra do zera", "2. połowa - <team> zachowa
+ * czyste konto") must resolve to the side-specific catalog codes; folding them
+ * into the shared WIN_TO_NIL / CLEAN_SHEET buckets mixes home and away prices
+ * under identical YES/NO codes and poisons best-odds comparison.
+ */
+function resolveTeamScopedMarket(
+  rawName: string,
+  ctx: NormalizationContext
+): NormalizedMarketType | null {
+  const resolveSide = (teamText: string): NormalizedSelection =>
+    normalize1x2Selection(teamText, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
+  // "<team> wygra do zera"
+  let match = rawName.match(/^(.+?)\s+wygra\s+do\s+zera\s*$/i);
+  if (match) {
+    const side = resolveSide(match[1]);
+    if (side === "HOME") return "HOME_WIN_TO_NIL";
+    if (side === "AWAY") return "AWAY_WIN_TO_NIL";
+    return null;
+  }
+
+  // "[1./2. połowa - ]<team> zachowa czyste konto"
+  match = rawName.match(
+    /^(?:([12])\.?\s*po[łl]ow[aey]\s*-\s*)?(.+?)\s+zachowa\s+czyste\s+konto\s*$/i
+  );
+  if (match) {
+    const half = match[1];
+    const side = resolveSide(match[2]);
+    if (side === "HOME") {
+      if (half === "1") return "HALF_TIME_HOME_CLEAN_SHEET";
+      if (half === "2") return "SECOND_HALF_HOME_CLEAN_SHEET";
+      return "HOME_CLEAN_SHEET";
+    }
+    if (side === "AWAY") {
+      if (half === "1") return "HALF_TIME_AWAY_CLEAN_SHEET";
+      if (half === "2") return "SECOND_HALF_AWAY_CLEAN_SHEET";
+      // No full-match away clean-sheet YES/NO code in the catalog yet;
+      // excluding beats surfacing YES/NO inside CLEAN_SHEET's HOME/AWAY vocab.
+      return "OTHER";
+    }
+    // Half-scoped market with an unresolved team must not fall through to the
+    // generic full-match CLEAN_SHEET pattern.
+    if (half) return "OTHER";
+    return null;
+  }
+
+  return null;
+}
+
+function resolveMarketCodeFromName(
+  rawName: string,
+  ctx: NormalizationContext
+): {
   marketCode: NormalizedMarketType;
   matchedBy: "name" | "pattern";
 } {
+  const teamScoped = resolveTeamScopedMarket(rawName, ctx);
+  if (teamScoped) {
+    return { marketCode: teamScoped, matchedBy: "pattern" };
+  }
+
   const normalized = normalizeEtotoName(rawName);
   const direct = ETOTO_MARKET_NAME_TO_CODE[normalized];
   if (direct) {
@@ -372,7 +439,18 @@ function normalizeEtotoHandicapSelection(
     .replace(/\s+\d+\s*:\s*\d+\s*$/, "")
     .trim();
 
-  return normalize1x2Selection(teamPart, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  const side = normalize1x2Selection(teamPart, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  if (side !== "UNKNOWN") return side;
+
+  // Pick'em lines ("handicap +0 / -0") suffix one side with an unsigned zero
+  // ("Szwajcaria 0") that the signed strip above misses; drop a bare trailing
+  // number and retry so the home side does not fall through to UNKNOWN.
+  const bareStripped = teamPart.replace(/\s+\d+(?:[.,]\d+)?$/, "").trim();
+  if (bareStripped && bareStripped !== teamPart) {
+    return normalize1x2Selection(bareStripped, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  }
+
+  return "UNKNOWN";
 }
 
 function parseTeamBasedHtFt(
@@ -416,6 +494,7 @@ function normalizeSelectionForMarket(
     case "AWAY_NO_BET":
     case "HT_OR_FT_RESULT":
     case "TIME_PERIOD_RESULT":
+    case "TEAM_TO_QUALIFY":
     case "CORNERS_RACE":
     case "HALF_TIME_CORNERS_RACE":
     case "CARDS_RACE":
@@ -499,6 +578,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_CLEAN_SHEET":
     case "SECOND_HALF_HOME_CLEAN_SHEET":
     case "SECOND_HALF_AWAY_CLEAN_SHEET":
+    case "HOME_CLEAN_SHEET":
     case "PENALTY_AWARDED":
     case "RED_CARD":
     case "RED_CARD_TEAM":
@@ -512,7 +592,11 @@ function normalizeSelectionForMarket(
     case "DRAW_OR_BTTS":
     case "WIN_OR_UNDER":
     case "DRAW_OR_OVER_2_5":
+    case "DRAW_OR_UNDER_2_5":
     case "DRAW_OR_CLEAN_SHEET":
+    case "TEAM_WIN_OR_CLEAN_SHEET":
+    case "EXTRA_TIME":
+    case "PENALTY_SHOOTOUT":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
@@ -716,6 +800,27 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
+    // "<team> w reg. czasie" / "<team> po dogrywce" / "<team> po rzutach
+    // karnych" -> HOME_/AWAY_ + REGULAR/EXTRA_TIME/PENALTIES.
+    case "WIN_METHOD": {
+      const match = trimmed.match(
+        /^(.+?)\s+(w\s+reg\S*\s+czasie|po\s+dogrywce|po\s+rzutach\s+karnych)\s*$/i
+      );
+      if (match) {
+        const side = normalize1x2Selection(match[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+        if (side === "HOME" || side === "AWAY") {
+          const method = normalizeEtotoName(match[2]);
+          const suffix = method.startsWith("w reg")
+            ? "REGULAR"
+            : method.includes("dogrywce")
+              ? "EXTRA_TIME"
+              : "PENALTIES";
+          return `${side}_${suffix}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
     // "<team> gol i <1|X|2 or team>" / "Brak gola".
     case "FIRST_GOAL_AND_RESULT": {
       if (/^brak/.test(normalized)) return "NONE";
@@ -860,7 +965,7 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
     }
 
     if (!marketCode) {
-      const resolved = resolveMarketCodeFromName(raw.name);
+      const resolved = resolveMarketCodeFromName(raw.name, ctx);
       marketCode = resolved.marketCode;
       matchedBy = resolved.matchedBy;
     }

@@ -107,6 +107,7 @@ export const MARKET_TYPE_FALLBACK_LABELS: Record<string, string> = {
   "ufo:mtyp:00-rw": "Liczba goli",
   "ufo:mtyp:00-2j": "Liczba goli",
   "ufo:mtyp:00-3c": "Liczba goli",
+  "ufo:mtyp:00-lo": "Liczba goli (co najmniej)",
   "ufo:mtyp:00-2s": "Która drużyna strzeli pierwszego gola",
   "ufo:mtyp:00-o0": "Która drużyna strzeli pierwszego gola",
   "ufo:mtyp:00-3a": "Ostatni gol",

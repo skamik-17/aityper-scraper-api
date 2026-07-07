@@ -147,6 +147,15 @@ export function groupMarketsByTypeWithParameters(
     const marketType = market.normalizedType || "OTHER";
     const param = canonicalizeParamValue(market.paramValue || "base");
 
+    // Parameterized markets (sliders/handicaps/team-scoped) must not
+    // accumulate a "base" bucket: an entry with no extractable parameter is
+    // almost always a misrouted market or a stale row keyed under an old
+    // market_key, and the bucket used to surface as an empty-label parameter
+    // mixing unrelated odds.
+    if (param === "base" && getMarketByCode(marketType)?.hasParameter) {
+      continue;
+    }
+
     if (!typeGroups.has(marketType)) {
       typeGroups.set(marketType, {
         marketType,

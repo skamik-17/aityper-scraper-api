@@ -196,6 +196,39 @@ export const ASIAN_HANDICAP_IDS = new Set<number>([
 ]);
 
 /**
+ * Asian (integer-line) over/under total-goals market IDs.
+ * Lines are integers (1, 2, 3...) instead of half-lines (0.5, 1.5...).
+ */
+export const ASIAN_TOTAL_MARKET_IDS = new Set<number>([
+  MARKET_IDS.TOTAL_GOALS_ASIAN, // 23
+  80, // "1. połowa - liczba goli (z możliwym zwrotem)" - HT asian total
+  110, // "2. połowa - liczba goli (z możliwym zwrotem)" - 2nd half asian total
+]);
+
+/**
+ * Over/under total-goals market IDs whose WebSocket lines share the same
+ * line name and differ only by the O/U line value. The line value MUST be
+ * appended to the market name in parseAllMarkets, otherwise the name-based
+ * dedup collapses all lines into a single one (e.g. only the 1.5 line of
+ * "1. połowa - 2. drużyna - liczba goli" survived while peers offered
+ * 0.5/1.5/2.5).
+ */
+export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
+  MARKET_IDS.TOTAL_GOALS, // 25
+  MARKET_IDS.TOTAL_GOALS_ASIAN, // 23
+  MARKET_IDS.HOME_TEAM_TOTAL_GOALS, // 28
+  MARKET_IDS.AWAY_TEAM_TOTAL_GOALS, // 31
+  MARKET_IDS.HALF_TIME_TOTAL, // 82
+  MARKET_IDS.SECOND_HALF_TOTAL, // 112
+  80, // HT asian total goals
+  85, // "1. połowa - 1. drużyna - liczba goli" - HT home team total
+  88, // "1. połowa - 2. drużyna - liczba goli" - HT away team total
+  110, // 2nd half asian total goals
+  115, // "2. połowa - 1. drużyna - liczba goli" - 2nd half home team total
+  118, // "2. połowa - 2. drużyna - liczba goli" - 2nd half away team total
+]);
+
+/**
  * Outcome IDs for 1X2 market
  */
 export const OUTCOME_1X2 = {
@@ -258,15 +291,19 @@ export const CORRECT_SCORE_OUTCOMES: Record<number, string> = {
 /**
  * Half-time Correct Score outcome ID to score mapping (Markets 101, 124)
  * STS uses IDs 160-169 for 10 outcomes (0-0 through 2-2 plus Other)
- * Pattern: grouped by home goals (0-2) x away goals (0-2) = 9 + Other
+ * Pattern: grouped by RESULT TYPE, not by home goals:
+ * draws (160-162), home wins (163-165), away wins (166-168), Other (169).
+ * Verified cell-by-cell against peer bookmakers' odds (etoto/betclic/superbet)
+ * for Switzerland vs Colombia - the previous "grouped by home goals" layout
+ * produced a 3-cycle and a 4-cycle of mislabeled scores.
  */
 export const HALF_CORRECT_SCORE_OUTCOMES: Record<number, string> = {
-  // Home 0 goals at HT
-  160: "0:0", 161: "0:1", 162: "0:2",
-  // Home 1 goal at HT
-  163: "1:0", 164: "1:1", 165: "1:2",
-  // Home 2 goals at HT
-  166: "2:0", 167: "2:1", 168: "2:2",
+  // Draws
+  160: "0:0", 161: "1:1", 162: "2:2",
+  // Home wins
+  163: "1:0", 164: "2:0", 165: "2:1",
+  // Away wins
+  166: "0:1", 167: "0:2", 168: "1:2",
   // Other scores
   169: "Inne",
 };

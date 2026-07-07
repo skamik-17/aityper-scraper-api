@@ -193,6 +193,30 @@ export function getMarketName(
 }
 
 /**
+ * Human-readable Polish labels for numeric market-type ids whose identity
+ * was confirmed by the cross-bookmaker audit. Applied only when the resolved
+ * market name would otherwise be the "Rynek <id>" placeholder, so a real
+ * API-provided name always wins.
+ */
+const PZBUK_ID_LABELS: Record<string, string> = {
+  "19": "Gole gospodarzy",
+  "20": "Gole gości",
+  "33": "Wynik meczu i obie drużyny strzelą",
+  "35": "Wynik meczu i liczba goli",
+  "47": "Połowa z większą liczbą goli",
+  "48": "Gospodarz - połowa z większą liczbą goli",
+  "49": "Gość - połowa z większą liczbą goli",
+  "50": "BTTS w połowach",
+  "57": "Pierwszy gol 1. połowy",
+  "77": "Pierwszy gol 2. połowy",
+  "78": "Podwójna szansa",
+  "79": "Zakład bez remisu",
+  "86": "Parzysta/nieparzysta liczba goli",
+  "91": "Czas pierwszego gola (15 min)",
+  "92": "Czas pierwszego gola (10 min)",
+};
+
+/**
  * Get selection display name based on outcome type and market
  */
 function getSelectionName(
@@ -629,11 +653,25 @@ export function parseAllMarkets(
 
     // Get market metadata - prefer the real API name, fall back to the
     // hard-coded label switch when the API name is blank
-    const marketName = getMarketName(marketTypeId, line, apiName);
+    let marketName = getMarketName(marketTypeId, line, apiName);
+
+    // Replace unresolved "Rynek <id>" placeholders with audit-confirmed
+    // labels (covers both a missing API name and an API name that is itself
+    // an untranslated "Rynek <id>" placeholder).
+    if (/^rynek\s*\d+$/i.test(marketName.trim())) {
+      const label = PZBUK_ID_LABELS[String(marketTypeId)];
+      if (label) {
+        marketName = line !== undefined ? `${label} ${line}` : label;
+      }
+    }
+
     const groupName = MARKET_GROUPS[marketTypeId] || "Inne";
     const marketType = NORMALIZED_MARKET_TYPES[marketTypeId];
 
-    // Convert selections to MarketSelection format
+    // Convert selections to MarketSelection format.
+    // Odds at or below 1.01 are sentinel/placeholder prices (suspended or
+    // derived rows), never a real bookable offer — drop them so they cannot
+    // poison best-odds aggregation.
     const marketSelections: MarketSelection[] = selections
       .map((sel) => ({
         name: getSelectionName(sel, marketTypeId, teams),
@@ -641,7 +679,7 @@ export function parseAllMarkets(
         externalId: sel.id,
         status: sel.status === "Active" ? ("active" as const) : undefined,
       }))
-      .filter((sel) => sel.odds > 0);
+      .filter((sel) => sel.odds > 1.01);
 
     // Only add markets with valid selections
     if (marketSelections.length > 0) {
@@ -649,9 +687,14 @@ export function parseAllMarkets(
         name: marketName,
         // Carry the stable market-type id so the audit can match by id
         // instead of a brittle name regex
-        bookmakerMarketId: marketTypeId,
+        bookmakerMarketId: String(marketTypeId),
         groupName,
         type: marketType,
+        // Forward the vendor-provided line so the normalizer does not have
+        // to re-derive it from selection labels (audit: label-derived lines
+        // were shifted vs the odds actually delivered for that line)
+        paramValue:
+          line !== undefined ? String(line).replace(",", ".") : undefined,
         selections: marketSelections,
       });
     }

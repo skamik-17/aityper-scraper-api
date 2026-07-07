@@ -94,7 +94,10 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-rw": "TOTAL_GOALS",
   "ufo:mtyp:00-2j": "TOTAL_GOALS",
   "ufo:mtyp:00-3c": "TOTAL_GOALS",
-  "ufo:mtyp:00-gg": "MATCH_WINNER",
+  // NOTE: "ufo:mtyp:00-gg" was previously mapped to MATCH_WINNER but audit showed
+  // its odds shape (e.g. draw @8.5 vs peers ~3.1) is incompatible with full-time
+  // 1X2 — it is some other 3-way race market (its draw label is "Równo").
+  // Excluded until its real identity is verified live.
   "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
   "ufo:mtyp:00-21": "DOUBLE_CHANCE_BTTS",
   "ufo:mtyp:00-re": "ASIAN_HANDICAP",
@@ -241,14 +244,26 @@ function parseScoreStyleHandicap(texts: string[]): string | undefined {
   return undefined;
 }
 
-/** Extracts the integer line from "więcej niż 2" / "mniej niż 2" selection labels. */
+/**
+ * Extracts the line from "więcej niż 2" / "mniej niż 2" selection labels.
+ * Fortuna also quotes the short form without "niż" ("więcej 1" / "mniej 1").
+ */
 function parseFortunaThresholdLine(selectionNames: string[]): string | undefined {
   for (const name of selectionNames) {
     const normalized = normalizeMarketName(name);
-    const match = normalized.match(/^(?:wiecej|mniej)\s+niz\s+(\d+(?:[.,]\d+)?)/);
+    const match = normalized.match(/^(?:wiecej|mniej)(?:\s+niz)?\s+(\d+(?:[.,]\d+)?)/);
     if (match) return match[1].replace(",", ".");
   }
   return undefined;
+}
+
+/**
+ * True when a raw selection label is a draw leg. Fortuna labels it "Remis",
+ * "X" or "Równo" ("even"), optionally decorated with the handicap score
+ * ("Równo (3:0)"); match on the diacritics-stripped form.
+ */
+function isFortunaDrawLabel(name: string): boolean {
+  return /^(x\b|remis|rowno)/.test(normalizeMarketName(name.trim()));
 }
 
 /**
@@ -263,7 +278,7 @@ function normalizeFortunaHandicapSelection(
   const trimmed = selName.trim();
   if (/^1\b/.test(trimmed)) return "HOME";
   if (/^2\b/.test(trimmed)) return "AWAY";
-  if (/^(x\b|remis)/i.test(trimmed)) return "DRAW";
+  if (isFortunaDrawLabel(trimmed)) return "DRAW";
 
   const teamPart = trimmed
     .replace(/\s*\((?:[+-]?\d+(?:[.,]\d+)?|\d+\s*:\s*\d+)\)\s*$/, "")
@@ -328,6 +343,10 @@ function normalizeSelectionForMarket(
     case "MATCH_WINNER":
     case "HALF_TIME_RESULT":
     case "DRAW_NO_BET":
+    case "SECOND_HALF_RESULT":
+    case "TIME_PERIOD_RESULT":
+      // Some Fortuna result markets label the draw leg "Równo" ("even").
+      if (isFortunaDrawLabel(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
@@ -337,9 +356,10 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "CARDS_TOTAL":
     case "CORNERS_TOTAL":
-      // Integer-line phrasing: "więcej niż 2" / "mniej niż 2"
-      if (/^wiecej niz/.test(normalized)) return "OVER";
-      if (/^mniej niz/.test(normalized)) return "UNDER";
+      // Integer-line phrasing: "więcej niż 2" / "mniej niż 2", also the short
+      // form without "niż" ("więcej 1" / "mniej 0,5").
+      if (/^wiecej\b/.test(normalized)) return "OVER";
+      if (/^mniej\b/.test(normalized)) return "UNDER";
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -348,7 +368,21 @@ function normalizeSelectionForMarket(
 
     case "ODD_EVEN_GOALS":
     case "HOME_TEAM_ODD_EVEN_GOALS":
+    case "AWAY_TEAM_ODD_EVEN_GOALS":
+    case "HALF_TIME_ODD_EVEN_GOALS":
+    case "SECOND_HALF_ODD_EVEN_GOALS":
+      // Fortuna abbreviates: "Niep." = "Nieparzyste" (odd), "Parz." = "Parzyste"
+      // (even). The generic helper only matches the full words.
+      if (/^niep/.test(normalized)) return "ODD";
+      if (/^parz/.test(normalized)) return "EVEN";
       return normalizeOddEvenSelection(trimmed);
+
+    case "TOTAL_GOALS_MINIMUM":
+      // Raw labels are the catalog's own threshold codes: "1+", "2+", "3+"...
+      if (/^\d+\s*\+$/.test(trimmed)) {
+        return trimmed.replace(/\s+/g, "") as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
 
     case "ASIAN_HANDICAP":
     case "ASIAN_HANDICAP_PUSH":
@@ -365,6 +399,10 @@ function normalizeSelectionForMarket(
       // Ranges arrive in canonical dash format ("1-2", "3-5") or as "6+"/"0"
       if (/^\d+\s*-\s*\d+$/.test(trimmed)) {
         return trimmed.replace(/\s+/g, "") as NormalizedSelection;
+      }
+      // "Nikt" ("nobody scores") is the zero-goals band, canonical code "0".
+      if (/^(nikt|zaden|zadna|brak gola|bez gola|nie padnie)/.test(normalized)) {
+        return "0" as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
 
@@ -442,6 +480,10 @@ function extractParamValue(
   // Never mine digits out of leaked internal ids ("Rynek ufo:mtyp:00-37").
   const nameForParsing = isPlaceholderMarketName(raw.name) ? "" : raw.name;
 
+  // The threshold already lives in the selection codes ("1+", "2+", ...); mining
+  // a parameter here only splits one market into phantom per-param buckets.
+  if (marketCode === "TOTAL_GOALS_MINIMUM") return undefined;
+
   // Quarter sub-markets ("2.kwarta" = segment between hydration breaks) use a
   // quarter index, not a start minute. Prefix with "q" so the values never
   // collide with the start-minute scale used by other bookmakers on this axis.
@@ -484,6 +526,14 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     const marketId = raw.bookmakerMarketId ? String(raw.bookmakerMarketId) : null;
 
+    // "Wynik meczu lub 2 gol(e) przewagi" (result OR a 2-goal lead at any point)
+    // settles differently from plain 1X2, and its 3-way shape does not fit the
+    // 2-way WIN_OR_WIN_BY_2 catalog code either. Exclude — never route to
+    // MATCH_WINNER even though the odds look 1X2-like.
+    if (/^wynik meczu lub/.test(normalizeMarketName(raw.name))) {
+      return null;
+    }
+
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" = "id";
 
@@ -502,11 +552,13 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // A "2-way" handicap quoting a draw outcome is actually a 3-way handicap;
-    // keep the DRAW price instead of polluting the 2-way market with it.
+    // keep the DRAW price instead of polluting the 2-way market with it. The
+    // draw label check covers "X"/"Remis"/"Równo" (incl. odds-filtered markets
+    // where fewer than 3 selections survived).
     if (
       (marketCode === "ASIAN_HANDICAP" || marketCode === "ASIAN_HANDICAP_PUSH") &&
-      (raw.selections.length === 3 ||
-        raw.selections.some((sel) => /^(x\b|remis)/i.test(sel.name.trim())))
+      (raw.selections.length >= 3 ||
+        raw.selections.some((sel) => isFortunaDrawLabel(sel.name)))
     ) {
       marketCode = "ASIAN_HANDICAP_3WAY";
     }
@@ -524,6 +576,40 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
         );
         if (side === "AWAY") marketCode = "AWAY_HALF_WITH_MOST_GOALS";
       }
+    }
+
+    // Per-team odd/even goals ("W.Ziel.Przyl. Liczba goli P/N", "Kolumbia
+    // Liczba goli P/N") shares one Fortuna type id for both sides; route by the
+    // team named in the label. An unresolvable team must not default to HOME —
+    // that poisoned home-team best-odds with away-team prices.
+    if (marketCode === "HOME_TEAM_ODD_EVEN_GOALS") {
+      const teamPrefix = raw.name.match(/^(.+?)\s+liczba\s+goli\s+p\s*\/\s*n/i);
+      if (teamPrefix) {
+        const side = normalize1x2Selection(
+          teamPrefix[1].trim(),
+          ctx.homeTeam,
+          ctx.awayTeam,
+          ctx.league
+        );
+        if (side === "AWAY") marketCode = "AWAY_TEAM_ODD_EVEN_GOALS";
+        else if (side !== "HOME") return null;
+      }
+    }
+
+    // "X nie straci gola" (won't concede) is a per-team YES/NO clean-sheet
+    // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team; the
+    // away variant has no full-match catalog code yet, so it is excluded.
+    if (marketCode === "TEAM_CLEAN_SHEET") {
+      const teamPrefix = raw.name.match(/^(.+?)\s+nie\s+straci\s+gola/i);
+      if (!teamPrefix) return null;
+      const side = normalize1x2Selection(
+        teamPrefix[1].trim(),
+        ctx.homeTeam,
+        ctx.awayTeam,
+        ctx.league
+      );
+      if (side === "HOME") marketCode = "HOME_CLEAN_SHEET";
+      else return null;
     }
 
     if (!isValidMarketCode(marketCode)) {
@@ -578,11 +664,26 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    // Handicap markets admit only HOME/DRAW/AWAY. Any selection that still
+    // failed side resolution (e.g. a lone leg surviving the odds filter at an
+    // extreme line like -8.5) is dropped instead of emitted as UNKNOWN, where
+    // it would pollute cross-bookmaker comparisons.
+    let finalSelections = selections;
+    if (
+      marketCode === "ASIAN_HANDICAP" ||
+      marketCode === "ASIAN_HANDICAP_PUSH" ||
+      marketCode === "ASIAN_HANDICAP_3WAY" ||
+      marketCode === "EUROPEAN_HANDICAP"
+    ) {
+      finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
+      if (finalSelections.length === 0) return null;
+    }
+
     return {
       marketCode,
       paramValue,
       marketKey,
-      selections,
+      selections: finalSelections,
       debug: {
         rawName: raw.name,
         rawId: marketId ?? undefined,

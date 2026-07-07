@@ -88,8 +88,10 @@ const SCRAPER_TYPE_TO_NORMALIZED: Record<string, string> = {
   P1XP2FirstHalf: "HALF_TIME_RESULT",
   HalfTimeOverUnder: "HALF_TIME_TOTAL_GOALS",
   BothTeamsToScoreFirstHalf: "HALF_TIME_BTTS",
-  Team1OverUnder: "TEAM_TOTAL_GOALS",
-  Team2OverUnder: "TEAM_TOTAL_GOALS",
+  // Betcris team totals map to the side-specific codes (plain OVER/UNDER
+  // selections) so home rows never merge into away parameter rows.
+  Team1OverUnder: "HOME_TEAM_TOTAL_GOALS",
+  Team2OverUnder: "AWAY_TEAM_TOTAL_GOALS",
   TEAM_OVER_UNDER: "TEAM_TOTAL_GOALS",
   AsianHandicap: "ASIAN_HANDICAP",
   EuropeanHandicap: "EUROPEAN_HANDICAP",
@@ -443,8 +445,8 @@ const BOOKMAKER_TEST_DATA: BookmakerTestCase[] = [
       P1XP2FirstHalf: "HALF_TIME_RESULT",
       HalfTimeOverUnder: "HALF_TIME_TOTAL_GOALS",
       BothTeamsToScoreFirstHalf: "HALF_TIME_BTTS",
-      Team1OverUnder: "TEAM_TOTAL_GOALS",
-      Team2OverUnder: "TEAM_TOTAL_GOALS",
+      Team1OverUnder: "HOME_TEAM_TOTAL_GOALS",
+      Team2OverUnder: "AWAY_TEAM_TOTAL_GOALS",
       TEAM_OVER_UNDER: "TEAM_TOTAL_GOALS",
       AsianHandicap: "ASIAN_HANDICAP",
       EuropeanHandicap: "EUROPEAN_HANDICAP",

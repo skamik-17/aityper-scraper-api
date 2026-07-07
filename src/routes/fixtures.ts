@@ -11,8 +11,32 @@ import {
   getTsdbFixtures,
   type TsdbFixtureRow,
 } from "../repositories/tsdb-fixtures-repository.js";
+import { getTsdbLeagueMeta } from "../data/tsdb-leagues.js";
 
 const router = Router();
+
+// TSDB knockout intRound values → Polish stage labels (UI text is Polish).
+// Only applied to tournaments; in club leagues round 16 is just matchday 16.
+const KNOCKOUT_ROUND_LABELS: Record<number, string> = {
+  32: "1/16 finału",
+  16: "1/8 finału",
+  125: "Ćwierćfinał",
+  150: "Półfinał",
+  160: "Mecz o 3. miejsce",
+  200: "Finał",
+};
+
+function roundLabel(leagueSlug: string, round: number): string {
+  // An explicit rounds list in the TSDB meta marks a tournament with
+  // special knockout round numbers.
+  const isTournament = Boolean(getTsdbLeagueMeta(leagueSlug)?.rounds);
+  if (isTournament) {
+    const label = KNOCKOUT_ROUND_LABELS[round];
+    if (label) return label;
+    if (round > 3) return "Faza pucharowa";
+  }
+  return `Kolejka ${round}`;
+}
 
 interface FixtureDto {
   id: string;
@@ -44,7 +68,7 @@ function toDto(row: TsdbFixtureRow): FixtureDto {
     },
     kickoffTime: row.kickoff_time,
     venue: row.venue ?? undefined,
-    round: row.round !== null ? `Kolejka ${row.round}` : undefined,
+    round: row.round !== null ? roundLabel(row.league_slug, row.round) : undefined,
     status: row.status,
     homeScore: row.home_score ?? undefined,
     awayScore: row.away_score ?? undefined,

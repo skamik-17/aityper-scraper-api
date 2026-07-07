@@ -407,6 +407,19 @@ const TEAM_SCOPED_CODE_MAP: Partial<
   },
   BOTH_HALVES_GOALS: { home: "HOME_SCORE_BOTH_HALVES", away: "AWAY_SCORE_BOTH_HALVES" },
   EXACT_GOALS: { home: "HOME_EXACT_GOALS", away: "AWAY_EXACT_GOALS" },
+  // Betfan ids 126/127 are per-team markets whose side is only known from the
+  // name ("Kolumbia wygra obie polowy" arrives under the "home" id), so the
+  // id-guessed side codes must also be re-resolved from the team name.
+  HOME_WIN_BOTH_HALVES: { home: "HOME_WIN_BOTH_HALVES", away: "AWAY_WIN_BOTH_HALVES" },
+  AWAY_WIN_BOTH_HALVES: { home: "HOME_WIN_BOTH_HALVES", away: "AWAY_WIN_BOTH_HALVES" },
+  HOME_WIN_AT_LEAST_ONE_HALF: {
+    home: "HOME_WIN_AT_LEAST_ONE_HALF",
+    away: "AWAY_WIN_AT_LEAST_ONE_HALF",
+  },
+  AWAY_WIN_AT_LEAST_ONE_HALF: {
+    home: "HOME_WIN_AT_LEAST_ONE_HALF",
+    away: "AWAY_WIN_AT_LEAST_ONE_HALF",
+  },
 };
 
 const FIRST_HALF_PREFIX = /^1\.?\s*polow/;
@@ -465,6 +478,43 @@ function refineMarketCode(
     else code = "DOUBLE_CHANCE_BTTS";
   }
 
+  // Betfan reuses numeric game-type ids across unrelated markets, so an
+  // id-resolved goals code can carry a plain double-chance market (raw
+  // "1. polowa - podwojna szansa" arrives under the team-goals game type).
+  // Trust the market name when it is exactly the double-chance phrasing.
+  const dcExact = name.match(/^(?:([12])\.?\s*polow\w*\s*[-–]*\s*)?podwojna szansa$/);
+  if (
+    dcExact &&
+    code !== "DOUBLE_CHANCE" &&
+    code !== "HALF_TIME_DOUBLE_CHANCE" &&
+    code !== "SECOND_HALF_DOUBLE_CHANCE"
+  ) {
+    code =
+      dcExact[1] === "1"
+        ? "HALF_TIME_DOUBLE_CHANCE"
+        : dcExact[1] === "2"
+          ? "SECOND_HALF_DOUBLE_CHANCE"
+          : "DOUBLE_CHANCE";
+  }
+
+  // Combined "result + BTTS" markets ("1. polowa - wynik i obie druzyny
+  // strzela", 6 outcomes) must not merge into the plain YES/NO BTTS binaries.
+  if (
+    (code === "BTTS" || code === "HALF_TIME_BTTS" || code === "SECOND_HALF_BTTS") &&
+    /wynik i obie/.test(name)
+  ) {
+    if (FIRST_HALF_PREFIX.test(name)) code = "HALF_TIME_RESULT_AND_BTTS";
+    else if (SECOND_HALF_PREFIX.test(name)) code = "SECOND_HALF_RESULT_AND_BTTS";
+    else code = "RESULT_AND_BTTS";
+  }
+
+  // Half-scoped first-goal markets ("2. polowa - 1. gol") must not pollute
+  // the full-match first-team-to-score market.
+  if (code === "FIRST_TEAM_TO_SCORE") {
+    if (FIRST_HALF_PREFIX.test(name)) code = "HALF_TIME_FIRST_GOAL";
+    else if (SECOND_HALF_PREFIX.test(name)) code = "SECOND_HALF_FIRST_GOAL";
+  }
+
   // Exact goal count markets ("dokladna liczba goli") per half / per team
   if (/dokladna liczba goli/.test(name)) {
     if (FIRST_HALF_PREFIX.test(name)) code = "HALF_TIME_EXACT_GOALS";
@@ -504,6 +554,23 @@ function refineMarketCode(
     const side = teamSide();
     if (side === "HOME") code = teamScoped.home;
     else if (side === "AWAY") code = teamScoped.away;
+  }
+
+  // Betfan lists an exact-goal-count sub-table under the same raw name as the
+  // team O/U lines ("Kolumbia - liczba goli" with selections 0/1/2/3+). Route
+  // it to the exact-goals catalog codes instead of the OVER/UNDER slider.
+  if (
+    (code === "HOME_TEAM_TOTAL_GOALS" ||
+      code === "AWAY_TEAM_TOTAL_GOALS" ||
+      code === "TEAM_TOTAL_GOALS") &&
+    raw.selections.length > 0 &&
+    raw.selections.every((sel) => /^\d+\s*\+?$/.test(sel.name.trim()))
+  ) {
+    if (code === "HOME_TEAM_TOTAL_GOALS") code = "HOME_EXACT_GOALS";
+    else if (code === "AWAY_TEAM_TOTAL_GOALS") code = "AWAY_EXACT_GOALS";
+    // Team-scoped exact counts without a resolvable side cannot be compared
+    // against either catalog market
+    else code = "OTHER";
   }
 
   return code;
@@ -562,7 +629,9 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "FIRST_TEAM_TO_SCORE":
-    case "LAST_TEAM_TO_SCORE": {
+    case "LAST_TEAM_TO_SCORE":
+    case "HALF_TIME_FIRST_GOAL":
+    case "SECOND_HALF_FIRST_GOAL": {
       const normalized = normalizeText(trimmed);
       if (/^(zaden|zadna|nikt|brak)/.test(normalized)) return "NONE";
       if (/^obie/.test(normalized)) return "BOTH" as NormalizedSelection;
@@ -588,6 +657,26 @@ function normalizeSelectionForMarket(
           dc === "HOME_OR_DRAW" ? "1X" : dc === "DRAW_OR_AWAY" ? "X2" : dc === "HOME_OR_AWAY" ? "12" : null;
         if (dcToken && yesNo !== "UNKNOWN") {
           return `${dcToken}_${yesNo}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
+    case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_AND_BTTS": {
+      // "Szwajcaria i tak" -> HOME_YES, "X i nie" -> DRAW_NO
+      const comboMatch = trimmed.match(/^(.+?)\s+i\s+(tak|nie)$/i);
+      if (comboMatch) {
+        const side = normalize1x2Selection(
+          comboMatch[1].trim(),
+          ctx.homeTeam,
+          ctx.awayTeam,
+          ctx.league
+        );
+        const yesNo = normalizeYesNoSelection(comboMatch[2]);
+        if (side !== "UNKNOWN" && yesNo !== "UNKNOWN") {
+          return `${side}_${yesNo}` as NormalizedSelection;
         }
       }
       return "UNKNOWN";
@@ -651,10 +740,15 @@ function normalizeSelectionForMarket(
     case "SHOTS_ON_TARGET_HANDICAP": {
       // Strip a trailing parenthetical line: "Algieria (0:2)", "Austria (+1.5)"
       const base = trimmed.replace(/\s*\([^)]*\)\s*$/, "").trim();
-      if (/^1\b/i.test(base)) return "HOME";
-      if (/^2\b/i.test(base)) return "AWAY";
-      if (/^x\b/i.test(base) || /^remis$/i.test(normalizeText(base))) return "DRAW";
-      return normalizeHandicapSelection(base, ctx);
+      // Full-match handicap selections carry the line unbracketed
+      // ("Szwajcaria -1.5", "Kolumbia +1", "Szwajcaria 0") - strip a trailing
+      // bare handicap value so the team name resolves via canonical matching.
+      const teamOnly = base.replace(/\s+[+-]?\d+(?:[.,]\d+)?$/, "").trim();
+      const candidate = teamOnly.length > 0 ? teamOnly : base;
+      if (/^1\b/i.test(candidate)) return "HOME";
+      if (/^2\b/i.test(candidate)) return "AWAY";
+      if (/^x\b/i.test(candidate) || /^remis$/i.test(normalizeText(candidate))) return "DRAW";
+      return normalizeHandicapSelection(candidate, ctx);
     }
 
     case "CORRECT_SCORE":

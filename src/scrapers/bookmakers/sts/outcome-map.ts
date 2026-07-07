@@ -275,9 +275,10 @@ export const STS_CORRECT_SCORE_OUTCOMES: Record<number, string> = {
   1813: "5:0", 1814: "5:1", 1815: "5:2", 1816: "5:3", 1817: "5:4",
   
   // Half-time (Market 101, 124)
-  160: "0:0", 161: "0:1", 162: "0:2",
-  163: "1:0", 164: "1:1", 165: "1:2",
-  166: "2:0", 167: "2:1", 168: "2:2",
+  // Grouped by result type: draws, home wins, away wins (verified vs peer odds)
+  160: "0:0", 161: "1:1", 162: "2:2",
+  163: "1:0", 164: "2:0", 165: "2:1",
+  166: "0:1", 167: "0:2", 168: "1:2",
   169: "Inne",
 };
 

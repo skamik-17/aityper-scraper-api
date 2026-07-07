@@ -86,11 +86,13 @@ export async function syncLeagueFixtures(leagueSlug: string): Promise<SyncLeague
   // Tournaments (e.g. World Cup) use a single-year season; club leagues use
   // the cross-year season. The per-league override wins when present.
   const season = meta.season ?? getCurrentSeason();
-  console.log(`[tsdbSync] ${leagueSlug}: fetching ${meta.totalRounds} rounds (${season})`);
+  const rounds = meta.rounds ?? meta.totalRounds;
+  const roundCount = Array.isArray(rounds) ? rounds.length : rounds;
+  console.log(`[tsdbSync] ${leagueSlug}: fetching ${roundCount} rounds (${season})`);
 
   const { events, failedRounds } = await fetchAllRounds(
     meta.theSportsDbId,
-    meta.totalRounds,
+    rounds,
     season
   );
 

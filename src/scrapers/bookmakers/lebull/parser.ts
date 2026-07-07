@@ -65,18 +65,22 @@ const LINE_STAKE_TYPE_IDS: number[] = [
  * since it covers stake types beyond the hard-coded switch (e.g. the extended
  * stake type IDs requested for full offers). Falls back to the curated switch
  * and finally to a generic "Rynek <id>" placeholder only when the API name is blank.
+ *
+ * `line` is the (already regrouped, home-perspective for handicaps) line value
+ * of the market group — NOT the raw per-stake argument, which for away-side
+ * handicap stakes carries the opposite sign.
  */
 function getMarketName(
   stakeTypeId: number,
-  stake?: LebullStake,
+  line?: string,
   apiName?: string
 ): string {
   const apiLabel = (apiName || "").trim();
 
   if (apiLabel) {
     // For line markets, append the line value so distinct lines stay disambiguated
-    if (stake?.stakeArgument !== undefined && LINE_STAKE_TYPE_IDS.includes(stakeTypeId)) {
-      return `${apiLabel} ${stake.stakeArgument}`;
+    if (line !== undefined && LINE_STAKE_TYPE_IDS.includes(stakeTypeId)) {
+      return `${apiLabel} ${line}`;
     }
     return apiLabel;
   }
@@ -89,15 +93,15 @@ function getMarketName(
     case STAKE_TYPES.BTTS:
       return "Obie druzyny strzelą";
     case STAKE_TYPES.OVER_UNDER:
-      if (stake?.stakeArgument !== undefined) {
-        return `Liczba goli ${stake.stakeArgument}`;
+      if (line !== undefined) {
+        return `Liczba goli ${line}`;
       }
       return "Liczba goli";
     case STAKE_TYPES.HALF_TIME_RESULT:
       return "Wynik 1. polowy";
     case STAKE_TYPES.HALF_TIME_OVER_UNDER:
-      if (stake?.stakeArgument !== undefined) {
-        return `Liczba goli 1. polowa ${stake.stakeArgument}`;
+      if (line !== undefined) {
+        return `Liczba goli 1. polowa ${line}`;
       }
       return "Liczba goli 1. polowa";
     case STAKE_TYPES.CORRECT_SCORE:
@@ -105,14 +109,35 @@ function getMarketName(
     case STAKE_TYPES.DRAW_NO_BET:
       return "Remis = zwrot";
     case STAKE_TYPES.HANDICAP:
-      if (stake?.stakeArgument !== undefined) {
-        return `Handicap ${stake.stakeArgument}`;
+      if (line !== undefined) {
+        return `Handicap ${line}`;
       }
       return "Handicap";
     default:
       return `Rynek ${stakeTypeId}`;
   }
 }
+
+/**
+ * Determine which side a 2-way handicap stake refers to.
+ * LeBull (sbteam.xyz feed, same as betters) names handicap stakes "1"/"2"
+ * (optionally "Handicap 1"/"Handicap 2"); stake codes are used as a fallback.
+ */
+function getHandicapStakeSide(stake: LebullStake): "home" | "away" | null {
+  const name = (stake.stakeName || "").toLowerCase().trim();
+  if (/^(handicap\s*)?1(\b|$)/.test(name)) return "home";
+  if (/^(handicap\s*)?2(\b|$)/.test(name)) return "away";
+  if (stake.stakeCode === STAKE_CODES.HOME) return "home";
+  if (stake.stakeCode === 2 || stake.stakeCode === STAKE_CODES.AWAY) return "away";
+  return null;
+}
+
+/**
+ * Sentinel odds guard: the sbteam.xyz feed pads some markets with placeholder
+ * quotes (0, 1.0, 1.01) that are not real prices and would poison best-odds
+ * comparisons downstream.
+ */
+const MIN_VALID_ODDS = 1.01;
 
 /**
  * Get selection display name based on stake data
@@ -306,11 +331,26 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
     if (isLineMarket) {
       // Group stakes by their line value
       const lineGroups = new Map<string, LebullStake[]>();
+      const isTwoWayHandicap = stakeTypeId === STAKE_TYPES.HANDICAP;
 
       for (const stake of stakes) {
-        const line = stake.stakeArgument !== undefined
-          ? String(stake.stakeArgument)
-          : "default";
+        // Line-market rows without a line value are duplicate/truncated feed
+        // rows (e.g. a bare "Obie połowy powyżej" with no threshold) — they
+        // cannot be assigned a parameter and would pollute a bogus "base"
+        // bucket downstream, so skip them entirely.
+        if (stake.stakeArgument === undefined) continue;
+
+        // LeBull quotes handicap lines per selected team: the away stake with
+        // stakeArgument -1.5 means "away team at -1.5", not the away side of
+        // the home -1.5 market. Regroup away-side stakes under the negated
+        // (home-perspective) line so each market pairs HOME(line) with
+        // AWAY(-line) like every other bookmaker (same fix as betters, which
+        // shares the sbteam.xyz feed).
+        const groupLine =
+          isTwoWayHandicap && getHandicapStakeSide(stake) === "away"
+            ? -stake.stakeArgument
+            : stake.stakeArgument;
+        const line = String(groupLine);
 
         if (!lineGroups.has(line)) {
           lineGroups.set(line, []);
@@ -320,8 +360,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
 
       // Create a market for each line
       for (const [line, lineStakes] of lineGroups) {
-        const firstStake = lineStakes[0];
-        const marketName = getMarketName(stakeTypeId, firstStake, stakeType.stakeTypeName);
+        const marketName = getMarketName(stakeTypeId, line, stakeType.stakeTypeName);
         const groupName = MARKET_GROUPS[stakeTypeId] || "Inne";
         const marketType = MARKET_TYPES[stakeTypeId];
 
@@ -331,7 +370,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
             odds: stake.betFactor || 0,
             externalId: stake.stakeId ? String(stake.stakeId) : undefined,
           }))
-          .filter((sel) => sel.odds > 0);
+          .filter((sel) => sel.odds > MIN_VALID_ODDS);
 
         if (selections.length > 0) {
           markets.push({
@@ -355,7 +394,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
           odds: stake.betFactor || 0,
           externalId: stake.stakeId ? String(stake.stakeId) : undefined,
         }))
-        .filter((sel) => sel.odds > 0);
+        .filter((sel) => sel.odds > MIN_VALID_ODDS);
 
       if (selections.length > 0) {
         markets.push({

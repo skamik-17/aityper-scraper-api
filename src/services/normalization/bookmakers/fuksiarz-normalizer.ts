@@ -183,7 +183,28 @@ const MERGE_DUPLICATE_CODE_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_WINNING_MARGIN",
   "HALF_TIME_EXACT_GOALS",
   "SECOND_HALF_EXACT_GOALS",
+  "EXACT_GOALS",
+  "HOME_EXACT_GOALS",
+  "AWAY_EXACT_GOALS",
 ]);
+
+/**
+ * Team-sided markets whose Fuksiarz ids can only be mapped to the HOME_
+ * catalog variant. When the raw market name actually names the away team,
+ * the code must flip to the AWAY_ variant ("OTHER" = no away-side catalog
+ * code exists yet, so the market is excluded instead of poisoning the
+ * home-side odds).
+ */
+const AWAY_SIDE_VARIANT: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
+  HOME_WIN_TO_NIL: "AWAY_WIN_TO_NIL",
+  HOME_SCORE_BOTH_HALVES: "AWAY_SCORE_BOTH_HALVES",
+  TEAM_WIN_BOTH_HALVES: "AWAY_WIN_BOTH_HALVES",
+  HOME_EXACT_GOALS: "AWAY_EXACT_GOALS",
+  HALF_TIME_HOME_EXACT_CORNERS: "HALF_TIME_AWAY_EXACT_CORNERS",
+  HOME_TEAM_TOTAL_OFFSIDES: "AWAY_TEAM_TOTAL_OFFSIDES",
+  HALF_TIME_HOME_EXACT_GOALS: "OTHER",
+  SECOND_HALF_HOME_EXACT_GOALS: "OTHER",
+};
 
 function normalizeText(value: string): string {
   return value
@@ -291,24 +312,15 @@ function adjustMarketCode(
       return "OTHER";
     }
     if (code === "SECOND_HALF_TEAM_TOTAL_GOALS") return "SECOND_HALF_TEAM_GOAL_RANGE";
-    // No half-time team goal-range code exists in the catalog yet.
-    if (code === "HALF_TIME_TEAM_TOTAL_GOALS") return "OTHER";
+    if (code === "HALF_TIME_TEAM_TOTAL_GOALS") return "HALF_TIME_TEAM_GOAL_RANGE";
   }
 
   // Team-sided raw markets: the id map can only point at the HOME_/TEAM_
   // variant, but Fuksiarz quotes a separate raw market per team — flip to the
   // AWAY_ catalog code when the raw name names the away team.
-  if (
-    code === "HOME_WIN_TO_NIL" ||
-    code === "HOME_SCORE_BOTH_HALVES" ||
-    code === "TEAM_WIN_BOTH_HALVES"
-  ) {
-    const side = resolveTeamSide(raw.name, ctx);
-    if (side === "AWAY") {
-      if (code === "HOME_WIN_TO_NIL") return "AWAY_WIN_TO_NIL";
-      if (code === "HOME_SCORE_BOTH_HALVES") return "AWAY_SCORE_BOTH_HALVES";
-      return "AWAY_WIN_BOTH_HALVES";
-    }
+  const awayVariant = AWAY_SIDE_VARIANT[code];
+  if (awayVariant && resolveTeamSide(raw.name, ctx) === "AWAY") {
+    return awayVariant;
   }
 
   return code;
@@ -662,12 +674,18 @@ function extractParamValue(
     );
   }
 
-  // Per-half European handicap: selections carry a scoreline suffix
-  // ("Algieria (0:1)") — use the scoreline as the parameter (STS convention).
+  // Per-half European handicap: selections carry a virtual-score suffix
+  // ("Algieria (0:1)"). Convert it to the signed home-perspective value
+  // (STS convention: "(1:0)" -> "+1", "(0:2)" -> "-2") so Fuksiarz lines
+  // merge into the same parameter buckets as every other bookmaker instead
+  // of creating parallel raw "0:1"/"1:0" slots.
   if (marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" || marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") {
     for (const name of selectionNames) {
       const scoreline = name.match(/\((\d+)\s*:\s*(\d+)\)/);
-      if (scoreline) return `${scoreline[1]}:${scoreline[2]}`;
+      if (scoreline) {
+        const diff = Number(scoreline[1]) - Number(scoreline[2]);
+        return diff > 0 ? `+${diff}` : String(diff);
+      }
     }
     return extractHandicapLineFromSelections(raw, ctx);
   }
@@ -678,8 +696,29 @@ function extractParamValue(
     return extractHandicapLineFromSelections(raw, ctx);
   }
 
+  // Time-window markets: the parameter is the window's end minute
+  // ("1X2 - 75 minut (00:01-75:00)" -> "75"). parseIntegerLine would grab
+  // the leading "1" of "1X2"/"00:01" instead.
   if (marketCode === "TIME_PERIOD_RESULT") {
-    return parseIntegerLine(raw.name);
+    const minutes = raw.name.match(/(\d+)\s*minut/i);
+    return minutes ? minutes[1] : parseIntegerLine(raw.name);
+  }
+
+  // Time-window goal totals: keep the end minute as the base parameter, but
+  // when the raw goal line differs from the implicit 0.5 encode it into the
+  // parameter — a 1.5-goals-in-15-min line must not merge with a peer's
+  // 0.5-goals-in-15-min bucket as if directly comparable.
+  if (
+    marketCode === "TIME_PERIOD_TOTAL_GOALS" ||
+    marketCode === "INTERVAL_TOTAL_GOALS" ||
+    marketCode === "FIRST_30_MIN_TOTAL_GOALS"
+  ) {
+    const minutesMatch = raw.name.match(/(\d+)\s*minut/i);
+    const minutes = minutesMatch ? minutesMatch[1] : parseIntegerLine(raw.name);
+    if (!minutes) return parseLineFromSelections(selectionNames);
+    const goalLine = parseOverUnderLine(selectionNames);
+    if (goalLine && goalLine !== "0.5") return `${minutes} (${goalLine})`;
+    return minutes;
   }
 
   if (marketCode === "GOALSCORER_ANYTIME" || marketCode === "PLAYER_SHOTS_ON_TARGET") {
@@ -696,7 +735,8 @@ function extractParamValue(
   if (
     marketCode === "PLAYER_2_OR_MORE_GOALS" ||
     marketCode === "PLAYER_HAT_TRICK" ||
-    marketCode === "SECOND_HALF_TEAM_GOAL_RANGE"
+    marketCode === "SECOND_HALF_TEAM_GOAL_RANGE" ||
+    marketCode === "HALF_TIME_TEAM_GOAL_RANGE"
   ) {
     return undefined;
   }
@@ -959,6 +999,10 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_ASIAN_HANDICAP":
     case "FIRST_HALF_EUROPEAN_HANDICAP":
     case "SECOND_HALF_EUROPEAN_HANDICAP":
+    case "TIME_PERIOD_HANDICAP":
+    case "TIME_PERIOD_ASIAN_HANDICAP":
+    case "HALF_TIME_CORNERS_HANDICAP":
+    case "CARDS_HANDICAP":
       return normalizeHandicapSideSelection(trimmed, ctx);
 
     case "CORRECT_SCORE":
@@ -1012,6 +1056,7 @@ function normalizeSelectionForMarket(
     case "HOME_GOAL_RANGE":
     case "AWAY_GOAL_RANGE":
     case "SECOND_HALF_TEAM_GOAL_RANGE":
+    case "HALF_TIME_TEAM_GOAL_RANGE":
       return normalizeRangeSelection(trimmed);
 
     case "HALF_WITH_MORE_GOALS": {
@@ -1030,6 +1075,16 @@ function normalizeSelectionForMarket(
       // Catalog buckets everything from 3 goals up into "3+".
       if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) >= 3) return "3+" as NormalizedSelection;
       return trimmed as NormalizedSelection;
+
+    case "EXACT_GOALS":
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS": {
+      // Catalog buckets everything from 6 goals up into "6+" — Fuksiarz
+      // quotes discrete 6/7/8/9 tails that must collapse (and merge) there.
+      const tail = trimmed.match(/^(\d+)\s*\+?$/);
+      if (tail && parseInt(tail[1], 10) >= 6) return "6+" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
 
     case "SECOND_HALF_EXACT_GOALS":
       // Catalog buckets everything from 2 goals up into "2+".
@@ -1085,22 +1140,26 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       odds: sel.odds,
     }));
 
-    // Per-half team markets: the catalog codes are side-prefixed
+    // Team markets: the catalog codes are side-prefixed
     // (HOME_OVER/AWAY_UNDER, AWAY_2-3, ...) while the raw selections only say
-    // "powyżej"/"poniżej" — the side lives in the raw market name.
+    // "powyżej"/"poniżej" — the side lives in the raw market name. Without a
+    // resolved side the odds cannot be attributed to a team, and bare
+    // OVER/UNDER codes would collide with the other team's data across
+    // bookmakers — drop the market instead.
     if (
+      marketCode === "TEAM_TOTAL_GOALS" ||
       marketCode === "HALF_TIME_TEAM_TOTAL_GOALS" ||
       marketCode === "SECOND_HALF_TEAM_TOTAL_GOALS" ||
+      marketCode === "HALF_TIME_TEAM_GOAL_RANGE" ||
       marketCode === "SECOND_HALF_TEAM_GOAL_RANGE"
     ) {
       const side = resolveTeamSide(raw.name, ctx);
-      if (side) {
-        selections = selections.map((sel) =>
-          sel.code === "UNKNOWN"
-            ? sel
-            : { ...sel, code: `${side}_${sel.code}` as NormalizedSelection }
-        );
-      }
+      if (!side) return null;
+      selections = selections.map((sel) =>
+        sel.code === "UNKNOWN"
+          ? sel
+          : { ...sel, code: `${side}_${sel.code}` as NormalizedSelection }
+      );
     }
 
     // Collapse raw buckets that map to a single catalog selection

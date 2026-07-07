@@ -32,8 +32,12 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "OddEven": "ODD_EVEN_GOALS",
   "WinToNil": "WIN_TO_NIL",
   "CleanSheet": "CLEAN_SHEET",
-  "Team1OverUnder": "TEAM_TOTAL_GOALS",
-  "Team2OverUnder": "TEAM_TOTAL_GOALS",
+  // Side-specific catalog codes (plain OVER/UNDER selections): the shared
+  // TEAM_TOTAL_GOALS bucket emitted un-prefixed OVER/UNDER for both teams,
+  // silently merging betcris home-team rows into the away team's parameter
+  // rows of other bookmakers (best-odds poisoning).
+  "Team1OverUnder": "HOME_TEAM_TOTAL_GOALS",
+  "Team2OverUnder": "AWAY_TEAM_TOTAL_GOALS",
   "P1XP2FirstHalf": "HALF_TIME_RESULT",
   "HalfTimeOverUnder": "HALF_TIME_TOTAL_GOALS",
   "BothTeamsToScoreFirstHalf": "HALF_TIME_BTTS",
@@ -69,10 +73,10 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "Team2ScoreYes/No": "AWAY_TEAM_TO_SCORE",
   "Team1ScoreYes/no": "HOME_TEAM_TO_SCORE",
   "Handicap": "EUROPEAN_HANDICAP",
-  "Exactly4GoalsinMatch": "EXACT_GOALS",
-  "Exactly3GoalsinMatch": "EXACT_GOALS",
-  "Exactly2GoalsinMatch": "EXACT_GOALS",
-  "Exactly1GoalsinMatch": "EXACT_GOALS",
+  // Binary Yes/No prop ("Dokładnie 1 gol w całym meczu") — matches the
+  // EXACT_GOALS_YN code lvbet uses; it must NOT be flattened into the
+  // EXACT_GOALS 0..6+ distribution (its YES/NO selections were orphans there).
+  "Exactly1GoalsinMatch": "EXACT_GOALS_YN",
   "MatchScoreDraw": "SCORING_DRAW",
   "Team2ToWinToNil": "AWAY_WIN_TO_NIL",
   "Team1ToWinToNil": "HOME_WIN_TO_NIL",
@@ -244,6 +248,17 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "GoalFromOutsidetheBox": "GOAL_OUTSIDE_BOX",
 };
 
+// Known Swarm market ids with no catalog counterpart. EXACT_GOALS_YN is not
+// parameterized, so the "exactly N goals" Yes/No props for N >= 2 would all
+// collide on one key (and mapping them onto EXACT_GOALS orphans their YES/NO
+// selections inside the 0..6+ combination). Excluded to OTHER until a
+// parameterized catalog code exists.
+const BETCRIS_EXCLUDED_MARKET_IDS = new Set<string>([
+  "Exactly2GoalsinMatch",
+  "Exactly3GoalsinMatch",
+  "Exactly4GoalsinMatch",
+]);
+
 const BETCRIS_SELECTION_CODES: Record<string, NormalizedSelection> = {
   "W1": "HOME",
   "w1": "HOME",
@@ -280,18 +295,11 @@ function extractMarketType(raw: RawBookmakerMarket): string | null {
     return String(raw.bookmakerMarketId);
   }
 
-  if (raw.groupName) {
-    const groupLower = raw.groupName.toLowerCase();
-    if (groupLower.includes("wynik meczu")) return "P1XP2";
-    if (groupLower.includes("podwójna szansa") || groupLower.includes("podwojna szansa")) return "1X12X2";
-    if (groupLower.includes("gole") && !groupLower.includes("drużyny") && !groupLower.includes("druzyny")) return "OverUnder";
-    if (groupLower.includes("obie") && groupLower.includes("strzela")) return "BothTeamsToScore";
-    if (groupLower.includes("pierwsza polowa") || groupLower.includes("1. polowa")) return "P1XP2FirstHalf";
-    if (groupLower.includes("handicap") && groupLower.includes("azjatycki")) return "AsianHandicap";
-    if (groupLower.includes("handicap") && groupLower.includes("europejski")) return "EuropeanHandicap";
-    if (groupLower.includes("dokładny wynik") || groupLower.includes("dokladny wynik")) return "CorrectScore";
-  }
-
+  // No group-name guessing here: the betcris parser always carries the Swarm
+  // market type as bookmakerMarketId, and inferring a type from a broad group
+  // like "Gole" bypassed every misroute guard in matchMarketByName (e.g. a
+  // time-window goals market would blanket-map to full-match TOTAL_GOALS).
+  // Id-less markets fall through to name/group pattern matching below.
   return null;
 }
 
@@ -307,6 +315,28 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
     return null;
   }
 
+  // Player-prop combo markets (e.g. "Zawodnik. Strzeli gola lub zaliczy
+  // asystę / podwójna szansa") must not match DOUBLE_CHANCE & co. on a
+  // trailing phrase — their selections are player names. No catalog code
+  // exists for these combos, so they fall to OTHER.
+  if (/zawodni|\bgracz/i.test(lower)) {
+    return null;
+  }
+
+  // "Wynik meczu / Team X liczba goli" is a correlated result+team-goals
+  // combo whose selections cannot map to a simple O/U threshold; forcing it
+  // into *_TEAM_TOTAL_GOALS produced UNKNOWN selections. No catalog code.
+  if (/wynik\s+meczu\s*\/\s*team\s*[12]/i.test(lower)) {
+    return null;
+  }
+
+  // "(dodatkowe przedziały)" goal-bracket markets (selections 1-2/1-3/1-4/
+  // 2-3/2-4/"Każdy inny") do not fit any *_GOAL_RANGE catalog selection set
+  // and previously leaked into team-total "base" buckets.
+  if (/dodatkowe\s+przedzia[lł]/i.test(lower)) {
+    return null;
+  }
+
   // Half-scoped goal totals and correct score must be matched before the
   // generic full-match rules below (e.g. "1. połowa. Team 1. Liczba goli"
   // is a 1st-half team total, not full-match TOTAL_GOALS).
@@ -314,6 +344,27 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   const isSecondHalf = /2\.?\s*po[lł]ow/i.test(lower);
   const isHomeTeamScoped = /team\s*1\b|dru[żz]yna\s*1\b|1\.?\s*dru[żz]yn|gospodarz/i.test(lower);
   const isAwayTeamScoped = /team\s*2\b|dru[żz]yna\s*2\b|2\.?\s*dru[żz]yn|go[śs]ci/i.test(lower);
+
+  // Time-window goal markets ("1-15 min.", "Ranga 1-30 min.", "1-75 min.",
+  // "Pierwsze 10 minut (00:00-09:59)") are NOT full-match totals — their
+  // odds shape is completely different and poisoned TOTAL_GOALS /
+  // *_TEAM_TOTAL_GOALS best-odds. Route to existing time-window catalog
+  // codes where available, otherwise exclude to OTHER.
+  const windowMatch = lower.match(/\b1\s*[-–]\s*(\d{1,2})\s*\.?\s*min/);
+  const isFirst10MinWindow =
+    /pierwsze\s*10\s*minut/i.test(lower) || /00:00\s*[-–]\s*09:59/.test(lower);
+  if (/liczba\s+goli|gole/i.test(lower) && (windowMatch || isFirst10MinWindow)) {
+    const windowEnd = windowMatch?.[1];
+    const isTeamScoped = isHomeTeamScoped || isAwayTeamScoped;
+    if (windowEnd === "60") {
+      return isTeamScoped ? "TEAM_TOTAL_GOALS_FIRST_60MIN" : "TOTAL_GOALS_BY_60_MIN";
+    }
+    if (windowEnd === "30" && !isTeamScoped) {
+      return "FIRST_30_MIN_TOTAL_GOALS";
+    }
+    // 1-15 / 1-30 (team-scoped) / 1-75 / first-10-minutes: no catalog code
+    return null;
+  }
 
   if (/dok[lł]adny\s+wynik/i.test(lower)) {
     if (isSecondHalf) return "SECOND_HALF_CORRECT_SCORE";
@@ -345,8 +396,10 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   if (/wygrana\s+do\s+zera/i.test(lower)) return "WIN_TO_NIL";
   if (/czyste\s+konto/i.test(lower)) return "CLEAN_SHEET";
 
-  if (/gole\s+(gospodarzy|drużyny\s+1|team\s*1)/i.test(lower)) return "TEAM_TOTAL_GOALS";
-  if (/gole\s+(go[sś]ci|drużyny\s+2|team\s*2)/i.test(lower)) return "TEAM_TOTAL_GOALS";
+  // Side-specific codes: the shared TEAM_TOTAL_GOALS would emit un-prefixed
+  // OVER/UNDER for both teams and merge them into one bucket.
+  if (/gole\s+(gospodarzy|drużyny\s+1|team\s*1)/i.test(lower)) return "HOME_TEAM_TOTAL_GOALS";
+  if (/gole\s+(go[sś]ci|drużyny\s+2|team\s*2)/i.test(lower)) return "AWAY_TEAM_TOTAL_GOALS";
 
   if (/wynik\s+1\.?\s*po[lł]owy/i.test(lower) || /1\.?\s*po[lł]owa.*wynik/i.test(lower)) return "HALF_TIME_RESULT";
   if (/gole?\s+1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*gol/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
@@ -399,6 +452,9 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
+    case "TEAM_TOTAL_GOALS_FIRST_60MIN":
+    case "TOTAL_GOALS_BY_60_MIN":
+    case "FIRST_30_MIN_TOTAL_GOALS":
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -419,6 +475,12 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_AWAY_WIN_TO_NIL":
     case "SCORING_DRAW":
     case "DRAW_IN_AT_LEAST_ONE_HALF":
+    case "EXACT_GOALS_YN":
+    case "AT_LEAST_ONE_TEAM_OVER_GOALS":
+      // Prefix match first: Swarm labels occasionally carry a suffix (e.g.
+      // "Tak (1,5)") that the exact-match helper rejects, leaving UNKNOWN.
+      if (/^(tak|yes)\b/i.test(lowerTrimmed)) return "YES";
+      if (/^(nie|no)\b/i.test(lowerTrimmed)) return "NO";
       return normalizeYesNoSelection(trimmed);
 
     case "FIRST_TEAM_TO_SCORE":
@@ -447,6 +509,20 @@ function normalizeSelectionForMarket(
 
     case "ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);
+
+    case "PENALTY_GOAL":
+    case "HALF_TIME_PENALTY_GOAL":
+    case "SECOND_HALF_PENALTY_GOAL": {
+      // Catalog vocabulary for penalty-goal markets is TEAM_HOME/TEAM_AWAY/
+      // ANY/NONE — the generic HOME/AWAY codes never joined the cross-
+      // bookmaker comparison (orphan selections).
+      if (/^(kt[oó]rykolwiek|dowoln|any)/i.test(lowerTrimmed)) return "ANY";
+      if (/^([żz]aden|nikt|brak|none)/i.test(lowerTrimmed)) return "NONE";
+      const side = normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (side === "HOME") return "TEAM_HOME";
+      if (side === "AWAY") return "TEAM_AWAY";
+      return side;
+    }
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
@@ -516,6 +592,12 @@ function normalizeSelectionForMarket(
     }
 
     default:
+      // Generic Over/Under labels appear across stat markets (cards, corners,
+      // fouls, shots, ...), sometimes truncated to a bare "Powyżej "/
+      // "poniżej " — resolve them before the 1X2 fallback so both outcomes
+      // do not collapse into one shared UNKNOWN key.
+      if (/^(powy[żz]ej|over|ponad)\b/i.test(lowerTrimmed)) return "OVER";
+      if (/^(poni[żz]ej|under)\b/i.test(lowerTrimmed)) return "UNDER";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   }
 }
@@ -533,6 +615,48 @@ const OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
   "BOTH_HALVES_UNDER_GOALS",
   "BOTH_HALVES_OVER_GOALS",
+  "TEAM_TOTAL_GOALS_FIRST_60MIN",
+  "TOTAL_GOALS_BY_60_MIN",
+  "FIRST_30_MIN_TOTAL_GOALS",
+  "AT_LEAST_ONE_TEAM_OVER_GOALS",
+];
+
+// Stat-prop O/U markets (cards/corners/fouls/offsides/shots/throw-ins/goal
+// kicks) carry their line in the same Swarm "base" field as goal totals;
+// without extraction every line collapses into the internal "base" bucket
+// (visible as an unlabeled parameter next to peers' 0.5/1.5/2.5).
+const STAT_OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
+  "CARDS_TOTAL",
+  "HALF_TIME_CARDS_TOTAL",
+  "SECOND_HALF_CARDS_TOTAL",
+  "HALF_TIME_AWAY_TEAM_CARDS",
+  "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+  "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
+  "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
+  "RED_CARDS_TOTAL",
+  "CARDS_POINTS_OVER_UNDER",
+  "CORNERS_TOTAL",
+  "HALF_TIME_CORNERS_TOTAL",
+  "FIRST_10_MIN_CORNERS_TOTAL",
+  "FIRST_10_MIN_CARDS",
+  "FOULS_TOTAL",
+  "HOME_TEAM_TOTAL_FOULS",
+  "AWAY_TEAM_TOTAL_FOULS",
+  "HALF_TIME_FOULS_TOTAL",
+  "HALF_TIME_HOME_TEAM_FOULS_TOTAL",
+  "HALF_TIME_AWAY_TEAM_TOTAL_FOULS",
+  "OFFSIDES_TOTAL",
+  "HOME_TEAM_TOTAL_OFFSIDES",
+  "AWAY_TEAM_TOTAL_OFFSIDES",
+  "TOTAL_SHOTS",
+  "TOTAL_SHOTS_ON_TARGET",
+  "THROW_INS_TOTAL",
+  "HOME_TEAM_TOTAL_THROW_INS",
+  "AWAY_TEAM_TOTAL_THROW_INS",
+  "GOAL_KICKS_TOTAL",
+  "AWAY_TEAM_GOAL_KICKS",
+  "HOME_TEAM_TOTAL_GOAL_KICKS",
+  "POST_OR_CROSSBAR_TOTAL",
 ];
 
 const HANDICAP_PARAM_MARKETS: NormalizedMarketType[] = [
@@ -548,7 +672,9 @@ function extractParamValue(
   marketCode: NormalizedMarketType,
   raw: RawBookmakerMarket
 ): string | undefined {
-  const isOverUnder = OVER_UNDER_PARAM_MARKETS.includes(marketCode);
+  const isOverUnder =
+    OVER_UNDER_PARAM_MARKETS.includes(marketCode) ||
+    STAT_OVER_UNDER_PARAM_MARKETS.includes(marketCode);
   const isHandicap = HANDICAP_PARAM_MARKETS.includes(marketCode);
   if (!isOverUnder && !isHandicap) return undefined;
 
@@ -557,7 +683,20 @@ function extractParamValue(
   //    collapse into a single placeholder "base" bucket.
   if (raw.paramValue !== undefined && raw.paramValue !== "") {
     const normalized = raw.paramValue.replace(",", ".");
-    return isHandicap ? parseHandicapLine(normalized) : normalized;
+    if (!isHandicap) return normalized;
+    const line = parseHandicapLine(normalized);
+    if (line === undefined) return undefined;
+    // The Swarm "base" field uses the OPPOSITE sign of our home-relative
+    // catalog convention for handicap markets: cross-bookmaker audits
+    // (Argentina-Cape Verde, Switzerland-Colombia) show every betcris
+    // handicap row labelled P carrying the odds peers quote at -P — across
+    // asian, european and 1st/2nd-half variants alike (whole rows including
+    // DRAW move to the mirrored bucket, so it is a line-sign inversion, not
+    // a selection swap). Negate to the home perspective. The label-derived
+    // fallbacks below come from display text and keep their sign.
+    const negated = -parseFloat(line);
+    if (Number.isNaN(negated)) return undefined;
+    return negated > 0 ? `+${negated}` : String(negated);
   }
 
   const selectionNames = raw.selections.map((s) => s.name);
@@ -594,6 +733,11 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     let matchedBy: "id" | "name" | "pattern" = "id";
 
     const marketType = extractMarketType(raw);
+    if (marketType && BETCRIS_EXCLUDED_MARKET_IDS.has(marketType)) {
+      // Known Swarm ids without a catalog counterpart — exclude to OTHER
+      // instead of poisoning a wrong market.
+      return null;
+    }
     if (marketType) {
       marketCode = BETCRIS_MARKET_TYPE_TO_CODE[marketType] ?? null;
     }
@@ -621,13 +765,33 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     }
 
     const paramValue = extractParamValue(marketCode, raw);
+
+    // A handicap row without a resolvable line cannot be assigned to any
+    // parameter bucket — drop it instead of leaking a wrong-line "base"
+    // entry (e.g. "1. połowa. Handicap (3-drogowy)" with no visible number).
+    if (paramValue === undefined && HANDICAP_PARAM_MARKETS.includes(marketCode)) {
+      return null;
+    }
+
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => ({
+    let selections = raw.selections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode!, ctx),
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // TEAM_TOTAL_GOALS_FIRST_60MIN uses side-prefixed catalog selections
+    // (HOME_OVER/... vs AWAY_OVER/...); derive the side from the raw name
+    // ("1-60 min. Team 1/2. Liczba goli").
+    if (marketCode === "TEAM_TOTAL_GOALS_FIRST_60MIN") {
+      const side = /team\s*2|dru[żz]yna\s*2|go[śs]c/i.test(raw.name) ? "AWAY" : "HOME";
+      selections = selections.map((sel) =>
+        sel.code === "OVER" || sel.code === "UNDER"
+          ? { ...sel, code: `${side}_${sel.code}` as NormalizedSelection }
+          : sel
+      );
+    }
 
     return {
       marketCode,

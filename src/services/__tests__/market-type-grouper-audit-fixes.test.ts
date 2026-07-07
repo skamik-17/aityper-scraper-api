@@ -163,3 +163,85 @@ describe("grouper audit fixes — no silent cross-market odds merge", () => {
     expect(bm.selections.map((s) => s.type).sort()).toEqual(["DRAW_OR_AWAY", "HOME_OR_DRAW"]);
   });
 });
+
+describe("grouper audit fixes — no 'base' bucket on decimal-line markets", () => {
+  it("drops entries without a numeric line from decimal-parameter markets", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          paramValue: "2.5",
+          selections: [{ name: "Ponad", normalizedName: "OVER", odds: 1.6 }],
+        }),
+        bookmaker: "sts",
+      },
+      {
+        // Misrouted entry with no extractable line — must not surface as "base".
+        market: mkMarket({
+          name: "Jakiś obcy rynek",
+          paramValue: undefined,
+          selections: [{ name: "tak", normalizedName: "UNKNOWN", odds: 5.7 }],
+        }),
+        bookmaker: "superbet",
+      },
+    ]);
+    const params = result[0].parameters.map((p) => p.value);
+    expect(params).toEqual(["2.5"]);
+  });
+
+  it("keeps the base bucket for non-parameterized markets (BTTS path)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Obie drużyny strzelą",
+          type: "BTTS",
+          normalizedType: "BTTS" as ScrapedMarket["normalizedType"],
+          marketKey: "BTTS",
+          paramValue: undefined,
+          selections: [
+            { name: "Tak", normalizedName: "YES", odds: 1.9 },
+            { name: "Nie", normalizedName: "NO", odds: 1.9 },
+          ],
+        }),
+        bookmaker: "sts",
+      },
+    ]);
+    expect(result).toHaveLength(1);
+    expect(result[0].parameters[0].bookmakers[0].selections).toHaveLength(2);
+  });
+});
+
+describe("grouper audit fixes — no 'base' bucket on team-parameterized markets", () => {
+  it("drops side-less entries from team-parameterized markets", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Kolumbia wygra którąkolwiek połowę",
+          type: "TEAM_WIN_AT_LEAST_ONE_HALF",
+          normalizedType: "TEAM_WIN_AT_LEAST_ONE_HALF" as ScrapedMarket["normalizedType"],
+          marketKey: "TEAM_WIN_AT_LEAST_ONE_HALF:AWAY",
+          paramValue: "AWAY",
+          selections: [
+            { name: "Tak", normalizedName: "YES", odds: 6.9 },
+            { name: "Nie", normalizedName: "NO", odds: 1.07 },
+          ],
+        }),
+        bookmaker: "fuksiarz",
+      },
+      {
+        // Stale row keyed under the old market_key (no side param) — must not
+        // create a phantom "base" parameter next to the real AWAY one.
+        market: mkMarket({
+          name: "Kolumbia wygra którąkolwiek połowę",
+          type: "TEAM_WIN_AT_LEAST_ONE_HALF",
+          normalizedType: "TEAM_WIN_AT_LEAST_ONE_HALF" as ScrapedMarket["normalizedType"],
+          marketKey: "TEAM_WIN_AT_LEAST_ONE_HALF",
+          paramValue: undefined,
+          selections: [{ name: "tak", normalizedName: "UNKNOWN", odds: 6.8 }],
+        }),
+        bookmaker: "fuksiarz",
+      },
+    ]);
+    const params = result[0].parameters.map((p) => p.value);
+    expect(params).toEqual(["AWAY"]);
+  });
+});

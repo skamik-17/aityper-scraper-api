@@ -71,6 +71,32 @@ function getMarketName(marketId: number, selection?: SuperbetOddsSelection): str
 }
 
 /**
+ * Market ids whose selections legitimately arrive as bare outcome codes
+ * ("1"/"0"/"2", "O"/"U") that should be renamed to display labels. For any
+ * other market a short/numeric selection name ("0", "2", "3+") is a real
+ * outcome (exact goal counts, ranges) and must be preserved as-is -
+ * renaming those by code turned "0"/"1"/"2" into "Remis"/team names.
+ */
+const CODE_NAMED_MARKET_IDS = new Set<number>([
+  MARKET_IDS.MATCH_RESULT_1X2,
+  MARKET_IDS.DOUBLE_CHANCE,
+  MARKET_IDS.DOUBLE_CHANCE_ALT,
+  MARKET_IDS.BTTS,
+  MARKET_IDS.BTTS_ALT,
+  MARKET_IDS.TOTAL_GOALS,
+  MARKET_IDS.TOTAL_GOALS_ALT,
+  MARKET_IDS.TOTAL_GOALS_ALT2,
+]);
+
+/**
+ * Fix malformed time-range labels coming from the Superbet API, e.g.
+ * "45:00 - 59 minuty:59 minuty" -> "45:00 - 59:59 minuty".
+ */
+function cleanSelectionLabel(name: string): string {
+  return name.replace(/(\d+)\s+minuty:(\d+)\s+minuty/u, "$1:$2 minuty");
+}
+
+/**
  * Get selection display name based on code and market type
  */
 function getSelectionName(
@@ -79,9 +105,13 @@ function getSelectionName(
   marketId: number,
   teams?: ParsedTeams
 ): string {
-  // Use original name if provided and meaningful
-  if (originalName && originalName.length > 1 && !originalName.match(/^[0-9]+$/)) {
-    return originalName;
+  // Use the original name whenever provided; fall through to code-based
+  // renaming only for legacy core markets whose names are outcome codes.
+  if (originalName && originalName.length > 0) {
+    const isCodeLike = originalName.length <= 1 || /^[0-9]+$/.test(originalName);
+    if (!isCodeLike || !CODE_NAMED_MARKET_IDS.has(marketId)) {
+      return cleanSelectionLabel(originalName);
+    }
   }
 
   // Map codes to display names
@@ -255,6 +285,43 @@ export function parseOverUnder(
 }
 
 /**
+ * Odds at or below this value are placeholder/sentinel prices (Superbet
+ * publishes lines it does not really offer as e.g. UNDER 1.00 / OVER 100),
+ * never a real bookmaker quote.
+ */
+const SENTINEL_ODDS_MAX = 1.005;
+
+/**
+ * "Każda z drużyn powyżej X ..." markets: the catalog defines only the OVER
+ * (yes) side; the "nie" leg has no canonical selection and would normalize
+ * to a duplicate OVER (its name also starts with "Powyżej ...").
+ * 200697 = fouls, 200709 = shots on target, 200721 = offsides.
+ */
+const EACH_TEAM_OVER_MARKET_IDS = new Set<number>([200697, 200709, 200721]);
+
+/**
+ * Superbet returns some market names with an uninterpolated "X" placeholder
+ * ("Liczba goli - do X minuty"). Substitute the real minute when it can be
+ * recovered unambiguously from the selection names.
+ */
+function interpolatePlaceholderMinute(
+  marketName: string,
+  selections: SuperbetOddsSelection[]
+): string {
+  if (!/\bdo X minuty\b/iu.test(marketName)) return marketName;
+  const minutes = new Set<string>();
+  for (const sel of selections) {
+    const match = sel.name?.match(/do\s+(\d+)\.?\s*minut/iu);
+    if (match) minutes.add(match[1]);
+  }
+  if (minutes.size === 1) {
+    const minute = Array.from(minutes)[0];
+    return marketName.replace(/\bdo X minuty\b/iu, `do ${minute}. minuty`);
+  }
+  return marketName;
+}
+
+/**
  * Parse ALL markets from event odds into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -298,12 +365,21 @@ export function parseAllMarkets(
     const line = firstSelection.specialBetValue;
 
     // Get market metadata
-    const marketName = getMarketName(marketId, firstSelection);
+    const marketName = interpolatePlaceholderMinute(
+      getMarketName(marketId, firstSelection),
+      selections
+    );
     const groupName = MARKET_GROUPS[marketId] || "Inne";
     const marketType = MARKET_TYPES[marketId];
 
     // Convert selections to MarketSelection format
-    const marketSelections: MarketSelection[] = selections
+    const parsedSelections: MarketSelection[] = selections
+      .filter(
+        (sel) =>
+          // The "nie" leg of "każda z drużyn powyżej X" markets has no
+          // canonical selection - see EACH_TEAM_OVER_MARKET_IDS.
+          !(EACH_TEAM_OVER_MARKET_IDS.has(marketId) && /-\s*nie\s*$/iu.test(sel.name ?? ""))
+      )
       .map((sel) => ({
         name: getSelectionName(sel.code, sel.name, marketId, parsedTeams),
         odds: sel.price || 0,
@@ -311,6 +387,15 @@ export function parseAllMarkets(
         status: sel.status === "active" ? "active" as const : undefined,
       }))
       .filter((sel) => sel.odds > 0);
+
+    // Reject sentinel prices. When a two-way line loses a leg to the filter
+    // (e.g. UNDER 1.00 / OVER 100) the whole line is a placeholder Superbet
+    // does not actually offer - drop it entirely.
+    const priceableSelections = parsedSelections.filter((sel) => sel.odds > SENTINEL_ODDS_MAX);
+    const marketSelections =
+      parsedSelections.length === 2 && priceableSelections.length === 1
+        ? []
+        : priceableSelections;
 
     // Only add markets with valid selections
     if (marketSelections.length > 0) {

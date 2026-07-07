@@ -70,7 +70,7 @@ export interface FetchAllRoundsResult {
  */
 export async function fetchAllRounds(
   leagueId: string,
-  totalRounds: number,
+  rounds: number | number[],
   season: string,
   opts: {
     batchSize?: number;
@@ -79,14 +79,14 @@ export async function fetchAllRounds(
   } = {}
 ): Promise<FetchAllRoundsResult> {
   const { batchSize = 1, batchDelayMs = 3000, retryDelayMs = 60000 } = opts;
+  const roundList = Array.isArray(rounds)
+    ? rounds
+    : Array.from({ length: rounds }, (_, i) => i + 1);
   const events: TsdbEvent[] = [];
   const failedRounds: number[] = [];
 
-  for (let start = 1; start <= totalRounds; start += batchSize) {
-    const batch: number[] = [];
-    for (let r = start; r < start + batchSize && r <= totalRounds; r++) {
-      batch.push(r);
-    }
+  for (let start = 0; start < roundList.length; start += batchSize) {
+    const batch = roundList.slice(start, start + batchSize);
 
     const results = await Promise.allSettled(
       batch.map((r) => fetchRound(leagueId, r, season))
@@ -100,7 +100,7 @@ export async function fetchAllRounds(
       }
     });
 
-    if (start + batchSize <= totalRounds) {
+    if (start + batchSize < roundList.length) {
       await new Promise((resolve) => setTimeout(resolve, batchDelayMs));
     }
   }

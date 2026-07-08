@@ -34,3 +34,11 @@ describe("canonicalizePlayerName", () => {
     expect(canonicalizePlayerName("A, B, C")).toBe("A, B, C");
   });
 });
+
+describe("canonicalizePlayerName — apostrophe variants", () => {
+  it("normalizes backtick and other apostrophe-like glyphs to a standard apostrophe", () => {
+    expect(canonicalizePlayerName("Kante, N`Golo")).toBe("N'Golo Kante");
+    expect(canonicalizePlayerName("N´Golo Kante")).toBe("N'Golo Kante");
+    expect(canonicalizePlayerName("N'Golo Kante")).toBe("N'Golo Kante");
+  });
+});

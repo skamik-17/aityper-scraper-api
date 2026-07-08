@@ -282,7 +282,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Przedział goli dla konkretnej drużyny", en: "Goal range for specific team" },
     hasParameter: false,
     selections: ["0", "1", "2", "3", "4", "5+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 25,
   },
   {
@@ -295,7 +295,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Przedział goli w pierwszej połowie", en: "Goal range in first half" },
     hasParameter: false,
     selections: ["0", "1-2", "1-3", "2-3", "3+", "4+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 47,
   },
   {
@@ -456,7 +456,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE", "BOTH"],
     selectionOrder: ["HOME", "NONE", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 22,
     descriptionTemplates: { HOME: "{homeTeam} strzeli pierwsza", AWAY: "{awayTeam} strzeli pierwsza", NONE: "Brak goli" },
   },
@@ -1812,7 +1812,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "integer",
     validParameters: ["1", "2", "3", "4", "5+"],
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.STAT_RANGE,
     displayOrder: 49,
   },
   {
@@ -3028,7 +3028,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Dokładna liczba goli w pierwszej połowie", en: "Exact number of goals in first half" },
     hasParameter: false,
     selections: ["0", "1", "2", "2+", "3+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 207,
     descriptionTemplates: { "0": "0 goli w 1. poł.", "1": "1 gol w 1. poł.", "2": "2 gole w 1. poł.", "3+": "3+ gole w 1. poł." }
   },
@@ -3281,7 +3281,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Przedział liczby rzutów rożnych w meczu", en: "Range of total corners" },
     hasParameter: false,
     selections: ["0-3", "4-6", "7+", "0-8", "9-11", "12+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 220,
     descriptionTemplates: { "0-3": "0-3 rożnych", "4-6": "4-6 rożnych", "7+": "7+ rożnych", "0-8": "0-8 rożnych", "9-11": "9-11 rożnych", "12+": "12+ rożnych" }
   },
@@ -3295,7 +3295,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Przedział rożnych w 1. połowie", en: "Corners range in 1st half" },
     hasParameter: false,
     selections: ["0-2", "3-4", "5+", "0-4", "5-6", "7+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 221
   },
   {
@@ -3726,7 +3726,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE", "BOTH"],
     selectionOrder: ["HOME", "AWAY", "NONE"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 250,
     descriptionTemplates: { HOME: "{homeTeam} strzeli ostatnia", AWAY: "{awayTeam} strzeli ostatnia", NONE: "Brak goli" },
   },
@@ -4381,7 +4381,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład: 1. połowa - gość - dokładna liczba goli.", en: "Bet: Half Time Away Exact Goals." },
     hasParameter: false,
     selections: ["0","1","2","3","3+"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 500,
   },
   {
@@ -4760,7 +4760,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład: Rzuty rożne drużyny - pierwsze 10 minut.", en: "Bet: First 10 Min Corners Team." },
     hasParameter: false,
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 500,
   },
   {
@@ -5206,7 +5206,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład: 1. połowa - gospodarz - dokładna liczba goli.", en: "Bet: Half Time Home Exact Goals." },
     hasParameter: false,
     selections: ["0", "1", "2", "3"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 284,
   },
   {
@@ -5701,7 +5701,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Obie drużyny otrzymają rzut karny", en: "Both Teams Penalty Awarded" },
     descriptions: { pl: "Zakład: Obie drużyny otrzymają rzut karny.", en: "Bet: Both Teams Penalty Awarded." },
     hasParameter: false,
-    selections: ["YES"],
+    selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 321,
   },
@@ -6352,7 +6352,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Obie drużyny otrzymają kartki w obu połowach", en: "Both Teams Card Both Halves" },
     descriptions: { pl: "Zakład: Obie drużyny otrzymają kartki w obu połowach.", en: "Bet: Both Teams Card Both Halves." },
     hasParameter: false,
-    selections: ["YES"],
+    selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 368,
   },
@@ -7334,7 +7334,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład: Kartki drużyny - 2. połowa.", en: "Bet: Second Half Cards Team." },
     hasParameter: false,
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 441,
   },
   {
@@ -7414,7 +7414,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład: Faule drużyny - 1. połowa.", en: "Bet: Half Time Team Fouls." },
     hasParameter: false,
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.COMBINATION,
     displayOrder: 447,
   },
   {

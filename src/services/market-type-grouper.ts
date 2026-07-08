@@ -77,6 +77,41 @@ function splitBundledLineSelections(market: ScrapedMarket): ScrapedMarket[] | nu
   }));
 }
 
+/** A selection label that looks like a person's name rather than a bet-outcome code. */
+function looksLikePlayerName(label: string): boolean {
+  if (/,\s*[\p{L}]/u.test(label)) return true; // "Lastname, Firstname"
+  return /^[\p{L}][\p{L}'’.\-]*\s+[\p{L}][\p{L}'’.\-]*(\s+[\p{L}][\p{L}'’.\-]*)*$/u.test(label);
+}
+
+/**
+ * Recovers a player-parameterized market whose normalizer listed every
+ * player as a SELECTION in one raw entry (paramValue unset) instead of the
+ * usual one-row-per-player shape — e.g. lvbet's "Zawodnik zanotuje asystę"
+ * carries 40+ players as selections with no paramValue, so it collapses into
+ * the shared "base" bucket and strands its odds away from peers' per-player
+ * rows. Splits into one synthetic market per player, keyed by canonicalized
+ * name. The selection code itself is a best-effort default (the catalog's
+ * first declared code, e.g. "YES") since a bare flat odds number carries no
+ * further signal on which tier it represents — recovering the player
+ * identity and odds is the priority; callers needing an exact tier should
+ * fix the bookmaker's normalizer directly. Returns null when selections
+ * don't confidently look like a name list, or no fallback code exists.
+ */
+function splitBundledPlayerSelections(
+  market: ScrapedMarket,
+  fallbackSelectionCode: string | undefined,
+): ScrapedMarket[] | null {
+  if (market.selections.length < 2 || !fallbackSelectionCode) return null;
+  for (const sel of market.selections) {
+    if (!looksLikePlayerName(sel.normalizedName || sel.name)) return null;
+  }
+  return market.selections.map((sel) => ({
+    ...market,
+    paramValue: canonicalizePlayerName(sel.normalizedName || sel.name),
+    selections: [{ name: sel.name, normalizedName: fallbackSelectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
+  }));
+}
+
 /**
  * Sort parameters intelligently
  */
@@ -173,11 +208,18 @@ export function groupMarketsByTypeWithParameters(
   // would otherwise discard the whole thing as an apparent misroute.
   const expandedInput = marketsWithBookmakers.flatMap((entry) => {
     const marketType = entry.market.normalizedType || "OTHER";
-    const parameterType = getMarketByCode(marketType)?.parameterType;
-    if (entry.market.paramValue || parameterType !== "decimal") return [entry];
-    const split = splitBundledLineSelections(entry.market);
-    if (!split) return [entry];
-    return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
+    const catalogEntry = getMarketByCode(marketType);
+    const parameterType = catalogEntry?.parameterType;
+    if (entry.market.paramValue) return [entry];
+    if (parameterType === "decimal") {
+      const split = splitBundledLineSelections(entry.market);
+      if (split) return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
+    } else if (parameterType === "player") {
+      const fallbackCode = catalogEntry?.selections?.[0];
+      const split = splitBundledPlayerSelections(entry.market, fallbackCode);
+      if (split) return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
+    }
+    return [entry];
   });
 
   // Group by market type (without parameter)

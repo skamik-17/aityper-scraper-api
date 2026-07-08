@@ -281,10 +281,14 @@ export function normalizeHandicapSelection(
  *
  * Only a single "Last[ Parts], First[ Parts]" comma pattern is rewritten;
  * anything else (codes, scores, multi-comma lists) passes through unchanged
- * apart from whitespace collapsing.
+ * apart from whitespace collapsing and apostrophe normalization.
  */
 export function canonicalizePlayerName(raw: string): string {
-  const collapsed = raw.trim().replace(/\s+/g, " ");
+  // Bookmakers render names like "N'Golo" with different apostrophe-ish
+  // glyphs (backtick, acute accent, curly quote) depending on their font/
+  // encoding pipeline — normalize to a plain apostrophe so e.g. "N`Golo" and
+  // "N'Golo" merge into one selection instead of stranding odds separately.
+  const collapsed = raw.trim().replace(/\s+/g, " ").replace(/[`´'‘]/g, "'");
   const m = collapsed.match(/^([\p{L}][\p{L}'’.\- ]*),\s*([\p{L}][\p{L}'’.\- ]*)$/u);
   if (!m) return collapsed;
   return `${m[2].trim()} ${m[1].trim()}`;

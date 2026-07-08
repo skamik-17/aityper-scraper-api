@@ -442,3 +442,71 @@ describe("grouper audit fixes — recovers bundled multi-line markets instead of
     expect(params).toEqual(["2.5"]);
   });
 });
+
+describe("grouper audit fixes — recovers player markets bundled into one raw entry", () => {
+  it("splits a single bookmaker entry listing many players into per-player parameters", () => {
+    // Reproduces the real lvbet PLAYER_ASSISTS shape: one raw market
+    // ("Zawodnik zanotuje asystę") lists every player as a SELECTION with no
+    // paramValue, instead of one row per player (the shape betcris/etoto use).
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Zawodnik zanotuje asystę",
+          type: "PLAYER_ASSISTS",
+          normalizedType: "PLAYER_ASSISTS" as ScrapedMarket["normalizedType"],
+          marketKey: "PLAYER_ASSISTS",
+          paramValue: undefined,
+          selections: [
+            { name: "Michael Olise", normalizedName: "Michael Olise", odds: 3 },
+            { name: "Kylian Mbappe", normalizedName: "Kylian Mbappe", odds: 4 },
+          ],
+        }),
+        bookmaker: "lvbet",
+      },
+      {
+        // Peer bookmaker already emits the normal one-row-per-player shape.
+        market: mkMarket({
+          name: "Kylian Mbappe - asysta",
+          type: "PLAYER_ASSISTS",
+          normalizedType: "PLAYER_ASSISTS" as ScrapedMarket["normalizedType"],
+          marketKey: "PLAYER_ASSISTS:Kylian Mbappe",
+          paramValue: "Kylian Mbappe",
+          selections: [{ name: "1+", normalizedName: "1+", odds: 4.25 }],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+
+    const params = result[0].parameters.map((p) => p.value).sort();
+    expect(params).toEqual(["Kylian Mbappe", "Michael Olise"]);
+
+    const mbappe = result[0].parameters.find((p) => p.value === "Kylian Mbappe")!;
+    const lvbetEntry = mbappe.bookmakers.find((b) => b.bookmaker === "lvbet")!;
+    expect(lvbetEntry.selections[0].odds).toBe(4);
+    const betcrisEntry = mbappe.bookmakers.find((b) => b.bookmaker === "betcris")!;
+    expect(betcrisEntry.selections[0].odds).toBe(4.25);
+
+    const olise = result[0].parameters.find((p) => p.value === "Michael Olise")!;
+    expect(olise.bookmakers.find((b) => b.bookmaker === "lvbet")!.selections[0].odds).toBe(3);
+  });
+
+  it("does not split a genuinely single-player raw market (nothing to recover)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Kylian Mbappe - asysta",
+          type: "PLAYER_ASSISTS",
+          normalizedType: "PLAYER_ASSISTS" as ScrapedMarket["normalizedType"],
+          marketKey: "PLAYER_ASSISTS",
+          paramValue: undefined,
+          selections: [{ name: "1+", normalizedName: "1+", odds: 4.25 }],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+    // Single selection, no player identity embedded — stays in "base" untouched
+    // (existing player-market base exemption from round 3 still applies).
+    expect(result[0].parameters).toHaveLength(1);
+    expect(result[0].parameters[0].value).toBe("base");
+  });
+});

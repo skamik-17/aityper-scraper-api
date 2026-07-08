@@ -739,6 +739,15 @@ function normalizeSelectionForMarket(
         const code = `${scores.slice(0, -1).join(", ")} lub ${scores[scores.length - 1]}`;
         return code as NormalizedSelection;
       }
+      // Catch-all leg ("Francja wygra dowolnym innym wynikiem" - a win by
+      // any score not covered by the enumerated score-group buckets above)
+      // -> the catalog's "Inne zwycięstwo <side>" code.
+      const otherWinMatch = trimmed.match(/^(.+?)\s+wygra\s+dowolnym\s+innym\s+wynikiem/iu);
+      if (otherWinMatch) {
+        const side = normalize1x2Selection(otherWinMatch[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+        if (side === "HOME") return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
+        if (side === "AWAY") return "Inne zwycięstwo gości" as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
     }
 

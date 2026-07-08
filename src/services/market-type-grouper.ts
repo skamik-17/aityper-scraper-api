@@ -22,8 +22,15 @@ import {
 import { MarketCategory } from "../services/normalization/types.js";
 import { canonicalizePlayerName } from "./normalization/helpers/index.js";
 
-/** viewTypes whose selection codes are player names (order must be unified). */
-const PLAYER_SELECTION_VIEW_TYPES = new Set(["PLAYER_DROPDOWN", "PLAYER_STAT_LINES"]);
+/**
+ * viewTypes whose selection codes may be player names (order must be
+ * unified). COMBINATION also covers multi-player combo markets (e.g.
+ * TWO_PLAYERS_ANYTIME) alongside many non-player markets (score groups,
+ * result+total combos, ...) — safe to include broadly because
+ * canonicalizePlayerName() only rewrites a strict "Last, First" comma
+ * pattern and passes any other selection code through unchanged.
+ */
+const PLAYER_SELECTION_VIEW_TYPES = new Set(["PLAYER_DROPDOWN", "PLAYER_STAT_LINES", "COMBINATION"]);
 
 /**
  * Default parameters for each market type

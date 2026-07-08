@@ -510,3 +510,39 @@ describe("grouper audit fixes — recovers player markets bundled into one raw e
     expect(result[0].parameters[0].value).toBe("base");
   });
 });
+
+describe("grouper audit fixes — player-name canonicalization on COMBINATION-viewType player markets", () => {
+  it("canonicalizes player-pair selection names for TWO_PLAYERS_ANYTIME (viewType COMBINATION)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Dwóch zawodników strzeli gola",
+          type: "TWO_PLAYERS_ANYTIME",
+          normalizedType: "TWO_PLAYERS_ANYTIME" as ScrapedMarket["normalizedType"],
+          marketKey: "TWO_PLAYERS_ANYTIME",
+          selections: [{ name: "Kante, N'Golo", normalizedName: "Kante, N'Golo", odds: 2.1 }],
+        }),
+        bookmaker: "betfan",
+      },
+    ]);
+    const codes = new Set<string>();
+    for (const b of result[0].parameters[0].bookmakers) for (const s of b.selections) codes.add(s.type);
+    expect([...codes]).toEqual(["N'Golo Kante"]);
+  });
+
+  it("leaves non-name COMBINATION selection codes (e.g. score groups) untouched", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          type: "MULTI_RESULT",
+          normalizedType: "MULTI_RESULT" as ScrapedMarket["normalizedType"],
+          marketKey: "MULTI_RESULT",
+          selections: [{ name: "1:0, 2:0 lub 3:0", normalizedName: "1:0, 2:0 lub 3:0", odds: 9 }],
+        }),
+        bookmaker: "sts",
+      },
+    ]);
+    const codes = result[0].parameters[0].bookmakers[0].selections.map((s) => s.type);
+    expect(codes).toEqual(["1:0, 2:0 lub 3:0"]);
+  });
+});

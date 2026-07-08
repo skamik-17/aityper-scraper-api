@@ -1740,6 +1740,26 @@ function normalizeCorrectScoreGroupSelection(
   return null;
 }
 
+// Betclic's selections feed renders a few well-known players' surnames without
+// their native diacritics (e.g. "K. Mbappe") even though other players in the
+// very same market keep theirs ("O. Dembélé", "D. Doué", "B. Díaz"). Restore
+// the missing accent so the same player merges into one canonical selection
+// code instead of silently splitting off as a separate, ASCII-only variant.
+const BETCLIC_PLAYER_SURNAME_FIXUPS: Record<string, string> = {
+  mbappe: "Mbappé",
+};
+
+function fixBetclicPlayerDiacritics(canonicalName: string): string {
+  const parts = canonicalName.split(" ");
+  const lastIndex = parts.length - 1;
+  const surname = parts[lastIndex];
+  if (!surname) return canonicalName;
+  const fixed = BETCLIC_PLAYER_SURNAME_FIXUPS[surname.toLowerCase()];
+  if (!fixed) return canonicalName;
+  parts[lastIndex] = fixed;
+  return parts.join(" ");
+}
+
 /**
  * Builds a stable selection code for player-combination markets from the
  * player list itself. Betclic separates players with "/" or "&"
@@ -1751,11 +1771,11 @@ function normalizeCorrectScoreGroupSelection(
 function normalizePlayerComboSelection(selectionName: string): NormalizedSelection {
   const players = selectionName
     .split(/\s*[/&]\s*/)
-    .map((part) => canonicalizePlayerName(part))
+    .map((part) => fixBetclicPlayerDiacritics(canonicalizePlayerName(part)))
     .filter((part) => part.length > 0);
 
   if (players.length < 2) {
-    return canonicalizePlayerName(selectionName) as NormalizedSelection;
+    return fixBetclicPlayerDiacritics(canonicalizePlayerName(selectionName)) as NormalizedSelection;
   }
 
   return players
@@ -2117,8 +2137,8 @@ function normalizeSelectionForMarket(
     case "PENALTY_SCORER":
       // Canonicalize to "Firstname Lastname" so the same player merges
       // across bookmakers regardless of the source name order.
-      return canonicalizePlayerName(
-        trimmed.replace(/^\d+\.\s*/, "").trim()
+      return fixBetclicPlayerDiacritics(
+        canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim())
       ) as NormalizedSelection;
 
     case "PLAYER_ASSIST_PAIRS":

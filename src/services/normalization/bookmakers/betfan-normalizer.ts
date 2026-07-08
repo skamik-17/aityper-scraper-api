@@ -269,6 +269,22 @@ function normalizeText(value: string): string {
     .trim();
 }
 
+/**
+ * Betfan-specific bare-mononym aliases: some player-prop outcomes arrive
+ * under a short/common name while other bookmakers canonicalize to the full
+ * name, which would otherwise strand the same player in a separate
+ * parameter row from the rest of the market.
+ */
+const BETFAN_PLAYER_NAME_ALIASES: Record<string, string> = {
+  munir: "Munir Mohamedi",
+};
+
+function canonicalizeBetfanPlayerName(name: string): string {
+  const canonical = canonicalizePlayerName(name);
+  const alias = BETFAN_PLAYER_NAME_ALIASES[canonical.toLowerCase()];
+  return alias ?? canonical;
+}
+
 function resolveMarketCode(raw: RawBookmakerMarket): {
   marketCode: NormalizedMarketType;
   matchedBy: "id" | "name" | "pattern";
@@ -499,6 +515,19 @@ function refineMarketCode(
     }
   }
 
+  // Betfan's HOME/AWAY_TEAM_OVER_UNDER ids (120/121) also carry a completely
+  // unrelated half-scoped BTTS market ("1./2. polowa - obie druzyny strzela
+  // gola") under the same numeric id - trust the market name over the
+  // id-resolved code so the Tak/Nie selections land in HALF_TIME_BTTS/
+  // SECOND_HALF_BTTS instead of being forced through the team-goals
+  // OVER/UNDER vocabulary as literal "Tak"/"Nie" strings.
+  if (
+    (code === "HOME_TEAM_TOTAL_GOALS" || code === "AWAY_TEAM_TOTAL_GOALS") &&
+    /obie.*strzela/.test(name)
+  ) {
+    code = FIRST_HALF_PREFIX.test(name) ? "HALF_TIME_BTTS" : "SECOND_HALF_BTTS";
+  }
+
   // Double chance + BTTS combos must not bleed into plain double chance
   if (
     (code === "DOUBLE_CHANCE" ||
@@ -598,19 +627,23 @@ function refineMarketCode(
   }
 
   // Team-prefixed stat totals ("Szwajcaria - liczba strzalow (OPTA)",
-  // "Szwajcaria - liczba rzutow roznych") arrive under whole-match ids and
-  // must move to the per-team catalog codes - a single team's line merged
-  // into the whole-match market corrupts the parameter list.
+  // "Szwajcaria - liczba rzutow roznych", "Maroko - liczba kartek") arrive
+  // under whole-match ids and must move to the per-team catalog codes - a
+  // single team's line merged into the whole-match market corrupts the
+  // parameter list (e.g. a team's lower card count masquerading as the
+  // match-wide total at the same param rows).
   if (
     (code === "TOTAL_SHOTS" ||
       code === "TOTAL_SHOTS_ON_TARGET" ||
       code === "FOULS_TOTAL" ||
-      code === "CORNERS_TOTAL") &&
+      code === "CORNERS_TOTAL" ||
+      code === "CARDS_TOTAL") &&
     teamSide() !== null
   ) {
     if (code === "TOTAL_SHOTS") code = "TEAM_TOTAL_SHOTS";
     else if (code === "TOTAL_SHOTS_ON_TARGET") code = "TEAM_TOTAL_SHOTS_ON_TARGET";
     else if (code === "FOULS_TOTAL") code = "TEAM_TOTAL_FOULS";
+    else if (code === "CARDS_TOTAL") code = "CARDS_TEAM";
     else code = "CORNERS_TEAM";
   }
 
@@ -840,6 +873,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORNERS_TOTAL":
     case "SECOND_HALF_CORNERS_TOTAL":
     case "CARDS_TOTAL":
+    case "CARDS_TEAM":
     case "HALF_TIME_CARDS_TOTAL":
     case "SECOND_HALF_CARDS_TOTAL":
     case "TOTAL_SHOTS":
@@ -980,11 +1014,19 @@ function normalizeSelectionForMarket(
     }
 
     case "HT_FT_CORRECT_SCORE": {
-      // Convert dash score notation to the catalog's colon notation:
-      // "0-0 / 1-0" -> "0:0 / 1:0"
-      const htFtScore = trimmed.match(/^(\d+)\s*[-:]\s*(\d+)\s*\/\s*(\d+)\s*[-:]\s*(\d+)$/);
-      if (htFtScore) {
-        return `${htFtScore[1]}:${htFtScore[2]} / ${htFtScore[3]}:${htFtScore[4]}` as NormalizedSelection;
+      // Convert dash score notation to the catalog's colon notation on each
+      // half independently: "0-0 / 1-0" -> "0:0 / 1:0". Also covers the
+      // orphaned open-ended bucket ("0-0 / 4+", "4+ / 4+") where one or both
+      // halves collapse into a tail bucket instead of a paired score - the
+      // bucket text is left untouched while the score half still gets its
+      // separator normalized, matching forbet's colon-based vocabulary.
+      const parts = trimmed.split("/").map((part) => part.trim());
+      if (parts.length === 2) {
+        const normalizeHalf = (half: string): string => {
+          const scoreMatch = half.match(/^(\d+)\s*[-:]\s*(\d+)$/);
+          return scoreMatch ? `${scoreMatch[1]}:${scoreMatch[2]}` : half;
+        };
+        return `${normalizeHalf(parts[0])} / ${normalizeHalf(parts[1])}` as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -1028,7 +1070,7 @@ function normalizeSelectionForMarket(
       // Unify "Lastname, Firstname" -> "Firstname Lastname" so the same
       // player merges across bookmakers. Threshold codes ("1+", "2+") from
       // split player-prop markets pass through unchanged.
-      return canonicalizePlayerName(
+      return canonicalizeBetfanPlayerName(
         trimmed.replace(/^\d+\.\s*/, "").trim()
       ) as NormalizedSelection;
 
@@ -1158,7 +1200,7 @@ function extractParamValue(
   // player markets carry the player as a parameter despite hasParameter
   // being false in the catalog).
   if (raw.paramValue) {
-    return canonicalizePlayerName(raw.paramValue);
+    return canonicalizeBetfanPlayerName(raw.paramValue);
   }
 
   const metadata = getMarketMetadata(marketCode);

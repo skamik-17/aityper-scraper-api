@@ -152,6 +152,11 @@ const LEBULL_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "obie druzyny strzelą": "BTTS",
   "wynik 1. polowy": "HALF_TIME_RESULT",
   "wynik 2. polowy": "SECOND_HALF_RESULT",
+  // "Metoda zwycięstwa" quotes 9 selections mixing unqualified generic props
+  // ("Wygra w regulaminowym czasie") with team-qualified ET/penalties outcomes
+  // ("Wygra w dogrywce Francja"); only the latter map onto WIN_METHOD's
+  // HOME_/AWAY_ + method codes (see normalizeSelectionForMarket).
+  "metoda zwyciestwa": "WIN_METHOD",
 };
 
 const LEBULL_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
@@ -238,6 +243,10 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "DOUBLE_CHANCE_GOAL_RANGE",
   "HALFTIME_FULLTIME",
   "MULTI_RESULT",
+  // "Metoda zwycięstwa" mixes unqualified generic props with team-qualified
+  // ET/penalties outcomes; unqualified ones cannot be resolved to a side and
+  // must be dropped rather than colliding under literal UNKNOWN.
+  "WIN_METHOD",
 ]);
 
 /**
@@ -574,6 +583,24 @@ function normalizeSelectionForMarket(
       if (/brak|bez\s*gola|nikt/.test(normalized)) return "NONE";
       return trimmed as NormalizedSelection;
 
+    case "WIN_METHOD": {
+      // Raw labels: "Wygra w dogrywce <Team>" / "Wygra w rzutach karnych <Team>"
+      // map onto HOME_/AWAY_EXTRA_TIME / HOME_/AWAY_PENALTIES. Unqualified
+      // variants ("Wygra w regulaminowym czasie", "Wygra w dogrywce" with no
+      // team) and the "karnych lub w czasie doliczonym" combo have no matching
+      // catalog slot and fall through to UNKNOWN (dropped via
+      // UNKNOWN_FILTERED_MARKETS) instead of guessing a side.
+      const m = trimmed.match(/^wygra\s+w\s+(dogrywce|rzutach\s*karnych)\s+(.+)$/i);
+      if (m) {
+        const side = normalize1x2Selection(m[2], ctx.homeTeam, ctx.awayTeam, ctx.league);
+        if (side === "HOME" || side === "AWAY") {
+          const method = /dogrywce/i.test(m[1]) ? "EXTRA_TIME" : "PENALTIES";
+          return `${side}_${method}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
     case "CORNERS_HANDICAP":
@@ -755,6 +782,16 @@ function extractParamValue(
   // (bare selections are side digits like "Handicap 1", not lines).
   if (marketCode === "EUROPEAN_HANDICAP") {
     const cleaned = raw.name.replace(/3[\s-]?drogow\w*/gi, "").replace(/europejsk\w*/gi, "");
+    // A "(H:A)" starting-score pair (e.g. "Handicap 3-drogowy (0:3) null")
+    // must be checked BEFORE the naive parseHandicapLine fallback below: that
+    // fallback grabs the first bare number it finds, which for "(0:3)" is the
+    // home-side "0" — misbucketing the whole market as pick'em (parameter
+    // "0") instead of the true home-perspective line (home - away = "-3").
+    const pairMatch = cleaned.match(/\(([+-]?\d+)\s*:\s*([+-]?\d+)\)/);
+    if (pairMatch) {
+      const diff = Number(pairMatch[1]) - Number(pairMatch[2]);
+      return parseHandicapLine(String(diff));
+    }
     const fromName = parseHandicapLine(cleaned);
     if (fromName) return fromName;
     for (const sel of raw.selections) {

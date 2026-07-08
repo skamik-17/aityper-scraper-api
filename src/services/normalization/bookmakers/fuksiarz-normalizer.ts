@@ -54,7 +54,12 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "165": "HOME_TEAM_TOTAL_OFFSIDES",
   "166": "HOME_TEAM_TOTAL_OFFSIDES",
   "-30609": "EACH_TEAM_OFFSIDES",
-  "-30021": "PLAYER_GOAL_AND_RESULT",
+  // "Zawodnik strzeli gola i jego drużyna wygra" ("Player scores and his own
+  // team wins") never needs a HOME/DRAW/AWAY pick — it is the dedicated
+  // PLAYER_GOAL_AND_TEAM_WIN catalog code (same shape betcris uses for its
+  // "PlayerWillScoreandHisTeamWillWin" market), not the 3-way
+  // PLAYER_GOAL_AND_RESULT market that STS's per-player "i 1/X/2" labels use.
+  "-30021": "PLAYER_GOAL_AND_TEAM_WIN",
   "-4890": "PLAYER_GOAL_OR_ASSIST",
   "-30322": "PLAYER_GOAL_AND_ASSIST",
   "-30527": "PLAYER_SHOTS_ON_TARGET",
@@ -190,9 +195,25 @@ const MERGE_DUPLICATE_CODE_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_HOME_EXACT_GOALS",
   "SECOND_HALF_AWAY_EXACT_GOALS",
   "HALF_TIME_AWAY_EXACT_GOALS",
+  "HALF_TIME_HOME_EXACT_GOALS",
   "HALF_TIME_HOME_EXACT_CORNERS",
   "HALF_TIME_AWAY_EXACT_CORNERS",
   "CARDS_EXACT",
+]);
+
+/**
+ * Markets whose per-selection normalizer returns "UNKNOWN" for a raw bucket
+ * that has no faithful catalog counterpart (e.g. a combined tail or a coarser
+ * bucketing than the catalog's overlapping-range scheme). The literal
+ * "UNKNOWN" string must not leak into the aggregated selection set, so these
+ * entries are filtered out of the final market instead.
+ */
+const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
+  "CARDS_EXACT",
+  "HALF_TIME_GOAL_RANGE",
+  "SECOND_HALF_GOAL_RANGE",
+  "HOME_GOAL_RANGE",
+  "AWAY_GOAL_RANGE",
 ]);
 
 /**
@@ -1072,6 +1093,7 @@ function normalizeSelectionForMarket(
     case "CARDS_TOTAL":
     case "FOULS_TOTAL":
     case "OFFSIDES_TOTAL":
+    case "SUBSTITUTIONS_TOTAL":
     case "CORNERS_TEAM":
     case "HALF_TIME_CORNERS_TOTAL":
     case "SECOND_HALF_CORNERS_TOTAL":
@@ -1179,11 +1201,20 @@ function normalizeSelectionForMarket(
     case "FIRST_GOAL_AND_RESULT":
       return normalizeFirstGoalAndResultSelection(trimmed, ctx);
 
-    case "GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":
     case "HOME_GOAL_RANGE":
     case "AWAY_GOAL_RANGE":
+      // Unlike GOAL_RANGE (whose catalog vocabulary includes a literal "0-1"
+      // bucket), these four codes only support the 5-way overlapping scheme
+      // (0,1-2,1-3,2-3,4+). Fuksiarz's raw "0-1" here combines the catalog's
+      // separate "0" and "1-2" codes into a single price and cannot be split
+      // without fabricating two derived odds, so drop it instead of leaking
+      // an orphan "0-1" column.
+      if (/^0\s*-\s*1$/.test(trimmed)) return "UNKNOWN";
+      return normalizeRangeSelection(trimmed);
+
+    case "GOAL_RANGE":
     case "SECOND_HALF_TEAM_GOAL_RANGE":
     case "HALF_TIME_TEAM_GOAL_RANGE":
       return normalizeRangeSelection(trimmed);
@@ -1227,6 +1258,13 @@ function normalizeSelectionForMarket(
       if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) >= 3) return "3+" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
+    case "HALF_TIME_HOME_EXACT_GOALS":
+      // Unlike the away variant, the home catalog code has no separate "3+"
+      // tier — "3" itself is the open 3-or-more bucket. Fuksiarz quotes
+      // discrete 3/4/5 tails that must collapse (and merge) into it.
+      if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) >= 3) return "3" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+
     case "HALF_TIME_HOME_EXACT_CORNERS":
     case "HALF_TIME_AWAY_EXACT_CORNERS": {
       // Catalog tops out at "4+" — Fuksiarz's finer "4"/"5+" tail collapses
@@ -1239,6 +1277,12 @@ function normalizeSelectionForMarket(
     case "CARDS_EXACT":
       // Catalog groups the low tail into a single "0-3" bucket.
       if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) <= 3) return "0-3" as NormalizedSelection;
+      // The catalog's only open-ended tier is "12+" — a combined "7+"/"8+"/...
+      // tail bucket has no single matching code (7,8,9,10,11 are all separate
+      // discrete codes) and cannot be merged into one of them without
+      // fabricating a wrong probability, so drop it instead of leaking the
+      // raw "N+" text as an orphan selection.
+      if (/^\d+\+$/.test(trimmed) && trimmed !== "12+") return "UNKNOWN";
       return trimmed as NormalizedSelection;
 
     case "TOTAL_GOALS_AND_BTTS": {
@@ -1263,6 +1307,11 @@ function normalizeSelectionForMarket(
     case "PLAYER_GOAL_OUTSIDE_BOX":
     case "PLAYER_GOAL_OR_ASSIST":
     case "PLAYER_GOAL_AND_ASSIST":
+    case "PLAYER_GOAL_AND_TEAM_WIN":
+      // Catch-all "no scorer" bucket is quoted in English on Fuksiarz — map
+      // it to the catalog-wide NONE convention instead of leaking untranslated
+      // text into a Polish-facing selection.
+      if (/^no\s+goal\s*scorer$/i.test(trimmed)) return "NONE" as NormalizedSelection;
       // Selection is a player name — unify "Lastname, Firstname" to the
       // canonical "Firstname Lastname" order used by other bookmakers.
       return canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim()) as NormalizedSelection;
@@ -1321,7 +1370,14 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       marketCode === "HALF_TIME_CORNERS_TEAM" ||
       marketCode === "SECOND_HALF_CORNERS_TEAM" ||
       marketCode === "HALF_TIME_CARDS_TEAM" ||
-      marketCode === "SECOND_HALF_CARDS_TEAM"
+      marketCode === "SECOND_HALF_CARDS_TEAM" ||
+      // Fuksiarz maps both the home-team and away-team shots ids (168/169,
+      // -30342/-30343) to the same bare TEAM_TOTAL_SHOTS[_ON_TARGET] code —
+      // without the side prefix a home line and an away line at the same
+      // numeric param collide into one OVER/UNDER bucket (etoto's convention
+      // for these two codes already uses the HOME_/AWAY_ prefix).
+      marketCode === "TEAM_TOTAL_SHOTS" ||
+      marketCode === "TEAM_TOTAL_SHOTS_ON_TARGET"
     ) {
       const side = resolveTeamSide(raw.name, ctx);
       if (!side) return null;
@@ -1336,6 +1392,14 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
     // (e.g. "by 3" + "by 4+" -> HOME_BY_3PLUS, exact goals 3/4/5 -> "3+").
     if (MERGE_DUPLICATE_CODE_MARKETS.has(marketCode)) {
       selections = mergeDuplicateSelectionCodes(selections);
+    }
+
+    // Markets whose per-selection normalizer deliberately drops an
+    // off-catalog combined bucket (returns "UNKNOWN") must not leak that
+    // literal string into the aggregated table — remove it instead.
+    if (UNKNOWN_FILTERED_MARKETS.has(marketCode)) {
+      selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+      if (selections.length === 0) return null;
     }
 
     return {

@@ -349,6 +349,8 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   200759: "AWAY", // "1.połowa - {away} przedział goli"
   200760: "HOME", // "2.połowa - {home} przedział goli"
   200761: "AWAY", // "2.połowa - {away} przedział goli"
+  200703: "HOME", // "Liczba celnych strzałów - {home}"
+  200704: "AWAY", // "Liczba celnych strzałów - {away}"
 };
 
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
@@ -357,6 +359,16 @@ const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_TEAM_GOAL_RANGE",
   "SECOND_HALF_TEAM_GOAL_RANGE",
 ]);
+
+/**
+ * TEAM_TOTAL_SHOTS_ON_TARGET's catalog selections are bare OVER/UNDER (no
+ * side prefix) - the side must live in the param instead (betclic/betcris
+ * convention: "HOME:2.5"/"AWAY:2.5"), otherwise home and away lines for the
+ * same numeric threshold collide into one bucket (confirmed: superbet's
+ * "away" rows for this match landed under a bare "2.5"/"3.5"/... param,
+ * mixing Morocco's odds into the same column peers use for France).
+ */
+const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>(["TEAM_TOTAL_SHOTS_ON_TARGET"]);
 
 const SUPERBET_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
   "1x": "HOME_OR_DRAW",
@@ -497,9 +509,28 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_WOODWORK_SHOTS",
 ]);
 
+/**
+ * Per-player stat-line markets: Superbet quotes one player per raw entry
+ * ("Digne, Lucas - powyżej 3.5"), unlike the shared goalscorer-style
+ * selection mapping below - peers (fortuna, betfan, forbet, etoto) key
+ * these by the PLAYER as the market parameter and keep the selection to
+ * just the outcome ("1+"/"2+"), so the player must live in paramValue here
+ * too, otherwise every player's price silently falls into an unlabeled
+ * "base" bucket instead of joining that player's comparison column.
+ */
+const PLAYER_STAT_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_HEADER_SHOTS_ON_TARGET",
+  "PLAYER_PASSES",
+  "PLAYER_ASSISTS",
+  "PLAYER_OFFSIDES",
+]);
+
 const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
   ...OVER_UNDER_MARKETS,
   ...HANDICAP_MARKETS,
+  ...PLAYER_STAT_PARAM_MARKETS,
   "RESULT_AND_TOTAL",
   "DOUBLE_CHANCE_TOTAL",
   "TOTAL_GOALS_AND_BTTS",
@@ -535,8 +566,13 @@ const GOALS_OVER_UNDER_FAMILY = new Set<NormalizedMarketType>([
 function isNonGoalsLineName(rawName: string): boolean {
   const lowered = normalizeMarketName(rawName).replace(/ł/g, "l");
   return (
-    /&|\blub\b/.test(lowered) ||
+    /&|\blub\b|;/.test(lowered) ||
     lowered.includes("dokladna liczba") ||
+    // Bet-builder / same-game-multi combos and player head-to-head goal
+    // races share the same market id as plain goals O/U lines but are a
+    // different bet shape entirely, e.g. "Francja wygra obie polowy;
+    // Dembele, Ousmane strzeli 1. gola" or "Wiecej strzelonych goli: X vs Y".
+    /wygra obie polow|strzeli\b.*\bgola\b|wiecej strzelonych goli/.test(lowered) ||
     // Cross-stat leakage: corners/cards/offsides/shots/fouls/throw-ins/goal kicks
     /rozn|kartk|spalon|strzal|faul|autu|wybici/.test(lowered)
   );
@@ -1053,9 +1089,12 @@ function normalizeSelectionForMarket(
       // "PLAYER_PAIR" constant collapsed every pair into one aggregated row,
       // silently dropping all but the first quote. Canonicalize both names
       // ("Rodriguez, James i Ndoye, Dan" -> "James Rodriguez i Dan Ndoye").
+      // TWO_PLAYERS_ANYTIME ("either scores") uses "lub" (or) as the pair
+      // separator, while BOTH_PLAYERS_ANYTIME ("both score") uses "i" (and) -
+      // recognize both so neither falls through as raw unparsed text.
       const cleanedPair = trimmed.replace(/^\d+\.\s*/, "").trim();
       return cleanedPair
-        .split(/\s+i\s+/iu)
+        .split(/\s+(?:i|lub)\s+/iu)
         .map((part) => canonicalizePlayerName(part.trim()))
         .join(" i ") as NormalizedSelection;
     }
@@ -1066,14 +1105,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_GOALSCORER_ANYTIME":
     case "SECOND_HALF_GOALSCORER_ANYTIME":
     case "PLAYER_SCORES_BOTH_HALVES":
-    case "PLAYER_SHOTS":
     case "PLAYER_CARDS":
     case "PLAYER_RED_CARD":
-    case "PLAYER_ASSISTS":
-    case "PLAYER_SHOTS_ON_TARGET":
-    case "PLAYER_HEADER_SHOTS_ON_TARGET":
-    case "PLAYER_PASSES":
-    case "PLAYER_OFFSIDES":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_3_OR_MORE_GOALS":
     case "PLAYER_GOAL_OR_ASSIST":
@@ -1101,6 +1134,27 @@ function normalizeSelectionForMarket(
       // Superbet quotes players as "Lastname, Firstname"; canonicalize to
       // "Firstname Lastname" so selections line up across bookmakers.
       return canonicalizePlayerName(cleaned) as NormalizedSelection;
+    }
+
+    // Per-player stat-line markets (see PLAYER_STAT_PARAM_MARKETS): the
+    // player lives in paramValue (extracted by extractParamValue below), so
+    // the selection here is only the threshold outcome, never the name -
+    // otherwise the price can't join that player's column across bookmakers.
+    case "PLAYER_SHOTS":
+    case "PLAYER_SHOTS_ON_TARGET":
+    case "PLAYER_HEADER_SHOTS_ON_TARGET":
+    case "PLAYER_PASSES":
+    case "PLAYER_ASSISTS":
+    case "PLAYER_OFFSIDES": {
+      const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
+      const withLine = cleaned.match(/-\s*powy[żz]ej\s+(\d+(?:[.,]\d+)?)\s*$/iu);
+      if (withLine) {
+        const atLeast = Math.floor(parseFloat(withLine[1].replace(",", "."))) + 1;
+        return `${atLeast}+` as NormalizedSelection;
+      }
+      // No explicit threshold suffix ("Samba, Brice") - a bare player row is
+      // a simple yes/no outcome for markets in this group that offer one.
+      return "YES" as NormalizedSelection;
     }
 
     case "OTHER":
@@ -1184,6 +1238,16 @@ function extractParamValue(
 
   const selectionNames = raw.selections.map((s) => s.name);
 
+  if (PLAYER_STAT_PARAM_MARKETS.has(marketCode)) {
+    for (const name of selectionNames) {
+      const cleaned = name.replace(/^\d+\.\s*/, "").trim();
+      const withLine = cleaned.match(/^(.+?)\s*-\s*powy[żz]ej\s+\d+(?:[.,]\d+)?\s*$/iu);
+      const playerPart = withLine ? withLine[1] : cleaned;
+      if (playerPart) return canonicalizePlayerName(playerPart.trim());
+    }
+    return undefined;
+  }
+
   if (HANDICAP_MARKETS.has(marketCode)) {
     if (SCORE_HANDICAP_MARKETS.has(marketCode)) {
       const scoreParam = extractScoreHandicapParam(selectionNames);
@@ -1264,10 +1328,13 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     const marketMetadata = getMarketMetadata(marketCode);
     const marketName = marketMetadata?.labels.pl ?? raw.name;
 
-    const paramValue = extractParamValue(marketCode, raw, ctx);
-    const marketKey = buildMarketKey(marketCode, paramValue);
-
     const side = rawId !== undefined ? SUPERBET_SIDE_BY_MARKET_ID[rawId] : undefined;
+
+    let paramValue = extractParamValue(marketCode, raw, ctx);
+    if (side && SIDED_PARAM_MARKETS.has(marketCode) && paramValue) {
+      paramValue = `${side}:${paramValue}`;
+    }
+    const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => {
       let code = normalizeSelectionForMarket(sel.name, marketCode, ctx);

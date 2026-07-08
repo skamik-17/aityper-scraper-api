@@ -211,9 +211,18 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "49": "Gość - połowa z większą liczbą goli",
   "50": "BTTS w połowach",
   "57": "Pierwszy gol 1. połowy",
+  "69": "Obie drużyny strzelą - 1. połowa",
   "77": "Pierwszy gol 2. połowy",
   "78": "Podwójna szansa",
   "79": "Zakład bez remisu",
+  // Audit r4 (France vs Morocco): ids 126/498/501 were still surfacing the
+  // generic "Rynek <id>" placeholder even though their catalog identity is
+  // already confirmed (126 -> MATCH_WINNER, 498 -> DOUBLE_CHANCE_BTTS,
+  // 501 -> RESULT_AND_BTTS, see pzbuk-normalizer.ts) — give them real labels
+  // so future audits can sanity-check the label against the odds shape.
+  "126": "Wynik meczu",
+  "498": "Podwójna szansa i obie drużyny strzelą",
+  "501": "Wynik meczu i obie drużyny strzelą",
   "85": "Dokładna liczba goli - 2. połowa",
   "86": "Parzysta/nieparzysta liczba goli",
   "90": "Dokładny wynik 2. połowy",

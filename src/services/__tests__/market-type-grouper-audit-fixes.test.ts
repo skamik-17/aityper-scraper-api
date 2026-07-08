@@ -316,3 +316,129 @@ describe("grouper audit fixes — invalid params on decimal markets", () => {
     expect(params).toEqual(["4.5", "HOME:5.5"]);
   });
 });
+
+describe("grouper audit fixes — non-parameterized markets never leak a duplicate bucket", () => {
+  it("collapses a stray non-base paramValue and the base bucket into ONE dummy parameter (not 2)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        // A bookmaker normalizer accidentally emits a real paramValue for a
+        // market the catalog declares hasParameter:false — this creates a
+        // SECOND, distinct paramGroups key alongside "base".
+        market: mkMarket({
+          name: "1. połowa - wynik",
+          type: "HALF_TIME_RESULT",
+          normalizedType: "HALF_TIME_RESULT" as ScrapedMarket["normalizedType"],
+          marketKey: "HALF_TIME_RESULT",
+          paramValue: "0",
+          selections: [
+            { name: "1", normalizedName: "HOME", odds: 2.5 },
+            { name: "X", normalizedName: "DRAW", odds: 2.1 },
+            { name: "2", normalizedName: "AWAY", odds: 3.4 },
+          ],
+        }),
+        bookmaker: "sts",
+      },
+      {
+        // paramValue undefined -> falls back to "base" -> a SECOND paramGroups key
+        market: mkMarket({
+          name: "Wynik 1. połowy",
+          type: "HALF_TIME_RESULT",
+          normalizedType: "HALF_TIME_RESULT" as ScrapedMarket["normalizedType"],
+          marketKey: "HALF_TIME_RESULT",
+          paramValue: undefined,
+          selections: [
+            { name: "1", normalizedName: "HOME", odds: 2.6 },
+            { name: "X", normalizedName: "DRAW", odds: 2.15 },
+            { name: "2", normalizedName: "AWAY", odds: 3.3 },
+          ],
+        }),
+        bookmaker: "fortuna",
+      },
+    ]);
+    expect(result[0].parameters).toHaveLength(1);
+    expect(result[0].parameters[0].value).toBe("");
+    expect(result[0].parameters[0].label).toBe("");
+    const bms = result[0].parameters[0].bookmakers.map((b) => b.bookmaker).sort();
+    expect(bms).toEqual(["fortuna", "sts"]);
+  });
+});
+
+describe("grouper audit fixes — recovers bundled multi-line markets instead of dropping them", () => {
+  it("splits a single bookmaker entry that bundles multiple lines' selections into per-line parameters", () => {
+    // Reproduces the real betclic DOUBLE_CHANCE_TOTAL shape: normalizeMarket()
+    // returns ONE market (paramValue undefined) with all 4 lines' selections
+    // crammed together, because the line only lives in each selection's raw
+    // label ("Francja / Remis & Powyżej 2,5"), not in market.paramValue.
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Podwójna szansa & powyżej/poniżej",
+          type: "DOUBLE_CHANCE_TOTAL",
+          normalizedType: "DOUBLE_CHANCE_TOTAL" as ScrapedMarket["normalizedType"],
+          marketKey: "DOUBLE_CHANCE_TOTAL",
+          paramValue: undefined,
+          selections: [
+            { name: "Francja / Remis & Powyżej 1,5 ", normalizedName: "1X_OVER", odds: 1.47 },
+            { name: "Francja / Remis & Poniżej 1,5 ", normalizedName: "1X_UNDER", odds: 4.2 },
+            { name: "Francja / Remis & Powyżej 2,5 ", normalizedName: "1X_OVER", odds: 2.23 },
+            { name: "Francja / Remis & Poniżej 2,5 ", normalizedName: "1X_UNDER", odds: 2.1 },
+          ],
+        }),
+        bookmaker: "betclic",
+      },
+      {
+        // Peer bookmaker already pre-split per line (the normal shape).
+        market: mkMarket({
+          name: "Podwójna szansa i liczba goli",
+          type: "DOUBLE_CHANCE_TOTAL",
+          normalizedType: "DOUBLE_CHANCE_TOTAL" as ScrapedMarket["normalizedType"],
+          marketKey: "DOUBLE_CHANCE_TOTAL:1.5",
+          paramValue: "1.5",
+          selections: [
+            { name: "1X i +1,5", normalizedName: "1X_OVER", odds: 1.5 },
+            { name: "1X i -1,5", normalizedName: "1X_UNDER", odds: 4.0 },
+          ],
+        }),
+        bookmaker: "sts",
+      },
+    ]);
+
+    const params = result[0].parameters.map((p) => p.value).sort();
+    expect(params).toEqual(["1.5", "2.5"]);
+
+    const line15 = result[0].parameters.find((p) => p.value === "1.5")!;
+    const betclicAt15 = line15.bookmakers.find((b) => b.bookmaker === "betclic")!;
+    expect(betclicAt15.selections.find((s) => s.type === "1X_OVER")?.odds).toBe(1.47);
+    expect(betclicAt15.selections.find((s) => s.type === "1X_UNDER")?.odds).toBe(4.2);
+    const stsAt15 = line15.bookmakers.find((b) => b.bookmaker === "sts")!;
+    expect(stsAt15.selections.find((s) => s.type === "1X_OVER")?.odds).toBe(1.5);
+
+    const line25 = result[0].parameters.find((p) => p.value === "2.5")!;
+    const betclicAt25 = line25.bookmakers.find((b) => b.bookmaker === "betclic")!;
+    expect(betclicAt25.selections.find((s) => s.type === "1X_OVER")?.odds).toBe(2.23);
+  });
+
+  it("still drops a genuine misroute with a single embedded number (no bundling to recover)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          paramValue: "2.5",
+          selections: [{ name: "Ponad", normalizedName: "OVER", odds: 1.6 }],
+        }),
+        bookmaker: "sts",
+      },
+      {
+        // Misrouted entry: only ONE embedded number, still not a real line for
+        // THIS market — must stay dropped like before (round-2/3 behavior).
+        market: mkMarket({
+          name: "Jakiś obcy rynek o 1,5 czymś",
+          paramValue: undefined,
+          selections: [{ name: "Jakiś obcy rynek o 1,5 czymś", normalizedName: "UNKNOWN", odds: 5.7 }],
+        }),
+        bookmaker: "superbet",
+      },
+    ]);
+    const params = result[0].parameters.map((p) => p.value);
+    expect(params).toEqual(["2.5"]);
+  });
+});

@@ -34,7 +34,11 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // not goalscorer players — real identity unknown, park in OTHER so it
   // cannot poison GOALSCORER_FIRST.
   "12": "OTHER",
-  "13": "GOALSCORER_LAST",
+  // Audit r4 (France vs Morocco): id 13 delivered match-level selections
+  // ("Francja"/"remis"), the same non-goalscorer shape already found for id
+  // 12 — real identity unknown, park in OTHER so it cannot poison
+  // GOALSCORER_LAST with team names.
+  "13": "OTHER",
   "14": "GOALSCORER_ANYTIME",
   "17": "TOTAL_GOALS",
   "18": "HALF_TIME_TOTAL_GOALS",
@@ -169,11 +173,14 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "167": "OTHER",
   "173": "ODD_EVEN_GOALS",
   "498": "DOUBLE_CHANCE_BTTS",
-  // Audit r3: id 501 odds (HOME_YES 20.66 / AWAY_YES 14.75 / DRAW_NO 3.0)
-  // are wildly inconsistent with full-match RESULT_AND_BTTS peers (7.6 / 5.1
-  // / 7.5) — likely a half-scoped combo; identity unverified, park in OTHER
-  // (id 33 is the confirmed full-match Result + BTTS).
-  "501": "OTHER",
+  // Audit r4 (France vs Morocco + 3 other fixtures cross-checked in the same
+  // run): id 501 selections are consistently "<team|remis> & <tak|nie>" (the
+  // same 6-outcome Result+BTTS shape as id 33) with internally consistent
+  // implied probabilities (~120-125% overround) in every fixture checked —
+  // confirms this is a genuine full-match RESULT_AND_BTTS source. Round r3's
+  // "wildly inconsistent" odds were observed on a different fixture and are
+  // more likely a one-off stale price than a different market identity.
+  "501": "RESULT_AND_BTTS",
   "502": "RESULT_AND_TOTAL",
   "503": "DOUBLE_CHANCE_BTTS",
   "504": "DOUBLE_CHANCE_BTTS",
@@ -464,7 +471,14 @@ function normalizeSelectionForMarket(
     case "CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
-      return (score ?? trimmed) as NormalizedSelection;
+      if (score) return score as NormalizedSelection;
+      // PZBuk labels the catch-all score-grid column "inny"/"pozostałe" —
+      // align with the canonical OTHER code used by peers for the same
+      // column instead of leaking the raw Polish text as its own selection.
+      if (/^(inny|inny wynik|pozosta[łl]e?)$/i.test(trimmed)) {
+        return "OTHER" as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
     }
 
     case "MULTI_RESULT": {

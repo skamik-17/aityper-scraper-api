@@ -254,6 +254,32 @@ function getSelectionName(event: SwarmEvent, market: SwarmMarket, teams?: Parsed
 }
 
 /**
+ * Swarm market types that bundle MANY players into a single market object
+ * (each event's `name` is a player, not an Over/Under/Yes/No outcome), unlike
+ * Betcris' usual one-market-per-player structure (e.g. "PlayerTotalShots").
+ * Left unsplit, every player collapses into one unlabeled "base" parameter
+ * bucket downstream. The value is the selection label to synthesize for each
+ * split entry so the normalizer resolves it to the catalog's expected code
+ * ("Powyzej" -> OVER; "1+"/"4+" match the player-goals/assists threshold
+ * selections directly).
+ */
+const BULK_PLAYER_LIST_MARKET_SELECTION: Record<string, string> = {
+  PlayerShotsOver: "Powyzej",
+  PlayerShotsonTargetOver: "Powyzej",
+  PlayerFoulsCommittedOver: "Powyzej",
+  PlayerToBeFouledOver: "Powyzej",
+  PlayertoBeinOffsideOver: "Powyzej",
+  GoalkeeperSaves: "Powyzej",
+  ToAssistaGoal: "1+",
+  PlayerToScore4OrMore: "4+",
+  // "Strzelec gola / mecz zakończy się remisem" — every event in this market
+  // is a player, and the whole market represents the fixed "scores AND draw"
+  // scenario, so the selection code is the constant draw marker ("X" ->
+  // BETCRIS_SELECTION_CODES -> DRAW) once split per player.
+  PlayerWillScoreandMatchWillEndDraw: "X",
+};
+
+/**
  * Parse ALL markets from a game into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -305,6 +331,27 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
     let resolvedName = marketName;
     if (lineBase !== undefined && /wy[śs]cig\s+do\s*$/i.test(marketName)) {
       resolvedName = `${marketName.trimEnd()} ${lineBase}`;
+    }
+
+    // Split bulk multi-player markets into one synthetic entry per player so
+    // each player gets their own market parameter downstream instead of all
+    // of them merging into a single "base" bucket. The player's raw name is
+    // carried via paramValue (never a numeric line for these market types),
+    // and the single selection is normalized to the fixed marker this stat
+    // family expects (see BULK_PLAYER_LIST_MARKET_SELECTION).
+    const bulkSelectionMarker = BULK_PLAYER_LIST_MARKET_SELECTION[market.type];
+    if (bulkSelectionMarker && selections.length > 0) {
+      for (const sel of selections) {
+        markets.push({
+          name: resolvedName,
+          bookmakerMarketId: market.type,
+          groupName,
+          type: marketType,
+          paramValue: sel.name,
+          selections: [{ name: bulkSelectionMarker, odds: sel.odds, externalId: sel.externalId, status: sel.status }],
+        });
+      }
+      continue;
     }
 
     if (selections.length > 0) {

@@ -358,16 +358,24 @@ export function parseAllMarkets(
     const marketType = MARKET_TYPES[marketTypeId];
 
     // Convert outcomes to MarketSelection format
-    const selections: MarketSelection[] = market.outcomes
-      .map((outcome) => ({
-        name: getSelectionName(outcome, marketTypeId, teams),
-        odds: outcome.odds || 0,
-        externalId: market.id,
-        status: "active" as const,
-      }))
-      // Odds of exactly 1.00 are a sentinel for suspended/closed outcomes
-      // (e.g. "Rzut karny w obu połowach: Nie @1.0") — never a real price.
-      .filter((sel) => sel.odds > 1);
+    const rawSelections: MarketSelection[] = market.outcomes.map((outcome) => ({
+      name: getSelectionName(outcome, marketTypeId, teams),
+      odds: outcome.odds || 0,
+      externalId: market.id,
+      status: "active" as const,
+    }));
+
+    // Odds of exactly 1.00 are usually a sentinel for a suspended/closed
+    // outcome — filter them out. Exception: a genuinely binary (2-outcome)
+    // market where the other leg is priced above 1.00 is actively quoted,
+    // not suspended; a near-1.00 price on a rare event's "No" leg (e.g.
+    // "Rzut karny w obu połowach: Nie @1.0" alongside a real "Tak @30") is a
+    // real, extreme-probability quote and must be kept, not dropped.
+    const isLiveBinaryMarket =
+      rawSelections.length === 2 && rawSelections.some((sel) => sel.odds > 1);
+    const selections = isLiveBinaryMarket
+      ? rawSelections
+      : rawSelections.filter((sel) => sel.odds > 1);
 
     // Only add markets with valid selections
     if (selections.length > 0) {

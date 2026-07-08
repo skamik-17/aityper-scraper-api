@@ -239,6 +239,12 @@ const FORTUNA_PLAYER_STAT_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_PENALTY_AREA_GOAL",
   "PLAYER_OFFSIDES_1H",
   "PLAYER_FIRST_OR_LAST_GOAL",
+  // The market title already names the player ("Hernandez, Lucas liczba
+  // spalonych (reg.czas) (OPTA)") with the actual raw selection being a
+  // plain "1+" threshold, matching the other stat-line markets' shape (not
+  // the dropdown convention below, where the selection itself is the
+  // player).
+  "PLAYER_OFFSIDES",
 ]);
 
 // Player stat-line markets whose catalog vocabulary is YES (not "N+"): the
@@ -260,7 +266,6 @@ const FORTUNA_PLAYER_DROPDOWN_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_GOAL_OR_ASSIST",
   // Peers (betcris/lvbet/superbet) key these by player-name selections.
   "PLAYER_GOAL_OUTSIDE_BOX",
-  "PLAYER_OFFSIDES",
 ]);
 
 /** Strips the leading scope prefix ("Mecz:", "1.połowa:", "2.połowa:"). */
@@ -271,28 +276,70 @@ function stripFortunaScope(name: string): string {
 }
 
 /**
+ * Fortuna hyphenates some compound names ("Salah-Eddine, Anass") that peer
+ * bookmakers spell with a plain space ("Anass Salah Eddine"); align spelling
+ * after the generic Lastname/Firstname swap so the player parameter merges
+ * with peers instead of fragmenting into a second bucket.
+ */
+function canonicalizeFortunaPlayerName(raw: string): string {
+  return canonicalizePlayerName(raw).replace(/\bSalah-Eddine\b/giu, "Salah Eddine");
+}
+
+/**
+ * Strips a leading team-name token that OPTA occasionally prefixes directly
+ * onto the player name with no punctuation ("Maroko Diop, Issa strzeli
+ * pierwszego gola w meczu (OPTA)"), which would otherwise leak into the
+ * extracted surname ("Issa Maroko Diop"). Abbreviated team prefixes
+ * ("W.Ziel.Przyl. Cabral, Jovane") already fail to match below because of
+ * their embedded periods and need no special handling here.
+ */
+function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): string {
+  const leadingWord = name.match(/^([\p{Lu}][\p{L}'-]*)\s+/u)?.[1];
+  if (!leadingWord) return name;
+  const side = normalize1x2Selection(leadingWord, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  return side === "HOME" || side === "AWAY" ? name.slice(leadingWord.length).trim() : name;
+}
+
+/**
  * Extracts the player name from Fortuna per-player OPTA market names and
  * canonicalizes it to natural "Firstname Lastname" order:
  * - dash form: "Zerrouki, Ramiz - liczba fauli (OPTA)"
  * - count form (no dash): "Widmer, Silvan liczba spalonych w 1.połowie (OPTA)"
  * - verb form (optionally with abbreviated team prefix):
  *   "W.Ziel.Przyl. Cabral, Jovane strzeli pierwszego gola w meczu (OPTA)"
+ * - no-comma fallback: some OPTA entries are written in plain "Firstname
+ *   Lastname" order with no comma at all ("Youssef Belammari liczba
+ *   spalonych w 1.połowie (OPTA)", "Ayoube Amaimouni Echghouyab - liczba
+ *   fauli (OPTA)") — already in natural order, so no swap is needed.
  */
-function extractFortunaPlayerName(rawName: string): string | undefined {
-  const name = stripFortunaScope(rawName);
+function extractFortunaPlayerName(
+  rawName: string,
+  ctx: NormalizationContext
+): string | undefined {
+  const name = stripFortunaLeadingTeamToken(stripFortunaScope(rawName), ctx);
 
-  const dashMatch = name.match(/^(.+?,[^-]+?)\s+-\s+/);
-  if (dashMatch) return canonicalizePlayerName(dashMatch[1].trim());
+  // The name portion may itself contain a hyphenated given/surname ("Mateta,
+  // Jean-Philippe - ..."), so it must allow hyphens; only the literal " - "
+  // (space-hyphen-space) is the actual dash/count separator.
+  const dashMatch = name.match(/^(.+?,.+?)\s+-\s+/);
+  if (dashMatch) return canonicalizeFortunaPlayerName(dashMatch[1].trim());
 
   const countMatch = name.match(
     /^([\p{Lu}][\p{L}'’.\- ]*,\s*[\p{Lu}][\p{L}'’. -]*?)\s+liczba\s/u
   );
-  if (countMatch) return canonicalizePlayerName(countMatch[1].trim());
+  if (countMatch) return canonicalizeFortunaPlayerName(countMatch[1].trim());
 
   const verbMatch = name.match(
     /([\p{Lu}][\p{L}'-]*(?:\s+[\p{Lu}][\p{L}'-]*)*,\s*[\p{Lu}][\p{L} '.-]*?)\s+(?:strzeli|asystuje|otrzyma|zaliczy|odda)/u
   );
-  if (verbMatch) return canonicalizePlayerName(verbMatch[1].trim());
+  if (verbMatch) return canonicalizeFortunaPlayerName(verbMatch[1].trim());
+
+  // No-comma fallback: capture the leading run of 2+ capitalized words
+  // immediately preceding the dash separator or a known count/verb keyword.
+  const noCommaMatch = name.match(
+    /^([\p{Lu}][\p{L}'’.-]*(?:\s+[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
+  );
+  if (noCommaMatch) return canonicalizeFortunaPlayerName(noCommaMatch[1].trim());
 
   return undefined;
 }
@@ -600,8 +647,8 @@ function normalizeSelectionForMarket(
       return normalizeYesNoSelection(trimmed);
 
     case "FIRST_GOAL_AND_RESULT": {
-      // "1/2" = first goal by team 1 / away win; "Brak goli" -> NONE.
-      if (/^(brak goli|nikt|bez gola)/.test(normalized)) return "NONE";
+      // "1/2" = first goal by team 1 / away win; "Brak goli"/"No goal" -> NONE.
+      if (/^(brak goli|nikt|bez gola|no goal)/.test(normalized)) return "NONE";
       const parts = splitFortunaCombo(trimmed);
       if (parts) {
         const first = comboSide(parts[0]);
@@ -638,7 +685,8 @@ function normalizeSelectionForMarket(
     }
 
     case "RESULT_AND_TOTAL":
-    case "HALF_TIME_RESULT_AND_TOTAL": {
+    case "HALF_TIME_RESULT_AND_TOTAL":
+    case "SECOND_HALF_RESULT_AND_TOTAL": {
       // "Kolumbia/- 2.5", "0/+ 3.5" -> AWAY_UNDER, DRAW_OVER
       const parts = splitFortunaCombo(trimmed);
       if (parts) {
@@ -746,13 +794,23 @@ function normalizeSelectionForMarket(
     case "EUROPEAN_HANDICAP":
     case "FIRST_HALF_ASIAN_HANDICAP":
     case "FIRST_HALF_EUROPEAN_HANDICAP":
+    case "SECOND_HALF_EUROPEAN_HANDICAP":
+    case "SECOND_HALF_ASIAN_HANDICAP_PUSH":
+    case "CORNERS_HANDICAP":
       return normalizeFortunaHandicapSelection(trimmed, ctx);
 
     case "CORRECT_SCORE":
     case "HALF_TIME_CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
-      return (score ?? trimmed) as NormalizedSelection;
+      if (score) return score as NormalizedSelection;
+      // Fortuna labels the catch-all outcome "inny"/"pozostałe" — align with
+      // the canonical OTHER code peers (betclic, etoto) use for the same
+      // score-grid column instead of leaking raw Polish text.
+      if (normalized === "inny" || normalized === "inny wynik" || normalized === "pozostale") {
+        return "OTHER" as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
     }
 
     case "GOAL_RANGE":
@@ -924,12 +982,30 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
 
     if (!marketCode) {
       matchedBy = "name";
-      marketCode = findMarketCodeFromName(raw.name);
+      // "1.połowa: <team> przedział rzutów rożnych" (a per-team, half-scoped
+      // corner range) has no stable marketTypeId observed in this fixture's
+      // payload; route by name so it doesn't fall through to the generic
+      // OTHER bucket, which merges it with unrelated proposition markets.
+      marketCode =
+        findMarketCodeFromName(raw.name) ??
+        (/przedzia[łl]\s+rzut[oó]w\s+ro[żz]nych/iu.test(raw.name) &&
+        /^\s*1\s*\.?\s*po[łl]owa\s*:/iu.test(raw.name)
+          ? "HALF_TIME_CORNERS_TEAM_RANGE"
+          : null);
     }
 
     if (!marketCode) {
       console.warn(`[fortuna] Unknown market: "${raw.name}" (id: ${marketId ?? "none"})`);
       return null;
+    }
+
+    // Fortuna's handicap marketTypeIds (00-0b/00-0h/00-re) are reused across
+    // fixtures for both goal handicaps and corner handicaps; the live name
+    // ("Mecz: liczba rzutów rożnych handicap") is authoritative over a stale
+    // id assumption — never price a corners handicap into the goal-handicap
+    // ASIAN_HANDICAP bucket.
+    if (marketCode === "ASIAN_HANDICAP" && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
+      marketCode = "CORNERS_HANDICAP";
     }
 
     // A "2-way" handicap quoting a draw outcome is actually a 3-way handicap;
@@ -947,6 +1023,33 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // Scope-stripped name for the team routers below — live Fortuna labels
     // carry a "Mecz:"/"1.połowa:" prefix in front of the team name.
     const scopedName = stripFortunaScope(raw.name);
+
+    // Fortuna reuses some marketTypeIds across scopes/products (verified
+    // against this fixture): the id->code static map can hand back a
+    // full-match code even when the live payload's name is explicitly scoped
+    // to a half. The name is authoritative — reroute to the half-scoped
+    // counterpart, or drop the entry when no counterpart exists, instead of
+    // silently poisoning full-match best-odds with half-scoped prices.
+    if (matchedBy === "id") {
+      const halfScope = raw.name.trim().match(/^([12])\s*\.?\s*po[łl]owa\s*:/iu);
+      if (halfScope) {
+        const isSecondHalf = halfScope[1] === "2";
+        if (marketCode === "MATCH_WINNER") {
+          const isHandicapStyle = /handicap|\d+\s*:\s*\d+/iu.test(scopedName);
+          marketCode = isSecondHalf
+            ? isHandicapStyle
+              ? "SECOND_HALF_EUROPEAN_HANDICAP"
+              : "SECOND_HALF_RESULT"
+            : isHandicapStyle
+              ? "FIRST_HALF_EUROPEAN_HANDICAP"
+              : "HALF_TIME_RESULT";
+        } else if (marketCode === "RESULT_AND_TOTAL" && isSecondHalf) {
+          marketCode = "SECOND_HALF_RESULT_AND_TOTAL";
+        } else if (marketCode === "ASIAN_HANDICAP_PUSH" && isSecondHalf) {
+          marketCode = "SECOND_HALF_ASIAN_HANDICAP_PUSH";
+        }
+      }
+    }
 
     // Fortuna emits "team half with more goals" for both sides under the same
     // type ids; route by the team named in the market label.
@@ -1032,7 +1135,7 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     const isPlayerMarket =
       FORTUNA_PLAYER_STAT_MARKETS.has(marketCode) ||
       FORTUNA_PLAYER_DROPDOWN_MARKETS.has(marketCode);
-    const playerName = isPlayerMarket ? extractFortunaPlayerName(raw.name) : undefined;
+    const playerName = isPlayerMarket ? extractFortunaPlayerName(raw.name, ctx) : undefined;
 
     // Parlay-style player markets carry the player (and the shots tier) in
     // the natural-order label: "Norwegia wygra , Erling Haaland 2+ strzały w
@@ -1085,7 +1188,9 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     if (
       (marketCode === "ASIAN_HANDICAP" ||
         marketCode === "ASIAN_HANDICAP_PUSH" ||
-        marketCode === "FIRST_HALF_ASIAN_HANDICAP") &&
+        marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
+        marketCode === "SECOND_HALF_ASIAN_HANDICAP_PUSH" ||
+        marketCode === "CORNERS_HANDICAP") &&
       selections.length === 2
     ) {
       const unknowns = selections.filter((sel) => sel.code === "UNKNOWN");
@@ -1099,7 +1204,8 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     if (
       (marketCode === "EUROPEAN_HANDICAP" ||
         marketCode === "ASIAN_HANDICAP_3WAY" ||
-        marketCode === "FIRST_HALF_EUROPEAN_HANDICAP") &&
+        marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
+        marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") &&
       selections.length === 3
     ) {
       const unknowns = selections.filter((sel) => sel.code === "UNKNOWN");
@@ -1123,7 +1229,10 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode === "ASIAN_HANDICAP_3WAY" ||
       marketCode === "EUROPEAN_HANDICAP" ||
       marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
-      marketCode === "FIRST_HALF_EUROPEAN_HANDICAP"
+      marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
+      marketCode === "SECOND_HALF_EUROPEAN_HANDICAP" ||
+      marketCode === "SECOND_HALF_ASIAN_HANDICAP_PUSH" ||
+      marketCode === "CORNERS_HANDICAP"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

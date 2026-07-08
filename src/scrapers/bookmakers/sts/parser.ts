@@ -428,6 +428,17 @@ function getSelectionName(
       if (outcomeId === 244) return "nie / tak";
       break;
 
+    // Market 221 (FIRST_CORNER) and 179 (FIRST_CARD): the "no corner"/"no
+    // card" outcome shares global outcome id 7 with the "First/Last goal"
+    // markets (8, 9), where it means "Bez gola" (no goal). That text leaking
+    // into these unrelated markets is misleading (and fragile - a future
+    // rename of id 7 for goal markets would silently corrupt these too), so
+    // give them their own market-appropriate "none" label instead.
+    case 221:
+    case 179:
+      if (outcomeId === 7) return "Brak";
+      break;
+
     case MARKET_IDS.TOTAL_GOALS:
     case MARKET_IDS.TOTAL_GOALS_ASIAN:
       if (outcomeId === OUTCOME_OVER_UNDER.OVER) return "Powyżej";

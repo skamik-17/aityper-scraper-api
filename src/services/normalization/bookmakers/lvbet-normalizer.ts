@@ -134,6 +134,11 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // --- Card points ---
   { pattern: /kartki: suma punktow/, code: "CARDS_POINTS_OVER_UNDER" },
   { pattern: /kartki: wynik \(zk/, code: "CARDS_POINTS_1X2" },
+  // "Kartki: Handicap punktowy (ŻK - 1p, CzK - 2p)" is a disciplinary-points
+  // handicap (yellow=1pt/red=2pt), a different statistic from the goal
+  // ASIAN_HANDICAP family it used to fall through to via the generic
+  // HANDICAP_PATTERN fallback. The catalog has a dedicated code for it.
+  { pattern: /kartki: handicap punktowy/, code: "CARDS_POINTS_HANDICAP" },
 
   // --- Red cards (czerwona kartka) ---
   { pattern: /czerwone kartki: suma/, code: "RED_CARDS_TOTAL" },
@@ -192,8 +197,11 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /zawodnicy \(faule popełnione\)/, code: "PLAYER_FOULS" },
   { pattern: /zawodnicy \(faule zarobione\)/, code: "PLAYER_FOULS_WON" },
   { pattern: /odbiory- tackles/, code: "PLAYER_TACKLES" },
-  { pattern: /obrony bramkarza - powyzej \(2\.5\)/, code: "GOALKEEPER_SAVES_OVER" },
-  { pattern: /obrony bramkarza - powyzej/, code: "PLAYER_SAVES" },
+  // Any "powyżej <line>" goalkeeper-saves market shares the same shape
+  // (fixed threshold, per-keeper rows) regardless of the specific line — the
+  // catalog's dedicated GOALKEEPER_SAVES_OVER code applies to all of them,
+  // not just the 2.5 line that used to be hardcoded here.
+  { pattern: /obrony bramkarza - powyzej/, code: "GOALKEEPER_SAVES_OVER" },
 
   // --- Goalscorer markets ---
   // "Podwójna szansa" player combos are two-player OR bets — structurally
@@ -213,6 +221,11 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /auty:.*handicap/, code: "THROW_INS_HANDICAP" },
   // "Auty: Wynik" is the throw-ins 1X2, not the goal MATCH_WINNER.
   { pattern: /auty: wynik/, code: "THROW_INS_1X2" },
+  // "Auty: 1. Połowa - Suma" is a first-half, BOTH-teams-combined total — a
+  // different stat from the full-match TEAM_TOTAL_THROW_INS catch-all below
+  // (no team qualifier, no catalog code for the half-scoped combined total
+  // yet). Exclude it instead of letting it masquerade as the full-match code.
+  { pattern: /auty: 1\. połowa - suma/, code: "OTHER" },
   { pattern: /auty: suma/, code: "THROW_INS_TOTAL" },
   { pattern: /auty: belgia suma 23\.5$/, code: "THROW_INS_TEAM" },
   { pattern: /auty: nowa zelandia suma 14\.5$/, code: "TEAM_THROW_INS" },
@@ -220,6 +233,10 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
 
   // --- Goal kicks (wybicia od bramki) ---
   { pattern: /wybicia od bramki:.*handicap/, code: "GOAL_KICKS_HANDICAP" },
+  // "Wybicia od bramki: 1. Połowa - Suma" is a first-half segment total, not
+  // the full-match team total the generic catch-all below represents — no
+  // catalog code exists for the half-scoped variant yet.
+  { pattern: /wybicia od bramki: 1\. połowa - suma/, code: "OTHER" },
   { pattern: /wybicia od bramki: suma/, code: "GOAL_KICKS_TOTAL" },
   { pattern: /wybicia od bramki: belgia - suma 4\.5$/, code: "TEAM_TOTAL_GOAL_KICKS" },
   { pattern: /wybicia od bramki: belgia - suma 7\.5$/, code: "TEAM_TOTAL_GOAL_KICKS" },
@@ -304,7 +321,9 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /(?:belgia|belgium) wygra do zera/, code: "HOME_WIN_TO_NIL" },
   { pattern: /(?:nowa zelandia|new zealand) wygra do zera/, code: "AWAY_WIN_TO_NIL" },
   { pattern: /wygra obie połowy/, code: "TEAM_WIN_BOTH_HALVES" },
-  { pattern: /wygra przynajmniej jedna połowe/, code: "AWAY_WIN_AT_LEAST_ONE_HALF" },
+  // "<Team> wygra przynajmniej jedną połowę" is routed team-aware further
+  // down (via detectTeamSide) instead of a static pattern here, since a
+  // static regex cannot tell which team's name appears in the raw label.
   { pattern: /remis przynajmniej w jednej z połow/, code: "DRAW_AT_LEAST_ONE_HALF" },
   { pattern: /wygra pierwsza połowe \/ wygra druga połowe/, code: "HALF_TIME_SECOND_HALF_RESULT" },
   // "LV Zaliczka" is a 3-way (HOME/DRAW/AWAY) insured-1X2 promo product; the
@@ -462,6 +481,22 @@ function resolveMarketCode(
     return { code: side ? "OTHER" : "RESULT_AND_TOTAL", matchedBy: "pattern" };
   }
 
+  // "<Team> wygra przynajmniej jedną połowę" (team wins at least one half) —
+  // resolve the side from the raw name instead of a hardcoded AWAY code, so
+  // the home team's own market never lands in the away bucket.
+  if (/wygra przynajmniej jedna połowe/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    return {
+      code:
+        side === "HOME"
+          ? "HOME_WIN_AT_LEAST_ONE_HALF"
+          : side === "AWAY"
+            ? "AWAY_WIN_AT_LEAST_ONE_HALF"
+            : "OTHER",
+      matchedBy: "pattern",
+    };
+  }
+
   // "Total Goals (Extended Bands)" family — team-scoped variants need ctx to
   // resolve the side, so they cannot be routed by static patterns.
   if (/total goals \(extended bands\)/.test(normalizedName)) {
@@ -501,6 +536,20 @@ function resolveMarketCode(
   if (GOAL_TOTAL_PATTERN.test(normalizedName)) {
     const side = detectTeamSide(raw.name, ctx);
     if (side) {
+      // "Parzyste"/"Nieparzyste" (odd/even team goals) share the same
+      // team+"gole" wording as the over/under family below but are a
+      // distinct proposition — route them to the dedicated odd/even code
+      // before the over/under branches, instead of letting them fall into
+      // HOME/AWAY_TEAM_TOTAL_GOALS as unmapped UNKNOWN selections.
+      const isOddEven =
+        raw.selections.length > 0 &&
+        raw.selections.every((s) => /^(parzyst|nieparzyst)/.test(normalizeMarketName(s.name)));
+      if (isOddEven) {
+        return {
+          code: side === "HOME" ? "HOME_TEAM_ODD_EVEN_GOALS" : "AWAY_TEAM_ODD_EVEN_GOALS",
+          matchedBy: "pattern",
+        };
+      }
       const secondHalf = SECOND_HALF_PATTERN.test(normalizedName);
       const firstHalf = HALF_TIME_PATTERN.test(normalizedName);
       if (/dokładna liczba goli/.test(normalizedName)) {
@@ -626,6 +675,29 @@ function resolveMarketCode(
 function isCatalogSelection(marketCode: NormalizedMarketType, code: string): boolean {
   const metadata = getMarketMetadata(marketCode);
   return metadata ? metadata.selections.includes(code) : false;
+}
+
+/**
+ * Folds a bare numeric exact-goals selection ("2", "3", "5") that has no
+ * literal catalog match into the market's own highest "N+" catch-all bucket
+ * that it still satisfies (e.g. SECOND_HALF_EXACT_GOALS's "2+" swallows raw
+ * "2"/"3"/"4+"; AWAY_EXACT_GOALS's "3+" swallows raw "4"/"5"/"6+"), instead of
+ * silently dropping the whole tail the way a literal-only match would.
+ */
+function mergeIntoExactGoalsCatchAll(
+  marketCode: NormalizedMarketType,
+  compact: string
+): NormalizedSelection | null {
+  if (isCatalogSelection(marketCode, compact)) return compact as NormalizedSelection;
+  const value = parseInt(compact.replace("+", ""), 10);
+  if (Number.isNaN(value)) return null;
+  const metadata = getMarketMetadata(marketCode);
+  const catchAllThreshold = (metadata?.selections ?? [])
+    .filter((s) => /^\d+\+$/.test(s))
+    .map((s) => parseInt(s, 10))
+    .sort((a, b) => b - a)
+    .find((threshold) => value >= threshold);
+  return catchAllThreshold !== undefined ? (`${catchAllThreshold}+` as NormalizedSelection) : null;
 }
 
 /**
@@ -792,6 +864,8 @@ function normalizeSelectionForMarket(
     case "ODD_EVEN_GOALS":
     case "HALF_TIME_ODD_EVEN_GOALS":
     case "SECOND_HALF_ODD_EVEN_GOALS":
+    case "HOME_TEAM_ODD_EVEN_GOALS":
+    case "AWAY_TEAM_ODD_EVEN_GOALS":
     case "CORNERS_ODD_EVEN":
     case "HALF_TIME_CORNERS_ODD_EVEN":
     case "CARDS_ODD_EVEN":
@@ -809,6 +883,7 @@ function normalizeSelectionForMarket(
     case "CORNERS_HANDICAP":
     case "HALF_TIME_CORNERS_HANDICAP":
     case "CARDS_HANDICAP":
+    case "CARDS_POINTS_HANDICAP":
     case "HALF_TIME_CARDS_HANDICAP":
     case "SECOND_HALF_CARDS_HANDICAP":
     case "FOULS_HANDICAP":
@@ -848,6 +923,19 @@ function normalizeSelectionForMarket(
       // the whole grid into one UNKNOWN entry.
       const score = parseScoreSelection(trimmed);
       return score ? (score as NormalizedSelection) : null;
+    }
+
+    case "MULTI_RESULT": {
+      // "1-0 / 2-0 / 3-0" -> catalog code "1:0, 2:0 lub 3:0" (mirrors the
+      // betcris normalizer's transform for the identical raw grouping).
+      const scores = trimmed.split("/").map((part) => part.trim());
+      if (scores.length >= 2 && scores.every((s) => /^\d+\s*-\s*\d+$/.test(s))) {
+        const colonScores = scores.map((s) => s.replace(/\s*-\s*/, ":"));
+        const last = colonScores[colonScores.length - 1];
+        return `${colonScores.slice(0, -1).join(", ")} lub ${last}` as NormalizedSelection;
+      }
+      if (/^(x|remis)$/i.test(trimmed)) return "X" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
     }
 
     case "HALFTIME_FULLTIME":
@@ -1015,15 +1103,14 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_HOME_EXACT_GOALS": {
       // Exact-goal labels are numeric ("0", "1", "2", "3", "4+") — they must
       // NOT fall through to the 1X2 fallback, which mis-coded them as
-      // HOME/AWAY/DRAW. Only buckets the catalog defines for this market are
-      // emitted; LVBet's grouped bands ("0 lub 1", "4 do 6", "7 lub więcej")
-      // and unsupported buckets ("4+") have no catalog counterpart and are
-      // dropped rather than surfaced as UNKNOWN/orphan codes.
+      // HOME/AWAY/DRAW. LVBet's grouped bands ("0 lub 1", "4 do 6", "7 lub
+      // więcej") have no catalog counterpart and are dropped, but a bare
+      // numeric tail beyond the catalog's exact buckets ("2", "3", "5") is
+      // folded into the market's own "N+" catch-all instead of being
+      // silently discarded.
       const compact = trimmed.replace(/\s+/g, "");
-      if (/^\d+\+?$/.test(compact) && isCatalogSelection(marketCode, compact)) {
-        return compact as NormalizedSelection;
-      }
-      return null;
+      if (!/^\d+\+?$/.test(compact)) return null;
+      return mergeIntoExactGoalsCatchAll(marketCode, compact);
     }
 
     case "RESULT_AND_BTTS":
@@ -1074,6 +1161,8 @@ function normalizeSelectionForMarket(
     case "PLAYER_SCORES_BOTH_HALVES":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PENALTY_SCORER":
+    case "PLAYER_GOAL_TEAM_LOSES":
+    case "PLAYER_GOAL_AND_RESULT":
     case "FIRST_CARD_PLAYER": {
       const normalized = normalizeMarketName(trimmed);
       if (/^(nikt|zaden|zadny|bez gola|bez goli|brak gola|brak goli)$/.test(normalized)) {
@@ -1085,15 +1174,25 @@ function normalizeSelectionForMarket(
       return canonicalizePlayerName(trimmed) as NormalizedSelection;
     }
 
-    // Player pair/trio combos: keep the pair label as the selection code so
-    // distinct combinations do not collapse into a single UNKNOWN row.
+    // Player pair/trio combos: canonicalize and sort each member so the same
+    // real-world combination merges across bookmakers regardless of raw
+    // member order or "Lastname, Firstname" spelling (mirrors betclic's
+    // normalizePlayerComboSelection for the identical market shape).
     case "BOTH_PLAYERS_ANYTIME":
     case "TWO_PLAYERS_ANYTIME":
     case "THREE_PLAYERS_ANYTIME":
     case "ALL_PLAYERS_SCORE":
     case "ANY_PLAYER_FIRST_GOAL":
-    case "PLAYER_ASSIST_PAIRS":
-      return trimmed as NormalizedSelection;
+    case "PLAYER_ASSIST_PAIRS": {
+      const members = trimmed
+        .split(/\s+(?:or|and|i)\s+|\s*[/&]\s*/i)
+        .map((part) => canonicalizePlayerName(part.trim()))
+        .filter((part) => part.length > 0);
+      if (members.length < 2) {
+        return canonicalizePlayerName(trimmed) as NormalizedSelection;
+      }
+      return members.sort((a, b) => a.localeCompare(b, "en")).join(" & ") as NormalizedSelection;
+    }
 
     default: {
       // Generic fallback: LVBet exposes many YES/NO prop markets ("Tak"/"Nie")
@@ -1162,9 +1261,37 @@ function parseLvbetStatLine(selectionNames: string[]): string | undefined {
   return undefined;
 }
 
+/**
+ * LVBet bundles a whole player roster under ONE raw market per stat
+ * threshold for these props ("Zawodnicy (strzały celne) - powyżej 4.5" lists
+ * every eligible player, "Zawodnik strzeli 4 lub więcej goli" likewise), so
+ * separate threshold-scoped raw markets (0.5-line, 2.5-line, 4.5-line, ...)
+ * all share the same marketCode. Without a per-threshold parameter they
+ * would all collapse into the same "base" bucket: the grouper keeps only the
+ * first raw market seen per (marketCode, param, bookmaker) combination,
+ * silently dropping every other threshold's whole player roster. Keying the
+ * parameter by the threshold keeps every threshold's roster visible (players
+ * still share the selection dimension via the shared canonicalizePlayerName
+ * case in normalizeSelectionForMarket).
+ */
+const LVBET_MULTI_THRESHOLD_PLAYER_LIST_CODES = new Set<NormalizedMarketType>([
+  "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_SHOTS",
+  "PLAYER_TACKLES",
+  "PLAYER_FOULS_WON",
+  "PLAYER_FOULS",
+  "PLAYER_SAVES",
+  "GOALKEEPER_SAVES_OVER",
+  "PLAYER_GOALS",
+]);
+
 function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMarket): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
+
+  if (LVBET_MULTI_THRESHOLD_PLAYER_LIST_CODES.has(marketCode)) {
+    return marketCode === "PLAYER_GOALS" ? parseIntegerLine(raw.name) : parseDecimalLine(raw.name);
+  }
 
   const selectionNames = raw.selections.map((s) => s.name);
   const marketName = raw.name;

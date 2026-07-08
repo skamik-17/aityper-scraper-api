@@ -300,6 +300,48 @@ const SENTINEL_ODDS_MAX = 1.005;
 const EACH_TEAM_OVER_MARKET_IDS = new Set<number>([200697, 200709, 200721]);
 
 /**
+ * Player-list markets (one raw row per player or player pair, no real
+ * betting "line") - Superbet's feed still tags every such row with a
+ * per-player `specialBetValue`, which the generic grouping key below
+ * otherwise treats as a distinguishing line, splitting one logical market
+ * into many single-selection groups. Since every player/pair resolves to
+ * the identical marketCode with no param, all those groups collapse to the
+ * same normalized market_key; the storage upsert (keyed by match+bookmaker+
+ * market_key+scraped_at) then keeps only whichever group was written last,
+ * silently dropping every other player/pair (confirmed: TWO_PLAYERS_ANYTIME,
+ * BOTH_PLAYERS_ANYTIME, GOALSCORER_FIRST, GOALSCORER_ANYTIME, PLAYER_CARDS,
+ * PLAYER_RED_CARD, PLAYER_2_OR_MORE_GOALS all persisted with exactly one
+ * selection instead of the ~40-100 the raw feed actually offers). Grouping
+ * by marketId alone keeps every player/pair in the same market.
+ */
+const PLAYER_LIST_MARKET_IDS = new Set<number>([
+  600,
+  601, // GOALSCORER_ANYTIME / GOALSCORER_FIRST listing aliases
+  236226,
+  236424, // GOALSCORER_ANYTIME / GOALSCORER_FIRST
+  233486,
+  233487,
+  233488, // HALF_TIME/SECOND_HALF_GOALSCORER_ANYTIME, PLAYER_SCORES_BOTH_HALVES
+  236240,
+  236242, // PLAYER_CARDS, PLAYER_RED_CARD
+  201787, // FIRST_PLAYER_CARDED
+  239910, // PLAYER_OF_THE_MATCH
+  236230,
+  236232, // PLAYER_GOAL_OR_ASSIST, PLAYER_GOAL_AND_ASSIST
+  236244,
+  236246, // PLAYER_2_OR_MORE_GOALS, PLAYER_3_OR_MORE_GOALS
+  236426,
+  237087, // PLAYER_HEADER_GOAL (+ alt id)
+  236428,
+  236430, // PLAYER_LEFT_FOOT_GOAL, PLAYER_RIGHT_FOOT_GOAL
+  236436, // PLAYER_GOAL_OUTSIDE_BOX
+  236432, // PENALTY_SCORER
+  237085, // PLAYER_FREE_KICK_GOAL
+  233484,
+  233485, // TWO_PLAYERS_ANYTIME, BOTH_PLAYERS_ANYTIME
+]);
+
+/**
  * Superbet returns some market names with an uninterpolated "X" placeholder
  * ("Liczba goli - do X minuty"). Substitute the real minute when it can be
  * recovered unambiguously from the selection names.
@@ -344,9 +386,11 @@ export function parseAllMarkets(
 
   for (const selection of odds) {
     // Create unique key for market grouping
-    // For line markets (O/U, handicap), include the line in the key
+    // For line markets (O/U, handicap), include the line in the key. Skip
+    // this for player-list markets, whose specialBetValue is not a real
+    // line - see PLAYER_LIST_MARKET_IDS.
     let key = String(selection.marketId);
-    if (selection.specialBetValue) {
+    if (selection.specialBetValue && !PLAYER_LIST_MARKET_IDS.has(selection.marketId)) {
       key += `_${selection.specialBetValue}`;
     }
 

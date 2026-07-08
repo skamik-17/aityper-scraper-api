@@ -261,7 +261,12 @@ export function parseAllMarkets(
         odds: outcome.outcomeOdds || 0,
         externalId: outcome.outcomeId ? String(outcome.outcomeId) : undefined,
       }))
-      .filter((sel) => sel.odds > 0);
+      // forBET pads low-probability player-prop selections (e.g. distant
+      // goal/card thresholds) with a flat 101 ceiling instead of a real
+      // computed price — the same 101 recurs identically across different
+      // players and different thresholds, which a genuine market price
+      // would not. Drop it so it doesn't poison best-odds comparisons.
+      .filter((sel) => sel.odds > 0 && sel.odds !== 101);
 
     // Only add markets with valid selections
     if (selections.length > 0) {

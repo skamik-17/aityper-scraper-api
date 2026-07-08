@@ -52,6 +52,32 @@ function canonicalizeParamValue(param: string): string {
 }
 
 /**
+ * Recovers a market whose normalizer bundled multiple parameter lines'
+ * selections into one entry (paramValue unset) by extracting the line number
+ * embedded in each selection's raw label and splitting into one synthetic
+ * market per line. Returns null when the selections don't confidently encode
+ * 2+ distinct lines — callers then fall back to the normal (and stricter)
+ * base-bucket handling, so a genuine single-number misroute still gets
+ * dropped rather than mistaken for a bundle.
+ */
+function splitBundledLineSelections(market: ScrapedMarket): ScrapedMarket[] | null {
+  const byLine = new Map<string, typeof market.selections>();
+  for (const sel of market.selections) {
+    const m = sel.name.match(/(\d+)[.,](\d+)/);
+    if (!m) return null;
+    const line = `${m[1]}.${m[2]}`;
+    if (!byLine.has(line)) byLine.set(line, []);
+    byLine.get(line)!.push(sel);
+  }
+  if (byLine.size <= 1) return null;
+  return Array.from(byLine.entries()).map(([line, selections]) => ({
+    ...market,
+    paramValue: line,
+    selections,
+  }));
+}
+
+/**
  * Sort parameters intelligently
  */
 function sortParameters(params: string[]): string[] {
@@ -139,6 +165,21 @@ function getParameterLabel(param: string, marketType: string): string {
 export function groupMarketsByTypeWithParameters(
   marketsWithBookmakers: Array<{ market: ScrapedMarket; bookmaker: string }>
 ): MarketWithParams[] {
+  // Some bookmaker normalizers can only emit ONE market per raw entry, so a
+  // raw market that bundles several parameter lines together (the line lives
+  // only inside each selection's raw label, e.g. "Team & Powyżej 2,5") comes
+  // through with paramValue unset and every line's selections mixed as one.
+  // Recover it into per-line entries here — before the base-bucket drop below
+  // would otherwise discard the whole thing as an apparent misroute.
+  const expandedInput = marketsWithBookmakers.flatMap((entry) => {
+    const marketType = entry.market.normalizedType || "OTHER";
+    const parameterType = getMarketByCode(marketType)?.parameterType;
+    if (entry.market.paramValue || parameterType !== "decimal") return [entry];
+    const split = splitBundledLineSelections(entry.market);
+    if (!split) return [entry];
+    return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
+  });
+
   // Group by market type (without parameter)
   const typeGroups = new Map<string, {
     marketType: string;
@@ -147,7 +188,7 @@ export function groupMarketsByTypeWithParameters(
     markets: Array<{ market: ScrapedMarket; bookmaker: string; param: string }>;
   }>();
 
-  for (const { market, bookmaker } of marketsWithBookmakers) {
+  for (const { market, bookmaker } of expandedInput) {
     const marketType = market.normalizedType || "OTHER";
     const entryDef = getMarketByCode(marketType);
     const parameterType = entryDef?.hasParameter ? entryDef.parameterType : undefined;
@@ -336,17 +377,17 @@ export function groupMarketsByTypeWithParameters(
           selections: data.selections,
         }));
 
-        if (parameters.length === 0) {
-          parameters.push({
-            value: "",
-            label: "",
-            bookmakers: parameterBookmakers,
-          });
-        } else {
-          parameters[0].value = "";
-          parameters[0].label = "";
-          parameters[0].bookmakers = parameterBookmakers;
-        }
+        // Collapse ALL raw param-group buckets into exactly ONE dummy
+        // parameter. A stray non-"base" paramValue from a single bookmaker
+        // (the catalog says this market has no real parameter) would
+        // otherwise survive as parameters[1+], a phantom duplicate bucket
+        // alongside the intended single empty-value/empty-label entry.
+        parameters.length = 0;
+        parameters.push({
+          value: "",
+          label: "",
+          bookmakers: parameterBookmakers,
+        });
 
         // Set hasParameters to true so frontend gets data
         hasParameters = true;

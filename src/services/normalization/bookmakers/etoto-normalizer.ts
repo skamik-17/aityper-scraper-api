@@ -240,6 +240,8 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   [-30071]: "HOME",
   [-30072]: "AWAY",
+  [-250]: "HOME",
+  [-251]: "AWAY",
 };
 
 /**
@@ -331,6 +333,18 @@ function resolveTeamScopedMarket(
     const side = resolveSide(match[1]);
     if (side === "HOME") return "HOME_WIN_TO_NIL";
     if (side === "AWAY") return "AWAY_WIN_TO_NIL";
+    return null;
+  }
+
+  // "<team> wygra lub powyżej [line]" (win-or-over combo). The sibling
+  // "wygra lub poniżej" (win-or-under) phrase is routed via a dedicated
+  // gameType id to the generic WIN_OR_UNDER code instead, so this branch is
+  // scoped to "powyżej" only to avoid touching that already-working path.
+  match = rawName.match(/^(.+?)\s+wygra\s+lub\s+powy[zż]ej\b/i);
+  if (match) {
+    const side = resolveSide(match[1]);
+    if (side === "HOME") return "HOME_WIN_OR_OVER";
+    if (side === "AWAY") return "AWAY_WIN_OR_OVER";
     return null;
   }
 
@@ -592,6 +606,8 @@ function normalizeSelectionForMarket(
     case "WIN_OR_BTTS":
     case "DRAW_OR_BTTS":
     case "WIN_OR_UNDER":
+    case "HOME_WIN_OR_OVER":
+    case "AWAY_WIN_OR_OVER":
     case "DRAW_OR_OVER_2_5":
     case "DRAW_OR_UNDER_2_5":
     case "DRAW_OR_CLEAN_SHEET":
@@ -1006,6 +1022,13 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       paramValue = extractScorelineHandicap(raw.name) ?? extractParamValue(marketCode, raw);
     } else if (ETOTO_PLAYER_STAT_MARKETS.has(marketCode)) {
       paramValue = extractPlayerParam(raw.selections);
+    } else if (marketCode === "RED_CARD_TEAM" && teamSide) {
+      // RED_CARD_TEAM has no numeric line, so the team side must carry the
+      // param itself; otherwise the home/away variants collide on the same
+      // (marketCode, undefined) bucket and the grouper's collision guard
+      // silently drops the second one (see betclic-normalizer.ts for the
+      // same pattern).
+      paramValue = teamSide;
     } else {
       paramValue = extractParamValue(marketCode, raw);
     }

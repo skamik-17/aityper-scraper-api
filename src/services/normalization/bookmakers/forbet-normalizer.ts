@@ -656,6 +656,10 @@ function normalizeSelectionForMarket(
     case "TEAM_GOALS_BEFORE_MINUTE":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
+    // CORNERS_TEAM's catalog selections are plain OVER/UNDER (no side
+    // prefix, unlike CARDS_TEAM) — matches etoto, which shares this feed
+    // and the same 115/116 game-type ids.
+    case "CORNERS_TEAM":
     case "HALF_TIME_CORNERS_TOTAL":
     case "SECOND_HALF_CORNERS_TOTAL":
     case "HALF_TIME_CARDS_TOTAL":
@@ -725,7 +729,14 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
-      return (score ?? trimmed) as NormalizedSelection;
+      if (score) return score as NormalizedSelection;
+      // forBET labels the catch-all outcome "inny" — align with the canonical
+      // OTHER code used by peers (betclic, etoto, sts) for the same
+      // score-grid column, mirroring betclic-normalizer.ts.
+      if (normalized === "inny" || normalized === "inny wynik" || normalized === "pozostale") {
+        return "OTHER" as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
     }
 
     case "HT_FT_CORRECT_SCORE": {
@@ -982,6 +993,19 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    // OTHER is a catch-all for markets we route out of the standard buckets
+    // (e.g. unresolvable team-scoped windows). normalize1x2Selection would
+    // collapse distinct over/under (or yes/no) selections into the same
+    // UNKNOWN code, silently merging both sides into one row — keep them
+    // distinguishable instead, mirroring the sts/pzbuk OTHER handling.
+    case "OTHER": {
+      const ou = normalizeOverUnderSelection(trimmed);
+      if (ou !== "UNKNOWN") return ou;
+      const yn = normalizeYesNoSelection(trimmed);
+      if (yn !== "UNKNOWN") return yn;
+      return trimmed as NormalizedSelection;
+    }
+
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
   }
@@ -1029,6 +1053,7 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "SECOND_HALF_EUROPEAN_HANDICAP",
   "CORNERS_TOTAL",
   "CARDS_TOTAL",
+  "CORNERS_TEAM",
   "CORNERS_HANDICAP",
   "HALF_TIME_CORNERS_HANDICAP",
   "HALF_TIME_CORNERS_TOTAL",

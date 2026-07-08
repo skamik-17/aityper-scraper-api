@@ -205,6 +205,11 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "Offsides1stOffside": "FIRST_OFFSIDE",
   "PenaltyandRedCard": "RED_CARD_AND_PENALTY",
   "PenaltyorRedCardintheMatchYes": "PENALTY_OR_RED_CARD",
+  // The "No" side of the same market — without this, matchMarketByName's
+  // "karn"/"kartk" guard bails out (to avoid misrouting card/penalty combos)
+  // and this Swarm id fell through to unmatched/OTHER, silently dropping the
+  // NO price for the whole market.
+  "PenaltyorRedCardintheMatchNo": "PENALTY_OR_RED_CARD",
   "ACardinBothHalves": "BOTH_HALVES_CARDS",
   "HalfRedCard": "HALF_TIME_RED_CARD",
   "TeamtoReceiveFirstCard": "FIRST_CARD",
@@ -439,6 +444,12 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   }
 
   if (/^wynik\s+meczu$/i.test(lower) || /^1x2$/i.test(lower)) return "MATCH_WINNER";
+  // "Podwójna szansa. Kombinowane" pairs double-chance outcomes with
+  // total-goals lines (~27 selections, e.g. "1X / 2-3 gole", "12 / powyżej
+  // (1.5 gola)") — a combo market with no catalog counterpart. Must be
+  // excluded before the broad double-chance match below, which would
+  // otherwise dump all its selections into DOUBLE_CHANCE as one UNKNOWN row.
+  if (/podw[oó]jna\s+szansa.*kombinowan/i.test(lower)) return null;
   if (/podw[oó]jna\s+szansa/i.test(lower)) return "DOUBLE_CHANCE";
   if (/remis\s*[=:]\s*zwrot/i.test(lower) || /draw\s*no\s*bet/i.test(lower)) return "DRAW_NO_BET";
 
@@ -453,6 +464,13 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   if (/gole\s+(gospodarzy|drużyny\s+1|team\s*1)/i.test(lower)) return "HOME_TEAM_TOTAL_GOALS";
   if (/gole\s+(go[sś]ci|drużyny\s+2|team\s*2)/i.test(lower)) return "AWAY_TEAM_TOTAL_GOALS";
 
+  // "1. połowa. Wynik / obie drużyny strzelą gola" (HT result + BTTS combo,
+  // 6 selections: W1/Tak, Remis/Tak, W1/Nie, W2/Tak, Remis/Nie, W2/Nie) must
+  // be matched before the plain half-time-result rule below, which would
+  // otherwise swallow it and leave all 6 selections as UNKNOWN.
+  if (isFirstHalf && /wynik/i.test(lower) && /obie\s*(drużyny\s+)?strzel/i.test(lower)) {
+    return "HALF_TIME_RESULT_AND_BTTS";
+  }
   if (/wynik\s+1\.?\s*po[lł]owy/i.test(lower) || /1\.?\s*po[lł]owa.*wynik/i.test(lower)) return "HALF_TIME_RESULT";
   if (/gole?\s+1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*gol/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
   if (/obie.*strzela.*1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*obie.*strzela/i.test(lower)) return "HALF_TIME_BTTS";
@@ -482,6 +500,28 @@ function resolveResultToken(
   if (/^(x|remis)$/i.test(t)) return "DRAW";
   const side = normalize1x2Selection(t, ctx.homeTeam, ctx.awayTeam, ctx.league);
   return side === "HOME" || side === "AWAY" || side === "DRAW" ? side : null;
+}
+
+/**
+ * Encode a multi-player combo selection ("Jean-Philippe Mateta and Kylian
+ * Mbappe", "Kylian Mbappe or Neil El Aynaoui or Ousmane Dembele") as a
+ * canonical, sorted "Name & Name & Name" code instead of a fixed placeholder.
+ * Betcris quotes dozens of distinct pairs/trios per market under the same
+ * catalog code (PLAYER_PAIR/PLAYER_TRIO carry no per-combo parameter), so a
+ * literal placeholder code collapses every combination onto one aggregator
+ * row; encoding the actual names keeps each combo distinct.
+ */
+function normalizeBetcrisPlayerCombo(selectionName: string): NormalizedSelection {
+  const players = selectionName
+    .split(/\s*(?:\band\b|\bor\b|\bi\b|\/|&)\s*/i)
+    .map((part) => canonicalizePlayerName(part.trim()))
+    .filter((part) => part.length > 0);
+
+  if (players.length < 2) {
+    return canonicalizePlayerName(selectionName) as NormalizedSelection;
+  }
+
+  return players.sort((a, b) => a.localeCompare(b, "en")).join(" & ") as NormalizedSelection;
 }
 
 function normalizeSelectionForMarket(
@@ -578,14 +618,33 @@ function normalizeSelectionForMarket(
     }
 
     case "ODD_EVEN_GOALS":
+    case "HALF_TIME_ODD_EVEN_GOALS":
     // "Nieparzysty"/"Parzysty" (masculine singular) on stat parity markets
     case "CORNERS_ODD_EVEN":
     case "CARDS_ODD_EVEN":
       return normalizeOddEvenSelection(trimmed);
 
+    case "CORNERS_RANGE": {
+      // Betcris quotes a 5-tier scale ("5 lub mniej", "6-8", "9-11", "12-14",
+      // "15 lub więcej") — collapse it onto the catalog's coarse 3-bucket
+      // scale (0-8 / 9-11 / 12+) instead of leaving it unmapped.
+      const compact = lowerTrimmed.replace(/\s+/g, "");
+      if (/^5lubmniej$/.test(compact) || /^6-8$/.test(compact)) return "0-8" as NormalizedSelection;
+      if (/^9-11$/.test(compact)) return "9-11" as NormalizedSelection;
+      if (/^12-14$/.test(compact) || /^15lubwi[eę]cej$/.test(compact)) return "12+" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
     case "CORNERS_TOTAL_3WAY":
       if (/^dok[lł]adnie/i.test(lowerTrimmed)) return "EXACTLY" as NormalizedSelection;
       return normalizeOverUnderSelection(trimmed);
+
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+      // Bare integer/"N+" labels (" 0", " 1", " 4+") map directly onto the
+      // catalog's exact-goal-count selection codes once whitespace is
+      // stripped.
+      return trimmed.replace(/\s+/g, "") as NormalizedSelection;
 
     // Race-type markets: betcris uses positional "Team 1"/"Team 2" labels and
     // English/Polish "no event" phrases ("No Card", "No Shot on Target",
@@ -603,6 +662,7 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS":
     case "SECOND_HALF_RESULT_AND_BTTS": {
       // "W1 / Tak", "W1/ Tak", "Remis / Nie" -> HOME_YES / DRAW_NO / ...
       // (slash spacing is inconsistent in the raw feed)
@@ -731,14 +791,13 @@ function normalizeSelectionForMarket(
 
     case "BOTH_PLAYERS_ANYTIME":
     case "TWO_PLAYERS_ANYTIME":
-      // Catalog vocabulary is a single PLAYER_PAIR code (betclic convention);
-      // raw "A and B"/"A i B" strings never matched any catalog selection.
-      return "PLAYER_PAIR" as NormalizedSelection;
-
     case "THREE_PLAYERS_ANYTIME":
     case "ALL_PLAYERS_SCORE":
-      // Catalog vocabulary is a single PLAYER_TRIO code (betclic convention).
-      return "PLAYER_TRIO" as NormalizedSelection;
+      // These markets are unparameterized (PLAYER_PAIR/PLAYER_TRIO is a fixed
+      // catalog selection, not a per-combo parameter), so the raw combo names
+      // must live in the selection code itself — a literal placeholder code
+      // collapsed every distinct pair/trio onto one aggregator row.
+      return normalizeBetcrisPlayerCombo(trimmed);
 
     case "CORRECT_SCORE":
     case "HALF_TIME_CORRECT_SCORE":
@@ -996,6 +1055,46 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       // The "HalfRedCard" Swarm id also covers "2. Połowa. Czerwona kartka".
       marketCode = "SECOND_HALF_RED_CARD";
     }
+    if (
+      marketCode === "TOTAL_GOALS" &&
+      /wynik\s+meczu.{0,6}(?:i|\/|oraz).{0,6}liczba\s+goli/i.test(raw.name)
+    ) {
+      // "Wynik meczu / liczba goli" is a match-result + total-goals combo
+      // reusing the plain OverUnder Swarm id (hence sharing its 1.5/2.5/3.5
+      // lines) — its selections ("Francja / powyżej 2.5") don't fit the plain
+      // OVER/UNDER vocabulary. No catalog code exists for this combo.
+      return null;
+    }
+    if (
+      marketCode === "HALF_TIME_TOTAL_GOALS" &&
+      /wygra\s+dok[lł]adn/i.test(raw.name)
+    ) {
+      // "1. połowa - Francja wygra dokładną różnicą goli" (exact winning
+      // margin) reuses the HalfTimeOverUnder Swarm id but is a completely
+      // different bet type (YES/NO on an exact margin, not a goals total).
+      // No catalog code exists for this combo.
+      return null;
+    }
+    if (
+      marketCode === "HALF_TIME_TOTAL_GOALS" &&
+      raw.selections.some((sel) => /^(parzyst|nieparzyst)/i.test(sel.name.trim()))
+    ) {
+      // "Parzysty"/"Nieparzysty" (1st-half odd/even goals) also reuses the
+      // HalfTimeOverUnder Swarm id — route to the dedicated odd/even code
+      // instead of leaking UNKNOWN selections into the totals ladder.
+      marketCode = "HALF_TIME_ODD_EVEN_GOALS";
+    }
+    if (
+      (marketCode === "HOME_TEAM_TOTAL_GOALS" || marketCode === "AWAY_TEAM_TOTAL_GOALS") &&
+      raw.selections.length > 0 &&
+      raw.selections.every((sel) => /^\s*\d+\+?\s*$/.test(sel.name))
+    ) {
+      // "Team 1/2. Liczba goli" also reuses the Team1/2OverUnder Swarm id for
+      // an exact-goal-count distribution (" 0", " 1", " 2", " 3", " 4+")
+      // instead of an Over/Under line — route to the dedicated exact-count
+      // code instead of leaking these as UNKNOWN inside the team totals.
+      marketCode = marketCode === "HOME_TEAM_TOTAL_GOALS" ? "HOME_EXACT_GOALS" : "AWAY_EXACT_GOALS";
+    }
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[betcris] Market code "${marketCode}" not in catalog`);
@@ -1016,6 +1115,28 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // FIRST_GOAL_AND_RESULT win/win rows carry unresolved "Team 1"/"Team 2"
+    // template placeholders in the raw label (the draw-combo rows use real
+    // team names instead) — the selection code already resolves correctly
+    // via resolveResultToken, but substitute real team names into the
+    // display label for a consistent, non-generic UI string.
+    if (marketCode === "FIRST_GOAL_AND_RESULT" && (ctx.homeTeam || ctx.awayTeam)) {
+      selections = selections.map((sel) => ({
+        ...sel,
+        label: sel.label
+          .replace(/team\s*1/gi, ctx.homeTeam || "Team 1")
+          .replace(/team\s*2/gi, ctx.awayTeam || "Team 2"),
+      }));
+    }
+
+    // "Liczba goli 3-drogowo" (3-way total: under/exactly/over) carries an
+    // extra "Dokładnie N" (exactly N goals) leg alongside the Over/Under
+    // pair. TOTAL_GOALS only defines OVER/UNDER, so that leg has nowhere to
+    // go — drop it instead of leaking an UNKNOWN selection into the market.
+    if (marketCode === "TOTAL_GOALS") {
+      selections = selections.filter((sel) => !/^dok[lł]adnie\b/i.test(sel.label.trim()));
+    }
 
     // TEAM_TOTAL_GOALS_FIRST_60MIN uses side-prefixed catalog selections
     // (HOME_OVER/... vs AWAY_OVER/...); derive the side from the raw name
@@ -1074,11 +1195,36 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       selections.length > 0 &&
       selections.every((sel) => sel.code === "OVER" || sel.code === "UNDER")
     ) {
-      const playerMatch = raw.name.match(/^([^(.:]+?)\s*\(/);
-      const playerName = playerMatch?.[1]?.trim();
-      if (playerName && !/^zawodnik/i.test(playerName)) {
-        paramValue = canonicalizePlayerName(playerName);
+      // Bulk multi-player markets ("Zawodnik. Liczba strzałów celnych (musi
+      // rozpocząć): Powyżej" etc.) are pre-split by the parser into one
+      // synthetic entry per player, which carries the raw player name via
+      // paramValue since there is no numeric line to report. A genuine
+      // numeric line (the already-working single-market-per-player shape)
+      // stays on the raw.name fallback below.
+      if (raw.paramValue && !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)) {
+        paramValue = canonicalizePlayerName(raw.paramValue);
+      } else {
+        const playerMatch = raw.name.match(/^([^(.:]+?)\s*\(/);
+        const playerName = playerMatch?.[1]?.trim();
+        if (playerName && !/^zawodnik/i.test(playerName)) {
+          paramValue = canonicalizePlayerName(playerName);
+        }
       }
+    }
+
+    // Bulk multi-player markets with no Over/Under shape ("Zaliczy asystę w
+    // meczu" -> PLAYER_ASSISTS "1+"; "Strzeli 4 gole lub więcej" ->
+    // PLAYER_GOALS "4+"; "Strzelec gola / mecz zakończy się remisem" ->
+    // PLAYER_GOAL_AND_RESULT "DRAW"): same parser split/paramValue convention
+    // as the PLAYER_OU_PARAM_MARKETS block above.
+    if (
+      (marketCode === "PLAYER_ASSISTS" ||
+        marketCode === "PLAYER_GOALS" ||
+        marketCode === "PLAYER_GOAL_AND_RESULT") &&
+      raw.paramValue &&
+      !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)
+    ) {
+      paramValue = canonicalizePlayerName(raw.paramValue);
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

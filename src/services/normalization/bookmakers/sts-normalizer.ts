@@ -654,7 +654,23 @@ function normalizeSelectionForMarket(
       if (/^x\b/i.test(trimmed)) return "DRAW";
       return normalizeSts1x2Selection(trimmed, ctx);
 
-    case "CORRECT_SCORE":
+    case "CORRECT_SCORE": {
+      // Handle "Inne" (STS) → "OTHER" for correct score markets
+      if (lower === "inne" || lower === "inny" || lower === "other") {
+        return "OTHER" as NormalizedSelection;
+      }
+      // STS's full-match correct-score grid returns raw score text in
+      // away:home order: raw "0:1" carries the exact odds peers quote for
+      // "1-0", raw "1:0" carries peers' "0-1" price, and so on across every
+      // asymmetric cell - the opposite of every other bookmaker's home:away
+      // convention. Swap the digits so the score lands on the right side.
+      const swapMatch = trimmed.match(/^(\d+)\s*[:–-]\s*(\d+)$/);
+      if (swapMatch) {
+        return `${swapMatch[2]}-${swapMatch[1]}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
     case "HALF_TIME_CORRECT_SCORE":
     case "SECOND_HALF_CORRECT_SCORE": {
       // Handle "Inne" (STS) → "OTHER" for correct score markets
@@ -695,7 +711,20 @@ function normalizeSelectionForMarket(
     }
 
     case "GOALSCORER_FIRST":
-    case "GOALSCORER_LAST":
+    case "GOALSCORER_LAST": {
+      // STS emits these two markets' raw selections as space-separated
+      // "Lastname Firstname" (no comma) - e.g. "Digne Lucas", "Kante N'Golo" -
+      // the opposite of the canonical "Firstname Lastname" order used by
+      // betcris/etoto/lvbet. canonicalizePlayerName() only reorders the
+      // comma-delimited "Last, First" pattern, so it silently no-ops on
+      // STS's space-only format. Flip simple two-token names before handing
+      // off to the shared helper so selections merge with peers.
+      const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
+      const tokens = nameOnly.split(/\s+/);
+      const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
+      return canonicalizePlayerName(reordered) as NormalizedSelection;
+    }
+
     case "GOALSCORER_ANYTIME":
     case "HALF_TIME_GOALSCORER_ANYTIME":
     case "PLAYER_SHOTS":
@@ -800,10 +829,31 @@ function normalizeSelectionForMarket(
       }
       return trimmed as NormalizedSelection;
 
-    case "CORNERS_RANGE":
+    case "CORNERS_RANGE": {
+      // STS's full-match corners-range grid uses its own compressed bucket
+      // text ("0-3"/"4-6"/"7+") for the exact same three-way market every
+      // other bookmaker labels "0-8"/"9-11"/"12+" - the odds match peers'
+      // buckets almost to the decimal (STS 2.25/2.7/3.25 == etoto's
+      // 2.25/2.7/3.25 for 0-8/9-11/12+), confirming it's the same market
+      // with different-but-corresponding labels. Remap to the canonical scheme.
+      const cornersRangeShift: Record<string, string> = { "0-3": "0-8", "4-6": "9-11", "7+": "12+" };
+      const shifted = cornersRangeShift[trimmed];
+      if (shifted) return shifted as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HALF_TIME_CORNERS_RANGE": {
+      // Same STS bucket-label quirk as CORNERS_RANGE, but for the 1st-half
+      // grid: STS's "0-2"/"3-4"/"5+" prices closely match peers'
+      // "0-4"/"5-6"/"7+" (STS 1.72/3.2/4.4 vs betfan/superbet 1.76-1.77/3.3/4.3-4.55).
+      const htCornersRangeShift: Record<string, string> = { "0-2": "0-4", "3-4": "5-6", "5+": "7+" };
+      const shiftedHt = htCornersRangeShift[trimmed];
+      if (shiftedHt) return shiftedHt as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
     case "HOME_CORNERS_RANGE":
     case "AWAY_CORNERS_RANGE":
-    case "HALF_TIME_CORNERS_RANGE":
     case "PLAYER_GOALS":
     case "PLAYER_FOULS_WON":
     case "PLAYER_FOULS":

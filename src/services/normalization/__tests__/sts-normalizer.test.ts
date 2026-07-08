@@ -89,7 +89,10 @@ describe("stsNormalizer", () => {
       expect(result!.selections[2].code).toBe("HOME_OR_AWAY");
     });
 
-    it("normalizes CORRECT_SCORE (Rynek 283)", () => {
+    it("normalizes CORRECT_SCORE (Rynek 283), swapping STS's away:home raw digit order", () => {
+      // STS's full-match correct-score raw text is in away:home order (verified
+      // against peer odds for France vs Morocco - see sts-normalizer.ts), so
+      // "1:0" (STS) means the canonical "0-1" and must be swapped on the way in.
       const raw: RawBookmakerMarket = {
         bookmakerMarketId: 283,
         name: "Rynek 283",
@@ -104,8 +107,8 @@ describe("stsNormalizer", () => {
 
       expect(result).not.toBeNull();
       expect(result!.marketCode).toBe("CORRECT_SCORE");
-      expect(result!.selections[0].code).toBe("1-0");
-      expect(result!.selections[1].code).toBe("2-1");
+      expect(result!.selections[0].code).toBe("0-1");
+      expect(result!.selections[1].code).toBe("1-2");
       expect(result!.selections[2].code).toBe("0-0");
     });
 

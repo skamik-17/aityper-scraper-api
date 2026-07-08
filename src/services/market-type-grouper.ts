@@ -20,6 +20,10 @@ import {
   CATEGORY_ORDER,
 } from "../data/market-catalog.js";
 import { MarketCategory } from "../services/normalization/types.js";
+import { canonicalizePlayerName } from "./normalization/helpers/index.js";
+
+/** viewTypes whose selection codes are player names (order must be unified). */
+const PLAYER_SELECTION_VIEW_TYPES = new Set(["PLAYER_DROPDOWN", "PLAYER_STAT_LINES"]);
 
 /**
  * Default parameters for each market type
@@ -145,14 +149,33 @@ export function groupMarketsByTypeWithParameters(
 
   for (const { market, bookmaker } of marketsWithBookmakers) {
     const marketType = market.normalizedType || "OTHER";
-    const param = canonicalizeParamValue(market.paramValue || "base");
+    const entryDef = getMarketByCode(marketType);
+    const parameterType = entryDef?.hasParameter ? entryDef.parameterType : undefined;
+    let param = canonicalizeParamValue(market.paramValue || "base");
 
-    // Parameterized markets (sliders/handicaps/team-scoped) must not
-    // accumulate a "base" bucket: an entry with no extractable parameter is
-    // almost always a misrouted market or a stale row keyed under an old
-    // market_key, and the bucket used to surface as an empty-label parameter
-    // mixing unrelated odds.
-    if (param === "base" && getMarketByCode(marketType)?.hasParameter) {
+    // Player-scoped markets key their parameter by player name; unify the
+    // name order so the same player merges across bookmakers.
+    if (parameterType === "player" && param !== "base") {
+      param = canonicalizePlayerName(param);
+    }
+
+    // Line/team-parameterized markets must not accumulate a "base" bucket: an
+    // entry with no extractable parameter there is almost always a misrouted
+    // market or a stale row keyed under an old market_key. Player markets are
+    // exempt — the player identity may live in the selection instead.
+    if (param === "base" && (parameterType === "decimal" || parameterType === "team")) {
+      continue;
+    }
+
+    // On numeric-line markets, reject params that are neither a number nor a
+    // side-scoped line ("HOME:5.5"): bare side tokens or score notation mean
+    // the line failed to parse upstream and would render as a garbage chip.
+    if (
+      parameterType === "decimal" &&
+      param !== "base" &&
+      !/^[+-]?\d+(\.\d+)?$/.test(param) &&
+      !/^(HOME|AWAY):[+-]?\d+(\.\d+)?$/.test(param)
+    ) {
       continue;
     }
 
@@ -227,8 +250,16 @@ export function groupMarketsByTypeWithParameters(
       };
 
       // Add or update selections from this market
+      const isPlayerSelectionMarket = PLAYER_SELECTION_VIEW_TYPES.has(
+        String(getMarketByCode(marketType)?.viewType ?? ""),
+      );
       for (const selection of market.selections) {
-        const selectionType = selection.normalizedName || selection.name;
+        let selectionType = selection.normalizedName || selection.name;
+        // Unify player-name order so the same player merges across bookmakers
+        // ("Jashari, Ardon" vs "Ardon Jashari" stranded odds in duplicates).
+        if (isPlayerSelectionMarket) {
+          selectionType = canonicalizePlayerName(selectionType);
+        }
 
         // Check if this selection type already exists
         if (existingSelections.has(selectionType)) {

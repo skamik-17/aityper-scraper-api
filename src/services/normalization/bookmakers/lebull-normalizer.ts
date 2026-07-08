@@ -19,6 +19,7 @@ import {
   normalizeOddEvenSelection,
   parseScoreSelection,
   parseHtFtSelection,
+  canonicalizePlayerName,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 
@@ -42,6 +43,14 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   36: "DRAW_NO_BET",
   37: "DOUBLE_CHANCE",
   38: "FIRST_GOAL_TIME",
+  // Combo stake types (sbteam.xyz feed): result/DC/BTTS crossed with a goal
+  // line or BTTS leg. Selections are Polish phrases mapped per market code
+  // in normalizeSelectionForMarket.
+  134: "RESULT_AND_TOTAL",
+  261946: "RESULT_AND_BTTS",
+  270665: "DOUBLE_CHANCE_BTTS",
+  332815: "DOUBLE_CHANCE_TOTAL",
+  350010: "RESULT_OR_BTTS",
   274556: "DRAW_NO_BET",
   40390: "ONE_TEAM_TO_SCORE",
   748: "NEXT_TEAM_TO_SCORE",
@@ -210,6 +219,37 @@ function normalizeGoalTimeRangeSelection(selectionName: string): NormalizedSelec
   return selectionName.trim() as NormalizedSelection;
 }
 
+/**
+ * Market codes with a closed selection vocabulary where selections that fail
+ * to map (stray outcomes from other market families, unrepresentable combos)
+ * must be dropped instead of surfacing as literal/UNKNOWN entries.
+ */
+const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
+  "TIME_PERIOD_RESULT",
+  "TIME_PERIOD_TOTAL_GOALS",
+  "RESULT_AND_TOTAL",
+  "RESULT_AND_BTTS",
+  "DOUBLE_CHANCE_BTTS",
+  "DOUBLE_CHANCE_TOTAL",
+  "TOTAL_GOALS_AND_BTTS",
+  "SECOND_HALF_RESULT_OR_BTTS",
+  "RESULT_OR_BTTS",
+  "HALF_TIME_AND_SECOND_HALF_RESULT",
+  "DOUBLE_CHANCE_GOAL_RANGE",
+  "HALFTIME_FULLTIME",
+  "MULTI_RESULT",
+]);
+
+/**
+ * Resolves the match-result side of a combo-selection prefix: a team name or
+ * "Remis"/"X" -> HOME/DRAW/AWAY; anything unresolvable -> UNKNOWN.
+ */
+function resolveResultSide(text: string, ctx: NormalizationContext): NormalizedSelection {
+  const normalized = normalizeMarketName(text);
+  if (/^remis/.test(normalized)) return "DRAW";
+  return normalize1x2Selection(text, ctx.homeTeam, ctx.awayTeam, ctx.league);
+}
+
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -218,7 +258,54 @@ function resolveMarketCode(
 
   const direct = LEBULL_MARKET_NAME_TO_CODE[normalizedName];
   if (direct) {
+    // The parser's fallback label for sbteam stake type 7 is "Dokladny wynik",
+    // but that stake type actually quotes the half-comparison bet
+    // ("1. < 2." / "1. = 2." / "1. > 2.") — reroute by selection shape
+    // before trusting the name.
+    if (
+      direct === "CORRECT_SCORE" &&
+      raw.selections.length > 0 &&
+      raw.selections.every((s) => /^1\.?\s*[<=>]\s*2\.?$/.test(s.name.trim()))
+    ) {
+      return { marketCode: "HALF_WITH_MORE_GOALS", matchedBy: "pattern" };
+    }
     return { marketCode: direct, matchedBy: "name" };
+  }
+
+  // Per-combo exact-score propositions ("Dokładny wynik 1:0, 2:0 lub 3:0",
+  // Tak/Nie quotes) belong to the aggregate MULTI_RESULT market when the
+  // combo exists in the catalog; unknown combos are excluded to OTHER.
+  // NOTE: "ł" survives normalizeMarketName (NFD does not decompose it).
+  const multiComboMatch = normalizedName.match(/^dok[lł]adny\s+wynik\s+(.+)$/);
+  if (multiComboMatch && /(\d+\s*:\s*\d+)|^(x|remis)$/.test(multiComboMatch[1].trim())) {
+    const combo = raw.name
+      .replace(/^dok[lł]adny\s+wynik\s+/i, "")
+      .trim()
+      .replace(/\s+/g, " ");
+    const comboCode = /^(x|remis)$/i.test(combo) ? "X" : combo;
+    const multiMeta = getMarketMetadata("MULTI_RESULT");
+    if (multiMeta?.selections.includes(comboCode)) {
+      return { marketCode: "MULTI_RESULT", matchedBy: "pattern" };
+    }
+    return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // "Zawodnik zostanie usunięty z boiska. <Team>" is a team-scoped red-card
+  // market — route it to RED_CARD_TEAM, not the whole-match RED_CARD (its
+  // narrower probability space would pollute best-odds there).
+  const sentOffMatch = normalizedName.match(
+    /^zawodnik\s+zostanie\s+usuniet\w*\s+z\s+boiska[.:]?\s+(.+)$/
+  );
+  if (sentOffMatch) {
+    const sentOffSide = normalize1x2Selection(
+      sentOffMatch[1],
+      ctx.homeTeam,
+      ctx.awayTeam,
+      ctx.league
+    );
+    if (sentOffSide === "HOME" || sentOffSide === "AWAY") {
+      return { marketCode: "RED_CARD_TEAM", matchedBy: "pattern" };
+    }
   }
 
   const home = ctx.homeTeam ? normalizeMarketName(ctx.homeTeam) : "";
@@ -298,6 +385,18 @@ function resolveMarketCode(
     if (side === "HOME") return { marketCode: "HOME_WIN_BY_1_OR_DRAW", matchedBy: "pattern" };
     if (side === "AWAY") return { marketCode: "AWAY_WIN_BY_1_OR_DRAW", matchedBy: "pattern" };
     return { marketCode: "OTHER", matchedBy: "pattern" };
+  }
+
+  // Combo markets whose names may contain "suma goli" must be resolved before
+  // the generic total-goals routing below swallows them.
+  if (/wynik\s*meczu\s*i\s*suma/.test(normalizedName)) {
+    return { marketCode: "RESULT_AND_TOTAL", matchedBy: "pattern" };
+  }
+  if (/podwojna\s*szansa\s*i\s*suma/.test(normalizedName)) {
+    return { marketCode: "DOUBLE_CHANCE_TOTAL", matchedBy: "pattern" };
+  }
+  if (/obie\s*(druzyny\s*)?strzela\w*\s*i\s*suma/.test(normalizedName)) {
+    return { marketCode: "TOTAL_GOALS_AND_BTTS", matchedBy: "pattern" };
   }
 
   const isGoalRange = /suma\s*goli[:\s]+\d+\s*[-–]\s*\d+/i.test(normalizedName);
@@ -428,6 +527,7 @@ function normalizeSelectionForMarket(
     case "HOME_WIN_BY_1_OR_DRAW":
     case "AWAY_WIN_BY_1_OR_DRAW":
     case "RED_CARD":
+    case "RED_CARD_TEAM":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
@@ -493,8 +593,44 @@ function normalizeSelectionForMarket(
     case "HALFTIME_FULLTIME":
     case "DOUBLE_RESULT": {
       const htft = parseHtFtSelection(trimmed);
-      return (htft ?? trimmed) as NormalizedSelection;
+      if (htft) return htft as NormalizedSelection;
+      // Team-name pairs ("Szwajcaria/Kolumbia", "X/Kolumbia") -> HOME_AWAY etc.
+      const parts = trimmed.split("/");
+      if (parts.length === 2) {
+        const first = resolveResultSide(parts[0], ctx);
+        const second = resolveResultSide(parts[1], ctx);
+        if (first !== "UNKNOWN" && second !== "UNKNOWN") {
+          return `${first}_${second}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
     }
+
+    case "HALF_TIME_AND_SECOND_HALF_RESULT": {
+      // "1. połowa Kolumbia + 2. połowa remis" (separator can also be "i" and
+      // "2.połowa" may lack the space) -> AWAY_DRAW.
+      const halves = trimmed.match(
+        /^1[.\s]*po[lł]ow\w*\s+(.+?)\s*(?:\+|\bi\b)\s*2[.\s]*po[lł]ow\w*\s+(.+)$/i
+      );
+      if (halves) {
+        const first = resolveResultSide(halves[1], ctx);
+        const second = resolveResultSide(halves[2], ctx);
+        if (first !== "UNKNOWN" && second !== "UNKNOWN") {
+          return `${first}_${second}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
+    case "MULTI_RESULT":
+      // Combo labels arrive pre-merged from the parser and equal the catalog
+      // codes ("1:0, 2:0 lub 3:0", ..., "X"); Tak/Nie sub-market quotes are
+      // rewritten in normalizeMarket instead.
+      if (/^(x|remis)$/.test(normalized)) return "X" as NormalizedSelection;
+      if (getMarketMetadata("MULTI_RESULT")?.selections.includes(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      return "UNKNOWN";
 
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
@@ -504,17 +640,91 @@ function normalizeSelectionForMarket(
     case "PLAYER_ASSISTS":
     case "PLAYER_SHOTS_ON_TARGET":
     case "PLAYER_PASSES":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+      // Strip a leading shirt-number prefix and unify "Lastname, Firstname"
+      // to natural order so the same player merges across bookmakers.
+      return canonicalizePlayerName(
+        trimmed.replace(/^\d+\.\s*/, "")
+      ) as NormalizedSelection;
 
     case "FIRST_GOAL_TIME":
     case "FIRST_GOAL_TIME_ALT":
       // "Od 1 do 10 min." -> "1-10", "Od 16 do 30 min." -> "16-30", etc.
       return normalizeGoalTimeRangeSelection(trimmed);
 
-    case "RESULT_AND_TOTAL":
+    case "RESULT_AND_TOTAL": {
+      // "Szwajcaria i powyżej" -> HOME_OVER, "Remis i poniżej" -> DRAW_UNDER.
+      const m = trimmed.match(/^(.+?)\s+i\s+(powy[żz]ej|poni[żz]ej)/i);
+      if (m) {
+        const side = resolveResultSide(m[1], ctx);
+        if (side === "HOME" || side === "DRAW" || side === "AWAY") {
+          const ou = /^powy/i.test(normalizeMarketName(m[2])) ? "OVER" : "UNDER";
+          return `${side}_${ou}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
     case "RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_OR_BTTS":
+    case "RESULT_OR_BTTS": {
+      // "<Team|Remis> i/lub obie strzelą" -> SIDE_YES;
+      // "<Team|Remis> i/lub Przynajmniej jedna drużyna nie strzeli" -> SIDE_NO.
+      const m = trimmed.match(/^(.+?)\s+(?:i|lub)\s+(obie\s+strzel|przynajmniej\s+jedna)/i);
+      if (m) {
+        const side = resolveResultSide(m[1], ctx);
+        if (side === "HOME" || side === "DRAW" || side === "AWAY") {
+          const yes = /^obie/i.test(m[2]);
+          if (marketCode === "RESULT_OR_BTTS") {
+            return `${side}_OR_BTTS_${yes ? "YES" : "NO"}` as NormalizedSelection;
+          }
+          return `${side}_${yes ? "YES" : "NO"}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
     case "DOUBLE_CHANCE_BTTS":
-    case "DOUBLE_CHANCE_TOTAL":
+    case "DOUBLE_CHANCE_TOTAL": {
+      // "1X i Obie strzelą" -> 1X_YES; "X2 i powyżej" -> X2_OVER, etc.
+      const m = trimmed.match(/^(1x|12|x2)\s+i\s+(.+)$/i);
+      if (m) {
+        const dc = m[1].toUpperCase();
+        const rest = normalizeMarketName(m[2]);
+        if (rest.startsWith("obie")) return `${dc}_YES` as NormalizedSelection;
+        if (rest.startsWith("przynajmniej")) return `${dc}_NO` as NormalizedSelection;
+        if (rest.startsWith("powy")) return `${dc}_OVER` as NormalizedSelection;
+        if (rest.startsWith("poni")) return `${dc}_UNDER` as NormalizedSelection;
+      }
+      return "UNKNOWN";
+    }
+
+    case "TOTAL_GOALS_AND_BTTS": {
+      // "Obie strzelą i powyżej" -> OVER_YES; "Przynajmniej jedna drużyna nie
+      // strzeli i poniżej" -> UNDER_NO.
+      const m = trimmed.match(
+        /^(obie\s+strzel\S*|przynajmniej\s+jedna.*?)\s+i\s+(powy[żz]ej|poni[żz]ej)/i
+      );
+      if (m) {
+        const yes = normalizeMarketName(m[1]).startsWith("obie");
+        const over = /^powy/i.test(normalizeMarketName(m[2]));
+        return `${over ? "OVER" : "UNDER"}_${yes ? "YES" : "NO"}` as NormalizedSelection;
+      }
+      return "UNKNOWN";
+    }
+
+    case "DOUBLE_CHANCE_GOAL_RANGE": {
+      // "1X i 1-2 gole" -> "1X_1-2"; combos without a catalog slot map to
+      // UNKNOWN and are filtered out downstream.
+      const m = trimmed.match(/^(1x|12|x2)\s+i\s+(\d+)\s*[-–]\s*(\d+)/i);
+      if (m) {
+        const code = `${m[1].toUpperCase()}_${m[2]}-${m[3]}`;
+        if (getMarketMetadata("DOUBLE_CHANCE_GOAL_RANGE")?.selections.includes(code)) {
+          return code as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN";
+    }
+
     case "FIRST_GOAL_AND_RESULT":
       return trimmed as NormalizedSelection;
 
@@ -539,6 +749,21 @@ function extractParamValue(
     return extractTimePeriodParam(raw.name);
   }
 
+  // 3-way handicap names contain a literal "3" ("Handicap 3-drogowy") that
+  // parseHandicapLine would swallow as the line; strip the token first and
+  // otherwise trust only an explicit parenthesized line in a selection name
+  // (bare selections are side digits like "Handicap 1", not lines).
+  if (marketCode === "EUROPEAN_HANDICAP") {
+    const cleaned = raw.name.replace(/3[\s-]?drogow\w*/gi, "").replace(/europejsk\w*/gi, "");
+    const fromName = parseHandicapLine(cleaned);
+    if (fromName) return fromName;
+    for (const sel of raw.selections) {
+      const m = sel.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
+      if (m) return parseHandicapLine(m[1]);
+    }
+    return undefined;
+  }
+
   // "Kolumbia wygra co najmniej jedną połowę" — the parameter is the SIDE of
   // the named team (HOME/AWAY, matching the fuksiarz convention), not a goal
   // line; the numeric fallbacks below would leave it in the "base" bucket.
@@ -551,7 +776,8 @@ function extractParamValue(
       if (side === "HOME" || side === "AWAY") return side;
     }
     // Stake type 39505 is the team-B (away) variant on the sbteam.xyz feed.
-    if (raw.bookmakerMarketId === "39505") return "AWAY";
+    // (The factory passes numeric ids as numbers, so compare as string.)
+    if (String(raw.bookmakerMarketId) === "39505") return "AWAY";
     return undefined;
   }
 
@@ -617,6 +843,13 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
+    // A 3-way handicap without a resolvable line cannot be attributed to any
+    // parameter bucket — merging several lines under one bogus value (the "3"
+    // from "3-drogowy") corrupts best-odds, so drop the market entirely.
+    if (marketCode === "EUROPEAN_HANDICAP" && paramValue === undefined) {
+      return null;
+    }
+
     let selections = raw.selections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode, ctx),
       label: sel.name,
@@ -654,10 +887,31 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
-    // Time-period markets occasionally carry a stray 4th outcome from another
-    // market family (e.g. a goal-in-period yes/no quote); the catalog defines
-    // exactly HOME/DRAW/AWAY resp. OVER/UNDER, so unmappable entries are noise.
-    if (marketCode === "TIME_PERIOD_RESULT" || marketCode === "TIME_PERIOD_TOTAL_GOALS") {
+    // Per-combo "Dokładny wynik 1:0, 2:0 lub 3:0" sub-markets are quoted as
+    // Tak/Nie: "Tak" IS the combo's price (the catalog code equals the combo
+    // text); "Nie" has no slot in the mutually exclusive catalog and is dropped.
+    if (marketCode === "MULTI_RESULT") {
+      const comboMatch = raw.name.match(/^dok[lł]adny\s+wynik\s+(.+)$/i);
+      if (comboMatch) {
+        const comboRaw = comboMatch[1].trim().replace(/\s+/g, " ");
+        const combo = /^(x|remis)$/i.test(comboRaw) ? "X" : comboRaw;
+        if (getMarketMetadata("MULTI_RESULT")?.selections.includes(combo)) {
+          selections = raw.selections
+            .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")
+            .map((sel) => ({
+              code: combo as NormalizedSelection,
+              label: sel.name,
+              odds: sel.odds,
+            }));
+        }
+      }
+    }
+
+    // Markets whose catalog vocabulary is closed (time-period 1X2/totals and
+    // the combo grids mapped above) must not surface unmappable raw labels:
+    // a stray outcome from another market family or an unrepresentable combo
+    // is noise that would collapse into a meaningless UNKNOWN entry.
+    if (UNKNOWN_FILTERED_MARKETS.has(marketCode)) {
       selections = selections.filter((sel) => sel.code !== "UNKNOWN");
     }
 

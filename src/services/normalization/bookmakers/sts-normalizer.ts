@@ -16,6 +16,7 @@ import {
   normalizeOddEvenSelection,
   parseScoreSelection,
   parseHtFtSelection,
+  canonicalizePlayerName,
 } from "../helpers/index.js";
 import { isValidMarketCode, getCategoryForMarket } from "../../../data/market-catalog.js";
 
@@ -471,6 +472,21 @@ function normalizeSelectionForMarket(
 
     case "HOME_EXACT_CARDS":
     case "AWAY_EXACT_CARDS":
+    case "HALF_TIME_HOME_EXACT_CORNERS":
+    case "HALF_TIME_AWAY_EXACT_CORNERS": {
+      // STS labels these full-match/HT grids "0"/"1"/"2"/"3+", but the odds
+      // line up exactly one bucket over vs peers (verified vs etoto/forbet/
+      // betclic for Switzerland-Colombia: STS HT-corners "0"@2.05 == peers
+      // "0-1"@2.04-2.08, "1"@3.5 == peers "2"@3.5-3.58, "2"@5.1 == peers
+      // "3"@5.2-5.25, "3+"@5.1 == peers "4+"@5-5.25; a genuine exact-0 quote
+      // is ~5+). The real STS buckets are the merged "0-1"/"2"/"3"/"4+"
+      // scheme, so shift the labels to the correct catalog codes.
+      const bucketShift: Record<string, string> = { "0": "0-1", "1": "2", "2": "3", "3+": "4+" };
+      const shifted = bucketShift[trimmed];
+      if (shifted) return shifted as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
     case "HALF_TIME_HOME_EXACT_CARDS":
     case "HALF_TIME_AWAY_EXACT_CARDS":
       // STS sends "0","1","2","3+" as exact-count selections - pass through as-is
@@ -541,6 +557,7 @@ function normalizeSelectionForMarket(
     case "AWAY_WIN_BOTH_HALVES":
     case "HOME_WIN_TO_NIL":
     case "AWAY_WIN_TO_NIL":
+    case "RED_CARD":
     case "HALF_TIME_RED_CARD":
     case "PENALTY_AWARDED":
     case "RED_CARD_AND_PENALTY":
@@ -691,7 +708,9 @@ function normalizeSelectionForMarket(
     case "PLAYER_HAT_TRICK":
     case "PLAYER_TACKLES":
     case "PLAYER_INTERCEPTIONS":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+      // Selection is a player name; canonicalize "Lastname, Firstname" forms
+      // so selections group with peers that emit "Firstname Lastname"
+      return canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim()) as NormalizedSelection;
 
     case "PLAYER_GOAL_AND_RESULT": {
       const match = trimmed.match(/^(.+?)\s+i\s+([1X2])$/i);
@@ -785,8 +804,6 @@ function normalizeSelectionForMarket(
     case "HOME_CORNERS_RANGE":
     case "AWAY_CORNERS_RANGE":
     case "HALF_TIME_CORNERS_RANGE":
-    case "HALF_TIME_HOME_EXACT_CORNERS":
-    case "HALF_TIME_AWAY_EXACT_CORNERS":
     case "PLAYER_GOALS":
     case "PLAYER_FOULS_WON":
     case "PLAYER_FOULS":
@@ -1078,7 +1095,8 @@ function extractParamValue(
     for (const sel of raw.selections) {
       const match = sel.name.match(/^(.+?)\s+i\s+[1X2]$/i);
       if (match) {
-        return match[1].trim();
+        // Param is a player name; canonicalize "Lastname, Firstname" forms
+        return canonicalizePlayerName(match[1].trim());
       }
     }
   }
@@ -1218,6 +1236,12 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
       }
+    }
+
+    // Player-name params must be canonical ("Firstname Lastname") so player
+    // markets group across bookmakers regardless of "Lastname, Firstname" raws
+    if (playerName) {
+      playerName = canonicalizePlayerName(playerName.trim());
     }
 
     let marketCode: NormalizedMarketType | null = null;

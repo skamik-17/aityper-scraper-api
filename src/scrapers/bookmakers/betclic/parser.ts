@@ -253,7 +253,10 @@ function extractSelection(selFields: RawField[]): ParsedSelection | null {
     odds = oddsField.value as number;
   }
 
-  if (!name || odds <= 0 || odds > 1000) return null;
+  // Betclic uses 1000 as a sentinel/placeholder price for suspended or
+  // not-really-quoted outcomes (e.g. "no corner" at 1000 vs peers ~100),
+  // so treat it — and anything above — as no price, not a genuine quote.
+  if (!name || odds <= 0 || odds >= 1000) return null;
 
   // Round to 2 decimal places
   odds = Math.round(odds * 100) / 100;

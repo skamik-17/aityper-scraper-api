@@ -19,10 +19,16 @@ import {
   normalizeDoubleChanceSelection,
   normalizeOddEvenSelection,
   parseScoreSelection,
+  canonicalizePlayerName,
 } from "../helpers/index.js";
-import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
+import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { MARKET_TYPE_IDS } from "../../../scrapers/bookmakers/fortuna/constants.js";
 
+// Round-3 audit: id identities re-verified against the live markets API
+// (fixture "Norwegia - Anglia", 2026-07-08). Many ids previously guessed from
+// odds shapes turned out to be different markets — the API market names (now
+// captured by the parser instead of being rejected for containing ":") are the
+// source of truth recorded next to each mapping.
 const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   [MARKET_TYPE_IDS.MATCH_RESULT]: "MATCH_WINNER",
   [MARKET_TYPE_IDS.DOUBLE_CHANCE]: "DOUBLE_CHANCE",
@@ -31,20 +37,29 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   [MARKET_TYPE_IDS.HALF_TIME_RESULT]: "HALF_TIME_RESULT",
   [MARKET_TYPE_IDS.HALF_TIME_OVER_UNDER]: "HALF_TIME_TOTAL_GOALS",
   [MARKET_TYPE_IDS.HALF_TIME_BTTS]: "HALF_TIME_BTTS",
-  [MARKET_TYPE_IDS.ASIAN_HANDICAP]: "ASIAN_HANDICAP",
-  [MARKET_TYPE_IDS.EUROPEAN_HANDICAP]: "EUROPEAN_HANDICAP",
-  [MARKET_TYPE_IDS.CORRECT_SCORE]: "CORRECT_SCORE",
+  // NOTE: 00-0v ("ASIAN_HANDICAP") and 00-0w ("EUROPEAN_HANDICAP") are NOT
+  // handicaps on the live API — both carry a 4-way goal-band book ("0-1", "2",
+  // "3", "4+") of unknown scope. Excluded; real handicaps arrive via
+  // 00-0b/00-0h/00-re (2-way lines) and 00-61 (score-style 3-way).
+  // NOTE: 00-04 ("CORRECT_SCORE") is live-named "1.połowa lub wynik meczu
+  // (podwójna szansa)" — a HT-or-FT double chance, mapped below.
+  "ufo:mtyp:00-04": "HT_OR_FT_RESULT",
+  "ufo:mtyp:00-6w": "CORRECT_SCORE", // "Mecz: dokładny wynik" (full grid, 0:0@12)
   [MARKET_TYPE_IDS.DRAW_NO_BET]: "DRAW_NO_BET",
-  [MARKET_TYPE_IDS.ODD_EVEN_GOALS]: "ODD_EVEN_GOALS",
+  // 00-1a is live-named "Mecz: <team1> Liczba goli P/N" — the home-team
+  // odd/even market, not the match-level one; the name router flips sides.
+  [MARKET_TYPE_IDS.ODD_EVEN_GOALS]: "HOME_TEAM_ODD_EVEN_GOALS",
   // Player props (stable Fortuna marketTypeId)
   "ufo:mtyp:00-ox": "PLAYER_HEADER_GOAL",
   "ufo:mtyp:00-ln": "PLAYER_GOALS",
-  "ufo:mtyp:00-o6": "PLAYER_SHOTS_ON_TARGET",
-  "ufo:mtyp:00-og": "PLAYER_SHOTS_ON_TARGET",
+  // "Zawodnik - liczba strzałów w światło bramki spoza pola karnego (OPTA)"
+  "ufo:mtyp:00-o6": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  // NOTE: 00-og ("...w światło bramki nogą") and 00-ok ("...w światło bramki
+  // z pola karnego") are SOT-by-foot / SOT-in-box variants with no catalog
+  // codes — excluded so they stop diluting PLAYER_SHOTS_ON_TARGET.
   "ufo:mtyp:00-lf": "PLAYER_SHOTS",
   "ufo:mtyp:00-la": "PLAYER_ASSISTS",
   "ufo:mtyp:00-lk": "PLAYER_CARDS",
-  "ufo:mtyp:00-ok": "PLAYER_SHOTS_ON_TARGET",
   "ufo:mtyp:00-lg": "PLAYER_FOULS",
   "ufo:mtyp:00-ld": "PLAYER_SHOTS_ON_TARGET",
   "ufo:mtyp:00-nh": "GOALSCORER_LAST",
@@ -60,108 +75,131 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-oi": "PLAYER_HEADER_SHOTS_ON_TARGET",
   "ufo:mtyp:00-nw": "PLAYER_OFFSIDES",
   "ufo:mtyp:00-pn": "PLAYER_OFFSIDES_1H",
-  // ===== Fortuna final wave: id-to-code mappings =====
   "ufo:mtyp:00-hm": "PLAYER_GOAL_OR_ASSIST",
   "ufo:mtyp:00-71": "WIN_AND_PLAYER_SHOTS_ON_TARGET",
   "ufo:mtyp:00-76": "PLAYER_RED_CARD",
   "ufo:mtyp:00-70": "PLAYER_GOAL_AND_RESULT",
+  // NOTE: 00-lo is live-named "SuperSub: Zawodnik i jego zmiennik - liczba
+  // strzałów" (player+substitute combo) — NOT match TOTAL_GOALS_MINIMUM.
+  // Excluded; no catalog code for SuperSub combos.
+  // Handicaps
   "ufo:mtyp:00-0b": "ASIAN_HANDICAP",
-  "ufo:mtyp:00-lo": "TOTAL_GOALS_MINIMUM",
-  "ufo:mtyp:00-2i": "TOTAL_GOALS",
-  "ufo:mtyp:00-kr": "CARDS_TOTAL",
-  "ufo:mtyp:00-h7": "CORNERS_TOTAL",
-  "ufo:mtyp:00-0k": "TOTAL_GOALS",
-  "ufo:mtyp:00-13": "TOTAL_GOALS",
-  "ufo:mtyp:00-0i": "CORNERS_TOTAL",
-  "ufo:mtyp:00-0j": "TOTAL_GOALS",
-  "ufo:mtyp:00-3b": "TOTAL_GOALS",
-  "ufo:mtyp:00-kp": "CORNERS_TOTAL",
-  "ufo:mtyp:00-hb": "TOTAL_GOALS",
-  "ufo:mtyp:00-23": "DOUBLE_CHANCE_TOTAL",
-  "ufo:mtyp:00-kn": "CORNERS_TOTAL",
-  "ufo:mtyp:00-h3": "TOTAL_GOALS",
-  "ufo:mtyp:00-37": "ASIAN_HANDICAP_PUSH",
   "ufo:mtyp:00-0h": "ASIAN_HANDICAP",
-  "ufo:mtyp:00-0t": "TOTAL_GOALS",
-  "ufo:mtyp:00-ko": "CORNERS_TOTAL",
-  "ufo:mtyp:00-2k": "TOTAL_GOALS",
-  "ufo:mtyp:00-10": "TOTAL_GOALS",
-  "ufo:mtyp:00-1l": "RESULT_AND_TOTAL",
-  "ufo:mtyp:00-3d": "TOTAL_GOALS",
-  "ufo:mtyp:00-k6": "TOTAL_GOALS",
-  "ufo:mtyp:00-l6": "TOTAL_GOALS",
-  "ufo:mtyp:00-s6": "TOTAL_GOALS",
-  "ufo:mtyp:00-rw": "TOTAL_GOALS",
-  "ufo:mtyp:00-2j": "TOTAL_GOALS",
-  "ufo:mtyp:00-3c": "TOTAL_GOALS",
-  // NOTE: "ufo:mtyp:00-gg" was previously mapped to MATCH_WINNER but audit showed
-  // its odds shape (e.g. draw @8.5 vs peers ~3.1) is incompatible with full-time
-  // 1X2 — it is some other 3-way race market (its draw label is "Równo").
-  // Excluded until its real identity is verified live.
-  "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
-  "ufo:mtyp:00-21": "DOUBLE_CHANCE_BTTS",
   "ufo:mtyp:00-re": "ASIAN_HANDICAP",
-  "ufo:mtyp:00-60": "MATCH_WINNER",
-  "ufo:mtyp:00-gd": "MATCH_WINNER",
-  "ufo:mtyp:00-1y": "DOUBLE_CHANCE_BTTS",
-  "ufo:mtyp:00-7e": "TEAM_WIN_OR_TOTAL_UNDER",
-  "ufo:mtyp:00-0m": "GOAL_RANGE",
+  "ufo:mtyp:00-37": "ASIAN_HANDICAP_PUSH",
+  "ufo:mtyp:00-61": "EUROPEAN_HANDICAP", // "Mecz: handicap 1:0" (score-style 3-way)
+  "ufo:mtyp:00-5z": "FIRST_HALF_EUROPEAN_HANDICAP", // "1.połowa: handicap 2:0"
+  "ufo:mtyp:00-2h": "FIRST_HALF_ASIAN_HANDICAP", // "1.połowa: handicap" (2-way lines)
+  // Goals
+  "ufo:mtyp:00-2i": "HALF_TIME_TOTAL_GOALS", // "1.połowa: liczba goli"
+  "ufo:mtyp:00-3b": "SECOND_HALF_TOTAL_GOALS", // "2.połowa: liczba goli"
+  "ufo:mtyp:00-10": "HOME_TEAM_TOTAL_GOALS", // "Mecz: <team1> - liczba goli"
+  "ufo:mtyp:00-13": "AWAY_TEAM_TOTAL_GOALS", // "Mecz: <team2> - liczba goli"
+  "ufo:mtyp:00-2j": "HALF_TIME_HOME_TEAM_TOTAL_GOALS", // "1.połowa: <team1> liczba goli"
+  "ufo:mtyp:00-2k": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS", // "1.połowa: <team2> liczba goli"
+  "ufo:mtyp:00-3c": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS", // "2.połowa: <team1> liczba goli"
+  "ufo:mtyp:00-3d": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS", // "2.połowa: <team2> liczba goli"
+  "ufo:mtyp:00-24": "GOAL_RANGE", // "Mecz: multigole"
+  // NOTE: 00-0m was previously mapped to GOAL_RANGE, but its 4-band book
+  // ("0-2"@3.5, "3-4"@2.6, "5-6"@3.55, "7+"@5.2) is far too flat for match
+  // goals and deviates ~3x from every peer — a different (non-goals) range
+  // market. Excluded until verified live (absent from the checked fixture).
+  // NOTE: 00-s6/00-rw are quarter-scoped goal totals ("2.kwarta: liczba
+  // goli") — no catalog code for quarter totals; excluded.
+  // NOTE: 00-k6 is "Mecz: liczba asyst w meczu" — no ASSISTS_TOTAL catalog
+  // code; excluded (was wrongly bucketed into TOTAL_GOALS).
+  // Statistics (OPTA)
+  "ufo:mtyp:00-0i": "CORNERS_TOTAL", // "Mecz: liczba rzutów rożnych"
+  "ufo:mtyp:00-0t": "HALF_TIME_CORNERS_TOTAL", // "1.połowa: liczba rzutów rożnych"
+  "ufo:mtyp:00-0j": "CORNERS_TEAM", // "Mecz: <team1> - liczba rzutów rożnych"
+  "ufo:mtyp:00-0k": "CORNERS_TEAM", // "Mecz: <team2> - liczba rzutów rożnych"
   "ufo:mtyp:00-0l": "CORNERS_RANGE",
-  "ufo:mtyp:00-2x": "MATCH_WINNER",
+  "ufo:mtyp:00-0e": "CORNERS_RACE", // "Mecz: więcej rzutów rożnych"
+  "ufo:mtyp:00-hb": "CARDS_TOTAL", // "Mecz: liczba Żółtych Kartek"
+  "ufo:mtyp:00-l5": "CARDS_TEAM", // "Mecz: <team1> - liczba Żółtych Kartek"
+  "ufo:mtyp:00-l6": "CARDS_TEAM", // "Mecz: <team2> - liczba Żółtych Kartek"
+  "ufo:mtyp:00-gj": "CARDS_RACE", // "Mecz: więcej Żółtych Kartek"
+  "ufo:mtyp:00-o0": "FIRST_CARD", // "Mecz: pierwsza żółta kartka"
+  "ufo:mtyp:00-h3": "OFFSIDES_TOTAL", // "Mecz: liczba spalonych"
+  "ufo:mtyp:00-kx": "HOME_TEAM_TOTAL_OFFSIDES", // "Mecz: <team1> - liczba spalonych"
+  "ufo:mtyp:00-ky": "AWAY_TEAM_TOTAL_OFFSIDES", // "Mecz: <team2> - liczba spalonych"
+  "ufo:mtyp:00-gh": "OFFSIDES_1X2", // "Mecz: więcej spalonych"
+  "ufo:mtyp:00-h5": "TOTAL_SHOTS", // "Mecz: liczba strzałów"
+  "ufo:mtyp:00-h7": "TOTAL_SHOTS_ON_TARGET", // "Mecz: liczba strzałów w światło bramki"
+  "ufo:mtyp:00-kp": "TEAM_TOTAL_SHOTS", // "Mecz: <team1> - liczba strzałów"
+  "ufo:mtyp:00-kq": "TEAM_TOTAL_SHOTS", // "Mecz: <team2> - liczba strzałów"
+  "ufo:mtyp:00-kr": "TEAM_TOTAL_SHOTS_ON_TARGET", // "Mecz: <team1> - liczba celnych"
+  "ufo:mtyp:00-ks": "TEAM_TOTAL_SHOTS_ON_TARGET", // "Mecz: <team2> - liczba celnych"
+  "ufo:mtyp:00-gd": "MOST_SHOTS", // "Mecz: więcej strzałów"
+  "ufo:mtyp:00-gg": "MOST_SHOTS_ON_TARGET", // "Mecz: więcej strzałów w światło bramki"
+  "ufo:mtyp:00-hv": "FOULS_TOTAL", // "Mecz: liczba fauli"
+  "ufo:mtyp:00-kn": "HOME_TEAM_TOTAL_FOULS", // "Mecz: <team1> - liczba fauli"
+  "ufo:mtyp:00-ko": "AWAY_TEAM_TOTAL_FOULS", // "Mecz: <team2> - liczba fauli"
+  "ufo:mtyp:00-hu": "FOUL_RACE", // "Mecz: więcej fauli" (was wrongly MATCH_WINNER)
+  // Combos
+  "ufo:mtyp:00-23": "DOUBLE_CHANCE_TOTAL", // "Mecz: dwójtyp/liczba goli"
+  "ufo:mtyp:00-1k": "TOTAL_GOALS_AND_BTTS", // "Mecz: obie drużyny strzelą gola/liczba goli"
+  "ufo:mtyp:00-1l": "RESULT_AND_TOTAL", // "Mecz: wynik/liczba goli"
+  "ufo:mtyp:00-20": "RESULT_AND_TOTAL",
+  "ufo:mtyp:00-1j": "RESULT_AND_BTTS", // "Mecz: wynik/obie drużyny strzelą gola"
+  "ufo:mtyp:00-2q": "HALF_TIME_RESULT_AND_BTTS", // "1.połowa: wynik/obie... w 1.połowie"
+  "ufo:mtyp:00-2r": "HALF_TIME_RESULT_AND_TOTAL", // "1.połowa: wynik/liczba goli w 1.połowie"
+  "ufo:mtyp:00-1z": "SECOND_HALF_RESULT_AND_BTTS", // "2.połowa: wynik/obie... w 2.połowie"
+  "ufo:mtyp:00-0z": "FIRST_GOAL_AND_RESULT", // "Mecz: 1. gol/wynik"
+  "ufo:mtyp:00-28": "MULTI_RESULT", // "Mecz: multiwynik"
+  "ufo:mtyp:00-1n": "HALFTIME_FULLTIME", // "1.połowa/wynik meczu"
+  "ufo:mtyp:00-21": "DOUBLE_CHANCE_BTTS",
+  "ufo:mtyp:00-22": "DOUBLE_CHANCE_BTTS",
+  // NOTE: 00-1y was previously mapped to DOUBLE_CHANCE_BTTS but its BTTS-yes
+  // legs price ~2x above the full-match consensus (10/Tak@6.6 vs peer 1X_YES
+  // ~3.2) — consistent with a half-scoped variant. Excluded until verified.
+  "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
+  "ufo:mtyp:00-7e": "TEAM_WIN_OR_TOTAL_UNDER",
   "ufo:mtyp:00-7b": "TEAM_WIN_OR_OVER",
-  "ufo:mtyp:00-9b": "VAR_REVIEW",
+  // Match result family
+  "ufo:mtyp:00-60": "MATCH_WINNER",
+  "ufo:mtyp:00-2x": "MATCH_WINNER",
   "ufo:mtyp:00-0p": "MATCH_WINNER",
-  "ufo:mtyp:00-gj": "MATCH_WINNER",
-  "ufo:mtyp:00-o0": "FIRST_TEAM_TO_SCORE",
-  "ufo:mtyp:00-hu": "MATCH_WINNER",
-  "ufo:mtyp:00-gh": "MATCH_WINNER",
-  "ufo:mtyp:00-0e": "MATCH_WINNER",
+  "ufo:mtyp:00-9b": "VAR_REVIEW",
   "ufo:mtyp:00-r7": "PENALTY_IN_BOTH_HALVES",
-  "ufo:mtyp:00-rz": "TIME_PERIOD_RESULT",
-  "ufo:mtyp:00-s1": "TIME_PERIOD_RESULT",
-  "ufo:mtyp:00-ru": "MATCH_WINNER",
-  "ufo:mtyp:00-rx": "TIME_PERIOD_RESULT",
+  "ufo:mtyp:00-rx": "TIME_PERIOD_RESULT", // "2.kwarta"
+  "ufo:mtyp:00-rz": "TIME_PERIOD_RESULT", // "3.kwarta"
+  "ufo:mtyp:00-s1": "TIME_PERIOD_RESULT", // "4.kwarta"
+  "ufo:mtyp:00-ru": "TIME_PERIOD_RESULT", // "1.kwarta" (was wrongly MATCH_WINNER)
   "ufo:mtyp:00-m8": "HALF_TIME_SUBSTITUTION",
-  "ufo:mtyp:00-28": "MULTI_RESULT",
-  "ufo:mtyp:00-2d": "HALF_TIME_RESULT",
-  // NOTE: "ufo:mtyp:00-61" was previously mapped to MATCH_WINNER but audit showed
-  // its odds are inconsistent with full-time 1X2 on multiple fixtures (it shadowed
-  // the canonical 00-00 market). Excluded until its real identity is verified live.
+  "ufo:mtyp:00-2d": "HALF_TIME_RESULT", // "1.połowa"
   "ufo:mtyp:00-1e": "TEAMS_TO_SCORE",
-  "ufo:mtyp:00-2y": "DOUBLE_CHANCE",
+  "ufo:mtyp:00-2y": "SECOND_HALF_DOUBLE_CHANCE", // "2.połowa: dwójtyp" (was full-match DC)
+  "ufo:mtyp:00-2z": "SECOND_HALF_DRAW_NO_BET", // "2.połowa: bez remisu" (was full-match DNB)
   "ufo:mtyp:00-1t": "HALF_WITH_MORE_GOALS",
   "ufo:mtyp:00-m7": "SUBSTITUTE_GOAL",
-  "ufo:mtyp:00-2m": "ODD_EVEN_GOALS",
-  "ufo:mtyp:00-2q": "RESULT_AND_BTTS",
-  "ufo:mtyp:00-3j": "CORRECT_SCORE",
-  "ufo:mtyp:00-1n": "HALFTIME_FULLTIME",
-  "ufo:mtyp:00-22": "DOUBLE_CHANCE_BTTS",
-  "ufo:mtyp:00-20": "RESULT_AND_TOTAL",
-  "ufo:mtyp:00-2s": "FIRST_TEAM_TO_SCORE",
-  "ufo:mtyp:00-5z": "MATCH_WINNER",
-  "ufo:mtyp:00-2w": "SECOND_HALF_RESULT",
-  "ufo:mtyp:00-1k": "TOTAL_GOALS_AND_BTTS",
-  "ufo:mtyp:00-2z": "DRAW_NO_BET",
+  "ufo:mtyp:00-2m": "HALF_TIME_ODD_EVEN_GOALS", // "1.połowa: suma goli" P/N
+  "ufo:mtyp:00-3j": "SECOND_HALF_CORRECT_SCORE", // "2.połowa: dokładny wynik"
+  "ufo:mtyp:00-2t": "HALF_TIME_CORRECT_SCORE", // "1.połowa: dokładny wynik"
+  "ufo:mtyp:00-3g": "SECOND_HALF_BTTS", // "2.połowa: obie drużyny strzelą gola"
+  "ufo:mtyp:00-2g": "HALF_TIME_DRAW_NO_BET", // "1.połowa: bez remisu (remis = zwrot)"
+  "ufo:mtyp:00-2s": "FIRST_TEAM_TO_SCORE", // "Mecz: 1.gol"
+  "ufo:mtyp:00-2w": "SECOND_HALF_RESULT", // "2.połowa"
   "ufo:mtyp:00-1v": "HOME_HALF_WITH_MOST_GOALS",
   "ufo:mtyp:00-7a": "FIRST_GOAL_TIME",
-  "ufo:mtyp:00-2r": "RESULT_AND_TOTAL",
   "ufo:mtyp:00-26": "BTTS_BY_HALF",
   "ufo:mtyp:00-1b": "HOME_TEAM_ODD_EVEN_GOALS",
   "ufo:mtyp:00-1f": "TEAM_CLEAN_SHEET",
   "ufo:mtyp:00-38": "TEAM_WIN",
   "ufo:mtyp:00-3a": "LAST_TEAM_TO_SCORE",
-  "ufo:mtyp:00-1g": "HOME_CLEAN_SHEET",
+  // 00-1g is the second team's clean-sheet prop ("Mecz: <team2> - nie straci
+  // gola") — route through the TEAM_CLEAN_SHEET name router (away variant has
+  // no catalog code and is dropped there) instead of hardcoding HOME.
+  "ufo:mtyp:00-1g": "TEAM_CLEAN_SHEET",
   "ufo:mtyp:00-36": "TEAM_WINS_MATCH",
   "ufo:mtyp:00-q0": "HALF_TIME_STOPPAGE_TIME_GOAL",
   "ufo:mtyp:00-q1": "SECOND_HALF_ADDED_TIME_GOAL",
   "ufo:mtyp:00-q2": "INJURY_TIME_GOAL",
-  // NOTE: "ufo:mtyp:00-2f" was previously mapped to DOUBLE_CHANCE but audit showed
-  // its DRAW_OR_AWAY odds are probabilistically inconsistent with full-match double
-  // chance (likely a half-scoped variant). Excluded until verified live; the
-  // canonical DOUBLE_CHANCE (00-01) still covers this market.
+  // 00-2f live-verified as "1.połowa: dwójtyp" (its odds were previously
+  // inconsistent with full-match double chance for exactly this reason).
+  "ufo:mtyp:00-2f": "HALF_TIME_DOUBLE_CHANCE",
   "ufo:mtyp:00-39": "MATCH_HAS_WINNER",
   "ufo:mtyp:00-1u": "HOME_HALF_WITH_MOST_GOALS",
-  "ufo:mtyp:00-24": "GOAL_RANGE",
 };
 
 const FORTUNA_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
@@ -172,8 +210,10 @@ const FORTUNA_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMar
   { pattern: /^liczba goli/, code: "TOTAL_GOALS" },
   { pattern: /^wynik\s*1\.?\s*polow/, code: "HALF_TIME_RESULT" },
   { pattern: /^obie strzel.*1\.?\s*polow/, code: "HALF_TIME_BTTS" },
-  { pattern: /^handicap azjatycki/, code: "ASIAN_HANDICAP" },
-  { pattern: /^handicap europejski/, code: "EUROPEAN_HANDICAP" },
+  // NOTE: the "handicap azjatycki"/"handicap europejski" name patterns were
+  // removed — those labels were parser fallbacks for ids 00-0v/00-0w, which
+  // are goal-band markets (not handicaps) on the live API. Real handicaps
+  // ("Mecz: handicap ...") are routed by id.
   { pattern: /^dokladny wynik/, code: "CORRECT_SCORE" },
   { pattern: /^remis\s*=\s*zwrot/, code: "DRAW_NO_BET" },
   { pattern: /^parzyste\/nieparzyste/, code: "ODD_EVEN_GOALS" },
@@ -189,35 +229,70 @@ const FORTUNA_PLAYER_STAT_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_FOULS",
   "PLAYER_SHOTS",
   "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  "PLAYER_SHOTS_OUTSIDE_BOX",
+  "PLAYER_SHOTS_IN_BOX",
+  "PLAYER_HEADER_SHOTS_ON_TARGET",
   "PLAYER_PASSES",
   "PLAYER_RED_CARD",
+  "PLAYER_FOOT_GOAL",
+  "PLAYER_PENALTY_AREA_GOAL",
+  "PLAYER_OFFSIDES_1H",
+  "PLAYER_FIRST_OR_LAST_GOAL",
+]);
+
+// Player stat-line markets whose catalog vocabulary is YES (not "N+"): the
+// raw "1+" threshold means "at least one", i.e. YES.
+const FORTUNA_PLAYER_YES_MARKETS = new Set<NormalizedMarketType>([
+  "PLAYER_CARDS",
+  "PLAYER_RED_CARD",
+  "PLAYER_FIRST_OR_LAST_GOAL",
 ]);
 
 // Per-player dropdown markets: the player becomes the selection code (same
-// convention as Fuksiarz), so per-player Fortuna markets merge into one
-// aggregated dropdown market.
+// convention as Fuksiarz/betcris/superbet), so per-player Fortuna markets
+// merge into one aggregated dropdown market.
 const FORTUNA_PLAYER_DROPDOWN_MARKETS = new Set<NormalizedMarketType>([
   "GOALSCORER_FIRST",
   "GOALSCORER_LAST",
   "GOALSCORER_ANYTIME",
   "PLAYER_HEADER_GOAL",
   "PLAYER_GOAL_OR_ASSIST",
+  // Peers (betcris/lvbet/superbet) key these by player-name selections.
+  "PLAYER_GOAL_OUTSIDE_BOX",
+  "PLAYER_OFFSIDES",
 ]);
 
+/** Strips the leading scope prefix ("Mecz:", "1.połowa:", "2.połowa:"). */
+function stripFortunaScope(name: string): string {
+  return name
+    .replace(/^\s*(?:mecz|[12]\s*\.?\s*po[lł]owa)\s*:\s*/iu, "")
+    .trim();
+}
+
 /**
- * Extracts the player name from Fortuna per-player OPTA market names:
+ * Extracts the player name from Fortuna per-player OPTA market names and
+ * canonicalizes it to natural "Firstname Lastname" order:
  * - dash form: "Zerrouki, Ramiz - liczba fauli (OPTA)"
+ * - count form (no dash): "Widmer, Silvan liczba spalonych w 1.połowie (OPTA)"
  * - verb form (optionally with abbreviated team prefix):
  *   "W.Ziel.Przyl. Cabral, Jovane strzeli pierwszego gola w meczu (OPTA)"
  */
 function extractFortunaPlayerName(rawName: string): string | undefined {
-  const dashMatch = rawName.match(/^(.+?,[^-]+?)\s+-\s+/);
-  if (dashMatch) return dashMatch[1].trim();
+  const name = stripFortunaScope(rawName);
 
-  const verbMatch = rawName.match(
+  const dashMatch = name.match(/^(.+?,[^-]+?)\s+-\s+/);
+  if (dashMatch) return canonicalizePlayerName(dashMatch[1].trim());
+
+  const countMatch = name.match(
+    /^([\p{Lu}][\p{L}'’.\- ]*,\s*[\p{Lu}][\p{L}'’. -]*?)\s+liczba\s/u
+  );
+  if (countMatch) return canonicalizePlayerName(countMatch[1].trim());
+
+  const verbMatch = name.match(
     /([\p{Lu}][\p{L}'-]*(?:\s+[\p{Lu}][\p{L}'-]*)*,\s*[\p{Lu}][\p{L} '.-]*?)\s+(?:strzeli|asystuje|otrzyma|zaliczy|odda)/u
   );
-  if (verbMatch) return verbMatch[1].trim();
+  if (verbMatch) return canonicalizePlayerName(verbMatch[1].trim());
 
   return undefined;
 }
@@ -225,6 +300,76 @@ function extractFortunaPlayerName(rawName: string): string | undefined {
 /** Leaked internal ids like "Rynek ufo:mtyp:00-37" must never be mined for lines. */
 function isPlaceholderMarketName(name: string): boolean {
   return /^rynek\s/i.test(name) || name.includes("ufo:mtyp");
+}
+
+/**
+ * Resolves which side a team-scoped market ("Mecz: Norwegia - liczba fauli
+ * (OPTA)", "1.połowa: Anglia liczba goli 2.5") refers to, from the team token
+ * between the scope prefix and the "liczba" keyword.
+ */
+function resolveFortunaTeamSide(
+  rawName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | undefined {
+  if (isPlaceholderMarketName(rawName)) return undefined;
+  const stripped = stripFortunaScope(rawName);
+  const match = stripped.match(/^(.+?)\s*(?:-\s*)?[Ll]iczba\s/u);
+  if (!match) return undefined;
+  const side = normalize1x2Selection(
+    match[1].trim(),
+    ctx.homeTeam,
+    ctx.awayTeam,
+    ctx.league
+  );
+  return side === "HOME" || side === "AWAY" ? side : undefined;
+}
+
+// Fortuna type ids come in team1/team2 pairs; the id itself implies the side
+// when the (possibly fallback) market name cannot be team-matched. Verified
+// against the live API: the first id of each pair is always the home team.
+const FORTUNA_TEAM_SCOPED_ID_SIDE: Record<string, "HOME" | "AWAY"> = {
+  "ufo:mtyp:00-0j": "HOME", // team corners
+  "ufo:mtyp:00-0k": "AWAY",
+  "ufo:mtyp:00-kp": "HOME", // team shots
+  "ufo:mtyp:00-kq": "AWAY",
+  "ufo:mtyp:00-kr": "HOME", // team shots on target
+  "ufo:mtyp:00-ks": "AWAY",
+  "ufo:mtyp:00-l5": "HOME", // team yellow cards
+  "ufo:mtyp:00-l6": "AWAY",
+  "ufo:mtyp:00-1a": "HOME", // team odd/even goals
+  "ufo:mtyp:00-1b": "AWAY",
+};
+
+// Markets whose side lives in the parameter ("HOME:4.5"), matching the
+// betclic/forbet convention — catalog selections are plain OVER/UNDER.
+const FORTUNA_TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "CORNERS_TEAM",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+]);
+
+// Side-directional codes: when the market name resolves to the opposite team
+// (Fortuna's id->side pairing is positional), flip to the counterpart code.
+const FORTUNA_SIDED_CODE_FLIP: Partial<
+  Record<NormalizedMarketType, { side: "HOME" | "AWAY"; counterpart: NormalizedMarketType }>
+> = {
+  HOME_TEAM_TOTAL_GOALS: { side: "HOME", counterpart: "AWAY_TEAM_TOTAL_GOALS" },
+  AWAY_TEAM_TOTAL_GOALS: { side: "AWAY", counterpart: "HOME_TEAM_TOTAL_GOALS" },
+  HALF_TIME_HOME_TEAM_TOTAL_GOALS: { side: "HOME", counterpart: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS" },
+  HALF_TIME_AWAY_TEAM_TOTAL_GOALS: { side: "AWAY", counterpart: "HALF_TIME_HOME_TEAM_TOTAL_GOALS" },
+  SECOND_HALF_HOME_TEAM_TOTAL_GOALS: { side: "HOME", counterpart: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS" },
+  SECOND_HALF_AWAY_TEAM_TOTAL_GOALS: { side: "AWAY", counterpart: "SECOND_HALF_HOME_TEAM_TOTAL_GOALS" },
+  HOME_TEAM_TOTAL_FOULS: { side: "HOME", counterpart: "AWAY_TEAM_TOTAL_FOULS" },
+  AWAY_TEAM_TOTAL_FOULS: { side: "AWAY", counterpart: "HOME_TEAM_TOTAL_FOULS" },
+  HOME_TEAM_TOTAL_OFFSIDES: { side: "HOME", counterpart: "AWAY_TEAM_TOTAL_OFFSIDES" },
+  AWAY_TEAM_TOTAL_OFFSIDES: { side: "AWAY", counterpart: "HOME_TEAM_TOTAL_OFFSIDES" },
+};
+
+/** Splits a Fortuna combo selection ("Remis/Tak", "10 / +2.5") at the first slash. */
+function splitFortunaCombo(name: string): [string, string] | null {
+  const idx = name.indexOf("/");
+  if (idx <= 0 || idx >= name.length - 1) return null;
+  return [name.slice(0, idx).trim(), name.slice(idx + 1).trim()];
 }
 
 /**
@@ -313,23 +458,39 @@ function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
   ctx: NormalizationContext,
-  playerName?: string
+  playerName?: string,
+  teamSide?: "HOME" | "AWAY"
 ): NormalizedSelection {
   const trimmed = selName.trim();
-  const normalized = normalizeMarketName(trimmed);
 
   // Per-player dropdown markets: the player (from the market name) is the
   // canonical selection code; raw labels are generic markers ("Tak", "1+").
+  // Must run before the literal passthrough — some of these markets list
+  // "1+" in the catalog, which would otherwise swallow the player identity.
   if (FORTUNA_PLAYER_DROPDOWN_MARKETS.has(marketCode)) {
     if (playerName) return playerName as NormalizedSelection;
     return trimmed as NormalizedSelection;
   }
 
+  // Literal catalog-code passthrough: band/range/exact markets often quote
+  // raw selection text that IS the catalog selection code ("0-2", "7+", "1+"),
+  // and per-market cases below may miss them (falling through to UNKNOWN).
+  const literalCatalogCodes = getMarketByCode(marketCode)?.selections;
+  if (
+    literalCatalogCodes &&
+    literalCatalogCodes.length > 0 &&
+    literalCatalogCodes.includes(trimmed) &&
+    !FORTUNA_PLAYER_YES_MARKETS.has(marketCode)
+  ) {
+    return trimmed as NormalizedSelection;
+  }
+  const normalized = normalizeMarketName(trimmed);
+
   // Per-player stat-line markets: selections are thresholds or Yes/No.
   if (FORTUNA_PLAYER_STAT_MARKETS.has(marketCode)) {
     if (/^\d+\s*\+$/.test(trimmed)) {
-      // Card markets are YES/NO in the catalog; "1+" means "receives a card".
-      if (marketCode === "PLAYER_CARDS" || marketCode === "PLAYER_RED_CARD") {
+      // YES-vocabulary markets (cards, first-or-last goal): "1+" means YES.
+      if (FORTUNA_PLAYER_YES_MARKETS.has(marketCode)) {
         return "YES";
       }
       return trimmed.replace(/\s+/g, "") as NormalizedSelection;
@@ -339,32 +500,227 @@ function normalizeSelectionForMarket(
     return trimmed as NormalizedSelection;
   }
 
+  // Resolves the result leg of combo selections ("Remis", "0", team name).
+  const comboSide = (part: string): "HOME" | "DRAW" | "AWAY" | undefined => {
+    const p = part.trim();
+    if (p === "0" || isFortunaDrawLabel(p)) return "DRAW";
+    const side = normalize1x2Selection(p, ctx.homeTeam, ctx.awayTeam, ctx.league);
+    return side === "HOME" || side === "AWAY" ? side : undefined;
+  };
+  // Resolves the over/under leg ("+ 2.5", "- 1.5", "więcej niż 2.5").
+  const comboOverUnder = (part: string): "OVER" | "UNDER" | undefined => {
+    const p = normalizeMarketName(part);
+    if (/^(\+|wiecej|powyzej|ponad)/.test(p)) return "OVER";
+    if (/^(-|mniej|ponizej)/.test(p)) return "UNDER";
+    return undefined;
+  };
+  // Resolves the yes/no leg ("Tak", "Nie").
+  const comboYesNo = (part: string): "YES" | "NO" | undefined => {
+    const yn = normalizeYesNoSelection(part.trim());
+    return yn === "YES" || yn === "NO" ? yn : undefined;
+  };
+  // Resolves the double-chance leg ("10", "02", "12") to the catalog prefix.
+  const comboDoubleChance = (part: string): "1X" | "X2" | "12" | undefined => {
+    const dc = normalizeDoubleChanceSelection(part.trim());
+    if (dc === "HOME_OR_DRAW") return "1X";
+    if (dc === "DRAW_OR_AWAY") return "X2";
+    if (dc === "HOME_OR_AWAY") return "12";
+    return undefined;
+  };
+
   switch (marketCode) {
     case "MATCH_WINNER":
     case "HALF_TIME_RESULT":
     case "DRAW_NO_BET":
+    case "HALF_TIME_DRAW_NO_BET":
     case "SECOND_HALF_RESULT":
+    case "SECOND_HALF_DRAW_NO_BET":
     case "TIME_PERIOD_RESULT":
+    case "HT_OR_FT_RESULT":
+    // 3-way stat races quote team names plus a "Rowno" ("even") draw leg.
+    case "MOST_SHOTS":
+    case "MOST_SHOTS_ON_TARGET":
+    case "FOUL_RACE":
+    case "OFFSIDES_1X2":
+    case "CARDS_RACE":
+    case "CORNERS_RACE":
       // Some Fortuna result markets label the draw leg "Równo" ("even").
       if (isFortunaDrawLabel(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
+    case "HALF_TIME_DOUBLE_CHANCE":
+    case "SECOND_HALF_DOUBLE_CHANCE":
       return normalizeDoubleChanceSelection(trimmed);
 
     case "TOTAL_GOALS":
     case "HALF_TIME_TOTAL_GOALS":
+    case "SECOND_HALF_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
     case "CARDS_TOTAL":
     case "CORNERS_TOTAL":
+    case "HALF_TIME_CORNERS_TOTAL":
+    case "CORNERS_TEAM":
+    case "TOTAL_SHOTS":
+    case "TOTAL_SHOTS_ON_TARGET":
+    case "TEAM_TOTAL_SHOTS":
+    case "TEAM_TOTAL_SHOTS_ON_TARGET":
+    case "FOULS_TOTAL":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
+    case "OFFSIDES_TOTAL":
+    case "HOME_TEAM_TOTAL_OFFSIDES":
+    case "AWAY_TEAM_TOTAL_OFFSIDES":
       // Integer-line phrasing: "więcej niż 2" / "mniej niż 2", also the short
       // form without "niż" ("więcej 1" / "mniej 0,5").
       if (/^wiecej\b/.test(normalized)) return "OVER";
       if (/^mniej\b/.test(normalized)) return "UNDER";
       return normalizeOverUnderSelection(trimmed);
 
+    case "CARDS_TEAM": {
+      // Catalog vocabulary is side-prefixed (HOME_OVER, ...); the side comes
+      // from the market scope, the selection text only carries the O/U leg.
+      const ou = /^wiecej\b/.test(normalized)
+        ? "OVER"
+        : /^mniej\b/.test(normalized)
+          ? "UNDER"
+          : normalizeOverUnderSelection(trimmed);
+      if (ou === "UNKNOWN" || !teamSide) return "UNKNOWN";
+      return `${teamSide}_${ou}` as NormalizedSelection;
+    }
+
     case "BTTS":
     case "HALF_TIME_BTTS":
+    case "SECOND_HALF_BTTS":
       return normalizeYesNoSelection(trimmed);
+
+    case "FIRST_GOAL_AND_RESULT": {
+      // "1/2" = first goal by team 1 / away win; "Brak goli" -> NONE.
+      if (/^(brak goli|nikt|bez gola)/.test(normalized)) return "NONE";
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const first = comboSide(parts[0]);
+        const second = comboSide(parts[1]);
+        if ((first === "HOME" || first === "AWAY") && second) {
+          return `${first}_${second}` as NormalizedSelection;
+        }
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "HALFTIME_FULLTIME": {
+      // "Kolumbia/Kolumbia", "Remis/Szwajcaria" -> AWAY_AWAY, DRAW_HOME
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const first = comboSide(parts[0]);
+        const second = comboSide(parts[1]);
+        if (first && second) return `${first}_${second}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_AND_BTTS": {
+      // "Szwajcaria/Tak", "Remis/Nie" -> HOME_YES, DRAW_NO
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const side = comboSide(parts[0]);
+        const yn = comboYesNo(parts[1]);
+        if (side && yn) return `${side}_${yn}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "RESULT_AND_TOTAL":
+    case "HALF_TIME_RESULT_AND_TOTAL": {
+      // "Kolumbia/- 2.5", "0/+ 3.5" -> AWAY_UNDER, DRAW_OVER
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const side = comboSide(parts[0]);
+        const ou = comboOverUnder(parts[1]);
+        if (side && ou) return `${side}_${ou}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "TOTAL_GOALS_AND_BTTS": {
+      // "Tak/+ 2.5" -> OVER_YES, "Nie/- 2.5" -> UNDER_NO
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const yn = comboYesNo(parts[0]);
+        const ou = comboOverUnder(parts[1]);
+        if (yn && ou) return `${ou}_${yn}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "DOUBLE_CHANCE_TOTAL": {
+      // "10 / +2.5" -> 1X_OVER, "02 / -1.5" -> X2_UNDER
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const dc = comboDoubleChance(parts[0]);
+        const ou = comboOverUnder(parts[1]);
+        if (dc && ou) return `${dc}_${ou}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "DOUBLE_CHANCE_BTTS": {
+      // "10/Tak" -> 1X_YES, "12/Nie" -> 12_NO
+      const parts = splitFortunaCombo(trimmed);
+      if (parts) {
+        const dc = comboDoubleChance(parts[0]);
+        const yn = comboYesNo(parts[1]);
+        if (dc && yn) return `${dc}_${yn}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "MULTI_RESULT": {
+      // Space-separated score groups ("1:0 2:0 3:0") -> the catalog's comma
+      // form ("1:0, 2:0 lub 3:0"); the draw leg maps to code "X".
+      if (isFortunaDrawLabel(trimmed)) return "X" as NormalizedSelection;
+      const scores = trimmed.match(/\d+:\d+/g);
+      if (scores && scores.length >= 2) {
+        const code = `${scores.slice(0, -1).join(", ")} lub ${scores[scores.length - 1]}`;
+        return code as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
+    }
+
+    case "PLAYER_GOAL_AND_RESULT":
+    case "WIN_AND_PLAYER_SHOTS_ON_TARGET": {
+      // Parlay label doubles as the selection ("Norwegia wygra , Erling
+      // Haaland 2+ strzały..."); the catalog selection is the winning side.
+      const winner = trimmed.match(/^(.+?)\s+wygra\b/iu);
+      if (winner) {
+        const side = normalize1x2Selection(
+          winner[1].trim(),
+          ctx.homeTeam,
+          ctx.awayTeam,
+          ctx.league
+        );
+        if (side === "HOME" || side === "AWAY") return side;
+      }
+      if (/^remis\b/.test(normalized)) return "DRAW";
+      return trimmed as NormalizedSelection;
+    }
+
+    case "TEAM_WIN_OR_OVER_GOALS":
+    case "TEAM_WIN_OR_TOTAL_UNDER":
+    case "TEAM_WIN_OR_OVER": {
+      // "Tak (przynajmniej 1 warunek zostanie spełniony)" / "Nie (oba
+      // warunki nie zostaną spełnione)" -> YES / NO
+      if (/^tak\b/.test(normalized)) return "YES";
+      if (/^nie\b/.test(normalized)) return "NO";
+      return normalizeYesNoSelection(trimmed);
+    }
 
     case "ODD_EVEN_GOALS":
     case "HOME_TEAM_ODD_EVEN_GOALS":
@@ -388,9 +744,13 @@ function normalizeSelectionForMarket(
     case "ASIAN_HANDICAP_PUSH":
     case "ASIAN_HANDICAP_3WAY":
     case "EUROPEAN_HANDICAP":
+    case "FIRST_HALF_ASIAN_HANDICAP":
+    case "FIRST_HALF_EUROPEAN_HANDICAP":
       return normalizeFortunaHandicapSelection(trimmed, ctx);
 
-    case "CORRECT_SCORE": {
+    case "CORRECT_SCORE":
+    case "HALF_TIME_CORRECT_SCORE":
+    case "SECOND_HALF_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
     }
@@ -417,6 +777,7 @@ function normalizeSelectionForMarket(
 
     case "FIRST_TEAM_TO_SCORE":
     case "LAST_TEAM_TO_SCORE":
+    case "FIRST_CARD":
       if (/^(nikt|zaden|zadna|bez gola|brak gola|nie padnie)/.test(normalized)) {
         return "NONE";
       }
@@ -468,9 +829,17 @@ function normalizeSelectionForMarket(
   }
 }
 
+/** Negates a signed handicap line string ("-1.5" -> "+1.5", "+0" -> "0"). */
+function negateHandicapLine(line: string): string {
+  const value = -parseFloat(line);
+  if (value === 0) return "0";
+  return value > 0 ? `+${value}` : `${value}`;
+}
+
 function extractParamValue(
   marketCode: NormalizedMarketType,
-  raw: RawBookmakerMarket
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
 ): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
@@ -493,14 +862,26 @@ function extractParamValue(
   }
 
   switch (metadata.parameterType) {
-    case "handicap":
-      return (
+    case "handicap": {
+      const scoreStyle =
         parseScoreStyleHandicap(selectionNames) ??
-        parseScoreStyleHandicap([nameForParsing]) ??
-        selectionNames.map((name) => parseHandicapLine(name)).find(Boolean) ??
-        parseHandicapLine(nameForParsing) ??
-        parseHandicapLine(groupName)
-      );
+        parseScoreStyleHandicap([nameForParsing]);
+      if (scoreStyle) return scoreStyle;
+
+      // The parameter is the HOME-perspective line, but Fortuna orders the
+      // two legs arbitrarily ("Kolumbia -1" may come first). Resolve each
+      // leg's side and negate away-side lines — taking the first parseable
+      // line regardless of side swapped params on roughly half the rows.
+      for (const sel of raw.selections) {
+        const side = normalizeFortunaHandicapSelection(sel.name, ctx);
+        if (side !== "HOME" && side !== "AWAY") continue;
+        const line = parseHandicapLine(sel.name);
+        if (!line) continue;
+        return side === "HOME" ? line : negateHandicapLine(line);
+      }
+
+      return parseHandicapLine(nameForParsing) ?? parseHandicapLine(groupName);
+    }
 
     case "integer":
       return (
@@ -563,10 +944,14 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode = "ASIAN_HANDICAP_3WAY";
     }
 
+    // Scope-stripped name for the team routers below — live Fortuna labels
+    // carry a "Mecz:"/"1.połowa:" prefix in front of the team name.
+    const scopedName = stripFortunaScope(raw.name);
+
     // Fortuna emits "team half with more goals" for both sides under the same
     // type ids; route by the team named in the market label.
     if (marketCode === "HOME_HALF_WITH_MOST_GOALS") {
-      const teamPrefix = raw.name.match(/^(.+?)\s+po[łl]owa\s+z\s+wi[eę]ksz/i);
+      const teamPrefix = scopedName.match(/^(.+?)\s+po[łl]owa\s+z\s+wi[eę]ksz/i);
       if (teamPrefix) {
         const side = normalize1x2Selection(
           teamPrefix[1].trim(),
@@ -579,37 +964,63 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // Per-team odd/even goals ("W.Ziel.Przyl. Liczba goli P/N", "Kolumbia
-    // Liczba goli P/N") shares one Fortuna type id for both sides; route by the
-    // team named in the label. An unresolvable team must not default to HOME —
-    // that poisoned home-team best-odds with away-team prices.
+    // Liczba goli P/N") is emitted per team; route by the team named in the
+    // label, falling back to the side implied by the type id. An unresolvable
+    // side must not default to HOME — that poisoned home-team best-odds.
     if (marketCode === "HOME_TEAM_ODD_EVEN_GOALS") {
-      const teamPrefix = raw.name.match(/^(.+?)\s+liczba\s+goli\s+p\s*\/\s*n/i);
+      let side: NormalizedSelection | undefined;
+      const teamPrefix = scopedName.match(/^(.+?)\s+liczba\s+goli\s+p\s*\/\s*n/i);
       if (teamPrefix) {
-        const side = normalize1x2Selection(
+        side = normalize1x2Selection(
           teamPrefix[1].trim(),
           ctx.homeTeam,
           ctx.awayTeam,
           ctx.league
         );
-        if (side === "AWAY") marketCode = "AWAY_TEAM_ODD_EVEN_GOALS";
-        else if (side !== "HOME") return null;
       }
+      if (side !== "HOME" && side !== "AWAY") {
+        side = marketId ? FORTUNA_TEAM_SCOPED_ID_SIDE[marketId] : undefined;
+      }
+      if (side === "AWAY") marketCode = "AWAY_TEAM_ODD_EVEN_GOALS";
+      else if (side !== "HOME") return null;
     }
 
     // "X nie straci gola" (won't concede) is a per-team YES/NO clean-sheet
     // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team; the
     // away variant has no full-match catalog code yet, so it is excluded.
     if (marketCode === "TEAM_CLEAN_SHEET") {
-      const teamPrefix = raw.name.match(/^(.+?)\s+nie\s+straci\s+gola/i);
+      const teamPrefix = scopedName.match(/^(.+?)\s+-?\s*nie\s+straci\s+gola/i);
       if (!teamPrefix) return null;
       const side = normalize1x2Selection(
-        teamPrefix[1].trim(),
+        teamPrefix[1].trim().replace(/\s*-$/, ""),
         ctx.homeTeam,
         ctx.awayTeam,
         ctx.league
       );
       if (side === "HOME") marketCode = "HOME_CLEAN_SHEET";
       else return null;
+    }
+
+    // Side-directional team codes (team goals/fouls/offsides): flip to the
+    // counterpart code when the label names the opposite team — the id->side
+    // pairing is positional and the label is authoritative.
+    const sidedFlip = FORTUNA_SIDED_CODE_FLIP[marketCode];
+    if (sidedFlip) {
+      const nameSide = resolveFortunaTeamSide(raw.name, ctx);
+      if (nameSide && nameSide !== sidedFlip.side) {
+        marketCode = sidedFlip.counterpart;
+      }
+    }
+
+    // Side-in-parameter team markets (CORNERS_TEAM, TEAM_TOTAL_SHOTS[_ON_
+    // TARGET]) and side-in-selection CARDS_TEAM need a resolved team side.
+    let teamSide: "HOME" | "AWAY" | undefined;
+    if (FORTUNA_TEAM_LINE_PARAM_MARKETS.has(marketCode) || marketCode === "CARDS_TEAM") {
+      teamSide =
+        resolveFortunaTeamSide(raw.name, ctx) ??
+        (marketId ? FORTUNA_TEAM_SCOPED_ID_SIDE[marketId] : undefined);
+      // Without a side the entry would collide across teams — drop it.
+      if (!teamSide) return null;
     }
 
     if (!isValidMarketCode(marketCode)) {
@@ -623,15 +1034,48 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       FORTUNA_PLAYER_DROPDOWN_MARKETS.has(marketCode);
     const playerName = isPlayerMarket ? extractFortunaPlayerName(raw.name) : undefined;
 
+    // Parlay-style player markets carry the player (and the shots tier) in
+    // the natural-order label: "Norwegia wygra , Erling Haaland 2+ strzały w
+    // światło bramki". The player (+tier) becomes the parameter so different
+    // players/tiers never merge into one bucket.
+    let parlayPlayerParam: string | undefined;
+    if (
+      marketCode === "PLAYER_GOAL_AND_RESULT" ||
+      marketCode === "WIN_AND_PLAYER_SHOTS_ON_TARGET"
+    ) {
+      const parlay = raw.name.match(
+        /wygra\s*,\s*(.+?)(?:\s+(\d+\+))?\s+(?:strzeli|strza[lł])/iu
+      );
+      if (parlay) {
+        parlayPlayerParam =
+          canonicalizePlayerName(parlay[1].trim()) + (parlay[2] ? ` ${parlay[2]}` : "");
+      }
+    }
+
     // Stat-line player markets use the player as the market parameter.
-    const paramValue =
-      playerName && FORTUNA_PLAYER_STAT_MARKETS.has(marketCode)
+    let paramValue =
+      parlayPlayerParam ??
+      (playerName && FORTUNA_PLAYER_STAT_MARKETS.has(marketCode)
         ? playerName
-        : extractParamValue(marketCode, raw);
+        : extractParamValue(marketCode, raw, ctx));
+
+    // Side-in-parameter team markets combine the side with the numeric line
+    // ("HOME:4.5") so home/away lines never collide on the market key.
+    // CARDS_TEAM keeps its side-prefixed selection codes, but the param must
+    // also be side-scoped — storage dedupes rows by market key, so a bare
+    // "CARDS_TEAM:1.5" key would silently drop one team's line.
+    if (
+      (FORTUNA_TEAM_LINE_PARAM_MARKETS.has(marketCode) || marketCode === "CARDS_TEAM") &&
+      teamSide
+    ) {
+      if (!paramValue) return null;
+      paramValue = `${teamSide}:${paramValue}`;
+    }
+
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, playerName),
+      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, playerName, teamSide),
       label: sel.name,
       odds: sel.odds,
     }));
@@ -639,7 +1083,9 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // Two-way handicaps: when exactly one side failed team matching, infer it
     // from the resolved side (Fortuna heavily abbreviates team names).
     if (
-      (marketCode === "ASIAN_HANDICAP" || marketCode === "ASIAN_HANDICAP_PUSH") &&
+      (marketCode === "ASIAN_HANDICAP" ||
+        marketCode === "ASIAN_HANDICAP_PUSH" ||
+        marketCode === "FIRST_HALF_ASIAN_HANDICAP") &&
       selections.length === 2
     ) {
       const unknowns = selections.filter((sel) => sel.code === "UNKNOWN");
@@ -651,7 +1097,9 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
 
     // Three-way handicaps: fill the single missing slot the same way.
     if (
-      (marketCode === "EUROPEAN_HANDICAP" || marketCode === "ASIAN_HANDICAP_3WAY") &&
+      (marketCode === "EUROPEAN_HANDICAP" ||
+        marketCode === "ASIAN_HANDICAP_3WAY" ||
+        marketCode === "FIRST_HALF_EUROPEAN_HANDICAP") &&
       selections.length === 3
     ) {
       const unknowns = selections.filter((sel) => sel.code === "UNKNOWN");
@@ -673,7 +1121,9 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode === "ASIAN_HANDICAP" ||
       marketCode === "ASIAN_HANDICAP_PUSH" ||
       marketCode === "ASIAN_HANDICAP_3WAY" ||
-      marketCode === "EUROPEAN_HANDICAP"
+      marketCode === "EUROPEAN_HANDICAP" ||
+      marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
+      marketCode === "FIRST_HALF_EUROPEAN_HANDICAP"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

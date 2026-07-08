@@ -211,16 +211,22 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   1236: "2+",
 
   // HT/FT exact score combo (Market 57) - format: HT score / FT score
+  // HT 0:0 branch (ids 92-101): FT scores are enumerated home-goals-first
+  // (0:0, 0:1, 0:2, 0:3, 1:0, 1:1, 1:2, 2:0, 2:1, 3:0). Verified cell-by-cell
+  // against etoto/forbet/betfan/superbet for Switzerland-Colombia: e.g. STS
+  // id 93 @9.25 == peers "0:0/0:1"@9-10 (peers "0:0/1:0" is 11.7-14), id 94
+  // @24 == peers "0:0/0:2"@23.5-26 (peers "0:0/2:0" is 40-45). The previous
+  // away-goals-first layout mirrored every asymmetric cell of this branch.
   92: "0:0 / 0:0",
-  93: "0:0 / 1:0",
-  94: "0:0 / 2:0",
-  95: "0:0 / 3:0",
-  96: "0:0 / 0:1",
+  93: "0:0 / 0:1",
+  94: "0:0 / 0:2",
+  95: "0:0 / 0:3",
+  96: "0:0 / 1:0",
   97: "0:0 / 1:1",
-  98: "0:0 / 2:1",
-  99: "0:0 / 0:2",
-  100: "0:0 / 1:2",
-  101: "0:0 / 0:3",
+  98: "0:0 / 1:2",
+  99: "0:0 / 2:0",
+  100: "0:0 / 2:1",
+  101: "0:0 / 3:0",
   102: "1:0 / 1:0",
   103: "1:0 / 2:0",
   104: "1:0 / 3:0",

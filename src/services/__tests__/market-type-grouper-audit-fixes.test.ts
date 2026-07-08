@@ -245,3 +245,74 @@ describe("grouper audit fixes — no 'base' bucket on team-parameterized markets
     expect(params).toEqual(["AWAY"]);
   });
 });
+
+describe("grouper audit fixes — player-name selection merging", () => {
+  it("merges 'Lastname, Firstname' and 'Firstname Lastname' into one column", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Strzelec gola",
+          type: "GOALSCORER_ANYTIME",
+          normalizedType: "GOALSCORER_ANYTIME" as ScrapedMarket["normalizedType"],
+          marketKey: "GOALSCORER_ANYTIME",
+          selections: [{ name: "Jashari, Ardon", normalizedName: "Jashari, Ardon", odds: 5.0 }],
+        }),
+        bookmaker: "fuksiarz",
+      },
+      {
+        market: mkMarket({
+          name: "Strzelec gola",
+          type: "GOALSCORER_ANYTIME",
+          normalizedType: "GOALSCORER_ANYTIME" as ScrapedMarket["normalizedType"],
+          marketKey: "GOALSCORER_ANYTIME",
+          selections: [{ name: "Ardon Jashari", normalizedName: "Ardon Jashari", odds: 5.2 }],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+    const codes = new Set<string>();
+    for (const b of result[0].parameters[0].bookmakers) for (const s of b.selections) codes.add(s.type);
+    expect([...codes]).toEqual(["Ardon Jashari"]);
+  });
+});
+
+describe("grouper audit fixes — invalid params on decimal markets", () => {
+  it("drops bare side tokens (HOME/AWAY without a line) from decimal sliders", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM:4.5",
+          paramValue: "4.5",
+          selections: [{ name: "Ponad", normalizedName: "OVER", odds: 1.9 }],
+        }),
+        bookmaker: "sts",
+      },
+      {
+        // Side label without a line — the number failed to parse upstream.
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM:HOME",
+          paramValue: "HOME",
+          selections: [{ name: "Ponad", normalizedName: "OVER", odds: 2.1 }],
+        }),
+        bookmaker: "betclic",
+      },
+      {
+        // Side-scoped line is a valid composite param and must survive.
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM:HOME:5.5",
+          paramValue: "HOME:5.5",
+          selections: [{ name: "Ponad", normalizedName: "OVER", odds: 2.3 }],
+        }),
+        bookmaker: "betclic",
+      },
+    ]);
+    const params = result[0].parameters.map((p) => p.value).sort();
+    expect(params).toEqual(["4.5", "HOME:5.5"]);
+  });
+});

@@ -317,9 +317,18 @@ export function parseAllMarkets(
 
     // Only add markets with valid selections
     if (selections.length > 0) {
-      // Create unique market key for line markets
+      // Create unique market key for line markets.
+      // Scoreline handicaps ("Handicap 1:0", "1. połowa - handicap 2:0") are
+      // already unique per line, and the eToto API argument uses the opposite
+      // sign convention (arg -1 for the home +1 scoreline 1:0), so appending
+      // it would produce misleading names like "handicap 1:0 -1".
       let uniqueName = marketName;
-      if (typeof game.argument === "number" && !marketName.includes(String(game.argument))) {
+      const hasScorelineHandicap = /handicap\s+\d+\s*:\s*\d+/i.test(marketName);
+      if (
+        typeof game.argument === "number" &&
+        !hasScorelineHandicap &&
+        !marketName.includes(String(game.argument))
+      ) {
         uniqueName = `${marketName} ${game.argument}`;
       }
 

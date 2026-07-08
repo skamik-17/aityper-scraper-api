@@ -37,9 +37,12 @@ const MIN_VALID_ODDS = 1.01;
 
 /**
  * Check that a selection carries a real, offerable price.
+ * Inclusive comparison: 1.01 is a genuine price Fuksiarz quotes on heavy
+ * favorites (e.g. "no red card + penalty"); only the exact-1.00 placeholder
+ * of suspended selections must be dropped.
  */
 function hasValidOdds(sel: MarketSelection): boolean {
-  return sel.odds > MIN_VALID_ODDS;
+  return sel.odds >= MIN_VALID_ODDS;
 }
 
 /**

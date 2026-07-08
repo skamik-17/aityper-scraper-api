@@ -270,3 +270,22 @@ export function normalizeHandicapSelection(
 
   return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam, ctx.league);
 }
+
+/**
+ * Canonicalize a player-name selection to natural "Firstname Lastname" order.
+ *
+ * Bookmakers disagree on name order ("Jashari, Ardon" vs "Ardon Jashari"),
+ * which strands the same player's odds in duplicate comparison columns. The
+ * aggregator merges selections by exact code, so every normalizer (and the
+ * grouper as a safety net) must emit one canonical form.
+ *
+ * Only a single "Last[ Parts], First[ Parts]" comma pattern is rewritten;
+ * anything else (codes, scores, multi-comma lists) passes through unchanged
+ * apart from whitespace collapsing.
+ */
+export function canonicalizePlayerName(raw: string): string {
+  const collapsed = raw.trim().replace(/\s+/g, " ");
+  const m = collapsed.match(/^([\p{L}][\p{L}'’.\- ]*),\s*([\p{L}][\p{L}'’.\- ]*)$/u);
+  if (!m) return collapsed;
+  return `${m[2].trim()} ${m[1].trim()}`;
+}

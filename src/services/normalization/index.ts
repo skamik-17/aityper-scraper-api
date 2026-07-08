@@ -79,6 +79,23 @@ export function normalizeMarketsForBookmaker(
   return markets.map((market) => {
     const normalized = normalizerFacade.normalize(market, bookmaker, homeTeam, awayTeam, league);
 
+    // Normalizers may merge raw selections that map to one catalog code
+    // (e.g. exact goals "3"/"4"/"5" -> "3+" with combined odds). The index
+    // join below only works when the selection count is unchanged — when a
+    // normalizer collapsed/filtered selections, its output (including the
+    // recomputed odds) is authoritative and must not be discarded.
+    const selections =
+      normalized.selections.length === market.selections.length
+        ? market.selections.map((sel, idx) => ({
+            ...sel,
+            normalizedName: normalized.selections[idx]?.normalizedName as any,
+          }))
+        : normalized.selections.map((sel) => ({
+            name: sel.name,
+            normalizedName: sel.normalizedName as any,
+            odds: sel.odds,
+          }));
+
     const merged: ScrapedMarket = {
       ...market,
       normalizedType: normalized.normalizedType as any,
@@ -86,10 +103,7 @@ export function normalizeMarketsForBookmaker(
       paramValue: normalized.paramValue,
       customLabel: normalized.customLabel,
       category: normalized.category,
-      selections: market.selections.map((sel, idx) => ({
-        ...sel,
-        normalizedName: normalized.selections[idx]?.normalizedName as any,
-      })),
+      selections,
     };
 
     return merged;

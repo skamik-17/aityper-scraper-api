@@ -56,7 +56,22 @@ const LINE_STAKE_TYPE_IDS: number[] = [
   // "Obie drużyny suma powyżej" (each team over X goals) — the line
   // disambiguates BTTS (0.5) from BTTS 2+ goals (1.5)
   332818,
+  // "Wynik meczu i suma" (result + over/under) — several goal lines per event
+  134,
+  // "Podwójna szansa i suma" (double chance + over/under)
+  332815,
+  // "Obie strzelą i suma" (BTTS + over/under)
+  5774433,
 ];
+
+/**
+ * 3-way (European) handicap stake types carry their line in stakeArgument but
+ * are only identifiable by the API market name; without line grouping all
+ * lines merge into one market and the parameter is unrecoverable downstream.
+ */
+function isThreeWayHandicapName(apiName?: string): boolean {
+  return /handicap\s*3[\s-]?drogow|handicap\s*europejsk/i.test(apiName || "");
+}
 
 /**
  * Get human-readable market name based on stake type ID
@@ -73,18 +88,32 @@ const LINE_STAKE_TYPE_IDS: number[] = [
 function getMarketName(
   stakeTypeId: number,
   line?: string,
-  apiName?: string
+  apiName?: string,
+  isLineMarket?: boolean
 ): string {
   const apiLabel = (apiName || "").trim();
+  const appendLine =
+    line !== undefined &&
+    (isLineMarket ?? LINE_STAKE_TYPE_IDS.includes(stakeTypeId));
 
   if (apiLabel) {
     // For line markets, append the line value so distinct lines stay disambiguated
-    if (line !== undefined && LINE_STAKE_TYPE_IDS.includes(stakeTypeId)) {
+    if (appendLine) {
       return `${apiLabel} ${line}`;
     }
     return apiLabel;
   }
 
+  const fallback = getFallbackMarketName(stakeTypeId, line);
+  // Some fallback labels already embed the line ("Liczba goli 2.5") — only
+  // append when it is still missing (e.g. the generic "Rynek <id>" label).
+  if (appendLine && line !== undefined && !fallback.includes(line)) {
+    return `${fallback} ${line}`;
+  }
+  return fallback;
+}
+
+function getFallbackMarketName(stakeTypeId: number, line?: string): string {
   switch (stakeTypeId) {
     case STAKE_TYPES.MATCH_RESULT:
       return "Wynik meczu";
@@ -105,7 +134,10 @@ function getMarketName(
       }
       return "Liczba goli 1. polowa";
     case STAKE_TYPES.CORRECT_SCORE:
-      return "Dokladny wynik";
+      // On the sbteam.xyz feed stake type 7 is the half-comparison bet
+      // ("1. < 2." / "1. = 2." / "1. > 2."), not a correct-score market —
+      // the "Dokladny wynik" label used to reroute it into CORRECT_SCORE.
+      return "Polowa z najwiekszym wynikiem";
     case STAKE_TYPES.DRAW_NO_BET:
       return "Remis = zwrot";
     case STAKE_TYPES.HANDICAP:
@@ -318,15 +350,56 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
   // Get teams from event if not provided
   const parsedTeams = teams || parseTeamNames(event);
 
+  // Merge the per-combo "Dokładny wynik <combos>" Yes/No stake types into a
+  // single Multiwynik market: each sub-market's "Tak" price IS that combo's
+  // odds. Stored per (bookmaker, market_key), the nine sub-markets would
+  // otherwise overwrite each other leaving a single combo downstream.
+  const multiResultSelections: MarketSelection[] = [];
+  const multiResultStakeTypeIds = new Set<number>();
+  for (const stakeType of stakeTypes) {
+    const label = (stakeType.stakeTypeName || "").trim();
+    const comboMatch = label.match(/^dok[lł]adny\s+wynik\s+(.+)$/i);
+    if (!comboMatch) continue;
+    const combo = comboMatch[1].trim().replace(/\s+/g, " ");
+    if (!/\d+\s*:\s*\d+/.test(combo) && !/^(x|remis)$/i.test(combo)) continue;
+
+    const yesStake = (stakeType.stakes || []).find(
+      (stake) => (stake.stakeName || "").trim().toLowerCase() === "tak"
+    );
+    multiResultStakeTypeIds.add(stakeType.stakeTypeId);
+    if (yesStake && (yesStake.betFactor || 0) > MIN_VALID_ODDS) {
+      multiResultSelections.push({
+        name: combo,
+        odds: yesStake.betFactor || 0,
+        externalId: yesStake.stakeId ? String(yesStake.stakeId) : undefined,
+      });
+    }
+  }
+  if (multiResultSelections.length > 0) {
+    markets.push({
+      name: "Multiwynik",
+      // Stake type 40424 is one of the combo sub-markets; the normalizer maps
+      // this id to MULTI_RESULT.
+      bookmakerMarketId: "40424",
+      groupName: MARKET_GROUPS[STAKE_TYPES.CORRECT_SCORE] || "Inne",
+      type: MARKET_TYPES[40424],
+      selections: multiResultSelections,
+    });
+  }
+
   // Group stakes by market type and line (for O/U and handicap)
   for (const stakeType of stakeTypes) {
     const stakeTypeId = stakeType.stakeTypeId;
     const stakes = stakeType.stakes || [];
 
     if (stakes.length === 0) continue;
+    if (multiResultStakeTypeIds.has(stakeTypeId)) continue;
 
-    // For line markets (O/U, handicap, both-halves lines), group by line value
-    const isLineMarket = LINE_STAKE_TYPE_IDS.includes(stakeTypeId);
+    // For line markets (O/U, handicap, both-halves lines) group by line value;
+    // 3-way handicaps are detected by name since their stake type id varies.
+    const isLineMarket =
+      LINE_STAKE_TYPE_IDS.includes(stakeTypeId) ||
+      isThreeWayHandicapName(stakeType.stakeTypeName);
 
     if (isLineMarket) {
       // Group stakes by their line value
@@ -360,7 +433,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
 
       // Create a market for each line
       for (const [line, lineStakes] of lineGroups) {
-        const marketName = getMarketName(stakeTypeId, line, stakeType.stakeTypeName);
+        const marketName = getMarketName(stakeTypeId, line, stakeType.stakeTypeName, true);
         const groupName = MARKET_GROUPS[stakeTypeId] || "Inne";
         const marketType = MARKET_TYPES[stakeTypeId];
 

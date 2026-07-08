@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  canonicalizePlayerName,
   normalize1x2Selection,
   normalizeDoubleChanceSelection,
   normalizeMarketName,
@@ -21,7 +22,7 @@ import {
   parseOverUnderLine,
   parseScoreSelection,
 } from "../helpers/index.js";
-import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
+import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
 /**
  * Superbet market-type id -> catalog code.
@@ -171,7 +172,10 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   542: "DOUBLE_CHANCE_TOTAL", // "Podwójna szansa & liczba goli (X)"
   200571: "TOTAL_GOALS_AND_BTTS", // "Liczba goli & obie drużyny strzelą"
   200773: "RESULT_OR_TOTAL", // "Mecz lub liczba goli (X)"
-  201519: "RESULT_OR_TOTAL", // "Mecz lub 1.połowa liczba goli (X)"
+  // "Mecz lub 1.połowa liczba goli (X)" combines the FULL-match result with a
+  // FIRST-HALF goals line - mapping it to the full-match RESULT_OR_TOTAL mixed
+  // two different bet definitions. No catalog counterpart exists.
+  201519: "OTHER",
   201511: "HALFTIME_FULLTIME_AND_TOTAL", // "1. połowa/mecz & liczba goli (X)"
   200752: "RESULT_AND_GOAL_RANGE", // "Mecz & przedział goli"
   200764: "DOUBLE_CHANCE_GOAL_RANGE", // "Podwójna szansa & przedział goli"
@@ -669,6 +673,14 @@ function normalizeSelectionForMarket(
   ctx: NormalizationContext
 ): NormalizedSelection {
   const trimmed = selectionName.trim();
+
+  // Literal catalog-code passthrough: band/range/exact markets often quote
+  // raw selection text that IS the catalog selection code ("0-2", "7+", "1+"),
+  // and per-market cases below may miss them (falling through to UNKNOWN).
+  const literalCatalogCodes = getMarketByCode(marketCode)?.selections;
+  if (literalCatalogCodes && literalCatalogCodes.length > 0 && literalCatalogCodes.includes(trimmed)) {
+    return trimmed as NormalizedSelection;
+  }
   const lower = trimmed.toLowerCase();
 
   if (OVERRIDE_ELIGIBLE_MARKETS.has(marketCode)) {
@@ -680,6 +692,17 @@ function normalizeSelectionForMarket(
     // Team-scoped ranges ("<3", "3-4", "5+") share ids with plain O/U lines.
     const ou = normalizeOverUnderSelection(trimmed);
     if (ou !== "UNKNOWN") return ou;
+    // "Każda z drużyn powyżej X ..." markets: the catalog defines OVER only
+    // and the parser already drops the "nie" leg, but the surviving leg's
+    // label embeds the full market phrase ("Każda z drużyn powyżej 8.5 fauli
+    // - tak") instead of starting with "Powyżej", so it missed the O/U parse.
+    if (
+      marketCode === "BOTH_TEAMS_FOULS_OVER" ||
+      marketCode === "EACH_TEAM_OFFSIDES" ||
+      marketCode === "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER"
+    ) {
+      return /(^|[\s-])nie\s*$/iu.test(trimmed) ? "UNKNOWN" : "OVER";
+    }
     if (marketCode === "CORNERS_TEAM") {
       return normalizeRangeSelection(trimmed, lower);
     }
@@ -799,8 +822,22 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT":
-      // Catalog codes are the literal Polish labels, e.g. "1:0, 2:0 lub 3:0".
+      // Catalog codes are the literal Polish labels, e.g. "1:0, 2:0 lub 3:0",
+      // plus "X" for the draw - Superbet quotes the draw as "Remis"/"0".
+      if (/^(remis|x|0)$/i.test(trimmed)) return "X" as NormalizedSelection;
       return trimmed as NormalizedSelection;
+
+    case "DOUBLE_RESULT_PAIR": {
+      // "1/1 lub X/1" -> catalog code "1/1_OR_X/1". Superbet's raw market
+      // name ("1. połowa/mecz - podwójna szansa") is misleading - selections
+      // are pairs of HT/FT double-result outcomes joined by "lub".
+      const match = trimmed.match(/^([1X2]\s*\/\s*[1X2])\s+lub\s+([1X2]\s*\/\s*[1X2])$/i);
+      if (match) {
+        const compact = (part: string) => part.replace(/\s+/g, "").toUpperCase();
+        return `${compact(match[1])}_OR_${compact(match[2])}` as NormalizedSelection;
+      }
+      return "UNKNOWN";
+    }
 
     case "GOAL_RANGE":
     case "HOME_GOAL_RANGE":
@@ -811,8 +848,17 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_TEAM_GOAL_RANGE":
     case "CORNERS_RANGE":
     case "HALF_TIME_CORNERS_RANGE":
-    case "HALF_TIME_HOME_EXACT_GOALS":
       return normalizeRangeSelection(trimmed, lower);
+
+    case "HALF_TIME_HOME_EXACT_GOALS": {
+      // The catalog's top band is a bare count ("3"); Superbet quotes it as
+      // "3+" - strip the "+" so the odds join the existing comparison column.
+      const plusBand = trimmed.match(/^(\d+)\+$/);
+      if (plusBand && literalCatalogCodes?.includes(plusBand[1])) {
+        return plusBand[1] as NormalizedSelection;
+      }
+      return normalizeRangeSelection(trimmed, lower);
+    }
 
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
@@ -849,8 +895,9 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
 
     case "FIRST_GOAL_AND_RESULT": {
-      // "1 & X" = home scores first, draw; "bez gola" = no goal
-      if (isNoneSelection(lower)) return "NONE" as NormalizedSelection;
+      // "1 & X" = home scores first, draw; "bez gola"/"nie padnie gol" = no
+      // goal (no other selection in this market starts with "nie").
+      if (isNoneSelection(lower) || /^nie\s/.test(lower)) return "NONE" as NormalizedSelection;
       const match = trimmed.match(/^([12])\s*&\s*([1X2])$/i);
       if (match) {
         const first = match[1] === "1" ? "HOME" : "AWAY";
@@ -1001,8 +1048,17 @@ function normalizeSelectionForMarket(
     }
 
     case "TWO_PLAYERS_ANYTIME":
-    case "BOTH_PLAYERS_ANYTIME":
-      return "PLAYER_PAIR" as NormalizedSelection;
+    case "BOTH_PLAYERS_ANYTIME": {
+      // Each named pair must stay a distinct selection code - the shared
+      // "PLAYER_PAIR" constant collapsed every pair into one aggregated row,
+      // silently dropping all but the first quote. Canonicalize both names
+      // ("Rodriguez, James i Ndoye, Dan" -> "James Rodriguez i Dan Ndoye").
+      const cleanedPair = trimmed.replace(/^\d+\.\s*/, "").trim();
+      return cleanedPair
+        .split(/\s+i\s+/iu)
+        .map((part) => canonicalizePlayerName(part.trim()))
+        .join(" i ") as NormalizedSelection;
+    }
 
     case "GOALSCORER_FIRST":
     case "GOALSCORER_ANYTIME":
@@ -1029,8 +1085,23 @@ function normalizeSelectionForMarket(
     case "PENALTY_SCORER":
     case "PLAYER_FREE_KICK_GOAL":
     case "FIRST_PLAYER_CARDED":
-    case "PLAYER_OF_THE_MATCH":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+    case "PLAYER_OF_THE_MATCH": {
+      if (isNoneSelection(lower)) return "NONE" as NormalizedSelection;
+      const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
+      // Per-player stat lines arrive as "Lastname, Firstname - powyżej N.5".
+      // Over 0.5 is the base "records at least one" bet peers quote under the
+      // bare player name; higher lines keep an explicit "N+" suffix so a 3+
+      // price is never merged into the 1+ comparison column.
+      const withLine = cleaned.match(/^(.+?)\s*-\s*powy[żz]ej\s+(\d+(?:[.,]\d+)?)\s*$/iu);
+      if (withLine) {
+        const player = canonicalizePlayerName(withLine[1].trim());
+        const atLeast = Math.floor(parseFloat(withLine[2].replace(",", "."))) + 1;
+        return (atLeast <= 1 ? player : `${player} ${atLeast}+`) as NormalizedSelection;
+      }
+      // Superbet quotes players as "Lastname, Firstname"; canonicalize to
+      // "Firstname Lastname" so selections line up across bookmakers.
+      return canonicalizePlayerName(cleaned) as NormalizedSelection;
+    }
 
     case "OTHER":
       return "UNKNOWN";

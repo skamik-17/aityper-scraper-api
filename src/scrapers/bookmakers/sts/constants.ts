@@ -193,6 +193,12 @@ export const ASIAN_HANDICAP_IDS = new Set<number>([
   MARKET_IDS.FIRST_HALF_ASIAN_HANDICAP_PUSH,
   MARKET_IDS.SECOND_HALF_ASIAN_HANDICAP,
   MARKET_IDS.SECOND_HALF_ASIAN_HANDICAP_PUSH,
+  // Corners handicaps use the same "1 (-2.5)" / "2 (+2.5)" selection labels;
+  // the handicap value must be appended to the market name, otherwise the
+  // name-based dedup keeps only ONE line per match (only the default 0.5
+  // corners-handicap line survived while peers quoted -1.5/-0.5/1.5/2.5)
+  225, // "Rzuty rożne - handicap"
+  244, // "1. połowa - rzuty rożne - handicap"
 ]);
 
 /**
@@ -226,6 +232,16 @@ export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
   110, // 2nd half asian total goals
   115, // "2. połowa - 1. drużyna - liczba goli" - 2nd half home team total
   118, // "2. połowa - 2. drużyna - liczba goli" - 2nd half away team total
+  // Combo markets whose selections carry an O/U line ("1X i -2.5",
+  // "1 i +1.5", "+2.5 i Tak"): without the line suffix the name-based dedup
+  // collapsed every line into one, so only the 1.5 (or 2.5) line survived
+  // while peers quoted 1.5/2.5/3.5/4.5
+  50, // "Liczba goli i obie drużyny - strzelą gola" (TOTAL_GOALS_AND_BTTS)
+  51, // "Wynik końcowy i liczba goli" (RESULT_AND_TOTAL)
+  99, // "1. połowa - wynik i liczba goli" (HALF_TIME_RESULT_AND_TOTAL)
+  809, // "2. połowa - wynik i liczba goli" (SECOND_HALF_RESULT_AND_TOTAL)
+  812, // "Podwójna szansa i liczba goli" (DOUBLE_CHANCE_TOTAL)
+  1012, // "Połowa/koniec i liczba goli" (HALFTIME_FULLTIME_AND_TOTAL)
 ]);
 
 /**

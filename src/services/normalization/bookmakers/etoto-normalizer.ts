@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  canonicalizePlayerName,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -845,7 +846,11 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+      // eToto quotes players as "Lastname, Firstname"; canonicalize to
+      // "Firstname Lastname" so selections line up across bookmakers.
+      return canonicalizePlayerName(
+        trimmed.replace(/^\d+\.\s*/, "").trim()
+      ) as NormalizedSelection;
 
     // Per-player stat lines: "Lastname, Firstname N+" -> "N+"
     // (player name is carried in the market parameter).
@@ -866,10 +871,18 @@ function normalizeSelectionForMarket(
     }
 
     // Multi-player markets keep the full "Player N+" label as the code so
-    // different players inside one raw market never collide.
+    // different players inside one raw market never collide. The name part
+    // is canonicalized ("Lastname, Firstname N+" -> "Firstname Lastname N+")
+    // so codes line up across bookmakers.
     case "PLAYER_FOULS":
-    case "PLAYER_FOULS_WON":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+    case "PLAYER_FOULS_WON": {
+      const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
+      const withLine = cleaned.match(/^(.+?)\s+(\d+\+)$/);
+      if (withLine) {
+        return `${canonicalizePlayerName(withLine[1])} ${withLine[2]}` as NormalizedSelection;
+      }
+      return canonicalizePlayerName(cleaned) as NormalizedSelection;
+    }
 
     default:
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -908,7 +921,9 @@ function extractPlayerParam(
   const first = selections[0]?.name?.trim();
   if (!first) return undefined;
   const match = first.match(/^(.+?)\s+\d+\+$/);
-  return match ? match[1].trim() : undefined;
+  // Canonicalize "Lastname, Firstname" so per-player market keys match the
+  // parameter format used by other bookmakers.
+  return match ? canonicalizePlayerName(match[1].trim()) : undefined;
 }
 
 function extractParamValue(

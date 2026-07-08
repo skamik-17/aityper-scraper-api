@@ -265,6 +265,32 @@ export function parseOverUnder(
 }
 
 /**
+ * Player-prop game types that list players as outcomes with the stat
+ * threshold embedded in the game name ("Zawodnik odda 2+ celnych strzalow
+ * glowa"). The unified model expects one market per player (parameter =
+ * player name) with the threshold as the single selection ("1+", "2+"),
+ * so each outcome is split into its own market.
+ */
+const PLAYER_PROP_SPLIT_GAME_TYPES = new Set<number>([
+  -200333, // PLAYER_SHOTS_ON_TARGET ("Zawodnik odda celny strzal")
+  -200334, // PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX
+  -200343, // PLAYER_HEADER_SHOTS_ON_TARGET ("Zawodnik odda 2+ celnych strzalow glowa")
+  -200338, // PLAYER_OFFSIDES ("Zawodnik 2+ spalonych")
+  -200332, // PLAYER_FOULS_WON
+  -200339, // PLAYER_SAVES
+]);
+
+/**
+ * Extract the stat threshold ("2+") from a player-prop market name.
+ * Names without an explicit numeric threshold mean "at least one" ("Zawodnik
+ * odda celny strzal") -> "1+".
+ */
+function extractPlayerPropThreshold(marketName: string): string {
+  const match = marketName.match(/(\d+)\s*\+/);
+  return `${match ? match[1] : "1"}+`;
+}
+
+/**
  * Parse ALL markets from event data into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -295,6 +321,23 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
       }));
     // Drop placeholder/sentinel prices (e.g. 1.0000000001) - not real quotes
     const selections = allSelections.filter((sel) => sel.odds >= MIN_VALID_ODDS);
+
+    // Split player-prop lists into one market per player: the outcome name is
+    // the player, the threshold from the market name becomes the selection.
+    if (PLAYER_PROP_SPLIT_GAME_TYPES.has(game.gameType)) {
+      const threshold = extractPlayerPropThreshold(marketName);
+      for (const sel of selections) {
+        markets.push({
+          name: marketName,
+          bookmakerMarketId: String(game.gameType),
+          groupName,
+          type: marketType,
+          paramValue: sel.name,
+          selections: [{ name: threshold, odds: sel.odds, externalId: sel.externalId }],
+        });
+      }
+      continue;
+    }
 
     // A game whose counterpart outcomes were sentinel-priced is effectively
     // settled: the surviving side is a capped placeholder (e.g. an identical

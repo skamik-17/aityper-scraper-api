@@ -346,6 +346,16 @@ export function parseAllMarkets(
 
 
 /**
+ * Market 192 ("Dokładna liczba kartek") carries a second outcome-id block
+ * (218-222: "0-2"/"3-4"/"5-6"/"7+"/"9+") whose odds are flat placeholder
+ * quotes (~41-50 across ALL bands, mathematically impossible next to the
+ * genuine "0-1"/"2-3"/"4-5"/"6-7"/"8+" scheme priced 1.5-20 in the same
+ * line). Never publish these as live odds.
+ */
+const CARDS_EXACT_RANGE_MARKET_ID = 192;
+const CARDS_EXACT_RANGE_PLACEHOLDER_OUTCOME_IDS = new Set([218, 219, 220, 221, 222]);
+
+/**
  * Parse selections from a market line
  */
 function parseLineSelections(
@@ -361,6 +371,14 @@ function parseLineSelections(
     const outcomeId = parseInt(outcomeIdStr, 10);
 
     if (!outcome.O || outcome.O <= 0) continue;
+
+    // Skip placeholder second-scheme bands of the exact-cards market
+    if (
+      marketId === CARDS_EXACT_RANGE_MARKET_ID &&
+      CARDS_EXACT_RANGE_PLACEHOLDER_OUTCOME_IDS.has(outcomeId)
+    ) {
+      continue;
+    }
 
     const selectionName = getSelectionName(marketId, outcomeId, outcome, fixture);
 

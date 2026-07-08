@@ -390,10 +390,15 @@ export function parseAllMarkets(
 
     // Reject sentinel prices. When a two-way line loses a leg to the filter
     // (e.g. UNDER 1.00 / OVER 100) the whole line is a placeholder Superbet
-    // does not actually offer - drop it entirely.
+    // does not actually offer - drop it entirely. The same applies to 3-way
+    // lined markets (e.g. "1.połowa - handicap 1X2" at extreme lines where
+    // HOME sits at 1.00): publishing only the surviving legs misrepresents
+    // the line, so drop the whole line when any leg was a sentinel.
     const priceableSelections = parsedSelections.filter((sel) => sel.odds > SENTINEL_ODDS_MAX);
+    const lostSentinelLeg = priceableSelections.length < parsedSelections.length;
     const marketSelections =
-      parsedSelections.length === 2 && priceableSelections.length === 1
+      (parsedSelections.length === 2 && priceableSelections.length === 1) ||
+      (Boolean(line) && parsedSelections.length === 3 && lostSentinelLeg)
         ? []
         : priceableSelections;
 

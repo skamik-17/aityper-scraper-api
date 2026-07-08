@@ -23,6 +23,7 @@ import {
   parseHtFtSelection,
   normalizeAsianHandicap3WaySelection,
   normalizeHandicapSelection,
+  canonicalizePlayerName,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 import { matchToCanonical } from "../../../utils/team-matcher.js";
@@ -1392,16 +1393,17 @@ function normalizeCardsTeamSelection(
   marketName: string,
   ctx: NormalizationContext
 ): NormalizedSelection | null {
-  const home = normalizeName(ctx.homeTeam);
-  const away = normalizeName(ctx.awayTeam);
   const normalizedMarketName = normalizeName(marketName);
 
   const marketMatch = normalizedMarketName.match(/^kartki\s*-\s*(.+)$/i);
   if (!marketMatch) return null;
 
+  // Betclic renders team names in Polish while the context carries the
+  // canonical (often English) form — a plain substring test missed both
+  // sides and let raw "Powyżej 0,5" labels leak through as selection codes.
   const teamPart = marketMatch[1].trim();
-  const isHome = home && teamPart.includes(home);
-  const isAway = away && teamPart.includes(away);
+  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
+  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
   const normalizedSel = normalizeName(selectionName);
   if (normalizedSel.includes("powyzej")) {
@@ -1738,6 +1740,29 @@ function normalizeCorrectScoreGroupSelection(
   return null;
 }
 
+/**
+ * Builds a stable selection code for player-combination markets from the
+ * player list itself. Betclic separates players with "/" or "&"
+ * ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez");
+ * each name is canonicalized to "Firstname Lastname" order and the list is
+ * sorted so the same combination merges across bookmakers regardless of
+ * listing order.
+ */
+function normalizePlayerComboSelection(selectionName: string): NormalizedSelection {
+  const players = selectionName
+    .split(/\s*[/&]\s*/)
+    .map((part) => canonicalizePlayerName(part))
+    .filter((part) => part.length > 0);
+
+  if (players.length < 2) {
+    return canonicalizePlayerName(selectionName) as NormalizedSelection;
+  }
+
+  return players
+    .sort((a, b) => a.localeCompare(b, "en"))
+    .join(" & ") as NormalizedSelection;
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -1983,10 +2008,19 @@ function normalizeSelectionForMarket(
 
     case "EUROPEAN_HANDICAP":
     case "CORNERS_HANDICAP":
+    case "HALF_TIME_CORNERS_HANDICAP": {
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
+      // Betclic labels handicap selections with team name + line, e.g.
+      // "Szwajcaria (-0,5)". The context team name may be the canonical
+      // English form ("Switzerland"), so resolve via fragmentIsTeam —
+      // otherwise both sides fell through to UNKNOWN and the grouper kept
+      // only one price, silently dropping the away side of each line.
+      if (fragmentIsTeam(trimmed, ctx.homeTeam, ctx.league)) return "HOME";
+      if (fragmentIsTeam(trimmed, ctx.awayTeam, ctx.league)) return "AWAY";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+    }
 
     case "FIRST_HALF_EUROPEAN_HANDICAP":
     case "SECOND_HALF_EUROPEAN_HANDICAP": {
@@ -2081,7 +2115,11 @@ function normalizeSelectionForMarket(
     case "PLAYER_HEADER_GOAL":
     case "PLAYER_GOAL_AND_ASSIST":
     case "PENALTY_SCORER":
-      return trimmed.replace(/^\d+\.\s*/, "").trim() as NormalizedSelection;
+      // Canonicalize to "Firstname Lastname" so the same player merges
+      // across bookmakers regardless of the source name order.
+      return canonicalizePlayerName(
+        trimmed.replace(/^\d+\.\s*/, "").trim()
+      ) as NormalizedSelection;
 
     case "PLAYER_ASSIST_PAIRS":
     case "PLAYER_ASSIST_TRIPLE":
@@ -2095,15 +2133,18 @@ function normalizeSelectionForMarket(
     case "ANY_PLAYER_FIRST_GOAL":
     case "SAME_PLAYER_SCORES_BOTH_HALVES":
     case "BOTH_PLAYERS_SCORE_BOTH_HALVES":
-      return "PLAYER_PAIR" as NormalizedSelection;
-
     case "THREE_PLAYERS_COMBINED_GOALS":
     case "THREE_PLAYERS_ANYTIME":
     case "HALF_TIME_THREE_PLAYERS_ANYTIME":
     case "SECOND_HALF_THREE_PLAYERS_ANYTIME":
     case "ANY_PLAYER_SCORES_BOTH_HALVES":
     case "ALL_PLAYERS_SCORE":
-      return "PLAYER_TRIO" as NormalizedSelection;
+      // Betclic quotes dozens of distinct player combinations per market
+      // ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez").
+      // Collapsing them all onto the constant PLAYER_PAIR/PLAYER_TRIO code
+      // let the aggregator keep a single arbitrary row and silently discard
+      // every other combination's odds — encode the player list instead.
+      return normalizePlayerComboSelection(trimmed);
 
     case "GOAL_RANGE":
     case "TEAM_GOAL_RANGE":
@@ -2207,9 +2248,10 @@ function extractParamValue(
       const isParameterizedPlayerMarket = playerMarketCodesWithParams.includes(marketCode);
       
       if (isParameterizedPlayerMarket) {
-        // These markets have selections as parameters (e.g., player pairs/trios)
-        // Return as parameters array
-        return { parameters: selectionNames };
+        // These markets have selections as parameters (e.g., player pairs/trios).
+        // Canonicalize each name to "Firstname Lastname" order so the same
+        // combination merges across bookmakers.
+        return { parameters: selectionNames.map((name) => normalizePlayerComboSelection(name)) };
       } else {
         // Single player markets - return empty parameters
         return {};

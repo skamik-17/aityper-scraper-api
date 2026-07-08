@@ -65,9 +65,11 @@ export function getMarketName(
   line?: number | string,
   apiName?: string
 ): string {
-  // Use the real API-provided market name when present
+  // Use the real API-provided market name when present. API names that are
+  // themselves untranslated "Rynek <id>" placeholders are ignored so the
+  // switch/label fallbacks below get a chance to resolve a readable label.
   const trimmedApiName = apiName?.trim();
-  if (trimmedApiName) {
+  if (trimmedApiName && !/^rynek\s*\d+$/i.test(trimmedApiName)) {
     return trimmedApiName;
   }
 
@@ -202,6 +204,7 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "19": "Gole gospodarzy",
   "20": "Gole gości",
   "33": "Wynik meczu i obie drużyny strzelą",
+  "34": "Liczba goli i obie drużyny strzelą",
   "35": "Wynik meczu i liczba goli",
   "47": "Połowa z większą liczbą goli",
   "48": "Gospodarz - połowa z większą liczbą goli",
@@ -211,9 +214,19 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "77": "Pierwszy gol 2. połowy",
   "78": "Podwójna szansa",
   "79": "Zakład bez remisu",
+  "85": "Dokładna liczba goli - 2. połowa",
   "86": "Parzysta/nieparzysta liczba goli",
+  "90": "Dokładny wynik 2. połowy",
   "91": "Czas pierwszego gola (15 min)",
   "92": "Czas pierwszego gola (10 min)",
+  "128": "Suma strzałów",
+  "147": "Dokładna liczba kartek - gospodarze - 1. połowa",
+  "156": "Rzuty rożne",
+  "159": "Przedział rzutów rożnych",
+  "502": "Wynik meczu i liczba goli",
+  "509": "Multiwynik",
+  "510": "Przedział goli - 1. połowa",
+  "511": "Przedział goli",
 };
 
 /**
@@ -651,27 +664,35 @@ export function parseAllMarkets(
     const rawMarket = marketById.get(firstSelection.marketId);
     const apiName = rawMarket?.name || rawMarket?.marketType?.name;
 
-    // Get market metadata - prefer the real API name, fall back to the
-    // hard-coded label switch when the API name is blank
-    let marketName = getMarketName(marketTypeId, line, apiName);
-
-    // Replace unresolved "Rynek <id>" placeholders with audit-confirmed
-    // labels (covers both a missing API name and an API name that is itself
-    // an untranslated "Rynek <id>" placeholder).
-    if (/^rynek\s*\d+$/i.test(marketName.trim())) {
-      const label = PZBUK_ID_LABELS[String(marketTypeId)];
-      if (label) {
-        marketName = line !== undefined ? `${label} ${line}` : label;
-      }
+    // Name priority: (1) real API name, (2) audit-confirmed id label —
+    // these must beat the guessed switch labels, which are proven wrong for
+    // some ids (e.g. 33/34 are combo markets, not clean sheets) — then
+    // (3) hard-coded switch label / "Rynek <id>" placeholder.
+    const trimmedApiName = apiName?.trim();
+    const idLabel = PZBUK_ID_LABELS[String(marketTypeId)];
+    let marketName: string;
+    if (trimmedApiName && !/^rynek\s*\d+$/i.test(trimmedApiName)) {
+      marketName = trimmedApiName;
+    } else if (idLabel) {
+      // Do not append a vendor line of 0 — it is a structural filler, not a
+      // real betting line (audit r3: "Podwójna szansa 0").
+      marketName =
+        line !== undefined && Number(line) !== 0
+          ? `${idLabel} ${line}`
+          : idLabel;
+    } else {
+      marketName = getMarketName(marketTypeId, line);
     }
 
     const groupName = MARKET_GROUPS[marketTypeId] || "Inne";
     const marketType = NORMALIZED_MARKET_TYPES[marketTypeId];
 
     // Convert selections to MarketSelection format.
-    // Odds at or below 1.01 are sentinel/placeholder prices (suspended or
+    // Odds at or below 1.0 are sentinel/placeholder prices (suspended or
     // derived rows), never a real bookable offer — drop them so they cannot
-    // poison best-odds aggregation.
+    // poison best-odds aggregation. Exactly 1.01 IS a real minimum price
+    // (audit r3: pzbuk's UNDER 5.5 goals ~1.01 was being dropped while every
+    // peer quotes it) and can never falsely win a best-odds comparison.
     const marketSelections: MarketSelection[] = selections
       .map((sel) => ({
         name: getSelectionName(sel, marketTypeId, teams),
@@ -679,7 +700,7 @@ export function parseAllMarkets(
         externalId: sel.id,
         status: sel.status === "Active" ? ("active" as const) : undefined,
       }))
-      .filter((sel) => sel.odds > 1.01);
+      .filter((sel) => sel.odds > 1.0);
 
     // Only add markets with valid selections
     if (marketSelections.length > 0) {

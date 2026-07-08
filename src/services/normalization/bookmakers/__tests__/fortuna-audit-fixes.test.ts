@@ -34,8 +34,8 @@ describe("fortuna audit fixes", () => {
   it("routes 3-outcome handicap to ASIAN_HANDICAP_3WAY and keeps DRAW", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-0v",
-        name: "Handicap azjatycki",
+        bookmakerMarketId: "ufo:mtyp:00-0b",
+        name: "Mecz: handicap",
         selections: [
           { name: "Algieria (0:0)", odds: 2.5 },
           { name: "Remis (0:0)", odds: 3.2 },
@@ -52,8 +52,8 @@ describe("fortuna audit fixes", () => {
   it("parses score-style European handicap line and infers AWAY", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-0w",
-        name: "Handicap europejski",
+        bookmakerMarketId: "ufo:mtyp:00-61",
+        name: "Mecz: handicap 0:1",
         selections: [
           { name: "Algieria (0:1)", odds: 3.1 },
           { name: "Remis (0:1)", odds: 3.9 },
@@ -232,7 +232,9 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(fouls?.paramValue).toBe("Zerrouki, Ramiz");
+    // Player params are canonicalized to "Firstname Lastname" so the same
+    // player merges across bookmakers.
+    expect(fouls?.paramValue).toBe("Ramiz Zerrouki");
     expect(fouls?.selections.map((s) => s.code)).toEqual(["2+", "3+", "4+"]);
 
     const cards = fortunaNormalizer.normalizeMarket(
@@ -243,7 +245,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(cards?.paramValue).toBe("Mwene, Philipp");
+    expect(cards?.paramValue).toBe("Philipp Mwene");
     expect(cards?.selections[0].code).toBe("YES");
 
     const assists = fortunaNormalizer.normalizeMarket(
@@ -254,7 +256,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(assists?.paramValue).toBe("Otamendi, Nicolas");
+    expect(assists?.paramValue).toBe("Nicolas Otamendi");
     expect(assists?.selections[0].code).toBe("1+");
   });
 
@@ -267,7 +269,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(header?.selections[0].code).toBe("Chukwuemeka, Carney");
+    expect(header?.selections[0].code).toBe("Carney Chukwuemeka");
 
     const firstScorer = fortunaNormalizer.normalizeMarket(
       {
@@ -277,7 +279,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(firstScorer?.selections[0].code).toBe("Cabral, Jovane");
+    expect(firstScorer?.selections[0].code).toBe("Jovane Cabral");
   });
 
   it("excludes BTTS+scorer combo products from BTTS", () => {
@@ -291,15 +293,18 @@ describe("fortuna audit fixes", () => {
     expect(out).toBeNull();
   });
 
-  it("drops unmapped mtyp 00-61 instead of poisoning MATCH_WINNER", () => {
+  it("drops the 00-0v goal-band market instead of poisoning ASIAN_HANDICAP", () => {
+    // Live-verified: 00-0v ("ASIAN_HANDICAP" per legacy constants) actually
+    // carries a 4-way goal-band book ("0-1"/"2"/"3"/"4+"), not a handicap.
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-61",
-        name: "Rynek ufo:mtyp:00-61",
+        bookmakerMarketId: "ufo:mtyp:00-0v",
+        name: "Rynek ufo:mtyp:00-0v",
         selections: [
-          { name: "Argentyna", odds: 2.28 },
-          { name: "Remis", odds: 3.85 },
-          { name: "W.Ziel.Przyl.", odds: 2.55 },
+          { name: "0-1", odds: 2.08 },
+          { name: "W.Ziel.Przyl.", odds: 3.6 },
+          { name: "3", odds: 5.2 },
+          { name: "4+", odds: 5.2 },
         ],
       },
       ctxARG
@@ -351,8 +356,8 @@ describe("fortuna audit fixes", () => {
   it("recognizes 'Równo' as the draw leg and redirects handicap to 3-way", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-0v",
-        name: "Handicap azjatycki",
+        bookmakerMarketId: "ufo:mtyp:00-0b",
+        name: "Mecz: handicap",
         selections: [
           { name: "Równo (3:0)", odds: 5.2 },
           { name: "Kolumbia (3:0)", odds: 3.6 },
@@ -367,8 +372,8 @@ describe("fortuna audit fixes", () => {
   it("resolves all three European handicap sides at pick'em via aliases", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-0w",
-        name: "Handicap europejski",
+        bookmakerMarketId: "ufo:mtyp:00-61",
+        name: "Mecz: handicap 0:0",
         selections: [
           { name: "Szwajcaria (0:0)", odds: 2.55 },
           { name: "Równo (0:0)", odds: 4.7 },
@@ -384,8 +389,8 @@ describe("fortuna audit fixes", () => {
   it("drops handicap legs that cannot be resolved to a side", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
-        bookmakerMarketId: "ufo:mtyp:00-0v",
-        name: "Handicap azjatycki",
+        bookmakerMarketId: "ufo:mtyp:00-0b",
+        name: "Mecz: handicap",
         selections: [{ name: "(-8,5)", odds: 1.01 }],
       },
       ctxSUI
@@ -455,7 +460,9 @@ describe("fortuna audit fixes", () => {
     expect(out?.selections.map((s) => s.code)).toEqual(["0", "1-2"]);
   });
 
-  it("maps TOTAL_GOALS_MINIMUM thresholds to catalog codes without a param", () => {
+  it("excludes the 00-lo SuperSub combo from TOTAL_GOALS_MINIMUM", () => {
+    // Live-verified: 00-lo is "SuperSub: Zawodnik i jego zmiennik - liczba
+    // strzałów" (per-player combo), not the match goals-minimum market.
     const out = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-lo",
@@ -468,10 +475,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(out?.marketCode).toBe("TOTAL_GOALS_MINIMUM");
-    expect(out?.paramValue).toBeUndefined();
-    expect(out?.marketKey).toBe("TOTAL_GOALS_MINIMUM");
-    expect(out?.selections.map((s) => s.code)).toEqual(["1+", "2+", "3+"]);
+    expect(out).toBeNull();
   });
 
   it("routes home 'nie straci gola' to HOME_CLEAN_SHEET and drops away variant", () => {
@@ -518,7 +522,8 @@ describe("fortuna audit fixes", () => {
     expect(out).toBeNull();
   });
 
-  it("drops unmapped mtyp 00-gg instead of poisoning MATCH_WINNER", () => {
+  it("routes 00-gg to MOST_SHOTS_ON_TARGET with the 'Równo' draw leg", () => {
+    // Live-verified: 00-gg is "Mecz: więcej strzałów w światło bramki (OPTA)".
     const out = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-gg",
@@ -531,6 +536,491 @@ describe("fortuna audit fixes", () => {
       },
       ctxSUI
     );
+    expect(out?.marketCode).toBe("MOST_SHOTS_ON_TARGET");
+    expect(out?.selections.map((s) => s.code)).toEqual(["HOME", "DRAW", "AWAY"]);
+  });
+
+  // ===== Round 3 audit fixes (full-data wave, live-verified id identities) =====
+
+  it("keeps home-perspective sign on 2-way handicap regardless of leg order", () => {
+    // Away leg listed first previously flipped the param sign ("-1" while the
+    // home team was actually getting +1).
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-0b",
+        name: "Mecz: handicap",
+        selections: [
+          { name: "Kolumbia -1", odds: 3.65 },
+          { name: "Szwajcaria +1", odds: 1.31 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("ASIAN_HANDICAP");
+    expect(out?.paramValue).toBe("+1");
+    expect(out?.selections.map((s) => s.code)).toEqual(["AWAY", "HOME"]);
+  });
+
+  it("maps DOUBLE_CHANCE_TOTAL '10 / +2.5' combos to catalog codes", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-23",
+        name: "Rynek ufo:mtyp:00-23",
+        selections: [
+          { name: "10 / +2.5", odds: 4.6 },
+          { name: "10 / -2.5", odds: 2.36 },
+          { name: "02 / +2.5", odds: 3.2 },
+          { name: "02 / -2.5", odds: 2.05 },
+          { name: "12 / +2.5", odds: 2.55 },
+          { name: "12 / -2.5", odds: 2.7 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("DOUBLE_CHANCE_TOTAL");
+    expect(out?.paramValue).toBe("2.5");
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "1X_OVER",
+      "1X_UNDER",
+      "X2_OVER",
+      "X2_UNDER",
+      "12_OVER",
+      "12_UNDER",
+    ]);
+  });
+
+  it("maps RESULT_AND_TOTAL 'Team/± line' combos incl. the '0' draw leg", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-1l",
+        name: "Rynek ufo:mtyp:00-1l",
+        selections: [
+          { name: "Kolumbia/- 2.5 ", odds: 4.2 },
+          { name: "Kolumbia/+ 2.5 ", odds: 3.8 },
+          { name: "0/- 2.5 ", odds: 3.35 },
+          { name: "0/+ 2.5 ", odds: 14 },
+          { name: "Szwajcaria/- 2.5 ", odds: 6 },
+          { name: "Szwajcaria/+ 2.5 ", odds: 6.2 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("RESULT_AND_TOTAL");
+    expect(out?.paramValue).toBe("2.5");
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "AWAY_UNDER",
+      "AWAY_OVER",
+      "DRAW_UNDER",
+      "DRAW_OVER",
+      "HOME_UNDER",
+      "HOME_OVER",
+    ]);
+  });
+
+  it("maps TOTAL_GOALS_AND_BTTS 'Tak/+ 2.5' combos", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-1k",
+        name: "Rynek ufo:mtyp:00-1k",
+        selections: [
+          { name: "Tak/+ 2.5 ", odds: 2.55 },
+          { name: "Nie/- 2.5 ", odds: 2.02 },
+          { name: "Nie/+ 2.5 ", odds: 11 },
+          { name: "Tak/- 2.5 ", odds: 5.8 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("TOTAL_GOALS_AND_BTTS");
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "OVER_YES",
+      "UNDER_NO",
+      "OVER_NO",
+      "UNDER_YES",
+    ]);
+  });
+
+  it("maps HALFTIME_FULLTIME 'Team/Team' pairs to canonical codes", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-1n",
+        name: "1.połowa/wynik meczu",
+        selections: [
+          { name: "Kolumbia/Kolumbia", odds: 3.5 },
+          { name: "Remis/Szwajcaria", odds: 7.6 },
+          { name: "Remis/Remis", odds: 4.3 },
+          { name: "Szwajcaria/Kolumbia", odds: 35 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "AWAY_AWAY",
+      "DRAW_HOME",
+      "DRAW_DRAW",
+      "HOME_AWAY",
+    ]);
+  });
+
+  it("routes 00-2q to HALF_TIME_RESULT_AND_BTTS with mapped Team/Tak pairs", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-2q",
+        name: "Rynek ufo:mtyp:00-2q",
+        selections: [
+          { name: "Szwajcaria/Nie", odds: 4.2 },
+          { name: "Remis/Tak", odds: 8 },
+          { name: "Kolumbia/Tak", odds: 21 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("HALF_TIME_RESULT_AND_BTTS");
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "HOME_NO",
+      "DRAW_YES",
+      "AWAY_YES",
+    ]);
+  });
+
+  it("maps full-match RESULT_AND_BTTS via 00-1j", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-1j",
+        name: "Mecz: wynik/obie drużyny strzelą gola",
+        selections: [
+          { name: "Remis/Nie", odds: 12 },
+          { name: "Kolumbia/Tak", odds: 3.2 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("RESULT_AND_BTTS");
+    expect(out?.selections.map((s) => s.code)).toEqual(["DRAW_NO", "AWAY_YES"]);
+  });
+
+  it("maps MULTI_RESULT space-separated score groups and the 'Remis' leg", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-28",
+        name: "Mecz: multiwynik",
+        selections: [
+          { name: "1:0 2:0 3:0", odds: 5.4 },
+          { name: "3:2 4:2 4:3 5:1", odds: 40 },
+          { name: "Remis", odds: 2.75 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.selections.map((s) => s.code)).toEqual([
+      "1:0, 2:0 lub 3:0",
+      "3:2, 4:2, 4:3 lub 5:1",
+      "X",
+    ]);
+  });
+
+  it("maps DOUBLE_CHANCE_BTTS '10/Tak' combos on the verified full-match ids", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-21",
+        name: "Rynek ufo:mtyp:00-21",
+        selections: [
+          { name: "10/Tak", odds: 3.2 },
+          { name: "02/Nie", odds: 2.4 },
+          { name: "12/Tak", odds: 2.9 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("DOUBLE_CHANCE_BTTS");
+    expect(out?.selections.map((s) => s.code)).toEqual(["1X_YES", "X2_NO", "12_YES"]);
+  });
+
+  it("excludes the half-scoped 00-1y variant from DOUBLE_CHANCE_BTTS", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-1y",
+        name: "Rynek ufo:mtyp:00-1y",
+        selections: [{ name: "10/Tak", odds: 6.6 }],
+      },
+      ctxSUI
+    );
     expect(out).toBeNull();
+  });
+
+  it("maps TEAM_WIN_OR_* 'Tak (przynajmniej...)' selections to YES/NO", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-7e",
+        name: "Kolumbia wygra / poniżej 2.5 goli",
+        selections: [
+          { name: "Tak (przynajmniej 1 warunek zostanie spełniony)", odds: 1.19 },
+          { name: "Nie (oba warunki nie zostaną spełnione)", odds: 4.4 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("TEAM_WIN_OR_TOTAL_UNDER");
+    expect(out?.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
+  });
+
+  it("passes CORNERS_RANGE literal band codes through", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-0l",
+        name: "Rynek ufo:mtyp:00-0l",
+        selections: [
+          { name: "0-8", odds: 2.07 },
+          { name: "9-11", odds: 2.85 },
+          { name: "12+", odds: 3.8 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("CORNERS_RANGE");
+    expect(out?.selections.map((s) => s.code)).toEqual(["0-8", "9-11", "12+"]);
+  });
+
+  it("maps literal '1+' thresholds on single-line player prop markets", () => {
+    const footGoal = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-ow",
+        name: "Jashari, Ardon strzeli gola nogą (OPTA)",
+        selections: [{ name: "1+", odds: 20 }],
+      },
+      ctxSUI
+    );
+    expect(footGoal?.marketCode).toBe("PLAYER_FOOT_GOAL");
+    expect(footGoal?.paramValue).toBe("Ardon Jashari");
+    expect(footGoal?.selections[0].code).toBe("1+");
+
+    const offsides1h = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-pn",
+        name: "Widmer, Silvan liczba spalonych w 1.połowie (OPTA)",
+        selections: [{ name: "1+", odds: 13 }],
+      },
+      ctxSUI
+    );
+    expect(offsides1h?.marketCode).toBe("PLAYER_OFFSIDES_1H");
+    expect(offsides1h?.paramValue).toBe("Silvan Widmer");
+    expect(offsides1h?.selections[0].code).toBe("1+");
+  });
+
+  it("keeps distinct '1+'/'2+' tiers on PLAYER_SHOTS_IN_BOX with player param", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-oe",
+        name: "Ditta, Willer liczba strzałów z pola karnego (OPTA)",
+        selections: [
+          { name: "1+", odds: 2.5 },
+          { name: "2+", odds: 8.5 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("PLAYER_SHOTS_IN_BOX");
+    expect(out?.paramValue).toBe("Willer Ditta");
+    expect(out?.selections.map((s) => s.code)).toEqual(["1+", "2+"]);
+  });
+
+  it("uses the canonical player name as selection for goal-outside-box and offsides", () => {
+    const outsideBox = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-oz",
+        name: "Zakaria, Denis strzeli gola spoza pola karnego (OPTA)",
+        selections: [{ name: "1+", odds: 50 }],
+      },
+      ctxSUI
+    );
+    expect(outsideBox?.marketCode).toBe("PLAYER_GOAL_OUTSIDE_BOX");
+    expect(outsideBox?.selections[0].code).toBe("Denis Zakaria");
+
+    const offsides = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-nw",
+        name: "Machado, Deiver liczba spalonych (reg.czas) (OPTA)",
+        selections: [{ name: "1+", odds: 3.2 }],
+      },
+      ctxSUI
+    );
+    expect(offsides?.marketCode).toBe("PLAYER_OFFSIDES");
+    expect(offsides?.selections[0].code).toBe("Deiver Machado");
+  });
+
+  it("routes stat totals to their live-verified codes", () => {
+    // 00-2i = "1.połowa: liczba goli", was wrongly merged into TOTAL_GOALS.
+    const htGoals = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-2i",
+        name: "1.połowa: liczba goli 1.5",
+        selections: [
+          { name: "więcej niż 1.5", odds: 2.2 },
+          { name: "mniej niż 1.5", odds: 1.62 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(htGoals?.marketCode).toBe("HALF_TIME_TOTAL_GOALS");
+    expect(htGoals?.paramValue).toBe("1.5");
+
+    // 00-h7 = "Mecz: liczba strzałów w światło bramki", was CORNERS_TOTAL.
+    const sot = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-h7",
+        name: "Mecz: liczba strzałów w światło bramki 7.5 (OPTA)",
+        selections: [
+          { name: "Wiecej 7.5", odds: 1.3 },
+          { name: "Mniej 7.5", odds: 3.1 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(sot?.marketCode).toBe("TOTAL_SHOTS_ON_TARGET");
+    expect(sot?.paramValue).toBe("7.5");
+    expect(sot?.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
+
+    // 00-kn = "Mecz: <team1> - liczba fauli", was CORNERS_TOTAL.
+    const fouls = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-kn",
+        name: "Mecz: Szwajcaria - liczba fauli (OPTA)",
+        selections: [
+          { name: "więcej niż 12.5", odds: 2.1 },
+          { name: "mniej niż 12.5", odds: 1.65 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(fouls?.marketCode).toBe("HOME_TEAM_TOTAL_FOULS");
+    expect(fouls?.paramValue).toBe("12.5");
+  });
+
+  it("flips side-directional team codes when the label names the other team", () => {
+    // 00-kn is positionally the home team, but the label is authoritative.
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-kn",
+        name: "Mecz: Kolumbia - liczba fauli (OPTA)",
+        selections: [
+          { name: "więcej niż 14.5", odds: 2.35 },
+          { name: "mniej niż 14.5", odds: 1.5 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("AWAY_TEAM_TOTAL_FOULS");
+  });
+
+  it("encodes team corners/shots sides in the parameter", () => {
+    const corners = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-0k",
+        name: "Mecz: Kolumbia - liczba rzutów rożnych",
+        selections: [
+          { name: "Więcej niż 4.5", odds: 1.62 },
+          { name: "Mniej niż 4.5", odds: 2.1 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(corners?.marketCode).toBe("CORNERS_TEAM");
+    expect(corners?.paramValue).toBe("AWAY:4.5");
+    expect(corners?.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
+  });
+
+  it("maps CARDS_TEAM selections with the side prefix", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-l6",
+        name: "Rynek ufo:mtyp:00-l6",
+        selections: [
+          { name: "mniej niż 1.5", odds: 1.55 },
+          { name: "więcej niż 1.5", odds: 2.3 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("CARDS_TEAM");
+    // Side-scoped param: home/away lines must not collide on the market key.
+    expect(out?.paramValue).toBe("AWAY:1.5");
+    expect(out?.selections.map((s) => s.code)).toEqual(["AWAY_UNDER", "AWAY_OVER"]);
+  });
+
+  it("routes 00-hu (więcej fauli) to FOUL_RACE, not MATCH_WINNER", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-hu",
+        name: "Rynek ufo:mtyp:00-hu",
+        selections: [
+          { name: "Szwajcaria", odds: 2.35 },
+          { name: "Rowno", odds: 12 },
+          { name: "Kolumbia", odds: 1.68 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("FOUL_RACE");
+    expect(out?.selections.map((s) => s.code)).toEqual(["HOME", "DRAW", "AWAY"]);
+  });
+
+  it("routes 00-3j to SECOND_HALF_CORRECT_SCORE and 00-6w to full CORRECT_SCORE", () => {
+    const secondHalf = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-3j",
+        name: "Dokładny wynik",
+        selections: [
+          { name: "0:0", odds: 3.3 },
+          { name: "inny", odds: 14 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(secondHalf?.marketCode).toBe("SECOND_HALF_CORRECT_SCORE");
+    expect(secondHalf?.selections.map((s) => s.code)).toEqual(["0-0", "inny"]);
+
+    const full = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-6w",
+        name: "Mecz: dokładny wynik",
+        selections: [{ name: "0:0", odds: 12 }],
+      },
+      ctxSUI
+    );
+    expect(full?.marketCode).toBe("CORRECT_SCORE");
+  });
+
+  it("routes 00-ru (1.kwarta) to TIME_PERIOD_RESULT with the q1 param", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-ru",
+        name: "1.kwarta (od 00:00 do 1.przerwy na nawodnienie)",
+        selections: [
+          { name: "Szwajcaria", odds: 4.7 },
+          { name: "Remis", odds: 1.62 },
+          { name: "Kolumbia", odds: 3.9 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("TIME_PERIOD_RESULT");
+    expect(out?.paramValue).toBe("q1");
+  });
+
+  it("routes 00-o0 (pierwsza żółta kartka) to FIRST_CARD, not FIRST_TEAM_TO_SCORE", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-o0",
+        name: "Mecz: pierwsza żółta kartka (reg.czas)(OPTA)",
+        selections: [
+          { name: "Szwajcaria", odds: 2.1 },
+          { name: "Nikt", odds: 8.5 },
+          { name: "Kolumbia", odds: 2 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("FIRST_CARD");
+    expect(out?.selections.map((s) => s.code)).toEqual(["HOME", "NONE", "AWAY"]);
   });
 });

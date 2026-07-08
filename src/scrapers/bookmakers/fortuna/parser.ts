@@ -54,10 +54,16 @@ export function parseTeamNames(fixture: FortunaFixture): ParsedTeams {
   return { homeTeam: "", awayTeam: "" };
 }
 
-/** A blank or fallback-looking API market name we should not trust. */
+/**
+ * A blank or fallback-looking API market name we should not trust.
+ * Only internal-code leaks are rejected ("Rynek ufo:mtyp:00-23", "ufo:mkt:...").
+ * Legit Fortuna labels routinely contain a scope colon ("Mecz: liczba goli",
+ * "1.połowa: wynik/liczba goli w 1.połowie") and MUST be kept — rejecting any
+ * name with ":" previously replaced the whole offer's names with placeholders.
+ */
 function isUselessApiName(name: string): boolean {
   const n = name.trim();
-  return n.length === 0 || /^rynek\s/i.test(n) || /:/.test(n);
+  return n.length === 0 || /^rynek\s/i.test(n) || n.includes("ufo:");
 }
 
 /**
@@ -86,16 +92,15 @@ export function getMarketName(market: FortunaMarket): string {
       return line ? `Liczba goli 1. polowa ${line}` : "Liczba goli 1. polowa";
     case MARKET_TYPE_IDS.HALF_TIME_BTTS:
       return "Obie strzelą 1. polowa";
-    case MARKET_TYPE_IDS.ASIAN_HANDICAP:
-      return line ? `Handicap azjatycki ${line}` : "Handicap azjatycki";
-    case MARKET_TYPE_IDS.EUROPEAN_HANDICAP:
-      return line ? `Handicap europejski ${line}` : "Handicap europejski";
-    case MARKET_TYPE_IDS.CORRECT_SCORE:
-      return "Dokladny wynik";
+    // NOTE: ids 00-0v ("ASIAN_HANDICAP"), 00-0w ("EUROPEAN_HANDICAP"),
+    // 00-04 ("CORRECT_SCORE") and 00-1a ("ODD_EVEN_GOALS") turned out to carry
+    // different markets on the live API (goal bands, HT-or-FT double chance,
+    // home-team odd/even) — their labels now come from
+    // MARKET_TYPE_FALLBACK_LABELS / the placeholder instead of wrong names here.
     case MARKET_TYPE_IDS.DRAW_NO_BET:
       return "Remis = zwrot";
     case MARKET_TYPE_IDS.ODD_EVEN_GOALS:
-      return "Parzyste/Nieparzyste";
+      return "Gospodarze Liczba goli P/N";
     default:
       // Known ids get a curated Polish label instead of the raw internal code
       return (
@@ -360,7 +365,9 @@ export function parseAllMarkets(
         externalId: market.id,
         status: "active" as const,
       }))
-      .filter((sel) => sel.odds > 0);
+      // Odds of exactly 1.00 are a sentinel for suspended/closed outcomes
+      // (e.g. "Rzut karny w obu połowach: Nie @1.0") — never a real price.
+      .filter((sel) => sel.odds > 1);
 
     // Only add markets with valid selections
     if (selections.length > 0) {

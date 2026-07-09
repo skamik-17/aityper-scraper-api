@@ -177,6 +177,12 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /strzały celne:.*handicap/, code: "SHOTS_ON_TARGET_HANDICAP" },
   { pattern: /strzały: [12]\. połowa.*handicap/, code: "OTHER" },
   { pattern: /strzały:.*handicap/, code: "SHOTS_HANDICAP" },
+  // The full-match shots-on-target race ("Strzały celne: Wynik") shares its
+  // prefix with the half-scoped variant ("Strzały celne: 1. Połowa - Wynik"),
+  // which has no dedicated catalog code yet — route it out first so it never
+  // leaks into the full-match MOST_SHOTS_ON_TARGET bucket alongside genuinely
+  // full-match peer odds (round-2 audit, Argentina vs Switzerland).
+  { pattern: /strzały celne: [12]\. połowa - wynik/, code: "OTHER" },
   { pattern: /strzały celne: wynik/, code: "MOST_SHOTS_ON_TARGET" },
   { pattern: /strzały celne: 1\. strzał celny/, code: "FIRST_SHOT_ON_TARGET" },
   { pattern: /strzały celne: suma/, code: "TOTAL_SHOTS_ON_TARGET" },
@@ -1327,6 +1333,7 @@ const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "FIRST_HALF_ASIAN_HANDICAP",
   "CARDS_HANDICAP",
   "CORNERS_HANDICAP",
+  "HALF_TIME_CORNERS_HANDICAP",
 ]);
 
 /**

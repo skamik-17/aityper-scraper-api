@@ -10193,33 +10193,9 @@
     },
     {
       "blessed": false,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "MOST_SHOTS_ON_TARGET",
-        "marketKey": "MOST_SHOTS_ON_TARGET",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "HOME",
-            "label": "Francja",
-            "odds": 1.42
-          },
-          {
-            "code": "DRAW",
-            "label": "Remis",
-            "odds": 5.1
-          },
-          {
-            "code": "AWAY",
-            "label": "Maroko",
-            "odds": 4.8
-          }
-        ]
-      },
+      "expected": null,
       "index": 195,
-      "marketCode": "MOST_SHOTS_ON_TARGET",
+      "marketCode": "OTHER",
       "rawName": "Strzały celne: 1. Połowa - Wynik"
     },
     {
@@ -16184,9 +16160,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_HANDICAP",
-        "marketKey": "HALF_TIME_CORNERS_HANDICAP:+1",
+        "marketKey": "HALF_TIME_CORNERS_HANDICAP:-1",
         "matchedBy": "pattern",
-        "paramValue": "+1",
+        "paramValue": "-1",
         "parameters": null,
         "selections": [
           {
@@ -18909,9 +18885,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_HANDICAP",
-        "marketKey": "HALF_TIME_CORNERS_HANDICAP:+2",
+        "marketKey": "HALF_TIME_CORNERS_HANDICAP:-2",
         "matchedBy": "pattern",
-        "paramValue": "+2",
+        "paramValue": "-2",
         "parameters": null,
         "selections": [
           {
@@ -19560,9 +19536,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_HANDICAP",
-        "marketKey": "HALF_TIME_CORNERS_HANDICAP:+1.5",
+        "marketKey": "HALF_TIME_CORNERS_HANDICAP:-1.5",
         "matchedBy": "pattern",
-        "paramValue": "+1.5",
+        "paramValue": "-1.5",
         "parameters": null,
         "selections": [
           {

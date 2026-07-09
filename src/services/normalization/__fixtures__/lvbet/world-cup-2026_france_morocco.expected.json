@@ -17617,9 +17617,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+2",
+        "marketKey": "CORNERS_HANDICAP:-2",
         "matchedBy": "pattern",
-        "paramValue": "+2",
+        "paramValue": "-2",
         "parameters": null,
         "selections": [
           {
@@ -17721,9 +17721,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+2.5",
+        "marketKey": "CORNERS_HANDICAP:-2.5",
         "matchedBy": "pattern",
-        "paramValue": "+2.5",
+        "paramValue": "-2.5",
         "parameters": null,
         "selections": [
           {
@@ -17773,9 +17773,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+1",
+        "marketKey": "CORNERS_HANDICAP:-1",
         "matchedBy": "pattern",
-        "paramValue": "+1",
+        "paramValue": "-1",
         "parameters": null,
         "selections": [
           {
@@ -17825,9 +17825,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+0.5",
+        "marketKey": "CORNERS_HANDICAP:-0.5",
         "matchedBy": "pattern",
-        "paramValue": "+0.5",
+        "paramValue": "-0.5",
         "parameters": null,
         "selections": [
           {
@@ -17877,9 +17877,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+4",
+        "marketKey": "CORNERS_HANDICAP:-4",
         "matchedBy": "pattern",
-        "paramValue": "+4",
+        "paramValue": "-4",
         "parameters": null,
         "selections": [
           {
@@ -18100,9 +18100,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+3.5",
+        "marketKey": "CORNERS_HANDICAP:-3.5",
         "matchedBy": "pattern",
-        "paramValue": "+3.5",
+        "paramValue": "-3.5",
         "parameters": null,
         "selections": [
           {
@@ -18157,9 +18157,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+1.5",
+        "marketKey": "CORNERS_HANDICAP:-1.5",
         "matchedBy": "pattern",
-        "paramValue": "+1.5",
+        "paramValue": "-1.5",
         "parameters": null,
         "selections": [
           {
@@ -19534,9 +19534,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+4.5",
+        "marketKey": "CORNERS_HANDICAP:-4.5",
         "matchedBy": "pattern",
-        "paramValue": "+4.5",
+        "paramValue": "-4.5",
         "parameters": null,
         "selections": [
           {
@@ -24563,9 +24563,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+5",
+        "marketKey": "CORNERS_HANDICAP:-5",
         "matchedBy": "pattern",
-        "paramValue": "+5",
+        "paramValue": "-5",
         "parameters": null,
         "selections": [
           {
@@ -25509,9 +25509,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_HANDICAP",
-        "marketKey": "CORNERS_HANDICAP:+3",
+        "marketKey": "CORNERS_HANDICAP:-3",
         "matchedBy": "pattern",
-        "paramValue": "+3",
+        "paramValue": "-3",
         "parameters": null,
         "selections": [
           {

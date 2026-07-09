@@ -1314,6 +1314,11 @@ function normalizeSelectionForMarket(
  * first-half line mirrored onto the wrong sign relative to peer consensus.
  * CARDS_HANDICAP was likewise found sign-inverted (its own line progression
  * trends the opposite direction from betcris/fuksiarz/superbet's).
+ * CORNERS_HANDICAP was confirmed sign-inverted across its ENTIRE curve
+ * (round-1 audit, Argentina vs Switzerland, confidence 0.93): every non-zero
+ * lvbet line for value=+X matches the 10-bookmaker peer consensus for
+ * value=-X and vice versa (value=0 already agreed with peers directly,
+ * isolating the bug to the sign of non-zero lines, not a HOME/AWAY swap).
  */
 const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "EUROPEAN_HANDICAP",
@@ -1321,6 +1326,7 @@ const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_EUROPEAN_HANDICAP",
   "FIRST_HALF_ASIAN_HANDICAP",
   "CARDS_HANDICAP",
+  "CORNERS_HANDICAP",
 ]);
 
 /**
@@ -1508,6 +1514,41 @@ function refineResultAndExactGoalsMisroutedAsTotalGoals(
   return allMatch ? "RESULT_AND_EXACT_GOALS" : code;
 }
 
+/**
+ * CORNERS_RANGE collapses LVBet's 5-tier raw scale onto the catalog's coarse
+ * 3-bucket scale (see the CORNERS_RANGE case in normalizeSelectionForMarket),
+ * which means TWO raw sub-selections collide on each of the "0-8" and "12+"
+ * buckets ("5 lub mniej"+"6 - 8" -> "0-8"; "12 - 14"+"15 lub więcej" -> "12+").
+ * Left uncombined, only the first-seen sub-selection survives downstream
+ * dedup and the other's price is silently dropped (round-1 audit, Argentina
+ * vs Switzerland, confidence n/a — bucket collision confirmed structurally).
+ * Combine colliding sub-selections' prices via summed implied probability
+ * (1 / (1/o1 + 1/o2)) so exactly one correctly-priced selection per bucket
+ * is emitted, mirroring the forbet/fuksiarz normalizers' identical pattern
+ * for duplicate-coded selections.
+ */
+function mergeCornersRangeDuplicateSelections(
+  selections: Array<{ code: NormalizedSelection; label: string; odds: number }>
+): Array<{ code: NormalizedSelection; label: string; odds: number }> {
+  const byCode = new Map<string, { code: NormalizedSelection; label: string; odds: number }>();
+  const order: string[] = [];
+
+  for (const sel of selections) {
+    const existing = byCode.get(sel.code);
+    if (!existing) {
+      byCode.set(sel.code, { ...sel });
+      order.push(sel.code);
+      continue;
+    }
+    if (existing.odds > 0 && sel.odds > 0) {
+      existing.odds = Math.round((1 / (1 / existing.odds + 1 / sel.odds)) * 100) / 100;
+    }
+    existing.label = `${existing.label} / ${sel.label}`;
+  }
+
+  return order.map((code) => byCode.get(code)!);
+}
+
 export const lvbetNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "lvbet",
 
@@ -1537,11 +1578,17 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     // bands, catch-all buckets, ...) and are dropped so they never leak raw
     // labels or orphan codes into the cross-bookmaker aggregation.
     const siblingSelectionNames = raw.selections.map((s) => s.name);
-    const selections = raw.selections.flatMap((sel) => {
+    let selections = raw.selections.flatMap((sel) => {
       const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
       if (code === null) return [];
       return [{ code, label: sel.name, odds: sel.odds }];
     });
+
+    // Combine the two raw sub-selections that collide on each CORNERS_RANGE
+    // bucket instead of letting downstream dedup silently drop one of them.
+    if (marketCode === "CORNERS_RANGE") {
+      selections = mergeCornersRangeDuplicateSelections(selections);
+    }
 
     // A market whose every selection was dropped carries no usable data
     // (e.g. LVBet's grouped-band exact-goals product) — exclude it entirely.

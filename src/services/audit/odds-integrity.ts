@@ -47,6 +47,12 @@ export interface IntegrityMarketInput {
   catalogSelections: string[] | null;
   /** Markets with dynamic vocabularies (scores, players) skip vector detectors. */
   vocabExempt: boolean;
+  /**
+   * Market type code (e.g. "HT_OR_FT_RESULT"). Compound "wins one of several
+   * ways" markets are named with "_OR_" at the TYPE level (not the selection
+   * level) and legitimately sum overround > 1 — see detectOverround.
+   */
+  marketType: string;
   /** FRESH quotes only — staleness exclusion happens in the caller (§3.1). */
   params: IntegrityParamInput[];
 }
@@ -384,8 +390,12 @@ function detectAxisSwap(
 
 /**
  * Overround: sum of implied probabilities of a complete 2/3-way book outside
- * [0.95, 1.45]. Markets with overlapping outcomes (double-chance-style "_OR_"
- * codes) legitimately sum to ~2 and are skipped.
+ * [0.95, 1.45]. Markets with overlapping outcomes legitimately sum outside
+ * that band and are skipped: double-chance-style "_OR_" SELECTION codes
+ * (sum ~2), and compound "wins one of several ways" markets whose "_OR_" is
+ * in the market TYPE code instead (e.g. HT_OR_FT_RESULT, WIN_OR_WIN_BY_2 —
+ * confirmed structural, not a bug: 5 independent bookmakers agree on
+ * HT_OR_FT_RESULT's overround ~1.5).
  */
 function detectOverround(
   input: IntegrityMarketInput,
@@ -393,6 +403,7 @@ function detectOverround(
   out: OddsIntegrityFlag[],
 ): void {
   if (selections.some((s) => s.includes("_OR_"))) return;
+  if (input.marketType.includes("_OR_")) return;
   for (const param of input.params) {
     for (const { bookmaker, vector } of completeVectors(param, selections)) {
       const sum = vector.reduce((acc, odds) => acc + 1 / odds, 0);

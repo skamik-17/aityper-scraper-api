@@ -1665,7 +1665,9 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba udanych odbiorów zawodnika", en: "Player tackles count" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["1+", "2+", "3+", "4+"],
+    // Thresholds are player/position-dependent (defenders/DMs run well past
+    // 4+ in live data — observed up to 8+ for France vs Morocco).
+    selections: ["1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 72,
   },

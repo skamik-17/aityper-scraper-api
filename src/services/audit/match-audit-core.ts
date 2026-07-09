@@ -181,9 +181,31 @@ const HALF_HINT_RE = /(?:^|[\s(])(?:[12]\.\s*po[łl]ow|pierwsz[aą]\s+po[łl]ow|
 const BTTS_COMBO_HINT_RE = /obie\s+dru[żz]yny\s+strzel|btts/i;
 const PLUS_COMBO_HINT_RE = /\s\+\s|\b1x2\s*\+|\bi\s+(?:liczba|suma)\s+goli/i;
 
-const TYPE_HALF_RE = /HALF|_HT\b|^HT_/;
+// _1H/_2H is a newer half-scoped suffix convention (e.g. PLAYER_OFFSIDES_1H,
+// NEXT_CORNER_1H) that predates this regex; without it every such market's
+// own half-mentioning raw names falsely misroute-hint against themselves.
+const TYPE_HALF_RE = /HALF|_HT\b|^HT_|_1H\b|_2H\b/;
 const TYPE_BTTS_RE = /BTTS|BOTH_TEAMS|BOTH_SCORE/;
-const TYPE_COMBO_RE = /_AND_|COMBO|MULTI|1X2_/;
+// DOUBLE_CHANCE(_TOTAL) markets are themselves the "double chance + goals"
+// combo the plus_combo hint looks for; without this they flag against
+// themselves on every bookmaker.
+const TYPE_COMBO_RE = /_AND_|COMBO|MULTI|1X2_|DOUBLE_CHANCE/;
+
+/**
+ * Catalog selection lists that are dynamic wildcard placeholders (the actual
+ * codes are combinatorially generated player names, e.g. "K. Mbappe & O.
+ * Dembele"), not a finite enumerable set. orphan_selection/mixed_vocabulary
+ * checks must not flag every literal player-pair/trio string against these.
+ */
+const DYNAMIC_WILDCARD_SELECTIONS = new Set([
+  JSON.stringify(["PLAYER_PAIR"]),
+  JSON.stringify(["PLAYER_TRIO"]),
+]);
+
+function isDynamicWildcardCatalog(catalog: CatalogSnapshot | undefined): boolean {
+  if (!catalog || catalog.selections.length === 0) return false;
+  return DYNAMIC_WILDCARD_SELECTIONS.has(JSON.stringify(catalog.selections));
+}
 
 /** Quotes older than the pool's newest scrape by more than this are stale (§3.1). */
 const STALE_AFTER_MS = 60 * 60 * 1000;
@@ -214,7 +236,7 @@ interface FreshnessQuote {
 
 function isVocabExempt(market: ApiMarket, catalog: CatalogSnapshot | undefined): boolean {
   const vt = market.viewType ?? catalog?.viewType ?? "";
-  return VOCAB_EXEMPT_VIEW_TYPES.has(vt);
+  return VOCAB_EXEMPT_VIEW_TYPES.has(vt) || isDynamicWildcardCatalog(catalog);
 }
 
 // ---------------------------------------------------------------------------
@@ -444,6 +466,7 @@ export function analyzeApiMarket(
   flags.odds_integrity = detectOddsIntegrity({
     catalogSelections: catalog && catalog.selections.length > 0 ? [...catalog.selections] : null,
     vocabExempt,
+    marketType: market.type,
     params: integrityParams,
   });
 

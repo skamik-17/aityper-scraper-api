@@ -510,6 +510,101 @@ describe("analyzeApiMarket — misroute hints", () => {
     const flags = analyzeApiMarket(m, lookup);
     expect(flags.misroute_hints).toHaveLength(0);
   });
+
+  it("does not flag half markers on _1H-suffixed market types (round-1 loop regression: PLAYER_OFFSIDES_1H/NEXT_CORNER_1H)", () => {
+    const m = market({
+      type: "NEXT_CORNER_1H",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("betclic", "1. połowa - Następny 1 rzut rożny", [
+              { type: "HOME", odds: 1.43 },
+              { type: "NONE", odds: 50 },
+              { type: "AWAY", odds: 2.48 },
+            ]),
+          ],
+        },
+      ],
+    });
+    const flags = analyzeApiMarket(m, lookup);
+    expect(flags.misroute_hints).toHaveLength(0);
+  });
+
+  it("does not flag plus_combo markers on DOUBLE_CHANCE_TOTAL-family markets (round-1 loop regression)", () => {
+    const m = market({
+      type: "DOUBLE_CHANCE_TOTAL",
+      parameters: [
+        {
+          value: "1.5",
+          label: "1.5",
+          bookmakers: [
+            bm("betfan", "Podwójna szansa i liczba goli", [
+              { type: "1X_UNDER", odds: 1.5 },
+              { type: "X2_OVER", odds: 3.5 },
+            ]),
+          ],
+        },
+      ],
+    });
+    const flags = analyzeApiMarket(m, lookup);
+    expect(flags.misroute_hints).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// dynamic wildcard catalog selections (PLAYER_PAIR / PLAYER_TRIO)
+// ---------------------------------------------------------------------------
+
+describe("analyzeApiMarket — dynamic wildcard catalog selections", () => {
+  it("does not flag literal player-pair strings as orphan_selection when catalog declares PLAYER_PAIR", () => {
+    const m = market({
+      type: "TWO_PLAYERS_ANYTIME",
+      viewType: "COMBINATION",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("betclic", "Dwóch zawodników strzeli", [
+              { type: "K. Mbappé & O. Dembélé", odds: 2.0 },
+              { type: "B. Barcola & D. Doué", odds: 3.75 },
+            ]),
+          ],
+        },
+      ],
+    });
+    const playerPairLookup: CatalogLookup = (code) =>
+      code === "TWO_PLAYERS_ANYTIME"
+        ? { selections: ["PLAYER_PAIR"], viewType: "COMBINATION", hasParameter: false, labelPl: "Dwóch zawodników strzeli" }
+        : undefined;
+    const flags = analyzeApiMarket(m, playerPairLookup);
+    expect(flags.orphan_selection_entries).toHaveLength(0);
+    expect(flags.mixed_vocabulary).toBeNull();
+  });
+
+  it("still flags real orphan codes for markets with a finite enumerable catalog list", () => {
+    const m = market({
+      type: "DOUBLE_CHANCE",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("betfan", "Podwójna szansa", [{ type: "SOME_UNMAPPED_CODE", odds: 1.9 }]),
+          ],
+        },
+      ],
+    });
+    const dcLookup: CatalogLookup = (code) =>
+      code === "DOUBLE_CHANCE"
+        ? { selections: ["HOME_OR_DRAW", "HOME_OR_AWAY", "DRAW_OR_AWAY"], viewType: "TRIPLE_BUTTONS", hasParameter: false, labelPl: "Podwójna szansa" }
+        : undefined;
+    const flags = analyzeApiMarket(m, dcLookup);
+    // sanity: dynamic-wildcard exemption must not silently exempt everything
+    expect(flags.orphan_selection_entries).toHaveLength(1);
+  });
 });
 
 // ---------------------------------------------------------------------------

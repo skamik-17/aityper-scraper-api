@@ -32,6 +32,7 @@ function marketInput(
   return {
     catalogSelections: null,
     vocabExempt: false,
+    marketType: "TEST_MARKET",
     params: [{ param: "", bookmakers }],
     ...overrides,
   };
@@ -346,5 +347,30 @@ describe("detectOddsIntegrity — overround", () => {
     );
     expect(byDetector(flags, "overround")).toHaveLength(0);
     expect(byDetector(flags, "impossible_odds")).toHaveLength(1);
+  });
+
+  it("skips compound 'wins one of several ways' markets named with _OR_ at the TYPE level (plain HOME/DRAW/AWAY selections)", () => {
+    // Regression: round 1 of the loop flagged HT_OR_FT_RESULT (labelPl "1.
+    // polowa lub wynik koncowy") at overround ~1.5 across 5 independent
+    // bookmakers — a structurally correct sum for a market you can win two
+    // ways, not a bug. The old skip only checked SELECTION codes for "_OR_"
+    // (double-chance style), missing markets where "_OR_" is in the TYPE.
+    const flags = detectOddsIntegrity(
+      marketInput([bmQuotes("betclic", { HOME: 1.9, DRAW: 3.5, AWAY: 4.8 })], {
+        catalogSelections: ["HOME", "DRAW", "AWAY"],
+        marketType: "HT_OR_FT_RESULT",
+      }),
+    );
+    expect(byDetector(flags, "overround")).toHaveLength(0);
+  });
+
+  it("still fires for a plain 1X2-shaped market whose type code happens not to contain _OR_", () => {
+    const flags = detectOddsIntegrity(
+      marketInput([bmQuotes("betclic", { HOME: 1.3, DRAW: 1.3, AWAY: 1.3 })], {
+        catalogSelections: ["HOME", "DRAW", "AWAY"],
+        marketType: "MATCH_WINNER",
+      }),
+    );
+    expect(byDetector(flags, "overround")).toHaveLength(1);
   });
 });

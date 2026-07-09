@@ -1190,11 +1190,11 @@
       "rawName": "Zawodnik z kartką (lub zmiennik)"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOALSCORER_ANYTIME",
-        "marketKey": "GOALSCORER_ANYTIME",
+        "marketCode": "PLAYER_GOAL_OR_ASSIST",
+        "marketKey": "PLAYER_GOAL_OR_ASSIST",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -1427,7 +1427,7 @@
         ]
       },
       "index": 22,
-      "marketCode": "GOALSCORER_ANYTIME",
+      "marketCode": "PLAYER_GOAL_OR_ASSIST",
       "rawName": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę"
     },
     {

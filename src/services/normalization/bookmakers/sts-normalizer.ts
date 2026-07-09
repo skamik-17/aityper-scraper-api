@@ -744,7 +744,24 @@ function normalizeSelectionForMarket(
     }
 
     case "GOALSCORER_ANYTIME":
-    case "HALF_TIME_GOALSCORER_ANYTIME":
+    case "HALF_TIME_GOALSCORER_ANYTIME": {
+      // STS emits these two markets' raw selections as space-separated
+      // "Lastname Firstname" (no comma) - e.g. "Digne Lucas", "Kante N'Golo",
+      // "Rabiot Adrien" - the opposite of the canonical "Firstname Lastname"
+      // order used by peers (superbet/forbet/etoto emit "Lucas Digne"/
+      // "N'Golo Kante"). canonicalizePlayerName() only reorders the
+      // comma-delimited "Last, First" pattern, so it silently no-ops on
+      // STS's space-only format here, stranding each STS-quoted player as a
+      // duplicate top-level selection instead of merging with peers. Flip
+      // simple two-token names before handing off to the shared helper,
+      // mirroring the GOALSCORER_FIRST/GOALSCORER_LAST/PLAYER_CARDS handling
+      // above.
+      const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
+      const tokens = nameOnly.split(/\s+/);
+      const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
+      return canonicalizePlayerName(reordered) as NormalizedSelection;
+    }
+
     case "PLAYER_SHOTS":
     case "PLAYER_ASSISTS":
     case "PLAYER_SHOTS_ON_TARGET":

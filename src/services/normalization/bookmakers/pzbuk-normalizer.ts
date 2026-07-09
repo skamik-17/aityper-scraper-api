@@ -215,7 +215,15 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "511": "SECOND_HALF_GOAL_RANGE",
   "2099": "MATCH_WINNER",
   "2179": "GOALSCORER_ANYTIME",
-  "2186": "GOALSCORER_ANYTIME",
+  // Audit-loop v2 round 2: id 2186's raw name is "Zawodnik (lub zmiennik)
+  // strzeli gola lub zaliczy asystę" (goal OR assist), a distinct market
+  // from the pure-goalscorer id 2179 above ("strzeli gola" only). Every
+  // other bookmaker offering the same market shape (fortuna "ufo:mtyp:00-hm",
+  // forbet -30704, lvbet "zawodnik strzeli gola lub zanotuje asyste",
+  // fuksiarz -4890) routes it to PLAYER_GOAL_OR_ASSIST — this id was
+  // wrongly folded into GOALSCORER_ANYTIME, inflating pure-scorer odds with
+  // assist-inclusive prices (e.g. defenders who assist more than they score).
+  "2186": "PLAYER_GOAL_OR_ASSIST",
   "2395": "GOALSCORER_ANYTIME",
 };
 
@@ -553,6 +561,7 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
+    case "PLAYER_GOAL_OR_ASSIST":
       // Shared helper flips "Lastname, Firstname" to natural order so player
       // odds merge with peers in the aggregator.
       return canonicalizePlayerName(

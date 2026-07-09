@@ -83,6 +83,56 @@ describe("isFixResult", () => {
   it("accepts when reason is null and commit is null with empty files", () => {
     expect(isFixResult({ status: "noop", commit: null, files: [], reason: null })).toBe(true);
   });
+
+  // v2 fixer contract fields (docs/audit-ledger/FIXER-CONTRACT.md)
+  it("accepts new-shape result with fingerprints and fixtureTest", () => {
+    expect(isFixResult({
+      status: "applied",
+      commit: "abc123",
+      files: ["backend/src/data/market-catalog.ts"],
+      fingerprints: ["a1b2c3d4e5f6"],
+      fixtureTest: { path: "backend/src/services/normalization/__fixtures__/sts/x.json", before: "fail", after: "pass" },
+      reason: null,
+    })).toBe(true);
+  });
+  it("accepts fallback fixtureTest shape (path none / missing / n/a)", () => {
+    expect(isFixResult({
+      status: "applied", commit: "abc", files: ["x.ts"],
+      fingerprints: [],
+      fixtureTest: { path: "none", before: "missing", after: "n/a" },
+      reason: "verified online — no fixture/archive",
+    })).toBe(true);
+  });
+  it("accepts fixtureTest null (noop with pre-green fixture)", () => {
+    expect(isFixResult({ status: "noop", commit: null, files: [], fingerprints: ["a1b2c3d4e5f6"], fixtureTest: null, reason: "already green" })).toBe(true);
+  });
+  it("old shape without new fields still validates (backward compatible)", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: ["x.ts"], reason: null })).toBe(true);
+  });
+  it("rejects fingerprints with non-string entries", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: [], fingerprints: [42], reason: null })).toBe(false);
+  });
+  it("rejects fingerprints when not an array", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: [], fingerprints: "a1b2c3", reason: null })).toBe(false);
+  });
+  it("rejects fixtureTest with invalid before value", () => {
+    expect(isFixResult({
+      status: "applied", commit: "abc", files: [],
+      fixtureTest: { path: "x.json", before: "pass", after: "pass" }, reason: null,
+    })).toBe(false);
+  });
+  it("rejects fixtureTest with invalid after value", () => {
+    expect(isFixResult({
+      status: "applied", commit: "abc", files: [],
+      fixtureTest: { path: "x.json", before: "fail", after: "fail" }, reason: null,
+    })).toBe(false);
+  });
+  it("rejects fixtureTest missing path", () => {
+    expect(isFixResult({
+      status: "applied", commit: "abc", files: [],
+      fixtureTest: { before: "fail", after: "pass" }, reason: null,
+    })).toBe(false);
+  });
 });
 
 describe("extractVerdictBlock", () => {

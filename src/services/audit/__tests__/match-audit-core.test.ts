@@ -36,6 +36,12 @@ const CATALOG: Record<string, { selections: string[]; viewType: string; hasParam
     hasParameter: false,
     labelPl: "Dokładny wynik",
   },
+  FIRST_TO_SCORE: {
+    selections: ["HOME", "AWAY", "NONE"],
+    viewType: "TRIPLE_BUTTONS",
+    hasParameter: false,
+    labelPl: "Pierwsza strzeli",
+  },
 };
 
 const lookup: CatalogLookup = (code) => CATALOG[code];
@@ -228,11 +234,11 @@ describe("analyzeApiMarket — orphan selections and mixed vocabulary", () => {
 });
 
 // ---------------------------------------------------------------------------
-// odds outliers (per parameter + selection type)
+// odds disagreements (per parameter + selection type, implied-probability space)
 // ---------------------------------------------------------------------------
 
-describe("analyzeApiMarket — odds outliers", () => {
-  it("flags a quote deviating >40% from the median within one line", () => {
+describe("analyzeApiMarket — odds disagreements", () => {
+  it("flags a quote whose implied probability deviates >35% from the pool median", () => {
     const m = healthyDoubleChance();
     m.parameters[0].bookmakers.push(
       bm("betfan", "2. połowa - podwójna szansa i obie drużyny strzelą gola", [
@@ -240,13 +246,22 @@ describe("analyzeApiMarket — odds outliers", () => {
       ]),
     );
     const flags = analyzeApiMarket(m, lookup);
-    expect(flags.odds_outliers).toHaveLength(1);
-    expect(flags.odds_outliers[0]).toMatchObject({ bookmaker: "betfan", selectionType: "DRAW_OR_AWAY" });
+    expect(flags.odds_disagreements).toHaveLength(1);
+    expect(flags.odds_disagreements[0]).toMatchObject({
+      bookmaker: "betfan",
+      selectionType: "DRAW_OR_AWAY",
+    });
+    // Legacy fields preserved + new implied-space deviation.
+    expect(flags.odds_disagreements[0].median).toBeGreaterThan(0);
+    expect(flags.odds_disagreements[0].deviationPct).toBeGreaterThan(0);
+    expect(flags.odds_disagreements[0].impliedDevPct).toBeGreaterThan(35);
+    // No scrapedAt anywhere -> everything is fresh, nothing is stale.
+    expect(flags.stale_bookmakers).toHaveLength(0);
   });
 
   it("does NOT mix different parameter lines into one comparison", () => {
     // OVER 0.5 ~1.2 and OVER 3.5 ~5.0 are both healthy; naive cross-line
-    // comparison would scream outlier.
+    // comparison would scream disagreement.
     const mkLine = (value: string, odds: number) => ({
       value,
       label: value,
@@ -262,10 +277,10 @@ describe("analyzeApiMarket — odds outliers", () => {
       parameters: [mkLine("0.5", 1.2), mkLine("3.5", 5.0)],
     });
     const flags = analyzeApiMarket(m, lookup);
-    expect(flags.odds_outliers).toHaveLength(0);
+    expect(flags.odds_disagreements).toHaveLength(0);
   });
 
-  it("needs at least 4 quotes to call an outlier", () => {
+  it("needs at least 4 quotes to call a disagreement", () => {
     const m = market({
       type: "BTTS",
       parameters: [
@@ -281,10 +296,37 @@ describe("analyzeApiMarket — odds outliers", () => {
       ],
     });
     const flags = analyzeApiMarket(m, lookup);
-    expect(flags.odds_outliers).toHaveLength(0);
+    expect(flags.odds_disagreements).toHaveLength(0);
   });
 
-  it("flags impossible odds (<= 1.0) regardless of quote count", () => {
+  it("tolerates legitimate longshot spread [9, 12, 15, 11] — no disagreement, no integrity", () => {
+    const m = market({
+      type: "FIRST_TO_SCORE",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("sts", "Pierwsza strzeli", [{ type: "NONE", odds: 9 }]),
+            bm("fortuna", "Pierwsza strzeli", [{ type: "NONE", odds: 12 }]),
+            bm("betclic", "Pierwsza strzeli", [{ type: "NONE", odds: 15 }]),
+            bm("superbet", "Pierwsza strzeli", [{ type: "NONE", odds: 11 }]),
+          ],
+        },
+      ],
+    });
+    const flags = analyzeApiMarket(m, lookup);
+    expect(flags.odds_disagreements).toHaveLength(0);
+    expect(flags.odds_integrity).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// odds integrity (zero-tolerance detectors, delegated to odds-integrity.ts)
+// ---------------------------------------------------------------------------
+
+describe("analyzeApiMarket — odds integrity", () => {
+  it("flags impossible odds (<= 1.0) as odds_integrity regardless of quote count", () => {
     const m = market({
       type: "BTTS",
       parameters: [
@@ -296,8 +338,136 @@ describe("analyzeApiMarket — odds outliers", () => {
       ],
     });
     const flags = analyzeApiMarket(m, lookup);
-    expect(flags.impossible_odds).toHaveLength(1);
-    expect(flags.impossible_odds[0]).toMatchObject({ bookmaker: "superbet", odds: 0.5 });
+    expect(flags.odds_integrity).toHaveLength(1);
+    expect(flags.odds_integrity[0]).toMatchObject({
+      bookmaker: "superbet",
+      detector: "impossible_odds",
+      odds: 0.5,
+      expected: null,
+    });
+  });
+
+  it("flags a decimal-shifted quote against the peer pool", () => {
+    const m = market({
+      type: "FIRST_TO_SCORE",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("betclic", "Pierwsza strzeli", [{ type: "NONE", odds: 150 }]),
+            bm("sts", "Pierwsza strzeli", [{ type: "NONE", odds: 46 }]),
+            bm("fortuna", "Pierwsza strzeli", [{ type: "NONE", odds: 47 }]),
+            bm("superbet", "Pierwsza strzeli", [{ type: "NONE", odds: 50 }]),
+          ],
+        },
+      ],
+    });
+    const flags = analyzeApiMarket(m, lookup);
+    const shifts = flags.odds_integrity.filter((f) => f.detector === "decimal_shift");
+    expect(shifts).toHaveLength(1);
+    expect(shifts[0]).toMatchObject({ bookmaker: "betclic", selectionType: "NONE", odds: 150 });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// freshness windowing + stale_bookmaker (spec §3.1)
+// ---------------------------------------------------------------------------
+
+describe("analyzeApiMarket — freshness windowing", () => {
+  it("excludes quotes >60min older than the pool newest and flags stale_bookmaker", () => {
+    const m = healthyDoubleChance();
+    for (const b of m.parameters[0].bookmakers) b.scrapedAt = "2026-07-09T12:00:00Z";
+    m.parameters[0].bookmakers.push({
+      ...bm("lvbet", "Podwójna szansa", [{ type: "DRAW_OR_AWAY", odds: 6.0 }]),
+      scrapedAt: "2026-07-09T10:30:00Z", // 90 min behind the pool
+    });
+    const flags = analyzeApiMarket(m, lookup);
+    // The deviant quote is stale -> excluded, so NOT a disagreement.
+    expect(flags.odds_disagreements).toHaveLength(0);
+    expect(flags.odds_integrity).toHaveLength(0);
+    expect(flags.stale_bookmakers).toEqual([{ bookmaker: "lvbet", ageMinutes: 90 }]);
+  });
+
+  it("keeps quotes within the 60-minute window", () => {
+    const m = healthyDoubleChance();
+    for (const b of m.parameters[0].bookmakers) b.scrapedAt = "2026-07-09T12:00:00Z";
+    m.parameters[0].bookmakers[0].scrapedAt = "2026-07-09T11:30:00Z"; // 30 min: fresh
+    const flags = analyzeApiMarket(m, lookup);
+    expect(flags.stale_bookmakers).toHaveLength(0);
+  });
+
+  it("treats missing scrapedAt as fresh (never excludes on missing data)", () => {
+    const m = healthyDoubleChance();
+    m.parameters[0].bookmakers[0].scrapedAt = "2026-07-09T12:00:00Z";
+    // Other entries have no scrapedAt at all.
+    const flags = analyzeApiMarket(m, lookup);
+    expect(flags.stale_bookmakers).toHaveLength(0);
+  });
+
+  it("uses opts.now as an additional freshness reference when provided", () => {
+    const m = healthyDoubleChance();
+    for (const b of m.parameters[0].bookmakers) b.scrapedAt = "2026-07-09T10:00:00Z";
+    const flags = analyzeApiMarket(m, lookup, { now: "2026-07-09T12:00:00Z" });
+    // All quotes are 120 min behind `now` -> all stale (scraper-health signal).
+    expect(flags.stale_bookmakers).toHaveLength(4);
+    expect(flags.stale_bookmakers[0].ageMinutes).toBe(120);
+    expect(flags.odds_disagreements).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// coverage baseline gate (spec §3.4)
+// ---------------------------------------------------------------------------
+
+describe("analyzeApiMarket — coverage gate on selection gaps", () => {
+  /** lvbet quotes HOME/AWAY only; three peers quote NONE too. */
+  function firstToScoreMarket(): ApiMarket {
+    const full = [
+      { type: "HOME", odds: 1.5 },
+      { type: "AWAY", odds: 2.5 },
+      { type: "NONE", odds: 15 },
+    ];
+    return market({
+      type: "FIRST_TO_SCORE",
+      parameters: [
+        {
+          value: "",
+          label: "",
+          bookmakers: [
+            bm("sts", "Pierwsza strzeli", full),
+            bm("fortuna", "Pierwsza strzeli", full.map((s) => ({ ...s, odds: s.odds + 0.02 }))),
+            bm("etoto", "Pierwsza strzeli", full.map((s) => ({ ...s, odds: s.odds - 0.02 }))),
+            bm("lvbet", "Pierwsza strzeli", [
+              { type: "HOME", odds: 1.52 },
+              { type: "AWAY", odds: 2.45 },
+            ]),
+          ],
+        },
+      ],
+    });
+  }
+
+  it("flags the gap when no coverage callback is given (today's behaviour)", () => {
+    const flags = analyzeApiMarket(firstToScoreMarket(), lookup);
+    expect(flags.selection_gaps).toHaveLength(1);
+    expect(flags.selection_gaps[0]).toMatchObject({ bookmaker: "lvbet", missing: ["NONE"] });
+  });
+
+  it("does NOT flag a gap for a code the bookmaker never offered", () => {
+    const calls: [string, string, string][] = [];
+    const coverage = (bookmaker: string, marketType: string, code: string) => {
+      calls.push([bookmaker, marketType, code]);
+      return !(bookmaker === "lvbet" && code === "NONE");
+    };
+    const flags = analyzeApiMarket(firstToScoreMarket(), lookup, { coverage });
+    expect(flags.selection_gaps).toHaveLength(0);
+    expect(calls).toContainEqual(["lvbet", "FIRST_TO_SCORE", "NONE"]);
+  });
+
+  it("still flags the gap when coverage says the bookmaker has offered the code", () => {
+    const flags = analyzeApiMarket(firstToScoreMarket(), lookup, { coverage: () => true });
+    expect(flags.selection_gaps).toHaveLength(1);
   });
 });
 
@@ -453,5 +623,59 @@ describe("severityScore and analyzeMatchResponse", () => {
     expect(result.summary.culpritMatrix.betfan.misroute_hint).toBeGreaterThanOrEqual(1);
     expect(result.summary.culpritMatrix.betfan.unknown_selection).toBeGreaterThanOrEqual(1);
     expect(result.summary.totalFlagged).toBe(1);
+    expect(result.summary.integrityViolations).toBe(0);
+  });
+
+  it("counts integrityViolations and bumps odds_integrity per bookmaker", () => {
+    const data = {
+      match: { homeTeam: "A", awayTeam: "B", league: "test" },
+      categories: [
+        {
+          name: "GOLE",
+          label: "Gole",
+          order: 0,
+          markets: [
+            market({
+              type: "BTTS",
+              parameters: [
+                {
+                  value: "",
+                  label: "",
+                  bookmakers: [bm("superbet", "BTTS", [{ type: "YES", odds: 0.5 }])],
+                },
+              ],
+            }),
+          ],
+        },
+      ],
+      stats: { totalMarkets: 1, normalizedMarkets: 1, coveragePercent: 100, bookmakersWithOdds: [] },
+    };
+    const result = analyzeMatchResponse(data, lookup);
+    expect(result.summary.integrityViolations).toBe(1);
+    expect(result.summary.flagTotals.odds_integrity).toBe(1);
+    expect(result.summary.culpritMatrix.superbet.odds_integrity).toBe(1);
+  });
+
+  it("bumps stale_bookmaker in flagTotals and the culprit matrix with zero severity weight", () => {
+    const m = healthyDoubleChance();
+    for (const b of m.parameters[0].bookmakers) b.scrapedAt = "2026-07-09T12:00:00Z";
+    m.parameters[0].bookmakers.push({
+      ...bm("lvbet", "Podwójna szansa", [
+        { type: "HOME_OR_DRAW", odds: 1.46 },
+        { type: "HOME_OR_AWAY", odds: 1.54 },
+        { type: "DRAW_OR_AWAY", odds: 1.28 },
+      ]),
+      scrapedAt: "2026-07-09T09:00:00Z",
+    });
+    const data = {
+      match: { homeTeam: "A", awayTeam: "B", league: "test" },
+      categories: [{ name: "WYNIK_MECZU", label: "Wynik meczu", order: 0, markets: [m] }],
+      stats: { totalMarkets: 1, normalizedMarkets: 1, coveragePercent: 100, bookmakersWithOdds: [] },
+    };
+    const result = analyzeMatchResponse(data, lookup);
+    expect(result.summary.flagTotals.stale_bookmaker).toBe(1);
+    expect(result.summary.culpritMatrix.lvbet.stale_bookmaker).toBe(1);
+    // Informational only: a stale bookmaker alone must not raise severity.
+    expect(result.markets[0].severity).toBe(0);
   });
 });

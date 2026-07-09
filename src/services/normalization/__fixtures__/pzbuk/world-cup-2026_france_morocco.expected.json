@@ -1,0 +1,4845 @@
+{
+  "bookmaker": "pzbuk",
+  "entries": [
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE",
+        "marketKey": "DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Francja lub remis",
+            "odds": 1.11
+          },
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Francja lub Maroko",
+            "odds": 1.23
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Maroko",
+            "odds": 2.19
+          }
+        ]
+      },
+      "index": 0,
+      "marketCode": "DOUBLE_CHANCE",
+      "rawName": "Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DRAW_NO_BET",
+        "marketKey": "DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.17
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 4.61
+          }
+        ]
+      },
+      "index": 1,
+      "marketCode": "DRAW_NO_BET",
+      "rawName": "Remis bez zakładu"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.55
+          },
+          {
+            "code": "DRAW",
+            "label": "Remis",
+            "odds": 3.92
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 6.57
+          }
+        ]
+      },
+      "index": 2,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "1x2"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (0:1)",
+            "label": "Francja (0:1)",
+            "odds": 2.45
+          },
+          {
+            "code": "remis (0:1)",
+            "label": "remis (0:1)",
+            "odds": 3.58
+          },
+          {
+            "code": "Maroko (0:1)",
+            "label": "Maroko (0:1)",
+            "odds": 2.39
+          },
+          {
+            "code": "Francja (1:0)",
+            "label": "Francja (1:0)",
+            "odds": 1.1
+          },
+          {
+            "code": "remis (1:0)",
+            "label": "remis (1:0)",
+            "odds": 7.36
+          },
+          {
+            "code": "Maroko (1:0)",
+            "label": "Maroko (1:0)",
+            "odds": 17.67
+          },
+          {
+            "code": "Francja (0:2)",
+            "label": "Francja (0:2)",
+            "odds": 4.91
+          },
+          {
+            "code": "remis (0:2)",
+            "label": "remis (0:2)",
+            "odds": 4.52
+          },
+          {
+            "code": "Maroko (0:2)",
+            "label": "Maroko (0:2)",
+            "odds": 1.47
+          },
+          {
+            "code": "Francja (2:0)",
+            "label": "Francja (2:0)",
+            "odds": 1.02
+          },
+          {
+            "code": "remis (2:0)",
+            "label": "remis (2:0)",
+            "odds": 13.01
+          },
+          {
+            "code": "Maroko (2:0)",
+            "label": "Maroko (2:0)",
+            "odds": 44.18
+          },
+          {
+            "code": "Francja (0:3)",
+            "label": "Francja (0:3)",
+            "odds": 11.04
+          },
+          {
+            "code": "remis (0:3)",
+            "label": "remis (0:3)",
+            "odds": 7.36
+          },
+          {
+            "code": "Maroko (0:3)",
+            "label": "Maroko (0:3)",
+            "odds": 1.15
+          },
+          {
+            "code": "Francja (0:4)",
+            "label": "Francja (0:4)",
+            "odds": 24.55
+          },
+          {
+            "code": "remis (0:4)",
+            "label": "remis (0:4)",
+            "odds": 12.27
+          },
+          {
+            "code": "Maroko (0:4)",
+            "label": "Maroko (0:4)",
+            "odds": 1.04
+          },
+          {
+            "code": "Francja (0:5)",
+            "label": "Francja (0:5)",
+            "odds": 39.27
+          },
+          {
+            "code": "remis (0:5)",
+            "label": "remis (0:5)",
+            "odds": 15.71
+          },
+          {
+            "code": "Maroko (0:5)",
+            "label": "Maroko (0:5)",
+            "odds": 1.01
+          }
+        ]
+      },
+      "index": 3,
+      "marketCode": "GOALSCORER_ANYTIME",
+      "rawName": "Handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 0.5",
+            "odds": 1.04
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 0.5",
+            "odds": 8.83
+          }
+        ]
+      },
+      "index": 4,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 1.5",
+            "odds": 1.3
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 1.5",
+            "odds": 3.34
+          }
+        ]
+      },
+      "index": 5,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 2.5",
+            "odds": 1.96
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 2.5",
+            "odds": 1.79
+          }
+        ]
+      },
+      "index": 6,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 3.5",
+            "odds": 3.39
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 3.5",
+            "odds": 1.3
+          }
+        ]
+      },
+      "index": 7,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 4.5",
+            "odds": 6.57
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 4.5",
+            "odds": 1.09
+          }
+        ]
+      },
+      "index": 8,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:5.5",
+        "matchedBy": "id",
+        "paramValue": "5.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 5.5",
+            "odds": 12.27
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 5.5",
+            "odds": 1.03
+          }
+        ]
+      },
+      "index": 9,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 10,
+      "marketCode": "OTHER",
+      "rawName": "Czy będzie konkurs rzutów karnych?"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_RESOLUTION_METHOD",
+        "marketKey": "MATCH_RESOLUTION_METHOD",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "REGULAR_TIME",
+            "label": "Francja regulaminowy czas gry",
+            "odds": 1.43
+          },
+          {
+            "code": "REGULAR_TIME",
+            "label": "Maroko regulaminowy czas gry",
+            "odds": 5.31
+          },
+          {
+            "code": "EXTRA_TIME",
+            "label": "Francja po dogrywce",
+            "odds": 7.97
+          },
+          {
+            "code": "EXTRA_TIME",
+            "label": "Maroko po dogrywce",
+            "odds": 24.59
+          },
+          {
+            "code": "PENALTIES",
+            "label": "Francja po rzutach karnych",
+            "odds": 12.29
+          },
+          {
+            "code": "PENALTIES",
+            "label": "Maroko po rzutach karnych",
+            "odds": 12.29
+          }
+        ]
+      },
+      "index": 11,
+      "marketCode": "MATCH_RESOLUTION_METHOD",
+      "rawName": "W jaki sposób rozstrzygnie się mecz?"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.52
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 3.88
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 5.99
+          }
+        ]
+      },
+      "index": 12,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "Early Payout"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TEAM_TO_QUALIFY",
+        "marketKey": "TEAM_TO_QUALIFY",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.2
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 4.02
+          }
+        ]
+      },
+      "index": 13,
+      "marketCode": "TEAM_TO_QUALIFY",
+      "rawName": "Zakwalifikowanie się"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_TEAM_TO_SCORE",
+        "marketKey": "FIRST_TEAM_TO_SCORE",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.42
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 10.07
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 3.24
+          }
+        ]
+      },
+      "index": 14,
+      "marketCode": "FIRST_TEAM_TO_SCORE",
+      "rawName": "1. gol"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.99
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 2.27
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 6.28
+          }
+        ]
+      },
+      "index": 15,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "1. Połowa - 1x2"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "BTTS",
+        "marketKey": "BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "Tak",
+            "odds": 1.98
+          },
+          {
+            "code": "NO",
+            "label": "Nie",
+            "odds": 1.74
+          }
+        ]
+      },
+      "index": 16,
+      "marketCode": "BTTS",
+      "rawName": "Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALFTIME_FULLTIME",
+        "marketKey": "HALFTIME_FULLTIME",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_HOME",
+            "label": "Francja/Francja",
+            "odds": 2.14
+          },
+          {
+            "code": "HOME_DRAW",
+            "label": "Francja/remis",
+            "odds": 16.72
+          },
+          {
+            "code": "HOME_AWAY",
+            "label": "Francja/Maroko",
+            "odds": 68.85
+          },
+          {
+            "code": "DRAW_HOME",
+            "label": "remis/Francja",
+            "odds": 4.33
+          },
+          {
+            "code": "DRAW_DRAW",
+            "label": "remis/remis",
+            "odds": 5.31
+          },
+          {
+            "code": "DRAW_AWAY",
+            "label": "remis/Maroko",
+            "odds": 12.79
+          },
+          {
+            "code": "AWAY_HOME",
+            "label": "Maroko/Francja",
+            "odds": 24.59
+          },
+          {
+            "code": "AWAY_DRAW",
+            "label": "Maroko/remis",
+            "odds": 19.67
+          },
+          {
+            "code": "AWAY_AWAY",
+            "label": "Maroko/Maroko",
+            "odds": 11.31
+          }
+        ]
+      },
+      "index": 17,
+      "marketCode": "HALFTIME_FULLTIME",
+      "rawName": "Połowa/Reg. czas gry"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.43
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 2.55
+          }
+        ]
+      },
+      "index": 18,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.99
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.32
+          }
+        ]
+      },
+      "index": 19,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Lucas Digne",
+            "label": "Digne, Lucas",
+            "odds": 15.95
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Diop, Issa",
+            "odds": 30.9
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Mazraoui, Noussair",
+            "odds": 29.91
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Hakimi, Achraf",
+            "odds": 10.47
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Diaz, Brahim",
+            "odds": 5.38
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Belammari, Youssef",
+            "odds": 25.92
+          },
+          {
+            "code": "Anass Salah Eddine",
+            "label": "Salah Eddine, Anass",
+            "odds": 30.9
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "El Kaabi, Ayoub",
+            "odds": 4.88
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Rahimi, Soufiane",
+            "odds": 4.79
+          },
+          {
+            "code": "Azzedine Ounahi",
+            "label": "Ounahi, Azzedine",
+            "odds": 6.98
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Halhal, Redouane",
+            "odds": 32.9
+          },
+          {
+            "code": "Bilal El Khannouss",
+            "label": "El Khannouss, Bilal",
+            "odds": 8.17
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Talbi, Chemsdine",
+            "odds": 7.48
+          },
+          {
+            "code": "Ayoube Amaimouni",
+            "label": "Amaimouni, Ayoube",
+            "odds": 8.17
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Riad, Chadi",
+            "odds": 29.91
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "El Ouahdi, Zakaria",
+            "odds": 21.93
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Sbai, Amine",
+            "odds": 8.27
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "El Aynaoui, Neil",
+            "odds": 11.46
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Yassine, Gessime",
+            "odds": 7.88
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Amrabat, Sofyan",
+            "odds": 18.94
+          },
+          {
+            "code": "Marwane Saadane",
+            "label": "Saadane, Marwane",
+            "odds": 27.91
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Doue, Desire",
+            "odds": 3.14
+          },
+          {
+            "code": "Warren Zaire-Emery",
+            "label": "Zaire-Emery, Warren",
+            "odds": 7.88
+          },
+          {
+            "code": "N'Golo Kante",
+            "label": "Kante, N'Golo",
+            "odds": 9.57
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Rabiot, Adrien",
+            "odds": 7.08
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Hernandez, Lucas",
+            "odds": 19.94
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Dembele, Ousmane",
+            "odds": 2.89
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Thuram, Marcus",
+            "odds": 2.74
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Hernandez, Theo",
+            "odds": 10.72
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Upamecano, Dayot",
+            "odds": 15.95
+          },
+          {
+            "code": "Kylian Mbappe",
+            "label": "Mbappe, Kylian",
+            "odds": 1.8
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Mateta, Jean-Philippe",
+            "odds": 2.59
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Bouaddi, Ayyoub",
+            "odds": 19.94
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Konate, Ibrahima",
+            "odds": 15.95
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Tchouameni, Aurelien",
+            "odds": 11.22
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Lacroix, Maxence",
+            "odds": 12.21
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Olise, Michael",
+            "odds": 3.59
+          },
+          {
+            "code": "William Saliba",
+            "label": "Saliba, William",
+            "odds": 19.94
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Cherki, Rayan",
+            "odds": 3.59
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Gusto, Malo",
+            "odds": 13.21
+          },
+          {
+            "code": "Manu Kone",
+            "label": "Kone, Manu",
+            "odds": 10.22
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Akliouche, Maghnes",
+            "odds": 4.29
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Barcola, Bradley",
+            "odds": 3.39
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Kounde, Jules",
+            "odds": 17.94
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "El Mourabet, Samir",
+            "odds": 13.96
+          }
+        ]
+      },
+      "index": 20,
+      "marketCode": "GOALSCORER_ANYTIME",
+      "rawName": "Zawodnik (lub zmiennik) strzeli gola"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Lucas Digne",
+            "label": "Digne, Lucas",
+            "odds": 4.39
+          },
+          {
+            "code": "Marwane Saadane",
+            "label": "Saadane, Marwane",
+            "odds": 3.49
+          },
+          {
+            "code": "Ahmed Reda Tagnaouti",
+            "label": "Tagnaouti, Ahmed Reda",
+            "odds": 9.18
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Amrabat, Sofyan",
+            "odds": 2.74
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Diop, Issa",
+            "odds": 4.49
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Mazraoui, Noussair",
+            "odds": 5.29
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Hakimi, Achraf",
+            "odds": 4.39
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Diaz, Brahim",
+            "odds": 6.29
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Belammari, Youssef",
+            "odds": 6.39
+          },
+          {
+            "code": "Anass Salah Eddine",
+            "label": "Salah Eddine, Anass",
+            "odds": 4.79
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "El Kaabi, Ayoub",
+            "odds": 8.18
+          },
+          {
+            "code": "Yassine Bounou",
+            "label": "Bounou, Yassine",
+            "odds": 9.18
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Rahimi, Soufiane",
+            "odds": 4.09
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Halhal, Redouane",
+            "odds": 3.69
+          },
+          {
+            "code": "Bilal El Khannouss",
+            "label": "El Khannouss, Bilal",
+            "odds": 4.29
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Talbi, Chemsdine",
+            "odds": 6.59
+          },
+          {
+            "code": "Ayoube Amaimouni",
+            "label": "Amaimouni, Ayoube",
+            "odds": 4.89
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Riad, Chadi",
+            "odds": 4.89
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "El Ouahdi, Zakaria",
+            "odds": 4.19
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Sbai, Amine",
+            "odds": 5.19
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "El Aynaoui, Neil",
+            "odds": 3.69
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Yassine, Gessime",
+            "odds": 5.19
+          },
+          {
+            "code": "Azzedine Ounahi",
+            "label": "Ounahi, Azzedine",
+            "odds": 4.19
+          },
+          {
+            "code": "Munir El Kajoui",
+            "label": "El Kajoui, Munir",
+            "odds": 9.18
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Doue, Desire",
+            "odds": 5.09
+          },
+          {
+            "code": "Warren Zaire-Emery",
+            "label": "Zaire-Emery, Warren",
+            "odds": 6.59
+          },
+          {
+            "code": "Brice Samba",
+            "label": "Samba, Brice",
+            "odds": 9.08
+          },
+          {
+            "code": "N'Golo Kante",
+            "label": "Kante, N'Golo",
+            "odds": 6.39
+          },
+          {
+            "code": "Mike Maignan",
+            "label": "Maignan, Mike",
+            "odds": 12.97
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Rabiot, Adrien",
+            "odds": 4.59
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Hernandez, Lucas",
+            "odds": 4.19
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Dembele, Ousmane",
+            "odds": 6.59
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Thuram, Marcus",
+            "odds": 6.39
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Hernandez, Theo",
+            "odds": 4.39
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Upamecano, Dayot",
+            "odds": 4.79
+          },
+          {
+            "code": "Kylian Mbappe",
+            "label": "Mbappe, Kylian",
+            "odds": 5.69
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Mateta, Jean-Philippe",
+            "odds": 7.39
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Konate, Ibrahima",
+            "odds": 4.49
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Kounde, Jules",
+            "odds": 6.89
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Tchouameni, Aurelien",
+            "odds": 4.19
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Lacroix, Maxence",
+            "odds": 5.19
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Olise, Michael",
+            "odds": 5.99
+          },
+          {
+            "code": "William Saliba",
+            "label": "Saliba, William",
+            "odds": 6.59
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Cherki, Rayan",
+            "odds": 6.69
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Gusto, Malo",
+            "odds": 4.99
+          },
+          {
+            "code": "Manu Kone",
+            "label": "Kone, Manu",
+            "odds": 3.89
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Akliouche, Maghnes",
+            "odds": 5.49
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Barcola, Bradley",
+            "odds": 5.79
+          },
+          {
+            "code": "Robin Risser",
+            "label": "Risser, Robin",
+            "odds": 13.22
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Bouaddi, Ayyoub",
+            "odds": 3.74
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "El Mourabet, Samir",
+            "odds": 4.09
+          }
+        ]
+      },
+      "index": 21,
+      "marketCode": "GOALSCORER_ANYTIME",
+      "rawName": "Zawodnik z kartką (lub zmiennik)"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Lucas Digne",
+            "label": "Digne, Lucas",
+            "odds": 4.39
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Diop, Issa",
+            "odds": 19.96
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Mazraoui, Noussair",
+            "odds": 11.73
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Hakimi, Achraf",
+            "odds": 5.19
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Diaz, Brahim",
+            "odds": 3.49
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Belammari, Youssef",
+            "odds": 9.38
+          },
+          {
+            "code": "Anass Salah Eddine",
+            "label": "Salah Eddine, Anass",
+            "odds": 9.28
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "El Kaabi, Ayoub",
+            "odds": 3.74
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Rahimi, Soufiane",
+            "odds": 3.34
+          },
+          {
+            "code": "Azzedine Ounahi",
+            "label": "Ounahi, Azzedine",
+            "odds": 4.49
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Halhal, Redouane",
+            "odds": 16.97
+          },
+          {
+            "code": "Bilal El Khannouss",
+            "label": "El Khannouss, Bilal",
+            "odds": 4.19
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Talbi, Chemsdine",
+            "odds": 4.29
+          },
+          {
+            "code": "Ayoube Amaimouni",
+            "label": "Amaimouni, Ayoube",
+            "odds": 4.79
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Riad, Chadi",
+            "odds": 17.97
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "El Ouahdi, Zakaria",
+            "odds": 9.68
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Sbai, Amine",
+            "odds": 4.99
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "El Aynaoui, Neil",
+            "odds": 7.09
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Yassine, Gessime",
+            "odds": 4.39
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Amrabat, Sofyan",
+            "odds": 9.78
+          },
+          {
+            "code": "Marwane Saadane",
+            "label": "Saadane, Marwane",
+            "odds": 14.97
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Doue, Desire",
+            "odds": 2.12
+          },
+          {
+            "code": "Warren Zaire-Emery",
+            "label": "Zaire-Emery, Warren",
+            "odds": 4.49
+          },
+          {
+            "code": "N'Golo Kante",
+            "label": "Kante, N'Golo",
+            "odds": 5.49
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Rabiot, Adrien",
+            "odds": 3.84
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Hernandez, Lucas",
+            "odds": 8.98
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Dembele, Ousmane",
+            "odds": 1.96
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Thuram, Marcus",
+            "odds": 2.17
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Hernandez, Theo",
+            "odds": 4.49
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Upamecano, Dayot",
+            "odds": 9.98
+          },
+          {
+            "code": "Kylian Mbappe",
+            "label": "Mbappe, Kylian",
+            "odds": 1.57
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Mateta, Jean-Philippe",
+            "odds": 2.12
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Bouaddi, Ayyoub",
+            "odds": 10.23
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Konate, Ibrahima",
+            "odds": 10.23
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Tchouameni, Aurelien",
+            "odds": 6.29
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Lacroix, Maxence",
+            "odds": 7.49
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Olise, Michael",
+            "odds": 1.87
+          },
+          {
+            "code": "William Saliba",
+            "label": "Saliba, William",
+            "odds": 12.48
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Cherki, Rayan",
+            "odds": 2.09
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Gusto, Malo",
+            "odds": 4.69
+          },
+          {
+            "code": "Manu Kone",
+            "label": "Kone, Manu",
+            "odds": 4.99
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Akliouche, Maghnes",
+            "odds": 2.46
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Barcola, Bradley",
+            "odds": 2.31
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Kounde, Jules",
+            "odds": 6.79
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "El Mourabet, Samir",
+            "odds": 7.19
+          }
+        ]
+      },
+      "index": 22,
+      "marketCode": "GOALSCORER_ANYTIME",
+      "rawName": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 23,
+      "marketCode": "OTHER",
+      "rawName": "Ousmane Dembele i Michael Olise: każdy z powyżej 0.5 celnymi strzałami na bramkę (90 min)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 24,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 500"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_GOAL_RANGE",
+        "marketKey": "HALF_TIME_GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-2",
+            "label": "1-2",
+            "odds": 1.57
+          },
+          {
+            "code": "1-3",
+            "label": "1-3",
+            "odds": 1.39
+          },
+          {
+            "code": "2-3",
+            "label": "2-3",
+            "odds": 2.82
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 24.76
+          },
+          {
+            "code": "0",
+            "label": "bez gola",
+            "odds": 2.72
+          }
+        ]
+      },
+      "index": 25,
+      "marketCode": "HALF_TIME_GOAL_RANGE",
+      "rawName": "Przedział goli - 1. połowa"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 26,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 75"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 27,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 58"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 28,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 59"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_BTTS",
+        "marketKey": "HALF_TIME_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.81
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.12
+          }
+        ]
+      },
+      "index": 29,
+      "marketCode": "HALF_TIME_BTTS",
+      "rawName": "Obie drużyny strzelą - 1. połowa"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 30,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 65"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 31,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 68"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_FIRST_GOAL",
+        "marketKey": "HALF_TIME_FIRST_GOAL",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.85
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 2.9
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 4.52
+          }
+        ]
+      },
+      "index": 32,
+      "marketCode": "HALF_TIME_FIRST_GOAL",
+      "rawName": "Pierwszy gol 1. połowy"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.61
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 2.08
+          }
+        ]
+      },
+      "index": 33,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Rynek 63"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 3.93
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.18
+          }
+        ]
+      },
+      "index": 34,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Rynek 63"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 3.04
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 1.3
+          }
+        ]
+      },
+      "index": 35,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Rynek 64"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 36,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 70"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 37,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 71"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 38,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 60"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 39,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 61"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 1.47
+          },
+          {
+            "code": "Maroko",
+            "label": "Maroko",
+            "odds": 2.38
+          }
+        ]
+      },
+      "index": 40,
+      "marketCode": "OTHER",
+      "rawName": "Pierwszy strzelec"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja",
+            "label": "Francja",
+            "odds": 1.3
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 3.04
+          }
+        ]
+      },
+      "index": 41,
+      "marketCode": "OTHER",
+      "rawName": "Ostatni strzelec"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 2.31
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.5
+          }
+        ]
+      },
+      "index": 42,
+      "marketCode": "OTHER",
+      "rawName": "Goscie wygrają ktorąkolwiek polowe"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOAL_RANGE",
+        "marketKey": "GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-2",
+            "label": "1-2",
+            "odds": 1.94
+          },
+          {
+            "code": "1-3",
+            "label": "1-3",
+            "odds": 1.39
+          },
+          {
+            "code": "1-4",
+            "label": "1-4",
+            "odds": 1.19
+          },
+          {
+            "code": "1-5",
+            "label": "1-5",
+            "odds": 1.11
+          },
+          {
+            "code": "1-6",
+            "label": "1-6",
+            "odds": 1.08
+          },
+          {
+            "code": "2-3",
+            "label": "2-3",
+            "odds": 1.85
+          },
+          {
+            "code": "2-4",
+            "label": "2-4",
+            "odds": 1.48
+          },
+          {
+            "code": "2-5",
+            "label": "2-5",
+            "odds": 1.35
+          },
+          {
+            "code": "2-6",
+            "label": "2-6",
+            "odds": 1.3
+          },
+          {
+            "code": "3-4",
+            "label": "3-4",
+            "odds": 2.35
+          },
+          {
+            "code": "3-5",
+            "label": "3-5",
+            "odds": 2
+          },
+          {
+            "code": "3-6",
+            "label": "3-6",
+            "odds": 1.88
+          },
+          {
+            "code": "4-5",
+            "label": "4-5",
+            "odds": 3.69
+          },
+          {
+            "code": "4-6",
+            "label": "4-6",
+            "odds": 3.24
+          },
+          {
+            "code": "5-6",
+            "label": "5-6",
+            "odds": 7.38
+          },
+          {
+            "code": "7+",
+            "label": "7+",
+            "odds": 44.9
+          },
+          {
+            "code": "0",
+            "label": "bez gola",
+            "odds": 9.28
+          }
+        ]
+      },
+      "index": 43,
+      "marketCode": "GOAL_RANGE",
+      "rawName": "Rynek 506"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 7.56
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.03
+          }
+        ]
+      },
+      "index": 44,
+      "marketCode": "OTHER",
+      "rawName": "Gole w obu polowach"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.93
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.84
+          }
+        ]
+      },
+      "index": 45,
+      "marketCode": "OTHER",
+      "rawName": "Goscie wygrają obie polowy"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 2.38
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.56
+          }
+        ]
+      },
+      "index": 46,
+      "marketCode": "OTHER",
+      "rawName": "Gospodarze wygrają ktorąkolwiek polowe"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.72
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 1.93
+          }
+        ]
+      },
+      "index": 47,
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
+      "rawName": "Gole gospodarzy 0.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 4.52
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.14
+          }
+        ]
+      },
+      "index": 48,
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
+      "rawName": "Gole gospodarzy 1.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.13
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 4.91
+          }
+        ]
+      },
+      "index": 49,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Liczba goli 1. polowa 0.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 1.7
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.99
+          }
+        ]
+      },
+      "index": 50,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Liczba goli 1. polowa 1.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 3.14
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.3
+          }
+        ]
+      },
+      "index": 51,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Liczba goli 1. polowa 2.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 3.5",
+            "odds": 6.38
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 3.5",
+            "odds": 1.07
+          }
+        ]
+      },
+      "index": 52,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "Liczba goli 1. polowa 3.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 53,
+      "marketCode": "OTHER",
+      "rawName": "Liczba goli 2. polowa 0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_WITH_MORE_GOALS",
+        "marketKey": "HALF_WITH_MORE_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1st",
+            "label": "1. Połowa",
+            "odds": 2.9
+          },
+          {
+            "code": "2nd",
+            "label": "2. Połowa",
+            "odds": 2.15
+          },
+          {
+            "code": "Draw",
+            "label": "równo",
+            "odds": 3.19
+          }
+        ]
+      },
+      "index": 54,
+      "marketCode": "HALF_WITH_MORE_GOALS",
+      "rawName": "Połowa z większą liczbą goli"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 55,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 51"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 56,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 52"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_GOAL_TIME",
+        "marketKey": "FIRST_GOAL_TIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-10",
+            "label": "1-10",
+            "odds": 4.33
+          },
+          {
+            "code": "11-20",
+            "label": "11-20",
+            "odds": 4.72
+          },
+          {
+            "code": "21-30",
+            "label": "21-30",
+            "odds": 5.9
+          },
+          {
+            "code": "31-40",
+            "label": "31-40",
+            "odds": 7.38
+          },
+          {
+            "code": "41-50",
+            "label": "41-50",
+            "odds": 8.07
+          },
+          {
+            "code": "51-60",
+            "label": "51-60",
+            "odds": 12.05
+          },
+          {
+            "code": "61-70",
+            "label": "61-70",
+            "odds": 15.74
+          },
+          {
+            "code": "71-80",
+            "label": "71-80",
+            "odds": 20.66
+          },
+          {
+            "code": "81-90",
+            "label": "81-90",
+            "odds": 19.67
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 9.84
+          }
+        ]
+      },
+      "index": 57,
+      "marketCode": "FIRST_GOAL_TIME",
+      "rawName": "Czas pierwszego gola (10 min)"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_GOAL_TIME_ALT",
+        "marketKey": "FIRST_GOAL_TIME_ALT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-15",
+            "label": "1-15",
+            "odds": 2.95
+          },
+          {
+            "code": "16-30",
+            "label": "16-30",
+            "odds": 3.74
+          },
+          {
+            "code": "31-45",
+            "label": "31-45",
+            "odds": 4.62
+          },
+          {
+            "code": "46-60",
+            "label": "46-60",
+            "odds": 7.87
+          },
+          {
+            "code": "61-75",
+            "label": "61-75",
+            "odds": 11.31
+          },
+          {
+            "code": "76-90",
+            "label": "76-90",
+            "odds": 13.52
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 9.64
+          }
+        ]
+      },
+      "index": 58,
+      "marketCode": "FIRST_GOAL_TIME_ALT",
+      "rawName": "Czas pierwszego gola (15 min)"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 1.93
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.72
+          }
+        ]
+      },
+      "index": 59,
+      "marketCode": "OTHER",
+      "rawName": "Obie strzelą 1. polowa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+        "marketKey": "HOME_HALF_WITH_MOST_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1st",
+            "label": "1. Połowa",
+            "odds": 2.9
+          },
+          {
+            "code": "2nd",
+            "label": "2. Połowa",
+            "odds": 2.39
+          },
+          {
+            "code": "Draw",
+            "label": "równo",
+            "odds": 2.7
+          }
+        ]
+      },
+      "index": 60,
+      "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+      "rawName": "Gospodarz - połowa z większą liczbą goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+        "marketKey": "AWAY_HALF_WITH_MOST_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1st",
+            "label": "1. Połowa",
+            "odds": 4.22
+          },
+          {
+            "code": "2nd",
+            "label": "2. Połowa",
+            "odds": 3.24
+          },
+          {
+            "code": "Draw",
+            "label": "równo",
+            "odds": 1.7
+          }
+        ]
+      },
+      "index": 61,
+      "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+      "rawName": "Gość - połowa z większą liczbą goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.71
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.13
+          }
+        ]
+      },
+      "index": 62,
+      "marketCode": "OTHER",
+      "rawName": "Obie strzelą 2. polowa"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 63,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 9"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "Nieparzysty",
+            "odds": 1.95
+          },
+          {
+            "code": "EVEN",
+            "label": "Parzysty",
+            "odds": 1.82
+          }
+        ]
+      },
+      "index": 64,
+      "marketCode": "OTHER",
+      "rawName": "Gospodarze wygrają obie polowy"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 65,
+      "marketCode": "OTHER",
+      "rawName": "Parzyste/Nieparzyste"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.93
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.46
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 6.29
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 20.63
+          }
+        ]
+      },
+      "index": 66,
+      "marketCode": "OTHER",
+      "rawName": "Wynik 2. polowy"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:9.5",
+        "matchedBy": "id",
+        "paramValue": "9.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 9.5",
+            "odds": 1.81
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 9.5",
+            "odds": 1.83
+          }
+        ]
+      },
+      "index": 67,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Rzuty rożne 9.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 4.5",
+            "label": "ponad 4.5",
+            "odds": 1.87
+          },
+          {
+            "code": "poniżej 4.5",
+            "label": "poniżej 4.5",
+            "odds": 1.75
+          }
+        ]
+      },
+      "index": 68,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 167"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_RANGE",
+        "marketKey": "CORNERS_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-8",
+            "label": "0-8",
+            "odds": 2.33
+          },
+          {
+            "code": "9-11",
+            "label": "9-11",
+            "odds": 2.65
+          },
+          {
+            "code": "12+",
+            "label": "12+",
+            "odds": 3
+          }
+        ]
+      },
+      "index": 69,
+      "marketCode": "CORNERS_RANGE",
+      "rawName": "Przedział rzutów rożnych"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-2.5)",
+            "label": "Francja (-2.5)",
+            "odds": 1.71
+          },
+          {
+            "code": "Maroko (+2.5)",
+            "label": "Maroko (+2.5)",
+            "odds": 1.97
+          }
+        ]
+      },
+      "index": 70,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 155"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-1.5)",
+            "label": "Francja (-1.5)",
+            "odds": 1.93
+          },
+          {
+            "code": "Maroko (+1.5)",
+            "label": "Maroko (+1.5)",
+            "odds": 1.72
+          }
+        ]
+      },
+      "index": 71,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 166"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.25
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 9.04
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 4.62
+          }
+        ]
+      },
+      "index": 72,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "Rynek 152"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja",
+            "label": "Francja",
+            "odds": 1.43
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 5.5
+          },
+          {
+            "code": "Maroko",
+            "label": "Maroko",
+            "odds": 3.93
+          }
+        ]
+      },
+      "index": 73,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 163"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ODD_EVEN_GOALS",
+        "marketKey": "ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.89
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.88
+          }
+        ]
+      },
+      "index": 74,
+      "marketCode": "ODD_EVEN_GOALS",
+      "rawName": "Rynek 162"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ODD_EVEN_GOALS",
+        "marketKey": "ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.88
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.88
+          }
+        ]
+      },
+      "index": 75,
+      "marketCode": "ODD_EVEN_GOALS",
+      "rawName": "Rynek 173"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 76,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 153"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:8.5",
+        "matchedBy": "id",
+        "paramValue": "8.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 8.5",
+            "odds": 1.49
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 8.5",
+            "odds": 2.34
+          }
+        ]
+      },
+      "index": 77,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Rzuty rożne 8.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:10.5",
+        "matchedBy": "id",
+        "paramValue": "10.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 10.5",
+            "odds": 2.28
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 10.5",
+            "odds": 1.51
+          }
+        ]
+      },
+      "index": 78,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Rzuty rożne 10.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 3.5",
+            "label": "ponad 3.5",
+            "odds": 1.4
+          },
+          {
+            "code": "poniżej 3.5",
+            "label": "poniżej 3.5",
+            "odds": 2.5
+          }
+        ]
+      },
+      "index": 79,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 167"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 5.5",
+            "label": "ponad 5.5",
+            "odds": 2.65
+          },
+          {
+            "code": "poniżej 5.5",
+            "label": "poniżej 5.5",
+            "odds": 1.37
+          }
+        ]
+      },
+      "index": 80,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 167"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-3.5)",
+            "label": "Francja (-3.5)",
+            "odds": 2.11
+          },
+          {
+            "code": "Maroko (+3.5)",
+            "label": "Maroko (+3.5)",
+            "odds": 1.63
+          }
+        ]
+      },
+      "index": 81,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 155"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-1.5)",
+            "label": "Francja (-1.5)",
+            "odds": 1.44
+          },
+          {
+            "code": "Maroko (+1.5)",
+            "label": "Maroko (+1.5)",
+            "odds": 2.5
+          }
+        ]
+      },
+      "index": 82,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 155"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-2.5)",
+            "label": "Francja (-2.5)",
+            "odds": 2.8
+          },
+          {
+            "code": "Maroko (+2.5)",
+            "label": "Maroko (+2.5)",
+            "odds": 1.35
+          }
+        ]
+      },
+      "index": 83,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 166"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-0.5)",
+            "label": "Francja (-0.5)",
+            "odds": 1.45
+          },
+          {
+            "code": "Maroko (+0.5)",
+            "label": "Maroko (+0.5)",
+            "odds": 2.43
+          }
+        ]
+      },
+      "index": 84,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 166"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:11.5",
+        "matchedBy": "id",
+        "paramValue": "11.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 11.5",
+            "odds": 2.95
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 11.5",
+            "odds": 1.32
+          }
+        ]
+      },
+      "index": 85,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Rzuty rożne 11.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:7.5",
+        "matchedBy": "id",
+        "paramValue": "7.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 7.5",
+            "odds": 1.28
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 7.5",
+            "odds": 3.19
+          }
+        ]
+      },
+      "index": 86,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Rzuty rożne 7.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 87,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 158"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 6.5",
+            "label": "ponad 6.5",
+            "odds": 2
+          },
+          {
+            "code": "poniżej 6.5",
+            "label": "poniżej 6.5",
+            "odds": 1.63
+          }
+        ]
+      },
+      "index": 88,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 157"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MULTI_RESULT",
+        "marketKey": "MULTI_RESULT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1:0, 2:0 lub 3:0",
+            "label": "1:0, 2:0 lub 3:0",
+            "odds": 2.7
+          },
+          {
+            "code": "0:1, 0:2 lub 0:3",
+            "label": "0:1, 0:2 lub 0:3",
+            "odds": 11.05
+          },
+          {
+            "code": "4:0, 5:0 lub 6:0",
+            "label": "4:0, 5:0 lub 6:0",
+            "odds": 16.7
+          },
+          {
+            "code": "0:4, 0:5 lub 0:6",
+            "label": "0:4, 0:5 lub 0:6",
+            "odds": 196.48
+          },
+          {
+            "code": "2:1, 3:1 lub 4:1",
+            "label": "2:1, 3:1 lub 4:1",
+            "odds": 5.01
+          },
+          {
+            "code": "1:2, 1:3 lub 1:4",
+            "label": "1:2, 1:3 lub 1:4",
+            "odds": 17.68
+          },
+          {
+            "code": "3:2, 4:2, 4:3 lub 5:1",
+            "label": "3:2, 4:2, 4:3 lub 5:1",
+            "odds": 19.65
+          },
+          {
+            "code": "2:3, 2:4, 3:4 lub 1:5",
+            "label": "2:3, 2:4, 3:4 lub 1:5",
+            "odds": 73.68
+          },
+          {
+            "code": "Inne zwycięstwo gospodarzy",
+            "label": "inne zwycięstwo gospodarzy",
+            "odds": 68.77
+          },
+          {
+            "code": "Inne zwycięstwo gości",
+            "label": "inne zwycięstwo gości",
+            "odds": 196.48
+          },
+          {
+            "code": "X",
+            "label": "remis",
+            "odds": 3.68
+          }
+        ]
+      },
+      "index": 89,
+      "marketCode": "MULTI_RESULT",
+      "rawName": "Multiwynik"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0:0",
+            "label": "0:0",
+            "odds": 7.99
+          },
+          {
+            "code": "1:0",
+            "label": "1:0",
+            "odds": 5.13
+          },
+          {
+            "code": "2:0",
+            "label": "2:0",
+            "odds": 5.43
+          },
+          {
+            "code": "3:0",
+            "label": "3:0",
+            "odds": 8.59
+          },
+          {
+            "code": "4:0",
+            "label": "4:0",
+            "odds": 17.77
+          },
+          {
+            "code": "0:1",
+            "label": "0:1",
+            "odds": 12.09
+          },
+          {
+            "code": "1:1",
+            "label": "1:1",
+            "odds": 6.02
+          },
+          {
+            "code": "2:1",
+            "label": "2:1",
+            "odds": 7.11
+          },
+          {
+            "code": "3:1",
+            "label": "3:1",
+            "odds": 11.35
+          },
+          {
+            "code": "4:1",
+            "label": "4:1",
+            "odds": 23.69
+          },
+          {
+            "code": "0:2",
+            "label": "0:2",
+            "odds": 31.58
+          },
+          {
+            "code": "1:2",
+            "label": "1:2",
+            "odds": 16.78
+          },
+          {
+            "code": "2:2",
+            "label": "2:2",
+            "odds": 16.78
+          },
+          {
+            "code": "3:2",
+            "label": "3:2",
+            "odds": 29.61
+          },
+          {
+            "code": "4:2",
+            "label": "4:2",
+            "odds": 64.15
+          },
+          {
+            "code": "0:3",
+            "label": "0:3",
+            "odds": 123.37
+          },
+          {
+            "code": "1:3",
+            "label": "1:3",
+            "odds": 64.15
+          },
+          {
+            "code": "2:3",
+            "label": "2:3",
+            "odds": 74.02
+          },
+          {
+            "code": "3:3",
+            "label": "3:3",
+            "odds": 103.63
+          },
+          {
+            "code": "4:3",
+            "label": "4:3",
+            "odds": 197.4
+          },
+          {
+            "code": "0:4",
+            "label": "0:4",
+            "odds": 197.4
+          },
+          {
+            "code": "1:4",
+            "label": "1:4",
+            "odds": 197.4
+          },
+          {
+            "code": "2:4",
+            "label": "2:4",
+            "odds": 197.4
+          },
+          {
+            "code": "3:4",
+            "label": "3:4",
+            "odds": 197.4
+          },
+          {
+            "code": "4:4",
+            "label": "4:4",
+            "odds": 197.4
+          },
+          {
+            "code": "inny",
+            "label": "inny",
+            "odds": 15.79
+          }
+        ]
+      },
+      "index": 90,
+      "marketCode": "OTHER",
+      "rawName": "Wynik + liczba goli 0"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 2.8
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 3.44
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 2.07
+          }
+        ]
+      },
+      "index": 91,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "Wynik meczu"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja",
+            "label": "Francja",
+            "odds": 3.63
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 1.94
+          },
+          {
+            "code": "Maroko",
+            "label": "Maroko",
+            "odds": 2.95
+          }
+        ]
+      },
+      "index": 92,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 139"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 3.5",
+            "label": "ponad 3.5",
+            "odds": 2.3
+          },
+          {
+            "code": "poniżej 3.5",
+            "label": "poniżej 3.5",
+            "odds": 1.5
+          }
+        ]
+      },
+      "index": 93,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 129"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 2.9
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.33
+          }
+        ]
+      },
+      "index": 94,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 142"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 95,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 137"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 96,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 150"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 97,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 138"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 98,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 136"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 99,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 151"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 100,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 149"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 101,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 146"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOAL_RANGE",
+        "marketKey": "GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1",
+            "odds": 1.81
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.14
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 5.5
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 9.14
+          }
+        ]
+      },
+      "index": 102,
+      "marketCode": "GOAL_RANGE",
+      "rawName": "Rynek 134"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_HOME_EXACT_CARDS",
+        "marketKey": "HALF_TIME_HOME_EXACT_CARDS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.58
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.65
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 8.26
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 30.47
+          }
+        ]
+      },
+      "index": 103,
+      "marketCode": "HALF_TIME_HOME_EXACT_CARDS",
+      "rawName": "Dokładna liczba kartek - gospodarze - 1. połowa"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja",
+            "label": "Francja",
+            "odds": 2.02
+          },
+          {
+            "code": "żaden",
+            "label": "żaden",
+            "odds": 15.72
+          },
+          {
+            "code": "Maroko",
+            "label": "Maroko",
+            "odds": 1.75
+          }
+        ]
+      },
+      "index": 104,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 127"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 105,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 140"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 2.5",
+            "label": "ponad 2.5",
+            "odds": 1.54
+          },
+          {
+            "code": "poniżej 2.5",
+            "label": "poniżej 2.5",
+            "odds": 2.22
+          }
+        ]
+      },
+      "index": 106,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 129"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 4.5",
+            "label": "ponad 4.5",
+            "odds": 3.78
+          },
+          {
+            "code": "poniżej 4.5",
+            "label": "poniżej 4.5",
+            "odds": 1.2
+          }
+        ]
+      },
+      "index": 107,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 129"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.44
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 2.45
+          }
+        ]
+      },
+      "index": 108,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 142"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 2.5",
+            "label": "ponad 2.5",
+            "odds": 6.38
+          },
+          {
+            "code": "poniżej 2.5",
+            "label": "poniżej 2.5",
+            "odds": 1.06
+          }
+        ]
+      },
+      "index": 109,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 142"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOAL_RANGE",
+        "marketKey": "GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1",
+            "odds": 1.54
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.39
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 6.98
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 13.51
+          }
+        ]
+      },
+      "index": 110,
+      "marketCode": "GOAL_RANGE",
+      "rawName": "Rynek 133"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 5.5",
+            "label": "ponad 5.5",
+            "odds": 1.43
+          },
+          {
+            "code": "poniżej 5.5",
+            "label": "poniżej 5.5",
+            "odds": 2.43
+          }
+        ]
+      },
+      "index": 111,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 141"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 1.17
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 4.12
+          }
+        ]
+      },
+      "index": 112,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 129"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.03
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 9.33
+          }
+        ]
+      },
+      "index": 113,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 129"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_SHOTS",
+        "marketKey": "TOTAL_SHOTS:25.5",
+        "matchedBy": "id",
+        "paramValue": "25.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 25.5",
+            "odds": 1.52
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 25.5",
+            "odds": 2.2
+          }
+        ]
+      },
+      "index": 114,
+      "marketCode": "TOTAL_SHOTS",
+      "rawName": "Suma strzałów 25.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 115,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 80"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_BTTS",
+        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_YES",
+            "label": "Francja/remis & tak",
+            "odds": 4.36
+          },
+          {
+            "code": "1X_NO",
+            "label": "Francja/remis & nie",
+            "odds": 1.39
+          },
+          {
+            "code": "12_YES",
+            "label": "Francja/Maroko & tak",
+            "odds": 7.83
+          },
+          {
+            "code": "12_NO",
+            "label": "Francja/Maroko & nie",
+            "odds": 1.62
+          },
+          {
+            "code": "X2_YES",
+            "label": "remis/Maroko & tak",
+            "odds": 5.75
+          },
+          {
+            "code": "X2_NO",
+            "label": "remis/Maroko & nie",
+            "odds": 2.22
+          }
+        ]
+      },
+      "index": 116,
+      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "rawName": "Rynek 503"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_GOAL_RANGE",
+        "marketKey": "SECOND_HALF_GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-2",
+            "label": "1-2",
+            "odds": 1.54
+          },
+          {
+            "code": "1-3",
+            "label": "1-3",
+            "odds": 1.32
+          },
+          {
+            "code": "2-3",
+            "label": "2-3",
+            "odds": 2.37
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 14.37
+          },
+          {
+            "code": "0",
+            "label": "bez gola",
+            "odds": 3.37
+          }
+        ]
+      },
+      "index": 117,
+      "marketCode": "SECOND_HALF_GOAL_RANGE",
+      "rawName": "Przedział goli - 2. połowa"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja",
+            "label": "Francja",
+            "odds": 1.9
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 2.55
+          },
+          {
+            "code": "Maroko",
+            "label": "Maroko",
+            "odds": 5.5
+          }
+        ]
+      },
+      "index": 118,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 76"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 3.48
+          }
+        ]
+      },
+      "index": 119,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 82"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 2.19
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.58
+          }
+        ]
+      },
+      "index": 120,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 82"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 2.5",
+            "label": "ponad 2.5",
+            "odds": 4.71
+          },
+          {
+            "code": "poniżej 2.5",
+            "label": "poniżej 2.5",
+            "odds": 1.14
+          }
+        ]
+      },
+      "index": 121,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 82"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (+0.5)",
+            "label": "Francja (+0.5)",
+            "odds": 1.13
+          },
+          {
+            "code": "Maroko (-0.5)",
+            "label": "Maroko (-0.5)",
+            "odds": 4.91
+          }
+        ]
+      },
+      "index": 122,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 81"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-1.5)",
+            "label": "Francja (-1.5)",
+            "odds": 4.22
+          },
+          {
+            "code": "Maroko (+1.5)",
+            "label": "Maroko (+1.5)",
+            "odds": 1.18
+          }
+        ]
+      },
+      "index": 123,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 81"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Francja (-0.5)",
+            "label": "Francja (-0.5)",
+            "odds": 1.89
+          },
+          {
+            "code": "Maroko (+0.5)",
+            "label": "Maroko (+0.5)",
+            "odds": 1.79
+          }
+        ]
+      },
+      "index": 124,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 81"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 125,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 87"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ODD_EVEN_GOALS",
+        "marketKey": "ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 2.01
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.78
+          }
+        ]
+      },
+      "index": 126,
+      "marketCode": "ODD_EVEN_GOALS",
+      "rawName": "Parzysta/nieparzysta liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DRAW_NO_BET",
+        "marketKey": "DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.24
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 3.29
+          }
+        ]
+      },
+      "index": 127,
+      "marketCode": "DRAW_NO_BET",
+      "rawName": "Zakład bez remisu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_EXACT_GOALS",
+        "marketKey": "SECOND_HALF_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 3.54
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.6
+          },
+          {
+            "code": "2+",
+            "label": "2+",
+            "odds": 2.17
+          }
+        ]
+      },
+      "index": 128,
+      "marketCode": "SECOND_HALF_EXACT_GOALS",
+      "rawName": "Dokładna liczba goli - 2. połowa"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.49
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 2.34
+          }
+        ]
+      },
+      "index": 129,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 83"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 3.24
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.27
+          }
+        ]
+      },
+      "index": 130,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 83"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 2.55
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 1.41
+          }
+        ]
+      },
+      "index": 131,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 84"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 132,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 88"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 133,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 89"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_CORRECT_SCORE",
+        "marketKey": "SECOND_HALF_CORRECT_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-0",
+            "label": "0:0",
+            "odds": 3.3
+          },
+          {
+            "code": "0-1",
+            "label": "0:1",
+            "odds": 7.28
+          },
+          {
+            "code": "0-2",
+            "label": "0:2",
+            "odds": 31.5
+          },
+          {
+            "code": "1-0",
+            "label": "1:0",
+            "odds": 3.4
+          },
+          {
+            "code": "1-1",
+            "label": "1:1",
+            "odds": 7.78
+          },
+          {
+            "code": "1-2",
+            "label": "1:2",
+            "odds": 35.43
+          },
+          {
+            "code": "2-0",
+            "label": "2:0",
+            "odds": 6.5
+          },
+          {
+            "code": "2-1",
+            "label": "2:1",
+            "odds": 15.75
+          },
+          {
+            "code": "2-2",
+            "label": "2:2",
+            "odds": 73.82
+          },
+          {
+            "code": "OTHER",
+            "label": "inny",
+            "odds": 8.66
+          }
+        ]
+      },
+      "index": 134,
+      "marketCode": "SECOND_HALF_CORRECT_SCORE",
+      "rawName": "Dokładny wynik 2. połowy"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_FIRST_GOAL",
+        "marketKey": "SECOND_HALF_FIRST_GOAL",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Francja",
+            "odds": 1.74
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 3.58
+          },
+          {
+            "code": "AWAY",
+            "label": "Maroko",
+            "odds": 3.88
+          }
+        ]
+      },
+      "index": 135,
+      "marketCode": "SECOND_HALF_FIRST_GOAL",
+      "rawName": "Pierwszy gol 2. połowy"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_BTTS",
+        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_YES",
+            "label": "Francja/remis & tak",
+            "odds": 2.22
+          },
+          {
+            "code": "1X_NO",
+            "label": "Francja/remis & nie",
+            "odds": 1.88
+          },
+          {
+            "code": "12_YES",
+            "label": "Francja/Maroko & tak",
+            "odds": 2.88
+          },
+          {
+            "code": "12_NO",
+            "label": "Francja/Maroko & nie",
+            "odds": 1.89
+          },
+          {
+            "code": "X2_YES",
+            "label": "remis/Maroko & tak",
+            "odds": 3.77
+          },
+          {
+            "code": "X2_NO",
+            "label": "remis/Maroko & nie",
+            "odds": 5.06
+          }
+        ]
+      },
+      "index": 136,
+      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "rawName": "Rynek 504"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Francja & poniżej 1.5",
+            "odds": 3.29
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Francja & ponad 1.5",
+            "odds": 4.23
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 1.5",
+            "odds": 2.8
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 1.5",
+            "odds": 8.95
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Maroko & poniżej 1.5",
+            "odds": 8.06
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Maroko & ponad 1.5",
+            "odds": 22.61
+          }
+        ]
+      },
+      "index": 137,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "Rynek 73"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_BTTS",
+        "marketKey": "RESULT_AND_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_YES",
+            "label": "Francja & tak",
+            "odds": 15.73
+          },
+          {
+            "code": "HOME_NO",
+            "label": "Francja & nie",
+            "odds": 2.13
+          },
+          {
+            "code": "DRAW_YES",
+            "label": "remis & tak",
+            "odds": 8.75
+          },
+          {
+            "code": "DRAW_NO",
+            "label": "remis & nie",
+            "odds": 2.75
+          },
+          {
+            "code": "AWAY_YES",
+            "label": "Maroko & tak",
+            "odds": 49.15
+          },
+          {
+            "code": "AWAY_NO",
+            "label": "Maroko & nie",
+            "odds": 6.68
+          }
+        ]
+      },
+      "index": 138,
+      "marketCode": "RESULT_AND_BTTS",
+      "rawName": "Rynek 72"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_BTTS",
+        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_YES",
+            "label": "Francja/remis & tak",
+            "odds": 5.06
+          },
+          {
+            "code": "1X_NO",
+            "label": "Francja/remis & nie",
+            "odds": 1.25
+          },
+          {
+            "code": "12_YES",
+            "label": "Francja/Maroko & tak",
+            "odds": 6.05
+          },
+          {
+            "code": "12_NO",
+            "label": "Francja/Maroko & nie",
+            "odds": 1.35
+          },
+          {
+            "code": "X2_YES",
+            "label": "remis/Maroko & tak",
+            "odds": 9.72
+          },
+          {
+            "code": "X2_NO",
+            "label": "remis/Maroko & nie",
+            "odds": 2.43
+          }
+        ]
+      },
+      "index": 139,
+      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "rawName": "Podwójna szansa i obie drużyny strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER_YES",
+            "label": "ponad 2.5 & tak",
+            "odds": 2.51
+          },
+          {
+            "code": "UNDER_YES",
+            "label": "poniżej 2.5 & tak",
+            "odds": 7.18
+          },
+          {
+            "code": "OVER_NO",
+            "label": "ponad 2.5 & nie",
+            "odds": 6
+          },
+          {
+            "code": "UNDER_NO",
+            "label": "poniżej 2.5 & nie",
+            "odds": 2.1
+          }
+        ]
+      },
+      "index": 140,
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
+      "rawName": "Liczba goli i obie drużyny strzelą 2.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 141,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 499"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Francja & poniżej 1.5",
+            "odds": 6.29
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Francja & ponad 1.5",
+            "odds": 1.85
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 1.5",
+            "odds": 10.07
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 1.5",
+            "odds": 5.31
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Maroko & poniżej 1.5",
+            "odds": 15.72
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Maroko & ponad 1.5",
+            "odds": 9.43
+          }
+        ]
+      },
+      "index": 142,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "Wynik meczu i liczba goli 1.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Francja & poniżej 2.5",
+            "odds": 3.39
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Francja & ponad 2.5",
+            "odds": 2.43
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 2.5",
+            "odds": 4.42
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 2.5",
+            "odds": 17.69
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Maroko & poniżej 2.5",
+            "odds": 11.3
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Maroko & ponad 2.5",
+            "odds": 12.28
+          }
+        ]
+      },
+      "index": 143,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "Wynik meczu i liczba goli 2.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Francja & poniżej 3.5",
+            "odds": 2.09
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Francja & ponad 3.5",
+            "odds": 4.42
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 3.5",
+            "odds": 4.32
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 3.5",
+            "odds": 17.69
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Maroko & poniżej 3.5",
+            "odds": 7.17
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Maroko & ponad 3.5",
+            "odds": 33.41
+          }
+        ]
+      },
+      "index": 144,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "Wynik meczu i liczba goli 3.5"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_BTTS",
+        "marketKey": "RESULT_AND_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_YES",
+            "label": "Francja & tak",
+            "odds": 3.69
+          },
+          {
+            "code": "HOME_NO",
+            "label": "Francja & nie",
+            "odds": 2.29
+          },
+          {
+            "code": "DRAW_YES",
+            "label": "remis & tak",
+            "odds": 5.41
+          },
+          {
+            "code": "DRAW_NO",
+            "label": "remis & nie",
+            "odds": 10.07
+          },
+          {
+            "code": "AWAY_YES",
+            "label": "Maroko & tak",
+            "odds": 13.51
+          },
+          {
+            "code": "AWAY_NO",
+            "label": "Maroko & nie",
+            "odds": 10.32
+          }
+        ]
+      },
+      "index": 145,
+      "marketCode": "RESULT_AND_BTTS",
+      "rawName": "Wynik meczu i obie drużyny strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "BTTS_BY_HALF",
+        "marketKey": "BTTS_BY_HALF",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "None",
+            "label": "nie/nie",
+            "odds": 1.38
+          },
+          {
+            "code": "1st",
+            "label": "tak/nie",
+            "odds": 6.29
+          },
+          {
+            "code": "Both",
+            "label": "tak/tak",
+            "odds": 23.58
+          },
+          {
+            "code": "2nd",
+            "label": "nie/tak",
+            "odds": 4.62
+          }
+        ]
+      },
+      "index": 146,
+      "marketCode": "BTTS_BY_HALF",
+      "rawName": "BTTS w połowach"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Francja & poniżej 4.5",
+            "odds": 1.73
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Francja & ponad 4.5",
+            "odds": 8.16
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 4.5",
+            "odds": 3.59
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 4.5",
+            "odds": 117.93
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Maroko & poniżej 4.5",
+            "odds": 6.49
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Maroko & ponad 4.5",
+            "odds": 54.05
+          }
+        ]
+      },
+      "index": 147,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "Wynik meczu i liczba goli 4.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 148,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 53"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 149,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 54"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 150,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 207"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 151,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 43"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 152,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 45"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 153,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 44"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 154,
+      "marketCode": "OTHER",
+      "rawName": "Rynek 46"
+    }
+  ],
+  "matchIdSafe": "world-cup-2026_france_morocco"
+}

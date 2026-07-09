@@ -9,6 +9,13 @@
  */
 
 import { isPlaceholderName } from "./discovery-analysis.js";
+import {
+  detectOddsIntegrity,
+  type IntegrityParamInput,
+  type OddsIntegrityFlag,
+} from "./odds-integrity.js";
+
+export type { OddsIntegrityFlag } from "./odds-integrity.js";
 
 // ---------------------------------------------------------------------------
 // Input shape (mirrors the HTTP response; kept local so the audit validates
@@ -26,6 +33,8 @@ export interface ApiBookmakerEntry {
   bookmakerName: string;
   rawMarketName?: string;
   selections: ApiSelection[];
+  /** ISO timestamp of the scrape this entry comes from; absent → treated as fresh. */
+  scrapedAt?: string;
 }
 
 export interface ApiParameter {
@@ -76,6 +85,22 @@ export interface CatalogSnapshot {
 
 export type CatalogLookup = (code: string) => CatalogSnapshot | undefined;
 
+/** Optional knobs for the analysis (spec §3.1, §3.4). */
+export interface MatchAuditOpts {
+  /**
+   * Coverage baseline gate: returns true when the bookmaker is known to have
+   * EVER offered that selection for that market type. Absent → all selection
+   * gaps are flagged (today's behaviour).
+   */
+  coverage?: (bookmaker: string, marketType: string, selectionCode: string) => boolean;
+  /**
+   * Optional ISO reference time. When provided it joins each pool's
+   * newest-scrape computation, so quotes >60 min older than `now` are stale
+   * even when the whole pool is old (scraper-health signal).
+   */
+  now?: string;
+}
+
 // ---------------------------------------------------------------------------
 // Flags
 // ---------------------------------------------------------------------------
@@ -85,15 +110,20 @@ export interface MatchMarketFlags {
   orphan_selection_entries: { bookmaker: string; param: string; codes: string[] }[];
   mixed_vocabulary: { canonical: string[]; rawish: string[] } | null;
   selection_gaps: { bookmaker: string; param: string; missing: string[] }[];
-  odds_outliers: {
+  odds_disagreements: {
     bookmaker: string;
     param: string;
     selectionType: string;
     odds: number;
     median: number;
     deviationPct: number;
+    /** Deviation in implied-probability space, percent (spec §3.2). */
+    impliedDevPct: number;
   }[];
-  impossible_odds: { bookmaker: string; param: string; selectionType: string; odds: number }[];
+  /** Zero-tolerance detector hits (spec §3.3); replaces the old impossible_odds. */
+  odds_integrity: OddsIntegrityFlag[];
+  /** Informational (severity weight 0); at most one entry per bookmaker per market. */
+  stale_bookmakers: { bookmaker: string; ageMinutes: number }[];
   misroute_hints: { bookmaker: string; param: string; rawMarketName: string; hints: string[] }[];
   placeholder_names: { bookmaker: string; rawMarketName: string }[];
   param_anomalies: string[]; // "base_visible" | "non_numeric_param:<value>"
@@ -118,6 +148,8 @@ export interface MatchAuditSummary {
   totalFlagged: number;
   flagTotals: Record<string, number>;
   culpritMatrix: Record<string, Record<string, number>>; // bookmaker -> issueKind -> count
+  /** Total odds_integrity flag count across all markets (spec §3.3). */
+  integrityViolations: number;
 }
 
 export interface MatchAuditResult {
@@ -153,11 +185,31 @@ const TYPE_HALF_RE = /HALF|_HT\b|^HT_/;
 const TYPE_BTTS_RE = /BTTS|BOTH_TEAMS|BOTH_SCORE/;
 const TYPE_COMBO_RE = /_AND_|COMBO|MULTI|1X2_/;
 
+/** Quotes older than the pool's newest scrape by more than this are stale (§3.1). */
+const STALE_AFTER_MS = 60 * 60 * 1000;
+
+/** Implied-probability disagreement thresholds (§3.2). */
+const DISAGREEMENT_MIN_POOL = 4;
+const DISAGREEMENT_DEV_FAVOURITE = 0.35; // p_med >= 0.2 (odds <= 5)
+const DISAGREEMENT_DEV_LONGSHOT = 0.6; // p_med < 0.2 — longshots disagree legitimately
+
 function median(values: number[]): number {
   const s = [...values].sort((a, b) => a - b);
   const n = s.length;
   if (n === 0) return 0;
   return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2;
+}
+
+function round2(v: number): number {
+  return Math.round(v * 100) / 100;
+}
+
+interface FreshnessQuote {
+  bookmaker: string;
+  selectionType: string;
+  odds: number;
+  canonical: boolean;
+  scrapedAtMs: number; // NaN when the entry carries no scrapedAt
 }
 
 function isVocabExempt(market: ApiMarket, catalog: CatalogSnapshot | undefined): boolean {
@@ -169,22 +221,32 @@ function isVocabExempt(market: ApiMarket, catalog: CatalogSnapshot | undefined):
 // Per-market analysis
 // ---------------------------------------------------------------------------
 
-export function analyzeApiMarket(market: ApiMarket, lookup: CatalogLookup): MatchMarketFlags {
+export function analyzeApiMarket(
+  market: ApiMarket,
+  lookup: CatalogLookup,
+  opts?: MatchAuditOpts,
+): MatchMarketFlags {
   const catalog = lookup(market.type);
   const vocabExempt = isVocabExempt(market, catalog);
+  const nowMs = opts?.now ? Date.parse(opts.now) : NaN;
 
   const flags: MatchMarketFlags = {
     unknown_selection_entries: [],
     orphan_selection_entries: [],
     mixed_vocabulary: null,
     selection_gaps: [],
-    odds_outliers: [],
-    impossible_odds: [],
+    odds_disagreements: [],
+    odds_integrity: [],
+    stale_bookmakers: [],
     misroute_hints: [],
     placeholder_names: [],
     param_anomalies: [],
     view_type_mismatch: null,
   };
+
+  // Market-level stale tracking: at most one flag per bookmaker (max age wins).
+  const staleByBookmaker = new Map<string, number>();
+  const integrityParams: IntegrityParamInput[] = [];
 
   const seenPlaceholders = new Set<string>();
   const canonicalUsed = new Set<string>();
@@ -200,13 +262,14 @@ export function analyzeApiMarket(market: ApiMarket, lookup: CatalogLookup): Matc
   const catalogSelections = catalog && catalog.selections.length > 0 ? new Set(catalog.selections) : null;
 
   for (const param of market.parameters) {
-    // --- per (param, selectionType) odds pools for outlier detection
-    const oddsPools = new Map<string, { bookmaker: string; odds: number }[]>();
+    // --- every quote in this param, for freshness windowing + odds analysis
+    const rawQuotes: FreshnessQuote[] = [];
     // --- canonical codes quoted per bookmaker, for gap detection
     const perBmCanonical = new Map<string, Set<string>>();
 
     for (const entry of param.bookmakers) {
       const raw = entry.rawMarketName ?? "";
+      const scrapedAtMs = entry.scrapedAt ? Date.parse(entry.scrapedAt) : NaN;
 
       // UNKNOWN selections
       const unknownCount = entry.selections.filter((s) => s.type === "UNKNOWN").length;
@@ -250,18 +313,20 @@ export function analyzeApiMarket(market: ApiMarket, lookup: CatalogLookup): Matc
       const bmCanonical = perBmCanonical.get(entry.bookmaker)!;
 
       for (const sel of entry.selections) {
-        if (sel.odds > 0 && sel.odds <= 1.0) {
-          flags.impossible_odds.push({
-            bookmaker: entry.bookmaker,
-            param: param.value,
-            selectionType: sel.type,
-            odds: sel.odds,
-          });
-        }
+        const isCatalogCode =
+          sel.type !== "UNKNOWN" &&
+          (catalogSelections ? catalogSelections.has(sel.type) : CANONICAL_CODE_RE.test(sel.type));
+
+        rawQuotes.push({
+          bookmaker: entry.bookmaker,
+          selectionType: sel.type,
+          odds: sel.odds,
+          canonical: isCatalogCode,
+          scrapedAtMs,
+        });
+
         if (sel.type === "UNKNOWN") continue;
         renderedCodes.add(sel.type);
-
-        const isCatalogCode = catalogSelections ? catalogSelections.has(sel.type) : CANONICAL_CODE_RE.test(sel.type);
 
         if (!vocabExempt) {
           if (isCatalogCode) canonicalUsed.add(sel.type);
@@ -270,14 +335,7 @@ export function analyzeApiMarket(market: ApiMarket, lookup: CatalogLookup): Matc
           if (catalogSelections && !catalogSelections.has(sel.type)) orphanCodes.push(sel.type);
         }
 
-        if (isCatalogCode) {
-          bmCanonical.add(sel.type);
-          if (sel.odds > 1.0) {
-            const poolKey = sel.type;
-            if (!oddsPools.has(poolKey)) oddsPools.set(poolKey, []);
-            oddsPools.get(poolKey)!.push({ bookmaker: entry.bookmaker, odds: sel.odds });
-          }
-        }
+        if (isCatalogCode) bmCanonical.add(sel.type);
       }
 
       if (orphanCodes.length > 0) {
@@ -299,32 +357,99 @@ export function analyzeApiMarket(market: ApiMarket, lookup: CatalogLookup): Matc
       for (const [code, quotes] of countCanonicalQuotes(perBmCanonical)) {
         if (own.has(code)) continue;
         const peers = quotes - 0; // quotes counts bookmakers having the code; own doesn't have it
-        if (peers >= 2) missing.push(code);
+        if (peers < 2) continue;
+        // Coverage gate (§3.4): only flag codes the bookmaker has EVER offered.
+        if (opts?.coverage && !opts.coverage(bookmaker, market.type, code)) continue;
+        missing.push(code);
       }
       if (missing.length > 0) {
         flags.selection_gaps.push({ bookmaker, param: param.value, missing: missing.sort() });
       }
     }
 
-    // Odds outliers per (param, selectionType)
-    for (const [selectionType, quotes] of oddsPools) {
-      if (quotes.length < 4) continue;
-      const med = median(quotes.map((q) => q.odds));
-      if (med <= 0) continue;
-      for (const q of quotes) {
-        const dev = Math.abs(q.odds - med) / med;
-        if (dev > 0.4) {
-          flags.odds_outliers.push({
-            bookmaker: q.bookmaker,
-            param: param.value,
-            selectionType,
-            odds: q.odds,
-            median: Math.round(med * 100) / 100,
-            deviationPct: Math.round(dev * 100),
-          });
+    // --- Freshness windowing per (param, selectionType) pool (§3.1)
+    const bySelection = new Map<string, FreshnessQuote[]>();
+    for (const q of rawQuotes) {
+      if (!bySelection.has(q.selectionType)) bySelection.set(q.selectionType, []);
+      bySelection.get(q.selectionType)!.push(q);
+    }
+    const freshQuotes: FreshnessQuote[] = [];
+    for (const pool of bySelection.values()) {
+      let newest = Number.isNaN(nowMs) ? -Infinity : nowMs;
+      for (const q of pool) {
+        if (!Number.isNaN(q.scrapedAtMs) && q.scrapedAtMs > newest) newest = q.scrapedAtMs;
+      }
+      for (const q of pool) {
+        const stale =
+          !Number.isNaN(q.scrapedAtMs) &&
+          Number.isFinite(newest) &&
+          newest - q.scrapedAtMs > STALE_AFTER_MS;
+        if (stale) {
+          const ageMinutes = Math.round((newest - q.scrapedAtMs) / 60000);
+          staleByBookmaker.set(
+            q.bookmaker,
+            Math.max(staleByBookmaker.get(q.bookmaker) ?? 0, ageMinutes),
+          );
+        } else {
+          freshQuotes.push(q);
         }
       }
     }
+
+    // --- Odds disagreements per (param, selectionType) in implied-probability space (§3.2)
+    const oddsPools = new Map<string, { bookmaker: string; odds: number }[]>();
+    for (const q of freshQuotes) {
+      if (!q.canonical || q.odds <= 1.0) continue;
+      if (!oddsPools.has(q.selectionType)) oddsPools.set(q.selectionType, []);
+      oddsPools.get(q.selectionType)!.push({ bookmaker: q.bookmaker, odds: q.odds });
+    }
+    for (const [selectionType, quotes] of oddsPools) {
+      if (quotes.length < DISAGREEMENT_MIN_POOL) continue;
+      const oddsMed = median(quotes.map((q) => q.odds));
+      const pMed = median(quotes.map((q) => 1 / q.odds));
+      if (oddsMed <= 0 || pMed <= 0) continue;
+      const threshold = pMed >= 0.2 ? DISAGREEMENT_DEV_FAVOURITE : DISAGREEMENT_DEV_LONGSHOT;
+      for (const q of quotes) {
+        const impliedDev = Math.abs(1 / q.odds - pMed) / pMed;
+        if (impliedDev <= threshold) continue;
+        flags.odds_disagreements.push({
+          bookmaker: q.bookmaker,
+          param: param.value,
+          selectionType,
+          odds: q.odds,
+          median: round2(oddsMed),
+          deviationPct: Math.round((Math.abs(q.odds - oddsMed) / oddsMed) * 100),
+          impliedDevPct: Math.round(impliedDev * 100),
+        });
+      }
+    }
+
+    // --- Fresh quotes feed the odds-integrity detectors (§3.3)
+    const perBmFresh = new Map<string, { selectionType: string; odds: number; canonical: boolean }[]>();
+    for (const q of freshQuotes) {
+      if (!perBmFresh.has(q.bookmaker)) perBmFresh.set(q.bookmaker, []);
+      perBmFresh.get(q.bookmaker)!.push({
+        selectionType: q.selectionType,
+        odds: q.odds,
+        canonical: q.canonical,
+      });
+    }
+    integrityParams.push({
+      param: param.value,
+      bookmakers: [...perBmFresh].map(([bookmaker, quotes]) => ({ bookmaker, quotes })),
+    });
+  }
+
+  // Odds-integrity detectors (zero-tolerance class, §3.3)
+  flags.odds_integrity = detectOddsIntegrity({
+    catalogSelections: catalog && catalog.selections.length > 0 ? [...catalog.selections] : null,
+    vocabExempt,
+    params: integrityParams,
+  });
+
+  // Stale bookmakers: informational, one entry per bookmaker per market (§3.1)
+  for (const [bookmaker, ageMinutes] of staleByBookmaker) {
+    flags.stale_bookmakers.push({ bookmaker, ageMinutes });
   }
 
   // Mixed vocabulary (market-level)
@@ -379,40 +504,44 @@ function countCanonicalQuotes(perBm: Map<string, Set<string>>): Map<string, numb
 // ---------------------------------------------------------------------------
 
 const SEVERITY_WEIGHTS: Record<string, number> = {
+  odds_integrity: 6,
   misroute_hint: 5,
   unknown_selection: 3,
-  odds_outlier: 3,
-  impossible_odds: 4,
+  odds_disagreement: 2,
   orphan_selection: 2,
   mixed_vocabulary: 2,
   view_type_mismatch: 2,
   selection_gap: 1,
   placeholder_name: 1,
   param_anomaly: 1,
+  stale_bookmaker: 0, // informational scraper-health signal only
 };
 
 export function severityScore(flags: MatchMarketFlags): number {
   let score = 0;
+  score += flags.odds_integrity.length * SEVERITY_WEIGHTS.odds_integrity;
   score += flags.misroute_hints.length * SEVERITY_WEIGHTS.misroute_hint;
   score += flags.unknown_selection_entries.length * SEVERITY_WEIGHTS.unknown_selection;
-  score += flags.odds_outliers.length * SEVERITY_WEIGHTS.odds_outlier;
-  score += flags.impossible_odds.length * SEVERITY_WEIGHTS.impossible_odds;
+  score += flags.odds_disagreements.length * SEVERITY_WEIGHTS.odds_disagreement;
   score += flags.orphan_selection_entries.length * SEVERITY_WEIGHTS.orphan_selection;
   score += (flags.mixed_vocabulary ? 1 : 0) * SEVERITY_WEIGHTS.mixed_vocabulary;
   score += (flags.view_type_mismatch ? 1 : 0) * SEVERITY_WEIGHTS.view_type_mismatch;
   score += flags.selection_gaps.length * SEVERITY_WEIGHTS.selection_gap;
   score += flags.placeholder_names.length * SEVERITY_WEIGHTS.placeholder_name;
   score += flags.param_anomalies.length * SEVERITY_WEIGHTS.param_anomaly;
+  score += flags.stale_bookmakers.length * SEVERITY_WEIGHTS.stale_bookmaker;
   return score;
 }
 
 export function analyzeMatchResponse(
   data: NormalizedMarketsData,
   lookup: CatalogLookup,
+  opts?: MatchAuditOpts,
 ): MatchAuditResult {
   const markets: MarketAuditEntry[] = [];
   const flagTotals: Record<string, number> = {};
   const culpritMatrix: Record<string, Record<string, number>> = {};
+  let integrityViolations = 0;
 
   const bump = (kind: string, bookmaker: string | null, by = 1) => {
     flagTotals[kind] = (flagTotals[kind] ?? 0) + by;
@@ -424,7 +553,7 @@ export function analyzeMatchResponse(
 
   for (const category of data.categories) {
     for (const market of category.markets) {
-      const flags = analyzeApiMarket(market, lookup);
+      const flags = analyzeApiMarket(market, lookup, opts);
       const bookmakers = new Set<string>();
       for (const p of market.parameters) for (const b of p.bookmakers) bookmakers.add(b.bookmaker);
 
@@ -443,8 +572,10 @@ export function analyzeMatchResponse(
 
       for (const f of flags.misroute_hints) bump("misroute_hint", f.bookmaker);
       for (const f of flags.unknown_selection_entries) bump("unknown_selection", f.bookmaker);
-      for (const f of flags.odds_outliers) bump("odds_outlier", f.bookmaker);
-      for (const f of flags.impossible_odds) bump("impossible_odds", f.bookmaker);
+      for (const f of flags.odds_disagreements) bump("odds_disagreement", f.bookmaker);
+      for (const f of flags.odds_integrity) bump("odds_integrity", f.bookmaker);
+      for (const f of flags.stale_bookmakers) bump("stale_bookmaker", f.bookmaker);
+      integrityViolations += flags.odds_integrity.length;
       for (const f of flags.orphan_selection_entries) bump("orphan_selection", f.bookmaker);
       for (const f of flags.selection_gaps) bump("selection_gap", f.bookmaker);
       for (const f of flags.placeholder_names) bump("placeholder_name", f.bookmaker);
@@ -463,6 +594,7 @@ export function analyzeMatchResponse(
       totalFlagged: markets.filter((m) => m.severity > 0).length,
       flagTotals,
       culpritMatrix,
+      integrityViolations,
     },
   };
 }

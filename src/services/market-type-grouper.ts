@@ -119,6 +119,77 @@ function splitBundledPlayerSelections(
   }));
 }
 
+// ============================================================================
+// Odds quarantine (SPEC.md §5 — product safety net)
+// ============================================================================
+
+/** Minimum number of positive quotes in a (param, selectionType) pool before quarantine checks run. */
+const QUARANTINE_MIN_POOL_SIZE = 4;
+/** Odds at or above this value are treated as placeholder artifacts (e.g. betcris 1501). */
+const QUARANTINE_PLACEHOLDER_ODDS = 1000;
+/** Relative deviation from the pool median (> 400%) required for the decimal-shift check. */
+const QUARANTINE_DEVIATION_RATIO = 4;
+/** The /10 or /100 corrected value must land within ±15% of the pool median. */
+const QUARANTINE_SHIFT_TOLERANCE = 0.15;
+
+function medianOf(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+}
+
+function withinShiftTolerance(value: number, target: number): boolean {
+  return target > 0 && Math.abs(value - target) <= QUARANTINE_SHIFT_TOLERANCE * target;
+}
+
+/**
+ * Product safety net (SPEC.md §5): after aggregation, mark obviously broken
+ * quotes with `suspect: true` so the frontend never surfaces them as best
+ * odds. Runs per (parameter, selectionType) pool with >= 4 positive quotes:
+ * - odds >= 1000 → placeholder artifact → suspect;
+ * - odds deviating > 400% from the pool median while odds/10 or odds/100
+ *   lands within ±15% of the median → decimal shift → suspect.
+ * Suspect quotes are NOT dropped — audit tooling must still see raw values.
+ */
+function markSuspectOdds(parameters: MarketParameter[]): void {
+  for (const parameter of parameters) {
+    // Pool quotes across bookmakers per selection type
+    const pools = new Map<string, MarketParameterBookmaker["selections"]>();
+    for (const bmEntry of parameter.bookmakers) {
+      for (const sel of bmEntry.selections) {
+        if (!(sel.odds > 0)) continue;
+        let pool = pools.get(sel.type);
+        if (!pool) {
+          pool = [];
+          pools.set(sel.type, pool);
+        }
+        pool.push(sel);
+      }
+    }
+
+    for (const pool of pools.values()) {
+      if (pool.length < QUARANTINE_MIN_POOL_SIZE) continue;
+      const median = medianOf(pool.map((sel) => sel.odds));
+
+      for (const sel of pool) {
+        if (sel.odds >= QUARANTINE_PLACEHOLDER_ODDS) {
+          sel.suspect = true;
+          continue;
+        }
+        if (median <= 0) continue;
+        const deviation = Math.abs(sel.odds - median) / median;
+        if (
+          deviation > QUARANTINE_DEVIATION_RATIO &&
+          (withinShiftTolerance(sel.odds / 10, median) ||
+            withinShiftTolerance(sel.odds / 100, median))
+        ) {
+          sel.suspect = true;
+        }
+      }
+    }
+  }
+}
+
 /**
  * Sort parameters intelligently
  */
@@ -447,6 +518,11 @@ export function groupMarketsByTypeWithParameters(
     const isNonParameterized = !marketHasParameters(marketType);
     const defaultParam = DEFAULT_PARAMETERS[marketType];
     const useDefault = isNonParameterized ? "" : (defaultParam && sortedParams.includes(defaultParam) ? defaultParam : sortedParams[0]);
+
+    // Odds quarantine: flag placeholder / decimal-shifted quotes AFTER all
+    // aggregation (incl. the dummy-parameter collapse above) so pools reflect
+    // exactly what the API ships.
+    markSuspectOdds(parameters);
 
     // Get description, displayOrder, and viewType from market registry
     const marketDef = getMarketByCode(marketType);

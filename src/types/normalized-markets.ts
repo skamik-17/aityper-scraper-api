@@ -186,6 +186,15 @@ export interface MarketParameterBookmaker {
 
     /** Optional display label override (e.g., "Gospodarze (-0.5)" for handicap per-team perspective). If set, frontend should prefer this over generic selectionLabels. */
     label?: string;
+
+    /**
+     * Odds-quarantine flag (SPEC.md §5): true when the quote looks like a
+     * scraper/normalizer artifact (placeholder value >= 1000 or decimal-shifted
+     * vs the cross-bookmaker pool median). Suspect quotes stay in the payload
+     * so audit tooling still sees them, but the frontend must never let them
+     * win best-odds and renders them greyed-out.
+     */
+    suspect?: boolean;
   }>;
 }
 

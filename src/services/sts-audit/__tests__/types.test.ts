@@ -47,4 +47,28 @@ describe("sts-audit isJudgeVerdict — STS suggested_fix enums", () => {
   it("isFixResult accepts an applied result", () => {
     expect(isFixResult({ status: "applied", commit: "abc", files: ["x"], reason: null })).toBe(true);
   });
+
+  // v2 fixer contract fields (docs/audit-ledger/FIXER-CONTRACT.md)
+  it("isFixResult accepts the new shape with fingerprints and fixtureTest", () => {
+    expect(isFixResult({
+      status: "applied",
+      commit: "abc",
+      files: ["backend/src/services/normalization/bookmakers/sts-normalizer.ts"],
+      fingerprints: ["a1b2c3d4e5f6"],
+      fixtureTest: { path: "backend/src/services/normalization/__fixtures__/sts/x.json", before: "fail", after: "pass" },
+      reason: null,
+    })).toBe(true);
+  });
+  it("isFixResult accepts fixtureTest null and empty fingerprints", () => {
+    expect(isFixResult({ status: "noop", commit: null, files: [], fingerprints: [], fixtureTest: null, reason: "already green" })).toBe(true);
+  });
+  it("isFixResult rejects malformed fixtureTest", () => {
+    expect(isFixResult({
+      status: "applied", commit: "abc", files: [],
+      fixtureTest: { path: "x.json", before: "pass", after: "pass" }, reason: null,
+    })).toBe(false);
+  });
+  it("isFixResult rejects non-string fingerprints", () => {
+    expect(isFixResult({ status: "applied", commit: "abc", files: [], fingerprints: [1], reason: null })).toBe(false);
+  });
 });

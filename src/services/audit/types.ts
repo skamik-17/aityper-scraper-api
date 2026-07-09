@@ -165,14 +165,37 @@ export function isJudgeVerdict(v: unknown): v is JudgeVerdict {
 
 export type FixStatus = "applied" | "failed" | "noop";
 
+// Fixture-test summary attached by fixers following the v2 contract
+// (docs/audit-ledger/FIXER-CONTRACT.md). "before" is the pre-edit golden-test
+// state; "after" is the post-edit state ("n/a" for fallback/failed/noop).
+export type FixtureTestBefore = "fail" | "missing";
+export type FixtureTestAfter = "pass" | "n/a";
+
+export interface FixtureTestResult {
+  path: string; // repo-relative fixture path, or "none" in the online fallback
+  before: FixtureTestBefore;
+  after: FixtureTestAfter;
+}
+
 export interface FixResult {
   status: FixStatus;
   commit: string | null;
   files: string[];
   reason: string | null;
+  // v2 contract fields — optional so old-shape results keep validating.
+  fingerprints?: string[]; // ledger fingerprint ids echoed from the dispatch prompt
+  fixtureTest?: FixtureTestResult | null; // null allowed for fixture-already-green noops
 }
 
 const VALID_FIX_STATUSES: FixStatus[] = ["applied", "failed", "noop"];
+
+function isFixtureTestResult(v: unknown): v is FixtureTestResult {
+  if (!isObject(v)) return false;
+  if (typeof v.path !== "string") return false;
+  if (v.before !== "fail" && v.before !== "missing") return false;
+  if (v.after !== "pass" && v.after !== "n/a") return false;
+  return true;
+}
 
 export function isFixResult(v: unknown): v is FixResult {
   if (!isObject(v)) return false;
@@ -181,6 +204,14 @@ export function isFixResult(v: unknown): v is FixResult {
   if (!Array.isArray(v.files)) return false;
   if (!v.files.every((f) => typeof f === "string")) return false;
   if (v.reason !== null && typeof v.reason !== "string") return false;
+  // v2 optional fields: absent → old shape, still valid; present → must be well-formed.
+  if (v.fingerprints !== undefined) {
+    if (!Array.isArray(v.fingerprints)) return false;
+    if (!v.fingerprints.every((f) => typeof f === "string")) return false;
+  }
+  if (v.fixtureTest !== undefined && v.fixtureTest !== null && !isFixtureTestResult(v.fixtureTest)) {
+    return false;
+  }
   return true;
 }
 

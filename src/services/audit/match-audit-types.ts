@@ -14,7 +14,7 @@ export type MatchIssueKind =
   | "misrouted_entry"
   | "selection_gap"
   | "unknown_selection"
-  | "odds_outlier"
+  | "odds_disagreement"
   | "placeholder_name"
   | "mixed_vocabulary"
   | "param_anomaly"
@@ -50,7 +50,7 @@ const VALID_KINDS: MatchIssueKind[] = [
   "misrouted_entry",
   "selection_gap",
   "unknown_selection",
-  "odds_outlier",
+  "odds_disagreement",
   "placeholder_name",
   "mixed_vocabulary",
   "param_anomaly",

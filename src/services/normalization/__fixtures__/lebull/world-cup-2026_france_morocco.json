@@ -1,0 +1,6611 @@
+{
+  "bookmaker": "lebull",
+  "ctx": {
+    "awayTeam": "Morocco",
+    "homeTeam": "France",
+    "league": "world-cup-2026",
+    "leagueName": "world-cup-2026"
+  },
+  "entries": [
+    {
+      "index": 0,
+      "raw": {
+        "bookmakerMarketId": "40424",
+        "groupId": "",
+        "groupName": "Dokladny wynik",
+        "name": "Multiwynik",
+        "selections": [
+          {
+            "name": "1:0, 2:0 lub 2:1",
+            "odds": 2.66
+          },
+          {
+            "name": "0:0, 1:0 lub 2:0",
+            "odds": 2.75
+          },
+          {
+            "name": "1:0, 2:0 lub 1:1",
+            "odds": 2.48
+          },
+          {
+            "name": "1:0, 2:0 lub 3:0",
+            "odds": 2.82
+          },
+          {
+            "name": "2:0, 3:0 lub 3:1",
+            "odds": 3.6
+          },
+          {
+            "name": "1:0, 0:0 lub 0:1",
+            "odds": 3.3
+          },
+          {
+            "name": "0:1, 0:2 lub 1:2",
+            "odds": 6.6
+          },
+          {
+            "name": "0:0, 0:1 lub 0:2",
+            "odds": 5.2
+          },
+          {
+            "name": "0:1, 0:2 lub 1:1",
+            "odds": 4.3
+          },
+          {
+            "name": "0:2, 0:3 lub 1:3",
+            "odds": 14.1
+          },
+          {
+            "name": "1:0, 1:1 lub 0:1",
+            "odds": 2.92
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "raw": {
+        "bookmakerMarketId": "137",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Awans",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.27
+          },
+          {
+            "name": "Maroko",
+            "odds": 4.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "raw": {
+        "bookmakerMarketId": "1",
+        "groupId": "",
+        "groupName": "Wynik meczu",
+        "name": "Wynik meczu",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.58
+          },
+          {
+            "name": "X",
+            "odds": 3.75
+          },
+          {
+            "name": "Maroko",
+            "odds": 6.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "raw": {
+        "bookmakerMarketId": "37",
+        "groupId": "",
+        "groupName": "Wynik meczu",
+        "name": "podwójna szansa",
+        "selections": [
+          {
+            "name": "1X",
+            "odds": 1.14
+          },
+          {
+            "name": "12",
+            "odds": 1.29
+          },
+          {
+            "name": "X2",
+            "odds": 2.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "raw": {
+        "bookmakerMarketId": "274556",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "zakład bez remisu",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.15
+          },
+          {
+            "name": "Maroko",
+            "odds": 4.52
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 0.5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.06
+          },
+          {
+            "name": "poniżej",
+            "odds": 9.84
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 1",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.08
+          },
+          {
+            "name": "poniżej",
+            "odds": 8.33
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 1.5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.32
+          },
+          {
+            "name": "poniżej",
+            "odds": 3.46
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 2",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.52
+          },
+          {
+            "name": "poniżej",
+            "odds": 2.59
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 2.5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.04
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 3",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.87
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.44
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 3.5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.56
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.31
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 4",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 6.26
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 4.5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 7.1
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "raw": {
+        "bookmakerMarketId": "3",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Suma goli 5",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 13.32
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -3.5",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 14.32
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -3",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 12.91
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 1.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -2.5",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 5.74
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -2",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 4.64
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 1.19
+          }
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -1.5",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 2.7
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 1.46
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -1",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 2.02
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 1.78
+          }
+        ]
+      }
+    },
+    {
+      "index": 21,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap -0.5",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 1.59
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 2.34
+          }
+        ]
+      }
+    },
+    {
+      "index": 22,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap 0",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 1.19
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 4.67
+          }
+        ]
+      }
+    },
+    {
+      "index": 23,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap 0.5",
+        "selections": [
+          {
+            "name": "Handicap 1",
+            "odds": 1.11
+          },
+          {
+            "name": "Handicap 2",
+            "odds": 6.57
+          }
+        ]
+      }
+    },
+    {
+      "index": 24,
+      "raw": {
+        "bookmakerMarketId": "2",
+        "groupId": "",
+        "groupName": "Handicap",
+        "name": "Handicap 1",
+        "selections": [
+          {
+            "name": "Handicap 2",
+            "odds": 18.82
+          }
+        ]
+      }
+    },
+    {
+      "index": 25,
+      "raw": {
+        "bookmakerMarketId": "69",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli. Francja",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.15
+          },
+          {
+            "name": "poniżej",
+            "odds": 5.76
+          },
+          {
+            "name": "powyżej",
+            "odds": 1.26
+          },
+          {
+            "name": "poniżej",
+            "odds": 3.94
+          },
+          {
+            "name": "powyżej",
+            "odds": 1.82
+          },
+          {
+            "name": "poniżej",
+            "odds": 2.02
+          },
+          {
+            "name": "powyżej",
+            "odds": 2.68
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.49
+          },
+          {
+            "name": "powyżej",
+            "odds": 3.63
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.3
+          },
+          {
+            "name": "powyżej",
+            "odds": 7.33
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.1
+          },
+          {
+            "name": "powyżej",
+            "odds": 8.76
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.07
+          }
+        ]
+      }
+    },
+    {
+      "index": 26,
+      "raw": {
+        "bookmakerMarketId": "75",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli. Maroko",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.75
+          },
+          {
+            "name": "poniżej",
+            "odds": 2.11
+          },
+          {
+            "name": "powyżej",
+            "odds": 3.36
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.34
+          },
+          {
+            "name": "powyżej",
+            "odds": 5.22
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.17
+          },
+          {
+            "name": "powyżej",
+            "odds": 19.01
+          }
+        ]
+      }
+    },
+    {
+      "index": 27,
+      "raw": {
+        "bookmakerMarketId": "27",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja. Strzeli gola",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.14
+          },
+          {
+            "name": "Nie",
+            "odds": 5.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 28,
+      "raw": {
+        "bookmakerMarketId": "28",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko. Strzeli gola",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.74
+          },
+          {
+            "name": "Nie",
+            "odds": 2.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 29,
+      "raw": {
+        "bookmakerMarketId": "26",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Obie drużyny strzelą",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.95
+          },
+          {
+            "name": "Nie",
+            "odds": 1.81
+          }
+        ]
+      }
+    },
+    {
+      "index": 30,
+      "raw": {
+        "bookmakerMarketId": "40390",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "tylko jeden zespół strzeli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.06
+          },
+          {
+            "name": "Nie",
+            "odds": 1.77
+          }
+        ]
+      }
+    },
+    {
+      "index": 31,
+      "raw": {
+        "bookmakerMarketId": "748",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "kolejny gol:",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.5
+          },
+          {
+            "name": "Maroko",
+            "odds": 3.3
+          },
+          {
+            "name": "Nikt",
+            "odds": 9.9
+          },
+          {
+            "name": "Francja",
+            "odds": 1.89
+          },
+          {
+            "name": "Maroko",
+            "odds": 4.1
+          },
+          {
+            "name": "Nikt",
+            "odds": 3.5
+          },
+          {
+            "name": "Francja",
+            "odds": 2.89
+          },
+          {
+            "name": "Maroko",
+            "odds": 6.1
+          },
+          {
+            "name": "Nikt",
+            "odds": 1.83
+          },
+          {
+            "name": "Francja",
+            "odds": 4.95
+          },
+          {
+            "name": "Maroko",
+            "odds": 10
+          },
+          {
+            "name": "Nikt",
+            "odds": 1.31
+          },
+          {
+            "name": "Francja",
+            "odds": 9.6
+          },
+          {
+            "name": "Maroko",
+            "odds": 17.5
+          },
+          {
+            "name": "Nikt",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 32,
+      "raw": {
+        "bookmakerMarketId": "333649",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "ostatni gol",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.51
+          },
+          {
+            "name": "Nikt",
+            "odds": 9.8
+          },
+          {
+            "name": "Maroko",
+            "odds": 3.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 33,
+      "raw": {
+        "bookmakerMarketId": "1050",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Handicap 3-drogowy (0:1)",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 2.68
+          },
+          {
+            "name": "X",
+            "odds": 3.47
+          },
+          {
+            "name": "Maroko",
+            "odds": 2.34
+          }
+        ]
+      }
+    },
+    {
+      "index": 34,
+      "raw": {
+        "bookmakerMarketId": "1051",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Handicap 3-drogowy (0:2)",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 5.68
+          },
+          {
+            "name": "X",
+            "odds": 4.5
+          },
+          {
+            "name": "Maroko",
+            "odds": 1.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 35,
+      "raw": {
+        "bookmakerMarketId": "1052",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Handicap 3-drogowy (0:3)",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 14.03
+          },
+          {
+            "name": "X",
+            "odds": 8.51
+          },
+          {
+            "name": "Maroko",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 36,
+      "raw": {
+        "bookmakerMarketId": "1060",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Handicap 3-drogowy (1:0)",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.11
+          },
+          {
+            "name": "X",
+            "odds": 7.04
+          },
+          {
+            "name": "Maroko",
+            "odds": 20.55
+          }
+        ]
+      }
+    },
+    {
+      "index": 37,
+      "raw": {
+        "bookmakerMarketId": "618",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma (3-drogowo)",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.34
+          },
+          {
+            "name": "Dokładnie",
+            "odds": 4.85
+          },
+          {
+            "name": "poniżej",
+            "odds": 9.9
+          },
+          {
+            "name": "powyżej",
+            "odds": 2.07
+          },
+          {
+            "name": "Dokładnie",
+            "odds": 3.6
+          },
+          {
+            "name": "poniżej",
+            "odds": 3.5
+          },
+          {
+            "name": "powyżej",
+            "odds": 3.55
+          },
+          {
+            "name": "Dokładnie",
+            "odds": 4.45
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.83
+          },
+          {
+            "name": "powyżej",
+            "odds": 7.1
+          },
+          {
+            "name": "Dokładnie",
+            "odds": 6.4
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.31
+          },
+          {
+            "name": "powyżej",
+            "odds": 14.2
+          },
+          {
+            "name": "Dokładnie",
+            "odds": 11.7
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 38,
+      "raw": {
+        "bookmakerMarketId": "134",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i suma 1.5",
+        "selections": [
+          {
+            "name": "Francja i powyżej",
+            "odds": 2.07
+          },
+          {
+            "name": "Remis i powyżej",
+            "odds": 5.4
+          },
+          {
+            "name": "Francja i poniżej",
+            "odds": 6.75
+          },
+          {
+            "name": "Maroko i powyżej",
+            "odds": 9
+          },
+          {
+            "name": "Remis i poniżej",
+            "odds": 9.9
+          },
+          {
+            "name": "Maroko i poniżej",
+            "odds": 15.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 39,
+      "raw": {
+        "bookmakerMarketId": "134",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i suma 2.5",
+        "selections": [
+          {
+            "name": "Francja i powyżej",
+            "odds": 2.75
+          },
+          {
+            "name": "Remis i powyżej",
+            "odds": 15.5
+          },
+          {
+            "name": "Francja i poniżej",
+            "odds": 3.75
+          },
+          {
+            "name": "Maroko i powyżej",
+            "odds": 11.4
+          },
+          {
+            "name": "Remis i poniżej",
+            "odds": 4.6
+          },
+          {
+            "name": "Maroko i poniżej",
+            "odds": 10.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 40,
+      "raw": {
+        "bookmakerMarketId": "134",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i suma 3.5",
+        "selections": [
+          {
+            "name": "Francja i powyżej",
+            "odds": 5
+          },
+          {
+            "name": "Remis i powyżej",
+            "odds": 15.5
+          },
+          {
+            "name": "Francja i poniżej",
+            "odds": 2.32
+          },
+          {
+            "name": "Maroko i powyżej",
+            "odds": 23
+          },
+          {
+            "name": "Remis i poniżej",
+            "odds": 4.6
+          },
+          {
+            "name": "Maroko i poniżej",
+            "odds": 7.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 41,
+      "raw": {
+        "bookmakerMarketId": "134",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i suma 4.5",
+        "selections": [
+          {
+            "name": "Francja i powyżej",
+            "odds": 8.8
+          },
+          {
+            "name": "Francja i poniżej",
+            "odds": 1.93
+          },
+          {
+            "name": "Remis i poniżej",
+            "odds": 3.9
+          },
+          {
+            "name": "Maroko i poniżej",
+            "odds": 6.55
+          }
+        ]
+      }
+    },
+    {
+      "index": 42,
+      "raw": {
+        "bookmakerMarketId": "134",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i suma 5.5",
+        "selections": [
+          {
+            "name": "Francja i powyżej",
+            "odds": 18.5
+          },
+          {
+            "name": "Francja i poniżej",
+            "odds": 1.73
+          },
+          {
+            "name": "Remis i poniżej",
+            "odds": 3.9
+          },
+          {
+            "name": "Maroko i poniżej",
+            "odds": 6.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 43,
+      "raw": {
+        "bookmakerMarketId": "5699562",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik i suma goli (dokładna liczba)",
+        "selections": [
+          {
+            "name": "Francja i 1 gol",
+            "odds": 6.35
+          },
+          {
+            "name": "Francja i 2 gole",
+            "odds": 7.6
+          },
+          {
+            "name": "Francja i 3 gole",
+            "odds": 5.55
+          },
+          {
+            "name": "Francja i 4 gole",
+            "odds": 10.3
+          },
+          {
+            "name": "Francja i 5 goli",
+            "odds": 15.5
+          },
+          {
+            "name": "Francja i 6 goli",
+            "odds": 39
+          },
+          {
+            "name": "X i bez goli",
+            "odds": 9.9
+          },
+          {
+            "name": "X i 2 gole",
+            "odds": 7.5
+          },
+          {
+            "name": "X i 4 gole",
+            "odds": 22
+          },
+          {
+            "name": "X i 4+ goli",
+            "odds": 18.5
+          },
+          {
+            "name": "Maroko i 1 gol",
+            "odds": 12.2
+          },
+          {
+            "name": "Maroko i 2 gole",
+            "odds": 40
+          },
+          {
+            "name": "Maroko i 3 gole",
+            "odds": 20
+          },
+          {
+            "name": "Maroko i 4 gole",
+            "odds": 80
+          },
+          {
+            "name": "Maroko i 5 goli",
+            "odds": 80
+          }
+        ]
+      }
+    },
+    {
+      "index": 44,
+      "raw": {
+        "bookmakerMarketId": "350009",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu lub suma goli",
+        "selections": [
+          {
+            "name": "Francja lub powyżej",
+            "odds": 1.09
+          },
+          {
+            "name": "Maroko lub powyżej",
+            "odds": 1.21
+          },
+          {
+            "name": "Remis lub powyżej",
+            "odds": 1.18
+          },
+          {
+            "name": "Francja lub poniżej",
+            "odds": 1.3
+          },
+          {
+            "name": "Maroko lub poniżej",
+            "odds": 2.62
+          },
+          {
+            "name": "Remis lub poniżej",
+            "odds": 2.2
+          },
+          {
+            "name": "Francja lub powyżej",
+            "odds": 1.34
+          },
+          {
+            "name": "Maroko lub powyżej",
+            "odds": 1.78
+          },
+          {
+            "name": "Remis lub powyżej",
+            "odds": 1.45
+          },
+          {
+            "name": "Francja lub poniżej",
+            "odds": 1.07
+          },
+          {
+            "name": "Maroko lub poniżej",
+            "odds": 1.6
+          },
+          {
+            "name": "Remis lub poniżej",
+            "odds": 1.67
+          },
+          {
+            "name": "Francja lub powyżej",
+            "odds": 1.43
+          },
+          {
+            "name": "Maroko lub powyżej",
+            "odds": 2.5
+          },
+          {
+            "name": "Remis lub powyżej",
+            "odds": 2.1
+          },
+          {
+            "name": "Maroko lub poniżej",
+            "odds": 1.24
+          },
+          {
+            "name": "Remis lub poniżej",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 45,
+      "raw": {
+        "bookmakerMarketId": "5701801",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Podwójna szansa i dokładna liczba goli",
+        "selections": [
+          {
+            "name": "1X i 1 gol",
+            "odds": 6.35
+          },
+          {
+            "name": "1X i 2 gole",
+            "odds": 3.75
+          },
+          {
+            "name": "1X i 3 gole",
+            "odds": 5.55
+          },
+          {
+            "name": "1X i 4 gole",
+            "odds": 7
+          },
+          {
+            "name": "1X i 5 goli",
+            "odds": 15.5
+          },
+          {
+            "name": "1X i 6 goli",
+            "odds": 30
+          },
+          {
+            "name": "12 i 1 gol",
+            "odds": 4.75
+          },
+          {
+            "name": "12 i 2 gole",
+            "odds": 6.35
+          },
+          {
+            "name": "12 i 3 gole",
+            "odds": 4.3
+          },
+          {
+            "name": "12 i 4 gole",
+            "odds": 9.1
+          },
+          {
+            "name": "12 i 5 goli",
+            "odds": 12.9
+          },
+          {
+            "name": "12 i 6 goli",
+            "odds": 35
+          },
+          {
+            "name": "12 i 7+ goli",
+            "odds": 55
+          },
+          {
+            "name": "X2 i 1 gol",
+            "odds": 12.2
+          },
+          {
+            "name": "X2 i 2 gole",
+            "odds": 6.3
+          },
+          {
+            "name": "X2 i 3 gole",
+            "odds": 20
+          },
+          {
+            "name": "X2 i 4 gole",
+            "odds": 17
+          },
+          {
+            "name": "X2 i 5 goli",
+            "odds": 80
+          }
+        ]
+      }
+    },
+    {
+      "index": 46,
+      "raw": {
+        "bookmakerMarketId": "332815",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "podwójna szansa i suma goli 1.5",
+        "selections": [
+          {
+            "name": "1X i powyżej",
+            "odds": 1.49
+          },
+          {
+            "name": "1X i poniżej",
+            "odds": 4.15
+          },
+          {
+            "name": "12 i powyżej",
+            "odds": 1.69
+          },
+          {
+            "name": "12 i poniżej",
+            "odds": 4.6
+          },
+          {
+            "name": "X2 i powyżej",
+            "odds": 3.45
+          },
+          {
+            "name": "X2 i poniżej",
+            "odds": 6.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 47,
+      "raw": {
+        "bookmakerMarketId": "332815",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "podwójna szansa i suma goli 2.5",
+        "selections": [
+          {
+            "name": "1X i powyżej",
+            "odds": 2.36
+          },
+          {
+            "name": "1X i poniżej",
+            "odds": 2.08
+          },
+          {
+            "name": "12 i powyżej",
+            "odds": 2.23
+          },
+          {
+            "name": "12 i poniżej",
+            "odds": 2.78
+          },
+          {
+            "name": "X2 i powyżej",
+            "odds": 6.75
+          },
+          {
+            "name": "X2 i poniżej",
+            "odds": 3.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 48,
+      "raw": {
+        "bookmakerMarketId": "332815",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "podwójna szansa i suma goli 3.5",
+        "selections": [
+          {
+            "name": "1X i powyżej",
+            "odds": 3.85
+          },
+          {
+            "name": "1X i poniżej",
+            "odds": 1.54
+          },
+          {
+            "name": "12 i powyżej",
+            "odds": 4.2
+          },
+          {
+            "name": "12 i poniżej",
+            "odds": 1.76
+          },
+          {
+            "name": "X2 i powyżej",
+            "odds": 9.8
+          },
+          {
+            "name": "X2 i poniżej",
+            "odds": 2.83
+          }
+        ]
+      }
+    },
+    {
+      "index": 49,
+      "raw": {
+        "bookmakerMarketId": "332815",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "podwójna szansa i suma goli 4.5",
+        "selections": [
+          {
+            "name": "1X i powyżej",
+            "odds": 7.6
+          },
+          {
+            "name": "1X i poniżej",
+            "odds": 1.25
+          },
+          {
+            "name": "12 i powyżej",
+            "odds": 7.2
+          },
+          {
+            "name": "12 i poniżej",
+            "odds": 1.47
+          },
+          {
+            "name": "X2 i poniżej",
+            "odds": 2.46
+          }
+        ]
+      }
+    },
+    {
+      "index": 50,
+      "raw": {
+        "bookmakerMarketId": "5699564",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Podwójna szansa i przedział goli",
+        "selections": [
+          {
+            "name": "1X i 1-2 gole",
+            "odds": 2.42
+          },
+          {
+            "name": "1X i 1-3 gole",
+            "odds": 1.68
+          },
+          {
+            "name": "1X i 1-4 goli",
+            "odds": 1.36
+          },
+          {
+            "name": "1X i 1-5 goli",
+            "odds": 1.25
+          },
+          {
+            "name": "1X i 1-6 goli",
+            "odds": 1.2
+          },
+          {
+            "name": "1X i 2-3 gole",
+            "odds": 2.24
+          },
+          {
+            "name": "1X i 2-4 gole",
+            "odds": 1.7
+          },
+          {
+            "name": "1X i 2-5 goli",
+            "odds": 1.53
+          },
+          {
+            "name": "1X i 2-6 goli",
+            "odds": 1.46
+          },
+          {
+            "name": "1X i 3-4 goli",
+            "odds": 3.1
+          },
+          {
+            "name": "1X i 3-5 goli",
+            "odds": 2.57
+          },
+          {
+            "name": "1X i 3-6 goli",
+            "odds": 2.38
+          },
+          {
+            "name": "1X i 4-5 goli",
+            "odds": 4.8
+          },
+          {
+            "name": "1X i 4-6 goli",
+            "odds": 4.15
+          },
+          {
+            "name": "1X i 5-6 goli",
+            "odds": 10.2
+          },
+          {
+            "name": "12 i 1-2 goli",
+            "odds": 2.71
+          },
+          {
+            "name": "12 i 1-3 goli",
+            "odds": 1.67
+          },
+          {
+            "name": "12 i 1-4 goli",
+            "odds": 1.4
+          },
+          {
+            "name": "12 i 1-5 goli",
+            "odds": 1.27
+          },
+          {
+            "name": "12 i 1-6 goli",
+            "odds": 1.22
+          },
+          {
+            "name": "12 i 2-3 gole",
+            "odds": 2.57
+          },
+          {
+            "name": "12 i 2-4 gole",
+            "odds": 2.01
+          },
+          {
+            "name": "12 i 2-5 goli",
+            "odds": 1.74
+          },
+          {
+            "name": "12 i 2-6 goli",
+            "odds": 1.66
+          },
+          {
+            "name": "12 i 3-4 gole",
+            "odds": 2.93
+          },
+          {
+            "name": "12 i 3-5 goli",
+            "odds": 2.39
+          },
+          {
+            "name": "12 i 3-6 goli",
+            "odds": 2.24
+          },
+          {
+            "name": "12 i 4-5 goli",
+            "odds": 5.35
+          },
+          {
+            "name": "12 i 4-6 goli",
+            "odds": 4.65
+          },
+          {
+            "name": "12 i 5-6 goli",
+            "odds": 9.5
+          },
+          {
+            "name": "X2 i 1-2 gole",
+            "odds": 4.5
+          },
+          {
+            "name": "X2 i 1-3 gole",
+            "odds": 3.65
+          },
+          {
+            "name": "X2 i 1-4 goli",
+            "odds": 3
+          },
+          {
+            "name": "X2 i 1-5 goli",
+            "odds": 2.91
+          },
+          {
+            "name": "X2 i 1-6 goli",
+            "odds": 2.83
+          },
+          {
+            "name": "X2 i 2-3 gole",
+            "odds": 4.75
+          },
+          {
+            "name": "X2 i 2-4 goli",
+            "odds": 3.75
+          },
+          {
+            "name": "X2 i 2-5 goli",
+            "odds": 3.55
+          },
+          {
+            "name": "X2 i 2-6 goli",
+            "odds": 3.45
+          },
+          {
+            "name": "X2 i 3-4 goli",
+            "odds": 9.2
+          },
+          {
+            "name": "X2 i 3-5 goli",
+            "odds": 8.2
+          },
+          {
+            "name": "X2 i 3-6 goli",
+            "odds": 7.6
+          },
+          {
+            "name": "X2 i 4-5 goli",
+            "odds": 14.1
+          },
+          {
+            "name": "X2 i 4-6 goli",
+            "odds": 12.5
+          },
+          {
+            "name": "X2 i 5-6 goli",
+            "odds": 46
+          }
+        ]
+      }
+    },
+    {
+      "index": 51,
+      "raw": {
+        "bookmakerMarketId": "261946",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu i obie drużyny strzelą",
+        "selections": [
+          {
+            "name": "Francja i obie strzelą",
+            "odds": 4.2
+          },
+          {
+            "name": "Remis i obie strzelą",
+            "odds": 5
+          },
+          {
+            "name": "Francja i Przynajmniej jedna drużyna nie strzeli",
+            "odds": 2.47
+          },
+          {
+            "name": "Maroko i obie strzelą",
+            "odds": 13.3
+          },
+          {
+            "name": "Remis i Przynajmniej jedna drużyna nie strzeli",
+            "odds": 9.9
+          },
+          {
+            "name": "Maroko i Przynajmniej jedna drużyna nie strzeli",
+            "odds": 8.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 52,
+      "raw": {
+        "bookmakerMarketId": "270665",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "podwójna szansa i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "name": "1X i Obie strzelą",
+            "odds": 2.43
+          },
+          {
+            "name": "12 i Obie strzelą",
+            "odds": 3.25
+          },
+          {
+            "name": "X2 i Obie strzelą",
+            "odds": 4
+          },
+          {
+            "name": "1X i Przynajmniej jedna drużyna nie strzeli",
+            "odds": 2.13
+          },
+          {
+            "name": "12 i przynajmniej jedna drużyna nie strzeli",
+            "odds": 2.1
+          },
+          {
+            "name": "X2 i Przynajmniej jedna drużyna nie strzeli",
+            "odds": 5.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 53,
+      "raw": {
+        "bookmakerMarketId": "350010",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu lub obie drużyny strzelą",
+        "selections": [
+          {
+            "name": "Francja lub obie strzelą",
+            "odds": 1.14
+          },
+          {
+            "name": "Maroko lub obie strzelą",
+            "odds": 1.78
+          },
+          {
+            "name": "Remis lub obie strzelą",
+            "odds": 1.8
+          },
+          {
+            "name": "Francja lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.24
+          },
+          {
+            "name": "Maroko lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.6
+          },
+          {
+            "name": "Remis lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.36
+          }
+        ]
+      }
+    },
+    {
+      "index": 54,
+      "raw": {
+        "bookmakerMarketId": "350171",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli lub obie drużyny strzelą",
+        "selections": [
+          {
+            "name": "Obie strzelą lub powyżej",
+            "odds": 1.65
+          },
+          {
+            "name": "Obie strzelą lub poniżej",
+            "odds": 1.08
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli lub powyżej",
+            "odds": 1.07
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli lub poniżej",
+            "odds": 1.46
+          },
+          {
+            "name": "Obie strzelą lub powyżej",
+            "odds": 1.9
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli lub powyżej",
+            "odds": 1.28
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli lub poniżej",
+            "odds": 1.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 55,
+      "raw": {
+        "bookmakerMarketId": "5774433",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma i obie drużyny strzelą 2.5",
+        "selections": [
+          {
+            "name": "Obie strzelą i powyżej",
+            "odds": 2.86
+          },
+          {
+            "name": "Obie strzelą i poniżej",
+            "odds": 7.6
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli i powyżej",
+            "odds": 7.2
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli i poniżej",
+            "odds": 2.37
+          }
+        ]
+      }
+    },
+    {
+      "index": 56,
+      "raw": {
+        "bookmakerMarketId": "5774433",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma i obie drużyny strzelą 3.5",
+        "selections": [
+          {
+            "name": "Obie strzelą i powyżej",
+            "odds": 4.6
+          },
+          {
+            "name": "Obie strzelą i poniżej",
+            "odds": 3.8
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli i powyżej",
+            "odds": 16
+          },
+          {
+            "name": "Przynajmniej jedna drużyna nie strzeli i poniżej",
+            "odds": 2.01
+          }
+        ]
+      }
+    },
+    {
+      "index": 57,
+      "raw": {
+        "bookmakerMarketId": "4",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz",
+        "selections": [
+          {
+            "name": "Francja/Francja",
+            "odds": 2.53
+          },
+          {
+            "name": "Francja/X",
+            "odds": 19.5
+          },
+          {
+            "name": "Francja/Maroko",
+            "odds": 46
+          },
+          {
+            "name": "X/Francja",
+            "odds": 4.2
+          },
+          {
+            "name": "X/X",
+            "odds": 5.25
+          },
+          {
+            "name": "X/Maroko",
+            "odds": 10.6
+          },
+          {
+            "name": "Maroko/Francja",
+            "odds": 25
+          },
+          {
+            "name": "Maroko/X",
+            "odds": 19
+          },
+          {
+            "name": "Maroko/Maroko",
+            "odds": 11.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 58,
+      "raw": {
+        "bookmakerMarketId": "40397",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - gospodarze/gospodarze",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.53
+          },
+          {
+            "name": "Nie",
+            "odds": 1.49
+          }
+        ]
+      }
+    },
+    {
+      "index": 59,
+      "raw": {
+        "bookmakerMarketId": "40496",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - remis/goście",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 10.6
+          },
+          {
+            "name": "Nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 60,
+      "raw": {
+        "bookmakerMarketId": "40398",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - goście/goście",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 11.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 61,
+      "raw": {
+        "bookmakerMarketId": "40495",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - remis/gospodarze",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 62,
+      "raw": {
+        "bookmakerMarketId": "146",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - gospodarze/remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 14.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 63,
+      "raw": {
+        "bookmakerMarketId": "148",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - remis/remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.25
+          },
+          {
+            "name": "Nie",
+            "odds": 1.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 64,
+      "raw": {
+        "bookmakerMarketId": "150",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz - goście/remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 13.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 65,
+      "raw": {
+        "bookmakerMarketId": "40498",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz podwójna szansa",
+        "selections": [
+          {
+            "name": "1X/1X",
+            "odds": 1.25
+          },
+          {
+            "name": "1X/12",
+            "odds": 1.5
+          },
+          {
+            "name": "1X/X2",
+            "odds": 3.55
+          },
+          {
+            "name": "12/1X",
+            "odds": 2.05
+          },
+          {
+            "name": "12/12",
+            "odds": 1.99
+          },
+          {
+            "name": "12/X2",
+            "odds": 5.45
+          },
+          {
+            "name": "X2/1X",
+            "odds": 2.26
+          },
+          {
+            "name": "X2/12",
+            "odds": 2.56
+          },
+          {
+            "name": "X2/X2",
+            "odds": 2.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 66,
+      "raw": {
+        "bookmakerMarketId": "268826",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz i suma goli",
+        "selections": [
+          {
+            "name": "Francja/Francja i powyżej (2.5)",
+            "odds": 4.05
+          },
+          {
+            "name": "Francja/Francja i poniżej (2.5",
+            "odds": 6.65
+          },
+          {
+            "name": "Maroko/Maroko i powyżej (2.5)",
+            "odds": 18.5
+          },
+          {
+            "name": "Maroko/Maroko i poniżej (2.5)",
+            "odds": 18.5
+          },
+          {
+            "name": "Remis/Remis i powyżej (1.5)",
+            "odds": 11
+          },
+          {
+            "name": "Remis/Remis  i poniżej (1.5)",
+            "odds": 10.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 67,
+      "raw": {
+        "bookmakerMarketId": "377798",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "połowa/mecz i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "name": "Francja/Francja/Tak",
+            "odds": 6.9
+          },
+          {
+            "name": "Francja/Francja/Nie",
+            "odds": 4.05
+          },
+          {
+            "name": "Francja/Remis/Tak",
+            "odds": 20
+          },
+          {
+            "name": "Francja/Maroko/Tak",
+            "odds": 46
+          },
+          {
+            "name": "Remis/Francja/Tak",
+            "odds": 5.45
+          },
+          {
+            "name": "Remis/Francja/Nie",
+            "odds": 6.65
+          },
+          {
+            "name": "X/X/Tak",
+            "odds": 11.2
+          },
+          {
+            "name": "X/X/Nie",
+            "odds": 11
+          },
+          {
+            "name": "Remis/Maroko/Tak",
+            "odds": 16
+          },
+          {
+            "name": "Remis/Maroko/Nie",
+            "odds": 18.5
+          },
+          {
+            "name": "Maroko/Francja/Tak",
+            "odds": 25
+          },
+          {
+            "name": "Maroko/Remis/Tak",
+            "odds": 19.5
+          },
+          {
+            "name": "Maroko/Maroko/Tak",
+            "odds": 22
+          },
+          {
+            "name": "Maroko/Maroko/Nie",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 68,
+      "raw": {
+        "bookmakerMarketId": "607",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. Połowa lub mecz",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.47
+          },
+          {
+            "name": "Remis",
+            "odds": 1.88
+          },
+          {
+            "name": "Maroko",
+            "odds": 4.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 69,
+      "raw": {
+        "bookmakerMarketId": "8",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "rzut karny",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3
+          },
+          {
+            "name": "Nie",
+            "odds": 1.33
+          }
+        ]
+      }
+    },
+    {
+      "index": 70,
+      "raw": {
+        "bookmakerMarketId": "9",
+        "groupId": "",
+        "groupName": "Wynik meczu",
+        "name": "Zawodnik zostanie usunięty z boiska",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.55
+          },
+          {
+            "name": "Nie",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 71,
+      "raw": {
+        "bookmakerMarketId": "39593",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "rzut karny i czerwona kartka",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 9.9
+          },
+          {
+            "name": "Nie",
+            "odds": 1.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 72,
+      "raw": {
+        "bookmakerMarketId": "39594",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "rzut karny lub czerwona kartka",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.23
+          },
+          {
+            "name": "Nie",
+            "odds": 1.58
+          }
+        ]
+      }
+    },
+    {
+      "index": 73,
+      "raw": {
+        "bookmakerMarketId": "310988",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. połowa: rzut karny",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 74,
+      "raw": {
+        "bookmakerMarketId": "310989",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "2. połowa: rzut karny",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.55
+          },
+          {
+            "name": "Nie",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 75,
+      "raw": {
+        "bookmakerMarketId": "314168",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "nie wykorzysta jedenastki:",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 14
+          },
+          {
+            "name": "Maroko",
+            "odds": 21.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 76,
+      "raw": {
+        "bookmakerMarketId": "314169",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "strzeli rzut karny:",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 4.75
+          },
+          {
+            "name": "Maroko",
+            "odds": 8.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 77,
+      "raw": {
+        "bookmakerMarketId": "5755153",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Penalty Missed in the Match",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 8.35
+          },
+          {
+            "name": "Nie",
+            "odds": 1.04
+          }
+        ]
+      }
+    },
+    {
+      "index": 78,
+      "raw": {
+        "bookmakerMarketId": "175100",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik zostanie usunięty z boiska. Francja",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 8.35
+          },
+          {
+            "name": "Nie",
+            "odds": 1.04
+          }
+        ]
+      }
+    },
+    {
+      "index": 79,
+      "raw": {
+        "bookmakerMarketId": "175105",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik zostanie usunięty z boiska. Maroko",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.07
+          }
+        ]
+      }
+    },
+    {
+      "index": 80,
+      "raw": {
+        "bookmakerMarketId": "310990",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. połowa: Zawodnik usunięty z boiska",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 81,
+      "raw": {
+        "bookmakerMarketId": "310991",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "2. połowa: Zawodnik usunięty z boiska",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.1
+          },
+          {
+            "name": "Nie",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 82,
+      "raw": {
+        "bookmakerMarketId": "350214",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "czerwona kartka w obu zespołach:",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 20
+          }
+        ]
+      }
+    },
+    {
+      "index": 83,
+      "raw": {
+        "bookmakerMarketId": "2505",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma czerwonych kartek",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 84,
+      "raw": {
+        "bookmakerMarketId": "339468",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "rzut karny, czerwona kartka i gol samobójczy",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 80
+          }
+        ]
+      }
+    },
+    {
+      "index": 85,
+      "raw": {
+        "bookmakerMarketId": "5774055",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Będzie rzut karny, nie będzie czerwonej kartki",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.6
+          },
+          {
+            "name": "Nie",
+            "odds": 1.24
+          }
+        ]
+      }
+    },
+    {
+      "index": 86,
+      "raw": {
+        "bookmakerMarketId": "5774056",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Nie będzie rzutu karnego, będzie czerwona kartka",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.45
+          },
+          {
+            "name": "Nie",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 87,
+      "raw": {
+        "bookmakerMarketId": "39506",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol samobójczy",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.45
+          },
+          {
+            "name": "Nie",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 88,
+      "raw": {
+        "bookmakerMarketId": "39507",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Dublet w meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.25
+          },
+          {
+            "name": "Nie",
+            "odds": 1.29
+          }
+        ]
+      }
+    },
+    {
+      "index": 89,
+      "raw": {
+        "bookmakerMarketId": "39508",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Hat trick w meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 90,
+      "raw": {
+        "bookmakerMarketId": "66",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol zmiennika",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.4
+          },
+          {
+            "name": "Nie",
+            "odds": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 91,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Metoda 1. gola",
+        "selections": [
+          {
+            "name": "Gol z gry/bez gola głową",
+            "odds": 1.41
+          },
+          {
+            "name": "Gol głową",
+            "odds": 4.9
+          },
+          {
+            "name": "Rzuty wolny",
+            "odds": 19
+          },
+          {
+            "name": "Karny",
+            "odds": 7.8
+          },
+          {
+            "name": "Gol samobójczy",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 92,
+      "raw": {
+        "bookmakerMarketId": "682",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "dokładny wynik",
+        "selections": [
+          {
+            "name": "3:0",
+            "odds": 10.6
+          },
+          {
+            "name": "3:1",
+            "odds": 12.7
+          },
+          {
+            "name": "3:2",
+            "odds": 30
+          },
+          {
+            "name": "0:3",
+            "odds": 69
+          },
+          {
+            "name": "1:3",
+            "odds": 50
+          },
+          {
+            "name": "2:3",
+            "odds": 57
+          },
+          {
+            "name": "4:0",
+            "odds": 22
+          },
+          {
+            "name": "4:1",
+            "odds": 27
+          },
+          {
+            "name": "4:2",
+            "odds": 50
+          },
+          {
+            "name": "0:4",
+            "odds": 190
+          },
+          {
+            "name": "1:4",
+            "odds": 119
+          },
+          {
+            "name": "2:4",
+            "odds": 119
+          },
+          {
+            "name": "1:0",
+            "odds": 5.6
+          },
+          {
+            "name": "2:0",
+            "odds": 6.1
+          },
+          {
+            "name": "2:1",
+            "odds": 7.9
+          },
+          {
+            "name": "5:0",
+            "odds": 46
+          },
+          {
+            "name": "5:1",
+            "odds": 45
+          },
+          {
+            "name": "6:0",
+            "odds": 90
+          },
+          {
+            "name": "6:1",
+            "odds": 107
+          },
+          {
+            "name": "7:0",
+            "odds": 235
+          },
+          {
+            "name": "7:1",
+            "odds": 260
+          },
+          {
+            "name": "0:0",
+            "odds": 9
+          },
+          {
+            "name": "1:1",
+            "odds": 6.3
+          },
+          {
+            "name": "2:2",
+            "odds": 17
+          },
+          {
+            "name": "3:3",
+            "odds": 74
+          },
+          {
+            "name": "0:1",
+            "odds": 14
+          },
+          {
+            "name": "0:2",
+            "odds": 30
+          },
+          {
+            "name": "1:2",
+            "odds": 18.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 93,
+      "raw": {
+        "bookmakerMarketId": "311019",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1:1 w czasie meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.93
+          },
+          {
+            "name": "Nie",
+            "odds": 1.39
+          }
+        ]
+      }
+    },
+    {
+      "index": 94,
+      "raw": {
+        "bookmakerMarketId": "311020",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "2:0 lub 0:2 w czasie meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.21
+          },
+          {
+            "name": "Nie",
+            "odds": 1.63
+          }
+        ]
+      }
+    },
+    {
+      "index": 95,
+      "raw": {
+        "bookmakerMarketId": "311021",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "2:0 w czasie meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.6
+          },
+          {
+            "name": "Nie",
+            "odds": 1.47
+          }
+        ]
+      }
+    },
+    {
+      "index": 96,
+      "raw": {
+        "bookmakerMarketId": "311022",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "0:2 w czasie meczu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 10
+          },
+          {
+            "name": "Nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 97,
+      "raw": {
+        "bookmakerMarketId": "586",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli",
+        "selections": [
+          {
+            "name": "0 Goli",
+            "odds": 9.9
+          },
+          {
+            "name": "1 Gol",
+            "odds": 4.85
+          },
+          {
+            "name": "2 Gole",
+            "odds": 3.6
+          },
+          {
+            "name": "3 Gole",
+            "odds": 4.45
+          },
+          {
+            "name": "4 Gole",
+            "odds": 6.4
+          },
+          {
+            "name": "5 Goli",
+            "odds": 11.7
+          },
+          {
+            "name": "2 i Więcej Goli",
+            "odds": 1.34
+          },
+          {
+            "name": "3 i Więcej Goli",
+            "odds": 2.07
+          },
+          {
+            "name": "4 i Więcej Goli",
+            "odds": 3.55
+          },
+          {
+            "name": "5 i Więcej Goli",
+            "odds": 7.1
+          },
+          {
+            "name": "6 i Więcej Goli",
+            "odds": 14.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 98,
+      "raw": {
+        "bookmakerMarketId": "584",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja. Suma goli",
+        "selections": [
+          {
+            "name": "0 Goli",
+            "odds": 5.7
+          },
+          {
+            "name": "1 Gol",
+            "odds": 3.1
+          },
+          {
+            "name": "2 Gole",
+            "odds": 3.6
+          },
+          {
+            "name": "3 Gole",
+            "odds": 5.9
+          },
+          {
+            "name": "4 Gole",
+            "odds": 11.6
+          },
+          {
+            "name": "5 Goli",
+            "odds": 23
+          },
+          {
+            "name": "2 i Więcej Goli",
+            "odds": 1.82
+          },
+          {
+            "name": "3 i Więcej Goli",
+            "odds": 3.65
+          },
+          {
+            "name": "4 i Więcej Goli",
+            "odds": 8.7
+          },
+          {
+            "name": "5 i Więcej Goli",
+            "odds": 18
+          }
+        ]
+      }
+    },
+    {
+      "index": 99,
+      "raw": {
+        "bookmakerMarketId": "585",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko. Suma goli",
+        "selections": [
+          {
+            "name": "0 Goli",
+            "odds": 2.1
+          },
+          {
+            "name": "1 Gol",
+            "odds": 2.62
+          },
+          {
+            "name": "2 Gole",
+            "odds": 6.45
+          },
+          {
+            "name": "3 Gole",
+            "odds": 19.5
+          },
+          {
+            "name": "2 i Więcej Goli",
+            "odds": 5.2
+          },
+          {
+            "name": "3 i Więcej Goli",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 100,
+      "raw": {
+        "bookmakerMarketId": "275",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 0-1",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.3
+          },
+          {
+            "name": "Nie",
+            "odds": 1.31
+          }
+        ]
+      }
+    },
+    {
+      "index": 101,
+      "raw": {
+        "bookmakerMarketId": "276",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 1-2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.06
+          },
+          {
+            "name": "Nie",
+            "odds": 1.73
+          }
+        ]
+      }
+    },
+    {
+      "index": 102,
+      "raw": {
+        "bookmakerMarketId": "277",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 2-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.99
+          },
+          {
+            "name": "Nie",
+            "odds": 1.78
+          }
+        ]
+      }
+    },
+    {
+      "index": 103,
+      "raw": {
+        "bookmakerMarketId": "278",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli 3-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.63
+          },
+          {
+            "name": "Nie",
+            "odds": 1.46
+          }
+        ]
+      }
+    },
+    {
+      "index": 104,
+      "raw": {
+        "bookmakerMarketId": "279",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 4-5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.22
+          }
+        ]
+      }
+    },
+    {
+      "index": 105,
+      "raw": {
+        "bookmakerMarketId": "267861",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 4-6",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.65
+          },
+          {
+            "name": "Nie",
+            "odds": 1.27
+          }
+        ]
+      }
+    },
+    {
+      "index": 106,
+      "raw": {
+        "bookmakerMarketId": "280",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: suma goli: 0-1",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.98
+          },
+          {
+            "name": "Nie",
+            "odds": 1.79
+          }
+        ]
+      }
+    },
+    {
+      "index": 107,
+      "raw": {
+        "bookmakerMarketId": "281",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: suma goli: 1-2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.67
+          },
+          {
+            "name": "Nie",
+            "odds": 2.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 108,
+      "raw": {
+        "bookmakerMarketId": "282",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: suma goli: 2-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.23
+          },
+          {
+            "name": "Nie",
+            "odds": 1.63
+          }
+        ]
+      }
+    },
+    {
+      "index": 109,
+      "raw": {
+        "bookmakerMarketId": "283",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: suma goli: 3-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.9
+          },
+          {
+            "name": "Nie",
+            "odds": 1.24
+          }
+        ]
+      }
+    },
+    {
+      "index": 110,
+      "raw": {
+        "bookmakerMarketId": "285",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: suma goli: 0-1",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.17
+          },
+          {
+            "name": "Nie",
+            "odds": 4.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 111,
+      "raw": {
+        "bookmakerMarketId": "286",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: suma goli: 1-2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.87
+          },
+          {
+            "name": "Nie",
+            "odds": 1.89
+          }
+        ]
+      }
+    },
+    {
+      "index": 112,
+      "raw": {
+        "bookmakerMarketId": "287",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: suma goli: 2-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.85
+          },
+          {
+            "name": "Nie",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 113,
+      "raw": {
+        "bookmakerMarketId": "288",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: suma goli: 3-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 13.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 114,
+      "raw": {
+        "bookmakerMarketId": "267856",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 1-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.44
+          },
+          {
+            "name": "Nie",
+            "odds": 2.69
+          }
+        ]
+      }
+    },
+    {
+      "index": 115,
+      "raw": {
+        "bookmakerMarketId": "267857",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 2-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.56
+          },
+          {
+            "name": "Nie",
+            "odds": 2.37
+          }
+        ]
+      }
+    },
+    {
+      "index": 116,
+      "raw": {
+        "bookmakerMarketId": "267860",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Suma goli: 3-5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.22
+          },
+          {
+            "name": "Nie",
+            "odds": 1.63
+          }
+        ]
+      }
+    },
+    {
+      "index": 117,
+      "raw": {
+        "bookmakerMarketId": "268887",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 2-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.33
+          }
+        ]
+      }
+    },
+    {
+      "index": 118,
+      "raw": {
+        "bookmakerMarketId": "333109",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 1-2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.5
+          },
+          {
+            "name": "Nie",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 119,
+      "raw": {
+        "bookmakerMarketId": "333110",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 1-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.24
+          },
+          {
+            "name": "Nie",
+            "odds": 1.62
+          }
+        ]
+      }
+    },
+    {
+      "index": 120,
+      "raw": {
+        "bookmakerMarketId": "333111",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 2-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.49
+          },
+          {
+            "name": "Nie",
+            "odds": 1.51
+          }
+        ]
+      }
+    },
+    {
+      "index": 121,
+      "raw": {
+        "bookmakerMarketId": "333112",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 3-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.55
+          },
+          {
+            "name": "Nie",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 122,
+      "raw": {
+        "bookmakerMarketId": "333113",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma goli: 3-5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.94
+          },
+          {
+            "name": "Nie",
+            "odds": 1.39
+          }
+        ]
+      }
+    },
+    {
+      "index": 123,
+      "raw": {
+        "bookmakerMarketId": "268888",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 2-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 10
+          },
+          {
+            "name": "Nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 124,
+      "raw": {
+        "bookmakerMarketId": "333114",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 1-2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 8.9
+          },
+          {
+            "name": "Nie",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 125,
+      "raw": {
+        "bookmakerMarketId": "333115",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 1-3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.35
+          },
+          {
+            "name": "Nie",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 126,
+      "raw": {
+        "bookmakerMarketId": "333116",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 2-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 8.9
+          },
+          {
+            "name": "Nie",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 127,
+      "raw": {
+        "bookmakerMarketId": "333117",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 3-4",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 11.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 128,
+      "raw": {
+        "bookmakerMarketId": "333118",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma goli: 3-5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 10
+          },
+          {
+            "name": "Nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 129,
+      "raw": {
+        "bookmakerMarketId": "333182",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. Połowa/2 Połowa obie drużyny strzelą gola",
+        "selections": [
+          {
+            "name": "Tak/Tak",
+            "odds": 18.5
+          },
+          {
+            "name": "Tak/Nie",
+            "odds": 8
+          },
+          {
+            "name": "Nie/Tak",
+            "odds": 4.25
+          },
+          {
+            "name": "Nie/Nie",
+            "odds": 1.52
+          }
+        ]
+      }
+    },
+    {
+      "index": 130,
+      "raw": {
+        "bookmakerMarketId": "332816",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "obie drużyny strzelą w przynajmniej jednej połowie",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.52
+          },
+          {
+            "name": "Nie",
+            "odds": 1.49
+          }
+        ]
+      }
+    },
+    {
+      "index": 131,
+      "raw": {
+        "bookmakerMarketId": "262063",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "obie drużyny strzelą w obu połowach",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 16
+          }
+        ]
+      }
+    },
+    {
+      "index": 132,
+      "raw": {
+        "bookmakerMarketId": "332818",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "obie drużyny suma powyżej 1.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 7.6
+          },
+          {
+            "name": "Nie",
+            "odds": 1.07
+          }
+        ]
+      }
+    },
+    {
+      "index": 133,
+      "raw": {
+        "bookmakerMarketId": "332819",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "obie drużyny suma poniżej",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.37
+          },
+          {
+            "name": "Nie",
+            "odds": 1.56
+          }
+        ]
+      }
+    },
+    {
+      "index": 134,
+      "raw": {
+        "bookmakerMarketId": "350076",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik 1. połowy lub obie drużyny strzelą:",
+        "selections": [
+          {
+            "name": "Francja lub obie strzelą",
+            "odds": 1.38
+          },
+          {
+            "name": "Maroko lub obie strzelą",
+            "odds": 1.91
+          },
+          {
+            "name": "Remis lub obie strzelą",
+            "odds": 1.34
+          },
+          {
+            "name": "Francja lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.32
+          },
+          {
+            "name": "Maroko lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.5
+          },
+          {
+            "name": "Remis lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.36
+          }
+        ]
+      }
+    },
+    {
+      "index": 135,
+      "raw": {
+        "bookmakerMarketId": "350077",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik 2. połowy lub obie drużyny strzelą:",
+        "selections": [
+          {
+            "name": "Francja lub obie strzelą",
+            "odds": 1.27
+          },
+          {
+            "name": "Maroko lub obie strzelą",
+            "odds": 1.86
+          },
+          {
+            "name": "Remis lub obie strzelą",
+            "odds": 1.48
+          },
+          {
+            "name": "Francja lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.28
+          },
+          {
+            "name": "Maroko lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.51
+          },
+          {
+            "name": "Remis lub Przynajmniej jedna drużyna nie strzeli",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 136,
+      "raw": {
+        "bookmakerMarketId": "39",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Gol w obu połowach. Francja",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.83
+          },
+          {
+            "name": "Nie",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 137,
+      "raw": {
+        "bookmakerMarketId": "40",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Gol w obu połowach. Maroko",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 9.35
+          },
+          {
+            "name": "Nie",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 138,
+      "raw": {
+        "bookmakerMarketId": "380258",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli w tylko jednej połowie",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.9
+          },
+          {
+            "name": "Nie",
+            "odds": 1.86
+          }
+        ]
+      }
+    },
+    {
+      "index": 139,
+      "raw": {
+        "bookmakerMarketId": "380259",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli w tylko jednej połowie",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.11
+          },
+          {
+            "name": "Nie",
+            "odds": 1.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 140,
+      "raw": {
+        "bookmakerMarketId": "40414",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra obie połowy",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 141,
+      "raw": {
+        "bookmakerMarketId": "40415",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra obie połowy",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 17.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 142,
+      "raw": {
+        "bookmakerMarketId": "39504",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra co najmniej jedną połowę",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.35
+          },
+          {
+            "name": "Nie",
+            "odds": 3.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 143,
+      "raw": {
+        "bookmakerMarketId": "39505",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra co najmniej jedną połowę",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.1
+          },
+          {
+            "name": "Nie",
+            "odds": 1.35
+          }
+        ]
+      }
+    },
+    {
+      "index": 144,
+      "raw": {
+        "bookmakerMarketId": "332821",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "każdy zespół wygra jedną połowę",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.7
+          },
+          {
+            "name": "Nie",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 145,
+      "raw": {
+        "bookmakerMarketId": "30",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. Połowa: gol",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.48
+          },
+          {
+            "name": "Nie",
+            "odds": 2.72
+          }
+        ]
+      }
+    },
+    {
+      "index": 146,
+      "raw": {
+        "bookmakerMarketId": "31",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "2. połowa: gol",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.26
+          },
+          {
+            "name": "Nie",
+            "odds": 4.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 147,
+      "raw": {
+        "bookmakerMarketId": "32",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Gol w obu połowach",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.85
+          },
+          {
+            "name": "Nie",
+            "odds": 1.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 148,
+      "raw": {
+        "bookmakerMarketId": "332813",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie połowy powyżej 0.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.89
+          },
+          {
+            "name": "Nie",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 149,
+      "raw": {
+        "bookmakerMarketId": "332813",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie połowy powyżej 1.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.5
+          },
+          {
+            "name": "Nie",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 150,
+      "raw": {
+        "bookmakerMarketId": "332814",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie połowy poniżej 1.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.31
+          },
+          {
+            "name": "Nie",
+            "odds": 1.59
+          }
+        ]
+      }
+    },
+    {
+      "index": 151,
+      "raw": {
+        "bookmakerMarketId": "332814",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie połowy poniżej 2.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.31
+          },
+          {
+            "name": "Nie",
+            "odds": 3.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 152,
+      "raw": {
+        "bookmakerMarketId": "332814",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie połowy poniżej 3.5",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.06
+          },
+          {
+            "name": "Nie",
+            "odds": 7.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 153,
+      "raw": {
+        "bookmakerMarketId": "7",
+        "groupId": "",
+        "groupName": "Dokladny wynik",
+        "name": "połowa z największym wynikiem",
+        "selections": [
+          {
+            "name": "1. < 2.",
+            "odds": 2.01
+          },
+          {
+            "name": "1. = 2.",
+            "odds": 3.65
+          },
+          {
+            "name": "1. > 2.",
+            "odds": 3.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 154,
+      "raw": {
+        "bookmakerMarketId": "263683",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja. Połowa z wyższą sumą goli",
+        "selections": [
+          {
+            "name": "1. < 2.",
+            "odds": 2.26
+          },
+          {
+            "name": "1. = 2.",
+            "odds": 2.93
+          },
+          {
+            "name": "1. > 2.",
+            "odds": 3.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 155,
+      "raw": {
+        "bookmakerMarketId": "263685",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko. Połowa z wyższą sumą goli",
+        "selections": [
+          {
+            "name": "1. < 2.",
+            "odds": 3.25
+          },
+          {
+            "name": "1. = 2.",
+            "odds": 1.84
+          },
+          {
+            "name": "1. > 2.",
+            "odds": 5.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 156,
+      "raw": {
+        "bookmakerMarketId": "424467",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "najwięcej punktów w połowie: podwójna szansa",
+        "selections": [
+          {
+            "name": "1st < 2nd or 1st = 2nd",
+            "odds": 1.29
+          },
+          {
+            "name": "1.<2. lub 1.>2.",
+            "odds": 1.29
+          },
+          {
+            "name": "1.=2. lub 1.>2.",
+            "odds": 1.87
+          }
+        ]
+      }
+    },
+    {
+      "index": 157,
+      "raw": {
+        "bookmakerMarketId": "38",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "czas 1. gola",
+        "selections": [
+          {
+            "name": "Od 1 do 17 min.",
+            "odds": 2.89
+          },
+          {
+            "name": "Od 18 do 90 min.",
+            "odds": 1.38
+          },
+          {
+            "name": "Od 1 do 18 min.",
+            "odds": 2.74
+          },
+          {
+            "name": "Od 19 do 90 min.",
+            "odds": 1.43
+          },
+          {
+            "name": "Od 1 do 19 min.",
+            "odds": 2.61
+          },
+          {
+            "name": "Od 20 do 90 min.",
+            "odds": 1.48
+          },
+          {
+            "name": "Od 1 do 20 min.",
+            "odds": 2.49
+          },
+          {
+            "name": "Od 21 do 90 min.",
+            "odds": 1.53
+          },
+          {
+            "name": "Od 1 do 21 min.",
+            "odds": 2.42
+          },
+          {
+            "name": "Od 22 do 90 min.",
+            "odds": 1.57
+          },
+          {
+            "name": "Od 1 do 22 min.",
+            "odds": 2.35
+          },
+          {
+            "name": "Od 23 do 90 min.",
+            "odds": 1.61
+          },
+          {
+            "name": "Od 1 do 23 min.",
+            "odds": 2.28
+          },
+          {
+            "name": "Od 24 do 90 min.",
+            "odds": 1.65
+          },
+          {
+            "name": "Od 1 do 24 min.",
+            "odds": 2.22
+          },
+          {
+            "name": "Od 25 do 90 min.",
+            "odds": 1.68
+          },
+          {
+            "name": "Od 1 do 25 min.",
+            "odds": 2.17
+          },
+          {
+            "name": "Od 26 do 90 min.",
+            "odds": 1.71
+          },
+          {
+            "name": "Od 1 do 26 min.",
+            "odds": 2.11
+          },
+          {
+            "name": "Od 27 do 90 min.",
+            "odds": 1.75
+          },
+          {
+            "name": "Od 1 do 27 min.",
+            "odds": 2.06
+          },
+          {
+            "name": "Od 28 do 90 min.",
+            "odds": 1.79
+          },
+          {
+            "name": "Od 1 do 28 min.",
+            "odds": 2
+          },
+          {
+            "name": "Od 29 do 90 min.",
+            "odds": 1.83
+          },
+          {
+            "name": "Od 1 do 29 min.",
+            "odds": 1.96
+          },
+          {
+            "name": "Od 30 do 90 min.",
+            "odds": 1.87
+          },
+          {
+            "name": "Od 1 do 30 min.",
+            "odds": 1.91
+          },
+          {
+            "name": "Od 31 do 90 min.",
+            "odds": 1.92
+          },
+          {
+            "name": "Od 1 do 31 min.",
+            "odds": 1.87
+          },
+          {
+            "name": "Od 32 do 90 min.",
+            "odds": 1.96
+          },
+          {
+            "name": "Od 1 do 32 min.",
+            "odds": 1.83
+          },
+          {
+            "name": "Od 33 do 90 min.",
+            "odds": 2
+          },
+          {
+            "name": "Od 1 do 33 min.",
+            "odds": 1.8
+          },
+          {
+            "name": "Od 34 do 90 min.",
+            "odds": 2.05
+          },
+          {
+            "name": "Od 1 do 34 min.",
+            "odds": 1.77
+          },
+          {
+            "name": "Od 35 do 90 min.",
+            "odds": 2.09
+          },
+          {
+            "name": "Od 1 do 35 min.",
+            "odds": 1.74
+          },
+          {
+            "name": "Od 36 do 90 min.",
+            "odds": 2.13
+          },
+          {
+            "name": "Od 1 do 38 min.",
+            "odds": 1.71
+          },
+          {
+            "name": "Od 39 do 90 min.",
+            "odds": 2.17
+          }
+        ]
+      }
+    },
+    {
+      "index": 158,
+      "raw": {
+        "bookmakerMarketId": "583",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "czas 1. gola",
+        "selections": [
+          {
+            "name": "Od 1 do 15 min.",
+            "odds": 3.5
+          },
+          {
+            "name": "Od 16 do 30 min.",
+            "odds": 4.3
+          },
+          {
+            "name": "Od 31 do 45 min.",
+            "odds": 6.15
+          },
+          {
+            "name": "Od 46 do 60 min.",
+            "odds": 7.7
+          },
+          {
+            "name": "Od 61 do 75 min.",
+            "odds": 9.2
+          },
+          {
+            "name": "Od 76 do 90 min.",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 159,
+      "raw": {
+        "bookmakerMarketId": "655",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "czas 1. gola",
+        "selections": [
+          {
+            "name": "Od 1 do 10 min.",
+            "odds": 5.2
+          },
+          {
+            "name": "Od 11 do 20 min.",
+            "odds": 5.1
+          },
+          {
+            "name": "Od 21 do 30 min.",
+            "odds": 7.2
+          },
+          {
+            "name": "Od 31 do 40 min.",
+            "odds": 9.4
+          },
+          {
+            "name": "Od 41 do 50 min.",
+            "odds": 9
+          },
+          {
+            "name": "Od 51 do 60 min.",
+            "odds": 11
+          },
+          {
+            "name": "Od 61 do 70 min.",
+            "odds": 11.3
+          },
+          {
+            "name": "Od 71 do 80 min.",
+            "odds": 16.5
+          },
+          {
+            "name": "Od 81 do 90 min.",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 160,
+      "raw": {
+        "bookmakerMarketId": "40317",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "czas 2. gola",
+        "selections": [
+          {
+            "name": "Od 1 do 45 min.",
+            "odds": 3.1
+          },
+          {
+            "name": "Od 46 do 90 min.",
+            "odds": 2.03
+          },
+          {
+            "name": "Od 1 do 46 min.",
+            "odds": 3
+          },
+          {
+            "name": "Od 47 do 90 min.",
+            "odds": 2.06
+          },
+          {
+            "name": "Od 1 do 47 min.",
+            "odds": 2.93
+          },
+          {
+            "name": "Od 48 do 90 min.",
+            "odds": 2.1
+          },
+          {
+            "name": "Od 1 do 48 min.",
+            "odds": 2.87
+          },
+          {
+            "name": "Od 49 do 90 min.",
+            "odds": 2.14
+          },
+          {
+            "name": "Od 1 do 49 min.",
+            "odds": 2.8
+          },
+          {
+            "name": "Od 50 do 90 min.",
+            "odds": 2.17
+          },
+          {
+            "name": "Od 1 do 50 min.",
+            "odds": 2.73
+          },
+          {
+            "name": "Od 51 do 90 min.",
+            "odds": 2.21
+          },
+          {
+            "name": "Od 1 do 51 min.",
+            "odds": 2.66
+          },
+          {
+            "name": "Od 52 do 90 min.",
+            "odds": 2.26
+          },
+          {
+            "name": "Od 1 do 52 min.",
+            "odds": 2.59
+          },
+          {
+            "name": "Od 53 do 90 min.",
+            "odds": 2.32
+          },
+          {
+            "name": "Od 1 do 53 min.",
+            "odds": 2.53
+          },
+          {
+            "name": "Od 54 do 90 min.",
+            "odds": 2.37
+          },
+          {
+            "name": "Od 1 do 54 min.",
+            "odds": 2.47
+          },
+          {
+            "name": "Od 55 do 90 min.",
+            "odds": 2.42
+          },
+          {
+            "name": "Od 1 do 55 min.",
+            "odds": 2.41
+          },
+          {
+            "name": "Od 56 do 90 min.",
+            "odds": 2.48
+          },
+          {
+            "name": "Od 1 do 56 min.",
+            "odds": 2.36
+          },
+          {
+            "name": "Od 57 do 90 min.",
+            "odds": 2.53
+          },
+          {
+            "name": "Od 1 do 57 min.",
+            "odds": 2.32
+          },
+          {
+            "name": "Od 58 do 90 min.",
+            "odds": 2.58
+          },
+          {
+            "name": "Od 1 do 58 min.",
+            "odds": 2.28
+          },
+          {
+            "name": "Od 59 do 90 min.",
+            "odds": 2.64
+          },
+          {
+            "name": "Od 1 do 59 min.",
+            "odds": 2.24
+          },
+          {
+            "name": "Od 60 do 90 min.",
+            "odds": 2.69
+          },
+          {
+            "name": "Od 1 do 60 min.",
+            "odds": 2.2
+          },
+          {
+            "name": "Od 61 do 90 min.",
+            "odds": 2.75
+          },
+          {
+            "name": "Od 1 do 61 min.",
+            "odds": 2.15
+          },
+          {
+            "name": "Od 62 do 90 min.",
+            "odds": 2.83
+          },
+          {
+            "name": "Od 1 do 62 min.",
+            "odds": 2.1
+          },
+          {
+            "name": "Od 63 do 90 min.",
+            "odds": 2.91
+          },
+          {
+            "name": "Od 1 do 63 min.",
+            "odds": 2.06
+          },
+          {
+            "name": "Od 64 do 90 min.",
+            "odds": 3
+          },
+          {
+            "name": "Od 1 do 64 min.",
+            "odds": 2.02
+          },
+          {
+            "name": "Od 65 do 90 min.",
+            "odds": 3.1
+          },
+          {
+            "name": "Od 1 do 65 min.",
+            "odds": 1.98
+          },
+          {
+            "name": "Od 66 do 90 min.",
+            "odds": 3.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 161,
+      "raw": {
+        "bookmakerMarketId": "329307",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 10 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 162,
+      "raw": {
+        "bookmakerMarketId": "40379",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 15 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.5
+          },
+          {
+            "name": "Nie",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 163,
+      "raw": {
+        "bookmakerMarketId": "40380",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 20 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.49
+          },
+          {
+            "name": "Nie",
+            "odds": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "index": 164,
+      "raw": {
+        "bookmakerMarketId": "40381",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 25 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.17
+          },
+          {
+            "name": "Nie",
+            "odds": 1.64
+          }
+        ]
+      }
+    },
+    {
+      "index": 165,
+      "raw": {
+        "bookmakerMarketId": "40382",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 30 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.91
+          },
+          {
+            "name": "Nie",
+            "odds": 1.84
+          }
+        ]
+      }
+    },
+    {
+      "index": 166,
+      "raw": {
+        "bookmakerMarketId": "40384",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 40 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.62
+          },
+          {
+            "name": "Nie",
+            "odds": 2.24
+          }
+        ]
+      }
+    },
+    {
+      "index": 167,
+      "raw": {
+        "bookmakerMarketId": "40385",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 60 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.41
+          }
+        ]
+      }
+    },
+    {
+      "index": 168,
+      "raw": {
+        "bookmakerMarketId": "40383",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 1 a 35 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.74
+          },
+          {
+            "name": "Nie",
+            "odds": 2.06
+          }
+        ]
+      }
+    },
+    {
+      "index": 169,
+      "raw": {
+        "bookmakerMarketId": "40386",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 65 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.16
+          },
+          {
+            "name": "Nie",
+            "odds": 1.67
+          }
+        ]
+      }
+    },
+    {
+      "index": 170,
+      "raw": {
+        "bookmakerMarketId": "40387",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 70 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.97
+          }
+        ]
+      }
+    },
+    {
+      "index": 171,
+      "raw": {
+        "bookmakerMarketId": "40388",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 75 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.65
+          },
+          {
+            "name": "Nie",
+            "odds": 2.19
+          }
+        ]
+      }
+    },
+    {
+      "index": 172,
+      "raw": {
+        "bookmakerMarketId": "40493",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 80 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.49
+          },
+          {
+            "name": "Nie",
+            "odds": 2.55
+          }
+        ]
+      }
+    },
+    {
+      "index": 173,
+      "raw": {
+        "bookmakerMarketId": "40494",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 46 a 85 min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.38
+          },
+          {
+            "name": "Nie",
+            "odds": 2.97
+          }
+        ]
+      }
+    },
+    {
+      "index": 174,
+      "raw": {
+        "bookmakerMarketId": "40389",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "gol między 76 a 90+ min",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.91
+          },
+          {
+            "name": "Nie",
+            "odds": 1.79
+          }
+        ]
+      }
+    },
+    {
+      "index": 175,
+      "raw": {
+        "bookmakerMarketId": "299442",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "90+ gol",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.25
+          },
+          {
+            "name": "Nie",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 176,
+      "raw": {
+        "bookmakerMarketId": "290",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "remis bramkowy",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5
+          },
+          {
+            "name": "Nie",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 177,
+      "raw": {
+        "bookmakerMarketId": "647",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "remis w co najmniej jednej połowie",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.53
+          },
+          {
+            "name": "Nie",
+            "odds": 2.44
+          }
+        ]
+      }
+    },
+    {
+      "index": 178,
+      "raw": {
+        "bookmakerMarketId": "5685188",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obie drużyny będą na prowadzeniu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 7.7
+          },
+          {
+            "name": "Nie",
+            "odds": 1.09
+          }
+        ]
+      }
+    },
+    {
+      "index": 179,
+      "raw": {
+        "bookmakerMarketId": "1140",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra wcześniej przegrywając",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 9.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.04
+          }
+        ]
+      }
+    },
+    {
+      "index": 180,
+      "raw": {
+        "bookmakerMarketId": "40393",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra do zera",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.47
+          },
+          {
+            "name": "Nie",
+            "odds": 1.51
+          }
+        ]
+      }
+    },
+    {
+      "index": 181,
+      "raw": {
+        "bookmakerMarketId": "40394",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra do zera",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 8.4
+          },
+          {
+            "name": "Nie",
+            "odds": 1.06
+          }
+        ]
+      }
+    },
+    {
+      "index": 182,
+      "raw": {
+        "bookmakerMarketId": "650",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "jakikolwiek zespół. Margines zwycięstwa: 1",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.58
+          },
+          {
+            "name": "Nie",
+            "odds": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "index": 183,
+      "raw": {
+        "bookmakerMarketId": "651",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "jakikolwiek zespół. Margines zwycięstwa: dokładnie 2",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.95
+          },
+          {
+            "name": "Nie",
+            "odds": 1.23
+          }
+        ]
+      }
+    },
+    {
+      "index": 184,
+      "raw": {
+        "bookmakerMarketId": "652",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "jakikolwiek zespół. Margines zwycięstwa: 3",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 7.1
+          },
+          {
+            "name": "Nie",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 185,
+      "raw": {
+        "bookmakerMarketId": "653",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "jakikolwiek zespół. Margines zwycięstwa: 2 lub więcej",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.33
+          },
+          {
+            "name": "Nie",
+            "odds": 1.58
+          }
+        ]
+      }
+    },
+    {
+      "index": 186,
+      "raw": {
+        "bookmakerMarketId": "654",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "jakikolwiek zespół. Margines zwycięstwa: 3 lub więcej",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 187,
+      "raw": {
+        "bookmakerMarketId": "525",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 1 gola",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.55
+          },
+          {
+            "name": "Nie",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 188,
+      "raw": {
+        "bookmakerMarketId": "526",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 2 goli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.6
+          },
+          {
+            "name": "Nie",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 189,
+      "raw": {
+        "bookmakerMarketId": "529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 1 lub 2 goli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.67
+          }
+        ]
+      }
+    },
+    {
+      "index": 190,
+      "raw": {
+        "bookmakerMarketId": "530",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 2 lub 3 goli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.34
+          }
+        ]
+      }
+    },
+    {
+      "index": 191,
+      "raw": {
+        "bookmakerMarketId": "533",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 1 gola lub remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 1.89
+          },
+          {
+            "name": "Nie",
+            "odds": 1.87
+          }
+        ]
+      }
+    },
+    {
+      "index": 192,
+      "raw": {
+        "bookmakerMarketId": "534",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja: wygra różnicą 2 goli lub remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.67
+          }
+        ]
+      }
+    },
+    {
+      "index": 193,
+      "raw": {
+        "bookmakerMarketId": "535",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 1 gola",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 7.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 194,
+      "raw": {
+        "bookmakerMarketId": "536",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 2 goli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 14.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 195,
+      "raw": {
+        "bookmakerMarketId": "539",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 1 lub 2 golami",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.75
+          },
+          {
+            "name": "Nie",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 196,
+      "raw": {
+        "bookmakerMarketId": "540",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 2 lub 3 goli",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 13.2
+          },
+          {
+            "name": "Nie",
+            "odds": 1.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 197,
+      "raw": {
+        "bookmakerMarketId": "543",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 1 gola lub remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.58
+          },
+          {
+            "name": "Nie",
+            "odds": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "index": 198,
+      "raw": {
+        "bookmakerMarketId": "544",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko: wygra różnicą 2 goli lub remis",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.15
+          },
+          {
+            "name": "Nie",
+            "odds": 1.34
+          }
+        ]
+      }
+    },
+    {
+      "index": 199,
+      "raw": {
+        "bookmakerMarketId": "656",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli 2 gole z rzędu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 2.01
+          },
+          {
+            "name": "Nie",
+            "odds": 1.76
+          }
+        ]
+      }
+    },
+    {
+      "index": 200,
+      "raw": {
+        "bookmakerMarketId": "657",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli 3 gole z rzędu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.25
+          },
+          {
+            "name": "Nie",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 201,
+      "raw": {
+        "bookmakerMarketId": "658",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli 2 gole z rzędu",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 6.45
+          },
+          {
+            "name": "Nie",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 202,
+      "raw": {
+        "bookmakerMarketId": "673",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli pierwszego gola",
+        "selections": [
+          {
+            "name": "W 1. Połowie",
+            "odds": 1.86
+          },
+          {
+            "name": "W 2. Połowie",
+            "odds": 2.98
+          },
+          {
+            "name": "Nie strzeli",
+            "odds": 5.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 203,
+      "raw": {
+        "bookmakerMarketId": "674",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli drugiego gola",
+        "selections": [
+          {
+            "name": "W 1. Połowie",
+            "odds": 5.45
+          },
+          {
+            "name": "W 2. Połowie",
+            "odds": 2.58
+          },
+          {
+            "name": "Nie strzeli",
+            "odds": 2.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 204,
+      "raw": {
+        "bookmakerMarketId": "675",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli pierwszego gola",
+        "selections": [
+          {
+            "name": "W 1. Połowie",
+            "odds": 3.4
+          },
+          {
+            "name": "W 2. Połowie",
+            "odds": 3.4
+          },
+          {
+            "name": "Nie strzeli",
+            "odds": 2.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 205,
+      "raw": {
+        "bookmakerMarketId": "676",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli drugiego gola",
+        "selections": [
+          {
+            "name": "W 1. Połowie",
+            "odds": 16.5
+          },
+          {
+            "name": "W 2. Połowie",
+            "odds": 6.05
+          },
+          {
+            "name": "Nie strzeli",
+            "odds": 1.17
+          }
+        ]
+      }
+    },
+    {
+      "index": 206,
+      "raw": {
+        "bookmakerMarketId": "677",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Czas pierwszego gola",
+        "selections": [
+          {
+            "name": "W 1. Połowie",
+            "odds": 1.47
+          },
+          {
+            "name": "W 2. Połowie",
+            "odds": 3.45
+          },
+          {
+            "name": "Brak gola",
+            "odds": 9.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 207,
+      "raw": {
+        "bookmakerMarketId": "261964",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wyścig do 2. goli",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.92
+          },
+          {
+            "name": "Maroko",
+            "odds": 6
+          },
+          {
+            "name": "Nikt",
+            "odds": 2.36
+          }
+        ]
+      }
+    },
+    {
+      "index": 208,
+      "raw": {
+        "bookmakerMarketId": "261965",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wyścig do 3. goli",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 3.6
+          },
+          {
+            "name": "Maroko",
+            "odds": 18
+          },
+          {
+            "name": "Nikt",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 209,
+      "raw": {
+        "bookmakerMarketId": "390842",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja wygra i suma Francja",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.03
+          },
+          {
+            "name": "poniżej",
+            "odds": 6.35
+          },
+          {
+            "name": "powyżej",
+            "odds": 3.55
+          },
+          {
+            "name": "poniżej",
+            "odds": 2.71
+          },
+          {
+            "name": "powyżej",
+            "odds": 7.5
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.94
+          }
+        ]
+      }
+    },
+    {
+      "index": 210,
+      "raw": {
+        "bookmakerMarketId": "390843",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko wygra i suma Maroko",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 8.3
+          },
+          {
+            "name": "poniżej",
+            "odds": 12.2
+          },
+          {
+            "name": "powyżej",
+            "odds": 17.5
+          },
+          {
+            "name": "poniżej",
+            "odds": 6.9
+          },
+          {
+            "name": "powyżej",
+            "odds": 31
+          },
+          {
+            "name": "poniżej",
+            "odds": 5.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 211,
+      "raw": {
+        "bookmakerMarketId": "263693",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli pierwsza i wynik meczu",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.79
+          },
+          {
+            "name": "Remis",
+            "odds": 8.9
+          },
+          {
+            "name": "Maroko",
+            "odds": 20
+          },
+          {
+            "name": "1X",
+            "odds": 1.53
+          },
+          {
+            "name": "12",
+            "odds": 1.72
+          },
+          {
+            "name": "X2",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 212,
+      "raw": {
+        "bookmakerMarketId": "263694",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli pierwsza i wynik meczu",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 10.6
+          },
+          {
+            "name": "Remis",
+            "odds": 8.9
+          },
+          {
+            "name": "Maroko",
+            "odds": 6.3
+          },
+          {
+            "name": "1X",
+            "odds": 5.6
+          },
+          {
+            "name": "12",
+            "odds": 4.45
+          },
+          {
+            "name": "X2",
+            "odds": 4.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 213,
+      "raw": {
+        "bookmakerMarketId": "263695",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja strzeli pierwsza i suma",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.78
+          },
+          {
+            "name": "poniżej",
+            "odds": 5.3
+          },
+          {
+            "name": "powyżej",
+            "odds": 2.62
+          },
+          {
+            "name": "poniżej",
+            "odds": 2.72
+          }
+        ]
+      }
+    },
+    {
+      "index": 214,
+      "raw": {
+        "bookmakerMarketId": "263696",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko strzeli pierwsza i suma goli",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.6
+          },
+          {
+            "name": "poniżej",
+            "odds": 8.9
+          },
+          {
+            "name": "powyżej",
+            "odds": 5.1
+          },
+          {
+            "name": "poniżej",
+            "odds": 5.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 215,
+      "raw": {
+        "bookmakerMarketId": "40497",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "łączna liczba minut goli",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.88
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 216,
+      "raw": {
+        "bookmakerMarketId": "5685189",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja suma minut, w których padnie gol",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.93
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.91
+          }
+        ]
+      }
+    },
+    {
+      "index": 217,
+      "raw": {
+        "bookmakerMarketId": "5685190",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko suma minut, w których padnie gol",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.94
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 218,
+      "raw": {
+        "bookmakerMarketId": "672",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Maroko liczba minut na prowadzeniu",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.91
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.39
+          }
+        ]
+      }
+    },
+    {
+      "index": 219,
+      "raw": {
+        "bookmakerMarketId": "670",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Francja liczba minut na prowadzeniu",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.88
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 220,
+      "raw": {
+        "bookmakerMarketId": "671",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Łączna liczba minut remisowych",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.88
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 221,
+      "raw": {
+        "bookmakerMarketId": "421317",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. połowa + 2. połowa",
+        "selections": [
+          {
+            "name": "1. połowa Maroko + 2. połowa remis",
+            "odds": 5.25
+          },
+          {
+            "name": "1 połowa remis + 2. połowa Francja",
+            "odds": 4.2
+          },
+          {
+            "name": "1. połowa remis i 2.połowa Maroko",
+            "odds": 10.6
+          },
+          {
+            "name": "1. połowa Francja + 2. połowa remis",
+            "odds": 6.5
+          },
+          {
+            "name": "1. połowa Francja + 2. połowa Francja",
+            "odds": 4.55
+          },
+          {
+            "name": "1. połowa Francja + 2. połowa Maroko",
+            "odds": 12.7
+          },
+          {
+            "name": "1. połowa Maroko i 2.połowa remis",
+            "odds": 16
+          },
+          {
+            "name": "1. połowa Maroko + 2. połowa Francja",
+            "odds": 11.6
+          },
+          {
+            "name": "1. połowa Maroko i 2.połowa Maroko",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 222,
+      "raw": {
+        "bookmakerMarketId": "262274",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. Połowa powyżej (0.5) i 2. połowa powyżej (1.5)",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 3.25
+          },
+          {
+            "name": "Nie",
+            "odds": 1.38
+          }
+        ]
+      }
+    },
+    {
+      "index": 223,
+      "raw": {
+        "bookmakerMarketId": "262275",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1. Połowa powyżej (1.5) i 2. połowa powyżej (0.5)",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 4.4
+          },
+          {
+            "name": "Nie",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 224,
+      "raw": {
+        "bookmakerMarketId": "262276",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma powyżej (3.5) i 1. połowa powyżej (1.5)",
+        "selections": [
+          {
+            "name": "Tak",
+            "odds": 5.8
+          },
+          {
+            "name": "Nie",
+            "odds": 1.17
+          }
+        ]
+      }
+    },
+    {
+      "index": 225,
+      "raw": {
+        "bookmakerMarketId": "268284",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu w przedziale 1-15 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 5.4
+          },
+          {
+            "name": "Remis",
+            "odds": 1.25
+          },
+          {
+            "name": "Maroko",
+            "odds": 11.7
+          },
+          {
+            "name": "12",
+            "odds": 3.95
+          },
+          {
+            "name": "X2",
+            "odds": 1.14
+          }
+        ]
+      }
+    },
+    {
+      "index": 226,
+      "raw": {
+        "bookmakerMarketId": "270586",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 1-15 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.5
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 227,
+      "raw": {
+        "bookmakerMarketId": "268286",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu w przedziale 31-45+ min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 4.35
+          },
+          {
+            "name": "Remis",
+            "odds": 1.37
+          },
+          {
+            "name": "Maroko",
+            "odds": 9.9
+          },
+          {
+            "name": "1X",
+            "odds": 1.02
+          },
+          {
+            "name": "12",
+            "odds": 3.2
+          },
+          {
+            "name": "X2",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 228,
+      "raw": {
+        "bookmakerMarketId": "270588",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 31-45+ min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.85
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 229,
+      "raw": {
+        "bookmakerMarketId": "268287",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu w przedziale 46-60 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 4.3
+          },
+          {
+            "name": "Remis",
+            "odds": 1.38
+          },
+          {
+            "name": "Maroko",
+            "odds": 9.8
+          },
+          {
+            "name": "1X",
+            "odds": 1.02
+          },
+          {
+            "name": "12",
+            "odds": 3.15
+          },
+          {
+            "name": "X2",
+            "odds": 1.22
+          }
+        ]
+      }
+    },
+    {
+      "index": 230,
+      "raw": {
+        "bookmakerMarketId": "270589",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 45-60 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.8
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.41
+          }
+        ]
+      }
+    },
+    {
+      "index": 231,
+      "raw": {
+        "bookmakerMarketId": "268289",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Wynik meczu w przedziale 76-90+ min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 2.94
+          },
+          {
+            "name": "Remis",
+            "odds": 1.75
+          },
+          {
+            "name": "Maroko",
+            "odds": 7.3
+          },
+          {
+            "name": "1X",
+            "odds": 1.07
+          },
+          {
+            "name": "12",
+            "odds": 2.16
+          },
+          {
+            "name": "X2",
+            "odds": 1.43
+          }
+        ]
+      }
+    },
+    {
+      "index": 232,
+      "raw": {
+        "bookmakerMarketId": "270591",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 76-90+ min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 1.88
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 233,
+      "raw": {
+        "bookmakerMarketId": "270618",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1 do 10 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 8
+          },
+          {
+            "name": "Remis",
+            "odds": 1.12
+          },
+          {
+            "name": "Maroko",
+            "odds": 16
+          },
+          {
+            "name": "12",
+            "odds": 5.85
+          },
+          {
+            "name": "X2",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 234,
+      "raw": {
+        "bookmakerMarketId": "329349",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1-20 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 4
+          },
+          {
+            "name": "Remis",
+            "odds": 1.44
+          },
+          {
+            "name": "Maroko",
+            "odds": 9.2
+          },
+          {
+            "name": "1X",
+            "odds": 1.03
+          },
+          {
+            "name": "12",
+            "odds": 2.92
+          },
+          {
+            "name": "X2",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 235,
+      "raw": {
+        "bookmakerMarketId": "175092",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1. do 30. min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 3
+          },
+          {
+            "name": "Remis",
+            "odds": 1.73
+          },
+          {
+            "name": "Maroko",
+            "odds": 7.4
+          },
+          {
+            "name": "1X",
+            "odds": 1.07
+          },
+          {
+            "name": "12",
+            "odds": 2.21
+          },
+          {
+            "name": "X2",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 236,
+      "raw": {
+        "bookmakerMarketId": "329350",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1-40 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 2.54
+          },
+          {
+            "name": "Remis",
+            "odds": 1.98
+          },
+          {
+            "name": "Maroko",
+            "odds": 6.6
+          },
+          {
+            "name": "1X",
+            "odds": 1.09
+          },
+          {
+            "name": "12",
+            "odds": 1.89
+          },
+          {
+            "name": "X2",
+            "odds": 1.56
+          }
+        ]
+      }
+    },
+    {
+      "index": 237,
+      "raw": {
+        "bookmakerMarketId": "175094",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1. do 60. min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.99
+          },
+          {
+            "name": "Remis",
+            "odds": 2.69
+          },
+          {
+            "name": "Maroko",
+            "odds": 5.75
+          },
+          {
+            "name": "1X",
+            "odds": 1.13
+          },
+          {
+            "name": "12",
+            "odds": 1.5
+          },
+          {
+            "name": "X2",
+            "odds": 1.89
+          }
+        ]
+      }
+    },
+    {
+      "index": 238,
+      "raw": {
+        "bookmakerMarketId": "270619",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1. do 50. min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 2.19
+          },
+          {
+            "name": "Remis",
+            "odds": 2.36
+          },
+          {
+            "name": "Maroko",
+            "odds": 6
+          },
+          {
+            "name": "1X",
+            "odds": 1.12
+          },
+          {
+            "name": "12",
+            "odds": 1.64
+          },
+          {
+            "name": "X2",
+            "odds": 1.74
+          }
+        ]
+      }
+    },
+    {
+      "index": 239,
+      "raw": {
+        "bookmakerMarketId": "270621",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1. do 70. min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.83
+          },
+          {
+            "name": "Remis",
+            "odds": 3.1
+          },
+          {
+            "name": "Maroko",
+            "odds": 5.6
+          },
+          {
+            "name": "1X",
+            "odds": 1.13
+          },
+          {
+            "name": "12",
+            "odds": 1.39
+          },
+          {
+            "name": "X2",
+            "odds": 2.07
+          }
+        ]
+      }
+    },
+    {
+      "index": 240,
+      "raw": {
+        "bookmakerMarketId": "175095",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "wynik od 1. do 75. min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.71
+          },
+          {
+            "name": "Remis",
+            "odds": 2.95
+          },
+          {
+            "name": "Maroko",
+            "odds": 6.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 241,
+      "raw": {
+        "bookmakerMarketId": "329351",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1-80 min",
+        "selections": [
+          {
+            "name": "Francja",
+            "odds": 1.73
+          },
+          {
+            "name": "Remis",
+            "odds": 3.45
+          },
+          {
+            "name": "Maroko",
+            "odds": 5.6
+          },
+          {
+            "name": "1X",
+            "odds": 1.13
+          },
+          {
+            "name": "12",
+            "odds": 1.32
+          },
+          {
+            "name": "X2",
+            "odds": 2.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 242,
+      "raw": {
+        "bookmakerMarketId": "270825",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 1-10 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 5.2
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 243,
+      "raw": {
+        "bookmakerMarketId": "270826",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 11-20 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.8
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 244,
+      "raw": {
+        "bookmakerMarketId": "270828",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 31-40 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 4.55
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 245,
+      "raw": {
+        "bookmakerMarketId": "270829",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 41-50 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.5
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 246,
+      "raw": {
+        "bookmakerMarketId": "270830",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 51-60 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.7
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.26
+          }
+        ]
+      }
+    },
+    {
+      "index": 247,
+      "raw": {
+        "bookmakerMarketId": "270832",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 71-80 min",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 3.6
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 248,
+      "raw": {
+        "bookmakerMarketId": "270833",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma między 81-90+ min.",
+        "selections": [
+          {
+            "name": "powyżej",
+            "odds": 2.26
+          },
+          {
+            "name": "poniżej",
+            "odds": 1.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 249,
+      "raw": {
+        "bookmakerMarketId": "11",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "suma goli parzyste/nieparzyste",
+        "selections": [
+          {
+            "name": "Parzysty",
+            "odds": 1.82
+          },
+          {
+            "name": "Nieparzysty",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 250,
+      "raw": {
+        "bookmakerMarketId": "273108",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "metoda zwycięstwa",
+        "selections": [
+          {
+            "name": "Wygra w regulaminowym czasie",
+            "odds": 1.28
+          },
+          {
+            "name": "Wygra w dogrywce",
+            "odds": 7.5
+          },
+          {
+            "name": "Wygra w dogrywce Francja",
+            "odds": 10
+          },
+          {
+            "name": "Wygra w dogrywce Maroko",
+            "odds": 25
+          },
+          {
+            "name": "Wygra w rzutach karnych",
+            "odds": 7
+          },
+          {
+            "name": "Wygra w rzutach karnych Francja",
+            "odds": 11
+          },
+          {
+            "name": "Wygra w rzutach karnych Maroko",
+            "odds": 13
+          },
+          {
+            "name": "Wygra w karnych lub w czasie doliczonym Francja",
+            "odds": 5
+          },
+          {
+            "name": "Wygra w karnych lub w czasie doliczonym Maroko",
+            "odds": 8.5
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "38863250",
+  "matchIdSafe": "world-cup-2026_france_morocco",
+  "sourceArchive": "world-cup-2026_france_morocco__2026-07-09.json"
+}

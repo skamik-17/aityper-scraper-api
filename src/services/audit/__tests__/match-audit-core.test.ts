@@ -645,6 +645,30 @@ describe("analyzeApiMarket — placeholders, params, view type", () => {
     expect(analyzeApiMarket(single, lookup).param_anomalies).not.toContain("base_visible");
   });
 
+  it("does not flag legitimate HOME:/AWAY: team-scoped stat-range params as non-numeric (round-2 loop regression: superbet TEAM_TOTAL_SHOTS)", () => {
+    const m = market({
+      type: "TEAM_TOTAL_SHOTS",
+      viewType: "STAT_RANGE",
+      parameters: [
+        { value: "AWAY:10.5", label: "", bookmakers: [bm("betcris", "Maroko strzaly", [{ type: "OVER", odds: 3.2 }])] },
+        { value: "HOME:14.5", label: "", bookmakers: [bm("betcris", "Francja strzaly", [{ type: "OVER", odds: 2.1 }])] },
+      ],
+    });
+    expect(analyzeApiMarket(m, lookup).param_anomalies).toHaveLength(0);
+  });
+
+  it("still flags genuinely non-numeric stat-range params", () => {
+    const m = market({
+      type: "TEAM_TOTAL_SHOTS",
+      viewType: "STAT_RANGE",
+      parameters: [
+        { value: "AWAY:garbage", label: "", bookmakers: [bm("betcris", "x", [{ type: "OVER", odds: 3.2 }])] },
+        { value: "10.5", label: "", bookmakers: [bm("betcris", "y", [{ type: "OVER", odds: 2.1 }])] },
+      ],
+    });
+    expect(analyzeApiMarket(m, lookup).param_anomalies).toContain("non_numeric_param:AWAY:garbage");
+  });
+
   it("flags viewType/selection-count mismatch for button views", () => {
     const m = market({
       type: "DOUBLE_CHANCE",

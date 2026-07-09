@@ -491,7 +491,13 @@ export function analyzeApiMarket(
     const vt = market.viewType ?? catalog?.viewType ?? "";
     if (vt === "PARAMETER_SLIDER" || vt === "STAT_RANGE") {
       for (const p of market.parameters) {
-        if (p.value !== "base" && p.value !== "" && Number.isNaN(parseFloat(p.value))) {
+        if (p.value === "base" || p.value === "") continue;
+        // Team-scoped stat-range markets (e.g. TEAM_TOTAL_SHOTS) legitimately
+        // prefix the line with the team side ("HOME:10.5"/"AWAY:3.5") so two
+        // teams' lines don't collide in one parameter bucket — strip it
+        // before checking numericity instead of flagging the convention itself.
+        const numericPart = p.value.replace(/^(HOME|AWAY):/, "");
+        if (Number.isNaN(parseFloat(numericPart))) {
           flags.param_anomalies.push(`non_numeric_param:${p.value}`);
         }
       }

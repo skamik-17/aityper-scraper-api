@@ -46,7 +46,7 @@ function hasValidOdds(sel: MarketSelection): boolean {
 }
 
 /**
- * Multi-player "line" props ("Zawodnik odda co najmniej N celne strzały",
+ * Multi-player "line" props ("Odda co najmniej N celne strzały",
  * "Zawodnik wywalczy co najmniej N faule") bundle every eligible player as a
  * separate outcome inside ONE game object. The normalization catalog keys
  * these markets (PLAYER_SHOTS[_ON_TARGET[_OUTSIDE_BOX]], PLAYER_FOULS[_WON])
@@ -55,10 +55,14 @@ function hasValidOdds(sel: MarketSelection): boolean {
  * every player collides into a single unlabeled "base" bucket. Detected by
  * name instead of game type id so every threshold variant (1/2/3/4+) is
  * covered without hardcoding each id.
+ *
+ * The live Fuksiarz shot-line games are actually named "Odda co najmniej N
+ * celne strzały[ spoza pola karnego]" / "Odda co najmniej N strzały" (no
+ * "Zawodnik" prefix at all), so the anchor must accept both prefixes.
  */
 function isMultiPlayerLineGame(gameName: string | undefined): boolean {
   const lower = (gameName || "").toLowerCase();
-  return /^zawodnik\b/.test(lower) && /co\s*najmniej\s*\d+/.test(lower) && /(strza|faul)/.test(lower);
+  return /^(zawodnik|odda)\b/.test(lower) && /co\s*najmniej\s*\d+/.test(lower) && /(strza|faul)/.test(lower);
 }
 
 /**

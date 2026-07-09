@@ -1,0 +1,479 @@
+{
+  "bookmaker": "fuksiarz",
+  "ctx": {
+    "awayTeam": "Switzerland",
+    "homeTeam": "Argentina",
+    "league": "world-cup-2026",
+    "leagueName": "world-cup-2026"
+  },
+  "entries": [
+    {
+      "index": 86,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Alvarez, Julian",
+            "odds": 2.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 87,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Embolo, Breel Donald",
+            "odds": 4.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 88,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Fernández, Enzo Jeremías",
+            "odds": 6.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 89,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Gonzalez, Nicolas Ivan",
+            "odds": 5.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 90,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Manzambi, Johan",
+            "odds": 6.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 91,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Martínez, Lautaro",
+            "odds": 3.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 92,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Messi, Lionel",
+            "odds": 1.39
+          }
+        ]
+      }
+    },
+    {
+      "index": 93,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Ndoye, Dan",
+            "odds": 6.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 94,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Paredes, Leandro Daniel",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 95,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Rieder, Fabian",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 96,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Vargas, Ruben",
+            "odds": 7.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 97,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Mac Allister, Alexis",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 98,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Almada, Thiago",
+            "odds": 6.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 99,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Amdouni, Zeki",
+            "odds": 5.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 100,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Barco, V",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 101,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Fassnacht, Christian",
+            "odds": 7.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 102,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Itten, Cedric",
+            "odds": 4.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 103,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Lo Celso, Giovani",
+            "odds": 5.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 104,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Lopez, Jose Manuel",
+            "odds": 2.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 105,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Okafor, Noah",
+            "odds": 7.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 106,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Paz Martínez, N",
+            "odds": 3.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 107,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "Simeone, Giuliano",
+            "odds": 4.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 108,
+      "raw": {
+        "bookmakerMarketId": "-30528",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały",
+        "selections": [
+          {
+            "name": "De Paul, Rodrigo Javier",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 109,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Alvarez, Julian",
+            "odds": 6.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 110,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Martínez, Lautaro",
+            "odds": 8.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 111,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Messi, Lionel",
+            "odds": 2.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 112,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Lopez, Jose Manuel",
+            "odds": 6.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 113,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Paz Martínez, N",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 114,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Simeone, Giuliano",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 115,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Embolo, Breel Donald",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 116,
+      "raw": {
+        "bookmakerMarketId": "-30529",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 3 celne strzały",
+        "selections": [
+          {
+            "name": "Itten, Cedric",
+            "odds": 16
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "21211519",
+  "matchIdSafe": "world-cup-2026_argentina_switzerland",
+  "sourceArchive": "world-cup-2026_argentina_switzerland__2026-07-09.json"
+}

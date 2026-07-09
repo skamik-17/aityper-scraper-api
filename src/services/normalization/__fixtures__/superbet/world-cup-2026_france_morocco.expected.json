@@ -75375,13 +75375,13 @@
       "rawName": "Liczba strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:10.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:10.5",
         "matchedBy": "id",
-        "paramValue": "10.5",
+        "paramValue": "HOME:10.5",
         "parameters": null,
         "selections": [
           {
@@ -75401,13 +75401,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:11.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:11.5",
         "matchedBy": "id",
-        "paramValue": "11.5",
+        "paramValue": "HOME:11.5",
         "parameters": null,
         "selections": [
           {
@@ -75427,13 +75427,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:12.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:12.5",
         "matchedBy": "id",
-        "paramValue": "12.5",
+        "paramValue": "HOME:12.5",
         "parameters": null,
         "selections": [
           {
@@ -75453,13 +75453,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:13.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:13.5",
         "matchedBy": "id",
-        "paramValue": "13.5",
+        "paramValue": "HOME:13.5",
         "parameters": null,
         "selections": [
           {
@@ -75479,13 +75479,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:14.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:14.5",
         "matchedBy": "id",
-        "paramValue": "14.5",
+        "paramValue": "HOME:14.5",
         "parameters": null,
         "selections": [
           {
@@ -75505,13 +75505,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:15.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:15.5",
         "matchedBy": "id",
-        "paramValue": "15.5",
+        "paramValue": "HOME:15.5",
         "parameters": null,
         "selections": [
           {
@@ -75531,13 +75531,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:16.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:16.5",
         "matchedBy": "id",
-        "paramValue": "16.5",
+        "paramValue": "HOME:16.5",
         "parameters": null,
         "selections": [
           {
@@ -75557,13 +75557,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:17.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:17.5",
         "matchedBy": "id",
-        "paramValue": "17.5",
+        "paramValue": "HOME:17.5",
         "parameters": null,
         "selections": [
           {
@@ -75583,13 +75583,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:18.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:18.5",
         "matchedBy": "id",
-        "paramValue": "18.5",
+        "paramValue": "HOME:18.5",
         "parameters": null,
         "selections": [
           {
@@ -75609,13 +75609,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:19.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:19.5",
         "matchedBy": "id",
-        "paramValue": "19.5",
+        "paramValue": "HOME:19.5",
         "parameters": null,
         "selections": [
           {
@@ -75635,13 +75635,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:20.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:20.5",
         "matchedBy": "id",
-        "paramValue": "20.5",
+        "paramValue": "HOME:20.5",
         "parameters": null,
         "selections": [
           {
@@ -75661,13 +75661,13 @@
       "rawName": "Liczba strzałów Francja"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:3.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:3.5",
         "matchedBy": "id",
-        "paramValue": "3.5",
+        "paramValue": "AWAY:3.5",
         "parameters": null,
         "selections": [
           {
@@ -75687,13 +75687,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:4.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:4.5",
         "matchedBy": "id",
-        "paramValue": "4.5",
+        "paramValue": "AWAY:4.5",
         "parameters": null,
         "selections": [
           {
@@ -75713,13 +75713,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:5.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:5.5",
         "matchedBy": "id",
-        "paramValue": "5.5",
+        "paramValue": "AWAY:5.5",
         "parameters": null,
         "selections": [
           {
@@ -75739,13 +75739,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:6.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:6.5",
         "matchedBy": "id",
-        "paramValue": "6.5",
+        "paramValue": "AWAY:6.5",
         "parameters": null,
         "selections": [
           {
@@ -75765,13 +75765,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:7.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:7.5",
         "matchedBy": "id",
-        "paramValue": "7.5",
+        "paramValue": "AWAY:7.5",
         "parameters": null,
         "selections": [
           {
@@ -75791,13 +75791,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:8.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:8.5",
         "matchedBy": "id",
-        "paramValue": "8.5",
+        "paramValue": "AWAY:8.5",
         "parameters": null,
         "selections": [
           {
@@ -75817,13 +75817,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:9.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:9.5",
         "matchedBy": "id",
-        "paramValue": "9.5",
+        "paramValue": "AWAY:9.5",
         "parameters": null,
         "selections": [
           {
@@ -75843,13 +75843,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:10.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:10.5",
         "matchedBy": "id",
-        "paramValue": "10.5",
+        "paramValue": "AWAY:10.5",
         "parameters": null,
         "selections": [
           {
@@ -75869,13 +75869,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:11.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:11.5",
         "matchedBy": "id",
-        "paramValue": "11.5",
+        "paramValue": "AWAY:11.5",
         "parameters": null,
         "selections": [
           {
@@ -75895,13 +75895,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:12.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:12.5",
         "matchedBy": "id",
-        "paramValue": "12.5",
+        "paramValue": "AWAY:12.5",
         "parameters": null,
         "selections": [
           {
@@ -75921,13 +75921,13 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:13.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:13.5",
         "matchedBy": "id",
-        "paramValue": "13.5",
+        "paramValue": "AWAY:13.5",
         "parameters": null,
         "selections": [
           {

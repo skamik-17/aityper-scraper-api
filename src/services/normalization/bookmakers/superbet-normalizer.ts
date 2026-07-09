@@ -357,6 +357,8 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   200761: "AWAY", // "2.połowa - {away} przedział goli"
   200703: "HOME", // "Liczba celnych strzałów - {home}"
   200704: "AWAY", // "Liczba celnych strzałów - {away}"
+  201591: "HOME", // "Liczba strzałów {home}"
+  201592: "AWAY", // "Liczba strzałów {away}"
 };
 
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([

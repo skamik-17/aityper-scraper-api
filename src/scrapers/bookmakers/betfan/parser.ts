@@ -15,10 +15,26 @@ import { GAME_TYPES, MARKET_GROUPS, MARKET_TYPES } from "./constants.js";
 /**
  * Minimum odds value considered a real bookmaker price.
  * Betfan publishes sentinel values like 1.0000000001 for effectively-settled
- * outcomes; anything below the lowest real price (1.01) must be dropped
- * instead of being surfaced as a genuine quote.
+ * outcomes - a hair above 1.0, far below any genuine rounded price. A flat
+ * 1.01 cutoff also swallowed real short prices on extreme lines (e.g. a
+ * heavy favorite's ~1.01-1.02 European Handicap cell got dropped entirely,
+ * silently removing that side from the market), so the floor is tightened to
+ * only catch the sentinel's near-zero epsilon above 1.0.
  */
-const MIN_VALID_ODDS = 1.01;
+const MIN_VALID_ODDS = 1.001;
+
+/**
+ * Maximum odds value considered a real, differentiated bookmaker price for
+ * player-prop style markets. Betfan clamps computed odds for very unlikely
+ * outcomes to a flat ceiling (observed as exactly 100 across many unrelated
+ * players/markets - e.g. several bench players all show identically "100"
+ * for the same prop) instead of publishing the true (uncapped) price. An
+ * identical round number repeated across unrelated entries carries no real
+ * comparison value, so it is dropped like the low-end sentinel above.
+ * Markets with their own higher ceiling (e.g. correct-score longshots up to
+ * 500) are unaffected since their genuine prices vary well past 100.
+ */
+const MAX_SENTINEL_ODDS = 100;
 import type {
   BetfanEvent,
   BetfanGame,
@@ -319,8 +335,11 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
         odds: outcome.outcomeOdds || 0,
         externalId: String(outcome.outcomeId),
       }));
-    // Drop placeholder/sentinel prices (e.g. 1.0000000001) - not real quotes
-    const selections = allSelections.filter((sel) => sel.odds >= MIN_VALID_ODDS);
+    // Drop placeholder/sentinel prices: near-1.0 fake settlements
+    // (e.g. 1.0000000001) and the flat ~100 ceiling clamp on longshot props.
+    const selections = allSelections.filter(
+      (sel) => sel.odds >= MIN_VALID_ODDS && sel.odds < MAX_SENTINEL_ODDS
+    );
 
     // Split player-prop lists into one market per player: the outcome name is
     // the player, the threshold from the market name becomes the selection.

@@ -46,6 +46,22 @@ function hasValidOdds(sel: MarketSelection): boolean {
 }
 
 /**
+ * Multi-player "line" props ("Zawodnik odda co najmniej N celne strzały",
+ * "Zawodnik wywalczy co najmniej N faule") bundle every eligible player as a
+ * separate outcome inside ONE game object. The normalization catalog keys
+ * these markets (PLAYER_SHOTS[_ON_TARGET[_OUTSIDE_BOX]], PLAYER_FOULS[_WON])
+ * by the player's name as the market parameter (the etoto/fortuna/superbet/
+ * forbet convention), which requires one raw market per player — otherwise
+ * every player collides into a single unlabeled "base" bucket. Detected by
+ * name instead of game type id so every threshold variant (1/2/3/4+) is
+ * covered without hardcoding each id.
+ */
+function isMultiPlayerLineGame(gameName: string | undefined): boolean {
+  const lower = (gameName || "").toLowerCase();
+  return /^zawodnik\b/.test(lower) && /co\s*najmniej\s*\d+/.test(lower) && /(strza|faul)/.test(lower);
+}
+
+/**
  * Parse team names from the Fuksiarz eventName format
  * Format: "HomeTeam - AwayTeam"
  */
@@ -326,6 +342,31 @@ export function parseAllMarkets(
             selections,
           });
         }
+      }
+    } else if (isMultiPlayerLineGame(game.gameName)) {
+      // One market per player: keeps each player's odds as the sole
+      // selection of its own row so the normalizer can key the market
+      // parameter by player name instead of bundling everyone into "base".
+      const marketName = getMarketName(game);
+      const marketId = String(game.gameType);
+      const groupName = MARKET_GROUPS[game.gameType] || "Inne";
+      const marketType = MARKET_TYPES[game.gameType];
+
+      for (const outcome of outcomes.sort((a, b) => a.outcomePosition - b.outcomePosition)) {
+        const selection: MarketSelection = {
+          name: getSelectionName(outcome, game.gameType, parsedTeams),
+          odds: outcome.outcomeOdds || 0,
+          externalId: String(outcome.outcomeId),
+        };
+        if (!hasValidOdds(selection)) continue;
+
+        markets.push({
+          name: marketName,
+          bookmakerMarketId: marketId,
+          groupName,
+          type: marketType,
+          selections: [selection],
+        });
       }
     } else {
       // Standard market - all outcomes belong to one market

@@ -325,11 +325,18 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
       }))
       .filter((sel) => sel.odds > 1);
 
-    // Swarm omits the threshold from race-market names ("Rzuty rożne.
-    // Wyścig do  ") — recover it from the base field so the market label
-    // carries the race target like peers ("... Wyścig do 5").
+    // Swarm omits the threshold from some market names — race markets
+    // ("Rzuty rożne. Wyścig do  ") and bulk player "must start" O/U markets
+    // ("Zawodnik. Liczba strzałów celnych (musi rozpocząć): Powyżej ") both
+    // arrive with the trailing numeric line missing from the name string.
+    // Recover it from the base field so the market label carries the real
+    // threshold like peers ("... Wyścig do 5", "... Powyżej 0.5") instead of
+    // truncating it away.
     let resolvedName = marketName;
-    if (lineBase !== undefined && /wy[śs]cig\s+do\s*$/i.test(marketName)) {
+    if (
+      lineBase !== undefined &&
+      /(?:wy[śs]cig\s+do|powy[żz]ej|poni[żz]ej)\s*$/i.test(marketName)
+    ) {
       resolvedName = `${marketName.trimEnd()} ${lineBase}`;
     }
 

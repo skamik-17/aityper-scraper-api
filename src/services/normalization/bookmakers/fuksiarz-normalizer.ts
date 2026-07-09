@@ -499,6 +499,18 @@ function resolveMarketCodeBase(
     return { code: "HALF_TIME_CORRECT_SCORE", matchedBy: "pattern" };
   }
 
+  // "<Team> - strzelec 1. gola" is a TEAM-SCOPED first-goalscorer market
+  // (only that team's squad plus a "no goal for this team" outcome) — a
+  // different bet from the whole-match first goalscorer market below, so it
+  // must be checked first (it shares the same "- strzelec 1 gola" suffix
+  // and would otherwise feed the parsed "1" digit into GOALSCORER_FIRST's
+  // parameter as a phantom line, falsely merging it with the match-wide
+  // market).
+  const teamFirstScorer = normalized.match(/^(.+?)\s*-\s*strzelec\s+1\s+gola$/);
+  if (teamFirstScorer && resolveTeamSide(raw.name, ctx)) {
+    return { code: "TEAM_FIRST_GOALSCORER", matchedBy: "pattern" };
+  }
+
   if (/^strzelec 1 gola$/.test(normalized) || /- strzelec 1 gola$/.test(normalized)) {
     return { code: "GOALSCORER_FIRST", matchedBy: "pattern" };
   }
@@ -752,19 +764,19 @@ function extractParamValue(
     return parseLineFromSelections(selectionNames);
   }
 
-  if (["ASIAN_HANDICAP", "EUROPEAN_HANDICAP", "CORNERS_HANDICAP"].includes(marketCode)) {
-    return (
-      parseHandicapLine(raw.name) ||
-      selectionNames.map((name) => parseHandicapLine(name)).find(Boolean)
-    );
-  }
-
-  // Per-half European handicap: selections carry a virtual-score suffix
-  // ("Algieria (0:1)"). Convert it to the signed home-perspective value
-  // (STS convention: "(1:0)" -> "+1", "(0:2)" -> "-2") so Fuksiarz lines
-  // merge into the same parameter buckets as every other bookmaker instead
-  // of creating parallel raw "0:1"/"1:0" slots.
-  if (marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" || marketCode === "SECOND_HALF_EUROPEAN_HANDICAP") {
+  // European handicap (3-way, full match or per-half): selections may carry
+  // a virtual-score suffix ("Algieria (0:3)") instead of a plain decimal
+  // line. Convert it to the signed home-perspective differential (STS
+  // convention: "(1:0)" -> "+1", "(0:2)" -> "-2") before falling through to
+  // the generic parseHandicapLine block below — otherwise parseHandicapLine
+  // greedily matches the scoreline's first digit ("0") and fabricates a
+  // bogus "0" line instead of the real "-3" handicap (confirmed root cause
+  // of fuksiarz's phantom EUROPEAN_HANDICAP "0" param).
+  if (
+    marketCode === "EUROPEAN_HANDICAP" ||
+    marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
+    marketCode === "SECOND_HALF_EUROPEAN_HANDICAP"
+  ) {
     for (const name of selectionNames) {
       const scoreline = name.match(/\((\d+)\s*:\s*(\d+)\)/);
       if (scoreline) {
@@ -772,7 +784,16 @@ function extractParamValue(
         return diff > 0 ? `+${diff}` : String(diff);
       }
     }
-    return extractHandicapLineFromSelections(raw, ctx);
+    if (marketCode !== "EUROPEAN_HANDICAP") {
+      return extractHandicapLineFromSelections(raw, ctx);
+    }
+  }
+
+  if (["ASIAN_HANDICAP", "EUROPEAN_HANDICAP", "CORNERS_HANDICAP"].includes(marketCode)) {
+    return (
+      parseHandicapLine(raw.name) ||
+      selectionNames.map((name) => parseHandicapLine(name)).find(Boolean)
+    );
   }
 
   // Per-half Asian handicap and per-half corners handicap: the line lives in
@@ -815,15 +836,29 @@ function extractParamValue(
     return parseIntegerLine(raw.name);
   }
 
-  // Multi-player line markets carry the threshold in the selection code
-  // ("{Player} {N}+") — a numeric parameter would strand every player's odds
-  // under a fake "1"/"2" bucket that no other bookmaker uses.
+  // Multi-player line markets: the parser splits the bundled "Zawodnik ...
+  // co najmniej N ..." raw market into one row per player (see parser.ts's
+  // isMultiPlayerLineGame), so the sole selection's label is the player's
+  // name. Canonicalize it into the catalog's "player" parameter — the same
+  // convention etoto/fortuna/superbet/forbet use — instead of leaving every
+  // player stranded in a shared "base" bucket. Falls back to the old
+  // undefined/"base" behavior if a raw market unexpectedly still bundles
+  // multiple players, so the grouper's safety net remains a backstop.
   if (PLAYER_LINE_MARKETS.has(marketCode)) {
-    return undefined;
+    if (raw.selections.length !== 1) return undefined;
+    const soleName = raw.selections[0].name;
+    return soleName ? canonicalizePlayerName(soleName.replace(/^\d+\.\s*/, "").trim()) : undefined;
   }
 
   // Same convention as the STS normalizer: the parameter is the team side.
   if (marketCode === "TEAM_WIN_AT_LEAST_ONE_HALF") {
+    return resolveTeamSide(raw.name, ctx) ?? undefined;
+  }
+
+  // Team-scoped first goalscorer: the catalog has one shared code for both
+  // teams' own "who scores first for this team" markets, so the side must
+  // live in the parameter to keep Home's and Away's panels from colliding.
+  if (marketCode === "TEAM_FIRST_GOALSCORER") {
     return resolveTeamSide(raw.name, ctx) ?? undefined;
   }
 
@@ -1035,21 +1070,33 @@ function normalizeSelectionForMarket(
 ): NormalizedSelection {
   const trimmed = selectionName.trim();
 
-  // Multi-player line markets: the selection is a player name and the
-  // threshold lives in the raw market name ("Odda co najmniej 2 celne
-  // strzały"). Emit "{Player} {N}+" so different players inside one raw
-  // market never collide (same convention as eToto's multi-player markets).
+  // Multi-player line markets: the player identity is now carried by the
+  // market parameter (see extractParamValue), so the selection is just the
+  // plain threshold ("3+") parsed from the raw market name ("Zawodnik odda
+  // co najmniej 3 celne strzały") — matches the etoto/fortuna/superbet/
+  // forbet convention. Falls back to the raw text if no threshold is found.
   if (PLAYER_LINE_MARKETS.has(marketCode)) {
-    const player = canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim());
     const threshold = rawName?.match(/co najmniej\s+(\d+)/i)?.[1];
-    return (threshold ? `${player} ${threshold}+` : player) as NormalizedSelection;
+    return (threshold ? `${threshold}+` : trimmed) as NormalizedSelection;
   }
 
   // Literal catalog-code passthrough: band/range/exact markets often quote
   // raw selection text that IS the catalog selection code ("0-2", "7+", "1+"),
   // and per-market cases below may miss them (falling through to UNKNOWN).
+  // Skipped for MERGE_DUPLICATE_CODE_MARKETS: those markets have dedicated
+  // tail-bucketing logic in the switch below (e.g. raw "3" -> "3+" for
+  // HALF_TIME_AWAY_EXACT_GOALS), and some of their raw digits also happen to
+  // be literal catalog codes in their own right ("3" is itself a valid
+  // HALF_TIME_AWAY_EXACT_GOALS selection) — letting this fast path intercept
+  // them here would return the un-bucketed literal and make the dedicated
+  // case below dead code.
   const literalCatalogCodes = getMarketByCode(marketCode)?.selections;
-  if (literalCatalogCodes && literalCatalogCodes.length > 0 && literalCatalogCodes.includes(trimmed)) {
+  if (
+    literalCatalogCodes &&
+    literalCatalogCodes.length > 0 &&
+    literalCatalogCodes.includes(trimmed) &&
+    !MERGE_DUPLICATE_CODE_MARKETS.has(marketCode)
+  ) {
     return trimmed as NormalizedSelection;
   }
 
@@ -1271,6 +1318,10 @@ function normalizeSelectionForMarket(
       // there (duplicates merged into one combined price afterwards).
       const cornersTail = trimmed.match(/^(\d+)\s*\+?$/);
       if (cornersTail && parseInt(cornersTail[1], 10) >= 4) return "4+" as NormalizedSelection;
+      // Fuksiarz is the only bookmaker to split the "0-1" tier into separate
+      // "0"/"1" rows — merge both into the shared "0-1" code (duplicates
+      // combined into one price afterwards) so it lines up with every peer.
+      if (/^[01]$/.test(trimmed)) return "0-1" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -1298,6 +1349,7 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
+    case "TEAM_FIRST_GOALSCORER":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_HAT_TRICK":
     case "PLAYER_CARDS":
@@ -1345,7 +1397,24 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const paramValue = extractParamValue(marketCode, raw, ctx);
+    let paramValue = extractParamValue(marketCode, raw, ctx);
+
+    // TEAM_TOTAL_SHOTS(_ON_TARGET)'s catalog selections are bare OVER/UNDER
+    // (no side variant) — the side lives in the parameter instead, matching
+    // the betcris/superbet "HOME:8.5"/"AWAY:2.5" convention. Fuksiarz maps
+    // both the home-team and away-team ids (168/169, -30342/-30343) to the
+    // same bare catalog code, so without the side-prefixed param a home line
+    // and an away line at the same numeric threshold collide into one
+    // OVER/UNDER bucket.
+    if (
+      (marketCode === "TEAM_TOTAL_SHOTS" || marketCode === "TEAM_TOTAL_SHOTS_ON_TARGET") &&
+      paramValue
+    ) {
+      const side = resolveTeamSide(raw.name, ctx);
+      if (!side) return null;
+      paramValue = `${side}:${paramValue}`;
+    }
+
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     let selections = raw.selections.map((sel) => ({
@@ -1370,14 +1439,7 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       marketCode === "HALF_TIME_CORNERS_TEAM" ||
       marketCode === "SECOND_HALF_CORNERS_TEAM" ||
       marketCode === "HALF_TIME_CARDS_TEAM" ||
-      marketCode === "SECOND_HALF_CARDS_TEAM" ||
-      // Fuksiarz maps both the home-team and away-team shots ids (168/169,
-      // -30342/-30343) to the same bare TEAM_TOTAL_SHOTS[_ON_TARGET] code —
-      // without the side prefix a home line and an away line at the same
-      // numeric param collide into one OVER/UNDER bucket (etoto's convention
-      // for these two codes already uses the HOME_/AWAY_ prefix).
-      marketCode === "TEAM_TOTAL_SHOTS" ||
-      marketCode === "TEAM_TOTAL_SHOTS_ON_TARGET"
+      marketCode === "SECOND_HALF_CARDS_TEAM"
     ) {
       const side = resolveTeamSide(raw.name, ctx);
       if (!side) return null;

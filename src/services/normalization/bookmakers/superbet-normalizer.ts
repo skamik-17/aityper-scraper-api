@@ -46,7 +46,13 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   563: "HALF_TIME_DRAW_NO_BET", // "1.połowa - zakład bez remisu"
   572: "SECOND_HALF_DRAW_NO_BET", // "2.połowa - zakład bez remisu"
   239944: "KICKOFF_TEAM", // "Drużyna rozpocznie mecz"
-  2365: "DOUBLE_RESULT", // "1. połowa/mecz"
+  // "1. połowa/mecz" is the network-wide HT/FT double-result product - peers
+  // (etoto, forbet) route the identical raw bet to HALFTIME_FULLTIME, not the
+  // near-duplicate DOUBLE_RESULT catalog code, so every bookmaker's odds for
+  // this bet land in the same comparison market. This also fixes a latent
+  // selection-shape bug: parseHtFtSelection below always emits the
+  // HALFTIME_FULLTIME "HOME_HOME" shape, never DOUBLE_RESULT's "1/1" shape.
+  2365: "HALFTIME_FULLTIME", // "1. połowa/mecz"
   201521: "DOUBLE_RESULT_PAIR", // "1. połowa/mecz - podwójna szansa"
   200914: "HT_OR_FT_RESULT", // "1. połowa lub mecz"
   200791: "MULTI_RESULT", // "Multiwynik"
@@ -361,14 +367,20 @@ const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
 ]);
 
 /**
- * TEAM_TOTAL_SHOTS_ON_TARGET's catalog selections are bare OVER/UNDER (no
+ * TEAM_TOTAL_SHOTS(_ON_TARGET)'s catalog selections are bare OVER/UNDER (no
  * side prefix) - the side must live in the param instead (betclic/betcris
  * convention: "HOME:2.5"/"AWAY:2.5"), otherwise home and away lines for the
  * same numeric threshold collide into one bucket (confirmed: superbet's
  * "away" rows for this match landed under a bare "2.5"/"3.5"/... param,
- * mixing Morocco's odds into the same column peers use for France).
+ * mixing Morocco's odds into the same column peers use for France). The
+ * plain-shots sibling shares the identical bare-param shape and market-id
+ * side split, so it collides the same way whenever both teams' lines land
+ * on the same numeric threshold.
  */
-const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>(["TEAM_TOTAL_SHOTS_ON_TARGET"]);
+const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "TEAM_TOTAL_SHOTS",
+]);
 
 const SUPERBET_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
   "1x": "HOME_OR_DRAW",
@@ -611,6 +623,23 @@ function isNoneSelection(lower: string): boolean {
     lower.startsWith("brak") ||
     lower.startsWith("bez ")
   );
+}
+
+/**
+ * Superbet quotes player identities as full names ("Mbappe, Kylian" ->
+ * canonicalizePlayerName -> "Kylian Mbappe"), but the network convention for
+ * player-combination selections (betclic, forbet) is "initial + surname"
+ * ("K. Mbappe") - their raw feeds already arrive pre-abbreviated. Reduce
+ * superbet's full first name down to the same shape so the same real pair
+ * merges into one comparison column instead of superbet stranding its own,
+ * full-name-only variant.
+ */
+function toInitialSurname(fullName: string): string {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length < 2) return fullName;
+  const initial = parts[0].charAt(0);
+  const surname = parts.slice(1).join(" ");
+  return `${initial}. ${surname}`;
 }
 
 function map1x2Token(token: string): NormalizedSelection | null {
@@ -1095,7 +1124,7 @@ function normalizeSelectionForMarket(
       const cleanedPair = trimmed.replace(/^\d+\.\s*/, "").trim();
       return cleanedPair
         .split(/\s+(?:i|lub)\s+/iu)
-        .map((part) => canonicalizePlayerName(part.trim()))
+        .map((part) => toInitialSurname(canonicalizePlayerName(part.trim())))
         .join(" i ") as NormalizedSelection;
     }
 

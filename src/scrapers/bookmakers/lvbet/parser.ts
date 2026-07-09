@@ -310,6 +310,132 @@ export function parseMarket(
 }
 
 /**
+ * LVBet raw-market name fragments that bundle an entire player roster into
+ * ONE market object (each selection is a player's name/odds pair, not a bet
+ * outcome) instead of the usual one-market-per-player shape. Left unsplit,
+ * the normalizer has no per-player parameter to key on and either merges
+ * every player into a shared "base" bucket or, worse, treats the player's
+ * name itself as the selection code — silently hiding these prices from
+ * cross-bookmaker best-odds comparison. `selectionLabel` synthesizes the
+ * market's real bet outcome (its own threshold/result) so the normalizer can
+ * map it to the correct catalog selection code once the player identity
+ * moves to `paramValue` (mirrors betcris' parser-level bulk-player split).
+ */
+const BULK_PLAYER_LIST_MARKET_PATTERNS: Array<{
+  pattern: RegExp;
+  selectionLabel: (market: LVBetMarket, normalizedName: string) => string | null;
+}> = [
+  // "Zawodnicy (strzały celne)" / "Total Shots On Target" / "Strzały celne
+  // (musi rozpocząć)" — threshold lives in market.line ("0.5".."4.5"). The
+  // bare "zawodnicy (strzały celne)" form is anchored end-to-end so it never
+  // swallows a differently-suffixed variant that might carry its own code.
+  {
+    pattern: /^zawodnicy \(strzały celne\)$|total shots on target|strzały celne \(musi rozpoczac/,
+    selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : null),
+  },
+  // "Zawodnicy (strzały)" / "Total Shots (must start)" / "Strzały (musi
+  // rozpocząć)" — the catalog's PLAYER_SHOTS has no per-threshold tiers, so
+  // every line resolves to the same OVER marker. The bare "zawodnicy
+  // (strzały)" form is anchored end-to-end so it does not also swallow the
+  // "zawodnicy (strzały) - powyżej 7.5" variant, which has its own dedicated
+  // PLAYER_SHOTS_OVER catalog code (PLAYER_DROPDOWN shape, not a bulk O/U tier).
+  {
+    pattern: /^zawodnicy \(strzały\)$|total shots \(must start\)|strzały \(musi rozpoczac/,
+    selectionLabel: () => "Powyzej",
+  },
+  // "Zawodnicy (faule popełnione)" / "Zawodnicy (faule zarobione)" / "Odbiory
+  // - Tackles" — same bundled-roster shape for the other player stat lines.
+  // Anchored end-to-end for the same reason as the shots patterns above:
+  // "zawodnicy (faule popełnione) - powyżej 3.5" has its own dedicated
+  // PLAYER_FOULS_OVER catalog code.
+  {
+    pattern: /^zawodnicy \(faule popełnione\)$/,
+    selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
+  },
+  {
+    pattern: /^zawodnicy \(faule zarobione\)$/,
+    selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
+  },
+  {
+    pattern: /^odbiory-\s*tackles$/,
+    selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
+  },
+  // "Zawodnik strzeli N lub więcej goli" (N >= 3) — the threshold is embedded
+  // in the market name itself, not market.line. Anchored to the START of the
+  // name and excludes N=2/1: "Zawodnik strzeli 2 lub więcej goli" has its own
+  // dedicated YES/NO catalog code (PLAYER_2_OR_MORE_GOALS), and "Dowolny
+  // zawodnik strzeli 3 lub więcej goli" (HAT_TRICK) is a different YES/NO
+  // market entirely — neither has PLAYER_GOALS' "N+" tiered selection shape,
+  // so bulk-splitting them here would synthesize a marker their normalizer
+  // case cannot map.
+  {
+    pattern: /^zawodnik strzeli ([3-9]|\d{2,}) lub wiecej goli$/,
+    selectionLabel: (_market, normalizedName) => {
+      const m = normalizedName.match(/^zawodnik strzeli (\d+) lub wiecej goli$/);
+      return m ? `${m[1]}+` : null;
+    },
+  },
+  // "Zawodnik strzeli gola i mecz zakończy się remisem" — every row prices
+  // the fixed "scores AND match ends in a draw" outcome for that player.
+  {
+    pattern: /zawodnik strzeli gola i mecz zakonczy sie remisem/,
+    selectionLabel: () => "Remis",
+  },
+];
+
+/**
+ * Splits a raw LVBet market whose name matches a known bundled-player-roster
+ * pattern into one synthetic ScrapedMarket per player, carrying the player's
+ * raw name via `paramValue` and the market's real outcome (threshold/result)
+ * as the single selection. Returns null when the market's name does not
+ * match a known bundled pattern, when no odds survive filtering, or when the
+ * resolved selection label is unavailable (e.g. a market missing the `line`
+ * its label needs).
+ */
+function splitBulkPlayerListMarket(
+  market: LVBetMarket,
+  teams: ParsedTeams | undefined,
+  seenPlayerParams: Set<string>
+): ScrapedMarket[] | null {
+  if (!market.selections || market.selections.length === 0) return null;
+
+  const normalizedName = normalizeMarketName(market.name || "");
+  const config = BULK_PLAYER_LIST_MARKET_PATTERNS.find(({ pattern }) => pattern.test(normalizedName));
+  if (!config) return null;
+
+  const selectionLabel = config.selectionLabel(market, normalizedName);
+  if (!selectionLabel) return null;
+
+  const validSelections = market.selections.filter((s) => s.rate?.decimal && s.rate.decimal > 1);
+  if (validSelections.length === 0) return null;
+
+  const marketName = market.line ? `${market.name} ${market.line}` : market.name || "Unknown";
+  const results: ScrapedMarket[] = [];
+
+  for (const sel of convertSelections(validSelections, teams)) {
+    // Different thresholds of the SAME bundled market share one dedupe key
+    // whenever selectionLabel does not vary by line (e.g. plain "Powyzej"
+    // for PLAYER_SHOTS, which has no per-threshold catalog tiers) — this
+    // keeps only the first-seen line per player instead of emitting several
+    // rows that would collide on the same downstream market key.
+    const dedupeKey = `${normalizedName}::${sel.name}::${selectionLabel}`;
+    if (seenPlayerParams.has(dedupeKey)) continue;
+    seenPlayerParams.add(dedupeKey);
+
+    results.push({
+      name: marketName,
+      bookmakerMarketId: market.id != null ? String(market.id) : undefined,
+      groupName: getMarketGroup(market.name || ""),
+      type: getMarketType(market.name || ""),
+      paramValue: sel.name,
+      selections: [{ name: selectionLabel, odds: sel.odds, externalId: sel.externalId }],
+    });
+  }
+
+  return results.length > 0 ? results : null;
+}
+
+/**
  * Parse ALL markets from LVBet markets array into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -319,6 +445,7 @@ export function parseAllMarkets(
 ): ScrapedMarket[] {
   const result: ScrapedMarket[] = [];
   const seenKeys = new Set<string>();
+  const seenPlayerParams = new Set<string>();
 
   for (const market of markets) {
     // Create unique key to avoid duplicates. Prefer the stable market id:
@@ -329,6 +456,12 @@ export function parseAllMarkets(
       market.id != null ? `id:${market.id}` : `${market.name}_${market.line || ""}`;
     if (seenKeys.has(key)) continue;
     seenKeys.add(key);
+
+    const bulkSplit = splitBulkPlayerListMarket(market, teams, seenPlayerParams);
+    if (bulkSplit) {
+      result.push(...bulkSplit);
+      continue;
+    }
 
     const parsedMarket = parseMarket(market, teams);
     if (parsedMarket) {

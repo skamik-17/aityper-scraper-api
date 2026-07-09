@@ -701,6 +701,34 @@ function mergeIntoExactGoalsCatchAll(
 }
 
 /**
+ * Maps the synthetic "Powyżej X" / "Powyżej" marker the LVBet parser
+ * synthesizes for bulk player-roster markets (see splitBulkPlayerListMarket
+ * in the scraper's parser.ts) to the market's threshold-tiered catalog code
+ * (e.g. PLAYER_SHOTS_ON_TARGET's "Powyżej 1.5" -> "2+"), falling back to the
+ * market's own OVER selection when no numeric line is present or no
+ * matching tier exists in the catalog. Returns null for any other text (a
+ * real player name reaching this market's default case) so callers can fall
+ * through to the normal player-name handling.
+ */
+function normalizeLvbetPlayerThreshold(
+  marketCode: NormalizedMarketType,
+  trimmed: string
+): NormalizedSelection | null {
+  const normalized = normalizeMarketName(trimmed);
+  const match = normalized.match(/^powyzej\s*(\d+(?:[.,]\d+)?)?$/);
+  if (!match) return null;
+  const lineText = match[1];
+  if (lineText) {
+    const line = parseFloat(lineText.replace(",", "."));
+    if (!Number.isNaN(line)) {
+      const tierCode = `${Math.floor(line) + 1}+`;
+      if (isCatalogSelection(marketCode, tierCode)) return tierCode as NormalizedSelection;
+    }
+  }
+  return isCatalogSelection(marketCode, "OVER") ? "OVER" : null;
+}
+
+/**
  * Over/Under detection tolerant of LVBet's stat-market label variants:
  * "Powyżej (6.5)", "Poniżej 2,5", "Ponad 9", "Więcej"/"Mniej".
  * Returns null (not UNKNOWN) when the label is not an over/under phrase.
@@ -722,7 +750,8 @@ function normalizeSelectionForMarket(
   selectionName: string,
   marketCode: NormalizedMarketType,
   ctx: NormalizationContext,
-  rawMarketName?: string
+  rawMarketName?: string,
+  siblingSelectionNames?: string[]
 ): NormalizedSelection | null {
   const trimmed = selectionName.trim();
 
@@ -828,6 +857,18 @@ function normalizeSelectionForMarket(
         return "EXACTLY" as NormalizedSelection;
       }
       return normalizeOverUnderSelection(trimmed);
+    }
+
+    // LVBet quotes a 5-tier corner-range scale ("5 lub mniej", "6 - 8",
+    // "9 - 11", "12 - 14", "15 lub więcej") with no direct catalog match —
+    // collapse it onto the catalog's coarse 3-bucket scale (0-8/9-11/12+),
+    // mirroring betcris' identical raw label set for this market.
+    case "CORNERS_RANGE": {
+      const compact = normalizeMarketName(trimmed).replace(/\s+/g, "");
+      if (/^5lubmniej$/.test(compact) || /^6-8$/.test(compact)) return "0-8" as NormalizedSelection;
+      if (/^9-11$/.test(compact)) return "9-11" as NormalizedSelection;
+      if (/^12-14$/.test(compact) || /^15lubwiecej$/.test(compact)) return "12+" as NormalizedSelection;
+      return null;
     }
 
     // Team-scoped stat totals whose catalog selections are side-prefixed
@@ -936,6 +977,18 @@ function normalizeSelectionForMarket(
       }
       if (/^(x|remis)$/i.test(trimmed)) return "X" as NormalizedSelection;
       return trimmed as NormalizedSelection;
+    }
+
+    // "Francja i 1" / "Remis i 0" / "Maroko i 2" -> HOME_1 / DRAW_0 / AWAY_2
+    // (result + exact total-goals combo, redirected here from TOTAL_GOALS by
+    // refineResultAndExactGoalsMisroutedAsTotalGoals).
+    case "RESULT_AND_EXACT_GOALS": {
+      const m = trimmed.match(/^(.+?)\s+i\s+(\d+)\s*(\+|lub\s*wi[eę]cej)?$/i);
+      if (!m) return null;
+      const side = normalize1x2Selection(m[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (side !== "HOME" && side !== "DRAW" && side !== "AWAY") return null;
+      const code = `${side}_${m[2]}${m[3] ? "+" : ""}`;
+      return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
     }
 
     case "HALFTIME_FULLTIME":
@@ -1110,6 +1163,21 @@ function normalizeSelectionForMarket(
       // silently discarded.
       const compact = trimmed.replace(/\s+/g, "");
       if (!/^\d+\+?$/.test(compact)) return null;
+      // A raw "(n)+" tail (e.g. LVBet's "4+" meaning four-or-more) must not
+      // fold into the catalog's lower "N+" catch-all (e.g. "3+", meaning
+      // three-or-more to every peer bookmaker) when this SAME bookmaker
+      // already reports its own literal exact selection below that
+      // threshold (e.g. a separate literal "3") — colliding would silently
+      // narrow the shared "3+" bucket's true meaning. Drop it instead
+      // (matches betcris' convention for the identical LVBet-only gap).
+      if (compact.endsWith("+")) {
+        const value = parseInt(compact.slice(0, -1), 10);
+        const hasLowerLiteralSibling = siblingSelectionNames?.some((name) => {
+          const otherCompact = name.trim().replace(/\s+/g, "");
+          return /^\d+$/.test(otherCompact) && parseInt(otherCompact, 10) < value;
+        });
+        if (hasLowerLiteralSibling) return null;
+      }
       return mergeIntoExactGoalsCatchAll(marketCode, compact);
     }
 
@@ -1168,6 +1236,21 @@ function normalizeSelectionForMarket(
       if (/^(nikt|zaden|zadny|bez gola|bez goli|brak gola|brak goli)$/.test(normalized)) {
         return "NONE";
       }
+      // Bulk player-roster markets are pre-split by the parser into one entry
+      // per player, with the market's real threshold synthesized as a
+      // "Powyżej X" marker (the raw player name moved to paramValue) — map it
+      // to the market's threshold-tiered catalog code. A recognized marker
+      // with no matching catalog tier is dropped (not a real player name)
+      // instead of falling through to the player-name passthrough below.
+      if (/^powyzej(\s*\d+(?:[.,]\d+)?)?$/.test(normalized)) {
+        return normalizeLvbetPlayerThreshold(marketCode, trimmed);
+      }
+      // Same bulk-split convention for "Zawodnik strzeli gola i mecz zakończy
+      // się remisem" (player scores AND match ends in a draw): every row
+      // prices the fixed DRAW outcome, synthesized as the "Remis" marker.
+      if (marketCode === "PLAYER_GOAL_AND_RESULT" && normalized === "remis") {
+        return "DRAW";
+      }
       // Unify player-name order via the shared canonical form
       // ("Lastname, Firstname" -> "Firstname Lastname") so lvbet merges with
       // bookmakers quoting the comma convention.
@@ -1212,16 +1295,34 @@ function normalizeSelectionForMarket(
 /**
  * 3-way (European) goal handicaps whose LVBet label sign is INVERTED relative
  * to the catalog/peers ("Handicap (3-drogowy) -1" prices what peers price at
- * "+1" — round-2 audit verification). The 2-way Asian family is NOT inverted:
- * the full-data audit confirmed via 10-bookmaker consensus that LVBet's
- * "Handicap Azjatycki 0.5" prices the catalog's "+0.5" bucket, so negating
- * every line mirrored the whole market onto wrong params. Stat-prop handicaps
- * follow the raw label sign as well.
+ * "+1" — round-2 audit verification). The full-match 2-way Asian handicap is
+ * NOT inverted: the full-data audit confirmed via 10-bookmaker consensus that
+ * LVBet's "Handicap Azjatycki 0.5" prices the catalog's "+0.5" bucket, so
+ * negating every line mirrored the whole market onto wrong params. That
+ * verification does NOT extend to FIRST_HALF_ASIAN_HANDICAP, though: a
+ * dedicated audit (round 3, reconfirmed round 5) found every non-zero
+ * first-half line mirrored onto the wrong sign relative to peer consensus.
+ * CARDS_HANDICAP was likewise found sign-inverted (its own line progression
+ * trends the opposite direction from betcris/fuksiarz/superbet's).
  */
 const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "EUROPEAN_HANDICAP",
   "FIRST_HALF_EUROPEAN_HANDICAP",
   "SECOND_HALF_EUROPEAN_HANDICAP",
+  "FIRST_HALF_ASIAN_HANDICAP",
+  "CARDS_HANDICAP",
+]);
+
+/**
+ * SECOND_HALF_ASIAN_HANDICAP markets whose raw label omits the sign on a
+ * generic line ("Handicap 1", "Handicap 2", vs. the usual explicit
+ * "Handicap -2.5"/"Handicap +0.5"). Cross-checked against 4 peer bookmakers'
+ * monotonic line progression: an unsigned trailing number here means the
+ * HOME side is favored by that amount (i.e. it should resolve as negative),
+ * not the positive default parseLvbetHandicapParam would otherwise produce.
+ */
+const LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS = new Set<NormalizedMarketType>([
+  "SECOND_HALF_ASIAN_HANDICAP",
 ]);
 
 /**
@@ -1230,19 +1331,29 @@ const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
  * "Handicap (3-drogowy) 1", "Handicap -2.5"), so the LAST number is the line.
  * Digits of the "3-drogowy" qualifier, the "1./2. Połowa" prefix and minute
  * windows ("1-15 min.") are stripped first so they are never mistaken for
- * the line. The sign is negated only for the 3-way markets listed in
- * LVBET_SIGN_INVERTED_HANDICAP_MARKETS (see comment there).
+ * the line. The sign is negated for the markets listed in
+ * LVBET_SIGN_INVERTED_HANDICAP_MARKETS (see comment there); for markets in
+ * LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS, a trailing number with NO
+ * explicit sign character defaults to negative instead of positive.
  */
-function parseLvbetHandicapParam(name: string, invertSign: boolean): string | undefined {
+function parseLvbetHandicapParam(
+  name: string,
+  invertSign: boolean,
+  defaultNegativeWhenUnsigned: boolean
+): string | undefined {
   const cleaned = name
     .replace(/3[-\s]?drogow\w*/gi, "")
     .replace(/[12]\.\s*połowa/gi, "")
     .replace(/\d+\s*-\s*\d+\s*min\.?/gi, "");
   const matches = cleaned.match(/[+-]?\d+(?:[.,]\d+)?/g);
   if (!matches || matches.length === 0) return undefined;
-  const value = parseFloat(matches[matches.length - 1].replace(",", "."));
+  const lastMatch = matches[matches.length - 1];
+  const value = parseFloat(lastMatch.replace(",", "."));
   if (Number.isNaN(value)) return undefined;
-  const line = invertSign ? -value : value;
+  let line = invertSign ? -value : value;
+  if (defaultNegativeWhenUnsigned && !/^[+-]/.test(lastMatch) && line > 0) {
+    line = -line;
+  }
   if (line > 0) return `+${line}`;
   return `${line}`;
 }
@@ -1262,35 +1373,39 @@ function parseLvbetStatLine(selectionNames: string[]): string | undefined {
 }
 
 /**
- * LVBet bundles a whole player roster under ONE raw market per stat
- * threshold for these props ("Zawodnicy (strzały celne) - powyżej 4.5" lists
- * every eligible player, "Zawodnik strzeli 4 lub więcej goli" likewise), so
- * separate threshold-scoped raw markets (0.5-line, 2.5-line, 4.5-line, ...)
- * all share the same marketCode. Without a per-threshold parameter they
- * would all collapse into the same "base" bucket: the grouper keeps only the
- * first raw market seen per (marketCode, param, bookmaker) combination,
- * silently dropping every other threshold's whole player roster. Keying the
- * parameter by the threshold keeps every threshold's roster visible (players
- * still share the selection dimension via the shared canonicalizePlayerName
- * case in normalizeSelectionForMarket).
+ * Team-scoped stat markets whose catalog selections are plain OVER/UNDER
+ * (no side prefix). LVBet quotes each team's line as a SEPARATE raw market
+ * ("Strzały: Maroko suma" / "Strzały: Francja suma"), so without a side
+ * marker both teams' lines land in the same bare numeric bucket and their
+ * odds silently collide. Prefixing paramValue with HOME:/AWAY: (the
+ * betclic/betcris/forbet/fortuna/superbet convention) keeps them separate.
  */
-const LVBET_MULTI_THRESHOLD_PLAYER_LIST_CODES = new Set<NormalizedMarketType>([
-  "PLAYER_SHOTS_ON_TARGET",
-  "PLAYER_SHOTS",
-  "PLAYER_TACKLES",
-  "PLAYER_FOULS_WON",
-  "PLAYER_FOULS",
-  "PLAYER_SAVES",
-  "GOALKEEPER_SAVES_OVER",
-  "PLAYER_GOALS",
+const LVBET_TEAM_SCOPED_DECIMAL_MARKETS = new Set<NormalizedMarketType>([
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "CORNERS_TEAM",
+  "TEAM_TOTAL_FOULS",
 ]);
 
-function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMarket): string | undefined {
+function extractParamValue(
+  marketCode: NormalizedMarketType,
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
 
-  if (LVBET_MULTI_THRESHOLD_PLAYER_LIST_CODES.has(marketCode)) {
-    return marketCode === "PLAYER_GOALS" ? parseIntegerLine(raw.name) : parseDecimalLine(raw.name);
+  // LVBet used to bundle a whole player roster under ONE raw market per stat
+  // threshold ("Zawodnicy (strzały celne) - powyżej 4.5" lists every eligible
+  // player). The PARSER now splits these into one synthetic raw market per
+  // player (see splitBulkPlayerListMarket in the lvbet scraper's parser.ts),
+  // carrying the player's raw name via raw.paramValue since there is no
+  // numeric line to report for a player-keyed market. Prefer that pre-split
+  // value for every player-parameterized code; markets the parser does not
+  // split (e.g. GOALSCORER_ANYTIME, GOALKEEPER_SAVES_OVER) leave raw.paramValue
+  // unset and fall through to the grouper's bundled-player-selection recovery.
+  if (metadata.parameterType === "player" && raw.paramValue) {
+    return canonicalizePlayerName(raw.paramValue);
   }
 
   const selectionNames = raw.selections.map((s) => s.name);
@@ -1303,29 +1418,94 @@ function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMa
       return (
         parseLvbetHandicapParam(
           marketName,
-          LVBET_SIGN_INVERTED_HANDICAP_MARKETS.has(marketCode)
+          LVBET_SIGN_INVERTED_HANDICAP_MARKETS.has(marketCode),
+          LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS.has(marketCode)
         ) ??
         parseOverUnderLine(selectionNames) ??
         "0"
       );
     case "integer":
       return parseIntegerLine(marketName) ?? parseOverUnderLine(selectionNames);
-    case "decimal":
-      return (
+    case "decimal": {
+      const line =
         parseDecimalLine(marketName) ??
         parseOverUnderLine(selectionNames) ??
-        parseLvbetStatLine(selectionNames)
-      );
+        parseLvbetStatLine(selectionNames);
+      if (line && LVBET_TEAM_SCOPED_DECIMAL_MARKETS.has(marketCode)) {
+        const side = detectTeamSide(marketName, ctx);
+        if (side) return `${side}:${line}`;
+      }
+      return line;
+    }
     default:
       return parseOverUnderLine(selectionNames) ?? parseLvbetStatLine(selectionNames);
   }
+}
+
+/**
+ * A handful of "who does more X" 3-way race markets (MOST_SHOTS_ON_TARGET,
+ * MOST_SHOTS, CORNERS_RACE, FOUL_RACE) share a raw market-name prefix with
+ * the corresponding team-total OVER/UNDER market ("Strzały celne: Wynik" vs
+ * "Strzały celne: <Team> suma"). When the generic team-total name pattern
+ * wins by mistake, its RAW SELECTIONS are team names / "Remis" instead of
+ * "Powyżej"/"Poniżej" text — the OVER/UNDER catalog code cannot represent
+ * that shape, so every selection ends up UNKNOWN. Detect the shape (exactly
+ * 3 selections, all resolving to HOME/DRAW/AWAY) and redirect to the sibling
+ * race code instead of leaking raw team names as UNKNOWN under a
+ * numeric-parameter market.
+ */
+const TEAM_TOTAL_TO_RACE_CODE: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
+  TEAM_TOTAL_SHOTS_ON_TARGET: "MOST_SHOTS_ON_TARGET",
+  TEAM_TOTAL_SHOTS: "MOST_SHOTS",
+  CORNERS_TEAM: "CORNERS_RACE",
+  TEAM_TOTAL_FOULS: "FOUL_RACE",
+};
+
+function refineRaceMisroutedAsTeamTotal(
+  code: NormalizedMarketType,
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): NormalizedMarketType {
+  const raceCode = TEAM_TOTAL_TO_RACE_CODE[code];
+  if (!raceCode || raw.selections.length !== 3) return code;
+  const allResolve3Way = raw.selections.every((s) => {
+    const side = normalize1x2Selection(s.name, ctx.homeTeam, ctx.awayTeam, ctx.league);
+    return side === "HOME" || side === "DRAW" || side === "AWAY";
+  });
+  return allResolve3Way ? raceCode : code;
+}
+
+/**
+ * "Wynik i dokładna liczba goli" combo selections ("Francja i 1", "Remis i
+ * 0", "Maroko i 2") share the generic goals-total name pattern with
+ * TOTAL_GOALS and land there by default, but their shape ("<team or draw> i
+ * <exact count>") does not fit TOTAL_GOALS' OVER/UNDER catalog code at all
+ * (every selection ends up UNKNOWN). Detect the shape from the selections
+ * themselves and redirect to the dedicated RESULT_AND_EXACT_GOALS combo code.
+ */
+function refineResultAndExactGoalsMisroutedAsTotalGoals(
+  code: NormalizedMarketType,
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
+): NormalizedMarketType {
+  if (code !== "TOTAL_GOALS" || raw.selections.length === 0) return code;
+  const allMatch = raw.selections.every((sel) => {
+    const m = sel.name.match(/^(.+?)\s+i\s+\d+\+?$/i);
+    if (!m) return false;
+    const side = normalize1x2Selection(m[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+    return side === "HOME" || side === "DRAW" || side === "AWAY";
+  });
+  return allMatch ? "RESULT_AND_EXACT_GOALS" : code;
 }
 
 export const lvbetNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "lvbet",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
-    const { code: marketCode, matchedBy } = resolveMarketCode(raw, ctx);
+    const resolved = resolveMarketCode(raw, ctx);
+    let marketCode = refineRaceMisroutedAsTeamTotal(resolved.code, raw, ctx);
+    marketCode = refineResultAndExactGoalsMisroutedAsTotalGoals(marketCode, raw, ctx);
+    const { matchedBy } = resolved;
 
     // Deliberately excluded markets must not share the single "OTHER" market
     // key: unrelated YES/NO props (e.g. half-time exact-margin bets) were
@@ -1340,14 +1520,15 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const paramValue = extractParamValue(marketCode, raw);
+    const paramValue = extractParamValue(marketCode, raw, ctx);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     // Selections that resolve to null have no catalog counterpart (grouped
     // bands, catch-all buckets, ...) and are dropped so they never leak raw
     // labels or orphan codes into the cross-bookmaker aggregation.
+    const siblingSelectionNames = raw.selections.map((s) => s.name);
     const selections = raw.selections.flatMap((sel) => {
-      const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name);
+      const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
       if (code === null) return [];
       return [{ code, label: sel.name, odds: sel.odds }];
     });

@@ -2301,6 +2301,41 @@ function extractParamValue(
   }
 }
 
+/**
+ * Betclic's half-time exact-cards markets sometimes expose a 5-way tier
+ * (0/1/2/3/4+) while the catalog only defines a 4-way (0/1/2/3+) for these
+ * half-time markets (unlike the full-match CARDS variants, which keep "3"
+ * and "4+" as distinct catalog selections). When both a bare "3" and a "4+"
+ * selection are present, fold them into a single "3+" selection using
+ * combined implied probability instead of letting the "4+" price pass
+ * through alone as "3+" (which inflates the combined tail odds well past
+ * what peers show for the same bucket).
+ */
+function mergeHalfTimeExactCardsTail(
+  marketCode: NormalizedMarketType,
+  selections: RawBookmakerMarket["selections"]
+): RawBookmakerMarket["selections"] {
+  if (marketCode !== "HALF_TIME_HOME_EXACT_CARDS" && marketCode !== "HALF_TIME_AWAY_EXACT_CARDS") {
+    return selections;
+  }
+
+  const threeIndex = selections.findIndex((s) => s.name.trim() === "3");
+  const fourPlusIndex = selections.findIndex((s) => /^4\+$/.test(s.name.trim()));
+
+  if (threeIndex === -1 || fourPlusIndex === -1) return selections;
+
+  const three = selections[threeIndex];
+  const fourPlus = selections[fourPlusIndex];
+  if (three.odds <= 0 || fourPlus.odds <= 0) return selections;
+
+  const combinedProbability = 1 / three.odds + 1 / fourPlus.odds;
+  const combinedOdds = Math.round((1 / combinedProbability) * 100) / 100;
+
+  const merged = selections.filter((_, i) => i !== threeIndex && i !== fourPlusIndex);
+  merged.push({ ...three, name: "3+", odds: combinedOdds });
+  return merged;
+}
+
 export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
@@ -2352,7 +2387,8 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
     
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => ({
+    const mergedRawSelections = mergeHalfTimeExactCardsTail(marketCode, raw.selections);
+    const selections = mergedRawSelections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name),
       label: sel.name,
       odds: sel.odds,

@@ -342,6 +342,39 @@ const PLAYER_LIST_MARKET_IDS = new Set<number>([
 ]);
 
 /**
+ * Per-player STAT-LINE markets (PLAYER_SHOTS, PLAYER_OFFSIDES,
+ * PLAYER_HEADER_SHOTS_ON_TARGET): unlike PLAYER_LIST_MARKET_IDS above, the
+ * normalizer keys these by the PLAYER as the market parameter and reduces
+ * every selection to just the threshold outcome ("1+"/"2+"). Superbet tags
+ * every player's row with the THRESHOLD as `specialBetValue` (e.g. "0.5",
+ * "2.5"), not a per-player id, so grouping by marketId+specialBetValue like
+ * the generic O/U markets bundles every player who happens to share that
+ * threshold into one raw group - the normalizer then reads only the first
+ * bundled row's player name as the group's single param and mixes every
+ * other player's price under that one player's column (confirmed:
+ * PLAYER_OFFSIDES mixed Sbai's and Mbappe's higher-threshold rows in under
+ * whichever player's row the API happened to list first). Group these by
+ * the player identity embedded in the selection name instead, so one raw
+ * group always corresponds to exactly one player.
+ */
+const PLAYER_STAT_LINE_MARKET_IDS = new Set<number>([
+  236218, // PLAYER_SHOTS: "Zawodnik - liczba strzałów"
+  236224, // PLAYER_OFFSIDES: "Zawodnik - liczba spalonych"
+  238465, // PLAYER_HEADER_SHOTS_ON_TARGET: "Zawodnik - liczba celnych strzałów głową"
+]);
+
+/**
+ * Player identity portion of a stat-line selection name, e.g.
+ * "Sbai, Amine - powyżej 2.5" -> "sbai, amine". Falls back to the full
+ * (lowercased) name for bare player rows with no threshold suffix.
+ */
+function extractPlayerStatGroupKey(name: string | undefined): string {
+  const trimmed = (name ?? "").trim();
+  const withoutLine = trimmed.replace(/\s*-\s*powy[żz]ej\s+[\d.,]+\s*$/iu, "");
+  return (withoutLine || trimmed).toLowerCase();
+}
+
+/**
  * Superbet returns some market names with an uninterpolated "X" placeholder
  * ("Liczba goli - do X minuty"). Substitute the real minute when it can be
  * recovered unambiguously from the selection names.
@@ -388,9 +421,13 @@ export function parseAllMarkets(
     // Create unique key for market grouping
     // For line markets (O/U, handicap), include the line in the key. Skip
     // this for player-list markets, whose specialBetValue is not a real
-    // line - see PLAYER_LIST_MARKET_IDS.
+    // line - see PLAYER_LIST_MARKET_IDS. Per-player stat-line markets need
+    // the opposite treatment: group by player identity, not the shared
+    // threshold - see PLAYER_STAT_LINE_MARKET_IDS.
     let key = String(selection.marketId);
-    if (selection.specialBetValue && !PLAYER_LIST_MARKET_IDS.has(selection.marketId)) {
+    if (PLAYER_STAT_LINE_MARKET_IDS.has(selection.marketId)) {
+      key += `_${extractPlayerStatGroupKey(selection.name)}`;
+    } else if (selection.specialBetValue && !PLAYER_LIST_MARKET_IDS.has(selection.marketId)) {
       key += `_${selection.specialBetValue}`;
     }
 

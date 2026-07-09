@@ -242,6 +242,13 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   [-30072]: "AWAY",
   [-250]: "HOME",
   [-251]: "AWAY",
+  // CORNERS_TEAM's catalog selections are plain OVER/UNDER (no side prefix),
+  // so the home/away variants must be told apart via the marketKey/paramValue
+  // instead (see the CORNERS_TEAM branch in normalizeMarket below); without
+  // this, both ids resolve to the same paramValue (just the line, e.g. "5.5")
+  // and collide into a single row that mixes the two teams' prices.
+  [115]: "HOME",
+  [116]: "AWAY",
 };
 
 /**
@@ -345,6 +352,20 @@ function resolveTeamScopedMarket(
     const side = resolveSide(match[1]);
     if (side === "HOME") return "HOME_WIN_OR_OVER";
     if (side === "AWAY") return "AWAY_WIN_OR_OVER";
+    return null;
+  }
+
+  // "<team> wygra lub poniżej [line]" (win-or-under combo). The away side
+  // already has a dedicated gameType id (-8040) routed to the generic
+  // WIN_OR_UNDER code; the home side has no dedicated id and previously fell
+  // through to OTHER via the name resolver, so route it here to the
+  // catalog's HOME_WIN_OR_UNDER code (mirroring the away id's target when it
+  // also arrives by name).
+  match = rawName.match(/^(.+?)\s+wygra\s+lub\s+poni[zż]ej\b/i);
+  if (match) {
+    const side = resolveSide(match[1]);
+    if (side === "HOME") return "HOME_WIN_OR_UNDER";
+    if (side === "AWAY") return "WIN_OR_UNDER";
     return null;
   }
 
@@ -606,6 +627,7 @@ function normalizeSelectionForMarket(
     case "WIN_OR_BTTS":
     case "DRAW_OR_BTTS":
     case "WIN_OR_UNDER":
+    case "HOME_WIN_OR_UNDER":
     case "HOME_WIN_OR_OVER":
     case "AWAY_WIN_OR_OVER":
     case "DRAW_OR_OVER_2_5":
@@ -654,9 +676,16 @@ function normalizeSelectionForMarket(
 
     case "HT_FT_CORRECT_SCORE": {
       // eToto uses dash scores ("0-0 / 1-0"); catalog uses colons ("0:0 / 1:0").
-      const match = trimmed.match(/^(\d+)\s*[-:]\s*(\d+)\s*\/\s*(\d+)\s*[-:]\s*(\d+)$/);
-      if (match) {
-        return `${match[1]}:${match[2]} / ${match[3]}:${match[4]}` as NormalizedSelection;
+      // The "4+" catch-all bucket ("0-0 / 4+") is not a score pair, so each
+      // half must be converted independently rather than requiring both
+      // halves to match the digit-digit pattern at once.
+      const parts = trimmed.split("/").map((part) => part.trim());
+      if (parts.length === 2) {
+        const normalizeHalf = (half: string): string => {
+          const scoreMatch = half.match(/^(\d+)\s*[-:]\s*(\d+)$/);
+          return scoreMatch ? `${scoreMatch[1]}:${scoreMatch[2]}` : half;
+        };
+        return `${normalizeHalf(parts[0])} / ${normalizeHalf(parts[1])}` as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -855,9 +884,19 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
-    // Catalog uses the raw combo strings ("1:0, 2:0 lub 3:0", "X") verbatim.
-    case "MULTI_RESULT":
+    // Catalog uses the raw combo strings ("1:0, 2:0 lub 3:0", "X") verbatim,
+    // except the "other win" legs which eToto quotes lowercase and in the
+    // wrong grammatical case ("inne zwycięstwo gospodarze"/"goście") instead
+    // of the catalog's capitalized genitive form.
+    case "MULTI_RESULT": {
+      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(normalized)) {
+        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
+      }
+      if (/^inne\s+zwyci[eę]stwo\s+go[sś]ci/i.test(normalized)) {
+        return "Inne zwycięstwo gości" as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
+    }
 
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
@@ -1031,6 +1070,15 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       paramValue = teamSide;
     } else {
       paramValue = extractParamValue(marketCode, raw);
+      // CORNERS_TEAM's catalog selections are plain OVER/UNDER with no side
+      // prefix, so the home (id 115) and away (id 116) variants must combine
+      // teamSide with the numeric line to stay on distinct marketKeys
+      // (e.g. CORNERS_TEAM:HOME:5.5 vs CORNERS_TEAM:AWAY:5.5); otherwise they
+      // collide on a single "CORNERS_TEAM:5.5" key and mix the two teams'
+      // prices into one row (see betclic-normalizer.ts for the same pattern).
+      if (marketCode === "CORNERS_TEAM" && teamSide) {
+        paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;
+      }
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

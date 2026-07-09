@@ -471,6 +471,12 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   if (isFirstHalf && /wynik/i.test(lower) && /obie\s*(drużyny\s+)?strzel/i.test(lower)) {
     return "HALF_TIME_RESULT_AND_BTTS";
   }
+  // "Wynik 1. połowy / wynik końcowy" is the HT+FT correct-score combo
+  // (literal scorelines like "1-3/3-3", not 1X2 result letters) — must be
+  // checked before the plain half-time-result rule below, which otherwise
+  // matches the leading "wynik 1. połowy" prefix and collapses this into a
+  // single UNKNOWN HALF_TIME_RESULT selection.
+  if (/wynik\s+1\.?\s*po[lł]owy\s*\/\s*wynik\s+ko[nń]cowy/i.test(lower)) return "HT_FT_CORRECT_SCORE";
   if (/wynik\s+1\.?\s*po[lł]owy/i.test(lower) || /1\.?\s*po[lł]owa.*wynik/i.test(lower)) return "HALF_TIME_RESULT";
   if (/gole?\s+1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*gol/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
   if (/obie.*strzela.*1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*obie.*strzela/i.test(lower)) return "HALF_TIME_BTTS";
@@ -550,6 +556,17 @@ function normalizeSelectionForMarket(
 
     case "DOUBLE_CHANCE":
       return normalizeDoubleChanceSelection(trimmed);
+
+    case "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE": {
+      // Betcris quotes each leg as its own raw selection instead of combined
+      // "1.<2. lub 1.=2." phrasing: "1>=2" (1st half >= 2nd, i.e. 1st half
+      // or draw), "2>=1" (2nd half >= 1st, i.e. 2nd half or draw), "1. lub
+      // 2." (either half, draw excluded).
+      if (/^1\s*>=\s*2/.test(trimmed)) return "1ST_OR_DRAW" as NormalizedSelection;
+      if (/^2\s*>=\s*1/.test(trimmed)) return "2ND_OR_DRAW" as NormalizedSelection;
+      if (/^1\.?\s*lub\s*2\.?$/i.test(lowerTrimmed)) return "1ST_OR_2ND" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
 
     case "TOTAL_GOALS":
     case "HALF_TIME_TOTAL_GOALS":
@@ -636,15 +653,25 @@ function normalizeSelectionForMarket(
     }
 
     case "CORNERS_TOTAL_3WAY":
+    case "TOTAL_GOALS_3WAY":
       if (/^dok[lł]adnie/i.test(lowerTrimmed)) return "EXACTLY" as NormalizedSelection;
       return normalizeOverUnderSelection(trimmed);
 
     case "HOME_EXACT_GOALS":
-    case "AWAY_EXACT_GOALS":
-      // Bare integer/"N+" labels (" 0", " 1", " 4+") map directly onto the
-      // catalog's exact-goal-count selection codes once whitespace is
-      // stripped.
-      return trimmed.replace(/\s+/g, "") as NormalizedSelection;
+    case "AWAY_EXACT_GOALS": {
+      // Bare integer/"N+" labels (" 0", " 1", " 3+", " 6+") map directly onto
+      // the catalog's exact-goal-count selection codes once whitespace is
+      // stripped — but betcris' own scale caps at "4+" (4-or-more) while the
+      // catalog ladder is 0/1/2/3/3+/4/5/6+, so a literal "4+" has no home:
+      // it can't be safely split into separate 4/5/6+ probabilities. Drop it
+      // (UNKNOWN) instead of leaking an orphan selection that never joins
+      // the catalog's comparison table.
+      const stripped = trimmed.replace(/\s+/g, "");
+      const validExactGoalsSelections = new Set(["0", "1", "2", "3", "3+", "4", "5", "6+"]);
+      return (
+        validExactGoalsSelections.has(stripped) ? stripped : "UNKNOWN"
+      ) as NormalizedSelection;
+    }
 
     // Race-type markets: betcris uses positional "Team 1"/"Team 2" labels and
     // English/Polish "no event" phrases ("No Card", "No Shot on Target",
@@ -805,6 +832,16 @@ function normalizeSelectionForMarket(
     case "ANYTIME_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
       return (score ?? trimmed) as NormalizedSelection;
+    }
+
+    case "HT_FT_CORRECT_SCORE": {
+      // Betcris uses dash scores with no spaces ("1-3/3-3"); catalog uses
+      // colons with a spaced slash ("1:3 / 3:3").
+      const match = trimmed.match(/^(\d+)\s*[-:]\s*(\d+)\s*\/\s*(\d+)\s*[-:]\s*(\d+)$/);
+      if (match) {
+        return `${match[1]}:${match[2]} / ${match[3]}:${match[4]}` as NormalizedSelection;
+      }
+      return trimmed as NormalizedSelection;
     }
 
     case "HALFTIME_FULLTIME":
@@ -1046,10 +1083,17 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
     if (marketCode === "DOUBLE_CHANCE") {
-      // "1. Połowa. Podwójna szansa" was mis-slotted into the full-match
-      // market, poisoning best-odds with half-scoped prices.
-      if (/1\.?\s*po[lł]ow/i.test(raw.name)) marketCode = "HALF_TIME_DOUBLE_CHANCE";
-      else if (/2\.?\s*po[lł]ow/i.test(raw.name)) marketCode = "SECOND_HALF_DOUBLE_CHANCE";
+      // "Połowa z największą liczbą bramek. Podwójna szansa" is a half-with-
+      // more-goals double chance (selections "1>=2"/"2>=1"/"1. lub 2."), not
+      // a full-match result double chance — must be checked first since it
+      // also contains "Podwójna szansa" but isn't scoped by "1./2. połowa".
+      if (/po[lł]ow.*wi[eę]ksz.*(?:bramek|gol)/i.test(raw.name)) {
+        marketCode = "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE";
+      } else if (/1\.?\s*po[lł]ow/i.test(raw.name)) {
+        // "1. Połowa. Podwójna szansa" was mis-slotted into the full-match
+        // market, poisoning best-odds with half-scoped prices.
+        marketCode = "HALF_TIME_DOUBLE_CHANCE";
+      } else if (/2\.?\s*po[lł]ow/i.test(raw.name)) marketCode = "SECOND_HALF_DOUBLE_CHANCE";
     }
     if (marketCode === "HALF_TIME_RED_CARD" && /2\.?\s*po[lł]ow/i.test(raw.name)) {
       // The "HalfRedCard" Swarm id also covers "2. Połowa. Czerwona kartka".
@@ -1057,12 +1101,34 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     }
     if (
       marketCode === "TOTAL_GOALS" &&
-      /wynik\s+meczu.{0,6}(?:i|\/|oraz).{0,6}liczba\s+goli/i.test(raw.name)
+      /wynik\s+meczu.{0,6}(?:i|\/|oraz|lub).{0,6}liczba\s+goli/i.test(raw.name)
     ) {
-      // "Wynik meczu / liczba goli" is a match-result + total-goals combo
-      // reusing the plain OverUnder Swarm id (hence sharing its 1.5/2.5/3.5
-      // lines) — its selections ("Francja / powyżej 2.5") don't fit the plain
-      // OVER/UNDER vocabulary. No catalog code exists for this combo.
+      // "Wynik meczu lub/i/oraz liczba goli" is a match-result + total-goals
+      // combo reusing the plain OverUnder Swarm id (hence sharing its
+      // 1.5/2.5/3.5 lines) — its selections ("Francja / powyżej 2.5") don't
+      // fit the plain OVER/UNDER vocabulary. No catalog code exists for this
+      // combo. ("lub" was previously missing from the alternation, so this
+      // guard silently let "Wynik meczu lub liczba goli" through into
+      // TOTAL_GOALS with an UNKNOWN selection.)
+      return null;
+    }
+    if (marketCode === "TOTAL_GOALS" && /3[\s-]*drogow/i.test(raw.name)) {
+      // "Liczba goli 3-drogowo" (3-way: Under/Exactly/Over) reuses the plain
+      // OverUnder Swarm id — force-mapping it into 2-way TOTAL_GOALS drops
+      // the "Exactly N" leg's probability mass into Over/Under, inflating
+      // both vs. peers' genuine 2-way lines. Route to the dedicated 3-way
+      // catalog code instead.
+      marketCode = "TOTAL_GOALS_3WAY";
+    }
+    if (
+      marketCode === "HALF_TIME_TOTAL_GOALS" &&
+      /3[\s-]*drogow/i.test(raw.name)
+    ) {
+      // "Rynek: 1. połowa. Liczba goli (3-drogowo)" is the same 3-way shape
+      // for the 1st half, but no HALF_TIME_TOTAL_GOALS_3WAY catalog code
+      // exists yet — exclude instead of force-mapping the "exactly 1" leg's
+      // probability mass into a binary OVER/UNDER, which inflated betcris'
+      // odds ~53% above peers' genuine 2-way half-time totals line.
       return null;
     }
     if (
@@ -1210,6 +1276,33 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
           paramValue = canonicalizePlayerName(playerName);
         }
       }
+    }
+
+    // PLAYER_FOULS/PLAYER_FOULS_WON have no catalog "OVER" code (only
+    // 1+/2+/3+/4+ tiers) — a bare "OVER" from betcris' single-threshold
+    // "musi rozpocząć: Powyżej N" bulk markets is always an orphan. Convert
+    // it to the matching N+ tier using the numeric line the parser recovers
+    // into raw.name ("... Powyżej 3.5" -> over 3.5 -> "4+"); fall back to the
+    // lowest tier when no line can be recovered.
+    if (
+      (marketCode === "PLAYER_FOULS" || marketCode === "PLAYER_FOULS_WON") &&
+      selections.some((sel) => sel.code === "OVER")
+    ) {
+      const lineMatch = raw.name.match(/powy[żz]ej\s+([\d.,]+)\s*$/i);
+      const line = lineMatch ? parseFloat(lineMatch[1].replace(",", ".")) : undefined;
+      const tier = line !== undefined ? Math.min(4, Math.max(1, Math.floor(line) + 1)) : 1;
+      selections = selections.map((sel) =>
+        sel.code === "OVER" ? { ...sel, code: `${tier}+` as NormalizedSelection } : sel
+      );
+    }
+
+    // PLAYER_OFFSIDES has only one catalog tier ("1+") and no meaningful
+    // "Under" side — betcris' bare "OVER" (from "Player to Be in Offside
+    // Over (Must Start)") always represents that single tier.
+    if (marketCode === "PLAYER_OFFSIDES") {
+      selections = selections.map((sel) =>
+        sel.code === "OVER" ? { ...sel, code: "1+" as NormalizedSelection } : sel
+      );
     }
 
     // Bulk multi-player markets with no Over/Under shape ("Zaliczy asystę w

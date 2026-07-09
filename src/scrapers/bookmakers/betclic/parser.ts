@@ -253,10 +253,15 @@ function extractSelection(selFields: RawField[]): ParsedSelection | null {
     odds = oddsField.value as number;
   }
 
-  // Betclic uses 1000 as a sentinel/placeholder price for suspended or
-  // not-really-quoted outcomes (e.g. "no corner" at 1000 vs peers ~100),
-  // so treat it — and anything above — as no price, not a genuine quote.
-  if (!name || odds <= 0 || odds >= 1000) return null;
+  // Betclic genuinely prices some very-low-probability outcomes (e.g. "no
+  // corner in the whole match", rare multi-player combined-goals combos, or
+  // deep handicap/margin lines) well past 1000 rather than suspending them —
+  // treating any value >= 1000 as a sentinel silently dropped these real
+  // selections from the offer (see recurring FIRST_CORNER/LAST_CORNER/
+  // THREE_PLAYERS_COMBINED_GOALS selection gaps in audits). Only reject
+  // non-finite/zero/negative values and implausible protobuf-misparse
+  // magnitudes, not real long-shot prices.
+  if (!name || !Number.isFinite(odds) || odds <= 0 || odds > 100000) return null;
 
   // Round to 2 decimal places
   odds = Math.round(odds * 100) / 100;

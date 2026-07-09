@@ -351,6 +351,26 @@ function resolveForbetSpecialMarket(
 ): NormalizedMarketType | null {
   const name = normalizeForbetName(raw.name);
 
+  // Odd/even total-goals market ("Parzysta/nieparzysta - liczba goli") shares
+  // the generic O/U game type (8) but its selections are "Parzyste" /
+  // "Nieparzyste", not over/under thresholds — route to the dedicated
+  // odd/even catalog code instead of leaving them UNKNOWN under TOTAL_GOALS.
+  // Guarded to goal-worded names only so it never hijacks the corner/card
+  // odd/even markets, which already route correctly via bookmakerMarketId
+  // (-262/-263) and use the same "Parzyste"/"Nieparzyste" wording.
+  if (
+    raw.selections.some((sel) => /parzyst/i.test(sel.name)) &&
+    /gol/.test(name) &&
+    !/rzut|rozn|kartek/.test(name)
+  ) {
+    if (/^1\.?\s*polowa/.test(name)) return "HALF_TIME_ODD_EVEN_GOALS";
+    if (/^2\.?\s*polowa/.test(name)) return "SECOND_HALF_ODD_EVEN_GOALS";
+    const side = detectTeamSide(raw.name, ctx);
+    if (side === "HOME") return "HOME_TEAM_ODD_EVEN_GOALS";
+    if (side === "AWAY") return "AWAY_TEAM_ODD_EVEN_GOALS";
+    return "ODD_EVEN_GOALS";
+  }
+
   // Player goals special quoted as a generic goals market:
   // "Wanner, Paul - liczba goli (…)", "Richard - liczba goli (…)".
   // The prefix must not be a team name (guards hypothetical team totals) and
@@ -524,6 +544,67 @@ function formatHtFtScorePart(part: string): string {
   return part;
 }
 
+/** Known player surnames whose canonical diacritic forBET drops in plain text. */
+const FORBET_PLAYER_SURNAME_FIXUPS: Record<string, string> = {
+  mbappe: "Mbappé",
+};
+
+function fixForbetPlayerDiacritics(canonicalName: string): string {
+  const parts = canonicalName.split(" ");
+  const lastIndex = parts.length - 1;
+  const surname = parts[lastIndex];
+  if (!surname) return canonicalName;
+  const fixed = FORBET_PLAYER_SURNAME_FIXUPS[surname.toLowerCase()];
+  if (!fixed) return canonicalName;
+  parts[lastIndex] = fixed;
+  return parts.join(" ");
+}
+
+/**
+ * Builds a stable selection code for player-combination markets ("A & B",
+ * "A / B / C") so the same pair/trio merges across bookmakers regardless of
+ * forBET's listing order or separator ("&" vs "/") — mirrors betclic's
+ * normalizePlayerComboSelection (sort + diacritic fixup + fixed "&" join).
+ */
+function normalizeForbetPlayerCombo(raw: string): string {
+  const sep = raw.includes("&") ? "&" : "/";
+  const names = raw
+    .split(sep)
+    .map((part) => fixForbetPlayerDiacritics(canonicalizePlayerName(part)))
+    .filter(Boolean);
+  if (names.length < 2) {
+    return fixForbetPlayerDiacritics(canonicalizePlayerName(raw));
+  }
+  return names.sort((a, b) => a.localeCompare(b, "en")).join(" & ");
+}
+
+/**
+ * Merges selections that normalized to the same catalog code (e.g. a hidden
+ * "3"/"4+" split both clamped to "3+"). The combined price sums the implied
+ * probabilities: 1 / (1/o1 + 1/o2), matching the fuksiarz-normalizer pattern.
+ */
+function mergeDuplicateSelectionCodes(
+  selections: Array<{ code: NormalizedSelection; label: string; odds: number }>
+): Array<{ code: NormalizedSelection; label: string; odds: number }> {
+  const byCode = new Map<string, { code: NormalizedSelection; label: string; odds: number }>();
+  const order: string[] = [];
+
+  for (const sel of selections) {
+    const existing = byCode.get(sel.code);
+    if (!existing) {
+      byCode.set(sel.code, { ...sel });
+      order.push(sel.code);
+      continue;
+    }
+    if (existing.odds > 0 && sel.odds > 0) {
+      existing.odds = Math.round((1 / (1 / existing.odds + 1 / sel.odds)) * 100) / 100;
+    }
+    existing.label = `${existing.label} / ${sel.label}`;
+  }
+
+  return order.map((code) => byCode.get(code)!);
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -558,19 +639,14 @@ function normalizeSelectionForMarket(
     if (rawMarketName && colonIdx > 0) {
       const pair = rawMarketName.slice(0, colonIdx).trim();
       if (pair && normalizeYesNoSelection(trimmed) !== "NO") {
-        return pair as NormalizedSelection;
+        return normalizeForbetPlayerCombo(pair) as NormalizedSelection;
       }
       return normalizeYesNoSelection(trimmed);
     }
     const yn = normalizeYesNoSelection(trimmed);
     if (yn !== "UNKNOWN") return yn;
-    const sep = trimmed.includes("&") ? "&" : "/";
-    const names = trimmed
-      .split(sep)
-      .map((part) => canonicalizePlayerName(part))
-      .filter(Boolean);
-    if (names.length >= 2) {
-      return names.join(` ${sep} `) as NormalizedSelection;
+    if (trimmed.includes("&") || trimmed.includes("/")) {
+      return normalizeForbetPlayerCombo(trimmed) as NormalizedSelection;
     }
     return trimmed as NormalizedSelection;
   }
@@ -619,6 +695,11 @@ function normalizeSelectionForMarket(
 
     case "CORNERS_ODD_EVEN":
     case "HALF_TIME_CORNERS_ODD_EVEN":
+    case "ODD_EVEN_GOALS":
+    case "HALF_TIME_ODD_EVEN_GOALS":
+    case "SECOND_HALF_ODD_EVEN_GOALS":
+    case "HOME_TEAM_ODD_EVEN_GOALS":
+    case "AWAY_TEAM_ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);
 
     case "DOUBLE_CHANCE":
@@ -826,8 +907,6 @@ function normalizeSelectionForMarket(
 
     case "HOME_EXACT_CARDS":
     case "AWAY_EXACT_CARDS":
-    case "HALF_TIME_HOME_EXACT_CARDS":
-    case "HALF_TIME_AWAY_EXACT_CARDS":
     case "HALF_TIME_HOME_EXACT_CORNERS":
     case "HALF_TIME_AWAY_EXACT_CORNERS": {
       // Counts are literal codes ("0", "1", "2", "3+") — never HOME/AWAY
@@ -837,6 +916,22 @@ function normalizeSelectionForMarket(
       if (plus) return `${plus[1]}+` as NormalizedSelection;
       const range = trimmed.match(/^(\d+)\s*-\s*(\d+)$/);
       if (range) return `${range[1]}-${range[2]}` as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    // Half-time exact cards has no separate "3" bucket in the catalog (only
+    // 0/1/2/3+, unlike the full-match variant which also has a bare "3" and
+    // "4+"). Clamp any bare count ≥3 (and any "N+" tier) into "3+" so a
+    // hidden 3/4+ split on forBET's side merges into one bucket instead of
+    // leaking a stray non-catalog "3"/"4+" code that never matches peers.
+    case "HALF_TIME_HOME_EXACT_CARDS":
+    case "HALF_TIME_AWAY_EXACT_CARDS": {
+      if (/^brak/.test(normalized)) return "0" as NormalizedSelection;
+      const bare = trimmed.match(/^(\d+)$/);
+      if (bare) {
+        return (parseInt(bare[1], 10) >= 3 ? "3+" : bare[1]) as NormalizedSelection;
+      }
+      if (/^\d+\s*\+$/.test(trimmed)) return "3+" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -852,8 +947,11 @@ function normalizeSelectionForMarket(
     case "RESULT_AND_TOTAL":
     case "HALF_TIME_RESULT_AND_TOTAL":
     case "SECOND_HALF_RESULT_AND_TOTAL": {
-      // "Argentyna i powyżej 1,5" → HOME_OVER
-      const combo = trimmed.match(/^(.+?)\s+i\s+(.+)$/i);
+      // "Argentyna i powyżej 1,5" → HOME_OVER. forBET mixes "i" and "&" as
+      // the leg separator within one market (same quirk as
+      // DOUBLE_CHANCE_TOTAL below), so a "remis & powyżej 4,5" row must also
+      // match or its DRAW_OVER leg silently falls through unnormalized.
+      const combo = trimmed.match(/^(.+?)\s+(?:i|&)\s+(.+)$/i);
       if (combo) {
         const res = normalize1x2Selection(combo[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
         const ou = normalizeOverUnderSelection(combo[2]);
@@ -1303,11 +1401,13 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
     const paramValue = extractParamValue(marketCode, raw, ctx);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, raw.name),
-      label: sel.name,
-      odds: sel.odds,
-    }));
+    const selections = mergeDuplicateSelectionCodes(
+      raw.selections.map((sel) => ({
+        code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, raw.name),
+        label: sel.name,
+        odds: sel.odds,
+      }))
+    );
 
     return {
       marketCode,

@@ -365,17 +365,12 @@ export function parseAllMarkets(
       status: "active" as const,
     }));
 
-    // Odds of exactly 1.00 are usually a sentinel for a suspended/closed
-    // outcome — filter them out. Exception: a genuinely binary (2-outcome)
-    // market where the other leg is priced above 1.00 is actively quoted,
-    // not suspended; a near-1.00 price on a rare event's "No" leg (e.g.
-    // "Rzut karny w obu połowach: Nie @1.0" alongside a real "Tak @30") is a
-    // real, extreme-probability quote and must be kept, not dropped.
-    const isLiveBinaryMarket =
-      rawSelections.length === 2 && rawSelections.some((sel) => sel.odds > 1);
-    const selections = isLiveBinaryMarket
-      ? rawSelections
-      : rawSelections.filter((sel) => sel.odds > 1);
+    // Odds of exactly 1.00 (or below) are always a sentinel for a
+    // suspended/closed outcome — no bookmaker offers a real quote with zero
+    // margin/profit, so this is never a genuine price regardless of whether
+    // the market is binary and the other leg is actively quoted. Filter it
+    // out unconditionally; only the live leg(s) survive.
+    const selections = rawSelections.filter((sel) => sel.odds > 1);
 
     // Only add markets with valid selections
     if (selections.length > 0) {

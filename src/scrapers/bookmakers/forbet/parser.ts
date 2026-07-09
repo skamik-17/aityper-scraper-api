@@ -243,6 +243,26 @@ export function parseAllMarkets(
   // Get teams from event if not provided
   const parsedTeams = teams || parseTeamNames(event.eventName);
 
+  // forBET pads low-probability selections (mostly player-prop goal/card/shot
+  // thresholds) with a flat 101 ceiling instead of a real computed price. The
+  // tell is that the exact same 101 value recurs identically across many
+  // unrelated selections in the event; a genuinely priced long-shot would not
+  // repeat that precisely. Count occurrences across the WHOLE event first so
+  // a single, real 101.00 quote (e.g. a rare correct-score cell or a
+  // multi-result/last-corner longshot) isn't mistaken for the sentinel and
+  // silently dropped — only treat it as padding once it recurs often enough
+  // to rule out coincidence.
+  const SENTINEL_ODDS = 101;
+  const SENTINEL_MIN_REPEATS = 3;
+  const oddsCounts = new Map<number, number>();
+  for (const game of games) {
+    for (const outcome of game.outcomes || []) {
+      const odds = outcome.outcomeOdds || 0;
+      oddsCounts.set(odds, (oddsCounts.get(odds) || 0) + 1);
+    }
+  }
+  const isSentinelPadding = (oddsCounts.get(SENTINEL_ODDS) || 0) >= SENTINEL_MIN_REPEATS;
+
   // Process each game (market) in the event
   for (const game of games) {
     const outcomes = game.outcomes || [];
@@ -261,12 +281,10 @@ export function parseAllMarkets(
         odds: outcome.outcomeOdds || 0,
         externalId: outcome.outcomeId ? String(outcome.outcomeId) : undefined,
       }))
-      // forBET pads low-probability player-prop selections (e.g. distant
-      // goal/card thresholds) with a flat 101 ceiling instead of a real
-      // computed price — the same 101 recurs identically across different
-      // players and different thresholds, which a genuine market price
-      // would not. Drop it so it doesn't poison best-odds comparisons.
-      .filter((sel) => sel.odds > 0 && sel.odds !== 101);
+      // Drop the sentinel-padding value (see isSentinelPadding above) so it
+      // doesn't poison best-odds comparisons, but only once it's confirmed to
+      // recur across the event rather than being a one-off genuine price.
+      .filter((sel) => sel.odds > 0 && !(isSentinelPadding && sel.odds === SENTINEL_ODDS));
 
     // Only add markets with valid selections
     if (selections.length > 0) {

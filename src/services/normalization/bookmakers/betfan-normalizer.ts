@@ -684,6 +684,21 @@ function refineMarketCode(
     else code = "OTHER";
   }
 
+  // Betfan also carries a raw 3-way exact first-half goal count ("0"/"1"/
+  // "2+") under the identical raw name as the correctly-mapped 0.5/1.5
+  // half-time O/U lines ("1. polowa - liczba goli"). Its bare-digit selections
+  // never match OVER/UNDER, so it would otherwise land in an unparameterized
+  // "base" HALF_TIME_TOTAL_GOALS bucket (a decimal-parameter market) and be
+  // silently dropped. Route it to the catalog's dedicated exact-count code
+  // instead, which already covers this exact "0"/"1"/"2"/"2+"/"3+" shape.
+  if (
+    code === "HALF_TIME_TOTAL_GOALS" &&
+    raw.selections.length > 0 &&
+    raw.selections.every((sel) => /^\d+\+?$/.test(sel.name.trim()))
+  ) {
+    code = "HALF_TIME_EXACT_GOALS";
+  }
+
   return code;
 }
 
@@ -725,7 +740,8 @@ function normalizeBetfanDoubleChance(
 function normalizeSelectionForMarket(
   selectionName: string,
   marketCode: NormalizedMarketType,
-  ctx: NormalizationContext
+  ctx: NormalizationContext,
+  teamSide?: "HOME" | "AWAY" | null
 ): NormalizedSelection {
   const trimmed = selectionName.trim();
 
@@ -873,7 +889,6 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORNERS_TOTAL":
     case "SECOND_HALF_CORNERS_TOTAL":
     case "CARDS_TOTAL":
-    case "CARDS_TEAM":
     case "HALF_TIME_CARDS_TOTAL":
     case "SECOND_HALF_CARDS_TOTAL":
     case "TOTAL_SHOTS":
@@ -887,6 +902,15 @@ function normalizeSelectionForMarket(
     case "AWAY_TEAM_TOTAL_OFFSIDES": {
       const overUnder = normalizeOverUnderSelection(trimmed);
       return overUnder === "UNKNOWN" ? (trimmed as NormalizedSelection) : overUnder;
+    }
+
+    // Catalog vocabulary is side-prefixed (HOME_OVER/HOME_UNDER/AWAY_OVER/
+    // AWAY_UNDER); the side comes from the market scope (see
+    // TEAM_LINE_PARAM_MARKETS), the selection text only carries the O/U leg.
+    case "CARDS_TEAM": {
+      const overUnder = normalizeOverUnderSelection(trimmed);
+      if (overUnder === "UNKNOWN" || !teamSide) return trimmed as NormalizedSelection;
+      return `${teamSide}_${overUnder}` as NormalizedSelection;
     }
 
     case "BTTS":
@@ -1243,6 +1267,15 @@ function extractParamValue(
   }
 }
 
+/**
+ * Team-scoped stat lines whose catalog vocabulary carries the side in the
+ * PARAMETER ("HOME:6.5"/"AWAY:6.5") rather than in a dedicated HOME_/AWAY_
+ * marketCode (mirrors fortuna's convention for the same catalog codes).
+ * Without the side folded into the param, both teams' lines collide on the
+ * same (marketCode, param) key and only one team's odds survive.
+ */
+const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>(["CORNERS_TEAM", "CARDS_TEAM"]);
+
 export const betfanNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betfan",
 
@@ -1256,11 +1289,24 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const paramValue = extractParamValue(resolvedCode, raw);
+    // PLAYER_OFFSIDES has only a single "1+" catalog line (hasParameter:
+    // false); betfan's "Zawodnik 2+ spalonych" line is a materially rarer
+    // prop with no catalog counterpart - surfacing it as if comparable to
+    // peers' 1+ prices would misrepresent it as the same bet.
+    if (resolvedCode === "PLAYER_OFFSIDES" && raw.selections[0]?.name.trim() !== "1+") {
+      return null;
+    }
+
+    const teamSide = TEAM_LINE_PARAM_MARKETS.has(resolvedCode) ? detectTeamSide(raw.name, ctx) : null;
+
+    let paramValue = extractParamValue(resolvedCode, raw);
+    if (teamSide && paramValue) {
+      paramValue = `${teamSide}:${paramValue}`;
+    }
     const marketKey = buildMarketKey(resolvedCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, resolvedCode, ctx),
+      code: normalizeSelectionForMarket(sel.name, resolvedCode, ctx, teamSide),
       label: sel.name,
       odds: sel.odds,
     }));

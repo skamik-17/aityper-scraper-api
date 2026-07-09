@@ -15,10 +15,11 @@ describe("parseAllMarkets", () => {
     expect(out[0].bookmakerMarketId).toBe("ufo:mtyp:00-00");
   });
 
-  it("keeps a genuine ~1.00 price on a rare event's 'No' leg when its sibling is live", () => {
-    // "Rzut karny w obu połowach: Nie @1.0" alongside a real "Tak @30" is an
-    // extreme-probability quote, not a suspended market — both legs must
-    // survive.
+  it("drops a suspended ~1.00 leg from a binary market even when its sibling is live", () => {
+    // "Rzut karny w obu połowach: Nie @1.0" alongside a real "Tak @30" is a
+    // suspended/placeholder quote, not a genuine zero-margin price — no
+    // bookmaker offers a real bet at exactly 1.00, so it must be dropped
+    // even though the sibling leg is actively priced.
     const binaryMarket: FortunaMarket = {
       id: "m2", fixtureId: "f1", marketTypeId: "ufo:mtyp:00-r7",
       marketTypeName: "Rzut karny w obu połowach", name: "Rzut karny w obu połowach",
@@ -29,7 +30,7 @@ describe("parseAllMarkets", () => {
       specifiers: {},
     };
     const out = parseAllMarkets([binaryMarket]);
-    expect(out[0].selections.map((s) => s.name)).toEqual(["Tak", "Nie"]);
+    expect(out[0].selections.map((s) => s.name)).toEqual(["Tak"]);
   });
 
   it("still drops a genuinely suspended market where every outcome is at/below 1.00", () => {

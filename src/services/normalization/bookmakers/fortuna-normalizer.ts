@@ -179,6 +179,11 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-3g": "SECOND_HALF_BTTS", // "2.połowa: obie drużyny strzelą gola"
   "ufo:mtyp:00-2g": "HALF_TIME_DRAW_NO_BET", // "1.połowa: bez remisu (remis = zwrot)"
   "ufo:mtyp:00-2s": "FIRST_TEAM_TO_SCORE", // "Mecz: 1.gol"
+  // NOTE: this id is reused for two different products (live-verified):
+  // bare "2.połowa" (who wins the 2nd half, HOME/DRAW/AWAY) and "2.połowa:
+  // 1. gol" (who scores the FIRST goal of the 2nd half — no draw concept,
+  // HOME/AWAY/NONE). The live name is authoritative; the latter is rerouted
+  // to SECOND_HALF_FIRST_GOAL below.
   "ufo:mtyp:00-2w": "SECOND_HALF_RESULT", // "2.połowa"
   "ufo:mtyp:00-1v": "HOME_HALF_WITH_MOST_GOALS",
   "ufo:mtyp:00-7a": "FIRST_GOAL_TIME",
@@ -279,10 +284,20 @@ function stripFortunaScope(name: string): string {
  * Fortuna hyphenates some compound names ("Salah-Eddine, Anass") that peer
  * bookmakers spell with a plain space ("Anass Salah Eddine"); align spelling
  * after the generic Lastname/Firstname swap so the player parameter merges
- * with peers instead of fragmenting into a second bucket.
+ * with peers instead of fragmenting into a second bucket. Also aligns two
+ * OPTA spelling/naming variants that otherwise fragment cross-bookmaker
+ * best-odds for the same real player:
+ * - "El-Ouadi" (Fortuna's OPTA spelling for Morocco's Zakaria El Ouahdi) vs
+ *   "El Ouahdi" (betcris/betfan/superbet's spelling).
+ * - "Kouadio Kone" (Fortuna's OPTA given name for Manu Koné, whose full name
+ *   is Emmanuel Kouadio Koné) vs "Kone Manu", the bucket already shared by
+ *   STS/LVBet.
  */
 function canonicalizeFortunaPlayerName(raw: string): string {
-  return canonicalizePlayerName(raw).replace(/\bSalah-Eddine\b/giu, "Salah Eddine");
+  return canonicalizePlayerName(raw)
+    .replace(/\bSalah-Eddine\b/giu, "Salah Eddine")
+    .replace(/\bEl[- ]Ouadi\b/giu, "El Ouahdi")
+    .replace(/\bKouadio Kone\b/giu, "Kone Manu");
 }
 
 /**
@@ -822,6 +837,16 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    case "HALF_TIME_CORNERS_TEAM_RANGE":
+      // Genuine range/count labels ("0", "1", "3+", "0-1", "4+", ...) are
+      // already handled by the literal-catalog-code passthrough above.
+      // Fortuna bundles a separate "which team gets more 1st-half corners"
+      // prop (team names, plus a numeric "3" draw code) into the same raw
+      // entry; those labels aren't part of this count-based market's
+      // vocabulary and must not be coerced into a spurious HOME/DRAW/AWAY
+      // code via the generic 1X2 fallback below.
+      return "UNKNOWN";
+
     case "GOAL_RANGE":
       // Ranges arrive in canonical dash format ("1-2", "3-5") or as "6+"/"0"
       if (/^\d+\s*-\s*\d+$/.test(trimmed)) {
@@ -845,6 +870,7 @@ function normalizeSelectionForMarket(
     case "FIRST_TEAM_TO_SCORE":
     case "LAST_TEAM_TO_SCORE":
     case "FIRST_CARD":
+    case "SECOND_HALF_FIRST_GOAL":
       if (/^(nikt|zaden|zadna|bez gola|brak gola|nie padnie)/.test(normalized)) {
         return "NONE";
       }
@@ -1029,6 +1055,14 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode = "ASIAN_HANDICAP_3WAY";
     }
 
+    // "2.połowa: 1. gol" is a distinct market (first goal of the 2nd half,
+    // HOME/AWAY/NONE) bundled under the same id as bare "2.połowa" (who wins
+    // the half, HOME/DRAW/AWAY) — see the id-map note above. Forcing it into
+    // the 1X2-shaped SECOND_HALF_RESULT can never yield a valid DRAW.
+    if (marketCode === "SECOND_HALF_RESULT" && /1\s*\.\s*gol\b/iu.test(raw.name)) {
+      marketCode = "SECOND_HALF_FIRST_GOAL";
+    }
+
     // Scope-stripped name for the team routers below — live Fortuna labels
     // carry a "Mecz:"/"1.połowa:" prefix in front of the team name.
     const scopedName = stripFortunaScope(raw.name);
@@ -1160,7 +1194,7 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       );
       if (parlay) {
         parlayPlayerParam =
-          canonicalizePlayerName(parlay[1].trim()) + (parlay[2] ? ` ${parlay[2]}` : "");
+          canonicalizeFortunaPlayerName(parlay[1].trim()) + (parlay[2] ? ` ${parlay[2]}` : "");
       }
     }
 
@@ -1241,7 +1275,10 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode === "FIRST_HALF_EUROPEAN_HANDICAP" ||
       marketCode === "SECOND_HALF_EUROPEAN_HANDICAP" ||
       marketCode === "SECOND_HALF_ASIAN_HANDICAP_PUSH" ||
-      marketCode === "CORNERS_HANDICAP"
+      marketCode === "CORNERS_HANDICAP" ||
+      // Drops the bundled "corners race" garbage rows (see the UNKNOWN case
+      // above) so only genuine range/count selections reach the output.
+      marketCode === "HALF_TIME_CORNERS_TEAM_RANGE"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

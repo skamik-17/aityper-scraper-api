@@ -73,7 +73,15 @@ export function getMarketName(
     return trimmedApiName;
   }
 
-  switch (marketTypeId) {
+  // Audit r5 (France vs Morocco): the WebSocket payload can deliver
+  // marketTypeId as a JSON number even though the type declares string —
+  // switch(...) uses strict equality, so an un-coerced numeric id silently
+  // skipped every case below (including ones with a real label, e.g. id 18)
+  // and fell through to the "Rynek <id>" placeholder. Coerce once so the
+  // switch always compares string-to-string.
+  const id = String(marketTypeId);
+
+  switch (id) {
     // Core markets
     case MARKET_TYPES.MATCH_RESULT:
       return "Wynik meczu";
@@ -190,7 +198,7 @@ export function getMarketName(
       return "Podwojna szansa + gole";
 
     default:
-      return `Rynek ${marketTypeId}`;
+      return `Rynek ${id}`;
   }
 }
 
@@ -235,7 +243,10 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "502": "Wynik meczu i liczba goli",
   "509": "Multiwynik",
   "510": "Przedział goli - 1. połowa",
-  "511": "Przedział goli",
+  // Audit r5 (France vs Morocco): id 511's odds match confirmed peer
+  // SECOND_HALF_GOAL_RANGE prices, not full-match GOAL_RANGE (see
+  // pzbuk-normalizer.ts PZBUK_MARKET_ID_TO_CODE) — label it accordingly.
+  "511": "Przedział goli - 2. połowa",
 };
 
 /**

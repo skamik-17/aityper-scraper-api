@@ -187,7 +187,14 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "506": "GOAL_RANGE",
   "509": "MULTI_RESULT",
   "510": "HALF_TIME_GOAL_RANGE",
-  "511": "GOAL_RANGE",
+  // Audit r5 (France vs Morocco): id 511 always surfaces the 5-bucket
+  // {0,1-2,1-3,2-3,4+} shape (never the ~17-bucket full-match vocabulary
+  // other ids under GOAL_RANGE deliver), and its odds match peer
+  // SECOND_HALF_GOAL_RANGE values almost exactly (e.g. this fixture's "0"
+  // bucket at 3.37-3.42 vs sts/forbet/betfan/etoto second-half "0" prices of
+  // 3.55-4.0) while being far off full-match "0 goals" consensus (~8-12) —
+  // id 511 is the 2nd-half goal-range market, not the full-match one.
+  "511": "SECOND_HALF_GOAL_RANGE",
   "2099": "MATCH_WINNER",
   "2179": "GOALSCORER_ANYTIME",
   "2186": "GOALSCORER_ANYTIME",
@@ -401,6 +408,10 @@ function normalizeSelectionForMarket(
 
     case "GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
+    // Audit r5: id 511 (re-routed from GOAL_RANGE, see PZBUK_MARKET_ID_TO_CODE)
+    // shares the same "bez gola"/range-bucket vocabulary as the other
+    // goal-range markets above.
+    case "SECOND_HALF_GOAL_RANGE":
     case "EXACT_GOALS":
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS":
@@ -486,6 +497,17 @@ function normalizeSelectionForMarket(
       // 1X2 helper produced "DRAW", stranding the draw price outside the
       // catalog selection set. Multi-score buckets pass through as-is.
       if (/^(x|remis|draw)$/i.test(trimmed)) return "X" as NormalizedSelection;
+      // Audit r5 (France vs Morocco): pzbuk lowercases the "other win" rows
+      // ("inne zwycięstwo gospodarzy"/"inne zwycięstwo gości") while the
+      // catalog's canonical strings are capitalized — align casing so these
+      // match the catalog exactly instead of surviving as an uncomparable
+      // raw-cased duplicate selection.
+      if (/^inne zwyci[eę]stwo gospodarzy$/i.test(trimmed)) {
+        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
+      }
+      if (/^inne zwyci[eę]stwo go[śs]ci$/i.test(trimmed)) {
+        return "Inne zwycięstwo gości" as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
     }
 

@@ -562,7 +562,9 @@ describe("forbet audit fixes", () => {
       ctxB
     );
     expect(out.marketCode).toBe("BOTH_PLAYERS_ANYTIME");
-    expect(out.selections.map((s) => s.code)).toEqual(["R. De Paul & Lau. Martínez"]);
+    // Names are sorted alphabetically (mirrors betclic's normalizePlayerComboSelection)
+    // so the same pair merges across bookmakers regardless of forBET's listing order.
+    expect(out.selections.map((s) => s.code)).toEqual(["Lau. Martínez & R. De Paul"]);
   });
 
   it("routes 2H 1X2+BTTS combo away from BTTS", () => {
@@ -920,5 +922,99 @@ describe("forbet audit fixes", () => {
     expect(out.marketCode).toBe("FIRST_HALF_ASIAN_HANDICAP");
     expect(out.paramValue).toBe("+1.5");
     expect(out.selections.map((s) => s.code)).toEqual(["HOME", "AWAY"]);
+  });
+});
+
+// Regression tests for round-5 fixes (world-cup-2026: France vs Morocco
+// verification audit).
+const ctxD: NormalizationContext = {
+  homeTeam: "France",
+  awayTeam: "Morocco",
+  league: "world-cup-2026",
+};
+
+describe("forbet audit fixes round 5", () => {
+  it("routes odd/even goals selections to ODD_EVEN_GOALS instead of UNKNOWN under TOTAL_GOALS", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "8",
+        name: "Parzysta/nieparzysta - liczba goli",
+        selections: [
+          { name: "Nieparzyste", odds: 2.27 },
+          { name: "Parzyste", odds: 1.56 },
+        ],
+      },
+      ctxD
+    );
+    expect(out.marketCode).toBe("ODD_EVEN_GOALS");
+    expect(out.selections.map((s) => s.code)).toEqual(["ODD", "EVEN"]);
+  });
+
+  it("does not hijack the corner odd/even market, which also says Parzyste/Nieparzyste", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-262",
+        name: "Parzysta/nieparzysta - liczba rzutów rożnych",
+        selections: [
+          { name: "Nieparzyste", odds: 1.9 },
+          { name: "Parzyste", odds: 1.85 },
+        ],
+      },
+      ctxD
+    );
+    expect(out.marketCode).toBe("CORNERS_ODD_EVEN");
+    expect(out.selections.map((s) => s.code)).toEqual(["ODD", "EVEN"]);
+  });
+
+  it("accepts '&' as the RESULT_AND_TOTAL leg separator (not just 'i')", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "8",
+        name: "1X2 i poniżej/powyżej 4.5 goli",
+        selections: [
+          { name: "Francja i powyżej 4,5", odds: 5.5 },
+          { name: "remis & powyżej 4,5", odds: 22 },
+          { name: "Maroko i powyżej 4,5", odds: 60 },
+        ],
+      },
+      ctxD
+    );
+    expect(out.marketCode).toBe("RESULT_AND_TOTAL");
+    expect(out.selections.map((s) => s.code)).toEqual(["HOME_OVER", "DRAW_OVER", "AWAY_OVER"]);
+  });
+
+  it("clamps a hidden 3/4+ split into a single merged 3+ bucket for half-time exact cards", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-244",
+        name: "1. połowa - Francja - dokładna liczba kartek (czerwona kartka=2)",
+        selections: [
+          { name: "0", odds: 1.34 },
+          { name: "1", odds: 2.65 },
+          { name: "2", odds: 9.8 },
+          { name: "3", odds: 60 },
+          { name: "4+", odds: 101 },
+        ],
+      },
+      ctxD
+    );
+    expect(out.marketCode).toBe("HALF_TIME_HOME_EXACT_CARDS");
+    expect(out.selections.map((s) => s.code)).toEqual(["0", "1", "2", "3+"]);
+    const merged = out.selections.find((s) => s.code === "3+");
+    // Combined via implied probability: 1 / (1/60 + 1/101)
+    expect(merged?.odds).toBeCloseTo(37.64, 1);
+  });
+
+  it("sorts and diacritic-fixes TWO_PLAYERS_ANYTIME combos so they merge across bookmakers", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "-30415",
+        name: "Którykolwiek z dwóch wymienionych zawodników strzeli gola",
+        selections: [{ name: "K. Mbappe / B. Barcola", odds: 1.55 }],
+      },
+      ctxD
+    );
+    expect(out.marketCode).toBe("TWO_PLAYERS_ANYTIME");
+    expect(out.selections.map((s) => s.code)).toEqual(["B. Barcola & K. Mbappé"]);
   });
 });

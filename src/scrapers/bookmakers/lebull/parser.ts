@@ -361,7 +361,12 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
     const comboMatch = label.match(/^dok[lł]adny\s+wynik\s+(.+)$/i);
     if (!comboMatch) continue;
     const combo = comboMatch[1].trim().replace(/\s+/g, " ");
-    if (!/\d+\s*:\s*\d+/.test(combo) && !/^(x|remis)$/i.test(combo)) continue;
+    // Besides literal score pairs and the "X"/"Remis" draw leg, the catalog's
+    // MULTI_RESULT also has the two "other win" catch-all buckets — without
+    // this branch they fail the score-pattern check below and get silently
+    // dropped even though they are valid MULTI_RESULT legs.
+    const isOtherWinCombo = /^inne\s+zwyci[eę]stwo/i.test(combo);
+    if (!/\d+\s*:\s*\d+/.test(combo) && !/^(x|remis)$/i.test(combo) && !isOtherWinCombo) continue;
 
     const yesStake = (stakeType.stakes || []).find(
       (stake) => (stake.stakeName || "").trim().toLowerCase() === "tak"
@@ -405,25 +410,40 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
       // Group stakes by their line value
       const lineGroups = new Map<string, LebullStake[]>();
       const isTwoWayHandicap = stakeTypeId === STAKE_TYPES.HANDICAP;
+      const isThreeWayHandicap =
+        !isTwoWayHandicap && isThreeWayHandicapName(stakeType.stakeTypeName);
 
       for (const stake of stakes) {
-        // Line-market rows without a line value are duplicate/truncated feed
-        // rows (e.g. a bare "Obie połowy powyżej" with no threshold) — they
-        // cannot be assigned a parameter and would pollute a bogus "base"
-        // bucket downstream, so skip them entirely.
-        if (stake.stakeArgument === undefined) continue;
+        let line: string;
 
-        // LeBull quotes handicap lines per selected team: the away stake with
-        // stakeArgument -1.5 means "away team at -1.5", not the away side of
-        // the home -1.5 market. Regroup away-side stakes under the negated
-        // (home-perspective) line so each market pairs HOME(line) with
-        // AWAY(-line) like every other bookmaker (same fix as betters, which
-        // shares the sbteam.xyz feed).
-        const groupLine =
-          isTwoWayHandicap && getHandicapStakeSide(stake) === "away"
-            ? -stake.stakeArgument
-            : stake.stakeArgument;
-        const line = String(groupLine);
+        if (isThreeWayHandicap) {
+          // The sbteam.xyz feed sends stakeArgument as JSON `null` (not an
+          // omitted field) for 3-way handicap stakes, so the per-stake line
+          // below is unusable; the real line already lives in the stake
+          // type's own name as a "(home:away)" starting-score pair (e.g.
+          // "Handicap 3-drogowy (0:3)"), shared by every stake in this stake
+          // type, so group them all together instead.
+          line = String(stakeTypeId);
+        } else {
+          // Line-market rows without a line value are duplicate/truncated feed
+          // rows (e.g. a bare "Obie połowy powyżej" with no threshold), or a
+          // JSON `null` rather than a genuinely missing field — either way
+          // they cannot be assigned a parameter and would pollute a bogus
+          // "base"/stringified-"null" bucket downstream, so skip them entirely.
+          if (stake.stakeArgument === undefined || stake.stakeArgument === null) continue;
+
+          // LeBull quotes handicap lines per selected team: the away stake with
+          // stakeArgument -1.5 means "away team at -1.5", not the away side of
+          // the home -1.5 market. Regroup away-side stakes under the negated
+          // (home-perspective) line so each market pairs HOME(line) with
+          // AWAY(-line) like every other bookmaker (same fix as betters, which
+          // shares the sbteam.xyz feed).
+          const groupLine =
+            isTwoWayHandicap && getHandicapStakeSide(stake) === "away"
+              ? -stake.stakeArgument
+              : stake.stakeArgument;
+          line = String(groupLine);
+        }
 
         if (!lineGroups.has(line)) {
           lineGroups.set(line, []);
@@ -433,7 +453,15 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
 
       // Create a market for each line
       for (const [line, lineStakes] of lineGroups) {
-        const marketName = getMarketName(stakeTypeId, line, stakeType.stakeTypeName, true);
+        // 3-way handicap names already embed the line as a "(home:away)" pair
+        // (e.g. "Handicap 3-drogowy (0:3)"); appending the synthetic group key
+        // (the stake type id) would just tack a meaningless number onto the name.
+        const marketName = getMarketName(
+          stakeTypeId,
+          isThreeWayHandicap ? undefined : line,
+          stakeType.stakeTypeName,
+          true
+        );
         const groupName = MARKET_GROUPS[stakeTypeId] || "Inne";
         const marketType = MARKET_TYPES[stakeTypeId];
 

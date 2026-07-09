@@ -41,7 +41,18 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "13": "OTHER",
   "14": "GOALSCORER_ANYTIME",
   "17": "TOTAL_GOALS",
-  "18": "HALF_TIME_TOTAL_GOALS",
+  // Audit r6 (France vs Morocco, audit-loop v2 round 1): id 18 ("Liczba goli
+  // 1. polowa X.5", group "Pierwsza polowa") emits the SAME HALF_TIME_TOTAL_
+  // GOALS param lines (0.5/1.5/2.5/3.5) as ids 62/63/64, but its OVER/UNDER
+  // odds are wrong on every line (e.g. 0.5: OVER 1.13/UNDER 4.91 vs id 62's
+  // OVER 1.43/UNDER 2.55, which matches the cross-bookmaker peer median
+  // ~1.46/~2.60 almost exactly). Id 18's numbers instead track the FULL-MATCH
+  // total-goals market (id 17) shifted one line up (id 18's 2.5 UNDER 1.30 ==
+  // id 17's 3.5 UNDER 1.3 exactly; id 18's 3.5 OVER/UNDER 6.38/1.07 nearly
+  // equal id 17's 4.5 6.57/1.09) — a scraper-side table mix-up, not a genuine
+  // half-time price. Park in OTHER; ids 62/63/64 remain the trusted source
+  // (0.5/1.5 lines only — 2.5/3.5 have no other verified source and are lost).
+  "18": "OTHER",
   // Home/away team totals are separate ids — map them to the dedicated
   // catalog codes so OVER/UNDER selections of both teams do not collide
   // under a single TEAM_TOTAL_GOALS key.
@@ -111,7 +122,14 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "64": "HALF_TIME_TOTAL_GOALS",
   "69": "HALF_TIME_BTTS",
   "72": "RESULT_AND_BTTS",
-  "73": "RESULT_AND_TOTAL",
+  // Audit r6 (France vs Morocco, audit-loop v2 round 1): id 73 ("Rynek 73")
+  // collides with id 35's RESULT_AND_TOTAL data at the SAME param (1.5) with
+  // materially different odds (HOME_OVER 4.23 vs id 35's 1.85; HOME_UNDER
+  // 3.29 vs id 35's 6.29). Id 35's values match the cross-bookmaker peer
+  // median almost exactly (~1.88/~6.0), confirming id 35 is correct and id 73
+  // is a mismatched duplicate feeding corrupted odds into the same bucket —
+  // park id 73 in OTHER; id 35 remains the trusted RESULT_AND_TOTAL source.
+  "73": "OTHER",
   // Audit r2 (both matches): id 76 produced 1X2-shaped odds wildly
   // inconsistent with all peers (Argentina: DRAW 3.39 vs peers 7.6-8.75;
   // Switzerland: DRAW/AWAY values transposed vs peer ranges) — not a

@@ -405,13 +405,20 @@ describe("analyzeApiMarket — freshness windowing", () => {
     expect(flags.stale_bookmakers).toHaveLength(0);
   });
 
-  it("uses opts.now as an additional freshness reference when provided", () => {
+  it("does NOT anchor freshness to opts.now/wall-clock — only to the pool's own newest quote (round-3 loop regression)", () => {
+    // Regression: staleness used to seed "newest" with opts.now, so every
+    // quote was flagged stale once enough WALL-CLOCK time passed since the
+    // scrape (e.g. a long orchestration session between rescrape and audit),
+    // even though all quotes agree with each other. "Has scraping stalled
+    // overall" is a separate concern already covered by match-audit-prep.ts's
+    // --min-fresh CLI gate (anchored to a meaningful timestamp, e.g. the last
+    // fix commit) — the mechanical stale_bookmaker flag must stay pool-relative.
     const m = healthyDoubleChance();
     for (const b of m.parameters[0].bookmakers) b.scrapedAt = "2026-07-09T10:00:00Z";
     const flags = analyzeApiMarket(m, lookup, { now: "2026-07-09T12:00:00Z" });
-    // All quotes are 120 min behind `now` -> all stale (scraper-health signal).
-    expect(flags.stale_bookmakers).toHaveLength(4);
-    expect(flags.stale_bookmakers[0].ageMinutes).toBe(120);
+    // All quotes agree with each other (mutually fresh) -> opts.now must not
+    // matter at all, regardless of how far in the future it is.
+    expect(flags.stale_bookmakers).toHaveLength(0);
     expect(flags.odds_disagreements).toHaveLength(0);
   });
 });

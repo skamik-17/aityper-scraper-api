@@ -275,10 +275,7 @@ async function main() {
   }
 
   // 4. Mechanical analysis (coverage gate wired per SPEC §4.2).
-  const analysis = analyzeMatchResponse(data, catalogLookup, {
-    coverage,
-    now: fetchedAt.toISOString(),
-  });
+  const analysis = analyzeMatchResponse(data, catalogLookup, { coverage });
 
   const marketByRef = new Map<string, ApiMarket>();
   for (const cat of data.categories) {

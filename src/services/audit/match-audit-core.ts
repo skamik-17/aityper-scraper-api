@@ -93,12 +93,6 @@ export interface MatchAuditOpts {
    * gaps are flagged (today's behaviour).
    */
   coverage?: (bookmaker: string, marketType: string, selectionCode: string) => boolean;
-  /**
-   * Optional ISO reference time. When provided it joins each pool's
-   * newest-scrape computation, so quotes >60 min older than `now` are stale
-   * even when the whole pool is old (scraper-health signal).
-   */
-  now?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -250,7 +244,6 @@ export function analyzeApiMarket(
 ): MatchMarketFlags {
   const catalog = lookup(market.type);
   const vocabExempt = isVocabExempt(market, catalog);
-  const nowMs = opts?.now ? Date.parse(opts.now) : NaN;
 
   const flags: MatchMarketFlags = {
     unknown_selection_entries: [],
@@ -397,7 +390,12 @@ export function analyzeApiMarket(
     }
     const freshQuotes: FreshnessQuote[] = [];
     for (const pool of bySelection.values()) {
-      let newest = Number.isNaN(nowMs) ? -Infinity : nowMs;
+      // Pool-relative, NOT wall-clock: this catches a bookmaker whose own
+      // quote lags behind its peers in the same pool. Anchoring to opts.now
+      // instead would flag every quote as "stale" simply because real time
+      // passed since the scrape (e.g. during a long orchestration session),
+      // even when all quotes are mutually consistent with each other.
+      let newest = -Infinity;
       for (const q of pool) {
         if (!Number.isNaN(q.scrapedAtMs) && q.scrapedAtMs > newest) newest = q.scrapedAtMs;
       }

@@ -1767,10 +1767,26 @@ function fixBetclicPlayerDiacritics(canonicalName: string): string {
  * each name is canonicalized to "Firstname Lastname" order and the list is
  * sorted so the same combination merges across bookmakers regardless of
  * listing order.
+ *
+ * Betclic sometimes disambiguates two players sharing a surname with a
+ * birthdate suffix, e.g. "N. González (06/04/1998)". The "/" inside that
+ * parenthetical must NOT be treated as a player separator, or the date gets
+ * shredded into extra bogus "player" tokens which are then alphabetically
+ * re-sorted into nonsense (e.g. "04) & 1998) & L. Messi & N. González (06").
+ * Mask any "(...)" span before splitting on "/" or "&", then restore it
+ * afterwards so the birthdate travels with its player intact.
  */
 function normalizePlayerComboSelection(selectionName: string): NormalizedSelection {
-  const players = selectionName
+  const parenSpans: string[] = [];
+  const masked = selectionName.replace(/\([^()]*\)/g, (match) => {
+    const token = "@@BETCLIC_PAREN_" + parenSpans.length + "@@";
+    parenSpans.push(match);
+    return token;
+  });
+
+  const players = masked
     .split(/\s*[/&]\s*/)
+    .map((part) => part.replace(/@@BETCLIC_PAREN_(\d+)@@/g, (_, idx) => parenSpans[Number(idx)]))
     .map((part) => fixBetclicPlayerDiacritics(canonicalizePlayerName(part)))
     .filter((part) => part.length > 0);
 

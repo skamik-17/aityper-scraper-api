@@ -269,6 +269,16 @@ const BETCRIS_EXCLUDED_MARKET_IDS = new Set<string>([
   // yellow-cards-only race with a first-booking-per-player rule set; peers'
   // CARDS_RACE counts all cards, so its odds were flagged as outliers there.
   "TeamWithMostYellowCardsWithDraw",
+  // "Kto pierwszy strzeli gola i wynik 1. połowy" is a combo market (first
+  // goalscorer team x half-time result, 6 selections: "Team1 i W1", "Team1 i
+  // X", ..., "Team2 i W2") with no catalog counterpart yet. Without this
+  // exclusion the id was unmapped and fell through to the plain
+  // "wynik 1. połowy" catch-all in matchMarketByName, which matched the
+  // trailing "wynik 1. połowy" substring and mis-tagged it as HALF_TIME_RESULT
+  // — none of its combo selection labels resolve, so all 6 rows became
+  // UNKNOWN and the aggregator kept only the first, presenting a fake
+  // HALF_TIME_RESULT row (odds 2.12) instead of the real 1X2 half-time market.
+  "FirstTeamToScoreAnd1stHalfResult",
 ]);
 
 const BETCRIS_SELECTION_CODES: Record<string, NormalizedSelection> = {

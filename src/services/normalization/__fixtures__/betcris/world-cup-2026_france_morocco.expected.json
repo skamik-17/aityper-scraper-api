@@ -3390,54 +3390,10 @@
       "rawName": "Kto pierwszy strzeli gola i wynik 2. połowy"
     },
     {
-      "blessed": false,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "HALF_TIME_RESULT",
-        "marketKey": "HALF_TIME_RESULT",
-        "matchedBy": "name",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "UNKNOWN",
-            "label": "Team1 i W1",
-            "odds": 2.12
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Team1 i X",
-            "odds": 3.38
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Team1 i W2",
-            "odds": 96
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Team2 i W1",
-            "odds": 41
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Team2 i X",
-            "odds": 5.6
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Team2 i W2",
-            "odds": 5.2
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "nikt",
-            "odds": 8.5
-          }
-        ]
-      },
+      "blessed": true,
+      "expected": null,
       "index": 162,
-      "marketCode": "HALF_TIME_RESULT",
+      "marketCode": "OTHER",
       "rawName": "Kto pierwszy strzeli gola i wynik 1. połowy"
     },
     {

@@ -925,16 +925,24 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    // Multi-player markets keep the full "Player N+" label as the code so
-    // different players inside one raw market never collide. The name part
-    // is canonicalized ("Lastname, Firstname N+" -> "Firstname Lastname N+")
-    // so codes line up across bookmakers.
+    // eToto bundles every player into one combined raw market for these two
+    // stats ("Lastname, Firstname N+" per selection, thresholds mixed across
+    // players), unlike the one-market-per-player shape used for
+    // PLAYER_GOALS/PLAYER_CARDS etc. paramValue is left unset here (see
+    // extractParamValue's default branch) so market-type-grouper's
+    // splitBundledPlayerSelections() recovery can still split this into one
+    // synthetic market per player downstream — that recovery only fires when
+    // every selection's code passes looksLikePlayerName(), which requires a
+    // bare name. Strip the trailing "N+" threshold token so the code carries
+    // only the canonicalized player name (matching the bare-name format used
+    // for cross-bookmaker player matching), instead of embedding the
+    // threshold in the code and defeating that recovery.
     case "PLAYER_FOULS":
     case "PLAYER_FOULS_WON": {
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
-      const withLine = cleaned.match(/^(.+?)\s+(\d+\+)$/);
+      const withLine = cleaned.match(/^(.+?)\s+\d+\+$/);
       if (withLine) {
-        return `${canonicalizePlayerName(withLine[1])} ${withLine[2]}` as NormalizedSelection;
+        return canonicalizePlayerName(withLine[1]) as NormalizedSelection;
       }
       return canonicalizePlayerName(cleaned) as NormalizedSelection;
     }

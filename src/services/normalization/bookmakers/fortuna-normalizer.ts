@@ -292,12 +292,20 @@ function stripFortunaScope(name: string): string {
  * - "Kouadio Kone" (Fortuna's OPTA given name for Manu Koné, whose full name
  *   is Emmanuel Kouadio Koné) vs "Kone Manu", the bucket already shared by
  *   STS/LVBet.
+ * - "Cedric Jan Itten" (Fortuna's OPTA full given name for Switzerland's
+ *   Cedric Itten, including his middle name "Jan") vs "Cedric Itten", the
+ *   shorter form used by lvbet/betcris/most other bookmakers.
+ * - "Eray Comert" (Fortuna's OPTA transliteration of Switzerland's Eray
+ *   Cömert, dropping the umlaut to a plain "o") vs "Eray Coemert", the "oe"
+ *   transliteration used by lvbet/betcris/most other bookmakers.
  */
 function canonicalizeFortunaPlayerName(raw: string): string {
   return canonicalizePlayerName(raw)
     .replace(/\bSalah-Eddine\b/giu, "Salah Eddine")
     .replace(/\bEl[- ]Ouadi\b/giu, "El Ouahdi")
-    .replace(/\bKouadio Kone\b/giu, "Kone Manu");
+    .replace(/\bKouadio Kone\b/giu, "Kone Manu")
+    .replace(/\bCedric Jan Itten\b/giu, "Cedric Itten")
+    .replace(/\bEray Comert\b/giu, "Eray Coemert");
 }
 
 /**

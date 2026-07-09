@@ -530,6 +530,42 @@ describe("grouper audit fixes — player-name canonicalization on COMBINATION-vi
     expect([...codes]).toEqual(["N'Golo Kante"]);
   });
 
+  it("does not collapse multiple bundled player-pair selections into the catalog fallback code (round-2 AS loop regression: superbet PLAYER_PAIR)", () => {
+    // BOTH_PLAYERS_ANYTIME/TWO_PLAYERS_ANYTIME have hasParameter:false but a
+    // stray parameterType:"player" (the pair IS the selection, not a
+    // parameter). superbet's raw pair labels are " i "-joined name-shaped
+    // strings that pass looksLikePlayerName(), so the ungated player-split
+    // used to fire here too and overwrite every selection's type with the
+    // catalog's fallback code "PLAYER_PAIR" — collapsing 15 distinct real
+    // pairs into one indistinguishable button. betcris/forbet/lvbet escaped
+    // this only by coincidence (their "&" joiner fails looksLikePlayerName).
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Obaj gracze strzelą gola",
+          type: "BOTH_PLAYERS_ANYTIME",
+          normalizedType: "BOTH_PLAYERS_ANYTIME" as ScrapedMarket["normalizedType"],
+          marketKey: "BOTH_PLAYERS_ANYTIME",
+          paramValue: undefined,
+          selections: [
+            { name: "L. Messi i J. Alvarez", normalizedName: "L. Messi i J. Alvarez", odds: 1.44 },
+            { name: "L. Messi i B. Embolo", normalizedName: "L. Messi i B. Embolo", odds: 3.3 },
+            { name: "R. Vargas i L. Messi", normalizedName: "R. Vargas i L. Messi", odds: 7.9 },
+          ],
+        }),
+        bookmaker: "superbet",
+      },
+    ]);
+    const codes = new Set<string>();
+    for (const p of result[0].parameters) for (const b of p.bookmakers) for (const s of b.selections) codes.add(s.type);
+    expect(codes.has("PLAYER_PAIR")).toBe(false);
+    expect([...codes].sort()).toEqual([
+      "L. Messi i B. Embolo",
+      "L. Messi i J. Alvarez",
+      "R. Vargas i L. Messi",
+    ]);
+  });
+
   it("leaves non-name COMBINATION selection codes (e.g. score groups) untouched", () => {
     const result = groupMarketsByTypeWithParameters([
       {

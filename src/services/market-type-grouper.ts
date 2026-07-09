@@ -287,7 +287,14 @@ export function groupMarketsByTypeWithParameters(
   const expandedInput = marketsWithBookmakers.flatMap((entry) => {
     const marketType = entry.market.normalizedType || "OTHER";
     const catalogEntry = getMarketByCode(marketType);
-    const parameterType = catalogEntry?.parameterType;
+    // Gate on hasParameter like the later canonicalization step (below) does —
+    // some catalog entries carry a stray parameterType even though
+    // hasParameter is false (e.g. BOTH_PLAYERS_ANYTIME/TWO_PLAYERS_ANYTIME:
+    // the pair IS the selection, not a parameter). Without this gate,
+    // splitBundledPlayerSelections fires whenever a bookmaker's raw pair
+    // label happens to look name-shaped (looksLikePlayerName), overwriting
+    // the real pair identity with the catalog's generic fallback code.
+    const parameterType = catalogEntry?.hasParameter ? catalogEntry.parameterType : undefined;
     if (entry.market.paramValue) return [entry];
     if (parameterType === "decimal") {
       const split = splitBundledLineSelections(entry.market);

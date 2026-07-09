@@ -1091,6 +1091,20 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
     if (marketCode === "DOUBLE_CHANCE") {
+      // "Podwójna szansa / obie drużyny strzelą gola" is a DOUBLE_CHANCE x
+      // BTTS combo reusing the plain double-chance Swarm id (6 selections:
+      // "1X/Tak", "1X/Nie", "12/Tak", "12/Nie", "X2/Tak", "X2/Nie"). The
+      // generic DOUBLE_CHANCE selection parser only understands the leading
+      // DC code, so every row normalized to the same UNKNOWN code and the
+      // grouper's dedup kept only whichever quote came first — a fake price
+      // baked into the real 9-bookmaker double-chance comparison, silently
+      // dropping the other five combo prices. No catalog code exists for
+      // this combo yet; exclude it (same "no combo catalog code" exclusion
+      // pattern used elsewhere in this file, e.g.
+      // FirstTeamToScoreAnd1stHalfResult).
+      if (/obie\s*(drużyny\s+)?strzel/i.test(raw.name)) {
+        return null;
+      }
       // "Połowa z największą liczbą bramek. Podwójna szansa" is a half-with-
       // more-goals double chance (selections "1>=2"/"2>=1"/"1. lub 2."), not
       // a full-match result double chance — must be checked first since it
@@ -1189,6 +1203,29 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // CORNERS_RANGE: betcris quotes a 5-tier scale ("5 lub mniej"/"6-8"/
+    // "9-11"/"12-14"/"15 lub więcej") that collapses onto the catalog's
+    // coarse 3-bucket scale (0-8/9-11/12+), with TWO raw sub-buckets landing
+    // on the same catalog code ("5 lub mniej" + "6-8" -> "0-8"; "12-14" +
+    // "15 lub więcej" -> "12+"). Combine each colliding pair's implied
+    // probability into one accurately-priced selection here — otherwise the
+    // grouper's per-market "keep the first quote" dedup arbitrarily drops the
+    // second raw quote, presenting only the "5 lub mniej" sub-bucket's own
+    // (much tighter) price as if it covered the full 0-8 range.
+    if (marketCode === "CORNERS_RANGE") {
+      const merged = new Map<string, { code: NormalizedSelection; label: string; odds: number }>();
+      for (const sel of selections) {
+        const existing = merged.get(sel.code);
+        if (existing && existing.odds > 0 && sel.odds > 0) {
+          existing.odds = Math.round((1 / (1 / existing.odds + 1 / sel.odds)) * 100) / 100;
+          existing.label = `${existing.label} / ${sel.label}`;
+        } else if (!existing) {
+          merged.set(sel.code, { ...sel });
+        }
+      }
+      selections = Array.from(merged.values());
+    }
 
     // FIRST_GOAL_AND_RESULT win/win rows carry unresolved "Team 1"/"Team 2"
     // template placeholders in the raw label (the draw-combo rows use real

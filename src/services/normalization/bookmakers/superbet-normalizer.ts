@@ -810,12 +810,12 @@ function normalizeSelectionForMarket(
     case "FIRST_CARD":
     case "FIRST_SHOT":
     case "FIRST_SHOT_ON_TARGET":
+    case "FIRST_OFFSIDE":
       if (isNoneSelection(lower) || lower === "remis") return "NONE" as NormalizedSelection;
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
-    case "FIRST_OFFSIDE":
     case "FIRST_GOAL_KICK":
-      // The catalog defines these as HOME/AWAY only - Superbet's extra
+      // The catalog defines this as HOME/AWAY only - Superbet's extra
       // "Nikt" outcome has no canonical code.
       if (isNoneSelection(lower)) return "UNKNOWN";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);

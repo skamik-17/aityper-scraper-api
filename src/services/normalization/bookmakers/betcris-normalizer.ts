@@ -659,15 +659,13 @@ function normalizeSelectionForMarket(
 
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS": {
-      // Bare integer/"N+" labels (" 0", " 1", " 3+", " 6+") map directly onto
-      // the catalog's exact-goal-count selection codes once whitespace is
-      // stripped — but betcris' own scale caps at "4+" (4-or-more) while the
-      // catalog ladder is 0/1/2/3/3+/4/5/6+, so a literal "4+" has no home:
-      // it can't be safely split into separate 4/5/6+ probabilities. Drop it
-      // (UNKNOWN) instead of leaking an orphan selection that never joins
-      // the catalog's comparison table.
+      // Bare integer/"N+" labels (" 0", " 1", " 3+", " 4+", " 6+") map
+      // directly onto the catalog's exact-goal-count selection codes once
+      // whitespace is stripped. The catalog ladder is
+      // 0/1/2/3/3+/4/4+/5/6+ (market-catalog.ts), so "4+" is a valid
+      // catalog code just like lvbet's own "4+" mapping in this market.
       const stripped = trimmed.replace(/\s+/g, "");
-      const validExactGoalsSelections = new Set(["0", "1", "2", "3", "3+", "4", "5", "6+"]);
+      const validExactGoalsSelections = new Set(["0", "1", "2", "3", "3+", "4", "4+", "5", "6+"]);
       return (
         validExactGoalsSelections.has(stripped) ? stripped : "UNKNOWN"
       ) as NormalizedSelection;

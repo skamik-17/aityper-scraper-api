@@ -1556,7 +1556,7 @@
             "odds": 21
           },
           {
-            "code": "UNKNOWN",
+            "code": "4+",
             "label": " 4+",
             "odds": 46
           }
@@ -1567,7 +1567,7 @@
       "rawName": "Team 2. Dokładna liczba goli"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
         "marketCode": "HOME_EXACT_GOALS",
@@ -1597,7 +1597,7 @@
             "odds": 5.4
           },
           {
-            "code": "UNKNOWN",
+            "code": "4+",
             "label": " 4+",
             "odds": 8.2
           }

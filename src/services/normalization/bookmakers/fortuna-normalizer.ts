@@ -1198,12 +1198,17 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
-    // Stat-line player markets use the player as the market parameter.
+    // Player markets (both stat-line AND dropdown shape, e.g. GOALSCORER_*)
+    // use the player as the market parameter. Checking isPlayerMarket here
+    // (not just FORTUNA_PLAYER_STAT_MARKETS) matters: playerName IS already
+    // extracted for FORTUNA_PLAYER_DROPDOWN_MARKETS too (see isPlayerMarket
+    // above), but was previously discarded here, so every dropdown-shaped
+    // market's rows collapsed into an unlabeled "base" bucket instead of one
+    // row per player despite the selection itself already carrying the
+    // correct player name.
     let paramValue =
       parlayPlayerParam ??
-      (playerName && FORTUNA_PLAYER_STAT_MARKETS.has(marketCode)
-        ? playerName
-        : extractParamValue(marketCode, raw, ctx));
+      (playerName && isPlayerMarket ? playerName : extractParamValue(marketCode, raw, ctx));
 
     // Side-in-parameter team markets combine the side with the numeric line
     // ("HOME:4.5") so home/away lines never collide on the market key.

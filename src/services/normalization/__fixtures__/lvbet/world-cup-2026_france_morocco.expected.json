@@ -3928,11 +3928,11 @@
       "rawName": "Zawodnik strzeli gola w obu połowach"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_GOALS",
-        "marketKey": "PLAYER_GOALS",
+        "marketCode": "PLAYER_3_OR_MORE_GOALS",
+        "marketKey": "PLAYER_3_OR_MORE_GOALS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -4185,7 +4185,7 @@
         ]
       },
       "index": 46,
-      "marketCode": "PLAYER_GOALS",
+      "marketCode": "PLAYER_3_OR_MORE_GOALS",
       "rawName": "Zawodnik strzeli 3 lub więcej goli (Sub-Hero)"
     },
     {

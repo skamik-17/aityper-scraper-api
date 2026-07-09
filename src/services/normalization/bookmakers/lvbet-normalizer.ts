@@ -291,6 +291,15 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /zawodnik strzeli gola głowa/, code: "PLAYER_HEADER_GOAL" },
   { pattern: /dowolny zawodnik strzeli 3 lub wiecej goli/, code: "HAT_TRICK" },
   { pattern: /zawodnik strzeli 2 lub wiecej goli/, code: "PLAYER_2_OR_MORE_GOALS" },
+  // "Zawodnik strzeli 3 lub więcej goli (Sub-Hero)" is a per-player YES-shaped
+  // threshold market (same shape as PLAYER_2_OR_MORE_GOALS above — one row per
+  // player, no split threshold parameter). Routing N=3 through the generic
+  // \d+ PLAYER_GOALS pattern below collapsed it onto the SAME marketKey as the
+  // unrelated N=4 "Zawodnik strzeli 4 lub więcej goli" markets (both carry no
+  // paramValue), mixing two different thresholds' odds under one bucket. The
+  // catalog's dedicated PLAYER_3_OR_MORE_GOALS code (already used the same way
+  // by sts/betcris/superbet) keeps this threshold on its own marketKey.
+  { pattern: /zawodnik strzeli 3 lub wiecej goli/, code: "PLAYER_3_OR_MORE_GOALS" },
   { pattern: /zawodnik strzeli \d+ lub wiecej goli/, code: "PLAYER_GOALS" },
   // Two-player OR combos ("Podwójna szansa") must not pollute single-player markets
   { pattern: /zawodnik zanotuje asyste - podwojna szansa/, code: "PLAYER_ASSIST_PAIRS" },
@@ -1228,6 +1237,7 @@ function normalizeSelectionForMarket(
     case "PLAYER_GOAL_OUTSIDE_BOX":
     case "PLAYER_SCORES_BOTH_HALVES":
     case "PLAYER_2_OR_MORE_GOALS":
+    case "PLAYER_3_OR_MORE_GOALS":
     case "PENALTY_SCORER":
     case "PLAYER_GOAL_TEAM_LOSES":
     case "PLAYER_GOAL_AND_RESULT":

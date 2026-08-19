@@ -1740,25 +1740,11 @@ function normalizeCorrectScoreGroupSelection(
   return null;
 }
 
-// Betclic's selections feed renders a few well-known players' surnames without
-// their native diacritics (e.g. "K. Mbappe") even though other players in the
-// very same market keep theirs ("O. Dembélé", "D. Doué", "B. Díaz"). Restore
-// the missing accent so the same player merges into one canonical selection
-// code instead of silently splitting off as a separate, ASCII-only variant.
-const BETCLIC_PLAYER_SURNAME_FIXUPS: Record<string, string> = {
-  mbappe: "Mbappé",
-};
-
-function fixBetclicPlayerDiacritics(canonicalName: string): string {
-  const parts = canonicalName.split(" ");
-  const lastIndex = parts.length - 1;
-  const surname = parts[lastIndex];
-  if (!surname) return canonicalName;
-  const fixed = BETCLIC_PLAYER_SURNAME_FIXUPS[surname.toLowerCase()];
-  if (!fixed) return canonicalName;
-  parts[lastIndex] = fixed;
-  return parts.join(" ");
-}
+// Betclic renders a few well-known surnames without their native diacritics
+// ("K. Mbappe" next to "O. Dembélé" in the very same market). This used to be
+// repaired by adding the accent back; canonicalizePlayerName now folds accents
+// for EVERY bookmaker instead (see helpers/index.ts), which fixes the same
+// split without needing a per-player table — so the fixup table is gone.
 
 /**
  * Builds a stable selection code for player-combination markets from the
@@ -1787,11 +1773,11 @@ function normalizePlayerComboSelection(selectionName: string): NormalizedSelecti
   const players = masked
     .split(/\s*[/&]\s*/)
     .map((part) => part.replace(/@@BETCLIC_PAREN_(\d+)@@/g, (_, idx) => parenSpans[Number(idx)]))
-    .map((part) => fixBetclicPlayerDiacritics(canonicalizePlayerName(part)))
+    .map((part) => canonicalizePlayerName(part))
     .filter((part) => part.length > 0);
 
   if (players.length < 2) {
-    return fixBetclicPlayerDiacritics(canonicalizePlayerName(selectionName)) as NormalizedSelection;
+    return canonicalizePlayerName(selectionName) as NormalizedSelection;
   }
 
   return players
@@ -2153,8 +2139,8 @@ function normalizeSelectionForMarket(
     case "PENALTY_SCORER":
       // Canonicalize to "Firstname Lastname" so the same player merges
       // across bookmakers regardless of the source name order.
-      return fixBetclicPlayerDiacritics(
-        canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim())
+      return canonicalizePlayerName(
+        trimmed.replace(/^\d+\.\s*/, "").trim(),
       ) as NormalizedSelection;
 
     case "PLAYER_ASSIST_PAIRS":

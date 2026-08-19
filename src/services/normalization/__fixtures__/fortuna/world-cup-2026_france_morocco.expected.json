@@ -32948,9 +32948,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "WIN_AND_PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "WIN_AND_PLAYER_SHOTS_ON_TARGET:Désiré Doué 1+",
+        "marketKey": "WIN_AND_PLAYER_SHOTS_ON_TARGET:Desire Doue 1+",
         "matchedBy": "id",
-        "paramValue": "Désiré Doué 1+",
+        "paramValue": "Desire Doue 1+",
         "parameters": null,
         "selections": [
           {

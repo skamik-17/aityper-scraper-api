@@ -45,7 +45,7 @@ export const CONFIG = {
 
   // Supported leagues
   ENABLED_LEAGUES: [
-    "world-cup-2026",
+    "premier-league",
   ] as const,
 
   // Bookmakers

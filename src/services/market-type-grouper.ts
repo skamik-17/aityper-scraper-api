@@ -91,6 +91,148 @@ function looksLikePlayerName(label: string): boolean {
 }
 
 /**
+ * Reconciles the player-name variants a single market collects from different
+ * bookmakers. Even after canonicalizePlayerName (order + accents), the same
+ * footballer still arrives in shapes that cannot be normalized in isolation —
+ * only by looking at every name the market received:
+ *
+ *   "Amenda Aurele"  (sts sends "Surname Firstname" without a comma)
+ *   "M Grimes"       (fuksiarz abbreviates the first name)
+ *   "Victor Torp"    (betfan/superbet drop the second surname)
+ *
+ * Each of these was rendering as its own dropdown row next to the full name,
+ * splitting one player's odds across two entries and hiding best-odds
+ * (/audit-match, Arsenal vs Coventry City). A variant is folded into another
+ * name only when the target is UNAMBIGUOUS; ties and multi-candidate matches
+ * are left alone. The surviving spelling is the one more bookmakers use, so
+ * the majority form wins and the result is deterministic.
+ */
+export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<string>>): Map<string, string> {
+  const alias = new Map<string, string>();
+  const names = [...bookmakersByName.keys()].filter((n) => n !== "base");
+  if (names.length < 2) return alias;
+
+  const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).filter(Boolean);
+  const weight = (name: string): number => bookmakersByName.get(name)?.size ?? 0;
+  /** More bookmakers wins; ties break on the longer, then lexicographically smaller name. */
+  const preferred = (a: string, b: string): string => {
+    if (weight(a) !== weight(b)) return weight(a) > weight(b) ? a : b;
+    const ta = tokensOf(a).length;
+    const tb = tokensOf(b).length;
+    if (ta !== tb) return ta > tb ? a : b;
+    return a.localeCompare(b) <= 0 ? a : b;
+  };
+
+  const byTokens = new Map<string, string[]>();
+  for (const name of names) {
+    const key = [...tokensOf(name)].sort().join(" ");
+    (byTokens.get(key) ?? byTokens.set(key, []).get(key)!).push(name);
+  }
+
+  // 1. Same tokens in a different order ("Amenda Aurele" vs "Aurele Amenda").
+  for (const variants of byTokens.values()) {
+    if (variants.length < 2) continue;
+    const winner = variants.reduce(preferred);
+    for (const v of variants) if (v !== winner) alias.set(v, winner);
+  }
+
+  const resolve = (name: string): string => alias.get(name) ?? name;
+
+  /**
+   * Two spellings describe the same player when the surname matches, the first
+   * names match (or one is the other's initial) and every remaining token of
+   * the shorter spelling also appears, in order, in the longer one. That single
+   * rule covers all the shapes the audit found: "M Grimes" / "Matt Grimes",
+   * "Victor Torp" / "Victor Torp Overgaard", "Caleb Yirenkyi" /
+   * "Caleb Marfo Yirenkyi" and the combination "C Marfo Yirenkyi" /
+   * "Caleb Yirenkyi".
+   */
+  const sameFirstName = (a: string, b: string): boolean => {
+    if (a === b) return true;
+    const aInitial = a.replace(".", "");
+    const bInitial = b.replace(".", "");
+    if (aInitial.length === 1) return b.startsWith(aInitial);
+    if (bInitial.length === 1) return a.startsWith(bInitial);
+    return false;
+  };
+  const isSubsequence = (shorter: string[], longer: string[]): boolean => {
+    let i = 0;
+    for (const token of longer) if (i < shorter.length && token === shorter[i]) i++;
+    return i === shorter.length;
+  };
+  const describeSamePlayer = (a: string[], b: string[]): boolean => {
+    if (a.length < 2 || b.length < 2) return false;
+    if (!sameFirstName(a[0], b[0])) return false;
+    const [shorter, longer] = a.length <= b.length ? [a, b] : [b, a];
+    // A dropped trailing surname ("Victor Torp" / "Victor Torp Overgaard").
+    if (
+      longer.length > shorter.length &&
+      shorter.slice(1).join(" ") === longer.slice(1, shorter.length).join(" ")
+    ) {
+      return true;
+    }
+    // Same surname with an optional middle name dropped in one spelling.
+    if (a[a.length - 1] !== b[b.length - 1]) return false;
+    return isSubsequence(shorter.slice(1, -1), longer.slice(1, -1));
+  };
+
+  // 2. Abbreviated first names, dropped middle names and dropped second
+  //    surnames. Variants are clustered and a cluster is folded only when it
+  //    is a CLIQUE — every member compatible with every other. That merges
+  //    "V Torp" / "Victor Torp" / "Victor Torp Overgaard" in one go while
+  //    refusing to bridge two different players through a shared abbreviation
+  //    ("J Silva" fits both "Joao Silva" and "Jorge Silva", which do not fit
+  //    each other, so nothing is merged).
+  const canonicalNames = names.filter((n) => !alias.has(n));
+  const tokenCache = new Map(canonicalNames.map((n) => [n, tokensOf(n)]));
+  const compatible = (a: string, b: string): boolean =>
+    describeSamePlayer(tokenCache.get(a)!, tokenCache.get(b)!);
+
+  const clusterOf = new Map<string, string[]>();
+  const visited = new Set<string>();
+  for (const name of canonicalNames) {
+    if (visited.has(name)) continue;
+    const cluster = [name];
+    visited.add(name);
+    const queue = [name];
+    while (queue.length > 0) {
+      const current = queue.shift()!;
+      for (const other of canonicalNames) {
+        if (visited.has(other) || !compatible(current, other)) continue;
+        visited.add(other);
+        cluster.push(other);
+        queue.push(other);
+      }
+    }
+    if (cluster.length > 1) clusterOf.set(name, cluster);
+  }
+
+  for (const cluster of clusterOf.values()) {
+    const isClique = cluster.every((a) =>
+      cluster.every((b) => a === b || compatible(a, b)),
+    );
+    if (!isClique) continue;
+    const winner = cluster.reduce(preferred);
+    for (const member of cluster) {
+      if (member !== winner && !alias.has(member)) alias.set(member, winner);
+    }
+  }
+
+  // A fold may point at a name that was itself folded — collapse the chain.
+  for (const [from, to] of alias) {
+    let target = to;
+    const seen = new Set([from]);
+    while (alias.has(target) && !seen.has(target)) {
+      seen.add(target);
+      target = alias.get(target)!;
+    }
+    alias.set(from, target);
+  }
+
+  return alias;
+}
+
+/**
  * Recovers a player-parameterized market whose normalizer listed every
  * player as a SELECTION in one raw entry (paramValue unset) instead of the
  * usual one-row-per-player shape — e.g. lvbet's "Zawodnik zanotuje asystę"
@@ -367,8 +509,25 @@ export function groupMarketsByTypeWithParameters(
     const paramGroups = new Map<string, MarketParameter>();
     const handicapMarket = isLineBasedHandicap(marketType);
 
+    // Player-keyed markets: fold the spelling variants of one footballer into
+    // a single parameter before grouping, using the whole market's name set.
+    const isPlayerParam =
+      getMarketByCode(marketType)?.hasParameter &&
+      getMarketByCode(marketType)?.parameterType === "player";
+    let playerAlias = new Map<string, string>();
+    if (isPlayerParam) {
+      const bookmakersByName = new Map<string, Set<string>>();
+      for (const { bookmaker, param } of group.markets) {
+        if (param === "base") continue;
+        const set = bookmakersByName.get(param) ?? new Set<string>();
+        set.add(bookmaker);
+        bookmakersByName.set(param, set);
+      }
+      playerAlias = reconcilePlayerNameVariants(bookmakersByName);
+    }
+
     for (const { market, bookmaker, param } of group.markets) {
-      const paramKey = param;
+      const paramKey = playerAlias.get(param) ?? param;
 
       if (!paramGroups.has(paramKey)) {
         paramGroups.set(paramKey, {

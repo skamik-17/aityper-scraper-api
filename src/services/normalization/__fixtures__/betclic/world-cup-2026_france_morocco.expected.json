@@ -401,72 +401,72 @@
         "parameters": null,
         "selections": [
           {
-            "code": "J. Mateta & K. Mbappé",
+            "code": "J. Mateta & K. Mbappe",
             "label": "K. Mbappe / J. Mateta",
             "odds": 1.42
           },
           {
-            "code": "K. Mbappé & O. Dembélé",
+            "code": "K. Mbappe & O. Dembele",
             "label": "O. Dembélé / K. Mbappe",
             "odds": 1.43
           },
           {
-            "code": "B. Barcola & K. Mbappé",
+            "code": "B. Barcola & K. Mbappe",
             "label": "K. Mbappe / B. Barcola",
             "odds": 1.49
           },
           {
-            "code": "D. Doué & K. Mbappé",
+            "code": "D. Doue & K. Mbappe",
             "label": "K. Mbappe / D. Doué",
             "odds": 1.49
           },
           {
-            "code": "K. Mbappé & M. Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "K. Mbappe / M. Olise",
             "odds": 1.5
           },
           {
-            "code": "K. Mbappé & R. Cherki",
+            "code": "K. Mbappe & R. Cherki",
             "label": "K. Mbappe / R. Cherki",
             "odds": 1.52
           },
           {
-            "code": "K. Mbappé & M. Akliouche",
+            "code": "K. Mbappe & M. Akliouche",
             "label": "K. Mbappe / M. Akliouche",
             "odds": 1.56
           },
           {
-            "code": "K. Mbappé & S. Rahimi",
+            "code": "K. Mbappe & S. Rahimi",
             "label": "K. Mbappe / S. Rahimi",
             "odds": 1.57
           },
           {
-            "code": "A. El Kaabi & K. Mbappé",
+            "code": "A. El Kaabi & K. Mbappe",
             "label": "K. Mbappe / A. El Kaabi",
             "odds": 1.59
           },
           {
-            "code": "B. Díaz & K. Mbappé",
+            "code": "B. Diaz & K. Mbappe",
             "label": "K. Mbappe / B. Díaz",
             "odds": 1.62
           },
           {
-            "code": "A. Ounahi & K. Mbappé",
+            "code": "A. Ounahi & K. Mbappe",
             "label": "K. Mbappe / A. Ounahi",
             "odds": 1.65
           },
           {
-            "code": "A. Rabiot & K. Mbappé",
+            "code": "A. Rabiot & K. Mbappe",
             "label": "A. Rabiot / K. Mbappe",
             "odds": 1.66
           },
           {
-            "code": "A. Hakimi & K. Mbappé",
+            "code": "A. Hakimi & K. Mbappe",
             "label": "K. Mbappe / A. Hakimi",
             "odds": 1.73
           },
           {
-            "code": "J. Mateta & O. Dembélé",
+            "code": "J. Mateta & O. Dembele",
             "label": "O. Dembélé / J. Mateta",
             "odds": 1.74
           },
@@ -476,7 +476,7 @@
             "odds": 1.89
           },
           {
-            "code": "D. Doué & J. Mateta",
+            "code": "D. Doue & J. Mateta",
             "label": "J. Mateta / D. Doué",
             "odds": 1.89
           },
@@ -486,17 +486,17 @@
             "odds": 1.9
           },
           {
-            "code": "D. Doué & O. Dembélé",
+            "code": "D. Doue & O. Dembele",
             "label": "O. Dembélé / D. Doué",
             "odds": 1.91
           },
           {
-            "code": "B. Barcola & O. Dembélé",
+            "code": "B. Barcola & O. Dembele",
             "label": "O. Dembélé / B. Barcola",
             "odds": 1.92
           },
           {
-            "code": "M. Olise & O. Dembélé",
+            "code": "M. Olise & O. Dembele",
             "label": "O. Dembélé / M. Olise",
             "odds": 1.93
           },
@@ -506,7 +506,7 @@
             "odds": 1.94
           },
           {
-            "code": "O. Dembélé & R. Cherki",
+            "code": "O. Dembele & R. Cherki",
             "label": "O. Dembélé / R. Cherki",
             "odds": 1.97
           },
@@ -521,17 +521,17 @@
             "odds": 2.07
           },
           {
-            "code": "B. Barcola & D. Doué",
+            "code": "B. Barcola & D. Doue",
             "label": "B. Barcola / D. Doué",
             "odds": 2.08
           },
           {
-            "code": "O. Dembélé & S. Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "O. Dembélé / S. Rahimi",
             "odds": 2.1
           },
           {
-            "code": "M. Akliouche & O. Dembélé",
+            "code": "M. Akliouche & O. Dembele",
             "label": "O. Dembélé / M. Akliouche",
             "odds": 2.1
           },
@@ -541,7 +541,7 @@
             "odds": 2.1
           },
           {
-            "code": "D. Doué & M. Olise",
+            "code": "D. Doue & M. Olise",
             "label": "M. Olise / D. Doué",
             "odds": 2.1
           },
@@ -551,7 +551,7 @@
             "odds": 2.12
           },
           {
-            "code": "A. El Kaabi & O. Dembélé",
+            "code": "A. El Kaabi & O. Dembele",
             "label": "O. Dembélé / A. El Kaabi",
             "odds": 2.15
           },
@@ -561,7 +561,7 @@
             "odds": 2.15
           },
           {
-            "code": "D. Doué & R. Cherki",
+            "code": "D. Doue & R. Cherki",
             "label": "R. Cherki / D. Doué",
             "odds": 2.15
           },
@@ -571,12 +571,12 @@
             "odds": 2.17
           },
           {
-            "code": "B. Díaz & J. Mateta",
+            "code": "B. Diaz & J. Mateta",
             "label": "B. Díaz / J. Mateta",
             "odds": 2.2
           },
           {
-            "code": "B. Díaz & O. Dembélé",
+            "code": "B. Diaz & O. Dembele",
             "label": "O. Dembélé / B. Díaz",
             "odds": 2.25
           },
@@ -596,7 +596,7 @@
             "odds": 2.32
           },
           {
-            "code": "D. Doué & M. Akliouche",
+            "code": "D. Doue & M. Akliouche",
             "label": "M. Akliouche / D. Doué",
             "odds": 2.32
           },
@@ -606,7 +606,7 @@
             "odds": 2.33
           },
           {
-            "code": "D. Doué & S. Rahimi",
+            "code": "D. Doue & S. Rahimi",
             "label": "S. Rahimi / D. Doué",
             "odds": 2.33
           },
@@ -616,12 +616,12 @@
             "odds": 2.33
           },
           {
-            "code": "A. Rabiot & O. Dembélé",
+            "code": "A. Rabiot & O. Dembele",
             "label": "A. Rabiot / O. Dembélé",
             "odds": 2.35
           },
           {
-            "code": "A. Ounahi & O. Dembélé",
+            "code": "A. Ounahi & O. Dembele",
             "label": "O. Dembélé / A. Ounahi",
             "odds": 2.35
           },
@@ -636,7 +636,7 @@
             "odds": 2.4
           },
           {
-            "code": "A. El Kaabi & D. Doué",
+            "code": "A. El Kaabi & D. Doue",
             "label": "A. El Kaabi / D. Doué",
             "odds": 2.4
           },
@@ -666,22 +666,22 @@
             "odds": 2.52
           },
           {
-            "code": "B. Barcola & B. Díaz",
+            "code": "B. Barcola & B. Diaz",
             "label": "B. Díaz / B. Barcola",
             "odds": 2.53
           },
           {
-            "code": "B. Díaz & D. Doué",
+            "code": "B. Diaz & D. Doue",
             "label": "B. Díaz / D. Doué",
             "odds": 2.53
           },
           {
-            "code": "B. Díaz & M. Olise",
+            "code": "B. Diaz & M. Olise",
             "label": "B. Díaz / M. Olise",
             "odds": 2.55
           },
           {
-            "code": "A. Hakimi & O. Dembélé",
+            "code": "A. Hakimi & O. Dembele",
             "label": "O. Dembélé / A. Hakimi",
             "odds": 2.58
           },
@@ -691,12 +691,12 @@
             "odds": 2.6
           },
           {
-            "code": "B. Díaz & R. Cherki",
+            "code": "B. Diaz & R. Cherki",
             "label": "B. Díaz / R. Cherki",
             "odds": 2.65
           },
           {
-            "code": "A. Rabiot & D. Doué",
+            "code": "A. Rabiot & D. Doue",
             "label": "A. Rabiot / D. Doué",
             "odds": 2.67
           },
@@ -706,7 +706,7 @@
             "odds": 2.67
           },
           {
-            "code": "A. Ounahi & D. Doué",
+            "code": "A. Ounahi & D. Doue",
             "label": "A. Ounahi / D. Doué",
             "odds": 2.67
           },
@@ -746,22 +746,22 @@
             "odds": 2.8
           },
           {
-            "code": "B. Díaz & M. Akliouche",
+            "code": "B. Diaz & M. Akliouche",
             "label": "B. Díaz / M. Akliouche",
             "odds": 2.87
           },
           {
-            "code": "B. Díaz & S. Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "B. Díaz / S. Rahimi",
             "odds": 2.9
           },
           {
-            "code": "A. El Kaabi & B. Díaz",
+            "code": "A. El Kaabi & B. Diaz",
             "label": "B. Díaz / A. El Kaabi",
             "odds": 3
           },
           {
-            "code": "A. Hakimi & D. Doué",
+            "code": "A. Hakimi & D. Doue",
             "label": "A. Hakimi / D. Doué",
             "odds": 3.02
           },
@@ -811,12 +811,12 @@
             "odds": 3.25
           },
           {
-            "code": "A. Ounahi & B. Díaz",
+            "code": "A. Ounahi & B. Diaz",
             "label": "B. Díaz / A. Ounahi",
             "odds": 3.45
           },
           {
-            "code": "A. Rabiot & B. Díaz",
+            "code": "A. Rabiot & B. Diaz",
             "label": "A. Rabiot / B. Díaz",
             "odds": 3.47
           },
@@ -841,7 +841,7 @@
             "odds": 3.85
           },
           {
-            "code": "A. Hakimi & B. Díaz",
+            "code": "A. Hakimi & B. Diaz",
             "label": "A. Hakimi / B. Díaz",
             "odds": 4.2
           },
@@ -3835,62 +3835,62 @@
         "parameters": null,
         "selections": [
           {
-            "code": "K. Mbappé & O. Dembélé",
+            "code": "K. Mbappe & O. Dembele",
             "label": "O. Dembélé / K. Mbappe",
             "odds": 2
           },
           {
-            "code": "B. Barcola & K. Mbappé",
+            "code": "B. Barcola & K. Mbappe",
             "label": "K. Mbappe / B. Barcola",
             "odds": 2.13
           },
           {
-            "code": "D. Doué & K. Mbappé",
+            "code": "D. Doue & K. Mbappe",
             "label": "K. Mbappe / D. Doué",
             "odds": 2.13
           },
           {
-            "code": "K. Mbappé & M. Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "K. Mbappe / M. Olise",
             "odds": 2.15
           },
           {
-            "code": "K. Mbappé & S. Rahimi",
+            "code": "K. Mbappe & S. Rahimi",
             "label": "K. Mbappe / S. Rahimi",
             "odds": 2.3
           },
           {
-            "code": "B. Díaz & K. Mbappé",
+            "code": "B. Diaz & K. Mbappe",
             "label": "K. Mbappe / B. Díaz",
             "odds": 2.4
           },
           {
-            "code": "A. Rabiot & K. Mbappé",
+            "code": "A. Rabiot & K. Mbappe",
             "label": "A. Rabiot / K. Mbappe",
             "odds": 2.48
           },
           {
-            "code": "A. Ounahi & K. Mbappé",
+            "code": "A. Ounahi & K. Mbappe",
             "label": "K. Mbappe / A. Ounahi",
             "odds": 2.48
           },
           {
-            "code": "B. Barcola & O. Dembélé",
+            "code": "B. Barcola & O. Dembele",
             "label": "O. Dembélé / B. Barcola",
             "odds": 2.8
           },
           {
-            "code": "D. Doué & O. Dembélé",
+            "code": "D. Doue & O. Dembele",
             "label": "O. Dembélé / D. Doué",
             "odds": 2.8
           },
           {
-            "code": "M. Olise & O. Dembélé",
+            "code": "M. Olise & O. Dembele",
             "label": "O. Dembélé / M. Olise",
             "odds": 2.83
           },
           {
-            "code": "B. Barcola & D. Doué",
+            "code": "B. Barcola & D. Doue",
             "label": "B. Barcola / D. Doué",
             "odds": 3.05
           },
@@ -3900,17 +3900,17 @@
             "odds": 3.1
           },
           {
-            "code": "D. Doué & M. Olise",
+            "code": "D. Doue & M. Olise",
             "label": "M. Olise / D. Doué",
             "odds": 3.1
           },
           {
-            "code": "O. Dembélé & S. Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "O. Dembélé / S. Rahimi",
             "odds": 3.13
           },
           {
-            "code": "B. Díaz & O. Dembélé",
+            "code": "B. Diaz & O. Dembele",
             "label": "O. Dembélé / B. Díaz",
             "odds": 3.38
           },
@@ -3920,7 +3920,7 @@
             "odds": 3.45
           },
           {
-            "code": "D. Doué & S. Rahimi",
+            "code": "D. Doue & S. Rahimi",
             "label": "S. Rahimi / D. Doué",
             "odds": 3.47
           },
@@ -3930,27 +3930,27 @@
             "odds": 3.53
           },
           {
-            "code": "A. Ounahi & O. Dembélé",
+            "code": "A. Ounahi & O. Dembele",
             "label": "O. Dembélé / A. Ounahi",
             "odds": 3.55
           },
           {
-            "code": "A. Rabiot & O. Dembélé",
+            "code": "A. Rabiot & O. Dembele",
             "label": "A. Rabiot / O. Dembélé",
             "odds": 3.58
           },
           {
-            "code": "B. Barcola & B. Díaz",
+            "code": "B. Barcola & B. Diaz",
             "label": "B. Díaz / B. Barcola",
             "odds": 3.78
           },
           {
-            "code": "B. Díaz & D. Doué",
+            "code": "B. Diaz & D. Doue",
             "label": "B. Díaz / D. Doué",
             "odds": 3.8
           },
           {
-            "code": "B. Díaz & M. Olise",
+            "code": "B. Diaz & M. Olise",
             "label": "B. Díaz / M. Olise",
             "odds": 3.85
           },
@@ -3960,7 +3960,7 @@
             "odds": 4
           },
           {
-            "code": "A. Ounahi & D. Doué",
+            "code": "A. Ounahi & D. Doue",
             "label": "A. Ounahi / D. Doué",
             "odds": 4
           },
@@ -3970,7 +3970,7 @@
             "odds": 4.05
           },
           {
-            "code": "A. Rabiot & D. Doué",
+            "code": "A. Rabiot & D. Doue",
             "label": "A. Rabiot / D. Doué",
             "odds": 4.05
           },
@@ -3985,7 +3985,7 @@
             "odds": 4.1
           },
           {
-            "code": "B. Díaz & S. Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "B. Díaz / S. Rahimi",
             "odds": 4.35
           },
@@ -4000,12 +4000,12 @@
             "odds": 4.75
           },
           {
-            "code": "A. Rabiot & B. Díaz",
+            "code": "A. Rabiot & B. Diaz",
             "label": "A. Rabiot / B. Díaz",
             "odds": 5.25
           },
           {
-            "code": "A. Ounahi & B. Díaz",
+            "code": "A. Ounahi & B. Diaz",
             "label": "B. Díaz / A. Ounahi",
             "odds": 5.25
           },
@@ -4031,67 +4031,67 @@
         "parameters": null,
         "selections": [
           {
-            "code": "K. Mbappé & O. Dembélé",
+            "code": "K. Mbappe & O. Dembele",
             "label": "O. Dembélé / K. Mbappe",
             "odds": 1.67
           },
           {
-            "code": "B. Barcola & K. Mbappé",
+            "code": "B. Barcola & K. Mbappe",
             "label": "K. Mbappe / B. Barcola",
             "odds": 1.77
           },
           {
-            "code": "D. Doué & K. Mbappé",
+            "code": "D. Doue & K. Mbappe",
             "label": "K. Mbappe / D. Doué",
             "odds": 1.77
           },
           {
-            "code": "K. Mbappé & M. Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "K. Mbappe / M. Olise",
             "odds": 1.78
           },
           {
-            "code": "K. Mbappé & S. Rahimi",
+            "code": "K. Mbappe & S. Rahimi",
             "label": "K. Mbappe / S. Rahimi",
             "odds": 1.89
           },
           {
-            "code": "B. Díaz & K. Mbappé",
+            "code": "B. Diaz & K. Mbappe",
             "label": "K. Mbappe / B. Díaz",
             "odds": 1.98
           },
           {
-            "code": "A. Rabiot & K. Mbappé",
+            "code": "A. Rabiot & K. Mbappe",
             "label": "A. Rabiot / K. Mbappe",
             "odds": 2.05
           },
           {
-            "code": "A. Ounahi & K. Mbappé",
+            "code": "A. Ounahi & K. Mbappe",
             "label": "K. Mbappe / A. Ounahi",
             "odds": 2.05
           },
           {
-            "code": "D. Doué & O. Dembélé",
+            "code": "D. Doue & O. Dembele",
             "label": "O. Dembélé / D. Doué",
             "odds": 2.32
           },
           {
-            "code": "B. Barcola & O. Dembélé",
+            "code": "B. Barcola & O. Dembele",
             "label": "O. Dembélé / B. Barcola",
             "odds": 2.33
           },
           {
-            "code": "M. Olise & O. Dembélé",
+            "code": "M. Olise & O. Dembele",
             "label": "O. Dembélé / M. Olise",
             "odds": 2.35
           },
           {
-            "code": "D. Doué & M. Olise",
+            "code": "D. Doue & M. Olise",
             "label": "M. Olise / D. Doué",
             "odds": 2.55
           },
           {
-            "code": "B. Barcola & D. Doué",
+            "code": "B. Barcola & D. Doue",
             "label": "B. Barcola / D. Doué",
             "odds": 2.55
           },
@@ -4101,17 +4101,17 @@
             "odds": 2.57
           },
           {
-            "code": "O. Dembélé & S. Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "O. Dembélé / S. Rahimi",
             "odds": 2.6
           },
           {
-            "code": "B. Díaz & O. Dembélé",
+            "code": "B. Diaz & O. Dembele",
             "label": "O. Dembélé / B. Díaz",
             "odds": 2.8
           },
           {
-            "code": "D. Doué & S. Rahimi",
+            "code": "D. Doue & S. Rahimi",
             "label": "S. Rahimi / D. Doué",
             "odds": 2.87
           },
@@ -4126,37 +4126,37 @@
             "odds": 2.9
           },
           {
-            "code": "A. Ounahi & O. Dembélé",
+            "code": "A. Ounahi & O. Dembele",
             "label": "O. Dembélé / A. Ounahi",
             "odds": 2.93
           },
           {
-            "code": "A. Rabiot & O. Dembélé",
+            "code": "A. Rabiot & O. Dembele",
             "label": "A. Rabiot / O. Dembélé",
             "odds": 2.95
           },
           {
-            "code": "B. Díaz & D. Doué",
+            "code": "B. Diaz & D. Doue",
             "label": "B. Díaz / D. Doué",
             "odds": 3.13
           },
           {
-            "code": "B. Barcola & B. Díaz",
+            "code": "B. Barcola & B. Diaz",
             "label": "B. Díaz / B. Barcola",
             "odds": 3.15
           },
           {
-            "code": "B. Díaz & M. Olise",
+            "code": "B. Diaz & M. Olise",
             "label": "B. Díaz / M. Olise",
             "odds": 3.17
           },
           {
-            "code": "A. Ounahi & D. Doué",
+            "code": "A. Ounahi & D. Doue",
             "label": "A. Ounahi / D. Doué",
             "odds": 3.32
           },
           {
-            "code": "A. Rabiot & D. Doué",
+            "code": "A. Rabiot & D. Doue",
             "label": "A. Rabiot / D. Doué",
             "odds": 3.33
           },
@@ -4181,7 +4181,7 @@
             "odds": 3.38
           },
           {
-            "code": "B. Díaz & S. Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "B. Díaz / S. Rahimi",
             "odds": 3.58
           },
@@ -4196,12 +4196,12 @@
             "odds": 3.88
           },
           {
-            "code": "A. Rabiot & B. Díaz",
+            "code": "A. Rabiot & B. Diaz",
             "label": "A. Rabiot / B. Díaz",
             "odds": 4.4
           },
           {
-            "code": "A. Ounahi & B. Díaz",
+            "code": "A. Ounahi & B. Diaz",
             "label": "B. Díaz / A. Ounahi",
             "odds": 4.4
           },
@@ -5384,72 +5384,72 @@
         "parameters": null,
         "selections": [
           {
-            "code": "J. Mateta & K. Mbappé",
+            "code": "J. Mateta & K. Mbappe",
             "label": "K. Mbappe / J. Mateta",
             "odds": 2.28
           },
           {
-            "code": "K. Mbappé & O. Dembélé",
+            "code": "K. Mbappe & O. Dembele",
             "label": "O. Dembélé / K. Mbappe",
             "odds": 2.32
           },
           {
-            "code": "B. Barcola & K. Mbappé",
+            "code": "B. Barcola & K. Mbappe",
             "label": "K. Mbappe / B. Barcola",
             "odds": 2.52
           },
           {
-            "code": "D. Doué & K. Mbappé",
+            "code": "D. Doue & K. Mbappe",
             "label": "K. Mbappe / D. Doué",
             "odds": 2.52
           },
           {
-            "code": "K. Mbappé & M. Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "K. Mbappe / M. Olise",
             "odds": 2.53
           },
           {
-            "code": "K. Mbappé & R. Cherki",
+            "code": "K. Mbappe & R. Cherki",
             "label": "K. Mbappe / R. Cherki",
             "odds": 2.58
           },
           {
-            "code": "K. Mbappé & M. Akliouche",
+            "code": "K. Mbappe & M. Akliouche",
             "label": "K. Mbappe / M. Akliouche",
             "odds": 2.72
           },
           {
-            "code": "K. Mbappé & S. Rahimi",
+            "code": "K. Mbappe & S. Rahimi",
             "label": "K. Mbappe / S. Rahimi",
             "odds": 2.73
           },
           {
-            "code": "A. El Kaabi & K. Mbappé",
+            "code": "A. El Kaabi & K. Mbappe",
             "label": "K. Mbappe / A. El Kaabi",
             "odds": 2.78
           },
           {
-            "code": "B. Díaz & K. Mbappé",
+            "code": "B. Diaz & K. Mbappe",
             "label": "K. Mbappe / B. Díaz",
             "odds": 2.88
           },
           {
-            "code": "A. Ounahi & K. Mbappé",
+            "code": "A. Ounahi & K. Mbappe",
             "label": "K. Mbappe / A. Ounahi",
             "odds": 2.97
           },
           {
-            "code": "A. Rabiot & K. Mbappé",
+            "code": "A. Rabiot & K. Mbappe",
             "label": "A. Rabiot / K. Mbappe",
             "odds": 2.98
           },
           {
-            "code": "J. Mateta & O. Dembélé",
+            "code": "J. Mateta & O. Dembele",
             "label": "O. Dembélé / J. Mateta",
             "odds": 3.13
           },
           {
-            "code": "A. Hakimi & K. Mbappé",
+            "code": "A. Hakimi & K. Mbappe",
             "label": "K. Mbappe / A. Hakimi",
             "odds": 3.2
           },
@@ -5459,7 +5459,7 @@
             "odds": 3.5
           },
           {
-            "code": "D. Doué & J. Mateta",
+            "code": "D. Doue & J. Mateta",
             "label": "J. Mateta / D. Doué",
             "odds": 3.5
           },
@@ -5469,17 +5469,17 @@
             "odds": 3.55
           },
           {
-            "code": "B. Barcola & O. Dembélé",
+            "code": "B. Barcola & O. Dembele",
             "label": "O. Dembélé / B. Barcola",
             "odds": 3.6
           },
           {
-            "code": "D. Doué & O. Dembélé",
+            "code": "D. Doue & O. Dembele",
             "label": "O. Dembélé / D. Doué",
             "odds": 3.6
           },
           {
-            "code": "M. Olise & O. Dembélé",
+            "code": "M. Olise & O. Dembele",
             "label": "O. Dembélé / M. Olise",
             "odds": 3.63
           },
@@ -5489,12 +5489,12 @@
             "odds": 3.65
           },
           {
-            "code": "O. Dembélé & R. Cherki",
+            "code": "O. Dembele & R. Cherki",
             "label": "O. Dembélé / R. Cherki",
             "odds": 3.75
           },
           {
-            "code": "B. Barcola & D. Doué",
+            "code": "B. Barcola & D. Doue",
             "label": "B. Barcola / D. Doué",
             "odds": 3.88
           },
@@ -5509,7 +5509,7 @@
             "odds": 3.95
           },
           {
-            "code": "D. Doué & M. Olise",
+            "code": "D. Doue & M. Olise",
             "label": "M. Olise / D. Doué",
             "odds": 3.95
           },
@@ -5524,17 +5524,17 @@
             "odds": 4.05
           },
           {
-            "code": "D. Doué & R. Cherki",
+            "code": "D. Doue & R. Cherki",
             "label": "R. Cherki / D. Doué",
             "odds": 4.05
           },
           {
-            "code": "O. Dembélé & S. Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "O. Dembélé / S. Rahimi",
             "odds": 4.1
           },
           {
-            "code": "M. Akliouche & O. Dembélé",
+            "code": "M. Akliouche & O. Dembele",
             "label": "O. Dembélé / M. Akliouche",
             "odds": 4.1
           },
@@ -5549,12 +5549,12 @@
             "odds": 4.15
           },
           {
-            "code": "A. El Kaabi & O. Dembélé",
+            "code": "A. El Kaabi & O. Dembele",
             "label": "O. Dembélé / A. El Kaabi",
             "odds": 4.25
           },
           {
-            "code": "B. Díaz & J. Mateta",
+            "code": "B. Diaz & J. Mateta",
             "label": "B. Díaz / J. Mateta",
             "odds": 4.35
           },
@@ -5564,12 +5564,12 @@
             "odds": 4.45
           },
           {
-            "code": "D. Doué & M. Akliouche",
+            "code": "D. Doue & M. Akliouche",
             "label": "M. Akliouche / D. Doué",
             "odds": 4.45
           },
           {
-            "code": "B. Díaz & O. Dembélé",
+            "code": "B. Diaz & O. Dembele",
             "label": "O. Dembélé / B. Díaz",
             "odds": 4.5
           },
@@ -5579,7 +5579,7 @@
             "odds": 4.5
           },
           {
-            "code": "D. Doué & S. Rahimi",
+            "code": "D. Doue & S. Rahimi",
             "label": "S. Rahimi / D. Doué",
             "odds": 4.5
           },
@@ -5609,7 +5609,7 @@
             "odds": 4.65
           },
           {
-            "code": "A. El Kaabi & D. Doué",
+            "code": "A. El Kaabi & D. Doue",
             "label": "A. El Kaabi / D. Doué",
             "odds": 4.65
           },
@@ -5619,12 +5619,12 @@
             "odds": 4.7
           },
           {
-            "code": "A. Rabiot & O. Dembélé",
+            "code": "A. Rabiot & O. Dembele",
             "label": "A. Rabiot / O. Dembélé",
             "odds": 4.75
           },
           {
-            "code": "A. Ounahi & O. Dembélé",
+            "code": "A. Ounahi & O. Dembele",
             "label": "O. Dembélé / A. Ounahi",
             "odds": 4.75
           },
@@ -5644,12 +5644,12 @@
             "odds": 4.9
           },
           {
-            "code": "B. Barcola & B. Díaz",
+            "code": "B. Barcola & B. Diaz",
             "label": "B. Díaz / B. Barcola",
             "odds": 5
           },
           {
-            "code": "B. Díaz & D. Doué",
+            "code": "B. Diaz & D. Doue",
             "label": "B. Díaz / D. Doué",
             "odds": 5
           },
@@ -5659,7 +5659,7 @@
             "odds": 5.1
           },
           {
-            "code": "B. Díaz & M. Olise",
+            "code": "B. Diaz & M. Olise",
             "label": "B. Díaz / M. Olise",
             "odds": 5.1
           },
@@ -5669,7 +5669,7 @@
             "odds": 5.1
           },
           {
-            "code": "B. Díaz & R. Cherki",
+            "code": "B. Diaz & R. Cherki",
             "label": "B. Díaz / R. Cherki",
             "odds": 5.25
           },
@@ -5684,12 +5684,12 @@
             "odds": 5.4
           },
           {
-            "code": "A. Rabiot & D. Doué",
+            "code": "A. Rabiot & D. Doue",
             "label": "A. Rabiot / D. Doué",
             "odds": 5.4
           },
           {
-            "code": "A. Hakimi & O. Dembélé",
+            "code": "A. Hakimi & O. Dembele",
             "label": "O. Dembélé / A. Hakimi",
             "odds": 5.4
           },
@@ -5704,7 +5704,7 @@
             "odds": 5.4
           },
           {
-            "code": "A. Ounahi & D. Doué",
+            "code": "A. Ounahi & D. Doue",
             "label": "A. Ounahi / D. Doué",
             "odds": 5.4
           },
@@ -5724,12 +5724,12 @@
             "odds": 5.75
           },
           {
-            "code": "B. Díaz & S. Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "B. Díaz / S. Rahimi",
             "odds": 5.75
           },
           {
-            "code": "B. Díaz & M. Akliouche",
+            "code": "B. Diaz & M. Akliouche",
             "label": "B. Díaz / M. Akliouche",
             "odds": 5.75
           },
@@ -5739,7 +5739,7 @@
             "odds": 5.75
           },
           {
-            "code": "A. El Kaabi & B. Díaz",
+            "code": "A. El Kaabi & B. Diaz",
             "label": "B. Díaz / A. El Kaabi",
             "odds": 5.9
           },
@@ -5754,7 +5754,7 @@
             "odds": 6.25
           },
           {
-            "code": "A. Hakimi & D. Doué",
+            "code": "A. Hakimi & D. Doue",
             "label": "A. Hakimi / D. Doué",
             "odds": 6.25
           },
@@ -5789,7 +5789,7 @@
             "odds": 6.4
           },
           {
-            "code": "A. Rabiot & B. Díaz",
+            "code": "A. Rabiot & B. Diaz",
             "label": "A. Rabiot / B. Díaz",
             "odds": 6.75
           },
@@ -5799,7 +5799,7 @@
             "odds": 6.75
           },
           {
-            "code": "A. Ounahi & B. Díaz",
+            "code": "A. Ounahi & B. Diaz",
             "label": "B. Díaz / A. Ounahi",
             "odds": 6.75
           },
@@ -5824,7 +5824,7 @@
             "odds": 7.75
           },
           {
-            "code": "A. Hakimi & B. Díaz",
+            "code": "A. Hakimi & B. Diaz",
             "label": "A. Hakimi / B. Díaz",
             "odds": 8.5
           },
@@ -10307,91 +10307,91 @@
         "paramValue": null,
         "parameters": [
           "M. Olise & R. Cherki",
-          "M. Olise & O. Dembélé",
+          "M. Olise & O. Dembele",
           "M. Akliouche & M. Olise",
-          "D. Doué & M. Olise",
-          "K. Mbappé & M. Olise",
+          "D. Doue & M. Olise",
+          "K. Mbappe & M. Olise",
           "J. Mateta & M. Olise",
           "B. Barcola & M. Olise",
-          "O. Dembélé & R. Cherki",
+          "O. Dembele & R. Cherki",
           "M. Akliouche & R. Cherki",
-          "M. Akliouche & O. Dembélé",
+          "M. Akliouche & O. Dembele",
           "A. Rabiot & M. Olise",
-          "D. Doué & R. Cherki",
-          "B. Díaz & M. Olise",
-          "K. Mbappé & R. Cherki",
+          "D. Doue & R. Cherki",
+          "B. Diaz & M. Olise",
+          "K. Mbappe & R. Cherki",
           "A. El Kaabi & M. Olise",
           "M. Olise & S. Rahimi",
           "A. Ounahi & M. Olise",
-          "D. Doué & O. Dembélé",
-          "D. Doué & M. Akliouche",
+          "D. Doue & O. Dembele",
+          "D. Doue & M. Akliouche",
           "A. Hakimi & M. Olise",
           "J. Mateta & R. Cherki",
           "B. Barcola & R. Cherki",
-          "K. Mbappé & O. Dembélé",
-          "K. Mbappé & M. Akliouche",
-          "J. Mateta & O. Dembélé",
+          "K. Mbappe & O. Dembele",
+          "K. Mbappe & M. Akliouche",
+          "J. Mateta & O. Dembele",
           "J. Mateta & M. Akliouche",
-          "B. Barcola & O. Dembélé",
-          "D. Doué & K. Mbappé",
+          "B. Barcola & O. Dembele",
+          "D. Doue & K. Mbappe",
           "B. Barcola & M. Akliouche",
-          "D. Doué & J. Mateta",
-          "B. Barcola & D. Doué",
-          "J. Mateta & K. Mbappé",
-          "B. Barcola & K. Mbappé",
+          "D. Doue & J. Mateta",
+          "B. Barcola & D. Doue",
+          "J. Mateta & K. Mbappe",
+          "B. Barcola & K. Mbappe",
           "A. Rabiot & R. Cherki",
           "B. Barcola & J. Mateta",
-          "B. Díaz & R. Cherki",
-          "A. Rabiot & O. Dembélé",
+          "B. Diaz & R. Cherki",
+          "A. Rabiot & O. Dembele",
           "A. Rabiot & M. Akliouche",
           "A. El Kaabi & R. Cherki",
           "R. Cherki & S. Rahimi",
           "A. Ounahi & R. Cherki",
           "A. Hakimi & R. Cherki",
-          "B. Díaz & O. Dembélé",
-          "B. Díaz & M. Akliouche",
-          "A. El Kaabi & O. Dembélé",
-          "O. Dembélé & S. Rahimi",
-          "A. Ounahi & O. Dembélé",
+          "B. Diaz & O. Dembele",
+          "B. Diaz & M. Akliouche",
+          "A. El Kaabi & O. Dembele",
+          "O. Dembele & S. Rahimi",
+          "A. Ounahi & O. Dembele",
           "A. El Kaabi & M. Akliouche",
           "M. Akliouche & S. Rahimi",
           "A. Ounahi & M. Akliouche",
-          "A. Rabiot & D. Doué",
-          "A. Hakimi & O. Dembélé",
+          "A. Rabiot & D. Doue",
+          "A. Hakimi & O. Dembele",
           "A. Hakimi & M. Akliouche",
-          "B. Díaz & D. Doué",
-          "A. Rabiot & K. Mbappé",
-          "A. El Kaabi & D. Doué",
-          "D. Doué & S. Rahimi",
-          "A. Ounahi & D. Doué",
+          "B. Diaz & D. Doue",
+          "A. Rabiot & K. Mbappe",
+          "A. El Kaabi & D. Doue",
+          "D. Doue & S. Rahimi",
+          "A. Ounahi & D. Doue",
           "A. Rabiot & J. Mateta",
-          "A. Hakimi & D. Doué",
-          "B. Díaz & K. Mbappé",
-          "A. El Kaabi & K. Mbappé",
-          "K. Mbappé & S. Rahimi",
+          "A. Hakimi & D. Doue",
+          "B. Diaz & K. Mbappe",
+          "A. El Kaabi & K. Mbappe",
+          "K. Mbappe & S. Rahimi",
           "A. Rabiot & B. Barcola",
-          "A. Ounahi & K. Mbappé",
-          "B. Díaz & J. Mateta",
-          "A. Hakimi & K. Mbappé",
+          "A. Ounahi & K. Mbappe",
+          "B. Diaz & J. Mateta",
+          "A. Hakimi & K. Mbappe",
           "A. El Kaabi & J. Mateta",
           "J. Mateta & S. Rahimi",
-          "B. Barcola & B. Díaz",
+          "B. Barcola & B. Diaz",
           "A. Ounahi & J. Mateta",
           "A. El Kaabi & B. Barcola",
           "B. Barcola & S. Rahimi",
           "A. Ounahi & B. Barcola",
           "A. Hakimi & J. Mateta",
           "A. Hakimi & B. Barcola",
-          "A. Rabiot & B. Díaz",
+          "A. Rabiot & B. Diaz",
           "A. El Kaabi & A. Rabiot",
           "A. Rabiot & S. Rahimi",
           "A. Ounahi & A. Rabiot",
           "A. Hakimi & A. Rabiot",
-          "A. El Kaabi & B. Díaz",
-          "B. Díaz & S. Rahimi",
-          "A. Ounahi & B. Díaz",
+          "A. El Kaabi & B. Diaz",
+          "B. Diaz & S. Rahimi",
+          "A. Ounahi & B. Diaz",
           "A. El Kaabi & S. Rahimi",
-          "A. Hakimi & B. Díaz",
+          "A. Hakimi & B. Diaz",
           "A. El Kaabi & A. Ounahi",
           "A. Ounahi & S. Rahimi",
           "A. El Kaabi & A. Hakimi",
@@ -10869,125 +10869,125 @@
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": [
-          "D. Doué & M. Olise & O. Dembélé",
-          "K. Mbappé & M. Olise & O. Dembélé",
-          "B. Barcola & M. Olise & O. Dembélé",
-          "D. Doué & K. Mbappé & M. Olise",
-          "B. Barcola & D. Doué & M. Olise",
-          "B. Barcola & K. Mbappé & M. Olise",
-          "A. Rabiot & M. Olise & O. Dembélé",
-          "B. Díaz & M. Olise & O. Dembélé",
-          "A. Ounahi & M. Olise & O. Dembélé",
-          "M. Olise & O. Dembélé & S. Rahimi",
-          "A. Rabiot & D. Doué & M. Olise",
-          "A. Hakimi & M. Olise & O. Dembélé",
-          "B. Díaz & D. Doué & M. Olise",
-          "A. Rabiot & K. Mbappé & M. Olise",
-          "A. Ounahi & D. Doué & M. Olise",
-          "D. Doué & M. Olise & S. Rahimi",
-          "B. Díaz & K. Mbappé & M. Olise",
-          "A. Hakimi & D. Doué & M. Olise",
+          "D. Doue & M. Olise & O. Dembele",
+          "K. Mbappe & M. Olise & O. Dembele",
+          "B. Barcola & M. Olise & O. Dembele",
+          "D. Doue & K. Mbappe & M. Olise",
+          "B. Barcola & D. Doue & M. Olise",
+          "B. Barcola & K. Mbappe & M. Olise",
+          "A. Rabiot & M. Olise & O. Dembele",
+          "B. Diaz & M. Olise & O. Dembele",
+          "A. Ounahi & M. Olise & O. Dembele",
+          "M. Olise & O. Dembele & S. Rahimi",
+          "A. Rabiot & D. Doue & M. Olise",
+          "A. Hakimi & M. Olise & O. Dembele",
+          "B. Diaz & D. Doue & M. Olise",
+          "A. Rabiot & K. Mbappe & M. Olise",
+          "A. Ounahi & D. Doue & M. Olise",
+          "D. Doue & M. Olise & S. Rahimi",
+          "B. Diaz & K. Mbappe & M. Olise",
+          "A. Hakimi & D. Doue & M. Olise",
           "A. Rabiot & B. Barcola & M. Olise",
-          "A. Ounahi & K. Mbappé & M. Olise",
-          "D. Doué & K. Mbappé & O. Dembélé",
-          "K. Mbappé & M. Olise & S. Rahimi",
-          "B. Barcola & B. Díaz & M. Olise",
-          "A. Hakimi & K. Mbappé & M. Olise",
+          "A. Ounahi & K. Mbappe & M. Olise",
+          "D. Doue & K. Mbappe & O. Dembele",
+          "K. Mbappe & M. Olise & S. Rahimi",
+          "B. Barcola & B. Diaz & M. Olise",
+          "A. Hakimi & K. Mbappe & M. Olise",
           "A. Ounahi & B. Barcola & M. Olise",
-          "B. Barcola & D. Doué & O. Dembélé",
+          "B. Barcola & D. Doue & O. Dembele",
           "B. Barcola & M. Olise & S. Rahimi",
           "A. Hakimi & B. Barcola & M. Olise",
-          "B. Barcola & K. Mbappé & O. Dembélé",
-          "B. Barcola & D. Doué & K. Mbappé",
-          "A. Rabiot & B. Díaz & M. Olise",
+          "B. Barcola & K. Mbappe & O. Dembele",
+          "B. Barcola & D. Doue & K. Mbappe",
+          "A. Rabiot & B. Diaz & M. Olise",
           "A. Ounahi & A. Rabiot & M. Olise",
-          "A. Rabiot & D. Doué & O. Dembélé",
+          "A. Rabiot & D. Doue & O. Dembele",
           "A. Rabiot & M. Olise & S. Rahimi",
-          "A. Ounahi & B. Díaz & M. Olise",
-          "B. Díaz & D. Doué & O. Dembélé",
-          "B. Díaz & M. Olise & S. Rahimi",
+          "A. Ounahi & B. Diaz & M. Olise",
+          "B. Diaz & D. Doue & O. Dembele",
+          "B. Diaz & M. Olise & S. Rahimi",
           "A. Hakimi & A. Rabiot & M. Olise",
-          "A. Rabiot & K. Mbappé & O. Dembélé",
-          "A. Ounahi & D. Doué & O. Dembélé",
-          "D. Doué & O. Dembélé & S. Rahimi",
+          "A. Rabiot & K. Mbappe & O. Dembele",
+          "A. Ounahi & D. Doue & O. Dembele",
+          "D. Doue & O. Dembele & S. Rahimi",
           "A. Ounahi & M. Olise & S. Rahimi",
-          "A. Hakimi & B. Díaz & M. Olise",
-          "B. Díaz & K. Mbappé & O. Dembélé",
+          "A. Hakimi & B. Diaz & M. Olise",
+          "B. Diaz & K. Mbappe & O. Dembele",
           "A. Hakimi & M. Olise & S. Rahimi",
           "A. Hakimi & A. Ounahi & M. Olise",
-          "A. Hakimi & D. Doué & O. Dembélé",
-          "A. Rabiot & B. Barcola & O. Dembélé",
-          "A. Ounahi & K. Mbappé & O. Dembélé",
-          "A. Rabiot & D. Doué & K. Mbappé",
-          "K. Mbappé & O. Dembélé & S. Rahimi",
-          "B. Barcola & B. Díaz & O. Dembélé",
-          "A. Hakimi & K. Mbappé & O. Dembélé",
-          "A. Ounahi & B. Barcola & O. Dembélé",
-          "A. Rabiot & B. Barcola & D. Doué",
-          "B. Díaz & D. Doué & K. Mbappé",
-          "A. Ounahi & D. Doué & K. Mbappé",
-          "D. Doué & K. Mbappé & S. Rahimi",
-          "B. Barcola & O. Dembélé & S. Rahimi",
-          "A. Hakimi & D. Doué & K. Mbappé",
-          "A. Hakimi & B. Barcola & O. Dembélé",
-          "A. Rabiot & B. Barcola & K. Mbappé",
-          "B. Barcola & B. Díaz & D. Doué",
-          "A. Ounahi & B. Barcola & D. Doué",
-          "B. Barcola & D. Doué & S. Rahimi",
-          "A. Hakimi & B. Barcola & D. Doué",
-          "B. Barcola & B. Díaz & K. Mbappé",
-          "A. Ounahi & B. Barcola & K. Mbappé",
-          "B. Barcola & K. Mbappé & S. Rahimi",
-          "A. Hakimi & B. Barcola & K. Mbappé",
-          "A. Rabiot & B. Díaz & O. Dembélé",
-          "A. Ounahi & A. Rabiot & O. Dembélé",
-          "A. Rabiot & O. Dembélé & S. Rahimi",
-          "A. Ounahi & B. Díaz & O. Dembélé",
-          "B. Díaz & O. Dembélé & S. Rahimi",
-          "A. Hakimi & A. Rabiot & O. Dembélé",
-          "A. Rabiot & B. Díaz & D. Doué",
-          "A. Ounahi & O. Dembélé & S. Rahimi",
-          "A. Hakimi & B. Díaz & O. Dembélé",
-          "A. Ounahi & A. Rabiot & D. Doué",
-          "A. Rabiot & D. Doué & S. Rahimi",
-          "A. Hakimi & O. Dembélé & S. Rahimi",
-          "A. Hakimi & A. Ounahi & O. Dembélé",
-          "A. Rabiot & B. Díaz & K. Mbappé",
-          "A. Ounahi & B. Díaz & D. Doué",
-          "B. Díaz & D. Doué & S. Rahimi",
-          "A. Hakimi & A. Rabiot & D. Doué",
-          "A. Ounahi & A. Rabiot & K. Mbappé",
-          "A. Rabiot & K. Mbappé & S. Rahimi",
-          "A. Ounahi & D. Doué & S. Rahimi",
-          "A. Hakimi & B. Díaz & D. Doué",
-          "A. Hakimi & D. Doué & S. Rahimi",
-          "A. Hakimi & A. Ounahi & D. Doué",
-          "A. Hakimi & A. Rabiot & K. Mbappé",
-          "A. Rabiot & B. Barcola & B. Díaz",
-          "A. Ounahi & B. Díaz & K. Mbappé",
-          "B. Díaz & K. Mbappé & S. Rahimi",
+          "A. Hakimi & D. Doue & O. Dembele",
+          "A. Rabiot & B. Barcola & O. Dembele",
+          "A. Ounahi & K. Mbappe & O. Dembele",
+          "A. Rabiot & D. Doue & K. Mbappe",
+          "K. Mbappe & O. Dembele & S. Rahimi",
+          "B. Barcola & B. Diaz & O. Dembele",
+          "A. Hakimi & K. Mbappe & O. Dembele",
+          "A. Ounahi & B. Barcola & O. Dembele",
+          "A. Rabiot & B. Barcola & D. Doue",
+          "B. Diaz & D. Doue & K. Mbappe",
+          "A. Ounahi & D. Doue & K. Mbappe",
+          "D. Doue & K. Mbappe & S. Rahimi",
+          "B. Barcola & O. Dembele & S. Rahimi",
+          "A. Hakimi & D. Doue & K. Mbappe",
+          "A. Hakimi & B. Barcola & O. Dembele",
+          "A. Rabiot & B. Barcola & K. Mbappe",
+          "B. Barcola & B. Diaz & D. Doue",
+          "A. Ounahi & B. Barcola & D. Doue",
+          "B. Barcola & D. Doue & S. Rahimi",
+          "A. Hakimi & B. Barcola & D. Doue",
+          "B. Barcola & B. Diaz & K. Mbappe",
+          "A. Ounahi & B. Barcola & K. Mbappe",
+          "B. Barcola & K. Mbappe & S. Rahimi",
+          "A. Hakimi & B. Barcola & K. Mbappe",
+          "A. Rabiot & B. Diaz & O. Dembele",
+          "A. Ounahi & A. Rabiot & O. Dembele",
+          "A. Rabiot & O. Dembele & S. Rahimi",
+          "A. Ounahi & B. Diaz & O. Dembele",
+          "B. Diaz & O. Dembele & S. Rahimi",
+          "A. Hakimi & A. Rabiot & O. Dembele",
+          "A. Rabiot & B. Diaz & D. Doue",
+          "A. Ounahi & O. Dembele & S. Rahimi",
+          "A. Hakimi & B. Diaz & O. Dembele",
+          "A. Ounahi & A. Rabiot & D. Doue",
+          "A. Rabiot & D. Doue & S. Rahimi",
+          "A. Hakimi & O. Dembele & S. Rahimi",
+          "A. Hakimi & A. Ounahi & O. Dembele",
+          "A. Rabiot & B. Diaz & K. Mbappe",
+          "A. Ounahi & B. Diaz & D. Doue",
+          "B. Diaz & D. Doue & S. Rahimi",
+          "A. Hakimi & A. Rabiot & D. Doue",
+          "A. Ounahi & A. Rabiot & K. Mbappe",
+          "A. Rabiot & K. Mbappe & S. Rahimi",
+          "A. Ounahi & D. Doue & S. Rahimi",
+          "A. Hakimi & B. Diaz & D. Doue",
+          "A. Hakimi & D. Doue & S. Rahimi",
+          "A. Hakimi & A. Ounahi & D. Doue",
+          "A. Hakimi & A. Rabiot & K. Mbappe",
+          "A. Rabiot & B. Barcola & B. Diaz",
+          "A. Ounahi & B. Diaz & K. Mbappe",
+          "B. Diaz & K. Mbappe & S. Rahimi",
           "A. Ounahi & A. Rabiot & B. Barcola",
           "A. Rabiot & B. Barcola & S. Rahimi",
-          "A. Ounahi & K. Mbappé & S. Rahimi",
-          "A. Hakimi & B. Díaz & K. Mbappé",
-          "A. Ounahi & B. Barcola & B. Díaz",
-          "B. Barcola & B. Díaz & S. Rahimi",
-          "A. Hakimi & K. Mbappé & S. Rahimi",
-          "A. Hakimi & A. Ounahi & K. Mbappé",
+          "A. Ounahi & K. Mbappe & S. Rahimi",
+          "A. Hakimi & B. Diaz & K. Mbappe",
+          "A. Ounahi & B. Barcola & B. Diaz",
+          "B. Barcola & B. Diaz & S. Rahimi",
+          "A. Hakimi & K. Mbappe & S. Rahimi",
+          "A. Hakimi & A. Ounahi & K. Mbappe",
           "A. Hakimi & A. Rabiot & B. Barcola",
           "A. Ounahi & B. Barcola & S. Rahimi",
-          "A. Hakimi & B. Barcola & B. Díaz",
+          "A. Hakimi & B. Barcola & B. Diaz",
           "A. Hakimi & B. Barcola & S. Rahimi",
           "A. Hakimi & A. Ounahi & B. Barcola",
-          "A. Ounahi & A. Rabiot & B. Díaz",
-          "A. Rabiot & B. Díaz & S. Rahimi",
+          "A. Ounahi & A. Rabiot & B. Diaz",
+          "A. Rabiot & B. Diaz & S. Rahimi",
           "A. Ounahi & A. Rabiot & S. Rahimi",
-          "A. Hakimi & A. Rabiot & B. Díaz",
+          "A. Hakimi & A. Rabiot & B. Diaz",
           "A. Hakimi & A. Rabiot & S. Rahimi",
           "A. Hakimi & A. Ounahi & A. Rabiot",
-          "A. Ounahi & B. Díaz & S. Rahimi",
-          "A. Hakimi & B. Díaz & S. Rahimi",
-          "A. Hakimi & A. Ounahi & B. Díaz",
+          "A. Ounahi & B. Diaz & S. Rahimi",
+          "A. Hakimi & B. Diaz & S. Rahimi",
+          "A. Hakimi & A. Ounahi & B. Diaz",
           "A. Hakimi & A. Ounahi & S. Rahimi"
         ],
         "selections": [

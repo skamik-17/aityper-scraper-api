@@ -556,7 +556,7 @@ describe("forbet audit fixes", () => {
     const out = run(
       {
         bookmakerMarketId: "-30416",
-        name: "R. De Paul & Lau. Martínez: obaj wymienieni zawodnicy strzelą co najmniej po jednym golu (muszą wyjść w pierwszym składzie)",
+        name: "R. De Paul & Lau. Martinez: obaj wymienieni zawodnicy strzelą co najmniej po jednym golu (muszą wyjść w pierwszym składzie)",
         selections: [{ name: "tak", odds: 11.5 }],
       },
       ctxB
@@ -564,7 +564,7 @@ describe("forbet audit fixes", () => {
     expect(out.marketCode).toBe("BOTH_PLAYERS_ANYTIME");
     // Names are sorted alphabetically (mirrors betclic's normalizePlayerComboSelection)
     // so the same pair merges across bookmakers regardless of forBET's listing order.
-    expect(out.selections.map((s) => s.code)).toEqual(["Lau. Martínez & R. De Paul"]);
+    expect(out.selections.map((s) => s.code)).toEqual(["Lau. Martinez & R. De Paul"]);
   });
 
   it("routes 2H 1X2+BTTS combo away from BTTS", () => {

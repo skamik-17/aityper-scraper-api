@@ -66,22 +66,22 @@ describe("betclic round-3 audit fixes", () => {
     const out = norm({
       name: "Wszyscy strzelą",
       selections: [
-        { name: "B. Embolo & L. Diaz & Luis Suárez", odds: 38 },
-        { name: "J. Rodríguez & L. Diaz & Luis Suárez", odds: 55 },
+        { name: "B. Embolo & L. Diaz & Luis Suarez", odds: 38 },
+        { name: "J. Rodríguez & L. Diaz & Luis Suarez", odds: 55 },
       ],
     } as RawBookmakerMarket);
     expect(out?.marketCode).toBe("ALL_PLAYERS_SCORE");
     const codes = out?.selections.map((s) => s.code);
     expect(new Set(codes).size).toBe(2);
-    expect(codes?.[0]).toBe("B. Embolo & L. Diaz & Luis Suárez");
+    expect(codes?.[0]).toBe("B. Embolo & L. Diaz & Luis Suarez");
   });
 
   it("merges slash and ampersand player pair variants onto one sorted code", () => {
     const out = norm({
       name: "Jeden z graczy strzeli pierwszego gola",
       selections: [
-        { name: "Luis Suárez / L. Diaz", odds: 3.32 },
-        { name: "L. Diaz & Luis Suárez", odds: 3.4 },
+        { name: "Luis Suarez / L. Diaz", odds: 3.32 },
+        { name: "L. Diaz & Luis Suarez", odds: 3.4 },
       ],
     } as RawBookmakerMarket);
     expect(out?.marketCode).toBe("ANY_PLAYER_FIRST_GOAL");

@@ -12,9 +12,23 @@ describe("canonicalizePlayerName", () => {
     expect(canonicalizePlayerName("Luis Suarez")).toBe("Luis Suarez");
   });
 
-  it("handles multi-part last names and diacritics", () => {
+  it("handles multi-part last names", () => {
     expect(canonicalizePlayerName("Da Costa, Nuno")).toBe("Nuno Da Costa");
-    expect(canonicalizePlayerName("Hernández, Cucho")).toBe("Cucho Hernández");
+  });
+
+  // The canonical name is the MERGE KEY for every PLAYER_* market, so an accent
+  // splits one footballer into two dropdown rows with half the odds each. The
+  // /audit-match run on Arsenal vs Coventry City found "Viktor Gyökeres"
+  // (fuksiarz) beside "Viktor Gyokeres" (betcris/lvbet/superbet/betfan). Most
+  // bookmakers send ASCII — and the project's canonical team names are ASCII
+  // too ("Zaglebie Lubin") — so accents fold into the base letter.
+  it("folds diacritics so the same player merges across bookmakers", () => {
+    expect(canonicalizePlayerName("Hernández, Cucho")).toBe("Cucho Hernandez");
+    expect(canonicalizePlayerName("Viktor Gyökeres")).toBe("Viktor Gyokeres");
+    expect(canonicalizePlayerName("Gyökeres, Viktor")).toBe("Viktor Gyokeres");
+    expect(canonicalizePlayerName("Aurèle Amenda")).toBe("Aurele Amenda");
+    expect(canonicalizePlayerName("Gabriel Magalhães")).toBe("Gabriel Magalhaes");
+    expect(canonicalizePlayerName("Kowalczyk, Michał")).toBe("Michal Kowalczyk");
   });
 
   it("collapses excess whitespace", () => {

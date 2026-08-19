@@ -285,6 +285,28 @@ export function normalizeHandicapSelection(
 }
 
 /**
+ * Player names are the merge key for every PLAYER_* market, so a single
+ * accent splits one footballer into two dropdown rows with half the odds each.
+ * The audit (/audit-match, Arsenal vs Coventry City) found "Viktor Gyökeres"
+ * (fuksiarz) sitting next to "Viktor Gyokeres" (betcris/lvbet/superbet), and
+ * the same for "Aurèle Amenda" and "Gabriel Magalhães". Most bookmakers
+ * already send ASCII, so folding accents into the base letter is what makes
+ * the majority form win.
+ */
+function stripPlayerDiacritics(value: string): string {
+  return value
+    .replace(/ł/g, "l")
+    .replace(/Ł/g, "L")
+    .replace(/ø/g, "o")
+    .replace(/Ø/g, "O")
+    .replace(/ß/g, "ss")
+    .replace(/æ/g, "ae")
+    .replace(/Æ/g, "AE")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+/**
  * Canonicalize a player-name selection to natural "Firstname Lastname" order.
  *
  * Bookmakers disagree on name order ("Jashari, Ardon" vs "Ardon Jashari"),
@@ -301,7 +323,9 @@ export function canonicalizePlayerName(raw: string): string {
   // glyphs (backtick, acute accent, curly quote) depending on their font/
   // encoding pipeline — normalize to a plain apostrophe so e.g. "N`Golo" and
   // "N'Golo" merge into one selection instead of stranding odds separately.
-  const collapsed = raw.trim().replace(/\s+/g, " ").replace(/[`´'‘]/g, "'");
+  const collapsed = stripPlayerDiacritics(
+    raw.trim().replace(/\s+/g, " ").replace(/[`´'‘]/g, "'"),
+  );
   const m = collapsed.match(/^([\p{L}][\p{L}'’.\- ]*),\s*([\p{L}][\p{L}'’.\- ]*)$/u);
   if (!m) return collapsed;
   return `${m[2].trim()} ${m[1].trim()}`;

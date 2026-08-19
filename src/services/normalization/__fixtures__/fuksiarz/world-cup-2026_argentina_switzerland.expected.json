@@ -48,9 +48,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "PLAYER_SHOTS_ON_TARGET:Enzo Jeremías Fernández",
+        "marketKey": "PLAYER_SHOTS_ON_TARGET:Enzo Jeremias Fernandez",
         "matchedBy": "id",
-        "paramValue": "Enzo Jeremías Fernández",
+        "paramValue": "Enzo Jeremias Fernandez",
         "parameters": null,
         "selections": [
           {
@@ -111,9 +111,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "PLAYER_SHOTS_ON_TARGET:Lautaro Martínez",
+        "marketKey": "PLAYER_SHOTS_ON_TARGET:Lautaro Martinez",
         "matchedBy": "id",
-        "paramValue": "Lautaro Martínez",
+        "paramValue": "Lautaro Martinez",
         "parameters": null,
         "selections": [
           {
@@ -426,9 +426,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "PLAYER_SHOTS_ON_TARGET:N Paz Martínez",
+        "marketKey": "PLAYER_SHOTS_ON_TARGET:N Paz Martinez",
         "matchedBy": "id",
-        "paramValue": "N Paz Martínez",
+        "paramValue": "N Paz Martinez",
         "parameters": null,
         "selections": [
           {
@@ -510,9 +510,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "PLAYER_SHOTS_ON_TARGET:Lautaro Martínez",
+        "marketKey": "PLAYER_SHOTS_ON_TARGET:Lautaro Martinez",
         "matchedBy": "id",
-        "paramValue": "Lautaro Martínez",
+        "paramValue": "Lautaro Martinez",
         "parameters": null,
         "selections": [
           {
@@ -573,9 +573,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "PLAYER_SHOTS_ON_TARGET",
-        "marketKey": "PLAYER_SHOTS_ON_TARGET:N Paz Martínez",
+        "marketKey": "PLAYER_SHOTS_ON_TARGET:N Paz Martinez",
         "matchedBy": "id",
-        "paramValue": "N Paz Martínez",
+        "paramValue": "N Paz Martinez",
         "parameters": null,
         "selections": [
           {

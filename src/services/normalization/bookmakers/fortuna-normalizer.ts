@@ -169,9 +169,19 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // HALF_TIME_DOUBLE_CHANCE_BTTS, matching etoto/sts's half-time figures for
   // this fixture (10/Tak@6 vs etoto HT 1X_YES@6).
   "ufo:mtyp:00-1y": "DOUBLE_CHANCE_BTTS",
+  // audit-match (Arsenal vs Coventry City) UX gap-analysis: these 4 ids are
+  // fortuna's own {home,away} x {over,under} 2x2 grid for "team wins or
+  // total goals over/under X" — verified via fresh raw capture: 7b="Arsenal
+  // wygra / powyżej", 7c="Mecz: Arsenal wygra / poniżej" (previously entirely
+  // unmapped, logged as "Unknown market" and dropped), 7d="Coventry wygra /
+  // powyżej", 7e="Coventry wygra / poniżej". 7b used to have its own
+  // duplicate code (TEAM_WIN_OR_OVER) purely because it and 7d were mapped
+  // independently — merged into TEAM_WIN_OR_OVER_GOALS; team side for all 4
+  // now comes from FORTUNA_TEAM_SCOPED_ID_SIDE via FORTUNA_TEAM_LINE_PARAM_MARKETS.
+  "ufo:mtyp:00-7b": "TEAM_WIN_OR_OVER_GOALS",
+  "ufo:mtyp:00-7c": "TEAM_WIN_OR_TOTAL_UNDER",
   "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
   "ufo:mtyp:00-7e": "TEAM_WIN_OR_TOTAL_UNDER",
-  "ufo:mtyp:00-7b": "TEAM_WIN_OR_OVER",
   // Match result family
   "ufo:mtyp:00-60": "MATCH_WINNER",
   "ufo:mtyp:00-2x": "MATCH_WINNER",
@@ -445,6 +455,10 @@ const FORTUNA_TEAM_SCOPED_ID_SIDE: Record<string, "HOME" | "AWAY"> = {
   "ufo:mtyp:00-l6": "AWAY",
   "ufo:mtyp:00-1a": "HOME", // team odd/even goals
   "ufo:mtyp:00-1b": "AWAY",
+  "ufo:mtyp:00-7b": "HOME", // team win or over/under total goals
+  "ufo:mtyp:00-7c": "HOME",
+  "ufo:mtyp:00-7d": "AWAY",
+  "ufo:mtyp:00-7e": "AWAY",
 };
 
 // Markets whose side lives in the parameter ("HOME:4.5"), matching the
@@ -453,6 +467,8 @@ const FORTUNA_TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "CORNERS_TEAM",
   "TEAM_TOTAL_SHOTS",
   "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "TEAM_WIN_OR_OVER_GOALS",
+  "TEAM_WIN_OR_TOTAL_UNDER",
 ]);
 
 // Side-directional codes: when the market name resolves to the opposite team
@@ -851,8 +867,7 @@ function normalizeSelectionForMarket(
     }
 
     case "TEAM_WIN_OR_OVER_GOALS":
-    case "TEAM_WIN_OR_TOTAL_UNDER":
-    case "TEAM_WIN_OR_OVER": {
+    case "TEAM_WIN_OR_TOTAL_UNDER": {
       // "Tak (przynajmniej 1 warunek zostanie spełniony)" / "Nie (oba
       // warunki nie zostaną spełnione)" -> YES / NO
       if (/^tak\b/.test(normalized)) return "YES";

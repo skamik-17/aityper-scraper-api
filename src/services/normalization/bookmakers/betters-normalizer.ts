@@ -118,7 +118,9 @@ const BETTERS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   261965: "GOAL_RACE",
   40497: "TOTAL_GOAL_MINUTES",
   5685189: "TEAM_GOAL_MINUTES_SUM",
-  670: "TEAM_MINUTES_IN_LEAD",
+  // 670 ("<Team> liczba minut na prowadzeniu") is handled by the
+  // name-pattern + team-side detection block in resolveMarketCode, not this
+  // static id map — see the comment there.
   671: "DRAW_MINUTES_TOTAL",
   270586: "TIME_PERIOD_TOTAL_GOALS",
   270588: "TIME_PERIOD_TOTAL_GOALS",
@@ -243,8 +245,30 @@ function resolveTeamSide(teamText: string, ctx: NormalizationContext): Normalize
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
-): { marketCode: NormalizedMarketType; matchedBy: "id" | "name" | "pattern"; rawId?: number } {
+): {
+  marketCode: NormalizedMarketType;
+  matchedBy: "id" | "name" | "pattern";
+  rawId?: number;
+  teamSide?: "HOME" | "AWAY";
+} {
   const normalizedName = normalizeMarketName(raw.name);
+
+  // "<Team> liczba minut na prowadzeniu" (id 670, shared with lebull on what
+  // looks like the same upstream feed) is the same market offered once per
+  // side. audit-match (Arsenal vs Coventry City) UX gap-analysis found the
+  // identical pattern already fixed for lebull (see its normalizer for the
+  // full note) — apply the same team-side-in-selection fix here so betters
+  // doesn't reintroduce the same split-code bug via this shared id.
+  if (/liczba minut na prowadzeniu/i.test(normalizedName)) {
+    const teamPrefix = raw.name.match(/^(.+?)\s+liczba minut na prowadzeniu/iu);
+    const side = teamPrefix ? resolveTeamSide(teamPrefix[1], ctx) : "UNKNOWN";
+    return {
+      marketCode: "TEAM_MINUTES_LEADING",
+      matchedBy: "pattern",
+      teamSide: side === "HOME" || side === "AWAY" ? side : undefined,
+    };
+  }
+
   const direct = BETTERS_MARKET_NAME_TO_CODE[normalizedName];
   if (direct) {
     return { marketCode: direct, matchedBy: "name" };
@@ -396,12 +420,21 @@ function resolveMarketCode(
 function normalizeSelectionForMarket(
   selectionName: string,
   marketCode: NormalizedMarketType,
-  ctx: NormalizationContext
+  ctx: NormalizationContext,
+  teamSide?: "HOME" | "AWAY"
 ): NormalizedSelection {
   const trimmed = selectionName.trim();
   const normalized = normalizeMarketName(trimmed);
 
   switch (marketCode) {
+    case "TEAM_MINUTES_LEADING": {
+      // Side comes from resolveMarketCode's name-based detection; the raw
+      // selection itself is plain "powyżej"/"poniżej" with no team of its own.
+      const ou = normalizeOverUnderSelection(trimmed);
+      if (teamSide === "HOME") return ou === "OVER" ? toSelection("HOME_OVER") : ou === "UNDER" ? toSelection("HOME_UNDER") : "UNKNOWN";
+      if (teamSide === "AWAY") return ou === "OVER" ? toSelection("AWAY_OVER") : ou === "UNDER" ? toSelection("AWAY_UNDER") : "UNKNOWN";
+      return "UNKNOWN";
+    }
     case "MATCH_WINNER":
     case "HALF_TIME_RESULT":
     case "SECOND_HALF_RESULT":
@@ -433,7 +466,6 @@ function normalizeSelectionForMarket(
     case "TIME_PERIOD_TOTAL_GOALS":
     case "TOTAL_GOAL_MINUTES":
     case "TEAM_GOAL_MINUTES_SUM":
-    case "TEAM_MINUTES_IN_LEAD":
     case "DRAW_MINUTES_TOTAL":
     case "CORNERS_TOTAL":
     case "CARDS_TOTAL":
@@ -641,7 +673,7 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betters",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
-    const { marketCode, matchedBy, rawId } = resolveMarketCode(raw, ctx);
+    const { marketCode, matchedBy, rawId, teamSide } = resolveMarketCode(raw, ctx);
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[betters] Market code "${marketCode}" not in catalog`);
@@ -666,7 +698,7 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
     }
 
     const selections = raw.selections.map((sel) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode, ctx),
+      code: normalizeSelectionForMarket(sel.name, marketCode, ctx, teamSide),
       label: sel.name,
       odds: sel.odds,
     }));

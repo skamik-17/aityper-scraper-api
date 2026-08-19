@@ -32007,9 +32007,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_WIN_OR_OVER_GOALS",
-        "marketKey": "TEAM_WIN_OR_OVER_GOALS",
+        "marketKey": "TEAM_WIN_OR_OVER_GOALS:AWAY:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY:2.5",
         "parameters": null,
         "selections": [
           {
@@ -32145,10 +32145,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_OR_OVER",
-        "marketKey": "TEAM_WIN_OR_OVER",
+        "marketCode": "TEAM_WIN_OR_OVER_GOALS",
+        "marketKey": "TEAM_WIN_OR_OVER_GOALS:HOME:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME:2.5",
         "parameters": null,
         "selections": [
           {
@@ -32164,7 +32164,7 @@
         ]
       },
       "index": 1969,
-      "marketCode": "TEAM_WIN_OR_OVER",
+      "marketCode": "TEAM_WIN_OR_OVER_GOALS",
       "rawName": "Francja wygra / powyżej 2.5 goli"
     },
     {
@@ -32429,9 +32429,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_WIN_OR_TOTAL_UNDER",
-        "marketKey": "TEAM_WIN_OR_TOTAL_UNDER:2.5",
+        "marketKey": "TEAM_WIN_OR_TOTAL_UNDER:AWAY:2.5",
         "matchedBy": "id",
-        "paramValue": "2.5",
+        "paramValue": "AWAY:2.5",
         "parameters": null,
         "selections": [
           {

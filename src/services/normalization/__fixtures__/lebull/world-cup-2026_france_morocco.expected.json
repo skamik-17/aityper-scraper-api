@@ -7181,17 +7181,17 @@
         "customLabel": null,
         "marketCode": "TEAM_MINUTES_LEADING",
         "marketKey": "TEAM_MINUTES_LEADING",
-        "matchedBy": "id",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "OVER",
+            "code": "AWAY_OVER",
             "label": "powyżej",
             "odds": 2.91
           },
           {
-            "code": "UNDER",
+            "code": "AWAY_UNDER",
             "label": "poniżej",
             "odds": 1.39
           }
@@ -7205,26 +7205,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_MINUTES_IN_LEAD",
-        "marketKey": "TEAM_MINUTES_IN_LEAD",
-        "matchedBy": "id",
+        "marketCode": "TEAM_MINUTES_LEADING",
+        "marketKey": "TEAM_MINUTES_LEADING",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "OVER",
+            "code": "HOME_OVER",
             "label": "powyżej",
             "odds": 1.88
           },
           {
-            "code": "UNDER",
+            "code": "HOME_UNDER",
             "label": "poniżej",
             "odds": 1.88
           }
         ]
       },
       "index": 219,
-      "marketCode": "TEAM_MINUTES_IN_LEAD",
+      "marketCode": "TEAM_MINUTES_LEADING",
       "rawName": "Francja liczba minut na prowadzeniu"
     },
     {

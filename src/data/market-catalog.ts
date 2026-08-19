@@ -8448,19 +8448,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 500,
   },
   {
-    numericId: 1236,
-    code: "TEAM_MINUTES_IN_LEAD",
-    slug: "team-minutes-in-lead",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "rozne",
-    labels: { pl: "Minuty na prowadzeniu drużyny", en: "Team Minutes in Lead" },
-    descriptions: { pl: "Zakład: Minuty na prowadzeniu drużyny.", en: "Bet: Team Minutes in Lead." },
-    hasParameter: false,
-    selections: ["OVER", "UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 501,
-  },
-  {
     numericId: 1237,
     code: "DRAW_MINUTES_TOTAL",
     slug: "draw-minutes-total",
@@ -8643,17 +8630,29 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 515,
   },
   {
+    // audit-match (Arsenal vs Coventry City) UX gap-analysis: merged with the
+    // former TEAM_MINUTES_IN_LEAD (numericId 1236) — both codes were the same
+    // lebull market ("<team> liczba minut na prowadzeniu") applied once per
+    // side, split into two catalog entries with the identical Polish label
+    // and no team information visible anywhere. Team side is now carried by
+    // the selection code (HOME_OVER/AWAY_OVER), mirroring CARDS_TEAM.
     numericId: 1251,
     code: "TEAM_MINUTES_LEADING",
     slug: "team-minutes-leading",
     category: MarketCategory.STATYSTYKI,
     subCategory: "rozne",
     labels: { pl: "Minuty na prowadzeniu drużyny", en: "Team Minutes Leading" },
-    descriptions: { pl: "Zakład: Minuty na prowadzeniu drużyny.", en: "Bet: Team Minutes Leading." },
+    descriptions: { pl: "Ile minut dana drużyna spędzi na prowadzeniu w meczu", en: "How many minutes the team spends leading the match" },
     hasParameter: false,
-    selections: ["OVER", "UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 516,
+    descriptionTemplates: {
+      HOME_OVER: "{homeTeam} - powyżej progu minut na prowadzeniu",
+      HOME_UNDER: "{homeTeam} - poniżej progu minut na prowadzeniu",
+      AWAY_OVER: "{awayTeam} - powyżej progu minut na prowadzeniu",
+      AWAY_UNDER: "{awayTeam} - poniżej progu minut na prowadzeniu",
+    },
   },
   {
     numericId: 1252,
@@ -8902,16 +8901,25 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 534,
   },
   {
+    // audit-match (Arsenal vs Coventry City) UX gap-analysis: merged with the
+    // former TEAM_WIN_OR_OVER (numericId 1272) — fortuna offers this market
+    // once per side (ids ufo:mtyp:00-7b home / 00-7d away) and each id had
+    // been mapped to its own independently-created code, producing two rows
+    // with the identical Polish label. hasParameter was also false, so the
+    // goal line in the raw name ("Arsenal wygra / powyżej 2.5 goli") was
+    // discarded. Team side now comes via FORTUNA_TEAM_LINE_PARAM_MARKETS
+    // (prefixes paramValue as "HOME:2.5"/"AWAY:2.5"), mirroring CORNERS_TEAM.
     numericId: 1270,
     code: "TEAM_WIN_OR_OVER_GOALS",
     slug: "team-win-or-over-goals",
     category: MarketCategory.KOMBINACJE,
     subCategory: "wynik-gole",
     labels: { pl: "Wygrana drużyny lub powyżej X goli", en: "Team Win or Over Goals" },
-    descriptions: { pl: "Zakład: Wygrana drużyny lub powyżej X goli.", en: "Bet: Team Win or Over Goals." },
-    hasParameter: false,
+    descriptions: { pl: "Wygrana wybranej drużyny LUB co najmniej X+1 goli w meczu", en: "Selected team wins OR the match has at least X+1 goals" },
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.PARAMETERIZED_COMBINATION,
     displayOrder: 535,
   },
   {
@@ -8921,36 +8929,18 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.KOMBINACJE,
     subCategory: "wynik-gole",
     labels: { pl: "Wygrana drużyny lub poniżej X goli", en: "Team Win or Total Under" },
-    descriptions: { pl: "Zakład: Wygrana drużyny lub poniżej X goli.", en: "Bet: Team Win or Total Under." },
-    // Audit /audit-match (Arsenal vs Coventry City): fortuna's rawMarketName
-    // ("Coventry wygra / poniżej 2.5 gola") carries the goal threshold, but
-    // hasParameter:false discarded it, so the odds landed under a bare
-    // generic YES/NO with no way to tell which line (or, on a page with two
-    // such offers, which team) the bet refers to. Mirrors the WIN_OR_UNDER
-    // sibling, which already keys the same "win or under X" shape by its
-    // decimal goal line; fortuna's normalizer picks the line up automatically
-    // from raw.name once hasParameter/parameterType are set (no normalizer
-    // change needed). Team-side is still not captured — that would need a
-    // fortuna-normalizer.ts change (out of catalog's scope) to prefix the
-    // param with the named team, same as the existing HOME:/AWAY: convention.
+    // audit-match (Arsenal vs Coventry City) UX gap-analysis: fortuna offers
+    // this once per side too (ids ufo:mtyp:00-7c home / 00-7e away); 00-7c
+    // was previously entirely unmapped (logged "Unknown market", dropped —
+    // Arsenal's own price for this market never reached the API). Both ids
+    // now route here and team side comes via FORTUNA_TEAM_LINE_PARAM_MARKETS,
+    // same mechanism as the OVER sibling above.
+    descriptions: { pl: "Wygrana wybranej drużyny LUB nie więcej niż X goli w meczu", en: "Selected team wins OR the match has at most X goals" },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
     displayOrder: 536,
-  },
-  {
-    numericId: 1272,
-    code: "TEAM_WIN_OR_OVER",
-    slug: "team-win-or-over",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Wygrana drużyny lub powyżej X goli", en: "Team Win or Over" },
-    descriptions: { pl: "Zakład: Wygrana drużyny lub powyżej X goli.", en: "Bet: Team Win or Over." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 537,
   },
   {
     numericId: 1273,

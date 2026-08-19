@@ -644,6 +644,26 @@ export function groupMarketsByTypeWithParameters(
                   odds: selection.odds,
                 });
               }
+            } else if (marketDef?.viewType === "SINGLE_SELECTION") {
+              // Audit r7 (Arsenal vs Coventry City): SINGLE_SELECTION was
+              // written assuming every market of this viewType is a plain
+              // "yes, this happens" bet — true for BTTS_PENALTY-style codes,
+              // but later additions (FIRST_GOAL_TIME_30MIN, FIRST_GOAL_METHOD,
+              // AWAY_FIRST_GOAL_TIME, TOTAL_GOALS_OVER_LINES,
+              // TOTAL_GOALS_MINIMUM) carry a real multi-value ladder with no
+              // numeric parameter. Hard-coding "keep only YES" silently
+              // zeroed out every selection for those five codes across every
+              // bookmaker — the market reached the API with prices and no
+              // outcome. Keep whatever the catalog actually declares for
+              // this code instead of assuming YES.
+              const declared = new Set(marketDef?.selections ?? ["YES"]);
+              for (const selection of bmEntry.selections) {
+                if (!declared.has(selection.type)) continue;
+                bmData.selections.push({
+                  type: selection.type,
+                  odds: selection.odds,
+                });
+              }
             } else {
               const yesSelection = bmEntry.selections.find((s) => s.type === "YES");
               if (yesSelection) {

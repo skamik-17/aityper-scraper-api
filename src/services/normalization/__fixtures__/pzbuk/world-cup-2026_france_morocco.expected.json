@@ -1193,241 +1193,241 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_GOAL_OR_ASSIST",
-        "marketKey": "PLAYER_GOAL_OR_ASSIST",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "Lucas Digne",
+            "code": "Digne, Lucas",
             "label": "Digne, Lucas",
             "odds": 4.39
           },
           {
-            "code": "Issa Diop",
+            "code": "Diop, Issa",
             "label": "Diop, Issa",
             "odds": 19.96
           },
           {
-            "code": "Noussair Mazraoui",
+            "code": "Mazraoui, Noussair",
             "label": "Mazraoui, Noussair",
             "odds": 11.73
           },
           {
-            "code": "Achraf Hakimi",
+            "code": "Hakimi, Achraf",
             "label": "Hakimi, Achraf",
             "odds": 5.19
           },
           {
-            "code": "Brahim Diaz",
+            "code": "Diaz, Brahim",
             "label": "Diaz, Brahim",
             "odds": 3.49
           },
           {
-            "code": "Youssef Belammari",
+            "code": "Belammari, Youssef",
             "label": "Belammari, Youssef",
             "odds": 9.38
           },
           {
-            "code": "Anass Salah Eddine",
+            "code": "Salah Eddine, Anass",
             "label": "Salah Eddine, Anass",
             "odds": 9.28
           },
           {
-            "code": "Ayoub El Kaabi",
+            "code": "El Kaabi, Ayoub",
             "label": "El Kaabi, Ayoub",
             "odds": 3.74
           },
           {
-            "code": "Soufiane Rahimi",
+            "code": "Rahimi, Soufiane",
             "label": "Rahimi, Soufiane",
             "odds": 3.34
           },
           {
-            "code": "Azzedine Ounahi",
+            "code": "Ounahi, Azzedine",
             "label": "Ounahi, Azzedine",
             "odds": 4.49
           },
           {
-            "code": "Redouane Halhal",
+            "code": "Halhal, Redouane",
             "label": "Halhal, Redouane",
             "odds": 16.97
           },
           {
-            "code": "Bilal El Khannouss",
+            "code": "El Khannouss, Bilal",
             "label": "El Khannouss, Bilal",
             "odds": 4.19
           },
           {
-            "code": "Chemsdine Talbi",
+            "code": "Talbi, Chemsdine",
             "label": "Talbi, Chemsdine",
             "odds": 4.29
           },
           {
-            "code": "Ayoube Amaimouni",
+            "code": "Amaimouni, Ayoube",
             "label": "Amaimouni, Ayoube",
             "odds": 4.79
           },
           {
-            "code": "Chadi Riad",
+            "code": "Riad, Chadi",
             "label": "Riad, Chadi",
             "odds": 17.97
           },
           {
-            "code": "Zakaria El Ouahdi",
+            "code": "El Ouahdi, Zakaria",
             "label": "El Ouahdi, Zakaria",
             "odds": 9.68
           },
           {
-            "code": "Amine Sbai",
+            "code": "Sbai, Amine",
             "label": "Sbai, Amine",
             "odds": 4.99
           },
           {
-            "code": "Neil El Aynaoui",
+            "code": "El Aynaoui, Neil",
             "label": "El Aynaoui, Neil",
             "odds": 7.09
           },
           {
-            "code": "Gessime Yassine",
+            "code": "Yassine, Gessime",
             "label": "Yassine, Gessime",
             "odds": 4.39
           },
           {
-            "code": "Sofyan Amrabat",
+            "code": "Amrabat, Sofyan",
             "label": "Amrabat, Sofyan",
             "odds": 9.78
           },
           {
-            "code": "Marwane Saadane",
+            "code": "Saadane, Marwane",
             "label": "Saadane, Marwane",
             "odds": 14.97
           },
           {
-            "code": "Desire Doue",
+            "code": "Doue, Desire",
             "label": "Doue, Desire",
             "odds": 2.12
           },
           {
-            "code": "Warren Zaire-Emery",
+            "code": "Zaire-Emery, Warren",
             "label": "Zaire-Emery, Warren",
             "odds": 4.49
           },
           {
-            "code": "N'Golo Kante",
+            "code": "Kante, N'Golo",
             "label": "Kante, N'Golo",
             "odds": 5.49
           },
           {
-            "code": "Adrien Rabiot",
+            "code": "Rabiot, Adrien",
             "label": "Rabiot, Adrien",
             "odds": 3.84
           },
           {
-            "code": "Lucas Hernandez",
+            "code": "Hernandez, Lucas",
             "label": "Hernandez, Lucas",
             "odds": 8.98
           },
           {
-            "code": "Ousmane Dembele",
+            "code": "Dembele, Ousmane",
             "label": "Dembele, Ousmane",
             "odds": 1.96
           },
           {
-            "code": "Marcus Thuram",
+            "code": "Thuram, Marcus",
             "label": "Thuram, Marcus",
             "odds": 2.17
           },
           {
-            "code": "Theo Hernandez",
+            "code": "Hernandez, Theo",
             "label": "Hernandez, Theo",
             "odds": 4.49
           },
           {
-            "code": "Dayot Upamecano",
+            "code": "Upamecano, Dayot",
             "label": "Upamecano, Dayot",
             "odds": 9.98
           },
           {
-            "code": "Kylian Mbappe",
+            "code": "Mbappe, Kylian",
             "label": "Mbappe, Kylian",
             "odds": 1.57
           },
           {
-            "code": "Jean-Philippe Mateta",
+            "code": "Mateta, Jean-Philippe",
             "label": "Mateta, Jean-Philippe",
             "odds": 2.12
           },
           {
-            "code": "Ayyoub Bouaddi",
+            "code": "Bouaddi, Ayyoub",
             "label": "Bouaddi, Ayyoub",
             "odds": 10.23
           },
           {
-            "code": "Ibrahima Konate",
+            "code": "Konate, Ibrahima",
             "label": "Konate, Ibrahima",
             "odds": 10.23
           },
           {
-            "code": "Aurelien Tchouameni",
+            "code": "Tchouameni, Aurelien",
             "label": "Tchouameni, Aurelien",
             "odds": 6.29
           },
           {
-            "code": "Maxence Lacroix",
+            "code": "Lacroix, Maxence",
             "label": "Lacroix, Maxence",
             "odds": 7.49
           },
           {
-            "code": "Michael Olise",
+            "code": "Olise, Michael",
             "label": "Olise, Michael",
             "odds": 1.87
           },
           {
-            "code": "William Saliba",
+            "code": "Saliba, William",
             "label": "Saliba, William",
             "odds": 12.48
           },
           {
-            "code": "Rayan Cherki",
+            "code": "Cherki, Rayan",
             "label": "Cherki, Rayan",
             "odds": 2.09
           },
           {
-            "code": "Malo Gusto",
+            "code": "Gusto, Malo",
             "label": "Gusto, Malo",
             "odds": 4.69
           },
           {
-            "code": "Manu Kone",
+            "code": "Kone, Manu",
             "label": "Kone, Manu",
             "odds": 4.99
           },
           {
-            "code": "Maghnes Akliouche",
+            "code": "Akliouche, Maghnes",
             "label": "Akliouche, Maghnes",
             "odds": 2.46
           },
           {
-            "code": "Bradley Barcola",
+            "code": "Barcola, Bradley",
             "label": "Barcola, Bradley",
             "odds": 2.31
           },
           {
-            "code": "Jules Kounde",
+            "code": "Kounde, Jules",
             "label": "Kounde, Jules",
             "odds": 6.79
           },
           {
-            "code": "Samir El Mourabet",
+            "code": "El Mourabet, Samir",
             "label": "El Mourabet, Samir",
             "odds": 7.19
           }
         ]
       },
       "index": 22,
-      "marketCode": "PLAYER_GOAL_OR_ASSIST",
+      "marketCode": "OTHER",
       "rawName": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę"
     },
     {

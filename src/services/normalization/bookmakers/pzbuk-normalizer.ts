@@ -39,7 +39,15 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // 12 — real identity unknown, park in OTHER so it cannot poison
   // GOALSCORER_LAST with team names.
   "13": "OTHER",
-  "14": "GOALSCORER_ANYTIME",
+  // Audit r7 (Arsenal vs Coventry City): id 14 has the same shape of defect
+  // as ids 12/13 right above — its raw API name is "Handicap" (group
+  // "Strzelcy"/scorers) and its selections are team+scoreline pairs
+  // ("Arsenal FC (0:1)", "remis (1:0)", "Coventry City (0:2)", …), not
+  // player names. It landed under GOALSCORER_ANYTIME's "base" parameter as
+  // 15 nonsense selections sitting next to the real per-player ones — real
+  // identity unknown, park in OTHER like its neighbours so it cannot poison
+  // the goalscorer market.
+  "14": "OTHER",
   "17": "TOTAL_GOALS",
   // Audit r6 (France vs Morocco, audit-loop v2 round 1): id 18 ("Liczba goli
   // 1. polowa X.5", group "Pierwsza polowa") emits the SAME HALF_TIME_TOTAL_
@@ -242,16 +250,30 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Payout" promo variant of 1X2 (own settlement rules, AWAY 12.52 vs the
   // plain market's 14.48) and it was overwriting the genuine 1X2 (id 1).
   "2099": "OTHER",
-  "2179": "GOALSCORER_ANYTIME",
-  // Audit-loop v2 round 2: id 2186's raw name is "Zawodnik (lub zmiennik)
-  // strzeli gola lub zaliczy asystę" (goal OR assist), a distinct market
-  // from the pure-goalscorer id 2179 above ("strzeli gola" only). Every
-  // other bookmaker offering the same market shape (fortuna "ufo:mtyp:00-hm",
-  // forbet -30704, lvbet "zawodnik strzeli gola lub zanotuje asyste",
-  // fuksiarz -4890) routes it to PLAYER_GOAL_OR_ASSIST — this id was
-  // wrongly folded into GOALSCORER_ANYTIME, inflating pure-scorer odds with
-  // assist-inclusive prices (e.g. defenders who assist more than they score).
-  "2186": "PLAYER_GOAL_OR_ASSIST",
+  // Audit r7 (Arsenal vs Coventry City, selection-vocab-scan "product"
+  // check): id 2179's own raw name is "Zawodnik (LUB ZMIENNIK) strzeli
+  // gola" — pzbuk pays out this selection if EITHER the named player OR
+  // whoever comes on to replace him scores, unlike every peer's plain
+  // anytime-scorer bet (one named player only). That is not a mapping
+  // error to fix, it is a genuinely different, more inclusive product: the
+  // book sum on 39 selections shared with sts/betcris/etoto was 55% above
+  // the peer median (11.91 vs 7.66), and 43 players compared 1:1 against
+  // sts showed a consistent 1.27x-2.61x shorter price (median 1.67x) —
+  // exactly the shape of "covers two players' scoring chances, priced as
+  // one". Folding it into GOALSCORER_ANYTIME would silently hand pzbuk a
+  // fake best-odds win on every player. Route to OTHER, same as ids
+  // 2099/2395 below, rather than compare it to a bet it is not.
+  "2179": "OTHER",
+  // Audit-loop v2 round 2 (superseded by audit r7, see 2179 above): id
+  // 2186's raw name is "Zawodnik (LUB ZMIENNIK) strzeli gola lub zaliczy
+  // asystę" — the same substitute-inclusive design as 2179, just for
+  // goal-or-assist. It used to be routed to PLAYER_GOAL_OR_ASSIST on the
+  // (correct, but insufficient) reasoning that it is not a pure-scorer
+  // market; the substitute clause makes it not directly comparable to that
+  // code either — betcris/betfan/fuksiarz/lvbet/superbet quote ~1.47-1.65
+  // for Bukayo Saka, pzbuk quotes 1.25, the same one-sided-shorter pattern.
+  // Route to OTHER for the same reason as 2179.
+  "2186": "OTHER",
   // Audit /audit-match (Arsenal vs Coventry City): id 2395 is the bookmaker's
   // "Zawodnik z kartką (lub zmiennik)" card market — it was overwriting the
   // real scorer market (id 2179, "Zawodnik (lub zmiennik) strzeli gola"), so

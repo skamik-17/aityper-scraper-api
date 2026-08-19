@@ -8878,8 +8878,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "SECOND_HALF_BTTS",
+        "marketKey": "SECOND_HALF_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -8897,7 +8897,7 @@
         ]
       },
       "index": 178,
-      "marketCode": "BTTS",
+      "marketCode": "SECOND_HALF_BTTS",
       "rawName": "2. Połowa - Obie drużyny strzelą gola"
     },
     {
@@ -10517,8 +10517,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "BTTS_BOTH_HALVES",
+        "marketKey": "BTTS_BOTH_HALVES",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -10536,7 +10536,7 @@
         ]
       },
       "index": 207,
-      "marketCode": "BTTS",
+      "marketCode": "BTTS_BOTH_HALVES",
       "rawName": "Obie drużyny strzelą gola w obu połowach"
     },
     {
@@ -11499,8 +11499,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "BTTS_2PLUS_GOALS",
+        "marketKey": "BTTS_2PLUS_GOALS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -11518,7 +11518,7 @@
         ]
       },
       "index": 228,
-      "marketCode": "BTTS",
+      "marketCode": "BTTS_2PLUS_GOALS",
       "rawName": "Obie drużyny strzelą 2 gole lub więcej"
     },
     {

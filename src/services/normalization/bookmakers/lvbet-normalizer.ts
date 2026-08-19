@@ -754,6 +754,13 @@ function resolveMarketCode(
     if (/wynik/.test(normalizedName)) {
       return { code: "SECOND_HALF_RESULT", matchedBy: "pattern" };
     }
+    // Audit r10: this branch was missing the BTTS check its HALF_TIME_PATTERN
+    // sibling above already has — "2. Połowa - Obie drużyny strzelą gola"
+    // (Tak/Nie 4.25/1.18) fell through all the way to the generic
+    // "obie druzyny strzela" pattern and landed in plain (full-match) BTTS.
+    if (BTTS_PATTERN.test(normalizedName)) {
+      return { code: "SECOND_HALF_BTTS", matchedBy: "pattern" };
+    }
     if (GOAL_TOTAL_PATTERN.test(normalizedName) && !HANDICAP_PATTERN.test(normalizedName)) {
       return {
         code: hasExactCountSelections ? "SECOND_HALF_EXACT_GOALS" : "SECOND_HALF_TOTAL_GOALS",
@@ -820,6 +827,19 @@ function resolveMarketCode(
   }
   if (/^pierwsze 10 minut \(00:00 [-–] 09:59\): zołte kartki [\d.]+$/.test(normalizedName)) {
     return { code: "FIRST_10_MIN_CARDS", matchedBy: "pattern" };
+  }
+  // "Obie drużyny strzelą 2 gole lub więcej" is BTTS_2PLUS_GOALS — a real,
+  // cataloged, DIFFERENT product from plain BTTS ("obie druzyny strzela"
+  // substring made it collide onto plain BTTS: Tak/Nie 8.75/1.04 for the
+  // 2+-each variant was overwriting the real BTTS Tak/Nie 2.55/1.5).
+  if (normalizedName === "obie druzyny strzela 2 gole lub wiecej") {
+    return { code: "BTTS_2PLUS_GOALS", matchedBy: "pattern" };
+  }
+  // "Obie drużyny strzelą gola w obu połowach" — BTTS in EVERY half, a
+  // third distinct "obie druzyny strzela" variant found chasing the same
+  // BTTS pollution (single-sided raw market, Tak only, odds ~10.5).
+  if (normalizedName === "obie druzyny strzela gola w obu połowach") {
+    return { code: "BTTS_BOTH_HALVES", matchedBy: "pattern" };
   }
 
   // "1-N min. - Zwycięzca" IS a real, cataloged product (TIME_PERIOD_RESULT,

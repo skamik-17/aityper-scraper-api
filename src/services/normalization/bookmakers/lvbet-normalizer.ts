@@ -450,8 +450,8 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
 
   // --- Both teams cards / BTTS-by-half ---
   { pattern: /obie druzyny otrzymaja min/, code: "BOTH_TEAMS_MIN_CARDS" },
-  { pattern: /obie druzyny otrzymaja kartke/, code: "BTTS_CARD" },
-  { pattern: /kartka w obu połowach/, code: "CARDS_BOTH_HALVES" },
+  { pattern: /obie druzyny otrzymaja kartke/, code: "BOTH_TEAMS_CARDED" },
+  { pattern: /kartka w obu połowach/, code: "BOTH_HALVES_CARDS" },
   { pattern: /obydwie druzyny strzela/, code: "BTTS_BY_HALF" },
 
   // --- At-least-one-team goals ---

@@ -3680,8 +3680,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS_CARD",
-        "marketKey": "BTTS_CARD",
+        "marketCode": "BOTH_TEAMS_CARDED",
+        "marketKey": "BOTH_TEAMS_CARDED",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -3699,7 +3699,7 @@
         ]
       },
       "index": 39,
-      "marketCode": "BTTS_CARD",
+      "marketCode": "BOTH_TEAMS_CARDED",
       "rawName": "Obie drużyny otrzymają kartkę"
     },
     {
@@ -3779,8 +3779,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_BOTH_HALVES",
-        "marketKey": "CARDS_BOTH_HALVES",
+        "marketCode": "BOTH_HALVES_CARDS",
+        "marketKey": "BOTH_HALVES_CARDS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -3798,7 +3798,7 @@
         ]
       },
       "index": 43,
-      "marketCode": "CARDS_BOTH_HALVES",
+      "marketCode": "BOTH_HALVES_CARDS",
       "rawName": "Kartka w obu połowach"
     },
     {

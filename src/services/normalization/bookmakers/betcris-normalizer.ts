@@ -467,7 +467,7 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   ) {
     const isLast = /ostatnia\s+strzeli/i.test(lower);
     if (isFirstHalf) return isLast ? null : "HALF_TIME_FIRST_GOAL";
-    if (isSecondHalf) return isLast ? "SECOND_HALF_LAST_GOAL" : "SECOND_HALF_FIRST_GOAL";
+    if (isSecondHalf) return isLast ? "SECOND_HALF_LAST_TEAM_TO_SCORE" : "SECOND_HALF_FIRST_GOAL";
     return isLast ? "LAST_TEAM_TO_SCORE" : "FIRST_TEAM_TO_SCORE";
   }
 
@@ -701,7 +701,7 @@ function normalizeSelectionForMarket(
     case "LAST_TEAM_TO_SCORE":
     case "HALF_TIME_FIRST_GOAL":
     case "SECOND_HALF_FIRST_GOAL":
-    case "SECOND_HALF_LAST_GOAL":
+    case "SECOND_HALF_LAST_TEAM_TO_SCORE":
       // "Bez gola"/"Nikt" = no goal in the covered period
       if (/^(bez gola|brak gola|nikt|[żz]aden|brak)$/i.test(lowerTrimmed)) return "NONE";
       if (/^(obie|obydwie|both)$/i.test(lowerTrimmed)) return "BOTH" as NormalizedSelection;

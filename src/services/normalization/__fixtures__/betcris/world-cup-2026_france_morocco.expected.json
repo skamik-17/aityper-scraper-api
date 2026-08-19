@@ -6598,8 +6598,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_LAST_GOAL",
-        "marketKey": "SECOND_HALF_LAST_GOAL",
+        "marketCode": "SECOND_HALF_LAST_TEAM_TO_SCORE",
+        "marketKey": "SECOND_HALF_LAST_TEAM_TO_SCORE",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -6622,7 +6622,7 @@
         ]
       },
       "index": 221,
-      "marketCode": "SECOND_HALF_LAST_GOAL",
+      "marketCode": "SECOND_HALF_LAST_TEAM_TO_SCORE",
       "rawName": "2. połowa. Która drużyna ostatnia strzeli gola"
     },
     {

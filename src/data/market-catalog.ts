@@ -5721,11 +5721,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.WYNIK_MECZU,
     subCategory: "podstawowe",
     labels: { pl: "Gość bez zakładu", en: "Away No Bet" },
-    descriptions: { pl: "Zakład: Gość bez zakładu.", en: "Bet: Away No Bet." },
+    descriptions: { pl: "Obstawiasz gospodarza lub remis — zwrot stawki, jeśli wygra gość", en: "Bet on home win or draw — stake returned if away team wins" },
     hasParameter: false,
     selections: ["HOME", "DRAW"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 305,
+    descriptionTemplates: { HOME: "Wygrana {homeTeam} (zwrot przy wygranej {awayTeam})", DRAW: "Remis (zwrot przy wygranej {awayTeam})" },
   },
   {
     numericId: 1041,
@@ -5734,11 +5735,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.WYNIK_MECZU,
     subCategory: "podstawowe",
     labels: { pl: "Gospodarz bez zakładu", en: "Home No Bet" },
-    descriptions: { pl: "Zakład: Gospodarz bez zakładu.", en: "Bet: Home No Bet." },
+    descriptions: { pl: "Obstawiasz remis lub gościa — zwrot stawki, jeśli wygra gospodarz", en: "Bet on draw or away win — stake returned if home team wins" },
     hasParameter: false,
     selections: ["DRAW", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 306,
+    descriptionTemplates: { DRAW: "Remis (zwrot przy wygranej {homeTeam})", AWAY: "Wygrana {awayTeam} (zwrot przy wygranej {homeTeam})" },
   },
   {
     numericId: 1042,
@@ -5791,19 +5793,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 310,
-  },
-  {
-    numericId: 1046,
-    code: "SECOND_HALF_LAST_GOAL",
-    slug: "second-half-last-goal",
-    category: MarketCategory.POLOWY,
-    subCategory: "specjalne-2h",
-    labels: { pl: "Ostatni gol 2. połowy", en: "Second Half Last Goal" },
-    descriptions: { pl: "Zakład: Ostatni gol 2. połowy.", en: "Bet: Second Half Last Goal." },
-    hasParameter: false,
-    selections: ["HOME", "AWAY", "NONE"],
-    viewType: ViewType.TRIPLE_BUTTONS,
-    displayOrder: 311,
   },
   {
     numericId: 1047,
@@ -7534,32 +7523,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 430,
-  },
-  {
-    numericId: 1166,
-    code: "CARDS_BOTH_HALVES",
-    slug: "cards-both-halves",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Kartka w obu połowach", en: "Cards Both Halves" },
-    descriptions: { pl: "Zakład: Kartka w obu połowach.", en: "Bet: Cards Both Halves." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 431,
-  },
-  {
-    numericId: 1167,
-    code: "BTTS_CARD",
-    slug: "btts-card",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Obie drużyny otrzymają kartkę", en: "Btts Card" },
-    descriptions: { pl: "Zakład: Obie drużyny otrzymają kartkę.", en: "Bet: Btts Card." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 432,
   },
   {
     numericId: 1168,
@@ -9412,6 +9375,114 @@ export const SELECTION_LABELS: Record<string, string> = {
   // TEAM_HALF_WITH_MORE_GOALS selections (short labels for buttons; team context comes from parameter)
   HOME_1ST: "1. połowa", HOME_2ND: "2. połowa", HOME_EQUAL: "Równo",
   AWAY_1ST: "1. połowa", AWAY_2ND: "2. połowa", AWAY_EQUAL: "Równo",
+
+  // audit-match (Arsenal vs Coventry City) UX gap-analysis, 2026-08-20: 152 selection
+  // codes used across 42 catalog entries had no entry here and rendered as raw
+  // SNAKE_CASE/English text to real users (confirmed live: "EXACTLY", "OTHER",
+  // "1ST_OR_DRAW", "Yes Yes"/"Yes No"...). See docs/match-audit/ for the full report.
+  // Note: HOME_2-3/HOME_2-4/AWAY_2-3/AWAY_2-4 are reused with a slightly different
+  // meaning by RESULT_AND_GOAL_RANGE (result + team goal range) vs the team-goal-range
+  // family below (team goals only) — the label here favors the more common usage.
+
+  // FIRST_TEAM_TO_SCORE / LAST_TEAM_TO_SCORE extra outcome
+  BOTH: "Obie",
+
+  // Half-comparison family (mixed-case legacy codes)
+  "1st": "1. połowa", "2nd": "2. połowa", Draw: "Remis", Both: "Obie", None: "Żadna",
+
+  // HALF_WITH_MORE_GOALS_DOUBLE_CHANCE
+  "1ST_OR_DRAW": "1. poł. lub remis", "1ST_OR_2ND": "1. poł. lub 2. poł.",
+  "2ND_OR_DRAW": "2. poł. lub remis",
+
+  // FIRST_GOAL_HALF
+  "1ST_HALF": "1. połowa", "2ND_HALF": "2. połowa",
+
+  // HALVES_GOALS_HANDICAP / SECOND_GOAL_TIME / TEAM_FIRST_GOAL_PERIOD
+  FIRST_HALF: "1. połowa", SECOND_HALF: "2. połowa", NO_GOAL: "Bez gola",
+
+  // MATCH_RESOLUTION_METHOD
+  REGULAR_TIME: "Czas regulaminowy", EXTRA_TIME: "Dogrywka", PENALTIES: "Karne",
+
+  // WIN_METHOD (per-side resolution method)
+  HOME_REGULAR: "1 (czas regulaminowy)", HOME_EXTRA_TIME: "1 (dogrywka)", HOME_PENALTIES: "1 (karne)",
+  AWAY_REGULAR: "2 (czas regulaminowy)", AWAY_EXTRA_TIME: "2 (dogrywka)", AWAY_PENALTIES: "2 (karne)",
+
+  // FIRST_GOAL_METHOD
+  HEADER: "Głową", PENALTY: "Rzut karny", FREE_KICK: "Rzut wolny", OTHER: "Inaczej",
+
+  // TOTAL_GOALS_3WAY / HALF_TIME_TOTAL_GOALS_3WAY / CORNERS_TOTAL_3WAY
+  EXACTLY: "Dokładnie",
+
+  // GOAL_BY_MINUTE
+  UNDER_1MIN: "Poniżej 1 min", OVER_1MIN: "Powyżej 1 min", UNDER_5MIN: "Poniżej 5 min",
+  OVER_5MIN: "Powyżej 5 min", UNDER_10MIN: "Poniżej 10 min", OVER_10MIN: "Powyżej 10 min",
+  UNDER_15MIN: "Poniżej 15 min", OVER_15MIN: "Powyżej 15 min",
+
+  // TOTAL_GOALS_OVER_PICK
+  OVER_0_5: "Powyżej 0.5", OVER_1_5: "Powyżej 1.5", OVER_2_5: "Powyżej 2.5", OVER_3_5: "Powyżej 3.5",
+  OVER_4_5: "Powyżej 4.5", OVER_5_5: "Powyżej 5.5", OVER_6_5: "Powyżej 6.5",
+
+  // TEAM_SCORE_BY_HALF
+  YES_YES: "Tak / Tak", YES_NO: "Tak / Nie", NO_YES: "Nie / Tak", NO_NO: "Nie / Nie",
+
+  // RESULT_AND_FIRST_GOAL extra outcome
+  DRAW_NONE: "X i brak gola",
+
+  // RESULT_OR_BTTS
+  HOME_OR_BTTS_YES: "1 lub obie strzelą", HOME_OR_BTTS_NO: "1 lub nie obie strzelą",
+  DRAW_OR_BTTS_YES: "X lub obie strzelą", DRAW_OR_BTTS_NO: "X lub nie obie strzelą",
+  AWAY_OR_BTTS_YES: "2 lub obie strzelą", AWAY_OR_BTTS_NO: "2 lub nie obie strzelą",
+
+  // HALFTIME_FULLTIME_AND_BTTS
+  HOME_HOME_YES: "1/1 i tak", HOME_HOME_NO: "1/1 i nie", HOME_DRAW_YES: "1/X i tak",
+  HOME_DRAW_NO: "1/X i nie", HOME_AWAY_YES: "1/2 i tak", HOME_AWAY_NO: "1/2 i nie",
+  DRAW_HOME_YES: "X/1 i tak", DRAW_HOME_NO: "X/1 i nie", DRAW_DRAW_YES: "X/X i tak",
+  DRAW_DRAW_NO: "X/X i nie", DRAW_AWAY_YES: "X/2 i tak", DRAW_AWAY_NO: "X/2 i nie",
+  AWAY_HOME_YES: "2/1 i tak", AWAY_HOME_NO: "2/1 i nie", AWAY_DRAW_YES: "2/X i tak",
+  AWAY_DRAW_NO: "2/X i nie", AWAY_AWAY_YES: "2/2 i tak", AWAY_AWAY_NO: "2/2 i nie",
+
+  // HALFTIME_FULLTIME_DOUBLE_CHANCE
+  "1X_1X": "1X/1X", "1X_X2": "1X/X2", "1X_12": "1X/12", X2_1X: "X2/1X", X2_X2: "X2/X2", X2_12: "X2/12",
+  "12_1X": "12/1X", "12_X2": "12/X2", "12_12": "12/12",
+
+  // DOUBLE_CHANCE_TOTAL and half-scoped variants
+  "1X_OVER": "1X i +", "1X_UNDER": "1X i -", X2_OVER: "X2 i +", X2_UNDER: "X2 i -", "12_OVER": "12 i +",
+  "12_UNDER": "12 i -",
+
+  // DOUBLE_CHANCE_GOAL_RANGE
+  "1X_1-2": "1X i 1-2", "1X_1-3": "1X i 1-3", "1X_1-4": "1X i 1-4", "1X_1-5": "1X i 1-5",
+  "1X_2-3": "1X i 2-3", "1X_2-4": "1X i 2-4", "1X_2-5": "1X i 2-5", "1X_2-6": "1X i 2-6",
+  "1X_3-5": "1X i 3-5", "1X_3-6": "1X i 3-6", "X2_1-2": "X2 i 1-2", "X2_1-3": "X2 i 1-3",
+  "X2_1-4": "X2 i 1-4", "X2_1-5": "X2 i 1-5", "X2_2-3": "X2 i 2-3", "X2_2-4": "X2 i 2-4",
+  "X2_2-5": "X2 i 2-5", "X2_2-6": "X2 i 2-6", "X2_3-5": "X2 i 3-5", "X2_3-6": "X2 i 3-6",
+
+  // RESULT_AND_EXACT_GOALS
+  HOME_1: "1 i 1 gol", HOME_2: "1 i 2 gole", HOME_3: "1 i 3 gole", DRAW_0: "X i 0 goli",
+  DRAW_2: "X i 2 gole", DRAW_4: "X i 4 gole", "DRAW_6+": "X i 6+ goli", AWAY_1: "2 i 1 gol",
+  AWAY_2: "2 i 2 gole", AWAY_3: "2 i 3 gole",
+
+  // RESULT_AND_GOAL_RANGE (draw side, unambiguous)
+  "DRAW_2-4": "X i 2-4", "DRAW_2-6": "X i 2-6", "DRAW_4-6": "X i 4-6",
+
+  // Team-scoped goal-range family (HALF_TIME_TEAM_GOAL_RANGE, SECOND_HALF_TEAM_GOAL_RANGE,
+  // RESULT_AND_TEAM_GOALS, TEAM_GOAL_RANGE_EXTRA, RESULT_AND_GOAL_RANGE)
+  "HOME_0-1": "Gosp. 0-1", "HOME_1-2": "Gosp. 1-2", "HOME_1-3": "Gosp. 1-3", "HOME_1-4": "Gosp. 1-4",
+  "HOME_2-3": "Gosp. 2-3", "HOME_2-4": "Gosp. 2-4", "HOME_2-5": "Gosp. 2-5", "HOME_2-6": "Gosp. 2-6",
+  "HOME_3-5": "Gosp. 3-5", "HOME_3-6": "Gosp. 3-6", "HOME_4+": "Gosp. 4+", HOME_OTHER: "Gosp. inny wynik",
+  "AWAY_0-1": "Gość 0-1", "AWAY_1-2": "Gość 1-2", "AWAY_1-3": "Gość 1-3", "AWAY_1-4": "Gość 1-4",
+  "AWAY_2-3": "Gość 2-3", "AWAY_2-4": "Gość 2-4", "AWAY_2-5": "Gość 2-5", "AWAY_2-6": "Gość 2-6",
+  "AWAY_3-5": "Gość 3-5", "AWAY_3-6": "Gość 3-6", "AWAY_4+": "Gość 4+", AWAY_OTHER: "Gość inny wynik",
+
+  // CORRECT_SCORE_GROUP (grouped correct-score buckets; exact margin mapping is not
+  // documented anywhere in the source data, so these are honest generic bucket names
+  // rather than guessed specifics)
+  HOME_WIN_GROUP_0: "Gosp. - grupa 0", HOME_WIN_GROUP_1: "Gosp. - grupa 1",
+  HOME_WIN_GROUP_2: "Gosp. - grupa 2", HOME_WIN_GROUP_3: "Gosp. - grupa 3",
+  AWAY_WIN_GROUP_1: "Gość - grupa 1", AWAY_WIN_GROUP_2: "Gość - grupa 2", AWAY_WIN_GROUP_3: "Gość - grupa 3",
+  AWAY_WIN_GROUP_4: "Gość - grupa 4",
+
+  // MULTI_RESULT (already self-documenting sentence codes; X = draw, matches the app's own 1/X/2 shorthand)
+  X: "X",
 };
 
 // ============================================================================

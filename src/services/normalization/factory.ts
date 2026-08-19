@@ -247,14 +247,27 @@ export function createNormalizer(): NormalizerFacade {
 
       // Use bookmakerMarketId if available (actual ID from scraper)
       // Fall back to market.type for backwards compatibility
+      //
+      // Audit r12: `parseInt` truncates at the first non-digit character, so
+      // an alphanumeric Swarm-style id that HAPPENS to start with a digit
+      // ("1stHalf-2ndHalfBothToScore", "1stHalfBothTeamsToScore",
+      // "2ndHalfBothTeamsToScore") was silently collapsed to just its leading
+      // digit ("1", "1", "2") — three unrelated betcris markets colliding on
+      // the same bogus numeric id, bypassing both BETCRIS_EXCLUDED_MARKET_IDS
+      // (keyed on the full string) and BETCRIS_MARKET_TYPE_TO_CODE, and
+      // falling through to name-pattern matching instead. Only convert when
+      // the ENTIRE id is numeric — a partial parse is worse than keeping the
+      // original string, since every id-keyed lookup downstream does
+      // String(bookmakerMarketId) anyway.
+      const isFullyNumeric = (value: string): boolean => /^-?\d+$/.test(value);
       if (market.bookmakerMarketId) {
-        const numericId = parseInt(market.bookmakerMarketId, 10);
-        rawMarket.bookmakerMarketId = Number.isFinite(numericId) ? numericId : market.bookmakerMarketId;
+        const raw = market.bookmakerMarketId;
+        rawMarket.bookmakerMarketId =
+          typeof raw === "string" && !isFullyNumeric(raw) ? raw : Number(raw);
       } else if (market.type) {
-        const numericId = typeof market.type === "string" 
-          ? parseInt(market.type, 10) 
-          : Number(market.type);
-        rawMarket.bookmakerMarketId = Number.isFinite(numericId) ? numericId : market.type;
+        const raw = market.type;
+        rawMarket.bookmakerMarketId =
+          typeof raw === "string" && !isFullyNumeric(raw) ? raw : Number(raw);
       }
 
       const output = normalizer.normalizeMarket(rawMarket, ctx);

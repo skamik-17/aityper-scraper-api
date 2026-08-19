@@ -319,7 +319,22 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // "wildly inconsistent" odds were observed on a different fixture and are
   // more likely a one-off stale price than a different market identity.
   "501": "RESULT_AND_BTTS",
-  "502": "RESULT_AND_TOTAL",
+  // Audit r12 (Arsenal vs Coventry City): supersedes the r3 "flip the O/U
+  // suffix" fix below (kept, now dead, as a record of what was tried).
+  // Cross-line monotonicity is a stronger test than comparing against peers:
+  // id 35 (this match's other RESULT_AND_TOTAL lines, 2.5/3.5) is internally
+  // perfectly self-consistent in BOTH directions — HOME_OVER rises 1.6->2.45,
+  // HOME_UNDER falls 3.19->1.89, exactly as required by "over a higher line"
+  // being strictly harder and "under a higher line" being strictly easier.
+  // id 502 (line 1.5) fits NEITHER direction against that established
+  // family, flipped or not: unflipped HOME_OVER falls 2.1(1.5)->1.6(2.5)
+  // (backwards) while HOME_UNDER only inches 3.25->3.19 (should show a much
+  // larger drop, going by id 35's own step size); flipped, both directions
+  // invert and get worse. A raw-label swap cannot explain a market that is
+  // wrong in one direction and only mildly off in the other. Reproduced
+  // identically across two raw captures ~3.5 hours apart, so not scrape
+  // noise. Real identity unproven — park in OTHER rather than keep guessing.
+  "502": "OTHER",
   // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
   // id 503's implied double-chance legs (1X 1.031/12 0.846/X2 0.442) match
   // pzbuk's own HALF-TIME 1X2 (id 55: 1.49/2.90/11.54 -> 1X 1.016/12 0.758/
@@ -980,24 +995,8 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
     const paramValue = extractParamValue(marketCode, raw);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    // Audit r3: id 502 (RESULT_AND_TOTAL) carries textually correct
-    // ponad/poniżej labels whose odds are systematically attached to the
-    // opposite side (pzbuk HOME_UNDER 5.21 / HOME_OVER 8.66 vs peer
-    // HOME_OVER ~4.8-5.1 / HOME_UNDER ~8.5-8.8, impossible at low lines
-    // where "<result> & under" is the rarer outcome) — flip the O/U suffix.
-    const flipOverUnder =
-      marketCode === "RESULT_AND_TOTAL" &&
-      String(raw.bookmakerMarketId ?? "") === "502";
-
     const selections = raw.selections.map((sel) => {
-      let code = normalizeSelectionForMarket(sel.name, marketCode!, ctx);
-      if (flipOverUnder) {
-        if (code.endsWith("_OVER")) {
-          code = code.replace(/_OVER$/, "_UNDER") as NormalizedSelection;
-        } else if (code.endsWith("_UNDER")) {
-          code = code.replace(/_UNDER$/, "_OVER") as NormalizedSelection;
-        }
-      }
+      const code = normalizeSelectionForMarket(sel.name, marketCode!, ctx);
       return {
         code,
         label: sel.name,

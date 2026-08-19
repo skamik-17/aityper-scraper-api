@@ -1012,6 +1012,23 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
+    // Audit r12: id 618 ("suma (3-drogowo)") bundles FIVE goal lines'
+    // OVER/EXACTLY/UNDER triples into one 15-selection raw market with no
+    // per-selection line label at all — worse than the handicap case above,
+    // this can never be split, not even by paramValue. The catalog code has
+    // hasParameter:false (built for a single fixed-threshold 3-way market),
+    // so every one of the 5 bundled UNDER/OVER/EXACTLY values collides onto
+    // the same selection code; whichever line's price the array-collapse
+    // happens to keep last poisons best-odds with a number that belongs to a
+    // different line (verified: lebull UNDER 12.6 here was line 0.5's price,
+    // not paired with any bookmaker's matching-line OVER — an arbitrage-
+    // shaped false BROKEN). Drop unconditionally; lebull's contribution to
+    // this market cannot be made correct without the source page grouping
+    // its own rows by line, which we do not have.
+    if (marketCode === "TOTAL_GOALS_3WAY") {
+      return null;
+    }
+
     // Stake type 748 ("kolejny gol:") bundles 5 tranches (goal #1..#5) into
     // one row, 3 selections each (HOME/AWAY/NONE), descending. Only the
     // leading tranche is the FIRST_TEAM_TO_SCORE market; tranches 2-5 have no

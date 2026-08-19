@@ -19,6 +19,10 @@
  *   --coverage <path>   Coverage baseline (default docs/audit-ledger/coverage.json if exists)
  *   --min-fresh <ISO>   Stale gate: markets whose entries are ALL older get staleSkip: true
  *   --no-ledger         Bypass panel/registry/coverage/min-fresh entirely
+ *   --raw <path>        Raw bookmaker offer bundle from scripts/match-audit-raw-capture.ts.
+ *                       Attaches per-market ground truth (rawOffer) + a coverage
+ *                       diff (rawUnclaimed) so judges can compare our normalized
+ *                       markets against what the bookmaker actually publishes.
  *
  * The prep NEVER writes to the registry (read-only); ledger mutations happen
  * via scripts/audit-ledger-update.ts.
@@ -64,6 +68,7 @@ interface Args {
   coverage?: string;
   minFresh?: string;
   noLedger: boolean;
+  raw?: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -86,6 +91,7 @@ function parseArgs(argv: string[]): Args {
     else if (a === "--coverage") args.coverage = argv[++i];
     else if (a === "--min-fresh") args.minFresh = argv[++i];
     else if (a === "--no-ledger") args.noLedger = true;
+    else if (a === "--raw") args.raw = argv[++i];
   }
   return args;
 }
@@ -168,6 +174,170 @@ function buildCoverageLookup(data: CoverageData): NonNullable<MatchAuditOpts["co
   };
 }
 
+
+// ---------------------------------------------------------------------------
+// Raw bookmaker offer (ground truth) — see scripts/match-audit-raw-capture.ts
+// ---------------------------------------------------------------------------
+
+interface RawOfferMarket {
+  name: string;
+  groupName?: string;
+  paramValue?: string;
+  selections: { name: string; odds: number }[];
+}
+
+interface RawBundleFile {
+  matchId: string;
+  capturedAt: string;
+  bookmakers: Record<
+    string,
+    { bookmaker: string; ok: boolean; error?: string; eventUrl?: string | null; markets: RawOfferMarket[] }
+  >;
+}
+
+/** Loose key for matching an API rawMarketName against a raw offer market name. */
+function rawNameKey(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+/**
+ * Some bookmakers embed the line in the market name ("Liczba goli 2.5") while
+ * our API reports the bare name plus a paramValue. Strip a trailing numeric
+ * token so those still match, and expose the stripped number as the line.
+ */
+function splitTrailingLine(nameKey: string): { base: string; line: string } | null {
+  const m = nameKey.match(/^(.*?)\s+(\d+(?:\s\d+)?|\d+ \d+)$/);
+  if (!m) return null;
+  return { base: m[1].trim(), line: m[2] };
+}
+
+/** "2.5" and "2 5" collapse to the same key (rawNameKey eats the dot). */
+function lineKey(value: string): string {
+  return value.replace(/[^0-9]+/g, ".").replace(/^\.|\.$/g, "");
+}
+
+interface RawIndex {
+  /** bookmaker -> nameKey -> raw markets */
+  byName: Map<string, Map<string, RawOfferMarket[]>>;
+  /** bookmaker -> nameKey without trailing line -> raw markets (line embedded in name) */
+  byNameNoLine: Map<string, Map<string, { market: RawOfferMarket; line: string }[]>>;
+  /** bookmaker -> set of "nameKey|paramValue" already attached to some market */
+  claimed: Map<string, Set<string>>;
+  bookmakers: string[];
+  failed: { bookmaker: string; error?: string }[];
+  capturedAt: string;
+}
+
+function buildRawIndex(bundle: RawBundleFile): RawIndex {
+  const byName = new Map<string, Map<string, RawOfferMarket[]>>();
+  const byNameNoLine = new Map<string, Map<string, { market: RawOfferMarket; line: string }[]>>();
+  const claimed = new Map<string, Set<string>>();
+  const bookmakers: string[] = [];
+  const failed: { bookmaker: string; error?: string }[] = [];
+  for (const [bm, cap] of Object.entries(bundle.bookmakers ?? {})) {
+    if (!cap.ok) {
+      failed.push({ bookmaker: bm, error: cap.error });
+      continue;
+    }
+    bookmakers.push(bm);
+    const idx = new Map<string, RawOfferMarket[]>();
+    const idxNoLine = new Map<string, { market: RawOfferMarket; line: string }[]>();
+    for (const m of cap.markets ?? []) {
+      const key = rawNameKey(m.name ?? "");
+      const list = idx.get(key);
+      if (list) list.push(m);
+      else idx.set(key, [m]);
+      const split = splitTrailingLine(key);
+      if (split) {
+        const l = idxNoLine.get(split.base);
+        const item = { market: m, line: split.line };
+        if (l) l.push(item);
+        else idxNoLine.set(split.base, [item]);
+      }
+    }
+    byName.set(bm, idx);
+    byNameNoLine.set(bm, idxNoLine);
+    claimed.set(bm, new Set());
+  }
+  return { byName, byNameNoLine, claimed, bookmakers, failed, capturedAt: bundle.capturedAt };
+}
+
+const RAW_MARKETS_PER_BOOKMAKER = 6;
+
+/**
+ * Ground truth for one audited market: for every bookmaker entry in the API
+ * response, the raw market(s) whose name matches its rawMarketName, preferring
+ * the one whose paramValue matches the parameter under audit.
+ */
+function attachRawOffer(
+  market: ApiMarket | null,
+  index: RawIndex,
+): Record<string, RawOfferMarket[]> | null {
+  if (!market) return null;
+  const out: Record<string, RawOfferMarket[]> = {};
+  for (const param of market.parameters) {
+    for (const entry of param.bookmakers) {
+      const idx = index.byName.get(entry.bookmaker);
+      if (!idx) continue;
+      const rawName = entry.rawMarketName ?? market.label;
+      const nameKey = rawNameKey(rawName);
+      const wanted = param.value ? String(param.value) : null;
+      let candidates = idx.get(nameKey) ?? [];
+      if (candidates.length === 0) {
+        // Bookmaker embeds the line in the market name — match on the base name
+        // and, when we have a parameter, on the line it carries.
+        const embedded = index.byNameNoLine.get(entry.bookmaker)?.get(nameKey) ?? [];
+        const byLine = wanted
+          ? embedded.filter((e) => lineKey(e.line) === lineKey(wanted))
+          : embedded;
+        candidates = (byLine.length > 0 ? byLine : embedded).map((e) => e.market);
+      }
+      if (candidates.length === 0) continue;
+      const picked = wanted
+        ? candidates.filter((c) => (c.paramValue ?? "") === wanted)
+        : candidates;
+      const chosen = picked.length > 0 ? picked : candidates;
+      const bucket = (out[entry.bookmaker] ??= []);
+      const claimedSet = index.claimed.get(entry.bookmaker)!;
+      for (const c of chosen) {
+        claimedSet.add(`${rawNameKey(c.name)}|${c.paramValue ?? ""}`);
+        if (bucket.length >= RAW_MARKETS_PER_BOOKMAKER) continue;
+        const dupe = bucket.some(
+          (b) => b.name === c.name && (b.paramValue ?? "") === (c.paramValue ?? ""),
+        );
+        if (!dupe) bucket.push(c);
+      }
+    }
+  }
+  return Object.keys(out).length > 0 ? out : null;
+}
+
+/** Raw markets no audited market ever referenced — candidates for lost coverage. */
+function computeRawUnclaimed(
+  bundle: RawBundleFile,
+  index: RawIndex,
+): Record<string, { name: string; paramValue?: string; selections: number }[]> {
+  const out: Record<string, { name: string; paramValue?: string; selections: number }[]> = {};
+  for (const bm of index.bookmakers) {
+    const claimedSet = index.claimed.get(bm)!;
+    const seen = new Set<string>();
+    const missing: { name: string; paramValue?: string; selections: number }[] = [];
+    for (const m of bundle.bookmakers[bm].markets ?? []) {
+      const key = `${rawNameKey(m.name)}|${m.paramValue ?? ""}`;
+      if (claimedSet.has(key) || seen.has(key)) continue;
+      seen.add(key);
+      missing.push({ name: m.name, paramValue: m.paramValue, selections: m.selections.length });
+    }
+    if (missing.length > 0) out[bm] = missing;
+  }
+  return out;
+}
+
 async function main() {
   const args = parseArgs(process.argv);
 
@@ -210,6 +380,20 @@ async function main() {
   const coverage = coveragePath
     ? buildCoverageLookup(JSON.parse(fs.readFileSync(coveragePath, "utf8")) as CoverageData)
     : undefined;
+
+  // Raw bookmaker offer bundle (ground truth). Optional: absent → prep behaves
+  // exactly as before, judges just lose the per-market ground-truth block.
+  let rawIndex: RawIndex | null = null;
+  let rawBundle: RawBundleFile | null = null;
+  if (args.raw) {
+    const rawPath = path.isAbsolute(args.raw) ? args.raw : path.resolve(process.cwd(), args.raw);
+    if (!fs.existsSync(rawPath)) {
+      console.error(`[match-audit-prep] --raw file not found: ${rawPath}`);
+      process.exit(1);
+    }
+    rawBundle = JSON.parse(fs.readFileSync(rawPath, "utf8")) as RawBundleFile;
+    rawIndex = buildRawIndex(rawBundle);
+  }
 
   // 1. Fetch the API response — the exact bytes the frontend consumes.
   const url = `${args.backend}/api/matches/${encodeURIComponent(home)}/${encodeURIComponent(away)}/normalized-markets?league=${encodeURIComponent(league)}`;
@@ -331,6 +515,7 @@ async function main() {
       relatedCodes: getRelatedCodes(entry.type).slice(0, 25),
       market: marketByRef.get(entry.marketRef) ?? null,
       rawSelections: rawSelections[entry.marketKey] ?? null,
+      rawOffer: rawIndex ? attachRawOffer(marketByRef.get(entry.marketRef) ?? null, rawIndex) : null,
     };
   });
   // Suppression may change severities → re-sort like the core does.
@@ -363,6 +548,7 @@ async function main() {
         relatedCodes: [],
         market: null,
         rawSelections: null,
+        rawOffer: null,
       };
     });
 
@@ -378,6 +564,21 @@ async function main() {
       staleBookmakers[f.bookmaker] = (staleBookmakers[f.bookmaker] ?? 0) + 1;
     }
   }
+
+  // Raw coverage diff must run AFTER every market attached its ground truth,
+  // so `claimed` is complete.
+  const rawUnclaimed =
+    rawBundle && rawIndex ? computeRawUnclaimed(rawBundle, rawIndex) : null;
+  const rawCoverage = rawIndex
+    ? {
+        capturedAt: rawIndex.capturedAt,
+        bookmakers: rawIndex.bookmakers,
+        failed: rawIndex.failed,
+        unclaimedCounts: Object.fromEntries(
+          Object.entries(rawUnclaimed ?? {}).map(([bm, list]) => [bm, list.length]),
+        ),
+      }
+    : null;
 
   const summary = {
     ...analysis.summary,
@@ -395,6 +596,7 @@ async function main() {
           staleEntriesByBookmaker,
           staleSkippedMarkets: staleSkipRefs.size,
         },
+    rawCoverage,
   };
 
   const prep = {
@@ -415,8 +617,10 @@ async function main() {
         minFresh: args.minFresh ?? null,
         noLedger: args.noLedger,
       },
+      rawBundle: args.raw ?? null,
     },
     summary,
+    rawUnclaimed,
     markets: [...markets, ...panelStubs],
   };
 
@@ -444,6 +648,7 @@ async function main() {
       staleGate: summary.staleGate,
       panelMarkets: panelMarkets ? panelMarkets.length : null,
       panelMissingFromResponse: panelStubs.length,
+      rawCoverage,
     }),
   );
 }

@@ -59,12 +59,25 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   124: "SECOND_HALF_CORRECT_SCORE",
   1051: "PLAYER_GOAL_AND_RESULT",
 
-  1851: "PLAYER_SHOTS",
-  1263: "PLAYER_SHOTS",
-  1852: "PLAYER_SHOTS_ON_TARGET",
-  1264: "PLAYER_SHOTS_ON_TARGET",
-  1853: "PLAYER_PASSES",
-  1855: "PLAYER_CARDS",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City): STS quotes
+  // every player stat twice — unconditionally, and again with
+  // 'musi wyjść w "11", z dogrywką' (settled only if the player starts,
+  // counted through extra time). The conditional ids below used to own the
+  // shared PLAYER_* codes, so their prices were compared against the plain bet
+  // every other bookmaker offers, while STS's own unconditional markets
+  // (ids 2394/2395/2396/2397/2404, 42 players each) were dropped entirely.
+  1851: "PLAYER_SHOTS_LINEUP",
+  1263: "PLAYER_SHOTS_LINEUP",
+  1852: "PLAYER_SHOTS_ON_TARGET_LINEUP",
+  1264: "PLAYER_SHOTS_ON_TARGET_LINEUP",
+  1853: "PLAYER_PASSES_LINEUP",
+  1855: "PLAYER_CARDS_LINEUP",
+  1854: "PLAYER_TACKLES_LINEUP",
+  2394: "PLAYER_SHOTS",
+  2395: "PLAYER_SHOTS_ON_TARGET",
+  2396: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  2397: "PLAYER_ASSISTS",
+  2404: "PLAYER_HEADER_SHOTS_ON_TARGET",
 
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
@@ -197,8 +210,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2011: "PLAYER_SAVES",
   1898: "OTHER",
   1899: "RED_CARD_AND_PENALTY",
-  1845: "PLAYER_ASSISTS",
-  1850: "PLAYER_GOALS",
+  1845: "PLAYER_ASSISTS_LINEUP",
+  1850: "PLAYER_GOALS_LINEUP",
   2111: "FOULS_TOTAL",
   2112: "OTHER",
   2113: "OTHER",
@@ -1285,6 +1298,22 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
         playerName = marketName.replace(suffix, "").trim();
       } else if (marketName.includes(" - odbiory")) {
         playerName = marketName.split(" - odbiory")[0].trim();
+      }
+    }
+
+    // Generic per-player stat markets: "<Player> - <stat>" with no marker
+    // suffix. Audit /audit-match (Arsenal vs Coventry City): STS's
+    // UNCONDITIONAL player markets (ids 2394-2404, 42 players each) use this
+    // plain shape, and without an extractor every one of them landed under a
+    // single "base" parameter instead of one row per player. The optional
+    // '(musi wyjść …)' tail is stripped too so the conditional ids that have
+    // no dedicated block above (e.g. 1854 "odbiory") also resolve.
+    if (!playerName) {
+      const plain = marketName.match(
+        /^(.+?)\s+-\s+(?:strza[łl]y|celne strza[łl]y(?:\s+(?:spoza pola karnego|g[łl]ow[aą]))?|asysty|gole|podania|odbiory|otrzyma kartk[eę])(?:\s*\(.*\))?$/iu,
+      );
+      if (plain && !/^zawodnik$/i.test(plain[1].trim())) {
+        playerName = plain[1].trim();
       }
     }
 

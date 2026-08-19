@@ -9,6 +9,7 @@
  *
  * Usage:
  *   npx tsx scripts/match-audit-judge-prompts.ts --prep <prep.json> [--top 60 | --all] [--out <dir>]
+ *     [--outliers <odds-outliers.json>]   attach the odds-consistency findings
  */
 
 import * as fs from "node:fs";
@@ -19,6 +20,7 @@ interface Args {
   top: number;
   all: boolean;
   out?: string;
+  outliers?: string;
 }
 
 function parseArgs(argv: string[]): Args {
@@ -36,6 +38,7 @@ function parseArgs(argv: string[]): Args {
     top: Number(get("--top") ?? 60),
     all: argv.includes("--all"),
     out: get("--out"),
+    outliers: get("--outliers"),
   };
 }
 
@@ -103,6 +106,26 @@ function main() {
   const prep = JSON.parse(fs.readFileSync(prepPath, "utf8"));
   const meta = prep.meta;
 
+  // Odds-consistency findings from scripts/odds-outliers.ts, indexed by market.
+  // They tell the judge WHICH quote is out of line and by how much, so it can
+  // spend its attention on the number instead of re-deriving the comparison.
+  const outliersByRef = new Map<string, any[]>();
+  if (args.outliers) {
+    const outPath = path.resolve(process.cwd(), args.outliers);
+    if (!fs.existsSync(outPath)) {
+      console.error(`[judge-prompts] --outliers file not found: ${outPath}`);
+      process.exit(1);
+    }
+    const report = JSON.parse(fs.readFileSync(outPath, "utf8"));
+    for (const match of report.matches ?? []) {
+      for (const finding of match.findings ?? []) {
+        const list = outliersByRef.get(finding.marketRef) ?? [];
+        list.push(finding);
+        outliersByRef.set(finding.marketRef, list);
+      }
+    }
+  }
+
   const selected = (prep.markets as any[])
     .filter((m) => m.severity > 0 && !m.staleSkip && m.market)
     .slice(0, args.all ? undefined : args.top);
@@ -138,6 +161,26 @@ function main() {
       `MECHANICAL FLAGS:`,
       JSON.stringify(entry.flags, null, 1),
     ];
+    const oddsFindings = (outliersByRef.get(entry.marketRef) ?? [])
+      .sort((a, b) => (b.deviation ?? 0) - (a.deviation ?? 0))
+      .slice(0, 12)
+      .map((f) => ({
+        kind: f.kind,
+        severity: f.severity,
+        param: f.param,
+        selection: f.selection,
+        bookmaker: f.bookmaker,
+        odds: f.odds,
+        reference: f.reference,
+        detail: f.detail,
+      }));
+    if (oddsFindings.length > 0) {
+      blocks.push(
+        ``,
+        `NIESPÓJNOŚCI KURSÓW (scripts/odds-outliers.ts — mediana peerów, monotoniczność drabinki, integralność, suma najlepszych kursów):`,
+        JSON.stringify(oddsFindings, null, 1),
+      );
+    }
     if (rawOffer) {
       blocks.push(
         ``,

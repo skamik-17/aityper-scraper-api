@@ -156,6 +156,27 @@ export async function saveFullOfferMarkets(
     }
   }
 
+  // Drop this bookmaker's previous snapshot for the match. Rows were only ever
+  // appended, so a market_key that a normalization fix stops producing kept
+  // being served forever: the /audit-match run on Arsenal vs Coventry City
+  // still showed STS's conditional "gole (musi wyjść w 11)" market under
+  // PLAYER_GOALS long after that mapping had moved elsewhere. Only the newest
+  // scrape is ever read (see the latest_odds view), so anything older is dead
+  // weight. Skipped when the write partially failed, so a bad run cannot wipe
+  // good data.
+  if (result.errors === 0 && result.inserted > 0) {
+    const { error: pruneError } = await (supabase as any)
+      .from("odds")
+      .delete()
+      .eq("match_id", matchId)
+      .eq("bookmaker", bookmaker)
+      .lt("scraped_at", scrapedAt);
+
+    if (pruneError) {
+      console.error(`[FullOfferRepo] Stale-row prune error:`, pruneError);
+    }
+  }
+
   return result;
 }
 

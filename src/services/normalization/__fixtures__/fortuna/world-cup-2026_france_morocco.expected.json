@@ -32232,46 +32232,46 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DOUBLE_CHANCE_BTTS",
-        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "marketCode": "SECOND_HALF_DOUBLE_CHANCE_BTTS",
+        "marketKey": "SECOND_HALF_DOUBLE_CHANCE_BTTS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "12_YES",
+            "code": "UNKNOWN",
             "label": "12/Tak",
             "odds": 8.4
           },
           {
-            "code": "12_NO",
+            "code": "UNKNOWN",
             "label": "12/Nie",
             "odds": 1.7
           },
           {
-            "code": "X2_YES",
+            "code": "UNKNOWN",
             "label": "02/Tak",
             "odds": 6
           },
           {
-            "code": "X2_NO",
+            "code": "UNKNOWN",
             "label": "02/Nie",
             "odds": 2.33
           },
           {
-            "code": "1X_YES",
+            "code": "UNKNOWN",
             "label": "10/Tak",
             "odds": 4.6
           },
           {
-            "code": "1X_NO",
+            "code": "UNKNOWN",
             "label": "10/Nie",
             "odds": 1.47
           }
         ]
       },
       "index": 1976,
-      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "marketCode": "SECOND_HALF_DOUBLE_CHANCE_BTTS",
       "rawName": "2.połowa: dwójtyp/obie drużyny strzelą gola w 2.połowie"
     },
     {

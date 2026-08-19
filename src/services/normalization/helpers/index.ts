@@ -26,7 +26,20 @@ export function parseDecimalLine(text: string): string | undefined {
 }
 
 export function parseIntegerLine(text: string): string | undefined {
-  const match = text.match(/[+-]?(\d+)(?![.,]\d)/);
+  // The negative lookbehind stops the scanner from re-entering a decimal it
+  // already rejected: without it "Azjatycka liczba goli 1.75" skipped "1"
+  // (followed by ".7") and then matched the FRACTION "75" as the line, so
+  // LVBet's quarter-goal asian totals were stored as param 75 / 25 and
+  // collided with each other (audit-match, Arsenal vs Coventry City).
+  // Returning undefined lets callers fall back to the selection labels
+  // ("Powyżej 1.75"), which carry the real line.
+  // The second lookahead skips a scope ordinal ("1. połowa - liczba goli 2"
+  // used to yield 1, the half index, instead of the line 2). It is deliberately
+  // limited to scope words so ordinals that ARE the parameter still match
+  // ("1. połowa - 1. rzut rożny" -> 1, the first corner).
+  const match = text.match(
+    /(?<![\d.,])[+-]?(\d+)(?![.,]\d)(?!\.\s*(?:po[łl]ow|kwart|half|quarter))/i,
+  );
   if (match) return match[1];
   return undefined;
 }

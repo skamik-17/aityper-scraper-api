@@ -137,6 +137,12 @@ const PREMIER_LEAGUE_ALIASES: Record<string, string> = {
   "Luton T.": "Luton Town",
   Stoke: "Stoke City",
   "Stoke C.": "Stoke City",
+  Coventry: "Coventry City",
+  "Coventry C.": "Coventry City",
+  "Coventry Cty": "Coventry City",
+  Hull: "Hull City",
+  "Hull C.": "Hull City",
+  "Hull Cty": "Hull City",
 };
 
 /**

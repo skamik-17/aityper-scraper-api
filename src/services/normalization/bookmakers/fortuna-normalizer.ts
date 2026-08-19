@@ -1067,7 +1067,20 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // HOME/AWAY/NONE) bundled under the same id as bare "2.połowa" (who wins
     // the half, HOME/DRAW/AWAY) — see the id-map note above. Forcing it into
     // the 1X2-shaped SECOND_HALF_RESULT can never yield a valid DRAW.
-    if (marketCode === "SECOND_HALF_RESULT" && /1\s*\.\s*gol\b/iu.test(raw.name)) {
+    // Audit /audit-match (premier-league Arsenal vs Coventry City): the live
+    // "2.połowa: 1. gol" payload arrives under id 00-2x (MATCH_WINNER), not
+    // under 00-2w, so the old code-conditioned reroute never fired and the
+    // half-scope rule below turned it into SECOND_HALF_RESULT — a 1X2 market
+    // fed with "Nikt / Coventry / Arsenal" first-scorer prices (AWAY 6.0 vs
+    // peer median 11.0, "Nikt" mapped to UNKNOWN). Route on the NAME instead,
+    // regardless of which id the payload happened to use.
+    const firstGoalHalf = raw.name
+      .trim()
+      .match(/^([12])\s*\.?\s*po[łl]owa\s*:\s*1\s*\.\s*gol\b/iu);
+    if (firstGoalHalf) {
+      marketCode =
+        firstGoalHalf[1] === "2" ? "SECOND_HALF_FIRST_GOAL" : "HALF_TIME_FIRST_GOAL";
+    } else if (marketCode === "SECOND_HALF_RESULT" && /1\s*\.\s*gol\b/iu.test(raw.name)) {
       marketCode = "SECOND_HALF_FIRST_GOAL";
     }
 
@@ -1098,6 +1111,14 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
           marketCode = "SECOND_HALF_RESULT_AND_TOTAL";
         } else if (marketCode === "ASIAN_HANDICAP_PUSH" && isSecondHalf) {
           marketCode = "SECOND_HALF_ASIAN_HANDICAP_PUSH";
+        } else if (marketCode === "DOUBLE_CHANCE_BTTS") {
+          // Audit /audit-match (Arsenal vs Coventry City): id 00-21 carries the
+          // half-scoped "2.połowa: dwójtyp/obie drużyny strzelą gola w
+          // 2.połowie" and was filling the full-match DOUBLE_CHANCE_BTTS with
+          // second-half prices (1X_YES 4.8 vs peer median 2.55).
+          marketCode = isSecondHalf
+            ? "SECOND_HALF_DOUBLE_CHANCE_BTTS"
+            : "HALF_TIME_DOUBLE_CHANCE_BTTS";
         }
       }
     }

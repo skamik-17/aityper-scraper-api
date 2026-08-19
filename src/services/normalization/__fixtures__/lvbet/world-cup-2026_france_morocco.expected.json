@@ -25632,9 +25632,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:75",
+        "marketKey": "TOTAL_GOALS_ASIAN:2.75",
         "matchedBy": "pattern",
-        "paramValue": "75",
+        "paramValue": "2.75",
         "parameters": null,
         "selections": [
           {
@@ -25736,9 +25736,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:75",
+        "marketKey": "TOTAL_GOALS_ASIAN:0.75",
         "matchedBy": "pattern",
-        "paramValue": "75",
+        "paramValue": "0.75",
         "parameters": null,
         "selections": [
           {
@@ -30586,9 +30586,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:25",
+        "marketKey": "TOTAL_GOALS_ASIAN:4.25",
         "matchedBy": "pattern",
-        "paramValue": "25",
+        "paramValue": "4.25",
         "parameters": null,
         "selections": [
           {
@@ -30796,9 +30796,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:25",
+        "marketKey": "TOTAL_GOALS_ASIAN:3.25",
         "matchedBy": "pattern",
-        "paramValue": "25",
+        "paramValue": "3.25",
         "parameters": null,
         "selections": [
           {
@@ -31047,9 +31047,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:75",
+        "marketKey": "TOTAL_GOALS_ASIAN:3.75",
         "matchedBy": "pattern",
-        "paramValue": "75",
+        "paramValue": "3.75",
         "parameters": null,
         "selections": [
           {
@@ -31265,9 +31265,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:75",
+        "marketKey": "TOTAL_GOALS_ASIAN:4.75",
         "matchedBy": "pattern",
-        "paramValue": "75",
+        "paramValue": "4.75",
         "parameters": null,
         "selections": [
           {
@@ -31551,9 +31551,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:75",
+        "marketKey": "TOTAL_GOALS_ASIAN:1.75",
         "matchedBy": "pattern",
-        "paramValue": "75",
+        "paramValue": "1.75",
         "parameters": null,
         "selections": [
           {
@@ -31779,9 +31779,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:25",
+        "marketKey": "TOTAL_GOALS_ASIAN:5.25",
         "matchedBy": "pattern",
-        "paramValue": "25",
+        "paramValue": "5.25",
         "parameters": null,
         "selections": [
           {
@@ -32352,9 +32352,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:25",
+        "marketKey": "TOTAL_GOALS_ASIAN:2.25",
         "matchedBy": "pattern",
-        "paramValue": "25",
+        "paramValue": "2.25",
         "parameters": null,
         "selections": [
           {
@@ -32442,9 +32442,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:25",
+        "marketKey": "TOTAL_GOALS_ASIAN:1.25",
         "matchedBy": "pattern",
-        "paramValue": "25",
+        "paramValue": "1.25",
         "parameters": null,
         "selections": [
           {

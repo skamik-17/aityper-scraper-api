@@ -115,11 +115,20 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // gola" (BTTS per half): first slot = BTTS in 1st half, second = BTTS in
   // 2nd half — the catalog's BTTS_BY_HALF market, not TEAMS_TO_SCORE.
   "50": "BTTS_BY_HALF",
-  "55": "MATCH_WINNER",
+  // Audit /audit-match (Arsenal vs Coventry City): id 55 carries
+  // "1. Połowa - 1x2" — the first-half result, not the match winner.
+  "55": "HALF_TIME_RESULT",
   "57": "HALF_TIME_FIRST_GOAL",
   "62": "HALF_TIME_TOTAL_GOALS",
-  "63": "HALF_TIME_TOTAL_GOALS",
-  "64": "HALF_TIME_TOTAL_GOALS",
+  // Audit /audit-match (Arsenal vs Coventry City): the bookmaker also serves a
+  // NAMED "1. Połowa - Suma" market (0.5 -> ponad 1.23 / poniżej 3.63) that
+  // matches every peer. The unnamed ids 63/64 duplicate those lines with
+  // different numbers and id 64 is outright inverted (0.5 -> ponad 3.83 /
+  // poniżej 1.19, identical to id 70's tak/nie pair), so they are not the
+  // first-half total. Park them and let the named market win via
+  // matchMarketByName().
+  "63": "OTHER",
+  "64": "OTHER",
   "69": "HALF_TIME_BTTS",
   "72": "RESULT_AND_BTTS",
   // Audit r6 (France vs Morocco, audit-loop v2 round 1): id 73 ("Rynek 73")
@@ -178,7 +187,12 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "141": "OTHER",
   "142": "OTHER",
   "147": "HALF_TIME_HOME_EXACT_CARDS",
-  "152": "MATCH_WINNER",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
+  // ground truth from the bookmaker page shows the real 1X2 market (id 1,
+  // API name "1x2") at 1.16 / 6.77 / 14.48, in line with all 11 peers, while
+  // id 152 delivers 1.07 / 11.79 / 7.57 — a different market that overwrote
+  // the genuine 1X2 row. Same untrustworthy pattern as ids 139/163.
+  "152": "OTHER",
   "155": "OTHER",
   "156": "CORNERS_TOTAL",
   "157": "OTHER",
@@ -213,7 +227,10 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // 3.55-4.0) while being far off full-match "0 goals" consensus (~8-12) —
   // id 511 is the 2nd-half goal-range market, not the full-match one.
   "511": "SECOND_HALF_GOAL_RANGE",
-  "2099": "MATCH_WINNER",
+  // Audit /audit-match (Arsenal vs Coventry City): id 2099 is the "Early
+  // Payout" promo variant of 1X2 (own settlement rules, AWAY 12.52 vs the
+  // plain market's 14.48) and it was overwriting the genuine 1X2 (id 1).
+  "2099": "OTHER",
   "2179": "GOALSCORER_ANYTIME",
   // Audit-loop v2 round 2: id 2186's raw name is "Zawodnik (lub zmiennik)
   // strzeli gola lub zaliczy asystę" (goal OR assist), a distinct market
@@ -224,7 +241,11 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // wrongly folded into GOALSCORER_ANYTIME, inflating pure-scorer odds with
   // assist-inclusive prices (e.g. defenders who assist more than they score).
   "2186": "PLAYER_GOAL_OR_ASSIST",
-  "2395": "GOALSCORER_ANYTIME",
+  // Audit /audit-match (Arsenal vs Coventry City): id 2395 is the bookmaker's
+  // "Zawodnik z kartką (lub zmiennik)" card market — it was overwriting the
+  // real scorer market (id 2179, "Zawodnik (lub zmiennik) strzeli gola"), so
+  // goalscorer odds were showing booking prices (Gyokeres 4.09 vs peers 1.9).
+  "2395": "PLAYER_CARDS",
 };
 
 /**
@@ -252,6 +273,17 @@ const PZBUK_NAME_OVERRIDES: Array<{
   // under a numeric id mapped to DOUBLE_CHANCE_TOTAL at bogus param "0" —
   // route it to the HT/FT catalog market by name.
   { pattern: /^po[łl]owa\s*\/\s*reg\.?\s*czas/i, code: "HALFTIME_FULLTIME" },
+  // Audit /audit-match (Arsenal vs Coventry City): the bookmaker's half-scoped
+  // markets arrive under ids that the numeric map assigns to the FULL-MATCH
+  // code (e.g. "1. Połowa - 1x2" is id 55 -> MATCH_WINNER), so the half line
+  // hijacked the match winner. The name is authoritative — pin it here, ahead
+  // of the id map.
+  { pattern: /^1\.?\s*po[łl]owa\s*[-–]\s*1x2$/i, code: "HALF_TIME_RESULT" },
+  { pattern: /^2\.?\s*po[łl]owa\s*[-–]\s*1x2$/i, code: "SECOND_HALF_RESULT" },
+  { pattern: /^1\.?\s*po[łl]owa\s*[-–]\s*suma/i, code: "HALF_TIME_TOTAL_GOALS" },
+  { pattern: /^2\.?\s*po[łl]owa\s*[-–]\s*suma/i, code: "SECOND_HALF_TOTAL_GOALS" },
+  { pattern: /obie.*strzel[aą].*[-–]\s*1\.?\s*po[łl]owa/i, code: "HALF_TIME_BTTS" },
+  { pattern: /obie.*strzel[aą].*[-–]\s*2\.?\s*po[łl]owa/i, code: "SECOND_HALF_BTTS" },
 ];
 
 function matchNameOverride(name: string): NormalizedMarketType | null {
@@ -818,7 +850,19 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
 function matchMarketByName(name: string): NormalizedMarketType | null {
   const lower = name.toLowerCase();
 
+  // Half-scoped markets first: the generic patterns below (e.g. /obie strzelą/,
+  // /liczba goli/) would otherwise swallow "1. Połowa - ..." names and route a
+  // half market into a full-match code.
+  if (/^1\.?\s*po[łl]owa\s*[-–]\s*1x2$/i.test(lower)) return "HALF_TIME_RESULT";
+  if (/^2\.?\s*po[łl]owa\s*[-–]\s*1x2$/i.test(lower)) return "SECOND_HALF_RESULT";
+  if (/^1\.?\s*po[łl]owa\s*[-–]\s*suma/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
+  if (/^2\.?\s*po[łl]owa\s*[-–]\s*suma/i.test(lower)) return "SECOND_HALF_TOTAL_GOALS";
+  if (/obie.*strzel[aą].*1\.?\s*po[łl]ow/i.test(lower)) return "HALF_TIME_BTTS";
+  if (/obie.*strzel[aą].*2\.?\s*po[łl]ow/i.test(lower)) return "SECOND_HALF_BTTS";
+
   if (/^(wynik meczu|1x2|match result)$/i.test(lower)) return "MATCH_WINNER";
+  if (/^suma goli$/i.test(lower)) return "TOTAL_GOALS";
+  if (/^oba zespo[łl]y zdob[eę]d[aą] gola$/i.test(lower)) return "BTTS";
   if (/podw[óo]jna szansa|double chance/i.test(lower)) return "DOUBLE_CHANCE";
   if (/remis bez zak[łl]adu|draw no bet/i.test(lower)) return "DRAW_NO_BET";
 

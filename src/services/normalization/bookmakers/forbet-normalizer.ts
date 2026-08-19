@@ -188,6 +188,19 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 };
 
 const FORBET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
+  // ORDER MATTERS: the list is evaluated top-down and the generic full-match
+  // patterns below ("obie … strzelą", "liczba goli") also match half-scoped
+  // names. Every half-scoped rule therefore has to come FIRST — otherwise
+  // "2. połowa - obie drużyny strzelą gola" lands in full-match BTTS
+  // (observed right after the "Wydarzy się min. jedno z" fix freed that slot).
+  { pattern: /^2\.?\s*po[lł]owa\s*-\s*obie/i, code: "SECOND_HALF_BTTS" },
+  { pattern: /^1\.?\s*po[lł]owa\s*-\s*obie/i, code: "HALF_TIME_BTTS" },
+  { pattern: /^2\.?\s*po[lł]owa\s*-\s*1x2$/i, code: "SECOND_HALF_RESULT" },
+  { pattern: /^1\.?\s*po[lł]owa\s*-\s*1x2$/i, code: "HALF_TIME_RESULT" },
+  { pattern: /wynik\s*1\.?\s*po[lł]owy/i, code: "HALF_TIME_RESULT" },
+  { pattern: /^2\.?\s*po[lł]owa.*(poni[zż]ej|powy[zż]ej).*gol/i, code: "SECOND_HALF_TOTAL_GOALS" },
+  { pattern: /^1\.?\s*po[lł]owa.*(poni[zż]ej|powy[zż]ej).*gol/i, code: "HALF_TIME_TOTAL_GOALS" },
+
   { pattern: /^1x2$/i, code: "MATCH_WINNER" },
   { pattern: /wynik\s*meczu/i, code: "MATCH_WINNER" },
   { pattern: /podw[oó]jna\s*szansa/i, code: "DOUBLE_CHANCE" },
@@ -197,7 +210,6 @@ const FORBET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType 
   { pattern: /poni[zż]ej.*powy[zż]ej.*gol/i, code: "TOTAL_GOALS" },
   { pattern: /liczba\s*goli/i, code: "TOTAL_GOALS" },
   { pattern: /over.*under/i, code: "TOTAL_GOALS" },
-  { pattern: /wynik\s*1\.?\s*po[lł]owy/i, code: "HALF_TIME_RESULT" },
   { pattern: /1\.?\s*po[lł]owa.*1x2/i, code: "HALF_TIME_RESULT" },
   { pattern: /1\.?\s*po[lł]owa.*gol/i, code: "HALF_TIME_TOTAL_GOALS" },
   { pattern: /1\.?\s*po[lł]owa.*obie/i, code: "HALF_TIME_BTTS" },
@@ -350,6 +362,18 @@ function resolveForbetSpecialMarket(
   ctx: NormalizationContext
 ): NormalizedMarketType | null {
   const name = normalizeForbetName(raw.name);
+
+  // "Wydarzy się min. jedno z: <A> lub <B>" is an ALTERNATIVE bet — it wins if
+  // either leg happens — not the plain market whose wording it borrows. Ground
+  // truth (/audit-match, premier-league Arsenal vs Coventry City, 2026-08-19)
+  // showed "…: remis w meczu lub obie drużyny strzelą gola" (2.09 / 1.61)
+  // matching the generic /obie.*strzelą/ pattern and taking over BTTS, which
+  // pushed forBET's real "Obie drużyny strzelą gola" market out of the offer.
+  // Only variants with a dedicated catalog code (e.g. -8037 → DRAW_OR_OVER_2_5)
+  // keep one; the rest must stay out of the canonical markets they name.
+  if (/^wydarzy sie min\.? jedno z/.test(name)) {
+    return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
+  }
 
   // Odd/even total-goals market ("Parzysta/nieparzysta - liczba goli") shares
   // the generic O/U game type (8) but its selections are "Parzyste" /

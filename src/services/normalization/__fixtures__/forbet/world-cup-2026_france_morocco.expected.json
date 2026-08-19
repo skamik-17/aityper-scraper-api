@@ -1979,8 +1979,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "HALF_TIME_BTTS",
+        "marketKey": "HALF_TIME_BTTS",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -1998,7 +1998,7 @@
         ]
       },
       "index": 72,
-      "marketCode": "BTTS",
+      "marketCode": "HALF_TIME_BTTS",
       "rawName": "1. połowa - obie drużyny strzelą gola"
     },
     {
@@ -2213,8 +2213,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "SECOND_HALF_BTTS",
+        "marketKey": "SECOND_HALF_BTTS",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -2232,7 +2232,7 @@
         ]
       },
       "index": 81,
-      "marketCode": "BTTS",
+      "marketCode": "SECOND_HALF_BTTS",
       "rawName": "2. połowa - obie drużyny strzelą gola"
     },
     {
@@ -4162,9 +4162,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "name",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4181,7 +4181,7 @@
         ]
       },
       "index": 117,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Wydarzy się min. jedno z: Francja wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4209,9 +4209,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "name",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4228,7 +4228,7 @@
         ]
       },
       "index": 121,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Wydarzy się min. jedno z: Maroko wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4244,7 +4244,7 @@
         "customLabel": null,
         "marketCode": "DRAW_OR_OVER_2_5",
         "marketKey": "DRAW_OR_OVER_2_5",
-        "matchedBy": "id",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4275,9 +4275,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "name",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4294,7 +4294,7 @@
         ]
       },
       "index": 125,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola"
     },
     {

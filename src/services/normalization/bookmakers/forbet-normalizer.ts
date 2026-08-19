@@ -1032,6 +1032,16 @@ function normalizeSelectionForMarket(
     // "X" for the draw bucket (literal passthrough covers the combos).
     case "MULTI_RESULT":
       if (/^(remis|x)$/.test(normalized)) return "X" as NormalizedSelection;
+            // Audit /audit-match (Arsenal vs Coventry City): the "other win" legs are
+      // quoted lowercase (and forBET even in the wrong grammatical case,
+      // "inne zwycięstwo gospodarze"), so they never matched the catalog's
+      // capitalized genitive codes and every one of those prices was dropped.
+      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(trimmed)) {
+        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
+      }
+      if (/^inne\s+zwyci[eę]stwo\s+go[sś]c/i.test(trimmed)) {
+        return "Inne zwycięstwo gości" as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
 
     // "Tak i powyżej 2.5 goli" → OVER_YES (BTTS × totals combo)

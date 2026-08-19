@@ -182,6 +182,7 @@ function buildCoverageLookup(data: CoverageData): NonNullable<MatchAuditOpts["co
 interface RawOfferMarket {
   name: string;
   groupName?: string;
+  bookmakerMarketId?: string;
   paramValue?: string;
   selections: { name: string; odds: number }[];
 }
@@ -269,6 +270,53 @@ function buildRawIndex(bundle: RawBundleFile): RawIndex {
 
 const RAW_MARKETS_PER_BOOKMAKER = 6;
 
+/** Loose token form used to compare our selection codes with raw labels. */
+function selectionToken(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9+.-]/g, "");
+}
+
+/**
+ * Bookmakers routinely publish SEVERAL different markets under one name — e.g.
+ * fuksiarz serves both "Coventry - liczba goli" as over/under lines (id 53) and
+ * as goal ranges 0-1 / 2-3 / 4+ (id 103), and betfan does the same with exact
+ * goals vs over/under. Picking candidates by name alone therefore hands the
+ * judge the WRONG ground truth and manufactures phantom "these odds do not
+ * exist" findings. Score every candidate on how well its selection vocabulary
+ * and line match the entry we are actually auditing, and keep the best ones.
+ */
+function scoreRawCandidate(
+  candidate: RawOfferMarket,
+  entry: { selections: { type: string; label?: string }[] },
+  wantedParam: string | null,
+): number {
+  const rawTokens = candidate.selections.map((s) => selectionToken(s.name));
+  const rawBlob = rawTokens.join(" ");
+  let score = 0;
+
+  for (const sel of entry.selections) {
+    const code = selectionToken(sel.type);
+    if (!code || code === "unknown") continue;
+    if (rawTokens.includes(code)) score += 3;
+    else if (code.length >= 2 && rawBlob.includes(code)) score += 1;
+  }
+
+  if (wantedParam) {
+    const p = selectionToken(wantedParam);
+    if (p) {
+      if (selectionToken(candidate.paramValue ?? "") === p) score += 4;
+      else if (rawTokens.some((t) => t.includes(p))) score += 3;
+      else if (selectionToken(candidate.name).includes(p)) score += 2;
+    }
+  }
+
+  if (candidate.selections.length === entry.selections.length) score += 1;
+  return score;
+}
+
 /**
  * Ground truth for one audited market: for every bookmaker entry in the API
  * response, the raw market(s) whose name matches its rawMarketName, preferring
@@ -298,6 +346,14 @@ function attachRawOffer(
         candidates = (byLine.length > 0 ? byLine : embedded).map((e) => e.market);
       }
       if (candidates.length === 0) continue;
+
+      // Several raw markets can share the name — rank them by how well their
+      // selections match the entry under audit and keep only the best tier.
+      if (candidates.length > 1) {
+        const scored = candidates.map((c) => ({ c, s: scoreRawCandidate(c, entry, wanted) }));
+        const best = Math.max(...scored.map((x) => x.s));
+        if (best > 0) candidates = scored.filter((x) => x.s === best).map((x) => x.c);
+      }
       const picked = wanted
         ? candidates.filter((c) => (c.paramValue ?? "") === wanted)
         : candidates;

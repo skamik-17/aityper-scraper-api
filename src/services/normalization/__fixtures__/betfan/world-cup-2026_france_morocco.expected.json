@@ -147,7 +147,7 @@
         "customLabel": null,
         "marketCode": "DRAW_NO_BET",
         "marketKey": "DRAW_NO_BET",
-        "matchedBy": "name",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -270,61 +270,61 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CORRECT_SCORE",
-        "marketKey": "HALF_TIME_CORRECT_SCORE",
+        "marketCode": "HALFTIME_FULLTIME",
+        "marketKey": "HALFTIME_FULLTIME",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "1 / 1",
+            "code": "HOME_HOME",
             "label": "1 / 1",
             "odds": 2.28
           },
           {
-            "code": "X / 1",
+            "code": "DRAW_HOME",
             "label": "X / 1",
             "odds": 4.6
           },
           {
-            "code": "2 / 1",
+            "code": "AWAY_HOME",
             "label": "2 / 1",
             "odds": 27.5
           },
           {
-            "code": "1 / X",
+            "code": "HOME_DRAW",
             "label": "1 / X",
             "odds": 18
           },
           {
-            "code": "X / X",
+            "code": "DRAW_DRAW",
             "label": "X / X",
             "odds": 6
           },
           {
-            "code": "2 / X",
+            "code": "AWAY_DRAW",
             "label": "2 / X",
             "odds": 20.5
           },
           {
-            "code": "1 / 2",
+            "code": "HOME_AWAY",
             "label": "1 / 2",
             "odds": 50
           },
           {
-            "code": "X / 2",
+            "code": "DRAW_AWAY",
             "label": "X / 2",
             "odds": 13
           },
           {
-            "code": "2 / 2",
+            "code": "AWAY_AWAY",
             "label": "2 / 2",
             "odds": 11
           }
         ]
       },
       "index": 10,
-      "marketCode": "HALF_TIME_CORRECT_SCORE",
+      "marketCode": "HALFTIME_FULLTIME",
       "rawName": "1. połowa / wynik końcowy"
     },
     {
@@ -3883,8 +3883,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_DRAW_NO_BET",
-        "marketKey": "HALF_TIME_DRAW_NO_BET",
+        "marketCode": "HALF_TIME_RESULT",
+        "marketKey": "HALF_TIME_RESULT",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -3907,7 +3907,7 @@
         ]
       },
       "index": 163,
-      "marketCode": "HALF_TIME_DRAW_NO_BET",
+      "marketCode": "HALF_TIME_RESULT",
       "rawName": "1. połowa - wynik"
     },
     {
@@ -6079,31 +6079,31 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "WINNING_MARGIN",
-        "marketKey": "WINNING_MARGIN",
+        "marketCode": "FIRST_TEAM_TO_SCORE",
+        "marketKey": "FIRST_TEAM_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "Brak",
+            "code": "NONE",
             "label": "Brak",
             "odds": 11.5
           },
           {
-            "code": "Francja",
+            "code": "HOME",
             "label": "Francja",
             "odds": 1.46
           },
           {
-            "code": "Maroko",
+            "code": "AWAY",
             "label": "Maroko",
             "odds": 3.05
           }
         ]
       },
       "index": 239,
-      "marketCode": "WINNING_MARGIN",
+      "marketCode": "FIRST_TEAM_TO_SCORE",
       "rawName": "1. gol"
     },
     {
@@ -9937,7 +9937,7 @@
         "customLabel": null,
         "marketCode": "WINNING_MARGIN",
         "marketKey": "WINNING_MARGIN",
-        "matchedBy": "name",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [

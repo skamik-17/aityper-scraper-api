@@ -27,7 +27,13 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   1: "MATCH_WINNER",
   2: "HALF_TIME_RESULT",
   4: "DOUBLE_CHANCE",
-  5: "EUROPEAN_HANDICAP",
+  // Audit /audit-match (Arsenal vs Coventry City): id 5 is labelled "Handicap
+  // europejski" but serves a 3x3 HALF-TIME / FULL-TIME grid ("1/1", "X/1", …)
+  // whose odds match betfan's HT/FT market to the decimal. The genuine
+  // European handicap arrives under the plain "Handicap" label with
+  // "<team> (±line)" selections. Detected by selection shape in
+  // resolveMarketCode so a future relabel cannot silently reintroduce the bug.
+  5: "HALFTIME_FULLTIME",
   6: "DRAW_NO_BET",
   7: "ASIAN_HANDICAP",
   8: "TOTAL_GOALS",
@@ -130,15 +136,25 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-30430": "SECOND_HALF_RESULT_AND_BTTS",
   "-30429": "SECOND_HALF_DOUBLE_CHANCE_TOTAL",
   "-30008": "SECOND_HALF_DOUBLE_CHANCE_BTTS",
-  "-30570": "INTERVAL_TOTAL_GOALS",
+  // Audit /audit-match (Arsenal vs Coventry City): "Liczba goli - N minut" and
+  // "Handicap - N minut" are each ONE family, but the ids were spread over
+  // three codes apiece (INTERVAL_TOTAL_GOALS / TIME_PERIOD_TOTAL_GOALS /
+  // FIRST_30_MIN_TOTAL_GOALS and TIME_PERIOD_HANDICAP / _ASIAN_HANDICAP /
+  // unmapped), so siblings of the same market never lined up and the 5-min and
+  // 60-min windows fell out entirely. The market key already carries both the
+  // window and the line ("TIME_PERIOD_TOTAL_GOALS:75 (2.5)"), so a single code
+  // per family is safe.
+  "-30570": "TIME_PERIOD_TOTAL_GOALS",
   "-30571": "TIME_PERIOD_TOTAL_GOALS",
   "-30572": "TIME_PERIOD_TOTAL_GOALS",
-  "-30573": "FIRST_30_MIN_TOTAL_GOALS",
+  "-30573": "TIME_PERIOD_TOTAL_GOALS",
+  "-30574": "TIME_PERIOD_TOTAL_GOALS",
   "-30575": "TIME_PERIOD_TOTAL_GOALS",
-  "-30565": "TIME_PERIOD_HANDICAP",
+  "-30564": "TIME_PERIOD_ASIAN_HANDICAP",
+  "-30565": "TIME_PERIOD_ASIAN_HANDICAP",
   "-30566": "TIME_PERIOD_ASIAN_HANDICAP",
   "-30567": "TIME_PERIOD_ASIAN_HANDICAP",
-  "-30568": "TIME_PERIOD_HANDICAP",
+  "-30568": "TIME_PERIOD_ASIAN_HANDICAP",
   "-30569": "TIME_PERIOD_ASIAN_HANDICAP",
   "38": "HALF_WITH_MORE_GOALS",
   "-2957": "FIRST_GOAL_TIME",
@@ -488,6 +504,20 @@ function resolveMarketCodeBase(
   }
 
   if (/^handicap europejski$/.test(normalized) || normalized === "handicap") {
+    // Audit /audit-match (premier-league Arsenal vs Coventry City): under the
+    // "Handicap europejski" label fuksiarz actually serves a 3x3 HALF-TIME /
+    // FULL-TIME grid ("1/1", "X/1", "2/1", "1/X", …). Its odds line up with
+    // betfan's HT/FT market to the decimal (1/1 1.58 vs 1.50, X/1 4.10 vs
+    // 3.90, X/X 9.50 vs 9.40), and forcing it into EUROPEAN_HANDICAP produced
+    // an UNKNOWN selection plus a DRAW price parked on the wrong line.
+    // The genuine handicap markets arrive under the plain "Handicap" label
+    // with "<team> (±line)" selections, which the check below still catches.
+    const isHalftimeFulltimeGrid =
+      raw.selections.length >= 6 &&
+      raw.selections.every((sel) => /^\s*[1x2]\s*\/\s*[1x2]\s*$/i.test(sel.name));
+    if (isHalftimeFulltimeGrid) {
+      return { code: "HALFTIME_FULLTIME", matchedBy: "pattern" };
+    }
     return { code: "EUROPEAN_HANDICAP", matchedBy: "pattern" };
   }
 

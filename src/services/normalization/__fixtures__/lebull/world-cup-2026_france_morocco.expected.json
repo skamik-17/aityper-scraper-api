@@ -1847,6 +1847,36 @@
             "odds": 1.25
           },
           {
+            "code": "1X_2-3",
+            "label": "1X i 2-3 gole",
+            "odds": 2.24
+          },
+          {
+            "code": "1X_2-4",
+            "label": "1X i 2-4 gole",
+            "odds": 1.7
+          },
+          {
+            "code": "1X_2-5",
+            "label": "1X i 2-5 goli",
+            "odds": 1.53
+          },
+          {
+            "code": "1X_2-6",
+            "label": "1X i 2-6 goli",
+            "odds": 1.46
+          },
+          {
+            "code": "1X_3-5",
+            "label": "1X i 3-5 goli",
+            "odds": 2.57
+          },
+          {
+            "code": "1X_3-6",
+            "label": "1X i 3-6 goli",
+            "odds": 2.38
+          },
+          {
             "code": "12_1-2",
             "label": "12 i 1-2 goli",
             "odds": 2.71
@@ -1867,6 +1897,36 @@
             "odds": 1.27
           },
           {
+            "code": "12_2-3",
+            "label": "12 i 2-3 gole",
+            "odds": 2.57
+          },
+          {
+            "code": "12_2-4",
+            "label": "12 i 2-4 gole",
+            "odds": 2.01
+          },
+          {
+            "code": "12_2-5",
+            "label": "12 i 2-5 goli",
+            "odds": 1.74
+          },
+          {
+            "code": "12_2-6",
+            "label": "12 i 2-6 goli",
+            "odds": 1.66
+          },
+          {
+            "code": "12_3-5",
+            "label": "12 i 3-5 goli",
+            "odds": 2.39
+          },
+          {
+            "code": "12_3-6",
+            "label": "12 i 3-6 goli",
+            "odds": 2.24
+          },
+          {
             "code": "X2_1-2",
             "label": "X2 i 1-2 gole",
             "odds": 4.5
@@ -1885,6 +1945,36 @@
             "code": "X2_1-5",
             "label": "X2 i 1-5 goli",
             "odds": 2.91
+          },
+          {
+            "code": "X2_2-3",
+            "label": "X2 i 2-3 gole",
+            "odds": 4.75
+          },
+          {
+            "code": "X2_2-4",
+            "label": "X2 i 2-4 goli",
+            "odds": 3.75
+          },
+          {
+            "code": "X2_2-5",
+            "label": "X2 i 2-5 goli",
+            "odds": 3.55
+          },
+          {
+            "code": "X2_2-6",
+            "label": "X2 i 2-6 goli",
+            "odds": 3.45
+          },
+          {
+            "code": "X2_3-5",
+            "label": "X2 i 3-5 goli",
+            "odds": 8.2
+          },
+          {
+            "code": "X2_3-6",
+            "label": "X2 i 3-6 goli",
+            "odds": 7.6
           }
         ]
       },
@@ -4979,62 +5069,62 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_WITH_MORE_GOALS",
-        "marketKey": "HALF_WITH_MORE_GOALS",
+        "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+        "marketKey": "HOME_HALF_WITH_MOST_GOALS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "UNKNOWN",
             "label": "1. < 2.",
             "odds": 2.26
           },
           {
-            "code": "Draw",
+            "code": "UNKNOWN",
             "label": "1. = 2.",
             "odds": 2.93
           },
           {
-            "code": "1st",
+            "code": "UNKNOWN",
             "label": "1. > 2.",
             "odds": 3.8
           }
         ]
       },
       "index": 154,
-      "marketCode": "HALF_WITH_MORE_GOALS",
+      "marketCode": "HOME_HALF_WITH_MOST_GOALS",
       "rawName": "Francja. Połowa z wyższą sumą goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_WITH_MORE_GOALS",
-        "marketKey": "HALF_WITH_MORE_GOALS",
+        "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+        "marketKey": "AWAY_HALF_WITH_MOST_GOALS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "UNKNOWN",
             "label": "1. < 2.",
             "odds": 3.25
           },
           {
-            "code": "Draw",
+            "code": "UNKNOWN",
             "label": "1. = 2.",
             "odds": 1.84
           },
           {
-            "code": "1st",
+            "code": "UNKNOWN",
             "label": "1. > 2.",
             "odds": 5.05
           }
         ]
       },
       "index": 155,
-      "marketCode": "HALF_WITH_MORE_GOALS",
+      "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
       "rawName": "Maroko. Połowa z wyższą sumą goli"
     },
     {

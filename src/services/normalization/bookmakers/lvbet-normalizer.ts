@@ -1222,6 +1222,10 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
+    case "HOME_GOALSCORER_FIRST":
+    case "AWAY_GOALSCORER_FIRST":
+    case "HOME_GOALSCORER_LAST":
+    case "AWAY_GOALSCORER_LAST":
     case "HALF_TIME_GOALSCORER_ANYTIME":
     case "SECOND_HALF_GOALSCORER_ANYTIME":
     case "PLAYER_GOALS":
@@ -1484,6 +1488,60 @@ const TEAM_TOTAL_TO_RACE_CODE: Partial<Record<NormalizedMarketType, NormalizedMa
   TEAM_TOTAL_FOULS: "FOUL_RACE",
 };
 
+/**
+ * LVBet publishes team-scoped variants of the goalscorer markets ("Arsenal -
+ * Ostatni strzelec") and promotional "(Sub-Hero)" variants of the match-wide
+ * ones, both under the same names the generic patterns match. The audit
+ * (/audit-match, Arsenal vs Coventry City) found the team variant occupying
+ * GOALSCORER_LAST — the player list was truncated to one side and the genuine
+ * match-wide market never surfaced — while the Sub-Hero promo (own settlement
+ * rules, one flat price for ~31 players) sat inside the individual markets.
+ */
+const TEAM_SCOPED_SCORER_CODE: Partial<
+  Record<NormalizedMarketType, { home: NormalizedMarketType; away: NormalizedMarketType }>
+> = {
+  GOALSCORER_FIRST: { home: "HOME_GOALSCORER_FIRST", away: "AWAY_GOALSCORER_FIRST" },
+  GOALSCORER_LAST: { home: "HOME_GOALSCORER_LAST", away: "AWAY_GOALSCORER_LAST" },
+};
+
+/**
+ * A "1-30 min." style prefix scopes the market to a time window. Audit
+ * /audit-match (Arsenal vs Coventry City) found "1-30 min. - Arsenal liczba
+ * goli" inside the FULL-MATCH HOME_TEAM_TOTAL_GOALS slider (OVER 1.77 at the
+ * 0.5 line against a full-match consensus of ~1.05), so a 30-minute price was
+ * being compared with 90-minute ones. Unless the resolved code is itself
+ * time-scoped, such an entry must stay out of the canonical market.
+ */
+function isTimeWindowScoped(name: string): boolean {
+  return /^\s*\d+\s*-\s*\d+\s*min\.?/i.test(name);
+}
+
+function isTimeScopedCode(code: NormalizedMarketType): boolean {
+  return /MIN|TIME_PERIOD|INTERVAL|SEGMENT|BAND/.test(code);
+}
+
+function refineTeamScopedScorer(
+  code: NormalizedMarketType,
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext,
+): NormalizedMarketType {
+  const variants = TEAM_SCOPED_SCORER_CODE[code];
+  if (!variants) return code;
+  // Only a "<team> - <market>" prefix scopes the market; a team name appearing
+  // later in the label (e.g. inside a combo) must not trigger the switch.
+  const prefix = raw.name.split(/\s[-–]\s/)[0];
+  if (prefix === raw.name) return code;
+  const side = detectTeamSide(prefix, ctx);
+  if (side === "HOME") return variants.home;
+  if (side === "AWAY") return variants.away;
+  return code;
+}
+
+/** "(Sub-Hero)" is a promotional product, not the market it is named after. */
+function isSubHeroPromo(name: string): boolean {
+  return /\(sub-hero\)/i.test(name);
+}
+
 function refineRaceMisroutedAsTeamTotal(
   code: NormalizedMarketType,
   raw: RawBookmakerMarket,
@@ -1563,6 +1621,9 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     const resolved = resolveMarketCode(raw, ctx);
     let marketCode = refineRaceMisroutedAsTeamTotal(resolved.code, raw, ctx);
     marketCode = refineResultAndExactGoalsMisroutedAsTotalGoals(marketCode, raw, ctx);
+    marketCode = refineTeamScopedScorer(marketCode, raw, ctx);
+    if (isSubHeroPromo(raw.name)) marketCode = "OTHER";
+    if (isTimeWindowScoped(raw.name) && !isTimeScopedCode(marketCode)) marketCode = "OTHER";
     const { matchedBy } = resolved;
 
     // Deliberately excluded markets must not share the single "OTHER" market

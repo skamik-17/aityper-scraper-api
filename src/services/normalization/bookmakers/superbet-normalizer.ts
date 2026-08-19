@@ -892,6 +892,16 @@ function normalizeSelectionForMarket(
       // Catalog codes are the literal Polish labels, e.g. "1:0, 2:0 lub 3:0",
       // plus "X" for the draw - Superbet quotes the draw as "Remis"/"0".
       if (/^(remis|x|0)$/i.test(trimmed)) return "X" as NormalizedSelection;
+            // Audit /audit-match (Arsenal vs Coventry City): the "other win" legs are
+      // quoted lowercase (and forBET even in the wrong grammatical case,
+      // "inne zwycięstwo gospodarze"), so they never matched the catalog's
+      // capitalized genitive codes and every one of those prices was dropped.
+      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(trimmed)) {
+        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
+      }
+      if (/^inne\s+zwyci[eę]stwo\s+go[sś]c/i.test(trimmed)) {
+        return "Inne zwycięstwo gości" as NormalizedSelection;
+      }
       return trimmed as NormalizedSelection;
 
     case "DOUBLE_RESULT_PAIR": {

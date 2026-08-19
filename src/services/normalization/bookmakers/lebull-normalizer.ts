@@ -291,6 +291,27 @@ function resolveMarketCode(
     raw.selections.length > 0 &&
     raw.selections.every((s) => /^1\.?\s*[<=>]\s*2\.?$/.test(s.name.trim()))
   ) {
+    // LeBull quotes the same shape three times: match-wide ("połowa z
+    // największym wynikiem") and once per team ("Arsenal. Połowa z wyższą sumą
+    // goli"). Audit /audit-match (Arsenal vs Coventry City) found the Coventry
+    // variant occupying the match-wide code (1st 5.35 / Draw 1.45 against a
+    // consensus of ~3.0 / ~3.7) while the real match market was never mapped.
+    // Route the team variants to their own codes.
+    const teamPrefix = raw.name.match(/^(.+?)\.\s*po[łl]owa\s+z\s+wy[żz]sz/iu);
+    if (teamPrefix) {
+      const side = normalize1x2Selection(
+        teamPrefix[1].trim(),
+        ctx.homeTeam,
+        ctx.awayTeam,
+        ctx.league,
+      );
+      if (side === "HOME") {
+        return { marketCode: "HOME_HALF_WITH_MOST_GOALS", matchedBy: "pattern" };
+      }
+      if (side === "AWAY") {
+        return { marketCode: "AWAY_HALF_WITH_MOST_GOALS", matchedBy: "pattern" };
+      }
+    }
     return { marketCode: "HALF_WITH_MORE_GOALS", matchedBy: "pattern" };
   }
 

@@ -51,6 +51,9 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [GAME_TYPES.EXACT_GOALS]: "GOAL_RANGE",
   "-8132": "HT_OR_FT_RESULT",
   "-2982": "HOME_TEAM_TO_SCORE",
+  "-2983": "AWAY_TEAM_TO_SCORE",
+  "-200345": "HOME_GOALSCORER_FIRST",
+  "-200346": "AWAY_GOALSCORER_FIRST",
   "-200017": "COMEBACK",
   "-200069": "MOST_SHOTS_ON_TARGET",
   "-30242": "TOTAL_SHOTS_ON_TARGET",
@@ -146,6 +149,28 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-200332": "PLAYER_FOULS_WON",
   "-200338": "PLAYER_OFFSIDES",
   "-200339": "PLAYER_SAVES",
+};
+
+/**
+ * Ids verified against the live bookmaker page during /audit-match
+ * (premier-league Arsenal vs Coventry City, 2026-08-19). Several GAME_TYPES
+ * constants no longer describe what betfan serves under those numbers, and the
+ * stale values were routing real markets into unrelated codes:
+ *   3    "1. połowa - wynik"         → was HALF_TIME_DRAW_NO_BET (it has a draw)
+ *   111  "2. połowa - wynik"         → was HALFTIME_FULLTIME
+ *   5    "1. połowa / wynik końcowy" → was HALF_TIME_CORRECT_SCORE
+ *   -2967 "1. gol"                   → was WINNING_MARGIN (the real margin
+ *                                      market is "Różnica zwycięstwa", -338)
+ * These win over both the symbolic map and the name patterns.
+ */
+const BETFAN_VERIFIED_ID_OVERRIDES: Record<string, NormalizedMarketType> = {
+  "3": "HALF_TIME_RESULT",
+  "111": "SECOND_HALF_RESULT",
+  "5": "HALFTIME_FULLTIME",
+  "-2967": "FIRST_TEAM_TO_SCORE",
+  "-338": "WINNING_MARGIN",
+  "93": "DRAW_NO_BET",
+  "-30001": "CORRECT_SCORE",
 };
 
 const BETFAN_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
@@ -295,6 +320,10 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
   if (rawId !== undefined && rawId !== null) {
     if (typeof rawId === "number" || /^-?\d+$/.test(String(rawId))) {
       const numericId = Number(rawId);
+      const verified = BETFAN_VERIFIED_ID_OVERRIDES[String(numericId)];
+      if (verified) {
+        return { marketCode: verified, matchedBy: "id", rawId: numericId };
+      }
       const byId = BETFAN_MARKET_ID_TO_CODE[numericId];
       if (byId) {
         return { marketCode: byId, matchedBy: "id", rawId: numericId };
@@ -1070,6 +1099,10 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
+    case "HOME_GOALSCORER_FIRST":
+    case "AWAY_GOALSCORER_FIRST":
+    case "HOME_GOALSCORER_LAST":
+    case "AWAY_GOALSCORER_LAST":
     case "HALF_TIME_GOALSCORER_ANYTIME":
     case "PLAYER_SHOTS":
     case "PLAYER_CARDS":

@@ -85,6 +85,8 @@ function trimRawOffer(raw: any): any {
     out[bm] = (markets ?? []).slice(0, MAX_RAW_MARKETS).map((m) => ({
       name: m.name,
       groupName: m.groupName,
+      // Bookmakers reuse one name for several products — the id disambiguates.
+      bookmakerMarketId: m.bookmakerMarketId,
       paramValue: m.paramValue,
       selections: (m.selections ?? []).slice(0, MAX_RAW_MARKET_SELECTIONS),
       ...((m.selections ?? []).length > MAX_RAW_MARKET_SELECTIONS

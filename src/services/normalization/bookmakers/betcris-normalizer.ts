@@ -438,6 +438,15 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
     if (isFirstHalf) return "HALF_TIME_CORRECT_SCORE";
   }
 
+  // "Team 1. Dokładna liczba goli i wygra mecz" is a COMBINED bet (exact goal
+  // count AND the team winning), quoted Tak/Nie. Audit /audit-match (Arsenal
+  // vs Coventry City) found it inside HOME_TEAM_TOTAL_GOALS, mixing YES/NO
+  // selections into an OVER/UNDER market on integer lines 1-4. No catalog
+  // counterpart exists, so keep it out rather than poison the team total.
+  if (/liczba\s+goli\s+i\s+wygra/i.test(lower)) {
+    return null;
+  }
+
   if (/liczba\s+goli/i.test(lower)) {
     if (isFirstHalf) {
       if (isHomeTeamScoped) return "HALF_TIME_HOME_TEAM_TOTAL_GOALS";

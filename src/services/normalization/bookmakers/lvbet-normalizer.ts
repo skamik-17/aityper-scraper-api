@@ -806,11 +806,70 @@ function resolveMarketCode(
   if (/strzeli gola \/ zwyciezca meczu$/.test(normalizedName)) {
     return { code: "OTHER", matchedBy: "pattern" };
   }
+  // "Pierwsze 10 minut (00:00 – 09:59): <stat> X.5" — real, cataloged
+  // first-10-minutes products. The corners variant already has a route above
+  // in LVBET_AUDIT_NAME_PATTERNS (checked earlier in this function); goals
+  // and cards did not, so they fell all the way through to the generic
+  // "gole"/"suma goli" substring pattern and landed in plain TOTAL_GOALS/
+  // CARDS_TOTAL. Found chasing a match-level TOTAL_GOALS:0.5 collision:
+  // this window's own Powyżej/Poniżej (0.5) — 3.9/1.2, correctly
+  // UNDER-favoured for a 10-minute window — was overwriting the real
+  // match-total 0.5 line's 1.02/13.
+  if (/^pierwsze 10 minut \(00:00 [-–] 09:59\): gole [\d.]+$/.test(normalizedName)) {
+    return { code: "FIRST_10_MIN_TOTAL_GOALS", matchedBy: "pattern" };
+  }
+  if (/^pierwsze 10 minut \(00:00 [-–] 09:59\): zołte kartki [\d.]+$/.test(normalizedName)) {
+    return { code: "FIRST_10_MIN_CARDS", matchedBy: "pattern" };
+  }
+
+  // "1-N min. - Zwycięzca" IS a real, cataloged product (TIME_PERIOD_RESULT,
+  // param = the window's end minute) — checked before the bare "zwyciezca"
+  // substring pattern below sends it to plain MATCH_WINNER. Selection
+  // shape (Arsenal/Remis/Coventry City) is handled by the MATCH_WINNER-
+  // style branch in normalizeSelectionForMarket; the end-minute param is
+  // extracted in extractParamValue (a market-name-generic parseIntegerLine
+  // would grab the window's START minute "1" instead).
+  if (/^\d+-\d+ min\.\s*-\s*zwyciezca$/.test(normalizedName)) {
+    return { code: "TIME_PERIOD_RESULT", matchedBy: "pattern" };
+  }
+  // Remaining "…/ wynik meczu" and "…zwyciezca meczu" combo shapes with no
+  // catalog counterpart — all four contain "wynik meczu" or "zwyciezca meczu"
+  // as a substring and were colliding onto plain MATCH_WINNER (225-selection
+  // HT/FT correct-score grid "Wynik 1. połowy/Wynik meczu" was the worst
+  // offender, but the pair below also contaminated it):
+  //   "Wynik 1. połowy/Wynik meczu" — half-time score / full-time score grid
+  //   "Drużyna, która strzeli pierwszego gola i wynik meczu" — scorer+result
+  //   "1. Połowa lub zwycięzca meczu" — HT-result-OR-FT-result (looser bet)
+  if (
+    normalizedName === "wynik 1. połowy/wynik meczu" ||
+    normalizedName === "druzyna, ktora strzeli pierwszego gola i wynik meczu" ||
+    normalizedName === "1. połowa lub zwyciezca meczu"
+  ) {
+    return { code: "OTHER", matchedBy: "pattern" };
+  }
   // "Obie drużyny strzelą i powyżej/poniżej X.5 goli w meczu" IS a real,
   // cataloged product (TOTAL_GOALS_AND_BTTS) — recover it instead of parking
   // it, its selection shape is handled in normalizeSelectionForMarket below.
   if (/^obie druzyny strzela i powyzej\/ponizej [\d.]+ goli w meczu$/.test(normalizedName)) {
     return { code: "TOTAL_GOALS_AND_BTTS", matchedBy: "pattern" };
+  }
+  // Three more parlay shapes found while chasing the BTTS/TOTAL_GOALS
+  // contamination above — same substring-collision mechanism, no quick safe
+  // recovery (raw selection labels are inconsistent — mixed Polish/English,
+  // "Drużyna 1" team-number placeholders — parsing them under uncertainty
+  // risks inventing wrong data, worse than dropping the market):
+  //   "Podwójna szansa i obie drużyny strzelą" (double-chance x BTTS combo,
+  //   6 cells) contains "obie druzyny strzela" -> was landing in plain BTTS.
+  //   "(Do przerwy / koniec meczu) i suma goli X.5 X.5" (HT-or-FT-result x
+  //   total-goals combo, 5 line variants, 14-18 cells each) and "Podwójna
+  //   szansa oraz suma goli (przedziały)" (48 cells) both contain "suma
+  //   goli" -> were landing in plain TOTAL_GOALS.
+  if (
+    normalizedName === "podwojna szansa i obie druzyny strzela" ||
+    normalizedName === "podwojna szansa oraz suma goli (przedzialy)" ||
+    /^\(do przerwy \/ koniec meczu\) i suma goli [\d.]+ [\d.]+$/.test(normalizedName)
+  ) {
+    return { code: "OTHER", matchedBy: "pattern" };
   }
 
   for (const { pattern, code } of LVBET_MARKET_NAME_PATTERNS) {
@@ -928,6 +987,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_RESULT":
     case "SECOND_HALF_RESULT":
     case "DRAW_NO_BET":
+    case "TIME_PERIOD_RESULT":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "DOUBLE_CHANCE":
@@ -1649,6 +1709,13 @@ function extractParamValue(
         "0"
       );
     case "integer":
+      // "1-60 min. - Zwycięzca" -> param "60" (the window's END minute).
+      // parseIntegerLine has no way to know this specific shape's SECOND
+      // number is the real line — it would grab the leading "1" instead.
+      if (marketCode === "TIME_PERIOD_RESULT") {
+        const windowMatch = marketName.match(/^\d+-(\d+)\s*min\b/i);
+        if (windowMatch) return windowMatch[1];
+      }
       return parseIntegerLine(marketName) ?? parseOverUnderLine(selectionNames);
     case "decimal": {
       const line =

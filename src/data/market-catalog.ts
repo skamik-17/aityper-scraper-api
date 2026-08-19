@@ -9250,7 +9250,18 @@ const OTHER_MARKET: MarketCatalogEntry = {
   descriptions: { pl: "Nierozpoznany typ rynku", en: "Unknown market type" },
   hasParameter: false,
   selections: [],
-  viewType: ViewType.BINARY_BUTTONS,
+  // audit-match (Arsenal vs Coventry City) UX gap-analysis: OTHER is a
+  // catch-all bucket that can carry dozens of genuinely unrelated raw
+  // bookmaker markets (a single bookmaker offered up to 134 selections here
+  // for one match). BINARY_BUTTONS is designed for real 2-outcome markets
+  // and its renderer intentionally caps display at 2 selections — applied
+  // to OTHER, that silently dropped the other 132 selections with no
+  // indication anything was missing. COMBINATION has no such cap and
+  // renders every selection type present, which is the correct behavior for
+  // an unbounded catch-all (the underlying "different unrelated products
+  // sharing one generic label" problem is a normalizer-routing issue, not
+  // fixable purely by choice of viewType — see report section 21).
+  viewType: ViewType.COMBINATION,
   displayOrder: 999,
 };
 

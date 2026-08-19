@@ -698,6 +698,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param}", AWAY: "{awayTeam} z handicapem {param}" },
     displayOrder: 30,
   },
   {
@@ -714,6 +715,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} (remis zwrot)", AWAY: "{awayTeam} z handicapem {param} (remis zwrot)" },
     displayOrder: 31,
   },
   {
@@ -730,6 +732,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "DRAW", "AWAY"],
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa z handicapem {param}", DRAW: "Remis z handicapem {param}", AWAY: "{awayTeam} wygrywa z handicapem {param}" },
     displayOrder: 32,
   },
   {
@@ -746,6 +749,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "DRAW", "AWAY"],
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa z handicapem {param}", DRAW: "Remis z handicapem {param}", AWAY: "{awayTeam} wygrywa z handicapem {param}" },
     displayOrder: 33,
   },
   // ── 2. połowa (37-39) ──
@@ -763,6 +767,7 @@ const HANDICAP_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "DRAW", "AWAY"],
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa 2. połowę z handicapem {param}", DRAW: "Remis w 2. połowie z handicapem {param}", AWAY: "{awayTeam} wygrywa 2. połowę z handicapem {param}" },
     displayOrder: 39,
   },
 ];
@@ -915,6 +920,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w 2. połowie", AWAY: "{awayTeam} z handicapem {param} w 2. połowie" },
     displayOrder: 37,
   },
   {
@@ -931,6 +937,7 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w 2. połowie (remis zwrot)", AWAY: "{awayTeam} z handicapem {param} w 2. połowie (remis zwrot)" },
     displayOrder: 38,
   },
   {
@@ -1482,6 +1489,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     // selectionsNotInCatalog and back onto a collapsed "OVER".
     selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+", "9+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} strzałów zawodnika", UNDER: "Poniżej {param} strzałów zawodnika", "1+": "Zawodnik odda co najmniej 1 strzał", "2+": "Zawodnik odda co najmniej 2 strzały", "3+": "Zawodnik odda co najmniej 3 strzały", "4+": "Zawodnik odda co najmniej 4 strzały", "5+": "Zawodnik odda co najmniej 5 strzałów", "6+": "Zawodnik odda co najmniej 6 strzałów", "7+": "Zawodnik odda co najmniej 7 strzałów", "8+": "Zawodnik odda co najmniej 8 strzałów", "9+": "Zawodnik odda co najmniej 9 strzałów" },
     displayOrder: 63,
   },
   {
@@ -1496,6 +1504,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik otrzyma kartkę w meczu", NO: "Zawodnik nie otrzyma kartki w meczu" },
     displayOrder: 64,
   },
   {
@@ -1532,6 +1541,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO", "1+", "2+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik zaliczy asystę w meczu", NO: "Zawodnik nie zaliczy asysty w meczu", "1+": "Zawodnik zaliczy co najmniej 1 asystę", "2+": "Zawodnik zaliczy co najmniej 2 asysty" },
     displayOrder: 65,
   },
   {
@@ -1606,6 +1616,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "DRAW", "AWAY"],
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { HOME: "Zawodnik strzeli gola i wygra {homeTeam}", DRAW: "Zawodnik strzeli gola, a mecz zakończy się remisem", AWAY: "Zawodnik strzeli gola i wygra {awayTeam}" },
     displayOrder: 66,
   },
   {
@@ -1622,6 +1633,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     // PLAYER_SHOTS' higher tiers (see that entry's comment).
     selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} celnych strzałów zawodnika", UNDER: "Poniżej {param} celnych strzałów zawodnika", "1+": "Zawodnik odda co najmniej 1 celny strzał", "2+": "Zawodnik odda co najmniej 2 celne strzały", "3+": "Zawodnik odda co najmniej 3 celne strzały", "4+": "Zawodnik odda co najmniej 4 celne strzały", "5+": "Zawodnik odda co najmniej 5 celnych strzałów", "6+": "Zawodnik odda co najmniej 6 celnych strzałów", "7+": "Zawodnik odda co najmniej 7 celnych strzałów" },
     displayOrder: 67,
   },
   {
@@ -1636,6 +1648,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["OVER", "UNDER", "25+", "30+", "35+", "40+", "45+", "50+", "55+", "60+", "65+", "70+", "75+", "80+", "85+", "90+", "95+", "100+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Powyżej progu podań", UNDER: "Poniżej progu podań", "25+": "25 lub więcej podań", "30+": "30 lub więcej podań", "35+": "35 lub więcej podań", "40+": "40 lub więcej podań", "45+": "45 lub więcej podań", "50+": "50 lub więcej podań", "55+": "55 lub więcej podań", "60+": "60 lub więcej podań", "65+": "65 lub więcej podań", "70+": "70 lub więcej podań", "75+": "75 lub więcej podań", "80+": "80 lub więcej podań", "85+": "85 lub więcej podań", "90+": "90 lub więcej podań", "95+": "95 lub więcej podań", "100+": "100 lub więcej podań" },
     displayOrder: 68,
   },
   {
@@ -1650,6 +1663,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
+    descriptionTemplates: { YES: "Zawodnik strzeli co najmniej 2 gole", NO: "Zawodnik nie strzeli 2 lub więcej goli" },
     displayOrder: 69,
   },
   {
@@ -1664,6 +1678,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
+    descriptionTemplates: { YES: "Zawodnik strzeli co najmniej 3 gole", NO: "Zawodnik nie strzeli 3 lub więcej goli" },
     displayOrder: 70,
   },
   {
@@ -1703,6 +1718,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
+    descriptionTemplates: { YES: "Zawodnik strzeli hat-tricka (3 lub więcej goli)", NO: "Zawodnik nie strzeli hat-tricka" },
     displayOrder: 71,
   },
   {
@@ -1886,6 +1902,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     validParameters: ["1", "2", "3", "4", "5+"],
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} różnych strzelców", UNDER: "Poniżej {param} różnych strzelców" },
     displayOrder: 49,
   },
   {
@@ -1963,6 +1980,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik strzeli pierwszego lub ostatniego gola meczu" },
     displayOrder: 263,
   },
   {
@@ -2109,6 +2127,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     validParameters: ["7.5", "8.5", "9.5", "10.5", "11.5", "12.5"],
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} rzutów rożnych", UNDER: "Poniżej {param} rzutów rożnych" },
     displayOrder: 70,
   },
   {
@@ -2123,6 +2142,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER", "0-2", "3-4", "5-6", "7+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} rożnych drużyny", UNDER: "Poniżej {param} rożnych drużyny", "0-2": "0-2 rzuty rożne drużyny", "3-4": "3-4 rzuty rożne drużyny", "5-6": "5-6 rzutów rożnych drużyny", "7+": "7 lub więcej rożnych drużyny" },
     displayOrder: 71,
   },
   {
@@ -2136,6 +2156,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą rożnych", DRAW: "Tyle samo rzutów rożnych obu drużyn", AWAY: "{awayTeam} z większą liczbą rożnych" },
     displayOrder: 72,
   },
   {
@@ -2223,6 +2244,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "handicap",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w rożnych", AWAY: "{awayTeam} z handicapem {param} w rożnych" },
     displayOrder: 74,
   },
   {
@@ -2237,6 +2259,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER", "0-4", "5-6", "7+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} rożnych w 1. połowie", UNDER: "Poniżej {param} rożnych w 1. połowie", "0-4": "0-4 rzuty rożne w 1. połowie", "5-6": "5-6 rzutów rożnych w 1. połowie", "7+": "7 lub więcej rożnych w 1. połowie" },
     displayOrder: 81,
   },
   {
@@ -2251,6 +2274,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} rożnych w 1. połowie", HOME_UNDER: "{homeTeam} poniżej {param} rożnych w 1. połowie", AWAY_OVER: "{awayTeam} powyżej {param} rożnych w 1. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} rożnych w 1. połowie" },
     displayOrder: 82,
   },
   {
@@ -2264,6 +2288,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą rożnych w 1. połowie", DRAW: "Tyle samo rożnych obu drużyn w 1. połowie", AWAY: "{awayTeam} z większą liczbą rożnych w 1. połowie" },
     displayOrder: 83,
   },
   {
@@ -2309,6 +2334,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     validParameters: ["3.5", "4.5", "5.5", "6.5", "7.5"],
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} kartek w meczu", UNDER: "Poniżej {param} kartek w meczu" },
     displayOrder: 75,
   },
   {
@@ -2323,6 +2349,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER", "0", "1", "2", "3", "4", "5", "6+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "0": "0 kartek w 1. połowie", "1": "Dokładnie 1 kartka w 1. połowie", "2": "Dokładnie 2 kartki w 1. połowie", "3": "Dokładnie 3 kartki w 1. połowie", "4": "Dokładnie 4 kartki w 1. połowie", "5": "Dokładnie 5 kartek w 1. połowie", OVER: "Powyżej {param} kartek w 1. połowie", UNDER: "Poniżej {param} kartek w 1. połowie", "6+": "6 lub więcej kartek w 1. połowie" },
     displayOrder: 84,
   },
   {
@@ -2351,6 +2378,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} kartek", HOME_UNDER: "{homeTeam} poniżej {param} kartek", AWAY_OVER: "{awayTeam} powyżej {param} kartek", AWAY_UNDER: "{awayTeam} poniżej {param} kartek" },
     displayOrder: 76,
   },
   {
@@ -2364,6 +2392,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą kartek", DRAW: "Tyle samo kartek obu drużyn", AWAY: "{awayTeam} z większą liczbą kartek" },
     displayOrder: 77,
   },
   {
@@ -2377,6 +2406,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą kartek w 1. połowie", DRAW: "Tyle samo kartek obu drużyn w 1. połowie", AWAY: "{awayTeam} z większą liczbą kartek w 1. połowie" },
     displayOrder: 78,
   },
   {
@@ -2390,6 +2420,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Pierwsza kartka dla {homeTeam}", NONE: "Żadna drużyna nie zobaczy kartki", AWAY: "Pierwsza kartka dla {awayTeam}" },
     displayOrder: 78,
   },
   {
@@ -2404,6 +2435,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} fauli w meczu", UNDER: "Poniżej {param} fauli w meczu" },
     displayOrder: 79,
   },
   {
@@ -2433,6 +2465,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} spalonych w meczu", UNDER: "Poniżej {param} spalonych w meczu" },
     displayOrder: 81,
   },
   {
@@ -2935,6 +2968,7 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
     selections: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
     selectionOrder: ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"],
     viewType: ViewType.HALFTIME_FULLTIME,
+    descriptionTemplates: { "1/1": "{homeTeam} prowadzi do przerwy i wygrywa", "1/X": "{homeTeam} prowadzi do przerwy, remis na koniec", "1/2": "{homeTeam} prowadzi do przerwy, wygrywa {awayTeam}", "X/1": "Remis do przerwy, wygrywa {homeTeam}", "X/X": "Remis do przerwy i remis na koniec", "X/2": "Remis do przerwy, wygrywa {awayTeam}", "2/1": "{awayTeam} prowadzi do przerwy, wygrywa {homeTeam}", "2/X": "{awayTeam} prowadzi do przerwy, remis na koniec", "2/2": "{awayTeam} prowadzi do przerwy i wygrywa" },
     displayOrder: 93,
     viewConfig: { gridSize: 3, htLabels: ["1", "X", "2"], ftLabels: ["1", "X", "2"], labelFormat: "{ht}/{ft}" },
   },
@@ -2949,6 +2983,7 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X i obie drużyny strzelą gola", "1X_NO": "1X i przynajmniej jedna nie strzeli", X2_YES: "X2 i obie drużyny strzelą gola", X2_NO: "X2 i przynajmniej jedna nie strzeli", "12_YES": "12 i obie drużyny strzelą gola", "12_NO": "12 i przynajmniej jedna nie strzeli" },
     displayOrder: 94,
   },
   {
@@ -2963,6 +2998,7 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["1X_OVER", "1X_UNDER", "X2_OVER", "X2_UNDER", "12_OVER", "12_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_OVER": "1X i powyżej {param} goli w meczu", "1X_UNDER": "1X i poniżej {param} goli w meczu", X2_OVER: "X2 i powyżej {param} goli w meczu", X2_UNDER: "X2 i poniżej {param} goli w meczu", "12_OVER": "12 i powyżej {param} goli w meczu", "12_UNDER": "12 i poniżej {param} goli w meczu" },
     displayOrder: 95,
   },
   {
@@ -2976,6 +3012,7 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_HOME", "HOME_DRAW", "HOME_AWAY", "AWAY_HOME", "AWAY_DRAW", "AWAY_AWAY", "NONE"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_HOME: "{homeTeam} strzela pierwszy gol i wygrywa", HOME_DRAW: "{homeTeam} strzela pierwszy gol, mecz kończy się remisem", HOME_AWAY: "{homeTeam} strzela pierwszy gol, wygrywa {awayTeam}", AWAY_HOME: "{awayTeam} strzela pierwszy gol, wygrywa {homeTeam}", AWAY_DRAW: "{awayTeam} strzela pierwszy gol, mecz kończy się remisem", AWAY_AWAY: "{awayTeam} strzela pierwszy gol i wygrywa", NONE: "Mecz kończy się bez goli, wynik 0:0" },
     displayOrder: 96,
   },
   {
@@ -3172,6 +3209,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "DRAW", "AWAY"],
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa 1. połowę z handicapem {param}", DRAW: "Remis w 1. połowie z handicapem {param}", AWAY: "{awayTeam} wygrywa 1. połowę z handicapem {param}" },
     displayOrder: 36,
   },
   {
@@ -3188,6 +3226,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w 1. połowie", AWAY: "{awayTeam} z handicapem {param} w 1. połowie" },
     displayOrder: 34,
   },
   {
@@ -3204,6 +3243,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["HOME", "AWAY"],
     selectionOrder: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w 1. połowie (remis zwrot)", AWAY: "{awayTeam} z handicapem {param} w 1. połowie (remis zwrot)" },
     displayOrder: 35,
   },
   {
@@ -3490,6 +3530,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X do przerwy i obie drużyny strzelą gola w 1. połowie", "1X_NO": "1X do przerwy i przynajmniej jedna nie strzeli w 1. połowie", X2_YES: "X2 do przerwy i obie drużyny strzelą gola w 1. połowie", X2_NO: "X2 do przerwy i przynajmniej jedna nie strzeli w 1. połowie", "12_YES": "12 do przerwy i obie drużyny strzelą gola w 1. połowie", "12_NO": "12 do przerwy i przynajmniej jedna nie strzeli w 1. połowie" },
     displayOrder: 223
   },
   {
@@ -3503,6 +3544,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X w 2. połowie i obie drużyny strzelą gola w 2. połowie", "1X_NO": "1X w 2. połowie i przynajmniej jedna nie strzeli w 2. połowie", X2_YES: "X2 w 2. połowie i obie drużyny strzelą gola w 2. połowie", X2_NO: "X2 w 2. połowie i przynajmniej jedna nie strzeli w 2. połowie", "12_YES": "12 w 2. połowie i obie drużyny strzelą gola w 2. połowie", "12_NO": "12 w 2. połowie i przynajmniej jedna nie strzeli w 2. połowie" },
     displayOrder: 224
   },
   {
@@ -3516,6 +3558,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_YES: "{homeTeam} wygrywa 2. połowę, obie drużyny strzelą gola", HOME_NO: "{homeTeam} wygrywa 2. połowę, przynajmniej jedna nie strzeli", DRAW_YES: "Remis w 2. połowie, obie drużyny strzelą gola", DRAW_NO: "Remis w 2. połowie, przynajmniej jedna nie strzeli", AWAY_YES: "{awayTeam} wygrywa 2. połowę, obie drużyny strzelą gola", AWAY_NO: "{awayTeam} wygrywa 2. połowę, przynajmniej jedna nie strzeli" },
     displayOrder: 225
   },
   {
@@ -3544,6 +3587,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygra co najmniej jedną połowę", NO: "{homeTeam} nie wygra żadnej połowy" },
     displayOrder: 227
   },
   {
@@ -3557,6 +3601,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygra co najmniej jedną połowę", NO: "{awayTeam} nie wygra żadnej połowy" },
     displayOrder: 228
   },
   {
@@ -3570,6 +3615,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygra obie połowy", NO: "{homeTeam} nie wygra obu połów" },
     displayOrder: 229
   },
   {
@@ -3583,6 +3629,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygra obie połowy", NO: "{awayTeam} nie wygra obu połów" },
     displayOrder: 230
   },
   {
@@ -3596,6 +3643,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygra bez straty gola", NO: "{homeTeam} nie wygra do zera" },
     displayOrder: 231
   },
   {
@@ -3609,6 +3657,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygra bez straty gola", NO: "{awayTeam} nie wygra do zera" },
     displayOrder: 232
   },
   {
@@ -3721,6 +3770,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1st", "2nd", "Draw"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1st": "Więcej goli {homeTeam} w 1. połowie", "2nd": "Więcej goli {homeTeam} w 2. połowie", Draw: "Tyle samo goli {homeTeam} w obu połowach" },
     displayOrder: 239
   },
   {
@@ -3734,6 +3784,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1st", "2nd", "Draw"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1st": "Więcej goli {awayTeam} w 1. połowie", "2nd": "Więcej goli {awayTeam} w 2. połowie", Draw: "Tyle samo goli {awayTeam} w obu połowach" },
     displayOrder: 240
   },
   {
@@ -3747,6 +3798,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} strzeli w obu połowach", NO: "{homeTeam} nie strzeli w obu połowach" },
     displayOrder: 241
   },
   {
@@ -3760,6 +3812,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} strzeli w obu połowach", NO: "{awayTeam} nie strzeli w obu połowach" },
     displayOrder: 242
   },
   {
@@ -4066,6 +4119,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Ktoś strzeli hat-tricka w meczu", NO: "Nikt nie strzeli hat-tricka w meczu" },
     displayOrder: 262,
   },
   {
@@ -4079,6 +4133,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Rezerwowy zawodnik strzeli gola", NO: "Żaden rezerwowy nie strzeli gola" },
     displayOrder: 263,
   },
   {
@@ -4160,6 +4215,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} odbiorów w meczu", UNDER: "Poniżej {param} odbiorów w meczu" },
     displayOrder: 269,
   },
   {
@@ -4173,6 +4229,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą odbiorów", DRAW: "Tyle samo odbiorów obu drużyn", AWAY: "{awayTeam} z większą liczbą odbiorów" },
     displayOrder: 270,
   },
   {
@@ -4186,6 +4243,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Pierwszy strzał w meczu odda {homeTeam}", AWAY: "Pierwszy strzał w meczu odda {awayTeam}", NONE: "Żadna drużyna nie odda strzału" },
     displayOrder: 271,
   },
   {
@@ -4199,6 +4257,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Pierwszy celny strzał odda {homeTeam}", AWAY: "Pierwszy celny strzał odda {awayTeam}", NONE: "Żadna drużyna nie odda celnego strzału" },
     displayOrder: 272,
   },
   {
@@ -4213,6 +4272,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} punktów za kartki", UNDER: "Poniżej {param} punktów za kartki" },
     displayOrder: 273,
   },
   {
@@ -4227,6 +4287,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} punktów za kartki w 1. połowie", UNDER: "Poniżej {param} punktów za kartki w 1. połowie" },
     displayOrder: 274,
   }
 ];
@@ -4244,6 +4305,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} awansuje dalej", AWAY: "{awayTeam} awansuje dalej" },
     displayOrder: 500,
   },
   {
@@ -4257,6 +4319,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_REGULAR","HOME_EXTRA_TIME","HOME_PENALTIES","AWAY_REGULAR","AWAY_EXTRA_TIME","AWAY_PENALTIES"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_REGULAR: "{homeTeam} wygrywa w regulaminowym czasie gry", HOME_EXTRA_TIME: "{homeTeam} wygrywa po dogrywce", HOME_PENALTIES: "{homeTeam} wygrywa po rzutach karnych", AWAY_REGULAR: "{awayTeam} wygrywa w regulaminowym czasie gry", AWAY_EXTRA_TIME: "{awayTeam} wygrywa po dogrywce", AWAY_PENALTIES: "{awayTeam} wygrywa po rzutach karnych" },
     displayOrder: 500,
   },
   {
@@ -4270,6 +4333,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Mecz zostanie rozstrzygnięty w dogrywce", NO: "Mecz nie zostanie rozstrzygnięty w dogrywce" },
     displayOrder: 500,
   },
   {
@@ -4283,6 +4347,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "O wyniku zadecyduje seria rzutów karnych", NO: "Nie dojdzie do serii rzutów karnych" },
     displayOrder: 500,
   },
   {
@@ -4296,6 +4361,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Remis lub poniżej 2.5 gola w meczu", NO: "Ani remis, ani poniżej 2.5 gola" },
     displayOrder: 500,
   },
   {
@@ -4314,6 +4380,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "team",
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra lub zachowa czyste konto", NO: "Brak wygranej i brak czystego konta obu drużyn" },
     displayOrder: 500,
   },
   {
@@ -4328,6 +4395,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_0-1","HOME_1-2","HOME_1-3","HOME_2-3","HOME_4+","AWAY_0-1","AWAY_1-2","AWAY_1-3","AWAY_2-3","AWAY_4+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "HOME_0-1": "{homeTeam} strzeli 0-1 gola w 1. połowie", "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 1. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 1. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 1. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub więcej goli w 1. połowie", "AWAY_0-1": "{awayTeam} strzeli 0-1 gola w 1. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 1. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 1. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 1. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub więcej goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -4356,6 +4424,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w spalonych - 1. połowa", AWAY: "{awayTeam} z handicapem {param} w spalonych - 1. połowa" },
     displayOrder: 500,
   },
   {
@@ -4369,6 +4438,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { YES: "Trafiony typ wyniku meczu lub dokładnego rezultatu", NO: "Nietrafiony ani wynik meczu, ani dokładny rezultat" },
     displayOrder: 500,
   },
   {
@@ -4409,6 +4479,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "Pierwsze wybicie od bramki wykona {homeTeam}", AWAY: "Pierwsze wybicie od bramki wykona {awayTeam}" },
     displayOrder: 500,
   },
   {
@@ -4423,6 +4494,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER","UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli samobójczych", UNDER: "Poniżej {param} goli samobójczych" },
     displayOrder: 500,
   },
   {
@@ -4437,6 +4509,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} strzałów w 1. połowie", AWAY: "{awayTeam} z handicapem {param} strzałów w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -4450,6 +4523,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Wskazana drużyna wygrywa, liczba goli w przedziale {param}", NO: "Warunek wygranej i przedziału goli niespełniony" },
     displayOrder: 500,
   },
   {
@@ -4464,6 +4538,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny strzelą powyżej {param} goli", NO: "Przynajmniej jedna drużyna nie przekroczy {param} goli" },
     displayOrder: 500,
   },
   {
@@ -4490,6 +4565,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Więcej spalonych po stronie {homeTeam} (1. połowa)", DRAW: "Tyle samo spalonych obu drużyn (1. połowa)", AWAY: "Więcej spalonych po stronie {awayTeam} (1. połowa)" },
     displayOrder: 500,
   },
   {
@@ -4503,6 +4579,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["REGULAR_TIME","EXTRA_TIME","PENALTIES"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { REGULAR_TIME: "Mecz rozstrzygnięty w regulaminowym czasie gry", EXTRA_TIME: "Mecz rozstrzygnięty w dogrywce", PENALTIES: "Mecz rozstrzygnięty w rzutach karnych" },
     displayOrder: 500,
   },
   {
@@ -4517,6 +4594,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} strzeli pierwszy gol i padnie powyżej {param} goli", HOME_UNDER: "{homeTeam} strzeli pierwszy gol i padnie poniżej {param} goli", AWAY_OVER: "{awayTeam} strzeli pierwszy gol i padnie powyżej {param} goli", AWAY_UNDER: "{awayTeam} strzeli pierwszy gol i padnie poniżej {param} goli" },
     displayOrder: 500,
   },
   {
@@ -4531,6 +4609,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny strzelą lub suma goli powyżej {param}", NO: "Żaden z warunków się nie spełni" },
     displayOrder: 500,
   },
   {
@@ -4544,6 +4623,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygrywa jedną bramką lub jest remis", NO: "Inny wynik niż remis lub wygrana {awayTeam} o 1 gola" },
     displayOrder: 500,
   },
   {
@@ -4584,6 +4664,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER","UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w pierwszych 10 minutach", UNDER: "Poniżej {param} goli w pierwszych 10 minutach" },
     displayOrder: 500,
   },
   {
@@ -4598,6 +4679,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} strzeli powyżej {param} goli do 15. minuty", HOME_UNDER: "{homeTeam} strzeli poniżej {param} goli do 15. minuty", AWAY_OVER: "{awayTeam} strzeli powyżej {param} goli do 15. minuty", AWAY_UNDER: "{awayTeam} strzeli poniżej {param} goli do 15. minuty" },
     displayOrder: 500,
   },
   {
@@ -4612,6 +4694,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} strzeli powyżej {param} goli do 30. minuty", HOME_UNDER: "{homeTeam} strzeli poniżej {param} goli do 30. minuty", AWAY_OVER: "{awayTeam} strzeli powyżej {param} goli do 30. minuty", AWAY_UNDER: "{awayTeam} strzeli poniżej {param} goli do 30. minuty" },
     displayOrder: 500,
   },
   {
@@ -4626,6 +4709,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} strzeli powyżej {param} goli do 75. minuty", HOME_UNDER: "{homeTeam} strzeli poniżej {param} goli do 75. minuty", AWAY_OVER: "{awayTeam} strzeli powyżej {param} goli do 75. minuty", AWAY_UNDER: "{awayTeam} strzeli poniżej {param} goli do 75. minuty" },
     displayOrder: 500,
   },
   {
@@ -4639,6 +4723,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_1-2","HOME_1-3","HOME_1-4","HOME_2-3","HOME_2-4","AWAY_1-2","AWAY_1-3","AWAY_1-4","AWAY_2-3","AWAY_2-4"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_1-2": "{homeTeam} wygrywa i strzela 1-2 gole", "HOME_1-3": "{homeTeam} wygrywa i strzela 1-3 gole", "HOME_1-4": "{homeTeam} wygrywa i strzela 1-4 gole", "HOME_2-3": "{homeTeam} wygrywa i strzela 2-3 gole", "HOME_2-4": "{homeTeam} wygrywa i strzela 2-4 gole", "AWAY_1-2": "{awayTeam} wygrywa i strzela 1-2 gole", "AWAY_1-3": "{awayTeam} wygrywa i strzela 1-3 gole", "AWAY_1-4": "{awayTeam} wygrywa i strzela 1-4 gole", "AWAY_2-3": "{awayTeam} wygrywa i strzela 2-3 gole", "AWAY_2-4": "{awayTeam} wygrywa i strzela 2-4 gole" },
     displayOrder: 500,
   },
   {
@@ -4652,6 +4737,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_1-2","HOME_1-3","HOME_1-4","HOME_2-3","HOME_2-4","HOME_OTHER","AWAY_1-2","AWAY_1-3","AWAY_1-4","AWAY_2-3","AWAY_2-4","AWAY_OTHER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_1-2": "{homeTeam} strzeli 1-2 gole", "HOME_1-3": "{homeTeam} strzeli 1-3 gole", "HOME_1-4": "{homeTeam} strzeli 1-4 gole", "HOME_2-3": "{homeTeam} strzeli 2-3 gole", "HOME_2-4": "{homeTeam} strzeli 2-4 gole", HOME_OTHER: "{homeTeam} strzeli inną liczbę goli", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole", "AWAY_1-4": "{awayTeam} strzeli 1-4 gole", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole", "AWAY_2-4": "{awayTeam} strzeli 2-4 gole", AWAY_OTHER: "{awayTeam} strzeli inną liczbę goli" },
     displayOrder: 500,
   },
   {
@@ -4679,6 +4765,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Dokładnie {param} goli w meczu", NO: "Inna liczba goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -4693,6 +4780,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_YES","HOME_NO","AWAY_YES","AWAY_NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME_YES: "{homeTeam} strzeli powyżej {param} goli w obu połowach", HOME_NO: "{homeTeam} nie strzeli powyżej {param} goli w obu połowach", AWAY_YES: "{awayTeam} strzeli powyżej {param} goli w obu połowach", AWAY_NO: "{awayTeam} nie strzeli powyżej {param} goli w obu połowach" },
     displayOrder: 500,
   },
   {
@@ -4707,6 +4795,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Powyżej {param} goli w co najmniej jednej połowie", NO: "Żadna połowa nie przekroczy {param} goli" },
     displayOrder: 500,
   },
   {
@@ -4721,6 +4810,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER","UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli do 40. minuty", UNDER: "Poniżej {param} goli do 40. minuty" },
     displayOrder: 500,
   },
   {
@@ -4734,6 +4824,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Wygrana {homeTeam} lub prowadzenie różnicą 2 goli", DRAW: "Remis bez prowadzenia różnicą 2 goli żadnej ze stron", AWAY: "Wygrana {awayTeam} lub prowadzenie różnicą 2 goli" },
     displayOrder: 500,
   },
   {
@@ -4748,6 +4839,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} do 30. minuty", AWAY: "{awayTeam} z handicapem {param} do 30. minuty" },
     displayOrder: 500,
   },
   {
@@ -4762,6 +4854,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} do 60. minuty", AWAY: "{awayTeam} z handicapem {param} do 60. minuty" },
     displayOrder: 500,
   },
   {
@@ -4776,6 +4869,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} do 75. minuty", AWAY: "{awayTeam} z handicapem {param} do 75. minuty" },
     displayOrder: 500,
   },
   {
@@ -4802,6 +4896,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} zachowa czyste konto", NO: "{awayTeam} straci przynajmniej gola" },
     displayOrder: 500,
   },
   {
@@ -4815,6 +4910,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa lub prowadzi 2 golami", DRAW: "Remis bez przewagi 2 goli którejś ze stron", AWAY: "{awayTeam} wygrywa lub prowadzi 2 golami" },
     displayOrder: 500,
   },
   {
@@ -4828,6 +4924,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} prowadzi po tej kwarcie", DRAW: "Remis po tej kwarcie", AWAY: "{awayTeam} prowadzi po tej kwarcie" },
     displayOrder: 500,
   },
   {
@@ -4841,6 +4938,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygra mecz", NO: "{awayTeam} nie wygra meczu" },
     displayOrder: 500,
   },
   {
@@ -4855,6 +4953,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "{homeTeam} wygrywa lub powyżej {param} goli w meczu", NO: "{homeTeam} nie wygrywa i poniżej {param} goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -4869,6 +4968,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "{awayTeam} wygrywa lub powyżej {param} goli w meczu", NO: "{awayTeam} nie wygrywa i poniżej {param} goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -4883,6 +4983,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "{homeTeam} wygrywa lub poniżej {param} goli w meczu", NO: "{homeTeam} nie wygrywa i powyżej {param} goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -4897,6 +4998,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "{awayTeam} wygrywa lub poniżej {param} goli w meczu", NO: "{awayTeam} nie wygrywa i powyżej {param} goli w meczu" },
     displayOrder: 501,
   },
   {
@@ -4910,6 +5012,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w dogrywce", NO: "Brak gola w dogrywce" },
     displayOrder: 500,
   },
   {
@@ -4923,6 +5026,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Więcej żółtych kartek dla {homeTeam}", DRAW: "Tyle samo żółtych kartek obu drużyn", AWAY: "Więcej żółtych kartek dla {awayTeam}" },
     displayOrder: 500,
   },
   {
@@ -4937,6 +5041,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME","AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} celnych strzałów w 1. połowie", AWAY: "{awayTeam} z handicapem {param} celnych strzałów w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -4950,6 +5055,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_OVER","HOME_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} - powyżej {param} rożnych w pierwszych 10 minutach", HOME_UNDER: "{homeTeam} - poniżej {param} rożnych w pierwszych 10 minutach", AWAY_OVER: "{awayTeam} - powyżej {param} rożnych w pierwszych 10 minutach", AWAY_UNDER: "{awayTeam} - poniżej {param} rożnych w pierwszych 10 minutach" },
     displayOrder: 500,
   },
   {
@@ -4963,6 +5069,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_OVER","HOME_UNDER","DRAW_OVER","DRAW_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i strzela powyżej {param} goli", HOME_UNDER: "{homeTeam} wygrywa i strzela poniżej {param} goli", DRAW_OVER: "Remis i powyżej {param} goli w meczu", DRAW_UNDER: "Remis i poniżej {param} goli w meczu", AWAY_OVER: "{awayTeam} wygrywa i strzela powyżej {param} goli", AWAY_UNDER: "{awayTeam} wygrywa i strzela poniżej {param} goli" },
     displayOrder: 500,
   },
   {
@@ -4976,6 +5083,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra 1. połowę dokładnie {param} golami", NO: "Żadna drużyna nie wygra 1. połowy dokładnie {param} golami" },
     displayOrder: 500,
   },
   {
@@ -5031,6 +5139,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["FIRST_HALF","SECOND_HALF"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { FIRST_HALF: "Więcej goli w 1. połowie (z handicapem)", SECOND_HALF: "Więcej goli w 2. połowie (z handicapem)" },
     displayOrder: 500,
   },
   {
@@ -5044,6 +5153,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_1","HOME_2","HOME_3","HOME_4+","DRAW_0","DRAW_2","DRAW_4","DRAW_6+","AWAY_1","AWAY_2","AWAY_3","AWAY_4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_1: "{homeTeam} wygrywa, dokładnie 1 gol w meczu", HOME_2: "{homeTeam} wygrywa, dokładnie 2 gole w meczu", HOME_3: "{homeTeam} wygrywa, dokładnie 3 gole w meczu", "HOME_4+": "{homeTeam} wygrywa, 4 lub więcej goli w meczu", DRAW_0: "Remis, wynik 0:0", DRAW_2: "Remis, dokładnie 2 gole w meczu", DRAW_4: "Remis, dokładnie 4 gole w meczu", "DRAW_6+": "Remis, 6 lub więcej goli w meczu", AWAY_1: "{awayTeam} wygrywa, dokładnie 1 gol w meczu", AWAY_2: "{awayTeam} wygrywa, dokładnie 2 gole w meczu", AWAY_3: "{awayTeam} wygrywa, dokładnie 3 gole w meczu", "AWAY_4+": "{awayTeam} wygrywa, 4 lub więcej goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -5058,6 +5168,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER","UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w meczu", UNDER: "Poniżej {param} goli w meczu" },
     displayOrder: 500,
   },
   {
@@ -5084,6 +5195,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME","DRAW","AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} otrzyma pierwszą żółtą kartkę w meczu", DRAW: "W meczu nie będzie żółtej kartki", AWAY: "{awayTeam} otrzyma pierwszą żółtą kartkę w meczu" },
     displayOrder: 500,
   },
   {
@@ -5162,6 +5274,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik otrzyma żółtą kartkę w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5201,6 +5314,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik strzeli gola lub zobaczy żółtą kartkę" },
     displayOrder: 500,
   },
   {
@@ -5215,6 +5329,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER","UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} asyst w meczu", UNDER: "Poniżej {param} asyst w meczu" },
     displayOrder: 500,
   },
   {
@@ -5228,6 +5343,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES","1X_NO","X2_YES","X2_NO","12_YES","12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X do przerwy i obie drużyny strzelą gola w 1. połowie", "1X_NO": "1X do przerwy i przynajmniej jedna nie strzeli w 1. połowie", X2_YES: "X2 do przerwy i obie drużyny strzelą gola w 1. połowie", X2_NO: "X2 do przerwy i przynajmniej jedna nie strzeli w 1. połowie", "12_YES": "12 do przerwy i obie drużyny strzelą gola w 1. połowie", "12_NO": "12 do przerwy i przynajmniej jedna nie strzeli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5242,6 +5358,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","DRAW_OVER","DRAW_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli w 1. połowie", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli w 1. połowie", DRAW_OVER: "Remis i powyżej {param} goli w 1. połowie", DRAW_UNDER: "Remis i poniżej {param} goli w 1. połowie", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli w 1. połowie", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5268,6 +5385,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER","EXACTLY","UNDER"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w 1. połowie", EXACTLY: "Dokładnie {param} goli w 1. połowie", UNDER: "Poniżej {param} goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5299,6 +5417,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Obie drużyny oddadzą powyżej {param} celnych strzałów każda" },
     displayOrder: 275,
   },
   {
@@ -5313,6 +5432,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Drużyna popełni powyżej {param} fauli", UNDER: "Drużyna popełni poniżej {param} fauli" },
     displayOrder: 276,
   },
   {
@@ -5327,6 +5447,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Obie drużyny popełnią powyżej {param} fauli każda" },
     displayOrder: 277,
   },
   {
@@ -5341,6 +5462,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Obie drużyny będą na spalonym więcej niż {param} razy każda" },
     displayOrder: 278,
   },
   {
@@ -5382,6 +5504,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Prowadzenie zmieni się w 1. połowie", NO: "Prowadzenie nie zmieni się w 1. połowie" },
     displayOrder: 281,
   },
   {
@@ -5396,6 +5519,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} zmian zawodników w meczu", UNDER: "Poniżej {param} zmian zawodników w meczu" },
     displayOrder: 282,
   },
   {
@@ -5409,6 +5533,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra 1. połowę do zera", NO: "Żadna drużyna nie wygra 1. połowy do zera" },
     displayOrder: 283,
   },
   {
@@ -5435,6 +5560,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra 2. połowę do zera", NO: "Żadna drużyna nie wygra 2. połowy do zera" },
     displayOrder: 285,
   },
   {
@@ -5450,6 +5576,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} kartek", AWAY: "{awayTeam} z handicapem {param} kartek" },
     displayOrder: 286,
   },
   {
@@ -5463,6 +5590,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "W meczu będzie rzut karny lub czerwona kartka", NO: "W meczu nie będzie ani rzutu karnego, ani czerwonej kartki" },
     displayOrder: 287,
   },
   {
@@ -5476,6 +5604,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna otrzyma rzut karny w meczu", NO: "Drużyna nie otrzyma rzutu karnego w meczu" },
     displayOrder: 288,
   },
   {
@@ -5490,6 +5619,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["1X_OVER", "1X_UNDER", "X2_OVER", "X2_UNDER", "12_OVER", "12_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_OVER": "1X do przerwy i powyżej {param} goli w 1. połowie", "1X_UNDER": "1X do przerwy i poniżej {param} goli w 1. połowie", X2_OVER: "X2 do przerwy i powyżej {param} goli w 1. połowie", X2_UNDER: "X2 do przerwy i poniżej {param} goli w 1. połowie", "12_OVER": "12 do przerwy i powyżej {param} goli w 1. połowie", "12_UNDER": "12 do przerwy i poniżej {param} goli w 1. połowie" },
     displayOrder: 289,
   },
   {
@@ -5504,6 +5634,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["1X_OVER", "1X_UNDER", "X2_OVER", "X2_UNDER", "12_OVER", "12_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_OVER": "1X w 2. połowie i powyżej {param} goli", "1X_UNDER": "1X w 2. połowie i poniżej {param} goli", X2_OVER: "X2 w 2. połowie i powyżej {param} goli", X2_UNDER: "X2 w 2. połowie i poniżej {param} goli", "12_OVER": "12 w 2. połowie i powyżej {param} goli", "12_UNDER": "12 w 2. połowie i poniżej {param} goli" },
     displayOrder: 290,
   },
   {
@@ -5518,6 +5649,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
     displayOrder: 291,
   },
   {
@@ -5540,6 +5672,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w tym okresie meczu", UNDER: "Poniżej {param} goli w tym okresie meczu" },
     displayOrder: 292,
   },
   {
@@ -5554,6 +5687,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w pierwszych 30 minutach", UNDER: "Poniżej {param} goli w pierwszych 30 minutach" },
     displayOrder: 293,
   },
   {
@@ -5569,6 +5703,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w wybranym przedziale czasowym", AWAY: "{awayTeam} z handicapem {param} w wybranym przedziale czasowym" },
     displayOrder: 294,
   },
   {
@@ -5593,6 +5728,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "integer",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} w wybranym przedziale czasowym", AWAY: "{awayTeam} z handicapem {param} w wybranym przedziale czasowym" },
     displayOrder: 295,
   },
   {
@@ -5619,6 +5755,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_BY_1", "HOME_BY_2", "HOME_BY_3PLUS", "DRAW", "AWAY_BY_1", "AWAY_BY_2", "AWAY_BY_3PLUS"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_BY_1: "{homeTeam} wygrywa 1. połowę różnicą 1 gola", HOME_BY_2: "{homeTeam} wygrywa 1. połowę różnicą 2 goli", HOME_BY_3PLUS: "{homeTeam} wygrywa 1. połowę różnicą 3 lub więcej goli", DRAW: "Remis w 1. połowie", AWAY_BY_1: "{awayTeam} wygrywa 1. połowę różnicą 1 gola", AWAY_BY_2: "{awayTeam} wygrywa 1. połowę różnicą 2 goli", AWAY_BY_3PLUS: "{awayTeam} wygrywa 1. połowę różnicą 3 lub więcej goli" },
     displayOrder: 297,
   },
   {
@@ -5632,6 +5769,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol spoza pola karnego", NO: "Nie padnie gol spoza pola karnego" },
     displayOrder: 298,
   },
   {
@@ -5645,6 +5783,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny strzelą gola do 60. minuty", NO: "Nie obie drużyny strzelą gola do 60. minuty" },
     displayOrder: 299,
   },
   {
@@ -5658,6 +5797,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny strzelą gola do 30. minuty", NO: "Nie obie drużyny strzelą gola do 30. minuty" },
     displayOrder: 300,
   },
   {
@@ -5671,6 +5811,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny strzelą gola do 15. minuty", NO: "Nie obie drużyny strzelą gola do 15. minuty" },
     displayOrder: 301,
   },
   {
@@ -5686,6 +5827,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} do 15. minuty", AWAY: "{awayTeam} z handicapem {param} do 15. minuty" },
     displayOrder: 302,
   },
   {
@@ -5699,6 +5841,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie remis z co najmniej jedną bramką", NO: "Nie będzie remisu z bramkami (0:0 lub zwycięstwo)" },
     displayOrder: 303,
   },
   {
@@ -5753,6 +5896,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Przynajmniej jedna połowa zakończy się remisem", NO: "Żadna połowa nie zakończy się remisem" },
     displayOrder: 307,
   },
   {
@@ -5766,6 +5910,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_HOME", "HOME_DRAW", "HOME_AWAY", "DRAW_HOME", "DRAW_DRAW", "DRAW_AWAY", "AWAY_HOME", "AWAY_DRAW", "AWAY_AWAY"],
     viewType: ViewType.HALFTIME_FULLTIME,
+    descriptionTemplates: { HOME_HOME: "{homeTeam} wygrywa obie połowy", HOME_DRAW: "{homeTeam} wygrywa 1. połowę, remis w 2. połowie", HOME_AWAY: "{homeTeam} wygrywa 1. połowę, {awayTeam} wygrywa 2. połowę", DRAW_HOME: "Remis w 1. połowie, {homeTeam} wygrywa 2. połowę", DRAW_DRAW: "Remis w obu połowach", DRAW_AWAY: "Remis w 1. połowie, {awayTeam} wygrywa 2. połowę", AWAY_HOME: "{awayTeam} wygrywa 1. połowę, {homeTeam} wygrywa 2. połowę", AWAY_DRAW: "{awayTeam} wygrywa 1. połowę, remis w 2. połowie", AWAY_AWAY: "{awayTeam} wygrywa obie połowy" },
     displayOrder: 308,
   },
   {
@@ -5779,6 +5924,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} wygra 2. połowę do zera", NO: "{awayTeam} nie wygra 2. połowy do zera" },
     displayOrder: 309,
   },
   {
@@ -5792,6 +5938,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygra 2. połowę do zera", NO: "{homeTeam} nie wygra 2. połowy do zera" },
     displayOrder: 310,
   },
   {
@@ -5806,6 +5953,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "{awayTeam} wygra 2. połowę dokładnie {param} golami", NO: "{awayTeam} nie wygra 2. połowy dokładnie {param} golami" },
     displayOrder: 312,
   },
   {
@@ -5819,6 +5967,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygrywa 2. połowę dokładnie różnicą {param} goli", NO: "{homeTeam} nie wygrywa 2. połowy dokładnie tą różnicą" },
     displayOrder: 313,
   },
   {
@@ -5832,6 +5981,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{awayTeam} prowadzi do przerwy bez straty gola", NO: "{awayTeam} nie wygrywa 1. połowy do zera" },
     displayOrder: 314,
   },
   {
@@ -5845,6 +5995,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} prowadzi do przerwy bez straty gola", NO: "{homeTeam} nie wygrywa 1. połowy do zera" },
     displayOrder: 315,
   },
   {
@@ -5858,6 +6009,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HEADER", "PENALTY", "FREE_KICK", "OTHER"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { HEADER: "Pierwszy gol strzelony głową", PENALTY: "Pierwszy gol z rzutu karnego", FREE_KICK: "Pierwszy gol z rzutu wolnego", OTHER: "Pierwszy gol w inny sposób" },
     displayOrder: 316,
   },
   {
@@ -5871,6 +6023,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} nie wykorzysta rzutu karnego", AWAY: "{awayTeam} nie wykorzysta rzutu karnego" },
     displayOrder: 317,
   },
   {
@@ -5884,6 +6037,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { "1-10": "Pierwszy gol {awayTeam} w 1-10 min", "11-20": "Pierwszy gol {awayTeam} w 11-20 min", "21-30": "Pierwszy gol {awayTeam} w 21-30 min", "31-40": "Pierwszy gol {awayTeam} w 31-40 min", "41-50": "Pierwszy gol {awayTeam} w 41-50 min", "51-60": "Pierwszy gol {awayTeam} w 51-60 min", "61-70": "Pierwszy gol {awayTeam} w 61-70 min", "71-80": "Pierwszy gol {awayTeam} w 71-80 min", "81-90": "Pierwszy gol {awayTeam} w 81-90 min", NONE: "{awayTeam} nie strzeli gola w meczu" },
     displayOrder: 318,
   },
   {
@@ -5897,6 +6051,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1-10": "Pierwszy gol {homeTeam} w 1-10 min", "11-20": "Pierwszy gol {homeTeam} w 11-20 min", "21-30": "Pierwszy gol {homeTeam} w 21-30 min", "31-40": "Pierwszy gol {homeTeam} w 31-40 min", "41-50": "Pierwszy gol {homeTeam} w 41-50 min", "51-60": "Pierwszy gol {homeTeam} w 51-60 min", "61-70": "Pierwszy gol {homeTeam} w 61-70 min", "71-80": "Pierwszy gol {homeTeam} w 71-80 min", "81-90": "Pierwszy gol {homeTeam} w 81-90 min", NONE: "{homeTeam} nie strzeli gola w meczu" },
     displayOrder: 319,
   },
   {
@@ -5911,6 +6066,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Co najmniej jedna drużyna strzeli powyżej {param} goli", NO: "Żadna drużyna nie strzeli powyżej {param} goli" },
     displayOrder: 320,
   },
   {
@@ -5924,6 +6080,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny otrzymają rzut karny w meczu", NO: "Przynajmniej jedna drużyna nie otrzyma rzutu karnego" },
     displayOrder: 321,
   },
   {
@@ -5937,6 +6094,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { YES: "W meczu zostaną podyktowane dokładnie 2 rzuty karne" },
     displayOrder: 322,
   },
   {
@@ -5950,6 +6108,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Rzut karny zostanie podyktowany w 1. połowie", NO: "W 1. połowie nie będzie rzutu karnego" },
     displayOrder: 323,
   },
   {
@@ -6020,6 +6179,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} rożnych w pierwszych 10 minutach meczu", UNDER: "Poniżej {param} rożnych w pierwszych 10 minutach meczu" },
     displayOrder: 328,
   },
   {
@@ -6062,6 +6222,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER", "EXACTLY"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} rożnych w meczu", UNDER: "Poniżej {param} rożnych w meczu", EXACTLY: "Dokładnie {param} rożnych w meczu" },
     displayOrder: 330,
   },
   {
@@ -6075,6 +6236,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1st", "2nd", "Draw"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1st": "Więcej rożnych padnie w 1. połowie", "2nd": "Więcej rożnych padnie w 2. połowie", Draw: "Tyle samo rożnych w obu połowach" },
     displayOrder: 331,
   },
   {
@@ -6088,6 +6250,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Rzut rożny padnie w 1. minucie meczu", NO: "W 1. minucie meczu nie będzie rzutu rożnego" },
     displayOrder: 332,
   },
   {
@@ -6101,6 +6264,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Ostatnią kartkę zobaczy {homeTeam}", NONE: "W meczu nie będzie żadnej kartki", AWAY: "Ostatnią kartkę zobaczy {awayTeam}" },
     displayOrder: 333,
   },
   {
@@ -6116,6 +6280,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z faulami po handicapie {param}", AWAY: "{awayTeam} z faulami po handicapie {param}" },
     displayOrder: 334,
   },
   {
@@ -6131,6 +6296,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z kartkami 2. połowy po handicapie {param}", AWAY: "{awayTeam} z kartkami 2. połowy po handicapie {param}" },
     displayOrder: 335,
   },
   {
@@ -6145,6 +6311,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "{awayTeam} powyżej {param} kartek w 2. połowie", UNDER: "{awayTeam} poniżej {param} kartek w 2. połowie" },
     displayOrder: 336,
   },
   {
@@ -6159,6 +6326,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "{homeTeam} powyżej {param} kartek w 2. połowie", UNDER: "{homeTeam} poniżej {param} kartek w 2. połowie" },
     displayOrder: 337,
   },
   {
@@ -6173,6 +6341,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} kartek w 2. połowie", UNDER: "Poniżej {param} kartek w 2. połowie" },
     displayOrder: 338,
   },
   {
@@ -6186,6 +6355,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą kartek w 2. połowie", DRAW: "Tyle samo kartek obu drużyn w 2. połowie", AWAY: "{awayTeam} z większą liczbą kartek w 2. połowie" },
     displayOrder: 339,
   },
   {
@@ -6201,6 +6371,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z kartkami 1. połowy po handicapie {param}", AWAY: "{awayTeam} z kartkami 1. połowy po handicapie {param}" },
     displayOrder: 340,
   },
   {
@@ -6215,6 +6386,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyzej {param} kartek {awayTeam} w 1. połowie", UNDER: "Ponizej {param} kartek {awayTeam} w 1. połowie" },
     displayOrder: 341,
   },
   {
@@ -6229,6 +6401,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyzej {param} kartek {homeTeam} w 1. połowie", UNDER: "Ponizej {param} kartek {homeTeam} w 1. połowie" },
     displayOrder: 342,
   },
   {
@@ -6244,6 +6417,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z faulami 1. połowy po handicapie {param}", AWAY: "{awayTeam} z faulami 1. połowy po handicapie {param}" },
     displayOrder: 343,
   },
   {
@@ -6258,6 +6432,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} strzałów drużyny w słupek/poprzeczkę", UNDER: "Poniżej {param} strzałów drużyny w słupek/poprzeczkę" },
     displayOrder: 344,
   },
   {
@@ -6273,6 +6448,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} ze strzałami w obramowanie po handicapie {param}", AWAY: "{awayTeam} ze strzałami w obramowanie po handicapie {param}" },
     displayOrder: 345,
   },
   {
@@ -6286,6 +6462,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą strzałów w obramowanie bramki", DRAW: "Tyle samo strzałów w obramowanie bramki obu drużyn", AWAY: "{awayTeam} z większą liczbą strzałów w obramowanie bramki" },
     displayOrder: 346,
   },
   {
@@ -6300,6 +6477,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} strzałów w słupek lub poprzeczkę", UNDER: "Poniżej {param} strzałów w słupek lub poprzeczkę" },
     displayOrder: 347,
   },
   {
@@ -6315,6 +6493,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z wznowieniami od bramki po handicapie {param}", AWAY: "{awayTeam} z wznowieniami od bramki po handicapie {param}" },
     displayOrder: 348,
   },
   {
@@ -6330,6 +6509,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z wrzutami z autu po handicapie {param}", AWAY: "{awayTeam} z wrzutami z autu po handicapie {param}" },
     displayOrder: 349,
   },
   {
@@ -6343,6 +6523,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą wrzutów z autu", DRAW: "Tyle samo wrzutów z autu obu drużyn", AWAY: "{awayTeam} z większą liczbą wrzutów z autu" },
     displayOrder: 350,
   },
   {
@@ -6358,6 +6539,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} ze strzałami po handicapie {param}", AWAY: "{awayTeam} ze strzałami po handicapie {param}" },
     displayOrder: 351,
   },
   {
@@ -6371,6 +6553,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { YES: "Gol padnie w pierwszej minucie meczu" },
     displayOrder: 352,
   },
   {
@@ -6385,6 +6568,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} czerwonych kartek w meczu", UNDER: "Poniżej {param} czerwonych kartek w meczu" },
     displayOrder: 353,
   },
   {
@@ -6399,6 +6583,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} fauli w 1. połowie", UNDER: "Poniżej {param} fauli w 1. połowie" },
     displayOrder: 354,
   },
   {
@@ -6413,6 +6598,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "{homeTeam} powyżej {param} fauli w 1. połowie", UNDER: "{homeTeam} poniżej {param} fauli w 1. połowie" },
     displayOrder: 355,
   },
   {
@@ -6427,6 +6613,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "{awayTeam} powyżej {param} fauli w 1. połowie", UNDER: "{awayTeam} poniżej {param} fauli w 1. połowie" },
     displayOrder: 356,
   },
   {
@@ -6440,6 +6627,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą punktów za kartki", DRAW: "Tyle samo punktów za kartki obu drużyn", AWAY: "{awayTeam} z większą liczbą punktów za kartki" },
     displayOrder: 357,
   },
   {
@@ -6455,6 +6643,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} pkt kartkowych", AWAY: "{awayTeam} z handicapem {param} pkt kartkowych" },
     displayOrder: 358,
   },
   {
@@ -6468,6 +6657,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny otrzymają przynajmniej jedną kartkę", NO: "Przynajmniej jedna drużyna bez kartki" },
     displayOrder: 359,
   },
   {
@@ -6481,6 +6671,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "W meczu padnie bezpośrednia czerwona kartka", NO: "Brak bezpośredniej czerwonej kartki w meczu" },
     displayOrder: 360,
   },
   {
@@ -6494,6 +6685,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Pierwsze spalone zaliczy {homeTeam}", AWAY: "Pierwsze spalone zaliczy {awayTeam}", NONE: "W meczu nie będzie żadnego spalonego" },
     displayOrder: 361,
   },
   {
@@ -6507,6 +6699,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "W meczu będzie rzut karny lub czerwona kartka", NO: "Brak rzutu karnego i czerwonej kartki w meczu" },
     displayOrder: 362,
   },
   {
@@ -6520,6 +6713,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Kartka padnie w obu połowach meczu", NO: "Kartka nie padnie w co najmniej jednej połowie" },
     displayOrder: 363,
   },
   {
@@ -6534,6 +6728,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Ponad {param} wrzutów z autu w meczu", UNDER: "Poniżej {param} wrzutów z autu w meczu" },
     displayOrder: 364,
   },
   {
@@ -6548,6 +6743,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "{homeTeam} wykona ponad {param} wrzutów z autu", UNDER: "{homeTeam} wykona poniżej {param} wrzutów z autu" },
     displayOrder: 365,
   },
   {
@@ -6562,6 +6758,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "{awayTeam} wykona ponad {param} wrzutów z autu", UNDER: "{awayTeam} wykona poniżej {param} wrzutów z autu" },
     displayOrder: 366,
   },
   {
@@ -6577,6 +6774,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} celnych strzałów", AWAY: "{awayTeam} z handicapem {param} celnych strzałów" },
     displayOrder: 367,
   },
   {
@@ -6590,6 +6788,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny ukarane kartką w każdej połowie", NO: "Nie każda drużyna ukarana kartką w obu połowach" },
     displayOrder: 368,
   },
   {
@@ -6604,6 +6803,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Ponad {param} żółtych kartek w pierwszych 10 minutach", UNDER: "Poniżej {param} żółtych kartek w pierwszych 10 minutach" },
     displayOrder: 369,
   },
   {
@@ -6617,6 +6817,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny otrzymają co najmniej 2 kartki", NO: "Co najmniej jedna drużyna otrzyma mniej niż 2 kartki" },
     displayOrder: 370,
   },
   {
@@ -6645,6 +6846,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "{homeTeam} popełni ponad {param} fauli", UNDER: "{homeTeam} popełni poniżej {param} fauli" },
     displayOrder: 372,
   },
   {
@@ -6659,6 +6861,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "{awayTeam} popełni ponad {param} fauli", UNDER: "{awayTeam} popełni poniżej {param} fauli" },
     displayOrder: 373,
   },
   {
@@ -6673,6 +6876,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Ponad {param} wznowień od bramki w meczu", UNDER: "Poniżej {param} wznowień od bramki w meczu" },
     displayOrder: 374,
   },
   {
@@ -6687,6 +6891,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "{awayTeam} wykona ponad {param} wznowień od bramki", UNDER: "{awayTeam} wykona poniżej {param} wznowień od bramki" },
     displayOrder: 375,
   },
   {
@@ -6701,6 +6906,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "{homeTeam} wykona ponad {param} wznowień od bramki", UNDER: "{homeTeam} wykona poniżej {param} wznowień od bramki" },
     displayOrder: 376,
   },
   {
@@ -6728,6 +6934,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { YES: "Co najmniej 3 celne strzały spoza pola karnego" },
     displayOrder: 378,
   },
   {
@@ -6741,6 +6948,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { YES: "Kartka padnie w doliczonym czasie 2. połowy" },
     displayOrder: 379,
   },
   {
@@ -6768,6 +6976,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["ODD", "EVEN"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { ODD: "Nieparzysta liczba kartek w meczu", EVEN: "Parzysta liczba kartek w meczu" },
     displayOrder: 381,
   },
   {
@@ -6797,6 +7006,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem {param} spalonych", AWAY: "{awayTeam} z handicapem {param} spalonych" },
     displayOrder: 383,
   },
   {
@@ -6810,6 +7020,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny zobaczą czerwoną kartkę", NO: "Przynajmniej jedna drużyna bez czerwonej" },
     displayOrder: 384,
   },
   {
@@ -6825,6 +7036,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterFormat: "handicap_dual",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
+    descriptionTemplates: { HOME: "{homeTeam} z handicapem xG {param}", AWAY: "{awayTeam} z handicapem xG {param}" },
     displayOrder: 385,
   },
   {
@@ -6872,6 +7084,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra mecz (bez remisu)", NO: "Mecz zakończy się remisem" },
     displayOrder: 388,
   },
   {
@@ -6890,6 +7103,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "team",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna wygra mecz", NO: "Drużyna nie wygra meczu" },
     displayOrder: 389,
   },
   {
@@ -6908,6 +7122,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "team",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Zwycięstwo dowolnej drużyny lub gol obu zespołów", NO: "Remis i nie obie drużyny strzelą gola" },
     displayOrder: 390,
   },
   {
@@ -6921,6 +7136,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Remis lub gol obu drużyn", NO: "Zwycięstwo jednej z drużyn i nie obie strzelą" },
     displayOrder: 391,
   },
   {
@@ -6935,6 +7151,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "Zwycięstwo drużyny lub poniżej {param} goli", NO: "Brak zwycięstwa i powyżej {param} goli" },
     displayOrder: 392,
   },
   {
@@ -6948,6 +7165,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Remis lub powyżej 2.5 gola w meczu", NO: "Zwycięstwo jednej z drużyn i poniżej 2.5 gola" },
     displayOrder: 393,
   },
   {
@@ -6961,6 +7179,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Remis lub czyste konto jednej z drużyn", NO: "Zwycięstwo drużyny bez czystego konta" },
     displayOrder: 394,
   },
   {
@@ -6974,6 +7193,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Czerwona kartka padnie w 1. połowie", NO: "Brak czerwonej kartki w 1. połowie" },
     displayOrder: 395,
   },
   {
@@ -6987,6 +7207,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna obejmie prowadzenie w trakcie meczu", NO: "Drużyna nie obejmie prowadzenia w meczu" },
     displayOrder: 396,
   },
   {
@@ -7000,6 +7221,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn strzeli dwa gole z rzędu", NO: "Żadna drużyna nie strzeli dwóch goli z rzędu" },
     displayOrder: 397,
   },
   {
@@ -7013,6 +7235,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn strzeli dwa gole pod rząd", NO: "Żadna drużyna nie strzeli dwóch goli pod rząd" },
     displayOrder: 398,
   },
   {
@@ -7026,6 +7249,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra mecz (bez remisu)", NO: "Mecz zakończy się remisem" },
     displayOrder: 399,
   },
   {
@@ -7039,6 +7263,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie zmiana zawodnika w 1. połowie", NO: "Brak zmiany zawodnika w 1. połowie" },
     displayOrder: 400,
   },
   {
@@ -7053,6 +7278,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Suma xG powyżej {param}", UNDER: "Suma xG poniżej {param}" },
     displayOrder: 401,
   },
   {
@@ -7067,6 +7293,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Ponad {param} obron bramkarzy", UNDER: "Poniżej {param} obron bramkarzy" },
     displayOrder: 402,
   },
   {
@@ -7153,6 +7380,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jakiś zawodnik strzeli co najmniej 2 gole", NO: "Żaden zawodnik nie strzeli 2 lub więcej goli" },
     displayOrder: 404,
   },
   {
@@ -7166,6 +7394,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w pierwszych 15 minutach", NO: "Nie padnie gol w pierwszych 15 minutach" },
     displayOrder: 405,
   },
   {
@@ -7179,6 +7408,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w pierwszych 30 minutach", NO: "Nie padnie gol w pierwszych 30 minutach" },
     displayOrder: 406,
   },
   {
@@ -7192,6 +7422,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w przedziale {param}", NO: "Nie padnie gol w przedziale {param}" },
     displayOrder: 407,
   },
   {
@@ -7206,6 +7437,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Padnie bramka po {param} minucie", NO: "Nie padnie bramka po {param} minucie" },
     displayOrder: 408,
   },
   {
@@ -7220,6 +7452,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli drużyny do danej minuty", UNDER: "Poniżej {param} goli drużyny do danej minuty" },
     displayOrder: 409,
   },
   {
@@ -7234,6 +7467,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli do 60. minuty", UNDER: "Poniżej {param} goli do 60. minuty" },
     displayOrder: 410,
   },
   {
@@ -7248,6 +7482,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} strzeli powyżej {param} goli do 60. minuty", HOME_UNDER: "{homeTeam} strzeli poniżej {param} goli do 60. minuty", AWAY_OVER: "{awayTeam} strzeli powyżej {param} goli do 60. minuty", AWAY_UNDER: "{awayTeam} strzeli poniżej {param} goli do 60. minuty" },
     displayOrder: 411,
   },
   {
@@ -7262,6 +7497,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Powyżej {param} goli do 60. minuty", UNDER: "Poniżej {param} goli do 60. minuty" },
     displayOrder: 412,
   },
   {
@@ -7275,6 +7511,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} z większą liczbą rożnych w 2. połowie", DRAW: "Tyle samo rożnych obu drużyn w 2. połowie", AWAY: "{awayTeam} z większą liczbą rożnych w 2. połowie" },
     displayOrder: 413,
   },
   {
@@ -7289,6 +7526,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Ponad {param} rożnych w 2. połowie", UNDER: "Poniżej {param} rożnych w 2. połowie" },
     displayOrder: 414,
   },
   {
@@ -7323,6 +7561,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} rożnych w 2. połowie", HOME_UNDER: "{homeTeam} poniżej {param} rożnych w 2. połowie", AWAY_OVER: "{awayTeam} powyżej {param} rożnych w 2. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} rożnych w 2. połowie" },
     displayOrder: 415,
   },
   {
@@ -7336,6 +7575,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} wykona pierwszy rożny w 1. połowie", NONE: "Brak rzutu rożnego w 1. połowie", AWAY: "{awayTeam} wykona pierwszy rożny w 1. połowie" },
     displayOrder: 416,
   },
   {
@@ -7350,6 +7590,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} kartek w 1. połowie", HOME_UNDER: "{homeTeam} poniżej {param} kartek w 1. połowie", AWAY_OVER: "{awayTeam} powyżej {param} kartek w 1. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} kartek w 1. połowie" },
     displayOrder: 417,
   },
   {
@@ -7363,6 +7604,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Ktoś zmarnuje rzut karny w meczu", NO: "Brak niewykorzystanego karnego w meczu" },
     displayOrder: 418,
   },
   {
@@ -7390,6 +7632,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1st", "2nd", "Draw"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1st": "Więcej rożnych w 1. połowie", "2nd": "Więcej rożnych w 2. połowie", Draw: "Tyle samo rożnych w obu połowach" },
     displayOrder: 420,
   },
   {
@@ -7403,6 +7646,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Przynajmniej jedna połowa zakończy się remisem", NO: "Żadna połowa nie zakończy się remisem" },
     displayOrder: 421,
   },
   {
@@ -7416,6 +7660,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "Mecz rozpocznie {homeTeam}", AWAY: "Mecz rozpocznie {awayTeam}" },
     displayOrder: 422,
   },
   {
@@ -7456,6 +7701,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w 1. połowie", NO: "Brak gola w 1. połowie" },
     displayOrder: 425,
   },
   {
@@ -7483,6 +7729,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Różne drużyny wygrywają każdą z połów", NO: "Ta sama drużyna wygrywa obie połowy lub remis w którejś" },
     displayOrder: 427,
   },
   {
@@ -7496,6 +7743,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Czerwona kartka padnie w 2. połowie", NO: "Brak czerwonej kartki w 2. połowie" },
     displayOrder: 428,
   },
   {
@@ -7509,6 +7757,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Ostatnią żółtą kartkę zobaczy {homeTeam}", NONE: "Brak żółtych kartek w meczu", AWAY: "Ostatnią żółtą kartkę zobaczy {awayTeam}" },
     displayOrder: 429,
   },
   {
@@ -7522,6 +7771,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Ktoś zobaczy bezpośrednią czerwoną kartkę", NO: "Brak bezpośredniej czerwonej kartki" },
     displayOrder: 430,
   },
   {
@@ -7535,6 +7785,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny z min. {param} kartek", NO: "Przynajmniej jedna drużyna poniżej {param} kartek" },
     displayOrder: 433,
   },
   {
@@ -7548,6 +7799,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Dokładnie {param} goli w meczu", NO: "Inna liczba goli niż {param} w meczu" },
     displayOrder: 434,
   },
   {
@@ -7561,6 +7813,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} strzeli ostatniego gola 1. połowy", AWAY: "{awayTeam} strzeli ostatniego gola 1. połowy", NONE: "Brak goli w 1. połowie" },
     displayOrder: 435,
   },
   {
@@ -7574,6 +7827,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} popełni więcej fauli w 1. połowie", DRAW: "Tyle samo fauli obu drużyn w 1. połowie", AWAY: "{awayTeam} popełni więcej fauli w 1. połowie" },
     displayOrder: 436,
   },
   {
@@ -7588,6 +7842,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_1-2", "HOME_1-3", "HOME_1-4", "HOME_2-3", "HOME_4+", "AWAY_1-2", "AWAY_1-3", "AWAY_1-4", "AWAY_2-3", "AWAY_4+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 2. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 2. połowie", "HOME_1-4": "{homeTeam} strzeli 1-4 gole w 2. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 2. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub wiecej goli w 2. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 2. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 2. połowie", "AWAY_1-4": "{awayTeam} strzeli 1-4 gole w 2. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 2. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub wiecej goli w 2. połowie" },
     displayOrder: 437,
   },
   {
@@ -7601,6 +7856,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w 2. połowie", NO: "Brak gola w 2. połowie" },
     displayOrder: 438,
   },
   {
@@ -7614,6 +7870,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES_YES", "YES_NO", "NO_YES", "NO_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { YES_YES: "{param} strzeli w obu połowach", YES_NO: "{param} strzeli tylko w pierwszej połowie", NO_YES: "{param} strzeli tylko w drugiej połowie", NO_NO: "{param} nie strzeli w żadnej połowie" },
     displayOrder: 439,
   },
   {
@@ -7627,6 +7884,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} strzeli ostatniego gola 2. połowy", AWAY: "{awayTeam} strzeli ostatniego gola 2. połowy", NONE: "Brak goli w 2. połowie" },
     displayOrder: 440,
   },
   {
@@ -7640,6 +7898,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} kartek w 2. połowie", HOME_UNDER: "{homeTeam} poniżej {param} kartek w 2. połowie", AWAY_OVER: "{awayTeam} powyżej {param} kartek w 2. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} kartek w 2. połowie" },
     displayOrder: 441,
   },
   {
@@ -7667,6 +7926,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Co najmniej jeden zespół strzeli {param}+ goli", NO: "Żaden zespół nie strzeli {param}+ goli" },
     displayOrder: 443,
   },
   {
@@ -7694,6 +7954,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} autów drużyny", UNDER: "Poniżej {param} autów drużyny" },
     displayOrder: 445,
   },
   {
@@ -7707,6 +7968,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} rożnych w tym przedziale czasowym", UNDER: "Poniżej {param} rożnych w tym przedziale czasowym" },
     displayOrder: 446,
   },
   {
@@ -7720,6 +7982,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} fauli w 1. połowie", HOME_UNDER: "{homeTeam} poniżej {param} fauli w 1. połowie", AWAY_OVER: "{awayTeam} powyżej {param} fauli w 1. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} fauli w 1. połowie" },
     displayOrder: 447,
   },
   {
@@ -7733,6 +7996,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} autów w pierwszych 10 minutach", UNDER: "Poniżej {param} autów w pierwszych 10 minutach" },
     displayOrder: 448,
   },
   {
@@ -7760,6 +8024,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Ponad {param} interwencji VAR", UNDER: "Poniżej {param} interwencji VAR" },
     displayOrder: 450,
   },
   {
@@ -7774,6 +8039,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Ponad {param} przerw na pomoc medyczną", UNDER: "Poniżej {param} przerw na pomoc medyczną" },
     displayOrder: 451,
   },
   {
@@ -7787,6 +8053,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Ponad {param} żółtych kartek w meczu", UNDER: "Poniżej {param} żółtych kartek w meczu" },
     displayOrder: 452,
   },
   {
@@ -7800,6 +8067,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Drużyna wykona ponad {param} autów", UNDER: "Drużyna wykona poniżej {param} autów" },
     displayOrder: 453,
   },
   {
@@ -7813,6 +8081,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Drużyna wykona ponad {param} autów", UNDER: "Drużyna wykona poniżej {param} autów" },
     displayOrder: 454,
   },
   {
@@ -7826,6 +8095,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Drużyna wykona ponad {param} wybić od bramki", UNDER: "Drużyna wykona poniżej {param} wybić od bramki" },
     displayOrder: 455,
   },
   {
@@ -7839,6 +8109,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Drużyna wykona ponad {param} wybić od bramki", UNDER: "Drużyna wykona poniżej {param} wybić od bramki" },
     displayOrder: 456,
   },
   {
@@ -7852,6 +8123,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna przegrywająca do przerwy wygrywa mecz", NO: "Brak odwrócenia wyniku po przerwie" },
     displayOrder: 457,
   },
   {
@@ -7866,6 +8138,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { OVER: "Ponad {param} celnych strzałów w 1. połowie", UNDER: "Poniżej {param} celnych strzałów w 1. połowie" },
     displayOrder: 458,
   },
   {
@@ -7879,6 +8152,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny mają ponad {param} rożnych w każdej połowie", NO: "Przynajmniej jedna drużyna nie osiąga {param} rożnych w połowie" },
     displayOrder: 459,
   },
   {
@@ -7892,6 +8166,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna ma ponad {param} rożnych w każdej połowie", NO: "Drużyna nie ma ponad {param} rożnych w którejś połowie" },
     displayOrder: 460,
   },
   {
@@ -7906,6 +8181,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny wykonują ponad {param} rożnych", NO: "Przynajmniej jedna drużyna ma poniżej {param} rożnych" },
     displayOrder: 461,
   },
   {
@@ -7920,6 +8196,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny otrzymują ponad {param} kartek" },
     displayOrder: 462,
   },
   {
@@ -7934,6 +8211,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny oddają celny strzał", NO: "Przynajmniej jedna drużyna bez celnego strzału" },
     displayOrder: 463,
   },
   {
@@ -7948,6 +8226,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "Obie drużyny popełniają ponad {param} fauli" },
     displayOrder: 464,
   },
   {
@@ -7961,6 +8240,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra mecz (bez remisu)", NO: "Mecz zakończy się remisem" },
     displayOrder: 465,
   },
   {
@@ -7974,6 +8254,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["DRAW", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { DRAW: "Remis (zwrot przy zwycięstwie {homeTeam})", AWAY: "Wygrana {awayTeam} (zwrot przy zwycięstwie {homeTeam})" },
     displayOrder: 466,
   },
   {
@@ -7987,6 +8268,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X w meczu i obie strzelą w 1. połowie", "1X_NO": "1X w meczu i nie obie strzelą w 1. połowie", X2_YES: "X2 w meczu i obie strzelą w 1. połowie", X2_NO: "X2 w meczu i nie obie strzelą w 1. połowie", "12_YES": "12 w meczu i obie strzelą w 1. połowie", "12_NO": "12 w meczu i nie obie strzelą w 1. połowie" },
     displayOrder: 467,
   },
   {
@@ -8000,6 +8282,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_YES", "1X_NO", "X2_YES", "X2_NO", "12_YES", "12_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_YES": "1X w meczu i obie strzelą w 2. połowie", "1X_NO": "1X w meczu i nie obie strzelą w 2. połowie", X2_YES: "X2 w meczu i obie strzelą w 2. połowie", X2_NO: "X2 w meczu i nie obie strzelą w 2. połowie", "12_YES": "12 w meczu i obie strzelą w 2. połowie", "12_NO": "12 w meczu i nie obie strzelą w 2. połowie" },
     displayOrder: 468,
   },
   {
@@ -8055,6 +8338,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Gola strzeli tylko jedna drużyna", NO: "Obie drużyny strzelą lub żadna nie strzeli" },
     displayOrder: 472,
   },
   {
@@ -8068,6 +8352,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "Kolejny gol strzeli {homeTeam}", AWAY: "Kolejny gol strzeli {awayTeam}", NONE: "W meczu nie padnie już żaden gol" },
     displayOrder: 473,
   },
   {
@@ -8091,6 +8376,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER", "EXACTLY", "UNDER"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w meczu", EXACTLY: "Dokładnie {param} goli w meczu", UNDER: "Poniżej {param} goli w meczu" },
     displayOrder: 474,
   },
   {
@@ -8107,6 +8393,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // bookmakers shared no column at all and 18 superbet prices were orphans.
     selections: ["1X_1-2", "1X_1-3", "1X_1-4", "1X_1-5", "1X_2-3", "1X_2-4", "1X_2-5", "1X_2-6", "1X_3-5", "1X_3-6", "X2_1-2", "X2_1-3", "X2_1-4", "X2_1-5", "X2_2-3", "X2_2-4", "X2_2-5", "X2_2-6", "X2_3-5", "X2_3-6", "12_1-2", "12_1-3", "12_1-4", "12_1-5", "12_2-3", "12_2-4", "12_2-5", "12_2-6", "12_3-5", "12_3-6"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1X_1-2": "1X i 1-2 goli", "1X_1-3": "1X i 1-3 goli", "1X_1-4": "1X i 1-4 goli", "1X_1-5": "1X i 1-5 goli", "1X_2-3": "1X i 2-3 goli", "1X_2-4": "1X i 2-4 goli", "1X_2-5": "1X i 2-5 goli", "1X_2-6": "1X i 2-6 goli", "1X_3-5": "1X i 3-5 goli", "1X_3-6": "1X i 3-6 goli", "X2_1-2": "X2 i 1-2 goli", "X2_1-3": "X2 i 1-3 goli", "X2_1-4": "X2 i 1-4 goli", "X2_1-5": "X2 i 1-5 goli", "X2_2-3": "X2 i 2-3 goli", "X2_2-4": "X2 i 2-4 goli", "X2_2-5": "X2 i 2-5 goli", "X2_2-6": "X2 i 2-6 goli", "X2_3-5": "X2 i 3-5 goli", "X2_3-6": "X2 i 3-6 goli", "12_1-2": "12 i 1-2 goli", "12_1-3": "12 i 1-3 goli", "12_1-4": "12 i 1-4 goli", "12_1-5": "12 i 1-5 goli", "12_2-3": "12 i 2-3 goli", "12_2-4": "12 i 2-4 goli", "12_2-5": "12 i 2-5 goli", "12_2-6": "12 i 2-6 goli", "12_3-5": "12 i 3-5 goli", "12_3-6": "12 i 3-6 goli" },
     displayOrder: 475,
   },
   {
@@ -8120,6 +8407,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_OR_BTTS_YES", "AWAY_OR_BTTS_YES", "DRAW_OR_BTTS_YES", "HOME_OR_BTTS_NO", "AWAY_OR_BTTS_NO", "DRAW_OR_BTTS_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_OR_BTTS_YES: "{homeTeam} wygrywa lub obie strzelą", AWAY_OR_BTTS_YES: "{awayTeam} wygrywa lub obie strzelą", DRAW_OR_BTTS_YES: "Remis lub obie strzelą", HOME_OR_BTTS_NO: "{homeTeam} wygrywa lub nie obie drużyny strzelą", AWAY_OR_BTTS_NO: "{awayTeam} wygrywa lub nie obie drużyny strzelą", DRAW_OR_BTTS_NO: "Remis lub nie obie drużyny strzelą" },
     displayOrder: 476,
   },
   {
@@ -8133,6 +8421,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1X_1X", "1X_X2", "1X_12", "X2_1X", "X2_X2", "X2_12", "12_1X", "12_X2", "12_12"],
     viewType: ViewType.HALFTIME_FULLTIME,
+    descriptionTemplates: { "1X_1X": "1X do przerwy i 1X na koniec meczu", "1X_X2": "1X do przerwy i X2 na koniec meczu", "1X_12": "1X do przerwy i 12 na koniec meczu", X2_1X: "X2 do przerwy i 1X na koniec meczu", X2_X2: "X2 do przerwy i X2 na koniec meczu", X2_12: "X2 do przerwy i 12 na koniec meczu", "12_1X": "12 do przerwy i 1X na koniec meczu", "12_X2": "12 do przerwy i X2 na koniec meczu", "12_12": "12 do przerwy i 12 na koniec meczu" },
     displayOrder: 477,
   },
   {
@@ -8146,6 +8435,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_HOME_YES", "HOME_HOME_NO", "HOME_DRAW_YES", "HOME_DRAW_NO", "HOME_AWAY_YES", "HOME_AWAY_NO", "DRAW_HOME_YES", "DRAW_HOME_NO", "DRAW_DRAW_YES", "DRAW_DRAW_NO", "DRAW_AWAY_YES", "DRAW_AWAY_NO", "AWAY_HOME_YES", "AWAY_HOME_NO", "AWAY_DRAW_YES", "AWAY_DRAW_NO", "AWAY_AWAY_YES", "AWAY_AWAY_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_HOME_YES: "1/1 i obie strzelą", HOME_HOME_NO: "1/1 i nie obie strzelą", HOME_DRAW_YES: "1/X i obie strzelą", HOME_DRAW_NO: "1/X i nie obie strzelą", HOME_AWAY_YES: "1/2 i obie strzelą", HOME_AWAY_NO: "1/2 i nie obie strzelą", DRAW_HOME_YES: "X/1 i obie strzelą", DRAW_HOME_NO: "X/1 i nie obie strzelą", DRAW_DRAW_YES: "X/X i obie strzelą", DRAW_DRAW_NO: "X/X i nie obie strzelą", DRAW_AWAY_YES: "X/2 i obie strzelą", DRAW_AWAY_NO: "X/2 i nie obie strzelą", AWAY_HOME_YES: "2/1 i obie strzelą", AWAY_HOME_NO: "2/1 i nie obie strzelą", AWAY_DRAW_YES: "2/X i obie strzelą", AWAY_DRAW_NO: "2/X i nie obie strzelą", AWAY_AWAY_YES: "2/2 i obie strzelą", AWAY_AWAY_NO: "2/2 i nie obie strzelą" },
     displayOrder: 478,
   },
   {
@@ -8159,6 +8449,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Rzut karny podyktowany w 2. połowie", NO: "Brak rzutu karnego w 2. połowie" },
     displayOrder: 479,
   },
   {
@@ -8172,6 +8463,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} nie wykorzysta rzutu karnego", AWAY: "{awayTeam} nie wykorzysta rzutu karnego" },
     displayOrder: 480,
   },
   {
@@ -8185,6 +8477,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Ktoś strzeli dublet (2 gole) w meczu", NO: "Nikt nie strzeli dubletu w meczu" },
     displayOrder: 481,
   },
   {
@@ -8198,6 +8491,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie jeden z wybranych dokładnych wyników", NO: "Nie padnie żaden z wybranych dokładnych wyników" },
     displayOrder: 482,
   },
   {
@@ -8211,6 +8505,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny strzelą w co najmniej jednej połowie", NO: "Obie drużyny nie strzelą w żadnej połowie" },
     displayOrder: 483,
   },
   {
@@ -8224,6 +8519,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny strzelą w obu połowach", NO: "Obie drużyny nie strzelą w obu połowach" },
     displayOrder: 484,
   },
   {
@@ -8237,6 +8533,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Każda drużyna wygra dokładnie jedną połowę", NO: "Drużyny nie wygrają po jednej połowie" },
     displayOrder: 485,
   },
   {
@@ -8250,6 +8547,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1ST_OR_DRAW", "1ST_OR_2ND", "2ND_OR_DRAW"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1ST_OR_DRAW": "Więcej goli w 1. połowie lub remis", "1ST_OR_2ND": "Więcej goli w 1. lub 2. połowie", "2ND_OR_DRAW": "Więcej goli w 2. połowie lub remis" },
     displayOrder: 486,
   },
   {
@@ -8263,6 +8561,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["FIRST_HALF", "SECOND_HALF"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { FIRST_HALF: "Drugi gol padnie w pierwszej połowie", SECOND_HALF: "Drugi gol padnie w drugiej połowie" },
     displayOrder: 487,
   },
   {
@@ -8276,6 +8575,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Gol padnie w przedziale {param}", NO: "Gol nie padnie w przedziale {param}" },
     displayOrder: 488,
   },
   {
@@ -8289,6 +8589,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Gol padnie w doliczonym czasie gry", NO: "Gol nie padnie w doliczonym czasie gry" },
     displayOrder: 489,
   },
   {
@@ -8302,6 +8603,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny będą prowadzić w trakcie meczu", NO: "Tylko jedna drużyna będzie prowadzić w meczu" },
     displayOrder: 490,
   },
   {
@@ -8315,6 +8617,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra z przewagą {param}", NO: "Żadna drużyna nie wygra z przewagą {param}" },
     displayOrder: 491,
   },
   {
@@ -8328,6 +8631,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie {param}", NO: "Żadna drużyna nie wygra dokładnie {param}" },
     displayOrder: 492,
   },
   {
@@ -8341,6 +8645,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra różnicą co najmniej 2 goli", NO: "Żadna drużyna nie wygra różnicą co najmniej 2 goli" },
     displayOrder: 493,
   },
   {
@@ -8354,6 +8659,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra różnicą co najmniej 3 goli", NO: "Żadna drużyna nie wygra różnicą co najmniej 3 goli" },
     displayOrder: 494,
   },
   {
@@ -8367,6 +8673,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} wygrywa jedną bramką lub jest remis", NO: "Inny wynik niż remis lub wygrana {homeTeam} o 1 gola" },
     displayOrder: 495,
   },
   {
@@ -8380,6 +8687,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["FIRST_HALF", "SECOND_HALF", "NO_GOAL"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { FIRST_HALF: "{param} strzeli pierwszego gola w pierwszej połowie", SECOND_HALF: "{param} strzeli pierwszego gola w drugiej połowie", NO_GOAL: "{param} nie strzeli żadnego gola w meczu" },
     displayOrder: 496,
   },
   {
@@ -8419,6 +8727,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME: "{homeTeam} pierwszy osiągnie wymaganą liczbę goli", AWAY: "{awayTeam} pierwszy osiągnie wymaganą liczbę goli", NONE: "Żaden zespół nie osiągnie wymaganej liczby goli" },
     displayOrder: 498,
   },
   {
@@ -8432,6 +8741,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Suma minut goli powyżej {param}", UNDER: "Suma minut goli poniżej {param}" },
     displayOrder: 499,
   },
   {
@@ -8445,6 +8755,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Suma minut goli drużyny powyżej {param}", UNDER: "Suma minut goli drużyny poniżej {param}" },
     displayOrder: 500,
   },
   {
@@ -8458,6 +8769,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Ponad {param} minut przy remisowym wyniku", UNDER: "Poniżej {param} minut przy remisowym wyniku" },
     displayOrder: 502,
   },
   {
@@ -8471,6 +8783,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} strzeli kolejnego gola", AWAY: "{awayTeam} strzeli kolejnego gola", NONE: "Nie padnie już żaden gol w meczu" },
     displayOrder: 503,
   },
   {
@@ -8484,6 +8797,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Wskazany wynik pojawi się w trakcie meczu", NO: "Wskazany wynik nie pojawi się w meczu" },
     displayOrder: 504,
   },
   {
@@ -8497,6 +8811,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Wskazany wynik wystąpi w trakcie meczu", NO: "Wskazany wynik nie wystąpi w trakcie meczu" },
     displayOrder: 505,
   },
   {
@@ -8510,6 +8825,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Wskazany wynik wystąpi w trakcie meczu", NO: "Wskazany wynik nie wystąpi w trakcie meczu" },
     displayOrder: 506,
   },
   {
@@ -8523,6 +8839,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Obie drużyny zdobędą mniej niż {param} goli", NO: "Któraś drużyna zdobędzie {param} goli lub więcej" },
     displayOrder: 507,
   },
   {
@@ -8536,6 +8853,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_YES", "HOME_NO", "DRAW_YES", "DRAW_NO", "AWAY_YES", "AWAY_NO"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { HOME_YES: "{homeTeam} wygrywa 2. połowę lub obie strzelą", HOME_NO: "{homeTeam} wygrywa 2. połowę lub nie obie strzelą", DRAW_YES: "Remis w 2. połowie lub obie strzelą", DRAW_NO: "Remis w 2. połowie lub nie obie strzelą", AWAY_YES: "{awayTeam} wygrywa 2. połowę lub obie strzelą", AWAY_NO: "{awayTeam} wygrywa 2. połowę lub nie obie strzelą" },
     displayOrder: 508,
   },
   {
@@ -8549,6 +8867,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w doliczonym czasie gry", NO: "Nie padnie gol w doliczonym czasie gry" },
     displayOrder: 509,
   },
   {
@@ -8562,6 +8881,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
     displayOrder: 510,
   },
   {
@@ -8575,6 +8895,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
     displayOrder: 511,
   },
   {
@@ -8588,6 +8909,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Zwycięstwo z przewagą co najmniej {param} goli", NO: "Brak zwycięstwa z przewagą {param} goli" },
     displayOrder: 512,
   },
   {
@@ -8601,6 +8923,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Któraś drużyna wygra różnicą 2 lub więcej goli", NO: "Mecz zakończy się różnicą maksymalnie 1 gola" },
     displayOrder: 513,
   },
   {
@@ -8614,6 +8937,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa jedną bramką lub jest remis", AWAY: "{awayTeam} wygrywa jedną bramką lub jest remis" },
     displayOrder: 514,
   },
   {
@@ -8627,6 +8951,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1ST_HALF", "2ND_HALF", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "1ST_HALF": "Pierwszy gol padnie w 1. połowie", "2ND_HALF": "Pierwszy gol padnie w 2. połowie", NONE: "W meczu nie padnie żaden gol" },
     displayOrder: 515,
   },
   {
@@ -8665,6 +8990,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_HOME", "HOME_DRAW", "HOME_AWAY", "DRAW_HOME", "DRAW_DRAW", "DRAW_AWAY", "AWAY_HOME", "AWAY_DRAW", "AWAY_AWAY"],
     viewType: ViewType.HALFTIME_FULLTIME,
+    descriptionTemplates: { HOME_HOME: "{homeTeam} wygrywa obie połowy", HOME_DRAW: "{homeTeam} wygrywa 1. połowę, remis w 2. połowie", HOME_AWAY: "{homeTeam} wygrywa 1. połowę, {awayTeam} wygrywa 2. połowę", DRAW_HOME: "Remis w 1. połowie, {homeTeam} wygrywa 2. połowę", DRAW_DRAW: "Remis w obu połowach", DRAW_AWAY: "Remis w 1. połowie, {awayTeam} wygrywa 2. połowę", AWAY_HOME: "{awayTeam} wygrywa 1. połowę, {homeTeam} wygrywa 2. połowę", AWAY_DRAW: "{awayTeam} wygrywa 1. połowę, remis w 2. połowie", AWAY_AWAY: "{awayTeam} wygrywa obie połowy" },
     displayOrder: 517,
   },
   {
@@ -8678,6 +9004,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Powyżej {param} goli w obu połowach", NO: "Brak powyżej {param} goli w co najmniej jednej połowie" },
     displayOrder: 518,
   },
   {
@@ -8691,6 +9018,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
     displayOrder: 519,
   },
   {
@@ -8704,6 +9032,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
     displayOrder: 520,
   },
   {
@@ -8717,6 +9046,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
     displayOrder: 521,
   },
   // ===== Wave-B expansion: placeholder/superbet-pzbuk catalog codes =====
@@ -8732,6 +9062,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["UNDER_1MIN", "OVER_1MIN", "UNDER_5MIN", "OVER_5MIN", "UNDER_10MIN", "OVER_10MIN", "UNDER_15MIN", "OVER_15MIN"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { UNDER_1MIN: "Gol padnie do 1. minuty", OVER_1MIN: "Gol padnie po 1. minucie", UNDER_5MIN: "Gol padnie do 5. minuty", OVER_5MIN: "Gol padnie po 5. minucie", UNDER_10MIN: "Gol padnie do 10. minuty", OVER_10MIN: "Gol padnie po 10. minucie", UNDER_15MIN: "Gol padnie do 15. minuty", OVER_15MIN: "Gol padnie po 15. minucie" },
     displayOrder: 522,
   },
   {
@@ -8745,6 +9076,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} prowadzi o {param} minucie", DRAW: "Remis o {param} minucie", AWAY: "{awayTeam} prowadzi o {param} minucie" },
     displayOrder: 523,
   },
   {
@@ -8759,6 +9091,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["OVER_0_5", "OVER_1_5", "OVER_2_5", "OVER_3_5", "OVER_4_5", "OVER_5_5", "OVER_6_5"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER_0_5: "Padnie co najmniej 1 gol w meczu", OVER_1_5: "Padną co najmniej 2 gole w meczu", OVER_2_5: "Padną co najmniej 3 gole w meczu", OVER_3_5: "Padną co najmniej 4 gole w meczu", OVER_4_5: "Padnie co najmniej 5 goli w meczu", OVER_5_5: "Padnie co najmniej 6 goli w meczu", OVER_6_5: "Padnie co najmniej 7 goli w meczu" },
     displayOrder: 524,
   },
   {
@@ -8773,6 +9106,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli", DRAW_OVER: "Remis i powyżej {param} goli", DRAW_UNDER: "Remis i poniżej {param} goli", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli" },
     displayOrder: 525,
   },
   {
@@ -8787,6 +9121,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "integer",
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { HOME: "{param}. rożny dla {homeTeam}", NONE: "Nie będzie {param}. rożnego w meczu", AWAY: "{param}. rożny dla {awayTeam}" },
     displayOrder: 526,
   },
   {
@@ -8800,6 +9135,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["OVER_0.5", "OVER_1.5", "OVER_2.5", "OVER_3.5"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { "OVER_0.5": "Powyżej 0.5 gola w meczu", "OVER_1.5": "Powyżej 1.5 gola w meczu", "OVER_2.5": "Powyżej 2.5 gola w meczu", "OVER_3.5": "Powyżej 3.5 gola w meczu" },
     displayOrder: 527,
   },
   {
@@ -8830,6 +9166,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // with 1/1 were catalogued, so 28 real prices were dropped as orphans.
     selections: ["1/1_OR_X/1", "1/1_OR_X/X", "1/1_OR_X/2", "1/1_OR_1/X", "1/1_OR_1/2", "1/1_OR_2/1", "1/1_OR_2/X", "1/1_OR_2/2", "1/X_OR_1/2", "1/X_OR_X/1", "1/X_OR_X/X", "1/X_OR_X/2", "1/X_OR_2/1", "1/X_OR_2/X", "1/X_OR_2/2", "1/2_OR_X/1", "1/2_OR_X/X", "1/2_OR_X/2", "1/2_OR_2/1", "1/2_OR_2/X", "1/2_OR_2/2", "X/1_OR_X/X", "X/1_OR_X/2", "X/1_OR_2/1", "X/1_OR_2/X", "X/1_OR_2/2", "X/X_OR_X/2", "X/X_OR_2/1", "X/X_OR_2/X", "X/X_OR_2/2", "X/2_OR_2/1", "X/2_OR_2/X", "X/2_OR_2/2", "2/1_OR_2/X", "2/1_OR_2/2", "2/X_OR_2/2", "2/2_OR_2/X", "2/2_OR_2/1"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "1/1_OR_X/1": "1/1 lub X/1", "1/1_OR_X/X": "1/1 lub X/X", "1/1_OR_X/2": "1/1 lub X/2", "1/1_OR_1/X": "1/1 lub 1/X", "1/1_OR_1/2": "1/1 lub 1/2", "1/1_OR_2/1": "1/1 lub 2/1", "1/1_OR_2/X": "1/1 lub 2/X", "1/1_OR_2/2": "1/1 lub 2/2", "1/X_OR_1/2": "1/X lub 1/2", "1/X_OR_X/1": "1/X lub X/1", "1/X_OR_X/X": "1/X lub X/X", "1/X_OR_X/2": "1/X lub X/2", "1/X_OR_2/1": "1/X lub 2/1", "1/X_OR_2/X": "1/X lub 2/X", "1/X_OR_2/2": "1/X lub 2/2", "1/2_OR_X/1": "1/2 lub X/1", "1/2_OR_X/X": "1/2 lub X/X", "1/2_OR_X/2": "1/2 lub X/2", "1/2_OR_2/1": "1/2 lub 2/1", "1/2_OR_2/X": "1/2 lub 2/X", "1/2_OR_2/2": "1/2 lub 2/2", "X/1_OR_X/X": "X/1 lub X/X", "X/1_OR_X/2": "X/1 lub X/2", "X/1_OR_2/1": "X/1 lub 2/1", "X/1_OR_2/X": "X/1 lub 2/X", "X/1_OR_2/2": "X/1 lub 2/2", "X/X_OR_X/2": "X/X lub X/2", "X/X_OR_2/1": "X/X lub 2/1", "X/X_OR_2/X": "X/X lub 2/X", "X/X_OR_2/2": "X/X lub 2/2", "X/2_OR_2/1": "X/2 lub 2/1", "X/2_OR_2/X": "X/2 lub 2/X", "X/2_OR_2/2": "X/2 lub 2/2", "2/1_OR_2/X": "2/1 lub 2/X", "2/1_OR_2/2": "2/1 lub 2/2", "2/X_OR_2/2": "2/X lub 2/2", "2/2_OR_2/X": "2/2 lub 2/X", "2/2_OR_2/1": "2/2 lub 2/1" },
     displayOrder: 529,
   },
   {
@@ -8843,6 +9180,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} wygrywa obie połowy", DRAW: "Remis w obu połowach", AWAY: "{awayTeam} wygrywa obie połowy" },
     displayOrder: 530,
   },
   {
@@ -8856,6 +9194,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME_2-3", "HOME_2-4", "HOME_2-5", "HOME_2-6", "HOME_3-5", "HOME_3-6", "DRAW_2-4", "DRAW_2-6", "DRAW_4-6", "AWAY_2-3", "AWAY_2-4", "AWAY_2-5", "AWAY_2-6", "AWAY_3-5", "AWAY_3-6"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_2-3": "1 i 2-3 goli", "HOME_2-4": "1 i 2-4 goli", "HOME_2-5": "1 i 2-5 goli", "HOME_2-6": "1 i 2-6 goli", "HOME_3-5": "1 i 3-5 goli", "HOME_3-6": "1 i 3-6 goli", "DRAW_2-4": "X i 2-4 goli", "DRAW_2-6": "X i 2-6 goli", "DRAW_4-6": "X i 4-6 goli", "AWAY_2-3": "2 i 2-3 goli", "AWAY_2-4": "2 i 2-4 goli", "AWAY_2-5": "2 i 2-5 goli", "AWAY_2-6": "2 i 2-6 goli", "AWAY_3-5": "2 i 3-5 goli", "AWAY_3-6": "2 i 3-6 goli" },
     displayOrder: 531,
   },
   {
@@ -8869,6 +9208,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0:0_HOME", "0:0_DRAW", "0:0_AWAY", "0:1_HOME", "0:1_DRAW", "0:1_AWAY", "1:0_HOME", "1:0_DRAW", "1:0_AWAY", "1:1_HOME", "1:1_DRAW", "1:1_AWAY", "2:0_HOME", "2:0_DRAW", "2:0_AWAY", "0:2_HOME", "0:2_DRAW", "0:2_AWAY"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0:0_HOME": "0:0 do przerwy, na koniec wygrywa {homeTeam}", "0:0_DRAW": "0:0 do przerwy, na koniec remis", "0:0_AWAY": "0:0 do przerwy, na koniec wygrywa {awayTeam}", "0:1_HOME": "0:1 do przerwy, na koniec wygrywa {homeTeam}", "0:1_DRAW": "0:1 do przerwy, na koniec remis", "0:1_AWAY": "0:1 do przerwy, na koniec wygrywa {awayTeam}", "1:0_HOME": "1:0 do przerwy, na koniec wygrywa {homeTeam}", "1:0_DRAW": "1:0 do przerwy, na koniec remis", "1:0_AWAY": "1:0 do przerwy, na koniec wygrywa {awayTeam}", "1:1_HOME": "1:1 do przerwy, na koniec wygrywa {homeTeam}", "1:1_DRAW": "1:1 do przerwy, na koniec remis", "1:1_AWAY": "1:1 do przerwy, na koniec wygrywa {awayTeam}", "2:0_HOME": "2:0 do przerwy, na koniec wygrywa {homeTeam}", "2:0_DRAW": "2:0 do przerwy, na koniec remis", "2:0_AWAY": "2:0 do przerwy, na koniec wygrywa {awayTeam}", "0:2_HOME": "0:2 do przerwy, na koniec wygrywa {homeTeam}", "0:2_DRAW": "0:2 do przerwy, na koniec remis", "0:2_AWAY": "0:2 do przerwy, na koniec wygrywa {awayTeam}" },
     displayOrder: 532,
   },
   // ===== Fortuna final wave: new catalog codes =====
@@ -8884,6 +9224,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { HOME: "Wygrana {homeTeam} i celny strzał zawodnika", AWAY: "Wygrana {awayTeam} i celny strzał zawodnika" },
     displayOrder: 533,
   },
   {
@@ -8940,6 +9281,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "Zwycięstwo drużyny lub poniżej {param} goli", NO: "Brak zwycięstwa i powyżej {param} goli" },
     displayOrder: 536,
   },
   {
@@ -8953,6 +9295,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Sędzia przeprowadzi weryfikację VAR", NO: "Sędzia nie przeprowadzi weryfikacji VAR" },
     displayOrder: 538,
   },
   {
@@ -8966,6 +9309,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Rzut karny w obu połowach meczu", NO: "Brak rzutu karnego w co najmniej jednej połowie" },
     displayOrder: 539,
   },
   {
@@ -8979,6 +9323,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["HOME", "AWAY"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { HOME: "{homeTeam} nie straci gola w meczu", AWAY: "{awayTeam} nie straci gola w meczu" },
     displayOrder: 540,
   },
   {
@@ -8992,6 +9337,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna wygra mecz", NO: "Drużyna nie wygra meczu" },
     displayOrder: 541,
   },
   {
@@ -9005,6 +9351,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "{homeTeam} nie straci gola w meczu", NO: "{homeTeam} straci przynajmniej jednego gola" },
     displayOrder: 542,
   },
   {
@@ -9018,6 +9365,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Drużyna wygra mecz", NO: "Drużyna nie wygra meczu" },
     displayOrder: 543,
   },
   {
@@ -9031,6 +9379,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w doliczonym czasie 1. połowy", NO: "Brak gola w doliczonym czasie 1. połowy" },
     displayOrder: 544,
   },
   {
@@ -9044,6 +9393,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w doliczonym czasie 2. połowy", NO: "Nie padnie gol w doliczonym czasie 2. połowy" },
     displayOrder: 545,
   },
   {
@@ -9057,6 +9407,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Padnie gol w doliczonym czasie", NO: "Nie padnie gol w doliczonym czasie" },
     displayOrder: 546,
   },
   {
@@ -9070,6 +9421,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
+    descriptionTemplates: { YES: "Jedna z drużyn wygra mecz (bez remisu)", NO: "Mecz zakończy się remisem" },
     displayOrder: 547,
   },
   // Team-scoped goalscorer markets. Audit /audit-match (Arsenal vs Coventry
@@ -9151,6 +9503,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // audit-match (Arsenal vs Coventry City), round 8 P5: mirror PLAYER_SHOTS.
     selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+", "9+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} strzałów zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} strzałów zawodnika (musi wyjść w składzie)", "1+": "Co najmniej 1 strzał, zawodnik musi wyjść w składzie", "2+": "Co najmniej 2 strzały, zawodnik musi wyjść w składzie", "3+": "Co najmniej 3 strzały, zawodnik musi wyjść w składzie", "4+": "Co najmniej 4 strzały, zawodnik musi wyjść w składzie", "5+": "Co najmniej 5 strzałów, zawodnik musi wyjść w składzie", "6+": "Co najmniej 6 strzałów, zawodnik musi wyjść w składzie", "7+": "Co najmniej 7 strzałów, zawodnik musi wyjść w składzie", "8+": "Co najmniej 8 strzałów, zawodnik musi wyjść w składzie", "9+": "Co najmniej 9 strzałów, zawodnik musi wyjść w składzie" },
     displayOrder: 560,
   },
   {
@@ -9166,6 +9519,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // audit-match (Arsenal vs Coventry City), round 8 P5: mirror PLAYER_SHOTS_ON_TARGET.
     selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} celnych strzałów zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} celnych strzałów zawodnika (musi wyjść w składzie)", "1+": "Co najmniej 1 celny strzał, zawodnik musi wyjść w składzie", "2+": "Co najmniej 2 celne strzały, zawodnik musi wyjść w składzie", "3+": "Co najmniej 3 celne strzały, zawodnik musi wyjść w składzie", "4+": "Co najmniej 4 celne strzały, zawodnik musi wyjść w składzie", "5+": "Co najmniej 5 celnych strzałów, zawodnik musi wyjść w składzie", "6+": "Co najmniej 6 celnych strzałów, zawodnik musi wyjść w składzie", "7+": "Co najmniej 7 celnych strzałów, zawodnik musi wyjść w składzie" },
     displayOrder: 561,
   },
   {
@@ -9180,6 +9534,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["OVER", "UNDER", "1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} asyst zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} asyst zawodnika (musi wyjść w składzie)", "1+": "Co najmniej 1 asysta, zawodnik musi wyjść w składzie", "2+": "Co najmniej 2 asysty, zawodnik musi wyjść w składzie", "3+": "Co najmniej 3 asysty, zawodnik musi wyjść w składzie" },
     displayOrder: 562,
   },
   {
@@ -9194,6 +9549,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["OVER", "UNDER", "1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} goli zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} goli zawodnika (musi wyjść w składzie)", "1+": "Co najmniej 1 gol, zawodnik musi wyjść w składzie", "2+": "Co najmniej 2 gole, zawodnik musi wyjść w składzie", "3+": "Co najmniej 3 gole, zawodnik musi wyjść w składzie" },
     displayOrder: 563,
   },
   {
@@ -9208,6 +9564,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["OVER", "UNDER", "46+", "50+", "54+", "58+", "62+", "66+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} podań zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} podań zawodnika (musi wyjść w składzie)", "46+": "Co najmniej 46 podań, zawodnik musi wyjść w składzie", "50+": "Co najmniej 50 podań, zawodnik musi wyjść w składzie", "54+": "Co najmniej 54 podania, zawodnik musi wyjść w składzie", "58+": "Co najmniej 58 podań, zawodnik musi wyjść w składzie", "62+": "Co najmniej 62 podania, zawodnik musi wyjść w składzie", "66+": "Co najmniej 66 podań, zawodnik musi wyjść w składzie" },
     displayOrder: 564,
   },
   {
@@ -9222,6 +9579,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["OVER", "UNDER", "1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { OVER: "Ponad {param} odbiorów zawodnika (musi wyjść w składzie)", UNDER: "Poniżej {param} odbiorów zawodnika (musi wyjść w składzie)", "1+": "Co najmniej 1 odbiór, zawodnik musi wyjść w składzie", "2+": "Co najmniej 2 odbiory, zawodnik musi wyjść w składzie", "3+": "Co najmniej 3 odbiory, zawodnik musi wyjść w składzie" },
     displayOrder: 565,
   },
   {
@@ -9236,6 +9594,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "Zawodnik otrzyma kartkę (musi wyjść w składzie)", NO: "Zawodnik nie otrzyma kartki (musi wyjść w składzie)" },
     displayOrder: 566,
   },
 ];

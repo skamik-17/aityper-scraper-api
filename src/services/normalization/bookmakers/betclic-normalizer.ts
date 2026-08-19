@@ -2145,8 +2145,6 @@ function normalizeSelectionForMarket(
 
     case "PLAYER_ASSIST_PAIRS":
     case "PLAYER_ASSIST_TRIPLE":
-      return "YES" as NormalizedSelection;
-
     case "TWO_PLAYERS_COMBINED_GOALS":
     case "TWO_PLAYERS_ANYTIME":
     case "BOTH_PLAYERS_ANYTIME":
@@ -2266,7 +2264,9 @@ function extractParamValue(
       // 1. Single player markets (no parameters) - GOALSCORER_ANYTIME, etc.
       // 2. Multiple player markets with parameters - TWO_PLAYERS_COMBINED_GOALS, THREE_PLAYERS_ANYTIME
       
-      const playerMarketCodesWithParams = ["TWO_PLAYERS_COMBINED_GOALS", "THREE_PLAYERS_ANYTIME", "PLAYER_ASSIST_PAIRS", "PLAYER_ASSIST_TRIPLE", "TWO_PLAYERS_ANYTIME", "THREE_PLAYERS_COMBINED_GOALS"];
+      // PLAYER_ASSIST_PAIRS / _TRIPLE moved to selection-carried combinations (see
+      // the catalog note) — listing them here would strand every pair under "base".
+      const playerMarketCodesWithParams = ["TWO_PLAYERS_COMBINED_GOALS", "THREE_PLAYERS_ANYTIME", "TWO_PLAYERS_ANYTIME", "THREE_PLAYERS_COMBINED_GOALS"];
       const isParameterizedPlayerMarket = playerMarketCodesWithParams.includes(marketCode);
       
       if (isParameterizedPlayerMarket) {

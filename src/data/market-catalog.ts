@@ -1490,10 +1490,16 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "asysty",
     labels: { pl: "Asysty par zawodników", en: "Player Assist Pairs" },
     descriptions: { pl: "Para zawodników zaliczy asystę", en: "Player pair to assist" },
-    hasParameter: true,
+    // Audit /audit-match (Arsenal vs Coventry City): betclic quotes 220 pairs
+    // (120 trios) here, but a player-PARAMETERISED shape with a single "YES"
+    // selection collapsed all of them into one "base" row carrying one price
+    // that belonged to no identifiable pair. The sibling pair markets
+    // (TWO_PLAYERS_ANYTIME / THREE_PLAYERS_ANYTIME) put the combination in the
+    // SELECTION instead, which keeps every price and its identity.
+    hasParameter: false,
     parameterType: "player",
-    selections: ["YES"],
-    viewType: ViewType.PLAYER_STAT_LINES,
+    selections: ["PLAYER_PAIR"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 66,
   },
   {
@@ -1504,10 +1510,16 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "asysty",
     labels: { pl: "Asysty tria zawodników", en: "Player Assist Trio" },
     descriptions: { pl: "Trio zawodników zaliczy asystę", en: "Player trio to assist" },
-    hasParameter: true,
+    // Audit /audit-match (Arsenal vs Coventry City): betclic quotes 220 pairs
+    // (120 trios) here, but a player-PARAMETERISED shape with a single "YES"
+    // selection collapsed all of them into one "base" row carrying one price
+    // that belonged to no identifiable pair. The sibling pair markets
+    // (TWO_PLAYERS_ANYTIME / THREE_PLAYERS_ANYTIME) put the combination in the
+    // SELECTION instead, which keeps every price and its identity.
+    hasParameter: false,
     parameterType: "player",
-    selections: ["YES"],
-    viewType: ViewType.PLAYER_STAT_LINES,
+    selections: ["PLAYER_TRIO"],
+    viewType: ViewType.COMBINATION,
     displayOrder: 67,
   },
   {

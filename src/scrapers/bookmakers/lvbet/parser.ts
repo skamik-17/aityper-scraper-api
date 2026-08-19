@@ -355,19 +355,24 @@ const BULK_PLAYER_LIST_MARKET_PATTERNS: Array<{
   },
   // "Zawodnicy (faule popełnione)" / "Zawodnicy (faule zarobione)" / "Odbiory
   // - Tackles" — same bundled-roster shape for the other player stat lines.
-  // Anchored end-to-end for the same reason as the shots patterns above:
-  // "zawodnicy (faule popełnione) - powyżej 3.5" has its own dedicated
-  // PLAYER_FOULS_OVER catalog code.
+  // Audit r14 (Arsenal vs Coventry City): these three were left end-to-end
+  // anchored when the shots/celne siblings above got the "- powyżej N (musi
+  // rozpocząć...)" tolerance in round 8 — the production raw name carries
+  // that same infix/suffix here too ("Zawodnicy (faule popełnione) -
+  // powyżej 4.5 (musi rozpocząć w wyjściowej \"11\")"), so every threshold
+  // fell through unsplit and collided on one key; PLAYER_FOULS "1+" for
+  // Brandon Thomas-Asante was showing the 4.5-line's price (15) instead of
+  // the 0.5-line's (1.16, matching peers' ~1.32 median almost exactly).
   {
-    pattern: /^zawodnicy \(faule popełnione\)$/,
+    pattern: /^zawodnicy \(faule popełnione\)(?: - powyzej [\d.,]+)?(?: \(musi rozpoczac[^)]*\))?$/,
     selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
   },
   {
-    pattern: /^zawodnicy \(faule zarobione\)$/,
+    pattern: /^zawodnicy \(faule zarobione\)(?: - powyzej [\d.,]+)?(?: \(musi rozpoczac[^)]*\))?$/,
     selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
   },
   {
-    pattern: /^odbiory-\s*tackles$/,
+    pattern: /^odbiory-\s*tackles(?: - powyzej [\d.,]+)?(?: \(musi rozpoczac[^)]*\))?$/,
     selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
   },
   // "Zawodnik strzeli N lub więcej goli" (N >= 3) — the threshold is embedded

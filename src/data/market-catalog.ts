@@ -296,6 +296,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     selections: ["0", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "7+"],
     selectionOrder: ["0", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "W meczu nie padnie żaden gol", "1-2": "W meczu padnie 1-2 goli", "1-3": "W meczu padnie 1-3 goli", "1-4": "W meczu padnie 1-4 goli", "1-5": "W meczu padnie 1-5 goli", "1-6": "W meczu padnie 1-6 goli", "2-3": "W meczu padnie 2-3 goli", "2-4": "W meczu padnie 2-4 goli", "2-5": "W meczu padnie 2-5 goli", "2-6": "W meczu padnie 2-6 goli", "3-4": "W meczu padnie 3-4 goli", "3-5": "W meczu padnie 3-5 goli", "3-6": "W meczu padnie 3-6 goli", "4-5": "W meczu padnie 4-5 goli", "4-6": "W meczu padnie 4-6 goli", "5-6": "W meczu padnie 5-6 goli", "7+": "W meczu padnie 7 lub więcej goli" },
     displayOrder: 20,
   },
   {
@@ -309,6 +310,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3", "4", "5+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Wskazana drużyna nie strzeli gola", "1": "Wskazana drużyna strzeli 1 goli", "2": "Wskazana drużyna strzeli 2 goli", "3": "Wskazana drużyna strzeli 3 goli", "4": "Wskazana drużyna strzeli 4 goli", "5+": "Wskazana drużyna strzeli 5 lub więcej goli" },
     displayOrder: 25,
   },
   {
@@ -322,6 +324,7 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "0-1", "1-2", "1-3", "2-3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "W 1. połowie nie padnie żaden gol", "0-1": "W 1. połowie padnie 0-1 goli", "1-2": "W 1. połowie padnie 1-2 goli", "1-3": "W 1. połowie padnie 1-3 goli", "2-3": "W 1. połowie padnie 2-3 goli", "3+": "W 1. połowie padnie 3 lub więcej goli", "4+": "W 1. połowie padnie 4 lub więcej goli" },
     displayOrder: 47,
   },
   {
@@ -1372,6 +1375,7 @@ const CORRECT_SCORE_MARKETS: MarketCatalogEntry[] = [
       "0:2 / 2:2",
     ],
     viewType: ViewType.HALFTIME_FULLTIME,
+    descriptionTemplates: { "0:0 / 0:0": "Do przerwy wynik 0:0, na koniec meczu wynik 0:0", "0:0 / 1:0": "Do przerwy wynik 0:0, na koniec meczu wynik 1:0", "0:0 / 2:0": "Do przerwy wynik 0:0, na koniec meczu wynik 2:0", "0:0 / 3:0": "Do przerwy wynik 0:0, na koniec meczu wynik 3:0", "0:0 / 0:1": "Do przerwy wynik 0:0, na koniec meczu wynik 0:1", "0:0 / 1:1": "Do przerwy wynik 0:0, na koniec meczu wynik 1:1", "0:0 / 2:1": "Do przerwy wynik 0:0, na koniec meczu wynik 2:1", "0:0 / 0:2": "Do przerwy wynik 0:0, na koniec meczu wynik 0:2", "0:0 / 1:2": "Do przerwy wynik 0:0, na koniec meczu wynik 1:2", "0:0 / 0:3": "Do przerwy wynik 0:0, na koniec meczu wynik 0:3", "1:0 / 1:0": "Do przerwy wynik 1:0, na koniec meczu wynik 1:0", "1:0 / 2:0": "Do przerwy wynik 1:0, na koniec meczu wynik 2:0", "1:0 / 3:0": "Do przerwy wynik 1:0, na koniec meczu wynik 3:0", "1:0 / 1:1": "Do przerwy wynik 1:0, na koniec meczu wynik 1:1", "1:0 / 2:1": "Do przerwy wynik 1:0, na koniec meczu wynik 2:1", "1:0 / 3:1": "Do przerwy wynik 1:0, na koniec meczu wynik 3:1", "1:0 / 1:2": "Do przerwy wynik 1:0, na koniec meczu wynik 1:2", "1:0 / 2:2": "Do przerwy wynik 1:0, na koniec meczu wynik 2:2", "1:0 / 1:3": "Do przerwy wynik 1:0, na koniec meczu wynik 1:3", "0:1 / 0:1": "Do przerwy wynik 0:1, na koniec meczu wynik 0:1", "0:1 / 1:1": "Do przerwy wynik 0:1, na koniec meczu wynik 1:1", "0:1 / 0:2": "Do przerwy wynik 0:1, na koniec meczu wynik 0:2", "0:1 / 1:2": "Do przerwy wynik 0:1, na koniec meczu wynik 1:2", "0:1 / 0:3": "Do przerwy wynik 0:1, na koniec meczu wynik 0:3", "0:1 / 1:3": "Do przerwy wynik 0:1, na koniec meczu wynik 1:3", "0:1 / 2:1": "Do przerwy wynik 0:1, na koniec meczu wynik 2:1", "0:1 / 2:2": "Do przerwy wynik 0:1, na koniec meczu wynik 2:2", "0:1 / 3:1": "Do przerwy wynik 0:1, na koniec meczu wynik 3:1", "1:1 / 1:1": "Do przerwy wynik 1:1, na koniec meczu wynik 1:1", "1:1 / 2:1": "Do przerwy wynik 1:1, na koniec meczu wynik 2:1", "1:1 / 1:2": "Do przerwy wynik 1:1, na koniec meczu wynik 1:2", "1:1 / 2:2": "Do przerwy wynik 1:1, na koniec meczu wynik 2:2", "1:1 / 3:1": "Do przerwy wynik 1:1, na koniec meczu wynik 3:1", "1:1 / 1:3": "Do przerwy wynik 1:1, na koniec meczu wynik 1:3", "1:1 / 3:2": "Do przerwy wynik 1:1, na koniec meczu wynik 3:2", "1:1 / 2:3": "Do przerwy wynik 1:1, na koniec meczu wynik 2:3", "2:0 / 2:0": "Do przerwy wynik 2:0, na koniec meczu wynik 2:0", "2:0 / 3:0": "Do przerwy wynik 2:0, na koniec meczu wynik 3:0", "2:0 / 2:1": "Do przerwy wynik 2:0, na koniec meczu wynik 2:1", "2:0 / 3:1": "Do przerwy wynik 2:0, na koniec meczu wynik 3:1", "2:0 / 2:2": "Do przerwy wynik 2:0, na koniec meczu wynik 2:2", "0:2 / 0:2": "Do przerwy wynik 0:2, na koniec meczu wynik 0:2", "0:2 / 0:3": "Do przerwy wynik 0:2, na koniec meczu wynik 0:3", "0:2 / 1:2": "Do przerwy wynik 0:2, na koniec meczu wynik 1:2", "0:2 / 1:3": "Do przerwy wynik 0:2, na koniec meczu wynik 1:3", "0:2 / 2:2": "Do przerwy wynik 0:2, na koniec meczu wynik 2:2", "0:0 / 0:4": "Do przerwy wynik 0:0, na koniec meczu wynik 0:4", "0:0 / 1:3": "Do przerwy wynik 0:0, na koniec meczu wynik 1:3", "0:0 / 1:4": "Do przerwy wynik 0:0, na koniec meczu wynik 1:4", "0:0 / 2:2": "Do przerwy wynik 0:0, na koniec meczu wynik 2:2", "0:0 / 2:3": "Do przerwy wynik 0:0, na koniec meczu wynik 2:3", "0:0 / 2:4": "Do przerwy wynik 0:0, na koniec meczu wynik 2:4", "0:0 / 3:1": "Do przerwy wynik 0:0, na koniec meczu wynik 3:1", "0:0 / 3:2": "Do przerwy wynik 0:0, na koniec meczu wynik 3:2", "0:0 / 3:3": "Do przerwy wynik 0:0, na koniec meczu wynik 3:3", "0:0 / 3:4": "Do przerwy wynik 0:0, na koniec meczu wynik 3:4", "0:0 / 4:0": "Do przerwy wynik 0:0, na koniec meczu wynik 4:0", "0:0 / 4:1": "Do przerwy wynik 0:0, na koniec meczu wynik 4:1", "0:0 / 4:2": "Do przerwy wynik 0:0, na koniec meczu wynik 4:2", "0:0 / 4:3": "Do przerwy wynik 0:0, na koniec meczu wynik 4:3", "0:0 / 4:4": "Do przerwy wynik 0:0, na koniec meczu wynik 4:4", "0:1 / 0:4": "Do przerwy wynik 0:1, na koniec meczu wynik 0:4", "0:1 / 1:4": "Do przerwy wynik 0:1, na koniec meczu wynik 1:4", "0:1 / 2:3": "Do przerwy wynik 0:1, na koniec meczu wynik 2:3", "0:1 / 2:4": "Do przerwy wynik 0:1, na koniec meczu wynik 2:4", "0:1 / 3:2": "Do przerwy wynik 0:1, na koniec meczu wynik 3:2", "0:1 / 3:3": "Do przerwy wynik 0:1, na koniec meczu wynik 3:3", "0:1 / 3:4": "Do przerwy wynik 0:1, na koniec meczu wynik 3:4", "0:1 / 4:1": "Do przerwy wynik 0:1, na koniec meczu wynik 4:1", "0:1 / 4:2": "Do przerwy wynik 0:1, na koniec meczu wynik 4:2", "0:1 / 4:3": "Do przerwy wynik 0:1, na koniec meczu wynik 4:3", "0:1 / 4:4": "Do przerwy wynik 0:1, na koniec meczu wynik 4:4", "0:2 / 0:4": "Do przerwy wynik 0:2, na koniec meczu wynik 0:4", "0:2 / 1:4": "Do przerwy wynik 0:2, na koniec meczu wynik 1:4", "0:2 / 2:3": "Do przerwy wynik 0:2, na koniec meczu wynik 2:3", "0:2 / 2:4": "Do przerwy wynik 0:2, na koniec meczu wynik 2:4", "0:2 / 3:2": "Do przerwy wynik 0:2, na koniec meczu wynik 3:2", "0:2 / 3:3": "Do przerwy wynik 0:2, na koniec meczu wynik 3:3", "0:2 / 3:4": "Do przerwy wynik 0:2, na koniec meczu wynik 3:4", "0:2 / 4:2": "Do przerwy wynik 0:2, na koniec meczu wynik 4:2", "0:2 / 4:3": "Do przerwy wynik 0:2, na koniec meczu wynik 4:3", "0:2 / 4:4": "Do przerwy wynik 0:2, na koniec meczu wynik 4:4", "0:3 / 0:3": "Do przerwy wynik 0:3, na koniec meczu wynik 0:3", "0:3 / 0:4": "Do przerwy wynik 0:3, na koniec meczu wynik 0:4", "0:3 / 1:3": "Do przerwy wynik 0:3, na koniec meczu wynik 1:3", "0:3 / 1:4": "Do przerwy wynik 0:3, na koniec meczu wynik 1:4", "0:3 / 2:3": "Do przerwy wynik 0:3, na koniec meczu wynik 2:3", "0:3 / 2:4": "Do przerwy wynik 0:3, na koniec meczu wynik 2:4", "0:3 / 3:3": "Do przerwy wynik 0:3, na koniec meczu wynik 3:3", "0:3 / 3:4": "Do przerwy wynik 0:3, na koniec meczu wynik 3:4", "0:3 / 4:3": "Do przerwy wynik 0:3, na koniec meczu wynik 4:3", "0:3 / 4:4": "Do przerwy wynik 0:3, na koniec meczu wynik 4:4", "0:4 / 0:4": "Do przerwy wynik 0:4, na koniec meczu wynik 0:4", "0:4 / 1:4": "Do przerwy wynik 0:4, na koniec meczu wynik 1:4", "0:4 / 2:4": "Do przerwy wynik 0:4, na koniec meczu wynik 2:4", "0:4 / 3:4": "Do przerwy wynik 0:4, na koniec meczu wynik 3:4", "0:4 / 4:4": "Do przerwy wynik 0:4, na koniec meczu wynik 4:4", "1:0 / 1:4": "Do przerwy wynik 1:0, na koniec meczu wynik 1:4", "1:0 / 2:3": "Do przerwy wynik 1:0, na koniec meczu wynik 2:3", "1:0 / 2:4": "Do przerwy wynik 1:0, na koniec meczu wynik 2:4", "1:0 / 3:2": "Do przerwy wynik 1:0, na koniec meczu wynik 3:2", "1:0 / 3:3": "Do przerwy wynik 1:0, na koniec meczu wynik 3:3", "1:0 / 3:4": "Do przerwy wynik 1:0, na koniec meczu wynik 3:4", "1:0 / 4:0": "Do przerwy wynik 1:0, na koniec meczu wynik 4:0", "1:0 / 4:1": "Do przerwy wynik 1:0, na koniec meczu wynik 4:1", "1:0 / 4:2": "Do przerwy wynik 1:0, na koniec meczu wynik 4:2", "1:0 / 4:3": "Do przerwy wynik 1:0, na koniec meczu wynik 4:3", "1:0 / 4:4": "Do przerwy wynik 1:0, na koniec meczu wynik 4:4", "1:1 / 1:4": "Do przerwy wynik 1:1, na koniec meczu wynik 1:4", "1:1 / 2:4": "Do przerwy wynik 1:1, na koniec meczu wynik 2:4", "1:1 / 3:3": "Do przerwy wynik 1:1, na koniec meczu wynik 3:3", "1:1 / 3:4": "Do przerwy wynik 1:1, na koniec meczu wynik 3:4", "1:1 / 4:1": "Do przerwy wynik 1:1, na koniec meczu wynik 4:1", "1:1 / 4:2": "Do przerwy wynik 1:1, na koniec meczu wynik 4:2", "1:1 / 4:3": "Do przerwy wynik 1:1, na koniec meczu wynik 4:3", "1:1 / 4:4": "Do przerwy wynik 1:1, na koniec meczu wynik 4:4", "1:2 / 1:2": "Do przerwy wynik 1:2, na koniec meczu wynik 1:2", "1:2 / 1:3": "Do przerwy wynik 1:2, na koniec meczu wynik 1:3", "1:2 / 1:4": "Do przerwy wynik 1:2, na koniec meczu wynik 1:4", "1:2 / 2:2": "Do przerwy wynik 1:2, na koniec meczu wynik 2:2", "1:2 / 2:3": "Do przerwy wynik 1:2, na koniec meczu wynik 2:3", "1:2 / 2:4": "Do przerwy wynik 1:2, na koniec meczu wynik 2:4", "1:2 / 3:2": "Do przerwy wynik 1:2, na koniec meczu wynik 3:2", "1:2 / 3:3": "Do przerwy wynik 1:2, na koniec meczu wynik 3:3", "1:2 / 3:4": "Do przerwy wynik 1:2, na koniec meczu wynik 3:4", "1:2 / 4:2": "Do przerwy wynik 1:2, na koniec meczu wynik 4:2", "1:2 / 4:3": "Do przerwy wynik 1:2, na koniec meczu wynik 4:3", "1:2 / 4:4": "Do przerwy wynik 1:2, na koniec meczu wynik 4:4", "1:3 / 1:3": "Do przerwy wynik 1:3, na koniec meczu wynik 1:3", "1:3 / 1:4": "Do przerwy wynik 1:3, na koniec meczu wynik 1:4", "1:3 / 2:3": "Do przerwy wynik 1:3, na koniec meczu wynik 2:3", "1:3 / 2:4": "Do przerwy wynik 1:3, na koniec meczu wynik 2:4", "1:3 / 3:3": "Do przerwy wynik 1:3, na koniec meczu wynik 3:3", "1:3 / 3:4": "Do przerwy wynik 1:3, na koniec meczu wynik 3:4", "1:3 / 4:3": "Do przerwy wynik 1:3, na koniec meczu wynik 4:3", "1:3 / 4:4": "Do przerwy wynik 1:3, na koniec meczu wynik 4:4", "1:4 / 1:4": "Do przerwy wynik 1:4, na koniec meczu wynik 1:4", "1:4 / 2:4": "Do przerwy wynik 1:4, na koniec meczu wynik 2:4", "1:4 / 3:4": "Do przerwy wynik 1:4, na koniec meczu wynik 3:4", "1:4 / 4:4": "Do przerwy wynik 1:4, na koniec meczu wynik 4:4", "2:0 / 2:3": "Do przerwy wynik 2:0, na koniec meczu wynik 2:3", "2:0 / 2:4": "Do przerwy wynik 2:0, na koniec meczu wynik 2:4", "2:0 / 3:2": "Do przerwy wynik 2:0, na koniec meczu wynik 3:2", "2:0 / 3:3": "Do przerwy wynik 2:0, na koniec meczu wynik 3:3", "2:0 / 3:4": "Do przerwy wynik 2:0, na koniec meczu wynik 3:4", "2:0 / 4:0": "Do przerwy wynik 2:0, na koniec meczu wynik 4:0", "2:0 / 4:1": "Do przerwy wynik 2:0, na koniec meczu wynik 4:1", "2:0 / 4:2": "Do przerwy wynik 2:0, na koniec meczu wynik 4:2", "2:0 / 4:3": "Do przerwy wynik 2:0, na koniec meczu wynik 4:3", "2:0 / 4:4": "Do przerwy wynik 2:0, na koniec meczu wynik 4:4", "2:1 / 2:1": "Do przerwy wynik 2:1, na koniec meczu wynik 2:1", "2:1 / 2:2": "Do przerwy wynik 2:1, na koniec meczu wynik 2:2", "2:1 / 2:3": "Do przerwy wynik 2:1, na koniec meczu wynik 2:3", "2:1 / 2:4": "Do przerwy wynik 2:1, na koniec meczu wynik 2:4", "2:1 / 3:1": "Do przerwy wynik 2:1, na koniec meczu wynik 3:1", "2:1 / 3:2": "Do przerwy wynik 2:1, na koniec meczu wynik 3:2", "2:1 / 3:3": "Do przerwy wynik 2:1, na koniec meczu wynik 3:3", "2:1 / 3:4": "Do przerwy wynik 2:1, na koniec meczu wynik 3:4", "2:1 / 4:1": "Do przerwy wynik 2:1, na koniec meczu wynik 4:1", "2:1 / 4:2": "Do przerwy wynik 2:1, na koniec meczu wynik 4:2", "2:1 / 4:3": "Do przerwy wynik 2:1, na koniec meczu wynik 4:3", "2:1 / 4:4": "Do przerwy wynik 2:1, na koniec meczu wynik 4:4", "2:2 / 2:2": "Do przerwy wynik 2:2, na koniec meczu wynik 2:2", "2:2 / 2:3": "Do przerwy wynik 2:2, na koniec meczu wynik 2:3", "2:2 / 2:4": "Do przerwy wynik 2:2, na koniec meczu wynik 2:4", "2:2 / 3:2": "Do przerwy wynik 2:2, na koniec meczu wynik 3:2", "2:2 / 3:3": "Do przerwy wynik 2:2, na koniec meczu wynik 3:3", "2:2 / 3:4": "Do przerwy wynik 2:2, na koniec meczu wynik 3:4", "2:2 / 4:2": "Do przerwy wynik 2:2, na koniec meczu wynik 4:2", "2:2 / 4:3": "Do przerwy wynik 2:2, na koniec meczu wynik 4:3", "2:2 / 4:4": "Do przerwy wynik 2:2, na koniec meczu wynik 4:4", "2:3 / 2:3": "Do przerwy wynik 2:3, na koniec meczu wynik 2:3", "2:3 / 2:4": "Do przerwy wynik 2:3, na koniec meczu wynik 2:4", "2:3 / 3:3": "Do przerwy wynik 2:3, na koniec meczu wynik 3:3", "2:3 / 3:4": "Do przerwy wynik 2:3, na koniec meczu wynik 3:4", "2:3 / 4:3": "Do przerwy wynik 2:3, na koniec meczu wynik 4:3", "2:3 / 4:4": "Do przerwy wynik 2:3, na koniec meczu wynik 4:4", "2:4 / 2:4": "Do przerwy wynik 2:4, na koniec meczu wynik 2:4", "2:4 / 3:4": "Do przerwy wynik 2:4, na koniec meczu wynik 3:4", "2:4 / 4:4": "Do przerwy wynik 2:4, na koniec meczu wynik 4:4", "3:0 / 3:0": "Do przerwy wynik 3:0, na koniec meczu wynik 3:0", "3:0 / 3:1": "Do przerwy wynik 3:0, na koniec meczu wynik 3:1", "3:0 / 3:2": "Do przerwy wynik 3:0, na koniec meczu wynik 3:2", "3:0 / 3:3": "Do przerwy wynik 3:0, na koniec meczu wynik 3:3", "3:0 / 3:4": "Do przerwy wynik 3:0, na koniec meczu wynik 3:4", "3:0 / 4:0": "Do przerwy wynik 3:0, na koniec meczu wynik 4:0", "3:0 / 4:1": "Do przerwy wynik 3:0, na koniec meczu wynik 4:1", "3:0 / 4:2": "Do przerwy wynik 3:0, na koniec meczu wynik 4:2", "3:0 / 4:3": "Do przerwy wynik 3:0, na koniec meczu wynik 4:3", "3:0 / 4:4": "Do przerwy wynik 3:0, na koniec meczu wynik 4:4", "3:1 / 3:1": "Do przerwy wynik 3:1, na koniec meczu wynik 3:1", "3:1 / 3:2": "Do przerwy wynik 3:1, na koniec meczu wynik 3:2", "3:1 / 3:3": "Do przerwy wynik 3:1, na koniec meczu wynik 3:3", "3:1 / 3:4": "Do przerwy wynik 3:1, na koniec meczu wynik 3:4", "3:1 / 4:1": "Do przerwy wynik 3:1, na koniec meczu wynik 4:1", "3:1 / 4:2": "Do przerwy wynik 3:1, na koniec meczu wynik 4:2", "3:1 / 4:3": "Do przerwy wynik 3:1, na koniec meczu wynik 4:3", "3:1 / 4:4": "Do przerwy wynik 3:1, na koniec meczu wynik 4:4", "3:2 / 3:2": "Do przerwy wynik 3:2, na koniec meczu wynik 3:2", "3:2 / 3:3": "Do przerwy wynik 3:2, na koniec meczu wynik 3:3", "3:2 / 3:4": "Do przerwy wynik 3:2, na koniec meczu wynik 3:4", "3:2 / 4:2": "Do przerwy wynik 3:2, na koniec meczu wynik 4:2", "3:2 / 4:3": "Do przerwy wynik 3:2, na koniec meczu wynik 4:3", "3:2 / 4:4": "Do przerwy wynik 3:2, na koniec meczu wynik 4:4", "3:3 / 3:3": "Do przerwy wynik 3:3, na koniec meczu wynik 3:3", "3:3 / 3:4": "Do przerwy wynik 3:3, na koniec meczu wynik 3:4", "3:3 / 4:3": "Do przerwy wynik 3:3, na koniec meczu wynik 4:3", "3:3 / 4:4": "Do przerwy wynik 3:3, na koniec meczu wynik 4:4", "3:4 / 3:4": "Do przerwy wynik 3:4, na koniec meczu wynik 3:4", "3:4 / 4:4": "Do przerwy wynik 3:4, na koniec meczu wynik 4:4", "4:0 / 4:0": "Do przerwy wynik 4:0, na koniec meczu wynik 4:0", "4:0 / 4:1": "Do przerwy wynik 4:0, na koniec meczu wynik 4:1", "4:0 / 4:2": "Do przerwy wynik 4:0, na koniec meczu wynik 4:2", "4:0 / 4:3": "Do przerwy wynik 4:0, na koniec meczu wynik 4:3", "4:0 / 4:4": "Do przerwy wynik 4:0, na koniec meczu wynik 4:4", "4:1 / 4:1": "Do przerwy wynik 4:1, na koniec meczu wynik 4:1", "4:1 / 4:2": "Do przerwy wynik 4:1, na koniec meczu wynik 4:2", "4:1 / 4:3": "Do przerwy wynik 4:1, na koniec meczu wynik 4:3", "4:1 / 4:4": "Do przerwy wynik 4:1, na koniec meczu wynik 4:4", "4:2 / 4:2": "Do przerwy wynik 4:2, na koniec meczu wynik 4:2", "4:2 / 4:3": "Do przerwy wynik 4:2, na koniec meczu wynik 4:3", "4:2 / 4:4": "Do przerwy wynik 4:2, na koniec meczu wynik 4:4", "4:3 / 4:3": "Do przerwy wynik 4:3, na koniec meczu wynik 4:3", "4:3 / 4:4": "Do przerwy wynik 4:3, na koniec meczu wynik 4:4", "4:4 / 4:4": "Do przerwy wynik 4:4, na koniec meczu wynik 4:4", "0:0 / 4+": "Do przerwy wynik 0:0, na koniec meczu 4 lub więcej bramek łącznie", "1:0 / 4+": "Do przerwy wynik 1:0, na koniec meczu 4 lub więcej bramek łącznie", "0:1 / 4+": "Do przerwy wynik 0:1, na koniec meczu 4 lub więcej bramek łącznie", "2:0 / 4+": "Do przerwy wynik 2:0, na koniec meczu 4 lub więcej bramek łącznie", "1:1 / 4+": "Do przerwy wynik 1:1, na koniec meczu 4 lub więcej bramek łącznie", "0:2 / 4+": "Do przerwy wynik 0:2, na koniec meczu 4 lub więcej bramek łącznie", "3:0 / 4+": "Do przerwy wynik 3:0, na koniec meczu 4 lub więcej bramek łącznie", "2:1 / 4+": "Do przerwy wynik 2:1, na koniec meczu 4 lub więcej bramek łącznie", "1:2 / 4+": "Do przerwy wynik 1:2, na koniec meczu 4 lub więcej bramek łącznie", "0:3 / 4+": "Do przerwy wynik 0:3, na koniec meczu 4 lub więcej bramek łącznie", "4+ / 4+": "Do przerwy 4 lub więcej bramek łącznie, na koniec meczu 4 lub więcej bramek łącznie" },
     displayOrder: 51,
     viewConfig: { gridSize: 6 },
   },
@@ -1527,6 +1531,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { YES: "{param} otrzyma żółtą kartkę", NO: "{param} NIE otrzyma żółtej kartki" },
     displayOrder: 64,
   },
   {
@@ -1601,6 +1606,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     // always-empty column and spurious selection_gaps entries.
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} strzeli 1 lub więcej goli", "2+": "{param} strzeli 2 lub więcej goli", "3+": "{param} strzeli 3 lub więcej goli" },
     displayOrder: 68,
   },
   {
@@ -1704,6 +1710,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
+    descriptionTemplates: { YES: "{param} strzeli 4 lub więcej goli", NO: "{param} NIE strzeli 4 lub więcej goli" },
     displayOrder: 71,
   },
   {
@@ -1735,6 +1742,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     // 4+ in live data — observed up to 8+ for France vs Morocco).
     selections: ["1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} wykona 1 lub więcej udanych odbiorów", "2+": "{param} wykona 2 lub więcej udanych odbiorów", "3+": "{param} wykona 3 lub więcej udanych odbiorów", "4+": "{param} wykona 4 lub więcej udanych odbiorów", "5+": "{param} wykona 5 lub więcej udanych odbiorów", "6+": "{param} wykona 6 lub więcej udanych odbiorów", "7+": "{param} wykona 7 lub więcej udanych odbiorów", "8+": "{param} wykona 8 lub więcej udanych odbiorów" },
     displayOrder: 72,
   },
   {
@@ -1749,6 +1757,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+", "4+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} wykona 1 lub więcej przechwytów", "2+": "{param} wykona 2 lub więcej przechwytów", "3+": "{param} wykona 3 lub więcej przechwytów", "4+": "{param} wykona 4 lub więcej przechwytów" },
     displayOrder: 73,
   },
   {
@@ -1763,6 +1772,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+", "4+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} wywalczy 1 lub więcej fauli", "2+": "{param} wywalczy 2 lub więcej fauli", "3+": "{param} wywalczy 3 lub więcej fauli", "4+": "{param} wywalczy 4 lub więcej fauli" },
     displayOrder: 73,
   },
   {
@@ -1777,6 +1787,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+", "4+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} popełni 1 lub więcej fauli", "2+": "{param} popełni 2 lub więcej fauli", "3+": "{param} popełni 3 lub więcej fauli", "4+": "{param} popełni 4 lub więcej fauli" },
     displayOrder: 74,
   },
   {
@@ -1791,6 +1802,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "2+": "{param} obroni 2 lub więcej strzałów", "3+": "{param} obroni 3 lub więcej strzałów", "4+": "{param} obroni 4 lub więcej strzałów", "5+": "{param} obroni 5 lub więcej strzałów", "6+": "{param} obroni 6 lub więcej strzałów", "7+": "{param} obroni 7 lub więcej strzałów" },
     displayOrder: 75,
   },
   {
@@ -1994,6 +2006,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik strzeli gola nogą" },
     displayOrder: 264,
   },
   {
@@ -2007,6 +2020,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik strzeli gola z pola karnego" },
     displayOrder: 265,
   },
   {
@@ -2043,6 +2057,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda 1 lub więcej strzałów spoza pola karnego", "2+": "Zawodnik odda 2 lub więcej strzałów spoza pola karnego", "3+": "Zawodnik odda 3 lub więcej strzałów spoza pola karnego" },
     displayOrder: 267,
   },
   {
@@ -2056,6 +2071,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+", "2+", "3+", "4+", "5+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda 1 lub więcej strzałów z pola karnego", "2+": "Zawodnik odda 2 lub więcej strzałów z pola karnego", "3+": "Zawodnik odda 3 lub więcej strzałów z pola karnego", "4+": "Zawodnik odda 4 lub więcej strzałów z pola karnego", "5+": "Zawodnik odda 5 lub więcej strzałów z pola karnego" },
     displayOrder: 268,
   },
   {
@@ -2076,6 +2092,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda 1 lub więcej celnych strzałów głową", "2+": "Zawodnik odda 2 lub więcej celnych strzałów głową", "3+": "Zawodnik odda 3 lub więcej celnych strzałów głową" },
     displayOrder: 269,
   },
   {
@@ -2096,6 +2113,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} będzie na spalonym 1 lub więcej razy", "2+": "{param} będzie na spalonym 2 lub więcej razy", "3+": "{param} będzie na spalonym 3 lub więcej razy" },
     displayOrder: 270,
   },
   {
@@ -2109,6 +2127,7 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik będzie na spalonym w 1. połowie" },
     displayOrder: 271,
   },
 ];
@@ -2364,6 +2383,7 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     selections: ["0-1", "2-3", "4-5", "6-7", "8+", "0-2", "3-4", "5-6", "7+", "9+"],
     selectionOrder: ["0-1", "2-3", "4-5", "6-7", "8+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-1": "W meczu padnie 0-1 kartek", "2-3": "W meczu padnie 2-3 kartek", "4-5": "W meczu padnie 4-5 kartek", "6-7": "W meczu padnie 6-7 kartek", "8+": "W meczu padnie 8 lub więcej kartek", "0-2": "W meczu padnie 0-2 kartek", "3-4": "W meczu padnie 3-4 kartek", "5-6": "W meczu padnie 5-6 kartek", "7+": "W meczu padnie 7 lub więcej kartek", "9+": "W meczu padnie 9 lub więcej kartek" },
     displayOrder: 76,
   },
   {
@@ -3467,6 +3487,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-2", "3-4", "5+", "0-4", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-2": "W 1. połowie będzie 0-2 rzutów rożnych", "3-4": "W 1. połowie będzie 3-4 rzutów rożnych", "5+": "W 1. połowie będzie 5 lub więcej rzutów rożnych", "0-4": "W 1. połowie będzie 0-4 rzutów rożnych", "5-6": "W 1. połowie będzie 5-6 rzutów rożnych", "7+": "W 1. połowie będzie 7 lub więcej rzutów rożnych" },
     displayOrder: 221
   },
   {
@@ -3485,6 +3506,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["0", "1", "2", "3+", "0-1", "2-3", "4+"],
     selectionOrder: ["0", "1", "2", "3+", "0-1", "2-3", "4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "{param} nie zdobędzie żadnego rzutu rożnego w 1. połowie", "1": "{param} zdobędzie 1 rzutów rożnych w 1. połowie", "2": "{param} zdobędzie 2 rzutów rożnych w 1. połowie", "3+": "{param} zdobędzie 3 lub więcej rzutów rożnych w 1. połowie", "0-1": "{param} zdobędzie 0-1 rzutów rożnych w 1. połowie", "2-3": "{param} zdobędzie 2-3 rzutów rożnych w 1. połowie", "4+": "{param} zdobędzie 4 lub więcej rzutów rożnych w 1. połowie" },
     displayOrder: 222
   },
   {
@@ -3744,6 +3766,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych", "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5+": "Gospodarze zdobędą 5 lub więcej rzutów rożnych" },
     displayOrder: 237
   },
   {
@@ -3757,6 +3780,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych", "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5+": "Goście zdobędą 5 lub więcej rzutów rożnych" },
     displayOrder: 238
   },
   {
@@ -3826,6 +3850,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2+"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "0": "Gospodarze nie strzelą gola w 2. połowie", "1": "Gospodarze strzelą 1 goli w 2. połowie", "2+": "Gospodarze strzelą 2 lub więcej goli w 2. połowie" },
     displayOrder: 243
   },
   {
@@ -4147,6 +4172,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-3", "4", "5", "6", "7", "8", "9", "10", "11", "12+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-3": "W meczu padnie łącznie 0-3 kartek", "4": "W meczu padnie łącznie 4 kartek", "5": "W meczu padnie łącznie 5 kartek", "6": "W meczu padnie łącznie 6 kartek", "7": "W meczu padnie łącznie 7 kartek", "8": "W meczu padnie łącznie 8 kartek", "9": "W meczu padnie łącznie 9 kartek", "10": "W meczu padnie łącznie 10 kartek", "11": "W meczu padnie łącznie 11 kartek", "12+": "W meczu padnie łącznie 12 lub więcej kartek" },
     displayOrder: 264,
   },
   {
@@ -4161,6 +4187,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
     selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Gospodarze nie obejrzą żadnej kartki", "1": "Gospodarze obejrzą 1 kartek", "0-1": "Gospodarze obejrzą 0-1 kartek", "2": "Gospodarze obejrzą 2 kartek", "3": "Gospodarze obejrzą 3 kartek", "3+": "Gospodarze obejrzą 3 lub więcej kartek", "4+": "Gospodarze obejrzą 4 lub więcej kartek" },
     displayOrder: 265,
   },
   {
@@ -4175,6 +4202,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     // betclic uses grouped "0-1","2","3","4+"; STS uses split "0","1","2","3+" — both variants are valid
     selections: ["0", "1", "0-1", "2", "3", "3+", "4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Goście nie obejrzą żadnej kartki", "1": "Goście obejrzą 1 kartek", "0-1": "Goście obejrzą 0-1 kartek", "2": "Goście obejrzą 2 kartek", "3": "Goście obejrzą 3 kartek", "3+": "Goście obejrzą 3 lub więcej kartek", "4+": "Goście obejrzą 4 lub więcej kartek" },
     displayOrder: 266,
   },
   {
@@ -4188,6 +4216,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Gospodarze nie obejrzą żadnej kartki w 1. połowie", "1": "Gospodarze obejrzą 1 kartek w 1. połowie", "2": "Gospodarze obejrzą 2 kartek w 1. połowie", "3+": "Gospodarze obejrzą 3 lub więcej kartek w 1. połowie" },
     displayOrder: 267,
   },
   {
@@ -4201,6 +4230,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Goście nie obejrzą żadnej kartki w 1. połowie", "1": "Goście obejrzą 1 kartek w 1. połowie", "2": "Goście obejrzą 2 kartek w 1. połowie", "3+": "Goście obejrzą 3 lub więcej kartek w 1. połowie" },
     displayOrder: 268,
   },
   {
@@ -4637,6 +4667,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0","1","2","3","3+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Goście nie strzelą gola w 1. połowie", "1": "Goście strzelą 1 goli w 1. połowie", "2": "Goście strzelą 2 goli w 1. połowie", "3": "Goście strzelą 3 goli w 1. połowie", "3+": "Goście strzelą 3 lub więcej goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -4650,6 +4681,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0","1","2+"],
     viewType: ViewType.TRIPLE_BUTTONS,
+    descriptionTemplates: { "0": "Goście nie strzelą gola w 2. połowie", "1": "Goście strzelą 1 goli w 2. połowie", "2+": "Goście strzelą 2 lub więcej goli w 2. połowie" },
     displayOrder: 500,
   },
   {
@@ -4883,6 +4915,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-1","2-3","4-6","7+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-1": "Wskazana drużyna strzeli 0-1 goli", "2-3": "Wskazana drużyna strzeli 2-3 goli", "4-6": "Wskazana drużyna strzeli 4-6 goli", "7+": "Wskazana drużyna strzeli 7 lub więcej goli" },
     displayOrder: 500,
   },
   {
@@ -5098,6 +5131,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["0-5","6-8","9-11","12-14","15+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "0-5": "Łączna liczba rzutów rożnych w meczu: 0-5", "6-8": "Łączna liczba rzutów rożnych w meczu: 6-8", "9-11": "Łączna liczba rzutów rożnych w meczu: 9-11", "12-14": "Łączna liczba rzutów rożnych w meczu: 12-14", "15+": "Łączna liczba rzutów rożnych w meczu: 15 lub więcej" },
     displayOrder: 500,
   },
   {
@@ -5112,6 +5146,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["0-2","3-5","6+"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "0-2": "Łączna liczba kartek w meczu: 0-2", "3-5": "Łączna liczba kartek w meczu: 3-5", "6+": "Łączna liczba kartek w meczu: 6 lub więcej" },
     displayOrder: 500,
   },
   {
@@ -5125,6 +5160,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0","1","2","3","4+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "W 1. połowie nie padnie żadna kartka", "1": "W 1. połowie padnie łącznie 1 kartek", "2": "W 1. połowie padnie łącznie 2 kartek", "3": "W 1. połowie padnie łącznie 3 kartek", "4+": "W 1. połowie padnie łącznie 4 lub więcej kartek" },
     displayOrder: 500,
   },
   {
@@ -5182,6 +5218,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0","1-2","3-4","5-6","7-8","9-10","11+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Suma punktów za kartki w meczu: 0", "1-2": "Suma punktów za kartki w meczu: 1-2", "3-4": "Suma punktów za kartki w meczu: 3-4", "5-6": "Suma punktów za kartki w meczu: 5-6", "7-8": "Suma punktów za kartki w meczu: 7-8", "9-10": "Suma punktów za kartki w meczu: 9-10", "11+": "Suma punktów za kartki w meczu: 11 lub więcej" },
     displayOrder: 500,
   },
   {
@@ -5209,6 +5246,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-1","2-3","4-6","7+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-1": "W 2. połowie padnie 0-1 goli", "2-3": "W 2. połowie padnie 2-3 goli", "4-6": "W 2. połowie padnie 4-6 goli", "7+": "W 2. połowie padnie 7 lub więcej goli" },
     displayOrder: 500,
   },
   {
@@ -5222,6 +5260,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik strzeli gola w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5235,6 +5274,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+","2+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik popełni 1 lub więcej fauli w 1. połowie", "2+": "Zawodnik popełni 2 lub więcej fauli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5248,6 +5288,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+","2+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda 1 lub więcej strzałów w 1. połowie", "2+": "Zawodnik odda 2 lub więcej strzałów w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5261,6 +5302,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda celny strzał w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5288,6 +5330,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda celny strzał nogą (bez główek)" },
     displayOrder: 500,
   },
   {
@@ -5301,6 +5344,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1+","2+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "Zawodnik odda 1 lub więcej celnych strzałów z pola karnego", "2+": "Zawodnik odda 2 lub więcej celnych strzałów z pola karnego" },
     displayOrder: 500,
   },
   {
@@ -5372,6 +5416,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego punktu za kartki w 1. połowie", "1": "Gospodarze zdobędą 1 punktów za kartki w 1. połowie", "2": "Gospodarze zdobędą 2 punktów za kartki w 1. połowie", "3+": "Gospodarze zdobędą 3 lub więcej punktów za kartki w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5399,6 +5444,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-5","6-8","9-11","12-14","15+"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-5": "Łączna liczba rzutów rożnych w meczu: 0-5", "6-8": "Łączna liczba rzutów rożnych w meczu: 6-8", "9-11": "Łączna liczba rzutów rożnych w meczu: 9-11", "12-14": "Łączna liczba rzutów rożnych w meczu: 12-14", "15+": "Łączna liczba rzutów rożnych w meczu: 15 lub więcej" },
     displayOrder: 500,
   },
 ];
@@ -5491,6 +5537,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "player",
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
+    descriptionTemplates: { "1+": "{param} odda 1 lub więcej celnych strzałów spoza pola karnego", "2+": "{param} odda 2 lub więcej celnych strzałów spoza pola karnego", "3+": "{param} odda 3 lub więcej celnych strzałów spoza pola karnego" },
     displayOrder: 280,
   },
   {
@@ -5547,6 +5594,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0", "1", "2", "3"],
     viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0": "Gospodarze nie strzelą gola w 1. połowie", "1": "Gospodarze strzelą dokładnie 1 goli w 1. połowie", "2": "Gospodarze strzelą dokładnie 2 goli w 1. połowie", "3": "Gospodarze strzelą dokładnie 3 goli w 1. połowie" },
     displayOrder: 284,
   },
   {
@@ -5742,6 +5790,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["1-30", "31-60", "61+"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { "1-30": "Pierwszy gol meczu padnie między 1. a 30. minutą", "31-60": "Pierwszy gol meczu padnie między 31. a 60. minutą", "61+": "Pierwszy gol meczu padnie po 61. minucie (lub nie padnie wcale)" },
     displayOrder: 296,
   },
   {
@@ -6832,6 +6881,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["0", "1-3", "4-6", "10-12"],
     viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { "0": "Łączna liczba celnych strzałów obu drużyn w meczu: 0", "1-3": "Łączna liczba celnych strzałów obu drużyn w meczu: 1-3", "4-6": "Łączna liczba celnych strzałów obu drużyn w meczu: 4-6", "10-12": "Łączna liczba celnych strzałów obu drużyn w meczu: 10-12" },
     displayOrder: 371,
   },
   {
@@ -7688,6 +7738,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     selections: ["0-1", "0-2", "0-3", "0-4"],
     viewType: ViewType.SCORE_GRID,
+    descriptionTemplates: { "0-1": "Wynik 0-1 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-2": "Wynik 0-2 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-3": "Wynik 0-3 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-4": "Wynik 0-4 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)" },
     displayOrder: 424,
   },
   {
@@ -9150,6 +9201,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["0.5", "1.5", "2.5", "3.5"],
     viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { "0.5": "Łączna liczba goli w meczu przekroczy 0.5", "1.5": "Łączna liczba goli w meczu przekroczy 1.5", "2.5": "Łączna liczba goli w meczu przekroczy 2.5", "3.5": "Łączna liczba goli w meczu przekroczy 3.5" },
     displayOrder: 528,
   },
   {
@@ -9239,6 +9291,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "integer",
     selections: ["1+", "2+", "3+", "4+", "5+"],
     viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { "1+": "W meczu padnie 1 lub więcej goli łącznie", "2+": "W meczu padnie 2 lub więcej goli łącznie", "3+": "W meczu padnie 3 lub więcej goli łącznie", "4+": "W meczu padnie 4 lub więcej goli łącznie", "5+": "W meczu padnie 5 lub więcej goli łącznie" },
     displayOrder: 534,
   },
   {
@@ -9261,6 +9314,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["YES", "NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
+    descriptionTemplates: { YES: "Wskazana drużyna wygra mecz LUB łączna liczba goli w meczu przekroczy {param}", NO: "Wskazana drużyna nie wygra I łączna liczba goli w meczu nie przekroczy {param}" },
     displayOrder: 535,
   },
   {

@@ -275,6 +275,28 @@ function normalizeText(value: string): string {
     .trim();
 }
 
+/**
+ * Fuksiarz-only raw-name irregularities that break the shared
+ * canonicalizePlayerName() "Lastname, Firstname" -> "Firstname Lastname"
+ * swap because Fuksiarz itself put the name parts in the wrong slot at the
+ * source. E.g. Frank Onyeka is quoted as "Onyeka Frank, Ogochukwu" (treating
+ * "Onyeka Frank" as the surname and "Ogochukwu" as the given name), so the
+ * generic swap produces "Ogochukwu Onyeka Frank" — a name no other
+ * bookmaker uses — stranding this player's odds in their own single-book
+ * parameter row instead of merging into the shared "Frank Onyeka" row
+ * (audit-match, Arsenal vs Coventry City, AWAY_GOALSCORER_FIRST index 288).
+ * Keyed by the raw text as-is (pre-canonicalization) since the malformation
+ * is specific to Fuksiarz's source data, not a generic parsing pattern.
+ */
+const FUKSIARZ_PLAYER_NAME_ALIASES: Record<string, string> = {
+  "Onyeka Frank, Ogochukwu": "Frank Onyeka",
+};
+
+function canonicalizeFuksiarzPlayerName(raw: string): string {
+  const alias = FUKSIARZ_PLAYER_NAME_ALIASES[raw.trim()];
+  return alias ?? canonicalizePlayerName(raw);
+}
+
 function normalizeTeam(value: string | undefined): string | null {
   if (!value) return null;
   return normalizeText(value);
@@ -614,7 +636,14 @@ function resolveMarketCodeBase(
     return { code: "GOALSCORER_ANYTIME", matchedBy: "pattern" };
   }
 
-  if (/^zawodnik zaliczy asyste$/.test(normalized)) {
+  // Live Fuksiarz names this market plain "Zaliczy asystę" — no "Zawodnik"
+  // prefix — so the anchor must accept the bare verb too, matching the same
+  // fix already applied to the shot/foul line-prop anchors below. Without
+  // this, the market fails classification entirely and its 40 bundled
+  // player selections leak into the OTHER catch-all bucket instead of the
+  // dedicated PLAYER_ASSISTS market (audit-match, Arsenal vs Coventry City,
+  // OTHER index 15).
+  if (/^(zawodnik\s+)?zaliczy asyste$/.test(normalized)) {
     return { code: "PLAYER_ASSISTS", matchedBy: "pattern" };
   }
 
@@ -912,7 +941,7 @@ function extractParamValue(
   if (PLAYER_LINE_MARKETS.has(marketCode)) {
     if (raw.selections.length !== 1) return undefined;
     const soleName = raw.selections[0].name;
-    return soleName ? canonicalizePlayerName(soleName.replace(/^\d+\.\s*/, "").trim()) : undefined;
+    return soleName ? canonicalizeFuksiarzPlayerName(soleName.replace(/^\d+\.\s*/, "").trim()) : undefined;
   }
 
   // Same convention as the STS normalizer: the parameter is the team side.
@@ -1451,12 +1480,12 @@ function normalizeSelectionForMarket(
       if (/^no\s+goal\s*scorer$/i.test(trimmed)) return "NONE" as NormalizedSelection;
       // Selection is a player name — unify "Lastname, Firstname" to the
       // canonical "Firstname Lastname" order used by other bookmakers.
-      return canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim()) as NormalizedSelection;
+      return canonicalizeFuksiarzPlayerName(trimmed.replace(/^\d+\.\s*/, "").trim()) as NormalizedSelection;
 
     case "PLAYER_ASSISTS": {
       // Align with the catalog convention used by peers ("{Player} 1+") —
       // Fuksiarz's "anytime assist" market implies the 1+ line.
-      const player = canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim());
+      const player = canonicalizeFuksiarzPlayerName(trimmed.replace(/^\d+\.\s*/, "").trim());
       return (/\d\+$/.test(player) ? player : `${player} 1+`) as NormalizedSelection;
     }
 

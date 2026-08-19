@@ -7264,11 +7264,6 @@
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_DRAW",
-            "label": "1. połowa Maroko + 2. połowa remis",
-            "odds": 5.25
-          },
-          {
             "code": "DRAW_HOME",
             "label": "1 połowa remis + 2. połowa Francja",
             "odds": 4.2
@@ -7292,11 +7287,6 @@
             "code": "HOME_AWAY",
             "label": "1. połowa Francja + 2. połowa Maroko",
             "odds": 12.7
-          },
-          {
-            "code": "AWAY_DRAW",
-            "label": "1. połowa Maroko i 2.połowa remis",
-            "odds": 16
           },
           {
             "code": "AWAY_HOME",

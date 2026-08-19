@@ -45,7 +45,20 @@ const LVBET_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
 
 const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
   { pattern: /dokładny wynik/, code: "CORRECT_SCORE" },
-  { pattern: /podwojna szansa|dwojtyp|mix szans/, code: "DOUBLE_CHANCE" },
+  // "Mix szans" is lvbet's 30-selection combo/parlay product (e.g. "Arsenal
+  // wygra lub powyżej 2.5 goli", "Remis lub poniżej 3,5 goli") — none of its
+  // selections are plain double-chance picks (audit-match, Arsenal vs
+  // Coventry City, WYNIK_MECZU/DOUBLE_CHANCE index 44). It used to collide
+  // with the "podwojna szansa"/"dwojtyp" alternation below via the shared
+  // "mix szans" substring, forcing all 30 combo selections into UNKNOWN
+  // under DOUBLE_CHANCE (plus letting three unrelated stale DB rows —
+  // "Arsenal lub remis"/"Arsenal lub Coventry City"/"Coventry City lub
+  // remis", not present in any current lvbet raw market — surface as a
+  // fabricated HOME_OR_DRAW/HOME_OR_AWAY/DRAW_OR_AWAY set). No catalog code
+  // exists for this parlay shape — exclude it. Must run before the generic
+  // alternation, which would otherwise still match "mix szans".
+  { pattern: /^mix szans$/, code: "OTHER" },
+  { pattern: /podwojna szansa|dwojtyp/, code: "DOUBLE_CHANCE" },
   { pattern: /remis = zwrot|zaklad bez/, code: "DRAW_NO_BET" },
   { pattern: /obie druzyny strzela/, code: "BTTS" },
   { pattern: /parzyste|nieparzyst/, code: "ODD_EVEN_GOALS" },
@@ -64,6 +77,21 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
   // OVER/UNDER, so they fell into rawUnclaimed).
   { pattern: /^dokładna liczba goli \(przedział\)$/, code: "GOAL_RANGE" },
   { pattern: /^suma goli \(przedziały\)$/, code: "MULTI_GOAL_RANGE" },
+  // Two more DIFFERENT products share generic "liczba goli"/"bramek" wording
+  // with the plain 2-way Total Goals market and used to be swallowed by the
+  // catch-all below (audit-match, Arsenal vs Coventry City, GOLE/TOTAL_GOALS
+  // index 10): "Liczba goli 3-drogowo (regulaminowy czas) N" is a genuine
+  // 3-way (Powyżej/Dokładnie/Poniżej) exact-goals-count market for line N —
+  // catalog code TOTAL_GOALS_3WAY (mirrors betcris' identical raw shape).
+  // "Wynik i liczba bramek w meczu N" is a match-result + total-goals combo
+  // (12 selections: 3 sides x over/under x plain/double-chance) — catalog
+  // code RESULT_AND_TOTAL covers only the plain 3-side x over/under half (the
+  // extra double-chance legs are dropped in normalizeSelectionForMarket).
+  // Both must run BEFORE the generic TOTAL_GOALS catch-all, which used to
+  // force-fit their selections into a 2-way OVER/UNDER slot, leaving a
+  // spurious UNKNOWN selection and understating the true 2-way probability.
+  { pattern: /^liczba goli 3-drogowo\b/, code: "TOTAL_GOALS_3WAY" },
+  { pattern: /^wynik i liczba bramek w meczu\b/, code: "RESULT_AND_TOTAL" },
   { pattern: /suma goli|liczba goli|dokładna liczba goli|gole|bramek/, code: "TOTAL_GOALS" },
 ];
 
@@ -75,7 +103,24 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
 // MUST appear before generic catch-alls within the same family.
 const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
   // --- Time-period stats (must precede generic corner/throw-in families) ---
-  { pattern: /pierwsze 10 minut.*rzuty rozne 0\.5$/, code: "TIME_PERIOD_CORNERS_TOTAL" },
+  // A prior special case routed ONLY the "…Rzuty rożne 0.5" line to the
+  // param-less TIME_PERIOD_CORNERS_TOTAL catalog code (hasParameter: false —
+  // it can hold exactly one line). LVBet actually publishes TWO first-10-min
+  // corner lines (0.5 AND 1.5) — the 1.5 line already fell through to the
+  // generic FIRST_10_MIN_CORNERS_TOTAL pattern below (hasParameter: true,
+  // decimal — built for exactly this multi-line ladder, and where betcris/
+  // superbet already publish their own 0.5/1.5 lines). Force-fitting only
+  // the 0.5 line into the param-less sibling code silently dropped the 1.5
+  // line and left the surviving entry's own parameter value/label blank
+  // (audit-match, Arsenal vs Coventry City, STATYSTYKI/
+  // TIME_PERIOD_CORNERS_TOTAL index 370). Worse, being unanchored past
+  // "pierwsze 10 minut", the same special case ALSO caught the raw name's
+  // TEAM-SCOPED variant ("Pierwsze 10 minut (…) - <Team>: Rzuty rożne 0.5")
+  // before the team-scope exclusion below could run, leaking a team's own
+  // corners prop into the match-total market. Removing the special case
+  // lets every "…rzuty rozne" shape — match-total AND team-scoped — reach
+  // its correct existing route below (FIRST_10_MIN_CORNERS_TOTAL with a
+  // real parameter, or OTHER for the team-scoped exclusion).
   { pattern: /pierwsze 10 minut.*wrzuty z autu/, code: "FIRST_PERIOD_THROW_INS" },
   // Team-scoped 10-minute corner props ("Pierwsze 10 minut (…) - Kolumbia:
   // Rzuty rożne") have no catalog code — exclude them instead of letting
@@ -651,6 +696,19 @@ function resolveMarketCode(
     return { code: "GOAL_RANGE", matchedBy: "pattern" };
   }
 
+  // "Połowa z większą liczbą goli: Podwójna szansa" is a DOUBLE-CHANCE
+  // variant of the half-with-more-goals market (selections "1. lub w obu
+  // połowach po równo" / "1. lub 2." / "2. lub w obu połowach po równo"),
+  // not the plain 1st/Draw/2nd pick the generic branch below routes to
+  // (audit-match, Arsenal vs Coventry City, GOLE/HALF_WITH_MORE_GOALS index
+  // 43). Forcing it into plain HALF_WITH_MORE_GOALS collided its two
+  // "X lub równo" selections onto the single Draw slot and left "1. lub 2."
+  // unmapped raw text — must be checked before the generic substring branch,
+  // which would otherwise also match this name.
+  if (/połowa z wieksza liczba goli.*podwojna szansa/.test(normalizedName)) {
+    return { code: "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE", matchedBy: "pattern" };
+  }
+
   // "<Team> Połowa z większą liczbą goli" (half-with-more-goals comparison,
   // optionally team-scoped) — a comparison market, never a goals total.
   if (/połowa z wieksza liczba goli/.test(normalizedName)) {
@@ -767,6 +825,22 @@ function resolveMarketCode(
         matchedBy: "pattern",
       };
     }
+  }
+
+  // "Handicap - Suma goli w pierwszej połowie vs. Suma goli w drugiej
+  // połowie [line]" is a 1st-half-goals-total vs 2nd-half-goals-total
+  // handicap — an entirely different statistic from the match-result
+  // Asian/European Handicap despite containing "handicap" as a substring
+  // (audit-match, Arsenal vs Coventry City, HANDICAP/ASIAN_HANDICAP index
+  // 39). It was falling through the generic HANDICAP_PATTERN branch below
+  // (neither HALF_TIME_PATTERN nor SECOND_HALF_PATTERN match its "pierwszej
+  // połowie"/"drugiej połowie" wording, unlike the "1./2. połowa" prefix
+  // those check for), landing in full-match ASIAN_HANDICAP and colliding
+  // with the genuine handicap entry sharing the same numeric line (e.g.
+  // both quote "-1.5"), injecting a spurious UNKNOWN third selection. No
+  // catalog code exists for this halves-comparison handicap — exclude it.
+  if (/suma goli w pierwszej połowie.*suma goli w drugiej połowie/.test(normalizedName)) {
+    return { code: "OTHER", matchedBy: "pattern" };
   }
 
   if (HANDICAP_PATTERN.test(normalizedName)) {
@@ -1085,14 +1159,43 @@ function normalizeSelectionForMarket(
       return normalizeOverUnderSelection(trimmed);
     }
 
-    // 3-way corner totals add an EXACTLY leg to the over/under pair.
-    case "CORNERS_TOTAL_3WAY": {
+    // 3-way corner/goal totals add an EXACTLY leg to the over/under pair.
+    // TOTAL_GOALS_3WAY (audit-match, Arsenal vs Coventry City, GOLE/
+    // TOTAL_GOALS index 10) shares the identical "Powyżej"/"Dokładnie"/
+    // "Poniżej" vocabulary as lvbet's corner 3-way market.
+    case "CORNERS_TOTAL_3WAY":
+    case "TOTAL_GOALS_3WAY": {
       const overUnder = normalizeLvbetOverUnder(trimmed);
       if (overUnder) return overUnder;
       if (/^(dokładnie|dokladnie|exactly)\b/.test(normalizeMarketName(trimmed))) {
         return "EXACTLY" as NormalizedSelection;
       }
       return normalizeOverUnderSelection(trimmed);
+    }
+
+    // "Wynik i liczba bramek w meczu N" (audit-match, Arsenal vs Coventry
+    // City, GOLE/TOTAL_GOALS index 10) bundles the plain 3-side x over/under
+    // combo (matching the catalog's HOME_OVER/HOME_UNDER/DRAW_OVER/
+    // DRAW_UNDER/AWAY_OVER/AWAY_UNDER vocabulary) together with SIX extra
+    // double-chance + total legs ("(Arsenal lub remis) i powyżej…",
+    // "Drużyna 1 lub Drużyna 2 i …") that have no slot in the catalog's
+    // 3-side shape. Only the plain "<side> i <Powyżej/Poniżej>" shape is
+    // mapped; anything else (including the double-chance legs) is dropped
+    // (returns null) instead of leaking as UNKNOWN.
+    case "RESULT_AND_TOTAL": {
+      const m = trimmed.match(/^(.+?)\s+i\s+(powy[żz]ej|ponad|poni[żz]ej|mniej)\b/i);
+      if (!m) return null;
+      const overUnder = normalizeOverUnderSelection(m[2]);
+      if (overUnder !== "OVER" && overUnder !== "UNDER") return null;
+      const sideToken = normalizeMarketName(m[1].trim());
+      const homeToken = ctx.homeTeam ? normalizeMarketName(ctx.homeTeam) : null;
+      const awayToken = ctx.awayTeam ? normalizeMarketName(ctx.awayTeam) : null;
+      let side: "HOME" | "DRAW" | "AWAY" | null = null;
+      if (sideToken === "remis") side = "DRAW";
+      else if (homeToken && sideToken === homeToken) side = "HOME";
+      else if (awayToken && sideToken === awayToken) side = "AWAY";
+      if (!side) return null;
+      return `${side}_${overUnder}` as NormalizedSelection;
     }
 
     // LVBet quotes a 5-tier corner-range scale ("5 lub mniej", "6 - 8",
@@ -1376,6 +1479,18 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    // "Połowa z większą liczbą goli: Podwójna szansa" (audit-match, Arsenal
+    // vs Coventry City, GOLE/HALF_WITH_MORE_GOALS index 43) — a genuine
+    // double-chance product with its own catalog selections, distinct from
+    // the plain 1st/Draw/2nd HALF_WITH_MORE_GOALS shape above.
+    case "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE": {
+      const normalized = normalizeMarketName(trimmed);
+      if (/^1\.?\s*lub\s*2\.?$/.test(normalized)) return "1ST_OR_2ND" as NormalizedSelection;
+      if (/^1\..*rowno$/.test(normalized)) return "1ST_OR_DRAW" as NormalizedSelection;
+      if (/^2\..*rowno$/.test(normalized)) return "2ND_OR_DRAW" as NormalizedSelection;
+      return null;
+    }
+
     case "BTTS_BY_HALF": {
       // "Tak/Tak" = both halves, "Tak/Nie" = 1st only, "Nie/Tak" = 2nd only
       if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
@@ -1427,21 +1542,18 @@ function normalizeSelectionForMarket(
       // silently discarded.
       const compact = trimmed.replace(/\s+/g, "");
       if (!/^\d+\+?$/.test(compact)) return null;
-      // A raw "(n)+" tail (e.g. LVBet's "4+" meaning four-or-more) must not
-      // fold into the catalog's lower "N+" catch-all (e.g. "3+", meaning
-      // three-or-more to every peer bookmaker) when this SAME bookmaker
-      // already reports its own literal exact selection below that
-      // threshold (e.g. a separate literal "3") — colliding would silently
-      // narrow the shared "3+" bucket's true meaning. Drop it instead
-      // (matches betcris' convention for the identical LVBet-only gap).
-      if (compact.endsWith("+")) {
-        const value = parseInt(compact.slice(0, -1), 10);
-        const hasLowerLiteralSibling = siblingSelectionNames?.some((name) => {
-          const otherCompact = name.trim().replace(/\s+/g, "");
-          return /^\d+$/.test(otherCompact) && parseInt(otherCompact, 10) < value;
-        });
-        if (hasLowerLiteralSibling) return null;
-      }
+      // A raw "(n)+" tail (e.g. LVBet's "4+" meaning four-or-more) folds
+      // into the SAME catalog "N+" catch-all bucket as a lower literal
+      // sibling (e.g. a separate literal "3") whenever both values are at
+      // or above that bucket's threshold — genuinely the same outcome, not
+      // a narrowing conflict. Both are mapped to that shared code here; the
+      // caller combines same-code duplicates' implied probabilities into
+      // one fair price via mergeDuplicateCodedSelections instead of
+      // silently dropping either raw quote (audit-match, Arsenal vs
+      // Coventry City, POLOWY/HALF_TIME_EXACT_GOALS index 218: LVBet's own
+      // "3"=5.8 and "4+"=11 were being collapsed into a single "3+"=5.8,
+      // dropping the "4+" leg's probability mass and overstating the
+      // combined line's true odds).
       return mergeIntoExactGoalsCatchAll(marketCode, compact);
     }
 
@@ -1857,19 +1969,37 @@ function refineResultAndExactGoalsMisroutedAsTotalGoals(
 }
 
 /**
- * CORNERS_RANGE collapses LVBet's 5-tier raw scale onto the catalog's coarse
- * 3-bucket scale (see the CORNERS_RANGE case in normalizeSelectionForMarket),
- * which means TWO raw sub-selections collide on each of the "0-8" and "12+"
- * buckets ("5 lub mniej"+"6 - 8" -> "0-8"; "12 - 14"+"15 lub więcej" -> "12+").
+ * Generic same-code duplicate merge, used wherever LVBet's raw scale is
+ * coarser or finer than the catalog's bucket ladder and two (or more) raw
+ * selections legitimately land on the same catalog code:
+ *  - CORNERS_RANGE collapses LVBet's 5-tier raw scale onto the catalog's
+ *    coarse 3-bucket scale (see the CORNERS_RANGE case in
+ *    normalizeSelectionForMarket): "5 lub mniej"+"6 - 8" -> "0-8";
+ *    "12 - 14"+"15 lub więcej" -> "12+" (round-1 audit, Argentina vs
+ *    Switzerland — bucket collision confirmed structurally).
+ *  - HALF_TIME_EXACT_GOALS/SECOND_HALF_EXACT_GOALS/... fold a literal count
+ *    at or above the catalog's top threshold together with LVBet's own
+ *    "N+" tail onto the same "<threshold>+" catch-all code (audit-match,
+ *    Arsenal vs Coventry City, POLOWY/HALF_TIME_EXACT_GOALS index 218:
+ *    literal "3"=5.8 and "4+"=11 both belong under "3+").
  * Left uncombined, only the first-seen sub-selection survives downstream
- * dedup and the other's price is silently dropped (round-1 audit, Argentina
- * vs Switzerland, confidence n/a — bucket collision confirmed structurally).
- * Combine colliding sub-selections' prices via summed implied probability
- * (1 / (1/o1 + 1/o2)) so exactly one correctly-priced selection per bucket
- * is emitted, mirroring the forbet/fuksiarz normalizers' identical pattern
- * for duplicate-coded selections.
+ * dedup and the other's price is silently dropped. Combine colliding
+ * sub-selections' prices via summed implied probability (1 / (1/o1 + 1/o2))
+ * so exactly one correctly-priced selection per bucket is emitted,
+ * mirroring the forbet/fuksiarz normalizers' identical pattern for
+ * duplicate-coded selections.
  */
-function mergeCornersRangeDuplicateSelections(
+const EXACT_GOALS_MERGE_FAMILY = new Set<NormalizedMarketType>([
+  "EXACT_GOALS",
+  "HOME_EXACT_GOALS",
+  "AWAY_EXACT_GOALS",
+  "HALF_TIME_EXACT_GOALS",
+  "SECOND_HALF_EXACT_GOALS",
+  "HALF_TIME_HOME_EXACT_GOALS",
+  "SECOND_HALF_HOME_EXACT_GOALS",
+]);
+
+function mergeDuplicateCodedSelections(
   selections: Array<{ code: NormalizedSelection; label: string; odds: number }>
 ): Array<{ code: NormalizedSelection; label: string; odds: number }> {
   const byCode = new Map<string, { code: NormalizedSelection; label: string; odds: number }>();
@@ -1942,10 +2072,12 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
       return [{ code, label: sel.name, odds: sel.odds }];
     });
 
-    // Combine the two raw sub-selections that collide on each CORNERS_RANGE
-    // bucket instead of letting downstream dedup silently drop one of them.
-    if (marketCode === "CORNERS_RANGE") {
-      selections = mergeCornersRangeDuplicateSelections(selections);
+    // Combine raw sub-selections that collide on the same catalog code
+    // (CORNERS_RANGE's 5-tier-to-3-bucket collapse; the exact-goals
+    // family's literal-count-vs-"N+"-tail fold) instead of letting
+    // downstream dedup silently drop one of them.
+    if (marketCode === "CORNERS_RANGE" || EXACT_GOALS_MERGE_FAMILY.has(marketCode)) {
+      selections = mergeDuplicateCodedSelections(selections);
     }
 
     // A market whose every selection was dropped carries no usable data

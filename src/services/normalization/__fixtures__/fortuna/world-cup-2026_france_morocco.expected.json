@@ -32429,9 +32429,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_WIN_OR_TOTAL_UNDER",
-        "marketKey": "TEAM_WIN_OR_TOTAL_UNDER",
+        "marketKey": "TEAM_WIN_OR_TOTAL_UNDER:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {

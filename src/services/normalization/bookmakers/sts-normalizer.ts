@@ -404,8 +404,25 @@ function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationConte
 // STS-quoted player as a duplicate top-level selection instead of merging
 // with peers. Flip simple two-token names before handing off to the shared
 // helper.
+// The generic two-token flip above cannot reorder 3+ token STS names, and
+// for some players STS omits a name part entirely rather than abbreviating
+// it. Audit /audit-match (Arsenal vs Coventry City, GOALSCORER_ANYTIME):
+// "Borges Rodrigues R." (STS's own "Lastname[ Lastname2] Firstname" order,
+// here with an abbreviated firstname) and "Brau Miguel Angel" (STS drops
+// the second surname "Blanquez" entirely) both stranded a duplicate row
+// instead of merging into the canonical "Raphael Borges Rodrigues" /
+// "Miguel Angel Brau Blanquez" already established by peer bookmakers.
+// A general reorder heuristic would guess wrong for one of the two shapes,
+// so these are pinned explicitly rather than inferred.
+const STS_PLAYER_NAME_OVERRIDES: Record<string, string> = {
+  "Borges Rodrigues R.": "Raphael Borges Rodrigues",
+  "Brau Miguel Angel": "Miguel Angel Brau Blanquez",
+};
+
 function stsPlayerNameSelection(trimmed: string): NormalizedSelection {
   const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
+  const override = STS_PLAYER_NAME_OVERRIDES[nameOnly];
+  if (override) return override as NormalizedSelection;
   const tokens = nameOnly.split(/\s+/);
   const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
   return canonicalizePlayerName(reordered) as NormalizedSelection;

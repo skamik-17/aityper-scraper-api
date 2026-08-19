@@ -59,10 +59,20 @@ function hasValidOdds(sel: MarketSelection): boolean {
  * The live Fuksiarz shot-line games are actually named "Odda co najmniej N
  * celne strzały[ spoza pola karnego]" / "Odda co najmniej N strzały" (no
  * "Zawodnik" prefix at all), so the anchor must accept both prefixes.
+ *
+ * The foul-line games are named "Popełni co najmniej N faul[e]" (fouls
+ * committed) and "Wywalczy co najmniej N faul[e]" (fouls won) — also no
+ * "Zawodnik" prefix. Without these two verbs, every player's odds collide
+ * into a single unlabeled "base" parameter bucket (audit-match, Arsenal vs
+ * Coventry City, PLAYER_FOULS index 21).
  */
 function isMultiPlayerLineGame(gameName: string | undefined): boolean {
   const lower = (gameName || "").toLowerCase();
-  return /^(zawodnik|odda)\b/.test(lower) && /co\s*najmniej\s*\d+/.test(lower) && /(strza|faul)/.test(lower);
+  return (
+    /^(zawodnik|odda|pope[łl]ni|wywalczy)\b/.test(lower) &&
+    /co\s*najmniej\s*\d+/.test(lower) &&
+    /(strza|faul)/.test(lower)
+  );
 }
 
 /**

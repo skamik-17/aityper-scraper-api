@@ -482,17 +482,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "HEADER",
             "label": "Głową",
             "odds": 5.1
           },
           {
-            "code": "UNKNOWN",
+            "code": "FREE_KICK",
             "label": "Bezpośrednio z rzutu wolnego",
             "odds": 19
           },
           {
-            "code": "UNKNOWN",
+            "code": "OTHER",
             "label": "W inny sposób",
             "odds": 1.45
           },
@@ -502,7 +502,7 @@
             "odds": 21
           },
           {
-            "code": "UNKNOWN",
+            "code": "PENALTY",
             "label": "Bezpośrednio z rzutu karnego",
             "odds": 7.8
           },

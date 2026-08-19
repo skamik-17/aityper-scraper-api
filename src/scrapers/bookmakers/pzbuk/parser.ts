@@ -253,6 +253,17 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "147": "Dokładna liczba kartek - gospodarze - 1. połowa",
   "156": "Rzuty rożne",
   "159": "Przedział rzutów rożnych",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City,
+  // 2026-08-19): ids 45/46 and 162/173 were still surfacing the generic
+  // "Rynek <id>" placeholder even though their identity is confirmed in
+  // pzbuk-normalizer.ts (45 -> HOME_WIN_AT_LEAST_ONE_HALF, 46 ->
+  // AWAY_WIN_AT_LEAST_ONE_HALF, 162 -> CORNERS_ODD_EVEN, 173 ->
+  // HALF_TIME_CORNERS_ODD_EVEN) — selections/odds were already correct,
+  // only the raw display name was a placeholder.
+  "45": "Gospodarz wygra przynajmniej jedną połowę",
+  "46": "Gość wygra przynajmniej jedną połowę",
+  "162": "Rzuty rożne - parzyste/nieparzyste",
+  "173": "Rzuty rożne 1. połowy - parzyste/nieparzyste",
   "502": "Wynik meczu i liczba goli",
   "509": "Multiwynik",
   "510": "Przedział goli - 1. połowa",

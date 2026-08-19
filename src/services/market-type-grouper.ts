@@ -23,14 +23,34 @@ import { MarketCategory } from "../services/normalization/types.js";
 import { canonicalizePlayerName } from "./normalization/helpers/index.js";
 
 /**
- * viewTypes whose selection codes may be player names (order must be
- * unified). COMBINATION also covers multi-player combo markets (e.g.
- * TWO_PLAYERS_ANYTIME) alongside many non-player markets (score groups,
- * result+total combos, ...) — safe to include broadly because
- * canonicalizePlayerName() only rewrites a strict "Last, First" comma
- * pattern and passes any other selection code through unchanged.
+ * viewTypes whose selection codes are ALWAYS player names (order must be
+ * unified) regardless of the catalog's parameterType field.
  */
-const PLAYER_SELECTION_VIEW_TYPES = new Set(["PLAYER_DROPDOWN", "PLAYER_STAT_LINES", "COMBINATION"]);
+const UNCONDITIONAL_PLAYER_SELECTION_VIEW_TYPES = new Set(["PLAYER_DROPDOWN", "PLAYER_STAT_LINES"]);
+
+/**
+ * Whether a market's selection codes are player names/pairs that need
+ * canonicalizePlayerName() applied (order unification + diacritics folding).
+ *
+ * PLAYER_DROPDOWN/PLAYER_STAT_LINES are player-centric by construction, so
+ * they qualify unconditionally. COMBINATION is shared between real
+ * multi-player combo markets (TWO_PLAYERS_ANYTIME, PLAYER_ASSIST_PAIRS, ...)
+ * and many entirely non-player markets (MULTI_RESULT, WINNING_MARGIN,
+ * EXACT_GOALS, ...) whose selections are fixed Polish outcome codes — so
+ * COMBINATION only qualifies when the catalog also declares
+ * parameterType: "player" (true for every real player-combo code).
+ * Without this gate, canonicalizePlayerName's unconditional diacritics
+ * stripping (needed for genuine names like "Gyökeres" -> "Gyokeres")
+ * corrupted plain-Polish selection codes too — e.g. MULTI_RESULT's "Inne
+ * zwycięstwo gospodarzy" came out as "Inne zwyciestwo gospodarzy" (audit
+ * /audit-match, Arsenal vs Coventry City).
+ */
+function isPlayerSelectionMarketType(marketType: string): boolean {
+  const entry = getMarketByCode(marketType);
+  const viewType = String(entry?.viewType ?? "");
+  if (UNCONDITIONAL_PLAYER_SELECTION_VIEW_TYPES.has(viewType)) return true;
+  return viewType === "COMBINATION" && entry?.parameterType === "player";
+}
 
 /**
  * Default parameters for each market type
@@ -581,6 +601,29 @@ export function groupMarketsByTypeWithParameters(
       continue;
     }
 
+    // 3-way-collapsed-into-2-way guard: a genuine 2-way PARAMETER_SLIDER
+    // (OVER/UNDER) has no legitimate third leg. When a raw entry mixes
+    // recognized vocab codes with an explicit "UNKNOWN" selection at an
+    // integer line, it is really a 3-way Powyżej/Dokładnie/Poniżej market
+    // whose push ("Dokładnie") leg the normalizer could not map — and whose
+    // "Powyżej"/OVER price is NOT equivalent to a genuine 2-way OVER price
+    // (the push probability mass is priced separately instead of refunded),
+    // so keeping just the recognized legs would still misrepresent the
+    // market. lvbet's "1. połowa - Liczba goli (3-drogowo)" on
+    // HALF_TIME_TOTAL_GOALS did exactly this (/audit-match, Arsenal vs
+    // Coventry City): OVER=2.35/UNKNOWN(Dokładnie)=2.65/UNDER=3.55 at line 1,
+    // a genuine outlier vs every proper 2-way line on the same market (odds
+    // deviation 58%, overround 0.71). Drop the whole entry rather than
+    // publish either a garbage UNKNOWN-typed selection or a mislabeled OVER.
+    if (
+      entryDef?.viewType === "PARAMETER_SLIDER" &&
+      entryDef.selections.length > 0 &&
+      market.selections.some((sel) => (sel.normalizedName || sel.name) === "UNKNOWN") &&
+      market.selections.some((sel) => entryDef.selections.includes(sel.normalizedName || sel.name))
+    ) {
+      continue;
+    }
+
     if (!typeGroups.has(marketType)) {
       typeGroups.set(marketType, {
         marketType,
@@ -605,9 +648,7 @@ export function groupMarketsByTypeWithParameters(
     // collision overlap check below and by the selection-code canonicalization
     // loop further down, so a player's selection code is compared on the same
     // normalized basis in both places.
-    const isPlayerSelectionMarket = PLAYER_SELECTION_VIEW_TYPES.has(
-      String(getMarketByCode(marketType)?.viewType ?? ""),
-    );
+    const isPlayerSelectionMarket = isPlayerSelectionMarketType(marketType);
 
     // Player-keyed markets: fold the spelling variants of one footballer into
     // a single parameter before grouping, using the whole market's name set.
@@ -722,9 +763,25 @@ export function groupMarketsByTypeWithParameters(
 
         // Check if this selection type already exists
         if (existingSelections.has(selectionType)) {
-          // Duplicate selection type within the same raw market — keep the
-          // first quote. Overwriting with the higher odds silently mixed
-          // prices of different outcomes that mapped to one code.
+          // Duplicate selection type within the same raw market. An
+          // open-ended bucket code ("2+", "5+", ...) is BY DEFINITION an
+          // aggregate of every tail outcome it covers, so when a bookmaker's
+          // normalizer maps several distinct raw buckets onto the same "+"
+          // code (e.g. lvbet's raw "2" and "3" both -> "2+" for
+          // SECOND_HALF_EXACT_GOALS) the two prices must be combined via
+          // implied-probability summation — keeping only the first verbatim
+          // massively overstates the true combined price (audit /audit-match,
+          // Arsenal vs Coventry City: lvbet '2+' showed 2.85, the raw
+          // exactly-2 price, instead of ~1.72 for 2-or-3-or-more). Any other
+          // duplicate code (no "+" suffix) keeps the original "first quote
+          // wins" behavior — overwriting with a different code's price there
+          // would silently mix two unrelated outcomes.
+          if (selectionType.endsWith("+")) {
+            const existing = existingSelections.get(selectionType)!;
+            if (existing.odds > 0 && selection.odds > 0) {
+              existing.odds = Math.round((1 / (1 / existing.odds + 1 / selection.odds)) * 100) / 100;
+            }
+          }
         } else {
           // Add new selection
           const label = buildSelectionLabel(selectionType);

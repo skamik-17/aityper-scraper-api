@@ -2151,11 +2151,17 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     // quoting this market (betcris, fuksiarz, lvbet, superbet) offer only the
     // two sides — a "no corner" outcome does not exist in the real offer, and
     // keeping it here rendered a permanently empty third column.
+    // Audit /audit-match r2: viewType was still TRIPLE_BUTTONS from before the
+    // NONE selection was dropped above, so the catalog itself declared 3
+    // buttons for a market with only 2 selections — a cosmetic catalog/
+    // viewType inconsistency (mechanical flag: expected 3, actual 2). Moved
+    // to BINARY_BUTTONS, the viewType already used by every other real 2-way
+    // HOME/AWAY market (e.g. BTTS, CLEAN_SHEET, HOME_TEAM_TO_SCORE).
     selections: ["HOME", "AWAY"],
-    selectionOrder: ["HOME", "NONE", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    selectionOrder: ["HOME", "AWAY"],
+    viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 73,
-    descriptionTemplates: { HOME: "{homeTeam} wykona pierwszy rzut rożny", NONE: "Brak rzutu rożnego", AWAY: "{awayTeam} wykona pierwszy rzut rożny" },
+    descriptionTemplates: { HOME: "{homeTeam} wykona pierwszy rzut rożny", AWAY: "{awayTeam} wykona pierwszy rzut rożny" },
   },
   {
     numericId: 407,
@@ -5574,8 +5580,17 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Handicap w przedziale czasowym", en: "Time Period Asian Handicap" },
     descriptions: { pl: "Zakład: Handicap w przedziale czasowym.", en: "Bet: Time Period Asian Handicap." },
     hasParameter: true,
-    parameterType: "handicap",
-    parameterFormat: "handicap_dual",
+    // Audit /audit-match (Arsenal vs Coventry City): unlike FIRST_15_MIN_
+    // HANDICAP etc. (one catalog code per fixed window, where the parameter
+    // really is the handicap goal line), this code covers MULTIPLE time
+    // windows under one type, so its parameter is the window-length bucket
+    // (fuksiarz: "5"/"10"/"15"/"30" minutes) — NOT the handicap magnitude.
+    // Declaring parameterType "handicap"/"handicap_dual" here falsely told
+    // downstream label formatting the raw bucket value (e.g. "5") was itself
+    // a +/-5 goal handicap, when the fuksiarz-quoted line is actually only
+    // +/-0.5 (5/10-min buckets) or +/-1.5 (15/30-min buckets).
+    parameterType: "integer",
+    parameterFormat: "integer",
     selections: ["HOME", "AWAY"],
     viewType: ViewType.HANDICAP_SELECTOR,
     displayOrder: 295,
@@ -8100,9 +8115,19 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Liczba goli (3-drogowo)", en: "Total Goals 3way" },
     descriptions: { pl: "Zakład: Liczba goli (3-drogowo).", en: "Bet: Total Goals 3way." },
-    hasParameter: false,
+    // Audit /audit-match (Arsenal vs Coventry City): betcris quotes 6
+    // distinct goal-count lines (paramValue 1-6) for this market, each with
+    // its own OVER/EXACTLY/UNDER odds, but hasParameter:false told the
+    // grouper this market has no parameter dimension at all, so it collapsed
+    // every line onto one unlabeled bucket and silently dropped 5 of the 6
+    // (only the last-seen line, 6, survived). Mirrors the sibling
+    // CORNERS_TOTAL_3WAY shape, which already declares hasParameter/
+    // parameterType correctly for this exact OVER/EXACTLY/UNDER-per-line
+    // pattern.
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["OVER", "EXACTLY", "UNDER"],
-    viewType: ViewType.TRIPLE_BUTTONS,
+    viewType: ViewType.STAT_RANGE,
     displayOrder: 474,
   },
   {
@@ -8934,9 +8959,21 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "wynik-gole",
     labels: { pl: "Wygrana drużyny lub poniżej X goli", en: "Team Win or Total Under" },
     descriptions: { pl: "Zakład: Wygrana drużyny lub poniżej X goli.", en: "Bet: Team Win or Total Under." },
-    hasParameter: false,
+    // Audit /audit-match (Arsenal vs Coventry City): fortuna's rawMarketName
+    // ("Coventry wygra / poniżej 2.5 gola") carries the goal threshold, but
+    // hasParameter:false discarded it, so the odds landed under a bare
+    // generic YES/NO with no way to tell which line (or, on a page with two
+    // such offers, which team) the bet refers to. Mirrors the WIN_OR_UNDER
+    // sibling, which already keys the same "win or under X" shape by its
+    // decimal goal line; fortuna's normalizer picks the line up automatically
+    // from raw.name once hasParameter/parameterType are set (no normalizer
+    // change needed). Team-side is still not captured — that would need a
+    // fortuna-normalizer.ts change (out of catalog's scope) to prefix the
+    // param with the named team, same as the existing HOME:/AWAY: convention.
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.PARAMETERIZED_COMBINATION,
     displayOrder: 536,
   },
   {

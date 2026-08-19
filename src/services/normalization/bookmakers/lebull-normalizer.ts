@@ -42,7 +42,20 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   32: "BOTH_HALVES_GOALS",
   36: "DRAW_NO_BET",
   37: "DOUBLE_CHANCE",
-  38: "FIRST_GOAL_TIME",
+  // audit-match (Arsenal vs Coventry City): stake type 38 ("czas 1. gola")
+  // quotes cumulative minute-cutoff pairs ("Od 1 do 17 min." / "Od 18 do 90
+  // min.", ~39 rows sweeping the cutoff minute one-by-one), NOT the catalog's
+  // fixed 10-minute-bucket vocabulary. Stake type 655 (below) is the genuine
+  // 10-min-bucket market ("Od 1 do 10 min." ... "Od 81 do 90 min.", 9 rows)
+  // and is the correct FIRST_GOAL_TIME source. Mapping 38 to FIRST_GOAL_TIME
+  // too force-merged its ~39 incompatible cutoff-pair selections into the
+  // same combination market as 655's 9 real buckets, producing 49 selection
+  // entries for lebull vs ~10 for every other bookmaker — including several
+  // (e.g. "1-17", "18-90") that don't even belong to the closed selection
+  // set. No catalog code represents the cutoff-pair shape, so route it to
+  // OTHER (dropped from user-facing output) instead of corrupting
+  // FIRST_GOAL_TIME.
+  38: "OTHER",
   // Combo stake types (sbteam.xyz feed): result/DC/BTTS crossed with a goal
   // line or BTTS leg. Selections are Polish phrases mapped per market code
   // in normalizeSelectionForMarket.
@@ -1046,6 +1059,33 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // audit-match (Arsenal vs Coventry City): lebull's HT/FT combo grid
+    // occasionally quotes the same combo twice under differently-worded
+    // labels (the "+" vs "i" connector) with materially different odds —
+    // e.g. "1. połowa Coventry City + 2. połowa remis" (6.1) and "1. połowa
+    // Coventry City i 2.połowa remis" (29) both resolve to AWAY_DRAW, while
+    // DRAW_DRAW is missing from the same 9-row grid, consistent with a
+    // mistyped label on lebull's own page rather than two genuine quotes.
+    // Downstream de-dup keeps only the first-seen quote per code, silently
+    // discarding the other with no signal that anything was dropped, and
+    // there is no way to tell which of the two odds (if either) is the real
+    // one. Rather than surface an unverifiable price as if authoritative,
+    // drop every code that shows disagreeing odds within this single raw
+    // market row.
+    if (marketCode === "HALF_TIME_AND_SECOND_HALF_RESULT") {
+      const oddsByCode = new Map<string, Set<number>>();
+      for (const sel of selections) {
+        if (!oddsByCode.has(sel.code)) oddsByCode.set(sel.code, new Set());
+        oddsByCode.get(sel.code)!.add(sel.odds);
+      }
+      const ambiguousCodes = new Set(
+        [...oddsByCode.entries()].filter(([, odds]) => odds.size > 1).map(([code]) => code)
+      );
+      if (ambiguousCodes.size > 0) {
+        selections = selections.filter((sel) => !ambiguousCodes.has(sel.code));
+      }
+    }
 
     // "Suma goli: 3-5" (or the bare "Suma goli: 0" / "Suma goli: 7+" buckets,
     // or the team-scoped "Arsenal: suma goli: 0-1") is quoted as Tak/Nie:

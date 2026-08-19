@@ -784,6 +784,18 @@ function normalizeSelectionForMarket(
     case "PLAYER_HAT_TRICK":
     case "PLAYER_TACKLES":
     case "PLAYER_INTERCEPTIONS":
+    // Audit /audit-match (Arsenal vs Coventry City): these arrived with the
+    // STS unconditional markets (ids 2394-2404) and the *_LINEUP split, and
+    // without a branch here every threshold selection ("1+", "2+", …) fell
+    // through to UNKNOWN — the markets rendered with prices but no outcome.
+    case "PLAYER_HEADER_SHOTS_ON_TARGET":
+    case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX":
+    case "PLAYER_SHOTS_LINEUP":
+    case "PLAYER_SHOTS_ON_TARGET_LINEUP":
+    case "PLAYER_ASSISTS_LINEUP":
+    case "PLAYER_GOALS_LINEUP":
+    case "PLAYER_PASSES_LINEUP":
+    case "PLAYER_TACKLES_LINEUP":
       // Selection is a player name; canonicalize "Lastname, Firstname" forms
       // so selections group with peers that emit "Firstname Lastname"
       return canonicalizePlayerName(trimmed.replace(/^\d+\.\s*/, "").trim()) as NormalizedSelection;

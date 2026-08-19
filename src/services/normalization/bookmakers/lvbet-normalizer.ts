@@ -787,6 +787,32 @@ function resolveMarketCode(
     return { code: "TOTAL_GOALS_ASIAN", matchedBy: "pattern" };
   }
 
+  // Audit r9 (Arsenal vs Coventry City): these three parlay/combo product
+  // names each contain a substring the generic patterns below were written
+  // for ("suma goli", "zwyciezca meczu", "obie druzyny strzela") and so were
+  // silently colliding onto the plain base market — TOTAL_GOALS, MATCH_WINNER
+  // and BTTS all showed a mix of real per-line prices and combo-cell prices
+  // typed as the same OVER/UNDER/HOME/AWAY code (e.g. TOTAL_GOALS param 0.5
+  // carried both the genuine "Poniżej 0.5" AND fourteen unrelated "Powyżej X
+  // goli w 1. połowie oraz powyżej Y w 2. połowie/meczu" combo cells).
+  //
+  // "Kombinowana suma goli" (first-half-total x second-half-total combo) and
+  // "<Team> strzeli gola / zwycięzca meczu" (team-to-score x match-winner
+  // combo) have no matching catalog code — park in OTHER, checked before the
+  // substring patterns can reach them.
+  if (normalizedName === "kombinowana suma goli") {
+    return { code: "OTHER", matchedBy: "pattern" };
+  }
+  if (/strzeli gola \/ zwyciezca meczu$/.test(normalizedName)) {
+    return { code: "OTHER", matchedBy: "pattern" };
+  }
+  // "Obie drużyny strzelą i powyżej/poniżej X.5 goli w meczu" IS a real,
+  // cataloged product (TOTAL_GOALS_AND_BTTS) — recover it instead of parking
+  // it, its selection shape is handled in normalizeSelectionForMarket below.
+  if (/^obie druzyny strzela i powyzej\/ponizej [\d.]+ goli w meczu$/.test(normalizedName)) {
+    return { code: "TOTAL_GOALS_AND_BTTS", matchedBy: "pattern" };
+  }
+
   for (const { pattern, code } of LVBET_MARKET_NAME_PATTERNS) {
     if (pattern.test(normalizedName)) {
       return { code, matchedBy: "pattern" };
@@ -1358,6 +1384,24 @@ function normalizeSelectionForMarket(
         }
       }
       return trimmed as NormalizedSelection;
+    }
+
+    case "TOTAL_GOALS_AND_BTTS": {
+      // "Tak i powyżej 3.5" / "Nie i poniżej 2.5" -> OVER_YES / UNDER_NO
+      // (audit r9: this combo used to collide onto plain BTTS/TOTAL_GOALS —
+      // see resolveMarketCode's "obie druzyny strzela i powyzej/ponizej"
+      // route). Order matches the catalog's ["OVER_YES","UNDER_YES",
+      // "OVER_NO","UNDER_NO"] — Y/N comes first in the raw label, O/U second.
+      const lowerSel = trimmed.toLowerCase();
+      const andIdx = lowerSel.indexOf(" i ");
+      if (andIdx > 0) {
+        const ynPart = normalizeYesNoSelection(trimmed.slice(0, andIdx).trim());
+        const ouPart = normalizeOverUnderSelection(trimmed.slice(andIdx + 3).trim());
+        if ((ynPart === "YES" || ynPart === "NO") && (ouPart === "OVER" || ouPart === "UNDER")) {
+          return `${ouPart}_${ynPart}` as NormalizedSelection;
+        }
+      }
+      return "UNKNOWN" as NormalizedSelection;
     }
 
     // Single-player markets: keep each player as its own selection code (the

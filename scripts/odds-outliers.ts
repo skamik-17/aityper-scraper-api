@@ -469,6 +469,20 @@ export function findArbitrage(market: ApiMarket, marketRef: string): Finding[] {
 
   const out: Finding[] = [];
   for (const param of market.parameters) {
+    // Audit r9: a whole-number OVER/UNDER line (1.0, 2.0, ...) can carry a
+    // third "Dokładnie N" (exactly N) leg alongside OVER/UNDER — a real
+    // 3-way partition the catalog's 2-selection OVER/UNDER model doesn't
+    // capture. Summing only OVER+UNDER there is expected to fall short of
+    // 100% by the "exactly N" chunk, not because a price is wrong (the
+    // lvbet HALF_TIME_TOTAL_GOALS 1.0/2.0 lines had this exact shape: OVER+
+    // UNDER+EXACT summed to a normal ~108% book margin, OVER+UNDER alone to
+    // 70-82%). Skip the param when ANY bookmaker quotes more distinct
+    // selection types here than the catalog's closed set accounts for.
+    const hasUnmodeledThirdLeg = param.bookmakers.some(
+      (entry) => new Set(entry.selections.filter((s) => s.odds > 1).map((s) => s.type)).size > expected.size,
+    );
+    if (hasUnmodeledThirdLeg) continue;
+
     const best = new Map<string, { odds: number; bookmaker: string }>();
     for (const entry of param.bookmakers) {
       for (const sel of entry.selections) {

@@ -1507,41 +1507,7 @@
     },
     {
       "blessed": true,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "MATCH_WINNER",
-        "marketKey": "MATCH_WINNER",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i Francja",
-            "odds": 1.57
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i remis",
-            "odds": 4.55
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Nie i remis",
-            "odds": 9
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i Maroko",
-            "odds": 12
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Nie i Maroko",
-            "odds": 7.75
-          }
-        ]
-      },
+      "expected": null,
       "index": 14,
       "marketCode": "MATCH_WINNER",
       "rawName": "Francja strzeli gola / zwycięzca meczu"
@@ -7917,36 +7883,36 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:2.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER_YES",
             "label": "Tak i powyżej 2.5",
             "odds": 2.3
           },
           {
-            "code": "UNKNOWN",
+            "code": "UNDER_YES",
             "label": "Tak i poniżej 2.5",
             "odds": 5.3
           },
           {
-            "code": "UNKNOWN",
+            "code": "OVER_NO",
             "label": "Nie i powyżej 2.5",
             "odds": 5.3
           },
           {
-            "code": "UNKNOWN",
+            "code": "UNDER_NO",
             "label": "Nie i poniżej 2.5",
             "odds": 1.98
           }
         ]
       },
       "index": 163,
-      "marketCode": "BTTS",
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
       "rawName": "Obie drużyny strzelą i powyżej/poniżej 2.5 goli w meczu"
     },
     {
@@ -13926,36 +13892,36 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:3.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "3.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER_YES",
             "label": "Tak i powyżej 3.5",
             "odds": 3.45
           },
           {
-            "code": "UNKNOWN",
+            "code": "UNDER_YES",
             "label": "Tak i poniżej 3.5",
             "odds": 2.9
           },
           {
-            "code": "UNKNOWN",
+            "code": "OVER_NO",
             "label": "Nie i powyżej 3.5",
             "odds": 12
           },
           {
-            "code": "UNKNOWN",
+            "code": "UNDER_NO",
             "label": "Nie i poniżej 3.5",
             "odds": 1.85
           }
         ]
       },
       "index": 274,
-      "marketCode": "BTTS",
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
       "rawName": "Obie drużyny strzelą i powyżej/poniżej 3.5 goli w meczu"
     },
     {
@@ -14979,41 +14945,7 @@
     },
     {
       "blessed": true,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "MATCH_WINNER",
-        "marketKey": "MATCH_WINNER",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i Francja",
-            "odds": 3.6
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Nie i Francja",
-            "odds": 2.4
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i remis",
-            "odds": 4.55
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Nie i remis",
-            "odds": 9
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Tak i Maroko",
-            "odds": 6
-          }
-        ]
-      },
+      "expected": null,
       "index": 304,
       "marketCode": "MATCH_WINNER",
       "rawName": "Maroko strzeli gola / zwycięzca meczu"

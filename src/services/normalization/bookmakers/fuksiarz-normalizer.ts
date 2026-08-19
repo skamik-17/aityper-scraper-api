@@ -365,8 +365,20 @@ function adjustMarketCode(
     if (code === "TOTAL_GOALS") return "GOAL_RANGE";
     if (code === "HALF_TIME_TOTAL_GOALS") return "HALF_TIME_GOAL_RANGE";
     if (code === "SECOND_HALF_TOTAL_GOALS") return "SECOND_HALF_GOAL_RANGE";
-    if (code === "TEAM_TOTAL_GOALS") {
-      const side = resolveTeamSide(raw.name, ctx);
+    // The same "<Team> - liczba goli" label covers BOTH an over/under ladder
+    // and a goal-range grid, so the side-scoped total codes have to be
+    // rerouted here too — otherwise the range grid stays in the O/U market.
+    if (
+      code === "TEAM_TOTAL_GOALS" ||
+      code === "HOME_TEAM_TOTAL_GOALS" ||
+      code === "AWAY_TEAM_TOTAL_GOALS"
+    ) {
+      const side =
+        code === "HOME_TEAM_TOTAL_GOALS"
+          ? "HOME"
+          : code === "AWAY_TEAM_TOTAL_GOALS"
+            ? "AWAY"
+            : resolveTeamSide(raw.name, ctx);
       if (side === "HOME") return "HOME_GOAL_RANGE";
       if (side === "AWAY") return "AWAY_GOAL_RANGE";
       return "OTHER";
@@ -649,6 +661,11 @@ function resolveMarketCodeBase(
   }
 
   if (/^(.+) - liczba goli$/.test(normalized)) {
+    // See the note in forbet-normalizer.ts: the side-scoped codes are where the
+    // other nine bookmakers put this bet, so team totals only line up there.
+    const side = resolveTeamSide(raw.name, ctx);
+    if (side === "HOME") return { code: "HOME_TEAM_TOTAL_GOALS", matchedBy: "pattern" };
+    if (side === "AWAY") return { code: "AWAY_TEAM_TOTAL_GOALS", matchedBy: "pattern" };
     return { code: "TEAM_TOTAL_GOALS", matchedBy: "pattern" };
   }
 
@@ -762,6 +779,8 @@ function extractParamValue(
     "HALF_TIME_TOTAL_GOALS",
     "SECOND_HALF_TOTAL_GOALS",
     "TEAM_TOTAL_GOALS",
+    "HOME_TEAM_TOTAL_GOALS",
+    "AWAY_TEAM_TOTAL_GOALS",
     "CORNERS_TOTAL",
     "CARDS_TOTAL",
     "FOULS_TOTAL",
@@ -1161,6 +1180,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
     case "HALF_TIME_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_TEAM_TOTAL_GOALS":
     case "TIME_PERIOD_TOTAL_GOALS":

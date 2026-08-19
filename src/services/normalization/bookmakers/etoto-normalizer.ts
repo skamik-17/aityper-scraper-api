@@ -46,6 +46,7 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-2550]: "AWAY_NO_BET", // "Wynik meczu - <away> wygra = zwrot"
   [-8132]: "HT_OR_FT_RESULT", // "1. połowa lub mecz"
   [-8048]: "TEAM_WIN_MATCH", // "<home> wygra"
+  [-8047]: "TEAM_WIN_MATCH", // "<away> wygra" (side comes from ETOTO_MARKET_ID_TEAM_SIDE)
   [-8049]: "ANY_TEAM_TO_WIN", // "Którakolwiek drużyna wygra"
   [-2976]: "TIME_PERIOD_RESULT", // "10' - 1X2 od 1 do 10"
 
@@ -169,7 +170,10 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-8041]: "WIN_OR_BTTS", // "<home> wygra lub obie strzelą"
   [-8042]: "DRAW_OR_BTTS", // "Remis lub obie strzelą"
   [-8043]: "WIN_OR_BTTS", // "<away> wygra lub obie strzelą"
-  [-8040]: "WIN_OR_UNDER", // "<away> wygra lub poniżej X"
+  // Audit /audit-match: the home variant had its own code while the away one
+  // fell back to the team-less WIN_OR_UNDER — the pair was asymmetric and the
+  // away label never said whose win it was.
+  [-8040]: "AWAY_WIN_OR_UNDER", // "<away> wygra lub poniżej X"
   [-8037]: "DRAW_OR_OVER_2_5", // "Remis lub powyżej 2.5"
   [-8038]: "DRAW_OR_UNDER_2_5", // "Remis lub poniżej 2.5"
   [-8045]: "DRAW_OR_CLEAN_SHEET", // "Remis lub którakolwiek drużyna czyste konto"
@@ -249,7 +253,33 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   // and collide into a single row that mixes the two teams' prices.
   [115]: "HOME",
   [116]: "AWAY",
+  // Audit /audit-match (Arsenal vs Coventry City): eToto publishes both sides
+  // of these bets under separate ids, but the catalog codes carried no team,
+  // so the two variants collided on one key — one side silently overwrote the
+  // other and the label never said whose win it was. The codes are now
+  // team-parameterised; these ids tell the normalizer which side each is.
+  [-8048]: "HOME", // "<home> wygra"
+  [-8047]: "AWAY", // "<away> wygra"
+  [-8041]: "HOME", // "<home> wygra lub obie strzelą"
+  [-8043]: "AWAY", // "<away> wygra lub obie strzelą"
+  [-8044]: "HOME", // "<home> wygra lub którakolwiek drużyna czyste konto"
+  [-8046]: "AWAY", // "<away> wygra lub którakolwiek drużyna czyste konto"
+  [-8036]: "HOME", // "<home> wygra lub poniżej 2.5"
+  [-8040]: "AWAY", // "<away> wygra lub poniżej 2.5"
 };
+
+/**
+ * Codes whose catalog entry carries a team parameter but no numeric line — the
+ * side itself has to become the paramValue, or the home and away variants land
+ * on the same (code, undefined) bucket and the grouper's collision guard drops
+ * the second one.
+ */
+const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "RED_CARD_TEAM",
+  "TEAM_WIN_MATCH",
+  "WIN_OR_BTTS",
+  "TEAM_WIN_OR_CLEAN_SHEET",
+]);
 
 /**
  * Player-prop markets where each raw eToto market covers exactly one player
@@ -1069,9 +1099,9 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       paramValue = extractScorelineHandicap(raw.name) ?? extractParamValue(marketCode, raw);
     } else if (ETOTO_PLAYER_STAT_MARKETS.has(marketCode)) {
       paramValue = extractPlayerParam(raw.selections);
-    } else if (marketCode === "RED_CARD_TEAM" && teamSide) {
-      // RED_CARD_TEAM has no numeric line, so the team side must carry the
-      // param itself; otherwise the home/away variants collide on the same
+    } else if (ETOTO_TEAM_PARAM_MARKETS.has(marketCode) && teamSide) {
+      // These have no numeric line, so the team side must carry the param
+      // itself; otherwise the home/away variants collide on the same
       // (marketCode, undefined) bucket and the grouper's collision guard
       // silently drops the second one (see betclic-normalizer.ts for the
       // same pattern).

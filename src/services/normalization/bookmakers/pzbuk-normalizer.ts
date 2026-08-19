@@ -56,8 +56,19 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Home/away team totals are separate ids — map them to the dedicated
   // catalog codes so OVER/UNDER selections of both teams do not collide
   // under a single TEAM_TOTAL_GOALS key.
-  "19": "HOME_TEAM_TOTAL_GOALS",
-  "20": "AWAY_TEAM_TOTAL_GOALS",
+  // Audit /audit-match: ids 19/20 were assigned home/away by guesswork (the
+  // API sends no label, our "Gole gospodarzy" text is our own). Ground truth
+  // proves the pair is the other way round — id 19 carries the AWAY team's
+  // numbers in BOTH archived fixtures:
+  //   Arsenal vs Coventry City  id 19 @0.5 = 2.19/1.58  ==  Coventry 2.2/1.6
+  //                                    @1.5 = 6.97/1.06  ==  Coventry 6.8/1.07
+  //   France  vs Morocco        id 19 @0.5 = 1.72/1.93  ==  Morocco 1.70/2.10
+  // (France's own 0.5 line is 1.15, nowhere near). Under HOME_TEAM_TOTAL_GOALS
+  // that made pzbuk read as "Arsenal to score" at 2.19 against a field of 1.05.
+  // Id 20 never appears in either capture; it is set to the mirror side so the
+  // pair stays consistent — re-verify it the first time a fixture carries it.
+  "19": "AWAY_TEAM_TOTAL_GOALS",
+  "20": "HOME_TEAM_TOTAL_GOALS",
   "21": "ODD_EVEN_GOALS",
   // Audit: id 22 delivered goals-count selections ("0"/"1"/"2"/"3+"),
   // not a 2nd-half 1X2 — real identity unknown, park in OTHER.

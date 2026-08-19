@@ -349,260 +349,260 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 0.5 goli",
             "odds": 4.7
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 0.5 goli",
             "odds": 1.15
           }
         ]
       },
       "index": 13,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
       "rawName": "Francja poniżej/powyżej 0.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 1.5 goli",
             "odds": 1.97
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 1.5 goli",
             "odds": 1.75
           }
         ]
       },
       "index": 14,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
       "rawName": "Francja poniżej/powyżej 1.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "pattern",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 2.5 goli",
             "odds": 1.3
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 2.5 goli",
             "odds": 3.25
           }
         ]
       },
       "index": 15,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
       "rawName": "Francja poniżej/powyżej 2.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:3.5",
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:3.5",
         "matchedBy": "pattern",
         "paramValue": "3.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 3.5 goli",
             "odds": 1.08
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 3.5 goli",
             "odds": 6.4
           }
         ]
       },
       "index": 16,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
       "rawName": "Francja poniżej/powyżej 3.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:4.5",
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:4.5",
         "matchedBy": "pattern",
         "paramValue": "4.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 4.5 goli",
             "odds": 1.01
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 4.5 goli",
             "odds": 11
           }
         ]
       },
       "index": 17,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
       "rawName": "Francja poniżej/powyżej 4.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 0.5 goli",
             "odds": 2.03
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 0.5 goli",
             "odds": 1.7
           }
         ]
       },
       "index": 18,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
       "rawName": "Maroko poniżej/powyżej 0.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 1.5 goli",
             "odds": 1.18
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 1.5 goli",
             "odds": 4.3
           }
         ]
       },
       "index": 19,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
       "rawName": "Maroko poniżej/powyżej 1.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "pattern",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 2.5 goli",
             "odds": 1.02
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 2.5 goli",
             "odds": 10
           }
         ]
       },
       "index": 20,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
       "rawName": "Maroko poniżej/powyżej 2.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:3.5",
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:3.5",
         "matchedBy": "pattern",
         "paramValue": "3.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 3.5 goli",
             "odds": 1.01
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 3.5 goli",
             "odds": 12
           }
         ]
       },
       "index": 21,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
       "rawName": "Maroko poniżej/powyżej 3.5 goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_TOTAL_GOALS",
-        "marketKey": "TEAM_TOTAL_GOALS:4.5",
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:4.5",
         "matchedBy": "pattern",
         "paramValue": "4.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 4.5 goli",
             "odds": 1.01
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 4.5 goli",
             "odds": 12
           }
         ]
       },
       "index": 22,
-      "marketCode": "TEAM_TOTAL_GOALS",
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
       "rawName": "Maroko poniżej/powyżej 4.5 goli"
     },
     {

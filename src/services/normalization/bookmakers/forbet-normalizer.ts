@@ -309,6 +309,17 @@ function detectTeamSide(
  * points at the HOME_* (or generic) catalog code. When the raw name clearly
  * names one of the teams, reroute to the correct home/away catalog variant.
  */
+/**
+ * Codes whose catalog entry is parameterised by team but carries no numeric
+ * line — the resolved side becomes the paramValue.
+ */
+const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "TEAM_HALF_WITH_MORE_GOALS",
+  "TEAM_WIN_MATCH",
+  "WIN_OR_BTTS",
+  "TEAM_WIN_OR_CLEAN_SHEET",
+]);
+
 const FORBET_TEAM_SIDED_VARIANTS: Partial<
   Record<NormalizedMarketType, { home: NormalizedMarketType; away: NormalizedMarketType }>
 > = {
@@ -373,6 +384,17 @@ function resolveForbetSpecialMarket(
   // keep one; the rest must stay out of the canonical markets they name.
   if (/^wydarzy sie min\.? jedno z/.test(name)) {
     return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
+  }
+
+  // "<Team> - liczba goli" carries EXACT goal counts (0 / 1 / 2 / 3+), not an
+  // over/under ladder — audit /audit-match found both forbet variants landing
+  // in the match-wide TOTAL_GOALS with every selection UNKNOWN.
+  const teamExact = name.match(/^(.+?)\s+-\s+liczba goli$/);
+  if (teamExact && raw.selections.some((sel) => /^\s*\d+\+?\s*$/.test(sel.name))) {
+    const side = resolveTeamSide(teamExact[1], ctx);
+    if (side === "HOME") return "HOME_EXACT_GOALS";
+    if (side === "AWAY") return "AWAY_EXACT_GOALS";
+    return "OTHER";
   }
 
   // Odd/even total-goals market ("Parzysta/nieparzysta - liczba goli") shares
@@ -530,7 +552,13 @@ function resolveForbetSpecialMarket(
   const teamTotal = name.match(/^(.+?)\s+ponizej\/powyzej\s*[\d.,]+\s*goli/);
   if (teamTotal) {
     const side = resolveTeamSide(teamTotal[1], ctx);
-    if (side) return "TEAM_TOTAL_GOALS";
+    // Audit /audit-match (Arsenal vs Coventry City): nine bookmakers put this
+    // bet in HOME_/AWAY_TEAM_TOTAL_GOALS while forBET and fuksiarz used the
+    // side-prefixed TEAM_TOTAL_GOALS — two parallel codes for one bet, so the
+    // team totals were never actually compared across bookmakers. Converge on
+    // the majority code.
+    if (side === "HOME") return "HOME_TEAM_TOTAL_GOALS";
+    if (side === "AWAY") return "AWAY_TEAM_TOTAL_GOALS";
     // Unresolvable prefix — do not let it fall into the match TOTAL_GOALS
     return "OTHER";
   }
@@ -751,6 +779,8 @@ function normalizeSelectionForMarket(
     case "TOTAL_GOALS_ASIAN":
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
+    case "HOME_TEAM_TOTAL_GOALS":
+    case "AWAY_TEAM_TOTAL_GOALS":
     case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
     case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
@@ -1174,6 +1204,8 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "HALF_TIME_TOTAL_GOALS",
   "SECOND_HALF_TOTAL_GOALS",
   "TEAM_TOTAL_GOALS",
+  "HOME_TEAM_TOTAL_GOALS",
+  "AWAY_TEAM_TOTAL_GOALS",
   "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
   "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
   "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
@@ -1274,8 +1306,12 @@ function extractParamValue(
     if (window) return window[1];
   }
 
-  // Team-scoped half comparison: parameter is the team side (HOME/AWAY)
-  if (marketCode === "TEAM_HALF_WITH_MORE_GOALS") {
+  // Team-scoped markets with no numeric line: the side IS the parameter.
+  // Audit /audit-match (Arsenal vs Coventry City): forBET quotes both teams
+  // under the same code, so without a side param "Arsenal FC wygra mecz" and
+  // "Coventry wygra mecz" collided on one key — the grouper kept the first and
+  // dropped the second, and the surviving row never said whose win it was.
+  if (FORBET_TEAM_PARAM_MARKETS.has(marketCode)) {
     return detectTeamSide(raw.name, ctx) ?? undefined;
   }
 

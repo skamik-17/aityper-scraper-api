@@ -4101,7 +4101,12 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     subCategory: "audyt-match",
     labels: { pl: "Wygrana drużyny lub czyste konto którejkolwiek drużyny", en: "Team Win Or Clean Sheet" },
     descriptions: { pl: "Zakład: Wygrana drużyny lub czyste konto którejkolwiek drużyny.", en: "Bet: Team Win Or Clean Sheet." },
-    hasParameter: false,
+        // Audit /audit-match (Arsenal vs Coventry City): the home and away variants
+    // of this bet collided on one key — one silently overwrote the other and
+    // the label never said whose win it was (forbet/etoto quote both sides).
+    // A team parameter keeps them apart and makes the chip self-describing.
+    hasParameter: true,
+    parameterType: "team",
     selections: ["YES","NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 500,
@@ -4674,6 +4679,20 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     selections: ["YES","NO"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
     displayOrder: 500,
+  },
+  {
+    numericId: 1412,
+    code: "AWAY_WIN_OR_UNDER",
+    slug: "away-win-or-under",
+    category: MarketCategory.KOMBINACJE,
+    subCategory: "audyt-match",
+    labels: { pl: "Gość wygra lub poniżej (linia)", en: "Away Win Or Under" },
+    descriptions: { pl: "Zakład: Gość wygra lub poniżej (linia).", en: "Bet: Away Win Or Under." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["YES","NO"],
+    viewType: ViewType.PARAMETERIZED_COMBINATION,
+    displayOrder: 501,
   },
   {
     numericId: 1331,
@@ -6631,7 +6650,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "specjalne",
     labels: { pl: "Wygra mecz", en: "Team Win Match" },
     descriptions: { pl: "Zakład: Wygra mecz.", en: "Bet: Team Win Match." },
-    hasParameter: false,
+        // Audit /audit-match (Arsenal vs Coventry City): the home and away variants
+    // of this bet collided on one key — one silently overwrote the other and
+    // the label never said whose win it was (forbet/etoto quote both sides).
+    // A team parameter keeps them apart and makes the chip self-describing.
+    hasParameter: true,
+    parameterType: "team",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 389,
@@ -6644,7 +6668,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "wynik-btts",
     labels: { pl: "Wygrana lub obie strzelą", en: "Win or BTTS" },
     descriptions: { pl: "Zakład: Wygrana lub obie strzelą.", en: "Bet: Win or BTTS." },
-    hasParameter: false,
+        // Audit /audit-match (Arsenal vs Coventry City): the home and away variants
+    // of this bet collided on one key — one silently overwrote the other and
+    // the label never said whose win it was (forbet/etoto quote both sides).
+    // A team parameter keeps them apart and makes the chip self-describing.
+    hasParameter: true,
+    parameterType: "team",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     displayOrder: 390,

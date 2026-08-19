@@ -209,8 +209,10 @@ export function getMarketName(
  * API-provided name always wins.
  */
 const PZBUK_ID_LABELS: Record<string, string> = {
-  "19": "Gole gospodarzy",
-  "20": "Gole gości",
+  // Side proven by ground truth in two fixtures — see the note on ids 19/20 in
+  // pzbuk-normalizer.ts. The labels used to be the other way round.
+  "19": "Gole gości",
+  "20": "Gole gospodarzy",
   "33": "Wynik meczu i obie drużyny strzelą",
   "34": "Liczba goli i obie drużyny strzelą",
   "35": "Wynik meczu i liczba goli",

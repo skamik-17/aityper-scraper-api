@@ -126,6 +126,22 @@ function getSelectionName(
     return longName;
   }
 
+  // 00-0v/00-0w (misleadingly named ASIAN_HANDICAP/EUROPEAN_HANDICAP in
+  // MARKET_TYPE_IDS) do NOT carry 1X2/handicap outcomes on the live API —
+  // they quote a 4-way corners-count band ("0-1", "2", "3", "4+") whose "2"
+  // bucket reuses the same raw outcome code ("2") as the 1X2 AWAY leg. The
+  // generic HOME/AWAY-to-teamname fallback below must never fire for these
+  // two ids: it was silently replacing the "2" band label with the away
+  // team's name (audit /audit-match, premier-league Arsenal vs Coventry
+  // City), destroying one of the four selections. Keep the raw band code —
+  // it IS the correct display label ("0", "1", "2", ...) for this market.
+  if (
+    marketTypeId === MARKET_TYPE_IDS.ASIAN_HANDICAP ||
+    marketTypeId === MARKET_TYPE_IDS.EUROPEAN_HANDICAP
+  ) {
+    return code;
+  }
+
   // Map codes to display names
   switch (code) {
     // 1X2

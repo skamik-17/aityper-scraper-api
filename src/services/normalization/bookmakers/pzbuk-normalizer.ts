@@ -124,6 +124,28 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "40": "OTHER",
   "41": "DOUBLE_CHANCE_BTTS",
   "42": "DOUBLE_CHANCE_TOTAL",
+  // Audit /audit-match (Arsenal vs Coventry City): ids 43/45/46 were
+  // previously unmapped (dropped as unknown markets). Implied P(yes) proves
+  // this is the "win both halves / win at least one half" family, block-
+  // ordered 43=home-both, 44=away-both (unseen this fixture, leave unmapped
+  // until independently verified), 45=home-at-least-one, 46=away-at-least-one:
+  //   id 45 (1.07/5.11) = 0.8269 ~= forbet/etoto/fortuna 'Arsenal wygra
+  //     przynajmniej jedną połowę' (1.10/5.8) = 0.8406, fuksiarz (1.10/5.85)
+  //     = 0.8418, betclic 'Wygrają jedną z połów - Arsenal' (1.09/5.4) = 0.8322
+  //   id 46 (4.62/1.09) = 0.1909 ~= forbet/betfan 'Coventry wygra przynajmniej
+  //     jedną połowę' (5.2/1.13) = 0.1785, betclic 'Wygrają jedną z połów -
+  //     Coventry' (4.85/1.12) = 0.1876, fuksiarz (5.6/1.11) = 0.1654
+  //   id 43 (2.13/1.51) = 0.4148 ~= betclic 'Wygrają obie połowy - Arsenal'
+  //     (2.2/1.55) = 0.4133, fuksiarz (2.2/1.6) = 0.4211, betfan/forbet/etoto/
+  //     fortuna (2.25/1.58) = 0.4125, betcris 'Team 1. Wygra obie połowy'
+  //     (2.2/1.6) = 0.4211
+  // id 43's next-closest peer candidate (betcris 'Team 1. Wygra 2 lub 3
+  // golami' = 0.4260) is ~1pp further away and does not fit the 43-46 id
+  // block pattern, so confidence here is proven-by-cross-bookmaker-odds but
+  // not corroborated by a raw-name match.
+  "43": "HOME_WIN_BOTH_HALVES",
+  "45": "HOME_WIN_AT_LEAST_ONE_HALF",
+  "46": "AWAY_WIN_AT_LEAST_ONE_HALF",
   "47": "HALF_WITH_MORE_GOALS",
   // Audit: id 49 odds pattern ("równo" @1.32) matches the away-team variant,
   // not the match-level market; 48/49 follow PZBuk's home/away id pairing.
@@ -149,7 +171,24 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "63": "OTHER",
   "64": "OTHER",
   "69": "HALF_TIME_BTTS",
-  "72": "RESULT_AND_BTTS",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
+  // id 72 ("Rynek 72") carries the SAME 6-outcome "<team|remis> & <tak|nie>"
+  // vocabulary as the genuine full-match id 33, and it sits EARLIER in the
+  // offer (index 100 vs 105), so the grouper's first-wins collision guard
+  // (market-type-grouper.ts:553) let it evict id 33 from RESULT_AND_BTTS.
+  // Id 72 is half-scoped, not full-match: its outcomes reconstruct exactly
+  // from pzbuk's own half correct-score grid id 75 (remis&nie 3.54 -> .2825
+  // vs 0:0 .2907; remis&tak 10.81 -> .0925 vs 1:1+2:2 .0967; Coventry&nie
+  // 12.04 -> .0831 vs 0:1+0:2 .0844), and it contradicts pzbuk's own 1X2
+  // (id 1: Remis 6.77 -> .148, Coventry 14.72 -> .068) because its DRAW_NO
+  // alone implies .2825 and its AWAY_NO alone implies .0903 — each larger
+  // than the whole DRAW / AWAY branch. Id 33 by contrast decomposes the 1X2
+  // to within 4% on all three branches, so id 33 is the trusted source.
+  // Which half id 72 covers cannot be settled from this fixture (pzbuk
+  // serves two half correct-score grids, ids 75 and 90), so park it rather
+  // than guess HALF_TIME_/SECOND_HALF_RESULT_AND_BTTS and poison another
+  // market. Same treatment as the id 73 vs id 35 collision below.
+  "72": "OTHER",
   // Audit r6 (France vs Morocco, audit-loop v2 round 1): id 73 ("Rynek 73")
   // collides with id 35's RESULT_AND_TOTAL data at the SAME param (1.5) with
   // materially different odds (HOME_OVER 4.23 vs id 35's 1.85; HOME_UNDER
@@ -182,7 +221,21 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "83": "OTHER",
   "84": "OTHER",
   "85": "SECOND_HALF_EXACT_GOALS",
-  "86": "ODD_EVEN_GOALS",
+  // Audit /audit-match (Arsenal vs Coventry City): ids 68/86/162/173 were all
+  // mapped to the single full-match ODD_EVEN_GOALS key, a three-way collision.
+  // Implied P(odd) = (1/odd)/((1/odd)+(1/even)) separates two families to the
+  // 4th decimal place: goals markets are asymmetric toward even (0 goals
+  // counts as even) while corners markets sit almost exactly at 0.50.
+  //   id 68  (1.97/1.81) = 0.4788  ~=  betclic HT odd/even goals   0.4780
+  //   id 86  (1.95/1.82) = 0.4828  ~=  betclic 2H odd/even goals   0.4835
+  //   id 162 (1.88/1.89) = 0.5013  ~=  betclic corners odd/even    0.5013
+  //   id 173 (1.88/1.88) = 0.5000  ~=  betclic HT corners odd/even 0.5000
+  // Id block position confirms the half split: 68 sits in the 55-75 block
+  // (half-time markets), 86 in the 76-90 block (2nd-half markets), and
+  // P(odd) rises from 1st to 2nd half for both pzbuk (.4788->.4828) and
+  // betclic (.4780->.4835).
+  "68": "HALF_TIME_ODD_EVEN_GOALS",
+  "86": "SECOND_HALF_ODD_EVEN_GOALS",
   // Audit r3: id 90 odds are a uniformly scaled-down, capped-at-2-2 copy of
   // forbet/fortuna's confirmed 2nd-half correct-score pattern (0-0 @2.95,
   // "inny" @13.3) — a half-scoped market, not the full-match CORRECT_SCORE.
@@ -209,21 +262,55 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
   // ground truth from the bookmaker page shows the real 1X2 market (id 1,
   // API name "1x2") at 1.16 / 6.77 / 14.48, in line with all 11 peers, while
-  // id 152 delivers 1.07 / 11.79 / 7.57 — a different market that overwrote
-  // the genuine 1X2 row. Same untrustworthy pattern as ids 139/163.
-  "152": "OTHER",
-  "155": "OTHER",
+  // id 152 delivers 1.07 / 11.79 / 7.57 — the DRAW leg priced above the AWAY
+  // leg, a shape 1X2 never takes but which is characteristic of the corners
+  // race market (favorite very short, draw the longest of the three). id 152
+  // = 1.07/12.04/7.66 vs betclic 'Więcej rzutów rożnych' 1.09/12.75/8.0 and
+  // lvbet 'Rzuty rożne: Wynik' 1.07/10.5/8.0 — matches CORNERS_RACE, the code
+  // betclic/lvbet/fortuna/fuksiarz all route their "Więcej rzutów rożnych"
+  // market to. Routing it there resolves the id-1 collision on its own,
+  // since the two codes are disjoint.
+  "152": "CORNERS_RACE",
+  // Audit /audit-match (Arsenal vs Coventry City): id 155 @-4.5 = 1.78/1.8
+  // vs betclic 'Rzuty rożne Handicap' -4.5 = 1.84/1.86 — a corners handicap
+  // line, not an asian/european handicap on the match result.
+  "155": "CORNERS_HANDICAP",
   "156": "CORNERS_TOTAL",
   "157": "OTHER",
   "159": "CORNERS_RANGE",
-  "162": "ODD_EVEN_GOALS",
-  // Audit: id 163 produced duplicated DRAW/AWAY odds far off 1X2 peers —
-  // it is not the match-winner market; park in OTHER (id 1 is the real 1X2).
-  "163": "OTHER",
+  "162": "CORNERS_ODD_EVEN",
+  // Audit /audit-match (Arsenal vs Coventry City): id 163's shape (DRAW/AWAY
+  // odds far off 1X2 peers) is because it is not the match-winner market at
+  // all — it is the corners-race market. id 163 = 1.23/6.29/5.99 vs betclic
+  // 'Rzuty rożne w- 1. połowa' 1.25/6.4/6.1 and lvbet 'Rzuty rożne: 1. połowa
+  // - Wynik' 1.2/6.75/7.5 (all three legs match). id 1 remains the real 1X2.
+  "163": "HALF_TIME_CORNERS_RACE",
   "166": "OTHER",
-  "167": "OTHER",
-  "173": "ODD_EVEN_GOALS",
-  "498": "DOUBLE_CHANCE_BTTS",
+  // Audit /audit-match (Arsenal vs Coventry City): id 167 carries three
+  // corners-total lines that match betclic's '1. połowa - Rzuty rożne'
+  // almost exactly: @3.5 1.36/2.65 vs 1.36/2.6, @4.5 1.78/1.84 vs 1.76/1.83,
+  // @5.5 2.45/1.42 vs 2.4/1.42 (all within 2%).
+  "167": "HALF_TIME_CORNERS_TOTAL",
+  "173": "HALF_TIME_CORNERS_ODD_EVEN",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
+  // id 498 ("Podwójna szansa i obie drużyny strzelą" — a real API name, not a
+  // placeholder) implies P(second leg = tak) = 0.192 on all three legs
+  // (1X/12/X2 all ~19%), which is structurally impossible for a genuine
+  // DC+BTTS product: the X2 leg must be markedly MORE btts-heavy than 1X/12
+  // (draws are BTTS-friendly), so peers price X2_YES shorter than X2_NO
+  // (sts 8.10 vs 11.50) while id 498 does the opposite (17.85 vs 4.36). Two
+  // independent internal checks confirm: pzbuk's own BTTS market (id 27,
+  // Tak 2.32/Nie 1.49) implies P(BTTS)=0.391, and summing pzbuk's own id 33
+  // (RESULT_AND_BTTS) branches into double-chance gives 1X_YES~2.34,
+  // X2_YES~7.69, X2_NO~10.8 — both match id 504 (2.35/.../7.44/10.41), not
+  // id 498. Same flat-0.19 shape reproduces on France vs Morocco (id 498 ->
+  // 0.193 vs P(BTTS)=0.468 from id 27 there). Id 498's true identity is
+  // unresolved — park in OTHER rather than let it evict id 504 from the key
+  // via the grouper's first-wins collision guard. IMPORTANT: keep this as an
+  // explicit "OTHER" entry, not a deleted key — matchMarketByName()'s
+  // /podw[óo]jna szansa/ pattern (this file) would otherwise re-route id 498
+  // to DOUBLE_CHANCE via its real API name and reopen the same collision.
+  "498": "OTHER",
   // Audit r4 (France vs Morocco + 3 other fixtures cross-checked in the same
   // run): id 501 selections are consistently "<team|remis> & <tak|nie>" (the
   // same 6-outcome Result+BTTS shape as id 33) with internally consistent
@@ -233,7 +320,25 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // more likely a one-off stale price than a different market identity.
   "501": "RESULT_AND_BTTS",
   "502": "RESULT_AND_TOTAL",
-  "503": "DOUBLE_CHANCE_BTTS",
+  // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
+  // id 503's implied double-chance legs (1X 1.031/12 0.846/X2 0.442) match
+  // pzbuk's own HALF-TIME 1X2 (id 55: 1.49/2.90/11.54 -> 1X 1.016/12 0.758/
+  // X2 0.432) far more closely than its full-match DC (id 10: 1.04/1.09/4.06
+  // -> 1X 0.962/12 0.917/X2 0.246). It is a first-half-scoped product wearing
+  // the full-match "Rynek 503" placeholder, so it cannot share the full-match
+  // DOUBLE_CHANCE_BTTS key with id 504 — park in OTHER (same reasoning as id
+  // 500, which already parks by omission).
+  "503": "OTHER",
+  // Trusted source for this key. id 504's odds (2.35/1.53/2.73/1.56/7.44/
+  // 10.41) match the 10-bookmaker consensus (sts 2.50/1.58/2.95/1.62/8.10/
+  // 11.50) and pzbuk's own cross-checks: BTTS market id 27 (Tak 2.32/Nie
+  // 1.49 -> P(BTTS)=0.391 vs id 504's 0.400) and the double-chance sum of
+  // id 33's RESULT_AND_BTTS branches (X2_YES~7.69/X2_NO~10.8 vs id 504's
+  // 7.44/10.41). Confirmed again on France vs Morocco (id 504 -> P(BTTS)=
+  // 0.458 vs 0.468 from id 27 there). Ids 498/499/500/503 all carry the same
+  // 6-outcome shape but fail one or more of these checks — see their OTHER
+  // entries above/below. Do not let a future audit merge another id into
+  // this key without repeating the id-27/id-33 cross-check.
   "504": "DOUBLE_CHANCE_BTTS",
   "506": "GOAL_RANGE",
   "509": "MULTI_RESULT",
@@ -404,6 +509,13 @@ function normalizeSelectionForMarket(
     case "DRAW_NO_BET":
     case "WIN_TO_NIL":
     case "CLEAN_SHEET":
+    // Audit /audit-match (Arsenal vs Coventry City): the newly-routed corners
+    // family (ids 152/155/163, see PZBUK_MARKET_ID_TO_CODE) shares the same
+    // team/draw selection vocabulary as 1X2.
+    case "HALF_TIME_DRAW_NO_BET":
+    case "SECOND_HALF_DRAW_NO_BET":
+    case "CORNERS_RACE":
+    case "HALF_TIME_CORNERS_RACE":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "MATCH_RESOLUTION_METHOD": {
@@ -434,7 +546,8 @@ function normalizeSelectionForMarket(
 
     case "FIRST_TEAM_TO_SCORE":
     case "HALF_TIME_FIRST_GOAL":
-    case "SECOND_HALF_FIRST_GOAL": {
+    case "SECOND_HALF_FIRST_GOAL":
+    case "LAST_TEAM_TO_SCORE": {
       // "żaden" / "nikt" / "bez gola" = no goal, "obie" = both teams
       if (/^(żaden|zaden|nikt|brak gola|bez gola|none|no goal)$/i.test(trimmed)) {
         return "NONE";
@@ -445,7 +558,8 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
     }
 
-    case "DOUBLE_CHANCE": {
+    case "DOUBLE_CHANCE":
+    case "HALF_TIME_DOUBLE_CHANCE": {
       const dc = normalizeDoubleChanceSelection(trimmed);
       if (dc !== "UNKNOWN") return dc;
       // PZBuk renders double chance with team names, e.g. "Argentina lub
@@ -491,10 +605,17 @@ function normalizeSelectionForMarket(
     case "TEAM_TOTAL_GOALS":
     case "HOME_TEAM_TOTAL_GOALS":
     case "AWAY_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
     // Audit r3: stat totals share the same "ponad/poniżej" vocabulary but
     // were falling through to the 1X2 default and normalizing to UNKNOWN.
     case "TOTAL_SHOTS":
     case "CORNERS_TOTAL":
+    // Audit /audit-match (Arsenal vs Coventry City): id 167, newly routed to
+    // HALF_TIME_CORNERS_TOTAL, uses the same "ponad/poniżej" vocabulary.
+    case "HALF_TIME_CORNERS_TOTAL":
       return normalizeOverUnderSelection(trimmed);
 
     case "GOAL_RANGE":
@@ -507,6 +628,7 @@ function normalizeSelectionForMarket(
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS":
     case "SECOND_HALF_EXACT_GOALS":
+    case "HALF_TIME_EXACT_GOALS":
     // Audit r3: range/exact-count stat markets ("0-8", "9-11", "12+", "3+")
     // use the same literal bucket codes as the catalog — map them identically
     // instead of the 1X2 default that produced UNKNOWN/HOME/AWAY orphans.
@@ -555,23 +677,47 @@ function normalizeSelectionForMarket(
 
     case "BTTS":
     case "HALF_TIME_BTTS":
+    case "SECOND_HALF_BTTS":
     case "BOTH_HALVES_GOALS":
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
+    case "HALF_TIME_HOME_CLEAN_SHEET":
+    case "HALF_TIME_AWAY_CLEAN_SHEET":
+    case "SECOND_HALF_HOME_CLEAN_SHEET":
+    case "SECOND_HALF_AWAY_CLEAN_SHEET":
+    // Audit /audit-match (Arsenal vs Coventry City): ids 43/45/46 (newly
+    // mapped, see PZBUK_MARKET_ID_TO_CODE) carry "tak"/"nie" selections.
+    case "HOME_WIN_BOTH_HALVES":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_SCORE_BOTH_HALVES":
+    case "AWAY_SCORE_BOTH_HALVES":
+    case "BOTH_HALVES_OVER_GOALS":
+    case "BOTH_HALVES_UNDER_GOALS":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
+    case "HALF_TIME_ODD_EVEN_GOALS":
+    case "SECOND_HALF_ODD_EVEN_GOALS":
+    case "CORNERS_ODD_EVEN":
+    case "HALF_TIME_CORNERS_ODD_EVEN":
       return normalizeOddEvenSelection(trimmed);
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
+    case "FIRST_HALF_ASIAN_HANDICAP":
+    case "SECOND_HALF_ASIAN_HANDICAP":
+    // Audit /audit-match (Arsenal vs Coventry City): id 155, newly mapped to
+    // CORNERS_HANDICAP, carries the same "<team> (+/-X.Y)" shape.
+    case "CORNERS_HANDICAP":
       if (/^1\b/i.test(trimmed)) return "HOME";
       if (/^2\b/i.test(trimmed)) return "AWAY";
       if (/^x\b/i.test(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "CORRECT_SCORE":
-    case "SECOND_HALF_CORRECT_SCORE": {
+    case "SECOND_HALF_CORRECT_SCORE":
+    case "HALF_TIME_CORRECT_SCORE": {
       const score = parseScoreSelection(trimmed);
       if (score) return score as NormalizedSelection;
       // PZBuk labels the catch-all score-grid column "inny"/"pozostałe" —
@@ -638,6 +784,10 @@ function normalizeSelectionForMarket(
     case "DOUBLE_CHANCE_BTTS":
     case "DOUBLE_CHANCE_TOTAL":
     case "TOTAL_GOALS_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_BTTS":
+    case "HALF_TIME_RESULT_AND_TOTAL":
+    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
+    case "SECOND_HALF_DOUBLE_CHANCE_BTTS":
       return parseCombinationSelection(trimmed, ctx);
 
     case "OTHER": {

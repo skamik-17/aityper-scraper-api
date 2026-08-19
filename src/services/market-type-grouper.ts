@@ -42,6 +42,11 @@ const DEFAULT_PARAMETERS: Record<string, string> = {
   TOTAL_GOALS_ASIAN: "2.0",
   CORNERS_TOTAL: "8.5",
   CARDS_TOTAL: "4.5",
+  // Round 8 P5: prefer the middle, most-liquid race-to-N line as the default
+  // tab instead of whichever line sorts first ("3"). Cosmetic only — every
+  // line is still fully priced and comparable, this only changes which
+  // parameter the frontend selects by default.
+  CORNERS_RACE_TO: "5",
   HALF_TIME_TOTAL_GOALS: "1.5",
   CORRECT_SCORE: "1:1",
 };
@@ -55,6 +60,10 @@ function canonicalizeParamValue(param: string): string {
   if (/^[+-]?\d+(\.\d+)?$/.test(param)) {
     return String(parseFloat(param));
   }
+  // Side-scoped lines ("HOME:7.0") must fold onto the same bucket as "HOME:7";
+  // LVBet quotes integers with a trailing .0 while Betcris quotes them bare.
+  const sided = param.match(/^(HOME|AWAY):([+-]?\d+(?:\.\d+)?)$/);
+  if (sided) return `${sided[1]}:${String(parseFloat(sided[2]))}`;
   return param;
 }
 
@@ -88,6 +97,15 @@ function splitBundledLineSelections(market: ScrapedMarket): ScrapedMarket[] | nu
 function looksLikePlayerName(label: string): boolean {
   if (/,\s*[\p{L}]/u.test(label)) return true; // "Lastname, Firstname"
   return /^[\p{L}][\p{L}'’.\-]*\s+[\p{L}][\p{L}'’.\-]*(\s+[\p{L}][\p{L}'’.\-]*)*$/u.test(label);
+}
+
+/**
+ * A raw market name the scraper never resolved past its bare bookmaker id
+ * ("Rynek 72", "Market 500") — an unconfirmed market identity, as opposed to
+ * a name the bookmaker actually publishes.
+ */
+function isPlaceholderMarketName(name: string | undefined): boolean {
+  return !name || /^(rynek|market)\s*\d+\b/i.test(name.trim());
 }
 
 /**
@@ -251,14 +269,34 @@ function splitBundledPlayerSelections(
   fallbackSelectionCode: string | undefined,
 ): ScrapedMarket[] | null {
   if (market.selections.length < 2 || !fallbackSelectionCode) return null;
+  // A bookmaker's catch-all "no scorer" outcome (normalized to the catalog
+  // sentinel "NONE") is a real, quotable price that cannot collide with any
+  // player — tolerate it inside an otherwise player-shaped selection list
+  // instead of letting one non-name selection veto the whole split. Fuksiarz
+  // quotes "No GoalScorer" -> NONE alongside 44 player names in
+  // GOALSCORER_FIRST; before this, that single NONE entry made every
+  // selection in the market fail looksLikePlayerName, so all 45 prices fell
+  // through to the shared "base"/misparsed-numeric bucket instead of one row
+  // per player (/audit-match Arsenal vs Coventry City, round 8
+  // P3-grouper-split-tolerate-none-selection).
+  const isCatchAll = (code: string): boolean => code === "NONE";
+  let nameLike = 0;
   for (const sel of market.selections) {
-    if (!looksLikePlayerName(sel.normalizedName || sel.name)) return null;
+    const code = sel.normalizedName || sel.name;
+    if (isCatchAll(code)) continue;
+    if (!looksLikePlayerName(code)) return null;
+    nameLike++;
   }
-  return market.selections.map((sel) => ({
-    ...market,
-    paramValue: canonicalizePlayerName(sel.normalizedName || sel.name),
-    selections: [{ name: sel.name, normalizedName: fallbackSelectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
-  }));
+  // Require a real name list, not a lone catch-all masquerading as one.
+  if (nameLike < 2) return null;
+  return market.selections.map((sel) => {
+    const code = sel.normalizedName || sel.name;
+    return {
+      ...market,
+      paramValue: isCatchAll(code) ? "NONE" : canonicalizePlayerName(code),
+      selections: [{ name: sel.name, normalizedName: fallbackSelectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
+    };
+  });
 }
 
 // ============================================================================
@@ -394,10 +432,21 @@ function getParameterLabel(param: string, marketType: string): string {
     }
   }
 
+  // Side-scoped stat lines ("HOME:7.5") are user-facing chips; render the side in Polish.
+  const sided = param.match(/^(HOME|AWAY):(.+)$/);
+  if (sided) return `${sided[1] === "HOME" ? "Gospodarze" : "Goście"} ${sided[2]}`;
+
   // For team-parameterized markets (HOME/AWAY), translate to Polish
   if (marketDef?.parameterType === "team") {
     if (param === "HOME") return "Gospodarze";
     if (param === "AWAY") return "Goście";
+  }
+
+  // Player-parameterized markets: "NONE" is the catch-all "no scorer" row
+  // (see splitBundledPlayerSelections' isCatchAll) — show its Polish label
+  // instead of the raw catalog sentinel.
+  if (marketDef?.parameterType === "player" && param === "NONE") {
+    return "Brak strzelca";
   }
 
   // For Asian total goals, format as integer (1 instead of 1.0)
@@ -437,7 +486,29 @@ export function groupMarketsByTypeWithParameters(
     // label happens to look name-shaped (looksLikePlayerName), overwriting
     // the real pair identity with the catalog's generic fallback code.
     const parameterType = catalogEntry?.hasParameter ? catalogEntry.parameterType : undefined;
-    if (entry.market.paramValue) return [entry];
+    if (entry.market.paramValue) {
+      // Player-parameterized markets: some bookmakers (Fortuna) emit one
+      // market per player, so paramValue is already set to the player name
+      // AND the selection code repeats that same player name instead of the
+      // catalog's generic code ("PLAYER_NAME"/"PLAYER"). Peers reach the
+      // catalog code through splitBundledPlayerSelections below, which only
+      // runs when paramValue is unset — leaving the name-shaped selection
+      // code intact here splits the market vocabulary and strands that
+      // bookmaker's column in the comparison table (/audit-match Arsenal vs
+      // Coventry City, round 8 P1-grouper-canonicalize-player-selection).
+      const fallbackCode = catalogEntry?.selections?.[0];
+      if (parameterType === "player" && fallbackCode) {
+        const paramPlayer = canonicalizePlayerName(entry.market.paramValue);
+        const selections = entry.market.selections.map((sel) => {
+          const code = sel.normalizedName || sel.name;
+          return canonicalizePlayerName(code) === paramPlayer
+            ? { ...sel, normalizedName: fallbackCode as ScrapedMarket["selections"][number]["normalizedName"] }
+            : sel;
+        });
+        return [{ ...entry, market: { ...entry.market, selections } }];
+      }
+      return [entry];
+    }
     if (parameterType === "decimal") {
       const split = splitBundledLineSelections(entry.market);
       if (split) return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
@@ -489,6 +560,27 @@ export function groupMarketsByTypeWithParameters(
       continue;
     }
 
+    // Vocabulary guard: on PARAMETER_SLIDER markets the catalog declares a
+    // fixed, closed selection vocabulary (typically OVER/UNDER). Reject an
+    // entry whose raw selections share NO code with that vocabulary at all —
+    // a bookmaker can route an unrelated product onto the same normalized
+    // code. Fuksiarz's "Arsenal - liczba goli" quotes three mutually
+    // exclusive interval buckets (0-1/2-3/4+) that land on
+    // HOME_TEAM_TOTAL_GOALS (catalog vocab OVER/UNDER only) at a phantom
+    // param "0" (/audit-match Arsenal vs Coventry City, round 8
+    // P1-grouper-vocab-gate). None of that entry's outcomes belong to this
+    // market, so drop the whole entry rather than let a garbage parameter
+    // row through. `.some` (not `.every`) is deliberate: an entry with even
+    // one recognized code must still get through untouched.
+    if (
+      entryDef?.viewType === "PARAMETER_SLIDER" &&
+      entryDef.selections.length > 0 &&
+      market.selections.length > 0 &&
+      !market.selections.some((sel) => entryDef.selections.includes(sel.normalizedName || sel.name))
+    ) {
+      continue;
+    }
+
     if (!typeGroups.has(marketType)) {
       typeGroups.set(marketType, {
         marketType,
@@ -508,6 +600,14 @@ export function groupMarketsByTypeWithParameters(
     // Group by parameter
     const paramGroups = new Map<string, MarketParameter>();
     const handicapMarket = isLineBasedHandicap(marketType);
+
+    // Computed once per market type and reused both by the rawMarketName-
+    // collision overlap check below and by the selection-code canonicalization
+    // loop further down, so a player's selection code is compared on the same
+    // normalized basis in both places.
+    const isPlayerSelectionMarket = PLAYER_SELECTION_VIEW_TYPES.has(
+      String(getMarketByCode(marketType)?.viewType ?? ""),
+    );
 
     // Player-keyed markets: fold the spelling variants of one footballer into
     // a single parameter before grouping, using the whole market's name set.
@@ -551,11 +651,45 @@ export function groupMarketsByTypeWithParameters(
         };
         paramEntry.bookmakers.push(bmEntry);
       } else if (bmEntry.rawMarketName !== market.name) {
-        // A DIFFERENT raw market collided on (type, param, bookmaker) — almost
-        // always a misrouted normalization (e.g. a 2nd-half combo landing in
-        // the plain full-time market). Merging would poison odds/best-odds
-        // with prices from another market, so the first raw market wins.
-        continue;
+        // A DIFFERENT raw market collided on (type, param, bookmaker). Two
+        // shapes exist. (1) Both describe the SAME outcomes — a misrouted
+        // normalization; merging would poison odds, so exactly one must win.
+        // (2) They describe DISJOINT, side-scoped outcomes of ONE catalog
+        // market: fuksiarz sends "1. połowa - Arsenal - liczba goli" as
+        // HOME_OVER/HOME_UNDER and "... - Coventry - ..." as AWAY_OVER/
+        // AWAY_UNDER on the same line, and the blanket skip below dropped
+        // every home-side line (/audit-match Arsenal vs Coventry). Only
+        // overlapping selection codes can poison anything. Player-keyed
+        // selection codes must go through the same canonicalizePlayerName
+        // transform as bmEntry.selections[].type below (governed by
+        // isPlayerSelectionMarket) - otherwise "Jashari, Ardon" vs "Ardon
+        // Jashari" would compare unequal here and a true collision on the
+        // same player could slip through as a false "disjoint" verdict.
+        const incomingCodes = new Set(
+          market.selections.map((sel) => {
+            const code = sel.normalizedName || sel.name;
+            return isPlayerSelectionMarket ? canonicalizePlayerName(code) : code;
+          }),
+        );
+        if (bmEntry.selections.some((sel) => incomingCodes.has(sel.type))) {
+          // Case (1): arrival order is arbitrary and has picked the wrong
+          // side before (pzbuk id 72 "Rynek 72" sat ahead of the genuine id
+          // 33 "Wynik meczu i obie drużyny strzelą" and evicted it from
+          // RESULT_AND_BTTS, round 8 grouper-prefer-named-market-on-
+          // collision). A raw name the scraper could not resolve past the
+          // "Rynek <id>"/"Market <id>" placeholder is an unconfirmed market
+          // identity, so a REAL name always beats a placeholder; only when
+          // both sides are equally (un)named does the first arrival keep the
+          // slot.
+          const incumbentIsPlaceholder = isPlaceholderMarketName(bmEntry.rawMarketName);
+          const challengerIsPlaceholder = isPlaceholderMarketName(market.name);
+          if (incumbentIsPlaceholder && !challengerIsPlaceholder) {
+            bmEntry.rawMarketName = market.name;
+            bmEntry.selections = [];
+          } else {
+            continue;
+          }
+        }
       }
 
       // Create a map to track existing selections by type to prevent duplicates
@@ -576,10 +710,8 @@ export function groupMarketsByTypeWithParameters(
         return undefined;
       };
 
-      // Add or update selections from this market
-      const isPlayerSelectionMarket = PLAYER_SELECTION_VIEW_TYPES.has(
-        String(getMarketByCode(marketType)?.viewType ?? ""),
-      );
+      // Add or update selections from this market (isPlayerSelectionMarket
+      // computed once above, reused here).
       for (const selection of market.selections) {
         let selectionType = selection.normalizedName || selection.name;
         // Unify player-name order so the same player merges across bookmakers

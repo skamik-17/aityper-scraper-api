@@ -796,8 +796,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NEXT_TEAM_TO_SCORE",
-        "marketKey": "NEXT_TEAM_TO_SCORE",
+        "marketCode": "FIRST_TEAM_TO_SCORE",
+        "marketKey": "FIRST_TEAM_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -816,71 +816,11 @@
             "code": "NONE",
             "label": "Nikt",
             "odds": 9.9
-          },
-          {
-            "code": "HOME",
-            "label": "Francja",
-            "odds": 1.89
-          },
-          {
-            "code": "AWAY",
-            "label": "Maroko",
-            "odds": 4.1
-          },
-          {
-            "code": "NONE",
-            "label": "Nikt",
-            "odds": 3.5
-          },
-          {
-            "code": "HOME",
-            "label": "Francja",
-            "odds": 2.89
-          },
-          {
-            "code": "AWAY",
-            "label": "Maroko",
-            "odds": 6.1
-          },
-          {
-            "code": "NONE",
-            "label": "Nikt",
-            "odds": 1.83
-          },
-          {
-            "code": "HOME",
-            "label": "Francja",
-            "odds": 4.95
-          },
-          {
-            "code": "AWAY",
-            "label": "Maroko",
-            "odds": 10
-          },
-          {
-            "code": "NONE",
-            "label": "Nikt",
-            "odds": 1.31
-          },
-          {
-            "code": "HOME",
-            "label": "Francja",
-            "odds": 9.6
-          },
-          {
-            "code": "AWAY",
-            "label": "Maroko",
-            "odds": 17.5
-          },
-          {
-            "code": "NONE",
-            "label": "Nikt",
-            "odds": 1.11
           }
         ]
       },
       "index": 31,
-      "marketCode": "NEXT_TEAM_TO_SCORE",
+      "marketCode": "FIRST_TEAM_TO_SCORE",
       "rawName": "kolejny gol:"
     },
     {
@@ -5076,17 +5016,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "2nd",
             "label": "1. < 2.",
             "odds": 2.26
           },
           {
-            "code": "UNKNOWN",
+            "code": "Draw",
             "label": "1. = 2.",
             "odds": 2.93
           },
           {
-            "code": "UNKNOWN",
+            "code": "1st",
             "label": "1. > 2.",
             "odds": 3.8
           }
@@ -5107,17 +5047,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "2nd",
             "label": "1. < 2.",
             "odds": 3.25
           },
           {
-            "code": "UNKNOWN",
+            "code": "Draw",
             "label": "1. = 2.",
             "odds": 1.84
           },
           {
-            "code": "UNKNOWN",
+            "code": "1st",
             "label": "1. > 2.",
             "odds": 5.05
           }
@@ -6928,9 +6868,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RACE_TO_GOALS",
-        "marketKey": "RACE_TO_GOALS",
+        "marketKey": "RACE_TO_GOALS:2",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2",
         "parameters": null,
         "selections": [
           {
@@ -6959,9 +6899,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RACE_TO_GOALS",
-        "marketKey": "RACE_TO_GOALS",
+        "marketKey": "RACE_TO_GOALS:3",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "3",
         "parameters": null,
         "selections": [
           {

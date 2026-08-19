@@ -83,6 +83,19 @@ const AXIS_SWAP_MIN_DEV_COMPONENTS = 2;
 const OVERROUND_MIN = 0.95;
 const OVERROUND_MAX = 1.45;
 
+/**
+ * Markets whose catalog selections are independent per-team YES props, not a
+ * partition of the outcome space: both legs can happen together, and the
+ * dominant "neither did" branch is never priced at all. Summing their implied
+ * probabilities is meaningless — betcris PENALTY_MISSED prices HOME=14 (7.1%)
+ * and AWAY=46 (2.2%), which sums to 9.3%, yet the SAME book's own "no penalty
+ * at all" quote (1.31 = 76%) shows that price is exactly right.
+ */
+export const NON_EXHAUSTIVE_SELECTION_MARKETS = new Set<string>([
+  "PENALTY_MISSED",
+  "TEAM_MISSES_PENALTY",
+]);
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -217,6 +230,9 @@ function detectPlaceholderOdds(input: IntegrityMarketInput, out: OddsIntegrityFl
   };
 
   for (const [bookmaker, quotes] of perBookmaker) {
+    // This bookmaker's own highest price in the market — used below to tell a
+    // house ceiling (repeated on purpose) from a pasted placeholder.
+    const bookMax = Math.max(...quotes.map((q) => q.odds));
     const byValue = new Map<number, { param: string; selectionType: string }[]>();
     for (const q of quotes) {
       // Values >= 1000 are already covered by rule (i); <= 1 by impossible_odds.
@@ -235,6 +251,17 @@ function detectPlaceholderOdds(input: IntegrityMarketInput, out: OddsIntegrityFl
       const min = Math.min(...medians);
       const max = Math.max(...medians);
       if (min <= 0 || max / min - 1 <= REPEATED_PEER_VARIATION) continue;
+
+      // House-ceiling guard: a bookmaker that truncates the tail of a grid
+      // (etoto/fortuna capping correct-score/HT-FT families at 100, sts at
+      // 500) prints its OWN maximum price repeatedly on those longshots.
+      // That is a real, faithful price, not a pasted placeholder, so only
+      // suppress when (a) the repeated value equals this bookmaker's own
+      // ceiling AND (b) every peer prices those same cells at or above it —
+      // a genuine placeholder also lands on favourites, so some peer median
+      // there sits below the repeated value and the guard does not apply.
+      if (value === bookMax && medians.every((m) => m >= value)) continue;
+
       const codes = [...new Set(members.map((m) => m.selectionType))].sort();
       out.push({
         bookmaker,
@@ -392,10 +419,11 @@ function detectAxisSwap(
  * Overround: sum of implied probabilities of a complete 2/3-way book outside
  * [0.95, 1.45]. Markets with overlapping outcomes legitimately sum outside
  * that band and are skipped: double-chance-style "_OR_" SELECTION codes
- * (sum ~2), and compound "wins one of several ways" markets whose "_OR_" is
- * in the market TYPE code instead (e.g. HT_OR_FT_RESULT, WIN_OR_WIN_BY_2 —
+ * (sum ~2), compound "wins one of several ways" markets whose "_OR_" is in
+ * the market TYPE code instead (e.g. HT_OR_FT_RESULT, WIN_OR_WIN_BY_2 —
  * confirmed structural, not a bug: 5 independent bookmakers agree on
- * HT_OR_FT_RESULT's overround ~1.5).
+ * HT_OR_FT_RESULT's overround ~1.5), and NON_EXHAUSTIVE_SELECTION_MARKETS
+ * (independent per-team YES props with no priced "neither" branch).
  */
 function detectOverround(
   input: IntegrityMarketInput,
@@ -404,6 +432,7 @@ function detectOverround(
 ): void {
   if (selections.some((s) => s.includes("_OR_"))) return;
   if (input.marketType.includes("_OR_")) return;
+  if (NON_EXHAUSTIVE_SELECTION_MARKETS.has(input.marketType)) return;
   for (const param of input.params) {
     for (const { bookmaker, vector } of completeVectors(param, selections)) {
       const sum = vector.reduce((acc, odds) => acc + 1 / odds, 0);

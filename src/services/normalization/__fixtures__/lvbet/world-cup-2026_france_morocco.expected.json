@@ -319,52 +319,52 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Michael Olise & Ousmane Dembele",
+            "code": "M. Olise & O. Dembele",
             "label": "Ousmane Dembele or Michael Olise",
             "odds": 1.9
           },
           {
-            "code": "Kylian Mbappe & Michael Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "Kylian Mbappe or Michael Olise",
             "odds": 2
           },
           {
-            "code": "Bradley Barcola & Michael Olise",
+            "code": "B. Barcola & M. Olise",
             "label": "Bradley Barcola or Michael Olise",
             "odds": 2.05
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele",
+            "code": "K. Mbappe & O. Dembele",
             "label": "Kylian Mbappe or Ousmane Dembele",
             "odds": 2.37
           },
           {
-            "code": "Bradley Barcola & Ousmane Dembele",
+            "code": "B. Barcola & O. Dembele",
             "label": "Ousmane Dembele or Bradley Barcola",
             "odds": 2.5
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe",
+            "code": "B. Barcola & K. Mbappe",
             "label": "Kylian Mbappe or Bradley Barcola",
             "odds": 2.65
           },
           {
-            "code": "Bilal El Khannous & Brahim Diaz",
+            "code": "B. Diaz & B. El Khannous",
             "label": "Bilal El Khannous or Brahim Diaz",
             "odds": 4.5
           },
           {
-            "code": "Azz-Eddine Ounahi & Bilal El Khannous",
+            "code": "A. Ounahi & B. El Khannous",
             "label": "Azz-Eddine Ounahi or Bilal El Khannous",
             "odds": 4.5
           },
           {
-            "code": "Bilal El Khannous & Soufiane Rahimi",
+            "code": "B. El Khannous & S. Rahimi",
             "label": "Soufiane Rahimi or Bilal El Khannous",
             "odds": 4.5
           },
           {
-            "code": "Brahim Diaz & Soufiane Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "Soufiane Rahimi or Brahim Diaz",
             "odds": 4.75
           }
@@ -439,502 +439,502 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Marcus Thuram",
+            "code": "J. Mateta & K. Mbappe & M. Thuram",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Marcus Thuram",
             "odds": 15
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Ousmane Dembele",
+            "code": "J. Mateta & K. Mbappe & O. Dembele",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Ousmane Dembele",
             "odds": 17
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Ousmane Dembele",
+            "code": "K. Mbappe & M. Thuram & O. Dembele",
             "label": "Kylian Mbappe and Marcus Thuram and Ousmane Dembele",
             "odds": 17
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "D. Doue & J. Mateta & K. Mbappe",
             "label": "Desire Doue and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 17
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Marcus Thuram",
+            "code": "D. Doue & K. Mbappe & M. Thuram",
             "label": "Desire Doue and Kylian Mbappe and Marcus Thuram",
             "odds": 17
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Ousmane Dembele",
+            "code": "D. Doue & K. Mbappe & O. Dembele",
             "label": "Desire Doue and Kylian Mbappe and Ousmane Dembele",
             "odds": 19
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "B. Barcola & J. Mateta & K. Mbappe",
             "label": "Bradley Barcola and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 19
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Marcus Thuram",
+            "code": "B. Barcola & K. Mbappe & M. Thuram",
             "label": "Bradley Barcola and Kylian Mbappe and Marcus Thuram",
             "odds": 19
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Rayan Cherki",
+            "code": "J. Mateta & K. Mbappe & R. Cherki",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Rayan Cherki",
             "odds": 21
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Michael Olise",
+            "code": "J. Mateta & K. Mbappe & M. Olise",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Michael Olise",
             "odds": 21
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Rayan Cherki",
+            "code": "K. Mbappe & M. Thuram & R. Cherki",
             "label": "Kylian Mbappe and Marcus Thuram and Rayan Cherki",
             "odds": 21
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Michael Olise",
+            "code": "K. Mbappe & M. Olise & M. Thuram",
             "label": "Kylian Mbappe and Marcus Thuram and Michael Olise",
             "odds": 21
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Ousmane Dembele",
+            "code": "B. Barcola & K. Mbappe & O. Dembele",
             "label": "Bradley Barcola and Kylian Mbappe and Ousmane Dembele",
             "odds": 21
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele & Rayan Cherki",
+            "code": "K. Mbappe & O. Dembele & R. Cherki",
             "label": "Kylian Mbappe and Ousmane Dembele and Rayan Cherki",
             "odds": 21
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Ousmane Dembele",
+            "code": "K. Mbappe & M. Olise & O. Dembele",
             "label": "Kylian Mbappe and Michael Olise and Ousmane Dembele",
             "odds": 21
           },
           {
-            "code": "Bradley Barcola & Desire Doue & Kylian Mbappe",
+            "code": "B. Barcola & D. Doue & K. Mbappe",
             "label": "Bradley Barcola and Desire Doue and Kylian Mbappe",
             "odds": 23
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Maghnes Akliouche",
+            "code": "J. Mateta & K. Mbappe & M. Akliouche",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Maghnes Akliouche",
             "odds": 23
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Marcus Thuram",
+            "code": "K. Mbappe & M. Akliouche & M. Thuram",
             "label": "Kylian Mbappe and Maghnes Akliouche and Marcus Thuram",
             "odds": 23
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Michael Olise",
+            "code": "D. Doue & K. Mbappe & M. Olise",
             "label": "Desire Doue and Kylian Mbappe and Michael Olise",
             "odds": 23
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Rayan Cherki",
+            "code": "D. Doue & K. Mbappe & R. Cherki",
             "label": "Desire Doue and Kylian Mbappe and Rayan Cherki",
             "odds": 23
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Soufiane Rahimi",
+            "code": "J. Mateta & K. Mbappe & S. Rahimi",
             "label": "Jean-Philippe Mateta and Kylian Mbappe and Soufiane Rahimi",
             "odds": 25
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Ousmane Dembele",
+            "code": "K. Mbappe & M. Akliouche & O. Dembele",
             "label": "Kylian Mbappe and Maghnes Akliouche and Ousmane Dembele",
             "odds": 25
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Thuram & S. Rahimi",
             "label": "Kylian Mbappe and Marcus Thuram and Soufiane Rahimi",
             "odds": 25
           },
           {
-            "code": "Jean-Philippe Mateta & Marcus Thuram & Ousmane Dembele",
+            "code": "J. Mateta & M. Thuram & O. Dembele",
             "label": "Jean-Philippe Mateta and Marcus Thuram and Ousmane Dembele",
             "odds": 25
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele & Soufiane Rahimi",
+            "code": "K. Mbappe & O. Dembele & S. Rahimi",
             "label": "Kylian Mbappe and Ousmane Dembele and Soufiane Rahimi",
             "odds": 26
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Rayan Cherki",
+            "code": "B. Barcola & K. Mbappe & R. Cherki",
             "label": "Bradley Barcola and Kylian Mbappe and Rayan Cherki",
             "odds": 26
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Michael Olise",
+            "code": "B. Barcola & K. Mbappe & M. Olise",
             "label": "Bradley Barcola and Kylian Mbappe and Michael Olise",
             "odds": 26
           },
           {
-            "code": "Ayoub El Kaabi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. El Kaabi & J. Mateta & K. Mbappe",
             "label": "Ayoub El Kaabi and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 26
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Marcus Thuram",
+            "code": "A. El Kaabi & K. Mbappe & M. Thuram",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Marcus Thuram",
             "odds": 26
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Maghnes Akliouche",
+            "code": "D. Doue & K. Mbappe & M. Akliouche",
             "label": "Desire Doue and Kylian Mbappe and Maghnes Akliouche",
             "odds": 26
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Marcus Thuram",
+            "code": "D. Doue & J. Mateta & M. Thuram",
             "label": "Desire Doue and Jean-Philippe Mateta and Marcus Thuram",
             "odds": 26
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Rayan Cherki",
+            "code": "K. Mbappe & M. Olise & R. Cherki",
             "label": "Kylian Mbappe and Michael Olise and Rayan Cherki",
             "odds": 26
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. El Kaabi & K. Mbappe & O. Dembele",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Ousmane Dembele",
             "odds": 29
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Soufiane Rahimi",
+            "code": "D. Doue & K. Mbappe & S. Rahimi",
             "label": "Desire Doue and Kylian Mbappe and Soufiane Rahimi",
             "odds": 29
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Ousmane Dembele",
+            "code": "D. Doue & J. Mateta & O. Dembele",
             "label": "Desire Doue and Jean-Philippe Mateta and Ousmane Dembele",
             "odds": 29
           },
           {
-            "code": "Desire Doue & Marcus Thuram & Ousmane Dembele",
+            "code": "D. Doue & M. Thuram & O. Dembele",
             "label": "Desire Doue and Marcus Thuram and Ousmane Dembele",
             "odds": 29
           },
           {
-            "code": "Brahim Diaz & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "B. Diaz & J. Mateta & K. Mbappe",
             "label": "Brahim Diaz and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 29
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Maghnes Akliouche",
+            "code": "B. Barcola & K. Mbappe & M. Akliouche",
             "label": "Bradley Barcola and Kylian Mbappe and Maghnes Akliouche",
             "odds": 29
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Marcus Thuram",
+            "code": "B. Diaz & K. Mbappe & M. Thuram",
             "label": "Brahim Diaz and Kylian Mbappe and Marcus Thuram",
             "odds": 29
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Marcus Thuram",
+            "code": "B. Barcola & J. Mateta & M. Thuram",
             "label": "Bradley Barcola and Jean-Philippe Mateta and Marcus Thuram",
             "odds": 29
           },
           {
-            "code": "Ayoub El Kaabi & Desire Doue & Kylian Mbappe",
+            "code": "A. El Kaabi & D. Doue & K. Mbappe",
             "label": "Ayoub El Kaabi and Desire Doue and Kylian Mbappe",
             "odds": 29
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Michael Olise",
+            "code": "K. Mbappe & M. Akliouche & M. Olise",
             "label": "Kylian Mbappe and Maghnes Akliouche and Michael Olise",
             "odds": 31
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Rayan Cherki",
+            "code": "K. Mbappe & M. Akliouche & R. Cherki",
             "label": "Kylian Mbappe and Maghnes Akliouche and Rayan Cherki",
             "odds": 31
           },
           {
-            "code": "Jean-Philippe Mateta & Marcus Thuram & Rayan Cherki",
+            "code": "J. Mateta & M. Thuram & R. Cherki",
             "label": "Jean-Philippe Mateta and Marcus Thuram and Rayan Cherki",
             "odds": 31
           },
           {
-            "code": "Jean-Philippe Mateta & Marcus Thuram & Michael Olise",
+            "code": "J. Mateta & M. Olise & M. Thuram",
             "label": "Jean-Philippe Mateta and Marcus Thuram and Michael Olise",
             "odds": 31
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Soufiane Rahimi",
+            "code": "B. Barcola & K. Mbappe & S. Rahimi",
             "label": "Bradley Barcola and Kylian Mbappe and Soufiane Rahimi",
             "odds": 31
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Ousmane Dembele",
+            "code": "B. Diaz & K. Mbappe & O. Dembele",
             "label": "Brahim Diaz and Kylian Mbappe and Ousmane Dembele",
             "odds": 31
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Ousmane Dembele",
+            "code": "B. Barcola & J. Mateta & O. Dembele",
             "label": "Bradley Barcola and Jean-Philippe Mateta and Ousmane Dembele",
             "odds": 31
           },
           {
-            "code": "Bradley Barcola & Marcus Thuram & Ousmane Dembele",
+            "code": "B. Barcola & M. Thuram & O. Dembele",
             "label": "Bradley Barcola and Marcus Thuram and Ousmane Dembele",
             "odds": 31
           },
           {
-            "code": "Kylian Mbappe & Rayan Cherki & Soufiane Rahimi",
+            "code": "K. Mbappe & R. Cherki & S. Rahimi",
             "label": "Kylian Mbappe and Rayan Cherki and Soufiane Rahimi",
             "odds": 31
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Olise & S. Rahimi",
             "label": "Kylian Mbappe and Michael Olise and Soufiane Rahimi",
             "odds": 31
           },
           {
-            "code": "Jean-Philippe Mateta & Ousmane Dembele & Rayan Cherki",
+            "code": "J. Mateta & O. Dembele & R. Cherki",
             "label": "Jean-Philippe Mateta and Ousmane Dembele and Rayan Cherki",
             "odds": 34
           },
           {
-            "code": "Jean-Philippe Mateta & Michael Olise & Ousmane Dembele",
+            "code": "J. Mateta & M. Olise & O. Dembele",
             "label": "Jean-Philippe Mateta and Michael Olise and Ousmane Dembele",
             "odds": 34
           },
           {
-            "code": "Marcus Thuram & Michael Olise & Ousmane Dembele",
+            "code": "M. Olise & M. Thuram & O. Dembele",
             "label": "Marcus Thuram and Michael Olise and Ousmane Dembele",
             "odds": 34
           },
           {
-            "code": "Marcus Thuram & Ousmane Dembele & Rayan Cherki",
+            "code": "M. Thuram & O. Dembele & R. Cherki",
             "label": "Marcus Thuram and Ousmane Dembele and Rayan Cherki",
             "odds": 34
           },
           {
-            "code": "Ayoub El Kaabi & Bradley Barcola & Kylian Mbappe",
+            "code": "A. El Kaabi & B. Barcola & K. Mbappe",
             "label": "Ayoub El Kaabi and Bradley Barcola and Kylian Mbappe",
             "odds": 34
           },
           {
-            "code": "Brahim Diaz & Desire Doue & Kylian Mbappe",
+            "code": "B. Diaz & D. Doue & K. Mbappe",
             "label": "Brahim Diaz and Desire Doue and Kylian Mbappe",
             "odds": 34
           },
           {
-            "code": "Bradley Barcola & Desire Doue & Jean-Philippe Mateta",
+            "code": "B. Barcola & D. Doue & J. Mateta",
             "label": "Bradley Barcola and Desire Doue and Jean-Philippe Mateta",
             "odds": 34
           },
           {
-            "code": "Bradley Barcola & Desire Doue & Marcus Thuram",
+            "code": "B. Barcola & D. Doue & M. Thuram",
             "label": "Bradley Barcola and Desire Doue and Marcus Thuram",
             "odds": 34
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Rayan Cherki",
+            "code": "A. El Kaabi & K. Mbappe & R. Cherki",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Rayan Cherki",
             "odds": 34
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Michael Olise",
+            "code": "A. El Kaabi & K. Mbappe & M. Olise",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Michael Olise",
             "odds": 34
           },
           {
-            "code": "Jean-Philippe Mateta & Maghnes Akliouche & Marcus Thuram",
+            "code": "J. Mateta & M. Akliouche & M. Thuram",
             "label": "Jean-Philippe Mateta and Maghnes Akliouche and Marcus Thuram",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Michael Olise",
+            "code": "D. Doue & J. Mateta & M. Olise",
             "label": "Desire Doue and Jean-Philippe Mateta and Michael Olise",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Rayan Cherki",
+            "code": "D. Doue & J. Mateta & R. Cherki",
             "label": "Desire Doue and Jean-Philippe Mateta and Rayan Cherki",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Marcus Thuram & Michael Olise",
+            "code": "D. Doue & M. Olise & M. Thuram",
             "label": "Desire Doue and Marcus Thuram and Michael Olise",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Marcus Thuram & Rayan Cherki",
+            "code": "D. Doue & M. Thuram & R. Cherki",
             "label": "Desire Doue and Marcus Thuram and Rayan Cherki",
             "odds": 36
           },
           {
-            "code": "Bradley Barcola & Desire Doue & Ousmane Dembele",
+            "code": "B. Barcola & D. Doue & O. Dembele",
             "label": "Bradley Barcola and Desire Doue and Ousmane Dembele",
             "odds": 36
           },
           {
-            "code": "Adrien Rabiot & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Rabiot & J. Mateta & K. Mbappe",
             "label": "Adrien Rabiot and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 36
           },
           {
-            "code": "Adrien Rabiot & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Rabiot & K. Mbappe & M. Thuram",
             "label": "Adrien Rabiot and Kylian Mbappe and Marcus Thuram",
             "odds": 36
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Akliouche & S. Rahimi",
             "label": "Kylian Mbappe and Maghnes Akliouche and Soufiane Rahimi",
             "odds": 36
           },
           {
-            "code": "Amine Sbai & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Sbai & J. Mateta & K. Mbappe",
             "label": "Amine Sbai and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 36
           },
           {
-            "code": "Amine Sbai & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Sbai & K. Mbappe & M. Thuram",
             "label": "Amine Sbai and Kylian Mbappe and Marcus Thuram",
             "odds": 36
           },
           {
-            "code": "Jean-Philippe Mateta & Maghnes Akliouche & Ousmane Dembele",
+            "code": "J. Mateta & M. Akliouche & O. Dembele",
             "label": "Jean-Philippe Mateta and Maghnes Akliouche and Ousmane Dembele",
             "odds": 36
           },
           {
-            "code": "Jean-Philippe Mateta & Marcus Thuram & Soufiane Rahimi",
+            "code": "J. Mateta & M. Thuram & S. Rahimi",
             "label": "Jean-Philippe Mateta and Marcus Thuram and Soufiane Rahimi",
             "odds": 36
           },
           {
-            "code": "Maghnes Akliouche & Marcus Thuram & Ousmane Dembele",
+            "code": "M. Akliouche & M. Thuram & O. Dembele",
             "label": "Maghnes Akliouche and Marcus Thuram and Ousmane Dembele",
             "odds": 36
           },
           {
-            "code": "Bradley Barcola & Brahim Diaz & Kylian Mbappe",
+            "code": "B. Barcola & B. Diaz & K. Mbappe",
             "label": "Bradley Barcola and Brahim Diaz and Kylian Mbappe",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Michael Olise & Ousmane Dembele",
+            "code": "D. Doue & M. Olise & O. Dembele",
             "label": "Desire Doue and Michael Olise and Ousmane Dembele",
             "odds": 36
           },
           {
-            "code": "Desire Doue & Ousmane Dembele & Rayan Cherki",
+            "code": "D. Doue & O. Dembele & R. Cherki",
             "label": "Desire Doue and Ousmane Dembele and Rayan Cherki",
             "odds": 36
           },
           {
-            "code": "Adrien Rabiot & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Rabiot & K. Mbappe & O. Dembele",
             "label": "Adrien Rabiot and Kylian Mbappe and Ousmane Dembele",
             "odds": 41
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Michael Olise",
+            "code": "B. Diaz & K. Mbappe & M. Olise",
             "label": "Brahim Diaz and Kylian Mbappe and Michael Olise",
             "odds": 41
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Rayan Cherki",
+            "code": "B. Diaz & K. Mbappe & R. Cherki",
             "label": "Brahim Diaz and Kylian Mbappe and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Amine Sbai & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Sbai & K. Mbappe & O. Dembele",
             "label": "Amine Sbai and Kylian Mbappe and Ousmane Dembele",
             "odds": 41
           },
           {
-            "code": "Jean-Philippe Mateta & Ousmane Dembele & Soufiane Rahimi",
+            "code": "J. Mateta & O. Dembele & S. Rahimi",
             "label": "Jean-Philippe Mateta and Ousmane Dembele and Soufiane Rahimi",
             "odds": 41
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Maghnes Akliouche",
+            "code": "A. El Kaabi & K. Mbappe & M. Akliouche",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Maghnes Akliouche",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Rayan Cherki",
+            "code": "B. Barcola & J. Mateta & R. Cherki",
             "label": "Bradley Barcola and Jean-Philippe Mateta and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Michael Olise",
+            "code": "B. Barcola & J. Mateta & M. Olise",
             "label": "Bradley Barcola and Jean-Philippe Mateta and Michael Olise",
             "odds": 41
           },
           {
-            "code": "Marcus Thuram & Ousmane Dembele & Soufiane Rahimi",
+            "code": "M. Thuram & O. Dembele & S. Rahimi",
             "label": "Marcus Thuram and Ousmane Dembele and Soufiane Rahimi",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Marcus Thuram & Michael Olise",
+            "code": "B. Barcola & M. Olise & M. Thuram",
             "label": "Bradley Barcola and Marcus Thuram and Michael Olise",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Marcus Thuram & Rayan Cherki",
+            "code": "B. Barcola & M. Thuram & R. Cherki",
             "label": "Bradley Barcola and Marcus Thuram and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Ayoub El Kaabi & Jean-Philippe Mateta & Marcus Thuram",
+            "code": "A. El Kaabi & J. Mateta & M. Thuram",
             "label": "Ayoub El Kaabi and Jean-Philippe Mateta and Marcus Thuram",
             "odds": 41
           },
           {
-            "code": "Chemsdine Talbi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "C. Talbi & J. Mateta & K. Mbappe",
             "label": "Chemsdine Talbi and Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 41
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Maghnes Akliouche",
+            "code": "D. Doue & J. Mateta & M. Akliouche",
             "label": "Desire Doue and Jean-Philippe Mateta and Maghnes Akliouche",
             "odds": 41
           },
           {
-            "code": "Chemsdine Talbi & Kylian Mbappe & Marcus Thuram",
+            "code": "C. Talbi & K. Mbappe & M. Thuram",
             "label": "Chemsdine Talbi and Kylian Mbappe and Marcus Thuram",
             "odds": 41
           },
           {
-            "code": "Desire Doue & Maghnes Akliouche & Marcus Thuram",
+            "code": "D. Doue & M. Akliouche & M. Thuram",
             "label": "Desire Doue and Maghnes Akliouche and Marcus Thuram",
             "odds": 41
           },
           {
-            "code": "Jean-Philippe Mateta & Michael Olise & Rayan Cherki",
+            "code": "J. Mateta & M. Olise & R. Cherki",
             "label": "Jean-Philippe Mateta and Michael Olise and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Marcus Thuram & Michael Olise & Rayan Cherki",
+            "code": "M. Olise & M. Thuram & R. Cherki",
             "label": "Marcus Thuram and Michael Olise and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Soufiane Rahimi",
+            "code": "A. El Kaabi & K. Mbappe & S. Rahimi",
             "label": "Ayoub El Kaabi and Kylian Mbappe and Soufiane Rahimi",
             "odds": 41
           },
           {
-            "code": "Adrien Rabiot & Desire Doue & Kylian Mbappe",
+            "code": "A. Rabiot & D. Doue & K. Mbappe",
             "label": "Adrien Rabiot and Desire Doue and Kylian Mbappe",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Ousmane Dembele & Rayan Cherki",
+            "code": "B. Barcola & O. Dembele & R. Cherki",
             "label": "Bradley Barcola and Ousmane Dembele and Rayan Cherki",
             "odds": 41
           },
           {
-            "code": "Bradley Barcola & Michael Olise & Ousmane Dembele",
+            "code": "B. Barcola & M. Olise & O. Dembele",
             "label": "Bradley Barcola and Michael Olise and Ousmane Dembele",
             "odds": 41
           }
@@ -955,502 +955,502 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "J. Mateta & K. Mbappe",
             "label": "Jean-Philippe Mateta and Kylian Mbappe",
             "odds": 5.3
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram",
+            "code": "K. Mbappe & M. Thuram",
             "label": "Kylian Mbappe and Marcus Thuram",
             "odds": 5.3
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele",
+            "code": "K. Mbappe & O. Dembele",
             "label": "Kylian Mbappe and Ousmane Dembele",
             "odds": 5.6
           },
           {
-            "code": "Desire Doue & Kylian Mbappe",
+            "code": "D. Doue & K. Mbappe",
             "label": "Desire Doue and Kylian Mbappe",
             "odds": 6
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe",
+            "code": "B. Barcola & K. Mbappe",
             "label": "Bradley Barcola and Kylian Mbappe",
             "odds": 6.75
           },
           {
-            "code": "Kylian Mbappe & Rayan Cherki",
+            "code": "K. Mbappe & R. Cherki",
             "label": "Kylian Mbappe and Rayan Cherki",
             "odds": 7
           },
           {
-            "code": "Kylian Mbappe & Michael Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "Kylian Mbappe and Michael Olise",
             "odds": 7
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche",
+            "code": "K. Mbappe & M. Akliouche",
             "label": "Kylian Mbappe and Maghnes Akliouche",
             "odds": 8
           },
           {
-            "code": "Jean-Philippe Mateta & Marcus Thuram",
+            "code": "J. Mateta & M. Thuram",
             "label": "Jean-Philippe Mateta and Marcus Thuram",
             "odds": 8.25
           },
           {
-            "code": "Kylian Mbappe & Soufiane Rahimi",
+            "code": "K. Mbappe & S. Rahimi",
             "label": "Kylian Mbappe and Soufiane Rahimi",
             "odds": 8.5
           },
           {
-            "code": "Jean-Philippe Mateta & Ousmane Dembele",
+            "code": "J. Mateta & O. Dembele",
             "label": "Jean-Philippe Mateta and Ousmane Dembele",
             "odds": 8.5
           },
           {
-            "code": "Marcus Thuram & Ousmane Dembele",
+            "code": "M. Thuram & O. Dembele",
             "label": "Marcus Thuram and Ousmane Dembele",
             "odds": 8.75
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe",
+            "code": "A. El Kaabi & K. Mbappe",
             "label": "Ayoub El Kaabi and Kylian Mbappe",
             "odds": 9
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta",
+            "code": "D. Doue & J. Mateta",
             "label": "Desire Doue and Jean-Philippe Mateta",
             "odds": 9.25
           },
           {
-            "code": "Desire Doue & Marcus Thuram",
+            "code": "D. Doue & M. Thuram",
             "label": "Desire Doue and Marcus Thuram",
             "odds": 9.5
           },
           {
-            "code": "Desire Doue & Ousmane Dembele",
+            "code": "D. Doue & O. Dembele",
             "label": "Desire Doue and Ousmane Dembele",
             "odds": 10
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe",
+            "code": "B. Diaz & K. Mbappe",
             "label": "Brahim Diaz and Kylian Mbappe",
             "odds": 10
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta",
+            "code": "B. Barcola & J. Mateta",
             "label": "Bradley Barcola and Jean-Philippe Mateta",
             "odds": 10
           },
           {
-            "code": "Bradley Barcola & Marcus Thuram",
+            "code": "B. Barcola & M. Thuram",
             "label": "Bradley Barcola and Marcus Thuram",
             "odds": 10
           },
           {
-            "code": "Jean-Philippe Mateta & Michael Olise",
+            "code": "J. Mateta & M. Olise",
             "label": "Jean-Philippe Mateta and Michael Olise",
             "odds": 11
           },
           {
-            "code": "Jean-Philippe Mateta & Rayan Cherki",
+            "code": "J. Mateta & R. Cherki",
             "label": "Jean-Philippe Mateta and Rayan Cherki",
             "odds": 11
           },
           {
-            "code": "Marcus Thuram & Rayan Cherki",
+            "code": "M. Thuram & R. Cherki",
             "label": "Marcus Thuram and Rayan Cherki",
             "odds": 11
           },
           {
-            "code": "Marcus Thuram & Michael Olise",
+            "code": "M. Olise & M. Thuram",
             "label": "Marcus Thuram and Michael Olise",
             "odds": 11
           },
           {
-            "code": "Bradley Barcola & Ousmane Dembele",
+            "code": "B. Barcola & O. Dembele",
             "label": "Bradley Barcola and Ousmane Dembele",
             "odds": 11
           },
           {
-            "code": "Ousmane Dembele & Rayan Cherki",
+            "code": "O. Dembele & R. Cherki",
             "label": "Ousmane Dembele and Rayan Cherki",
             "odds": 12
           },
           {
-            "code": "Michael Olise & Ousmane Dembele",
+            "code": "M. Olise & O. Dembele",
             "label": "Michael Olise and Ousmane Dembele",
             "odds": 12
           },
           {
-            "code": "Bradley Barcola & Desire Doue",
+            "code": "B. Barcola & D. Doue",
             "label": "Bradley Barcola and Desire Doue",
             "odds": 12
           },
           {
-            "code": "Jean-Philippe Mateta & Maghnes Akliouche",
+            "code": "J. Mateta & M. Akliouche",
             "label": "Jean-Philippe Mateta and Maghnes Akliouche",
             "odds": 12
           },
           {
-            "code": "Maghnes Akliouche & Marcus Thuram",
+            "code": "M. Akliouche & M. Thuram",
             "label": "Maghnes Akliouche and Marcus Thuram",
             "odds": 12
           },
           {
-            "code": "Desire Doue & Rayan Cherki",
+            "code": "D. Doue & R. Cherki",
             "label": "Desire Doue and Rayan Cherki",
             "odds": 12
           },
           {
-            "code": "Desire Doue & Michael Olise",
+            "code": "D. Doue & M. Olise",
             "label": "Desire Doue and Michael Olise",
             "odds": 12
           },
           {
-            "code": "Adrien Rabiot & Kylian Mbappe",
+            "code": "A. Rabiot & K. Mbappe",
             "label": "Adrien Rabiot and Kylian Mbappe",
             "odds": 13
           },
           {
-            "code": "Amine Sbai & Kylian Mbappe",
+            "code": "A. Sbai & K. Mbappe",
             "label": "Amine Sbai and Kylian Mbappe",
             "odds": 13
           },
           {
-            "code": "Jean-Philippe Mateta & Soufiane Rahimi",
+            "code": "J. Mateta & S. Rahimi",
             "label": "Jean-Philippe Mateta and Soufiane Rahimi",
             "odds": 13
           },
           {
-            "code": "Maghnes Akliouche & Ousmane Dembele",
+            "code": "M. Akliouche & O. Dembele",
             "label": "Maghnes Akliouche and Ousmane Dembele",
             "odds": 13
           },
           {
-            "code": "Marcus Thuram & Soufiane Rahimi",
+            "code": "M. Thuram & S. Rahimi",
             "label": "Marcus Thuram and Soufiane Rahimi",
             "odds": 13
           },
           {
-            "code": "Ousmane Dembele & Soufiane Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "Ousmane Dembele and Soufiane Rahimi",
             "odds": 14
           },
           {
-            "code": "Bradley Barcola & Michael Olise",
+            "code": "B. Barcola & M. Olise",
             "label": "Bradley Barcola and Michael Olise",
             "odds": 14
           },
           {
-            "code": "Bradley Barcola & Rayan Cherki",
+            "code": "B. Barcola & R. Cherki",
             "label": "Bradley Barcola and Rayan Cherki",
             "odds": 14
           },
           {
-            "code": "Ayoub El Kaabi & Jean-Philippe Mateta",
+            "code": "A. El Kaabi & J. Mateta",
             "label": "Ayoub El Kaabi and Jean-Philippe Mateta",
             "odds": 14
           },
           {
-            "code": "Ayoub El Kaabi & Marcus Thuram",
+            "code": "A. El Kaabi & M. Thuram",
             "label": "Ayoub El Kaabi and Marcus Thuram",
             "odds": 14
           },
           {
-            "code": "Chemsdine Talbi & Kylian Mbappe",
+            "code": "C. Talbi & K. Mbappe",
             "label": "Chemsdine Talbi and Kylian Mbappe",
             "odds": 14
           },
           {
-            "code": "Desire Doue & Maghnes Akliouche",
+            "code": "D. Doue & M. Akliouche",
             "label": "Desire Doue and Maghnes Akliouche",
             "odds": 14
           },
           {
-            "code": "Michael Olise & Rayan Cherki",
+            "code": "M. Olise & R. Cherki",
             "label": "Michael Olise and Rayan Cherki",
             "odds": 15
           },
           {
-            "code": "Ayoub El Kaabi & Ousmane Dembele",
+            "code": "A. El Kaabi & O. Dembele",
             "label": "Ayoub El Kaabi and Ousmane Dembele",
             "odds": 15
           },
           {
-            "code": "Gessime Yassine & Kylian Mbappe",
+            "code": "G. Yassine & K. Mbappe",
             "label": "Gessime Yassine and Kylian Mbappe",
             "odds": 15
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Kylian Mbappe",
+            "code": "A. Amaimouni-Echghouyab & K. Mbappe",
             "label": "Ayoube Amaimouni-Echghouyab and Kylian Mbappe",
             "odds": 15
           },
           {
-            "code": "Desire Doue & Soufiane Rahimi",
+            "code": "D. Doue & S. Rahimi",
             "label": "Desire Doue and Soufiane Rahimi",
             "odds": 15
           },
           {
-            "code": "Aurelien Tchouameni & Kylian Mbappe",
+            "code": "A. Tchouameni & K. Mbappe",
             "label": "Aurelien Tchouameni and Kylian Mbappe",
             "odds": 15
           },
           {
-            "code": "Brahim Diaz & Jean-Philippe Mateta",
+            "code": "B. Diaz & J. Mateta",
             "label": "Brahim Diaz and Jean-Philippe Mateta",
             "odds": 15
           },
           {
-            "code": "Bradley Barcola & Maghnes Akliouche",
+            "code": "B. Barcola & M. Akliouche",
             "label": "Bradley Barcola and Maghnes Akliouche",
             "odds": 15
           },
           {
-            "code": "Brahim Diaz & Marcus Thuram",
+            "code": "B. Diaz & M. Thuram",
             "label": "Brahim Diaz and Marcus Thuram",
             "odds": 15
           },
           {
-            "code": "Kylian Mbappe & Theo Hernandez",
+            "code": "K. Mbappe & T. Hernandez",
             "label": "Kylian Mbappe and Theo Hernandez",
             "odds": 17
           },
           {
-            "code": "Ayoub El Kaabi & Desire Doue",
+            "code": "A. El Kaabi & D. Doue",
             "label": "Ayoub El Kaabi and Desire Doue",
             "odds": 17
           },
           {
-            "code": "Maghnes Akliouche & Rayan Cherki",
+            "code": "M. Akliouche & R. Cherki",
             "label": "Maghnes Akliouche and Rayan Cherki",
             "odds": 17
           },
           {
-            "code": "Maghnes Akliouche & Michael Olise",
+            "code": "M. Akliouche & M. Olise",
             "label": "Maghnes Akliouche and Michael Olise",
             "odds": 17
           },
           {
-            "code": "Bradley Barcola & Soufiane Rahimi",
+            "code": "B. Barcola & S. Rahimi",
             "label": "Bradley Barcola and Soufiane Rahimi",
             "odds": 17
           },
           {
-            "code": "Brahim Diaz & Ousmane Dembele",
+            "code": "B. Diaz & O. Dembele",
             "label": "Brahim Diaz and Ousmane Dembele",
             "odds": 17
           },
           {
-            "code": "Kylian Mbappe & Lucas Hernandez",
+            "code": "K. Mbappe & L. Hernandez",
             "label": "Kylian Mbappe and Lucas Hernandez",
             "odds": 17
           },
           {
-            "code": "Achraf Hakimi & Kylian Mbappe",
+            "code": "A. Hakimi & K. Mbappe",
             "label": "Achraf Hakimi and Kylian Mbappe",
             "odds": 17
           },
           {
-            "code": "Rayan Cherki & Soufiane Rahimi",
+            "code": "R. Cherki & S. Rahimi",
             "label": "Rayan Cherki and Soufiane Rahimi",
             "odds": 17
           },
           {
-            "code": "Michael Olise & Soufiane Rahimi",
+            "code": "M. Olise & S. Rahimi",
             "label": "Michael Olise and Soufiane Rahimi",
             "odds": 17
           },
           {
-            "code": "Ayoub El Kaabi & Bradley Barcola",
+            "code": "A. El Kaabi & B. Barcola",
             "label": "Ayoub El Kaabi and Bradley Barcola",
             "odds": 17
           },
           {
-            "code": "Kylian Mbappe & Neil El Aynaoui",
+            "code": "K. Mbappe & N. El Aynaoui",
             "label": "Kylian Mbappe and Neil El Aynaoui",
             "odds": 17
           },
           {
-            "code": "Brahim Diaz & Desire Doue",
+            "code": "B. Diaz & D. Doue",
             "label": "Brahim Diaz and Desire Doue",
             "odds": 19
           },
           {
-            "code": "Ayoub El Kaabi & Rayan Cherki",
+            "code": "A. El Kaabi & R. Cherki",
             "label": "Ayoub El Kaabi and Rayan Cherki",
             "odds": 19
           },
           {
-            "code": "Ayoub El Kaabi & Michael Olise",
+            "code": "A. El Kaabi & M. Olise",
             "label": "Ayoub El Kaabi and Michael Olise",
             "odds": 19
           },
           {
-            "code": "Adrien Rabiot & Jean-Philippe Mateta",
+            "code": "A. Rabiot & J. Mateta",
             "label": "Adrien Rabiot and Jean-Philippe Mateta",
             "odds": 19
           },
           {
-            "code": "Adrien Rabiot & Marcus Thuram",
+            "code": "A. Rabiot & M. Thuram",
             "label": "Adrien Rabiot and Marcus Thuram",
             "odds": 19
           },
           {
-            "code": "Maghnes Akliouche & Soufiane Rahimi",
+            "code": "M. Akliouche & S. Rahimi",
             "label": "Maghnes Akliouche and Soufiane Rahimi",
             "odds": 19
           },
           {
-            "code": "Amine Sbai & Jean-Philippe Mateta",
+            "code": "A. Sbai & J. Mateta",
             "label": "Amine Sbai and Jean-Philippe Mateta",
             "odds": 19
           },
           {
-            "code": "Amine Sbai & Marcus Thuram",
+            "code": "A. Sbai & M. Thuram",
             "label": "Amine Sbai and Marcus Thuram",
             "odds": 19
           },
           {
-            "code": "Bradley Barcola & Brahim Diaz",
+            "code": "B. Barcola & B. Diaz",
             "label": "Bradley Barcola and Brahim Diaz",
             "odds": 21
           },
           {
-            "code": "Ibrahima Konate & Kylian Mbappe",
+            "code": "I. Konate & K. Mbappe",
             "label": "Ibrahima Konate and Kylian Mbappe",
             "odds": 21
           },
           {
-            "code": "Adrien Rabiot & Ousmane Dembele",
+            "code": "A. Rabiot & O. Dembele",
             "label": "Adrien Rabiot and Ousmane Dembele",
             "odds": 21
           },
           {
-            "code": "Brahim Diaz & Michael Olise",
+            "code": "B. Diaz & M. Olise",
             "label": "Brahim Diaz and Michael Olise",
             "odds": 21
           },
           {
-            "code": "Brahim Diaz & Rayan Cherki",
+            "code": "B. Diaz & R. Cherki",
             "label": "Brahim Diaz and Rayan Cherki",
             "odds": 21
           },
           {
-            "code": "Amine Sbai & Ousmane Dembele",
+            "code": "A. Sbai & O. Dembele",
             "label": "Amine Sbai and Ousmane Dembele",
             "odds": 21
           },
           {
-            "code": "Ayoub El Kaabi & Maghnes Akliouche",
+            "code": "A. El Kaabi & M. Akliouche",
             "label": "Ayoub El Kaabi and Maghnes Akliouche",
             "odds": 21
           },
           {
-            "code": "Kylian Mbappe & Samir El Mourabet",
+            "code": "K. Mbappe & S. El Mourabet",
             "label": "Kylian Mbappe and Samir El Mourabet",
             "odds": 21
           },
           {
-            "code": "Chemsdine Talbi & Jean-Philippe Mateta",
+            "code": "C. Talbi & J. Mateta",
             "label": "Chemsdine Talbi and Jean-Philippe Mateta",
             "odds": 21
           },
           {
-            "code": "Chemsdine Talbi & Marcus Thuram",
+            "code": "C. Talbi & M. Thuram",
             "label": "Chemsdine Talbi and Marcus Thuram",
             "odds": 21
           },
           {
-            "code": "Jules Kounde & Kylian Mbappe",
+            "code": "J. Kounde & K. Mbappe",
             "label": "Jules Kounde and Kylian Mbappe",
             "odds": 21
           },
           {
-            "code": "Ayoub El Kaabi & Soufiane Rahimi",
+            "code": "A. El Kaabi & S. Rahimi",
             "label": "Ayoub El Kaabi and Soufiane Rahimi",
             "odds": 23
           },
           {
-            "code": "Adrien Rabiot & Desire Doue",
+            "code": "A. Rabiot & D. Doue",
             "label": "Adrien Rabiot and Desire Doue",
             "odds": 23
           },
           {
-            "code": "Dayot Upamecano & Kylian Mbappe",
+            "code": "D. Upamecano & K. Mbappe",
             "label": "Dayot Upamecano and Kylian Mbappe",
             "odds": 23
           },
           {
-            "code": "Gessime Yassine & Jean-Philippe Mateta",
+            "code": "G. Yassine & J. Mateta",
             "label": "Gessime Yassine and Jean-Philippe Mateta",
             "odds": 23
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Jean-Philippe Mateta",
+            "code": "A. Amaimouni-Echghouyab & J. Mateta",
             "label": "Ayoube Amaimouni-Echghouyab and Jean-Philippe Mateta",
             "odds": 23
           },
           {
-            "code": "Amine Sbai & Desire Doue",
+            "code": "A. Sbai & D. Doue",
             "label": "Amine Sbai and Desire Doue",
             "odds": 23
           },
           {
-            "code": "Chemsdine Talbi & Ousmane Dembele",
+            "code": "C. Talbi & O. Dembele",
             "label": "Chemsdine Talbi and Ousmane Dembele",
             "odds": 23
           },
           {
-            "code": "Gessime Yassine & Marcus Thuram",
+            "code": "G. Yassine & M. Thuram",
             "label": "Gessime Yassine and Marcus Thuram",
             "odds": 23
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Marcus Thuram",
+            "code": "A. Amaimouni-Echghouyab & M. Thuram",
             "label": "Ayoube Amaimouni-Echghouyab and Marcus Thuram",
             "odds": 23
           },
           {
-            "code": "Kylian Mbappe & Maxence Lacroix",
+            "code": "K. Mbappe & M. Lacroix",
             "label": "Kylian Mbappe and Maxence Lacroix",
             "odds": 23
           },
           {
-            "code": "Kylian Mbappe & Malo Gusto",
+            "code": "K. Mbappe & M. Gusto",
             "label": "Kylian Mbappe and Malo Gusto",
             "odds": 23
           },
           {
-            "code": "Aurelien Tchouameni & Jean-Philippe Mateta",
+            "code": "A. Tchouameni & J. Mateta",
             "label": "Aurelien Tchouameni and Jean-Philippe Mateta",
             "odds": 23
           },
           {
-            "code": "Aurelien Tchouameni & Marcus Thuram",
+            "code": "A. Tchouameni & M. Thuram",
             "label": "Aurelien Tchouameni and Marcus Thuram",
             "odds": 23
           },
           {
-            "code": "Kylian Mbappe & Lucas Digne",
+            "code": "K. Mbappe & L. Digne",
             "label": "Kylian Mbappe and Lucas Digne",
             "odds": 23
           },
           {
-            "code": "Brahim Diaz & Maghnes Akliouche",
+            "code": "B. Diaz & M. Akliouche",
             "label": "Brahim Diaz and Maghnes Akliouche",
             "odds": 23
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Ousmane Dembele",
+            "code": "A. Amaimouni-Echghouyab & O. Dembele",
             "label": "Ayoube Amaimouni-Echghouyab and Ousmane Dembele",
             "odds": 25
           },
           {
-            "code": "Gessime Yassine & Ousmane Dembele",
+            "code": "G. Yassine & O. Dembele",
             "label": "Gessime Yassine and Ousmane Dembele",
             "odds": 25
           }
@@ -3929,14 +3929,522 @@
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_3_OR_MORE_GOALS",
+        "marketKey": "PLAYER_3_OR_MORE_GOALS",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Kylian Mbappe",
+            "label": "Kylian Mbappe",
+            "odds": 17
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Jean-Philippe Mateta",
+            "odds": 57
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Marcus Thuram",
+            "odds": 57
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Ousmane Dembele",
+            "odds": 77
+          },
+          {
+            "code": "Ayoube Amaimouni-Echghouyab",
+            "label": "Ayoube Amaimouni-Echghouyab",
+            "odds": 92
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Amine Sbai",
+            "odds": 92
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "Neil El Aynaoui",
+            "odds": 100
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Desire Doue",
+            "odds": 100
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Bradley Barcola",
+            "odds": 100
+          },
+          {
+            "code": "Bilal El Khannouss",
+            "label": "Bilal El Khannouss",
+            "odds": 100
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Chemsdine Talbi",
+            "odds": 100
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Michael Olise",
+            "odds": 110
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Malo Gusto",
+            "odds": 110
+          },
+          {
+            "code": "Manu Kone",
+            "label": "Manu Kone",
+            "odds": 110
+          },
+          {
+            "code": "Marwane Saadane",
+            "label": "Marwane Saadane",
+            "odds": 110
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Maxence Lacroix",
+            "odds": 110
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Noussair Mazraoui",
+            "odds": 110
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Redouane Halhal",
+            "odds": 110
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "Samir El Mourabet",
+            "odds": 110
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Sofyan Amrabat",
+            "odds": 110
+          },
+          {
+            "code": "William Saliba",
+            "label": "William Saliba",
+            "odds": 110
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Youssef Belammari",
+            "odds": 110
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Lucas Hernandez",
+            "odds": 110
+          },
+          {
+            "code": "Lucas Digne",
+            "label": "Lucas Digne",
+            "odds": 110
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "Zakaria El Ouahdi",
+            "odds": 110
+          },
+          {
+            "code": "Anass Salah-Eddine",
+            "label": "Anass Salah-Eddine",
+            "odds": 110
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Ayyoub Bouaddi",
+            "odds": 110
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Achraf Hakimi",
+            "odds": 110
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Chadi Riad",
+            "odds": 110
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Dayot Upamecano",
+            "odds": 110
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Gessime Yassine",
+            "odds": 110
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Issa Diop",
+            "odds": 110
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Rayan Cherki",
+            "odds": 110
+          },
+          {
+            "code": "Mohamed Amine Sbai",
+            "label": "Mohamed Amine Sbai",
+            "odds": 130
+          },
+          {
+            "code": "N'Golo Kante",
+            "label": "N'Golo Kante",
+            "odds": 130
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Theo Hernandez",
+            "odds": 130
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Aurelien Tchouameni",
+            "odds": 130
+          },
+          {
+            "code": "Ayoub Kaabi",
+            "label": "Ayoub Kaabi",
+            "odds": 130
+          },
+          {
+            "code": "Ayoube Amaimouni",
+            "label": "Ayoube Amaimouni",
+            "odds": 130
+          },
+          {
+            "code": "El Aynaoui",
+            "label": "El Aynaoui",
+            "odds": 130
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Ibrahima Konate",
+            "odds": 130
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Jules Kounde",
+            "odds": 130
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Maghnes Akliouche",
+            "odds": 150
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Soufiane Rahimi",
+            "odds": 180
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "Ayoub El Kaabi",
+            "odds": 230
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Adrien Rabiot",
+            "odds": 310
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Brahim Diaz",
+            "odds": 410
+          },
+          {
+            "code": "Azzedine Ounahi",
+            "label": "Azzedine Ounahi",
+            "odds": 410
+          },
+          {
+            "code": "Warren Zaire-Emery",
+            "label": "Warren Zaire-Emery",
+            "odds": 510
+          }
+        ]
+      },
       "index": 46,
       "marketCode": "PLAYER_3_OR_MORE_GOALS",
       "rawName": "Zawodnik strzeli 3 lub więcej goli (Sub-Hero)"
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_2_OR_MORE_GOALS",
+        "marketKey": "PLAYER_2_OR_MORE_GOALS",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Kylian Mbappe",
+            "label": "Kylian Mbappe",
+            "odds": 5.05
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Marcus Thuram",
+            "odds": 12
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Jean-Philippe Mateta",
+            "odds": 12
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Ousmane Dembele",
+            "odds": 15
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Desire Doue",
+            "odds": 17
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Bradley Barcola",
+            "odds": 17
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Michael Olise",
+            "odds": 19
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Rayan Cherki",
+            "odds": 19
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Maghnes Akliouche",
+            "odds": 25
+          },
+          {
+            "code": "Ayoub Kaabi",
+            "label": "Ayoub Kaabi",
+            "odds": 26
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Soufiane Rahimi",
+            "odds": 29
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "Ayoub El Kaabi",
+            "odds": 31
+          },
+          {
+            "code": "Ayoube Amaimouni-Echghouyab",
+            "label": "Ayoube Amaimouni-Echghouyab",
+            "odds": 46
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Brahim Diaz",
+            "odds": 46
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Adrien Rabiot",
+            "odds": 51
+          },
+          {
+            "code": "Azzedine Ounahi",
+            "label": "Azzedine Ounahi",
+            "odds": 56
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Amine Sbai",
+            "odds": 61
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Chemsdine Talbi",
+            "odds": 67
+          },
+          {
+            "code": "Warren Zaire-Emery",
+            "label": "Warren Zaire-Emery",
+            "odds": 67
+          },
+          {
+            "code": "Bilal El Khannouss",
+            "label": "Bilal El Khannouss",
+            "odds": 67
+          },
+          {
+            "code": "Mohamed Amine Sbai",
+            "label": "Mohamed Amine Sbai",
+            "odds": 71
+          },
+          {
+            "code": "Manu Kone",
+            "label": "Manu Kone",
+            "odds": 71
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Gessime Yassine",
+            "odds": 71
+          },
+          {
+            "code": "Ayoube Amaimouni",
+            "label": "Ayoube Amaimouni",
+            "odds": 71
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Aurelien Tchouameni",
+            "odds": 81
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Achraf Hakimi",
+            "odds": 86
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Malo Gusto",
+            "odds": 86
+          },
+          {
+            "code": "Lucas Digne",
+            "label": "Lucas Digne",
+            "odds": 86
+          },
+          {
+            "code": "N'Golo Kante",
+            "label": "N'Golo Kante",
+            "odds": 92
+          },
+          {
+            "code": "Anass Salah-Eddine",
+            "label": "Anass Salah-Eddine",
+            "odds": 92
+          },
+          {
+            "code": "El Aynaoui",
+            "label": "El Aynaoui",
+            "odds": 92
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Dayot Upamecano",
+            "odds": 92
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Theo Hernandez",
+            "odds": 97
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Jules Kounde",
+            "odds": 97
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Maxence Lacroix",
+            "odds": 97
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "Neil El Aynaoui",
+            "odds": 100
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Ibrahima Konate",
+            "odds": 110
+          },
+          {
+            "code": "William Saliba",
+            "label": "William Saliba",
+            "odds": 110
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "Samir El Mourabet",
+            "odds": 110
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "Zakaria El Ouahdi",
+            "odds": 130
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Issa Diop",
+            "odds": 140
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Ayyoub Bouaddi",
+            "odds": 140
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Youssef Belammari",
+            "odds": 140
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Redouane Halhal",
+            "odds": 140
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Sofyan Amrabat",
+            "odds": 150
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Lucas Hernandez",
+            "odds": 150
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Chadi Riad",
+            "odds": 150
+          },
+          {
+            "code": "Marwane Saadane",
+            "label": "Marwane Saadane",
+            "odds": 200
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Noussair Mazraoui",
+            "odds": 200
+          }
+        ]
+      },
       "index": 47,
       "marketCode": "PLAYER_2_OR_MORE_GOALS",
       "rawName": "Zawodnik strzeli 2 lub więcej goli (Sub-Hero)"
@@ -8522,502 +9030,502 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Marcus Thuram",
+            "code": "J. Mateta & K. Mbappe & M. Thuram",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Marcus Thuram",
             "odds": 1.25
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Ousmane Dembele",
+            "code": "J. Mateta & K. Mbappe & O. Dembele",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.25
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Ousmane Dembele",
+            "code": "K. Mbappe & M. Thuram & O. Dembele",
             "label": "Kylian Mbappe or Marcus Thuram or Ousmane Dembele",
             "odds": 1.25
           },
           {
-            "code": "Desire Doue & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "D. Doue & J. Mateta & K. Mbappe",
             "label": "Desire Doue or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.25
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Marcus Thuram",
+            "code": "D. Doue & K. Mbappe & M. Thuram",
             "label": "Desire Doue or Kylian Mbappe or Marcus Thuram",
             "odds": 1.28
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Ousmane Dembele",
+            "code": "D. Doue & K. Mbappe & O. Dembele",
             "label": "Desire Doue or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.28
           },
           {
-            "code": "Bradley Barcola & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "B. Barcola & J. Mateta & K. Mbappe",
             "label": "Bradley Barcola or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.28
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Marcus Thuram",
+            "code": "B. Barcola & K. Mbappe & M. Thuram",
             "label": "Bradley Barcola or Kylian Mbappe or Marcus Thuram",
             "odds": 1.28
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Michael Olise",
+            "code": "J. Mateta & K. Mbappe & M. Olise",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Michael Olise",
             "odds": 1.28
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Rayan Cherki",
+            "code": "J. Mateta & K. Mbappe & R. Cherki",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Rayan Cherki",
             "odds": 1.28
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Rayan Cherki",
+            "code": "K. Mbappe & M. Thuram & R. Cherki",
             "label": "Kylian Mbappe or Marcus Thuram or Rayan Cherki",
             "odds": 1.28
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Michael Olise",
+            "code": "K. Mbappe & M. Olise & M. Thuram",
             "label": "Kylian Mbappe or Marcus Thuram or Michael Olise",
             "odds": 1.28
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Ousmane Dembele",
+            "code": "B. Barcola & K. Mbappe & O. Dembele",
             "label": "Bradley Barcola or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.28
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele & Rayan Cherki",
+            "code": "K. Mbappe & O. Dembele & R. Cherki",
             "label": "Kylian Mbappe or Ousmane Dembele or Rayan Cherki",
             "odds": 1.3
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Ousmane Dembele",
+            "code": "K. Mbappe & M. Olise & O. Dembele",
             "label": "Kylian Mbappe or Michael Olise or Ousmane Dembele",
             "odds": 1.3
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Maghnes Akliouche",
+            "code": "J. Mateta & K. Mbappe & M. Akliouche",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Maghnes Akliouche",
             "odds": 1.3
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Marcus Thuram",
+            "code": "K. Mbappe & M. Akliouche & M. Thuram",
             "label": "Kylian Mbappe or Maghnes Akliouche or Marcus Thuram",
             "odds": 1.3
           },
           {
-            "code": "Bradley Barcola & Desire Doue & Kylian Mbappe",
+            "code": "B. Barcola & D. Doue & K. Mbappe",
             "label": "Bradley Barcola or Desire Doue or Kylian Mbappe",
             "odds": 1.3
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Soufiane Rahimi",
+            "code": "J. Mateta & K. Mbappe & S. Rahimi",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Soufiane Rahimi",
             "odds": 1.3
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Thuram & S. Rahimi",
             "label": "Kylian Mbappe or Marcus Thuram or Soufiane Rahimi",
             "odds": 1.3
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Michael Olise",
+            "code": "D. Doue & K. Mbappe & M. Olise",
             "label": "Desire Doue or Kylian Mbappe or Michael Olise",
             "odds": 1.3
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Rayan Cherki",
+            "code": "D. Doue & K. Mbappe & R. Cherki",
             "label": "Desire Doue or Kylian Mbappe or Rayan Cherki",
             "odds": 1.3
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Ousmane Dembele",
+            "code": "K. Mbappe & M. Akliouche & O. Dembele",
             "label": "Kylian Mbappe or Maghnes Akliouche or Ousmane Dembele",
             "odds": 1.3
           },
           {
-            "code": "Ayoub El Kaabi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. El Kaabi & J. Mateta & K. Mbappe",
             "label": "Ayoub El Kaabi or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.3
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Marcus Thuram",
+            "code": "A. El Kaabi & K. Mbappe & M. Thuram",
             "label": "Ayoub El Kaabi or Kylian Mbappe or Marcus Thuram",
             "odds": 1.33
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele & Soufiane Rahimi",
+            "code": "K. Mbappe & O. Dembele & S. Rahimi",
             "label": "Kylian Mbappe or Ousmane Dembele or Soufiane Rahimi",
             "odds": 1.33
           },
           {
-            "code": "Brahim Diaz & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "B. Diaz & J. Mateta & K. Mbappe",
             "label": "Brahim Diaz or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.33
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. El Kaabi & K. Mbappe & O. Dembele",
             "label": "Ayoub El Kaabi or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.33
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Maghnes Akliouche",
+            "code": "D. Doue & K. Mbappe & M. Akliouche",
             "label": "Desire Doue or Kylian Mbappe or Maghnes Akliouche",
             "odds": 1.33
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Marcus Thuram",
+            "code": "B. Diaz & K. Mbappe & M. Thuram",
             "label": "Brahim Diaz or Kylian Mbappe or Marcus Thuram",
             "odds": 1.33
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Michael Olise",
+            "code": "B. Barcola & K. Mbappe & M. Olise",
             "label": "Bradley Barcola or Kylian Mbappe or Michael Olise",
             "odds": 1.33
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Rayan Cherki",
+            "code": "B. Barcola & K. Mbappe & R. Cherki",
             "label": "Bradley Barcola or Kylian Mbappe or Rayan Cherki",
             "odds": 1.33
           },
           {
-            "code": "Desire Doue & Kylian Mbappe & Soufiane Rahimi",
+            "code": "D. Doue & K. Mbappe & S. Rahimi",
             "label": "Desire Doue or Kylian Mbappe or Soufiane Rahimi",
             "odds": 1.33
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Rayan Cherki",
+            "code": "K. Mbappe & M. Olise & R. Cherki",
             "label": "Kylian Mbappe or Michael Olise or Rayan Cherki",
             "odds": 1.33
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Ousmane Dembele",
+            "code": "B. Diaz & K. Mbappe & O. Dembele",
             "label": "Brahim Diaz or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.33
           },
           {
-            "code": "Ayoub El Kaabi & Desire Doue & Kylian Mbappe",
+            "code": "A. El Kaabi & D. Doue & K. Mbappe",
             "label": "Ayoub El Kaabi or Desire Doue or Kylian Mbappe",
             "odds": 1.33
           },
           {
-            "code": "Adrien Rabiot & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Rabiot & J. Mateta & K. Mbappe",
             "label": "Adrien Rabiot or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Amine Sbai & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Sbai & J. Mateta & K. Mbappe",
             "label": "Amine Sbai or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Adrien Rabiot & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Rabiot & K. Mbappe & M. Thuram",
             "label": "Adrien Rabiot or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Maghnes Akliouche",
+            "code": "B. Barcola & K. Mbappe & M. Akliouche",
             "label": "Bradley Barcola or Kylian Mbappe or Maghnes Akliouche",
             "odds": 1.35
           },
           {
-            "code": "Amine Sbai & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Sbai & K. Mbappe & M. Thuram",
             "label": "Amine Sbai or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Chemsdine Talbi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "C. Talbi & J. Mateta & K. Mbappe",
             "label": "Chemsdine Talbi or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Chemsdine Talbi & Kylian Mbappe & Marcus Thuram",
+            "code": "C. Talbi & K. Mbappe & M. Thuram",
             "label": "Chemsdine Talbi or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Michael Olise",
+            "code": "K. Mbappe & M. Akliouche & M. Olise",
             "label": "Kylian Mbappe or Maghnes Akliouche or Michael Olise",
             "odds": 1.35
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Rayan Cherki",
+            "code": "K. Mbappe & M. Akliouche & R. Cherki",
             "label": "Kylian Mbappe or Maghnes Akliouche or Rayan Cherki",
             "odds": 1.35
           },
           {
-            "code": "Gessime Yassine & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "G. Yassine & J. Mateta & K. Mbappe",
             "label": "Gessime Yassine or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Bradley Barcola & Kylian Mbappe & Soufiane Rahimi",
+            "code": "B. Barcola & K. Mbappe & S. Rahimi",
             "label": "Bradley Barcola or Kylian Mbappe or Soufiane Rahimi",
             "odds": 1.35
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Amaimouni-Echghouyab & J. Mateta & K. Mbappe",
             "label": "Ayoube Amaimouni-Echghouyab or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Gessime Yassine & Kylian Mbappe & Marcus Thuram",
+            "code": "G. Yassine & K. Mbappe & M. Thuram",
             "label": "Gessime Yassine or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Brahim Diaz & Desire Doue & Kylian Mbappe",
+            "code": "B. Diaz & D. Doue & K. Mbappe",
             "label": "Brahim Diaz or Desire Doue or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Amaimouni-Echghouyab & K. Mbappe & M. Thuram",
             "label": "Ayoube Amaimouni-Echghouyab or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Aurelien Tchouameni & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Tchouameni & J. Mateta & K. Mbappe",
             "label": "Aurelien Tchouameni or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Theo Hernandez",
+            "code": "J. Mateta & K. Mbappe & T. Hernandez",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Theo Hernandez",
             "odds": 1.35
           },
           {
-            "code": "Amine Sbai & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Sbai & K. Mbappe & O. Dembele",
             "label": "Amine Sbai or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.35
           },
           {
-            "code": "Adrien Rabiot & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Rabiot & K. Mbappe & O. Dembele",
             "label": "Adrien Rabiot or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.35
           },
           {
-            "code": "Aurelien Tchouameni & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Tchouameni & K. Mbappe & M. Thuram",
             "label": "Aurelien Tchouameni or Kylian Mbappe or Marcus Thuram",
             "odds": 1.35
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Theo Hernandez",
+            "code": "K. Mbappe & M. Thuram & T. Hernandez",
             "label": "Kylian Mbappe or Marcus Thuram or Theo Hernandez",
             "odds": 1.35
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Lucas Hernandez",
+            "code": "J. Mateta & K. Mbappe & L. Hernandez",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Lucas Hernandez",
             "odds": 1.35
           },
           {
-            "code": "Achraf Hakimi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Hakimi & J. Mateta & K. Mbappe",
             "label": "Achraf Hakimi or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.35
           },
           {
-            "code": "Kylian Mbappe & Rayan Cherki & Soufiane Rahimi",
+            "code": "K. Mbappe & R. Cherki & S. Rahimi",
             "label": "Kylian Mbappe or Rayan Cherki or Soufiane Rahimi",
             "odds": 1.35
           },
           {
-            "code": "Kylian Mbappe & Michael Olise & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Olise & S. Rahimi",
             "label": "Kylian Mbappe or Michael Olise or Soufiane Rahimi",
             "odds": 1.35
           },
           {
-            "code": "Ayoub El Kaabi & Bradley Barcola & Kylian Mbappe",
+            "code": "A. El Kaabi & B. Barcola & K. Mbappe",
             "label": "Ayoub El Kaabi or Bradley Barcola or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Lucas Hernandez & Marcus Thuram",
+            "code": "K. Mbappe & L. Hernandez & M. Thuram",
             "label": "Kylian Mbappe or Lucas Hernandez or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Achraf Hakimi & Kylian Mbappe & Marcus Thuram",
+            "code": "A. Hakimi & K. Mbappe & M. Thuram",
             "label": "Achraf Hakimi or Kylian Mbappe or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Chemsdine Talbi & Kylian Mbappe & Ousmane Dembele",
+            "code": "C. Talbi & K. Mbappe & O. Dembele",
             "label": "Chemsdine Talbi or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Neil El Aynaoui",
+            "code": "J. Mateta & K. Mbappe & N. El Aynaoui",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Neil El Aynaoui",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Neil El Aynaoui",
+            "code": "K. Mbappe & M. Thuram & N. El Aynaoui",
             "label": "Kylian Mbappe or Marcus Thuram or Neil El Aynaoui",
             "odds": 1.38
           },
           {
-            "code": "Gessime Yassine & Kylian Mbappe & Ousmane Dembele",
+            "code": "G. Yassine & K. Mbappe & O. Dembele",
             "label": "Gessime Yassine or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Ayoube Amaimouni-Echghouyab & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Amaimouni-Echghouyab & K. Mbappe & O. Dembele",
             "label": "Ayoube Amaimouni-Echghouyab or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Michael Olise",
+            "code": "A. El Kaabi & K. Mbappe & M. Olise",
             "label": "Ayoub El Kaabi or Kylian Mbappe or Michael Olise",
             "odds": 1.38
           },
           {
-            "code": "Ayoub El Kaabi & Kylian Mbappe & Rayan Cherki",
+            "code": "A. El Kaabi & K. Mbappe & R. Cherki",
             "label": "Ayoub El Kaabi or Kylian Mbappe or Rayan Cherki",
             "odds": 1.38
           },
           {
-            "code": "Aurelien Tchouameni & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Tchouameni & K. Mbappe & O. Dembele",
             "label": "Aurelien Tchouameni or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Ibrahima Konate & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "I. Konate & J. Mateta & K. Mbappe",
             "label": "Ibrahima Konate or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Samir El Mourabet",
+            "code": "J. Mateta & K. Mbappe & S. El Mourabet",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Samir El Mourabet",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Ousmane Dembele & Theo Hernandez",
+            "code": "K. Mbappe & O. Dembele & T. Hernandez",
             "label": "Kylian Mbappe or Ousmane Dembele or Theo Hernandez",
             "odds": 1.38
           },
           {
-            "code": "Ibrahima Konate & Kylian Mbappe & Marcus Thuram",
+            "code": "I. Konate & K. Mbappe & M. Thuram",
             "label": "Ibrahima Konate or Kylian Mbappe or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Jules Kounde & Kylian Mbappe",
+            "code": "J. Kounde & J. Mateta & K. Mbappe",
             "label": "Jean-Philippe Mateta or Jules Kounde or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Adrien Rabiot & Desire Doue & Kylian Mbappe",
+            "code": "A. Rabiot & D. Doue & K. Mbappe",
             "label": "Adrien Rabiot or Desire Doue or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Samir El Mourabet",
+            "code": "K. Mbappe & M. Thuram & S. El Mourabet",
             "label": "Kylian Mbappe or Marcus Thuram or Samir El Mourabet",
             "odds": 1.38
           },
           {
-            "code": "Dayot Upamecano & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "D. Upamecano & J. Mateta & K. Mbappe",
             "label": "Dayot Upamecano or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Bradley Barcola & Brahim Diaz & Kylian Mbappe",
+            "code": "B. Barcola & B. Diaz & K. Mbappe",
             "label": "Bradley Barcola or Brahim Diaz or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Amine Sbai & Desire Doue & Kylian Mbappe",
+            "code": "A. Sbai & D. Doue & K. Mbappe",
             "label": "Amine Sbai or Desire Doue or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Lucas Hernandez & Ousmane Dembele",
+            "code": "K. Mbappe & L. Hernandez & O. Dembele",
             "label": "Kylian Mbappe or Lucas Hernandez or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Jules Kounde & Kylian Mbappe & Marcus Thuram",
+            "code": "J. Kounde & K. Mbappe & M. Thuram",
             "label": "Jules Kounde or Kylian Mbappe or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Malo Gusto",
+            "code": "J. Mateta & K. Mbappe & M. Gusto",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Malo Gusto",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Maxence Lacroix",
+            "code": "J. Mateta & K. Mbappe & M. Lacroix",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Maxence Lacroix",
             "odds": 1.38
           },
           {
-            "code": "Achraf Hakimi & Kylian Mbappe & Ousmane Dembele",
+            "code": "A. Hakimi & K. Mbappe & O. Dembele",
             "label": "Achraf Hakimi or Kylian Mbappe or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Lucas Digne",
+            "code": "J. Mateta & K. Mbappe & L. Digne",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Lucas Digne",
             "odds": 1.38
           },
           {
-            "code": "Dayot Upamecano & Kylian Mbappe & Marcus Thuram",
+            "code": "D. Upamecano & K. Mbappe & M. Thuram",
             "label": "Dayot Upamecano or Kylian Mbappe or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Marcus Thuram & Maxence Lacroix",
+            "code": "K. Mbappe & M. Lacroix & M. Thuram",
             "label": "Kylian Mbappe or Marcus Thuram or Maxence Lacroix",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Malo Gusto & Marcus Thuram",
+            "code": "K. Mbappe & M. Gusto & M. Thuram",
             "label": "Kylian Mbappe or Malo Gusto or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Maghnes Akliouche & Soufiane Rahimi",
+            "code": "K. Mbappe & M. Akliouche & S. Rahimi",
             "label": "Kylian Mbappe or Maghnes Akliouche or Soufiane Rahimi",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Neil El Aynaoui & Ousmane Dembele",
+            "code": "K. Mbappe & N. El Aynaoui & O. Dembele",
             "label": "Kylian Mbappe or Neil El Aynaoui or Ousmane Dembele",
             "odds": 1.38
           },
           {
-            "code": "Kylian Mbappe & Lucas Digne & Marcus Thuram",
+            "code": "K. Mbappe & L. Digne & M. Thuram",
             "label": "Kylian Mbappe or Lucas Digne or Marcus Thuram",
             "odds": 1.38
           },
           {
-            "code": "Chemsdine Talbi & Desire Doue & Kylian Mbappe",
+            "code": "C. Talbi & D. Doue & K. Mbappe",
             "label": "Chemsdine Talbi or Desire Doue or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Michael Olise",
+            "code": "B. Diaz & K. Mbappe & M. Olise",
             "label": "Brahim Diaz or Kylian Mbappe or Michael Olise",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Zakaria El Ouahdi",
+            "code": "J. Mateta & K. Mbappe & Z. El Ouahdi",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Zakaria El Ouahdi",
             "odds": 1.38
           },
           {
-            "code": "Jean-Philippe Mateta & Kylian Mbappe & Sofyan Amrabat",
+            "code": "J. Mateta & K. Mbappe & S. Amrabat",
             "label": "Jean-Philippe Mateta or Kylian Mbappe or Sofyan Amrabat",
             "odds": 1.38
           },
           {
-            "code": "Ayyoub Bouaddi & Jean-Philippe Mateta & Kylian Mbappe",
+            "code": "A. Bouaddi & J. Mateta & K. Mbappe",
             "label": "Ayyoub Bouaddi or Jean-Philippe Mateta or Kylian Mbappe",
             "odds": 1.38
           },
           {
-            "code": "Brahim Diaz & Kylian Mbappe & Rayan Cherki",
+            "code": "B. Diaz & K. Mbappe & R. Cherki",
             "label": "Brahim Diaz or Kylian Mbappe or Rayan Cherki",
             "odds": 1.38
           }
@@ -9128,7 +9636,206 @@
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Kylian Mbappe",
+            "label": "Kylian Mbappe",
+            "odds": 1.85
+          },
+          {
+            "code": "Jean-Philippe Mateta",
+            "label": "Jean-Philippe Mateta",
+            "odds": 2.85
+          },
+          {
+            "code": "Marcus Thuram",
+            "label": "Marcus Thuram",
+            "odds": 2.9
+          },
+          {
+            "code": "Ousmane Dembele",
+            "label": "Ousmane Dembele",
+            "odds": 3.05
+          },
+          {
+            "code": "Desire Doue",
+            "label": "Desire Doue",
+            "odds": 3.3
+          },
+          {
+            "code": "Bradley Barcola",
+            "label": "Bradley Barcola",
+            "odds": 3.65
+          },
+          {
+            "code": "Michael Olise",
+            "label": "Michael Olise",
+            "odds": 3.8
+          },
+          {
+            "code": "Rayan Cherki",
+            "label": "Rayan Cherki",
+            "odds": 3.8
+          },
+          {
+            "code": "Maghnes Akliouche",
+            "label": "Maghnes Akliouche",
+            "odds": 4.35
+          },
+          {
+            "code": "Soufiane Rahimi",
+            "label": "Soufiane Rahimi",
+            "odds": 4.6
+          },
+          {
+            "code": "Ayoub El Kaabi",
+            "label": "Ayoub El Kaabi",
+            "odds": 4.9
+          },
+          {
+            "code": "Brahim Diaz",
+            "label": "Brahim Diaz",
+            "odds": 5.5
+          },
+          {
+            "code": "Adrien Rabiot",
+            "label": "Adrien Rabiot",
+            "odds": 7
+          },
+          {
+            "code": "Amine Sbai",
+            "label": "Amine Sbai",
+            "odds": 7
+          },
+          {
+            "code": "Chemsdine Talbi",
+            "label": "Chemsdine Talbi",
+            "odds": 7.5
+          },
+          {
+            "code": "Ayoube Amaimouni-Echghouyab",
+            "label": "Ayoube Amaimouni-Echghouyab",
+            "odds": 8
+          },
+          {
+            "code": "Gessime Yassine",
+            "label": "Gessime Yassine",
+            "odds": 8
+          },
+          {
+            "code": "Aurelien Tchouameni",
+            "label": "Aurelien Tchouameni",
+            "odds": 8.25
+          },
+          {
+            "code": "Theo Hernandez",
+            "label": "Theo Hernandez",
+            "odds": 8.5
+          },
+          {
+            "code": "Lucas Hernandez",
+            "label": "Lucas Hernandez",
+            "odds": 9
+          },
+          {
+            "code": "Achraf Hakimi",
+            "label": "Achraf Hakimi",
+            "odds": 9
+          },
+          {
+            "code": "Neil El Aynaoui",
+            "label": "Neil El Aynaoui",
+            "odds": 9.5
+          },
+          {
+            "code": "Ibrahima Konate",
+            "label": "Ibrahima Konate",
+            "odds": 11
+          },
+          {
+            "code": "Samir El Mourabet",
+            "label": "Samir El Mourabet",
+            "odds": 12
+          },
+          {
+            "code": "Jules Kounde",
+            "label": "Jules Kounde",
+            "odds": 12
+          },
+          {
+            "code": "Dayot Upamecano",
+            "label": "Dayot Upamecano",
+            "odds": 12
+          },
+          {
+            "code": "Maxence Lacroix",
+            "label": "Maxence Lacroix",
+            "odds": 12
+          },
+          {
+            "code": "Malo Gusto",
+            "label": "Malo Gusto",
+            "odds": 12
+          },
+          {
+            "code": "Lucas Digne",
+            "label": "Lucas Digne",
+            "odds": 13
+          },
+          {
+            "code": "Sofyan Amrabat",
+            "label": "Sofyan Amrabat",
+            "odds": 15
+          },
+          {
+            "code": "Ayyoub Bouaddi",
+            "label": "Ayyoub Bouaddi",
+            "odds": 15
+          },
+          {
+            "code": "Zakaria El Ouahdi",
+            "label": "Zakaria El Ouahdi",
+            "odds": 15
+          },
+          {
+            "code": "William Saliba",
+            "label": "William Saliba",
+            "odds": 17
+          },
+          {
+            "code": "Youssef Belammari",
+            "label": "Youssef Belammari",
+            "odds": 19
+          },
+          {
+            "code": "Noussair Mazraoui",
+            "label": "Noussair Mazraoui",
+            "odds": 21
+          },
+          {
+            "code": "Chadi Riad",
+            "label": "Chadi Riad",
+            "odds": 23
+          },
+          {
+            "code": "Issa Diop",
+            "label": "Issa Diop",
+            "odds": 23
+          },
+          {
+            "code": "Redouane Halhal",
+            "label": "Redouane Halhal",
+            "odds": 25
+          }
+        ]
+      },
       "index": 189,
       "marketCode": "GOALSCORER_ANYTIME",
       "rawName": "Strzelec bramki (Sub-Hero)"
@@ -23887,9 +24594,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_RACE_TO",
-        "marketKey": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "5",
         "parameters": null,
         "selections": [
           {
@@ -23918,9 +24625,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_RACE_TO",
-        "marketKey": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:3",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "3",
         "parameters": null,
         "selections": [
           {
@@ -24320,9 +25027,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_RACE_TO",
-        "marketKey": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:9",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "9",
         "parameters": null,
         "selections": [
           {
@@ -24351,9 +25058,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_RACE_TO",
-        "marketKey": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:7",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "7",
         "parameters": null,
         "selections": [
           {
@@ -28576,8 +29283,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_SHOTS_OVER",
-        "marketKey": "PLAYER_SHOTS_OVER",
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -28615,7 +29322,7 @@
         ]
       },
       "index": 755,
-      "marketCode": "PLAYER_SHOTS_OVER",
+      "marketCode": "PLAYER_SHOTS",
       "rawName": "Zawodnicy (strzały) - powyżej 7.5 (musi rozpocząć w wyjściowej \"11\") 7.5"
     },
     {

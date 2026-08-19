@@ -381,6 +381,9 @@ function parseLineSelections(
     }
 
     const selectionName = getSelectionName(marketId, outcomeId, outcome, fixture);
+    // An outcome with no resolvable label must be skipped, never surfaced
+    // under its numeric outcome id.
+    if (!selectionName) continue;
 
     selections.push({
       name: selectionName,
@@ -398,7 +401,7 @@ function getSelectionName(
   outcomeId: number,
   outcome: STSOutcome,
   fixture: STSFixture
-): string {
+): string | null {
   if (outcome.n && outcome.n.length > 1) {
     return outcome.n;
   }
@@ -470,7 +473,7 @@ function getSelectionName(
     return globalName;
   }
 
-  return outcome.n || String(outcomeId);
+  return outcome.n || null;
 }
 
 function extractPlayerNameFromLineName(lineName: string): string | null {

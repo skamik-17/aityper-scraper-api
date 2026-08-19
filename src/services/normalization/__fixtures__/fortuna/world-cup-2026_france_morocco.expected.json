@@ -6688,7 +6688,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Malo Gusto",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -7525,7 +7525,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Marcus Thuram",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 11
           }
@@ -8362,7 +8362,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Bradley Barcola",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 11
           }
@@ -9669,7 +9669,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Adrien Rabiot",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 17
           }
@@ -10604,7 +10604,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Ousmane Dembele",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 8.5
           }
@@ -11449,7 +11449,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Zakaria El Ouahdi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -11512,7 +11512,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "N'Golo Kante",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -11981,7 +11981,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Warren Zaire Emery",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -13460,7 +13460,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Rayan Cherki",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 12
           }
@@ -13603,7 +13603,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Anass Salah Eddine",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -14000,7 +14000,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Manu Kone",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 25
           }
@@ -14361,7 +14361,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Lucas Digne",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -14743,7 +14743,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Dayot Upamecano",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -15134,7 +15134,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Chadi Riad",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -15228,7 +15228,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Bilal El Khannouss",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -15305,7 +15305,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Soufiane Rahimi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 20
           }
@@ -15702,7 +15702,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Ayoub El Kaabi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 17
           }
@@ -16051,7 +16051,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "William Saliba",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -16147,7 +16147,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Jean-Philippe Mateta",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 10
           }
@@ -16457,7 +16457,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Redouane Halhal",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -17020,7 +17020,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Lucas Hernandez",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -17233,7 +17233,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Ayoube Amaimouni Echghouyab",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -17429,7 +17429,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Theo Hernandez",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -17478,7 +17478,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Noussair Mazraoui",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -17565,7 +17565,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Azzedine Ounahi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 25
           }
@@ -18067,7 +18067,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Michael Olise",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 11
           }
@@ -18151,7 +18151,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Kylian Mbappe",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 6
           }
@@ -18214,7 +18214,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Sofyan Amrabat",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -18961,7 +18961,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Gessime Yassine",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -19246,7 +19246,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Desire Doue",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 11
           }
@@ -19393,7 +19393,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Jules Kounde",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -19512,7 +19512,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Chemsdine Talbi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 30
           }
@@ -20785,7 +20785,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Ibrahima Konate",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -20973,7 +20973,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Brahim Diaz",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 20
           }
@@ -21095,7 +21095,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Maxence Lacroix",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -21529,7 +21529,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Maghnes Akliouche",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 14
           }
@@ -21641,7 +21641,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Ayyoub Bouaddi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -21882,7 +21882,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Achraf Hakimi",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -21992,7 +21992,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Neil El Aynaoui",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -22298,7 +22298,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Samir El Mourabet",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 50
           }
@@ -23930,7 +23930,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Youssef Belammari",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -26716,7 +26716,7 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Issa Diop",
+            "code": "PLAYER_NAME",
             "label": "1+",
             "odds": 90
           }
@@ -32239,32 +32239,32 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "12_YES",
             "label": "12/Tak",
             "odds": 8.4
           },
           {
-            "code": "UNKNOWN",
+            "code": "12_NO",
             "label": "12/Nie",
             "odds": 1.7
           },
           {
-            "code": "UNKNOWN",
+            "code": "X2_YES",
             "label": "02/Tak",
             "odds": 6
           },
           {
-            "code": "UNKNOWN",
+            "code": "X2_NO",
             "label": "02/Nie",
             "odds": 2.33
           },
           {
-            "code": "UNKNOWN",
+            "code": "1X_YES",
             "label": "10/Tak",
             "odds": 4.6
           },
           {
-            "code": "UNKNOWN",
+            "code": "1X_NO",
             "label": "10/Nie",
             "odds": 1.47
           }

@@ -76,6 +76,93 @@ function getMarketTypeId(normalizedType: string): number | null {
   return market?.numericId ?? null;
 }
 
+/**
+ * Adds one normalized market's record into a per-marketKey map, MERGING
+ * selections instead of letting a marketKey collision silently overwrite the
+ * whole prior record. Same-bookmaker raw markets legitimately collide on one
+ * marketKey when the catalog packs several thresholds under one
+ * parameterized market keyed by something other than the threshold itself
+ * (e.g. PLAYER_SHOTS' "2+".."9+" ladder, keyed only by player name) — a
+ * plain Map.set() here kept only the last-processed threshold and silently
+ * dropped the rest (audit-match Arsenal vs Coventry City, round 8
+ * P7-repo-merge-on-marketkey-collision: betcris lost 7 of every 8
+ * PLAYER_SHOTS rows this way, reproduced against the live normalizer output).
+ * Only selection codes not already present are appended; the first-seen
+ * odds for a given code wins, mirroring market-type-grouper.ts's identical
+ * collision rule. A genuine intersection (the same code appearing twice)
+ * likely means the two raw markets are actually the SAME bet mis-split by
+ * the normalizer rather than disjoint thresholds — logged as a misroute
+ * signal instead of being silently dropped.
+ */
+function mergeMarketRecord(
+  recordsMap: Map<string, OddsInsert>,
+  marketKey: string,
+  incoming: OddsInsert
+): void {
+  const existing = recordsMap.get(marketKey);
+  if (!existing) {
+    recordsMap.set(marketKey, incoming);
+    return;
+  }
+
+  const existingCodes = new Set(
+    existing.selections.map((sel) => sel.normalizedName || sel.name)
+  );
+  let collidedCode: string | undefined;
+  for (const sel of incoming.selections) {
+    const code = sel.normalizedName || sel.name;
+    if (existingCodes.has(code)) {
+      collidedCode = code;
+      continue;
+    }
+    existing.selections.push(sel);
+    existingCodes.add(code);
+  }
+
+  if (collidedCode) {
+    console.warn(
+      `[FullOfferRepo] marketKey collision with overlapping selection code "${collidedCode}" for ${incoming.bookmaker} ${marketKey} (${existing.match_id}) — possible misroute, keeping first-seen odds`
+    );
+  }
+}
+
+/**
+ * Drops rows from a PREVIOUS scrape of this (match, bookmaker) pair that are
+ * older than the scrape just written. Rows are only ever appended, so a
+ * market_key that a normalization fix stops producing kept being served
+ * forever: the /audit-match run on Arsenal vs Coventry City still showed
+ * STS's conditional "gole (musi wyjść w 11)" market under PLAYER_GOALS long
+ * after that mapping had moved elsewhere. Only the newest scrape is ever
+ * read (see the latest_odds view), so anything older is dead weight.
+ * Skipped when the write partially failed, so a bad run cannot wipe good
+ * data. Extracted as a shared helper (round 8 REPO-BATCH-STALE-PRUNE) so it
+ * also runs from saveBatchFullOfferMarkets — aggregator.ts always calls
+ * normalizeAndSaveMatches with { useBatchInsert: true }, so before this the
+ * prune was only ever wired into the single-match save path and never
+ * actually ran in production. Logs the number of rows actually removed
+ * (round 8 P3-prune-stale-snapshots) so a silent RLS/permission failure on
+ * the DELETE is visible instead of looking identical to "nothing to prune".
+ */
+async function pruneStaleOddsRows(
+  supabase: ReturnType<typeof getSupabase>,
+  matchId: string,
+  bookmaker: PolishBookmaker,
+  scrapedAt: string
+): Promise<void> {
+  const { count, error: pruneError } = await (supabase as any)
+    .from("odds")
+    .delete({ count: "exact" })
+    .eq("match_id", matchId)
+    .eq("bookmaker", bookmaker)
+    .lt("scraped_at", scrapedAt);
+
+  if (pruneError) {
+    console.error(`[FullOfferRepo] Stale-row prune error for ${bookmaker}/${matchId}:`, pruneError);
+  } else if (count) {
+    console.log(`[FullOfferRepo] Pruned ${count} stale row(s) for ${bookmaker}/${matchId}`);
+  }
+}
+
 export async function saveFullOfferMarkets(
   homeTeam: string,
   awayTeam: string,
@@ -112,8 +199,8 @@ export async function saveFullOfferMarkets(
     }
 
     const marketKey = market.marketKey || market.normalizedType!;
-    
-    recordsMap.set(marketKey, {
+
+    mergeMarketRecord(recordsMap, marketKey, {
       match_id: matchId,
       league_slug: leagueSlug,
       home_team: canonicalHome,
@@ -125,7 +212,7 @@ export async function saveFullOfferMarkets(
       param_value: market.paramValue,
       custom_name: market.customLabel,
       raw_market_name: market.name,
-      selections: market.selections,
+      selections: [...market.selections],
       scraped_at: scrapedAt,
       start_time: startTime,
     });
@@ -156,25 +243,9 @@ export async function saveFullOfferMarkets(
     }
   }
 
-  // Drop this bookmaker's previous snapshot for the match. Rows were only ever
-  // appended, so a market_key that a normalization fix stops producing kept
-  // being served forever: the /audit-match run on Arsenal vs Coventry City
-  // still showed STS's conditional "gole (musi wyjść w 11)" market under
-  // PLAYER_GOALS long after that mapping had moved elsewhere. Only the newest
-  // scrape is ever read (see the latest_odds view), so anything older is dead
-  // weight. Skipped when the write partially failed, so a bad run cannot wipe
-  // good data.
+  // See pruneStaleOddsRows() for why this runs and what it drops.
   if (result.errors === 0 && result.inserted > 0) {
-    const { error: pruneError } = await (supabase as any)
-      .from("odds")
-      .delete()
-      .eq("match_id", matchId)
-      .eq("bookmaker", bookmaker)
-      .lt("scraped_at", scrapedAt);
-
-    if (pruneError) {
-      console.error(`[FullOfferRepo] Stale-row prune error:`, pruneError);
-    }
+    await pruneStaleOddsRows(supabase, matchId, bookmaker, scrapedAt);
   }
 
   return result;
@@ -393,6 +464,10 @@ export async function saveBatchFullOfferMarkets(
 
   const scrapedAt = new Date().toISOString();
   const allRecords: OddsInsert[] = [];
+  // matchId -> bookmaker is constant across this whole call, so a per-match
+  // set of ids visited is enough to know which (match, bookmaker) pairs to
+  // prune after the write succeeds (see pruneStaleOddsRows()).
+  const matchIdsWritten = new Set<string>();
 
   for (const match of matches) {
     const matchId = generateMatchId(match.homeTeam, match.awayTeam, leagueSlug);
@@ -415,7 +490,7 @@ export async function saveBatchFullOfferMarkets(
 
       const marketKey = market.marketKey || market.normalizedType!;
 
-      recordsMap.set(marketKey, {
+      mergeMarketRecord(recordsMap, marketKey, {
         match_id: matchId,
         league_slug: leagueSlug,
         home_team: canonicalHome,
@@ -427,13 +502,14 @@ export async function saveBatchFullOfferMarkets(
         param_value: market.paramValue,
         custom_name: market.customLabel,
         raw_market_name: market.name,
-        selections: market.selections,
+        selections: [...market.selections],
         scraped_at: scrapedAt,
         start_time: match.startTime,
       });
     }
 
     allRecords.push(...recordsMap.values());
+    matchIdsWritten.add(matchId);
     result.matchesProcessed++;
   }
 
@@ -457,6 +533,17 @@ export async function saveBatchFullOfferMarkets(
       result.errors += batch.length;
     } else {
       result.inserted += batch.length;
+    }
+  }
+
+  // See pruneStaleOddsRows() for why this runs and what it drops. This is
+  // the ONLY place the prune actually executes in production: aggregator.ts
+  // always calls normalizeAndSaveMatches with { useBatchInsert: true }, so
+  // saveFullOfferMarkets's own copy of this call never runs (round 8
+  // REPO-BATCH-STALE-PRUNE).
+  if (result.errors === 0 && result.inserted > 0) {
+    for (const matchId of matchIdsWritten) {
+      await pruneStaleOddsRows(supabase, matchId, bookmaker, scrapedAt);
     }
   }
 

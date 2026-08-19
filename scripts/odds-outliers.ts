@@ -48,6 +48,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import {
   detectOddsIntegrity,
+  NON_EXHAUSTIVE_SELECTION_MARKETS,
   type IntegrityMarketInput,
   type OddsIntegrityFlag,
 } from "../src/services/audit/odds-integrity.js";
@@ -191,8 +192,38 @@ export function findOutliers(market: ApiMarket, marketRef: string, args: Args): 
         // because it silently caps the best price. Longer prices are graded
         // one notch lower unless they are extreme.
         const shorter = implied(q.odds) > med;
+        // BROKEN needs a probability gap that could actually move an EV
+        // decision, on top of the relative-deviation ratio. Two situations
+        // make the ratio alone misleading, both only reachable when the
+        // reference median is already a deep longshot (algebraically,
+        // deviation >= 1.5 with absDelta below the floor forces med < 0.033,
+        // i.e. reference odds > 30 — short/mainstream markets are never
+        // exempted):
+        //  - absDelta itself is tiny: a 150.00 vs 50.00 median is 200%
+        //    "off" yet only 1.33 percentage points apart, too small to move
+        //    any stake decision.
+        //  - the reference median sits deep in the tail (< 10% implied,
+        //    ~odds 10+): independent pricing models legitimately disagree by
+        //    a lot out there (confirmed on this match by a bookmaker's own
+        //    combo-bet price matching its single-leg ladder to ~1%), so a
+        //    large ratio there is a modelling difference, not a data defect.
+        //    Gated on `shorter` because a mapping bug that manufactures a
+        //    false +EV signal always makes a price read LONGER than reality,
+        //    never shorter — this floor can never hide that failure mode.
+        // Dedicated shape detectors (decimal_shift, axis_swap, impossible
+        // odds — see findIntegrity) are unaffected by this floor and keep
+        // full sensitivity regardless of odds length.
+        const absDelta = Math.abs(implied(q.odds) - med);
+        const ABS_DELTA_FOR_BROKEN = 0.05; // 5 percentage points of implied probability
+        const TAIL_MEDIAN_FLOOR = 0.1; // reference odds longer than ~10.0
+        const brokenEligible =
+          absDelta >= ABS_DELTA_FOR_BROKEN && !(shorter && med < TAIL_MEDIAN_FLOOR);
         const severity: Severity =
-          deviation >= 1.5 ? "BROKEN" : deviation >= 0.7 || shorter ? "MAJOR" : "MINOR";
+          deviation >= 1.5 && brokenEligible
+            ? "BROKEN"
+            : deviation >= 0.7 || shorter
+              ? "MAJOR"
+              : "MINOR";
         out.push({
           kind: "outlier",
           severity,
@@ -207,7 +238,8 @@ export function findOutliers(market: ApiMarket, marketRef: string, args: Args): 
           detail:
             `${q.bookmaker} ${q.odds} vs mediana ${(1 / med).toFixed(2)} ` +
             `(${quotes.length} bukmacherów, odchylenie ${(deviation * 100).toFixed(0)}% ` +
-            `implikowanego prawdopodobieństwa, kurs ${shorter ? "krótszy" : "dłuższy"} niż rynek)`,
+            `implikowanego prawdopodobieństwa, różnica ${(absDelta * 100).toFixed(2)} p.p., ` +
+            `kurs ${shorter ? "krótszy" : "dłuższy"} niż rynek)`,
         });
       }
     }
@@ -230,34 +262,96 @@ const LADDER_DIRECTION: Record<string, "rises" | "falls"> = {
   YES: "rises",
 };
 
+/**
+ * Markets whose numeric parameter is a time-window END MINUTE ("goals in the
+ * first N minutes"), not a betting line. A wider window can only ADD goal
+ * opportunities, so the whole ladder runs the mirror image of a goal-line
+ * ladder: OVER gets SHORTER and UNDER gets LONGER as the parameter grows.
+ * FIRST_30_MIN_TOTAL_GOALS is deliberately excluded — its parameter is a real
+ * goal line (0.5 / 1 / 1.5); the window itself is fixed by the market.
+ */
+const TIME_WINDOW_PARAM_MARKETS = new Set<string>([
+  "TIME_PERIOD_TOTAL_GOALS",
+  "INTERVAL_TOTAL_GOALS",
+]);
+
+/**
+ * YES/NO is only a shape, not a direction. In most parameterised YES/NO
+ * markets YES is an OVER proposition ("N or more goals"), so LADDER_DIRECTION
+ * already has it right (price rises with the line). These markets are the
+ * opposite: YES means "…and UNDER X", which raising the line can only ADD
+ * favourable outcomes to, so P(YES) rises and its PRICE must fall. Keyed by
+ * market type because the selection code alone cannot tell the two families
+ * apart.
+ */
+const MARKET_LADDER_DIRECTION: Record<string, Partial<Record<string, "rises" | "falls">>> = {
+  BOTH_HALVES_UNDER_GOALS: { YES: "falls", NO: "rises" },
+  HOME_WIN_OR_UNDER: { YES: "falls", NO: "rises" },
+  AWAY_WIN_OR_UNDER: { YES: "falls", NO: "rises" },
+  WIN_OR_UNDER: { YES: "falls", NO: "rises" },
+};
+
+/**
+ * Exact-value markets price a single bucket, not a cumulative tail: the price
+ * is U-shaped in the line (cheap mid-distribution, long at both ends), so no
+ * monotonic rule applies and every ladder finding here is noise by
+ * construction.
+ */
+const LADDER_EXEMPT_MARKETS = new Set<string>([
+  "EXACT_GOALS_COUNT_YN",
+  "SECOND_HALF_AWAY_WIN_EXACT_MARGIN",
+]);
+
 export function findLadderBreaks(market: ApiMarket, marketRef: string): Finding[] {
   const out: Finding[] = [];
+  if (LADDER_EXEMPT_MARKETS.has(market.type)) return out;
+  const inverted = TIME_WINDOW_PARAM_MARKETS.has(market.type);
+  const overrides = MARKET_LADDER_DIRECTION[market.type] ?? {};
+
+  // A ladder rung must be a bare number, optionally carrying the goal line the
+  // normalizers append for time-window markets ("60 (1.5)"). parseFloat alone
+  // silently accepts a band like "16-30" (-> 16, a DISJOINT bucket, not a
+  // wider window) and collapses "60" with "60 (1.5)" into one rung, comparing
+  // two different goal lines as if they were neighbours.
   const numericParams = market.parameters
-    .map((p) => ({ param: p, line: Number.parseFloat(p.value) }))
-    .filter((p) => Number.isFinite(p.line))
+    .map((p) => {
+      const m = /^(\d+(?:\.\d+)?)(?:\s*\((\d+(?:\.\d+)?)\))?$/.exec(p.value.trim());
+      return m
+        ? { param: p, line: Number.parseFloat(m[1]), subLine: m[2] ?? "" }
+        : null;
+    })
+    .filter((p): p is { param: ApiParameter; line: number; subLine: string } => p !== null)
     .sort((a, b) => a.line - b.line);
   if (numericParams.length < 2) return out;
 
-  // bookmaker -> selection -> [{ line, odds }]
+  // bookmaker -> seriesKey ("TYPE" or "TYPE|subLine") -> [{ line, odds }]
   const byBookmaker = new Map<string, Map<string, { line: number; odds: number }[]>>();
-  for (const { param, line } of numericParams) {
+  for (const { param, line, subLine } of numericParams) {
     for (const entry of param.bookmakers) {
       const bySelection = byBookmaker.get(entry.bookmaker) ?? new Map();
       for (const sel of entry.selections) {
-        if (!(sel.odds > 1) || !LADDER_DIRECTION[sel.type]) continue;
-        const series = bySelection.get(sel.type) ?? [];
+        const dir = overrides[sel.type] ?? LADDER_DIRECTION[sel.type];
+        if (!(sel.odds > 1) || !dir) continue;
+        const key = subLine ? `${sel.type}|${subLine}` : sel.type;
+        const series = bySelection.get(key) ?? [];
         series.push({ line, odds: sel.odds });
-        bySelection.set(sel.type, series);
+        bySelection.set(key, series);
       }
       byBookmaker.set(entry.bookmaker, bySelection);
     }
   }
 
   for (const [bookmaker, bySelection] of byBookmaker) {
-    for (const [selection, series] of bySelection) {
+    for (const [seriesKey, series] of bySelection) {
       if (series.length < 2) continue;
       series.sort((a, b) => a.line - b.line);
-      const direction = LADDER_DIRECTION[selection];
+      const selection = seriesKey.split("|")[0];
+      const base = overrides[selection] ?? LADDER_DIRECTION[selection];
+      const direction: "rises" | "falls" = inverted
+        ? base === "rises"
+          ? "falls"
+          : "rises"
+        : base;
       for (let i = 1; i < series.length; i++) {
         const prev = series[i - 1];
         const curr = series[i];
@@ -284,8 +378,8 @@ export function findLadderBreaks(market: ApiMarket, marketRef: string): Finding[
           reference: prev.odds,
           deviation: Number(ratio.toFixed(3)),
           detail:
-            `${bookmaker} ${selection}: linia ${prev.line} = ${prev.odds}, ` +
-            `linia ${curr.line} = ${curr.odds} — kurs ${direction === "rises" ? "spadł" : "wzrósł"}, ` +
+            `${bookmaker} ${selection}: ${inverted ? `okno 0-${prev.line} min` : `linia ${prev.line}`} = ${prev.odds}, ` +
+            `${inverted ? `okno 0-${curr.line} min` : `linia ${curr.line}`} = ${curr.odds} — kurs ${direction === "rises" ? "spadł" : "wzrósł"}, ` +
             `a powinien iść w drugą stronę`,
         });
       }
@@ -365,6 +459,10 @@ export function findArbitrage(market: ApiMarket, marketRef: string): Finding[] {
   // "wins several ways" combos legitimately sum to anything.
   if (!catalog?.selections || catalog.parameterType === "player") return [];
   if (market.type.includes("_OR_")) return [];
+  // Independent per-team YES props (PENALTY_MISSED: HOME/AWAY can both miss,
+  // and the dominant "neither" branch is never priced) are not a partition of
+  // the outcome space either — same reasoning as detectOverround.
+  if (NON_EXHAUSTIVE_SELECTION_MARKETS.has(market.type)) return [];
   if (!isExclusiveSelectionSet(catalog.selections)) return [];
   const expected = new Set(catalog.selections);
   if (expected.size < 2 || expected.size > 4) return [];

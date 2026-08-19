@@ -148,6 +148,33 @@ function getSelectionName(
 }
 
 /**
+ * Fuksiarz's feed for game type 38 ("Half with more goals") applies its
+ * outcome labels in template order (1st half / equal / 2nd half) while the
+ * prices arrive in provider order (1st half / 2nd half / equal). The result
+ * is that the "equal" label carries the 2nd-half price (~2.1) and the
+ * "2nd half" label carries the draw price (~3.6) — inverted against every
+ * other book quoting the same market id 38 (betfan 2.75/2.10/3.70, forbet
+ * 2.65/2.02/3.55, etoto 2.80/2.11/3.80) and against goal math (the 2nd half
+ * is always the favourite, an equal split the least likely outcome). Move
+ * the two labels back onto the prices they belong to. Guarded on the
+ * anomalous order so the fix turns into a no-op the day Fuksiarz repairs
+ * the feed.
+ */
+function repairHalfWithMoreGoalsLabels(outcomes: FuksiarzOutcome[]): FuksiarzOutcome[] {
+  if (outcomes.length !== 3) return outcomes;
+  const isDrawLike = (n?: string) => /^(r[oó]wno|remis|tyle samo)$/i.test((n || "").trim());
+  const isSecondHalf = (n?: string) => /^2\.?\s*po[łl]owa$/i.test((n || "").trim());
+  if (!isDrawLike(outcomes[1].outcomeName) || !isSecondHalf(outcomes[2].outcomeName)) {
+    return outcomes;
+  }
+  return [
+    outcomes[0],
+    { ...outcomes[1], outcomeName: outcomes[2].outcomeName },
+    { ...outcomes[2], outcomeName: outcomes[1].outcomeName },
+  ];
+}
+
+/**
  * Parse 1X2 market odds from event data
  * Used for backward compatibility with scrapeLeague
  */
@@ -374,8 +401,14 @@ export function parseAllMarkets(
       }
     } else {
       // Standard market - all outcomes belong to one market
-      const selections: MarketSelection[] = outcomes
-        .sort((a, b) => a.outcomePosition - b.outcomePosition)
+      const orderedOutcomes = [...outcomes].sort(
+        (a, b) => a.outcomePosition - b.outcomePosition
+      );
+      const fixedOutcomes =
+        game.gameType === GAME_TYPES.HALF_WITH_MORE_GOALS
+          ? repairHalfWithMoreGoalsLabels(orderedOutcomes)
+          : orderedOutcomes;
+      const selections: MarketSelection[] = fixedOutcomes
         .map((outcome) => ({
           name: getSelectionName(outcome, game.gameType, parsedTeams),
           odds: outcome.outcomeOdds || 0,

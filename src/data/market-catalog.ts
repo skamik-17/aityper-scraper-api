@@ -273,6 +273,32 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { "0-1": "0-1 bramek", "2-3": "2-3 bramki", "4-5": "4-5 bramek", "6+": "6 lub więcej bramek" },
   },
   {
+    // audit-match (Arsenal vs Coventry City): GOAL_RANGE conflated two
+    // different market families — disjoint exhaustive bands ("0-1"/"2-3"/
+    // "4-6"/"7+", implied probs sum to ~1) and this cumulative multi-goal
+    // ladder ("0"/"1-2"/"1-3".../"7+", overlapping ranges, implied probs sum
+    // well above 1). etoto's "Przedział goli" (id -30009) and forbet's
+    // "Multi-gole (liczba goli)" (id -30009) are this ladder; when quoted
+    // alongside the disjoint-band variant on the same bookmaker (etoto -225,
+    // forbet -225) they collided onto one key and one always lost the
+    // dedupe race. Selections list is the full-match ladder only — the
+    // team-/half-scoped multi-gole variants (with a "4+" top tier) are a
+    // separate, already-distinct catalog family (HOME_GOAL_RANGE /
+    // AWAY_GOAL_RANGE / HALF_TIME_GOAL_RANGE), not this code.
+    numericId: 1415,
+    code: "MULTI_GOAL_RANGE",
+    slug: "multi-goal-range",
+    category: MarketCategory.GOLE,
+    subCategory: "przedzialy",
+    labels: { pl: "Multi-gole (przedziały)", en: "Multi Goals Range" },
+    descriptions: { pl: "W jakim skumulowanym przedziale będzie liczba goli?", en: "Cumulative goal range bracket" },
+    hasParameter: false,
+    selections: ["0", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "7+"],
+    selectionOrder: ["0", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "7+"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 20,
+  },
+  {
     numericId: 54,
     code: "TEAM_GOAL_RANGE",
     slug: "team-goal-range",
@@ -1450,7 +1476,11 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba strzałów zawodnika", en: "Player shot count" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+"],
+    // audit-match (Arsenal vs Coventry City), round 8 P5: superbet/lvbet/
+    // betcris quote this ladder up to 8+/9+ (Gyokeres 6+@3.70 7+@5.55
+    // 8+@8.90 9+@14) — missing higher tiers pushed those rows out as
+    // selectionsNotInCatalog and back onto a collapsed "OVER".
+    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+", "9+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 63,
   },
@@ -1462,6 +1492,28 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "kartki",
     labels: { pl: "Kartki zawodnika", en: "Player Cards" },
     descriptions: { pl: "Zawodnik otrzyma kartkę", en: "Player receives card" },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PLAYER_STAT_LINES,
+    displayOrder: 64,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City): betcris publishes "Zawodnik
+    // otrzyma kartkę" (any card, mapped to PLAYER_CARDS) AND a separate
+    // "Zawodnik otrzyma żółtą kartkę" (yellow only, 47 selections) as two
+    // distinct raw markets for the same 47 players, with the yellow-only
+    // odds consistently 3-5% shorter (e.g. Frank Onyeka 2.85 vs 2.75,
+    // Bruno Guimaraes 4.2 vs 4.0) — a genuinely different bet, not a
+    // duplicate. Without its own code both series would collide on
+    // PLAYER_CARDS:<player> and one would be silently dropped by dedupe.
+    numericId: 1413,
+    code: "PLAYER_YELLOW_CARD",
+    slug: "player-yellow-card",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "kartki",
+    labels: { pl: "Żółta kartka zawodnika", en: "Player to be shown a yellow card" },
+    descriptions: { pl: "Zawodnik otrzyma żółtą kartkę", en: "Player is shown a yellow card" },
     hasParameter: true,
     parameterType: "player",
     selections: ["YES", "NO"],
@@ -1532,7 +1584,12 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba goli zawodnika", en: "Player goal count" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["1+", "2+", "3+", "4+"],
+    // audit-match (Arsenal vs Coventry City), round 8: no bookmaker
+    // publishes a "4+" rung of THIS tiered ladder (forbet/etoto/fortuna top
+    // out at 3+) — betcris/lvbet's 4+ prices are a separate one-price
+    // product, now PLAYER_4_OR_MORE_GOALS. The tier here only produced an
+    // always-empty column and spurious selection_gaps entries.
+    selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 68,
   },
@@ -1561,7 +1618,9 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba celnych strzałów zawodnika", en: "Player shots on target count" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+"],
+    // audit-match (Arsenal vs Coventry City), round 8 P5: extend to match
+    // PLAYER_SHOTS' higher tiers (see that entry's comment).
+    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 67,
   },
@@ -1606,6 +1665,31 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
     displayOrder: 70,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City), round 8 cat-add-player4:
+    // standalone one-price 4+ market published by betcris
+    // (PlayerToScore4OrMore) and lvbet — same YES-shaped per-player product
+    // as PLAYER_2_OR_MORE_GOALS / PLAYER_3_OR_MORE_GOALS, not a rung of the
+    // PLAYER_GOALS tiered ladder. Odds form a monotonic ladder with those
+    // two codes (Gyokeres 1+@1.86 2+@5.30 3+@19 4+@71 — betcris and lvbet
+    // agree to within 1-3%). NOTE: betcris-normalizer.ts's extractParamValue
+    // needs its literal marketCode==="PLAYER_GOALS" fill-in branch (~line
+    // 1362-1374) extended to also cover this new code, or paramValue (the
+    // player name) will be lost for all betcris rows — normalizer change is
+    // out of scope for this catalog-only pass, tracked separately.
+    numericId: 1421,
+    code: "PLAYER_4_OR_MORE_GOALS",
+    slug: "player-4-or-more-goals",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Strzelec 4+ goli", en: "Player 4+ Goals" },
+    descriptions: { pl: "Zawodnik strzeli 4 lub więcej goli", en: "Player to score 4 or more goals" },
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PLAYER_DROPDOWN,
+    displayOrder: 71,
   },
   {
     numericId: 62,
@@ -1769,6 +1853,27 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { PLAYER_TRIO: "{playerTrio} - którykolwiek strzeli" },
   },
   {
+    // audit-match (Arsenal vs Coventry City): betclic id 1200126813012669
+    // "Którykolwiek zawodnik strzeli gola lub zaliczy asystę" (220
+    // selections, e.g. C. Tzolis/B. Saka=1.13) has no catalog code. Odds
+    // relation confirms identity: for the same pair "gol lub asysta" (1.13)
+    // is shorter than plain "gol" via TWO_PLAYERS_ANYTIME (R. Nelson &
+    // V. Gyokeres=1.31) — a strictly easier condition, correctly cheaper.
+    numericId: 1416,
+    code: "TWO_PLAYERS_GOAL_OR_ASSIST",
+    slug: "two-players-goal-or-assist",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Którykolwiek z dwóch: gol lub asysta", en: "Either of Two Players Goal or Assist" },
+    descriptions: { pl: "Którykolwiek z wybranych dwóch zawodników strzeli gola lub zaliczy asystę", en: "Either of two selected players scores or assists" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_PAIR"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 79,
+    descriptionTemplates: { PLAYER_PAIR: "{playerPair} - którykolwiek gol lub asysta" },
+  },
+  {
     numericId: 63,
     code: "TEAM_TOTAL_SCORERS",
     slug: "team-total-scorers",
@@ -1894,9 +1999,19 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "metoda-gola",
     labels: { pl: "Zawodnik strzeli gola spoza pola karnego", en: "Player to Score from Outside the Box" },
     descriptions: { pl: "Czy zawodnik strzeli gola spoza pola karnego?", en: "Will the player score a goal from outside the penalty area?" },
-    hasParameter: false,
-    selections: ["1+"],
-    viewType: ViewType.PLAYER_STAT_LINES,
+    // audit-match (Arsenal vs Coventry City): 4 of 5 bookmakers offering
+    // this market (betcris, fuksiarz, lvbet, superbet) publish it as ONE
+    // bundled market with every player as a direct-odds selection (no
+    // 1+/2+/3+ ladder) — the same shape as PLAYER_RIGHT_FOOT_GOAL, not the
+    // per-player stat-line pattern. Mirroring PLAYER_RIGHT_FOOT_GOAL's
+    // PLAYER_NAME/PLAYER_DROPDOWN shape (instead of a naive
+    // hasParameter flip that keeps STAT_LINES/["1+"]) routes those 4
+    // bookmakers correctly without forcing splitBundledPlayerSelections to
+    // manufacture a synthetic "1+" tier for a market that never quoted one.
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["PLAYER_NAME"],
+    viewType: ViewType.PLAYER_DROPDOWN,
     displayOrder: 266,
   },
   {
@@ -1933,7 +2048,14 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "strzaly",
     labels: { pl: "Celne strzały głową zawodnika", en: "Player Headed Shots on Target" },
     descriptions: { pl: "Liczba celnych strzałów głową oddanych przez zawodnika", en: "Number of headed shots on target by the player" },
-    hasParameter: false,
+    // audit-match (Arsenal vs Coventry City): hasParameter:false stopped the
+    // grouper from running reconcilePlayerNameVariants, so sts's inverted
+    // "Lastname Firstname" rows never merged with peers' "Firstname
+    // Lastname" rows (92 API params for ~49 real players). Control:
+    // PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX has the identical shape and already
+    // has hasParameter:true/parameterType:"player" and merges correctly.
+    hasParameter: true,
+    parameterType: "player",
     selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 269,
@@ -1946,8 +2068,15 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     subCategory: "inne",
     labels: { pl: "Spalone zawodnika", en: "Player Offsides" },
     descriptions: { pl: "Liczba spalonych zawodnika", en: "Number of offsides by the player" },
-    hasParameter: false,
-    selections: ["1+"],
+    // audit-match (Arsenal vs Coventry City) + verifier correction: sts
+    // quotes offside markets at 1+/2+/3+ (42 raw sts markets use all three
+    // tiers) and betfan's own raw offside selections include 2+/3+ too, so
+    // the selection ladder must cover all three, not just 1+. hasParameter
+    // flip matches the PLAYER_HEADER_SHOTS_ON_TARGET fix above (same root
+    // cause: player-name merging requires hasParameter+parameterType:player).
+    hasParameter: true,
+    parameterType: "player",
+    selections: ["1+", "2+", "3+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 270,
   },
@@ -3211,7 +3340,18 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     subCategory: "rozne",
     labels: { pl: "Rzuty rożne drużyny (przedział)", en: "Team Corners Range" },
     descriptions: { pl: "Przedział rzutów rożnych drużyny", en: "Range of team corners" },
-    hasParameter: false,
+    // audit-match (Arsenal vs Coventry City), round 8 CT-5: hasParameter:false
+    // made home and away corner-range markets collide on one key (no team
+    // axis), so the home team's ladder overwrote the away team's — e.g.
+    // fuksiarz's "Coventry - liczba rzutow roznych" and "Arsenal - liczba
+    // rzutow roznych" are two DIFFERENT teams' ladders, not two rungs of one
+    // ladder. Parameterize by team like TEAM_HALF_WITH_MORE_GOALS so each
+    // side gets its own row. Bookmaker normalizers still need to emit
+    // paramValue "HOME"/"AWAY" for this code — tracked separately, out of
+    // scope for this catalog-only change.
+    hasParameter: true,
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
     selectionOrder: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
@@ -3242,11 +3382,19 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Dokładna liczba goli", en: "Exact Goals" },
     descriptions: { pl: "Dokładna liczba goli w meczu", en: "Exact number of goals in match" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3", "4", "5", "6+"],
-    selectionOrder: ["0", "1", "2", "3", "4", "5", "6+"],
+    // audit-match (Arsenal vs Coventry City), round 8 HEG-2 (+ verifier
+    // correction): mirror HOME_EXACT_GOALS/AWAY_EXACT_GOALS' full-granularity
+    // ladder — fuksiarz's total-match "Dokladna liczba goli" (id -227) quotes
+    // discrete goals up to 9, one more than the team-scoped variants (max 8).
+    selections: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8", "9"],
+    selectionOrder: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8", "9"],
     viewType: ViewType.COMBINATION,
     displayOrder: 219,
-    descriptionTemplates: { "0": "0 goli", "6+": "6 lub więcej goli" },
+    descriptionTemplates: {
+      "0": "0 goli", "1": "1 gol", "2": "2 gole", "3": "3 gole", "3+": "3 lub więcej goli",
+      "4": "4 gole", "4+": "4 lub więcej goli", "5": "5 goli", "6": "6 goli", "6+": "6 lub więcej goli",
+      "7": "7 goli", "8": "8 goli", "9": "9 goli",
+    },
   },
   {
     numericId: 220,
@@ -3283,7 +3431,11 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     subCategory: "rozne",
     labels: { pl: "Przedział rożnych drużyny 1. poł.", en: "Team Corners Range 1st Half" },
     descriptions: { pl: "Przedział rożnych drużyny w 1. połowie", en: "Team corners range in 1st half" },
-    hasParameter: false,
+    // audit-match (Arsenal vs Coventry City), round 8 CT-5: same key-collision
+    // defect as CORNERS_TEAM_RANGE (home/away ladders collapse to one key).
+    hasParameter: true,
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["0", "1", "2", "3+", "0-1", "2-3", "4+"],
     selectionOrder: ["0", "1", "2", "3+", "0-1", "2-3", "4+"],
     viewType: ViewType.COMBINATION,
@@ -3462,11 +3614,20 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gospodarz - dokładna liczba goli", en: "Home Exact Goals" },
     descriptions: { pl: "Dokładna liczba goli gospodarzy", en: "Home team exact goals" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6+"],
-    selectionOrder: ["0", "1", "2", "3", "3+", "4", "5", "6+"],
+    // audit-match (Arsenal vs Coventry City), round 8 HEG-2: fuksiarz quotes
+    // discrete goals up to 8 (6@21, 7@46, 8@50) — those were being collapsed
+    // into "6+". selectionOrder was also missing "4+", which pushed betcris/
+    // lvbet's "4+" row to render after "6+" on the file-fallback rendering
+    // path (CombinationView.tsx).
+    selections: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8"],
+    selectionOrder: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8"],
     viewType: ViewType.COMBINATION,
     displayOrder: 233,
-    descriptionTemplates: { "0": "0 goli", "1": "1 gol", "2": "2 gole", "3": "3 gole", "3+": "3 lub więcej goli", "4": "4 gole", "5": "5 goli", "6+": "6 lub więcej goli" },
+    descriptionTemplates: {
+      "0": "0 goli", "1": "1 gol", "2": "2 gole", "3": "3 gole", "3+": "3 lub więcej goli",
+      "4": "4 gole", "4+": "4 lub więcej goli", "5": "5 goli", "6": "6 goli", "6+": "6 lub więcej goli",
+      "7": "7 goli", "8": "8 goli",
+    },
   },
   {
     numericId: 234,
@@ -3477,11 +3638,17 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gość - dokładna liczba goli", en: "Away Exact Goals" },
     descriptions: { pl: "Dokładna liczba goli gości", en: "Away team exact goals" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6+"],
-    selectionOrder: ["0", "1", "2", "3", "3+", "4", "5", "6+"],
+    // audit-match (Arsenal vs Coventry City), round 8 HEG-2: same defect and
+    // fix as HOME_EXACT_GOALS above.
+    selections: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8"],
+    selectionOrder: ["0", "1", "2", "3", "3+", "4", "4+", "5", "6", "6+", "7", "8"],
     viewType: ViewType.COMBINATION,
     displayOrder: 234,
-    descriptionTemplates: { "0": "0 goli", "1": "1 gol", "2": "2 gole", "3": "3 gole", "3+": "3 lub więcej goli", "4": "4 gole", "5": "5 goli", "6+": "6 lub więcej goli" },
+    descriptionTemplates: {
+      "0": "0 goli", "1": "1 gol", "2": "2 gole", "3": "3 gole", "3+": "3 lub więcej goli",
+      "4": "4 gole", "4+": "4 lub więcej goli", "5": "5 goli", "6": "6 goli", "6+": "6 lub więcej goli",
+      "7": "7 goli", "8": "8 goli",
+    },
   },
   {
     numericId: 235,
@@ -3730,6 +3897,26 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     subCategory: "strzelcy",
     labels: { pl: "Obaj gracze strzelą gola", en: "Both Players To Score" },
     descriptions: { pl: "Obaj wybrani gracze strzelą gola w meczu", en: "Both selected players score in match" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_PAIR"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 252,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City): betclic id 1200126813012668
+    // "Obaj gracze strzelą gola lub zaliczą asystę" (220 selections, e.g.
+    // C. Tzolis & B. Saka=2.35). Odds relation confirms identity: for the
+    // same pair "gol lub asysta" (2.35) is shorter than plain "gol" via
+    // BOTH_PLAYERS_ANYTIME (G. Jesus & V. Gyokeres=4.1), and "obaj"
+    // (2.35) is correctly longer than "którykolwiek" (1.13) for the same pair.
+    numericId: 1417,
+    code: "BOTH_PLAYERS_GOAL_OR_ASSIST",
+    slug: "both-players-goal-or-assist",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Obaj gracze: gol lub asysta", en: "Both Players Goal or Assist" },
+    descriptions: { pl: "Obaj wybrani gracze strzelą gola lub zaliczą asystę w meczu", en: "Both selected players score or assist in match" },
     hasParameter: false,
     parameterType: "player",
     selections: ["PLAYER_PAIR"],
@@ -5336,7 +5523,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Liczba goli w przedziale czasowym", en: "Time Period Total Goals" },
     descriptions: { pl: "Zakład: Liczba goli w przedziale czasowym.", en: "Bet: Time Period Total Goals." },
     hasParameter: true,
-    parameterType: "decimal",
+    // The parameter is a minute window ("15", "16-30", "76-90"), not a goal
+    // line — the goal line is fixed at 0.5 across bookmakers. "integer"
+    // keeps the grouper's decimal-only numeric guard from dropping every
+    // non-cumulative window (audit-match: Arsenal vs Coventry City — 11 of
+    // 15 lebull minute-window markets were silently discarded because
+    // "decimal" only accepts /^[+-]?\d+(\.\d+)?$/ params, matching
+    // TIME_PERIOD_RESULT (numericId 48), which already uses "integer" for
+    // the same "16-30" style window).
+    parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
     displayOrder: 292,
@@ -5831,10 +6026,25 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "rozne",
     labels: { pl: "Wyścig do X rzutów rożnych", en: "Corners Race to" },
     descriptions: { pl: "Zakład: Wyścig do X rzutów rożnych.", en: "Bet: Corners Race to." },
-    hasParameter: false,
+    // audit-match (Arsenal vs Coventry City): betcris publishes four
+    // separate race thresholds (3/5/7/9 corners) and lvbet publishes its
+    // own set; with hasParameter=false they all collapsed onto one key, so
+    // betcris's "race to 5" (1.21/7.2/7.7) sat in the same API row as
+    // lvbet's "race to 9" (2.37/34/1.55) — a false cross-bookmaker price
+    // match, not just a coverage gap. Parameterizing by the race threshold
+    // keeps each line separate.
+    hasParameter: true,
+    parameterType: "integer",
+    parameterFormat: "integer",
+    validParameters: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 329,
+    descriptionTemplates: {
+      HOME: "{homeTeam} pierwszy dobije do {param} rzutów rożnych",
+      NONE: "Żaden zespół nie dobije do {param} rzutów rożnych",
+      AWAY: "{awayTeam} pierwszy dobije do {param} rzutów rożnych",
+    },
   },
   {
     numericId: 1065,
@@ -6635,10 +6845,16 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "metoda-gola",
     labels: { pl: "Zawodnik strzeli gola lewą nogą", en: "Player Left Foot Goal" },
     descriptions: { pl: "Zakład: Zawodnik strzeli gola lewą nogą.", en: "Bet: Player Left Foot Goal." },
+    // audit-match (Arsenal vs Coventry City): PLAYER_LEFT_FOOT_GOAL and
+    // PLAYER_RIGHT_FOOT_GOAL are the same bet shape on opposite feet, but
+    // used two different selection dictionaries (STAT_LINES/["1+"] here vs
+    // DROPDOWN/["PLAYER_NAME"] on the right-foot twin) — aligned to the
+    // right-foot entry's shape so the same bookmakers' rows don't split
+    // across two different UI representations.
     hasParameter: true,
     parameterType: "player",
-    selections: ["1+"],
-    viewType: ViewType.PLAYER_STAT_LINES,
+    selections: ["PLAYER_NAME"],
+    viewType: ViewType.PLAYER_DROPDOWN,
     displayOrder: 387,
   },
   {
@@ -6864,6 +7080,65 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 403,
   },
   {
+    // audit-match (Arsenal vs Coventry City): betclic id 1198115194408962
+    // "Którykolwiek z graczy strzeli 2 gole lub więcej" (66 pair
+    // selections, e.g. V. Gyokeres/R. Nelson=2.57). Distinct from
+    // TWO_PLAYERS_COMBINED_GOALS (counts goals jointly): for the same pair
+    // G. Jesus & V. Gyokeres, "łącznie pow. 1.5" = 2.37 vs "którykolwiek
+    // strzeli 2+" = 2.57 — the per-player condition is stricter and
+    // correctly longer.
+    numericId: 1418,
+    code: "TWO_PLAYERS_ANY_2PLUS_GOALS",
+    slug: "two-players-any-2plus-goals",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Któryś z dwóch strzeli 2+ gole", en: "Either of Two Players 2+ Goals" },
+    descriptions: { pl: "Którykolwiek z wybranych dwóch zawodników strzeli 2 lub więcej goli", en: "Either of two selected players scores 2 or more goals" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_PAIR"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 404,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City): betclic id 1198115194408960
+    // "Którykolwiek z graczy strzeli 2 gole lub więcej - 3 graczy" (20 trio
+    // selections, e.g. G. Jesus/V. Gyokeres/R. Nelson=1.88). Monotonic vs
+    // the pair variant: 2+ for a trio (1.88) is shorter than 2+ for a pair
+    // (2.57) — easier with three candidates, correctly cheaper.
+    numericId: 1419,
+    code: "THREE_PLAYERS_ANY_2PLUS_GOALS",
+    slug: "three-players-any-2plus-goals",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Któryś z trzech strzeli 2+ gole", en: "Any of Three Players 2+ Goals" },
+    descriptions: { pl: "Którykolwiek z wybranych trzech zawodników strzeli 2 lub więcej goli", en: "Any of three selected players scores 2 or more goals" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_TRIO"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 405,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City): betclic id 1198115194408961
+    // "Którykolwiek z graczy strzeli 3 gole lub więcej - 3 Graczy" (19 trio
+    // selections, e.g. G. Jesus/V. Gyokeres/R. Nelson=6.25). Monotonic vs
+    // the 2+ trio variant: 3+ (6.25) is longer than 2+ (1.88) for the same
+    // trio — stricter threshold, correctly more expensive.
+    numericId: 1420,
+    code: "THREE_PLAYERS_ANY_3PLUS_GOALS",
+    slug: "three-players-any-3plus-goals",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Któryś z trzech strzeli 3+ gole", en: "Any of Three Players 3+ Goals" },
+    descriptions: { pl: "Którykolwiek z wybranych trzech zawodników strzeli 3 lub więcej goli", en: "Any of three selected players scores 3 or more goals" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_TRIO"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 406,
+  },
+  {
     numericId: 1139,
     code: "ANY_PLAYER_2_OR_MORE_GOALS",
     slug: "any-player-2-or-more-goals",
@@ -7011,6 +7286,26 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
     displayOrder: 414,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City): superbet id 240085 "2. połowa
+    // - rzuty rożne - handicap" (Arsenal(-2.5)=1.88, Coventry(2.5)=1.8) has
+    // the same shape as superbet id 872 "1. połowa - rzuty rożne -
+    // handicap", already mapped to HALF_TIME_CORNERS_HANDICAP — the catalog
+    // was missing the 2nd-half counterpart.
+    numericId: 1414,
+    code: "SECOND_HALF_CORNERS_HANDICAP",
+    slug: "second-half-corners-handicap",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "rozne",
+    labels: { pl: "Handicap rożnych 2. połowa", en: "Second Half Corners Handicap" },
+    descriptions: { pl: "Handicap rzutów rożnych w drugiej połowie", en: "Corners handicap in second half" },
+    hasParameter: true,
+    parameterType: "handicap",
+    selections: ["HOME", "AWAY"],
+    viewType: ViewType.HANDICAP_SELECTOR,
+    displayOrder: 415,
+    descriptionTemplates: { HOME: "{homeTeam} ({param})", AWAY: "{awayTeam} ({param})" },
   },
   {
     numericId: 1150,
@@ -8107,10 +8402,22 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "linia-golowa",
     labels: { pl: "Wyścig do goli", en: "Race to Goals" },
     descriptions: { pl: "Zakład: Wyścig do goli.", en: "Bet: Race to Goals." },
-    hasParameter: false,
+    // audit-match (Arsenal vs Coventry City), round 8 P4: same defect as
+    // CORNERS_RACE_TO (its sibling, already fixed) — hasParameter:false
+    // collapsed lebull's "race to 2nd goal" and "race to 3rd goal" onto one
+    // key, dropping every line but the last-read one.
+    hasParameter: true,
+    parameterType: "integer",
+    parameterFormat: "integer",
+    validParameters: ["1", "2", "3", "4", "5"],
     selections: ["HOME", "AWAY", "NONE"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 497,
+    descriptionTemplates: {
+      HOME: "{homeTeam} pierwszy strzeli {param}. gola",
+      NONE: "Żaden zespół nie strzeli {param} goli",
+      AWAY: "{awayTeam} pierwszy strzeli {param}. gola",
+    },
   },
   {
     numericId: 1233,
@@ -8851,7 +9158,8 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba strzałów zawodnika — zakład rozliczany tylko gdy zawodnik wyjdzie w wyjściowym składzie, liczony z dogrywką", en: "Player shot count — settled only if the player starts; includes extra time" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+"],
+    // audit-match (Arsenal vs Coventry City), round 8 P5: mirror PLAYER_SHOTS.
+    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+", "8+", "9+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 560,
   },
@@ -8865,7 +9173,8 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba celnych strzałów zawodnika — zakład rozliczany tylko gdy zawodnik wyjdzie w wyjściowym składzie, liczony z dogrywką", en: "Player shots on target — settled only if the player starts; includes extra time" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+"],
+    // audit-match (Arsenal vs Coventry City), round 8 P5: mirror PLAYER_SHOTS_ON_TARGET.
+    selections: ["OVER", "UNDER", "1+", "2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
     displayOrder: 561,
   },
@@ -9038,6 +9347,10 @@ export const SELECTION_LABELS: Record<string, string> = {
   "1X_YES": "1X i tak", "1X_NO": "1X i nie", "X2_YES": "X2 i tak", "X2_NO": "X2 i nie",
   "12_YES": "12 i tak", "12_NO": "12 i nie",
   "0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5+": "5+",
+  // audit-match (Arsenal vs Coventry City), round 8 HEG-3: EXACT_GOALS
+  // family (HOME_EXACT_GOALS/AWAY_EXACT_GOALS/EXACT_GOALS) selection codes
+  // missing from this label map fell back to the raw code in the UI.
+  "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "3+": "3+", "4+": "4+", "6+": "6+",
   // WINNING_MARGIN selections
   HOME_BY_1: "Gosp. o 1", HOME_BY_2: "Gosp. o 2", HOME_BY_3PLUS: "Gosp. o 3+",
   AWAY_BY_1: "Gość o 1", AWAY_BY_2: "Gość o 2", AWAY_BY_3PLUS: "Gość o 3+",

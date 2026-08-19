@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  canonicalizePlayerComboSelection,
   canonicalizePlayerName,
   normalize1x2Selection,
   normalizeDoubleChanceSelection,
@@ -189,14 +190,30 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200756: "OTHER", // "Mecz & {away} liczba goli" - no catalog counterpart
   200762: "OTHER", // "Mecz & gol w każdej połowie" - no catalog counterpart
   200768: "OTHER", // "Podwójna szansa & gol w każdej połowie" - no catalog counterpart
+  // audit-match (Arsenal vs Coventry City): bet-builder / same-game-multi
+  // combos - 351 of 524 unclaimed raw markets in this match. Each entry is a
+  // unique leg combination ("Arsenal strzeli powyżej 0.5 gola; ... rożnych")
+  // with no peer bookmaker offering the same combination, so there is
+  // nothing to compare odds against. Mapped explicitly to OTHER to skip
+  // name-matching (which mis-routed ~30 of them into BTTS/HALF_TIME_BTTS by
+  // matching "Obie drużyny strzelą gola" inside the joined leg text) and to
+  // silence the per-entry "[superbet] Unmapped market" warning spam.
+  231194: "OTHER", // bet-builder / same-game-multi combos - no peer counterpart, never comparable
 
   // ===== Corners =====
   704: "CORNERS_TOTAL", // "Liczba rzutów rożnych"
   878: "HALF_TIME_CORNERS_TOTAL", // "1. połowa - liczba rzutów rożnych"
+  // audit-match (Arsenal vs Coventry City): CORNERS_TEAM's O/U ladder (ids
+  // 713/733) - side lives in the parameter (SIDED_PARAM_MARKETS), matching
+  // betclic/betcris/fortuna/lvbet's HOME:/AWAY: convention on this code.
   713: "CORNERS_TEAM", // "{home} - liczba rzutów rożnych"
   733: "CORNERS_TEAM", // "{away} - liczba rzutów rożnych"
-  685: "CORNERS_TEAM", // "{home} - przedział rzutów rożnych"
-  739: "CORNERS_TEAM", // "{away} - przedział rzutów rożnych"
+  // audit-match (Arsenal vs Coventry City): bucketed range variant ("0-2",
+  // "3-4", "5-6", "7+"), a different bet shape from the O/U ladder above -
+  // routed to the dedicated HOME/AWAY_CORNERS_RANGE codes instead of
+  // colliding with CORNERS_TEAM's over/under selections.
+  685: "HOME_CORNERS_RANGE", // "{home} - przedział rzutów rożnych"
+  739: "AWAY_CORNERS_RANGE", // "{away} - przedział rzutów rożnych"
   873: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {home} liczba rzutów rożnych"
   884: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {away} liczba rzutów rożnych"
   699: "CORNERS_RANGE", // "Liczba rzutów rożnych - przedziały"
@@ -209,8 +226,32 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   232535: "FIRST_CORNER", // "Kto wykona 1. rzut rożny"
   200684: "LAST_CORNER", // "Ostatni rzut rożny"
   881: "OTHER", // "1.połowa - kto pierwszy wykona X rożnych" - no catalog counterpart
-  711: "OTHER", // minute-interval corners count
-  731: "OTHER", // minute-interval corners 1X2
+  // 711 (minute-interval corners count) and 731 (minute-interval corners
+  // 1X2) are NOT listed here on purpose: id 711 carries several distinct
+  // time windows under one id, and only the 0:00-9:59 window has a catalog
+  // counterpart (FIRST_10_MIN_CORNERS_TOTAL) - see the window-based routing
+  // in resolveMarketCode(). A single static entry here cannot distinguish
+  // windows, so it would either wrongly claim all of them or none.
+  731: "OTHER", // minute-interval corners 1X2 - no catalog counterpart for any window yet
+
+  // ===== Second half - corners / cards (audit-match Arsenal vs Coventry) =====
+  // Superbet is the only bookmaker offering this full 2nd-half family in this
+  // match; the catalog codes already exist (SECOND_HALF_CORNERS_TOTAL/TEAM/
+  // RACE, SECOND_HALF_CARDS_TOTAL/1X2/HANDICAP, SECOND_HALF_HOME/AWAY_TEAM_
+  // TOTAL_CARDS) but none of these ids were mapped, so all 9 raw markets
+  // landed in rawUnclaimed and were dropped.
+  240082: "SECOND_HALF_CORNERS_TOTAL", // "2. połowa - liczba rzutów rożnych"
+  240083: "SECOND_HALF_CORNERS_TEAM", // "2. połowa - {home} liczba rzutów rożnych"
+  240084: "SECOND_HALF_CORNERS_TEAM", // "2. połowa - {away} liczba rzutów rożnych"
+  240081: "SECOND_HALF_CORNERS_RACE", // "2. połowa - najwięcej rzutów rożnych"
+  // audit-match (Arsenal vs Coventry City): "2. połowa - rzuty rożne -
+  // handicap", same shape as id 872 above (Arsenal(-2.5)=1.88, Coventry(2.5)=1.8).
+  240085: "SECOND_HALF_CORNERS_HANDICAP", // "2. połowa - rzuty rożne - handicap"
+  240086: "SECOND_HALF_CARDS_1X2", // "2. połowa - najwięcej kartek"
+  240087: "SECOND_HALF_CARDS_TOTAL", // "2. połowa - liczba kartek"
+  240088: "SECOND_HALF_HOME_TEAM_TOTAL_CARDS", // "2. połowa - {home} liczba kartek"
+  240089: "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS", // "2. połowa - {away} liczba kartek"
+  240090: "SECOND_HALF_CARDS_HANDICAP", // "2. połowa - liczba kartek - handicap"
 
   // ===== Cards =====
   690: "CARDS_TOTAL", // "Liczba kartek"
@@ -349,6 +390,8 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   700: "HOME", // "{home} - liczba kartek"
   708: "AWAY", // "{away} - liczba kartek"
+  713: "HOME", // "{home} - liczba rzutów rożnych"
+  733: "AWAY", // "{away} - liczba rzutów rożnych"
   873: "HOME", // "1. połowa - {home} liczba rzutów rożnych"
   884: "AWAY", // "1. połowa - {away} liczba rzutów rożnych"
   200758: "HOME", // "1.połowa - {home} przedział goli"
@@ -359,6 +402,10 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   200704: "AWAY", // "Liczba celnych strzałów - {away}"
   201591: "HOME", // "Liczba strzałów {home}"
   201592: "AWAY", // "Liczba strzałów {away}"
+  233528: "HOME", // "{home} - strzały w obramowanie"
+  233529: "AWAY", // "{away} - strzały w obramowanie"
+  240083: "HOME", // "2. połowa - {home} liczba rzutów rożnych"
+  240084: "AWAY", // "2. połowa - {away} liczba rzutów rożnych"
 };
 
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
@@ -366,22 +413,39 @@ const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_CORNERS_TEAM",
   "HALF_TIME_TEAM_GOAL_RANGE",
   "SECOND_HALF_TEAM_GOAL_RANGE",
+  "SECOND_HALF_CORNERS_TEAM",
 ]);
 
 /**
- * TEAM_TOTAL_SHOTS(_ON_TARGET)'s catalog selections are bare OVER/UNDER (no
- * side prefix) - the side must live in the param instead (betclic/betcris
- * convention: "HOME:2.5"/"AWAY:2.5"), otherwise home and away lines for the
- * same numeric threshold collide into one bucket (confirmed: superbet's
- * "away" rows for this match landed under a bare "2.5"/"3.5"/... param,
- * mixing Morocco's odds into the same column peers use for France). The
- * plain-shots sibling shares the identical bare-param shape and market-id
- * side split, so it collides the same way whenever both teams' lines land
- * on the same numeric threshold.
+ * Markets whose numeric-line parameter must carry the side prefix
+ * ("HOME:2.5"/"AWAY:2.5", the betclic/betcris convention), because the
+ * catalog's selection codes alone don't disambiguate home vs away:
+ *  - TEAM_TOTAL_SHOTS(_ON_TARGET): catalog selections are bare OVER/UNDER
+ *    (no side prefix at all) - without the side in param, home and away
+ *    lines for the same numeric threshold collide into one bucket
+ *    (confirmed: superbet's "away" rows for this match landed under a bare
+ *    "2.5"/"3.5"/... param, mixing Morocco's odds into France's column).
+ *  - CORNERS_TEAM: was missing from PARAMETERIZED_MARKETS entirely, so
+ *    every superbet corners-per-team line silently dropped (paramValue
+ *    undefined -> bare key shared with the wrong shape). Peers (betclic,
+ *    betcris, fortuna, lvbet) already key this code by HOME:/AWAY: line.
+ *  - CARDS_TEAM, HALF_TIME_CORNERS_TEAM, TEAM_TOTAL_WOODWORK_SHOTS,
+ *    SECOND_HALF_CORNERS_TEAM: catalog selections ARE side-prefixed
+ *    (HOME_OVER/AWAY_OVER, via SIDED_SELECTION_MARKETS) but the side was
+ *    only in the selection code, not the parameter - two raw markets (home
+ *    line, away line) then collided on the SAME (type, param) key and the
+ *    market-type-grouper's rawMarketName guard silently dropped whichever
+ *    arrived second (confirmed: HALF_TIME_CORNERS_TEAM:1.5 showed only the
+ *    away team's odds, Arsenal's identical-shaped line vanished).
  */
 const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS_ON_TARGET",
   "TEAM_TOTAL_SHOTS",
+  "CORNERS_TEAM",
+  "CARDS_TEAM",
+  "HALF_TIME_CORNERS_TEAM",
+  "TEAM_TOTAL_WOODWORK_SHOTS",
+  "SECOND_HALF_CORNERS_TEAM",
 ]);
 
 const SUPERBET_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
@@ -454,8 +518,10 @@ const HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_EUROPEAN_HANDICAP",
   "CORNERS_HANDICAP",
   "HALF_TIME_CORNERS_HANDICAP",
+  "SECOND_HALF_CORNERS_HANDICAP",
   "CARDS_HANDICAP",
   "HALF_TIME_CARDS_HANDICAP",
+  "SECOND_HALF_CARDS_HANDICAP",
   "SHOTS_HANDICAP",
   "HALF_TIME_SHOTS_HANDICAP",
   "SHOTS_ON_TARGET_HANDICAP",
@@ -477,6 +543,7 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_TOTAL_GOALS",
   "OWN_GOALS_TOTAL",
   "FIRST_30_MIN_TOTAL_GOALS",
+  "TOTAL_GOALS_BY_40_MIN",
   "TOTAL_GOALS_BY_60_MIN",
   "TEAM_TOTAL_GOALS",
   "HOME_TEAM_TOTAL_GOALS",
@@ -487,11 +554,18 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
   "CORNERS_TOTAL",
   "HALF_TIME_CORNERS_TOTAL",
+  "CORNERS_TEAM",
+  "FIRST_10_MIN_CORNERS_TOTAL",
+  "SECOND_HALF_CORNERS_TOTAL",
+  "SECOND_HALF_CORNERS_TEAM",
   "CARDS_TOTAL",
   "HALF_TIME_CARDS_TOTAL",
+  "SECOND_HALF_CARDS_TOTAL",
   "CARDS_TEAM",
   "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
   "HALF_TIME_AWAY_TEAM_CARDS",
+  "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
+  "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
   "HALF_TIME_CORNERS_TEAM",
   "RED_CARDS_TOTAL",
   "FOULS_TOTAL",
@@ -606,10 +680,19 @@ function resolveGoalByMinuteCode(raw: RawBookmakerMarket): NormalizedMarketType 
     if (match) minutes.add(match[1]);
   }
   const list = Array.from(minutes);
-  if (list.length > 0 && list.every((m) => ["1", "5", "10", "15"].includes(m))) {
+  // audit-match (Arsenal vs Coventry City): superbet id 200248 quotes 8
+  // checkpoints (5/10/15/20/25/30/35/40) - only 30 and 60 had dedicated
+  // codes; 20/25/35 have no dedicated code but share GOAL_BY_MINUTE's exact
+  // shape (param = goal line, minute lives in the selection code, see the
+  // "GOAL_BY_MINUTE" case below), so route them there too instead of OTHER.
+  if (list.length > 0 && list.every((m) => ["1", "5", "10", "15", "20", "25", "35"].includes(m))) {
     return "GOAL_BY_MINUTE";
   }
   if (list.length > 0 && list.every((m) => m === "30")) return "FIRST_30_MIN_TOTAL_GOALS";
+  // 40' has a dedicated catalog code (bare OVER/UNDER, no minute suffix
+  // needed in the selection) - route there instead of stuffing another
+  // minute variant into GOAL_BY_MINUTE's selection-code convention.
+  if (list.length > 0 && list.every((m) => m === "40")) return "TOTAL_GOALS_BY_40_MIN";
   if (list.length > 0 && list.every((m) => m === "60")) return "TOTAL_GOALS_BY_60_MIN";
   return "OTHER";
 }
@@ -625,23 +708,6 @@ function isNoneSelection(lower: string): boolean {
     lower.startsWith("brak") ||
     lower.startsWith("bez ")
   );
-}
-
-/**
- * Superbet quotes player identities as full names ("Mbappe, Kylian" ->
- * canonicalizePlayerName -> "Kylian Mbappe"), but the network convention for
- * player-combination selections (betclic, forbet) is "initial + surname"
- * ("K. Mbappe") - their raw feeds already arrive pre-abbreviated. Reduce
- * superbet's full first name down to the same shape so the same real pair
- * merges into one comparison column instead of superbet stranding its own,
- * full-name-only variant.
- */
-function toInitialSurname(fullName: string): string {
-  const parts = fullName.trim().split(/\s+/);
-  if (parts.length < 2) return fullName;
-  const initial = parts[0].charAt(0);
-  const surname = parts.slice(1).join(" ");
-  return `${initial}. ${surname}`;
 }
 
 function map1x2Token(token: string): NormalizedSelection | null {
@@ -673,6 +739,26 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
   const marketId = raw.bookmakerMarketId
     ? Number(raw.bookmakerMarketId)
     : extractSuperbetMarketId(raw.name);
+
+  // Corner time-window families (ids 239802, 711) publish one raw market per
+  // window under the SAME market id, and only the FIRST window in each
+  // family has a catalog counterpart (FIRST_MINUTE_CORNER / FIRST_10_MIN_
+  // CORNERS_TOTAL) - every other window has none. A single static
+  // SUPERBET_MARKET_ID_TO_CODE entry can't express "this id is code X for
+  // window A but OTHER for window B", so route by window here, before the
+  // id-map lookup (and before the blanket "od X:00 do Y" -> OTHER guard
+  // below, which would otherwise catch these too and never let window A
+  // through).
+  if (marketId === 239802) {
+    return /od\s+0:00\s+do\s+0:59/iu.test(raw.name)
+      ? { marketCode: "FIRST_MINUTE_CORNER", matchedBy: "id", rawId: marketId }
+      : { marketCode: "OTHER", matchedBy: "id", rawId: marketId };
+  }
+  if (marketId === 711) {
+    return /od\s+0:00\s+do\s+9:59/iu.test(raw.name)
+      ? { marketCode: "FIRST_10_MIN_CORNERS_TOTAL", matchedBy: "id", rawId: marketId }
+      : { marketCode: "OTHER", matchedBy: "id", rawId: marketId };
+  }
 
   if (marketId && SUPERBET_MARKET_ID_TO_CODE[marketId]) {
     return {
@@ -797,8 +883,10 @@ function normalizeSelectionForMarket(
     case "WIN_TO_NIL":
     case "CORNERS_RACE":
     case "HALF_TIME_CORNERS_RACE":
+    case "SECOND_HALF_CORNERS_RACE":
     case "CARDS_RACE":
     case "HALF_TIME_CARDS_RACE":
+    case "SECOND_HALF_CARDS_1X2":
     case "MOST_SHOTS":
     case "MOST_SHOTS_ON_TARGET":
     case "KICKOFF_TEAM":
@@ -845,6 +933,7 @@ function normalizeSelectionForMarket(
     case "HOME_SCORE_BOTH_HALVES":
     case "AWAY_SCORE_BOTH_HALVES":
     case "VAR_REVIEW":
+    case "FIRST_MINUTE_CORNER":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
@@ -925,6 +1014,8 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_TEAM_GOAL_RANGE":
     case "CORNERS_RANGE":
     case "HALF_TIME_CORNERS_RANGE":
+    case "HOME_CORNERS_RANGE":
+    case "AWAY_CORNERS_RANGE":
       return normalizeRangeSelection(trimmed, lower);
 
     case "HALF_TIME_HOME_EXACT_GOALS": {
@@ -1102,7 +1193,10 @@ function normalizeSelectionForMarket(
       const match = trimmed.match(/^(powyżej|powyzej|poniżej|ponizej)\s+[\d.,]+\s*-\s*do\s+(\d+)\.?\s*minuty$/i);
       if (match) {
         const overUnder = /^pow/i.test(match[1]) ? "OVER" : "UNDER";
-        if (["1", "5", "10", "15"].includes(match[2])) {
+        // Kept in sync with resolveGoalByMinuteCode's checkpoint list above -
+        // 20/25/35 route here (no dedicated catalog code); 30/60/40 route to
+        // their own dedicated codes and never reach this case.
+        if (["1", "5", "10", "15", "20", "25", "35"].includes(match[2])) {
           return `${overUnder}_${match[2]}MIN` as NormalizedSelection;
         }
       }
@@ -1128,16 +1222,13 @@ function normalizeSelectionForMarket(
     case "BOTH_PLAYERS_ANYTIME": {
       // Each named pair must stay a distinct selection code - the shared
       // "PLAYER_PAIR" constant collapsed every pair into one aggregated row,
-      // silently dropping all but the first quote. Canonicalize both names
-      // ("Rodriguez, James i Ndoye, Dan" -> "James Rodriguez i Dan Ndoye").
-      // TWO_PLAYERS_ANYTIME ("either scores") uses "lub" (or) as the pair
-      // separator, while BOTH_PLAYERS_ANYTIME ("both score") uses "i" (and) -
-      // recognize both so neither falls through as raw unparsed text.
-      const cleanedPair = trimmed.replace(/^\d+\.\s*/, "").trim();
-      return cleanedPair
-        .split(/\s+(?:i|lub)\s+/iu)
-        .map((part) => toInitialSurname(canonicalizePlayerName(part.trim())))
-        .join(" i ") as NormalizedSelection;
+      // silently dropping all but the first quote. Use the network-wide
+      // combo reduction (audit-match, Arsenal vs Coventry City) so superbet's
+      // "Simms, Ellis Reco i Havertz, Kai" converges on the same selection
+      // code as betclic/betcris/lvbet's "K. Havertz & E. Simms" - matching
+      // last-token-only surnames, sorted, joined with "&" - instead of
+      // stranding its own "i"-joined, unsorted variant.
+      return canonicalizePlayerComboSelection(trimmed) as NormalizedSelection;
     }
 
     case "GOALSCORER_FIRST":
@@ -1327,6 +1418,24 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     const resolved = resolveMarketCode(raw);
     let marketCode = resolved.marketCode;
     const { matchedBy, rawId } = resolved;
+
+    // Guard: bet-builder / same-game-multi combos ("Arsenal strzeli powyżej
+    // 0.5 gola; Arsenal wykona powyżej 4.5 rz.rożnych") arrive as one raw
+    // market PER combo, each with exactly one selection whose name repeats
+    // the market name verbatim. Their joined-leg text can contain vocabulary
+    // that matches an unrelated catalog market by name (confirmed: ~30 SGM
+    // combos containing "Obie drużyny strzelą gola" leaked into BTTS, 3 into
+    // HALF_TIME_BTTS) - force OTHER before any name-matching gets a chance,
+    // regardless of which id map entry or name pattern this happened to
+    // resolve to. Defense-in-depth alongside the explicit 231194 -> OTHER
+    // id-map entry, in case a future combo family lands under a different id.
+    if (
+      raw.selections.length === 1 &&
+      raw.selections[0].name === raw.name &&
+      raw.name.includes(";")
+    ) {
+      marketCode = "OTHER";
+    }
 
     // Guard: correct-score shaped entries ("Liczba goli 0:2") must never
     // enter goal-line markets - the digits are a scoreline, not a threshold.

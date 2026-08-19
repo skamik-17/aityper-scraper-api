@@ -44,7 +44,11 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   76: "FIRST_HALF_EUROPEAN_HANDICAP",
   77: "FIRST_HALF_ASIAN_HANDICAP_PUSH",
   79: "FIRST_HALF_ASIAN_HANDICAP",
-  80: "HALF_TIME_TOTAL_GOALS_ASIAN",
+  // Audit /audit-match (Arsenal vs Coventry City): STS quotes whole-number
+  // goal lines as a separate "z możliwym zwrotem" market; peers publish the
+  // identical push line inside the plain total-goals family, so route it
+  // there instead of into a bookmaker-exclusive *_ASIAN code.
+  80: "HALF_TIME_TOTAL_GOALS",
   82: "HALF_TIME_TOTAL_GOALS",
   85: "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
   88: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
@@ -54,7 +58,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   106: "SECOND_HALF_EUROPEAN_HANDICAP",
   107: "SECOND_HALF_ASIAN_HANDICAP_PUSH",
   109: "SECOND_HALF_ASIAN_HANDICAP",
-  110: "SECOND_HALF_TOTAL_GOALS_ASIAN",
+  // Same reasoning as id 80 above.
+  110: "SECOND_HALF_TOTAL_GOALS",
   112: "SECOND_HALF_TOTAL_GOALS",
   124: "SECOND_HALF_CORRECT_SCORE",
   1051: "PLAYER_GOAL_AND_RESULT",
@@ -77,12 +82,35 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2395: "PLAYER_SHOTS_ON_TARGET",
   2396: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
   2397: "PLAYER_ASSISTS",
+  // id 2361 ("Zawodnik - celne strzały głową - N lub więcej") is the
+  // transposed twin of 2404 with cell-for-cell identical prices. Because
+  // PLAYER_HEADER_SHOTS_ON_TARGET is not in extractParamValue()'s
+  // parameterizedMarkets list and the generic per-player regex excludes
+  // names starting with "Zawodnik", all three of 2361's raw sub-markets
+  // (1+/2+/3+) resolve to the same bare "PLAYER_HEADER_SHOTS_ON_TARGET" key
+  // with no player param, colliding with each other under the grouper's
+  // "first raw market wins" rule and losing 2 of the 3 thresholds - not
+  // colliding with 2404, which keys per player. Intentionally left unmapped.
   2404: "PLAYER_HEADER_SHOTS_ON_TARGET",
+
+  // Audit /audit-match (Arsenal vs Coventry City): six "Zawodnik - <event>"
+  // dropdown markets (one raw market, 32-47 player-name selections) that the
+  // catalog already carries codes for and that 4-7 other bookmakers feed.
+  1892: "PLAYER_HEADER_GOAL",
+  1896: "PLAYER_RED_CARD",
+  1903: "PLAYER_GOAL_OR_ASSIST",
+  2168: "PLAYER_GOAL_AND_ASSIST",
+  2357: "PLAYER_LEFT_FOOT_GOAL",
+  2358: "PLAYER_RIGHT_FOOT_GOAL",
+  2318: "PLAYER_GOAL_OUTSIDE_BOX",
 
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
   31: "AWAY_TEAM_TOTAL_GOALS",
-  23: "TOTAL_GOALS_ASIAN",
+  // Same reasoning as id 80/110 above: route the "z możliwym zwrotem"
+  // whole-number line into the plain TOTAL_GOALS family instead of the
+  // bookmaker-exclusive *_ASIAN code.
+  23: "TOTAL_GOALS",
 
   43: "BTTS",
   121: "SECOND_HALF_BTTS",
@@ -208,6 +236,12 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2004: "PLAYER_FOULS_WON",
   2005: "PLAYER_FOULS",
   2011: "PLAYER_SAVES",
+  // Audit /audit-match (Arsenal vs Coventry City): STS renumbered its
+  // player-stat markets; 2004/2005/2011 no longer appear in the offer.
+  2398: "PLAYER_FOULS",
+  2399: "PLAYER_FOULS_WON",
+  2400: "PLAYER_OFFSIDES",
+  2401: "PLAYER_SAVES",
   1898: "OTHER",
   1899: "RED_CARD_AND_PENALTY",
   1845: "PLAYER_ASSISTS_LINEUP",
@@ -237,7 +271,7 @@ const STS_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType; ex
 
   // Goals markets - with parameter extraction
   { pattern: /^liczba\s+goli\s+(\d+[.,]\d+)$/i, code: "TOTAL_GOALS", extractParam: (m) => m[1]?.replace(",", ".") },
-  { pattern: /^liczba\s+goli\s+\(zwrot\)\s*(\d+)$/i, code: "TOTAL_GOALS_ASIAN", extractParam: (m) => m[1] },
+  { pattern: /^liczba\s+goli\s+\(zwrot\)\s*(\d+)$/i, code: "TOTAL_GOALS", extractParam: (m) => m[1] },
   { pattern: /^obie\s+dru[zż]yny\s+strzel[aą]$/i, code: "BTTS" },
 
   // Half-time markets
@@ -359,6 +393,22 @@ function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationConte
   }
 
   return normalize1x2Selection(selectionName, ctx.homeTeam, ctx.awayTeam, ctx.league);
+}
+
+// STS emits several player-dropdown markets' raw selections as
+// space-separated "Lastname Firstname" (no comma) - e.g. "Digne Lucas",
+// "Kante N'Golo" - the opposite of the canonical "Firstname Lastname" order
+// used by peers (superbet/forbet/etoto emit "Lucas Digne"/"N'Golo Kante").
+// canonicalizePlayerName() only reorders the comma-delimited "Last, First"
+// pattern, so it silently no-ops on STS's space-only format, stranding each
+// STS-quoted player as a duplicate top-level selection instead of merging
+// with peers. Flip simple two-token names before handing off to the shared
+// helper.
+function stsPlayerNameSelection(trimmed: string): NormalizedSelection {
+  const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
+  const tokens = nameOnly.split(/\s+/);
+  const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
+  return canonicalizePlayerName(reordered) as NormalizedSelection;
 }
 
 function normalizeSelectionForMarket(
@@ -577,10 +627,24 @@ function normalizeSelectionForMarket(
     case "OWN_GOAL":
     case "EACH_TEAM_TOTAL_CORNERS_OVER":
     case "EACH_TEAM_TOTAL_CARDS_OVER":
-    case "PLAYER_RED_CARD":
+    // STS quotes this conditional market as a single 'Tak' outcome, not as
+    // a player-name dropdown like the other *_LINEUP codes.
+    case "PLAYER_CARDS_LINEUP":
       if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && trimmed.startsWith("+")) return "OVER";
       return normalizeYesNoSelection(trimmed);
-    
+
+    case "PLAYER_RED_CARD":
+      // STS shares this code between two differently-shaped raw markets:
+      // id 2153 is per-player and quotes a single "Tak" outcome, while id
+      // 1896 is the "Zawodnik - otrzyma czerwoną kartkę" dropdown whose
+      // selections are player names. Branch on the market name shape so
+      // the dropdown's player names don't get funneled into
+      // normalizeYesNoSelection and come out UNKNOWN.
+      if (marketName?.trim().toLowerCase().startsWith("zawodnik")) {
+        return stsPlayerNameSelection(trimmed);
+      }
+      return normalizeYesNoSelection(trimmed);
+
     case "WIN_TO_NIL":
       if (marketName) {
         const mName = marketName.toLowerCase();
@@ -724,56 +788,20 @@ function normalizeSelectionForMarket(
     }
 
     case "GOALSCORER_FIRST":
-    case "GOALSCORER_LAST": {
-      // STS emits these two markets' raw selections as space-separated
-      // "Lastname Firstname" (no comma) - e.g. "Digne Lucas", "Kante N'Golo" -
-      // the opposite of the canonical "Firstname Lastname" order used by
-      // betcris/etoto/lvbet. canonicalizePlayerName() only reorders the
-      // comma-delimited "Last, First" pattern, so it silently no-ops on
-      // STS's space-only format. Flip simple two-token names before handing
-      // off to the shared helper so selections merge with peers.
-      const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
-      const tokens = nameOnly.split(/\s+/);
-      const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
-      return canonicalizePlayerName(reordered) as NormalizedSelection;
-    }
-
-    case "PLAYER_CARDS": {
-      // STS emits this market's raw selections as space-separated
-      // "Lastname Firstname" (no comma) - e.g. "Bounou Yassine", "Barcola
-      // Bradley", "Bouaddi Ayyoub" - the opposite of the canonical
-      // "Firstname Lastname" order used by peers (superbet/forbet/etoto
-      // emit "Yassine Bounou"/"Bradley Barcola"/"Ayyoub Bouaddi").
-      // canonicalizePlayerName() only reorders the comma-delimited
-      // "Last, First" pattern, so it silently no-ops on STS's space-only
-      // format here, stranding each STS-quoted player as a duplicate
-      // top-level selection instead of merging with peers. Flip simple
-      // two-token names before handing off to the shared helper, mirroring
-      // the GOALSCORER_FIRST/GOALSCORER_LAST handling above.
-      const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
-      const tokens = nameOnly.split(/\s+/);
-      const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
-      return canonicalizePlayerName(reordered) as NormalizedSelection;
-    }
-
+    case "GOALSCORER_LAST":
+    case "PLAYER_CARDS":
     case "GOALSCORER_ANYTIME":
-    case "HALF_TIME_GOALSCORER_ANYTIME": {
-      // STS emits these two markets' raw selections as space-separated
-      // "Lastname Firstname" (no comma) - e.g. "Digne Lucas", "Kante N'Golo",
-      // "Rabiot Adrien" - the opposite of the canonical "Firstname Lastname"
-      // order used by peers (superbet/forbet/etoto emit "Lucas Digne"/
-      // "N'Golo Kante"). canonicalizePlayerName() only reorders the
-      // comma-delimited "Last, First" pattern, so it silently no-ops on
-      // STS's space-only format here, stranding each STS-quoted player as a
-      // duplicate top-level selection instead of merging with peers. Flip
-      // simple two-token names before handing off to the shared helper,
-      // mirroring the GOALSCORER_FIRST/GOALSCORER_LAST/PLAYER_CARDS handling
-      // above.
-      const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
-      const tokens = nameOnly.split(/\s+/);
-      const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
-      return canonicalizePlayerName(reordered) as NormalizedSelection;
-    }
+    case "HALF_TIME_GOALSCORER_ANYTIME":
+    // Audit /audit-match (Arsenal vs Coventry City): same "Zawodnik -
+    // <event>" dropdown shape as the markets above (one raw market, 32-47
+    // player-name selections in space-separated "Lastname Firstname" order).
+    case "PLAYER_HEADER_GOAL":
+    case "PLAYER_GOAL_OR_ASSIST":
+    case "PLAYER_GOAL_AND_ASSIST":
+    case "PLAYER_LEFT_FOOT_GOAL":
+    case "PLAYER_RIGHT_FOOT_GOAL":
+    case "PLAYER_GOAL_OUTSIDE_BOX":
+      return stsPlayerNameSelection(trimmed);
 
     case "PLAYER_SHOTS":
     case "PLAYER_ASSISTS":
@@ -917,6 +945,7 @@ function normalizeSelectionForMarket(
     case "PLAYER_FOULS_WON":
     case "PLAYER_FOULS":
     case "PLAYER_SAVES":
+    case "PLAYER_OFFSIDES":
       // Pass through numeric (0, 1, 2), range (0-2, 3-4), and plus (5+, 3+) selections
       if (/^\d+$/.test(trimmed) || /^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
@@ -1037,6 +1066,7 @@ function extractParamValue(
     "EACH_TEAM_TOTAL_CORNERS_OVER",
     "EACH_TEAM_TOTAL_CARDS_OVER",
     "FIRST_GOAL_TIME",
+    "TIME_PERIOD_RESULT",
   ];
 
 
@@ -1051,6 +1081,13 @@ function extractParamValue(
     if (firstName?.match(/^\d+-15$/)) return "15min";
     if (firstName?.match(/^\d+-10$/)) return "10min";
     return "15min";
+  }
+
+  // STS names the window in the market title - "Wynik od 1. do 10. minuty" -
+  // and the catalog keys this market by the closing minute.
+  if (marketCode === "TIME_PERIOD_RESULT") {
+    const windowMatch = raw.name.match(/do\s+(\d+)\.?\s*minut/i);
+    if (windowMatch) return windowMatch[1];
   }
 
   if (marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") {
@@ -1082,51 +1119,35 @@ function extractParamValue(
     }
   }
 
-  // Extract Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
-  // The line value is an integer (1, 2, 3, etc.)
-  if (marketCode === "TOTAL_GOALS_ASIAN") {
-    // First try to extract from selection names like "+1", "-2"
+  // Extract the whole-number "z możliwym zwrotem" (push) line from selection
+  // names (e.g., "+1", "-2") for TOTAL_GOALS / HALF_TIME_TOTAL_GOALS /
+  // SECOND_HALF_TOTAL_GOALS. STS quotes this push line as its own market
+  // (ids 23/80/110) instead of folding it into the ".5" over/under ladder,
+  // but the line itself is the same TOTAL_GOALS family every other
+  // bookmaker publishes - id23 param "1" prices identically to
+  // betcris/etoto/fortuna/fuksiarz/lvbet's plain "Liczba goli 1" line - so
+  // it must resolve to the same bare integer param ("1", not "1.0") those
+  // peers use, or the row won't merge. Whole-.5 lines for these three codes
+  // fall through unchanged to the generic parseOverUnderLine() below.
+  if (
+    marketCode === "TOTAL_GOALS" ||
+    marketCode === "HALF_TIME_TOTAL_GOALS" ||
+    marketCode === "SECOND_HALF_TOTAL_GOALS"
+  ) {
     for (const sel of raw.selections) {
       const intMatch = sel.name.match(/^[+-](\d+)$/);
       if (intMatch) {
         return intMatch[1]; // Return integer without ".0"
       }
     }
-    // Fallback: try to extract from market name like "Liczba goli (zwrot) 1"
-    const nameMatch = raw.name.match(/\s(\d+)$/);
-    if (nameMatch) {
-      return nameMatch[1];
-    }
-  }
-
-  // Extract 1st-half Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
-  // Mirrors TOTAL_GOALS_ASIAN extraction; lines are integers (1, 2, 3, etc.)
-  if (marketCode === "HALF_TIME_TOTAL_GOALS_ASIAN") {
-    for (const sel of raw.selections) {
-      const intMatch = sel.name.match(/^[+-](\d+)$/);
-      if (intMatch) {
-        return intMatch[1];
-      }
-    }
-    const nameMatch = raw.name.match(/\s(\d+)$/);
-    if (nameMatch) {
-      return nameMatch[1];
-    }
-  }
-
-  // Extract 2nd-half Asian Total Goals line from selection names (e.g., "+1", "+2", "-3")
-  // Mirrors HALF_TIME_TOTAL_GOALS_ASIAN extraction; lines are integers (1, 2, 3, etc.)
-  if (marketCode === "SECOND_HALF_TOTAL_GOALS_ASIAN") {
-    for (const sel of raw.selections) {
-      const intMatch = sel.name.match(/^[+-](\d+)$/);
-      if (intMatch) {
-        return intMatch[1];
-      }
-    }
-    const nameMatch = raw.name.match(/\s(\d+)$/);
-    if (nameMatch) {
-      return nameMatch[1];
-    }
+    // No "+N"/"-N" selection found - this is a plain ".5" over/under line
+    // (or an unrelated shape), not the whole-number push market. Do NOT
+    // fall back to scanning raw.name for a trailing number here: these
+    // codes are also fed by the plain TOTAL_GOALS family (ids 25/82/112),
+    // whose raw market name can legitimately end in digits (e.g. the
+    // scraper's "Rynek <id>" placeholder) without that number being a
+    // push line. Let control fall through to parseOverUnderLine() below,
+    // which reads the actual decimal line from the selection labels.
   }
 
   if (marketCode === "BOTH_HALVES_UNDER_GOALS") {
@@ -1329,14 +1350,18 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
-    if (stsId === 2004) {
+    // id 2399 is the renumbered twin of the (currently absent) id 2004 -
+    // same "X - faule wywalczone" market shape.
+    if (stsId === 2004 || stsId === 2399) {
       const suffix = ' - faule wywalczone';
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
       }
     }
 
-    if (stsId === 2005) {
+    // id 2398 is the renumbered twin of the (currently absent) id 2005 -
+    // same "X - faule popełnione" market shape.
+    if (stsId === 2005 || stsId === 2398) {
       const suffix = ' - faule popełnione';
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
@@ -1349,8 +1374,18 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
-    if (stsId === 2011) {
+    // id 2401 is the renumbered twin of the (currently absent) id 2011 -
+    // same "X - obronione strzały" market shape.
+    if (stsId === 2011 || stsId === 2401) {
       const suffix = ' - obronione strzały';
+      if (marketName.endsWith(suffix)) {
+        playerName = marketName.replace(suffix, "").trim();
+      }
+    }
+
+    // id 2400: "X - spalone" (offsides) player-stat market.
+    if (stsId === 2400) {
+      const suffix = " - spalone";
       if (marketName.endsWith(suffix)) {
         playerName = marketName.replace(suffix, "").trim();
       }

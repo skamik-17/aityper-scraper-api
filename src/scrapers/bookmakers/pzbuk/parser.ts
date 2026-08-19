@@ -227,12 +227,23 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "79": "Zakład bez remisu",
   // Audit r4 (France vs Morocco): ids 126/498/501 were still surfacing the
   // generic "Rynek <id>" placeholder even though their catalog identity is
-  // already confirmed (126 -> MATCH_WINNER, 498 -> DOUBLE_CHANCE_BTTS,
-  // 501 -> RESULT_AND_BTTS, see pzbuk-normalizer.ts) — give them real labels
-  // so future audits can sanity-check the label against the odds shape.
+  // already confirmed (126 -> MATCH_WINNER, 501 -> RESULT_AND_BTTS, see
+  // pzbuk-normalizer.ts) — give them real labels so future audits can
+  // sanity-check the label against the odds shape.
+  // Audit /audit-match (premier-league Arsenal vs Coventry City,
+  // 2026-08-19): the "498 -> DOUBLE_CHANCE_BTTS" identity above was WRONG —
+  // id 498 already carries this exact label as its own API name (not a
+  // placeholder, so this table never even applied to it), and that
+  // misleading label is what made earlier audit rounds "confirm" the wrong
+  // market. The genuine full-match DOUBLE_CHANCE_BTTS source is id 504
+  // (see pzbuk-normalizer.ts for the odds proof), which still surfaces
+  // under the generic "Rynek 504" placeholder — move the label there so the
+  // reported rawMarketName matches what the market actually is. Id 498 is
+  // left unlabeled here (falls back to its own real, if misleading, API
+  // name) until its true identity is established.
   "126": "Wynik meczu",
-  "498": "Podwójna szansa i obie drużyny strzelą",
   "501": "Wynik meczu i obie drużyny strzelą",
+  "504": "Podwójna szansa i obie drużyny strzelą",
   "85": "Dokładna liczba goli - 2. połowa",
   "86": "Parzysta/nieparzysta liczba goli",
   "90": "Dokładny wynik 2. połowy",

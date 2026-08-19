@@ -1,6 +1,10 @@
 -- Add start_time column to odds table
 -- Stores match kickoff time from bookmaker data (ISO 8601 / TIMESTAMPTZ)
-ALTER TABLE odds ADD COLUMN start_time TIMESTAMPTZ;
+ALTER TABLE odds ADD COLUMN IF NOT EXISTS start_time TIMESTAMPTZ;
+
+-- The 06 version has a different return signature, so CREATE OR REPLACE
+-- alone would fail with "cannot change return type of existing function".
+DROP FUNCTION IF EXISTS get_matches_with_odds(TEXT);
 
 CREATE OR REPLACE FUNCTION get_matches_with_odds(p_league_slug TEXT)
 RETURNS TABLE (

@@ -65,3 +65,60 @@ describe("parseAllMarkets - rich market data for audit", () => {
     }
   });
 });
+
+describe("parseAllMarkets - HALF_WITH_MORE_GOALS label repair", () => {
+  // audit-match (Arsenal vs Coventry City), round 8 fuk-hwmg-3: Fuksiarz's
+  // feed for game type 38 applies outcome labels in template order
+  // (1st half / equal / 2nd half) while the prices arrive in provider order
+  // (1st half / 2nd half / equal), so "rowno" carries the 2nd-half price and
+  // "2. polowa" carries the draw price. Live payload from event 20831778.
+  const buildEvent = (
+    outcomes: { outcomeId: number; outcomeName: string; outcomeOdds: number; outcomePosition: number }[]
+  ): FuksiarzEvent => ({
+    eventId: 20831778,
+    eventName: "Arsenal - Coventry City",
+    categoryId: 625,
+    eventGames: [
+      {
+        gameId: 1,
+        gameType: GAME_TYPES.HALF_WITH_MORE_GOALS,
+        gameName: "Połowa z większą liczbą goli",
+        outcomes,
+      },
+    ],
+  });
+
+  it("swaps the mislabeled 'równo'/'2. połowa' prices back onto their correct labels", () => {
+    const event = buildEvent([
+      { outcomeId: 390826001, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
+      { outcomeId: 390826002, outcomeName: "równo", outcomeOdds: 2.09, outcomePosition: 1 },
+      { outcomeId: 390826003, outcomeName: "2. połowa", outcomeOdds: 3.6, outcomePosition: 2 },
+    ]);
+
+    const markets = parseAllMarkets(event);
+    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
+    expect(market).toBeDefined();
+
+    const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
+    expect(bySelectionName.get("1. połowa")).toBe(2.9);
+    expect(bySelectionName.get("2. połowa")).toBe(2.09);
+    expect(bySelectionName.get("równo")).toBe(3.6);
+  });
+
+  it("is a no-op once Fuksiarz sends the labels in the correct order", () => {
+    const event = buildEvent([
+      { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
+      { outcomeId: 2, outcomeName: "2. połowa", outcomeOdds: 2.09, outcomePosition: 1 },
+      { outcomeId: 3, outcomeName: "równo", outcomeOdds: 3.6, outcomePosition: 2 },
+    ]);
+
+    const markets = parseAllMarkets(event);
+    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
+    expect(market).toBeDefined();
+
+    const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
+    expect(bySelectionName.get("1. połowa")).toBe(2.9);
+    expect(bySelectionName.get("2. połowa")).toBe(2.09);
+    expect(bySelectionName.get("równo")).toBe(3.6);
+  });
+});

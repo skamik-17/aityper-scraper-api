@@ -588,8 +588,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:1",
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
@@ -607,15 +607,15 @@
         ]
       },
       "index": 21,
-      "marketCode": "TOTAL_GOALS_ASIAN",
+      "marketCode": "TOTAL_GOALS",
       "rawName": "Liczba goli (z możliwym zwrotem) 1"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:2",
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2",
         "matchedBy": "id",
         "paramValue": "2",
         "parameters": null,
@@ -633,15 +633,15 @@
         ]
       },
       "index": 22,
-      "marketCode": "TOTAL_GOALS_ASIAN",
+      "marketCode": "TOTAL_GOALS",
       "rawName": "Liczba goli (z możliwym zwrotem) 2"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:3",
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:3",
         "matchedBy": "id",
         "paramValue": "3",
         "parameters": null,
@@ -659,15 +659,15 @@
         ]
       },
       "index": 23,
-      "marketCode": "TOTAL_GOALS_ASIAN",
+      "marketCode": "TOTAL_GOALS",
       "rawName": "Liczba goli (z możliwym zwrotem) 3"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:4",
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:4",
         "matchedBy": "id",
         "paramValue": "4",
         "parameters": null,
@@ -685,15 +685,15 @@
         ]
       },
       "index": 24,
-      "marketCode": "TOTAL_GOALS_ASIAN",
+      "marketCode": "TOTAL_GOALS",
       "rawName": "Liczba goli (z możliwym zwrotem) 4"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS_ASIAN",
-        "marketKey": "TOTAL_GOALS_ASIAN:5",
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:5",
         "matchedBy": "id",
         "paramValue": "5",
         "parameters": null,
@@ -711,7 +711,7 @@
         ]
       },
       "index": 25,
-      "marketCode": "TOTAL_GOALS_ASIAN",
+      "marketCode": "TOTAL_GOALS",
       "rawName": "Liczba goli (z możliwym zwrotem) 5"
     },
     {
@@ -3268,8 +3268,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
-        "marketKey": "HALF_TIME_TOTAL_GOALS_ASIAN:1",
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
@@ -3287,7 +3287,7 @@
         ]
       },
       "index": 81,
-      "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
       "rawName": "1. połowa - liczba goli (z możliwym zwrotem) 1"
     },
     {
@@ -4095,8 +4095,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
-        "marketKey": "SECOND_HALF_TOTAL_GOALS_ASIAN:1",
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
@@ -4114,15 +4114,15 @@
         ]
       },
       "index": 108,
-      "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
       "rawName": "2. połowa - liczba goli (z możliwym zwrotem) 1"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
-        "marketKey": "SECOND_HALF_TOTAL_GOALS_ASIAN:2",
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:2",
         "matchedBy": "id",
         "paramValue": "2",
         "parameters": null,
@@ -4140,15 +4140,15 @@
         ]
       },
       "index": 109,
-      "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
       "rawName": "2. połowa - liczba goli (z możliwym zwrotem) 2"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
-        "marketKey": "SECOND_HALF_TOTAL_GOALS_ASIAN:3",
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:3",
         "matchedBy": "id",
         "paramValue": "3",
         "parameters": null,
@@ -4166,7 +4166,7 @@
         ]
       },
       "index": 110,
-      "marketCode": "SECOND_HALF_TOTAL_GOALS_ASIAN",
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
       "rawName": "2. połowa - liczba goli (z możliwym zwrotem) 3"
     },
     {

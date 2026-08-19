@@ -20,6 +20,7 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  canonicalizePlayerComboSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { matchToCanonical } from "../../../utils/team-matcher.js";
@@ -49,6 +50,20 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
   { pattern: /obie druzyny strzela/, code: "BTTS" },
   { pattern: /parzyste|nieparzyst/, code: "ODD_EVEN_GOALS" },
   { pattern: /zwyciezca meczu|wynik meczu|zwyciezca/, code: "MATCH_WINNER" },
+  // Full-match goal-range brackets (audit-match, Arsenal vs Coventry City,
+  // round 8) — anchored end-to-end so half-/team-scoped variants ("2. Połowa
+  // - Dokładna liczba goli (przedział)", "Arsenal - Liczba goli (przedziały)")
+  // stay on their own already-handled routes instead of collapsing here.
+  // Two DIFFERENT products share the "przedział(y)" wording: "Dokładna
+  // liczba goli (przedział)" is a disjoint exhaustive band scale (0-1/2-3/
+  // 4-6/7+, implied probs sum to ~1) — catalog code GOAL_RANGE. "Suma goli
+  // (przedziały)" is a cumulative multi-goal ladder (1-2/1-3/.../7+,
+  // overlapping ranges, implied probs sum well above 1) — catalog code
+  // MULTI_GOAL_RANGE. Must run BEFORE the generic TOTAL_GOALS catch-all
+  // below, which used to swallow both (their selections don't map to
+  // OVER/UNDER, so they fell into rawUnclaimed).
+  { pattern: /^dokładna liczba goli \(przedział\)$/, code: "GOAL_RANGE" },
+  { pattern: /^suma goli \(przedziały\)$/, code: "MULTI_GOAL_RANGE" },
   { pattern: /suma goli|liczba goli|dokładna liczba goli|gole|bramek/, code: "TOTAL_GOALS" },
 ];
 
@@ -166,9 +181,10 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /spalone: wynik/, code: "OFFSIDES_1X2" },
   { pattern: /spalone: 1\. spalony/, code: "FIRST_OFFSIDE" },
   { pattern: /spalone: suma/, code: "OFFSIDES_TOTAL" },
-  { pattern: /spalone: belgia suma 2\.5$/, code: "AWAY_TEAM_TOTAL_OFFSIDES" },
-  { pattern: /spalone: (?:belgia|belgium) suma/, code: "HOME_TEAM_TOTAL_OFFSIDES" },
-  { pattern: /spalone: (?:nowa zelandia|new zealand) suma/, code: "AWAY_TEAM_TOTAL_OFFSIDES" },
+  // Team-scoped offsides totals ("Spalone: <Team> suma <line>") used to be
+  // hardcoded to the Belgium/New Zealand fixture's team names and matched no
+  // other match (round-? audit, Arsenal vs Coventry City: rawUnclaimed).
+  // Resolved generically via detectTeamSide in resolveMarketCode instead.
 
   // --- Shots (strzały) — team/total markets carry a colon after the stat ---
   // Shot handicaps are spread bets, not totals — route them out first. The
@@ -197,7 +213,13 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /strzały celne \(musi rozpoczac/, code: "PLAYER_SHOTS_ON_TARGET" },
   { pattern: /zawodnicy \(strzały celne\)/, code: "PLAYER_SHOTS_ON_TARGET" },
   { pattern: /strzały \(musi rozpoczac/, code: "PLAYER_SHOTS" },
-  { pattern: /zawodnicy \(strzały\) - powyzej 7\.5/, code: "PLAYER_SHOTS_OVER" },
+  // The 7.5 threshold used to be carved out to the PLAYER_SHOTS_OVER
+  // PLAYER_DROPDOWN code (audit-match, Arsenal vs Coventry City, round 8 P4):
+  // it is NOT a separate product, just another rung of the same PLAYER_SHOTS
+  // ladder (parser.ts's splitBulkPlayerListMarket now carries every threshold
+  // via market.line, and normalizeLvbetPlayerThreshold below maps "Powyżej
+  // 7.5" -> "8+"). Carving it out here dropped every player from that line
+  // into a separate, differently-shaped market instead of the shared ladder.
   { pattern: /zawodnicy \(strzały\)/, code: "PLAYER_SHOTS" },
   { pattern: /zawodnicy \(faule popełnione\) - powyzej 3\.5/, code: "PLAYER_FOULS_OVER" },
   { pattern: /zawodnicy \(faule popełnione\)/, code: "PLAYER_FOULS" },
@@ -233,8 +255,14 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // yet). Exclude it instead of letting it masquerade as the full-match code.
   { pattern: /auty: 1\. połowa - suma/, code: "OTHER" },
   { pattern: /auty: suma/, code: "THROW_INS_TOTAL" },
-  { pattern: /auty: belgia suma 23\.5$/, code: "THROW_INS_TEAM" },
-  { pattern: /auty: nowa zelandia suma 14\.5$/, code: "TEAM_THROW_INS" },
+  // Team-scoped throw-ins ("Auty: <Team> suma <line>") used to be hardcoded
+  // to the Belgium/New Zealand fixture's team names (and to two specific
+  // hardcoded lines with distinct, likely-mistaken codes THROW_INS_TEAM /
+  // TEAM_THROW_INS instead of the catalog's HOME/AWAY_TEAM_TOTAL_THROW_INS).
+  // The generic "auty:" catch-all below already routes every other team-
+  // scoped throw-ins market to TEAM_TOTAL_THROW_INS, which
+  // refineTeamScopedStatCode then resolves to the correct side via
+  // detectTeamSide — verified against the france/morocco golden fixture.
   { pattern: /auty:/, code: "TEAM_TOTAL_THROW_INS" },
 
   // --- Goal kicks (wybicia od bramki) ---
@@ -244,9 +272,12 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // catalog code exists for the half-scoped variant yet.
   { pattern: /wybicia od bramki: 1\. połowa - suma/, code: "OTHER" },
   { pattern: /wybicia od bramki: suma/, code: "GOAL_KICKS_TOTAL" },
-  { pattern: /wybicia od bramki: belgia - suma 4\.5$/, code: "TEAM_TOTAL_GOAL_KICKS" },
-  { pattern: /wybicia od bramki: belgia - suma 7\.5$/, code: "TEAM_TOTAL_GOAL_KICKS" },
-  { pattern: /wybicia od bramki: nowa zelandia - suma 14\.5$/, code: "TEAM_TOTAL_GOAL_KICKS" },
+  // Team-scoped goal kicks used to be hardcoded to the Belgium/New Zealand
+  // fixture's team names AND to specific line values (4.5/7.5/14.5), so they
+  // never matched any other match or line. The generic "wybicia od bramki:"
+  // catch-all below already routes every team-scoped goal-kicks market to
+  // TEAM_GOAL_KICKS, which refineTeamScopedStatCode resolves to the correct
+  // side via detectTeamSide — verified against the france/morocco golden fixture.
   { pattern: /wybicia od bramki:/, code: "TEAM_GOAL_KICKS" },
 
   // --- Half-time / second-half scoring & results (specific phrases) ---
@@ -270,21 +301,22 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /2\. połowa - pierwsza druzyna/, code: "SECOND_HALF_FIRST_GOAL" },
   { pattern: /1\. połowa - ostatnia druzyna/, code: "HALF_TIME_LAST_TEAM_TO_SCORE" },
   { pattern: /2\. połowa - ostatnia druzyna/, code: "SECOND_HALF_LAST_TEAM_TO_SCORE" },
-  { pattern: /1\. połowa - (?:belgia|belgium) wygra do 0/, code: "HALF_TIME_HOME_WIN_TO_NIL" },
+  // "<Team> wygra do 0/zera" (half-scoped win-to-nil) and "<Team> strzeli
+  // gola [w N. połowie]" (team-to-score, full-match or half-scoped) used to
+  // be hardcoded to the Belgium/New Zealand fixture's team names, so they
+  // matched no other match (round-? audit, Arsenal vs Coventry City:
+  // rawUnclaimed). Resolved generically via detectTeamSide in
+  // resolveMarketCode instead — see the team-aware block after the loop.
   { pattern: /zawodnik strzeli gola w 1\. połowie/, code: "HALF_TIME_GOALSCORER_ANYTIME" },
   { pattern: /player to score in second half/, code: "SECOND_HALF_GOALSCORER_ANYTIME" },
-  { pattern: /(?:belgia|belgium) strzeli gola w 1\. połowie/, code: "HALF_TIME_HOME_TO_SCORE" },
-  { pattern: /(?:nowa zelandia|new zealand) strzeli gola w 1\. połowie/, code: "HALF_TIME_AWAY_TO_SCORE" },
-  { pattern: /(?:belgia|belgium) strzeli gola w 2\. połowie/, code: "SECOND_HALF_HOME_TO_SCORE" },
-  { pattern: /(?:nowa zelandia|new zealand) strzeli gola w 2\. połowie/, code: "SECOND_HALF_AWAY_TO_SCORE" },
   { pattern: /gol w 1\. połowie/, code: "HALF_TIME_GOAL" },
   { pattern: /gol w 2\. połowie/, code: "SECOND_HALF_GOAL" },
 
   // --- Team to score (full match) & by-half ---
-  { pattern: /(?:belgia|belgium|nowa zelandia|new zealand) strzeli w obu połowach/, code: "HOME_SCORE_BOTH_HALVES" },
+  // "<Team> strzeli w obu połowach" (team scores in both halves) used to be
+  // hardcoded to Belgium/New Zealand AND routed BOTH teams to
+  // HOME_SCORE_BOTH_HALVES regardless of side — resolved generically below.
   { pattern: /strzeli w pierwszej\/drugiej połowie/, code: "TEAM_SCORE_BY_HALF" },
-  { pattern: /(?:belgia|belgium) strzeli gola/, code: "HOME_TEAM_TO_SCORE" },
-  { pattern: /(?:nowa zelandia|new zealand) strzeli gola/, code: "AWAY_TEAM_TO_SCORE" },
   { pattern: /pierwsza druzyna, ktora zdobedzie gola/, code: "FIRST_TEAM_TO_SCORE" },
   { pattern: /ostatnia druzyna, ktora zdobedzie gola/, code: "LAST_TEAM_TO_SCORE" },
 
@@ -306,6 +338,16 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // catalog's dedicated PLAYER_3_OR_MORE_GOALS code (already used the same way
   // by sts/betcris/superbet) keeps this threshold on its own marketKey.
   { pattern: /zawodnik strzeli 3 lub wiecej goli/, code: "PLAYER_3_OR_MORE_GOALS" },
+  // "Zawodnik strzeli 4 lub więcej goli" (audit-match, Arsenal vs Coventry
+  // City, round 8): LVBet never publishes the tiered PLAYER_GOALS ladder
+  // (only "1+"/"2+"/"3+" exist there) — its own "4 lub więcej" row is a
+  // standalone one-price product shared with betcris' PlayerToScore4OrMore,
+  // now the catalog's dedicated PLAYER_4_OR_MORE_GOALS code (same YES-shaped
+  // per-player structure as PLAYER_2/3_OR_MORE_GOALS above, not a rung of
+  // the ladder). Must be excluded from the generic \d+ pattern below, which
+  // otherwise merged it onto PLAYER_GOALS' marketKey — the ladder has no "4+"
+  // slot, so every N=4 row was silently dropped as an orphan selection.
+  { pattern: /zawodnik strzeli 4 lub wiecej goli/, code: "PLAYER_4_OR_MORE_GOALS" },
   { pattern: /zawodnik strzeli \d+ lub wiecej goli/, code: "PLAYER_GOALS" },
   // Two-player OR combos ("Podwójna szansa") must not pollute single-player markets
   { pattern: /zawodnik zanotuje asyste - podwojna szansa/, code: "PLAYER_ASSIST_PAIRS" },
@@ -333,8 +375,9 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /dokładnie \d+ gol\w* w meczu/, code: "OTHER" },
 
   // --- Win / result variants ---
-  { pattern: /(?:belgia|belgium) wygra do zera/, code: "HOME_WIN_TO_NIL" },
-  { pattern: /(?:nowa zelandia|new zealand) wygra do zera/, code: "AWAY_WIN_TO_NIL" },
+  // "<Team> wygra do zera" (full-match win-to-nil) is routed team-aware
+  // further down (via detectTeamSide), same as the half-scoped variant —
+  // used to be hardcoded to the Belgium/New Zealand fixture's team names.
   { pattern: /wygra obie połowy/, code: "TEAM_WIN_BOTH_HALVES" },
   // "<Team> wygra przynajmniej jedną połowę" is routed team-aware further
   // down (via detectTeamSide) instead of a static pattern here, since a
@@ -348,11 +391,11 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /druzyna wygra mecz lub bedzie prowadzic dwoma bramkami/, code: "OTHER" },
   { pattern: /wynik - kombinacje/, code: "MULTI_RESULT" },
   // "(Do przerwy / koniec meczu) i suma goli X" is an HT/FT + total-goals
-  // combo, not an over/under market — it must not fall through to
-  // TOTAL_GOALS. The HALFTIME_FULLTIME_AND_TOTAL catalog code exists, but
-  // LVBet's combo selection format is unverified, so the market is excluded
-  // rather than risking a wrong selection mapping.
-  { pattern: /do przerwy\s*\/\s*koniec meczu.*suma goli/, code: "OTHER" },
+  // combo (audit-match, Arsenal vs Coventry City, round 8: verified via
+  // implied-probability convergence — at param 2.5, lvbet's selections sum
+  // to 1.374, matching betcris' 1.372 and etoto's 1.358 for the same
+  // catalog code). Selections are parsed by the dedicated case below.
+  { pattern: /do przerwy\s*\/\s*koniec meczu.*suma goli/, code: "HALFTIME_FULLTIME_AND_TOTAL" },
   { pattern: /do przerwy\s*\/\s*koniec meczu/, code: "HALFTIME_FULLTIME" },
 
   // --- Both halves goals ---
@@ -486,6 +529,78 @@ function resolveMarketCode(
   for (const { pattern, code } of LVBET_AUDIT_NAME_PATTERNS) {
     if (pattern.test(normalizedName)) {
       return { code: refineTeamScopedStatCode(code, raw.name, ctx), matchedBy: "pattern" };
+    }
+  }
+
+  // Team-scoped offsides total ("Spalone: <Team> suma <line>") — generalized
+  // from a Belgium/New Zealand-hardcoded pair of patterns (audit /audit-match,
+  // Arsenal vs Coventry City: rawUnclaimed for every other match). No generic
+  // catch-all bucket code exists for this stat family (unlike throw-ins/goal
+  // kicks below), so the side is resolved directly here.
+  if (/^spalone:.*suma/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    if (side === "HOME") return { code: "HOME_TEAM_TOTAL_OFFSIDES", matchedBy: "pattern" };
+    if (side === "AWAY") return { code: "AWAY_TEAM_TOTAL_OFFSIDES", matchedBy: "pattern" };
+  }
+
+  // "<Team> wygra do zera / wygra do 0" (win-to-nil, full-match or half-
+  // scoped) and "<Team> strzeli gola [w N. połowie]" (team-to-score) and
+  // "<Team> strzeli w obu połowach" (team scores in both halves) were
+  // previously hardcoded to the Belgium/New Zealand fixture's team names —
+  // generalized here via detectTeamSide (audit /audit-match, Arsenal vs
+  // Coventry City). Half-scoped win-to-nil is checked first since its prefix
+  // ("N. Połowa - ") would otherwise also satisfy the full-match pattern.
+  const halfWinToNilMatch = normalizedName.match(
+    /^([12])\.\s*połowa\s*-\s*.+\s+wygra do (?:0|zera)$/
+  );
+  if (halfWinToNilMatch) {
+    const side = detectTeamSide(raw.name, ctx);
+    const isFirstHalf = halfWinToNilMatch[1] === "1";
+    if (side === "HOME") {
+      return {
+        code: isFirstHalf ? "HALF_TIME_HOME_WIN_TO_NIL" : "SECOND_HALF_HOME_WIN_TO_NIL",
+        matchedBy: "pattern",
+      };
+    }
+    if (side === "AWAY") {
+      return {
+        code: isFirstHalf ? "HALF_TIME_AWAY_WIN_TO_NIL" : "SECOND_HALF_AWAY_WIN_TO_NIL",
+        matchedBy: "pattern",
+      };
+    }
+  }
+
+  if (/^.+\s+wygra do zera$/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    if (side === "HOME") return { code: "HOME_WIN_TO_NIL", matchedBy: "pattern" };
+    if (side === "AWAY") return { code: "AWAY_WIN_TO_NIL", matchedBy: "pattern" };
+  }
+
+  if (/^.+\s+strzeli w obu połowach$/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    if (side === "HOME") return { code: "HOME_SCORE_BOTH_HALVES", matchedBy: "pattern" };
+    if (side === "AWAY") return { code: "AWAY_SCORE_BOTH_HALVES", matchedBy: "pattern" };
+  }
+
+  const teamToScoreMatch = normalizedName.match(
+    /^.+\s+strzeli gola(?:\s+w\s+([12])\.\s*połowie)?$/
+  );
+  if (teamToScoreMatch) {
+    const side = detectTeamSide(raw.name, ctx);
+    const half = teamToScoreMatch[1];
+    if (side === "HOME") {
+      return {
+        code:
+          half === "1" ? "HALF_TIME_HOME_TO_SCORE" : half === "2" ? "SECOND_HALF_HOME_TO_SCORE" : "HOME_TEAM_TO_SCORE",
+        matchedBy: "pattern",
+      };
+    }
+    if (side === "AWAY") {
+      return {
+        code:
+          half === "1" ? "HALF_TIME_AWAY_TO_SCORE" : half === "2" ? "SECOND_HALF_AWAY_TO_SCORE" : "AWAY_TEAM_TO_SCORE",
+        matchedBy: "pattern",
+      };
     }
   }
 
@@ -1025,6 +1140,25 @@ function normalizeSelectionForMarket(
       return null;
     }
 
+    // "Arsenal/Arsenal i powyżej 2.5" -> HOME_HOME_OVER, "Remis / Coventry
+    // City i poniżej 2.5" -> DRAW_AWAY_UNDER, ... (audit-match, Arsenal vs
+    // Coventry City, round 8 — verified via implied-probability convergence
+    // with betcris/etoto at the 2.5 line).
+    case "HALFTIME_FULLTIME_AND_TOTAL": {
+      const lowerSel = trimmed.toLowerCase();
+      const andIdx = lowerSel.lastIndexOf(" i ");
+      if (andIdx <= 0) return null;
+      const overUnder = normalizeLvbetOverUnder(trimmed.slice(andIdx + 3).trim());
+      if (!overUnder) return null;
+      const legs = trimmed.slice(0, andIdx).split("/");
+      if (legs.length !== 2) return null;
+      const left = normalize1x2Selection(legs[0].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      const right = normalize1x2Selection(legs[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (left === "UNKNOWN" || right === "UNKNOWN") return null;
+      const code = `${left}_${right}_${overUnder}`;
+      return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
+    }
+
     // 3-way team races with a NONE leg ("Nikt", "Nie będzie strzału
     // celnego") — the negative outcome must map to NONE, not UNKNOWN.
     case "FIRST_SHOT_ON_TARGET":
@@ -1071,6 +1205,7 @@ function normalizeSelectionForMarket(
     }
 
     case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE":
     case "TEAM_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":
@@ -1078,7 +1213,15 @@ function normalizeSelectionForMarket(
     case "AWAY_GOAL_RANGE": {
       const normalized = normalizeMarketName(trimmed);
       let code: string | null = null;
+      // GOAL_RANGE's disjoint full-match brackets spell each band out in
+      // words instead of digits ("0 lub 1", "4 do 6", "7 lub więcej") —
+      // MULTI_GOAL_RANGE's ladder already quotes plain "1-2"/"2-3" digit
+      // ranges, so these three only ever fire for the word-form market.
+      const wordRangeMatch = normalized.match(/^(\d+)\s+(?:lub|do)\s+(\d+)$/);
+      const wordPlusMatch = normalized.match(/^(\d+)\s+lub\s+wiecej$/);
       if (/^(bez|brak)\s*gol/.test(normalized) || normalized === "0") code = "0";
+      else if (wordRangeMatch) code = `${wordRangeMatch[1]}-${wordRangeMatch[2]}`;
+      else if (wordPlusMatch) code = `${wordPlusMatch[1]}+`;
       else if (/^\d+\+$/.test(trimmed)) code = trimmed;
       else if (/^\d+$/.test(trimmed)) code = trimmed;
       else {
@@ -1248,6 +1391,7 @@ function normalizeSelectionForMarket(
     case "PLAYER_SCORES_BOTH_HALVES":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_3_OR_MORE_GOALS":
+    case "PLAYER_4_OR_MORE_GOALS":
     case "PENALTY_SCORER":
     case "PLAYER_GOAL_TEAM_LOSES":
     case "PLAYER_GOAL_AND_RESULT":
@@ -1265,6 +1409,20 @@ function normalizeSelectionForMarket(
       if (/^powyzej(\s*\d+(?:[.,]\d+)?)?$/.test(normalized)) {
         return normalizeLvbetPlayerThreshold(marketCode, trimmed);
       }
+      // PLAYER_3_OR_MORE_GOALS / PLAYER_4_OR_MORE_GOALS (audit-match, Arsenal
+      // vs Coventry City, round 8): both are fed by the SAME parser pattern
+      // (BULK_PLAYER_LIST_MARKET_PATTERNS' "Zawodnik strzeli N lub więcej
+      // goli", N>=3), which now synthesizes a fixed "Tak" marker for this
+      // YES/NO per-player product — map it to the catalog's YES code before
+      // falling through to the player-name passthrough. (The Sub-Hero-suffixed
+      // variant of either market is never bulk-split, so it never reaches
+      // this branch — it falls through to canonicalizePlayerName as before.)
+      if (
+        (marketCode === "PLAYER_3_OR_MORE_GOALS" || marketCode === "PLAYER_4_OR_MORE_GOALS") &&
+        normalized === "tak"
+      ) {
+        return "YES";
+      }
       // Same bulk-split convention for "Zawodnik strzeli gola i mecz zakończy
       // się remisem" (player scores AND match ends in a draw): every row
       // prices the fixed DRAW outcome, synthesized as the "Remis" marker.
@@ -1277,25 +1435,20 @@ function normalizeSelectionForMarket(
       return canonicalizePlayerName(trimmed) as NormalizedSelection;
     }
 
-    // Player pair/trio combos: canonicalize and sort each member so the same
-    // real-world combination merges across bookmakers regardless of raw
-    // member order or "Lastname, Firstname" spelling (mirrors betclic's
-    // normalizePlayerComboSelection for the identical market shape).
+    // Player pair/trio combos: reduce to the shared "I. Surname & I. Surname"
+    // canonical form (audit-match, Arsenal vs Coventry City, round 8) so
+    // LVBet's "Kai Havertz and Viktor Gyokeres"-style combos merge with
+    // betclic's pre-abbreviated "C. Tzolis & K. Havertz" and superbet's
+    // "Tzolis, Christos i Havertz, Kai" for the same real-world pairing —
+    // the previous local split+join kept full un-abbreviated names, which
+    // never matched those peers' selection codes.
     case "BOTH_PLAYERS_ANYTIME":
     case "TWO_PLAYERS_ANYTIME":
     case "THREE_PLAYERS_ANYTIME":
     case "ALL_PLAYERS_SCORE":
     case "ANY_PLAYER_FIRST_GOAL":
-    case "PLAYER_ASSIST_PAIRS": {
-      const members = trimmed
-        .split(/\s+(?:or|and|i)\s+|\s*[/&]\s*/i)
-        .map((part) => canonicalizePlayerName(part.trim()))
-        .filter((part) => part.length > 0);
-      if (members.length < 2) {
-        return canonicalizePlayerName(trimmed) as NormalizedSelection;
-      }
-      return members.sort((a, b) => a.localeCompare(b, "en")).join(" & ") as NormalizedSelection;
-    }
+    case "PLAYER_ASSIST_PAIRS":
+      return canonicalizePlayerComboSelection(trimmed) as NormalizedSelection;
 
     default: {
       // Generic fallback: LVBet exposes many YES/NO prop markets ("Tak"/"Nie")
@@ -1490,12 +1643,10 @@ const TEAM_TOTAL_TO_RACE_CODE: Partial<Record<NormalizedMarketType, NormalizedMa
 
 /**
  * LVBet publishes team-scoped variants of the goalscorer markets ("Arsenal -
- * Ostatni strzelec") and promotional "(Sub-Hero)" variants of the match-wide
- * ones, both under the same names the generic patterns match. The audit
- * (/audit-match, Arsenal vs Coventry City) found the team variant occupying
- * GOALSCORER_LAST — the player list was truncated to one side and the genuine
- * match-wide market never surfaced — while the Sub-Hero promo (own settlement
- * rules, one flat price for ~31 players) sat inside the individual markets.
+ * Ostatni strzelec") under the same names the generic patterns match. The
+ * audit (/audit-match, Arsenal vs Coventry City) found the team variant
+ * occupying GOALSCORER_LAST — the player list was truncated to one side and
+ * the genuine match-wide market never surfaced.
  */
 const TEAM_SCOPED_SCORER_CODE: Partial<
   Record<NormalizedMarketType, { home: NormalizedMarketType; away: NormalizedMarketType }>
@@ -1535,11 +1686,6 @@ function refineTeamScopedScorer(
   if (side === "HOME") return variants.home;
   if (side === "AWAY") return variants.away;
   return code;
-}
-
-/** "(Sub-Hero)" is a promotional product, not the market it is named after. */
-function isSubHeroPromo(name: string): boolean {
-  return /\(sub-hero\)/i.test(name);
 }
 
 function refineRaceMisroutedAsTeamTotal(
@@ -1622,7 +1768,20 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     let marketCode = refineRaceMisroutedAsTeamTotal(resolved.code, raw, ctx);
     marketCode = refineResultAndExactGoalsMisroutedAsTotalGoals(marketCode, raw, ctx);
     marketCode = refineTeamScopedScorer(marketCode, raw, ctx);
-    if (isSubHeroPromo(raw.name)) marketCode = "OTHER";
+    // "(Sub-Hero)" is a promotional LABEL, not a different market: the audit
+    // (/audit-match, Arsenal vs Coventry City) found e.g. "Strzelec bramki"
+    // and "Strzelec bramki (Sub-Hero)" carrying bit-identical odds per
+    // player, and four goalscorer families (GOALSCORER_FIRST, GOALSCORER_LAST,
+    // PLAYER_2_OR_MORE_GOALS, PLAYER_3_OR_MORE_GOALS) exist ONLY under the
+    // Sub-Hero-suffixed name — excluding it to OTHER dropped those four
+    // families entirely instead of merely deduplicating a promo label. The
+    // existing unanchored substring patterns above (e.g. "strzelec bramki",
+    // "strzelec pierwszego gola") already match the suffixed raw name and
+    // resolve it to the SAME marketKey as its non-suffixed sibling when both
+    // exist; the per-match Map in saveBatchFullOfferMarkets then keeps only
+    // the last-processed one, which is harmless since both carry identical
+    // selections/odds (verified above) — an intentional within-bookmaker
+    // duplicate collapse, not a real market loss.
     if (isTimeWindowScoped(raw.name) && !isTimeScopedCode(marketCode)) marketCode = "OTHER";
     const { matchedBy } = resolved;
 

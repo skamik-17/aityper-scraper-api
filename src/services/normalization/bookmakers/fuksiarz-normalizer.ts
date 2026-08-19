@@ -88,8 +88,8 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-4549": "HALF_TIME_FIRST_GOAL",
   "27": "HALF_TIME_DOUBLE_CHANCE",
   "-237": "HALF_TIME_DRAW_NO_BET",
-  "-30417": "HALF_TIME_WIN_TO_NIL",
-  "-30418": "HALF_TIME_WIN_TO_NIL",
+  "-30417": "HALF_TIME_HOME_WIN_TO_NIL",
+  "-30418": "HALF_TIME_HOME_WIN_TO_NIL",
   "-4548": "HALF_TIME_EXACT_GOALS",
   "-4555": "HALF_TIME_HOME_EXACT_GOALS",
   "-4521": "HALF_TIME_HOME_EXACT_GOALS",
@@ -116,8 +116,8 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-30333": "RED_CARD_OR_PENALTY",
   "130": "HOME_WIN_TO_NIL",
   "-30469": "RED_CARD_AND_PENALTY",
-  "125": "TEAM_WIN_BOTH_HALVES",
-  "126": "TEAM_WIN_BOTH_HALVES",
+  "125": "HOME_WIN_BOTH_HALVES",
+  "126": "HOME_WIN_BOTH_HALVES",
   "15": "PENALTY_AWARDED",
   "127": "TEAM_WIN_AT_LEAST_ONE_HALF",
   "-30331": "PENALTY_AWARDED_TEAM",
@@ -205,9 +205,6 @@ const MERGE_DUPLICATE_CODE_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_WINNING_MARGIN",
   "HALF_TIME_EXACT_GOALS",
   "SECOND_HALF_EXACT_GOALS",
-  "EXACT_GOALS",
-  "HOME_EXACT_GOALS",
-  "AWAY_EXACT_GOALS",
   "SECOND_HALF_HOME_EXACT_GOALS",
   "SECOND_HALF_AWAY_EXACT_GOALS",
   "HALF_TIME_AWAY_EXACT_GOALS",
@@ -257,7 +254,8 @@ const PLAYER_LINE_MARKETS = new Set<NormalizedMarketType>([
 const AWAY_SIDE_VARIANT: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
   HOME_WIN_TO_NIL: "AWAY_WIN_TO_NIL",
   HOME_SCORE_BOTH_HALVES: "AWAY_SCORE_BOTH_HALVES",
-  TEAM_WIN_BOTH_HALVES: "AWAY_WIN_BOTH_HALVES",
+  HOME_WIN_BOTH_HALVES: "AWAY_WIN_BOTH_HALVES",
+  HALF_TIME_HOME_WIN_TO_NIL: "HALF_TIME_AWAY_WIN_TO_NIL",
   HOME_EXACT_GOALS: "AWAY_EXACT_GOALS",
   HALF_TIME_HOME_EXACT_CORNERS: "HALF_TIME_AWAY_EXACT_CORNERS",
   HOME_TEAM_TOTAL_OFFSIDES: "AWAY_TEAM_TOTAL_OFFSIDES",
@@ -385,6 +383,15 @@ function adjustMarketCode(
     }
     if (code === "SECOND_HALF_TEAM_TOTAL_GOALS") return "SECOND_HALF_TEAM_GOAL_RANGE";
     if (code === "HALF_TIME_TEAM_TOTAL_GOALS") return "HALF_TIME_TEAM_GOAL_RANGE";
+    // "<Team> - liczba rzutow roznych" has the identical dual-shape problem:
+    // an O/U ladder ("poniżej 5.5"/"powyżej 5.5") and a discrete range panel
+    // ("0-2"/"3-4"/"5-6"/"7+") share the same raw name and id. Without this
+    // reroute the range panel's bucket labels ("0-2") get misparsed by
+    // extractParamValue's generic line parser into a phantom decimal "0"
+    // param, colliding CORNERS_TEAM into a nonsense line instead of landing
+    // in CORNERS_TEAM_RANGE where forbet/etoto/betfan already keep this
+    // product (audit-match, Arsenal vs Coventry City, round 8 CT-2).
+    if (code === "CORNERS_TEAM") return "CORNERS_TEAM_RANGE";
     // Bracket panels of corners/cards totals ("0-5"/"6-8"/"9-11"/"12-14"/"15+",
     // "0-2"/"3-5"/"6+") have no matching catalog vocabulary — they must not be
     // wedged into the OVER/UNDER parameter sliders as a fake "0" line.
@@ -548,9 +555,18 @@ function resolveMarketCodeBase(
   // and would otherwise feed the parsed "1" digit into GOALSCORER_FIRST's
   // parameter as a phantom line, falsely merging it with the match-wide
   // market).
+  // Route straight to the dedicated HOME_/AWAY_GOALSCORER_FIRST catalog
+  // codes (parameterType "player") instead of the shared TEAM_FIRST_GOALSCORER
+  // code — that shared code's catalog entry also declares parameterType
+  // "player", so stuffing the team side into the parameter left all 20+
+  // players stranded as selection codes under one row ("Arsenal" isolated
+  // from betfan's HOME_GOALSCORER_FIRST, which already uses this side-coded
+  // pair — audit-match, Arsenal vs Coventry City, round 8 P4).
   const teamFirstScorer = normalized.match(/^(.+?)\s*-\s*strzelec\s+1\s+gola$/);
-  if (teamFirstScorer && resolveTeamSide(raw.name, ctx)) {
-    return { code: "TEAM_FIRST_GOALSCORER", matchedBy: "pattern" };
+  if (teamFirstScorer) {
+    const side = resolveTeamSide(raw.name, ctx);
+    if (side === "HOME") return { code: "HOME_GOALSCORER_FIRST", matchedBy: "pattern" };
+    if (side === "AWAY") return { code: "AWAY_GOALSCORER_FIRST", matchedBy: "pattern" };
   }
 
   if (/^strzelec 1 gola$/.test(normalized) || /- strzelec 1 gola$/.test(normalized)) {
@@ -904,10 +920,11 @@ function extractParamValue(
     return resolveTeamSide(raw.name, ctx) ?? undefined;
   }
 
-  // Team-scoped first goalscorer: the catalog has one shared code for both
-  // teams' own "who scores first for this team" markets, so the side must
-  // live in the parameter to keep Home's and Away's panels from colliding.
-  if (marketCode === "TEAM_FIRST_GOALSCORER") {
+  // CORNERS_TEAM_RANGE's catalog parameter is the team side (HOME/AWAY), not
+  // a line — the range buckets ("0-2"/"3-4"/"5-6"/"7+") carry no numeric
+  // threshold to parse. Without this, the generic line-parsing fallback
+  // below would derive a phantom decimal param from the first bucket label.
+  if (marketCode === "CORNERS_TEAM_RANGE") {
     return resolveTeamSide(raw.name, ctx) ?? undefined;
   }
 
@@ -917,7 +934,20 @@ function extractParamValue(
     marketCode === "PLAYER_2_OR_MORE_GOALS" ||
     marketCode === "PLAYER_HAT_TRICK" ||
     marketCode === "SECOND_HALF_TEAM_GOAL_RANGE" ||
-    marketCode === "HALF_TIME_TEAM_GOAL_RANGE"
+    marketCode === "HALF_TIME_TEAM_GOAL_RANGE" ||
+    // "Strzelec 1. gola" - the "1" is the goal ordinal, not a market line.
+    // Leaving paramValue unset lets the grouper's splitBundledPlayerSelections
+    // fan the bundled 45-player list into one row per player (same recovery
+    // path sts/betfan/etoto/superbet already take), keyed by player name with
+    // the catalog's "PLAYER" selection code (audit-match, Arsenal vs
+    // Coventry City, round 8 P2).
+    marketCode === "GOALSCORER_FIRST" ||
+    // "<Team> - strzelec 1. gola" — same phantom-"1" problem, but for the
+    // team-scoped codes: HOME_/AWAY_GOALSCORER_FIRST also carry the player
+    // as a catalog parameter, so paramValue must stay unset here too (round
+    // 8 P4).
+    marketCode === "HOME_GOALSCORER_FIRST" ||
+    marketCode === "AWAY_GOALSCORER_FIRST"
   ) {
     return undefined;
   }
@@ -1315,6 +1345,7 @@ function normalizeSelectionForMarket(
     case "GOAL_RANGE":
     case "SECOND_HALF_TEAM_GOAL_RANGE":
     case "HALF_TIME_TEAM_GOAL_RANGE":
+    case "CORNERS_TEAM_RANGE":
       return normalizeRangeSelection(trimmed);
 
     case "HALF_WITH_MORE_GOALS": {
@@ -1336,13 +1367,15 @@ function normalizeSelectionForMarket(
 
     case "EXACT_GOALS":
     case "HOME_EXACT_GOALS":
-    case "AWAY_EXACT_GOALS": {
-      // Catalog buckets everything from 6 goals up into "6+" — Fuksiarz
-      // quotes discrete 6/7/8/9 tails that must collapse (and merge) there.
-      const tail = trimmed.match(/^(\d+)\s*\+?$/);
-      if (tail && parseInt(tail[1], 10) >= 6) return "6+" as NormalizedSelection;
+    case "AWAY_EXACT_GOALS":
+      // The catalog now carries the full discrete ladder (0..8 for the
+      // team-scoped codes, 0..9 for the total-match code) alongside the
+      // "6+" bucket for bookmakers that only quote a tail — Fuksiarz quotes
+      // discrete 6/7/8(/9) tails, and collapsing them into "6+" fabricated
+      // a price (1/(1/21+1/46+1/50)=11.19) the bookmaker never published
+      // and described "exactly 6-8" as "6 or more" (audit-match, Arsenal vs
+      // Coventry City, round 8 HEG-1). Pass the discrete value through.
       return trimmed as NormalizedSelection;
-    }
 
     case "SECOND_HALF_EXACT_GOALS":
     case "SECOND_HALF_HOME_EXACT_GOALS":
@@ -1400,7 +1433,8 @@ function normalizeSelectionForMarket(
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
-    case "TEAM_FIRST_GOALSCORER":
+    case "HOME_GOALSCORER_FIRST":
+    case "AWAY_GOALSCORER_FIRST":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_HAT_TRICK":
     case "PLAYER_CARDS":
@@ -1456,9 +1490,14 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
     // both the home-team and away-team ids (168/169, -30342/-30343) to the
     // same bare catalog code, so without the side-prefixed param a home line
     // and an away line at the same numeric threshold collide into one
-    // OVER/UNDER bucket.
+    // OVER/UNDER bucket. CORNERS_TEAM has the identical shape: "Arsenal -
+    // liczba rzutów rożnych" and "Coventry - liczba rzutów rożnych" both map
+    // to bare CORNERS_TEAM, and other bookmakers (betclic, betcris, fortuna,
+    // lvbet) already scope this market's param by side.
     if (
-      (marketCode === "TEAM_TOTAL_SHOTS" || marketCode === "TEAM_TOTAL_SHOTS_ON_TARGET") &&
+      (marketCode === "TEAM_TOTAL_SHOTS" ||
+        marketCode === "TEAM_TOTAL_SHOTS_ON_TARGET" ||
+        marketCode === "CORNERS_TEAM") &&
       paramValue
     ) {
       const side = resolveTeamSide(raw.name, ctx);

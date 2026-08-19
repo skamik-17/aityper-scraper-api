@@ -260,7 +260,13 @@ describe("fortuna audit fixes", () => {
     expect(assists?.selections[0].code).toBe("1+");
   });
 
-  it("uses player name as selection for dropdown player markets", () => {
+  it("uses the catalog's generic selection code (not the player name) for dropdown player markets, keeping the player as the parameter", () => {
+    // /audit-match (Arsenal vs Coventry City) round 8: Fortuna previously
+    // repeated the player name as the SELECTION type on top of the
+    // (correct) PARAMETER, stranding every Fortuna quote in a private
+    // per-player vocabulary that never joined betcris/betfan/etoto/fuksiarz/
+    // lvbet/sts/superbet's comparison row (they all key these markets by the
+    // catalog's generic code with the player in the parameter).
     const header = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-ox",
@@ -269,7 +275,8 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(header?.selections[0].code).toBe("Carney Chukwuemeka");
+    expect(header?.paramValue).toBe("Carney Chukwuemeka");
+    expect(header?.selections[0].code).toBe("PLAYER_NAME");
 
     const firstScorer = fortunaNormalizer.normalizeMarket(
       {
@@ -279,7 +286,8 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(firstScorer?.selections[0].code).toBe("Jovane Cabral");
+    expect(firstScorer?.paramValue).toBe("Jovane Cabral");
+    expect(firstScorer?.selections[0].code).toBe("PLAYER");
   });
 
   it("excludes BTTS+scorer combo products from BTTS", () => {
@@ -478,7 +486,11 @@ describe("fortuna audit fixes", () => {
     expect(out).toBeNull();
   });
 
-  it("routes home 'nie straci gola' to HOME_CLEAN_SHEET and drops away variant", () => {
+  it("routes home 'nie straci gola' to HOME_CLEAN_SHEET and away to AWAY_CLEAN_SHEET", () => {
+    // Audit /audit-match (premier-league Arsenal vs Coventry City): the away
+    // variant DOES have a catalog code (AWAY_CLEAN_SHEET) — the previous
+    // "drop it, no code yet" comment was stale and silently discarded a
+    // genuine market.
     const home = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-1f",
@@ -504,7 +516,8 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(away).toBeNull();
+    expect(away?.marketCode).toBe("AWAY_CLEAN_SHEET");
+    expect(away?.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
   });
 
   it("excludes 'Wynik meczu lub 2 gol(e) przewagi' from MATCH_WINNER", () => {
@@ -736,16 +749,46 @@ describe("fortuna audit fixes", () => {
     expect(out?.selections.map((s) => s.code)).toEqual(["1X_YES", "X2_NO", "12_YES"]);
   });
 
-  it("excludes the half-scoped 00-1y variant from DOUBLE_CHANCE_BTTS", () => {
+  it("routes the half-scoped 00-1y variant to HALF_TIME_DOUBLE_CHANCE_BTTS", () => {
+    // /audit-match (Arsenal vs Coventry City) round 8: id 00-1y is the
+    // "1.połowa:" (half-time) scoped sibling of full-match 00-21/00-22, not
+    // a different product — the higher BTTS-yes prices reflect the shorter
+    // half-time window, matching etoto/sts's half-time figures for this
+    // fixture. The name-based half-scope reroute (matchedBy === "id") turns
+    // it into HALF_TIME_DOUBLE_CHANCE_BTTS.
     const out = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-1y",
-        name: "Rynek ufo:mtyp:00-1y",
+        name: "1.połowa: dwójtyp/obie drużyny strzelą gola",
         selections: [{ name: "10/Tak", odds: 6.6 }],
       },
       ctxSUI
     );
-    expect(out).toBeNull();
+    expect(out?.marketCode).toBe("HALF_TIME_DOUBLE_CHANCE_BTTS");
+    expect(out?.selections[0].code).toBe("1X_YES");
+  });
+
+  it("maps the id-00-2e '1.połowa: 1. gol' market to HALF_TIME_FIRST_GOAL", () => {
+    // /audit-match (Arsenal vs Coventry City) round 8: id 00-2e had no id
+    // mapping and no name pattern, so it fell all the way through to null
+    // (OTHER) before ever reaching the firstGoalHalf name-regex fix further
+    // down normalizeMarket (that regex only rewrites an already-resolved
+    // marketCode; it never runs once normalizeMarket has already returned
+    // null for an unmapped id/name).
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-2e",
+        name: "1.połowa: 1. gol",
+        selections: [
+          { name: "Nikt", odds: 3.85 },
+          { name: "Colombia", odds: 7 },
+          { name: "Switzerland", odds: 1.48 },
+        ],
+      },
+      ctxSUI
+    );
+    expect(out?.marketCode).toBe("HALF_TIME_FIRST_GOAL");
+    expect(out?.selections.map((s) => s.code)).toEqual(["NONE", "AWAY", "HOME"]);
   });
 
   it("maps TEAM_WIN_OR_* 'Tak (przynajmniej...)' selections to YES/NO", () => {
@@ -824,7 +867,10 @@ describe("fortuna audit fixes", () => {
     expect(out?.selections.map((s) => s.code)).toEqual(["1+", "2+"]);
   });
 
-  it("uses the canonical player name as selection for goal-outside-box", () => {
+  it("uses the canonical player name as the parameter and the catalog's generic code as the selection for goal-outside-box", () => {
+    // The catalog now parameterizes PLAYER_GOAL_OUTSIDE_BOX like the other
+    // dropdown player markets (hasParameter: true, parameterType: "player",
+    // selections: ["PLAYER_NAME"]), matching betcris/fuksiarz/lvbet/superbet.
     const outsideBox = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-oz",
@@ -834,7 +880,8 @@ describe("fortuna audit fixes", () => {
       ctxSUI
     );
     expect(outsideBox?.marketCode).toBe("PLAYER_GOAL_OUTSIDE_BOX");
-    expect(outsideBox?.selections[0].code).toBe("Denis Zakaria");
+    expect(outsideBox?.paramValue).toBe("Denis Zakaria");
+    expect(outsideBox?.selections[0].code).toBe("PLAYER_NAME");
   });
 
   it("uses the canonical player name as the parameter (not the selection) for offsides", () => {
@@ -1125,7 +1172,8 @@ describe("fortuna audit fixes", () => {
       ctxFRA
     );
     expect(out?.marketCode).toBe("GOALSCORER_FIRST");
-    expect(out?.selections[0].code).toBe("Issa Diop");
+    expect(out?.paramValue).toBe("Issa Diop");
+    expect(out?.selections[0].code).toBe("PLAYER");
   });
 
   it("routes a corners handicap away from the goal-handicap ASIAN_HANDICAP bucket", () => {

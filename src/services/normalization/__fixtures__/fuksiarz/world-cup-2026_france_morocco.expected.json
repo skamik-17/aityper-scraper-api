@@ -6728,8 +6728,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_WIN_TO_NIL",
-        "marketKey": "HALF_TIME_WIN_TO_NIL",
+        "marketCode": "HALF_TIME_HOME_WIN_TO_NIL",
+        "marketKey": "HALF_TIME_HOME_WIN_TO_NIL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -6747,15 +6747,15 @@
         ]
       },
       "index": 193,
-      "marketCode": "HALF_TIME_WIN_TO_NIL",
+      "marketCode": "HALF_TIME_HOME_WIN_TO_NIL",
       "rawName": "1. połowa - Francja wygra do zera"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_WIN_TO_NIL",
-        "marketKey": "HALF_TIME_WIN_TO_NIL",
+        "marketCode": "HALF_TIME_AWAY_WIN_TO_NIL",
+        "marketKey": "HALF_TIME_AWAY_WIN_TO_NIL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -6773,7 +6773,7 @@
         ]
       },
       "index": 194,
-      "marketCode": "HALF_TIME_WIN_TO_NIL",
+      "marketCode": "HALF_TIME_AWAY_WIN_TO_NIL",
       "rawName": "1. połowa - Maroko wygra do zera"
     },
     {
@@ -10622,8 +10622,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_BOTH_HALVES",
-        "marketKey": "TEAM_WIN_BOTH_HALVES",
+        "marketCode": "HOME_WIN_BOTH_HALVES",
+        "marketKey": "HOME_WIN_BOTH_HALVES",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -10641,7 +10641,7 @@
         ]
       },
       "index": 317,
-      "marketCode": "TEAM_WIN_BOTH_HALVES",
+      "marketCode": "HOME_WIN_BOTH_HALVES",
       "rawName": "Francja wygra obie połowy"
     },
     {
@@ -14450,10 +14450,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_FIRST_GOALSCORER",
-        "marketKey": "TEAM_FIRST_GOALSCORER:HOME",
+        "marketCode": "HOME_GOALSCORER_FIRST",
+        "marketKey": "HOME_GOALSCORER_FIRST",
         "matchedBy": "pattern",
-        "paramValue": "HOME",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -14579,17 +14579,17 @@
         ]
       },
       "index": 400,
-      "marketCode": "TEAM_FIRST_GOALSCORER",
+      "marketCode": "HOME_GOALSCORER_FIRST",
       "rawName": "Francja - strzelec 1. gola"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_FIRST_GOALSCORER",
-        "marketKey": "TEAM_FIRST_GOALSCORER:AWAY",
+        "marketCode": "AWAY_GOALSCORER_FIRST",
+        "marketKey": "AWAY_GOALSCORER_FIRST",
         "matchedBy": "pattern",
-        "paramValue": "AWAY",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -14710,7 +14710,7 @@
         ]
       },
       "index": 401,
-      "marketCode": "TEAM_FIRST_GOALSCORER",
+      "marketCode": "AWAY_GOALSCORER_FIRST",
       "rawName": "Maroko - strzelec 1. gola"
     },
     {

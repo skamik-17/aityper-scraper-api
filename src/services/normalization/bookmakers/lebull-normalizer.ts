@@ -53,7 +53,12 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   350010: "RESULT_OR_BTTS",
   274556: "DRAW_NO_BET",
   40390: "ONE_TEAM_TO_SCORE",
-  748: "NEXT_TEAM_TO_SCORE",
+  // Stake type 748 ("kolejny gol:") bundles goal #1..#5 into one row (5 x
+  // HOME/AWAY/NONE, descending). Pre-match the FIRST tranche IS the
+  // first-goal market (verified: 75.8/17.5/6.8% vs sts 76.3/18.3/5.4% and 9
+  // more books); tranches 2-5 have no catalog slot and would collide on the
+  // same selection codes, so the leading triple is kept in normalizeMarket.
+  748: "FIRST_TEAM_TO_SCORE",
   333649: "LAST_TEAM_TO_SCORE",
   618: "TOTAL_GOALS_3WAY",
   5699564: "DOUBLE_CHANCE_GOAL_RANGE",
@@ -132,6 +137,16 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   270618: "TIME_PERIOD_RESULT",
   175094: "TIME_PERIOD_RESULT",
   175095: "TIME_PERIOD_RESULT",
+  // The 268284-268289 / 175092-175095 / 270618-270621 blocks are consecutive
+  // ids of ONE family (period 1X2); only every other id was mapped, so half
+  // the windows fell through to OTHER. Verified by the monotonic draw price
+  // across windows (1-10=1.11 ... 1-80=4.75).
+  268284: "TIME_PERIOD_RESULT",
+  268286: "TIME_PERIOD_RESULT",
+  268288: "TIME_PERIOD_RESULT",
+  175092: "TIME_PERIOD_RESULT",
+  270619: "TIME_PERIOD_RESULT",
+  270621: "TIME_PERIOD_RESULT",
   270825: "TIME_SEGMENT_TOTAL_GOALS",
   270826: "TIME_PERIOD_TOTAL_GOALS",
   270827: "TIME_PERIOD_GOALS",
@@ -141,6 +156,16 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   270831: "TIME_PERIOD_TOTAL_GOALS",
   270832: "TIME_PERIOD_TOTAL_GOALS",
   270833: "TIME_PERIOD_TOTAL_GOALS",
+  // Team-scoped odd/even: verified against 6 peers (home EVEN 1.77-1.88 /
+  // ODD 1.80-1.90, away EVEN 1.37-1.42 / ODD 2.57-2.82).
+  2381: "HOME_TEAM_ODD_EVEN_GOALS",
+  2382: "AWAY_TEAM_ODD_EVEN_GOALS",
+  // Simple Tak/Nie propositions with existing catalog codes; verified
+  // against peers (betcris "Gol samobójczy" 8.2/1.05, betcris/lvbet "Rzut
+  // karny" ~3.15/1.30 — both closely matching lebull's own prices).
+  39506: "OWN_GOAL",
+  8: "PENALTY_AWARDED",
+  310988: "HALF_TIME_PENALTY_AWARDED",
 };
 
 const LEBULL_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
@@ -258,6 +283,11 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "DOUBLE_CHANCE_GOAL_RANGE",
   "HALFTIME_FULLTIME",
   "MULTI_RESULT",
+  // Closed 1st/2nd/Draw vocabulary (market-catalog.ts): any unmapped label
+  // (e.g. a future sbteam.xyz wording change) is noise, not a real leg.
+  "HALF_WITH_MORE_GOALS",
+  "HOME_HALF_WITH_MOST_GOALS",
+  "AWAY_HALF_WITH_MOST_GOALS",
   // "Metoda zwycięstwa" mixes unqualified generic props with team-qualified
   // ET/penalties outcomes; unqualified ones cannot be resolved to a side and
   // must be dropped rather than colliding under literal UNKNOWN.
@@ -453,18 +483,50 @@ function resolveMarketCode(
     return { marketCode: "TOTAL_GOALS_AND_BTTS", matchedBy: "pattern" };
   }
 
-  // GOAL_RANGE covers dash-ranges ("Suma goli: 3-5"), bare single values
-  // ("Suma goli: 0") and "N+" buckets ("Suma goli: 7+") — a dash-only check
-  // would miss the single-value/plus-suffix buckets and let them fall through
-  // to the generic (decimal-line) TOTAL_GOALS routing below.
-  const isGoalRangeLine = /suma\s*goli[:\s]+\d+(\s*[-–]\s*\d+|\s*\+)?\b/i.test(normalizedName);
+  // Team-scoped goal lines ("Arsenal: suma goli: 0-1") must resolve to the
+  // per-team side BEFORE the range/total checks below, otherwise they land
+  // in the match-level buckets and mix incomparable odds (verified: Coventry
+  // "0-1" prices at 1.02 / 98% implied vs match "0-1" at 3.85 / 26% implied —
+  // clearly different bets, not the same market).
+  const rangeSide =
+    home && normalizedName.includes(home)
+      ? "HOME"
+      : away && normalizedName.includes(away)
+        ? "AWAY"
+        : null;
+
+  // GOAL_RANGE covers dash-ranges ("Suma goli: 3-5") and "N+" buckets
+  // ("Suma goli: 7+") always; a bare number ("Suma goli: 0") is a range
+  // bucket only when quoted Tak/Nie — quoted powyżej/poniżej it is instead a
+  // whole-number Asian total line (see isBareIntegerAsianLine below), not a
+  // goal-range bucket. Without the Tak/Nie guard "Suma goli 2" (an Asian
+  // line, powyżej=1.23/poniżej=3.62) would be misrouted into GOAL_RANGE,
+  // which has no over/under selection slot and drops the market entirely.
   const isDecimalGoalLine = /suma\s*goli[:\s]+\d+[.,]\d/i.test(normalizedName);
+  const isGoalRangeLine =
+    /suma\s*goli[:\s]+\d+\s*(?:[-–]\s*\d+|\+)\b/i.test(normalizedName) ||
+    (/suma\s*goli[:\s]+\d+\b/i.test(normalizedName) &&
+      raw.selections.length > 0 &&
+      raw.selections.every((s) => /^(tak|nie)$/i.test(s.name.trim())));
   if (isGoalRangeLine && !isDecimalGoalLine) {
+    if (rangeSide === "HOME") return { marketCode: "HOME_GOAL_RANGE", matchedBy: "pattern" };
+    if (rangeSide === "AWAY") return { marketCode: "AWAY_GOAL_RANGE", matchedBy: "pattern" };
     return { marketCode: "GOAL_RANGE", matchedBy: "pattern" };
   }
 
+  // "Suma goli N" (no dash/plus, no team prefix) quoted powyżej/poniżej is a
+  // whole-number Asian total line (verified: "Suma goli 3" 1.88/1.79 sits
+  // exactly between the 2.5 line 1.55/2.25 and the 3.5 line 2.37/1.50) —
+  // mirrors the "liczba goli N" handling just below.
+  const isBareIntegerAsianLine =
+    !isDecimalGoalLine && !isGoalRangeLine && !rangeSide &&
+    /suma\s*goli[:\s]+\d+\b/i.test(normalizedName);
+  if (isBareIntegerAsianLine) {
+    return { marketCode: "TOTAL_GOALS_ASIAN", matchedBy: "pattern" };
+  }
+
   if (/suma\s*goli/.test(normalizedName)) {
-    if ((home && normalizedName.includes(home)) || (away && normalizedName.includes(away))) {
+    if (rangeSide === "HOME" || rangeSide === "AWAY") {
       return { marketCode: "TEAM_TOTAL_GOALS", matchedBy: "pattern" };
     }
     return { marketCode: "TOTAL_GOALS", matchedBy: "pattern" };
@@ -587,9 +649,14 @@ function normalizeSelectionForMarket(
     case "AWAY_WIN_BY_1_OR_DRAW":
     case "RED_CARD":
     case "RED_CARD_TEAM":
+    case "OWN_GOAL":
+    case "PENALTY_AWARDED":
+    case "HALF_TIME_PENALTY_AWARDED":
       return normalizeYesNoSelection(trimmed);
 
     case "ODD_EVEN_GOALS":
+    case "HOME_TEAM_ODD_EVEN_GOALS":
+    case "AWAY_TEAM_ODD_EVEN_GOALS":
       return normalizeOddEvenSelection(trimmed);
 
     case "BTTS_BY_HALF":
@@ -601,9 +668,17 @@ function normalizeSelectionForMarket(
       if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
+    case "HOME_HALF_WITH_MOST_GOALS":
+    case "AWAY_HALF_WITH_MOST_GOALS":
     case "HALF_WITH_MORE_GOALS":
       // Raw labels compare halves: "1. > 2." (1st half higher), "1. < 2.",
-      // "1. = 2." — catalog selections are 1st/2nd/Draw.
+      // "1. = 2." — catalog selections are 1st/2nd/Draw. The per-team
+      // variants ("Arsenal. Połowa z wyższą sumą goli", routed to
+      // HOME_/AWAY_HALF_WITH_MOST_GOALS in resolveMarketCode) use the exact
+      // same selection vocabulary as the match-wide market, so they share
+      // this branch. Without it they fell through to the default 1x2
+      // resolver, collapsed all three legs to UNKNOWN, and the grouper's
+      // duplicate-type guard kept only the first quote.
       if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return "1st" as NormalizedSelection;
       if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return "2nd" as NormalizedSelection;
       if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return "Draw" as NormalizedSelection;
@@ -937,17 +1012,35 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    let selections = raw.selections.map((sel) => ({
+    // Stake type 748 ("kolejny gol:") bundles 5 tranches (goal #1..#5) into
+    // one row, 3 selections each (HOME/AWAY/NONE), descending. Only the
+    // leading tranche is the FIRST_TEAM_TO_SCORE market; tranches 2-5 have no
+    // catalog slot of their own and would otherwise collide on the same
+    // HOME/AWAY/NONE codes as the first, corrupting the market's odds.
+    const effectiveRawSelections =
+      marketCode === "FIRST_TEAM_TO_SCORE" &&
+      String(raw.bookmakerMarketId) === "748" &&
+      raw.selections.length > 3
+        ? raw.selections.slice(0, 3)
+        : raw.selections;
+
+    let selections = effectiveRawSelections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode, ctx),
       label: sel.name,
       odds: sel.odds,
     }));
 
-    // "Suma goli: 3-5" (or the bare "Suma goli: 0" / "Suma goli: 7+" buckets)
-    // is quoted as Tak/Nie: "Tak" IS the range-band price (catalog code
-    // "3-5" / "0" / "7+"); "Nie" has no negation slot in the mutually
-    // exclusive GOAL_RANGE catalog and must be dropped, not left UNKNOWN.
-    if (marketCode === "GOAL_RANGE") {
+    // "Suma goli: 3-5" (or the bare "Suma goli: 0" / "Suma goli: 7+" buckets,
+    // or the team-scoped "Arsenal: suma goli: 0-1") is quoted as Tak/Nie:
+    // "Tak" IS the range-band price (catalog code "3-5" / "0" / "7+"); "Nie"
+    // has no negation slot in the mutually exclusive GOAL_RANGE /
+    // HOME_GOAL_RANGE / AWAY_GOAL_RANGE catalogs and must be dropped, not
+    // left UNKNOWN.
+    if (
+      marketCode === "GOAL_RANGE" ||
+      marketCode === "HOME_GOAL_RANGE" ||
+      marketCode === "AWAY_GOAL_RANGE"
+    ) {
       const normalizedRawName = normalizeMarketName(raw.name);
       const dashMatch = normalizedRawName.match(/suma\s*goli[:\s]+(\d+)\s*[-–]\s*(\d+)/);
       const plusMatch =
@@ -963,7 +1056,12 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
           : singleMatch
             ? (singleMatch[1] as NormalizedSelection)
             : undefined;
-      if (rangeCode && getMarketMetadata("GOAL_RANGE")?.selections.includes(rangeCode)) {
+      // NOTE: HOME_GOAL_RANGE/AWAY_GOAL_RANGE catalog entries do not (yet)
+      // list "3-4" as a valid selection (lebull publishes it, e.g. id 283
+      // "Arsenal: suma goli: 3-4"); until the catalog is extended, such rows
+      // fall through the includes() guard below and keep their generic
+      // Tak/Nie -> UNKNOWN mapping rather than being silently mis-tagged.
+      if (rangeCode && getMarketMetadata(marketCode)?.selections.includes(rangeCode)) {
         selections = raw.selections
           .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")
           .map((sel) => ({ code: rangeCode, label: sel.name, odds: sel.odds }));

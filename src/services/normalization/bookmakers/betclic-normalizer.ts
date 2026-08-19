@@ -24,6 +24,7 @@ import {
   normalizeAsianHandicap3WaySelection,
   normalizeHandicapSelection,
   canonicalizePlayerName,
+  toComboPlayerForm,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 import { matchToCanonical } from "../../../utils/team-matcher.js";
@@ -94,6 +95,16 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "jeden z graczy strzeli pierwszego gola": "ANY_PLAYER_FIRST_GOAL",
   "jeden z graczy strzeli w obu polowach": "SAME_PLAYER_SCORES_BOTH_HALVES",
   "wszyscy strzela": "ALL_PLAYERS_SCORE",
+  // audit-match (Arsenal vs Coventry City): goal-or-assist pair combos,
+  // distinct from the plain-goal TWO/BOTH_PLAYERS_ANYTIME above (see
+  // catalog entry comments for the odds evidence).
+  "ktorykolwiek zawodnik strzeli gola lub zaliczy asyste": "TWO_PLAYERS_GOAL_OR_ASSIST",
+  "obaj gracze strzela gola lub zalicza asyste": "BOTH_PLAYERS_GOAL_OR_ASSIST",
+  // audit-match (Arsenal vs Coventry City): "any of N players scores 2+/3+
+  // goals" combo markets from the "Wielu strzelców" group.
+  "ktorykolwiek z graczy strzeli 2 gole lub wiecej": "TWO_PLAYERS_ANY_2PLUS_GOALS",
+  "ktorykolwiek z graczy strzeli 2 gole lub wiecej - 3 graczy": "THREE_PLAYERS_ANY_2PLUS_GOALS",
+  "ktorykolwiek z graczy strzeli 3 gole lub wiecej - 3 graczy": "THREE_PLAYERS_ANY_3PLUS_GOALS",
   "hat-trick": "HAT_TRICK",
   "bramka rezerwowego": "SUBSTITUTE_GOAL",
   "dokladna liczba kartek": "CARDS_EXACT",
@@ -1749,10 +1760,19 @@ function normalizeCorrectScoreGroupSelection(
 /**
  * Builds a stable selection code for player-combination markets from the
  * player list itself. Betclic separates players with "/" or "&"
- * ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez");
- * each name is canonicalized to "Firstname Lastname" order and the list is
- * sorted so the same combination merges across bookmakers regardless of
- * listing order.
+ * ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez"); each
+ * name is reduced to the network-wide "I. Surname" combo form (see
+ * toComboPlayerForm in helpers/index.ts) and the list is sorted so the same
+ * combination merges across bookmakers regardless of listing order or
+ * whether that bookmaker quotes full names, "Last, First", or already-
+ * abbreviated names like betclic does.
+ *
+ * (audit-match, Arsenal vs Coventry City): betcris/lvbet send full names
+ * ("Gabriel Jesus and Viktor Gyokeres") and superbet sends "Last, First"
+ * ("Tzolis, Christos i Havertz, Kai") for the exact same real-world pair
+ * betclic already renders as "G. Jesus & V. Gyokeres" — without reducing
+ * every bookmaker to the same "I. Surname" form, each one strands its own
+ * comparison row instead of merging into one.
  *
  * Betclic sometimes disambiguates two players sharing a surname with a
  * birthdate suffix, e.g. "N. González (06/04/1998)". The "/" inside that
@@ -1760,7 +1780,10 @@ function normalizeCorrectScoreGroupSelection(
  * shredded into extra bogus "player" tokens which are then alphabetically
  * re-sorted into nonsense (e.g. "04) & 1998) & L. Messi & N. González (06").
  * Mask any "(...)" span before splitting on "/" or "&", then restore it
- * afterwards so the birthdate travels with its player intact.
+ * afterwards so the birthdate travels with its player intact. This masking
+ * happens here (not inside the shared canonicalizePlayerComboSelection
+ * helper) because that helper's own separator regex would re-split on the
+ * "/" inside an unmasked date suffix.
  */
 function normalizePlayerComboSelection(selectionName: string): NormalizedSelection {
   const parenSpans: string[] = [];
@@ -1773,11 +1796,11 @@ function normalizePlayerComboSelection(selectionName: string): NormalizedSelecti
   const players = masked
     .split(/\s*[/&]\s*/)
     .map((part) => part.replace(/@@BETCLIC_PAREN_(\d+)@@/g, (_, idx) => parenSpans[Number(idx)]))
-    .map((part) => canonicalizePlayerName(part))
+    .map((part) => toComboPlayerForm(canonicalizePlayerName(part)))
     .filter((part) => part.length > 0);
 
   if (players.length < 2) {
-    return canonicalizePlayerName(selectionName) as NormalizedSelection;
+    return toComboPlayerForm(canonicalizePlayerName(selectionName)) as NormalizedSelection;
   }
 
   return players
@@ -2159,6 +2182,14 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_THREE_PLAYERS_ANYTIME":
     case "ANY_PLAYER_SCORES_BOTH_HALVES":
     case "ALL_PLAYERS_SCORE":
+    // audit-match (Arsenal vs Coventry City): goal-or-assist and any-N-plus
+    // multi-goal combos are pair/trio-keyed the same way as the plain-goal
+    // combos above and must preserve player identity identically.
+    case "TWO_PLAYERS_GOAL_OR_ASSIST":
+    case "BOTH_PLAYERS_GOAL_OR_ASSIST":
+    case "TWO_PLAYERS_ANY_2PLUS_GOALS":
+    case "THREE_PLAYERS_ANY_2PLUS_GOALS":
+    case "THREE_PLAYERS_ANY_3PLUS_GOALS":
       // Betclic quotes dozens of distinct player combinations per market
       // ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez").
       // Collapsing them all onto the constant PLAYER_PAIR/PLAYER_TRIO code

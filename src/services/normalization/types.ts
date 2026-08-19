@@ -111,6 +111,9 @@ export const NormalizedMarketType = {
   TEAM_TOTAL_GOALS: "TEAM_TOTAL_GOALS",
   TEAM_GOAL_RANGE: "TEAM_GOAL_RANGE",
   GOAL_RANGE: "GOAL_RANGE",
+  // audit-match (Arsenal vs Coventry City): cumulative multi-goal ladder,
+  // distinct market family from GOAL_RANGE's disjoint exhaustive bands.
+  MULTI_GOAL_RANGE: "MULTI_GOAL_RANGE",
     BOTH_HALVES_GOALS: "BOTH_HALVES_GOALS",
     OWN_GOAL: "OWN_GOAL",
      FREE_KICK_GOAL: "FREE_KICK_GOAL",
@@ -236,6 +239,10 @@ export const NormalizedMarketType = {
   GOALSCORER_ANYTIME: "GOALSCORER_ANYTIME",
   PLAYER_SHOTS: "PLAYER_SHOTS",
   PLAYER_CARDS: "PLAYER_CARDS",
+  // audit-match (Arsenal vs Coventry City): betcris's yellow-only card
+  // market is a distinct bet from PLAYER_CARDS (any card) — see catalog
+  // entry comment for the odds evidence.
+  PLAYER_YELLOW_CARD: "PLAYER_YELLOW_CARD",
    PLAYER_ASSISTS: "PLAYER_ASSISTS",
    PLAYER_ASSIST_PAIRS: "PLAYER_ASSIST_PAIRS",
    PLAYER_ASSIST_TRIPLE: "PLAYER_ASSIST_TRIPLE",
@@ -316,12 +323,25 @@ export const NormalizedMarketType = {
   PLAYER_PASSES: "PLAYER_PASSES",
    PLAYER_2_OR_MORE_GOALS: "PLAYER_2_OR_MORE_GOALS",
    PLAYER_3_OR_MORE_GOALS: "PLAYER_3_OR_MORE_GOALS",
+   // audit-match (Arsenal vs Coventry City), round 8 cat-add-player4: standalone
+   // one-price 4+ product (betcris/lvbet), distinct from the PLAYER_GOALS ladder.
+   PLAYER_4_OR_MORE_GOALS: "PLAYER_4_OR_MORE_GOALS",
     PLAYER_HAT_TRICK: "PLAYER_HAT_TRICK",
     TEAM_TOTAL_SCORERS: "TEAM_TOTAL_SCORERS",
     TWO_PLAYERS_COMBINED_GOALS: "TWO_PLAYERS_COMBINED_GOALS",
     THREE_PLAYERS_COMBINED_GOALS: "THREE_PLAYERS_COMBINED_GOALS",
     TWO_PLAYERS_ANYTIME: "TWO_PLAYERS_ANYTIME",
   BOTH_PLAYERS_ANYTIME: "BOTH_PLAYERS_ANYTIME",
+  // audit-match (Arsenal vs Coventry City): betclic goal-or-assist combo
+  // markets (distinct from plain-goal TWO/BOTH_PLAYERS_ANYTIME).
+  TWO_PLAYERS_GOAL_OR_ASSIST: "TWO_PLAYERS_GOAL_OR_ASSIST",
+  BOTH_PLAYERS_GOAL_OR_ASSIST: "BOTH_PLAYERS_GOAL_OR_ASSIST",
+  // audit-match (Arsenal vs Coventry City): betclic "any of N players scores
+  // 2+/3+ goals" combo markets (distinct from *_COMBINED_GOALS, which sums
+  // goals jointly instead of requiring one player to reach the threshold).
+  TWO_PLAYERS_ANY_2PLUS_GOALS: "TWO_PLAYERS_ANY_2PLUS_GOALS",
+  THREE_PLAYERS_ANY_2PLUS_GOALS: "THREE_PLAYERS_ANY_2PLUS_GOALS",
+  THREE_PLAYERS_ANY_3PLUS_GOALS: "THREE_PLAYERS_ANY_3PLUS_GOALS",
   HALF_TIME_TWO_PLAYERS_ANYTIME: "HALF_TIME_TWO_PLAYERS_ANYTIME",
   SECOND_HALF_TWO_PLAYERS_ANYTIME: "SECOND_HALF_TWO_PLAYERS_ANYTIME",
   HALF_TIME_THREE_PLAYERS_ANYTIME: "HALF_TIME_THREE_PLAYERS_ANYTIME",
@@ -509,6 +529,9 @@ export const NormalizedMarketType = {
   TOTAL_GOALS_BY_60MIN: "TOTAL_GOALS_BY_60MIN",
   SECOND_HALF_CORNERS_RACE: "SECOND_HALF_CORNERS_RACE",
   SECOND_HALF_CORNERS_TOTAL: "SECOND_HALF_CORNERS_TOTAL",
+  // audit-match (Arsenal vs Coventry City): superbet id 240085, missing
+  // 2nd-half counterpart to HALF_TIME_CORNERS_HANDICAP.
+  SECOND_HALF_CORNERS_HANDICAP: "SECOND_HALF_CORNERS_HANDICAP",
   SECOND_HALF_CORNERS_TEAM: "SECOND_HALF_CORNERS_TEAM",
   HALF_TIME_FIRST_CORNER: "HALF_TIME_FIRST_CORNER",
   HALF_TIME_CARDS_TEAM: "HALF_TIME_CARDS_TEAM",

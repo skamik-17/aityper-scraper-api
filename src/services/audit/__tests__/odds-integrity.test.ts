@@ -217,6 +217,64 @@ describe("detectOddsIntegrity — placeholder_odds", () => {
     const flags = detectOddsIntegrity(marketInput([betcris, sts], { vocabExempt: true }));
     expect(byDetector(flags, "placeholder_odds")).toHaveLength(0);
   });
+
+  // round8-detector-patches ceiling-guard-placeholder-odds / CS-DET-2
+  // (arsenal-vs-coventry-city, DOKLADNY_WYNIK/CORRECT_SCORE): etoto/fortuna
+  // truncate the correct-score tail at a fixed house maximum (100 in the real
+  // match) and print that value repeatedly on longshots — a real, faithful
+  // ceiling price, not a pasted placeholder.
+  it("does NOT fire when the repeated value is this bookmaker's own ceiling and every peer prices those cells at or above it", () => {
+    const etoto = bmQuotes(
+      "etoto",
+      { P1: 100, P2: 100, P3: 100, P4: 100, P5: 100 },
+      false,
+    );
+    const sts = bmQuotes(
+      "sts",
+      { P1: 150, P2: 200, P3: 300, P4: 180, P5: 400 },
+      false,
+    );
+    const flags = detectOddsIntegrity(marketInput([etoto, sts], { vocabExempt: true }));
+    expect(byDetector(flags, "placeholder_odds")).toHaveLength(0);
+  });
+
+  it("still fires when the repeated value is NOT this bookmaker's own ceiling", () => {
+    // Same repeated value (100) and same varied peers, but this bookmaker
+    // also quotes something HIGHER elsewhere (150) — 100 is not its ceiling,
+    // so the repetition is not explained by a house cap and must still fire.
+    const etoto = bmQuotes(
+      "etoto",
+      { P1: 100, P2: 100, P3: 100, P4: 100, P5: 100, P6: 150 },
+      false,
+    );
+    const sts = bmQuotes(
+      "sts",
+      { P1: 150, P2: 200, P3: 300, P4: 180, P5: 400, P6: 160 },
+      false,
+    );
+    const flags = detectOddsIntegrity(marketInput([etoto, sts], { vocabExempt: true }));
+    const hits = byDetector(flags, "placeholder_odds");
+    expect(hits.length).toBeGreaterThanOrEqual(1);
+    expect(hits.some((h) => h.bookmaker === "etoto" && h.odds === 100)).toBe(true);
+  });
+
+  it("still fires the ceiling guard's peer check when a peer prices a cell BELOW the repeated value", () => {
+    // The repeated value (100) is etoto's own max, but P3's peer (sts) is
+    // priced BELOW 100 — a genuine ceiling can never be undercut by the
+    // field, so this is not explained by a house cap and must still fire.
+    const etoto = bmQuotes(
+      "etoto",
+      { P1: 100, P2: 100, P3: 100, P4: 100, P5: 100 },
+      false,
+    );
+    const sts = bmQuotes(
+      "sts",
+      { P1: 150, P2: 200, P3: 60, P4: 180, P5: 400 },
+      false,
+    );
+    const flags = detectOddsIntegrity(marketInput([etoto, sts], { vocabExempt: true }));
+    expect(byDetector(flags, "placeholder_odds").length).toBeGreaterThanOrEqual(1);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -369,6 +427,32 @@ describe("detectOddsIntegrity — overround", () => {
       marketInput([bmQuotes("betclic", { HOME: 1.3, DRAW: 1.3, AWAY: 1.3 })], {
         catalogSelections: ["HOME", "DRAW", "AWAY"],
         marketType: "MATCH_WINNER",
+      }),
+    );
+    expect(byDetector(flags, "overround")).toHaveLength(1);
+  });
+
+  // round8-detector-patches PM-1 (arsenal-vs-coventry-city, GOLE/PENALTY_MISSED):
+  // betcris prices "misses a penalty" per team — HOME=14 (7.1%), AWAY=46
+  // (2.2%). Both legs can happen together and the dominant "no penalty at
+  // all" branch is never priced (the SAME book's own penalty market prices
+  // that at 1.31 = 76%), so the two-way sum (9.3%) says nothing about a
+  // mapping bug.
+  it("skips non-exhaustive per-team YES props (PENALTY_MISSED)", () => {
+    const flags = detectOddsIntegrity(
+      marketInput([bmQuotes("betcris", { HOME: 14, AWAY: 46 })], {
+        catalogSelections: ["HOME", "AWAY"],
+        marketType: "PENALTY_MISSED",
+      }),
+    );
+    expect(byDetector(flags, "overround")).toHaveLength(0);
+  });
+
+  it("still fires for a HOME/AWAY market whose type is not in the non-exhaustive list", () => {
+    const flags = detectOddsIntegrity(
+      marketInput([bmQuotes("betcris", { HOME: 14, AWAY: 46 })], {
+        catalogSelections: ["HOME", "AWAY"],
+        marketType: "SOME_OTHER_TWO_WAY_MARKET",
       }),
     );
     expect(byDetector(flags, "overround")).toHaveLength(1);

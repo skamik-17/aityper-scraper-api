@@ -581,4 +581,84 @@ describe("grouper audit fixes — player-name canonicalization on COMBINATION-vi
     const codes = result[0].parameters[0].bookmakers[0].selections.map((s) => s.type);
     expect(codes).toEqual(["1:0, 2:0 lub 3:0"]);
   });
+
+  it("merges side-scoped lines 'AWAY:2' and 'AWAY:2.0' into a single parameter (CORNERS_TEAM)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "AWAY:2",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 1.36 }],
+        }),
+        bookmaker: "betcris",
+      },
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "AWAY:2.0",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 1.35 }],
+        }),
+        bookmaker: "lvbet",
+      },
+    ]);
+    expect(result[0].parameters.map((p) => p.value)).toEqual(["AWAY:2"]);
+    expect(result[0].parameters[0].bookmakers).toHaveLength(2);
+  });
+
+  it("keeps side-scoped lines for different sides distinct ('HOME:7' vs 'AWAY:7')", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "HOME:7",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 1.68 }],
+        }),
+        bookmaker: "betcris",
+      },
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "AWAY:7.0",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 2.1 }],
+        }),
+        bookmaker: "lvbet",
+      },
+    ]);
+    expect(result[0].parameters.map((p) => p.value).sort()).toEqual(["AWAY:7", "HOME:7"]);
+  });
+
+  it("renders side-scoped param labels in Polish (Gospodarze/Goście)", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "HOME:7.0",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 1.7 }],
+        }),
+        bookmaker: "lvbet",
+      },
+      {
+        market: mkMarket({
+          type: "CORNERS_TEAM",
+          normalizedType: "CORNERS_TEAM" as ScrapedMarket["normalizedType"],
+          marketKey: "CORNERS_TEAM",
+          paramValue: "AWAY:2",
+          selections: [{ name: "Powyżej", normalizedName: "OVER", odds: 1.36 }],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+    const labels = result[0].parameters.map((p) => p.label).sort();
+    expect(labels).toEqual(["Gospodarze 7", "Goście 2"]);
+  });
 });

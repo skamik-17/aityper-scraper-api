@@ -135,6 +135,11 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-200326": "PLAYER_RED_CARD",
   "-200324": "PLAYER_GOAL_OR_ASSIST",
   "-200173": "PLAYER_HEADER_GOAL",
+  // "Zawodnik strzeli gola bezposrednio z rzutu wolnego" (43 player rows in
+  // this match, e.g. "Eze, Eberechi"=8.8) matches the catalog's
+  // PLAYER_FREE_KICK_GOAL description verbatim; unmapped it fell through to
+  // OTHER and collapsed to a single UNKNOWN selection.
+  "-200175": "PLAYER_FREE_KICK_GOAL",
   "-200342": "PLAYER_RIGHT_FOOT_GOAL",
   "-200341": "PLAYER_LEFT_FOOT_GOAL",
   "-200337": "ASSIST_SCORER_ANYTIME",
@@ -1110,6 +1115,7 @@ function normalizeSelectionForMarket(
     case "PLAYER_SHOTS_ON_TARGET":
     case "PLAYER_PASSES":
     case "PLAYER_HEADER_GOAL":
+    case "PLAYER_FREE_KICK_GOAL":
     case "PLAYER_RIGHT_FOOT_GOAL":
     case "PLAYER_LEFT_FOOT_GOAL":
     case "PLAYER_FOULS_OVER":
@@ -1322,11 +1328,14 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    // PLAYER_OFFSIDES has only a single "1+" catalog line (hasParameter:
-    // false); betfan's "Zawodnik 2+ spalonych" line is a materially rarer
-    // prop with no catalog counterpart - surfacing it as if comparable to
-    // peers' 1+ prices would misrepresent it as the same bet.
-    if (resolvedCode === "PLAYER_OFFSIDES" && raw.selections[0]?.name.trim() !== "1+") {
+    // PLAYER_OFFSIDES now carries 1+/2+/3+ catalog lines (audit-match:
+    // Arsenal vs Coventry City — sts quotes all three thresholds and
+    // betfan's own raw offside selections include 2+/3+ too), so only a
+    // genuinely unrecognized tier should be dropped.
+    if (
+      resolvedCode === "PLAYER_OFFSIDES" &&
+      !["1+", "2+", "3+"].includes(raw.selections[0]?.name.trim() ?? "")
+    ) {
       return null;
     }
 

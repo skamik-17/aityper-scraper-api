@@ -260,8 +260,9 @@ function getSelectionName(event: SwarmEvent, market: SwarmMarket, teams?: Parsed
  * Left unsplit, every player collapses into one unlabeled "base" parameter
  * bucket downstream. The value is the selection label to synthesize for each
  * split entry so the normalizer resolves it to the catalog's expected code
- * ("Powyzej" -> OVER; "1+"/"4+" match the player-goals/assists threshold
- * selections directly).
+ * ("Powyzej" -> OVER; "1+" matches the player-assists threshold selection
+ * directly; "Tak" resolves to the YES/NO family used by the single-price
+ * player-prop products, e.g. PLAYER_4_OR_MORE_GOALS).
  */
 const BULK_PLAYER_LIST_MARKET_SELECTION: Record<string, string> = {
   PlayerShotsOver: "Powyzej",
@@ -271,7 +272,13 @@ const BULK_PLAYER_LIST_MARKET_SELECTION: Record<string, string> = {
   PlayertoBeinOffsideOver: "Powyzej",
   GoalkeeperSaves: "Powyzej",
   ToAssistaGoal: "1+",
-  PlayerToScore4OrMore: "4+",
+  // round8 audit (Arsenal vs Coventry City): this is a standalone one-price
+  // 4+ product (PLAYER_4_OR_MORE_GOALS, YES/NO catalog vocabulary), not a
+  // rung of the PLAYER_GOALS 1+/2+/3+ tiered ladder — the synthesized marker
+  // must match the YES/NO family (see betcris-normalizer.ts's "Tak"->YES
+  // handling), not a bare "4+" tier label the catalog no longer declares
+  // there.
+  PlayerToScore4OrMore: "Tak",
   // "Strzelec gola / mecz zakończy się remisem" — every event in this market
   // is a player, and the whole market represents the fixed "scores AND draw"
   // scenario, so the selection code is the constant draw marker ("X" ->

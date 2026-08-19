@@ -50,7 +50,7 @@ apply_migration() {
 
     echo -e "${CYAN}Applying: ${filename}${NC}"
 
-    if docker exec -i "$CONTAINER_NAME" psql -U postgres -d postgres < "$file" 2>&1; then
+    if docker exec -i "$CONTAINER_NAME" psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$file" 2>&1; then
         echo -e "${GREEN}✓ Migration applied successfully${NC}\n"
         return 0
     else

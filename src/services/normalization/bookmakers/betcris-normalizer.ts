@@ -20,8 +20,9 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  canonicalizePlayerComboSelection,
 } from "../helpers/index.js";
-import { isValidMarketCode } from "../../../data/market-catalog.js";
+import { isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
 const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "P1XP2": "MATCH_WINNER",
@@ -29,8 +30,22 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "P1XP2DC": "DOUBLE_CHANCE",
   "DrawNoBet": "DRAW_NO_BET",
   "OverUnder": "TOTAL_GOALS",
+  "TotalGoalsExact": "EXACT_GOALS",
+  // round8 audit (Arsenal vs Coventry City): betcris publishes both goal-band
+  // families under the identical raw name "Liczba goli (przedziały)" but
+  // distinct Swarm ids — without these two mappings betcris had zero rows in
+  // either catalog code (both fell through matchMarketByName's blanket
+  // /przedzia[lł]/i exclusion). "TotalGoals" is the disjoint exhaustive
+  // partition (0 lub 1 / 2 lub 3 / 4 - 6 / 7+, implied probs sum to ~1) — the
+  // GOAL_RANGE shape. "MultiGoal" is the cumulative overlapping ladder
+  // (1-2/1-3/.../4-6/5-6, implied probs sum well above 1) — the
+  // MULTI_GOAL_RANGE shape (see that catalog entry's comment for the split
+  // rationale).
+  "TotalGoals": "GOAL_RANGE",
+  "MultiGoal": "MULTI_GOAL_RANGE",
   "BothTeamsToScore": "BTTS",
   "OddEven": "ODD_EVEN_GOALS",
+  "EvenOddTotal": "ODD_EVEN_GOALS",
   "WinToNil": "WIN_TO_NIL",
   "CleanSheet": "CLEAN_SHEET",
   // Side-specific catalog codes (plain OVER/UNDER selections): the shared
@@ -41,13 +56,17 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "Team2OverUnder": "AWAY_TEAM_TOTAL_GOALS",
   "P1XP2FirstHalf": "HALF_TIME_RESULT",
   "HalfTimeOverUnder": "HALF_TIME_TOTAL_GOALS",
+  "HalfTimeOverUnderAsian": "HALF_TIME_TOTAL_GOALS_ASIAN",
   "BothTeamsToScoreFirstHalf": "HALF_TIME_BTTS",
+  "1stHalfBothTeamsToScore": "HALF_TIME_BTTS",
   "AsianHandicap": "ASIAN_HANDICAP",
   "EuropeanHandicap": "EUROPEAN_HANDICAP",
   "CorrectScore": "CORRECT_SCORE",
+  "2ndHalfCornersOver/Under": "SECOND_HALF_CORNERS_TOTAL",
   "HalftimeFulltime": "HALFTIME_FULLTIME",
   // Audited mappings keyed by raw bookmakerMarketId
   "Team2HalfWithMostGoals": "AWAY_HALF_WITH_MOST_GOALS",
+  "HalfTimeCornersResult": "HALF_TIME_CORNERS_RACE",
   "Team1HalfWithMostGoals": "HOME_HALF_WITH_MOST_GOALS",
   "1st Goal Time": "FIRST_GOAL_TIME",
   "BothHalfLessThen1.5Goal": "BOTH_HALVES_UNDER_GOALS",
@@ -65,6 +84,7 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "1-75Result": "TIME_PERIOD_RESULT",
   "1-60MinutesBothTeamToScore": "BTTS_FIRST_60_MIN",
   "1-60": "TIME_PERIOD_RESULT",
+  "1-60Result": "TIME_PERIOD_RESULT",
   "1-30MinutesBothTeamToScore": "BTTS_FIRST_30_MIN",
   "1-30Handicap": "TIME_PERIOD_HANDICAP",
   "1-30Result": "TIME_PERIOD_RESULT",
@@ -72,12 +92,20 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "1-15Handicap": "FIRST_15_MIN_HANDICAP",
   "1-15Result": "TIME_PERIOD_RESULT",
   "Team2ScoreYes/No": "AWAY_TEAM_TO_SCORE",
+  // Note the Swarm id typo: Team2's 1st-half id uses a lowercase "in"
+  // ("Team2ScoreinFirstHalf") while every other pair here uses "In".
+  "Team1ScoreInFirstHalf": "HALF_TIME_HOME_TO_SCORE",
+  "Team2ScoreinFirstHalf": "HALF_TIME_AWAY_TO_SCORE",
+  "Team1ScoreInSecondHalf": "SECOND_HALF_HOME_TO_SCORE",
+  "Team2ScoreInSecondHalf": "SECOND_HALF_AWAY_TO_SCORE",
   "Team1ScoreYes/no": "HOME_TEAM_TO_SCORE",
   "Handicap": "EUROPEAN_HANDICAP",
   // Binary Yes/No prop ("Dokładnie 1 gol w całym meczu") — matches the
   // EXACT_GOALS_YN code lvbet uses; it must NOT be flattened into the
   // EXACT_GOALS 0..6+ distribution (its YES/NO selections were orphans there).
   "Exactly1GoalsinMatch": "EXACT_GOALS_YN",
+  "AnytimeGoalscorerDoubleChance": "TWO_PLAYERS_ANYTIME",
+  "PlayerWillScoreandTheOpponentTeamWillWin": "PLAYER_GOAL_TEAM_LOSES",
   "MatchScoreDraw": "SCORING_DRAW",
   "Team2ToWinToNil": "AWAY_WIN_TO_NIL",
   "Team1ToWinToNil": "HOME_WIN_TO_NIL",
@@ -104,6 +132,10 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "ToMissaPenalty": "PENALTY_MISSED",
   "1stGoalTimeTeam2": "AWAY_FIRST_GOAL_TIME",
   "1stGoalTimeTeam1": "HOME_FIRST_GOAL_TIME",
+  "Team1FirstGoalscorer": "HOME_GOALSCORER_FIRST",
+  "Team2FirstGoalscorer": "AWAY_GOALSCORER_FIRST",
+  "Team1LastGoalscorer": "HOME_GOALSCORER_LAST",
+  "Team2LastGoalscorer": "AWAY_GOALSCORER_LAST",
   "AtLeastOneTeamWillScoreOverGoals": "AT_LEAST_ONE_TEAM_OVER_GOALS",
   "AutoGoal": "OWN_GOAL",
   "AnytimeGoalscorerTripleChance": "THREE_PLAYERS_ANYTIME",
@@ -122,7 +154,12 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "TwoPenaltiesintheMatch": "TWO_PENALTIES_IN_MATCH",
   "HalfPenalty": "HALF_TIME_PENALTY_AWARDED",
   "Penalty": "PENALTY_AWARDED",
-  "PlayerToScore4OrMore": "PLAYER_GOALS",
+  // round8 audit (Arsenal vs Coventry City): betcris's "4+" is a standalone
+  // one-price product (same YES-shaped family as PlayerToScore2/3OrMore),
+  // not a rung of the PLAYER_GOALS 1+/2+/3+ tiered ladder — see catalog
+  // entry PLAYER_4_OR_MORE_GOALS's comment. Routing it to PLAYER_GOALS
+  // leaked a bare "4+" selection code the catalog never declared there.
+  "PlayerToScore4OrMore": "PLAYER_4_OR_MORE_GOALS",
   "PlayerWillScoreandMatchWillEndDraw": "PLAYER_GOAL_AND_RESULT",
   "PlayerWillScoreandHisTeamWillWin": "PLAYER_GOAL_AND_TEAM_WIN",
   "PlayertoScoreinBothHalves": "PLAYER_SCORES_BOTH_HALVES",
@@ -279,6 +316,17 @@ const BETCRIS_EXCLUDED_MARKET_IDS = new Set<string>([
   // UNKNOWN and the aggregator kept only the first, presenting a fake
   // HALF_TIME_RESULT row (odds 2.12) instead of the real 1X2 half-time market.
   "FirstTeamToScoreAnd1stHalfResult",
+  // "Dokładna liczba goli w meczu" is a duplicate render of "Dokładna
+  // liczba goli" (id "TotalGoalsExact", mapped to EXACT_GOALS) with
+  // identical prices under different selection labels ("Bez gola"/
+  // "Dokładnie N"/"Dokładnie 6 lub więcej" vs " 0"/" 1"/" 6+"). Excluded so
+  // it does not collide on the EXACT_GOALS key.
+  "ExactNumberOfGoals",
+  // "1. połowa / 2. połowa. Obie drużyny strzelą gola" is a per-half BTTS
+  // combo (4 selections: Tak/Tak, Tak/Nie, Nie/Tak, Nie/Nie) with no
+  // catalog counterpart — not the same market as the plain HALF_TIME_BTTS
+  // Yes/No mapped above.
+  "1stHalf-2ndHalfBothToScore",
 ]);
 
 const BETCRIS_SELECTION_CODES: Record<string, NormalizedSelection> = {
@@ -314,7 +362,10 @@ const BETCRIS_SELECTION_CODES: Record<string, NormalizedSelection> = {
 
 function extractMarketType(raw: RawBookmakerMarket): string | null {
   if (raw.bookmakerMarketId) {
-    return String(raw.bookmakerMarketId);
+    // Trim: the betcris scraper can hand back an id with leading/trailing
+    // whitespace (e.g. " SecondHalfHomeTeamToWinToNil"), which would
+    // otherwise never match BETCRIS_MARKET_TYPE_TO_CODE's exact keys.
+    return String(raw.bookmakerMarketId).trim();
   }
 
   // No group-name guessing here: the betcris parser always carries the Swarm
@@ -497,8 +548,13 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   // single UNKNOWN HALF_TIME_RESULT selection.
   if (/wynik\s+1\.?\s*po[lł]owy\s*\/\s*wynik\s+ko[nń]cowy/i.test(lower)) return "HT_FT_CORRECT_SCORE";
   if (/wynik\s+1\.?\s*po[lł]owy/i.test(lower) || /1\.?\s*po[lł]owa.*wynik/i.test(lower)) return "HALF_TIME_RESULT";
+  // Must be checked before the generic half-time-goals rule below: "1.
+  // połowa. Obie drużyny strzelą gola" contains both "1. połowa" and "gol",
+  // which would otherwise match the goals rule first. The stem "strzel"
+  // (not "strzela") is required to match the conjugated "strzelą" form
+  // betcris uses.
+  if (/obie.*strzel.*1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*obie.*strzel/i.test(lower)) return "HALF_TIME_BTTS";
   if (/gole?\s+1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*gol/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
-  if (/obie.*strzela.*1\.?\s*po[lł]ow/i.test(lower) || /1\.?\s*po[lł]owa.*obie.*strzela/i.test(lower)) return "HALF_TIME_BTTS";
 
   if (/handicap\s+azjatycki/i.test(lower) || /asian\s+handicap/i.test(lower)) return "ASIAN_HANDICAP";
   if (/handicap\s+europejski/i.test(lower) || /european\s+handicap/i.test(lower)) return "EUROPEAN_HANDICAP";
@@ -529,24 +585,21 @@ function resolveResultToken(
 
 /**
  * Encode a multi-player combo selection ("Jean-Philippe Mateta and Kylian
- * Mbappe", "Kylian Mbappe or Neil El Aynaoui or Ousmane Dembele") as a
- * canonical, sorted "Name & Name & Name" code instead of a fixed placeholder.
- * Betcris quotes dozens of distinct pairs/trios per market under the same
- * catalog code (PLAYER_PAIR/PLAYER_TRIO carry no per-combo parameter), so a
- * literal placeholder code collapses every combination onto one aggregator
- * row; encoding the actual names keeps each combo distinct.
+ * Mbappe", "Kylian Mbappe or Neil El Aynaoui or Ousmane Dembele") as the
+ * network-wide canonical "I. Surname & I. Surname" code instead of a fixed
+ * placeholder. Betcris quotes dozens of distinct pairs/trios per market
+ * under the same catalog code (PLAYER_PAIR/PLAYER_TRIO carry no per-combo
+ * parameter), so a literal placeholder code collapses every combination onto
+ * one aggregator row; encoding the actual names keeps each combo distinct.
+ * Delegates to the shared helper (also used by superbet) so betcris's full
+ * "Firstname Lastname and Firstname Lastname" names reduce to the same
+ * abbreviated form betclic/lvbet/superbet converge on — round8 audit
+ * (Arsenal vs Coventry City) found the previous full-name-sorted encoding
+ * ("Gabriel Jesus & Viktor Gyokeres") never merged with betclic's pre-
+ * abbreviated "G. Jesus & V. Gyokeres" row for the same real-world pair.
  */
 function normalizeBetcrisPlayerCombo(selectionName: string): NormalizedSelection {
-  const players = selectionName
-    .split(/\s*(?:\band\b|\bor\b|\bi\b|\/|&)\s*/i)
-    .map((part) => canonicalizePlayerName(part.trim()))
-    .filter((part) => part.length > 0);
-
-  if (players.length < 2) {
-    return canonicalizePlayerName(selectionName) as NormalizedSelection;
-  }
-
-  return players.sort((a, b) => a.localeCompare(b, "en")).join(" & ") as NormalizedSelection;
+  return canonicalizePlayerComboSelection(selectionName) as NormalizedSelection;
 }
 
 function normalizeSelectionForMarket(
@@ -584,6 +637,22 @@ function normalizeSelectionForMarket(
       if (/^1\s*>=\s*2/.test(trimmed)) return "1ST_OR_DRAW" as NormalizedSelection;
       if (/^2\s*>=\s*1/.test(trimmed)) return "2ND_OR_DRAW" as NormalizedSelection;
       if (/^1\.?\s*lub\s*2\.?$/i.test(lowerTrimmed)) return "1ST_OR_2ND" as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
+    case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE": {
+      // round8 audit (Arsenal vs Coventry City): betcris renders bands with
+      // Polish "lub"/spaced-dash wording ("2 lub 3", "0 lub 1", "4 - 6")
+      // instead of the catalog's plain "2-3"/"0-1"/"4-6"; MultiGoal's own
+      // ranges ("1-2", "2-3", ...) already match and pass through unchanged.
+      // "7+" (TotalGoals' open top band) also passes through unchanged.
+      // "Inny" (MultiGoal's catch-all leg, @4.9 in the raw offer) has no
+      // slot in either disjoint/cumulative catalog list — drop it via
+      // UNKNOWN rather than inventing one.
+      if (/^inny$/i.test(lowerTrimmed)) return "UNKNOWN";
+      const bandMatch = trimmed.match(/^(\d+)\s*(?:lub|-)\s*(\d+)\s*$/i);
+      if (bandMatch) return `${bandMatch[1]}-${bandMatch[2]}` as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -676,6 +745,9 @@ function normalizeSelectionForMarket(
       if (/^dok[lł]adnie/i.test(lowerTrimmed)) return "EXACTLY" as NormalizedSelection;
       return normalizeOverUnderSelection(trimmed);
 
+    case "EXACT_GOALS":
+    case "HALF_TIME_EXACT_GOALS":
+    case "SECOND_HALF_EXACT_GOALS":
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS": {
       // Bare integer/"N+" labels (" 0", " 1", " 3+", " 4+", " 6+") map
@@ -683,7 +755,16 @@ function normalizeSelectionForMarket(
       // whitespace is stripped. The catalog ladder is
       // 0/1/2/3/3+/4/4+/5/6+ (market-catalog.ts), so "4+" is a valid
       // catalog code just like lvbet's own "4+" mapping in this market.
-      const stripped = trimmed.replace(/\s+/g, "");
+      // The full-match id "TotalGoalsExact" (EXACT_GOALS) also has a
+      // duplicate-render variant with "Bez gola"/"Dokładnie N" labels
+      // (excluded as a raw-id duplicate, see BETCRIS_EXCLUDED_MARKET_IDS),
+      // so the prefix/"no goal" forms are handled here too defensively.
+      if (/^(bez\s+gola|brak\s+gola)$/i.test(lowerTrimmed)) return "0" as NormalizedSelection;
+      const bandMatch = trimmed.match(/(\d+)\s*(\+|lub\s+wi[eę]cej)/i);
+      if (bandMatch) return `${bandMatch[1]}+` as NormalizedSelection;
+      const stripped = trimmed
+        .replace(/^dok[lł]adnie\s+/i, "")
+        .replace(/\s+/g, "");
       const validExactGoalsSelections = new Set(["0", "1", "2", "3", "3+", "4", "4+", "5", "6+"]);
       return (
         validExactGoalsSelections.has(stripped) ? stripped : "UNKNOWN"
@@ -792,6 +873,10 @@ function normalizeSelectionForMarket(
 
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
+    case "HOME_GOALSCORER_FIRST":
+    case "AWAY_GOALSCORER_FIRST":
+    case "HOME_GOALSCORER_LAST":
+    case "AWAY_GOALSCORER_LAST":
     case "GOALSCORER_ANYTIME":
     case "HALF_TIME_GOALSCORER_ANYTIME":
     case "SECOND_HALF_GOALSCORER_ANYTIME":
@@ -804,10 +889,12 @@ function normalizeSelectionForMarket(
     case "PLAYER_GOALS":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_3_OR_MORE_GOALS":
+    case "PLAYER_4_OR_MORE_GOALS":
     case "PLAYER_HEADER_GOAL":
     case "PLAYER_GOAL_OR_ASSIST":
     case "PLAYER_GOAL_AND_ASSIST":
     case "PLAYER_GOAL_AND_TEAM_WIN":
+    case "PLAYER_GOAL_TEAM_LOSES":
     case "PLAYER_SCORES_BOTH_HALVES":
     case "PLAYER_GOAL_OUTSIDE_BOX":
     case "PLAYER_RED_CARD":
@@ -828,6 +915,12 @@ function normalizeSelectionForMarket(
       // player lives in the market name and the line in the Swarm base field.
       if (/^(powy[żz]ej|over|ponad)\b/i.test(lowerTrimmed)) return "OVER";
       if (/^(poni[żz]ej|under)\b/i.test(lowerTrimmed)) return "UNDER";
+      // PLAYER_4_OR_MORE_GOALS is a single-price YES/NO product: the parser
+      // synthesizes a literal "Tak" marker per player-split entry (round8
+      // audit betcris-selection-case/betcris-parser-label) that must resolve
+      // to the catalog's YES code before falling through to the player-name
+      // branch below (no player is ever literally named "Tak").
+      if (/^(tak|yes)$/i.test(lowerTrimmed)) return "YES";
       // Canonical "Firstname Lastname" order shared across all bookmakers.
       return canonicalizePlayerName(
         trimmed.replace(/^\d+\.\s*/, "")
@@ -876,6 +969,21 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    case "FIRST_GOAL_TIME":
+    case "FIRST_GOAL_TIME_ALT":
+    case "HOME_FIRST_GOAL_TIME":
+    case "AWAY_FIRST_GOAL_TIME": {
+      // Betcris quotes minute-band labels ("11-20", "31-40", trailing-band
+      // "81-90+"/"31-45+"/"76-90+") plus a "no goal" label ("Nie będzie
+      // bramki", "No Goal") — the catalog bands drop the trailing "+".
+      if (/nie\s+b[eę]dzie\s+bramki|no\s*goal|bez\s+gola|brak\s+gola/i.test(lowerTrimmed)) {
+        return "NONE";
+      }
+      const band = trimmed.replace(/\s+/g, "").match(/^(\d{1,2})-(\d{1,2})\+?$/);
+      if (band) return `${band[1]}-${band[2]}` as NormalizedSelection;
+      return "UNKNOWN" as NormalizedSelection;
+    }
+
     default:
       // Generic Over/Under labels appear across stat markets (cards, corners,
       // fouls, shots, ...), sometimes truncated to a bare "Powyżej "/
@@ -889,7 +997,9 @@ function normalizeSelectionForMarket(
 
 const OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "TOTAL_GOALS",
+  "TOTAL_GOALS_ASIAN",
   "HALF_TIME_TOTAL_GOALS",
+  "HALF_TIME_TOTAL_GOALS_ASIAN",
   "SECOND_HALF_TOTAL_GOALS",
   "TEAM_TOTAL_GOALS",
   "HOME_TEAM_TOTAL_GOALS",
@@ -925,6 +1035,7 @@ const STAT_OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "CARDS_POINTS_OVER_UNDER",
   "CORNERS_TOTAL",
   "HALF_TIME_CORNERS_TOTAL",
+  "SECOND_HALF_CORNERS_TOTAL",
   "FIRST_10_MIN_CORNERS_TOTAL",
   "FIRST_10_MIN_CARDS",
   "CORNERS_TOTAL_3WAY",
@@ -1000,6 +1111,28 @@ function extractParamValue(
   marketCode: NormalizedMarketType,
   raw: RawBookmakerMarket
 ): string | undefined {
+  // CORNERS_RACE_TO carries its threshold directly in raw.paramValue
+  // ("3"/"5"/"7"/"9") from the Swarm "base" field. This market is neither
+  // over/under nor handicap-shaped, so it fell through the two lists below
+  // and always returned undefined even after the catalog was parameterized
+  // (audit-match: Arsenal vs Coventry City — see catalog entry comment for
+  // the cross-bookmaker collision this caused).
+  if (marketCode === "CORNERS_RACE_TO") {
+    return raw.paramValue && raw.paramValue !== "" ? raw.paramValue.replace(",", ".") : undefined;
+  }
+
+  // TIME_PERIOD_RESULT: betcris reuses one result-selection shape ("W1"/
+  // "X"/"W2") across four distinct time windows ("1-15 min. Wynik", "1-30
+  // min. Wynik", "1-60 min. Wynik", "1-75 min. Wynik") with no per-window
+  // catalog id or paramValue field — without extracting the window end from
+  // the market name, all four windows collapse onto one marketKey. Convention
+  // matches the fuksiarz/lebull TIME_PERIOD_RESULT parameter (window end in
+  // minutes as a plain string, e.g. "30").
+  if (marketCode === "TIME_PERIOD_RESULT") {
+    const windowMatch = raw.name.match(/\b1\s*[-–]\s*(\d{1,2})\s*\.?\s*min/i);
+    return windowMatch ? windowMatch[1] : undefined;
+  }
+
   const isOverUnder =
     OVER_UNDER_PARAM_MARKETS.includes(marketCode) ||
     STAT_OVER_UNDER_PARAM_MARKETS.includes(marketCode);
@@ -1090,9 +1223,11 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     // --- Post-mapping reroutes: Swarm reuses one market id across match
     // periods/variants, so the id alone can land in the wrong catalog code.
     if (marketCode === "TOTAL_GOALS" && /azjatyck/i.test(raw.name)) {
-      // Asian quarter-line totals ("Azjatycka suma goli") settle with a
-      // split stake — do not present them as plain TOTAL_GOALS lines.
-      return null;
+      // Asian quarter-line totals ("Azjatycka liczba goli") reuse the plain
+      // OverUnder id but settle with a split stake at quarter lines
+      // (0.75/1.25/...) — reroute to the dedicated catalog code instead of
+      // presenting them as plain TOTAL_GOALS lines.
+      marketCode = "TOTAL_GOALS_ASIAN";
     }
     if (/przedzia[lł]/i.test(raw.name) && OVER_UNDER_PARAM_MARKETS.includes(marketCode)) {
       // Goal-band variants ("(przedziały)") reuse the totals ids but carry
@@ -1258,6 +1393,13 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       selections = selections.filter((sel) => !/^dok[lł]adnie\b/i.test(sel.label.trim()));
     }
 
+    // GOAL_RANGE/MULTI_GOAL_RANGE: drop MultiGoal's "Inny" catch-all leg
+    // (normalized to UNKNOWN above — no slot in either band list) instead of
+    // leaking an UNKNOWN selection into the market.
+    if (marketCode === "GOAL_RANGE" || marketCode === "MULTI_GOAL_RANGE") {
+      selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+    }
+
     // TEAM_TOTAL_GOALS_FIRST_60MIN uses side-prefixed catalog selections
     // (HOME_OVER/... vs AWAY_OVER/...); derive the side from the raw name
     // ("1-60 min. Team 1/2. Liczba goli").
@@ -1350,6 +1492,34 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       );
     }
 
+    // PLAYER_SHOTS/PLAYER_SHOTS_ON_TARGET: betcris publishes one raw market
+    // per threshold ("Zawodnik. Liczba strzałów (celnych) (musi rozpocząć):
+    // Powyżej N.5"), every one of them sharing the same paramValue (the
+    // player) and, before this fix, the same bare "OVER" selection code —
+    // collapsing the whole 8/9-line ladder onto a single code so only the
+    // last-processed threshold survived (round8 audit
+    // P3-betcris-normalizer-over-to-tier / p2-betcris-over-to-tier). Recover
+    // the threshold from raw.name and convert to the matching N+ tier, same
+    // convention as PLAYER_FOULS above, but WITHOUT that block's 4-tier
+    // clamp (these ladders run up to 9+/7+) — gate against the catalog's own
+    // declared selection set instead, so an out-of-range tier is dropped
+    // rather than silently clamped into a neighboring one.
+    if (
+      (marketCode === "PLAYER_SHOTS" || marketCode === "PLAYER_SHOTS_ON_TARGET") &&
+      selections.some((sel) => sel.code === "OVER")
+    ) {
+      const lineMatch = raw.name.match(/powy[żz]ej\s+([\d.,]+)\s*$/i);
+      const line = lineMatch ? parseFloat(lineMatch[1].replace(",", ".")) : undefined;
+      const catalogSelections = getMarketByCode(marketCode)?.selections;
+      selections = selections.flatMap((sel) => {
+        if (sel.code !== "OVER") return [sel];
+        if (line === undefined) return [];
+        const tier = `${Math.floor(line) + 1}+`;
+        if (!catalogSelections?.includes(tier)) return [];
+        return [{ ...sel, code: tier as NormalizedSelection }];
+      });
+    }
+
     // PLAYER_OFFSIDES has only one catalog tier ("1+") and no meaningful
     // "Under" side — betcris' bare "OVER" (from "Player to Be in Offside
     // Over (Must Start)") always represents that single tier.
@@ -1361,12 +1531,12 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
 
     // Bulk multi-player markets with no Over/Under shape ("Zaliczy asystę w
     // meczu" -> PLAYER_ASSISTS "1+"; "Strzeli 4 gole lub więcej" ->
-    // PLAYER_GOALS "4+"; "Strzelec gola / mecz zakończy się remisem" ->
-    // PLAYER_GOAL_AND_RESULT "DRAW"): same parser split/paramValue convention
-    // as the PLAYER_OU_PARAM_MARKETS block above.
+    // PLAYER_4_OR_MORE_GOALS "YES"; "Strzelec gola / mecz zakończy się
+    // remisem" -> PLAYER_GOAL_AND_RESULT "DRAW"): same parser split/
+    // paramValue convention as the PLAYER_OU_PARAM_MARKETS block above.
     if (
       (marketCode === "PLAYER_ASSISTS" ||
-        marketCode === "PLAYER_GOALS" ||
+        marketCode === "PLAYER_4_OR_MORE_GOALS" ||
         marketCode === "PLAYER_GOAL_AND_RESULT") &&
       raw.paramValue &&
       !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)

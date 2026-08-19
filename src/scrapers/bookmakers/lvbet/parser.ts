@@ -327,21 +327,31 @@ const BULK_PLAYER_LIST_MARKET_PATTERNS: Array<{
 }> = [
   // "Zawodnicy (strzały celne)" / "Total Shots On Target" / "Strzały celne
   // (musi rozpocząć)" — threshold lives in market.line ("0.5".."4.5"). The
-  // bare "zawodnicy (strzały celne)" form is anchored end-to-end so it never
-  // swallows a differently-suffixed variant that might carry its own code.
+  // production raw name always carries a "- powyżej X (musi rozpocząć w
+  // wyjściowej "11")" infix/suffix (audit-match, Arsenal vs Coventry City,
+  // round 8 P1); the OLD end-to-end anchor never matched that shape, so the
+  // roster fell through to the generic per-market parser with raw player
+  // names as selections instead of being split. Anchored end-to-end but now
+  // tolerant of the optional "- powyżej N" infix and "(musi rozpocząć...)"
+  // suffix, plus an unanchored catch-all for any other ordering.
   {
-    pattern: /^zawodnicy \(strzały celne\)$|total shots on target|strzały celne \(musi rozpoczac/,
+    pattern:
+      /^zawodnicy \(strzały celne\)(?: - powyzej [\d.,]+)?(?: \(musi rozpoczac[^)]*\))?$|total shots on target|strzały celne\b.*\(musi rozpoczac/,
     selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : null),
   },
   // "Zawodnicy (strzały)" / "Total Shots (must start)" / "Strzały (musi
-  // rozpocząć)" — the catalog's PLAYER_SHOTS has no per-threshold tiers, so
-  // every line resolves to the same OVER marker. The bare "zawodnicy
-  // (strzały)" form is anchored end-to-end so it does not also swallow the
-  // "zawodnicy (strzały) - powyżej 7.5" variant, which has its own dedicated
-  // PLAYER_SHOTS_OVER catalog code (PLAYER_DROPDOWN shape, not a bulk O/U tier).
+  // rozpocząć)" — same production shape and same fix as the celne entry
+  // above (round 8 P1). The catalog's PLAYER_SHOTS now carries a full
+  // "1+".."9+" tier ladder (round 8 P5), so unlike before, every threshold
+  // must flow through as its own "Powyzej <line>" label instead of a
+  // constant marker — normalizeLvbetPlayerThreshold (lvbet-normalizer.ts)
+  // maps each one to its tier. This also folds in the 7.5 threshold, which
+  // used to be carved out to the separate PLAYER_SHOTS_OVER code (round 8
+  // P4: not a distinct product, just another rung of the same ladder).
   {
-    pattern: /^zawodnicy \(strzały\)$|total shots \(must start\)|strzały \(musi rozpoczac/,
-    selectionLabel: () => "Powyzej",
+    pattern:
+      /^zawodnicy \(strzały\)(?: - powyzej [\d.,]+)?(?: \(musi rozpoczac[^)]*\))?$|total shots \(must start\)|strzały\b.*\(musi rozpoczac/,
+    selectionLabel: (market) => (market.line ? `Powyzej ${market.line}` : "Powyzej"),
   },
   // "Zawodnicy (faule popełnione)" / "Zawodnicy (faule zarobione)" / "Odbiory
   // - Tackles" — same bundled-roster shape for the other player stat lines.
@@ -365,15 +375,17 @@ const BULK_PLAYER_LIST_MARKET_PATTERNS: Array<{
   // name and excludes N=2/1: "Zawodnik strzeli 2 lub więcej goli" has its own
   // dedicated YES/NO catalog code (PLAYER_2_OR_MORE_GOALS), and "Dowolny
   // zawodnik strzeli 3 lub więcej goli" (HAT_TRICK) is a different YES/NO
-  // market entirely — neither has PLAYER_GOALS' "N+" tiered selection shape,
-  // so bulk-splitting them here would synthesize a marker their normalizer
-  // case cannot map.
+  // market entirely.
+  // N=3 and N=4 each route to their own one-price YES/NO catalog code
+  // (PLAYER_3_OR_MORE_GOALS / PLAYER_4_OR_MORE_GOALS — audit-match, Arsenal
+  // vs Coventry City, round 8): the label used to synthesize a tiered "N+"
+  // marker, but neither target code's selection vocabulary is a tiered
+  // ladder (both are plain YES/NO), so that marker had no catalog
+  // counterpart and was silently dropped. A fixed "Tak" marker matches the
+  // shape every other bulk-split single-price market already uses here.
   {
     pattern: /^zawodnik strzeli ([3-9]|\d{2,}) lub wiecej goli$/,
-    selectionLabel: (_market, normalizedName) => {
-      const m = normalizedName.match(/^zawodnik strzeli (\d+) lub wiecej goli$/);
-      return m ? `${m[1]}+` : null;
-    },
+    selectionLabel: () => "Tak",
   },
   // "Zawodnik strzeli gola i mecz zakończy się remisem" — every row prices
   // the fixed "scores AND match ends in a draw" outcome for that player.

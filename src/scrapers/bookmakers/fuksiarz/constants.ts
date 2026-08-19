@@ -56,6 +56,7 @@ export const GAME_TYPES = {
   DRAW_NO_BET: 6,            // Draw No Bet
   HANDICAP: 5,               // European Handicap
   ASIAN_HANDICAP: 7,         // Asian Handicap
+  HALF_WITH_MORE_GOALS: 38,  // Half with more goals
 } as const;
 
 /**

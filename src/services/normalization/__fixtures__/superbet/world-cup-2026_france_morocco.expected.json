@@ -3364,9 +3364,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -3378,7 +3378,7 @@
         ]
       },
       "index": 159,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 1.5 rz.rożnych; Obie drużyny strzelą gola"
     },
     {
@@ -4246,9 +4246,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4260,7 +4260,7 @@
         ]
       },
       "index": 201,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Powyżej 8.5 celnych strzałów w meczu; Obie drużyny strzelą gola"
     },
     {
@@ -4708,9 +4708,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4722,7 +4722,7 @@
         ]
       },
       "index": 223,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 0.5 kartek; Obie drużyny strzelą gola"
     },
     {
@@ -5086,9 +5086,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -5100,7 +5100,7 @@
         ]
       },
       "index": 241,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 2.5 rz.rożnych; Obie drużyny strzelą gola"
     },
     {
@@ -5947,9 +5947,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -5961,7 +5961,7 @@
         ]
       },
       "index": 282,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 1.5 strzałów; Rahimi, Soufiane powyżej 1.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -6178,9 +6178,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -6192,7 +6192,7 @@
         ]
       },
       "index": 293,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 2.5 strzałów; Rahimi, Soufiane powyżej 1.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -6766,9 +6766,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -6780,16 +6780,16 @@
         ]
       },
       "index": 321,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Powyżej 10.5 celnych strzałów w meczu; Obie drużyny strzelą gola"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -6801,7 +6801,7 @@
         ]
       },
       "index": 322,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 1.5 strzałów; Hakimi, Achraf powyżej 1.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -6976,9 +6976,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -6990,16 +6990,16 @@
         ]
       },
       "index": 331,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 2.5 strzałów; Hakimi, Achraf powyżej 1.5 strzałów; Obie drużyny strzelą gola"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -7011,7 +7011,7 @@
         ]
       },
       "index": 332,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -7081,9 +7081,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -7095,7 +7095,7 @@
         ]
       },
       "index": 336,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 2.5 rz.rożnych; Każda z drużyn powyżej 0.5 kartek; Obie drużyny strzelą gola"
     },
     {
@@ -7564,9 +7564,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -7578,7 +7578,7 @@
         ]
       },
       "index": 359,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian strzeli gola; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -7711,9 +7711,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -7725,7 +7725,7 @@
         ]
       },
       "index": 366,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Dembele, Ousmane powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -8299,9 +8299,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -8313,7 +8313,7 @@
         ]
       },
       "index": 394,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Powyżej 2.5 gola w meczu; Francja wygra lub zremisuje; Obie drużyny strzelą gola; Powyżej 1.5 kartek w meczu; Powyżej 8.5 rz.rożnych w meczu"
     },
     {
@@ -8467,9 +8467,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -8481,7 +8481,7 @@
         ]
       },
       "index": 402,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Olise, Michael powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -9748,9 +9748,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -9762,7 +9762,7 @@
         ]
       },
       "index": 463,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 1.5 kartek; Obie drużyny strzelą gola"
     },
     {
@@ -9874,9 +9874,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -9888,7 +9888,7 @@
         ]
       },
       "index": 469,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 2.5 strzałów; Rahimi, Soufiane powyżej 2.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -10147,9 +10147,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10161,7 +10161,7 @@
         ]
       },
       "index": 482,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Rabiot, Adrien powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -10189,9 +10189,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10203,7 +10203,7 @@
         ]
       },
       "index": 484,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Barcola, Bradley powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -10399,9 +10399,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10413,7 +10413,7 @@
         ]
       },
       "index": 494,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Dembele, Ousmane strzeli gola; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -10504,9 +10504,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10518,7 +10518,7 @@
         ]
       },
       "index": 499,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Dembele, Ousmane powyżej 1.5 strzałów; Rahimi, Soufiane powyżej 2.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -10567,9 +10567,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10581,7 +10581,7 @@
         ]
       },
       "index": 502,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 3.5 rz.rożnych; Każda z drużyn powyżej 3.5 celnych strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -10609,9 +10609,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10623,7 +10623,7 @@
         ]
       },
       "index": 504,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Olise, Michael powyżej 1.5 strzałów; Rahimi, Soufiane powyżej 2.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -10756,9 +10756,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10770,7 +10770,7 @@
         ]
       },
       "index": 511,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Mbappe, Kylian powyżej 2.5 strzałów; Hakimi, Achraf powyżej 2.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -11071,9 +11071,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_BTTS",
-        "marketKey": "HALF_TIME_BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11085,7 +11085,7 @@
         ]
       },
       "index": 526,
-      "marketCode": "HALF_TIME_BTTS",
+      "marketCode": "OTHER",
       "rawName": "Francja najwięcej celnych strzałów; Powyżej 0.5 gola w 1.połowie; Obie drużyny strzelą gola; Francja wygra mecz; Powyżej 2.5 kartek w meczu; Francja wykona powyżej 4.5 rz.rożnych"
     },
     {
@@ -11113,9 +11113,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11127,7 +11127,7 @@
         ]
       },
       "index": 528,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Olise, Michael powyżej 1.5 strzałów; Hakimi, Achraf powyżej 2.5 strzałów; Obie drużyny strzelą gola"
     },
     {
@@ -11218,9 +11218,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11232,7 +11232,7 @@
         ]
       },
       "index": 533,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Powyżej 2.5 gola w meczu; Maroko wygra lub zremisuje; Obie drużyny strzelą gola; Powyżej 1.5 kartek w meczu; Powyżej 8.5 rz.rożnych w meczu"
     },
     {
@@ -11428,9 +11428,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11442,16 +11442,16 @@
         ]
       },
       "index": 543,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Dembele, Ousmane powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11463,7 +11463,7 @@
         ]
       },
       "index": 544,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Olise, Michael powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -11764,9 +11764,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -11778,7 +11778,7 @@
         ]
       },
       "index": 559,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Rahimi, Soufiane powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -12205,9 +12205,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -12219,7 +12219,7 @@
         ]
       },
       "index": 580,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Każda z drużyn powyżej 3.5 rz.rożnych; Każda z drużyn powyżej 1.5 kartek; Obie drużyny strzelą gola"
     },
     {
@@ -12289,9 +12289,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -12303,16 +12303,16 @@
         ]
       },
       "index": 584,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Diaz, Brahim powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -12324,7 +12324,7 @@
         ]
       },
       "index": 585,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Rahimi, Soufiane strzeli gola; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -12541,9 +12541,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -12555,7 +12555,7 @@
         ]
       },
       "index": 596,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "El Khannouss, Bilal powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -13129,9 +13129,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -13143,7 +13143,7 @@
         ]
       },
       "index": 624,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Diaz, Brahim strzeli gola; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -13402,9 +13402,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -13416,7 +13416,7 @@
         ]
       },
       "index": 637,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "El Aynaoui, Neil powyżej 0.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -13465,9 +13465,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -13479,7 +13479,7 @@
         ]
       },
       "index": 640,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Barcola, Bradley powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Francja wygra mecz"
     },
     {
@@ -13885,9 +13885,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -13899,7 +13899,7 @@
         ]
       },
       "index": 660,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Rahimi, Soufiane powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -14599,9 +14599,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -14613,7 +14613,7 @@
         ]
       },
       "index": 694,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Hakimi, Achraf powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -14662,9 +14662,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BTTS",
-        "marketKey": "BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -14676,7 +14676,7 @@
         ]
       },
       "index": 697,
-      "marketCode": "BTTS",
+      "marketCode": "OTHER",
       "rawName": "Diaz, Brahim powyżej 1.5 celnych strzałów; Obie drużyny strzelą gola; Maroko wygra mecz"
     },
     {
@@ -14851,9 +14851,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_BTTS",
-        "marketKey": "HALF_TIME_BTTS",
-        "matchedBy": "pattern",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -14865,7 +14865,7 @@
         ]
       },
       "index": 706,
-      "marketCode": "HALF_TIME_BTTS",
+      "marketCode": "OTHER",
       "rawName": "Maroko najwięcej celnych strzałów; Powyżej 0.5 gola w 1.połowie; Obie drużyny strzelą gola; Maroko wygra mecz; Powyżej 2.5 kartek w meczu; Maroko wykona powyżej 2.5 rz.rożnych"
     },
     {
@@ -69531,9 +69531,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:0.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "HOME:0.5",
         "parameters": null,
         "selections": [
           {
@@ -69557,9 +69557,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:1.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:1.5",
         "matchedBy": "id",
-        "paramValue": "1.5",
+        "paramValue": "HOME:1.5",
         "parameters": null,
         "selections": [
           {
@@ -69583,9 +69583,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:2.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:2.5",
         "matchedBy": "id",
-        "paramValue": "2.5",
+        "paramValue": "HOME:2.5",
         "parameters": null,
         "selections": [
           {
@@ -69609,9 +69609,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:3.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:3.5",
         "matchedBy": "id",
-        "paramValue": "3.5",
+        "paramValue": "HOME:3.5",
         "parameters": null,
         "selections": [
           {
@@ -69635,9 +69635,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:4.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:4.5",
         "matchedBy": "id",
-        "paramValue": "4.5",
+        "paramValue": "HOME:4.5",
         "parameters": null,
         "selections": [
           {
@@ -69661,9 +69661,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:5.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:5.5",
         "matchedBy": "id",
-        "paramValue": "5.5",
+        "paramValue": "HOME:5.5",
         "parameters": null,
         "selections": [
           {
@@ -69687,9 +69687,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:6.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:HOME:6.5",
         "matchedBy": "id",
-        "paramValue": "6.5",
+        "paramValue": "HOME:6.5",
         "parameters": null,
         "selections": [
           {
@@ -69713,9 +69713,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:0.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:AWAY:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "AWAY:0.5",
         "parameters": null,
         "selections": [
           {
@@ -69739,9 +69739,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:1.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:AWAY:1.5",
         "matchedBy": "id",
-        "paramValue": "1.5",
+        "paramValue": "AWAY:1.5",
         "parameters": null,
         "selections": [
           {
@@ -69765,9 +69765,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:2.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:AWAY:2.5",
         "matchedBy": "id",
-        "paramValue": "2.5",
+        "paramValue": "AWAY:2.5",
         "parameters": null,
         "selections": [
           {
@@ -69791,9 +69791,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:3.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:AWAY:3.5",
         "matchedBy": "id",
-        "paramValue": "3.5",
+        "paramValue": "AWAY:3.5",
         "parameters": null,
         "selections": [
           {
@@ -69817,9 +69817,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_CORNERS_TEAM",
-        "marketKey": "HALF_TIME_CORNERS_TEAM:4.5",
+        "marketKey": "HALF_TIME_CORNERS_TEAM:AWAY:4.5",
         "matchedBy": "id",
-        "paramValue": "4.5",
+        "paramValue": "AWAY:4.5",
         "parameters": null,
         "selections": [
           {
@@ -87789,9 +87789,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_WOODWORK_SHOTS",
-        "marketKey": "TEAM_TOTAL_WOODWORK_SHOTS:0.5",
+        "marketKey": "TEAM_TOTAL_WOODWORK_SHOTS:HOME:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "HOME:0.5",
         "parameters": null,
         "selections": [
           {
@@ -87815,9 +87815,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_WOODWORK_SHOTS",
-        "marketKey": "TEAM_TOTAL_WOODWORK_SHOTS:0.5",
+        "marketKey": "TEAM_TOTAL_WOODWORK_SHOTS:AWAY:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "AWAY:0.5",
         "parameters": null,
         "selections": [
           {

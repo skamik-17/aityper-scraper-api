@@ -2656,8 +2656,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "ODD_EVEN_GOALS",
-        "marketKey": "ODD_EVEN_GOALS",
+        "marketCode": "CORNERS_ODD_EVEN",
+        "marketKey": "CORNERS_ODD_EVEN",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -2675,15 +2675,15 @@
         ]
       },
       "index": 74,
-      "marketCode": "ODD_EVEN_GOALS",
+      "marketCode": "CORNERS_ODD_EVEN",
       "rawName": "Rynek 162"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "ODD_EVEN_GOALS",
-        "marketKey": "ODD_EVEN_GOALS",
+        "marketCode": "HALF_TIME_CORNERS_ODD_EVEN",
+        "marketKey": "HALF_TIME_CORNERS_ODD_EVEN",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -2701,7 +2701,7 @@
         ]
       },
       "index": 75,
-      "marketCode": "ODD_EVEN_GOALS",
+      "marketCode": "HALF_TIME_CORNERS_ODD_EVEN",
       "rawName": "Rynek 173"
     },
     {
@@ -4030,8 +4030,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "ODD_EVEN_GOALS",
-        "marketKey": "ODD_EVEN_GOALS",
+        "marketCode": "SECOND_HALF_ODD_EVEN_GOALS",
+        "marketKey": "SECOND_HALF_ODD_EVEN_GOALS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -4049,7 +4049,7 @@
         ]
       },
       "index": 126,
-      "marketCode": "ODD_EVEN_GOALS",
+      "marketCode": "SECOND_HALF_ODD_EVEN_GOALS",
       "rawName": "Parzysta/nieparzysta liczba goli"
     },
     {

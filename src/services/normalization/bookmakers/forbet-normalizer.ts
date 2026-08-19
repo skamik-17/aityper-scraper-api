@@ -25,17 +25,23 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   1: "MATCH_WINNER",
   4: "DOUBLE_CHANCE",
   11: "DRAW_NO_BET",
-  12: "WINNING_MARGIN",
+  // gameType 12 is forBET's anytime-goalscorer board (49 player selections),
+  // not the winning-margin grid (that is id -338). Audit-match: Arsenal vs
+  // Coventry City.
+  12: "GOALSCORER_ANYTIME",
   98: "BTTS",
   8: "TOTAL_GOALS",
   9: "GOAL_RANGE",
-  5: "HALF_TIME_RESULT",
+  // forBET gameType 3 is the plain 1st-half 1X2; gameType 5 is HT/FT
+  // (1. połowa/mecz). Verified against raw offer ids for Arsenal vs
+  // Coventry City.
+  5: "HALFTIME_FULLTIME",
   10: "HALF_TIME_TOTAL_GOALS",
   99: "HALF_TIME_BTTS",
   6: "EUROPEAN_HANDICAP",
   7: "ASIAN_HANDICAP",
   2: "CORRECT_SCORE",
-  3: "HALFTIME_FULLTIME",
+  3: "HALF_TIME_RESULT",
   // Audited mappings keyed by raw bookmakerMarketId
   "-31170": "EUROPEAN_HANDICAP",
   "-8132": "HT_OR_FT_RESULT",
@@ -138,6 +144,16 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // ids and routing as eToto, which shares the feed.
   "-265": "CORNERS_TEAM_RANGE",
   "-266": "CORNERS_TEAM_RANGE",
+  // audit-match (Arsenal vs Coventry City): forbet publishes THREE distinct
+  // "Liczba goli"-named markets that the generic /liczba\s*goli/i pattern
+  // below routed into one shared TOTAL_GOALS/UNKNOWN bucket with an
+  // impossible <1 odds value. Explicit ids disambiguate:
+  // -227 = exact counts (0/1/2/3/4/5/6+), -225 = disjoint exhaustive bands
+  // (0-1/2-3/4-6/7+), -30009 "Multi-gole (liczba goli)" = the cumulative
+  // multi-goal ladder (see MULTI_GOAL_RANGE catalog entry).
+  "-227": "EXACT_GOALS",
+  "-225": "GOAL_RANGE",
+  "-30009": "MULTI_GOAL_RANGE",
   105: "HALF_TIME_CORNERS_TOTAL",
   "-2954": "HALF_TIME_CORNERS_HANDICAP",
   "-2975": "CORNERS_HANDICAP",
@@ -182,6 +198,10 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-2418": "PLAYER_SHOTS",
   "-8213": "PLAYER_CARDS",
   "-2412": "PLAYER_ASSISTS",
+  // player-goals props; keyed by id because the name regex drops hyphenated
+  // surnames (Lewis-Skelly, Thomas-Asante, Mason-Clark). Audit-match:
+  // Arsenal vs Coventry City.
+  "-2417": "PLAYER_GOALS",
   "-2420": "PLAYER_PASSES",
   "-2422": "PLAYER_TACKLES",
   "-6008": "FIRST_HALF_ASIAN_HANDICAP",
@@ -386,6 +406,23 @@ function resolveForbetSpecialMarket(
     return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
   }
 
+  // Half-scoped exact goal count ("2. połowa - liczba goli", id -234) shares
+  // its bare "<prefix> - liczba goli" wording with the team-scoped exact-goal
+  // market below, whose fallback treats any non-team prefix as OTHER — so
+  // without this guard "2. połowa" gets misread as an unresolvable team name
+  // and the whole market is dropped into OTHER (audit /audit-match,
+  // premier-league Arsenal vs Coventry City: forbet's "2. połowa - liczba
+  // goli" 0/1/2+ landed in OTHER instead of merging with the SECOND_HALF_
+  // EXACT_GOALS peers already contributed by betfan/etoto/fuksiarz/lvbet/
+  // pzbuk/sts, whose implied-probability sums bracket forbet's own 1.119).
+  // Must be checked before the team-scoped branch below.
+  if (
+    /^2\.?\s*polowa\s*-\s*liczba goli$/.test(name) &&
+    raw.selections.every((sel) => /^\d+\+?$/.test(sel.name.trim()))
+  ) {
+    return "SECOND_HALF_EXACT_GOALS";
+  }
+
   // "<Team> - liczba goli" carries EXACT goal counts (0 / 1 / 2 / 3+), not an
   // over/under ladder — audit /audit-match found both forbet variants landing
   // in the match-wide TOTAL_GOALS with every selection UNKNOWN.
@@ -421,7 +458,7 @@ function resolveForbetSpecialMarket(
   // "Wanner, Paul - liczba goli (…)", "Richard - liczba goli (…)".
   // The prefix must not be a team name (guards hypothetical team totals) and
   // cannot start with a digit (guards half-scoped names like "1. połowa - …").
-  const playerGoals = name.match(/^([^\d-][^-]*?)\s*-\s*liczba goli/);
+  const playerGoals = name.match(/^(.+?)\s*-\s*liczba goli\s*\(/);
   if (playerGoals && !resolveTeamSide(playerGoals[1], ctx)) return "PLAYER_GOALS";
 
   // "1. połowa/mecz" is the HT/FT market, not the plain 1st-half 1X2
@@ -451,9 +488,13 @@ function resolveForbetSpecialMarket(
     return "TOTAL_GOALS_AND_BTTS";
   }
 
-  // Full-match goal-range ladder ("Multi-gole (liczba goli)") quotes range
-  // selections ("Brak goli", "1-2", "2-6"), not O/U — keep out of TOTAL_GOALS.
-  if (/^multi-gole/.test(name)) return "GOAL_RANGE";
+  // Full-match cumulative multi-goal ladder ("Multi-gole (liczba goli)")
+  // quotes overlapping range selections ("Brak goli", "1-2", "2-6"), not
+  // O/U — keep out of TOTAL_GOALS. This is the same ladder family as
+  // MULTI_GOAL_RANGE (see catalog entry), not the disjoint-band GOAL_RANGE
+  // (audit-match: Arsenal vs Coventry City — the two families collide when
+  // a bookmaker quotes both, id -30009 vs id -225).
+  if (/^multi-gole/.test(name)) return "MULTI_GOAL_RANGE";
 
   // Double chance + BTTS combos ("2. Połowa - Podwójna szansa + obie drużyny strzelą")
   if (/^2\.?\s*polowa.*podwojna szansa.*obie druzyny strzela/.test(name)) {
@@ -613,6 +654,27 @@ function fixForbetPlayerDiacritics(canonicalName: string): string {
 }
 
 /**
+ * forBET's combo market names carry the given name pre-abbreviated, but not
+ * always down to a single letter ("Lau. Martinez", "Gab. Jesus") — while the
+ * network convention other bookmakers converge on (betclic's raw feed, our
+ * own canonicalizePlayerName-based pipeline) is always a single-letter
+ * initial ("L. Martinez"). Left alone, "Lau. Martinez & R. De Paul" never
+ * merges with betclic's "G. Jesus & V. Gyokeres"-style pairs even when both
+ * name the exact same two players. Collapse a multi-letter abbreviation
+ * ("Lau.") down to its first letter; a name that is already a single-letter
+ * initial ("R.") is left untouched, so this is a no-op for the common case.
+ */
+function compressComboInitial(name: string): string {
+  const parts = name.split(" ");
+  if (parts.length < 2) return name;
+  const first = parts[0];
+  if (/^\p{L}{2,}\.$/u.test(first)) {
+    parts[0] = `${first.charAt(0)}.`;
+  }
+  return parts.join(" ");
+}
+
+/**
  * Builds a stable selection code for player-combination markets ("A & B",
  * "A / B / C") so the same pair/trio merges across bookmakers regardless of
  * forBET's listing order or separator ("&" vs "/") — mirrors betclic's
@@ -622,10 +684,10 @@ function normalizeForbetPlayerCombo(raw: string): string {
   const sep = raw.includes("&") ? "&" : "/";
   const names = raw
     .split(sep)
-    .map((part) => fixForbetPlayerDiacritics(canonicalizePlayerName(part)))
+    .map((part) => compressComboInitial(fixForbetPlayerDiacritics(canonicalizePlayerName(part))))
     .filter(Boolean);
   if (names.length < 2) {
-    return fixForbetPlayerDiacritics(canonicalizePlayerName(raw));
+    return compressComboInitial(fixForbetPlayerDiacritics(canonicalizePlayerName(raw)));
   }
   return names.sort((a, b) => a.localeCompare(b, "en")).join(" & ");
 }
@@ -945,6 +1007,8 @@ function normalizeSelectionForMarket(
     }
 
     case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE":
+    case "EXACT_GOALS":
     case "TEAM_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":
@@ -1105,6 +1169,7 @@ function normalizeSelectionForMarket(
     // (canonicalized so "Lastname, Firstname" merges across bookmakers).
     case "PLAYER_GOAL_OR_ASSIST":
     case "PLAYER_OF_THE_MATCH":
+    case "GOALSCORER_ANYTIME":
       return canonicalizePlayerName(trimmed) as NormalizedSelection;
 
     case "BTTS_BY_HALF": {
@@ -1192,10 +1257,21 @@ const EUROPEAN_HANDICAP_MARKETS: NormalizedMarketType[] = [
 /**
  * Team-scoped stat totals whose catalog selections are plain OVER/UNDER —
  * the side is carried in the parameter ("HOME:2.5"), matching betclic.
+ *
+ * CORNERS_TEAM shares this shape: game-type ids 115 (home) / 116 (away) both
+ * collapse to the same catalog code with plain OVER/UNDER selections, so
+ * without a side-prefixed param the two teams' independent line ladders
+ * ("Arsenal 7.5" vs "Coventry 2.5") interleave into one bogus shared ladder
+ * (audit /audit-match, premier-league Arsenal vs Coventry City: CORNERS_TEAM
+ * scanner break at the 5 -> 5.5 seam was actually the Coventry/Arsenal
+ * boundary, not a real outlier). etoto hits the exact same 115/116 feed and
+ * already prefixes with HOME:/AWAY: (see etoto-normalizer.ts) — match that
+ * convention here so the two bookmakers merge instead of colliding.
  */
 const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS",
   "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "CORNERS_TEAM",
 ]);
 
 const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [

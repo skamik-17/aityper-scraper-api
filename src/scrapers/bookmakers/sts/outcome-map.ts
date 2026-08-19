@@ -227,56 +227,57 @@ export const STS_OUTCOME_ID_TO_SELECTION: Record<number, string> = {
   99: "0:0 / 2:0",
   100: "0:0 / 2:1",
   101: "0:0 / 3:0",
-  // Ids 102-137 (every HT branch except 0:0) are WITHDRAWN. They were never
-  // verified the way ids 92-101 were, and the /audit-match run on
-  // premier-league Arsenal vs Coventry City proved the labels do not match the
-  // prices: sts "1:0 / 2:0" quoted 70 where five bookmakers agree on 8.6,
-  // "1:0 / 3:0" quoted 225 against 12, "2:0 / 2:2" quoted 7.6 — a price that
-  // would read as a huge +EV edge on a market that cannot be that short.
-  // Fitting the values back onto labels from a single fixture produced no
-  // consistent bijection (candidates collide and several land on "4+" buckets
-  // STS does not quote), so the branch is dropped rather than guessed: an
-  // unnamed outcome is skipped downstream, a mislabelled one lies.
-  //
-  // To restore: capture market 57 for a fixture where a peer quotes the FULL
-  // grid, then match id -> label cell by cell the way the 0:0 branch was done
-  // (see the note above ids 92-101). Withdrawn labels, for reference:
-  // 102: "1:0 / 1:0",
-  // 103: "1:0 / 2:0",
-  // 104: "1:0 / 3:0",
-  // 105: "1:0 / 1:1",
-  // 106: "1:0 / 2:1",
-  // 107: "1:0 / 3:1",
-  // 108: "1:0 / 1:2",
-  // 109: "1:0 / 2:2",
-  // 110: "1:0 / 1:3",
-  // 111: "0:1 / 0:1",
-  // 112: "0:1 / 1:1",
-  // 113: "0:1 / 0:2",
-  // 114: "0:1 / 1:2",
-  // 115: "0:1 / 0:3",
-  // 116: "0:1 / 1:3",
-  // 117: "0:1 / 2:1",
-  // 118: "0:1 / 2:2",
-  // 119: "0:1 / 3:1",
-  // 120: "1:1 / 1:1",
-  // 121: "1:1 / 2:1",
-  // 122: "1:1 / 1:2",
-  // 123: "1:1 / 2:2",
-  // 124: "1:1 / 3:1",
-  // 125: "1:1 / 1:3",
-  // 126: "1:1 / 3:2",
-  // 127: "1:1 / 2:3",
-  // 128: "2:0 / 2:0",
-  // 129: "2:0 / 3:0",
-  // 130: "2:0 / 2:1",
-  // 131: "2:0 / 3:1",
-  // 132: "2:0 / 2:2",
-  // 133: "0:2 / 0:2",
-  // 134: "0:2 / 0:3",
-  // 135: "0:2 / 1:2",
-  // 136: "0:2 / 1:3",
-  // 137: "0:2 / 2:2",
+  // Ids 102-137 (every HT branch except 0:0) were WITHDRAWN as of commit
+  // c6bd055 because the away-goals-first layout tried at the time didn't
+  // match prices. Restored via /audit-match on premier-league Arsenal vs
+  // Coventry City: the raw market has exactly 46 active outcomes (92-137)
+  // and the real grid is the same HT-branch enumeration used for 92-101
+  // (0:0, 0:1, 0:2, 0:3, 1:0, 1:1, 1:2, 2:0, 2:1, 3:0, 4+), with each
+  // branch enumerating FT>=HT in that same order plus a closing "4+" cell -
+  // 11+7+4+2+7+4+2+4+2+2+1 = 46 cells, matching the raw count exactly.
+  // Verified cell-by-cell against betfan/forbet/etoto/superbet consensus,
+  // including the non-monotonic 116-121 signature (12,40,225,9,30,13
+  // mirrors peers' 11.5,40,~150,8.7,29.5,12.5), and cross-checked by
+  // summing each branch's implied probability against STS's own
+  // HALF_TIME_CORRECT_SCORE market (id 101) after normalizing for the
+  // difference in overround (1.5022 / 1.268 = 1.185): every branch total
+  // and the "Inne" bucket land within a few percent of the scaled HT market.
+  102: "0:0 / 4+",
+  103: "0:1 / 0:1",
+  104: "0:1 / 0:2",
+  105: "0:1 / 0:3",
+  106: "0:1 / 1:1",
+  107: "0:1 / 1:2",
+  108: "0:1 / 2:1",
+  109: "0:1 / 4+",
+  110: "0:2 / 0:2",
+  111: "0:2 / 0:3",
+  112: "0:2 / 1:2",
+  113: "0:2 / 4+",
+  114: "0:3 / 0:3",
+  115: "0:3 / 4+",
+  116: "1:0 / 1:0",
+  117: "1:0 / 1:1",
+  118: "1:0 / 1:2",
+  119: "1:0 / 2:0",
+  120: "1:0 / 2:1",
+  121: "1:0 / 3:0",
+  122: "1:0 / 4+",
+  123: "1:1 / 1:1",
+  124: "1:1 / 1:2",
+  125: "1:1 / 2:1",
+  126: "1:1 / 4+",
+  127: "1:2 / 1:2",
+  128: "1:2 / 4+",
+  129: "2:0 / 2:0",
+  130: "2:0 / 2:1",
+  131: "2:0 / 3:0",
+  132: "2:0 / 4+",
+  133: "2:1 / 2:1",
+  134: "2:1 / 4+",
+  135: "3:0 / 3:0",
+  136: "3:0 / 4+",
+  137: "4+ / 4+",
 };
 
 export const STS_HT_FT_OUTCOMES: Record<number, string> = {

@@ -330,3 +330,53 @@ export function canonicalizePlayerName(raw: string): string {
   if (!m) return collapsed;
   return `${m[2].trim()} ${m[1].trim()}`;
 }
+
+// Surname prefixes that stay attached to the surname when a full name is
+// reduced to "I. Surname" — without this list "Milan van Ewijk" would become
+// "M. Ewijk" (dropping "van") instead of "M. van Ewijk".
+const NAME_PARTICLES = new Set([
+  "de", "del", "della", "da", "das", "dos", "di", "van", "von", "der", "den",
+  "ten", "ter", "le", "la", "el", "al", "bin", "ibn", "mc", "mac", "st",
+]);
+
+/**
+ * Reduce a full or partly abbreviated player name to the network-wide combo
+ * form "I. Surname". Betclic (and forbet) receive names already abbreviated
+ * at the source, so "I. Surname" is the only form every bookmaker can reach
+ * without a roster lookup. Middle names are dropped so "Ellis Reco Simms"
+ * (superbet's "Simms, Ellis Reco" after canonicalizePlayerName) and
+ * "E. Simms" (betcris/lvbet's "Ellis Simms") merge into one code; particle
+ * prefixes stay attached so "Milan van Ewijk" -> "M. van Ewijk" and
+ * "Rodrigo De Paul" -> "R. De Paul".
+ */
+export function toComboPlayerForm(name: string): string {
+  const tokens = name.trim().split(/\s+/).filter(Boolean);
+  if (tokens.length < 2) return name.trim();
+  let start = tokens.length - 1;
+  while (start > 1 && NAME_PARTICLES.has(tokens[start - 1].toLowerCase().replace(/\./g, ""))) {
+    start--;
+  }
+  return `${tokens[0].charAt(0)}. ${tokens.slice(start).join(" ")}`;
+}
+
+/**
+ * Single canonical form for player-combination selections (PLAYER_PAIR /
+ * PLAYER_TRIO markets), where the combo IS the selection code. Every
+ * bookmaker quotes the same real-world pair in a different raw shape —
+ * betclic pre-abbreviates at the source ("C. Tzolis & K. Havertz"), betcris/
+ * lvbet send full names joined by "and" ("Kai Havertz and Christos Tzolis"),
+ * and superbet sends "Lastname, Firstname" joined by "i" ("Tzolis, Christos
+ * i Havertz, Kai") — without a shared reduction each bookmaker strands its
+ * own comparison column instead of merging into one row (audit-match,
+ * Arsenal vs Coventry City). Split on every separator any bookmaker uses,
+ * canonicalize name order, reduce to "I. Surname", sort, join with " & ".
+ */
+export function canonicalizePlayerComboSelection(raw: string): string {
+  const members = raw
+    .replace(/^\d+\.\s*/, "")
+    .split(/\s*[/&]\s*|\s+(?:and|or|i|lub)\s+/iu)
+    .map((part) => toComboPlayerForm(canonicalizePlayerName(part.trim())))
+    .filter((part) => part.length > 0);
+  if (members.length < 2) return toComboPlayerForm(canonicalizePlayerName(raw));
+  return members.sort((a, b) => a.localeCompare(b, "en")).join(" & ");
+}

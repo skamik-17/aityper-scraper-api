@@ -1459,8 +1459,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_RANGE",
-        "marketKey": "GOAL_RANGE",
+        "marketCode": "MULTI_GOAL_RANGE",
+        "marketKey": "MULTI_GOAL_RANGE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -1553,7 +1553,7 @@
         ]
       },
       "index": 49,
-      "marketCode": "GOAL_RANGE",
+      "marketCode": "MULTI_GOAL_RANGE",
       "rawName": "Przedział goli"
     },
     {
@@ -15015,12 +15015,12 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "YES",
             "label": "Tak",
             "odds": 1.56
           },
           {
-            "code": "UNKNOWN",
+            "code": "NO",
             "label": "Nie",
             "odds": 2.27
           }

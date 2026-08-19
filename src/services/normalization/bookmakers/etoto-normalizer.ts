@@ -78,8 +78,13 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-227]: "EXACT_GOALS", // "Suma goli" (0..6+)
   [102]: "HOME_EXACT_GOALS", // "<home> suma goli" (0/1/2/3+)
   [103]: "AWAY_EXACT_GOALS", // "<away> suma goli" (0/1/2/3+)
-  [-225]: "GOAL_RANGE", // "Suma goli (przedział)" (0-1/2-3/4-6/7+)
-  [-30009]: "GOAL_RANGE", // "Przedział goli"
+  [-225]: "GOAL_RANGE", // "Suma goli (przedział)" (0-1/2-3/4-6/7+, disjoint exhaustive bands)
+  // audit-match (Arsenal vs Coventry City): "Przedział goli" (-30009) is a
+  // cumulative multi-goal ladder (0/1-2/1-3/.../7+, overlapping ranges,
+  // implied probabilities sum well above 1), NOT the same market family as
+  // -225's disjoint exhaustive bands (implied probs sum to ~1.16). Sharing
+  // GOAL_RANGE made -30009 collide with -225 and lose the dedupe race.
+  [-30009]: "MULTI_GOAL_RANGE", // "Przedział goli"
   [-2904]: "HOME_GOAL_RANGE", // "<home> - przedział goli"
   [-2905]: "AWAY_GOAL_RANGE", // "<away> - przedział goli"
   [-233]: "HALF_TIME_EXACT_GOALS", // "1. połowa - suma goli" (0/1/2+)
@@ -235,6 +240,17 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-30727]: "TEAM_TOTAL_SHOTS", // "<home> suma X strzałów"
   [-30728]: "TEAM_TOTAL_SHOTS", // "<away> suma X strzałów"
 };
+
+// Audit /audit-match: ids -30005 ("1. poł./mecz i suma goli X w 1. poł") and
+// -30006 ("1. poł./mecz i dokładna suma goli") have no catalog code yet
+// (they need HALFTIME_FULLTIME_AND_HALF_TIME_TOTAL / _AND_EXACT_GOALS, not
+// yet added to market-catalog.ts). Without a mapping they fell through to
+// resolveMarketCodeFromName's OTHER default, whose whole-string 1X2 fallback
+// misread raw labels like "2/Arsenal i poniżej 2.5" (the away/home HT-FT
+// combo) as a plain HOME selection and let a fabricated selection reach the
+// API. Skip these markets outright until the dedicated codes exist, rather
+// than emitting that false selection under OTHER.
+const ETOTO_UNSUPPORTED_MARKET_IDS = new Set<number>([-30005, -30006]);
 
 /**
  * Which side of the match a team-specific eToto market id refers to.
@@ -657,6 +673,11 @@ function normalizeSelectionForMarket(
     case "WIN_OR_BTTS":
     case "DRAW_OR_BTTS":
     case "WIN_OR_UNDER":
+    // Audit /audit-match: AWAY_WIN_OR_UNDER (id -8040) resolves via the id
+    // map (matchedBy "id"), unlike its three siblings which resolve via the
+    // name-pattern path — so it never reached this Tak/Nie branch and
+    // rendered as UNKNOWN for both selections.
+    case "AWAY_WIN_OR_UNDER":
     case "HOME_WIN_OR_UNDER":
     case "HOME_WIN_OR_OVER":
     case "AWAY_WIN_OR_OVER":
@@ -767,6 +788,7 @@ function normalizeSelectionForMarket(
     // Numeric goal/card/corner counts and ranges: pass catalog-shaped codes
     // through and map "Brak gola" to the "0" bucket.
     case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE":
     case "EXACT_GOALS":
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS":
@@ -1064,6 +1086,13 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     const rawId = raw.bookmakerMarketId !== undefined ? Number(raw.bookmakerMarketId) : null;
     const marketId = Number.isNaN(rawId as number) ? null : (rawId as number);
+
+    if (marketId !== null && ETOTO_UNSUPPORTED_MARKET_IDS.has(marketId)) {
+      console.warn(
+        `[etoto] Skipping unsupported market "${raw.name}" (id: ${marketId}): no catalog code yet`
+      );
+      return null;
+    }
 
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" | "pattern" = "id";

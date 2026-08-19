@@ -100,6 +100,16 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-3c": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS", // "2.połowa: <team1> liczba goli"
   "ufo:mtyp:00-3d": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS", // "2.połowa: <team2> liczba goli"
   "ufo:mtyp:00-24": "GOAL_RANGE", // "Mecz: multigole"
+  // Per-team and per-half "multigole" variants (audit /audit-match,
+  // premier-league Arsenal vs Coventry City): same 4-way goal-band product
+  // as 00-24, just scoped to one team or one half. Catalog codes exist
+  // (HOME_GOAL_RANGE/AWAY_GOAL_RANGE/HALF_TIME_GOAL_RANGE/
+  // SECOND_HALF_GOAL_RANGE) but were never wired up, so these ids fell
+  // through to the generic OTHER bucket.
+  "ufo:mtyp:00-25": "HOME_GOAL_RANGE", // "Mecz: <team1> - multigole"
+  "ufo:mtyp:00-27": "AWAY_GOAL_RANGE", // "Mecz: <team2> - multigole"
+  "ufo:mtyp:00-29": "HALF_TIME_GOAL_RANGE", // "1.połowa: multigole"
+  "ufo:mtyp:00-2a": "SECOND_HALF_GOAL_RANGE", // "2.połowa: multigole"
   // NOTE: 00-0m was previously mapped to GOAL_RANGE, but its 4-band book
   // ("0-2"@3.5, "3-4"@2.6, "5-6"@3.55, "7+"@5.2) is far too flat for match
   // goals and deviates ~3x from every peer — a different (non-goals) range
@@ -150,9 +160,15 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-1n": "HALFTIME_FULLTIME", // "1.połowa/wynik meczu"
   "ufo:mtyp:00-21": "DOUBLE_CHANCE_BTTS",
   "ufo:mtyp:00-22": "DOUBLE_CHANCE_BTTS",
-  // NOTE: 00-1y was previously mapped to DOUBLE_CHANCE_BTTS but its BTTS-yes
-  // legs price ~2x above the full-match consensus (10/Tak@6.6 vs peer 1X_YES
-  // ~3.2) — consistent with a half-scoped variant. Excluded until verified.
+  // 00-1y is live-named "1.połowa: dwójtyp/obie drużyny strzelą gola" — the
+  // half-time-scoped variant of the same product (was previously excluded
+  // here on a since-superseded worry that its higher BTTS-yes prices meant a
+  // different product; they are simply half-scoped, same as 00-21's
+  // "2.połowa:" variant just below). The half-scope reroute further down
+  // (matchedBy === "id", "^1.połowa:" prefix) rewrites this to
+  // HALF_TIME_DOUBLE_CHANCE_BTTS, matching etoto/sts's half-time figures for
+  // this fixture (10/Tak@6 vs etoto HT 1X_YES@6).
+  "ufo:mtyp:00-1y": "DOUBLE_CHANCE_BTTS",
   "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
   "ufo:mtyp:00-7e": "TEAM_WIN_OR_TOTAL_UNDER",
   "ufo:mtyp:00-7b": "TEAM_WIN_OR_OVER",
@@ -185,6 +201,15 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // HOME/AWAY/NONE). The live name is authoritative; the latter is rerouted
   // to SECOND_HALF_FIRST_GOAL below.
   "ufo:mtyp:00-2w": "SECOND_HALF_RESULT", // "2.połowa"
+  // "1.połowa: 1. gol" (first goal of the 1st half, HOME/AWAY/NONE) has no
+  // other id or name-pattern route, so it fell all the way through to null
+  // -> OTHER before the firstGoalHalf name-regex below ever ran (that regex
+  // only rewrites an ALREADY-resolved marketCode; it never runs when
+  // marketCode is still null, since normalizeMarket returns early in that
+  // case). Map the id directly to the correct half-scoped code; the name
+  // regex below still handles "2.połowa: 1. gol" via id 00-2x (reused for
+  // MATCH_WINNER) and remains authoritative for any future scope drift.
+  "ufo:mtyp:00-2e": "HALF_TIME_FIRST_GOAL",
   "ufo:mtyp:00-1v": "HOME_HALF_WITH_MOST_GOALS",
   "ufo:mtyp:00-7a": "FIRST_GOAL_TIME",
   "ufo:mtyp:00-26": "BTTS_BY_HALF",
@@ -193,9 +218,18 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-38": "TEAM_WIN",
   "ufo:mtyp:00-3a": "LAST_TEAM_TO_SCORE",
   // 00-1g is the second team's clean-sheet prop ("Mecz: <team2> - nie straci
-  // gola") — route through the TEAM_CLEAN_SHEET name router (away variant has
-  // no catalog code and is dropped there) instead of hardcoding HOME.
+  // gola") — route through the TEAM_CLEAN_SHEET name router instead of
+  // hardcoding HOME.
   "ufo:mtyp:00-1g": "TEAM_CLEAN_SHEET",
+  // Half-scoped clean-sheet props (audit /audit-match, premier-league
+  // Arsenal vs Coventry City): each id is already team- and window-specific
+  // (unlike 00-1f/00-1g, which share the TEAM_CLEAN_SHEET intermediate code
+  // and need the name router below to pick a side), so these map straight
+  // to their catalog code.
+  "ufo:mtyp:00-2o": "HALF_TIME_HOME_CLEAN_SHEET", // "1.połowa: <team1> nie straci gola"
+  "ufo:mtyp:00-2p": "HALF_TIME_AWAY_CLEAN_SHEET", // "1.połowa: <team2> nie straci gola"
+  "ufo:mtyp:00-3h": "SECOND_HALF_HOME_CLEAN_SHEET", // "2.połowa: <team1> nie straci gola"
+  "ufo:mtyp:00-3i": "SECOND_HALF_AWAY_CLEAN_SHEET", // "2.połowa: <team2> nie straci gola"
   "ufo:mtyp:00-36": "TEAM_WINS_MATCH",
   "ufo:mtyp:00-q0": "HALF_TIME_STOPPAGE_TIME_GOAL",
   "ufo:mtyp:00-q1": "SECOND_HALF_ADDED_TIME_GOAL",
@@ -260,16 +294,19 @@ const FORTUNA_PLAYER_YES_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_FIRST_OR_LAST_GOAL",
 ]);
 
-// Per-player dropdown markets: the player becomes the selection code (same
-// convention as Fuksiarz/betcris/superbet), so per-player Fortuna markets
-// merge into one aggregated dropdown market.
+// Per-player dropdown markets: the player (parsed from the raw market name)
+// becomes the market PARAMETER, and per-player Fortuna markets merge into
+// one aggregated dropdown market keyed by that parameter. The SELECTION
+// code for all of these is the catalog's single generic code ("PLAYER" /
+// "PLAYER_NAME") - matching every peer bookmaker (betcris/betfan/etoto/
+// fuksiarz/lvbet/sts/superbet) - not the player name (see
+// normalizeSelectionForMarket below).
 const FORTUNA_PLAYER_DROPDOWN_MARKETS = new Set<NormalizedMarketType>([
   "GOALSCORER_FIRST",
   "GOALSCORER_LAST",
   "GOALSCORER_ANYTIME",
   "PLAYER_HEADER_GOAL",
   "PLAYER_GOAL_OR_ASSIST",
-  // Peers (betcris/lvbet/superbet) key these by player-name selections.
   "PLAYER_GOAL_OUTSIDE_BOX",
 ]);
 
@@ -533,11 +570,27 @@ function normalizeSelectionForMarket(
 ): NormalizedSelection {
   const trimmed = selName.trim();
 
-  // Per-player dropdown markets: the player (from the market name) is the
-  // canonical selection code; raw labels are generic markers ("Tak", "1+").
-  // Must run before the literal passthrough — some of these markets list
-  // "1+" in the catalog, which would otherwise swallow the player identity.
+  // Per-player dropdown markets: the player (from the market name) is
+  // already carried as the market PARAMETER (see paramValue below /
+  // isPlayerMarket), so the SELECTION code must be the catalog's generic
+  // code ("PLAYER" / "PLAYER_NAME"), not the player name again. Peers
+  // (betcris/betfan/etoto/fuksiarz/lvbet/sts/superbet) all emit that
+  // generic code with the player in the parameter; repeating the name here
+  // instead left every Fortuna quote in a private per-player selection
+  // vocabulary that never shared a comparison row with its peers
+  // (/audit-match Arsenal vs Coventry City: GOALSCORER_FIRST/LAST,
+  // PLAYER_HEADER_GOAL and PLAYER_GOAL_OR_ASSIST all showed 20+ Fortuna
+  // player names as selection types with 20+ matching selection_gaps
+  // flags). Must run before the literal passthrough — some of these
+  // markets list "1+"/"Tak" in the catalog, which would otherwise swallow
+  // the player identity.
   if (FORTUNA_PLAYER_DROPDOWN_MARKETS.has(marketCode)) {
+    const dropdownEntry = getMarketByCode(marketCode);
+    const canonicalCode =
+      dropdownEntry?.hasParameter && dropdownEntry.parameterType === "player"
+        ? dropdownEntry.selections?.[0]
+        : undefined;
+    if (playerName && canonicalCode) return canonicalCode as NormalizedSelection;
     if (playerName) return playerName as NormalizedSelection;
     return trimmed as NormalizedSelection;
   }
@@ -742,8 +795,13 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "DOUBLE_CHANCE_BTTS": {
-      // "10/Tak" -> 1X_YES, "12/Nie" -> 12_NO
+    case "DOUBLE_CHANCE_BTTS":
+    case "SECOND_HALF_DOUBLE_CHANCE_BTTS":
+    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
+    case "DOUBLE_CHANCE_HALF_TIME_BTTS":
+    case "DOUBLE_CHANCE_SECOND_HALF_BTTS": {
+      // "10/Tak" -> 1X_YES, "12/Nie" -> 12_NO (same '10|12|02' + '/Tak|/Nie'
+      // shape as the full-match variant, just half-scoped)
       const parts = splitFortunaCombo(trimmed);
       if (parts) {
         const dc = comboDoubleChance(parts[0]);
@@ -856,6 +914,10 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
 
     case "GOAL_RANGE":
+    case "HOME_GOAL_RANGE":
+    case "AWAY_GOAL_RANGE":
+    case "HALF_TIME_GOAL_RANGE":
+    case "SECOND_HALF_GOAL_RANGE":
       // Ranges arrive in canonical dash format ("1-2", "3-5") or as "6+"/"0"
       if (/^\d+\s*-\s*\d+$/.test(trimmed)) {
         return trimmed.replace(/\s+/g, "") as NormalizedSelection;
@@ -878,6 +940,7 @@ function normalizeSelectionForMarket(
     case "FIRST_TEAM_TO_SCORE":
     case "LAST_TEAM_TO_SCORE":
     case "FIRST_CARD":
+    case "HALF_TIME_FIRST_GOAL":
     case "SECOND_HALF_FIRST_GOAL":
       if (/^(nikt|zaden|zadna|bez gola|brak gola|nie padnie)/.test(normalized)) {
         return "NONE";
@@ -1161,8 +1224,7 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // "X nie straci gola" (won't concede) is a per-team YES/NO clean-sheet
-    // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team; the
-    // away variant has no full-match catalog code yet, so it is excluded.
+    // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team.
     if (marketCode === "TEAM_CLEAN_SHEET") {
       const teamPrefix = scopedName.match(/^(.+?)\s+-?\s*nie\s+straci\s+gola/i);
       if (!teamPrefix) return null;
@@ -1173,6 +1235,7 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
         ctx.league
       );
       if (side === "HOME") marketCode = "HOME_CLEAN_SHEET";
+      else if (side === "AWAY") marketCode = "AWAY_CLEAN_SHEET";
       else return null;
     }
 

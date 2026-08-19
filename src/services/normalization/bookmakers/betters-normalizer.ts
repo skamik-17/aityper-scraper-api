@@ -176,8 +176,27 @@ const BETTERS_MARKET_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketTy
 
 function extractTimePeriodParam(name: string): string | undefined {
   const normalized = normalizeMarketName(name);
-  const rangeMatch = normalized.match(/(\d+)\s*[-–]\s*(\d+)/);
-  if (rangeMatch) return rangeMatch[2];
+
+  // A window starting at minute 1 (or the API's 0-based equivalent) is the
+  // cumulative "first N minutes" bet and is keyed by its end minute alone,
+  // matching lebull (shares the sbteam.xyz feed). A window that does NOT
+  // start at the first minute (e.g. "16-30") is a distinct segment bet, not
+  // a cumulative one, and keying it by the end minute alone would collide it
+  // with the cumulative window of the same end (e.g. "1-30"), showing
+  // incomparable odds as if they were the same market (lebull evidence on
+  // this match: segment "16-30" over=2.18 / ~46% implied vs a cumulative
+  // "1-30" over reading ~63% implied on a peer book).
+  const wordedRange = normalized.match(/od\s*(\d+)\.?\s*do\s*(\d+)/);
+  if (wordedRange) {
+    const [, start, end] = wordedRange;
+    return start === "0" || start === "1" ? end : `${start}-${end}`;
+  }
+
+  const rangeMatch = normalized.match(/(\d+)\.?\s*[-–]\s*(\d+)/);
+  if (rangeMatch) {
+    const [, start, end] = rangeMatch;
+    return start === "0" || start === "1" ? end : `${start}-${end}`;
+  }
 
   const minuteMatch = normalized.match(/\b(\d+)\b/);
   return minuteMatch ? minuteMatch[1] : undefined;
@@ -634,6 +653,17 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
 
     const paramValue = extractParamValue(marketCode, raw);
     const marketKey = buildMarketKey(marketCode, paramValue);
+
+    // A time-period market without a resolvable minute window is a truncated
+    // feed row — it would land in a meaningless "base" bucket and collide
+    // with entries properly keyed by their window, so drop it entirely
+    // (mirrors lebull, which shares the sbteam.xyz feed).
+    if (
+      (marketCode === "TIME_PERIOD_RESULT" || marketCode === "TIME_PERIOD_TOTAL_GOALS") &&
+      paramValue === undefined
+    ) {
+      return null;
+    }
 
     const selections = raw.selections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode, ctx),

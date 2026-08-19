@@ -73,7 +73,10 @@ describe("betclic round-3 audit fixes", () => {
     expect(out?.marketCode).toBe("ALL_PLAYERS_SCORE");
     const codes = out?.selections.map((s) => s.code);
     expect(new Set(codes).size).toBe(2);
-    expect(codes?.[0]).toBe("B. Embolo & L. Diaz & Luis Suarez");
+    // audit-match (Arsenal vs Coventry City): combo selections are reduced to
+    // the network-wide "I. Surname" form so betclic merges with bookmakers
+    // that send full names for the same pair/trio (see toComboPlayerForm).
+    expect(codes?.[0]).toBe("B. Embolo & L. Diaz & L. Suarez");
   });
 
   it("merges slash and ampersand player pair variants onto one sorted code", () => {

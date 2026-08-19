@@ -325,7 +325,11 @@ describe("forbet audit fixes", () => {
   it("maps WINNING_MARGIN Polish labels to canonical codes", () => {
     const out = run(
       {
-        bookmakerMarketId: "12",
+        // -338 is forBET's real winning-margin id (audit-match: Arsenal vs
+        // Coventry City). id 12 was reassigned to GOALSCORER_ANYTIME after
+        // ground-truth verification showed it is the anytime-goalscorer
+        // board ("Zdobędzie gola w meczu"), not this market.
+        bookmakerMarketId: "-338",
         name: "Różnica zwycięstwa",
         selections: [
           { name: "Remis", odds: 2.1 },
@@ -564,7 +568,11 @@ describe("forbet audit fixes", () => {
     expect(out.marketCode).toBe("BOTH_PLAYERS_ANYTIME");
     // Names are sorted alphabetically (mirrors betclic's normalizePlayerComboSelection)
     // so the same pair merges across bookmakers regardless of forBET's listing order.
-    expect(out.selections.map((s) => s.code)).toEqual(["Lau. Martinez & R. De Paul"]);
+    // "Lau." is compressed to the single-letter initial "L." to match the
+    // network convention (betclic sends "G. Jesus & V. Gyokeres"-style pairs
+    // already at single-letter granularity), so the same real-world pair
+    // merges across bookmakers instead of stranding forBET's own variant.
+    expect(out.selections.map((s) => s.code)).toEqual(["L. Martinez & R. De Paul"]);
   });
 
   it("routes 2H 1X2+BTTS combo away from BTTS", () => {

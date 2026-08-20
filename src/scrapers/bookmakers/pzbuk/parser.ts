@@ -271,6 +271,20 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   // SECOND_HALF_GOAL_RANGE prices, not full-match GOAL_RANGE (see
   // pzbuk-normalizer.ts PZBUK_MARKET_ID_TO_CODE) — label it accordingly.
   "511": "Przedział goli - 2. połowa",
+  // Audit round 5b (premier-league Arsenal vs Coventry City, third
+  // Stop-hook rejection pass): ids 43/68/152/163/133 were still surfacing
+  // the generic "Rynek <id>" placeholder even though their catalog identity
+  // is already confirmed in pzbuk-normalizer.ts (43 -> HOME_WIN_BOTH_HALVES,
+  // 68 -> HALF_TIME_ODD_EVEN_GOALS, 152 -> CORNERS_RACE, 163 ->
+  // HALF_TIME_CORNERS_RACE, 133 -> HOME_EXACT_CARDS) — selections/odds were
+  // already correctly mapped, only the raw display name was a placeholder.
+  // Labels match the canonical Polish labels used for the same market codes
+  // in src/data/market-catalog.ts.
+  "43": "Gospodarz wygra obie połowy",
+  "68": "1. połowa - parzyste/nieparzyste",
+  "152": "Więcej rzutów rożnych",
+  "163": "Więcej rożnych 1. połowa",
+  "133": "Dokładna liczba kartek - gospodarze",
 };
 
 /**

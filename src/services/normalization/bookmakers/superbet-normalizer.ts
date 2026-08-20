@@ -655,6 +655,9 @@ const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
  */
 const SUPERBET_PLAYER_NAME_ALIASES: Record<string, string> = {
   "ephron jardell mason-clark": "Ephron Mason-Clark",
+  // audit-match, Arsenal vs Coventry City, PLAYER_GOAL_AND_ASSIST: superbet's
+  // "Simms, Ellis Reco" never merged with betcris/betfan/lvbet's "Ellis Simms".
+  "ellis reco simms": "Ellis Simms",
 };
 
 function canonicalizeSuperbetPlayerName(name: string): string {

@@ -251,7 +251,18 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "128": "TOTAL_SHOTS",
   "129": "OTHER",
   "133": "GOAL_RANGE",
-  "134": "GOAL_RANGE",
+  // Audit /audit-match (Arsenal vs Coventry City): id 134's implied
+  // probabilities ("0-1" 43.1%, "2" 33.9%, "3" 24.8%, "4+" 20.3%) do not
+  // match a total-goals distribution derived from pzbuk's own confirmed
+  // "Suma goli" O/U ladder (id 17) for this fixture, which implies roughly
+  // 22%/21%/23%/34% for the same buckets — "0-1" is ~2x too likely and "4+"
+  // is ~40% too unlikely to be a genuine goal-count range. Same shape
+  // mismatch reproduces on the France vs Morocco fixture (id 134 "0-1"
+  // implies 55.2% vs etoto's confirmed GOAL_RANGE "0-1" at 31.7% for that
+  // match). Real identity unresolved (generic numeric selections carry no
+  // team/half context to disambiguate) — park in OTHER rather than let it
+  // keep poisoning GOAL_RANGE.
+  "134": "OTHER",
   // Audit r3: id 139 delivered DRAW 1.97 / AWAY 3.14 with peers at DRAW
   // ~3.0-3.2 / AWAY ~2.2-2.4 — the values sit on the wrong selections, same
   // untrustworthy pattern as ids 76/163; park in OTHER (id 1 is the real 1X2).
@@ -923,6 +934,13 @@ function extractParamValue(
     "TOTAL_GOALS_AND_BTTS",
     "TOTAL_SHOTS",
     "CORNERS_TOTAL",
+    // Audit /audit-match (Arsenal vs Coventry City): CORNERS_HANDICAP (id
+    // 155) was missing from this list, so extractParamValue always returned
+    // undefined for it and every line (-3.5/-4.5/-5.5) collapsed onto the
+    // same paramless marketKey, colliding into a single bogus bucket. The
+    // raw paramValue field (e.g. "-4.5") is already supplied per-line by the
+    // parser, exactly like ASIAN_HANDICAP/EUROPEAN_HANDICAP above.
+    "CORNERS_HANDICAP",
   ];
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;

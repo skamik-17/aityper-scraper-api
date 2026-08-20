@@ -343,6 +343,12 @@ export const NormalizedMarketType = {
   THREE_PLAYERS_ANY_2PLUS_GOALS: "THREE_PLAYERS_ANY_2PLUS_GOALS",
   THREE_PLAYERS_ANY_3PLUS_GOALS: "THREE_PLAYERS_ANY_3PLUS_GOALS",
   HALF_TIME_TWO_PLAYERS_ANYTIME: "HALF_TIME_TWO_PLAYERS_ANYTIME",
+  // audit-match (Arsenal vs Coventry City), catalog issue 2/12: betclic
+  // "Obaj gracze strzelą w 1. połowa" (both named players score in 1st
+  // half, AND semantics) — distinct from the OR-semantics
+  // HALF_TIME_TWO_PLAYERS_ANYTIME above, mirrors BOTH_PLAYERS_ANYTIME's
+  // relationship to TWO_PLAYERS_ANYTIME for the full match.
+  HALF_TIME_BOTH_PLAYERS_ANYTIME: "HALF_TIME_BOTH_PLAYERS_ANYTIME",
   SECOND_HALF_TWO_PLAYERS_ANYTIME: "SECOND_HALF_TWO_PLAYERS_ANYTIME",
   HALF_TIME_THREE_PLAYERS_ANYTIME: "HALF_TIME_THREE_PLAYERS_ANYTIME",
   SECOND_HALF_THREE_PLAYERS_ANYTIME: "SECOND_HALF_THREE_PLAYERS_ANYTIME",
@@ -427,6 +433,15 @@ export const NormalizedMarketType = {
   SECOND_HALF_HOME_WIN_TO_NIL: "SECOND_HALF_HOME_WIN_TO_NIL",
   SECOND_HALF_AWAY_WIN_EXACT_MARGIN: "SECOND_HALF_AWAY_WIN_EXACT_MARGIN",
   SECOND_HALF_HOME_WIN_EXACT_MARGIN: "SECOND_HALF_HOME_WIN_EXACT_MARGIN",
+  // audit-match (Arsenal vs Coventry City), catalog issue 1/12: betcris
+  // "<Team> wygra dokładną różnicą goli" (exact winning margin) for the
+  // full match and 1st half, parallel to the SECOND_HALF_* pair above which
+  // already existed. paramValue carries the margin (1/2/3/4), selections
+  // are YES/NO on hitting that exact margin.
+  HOME_WIN_EXACT_MARGIN: "HOME_WIN_EXACT_MARGIN",
+  AWAY_WIN_EXACT_MARGIN: "AWAY_WIN_EXACT_MARGIN",
+  FIRST_HALF_HOME_WIN_EXACT_MARGIN: "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+  FIRST_HALF_AWAY_WIN_EXACT_MARGIN: "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
   HALF_TIME_AWAY_WIN_TO_NIL: "HALF_TIME_AWAY_WIN_TO_NIL",
   HALF_TIME_HOME_WIN_TO_NIL: "HALF_TIME_HOME_WIN_TO_NIL",
   FIRST_GOAL_METHOD: "FIRST_GOAL_METHOD",

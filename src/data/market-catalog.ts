@@ -266,11 +266,14 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Przedział goli", en: "Goal Range" },
     descriptions: { pl: "W jakim przedziale będzie liczba goli?", en: "Goal range bracket" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3", "4", "5", "6+", "7+", "0-1", "0-2", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "5+"],
-    selectionOrder: ["0", "1", "2", "3", "4", "5", "6+", "7+", "0-1", "0-2", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "5+"],
+    // audit-match (Arsenal vs Coventry City), catalog issue 12/12: pzbuk's
+    // raw offer ("Rynek 134": 0-1/2/3/4+) uses a '4+' top bucket that was
+    // missing from the enum (only 5+/6+/7+ tails were declared).
+    selections: ["0", "1", "2", "3", "4", "4+", "5", "6+", "7+", "0-1", "0-2", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "5+"],
+    selectionOrder: ["0", "1", "2", "3", "4", "4+", "5", "6+", "7+", "0-1", "0-2", "1-2", "1-3", "1-4", "1-5", "1-6", "2-3", "2-4", "2-5", "2-6", "3-4", "3-5", "3-6", "4-5", "4-6", "5-6", "5+"],
     viewType: ViewType.COMBINATION,
     displayOrder: 19,
-    descriptionTemplates: { "0-1": "0-1 bramek", "2-3": "2-3 bramki", "4-5": "4-5 bramek", "6+": "6 lub więcej bramek" },
+    descriptionTemplates: { "0-1": "0-1 bramek", "2-3": "2-3 bramki", "4-5": "4-5 bramek", "4+": "4 lub więcej bramek", "6+": "6 lub więcej bramek" },
   },
   {
     // audit-match (Arsenal vs Coventry City): GOAL_RANGE conflated two
@@ -3764,9 +3767,15 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gospodarz - przedział rożnych", en: "Home Corners Range" },
     descriptions: { pl: "Przedział rożnych gospodarzy", en: "Home team corners range" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
+    // audit-match (Arsenal vs Coventry City), catalog issue 7/12: superbet's
+    // raw offer ("Arsenal - przedział rzutów rożnych") uses 2-wide top
+    // buckets "5-6"/"7+" instead of a single "5+" bucket — both '5+' (sts-
+    // style single top bucket, still kept for back-compat) and '5-6'/'7+'
+    // (superbet-style) are declared so neither bookmaker's real selections
+    // are flagged as orphan/unrecognized.
+    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych", "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5+": "Gospodarze zdobędą 5 lub więcej rzutów rożnych" },
+    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych", "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5+": "Gospodarze zdobędą 5 lub więcej rzutów rożnych", "5-6": "Gospodarze zdobędą 5-6 rzutów rożnych", "7+": "Gospodarze zdobędą 7 lub więcej rzutów rożnych" },
     displayOrder: 237
   },
   {
@@ -3778,9 +3787,13 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gość - przedział rożnych", en: "Away Corners Range" },
     descriptions: { pl: "Przedział rożnych gości", en: "Away team corners range" },
     hasParameter: false,
-    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+"],
+    // audit-match (Arsenal vs Coventry City), catalog issue 7/12: same fix
+    // as HOME_CORNERS_RANGE above — superbet's away-side raw offer
+    // ("Coventry City - przedział rzutów rożnych") uses the same '5-6'/'7+'
+    // 2-wide top buckets instead of a single '5+'.
+    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych", "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5+": "Goście zdobędą 5 lub więcej rzutów rożnych" },
+    descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych", "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5+": "Goście zdobędą 5 lub więcej rzutów rożnych", "5-6": "Goście zdobędą 5-6 rzutów rożnych", "7+": "Goście zdobędą 7 lub więcej rzutów rożnych" },
     displayOrder: 238
   },
   {
@@ -4020,6 +4033,30 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["PLAYER_PAIR"],
     viewType: ViewType.COMBINATION,
     displayOrder: 253,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City), catalog issue 2/12: betclic
+    // "Obaj gracze strzelą w 1. połowa" (both named players score in 1st
+    // half — AND semantics) is a large legitimate player-pair market
+    // (~52 pairs) that had no catalog code and fell into the generic OTHER
+    // bucket, merging with completely unrelated markets from other
+    // bookmakers. Mirrors BOTH_PLAYERS_ANYTIME's relationship to
+    // TWO_PLAYERS_ANYTIME (OR semantics), scoped to the 1st half like
+    // HALF_TIME_TWO_PLAYERS_ANYTIME above. NOTE: betclic-normalizer.ts
+    // (out of scope for this catalog-only pass) still needs to route this
+    // raw market here instead of OTHER.
+    numericId: 1422,
+    code: "HALF_TIME_BOTH_PLAYERS_ANYTIME",
+    slug: "half-time-both-players-anytime",
+    category: MarketCategory.ZAWODNICY,
+    subCategory: "strzelcy",
+    labels: { pl: "Obaj gracze strzelą - 1. połowa", en: "Both Players To Score - 1st Half" },
+    descriptions: { pl: "Obaj wybrani gracze strzelą gola w 1. połowie", en: "Both selected players score in 1st half" },
+    hasParameter: false,
+    parameterType: "player",
+    selections: ["PLAYER_PAIR"],
+    viewType: ViewType.COMBINATION,
+    displayOrder: 567,
   },
   {
     numericId: 450,
@@ -6026,6 +6063,85 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 313,
   },
   {
+    // audit-match (Arsenal vs Coventry City), catalog issue 1/12: betcris
+    // "<Team> wygra dokładną różnicą goli" (full match) offers 4 separate
+    // margin lines (paramValue 1/2/3/4, each YES/NO) that were collapsing
+    // into the OTHER catalog (hasParameter: false) — only the last-
+    // processed margin's "Nie" leg survived, losing 7 of 8 selections and
+    // all 4 margin values. Parameterized on the margin, mirroring
+    // SECOND_HALF_HOME/AWAY_WIN_EXACT_MARGIN above. NOTE:
+    // betcris-normalizer.ts (out of scope for this catalog-only pass) still
+    // needs to route "HomeTeamToWinWithExactMargin" here instead of OTHER.
+    numericId: 1423,
+    code: "HOME_WIN_EXACT_MARGIN",
+    slug: "home-win-exact-margin",
+    category: MarketCategory.GOLE,
+    subCategory: "roznica-zwyciestwa",
+    labels: { pl: "Gospodarz wygra dokładną różnicą goli", en: "Home Win Exact Margin" },
+    descriptions: { pl: "Sprawdza, czy gospodarz wygra mecz dokładnie o wybraną różnicę bramek.", en: "Checks whether the home team wins the match by exactly the selected goal margin." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "{homeTeam} wygra mecz dokładnie {param} golami", NO: "{homeTeam} nie wygra meczu dokładnie {param} golami" },
+    displayOrder: 568,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City), catalog issue 1/12: away-side
+    // counterpart of HOME_WIN_EXACT_MARGIN above (betcris
+    // "AwayTeamToWinWithExactMargin").
+    numericId: 1424,
+    code: "AWAY_WIN_EXACT_MARGIN",
+    slug: "away-win-exact-margin",
+    category: MarketCategory.GOLE,
+    subCategory: "roznica-zwyciestwa",
+    labels: { pl: "Gość wygra dokładną różnicą goli", en: "Away Win Exact Margin" },
+    descriptions: { pl: "Sprawdza, czy gość wygra mecz dokładnie o wybraną różnicę bramek.", en: "Checks whether the away team wins the match by exactly the selected goal margin." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "{awayTeam} wygra mecz dokładnie {param} golami", NO: "{awayTeam} nie wygra meczu dokładnie {param} golami" },
+    displayOrder: 569,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City), catalog issue 1/12: 1st-half
+    // counterpart of HOME_WIN_EXACT_MARGIN, mirroring the SECOND_HALF_*
+    // pair's category/subCategory convention (betcris
+    // "FirstHalfHomeTeamToWinWithExactMargin").
+    numericId: 1425,
+    code: "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+    slug: "first-half-home-win-exact-margin",
+    category: MarketCategory.POLOWY,
+    subCategory: "specjalne-1h",
+    labels: { pl: "1. połowa - gospodarz wygra dokładną różnicą goli", en: "First Half Home Win Exact Margin" },
+    descriptions: { pl: "Sprawdza, czy gospodarz wygra 1. połowę dokładnie o wybraną różnicę bramek (np. 1:0 w tej połowie się liczy, 2:0 już nie).", en: "Checks whether the home team wins the first half by exactly the selected goal margin (e.g. 1:0 in that half counts, 2:0 does not)." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "{homeTeam} wygra 1. połowę dokładnie {param} golami", NO: "{homeTeam} nie wygra 1. połowy dokładnie {param} golami" },
+    displayOrder: 570,
+  },
+  {
+    // audit-match (Arsenal vs Coventry City), catalog issue 1/12: away-side
+    // counterpart of FIRST_HALF_HOME_WIN_EXACT_MARGIN above (betcris
+    // "FirstHalfAwayTeamToWinWithExactMargin").
+    numericId: 1426,
+    code: "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
+    slug: "first-half-away-win-exact-margin",
+    category: MarketCategory.POLOWY,
+    subCategory: "specjalne-1h",
+    labels: { pl: "1. połowa - gość wygra dokładną różnicą goli", en: "First Half Away Win Exact Margin" },
+    descriptions: { pl: "Sprawdza, czy gość wygra 1. połowę dokładnie o wybraną różnicę bramek (np. 1:0 w tej połowie się liczy, 2:0 już nie).", en: "Checks whether the away team wins the first half by exactly the selected goal margin (e.g. 1:0 in that half counts, 2:0 does not)." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["YES", "NO"],
+    viewType: ViewType.PARAMETER_SLIDER,
+    descriptionTemplates: { YES: "{awayTeam} wygra 1. połowę dokładnie {param} golami", NO: "{awayTeam} nie wygra 1. połowy dokładnie {param} golami" },
+    displayOrder: 571,
+  },
+  {
     numericId: 1049,
     code: "HALF_TIME_AWAY_WIN_TO_NIL",
     slug: "half-time-away-win-to-nil",
@@ -6062,13 +6178,23 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Sposób zdobycia pierwszej bramki", en: "First Goal Method" },
     descriptions: { pl: "W jaki sposob padnie pierwsza bramka meczu - glowa, rzut karny, rzut wolny bezposredni czy inny sposob.", en: "How the first goal of the match will be scored - header, penalty, direct free kick, or other method." },
     hasParameter: false,
-    selections: ["HEADER", "PENALTY", "FREE_KICK", "OTHER"],
+    // audit-match (Arsenal vs Coventry City), catalog issue 8/12: all 4
+    // bookmakers offering this market (betcris/lebull/lvbet/superbet) also
+    // quote "own goal" (Gol samobójczy/samobój), and 3 of 4 additionally
+    // quote "no goal scored" (Nie będzie bramki/Bez goli/bez gola) — both
+    // were previously undeclared, so those legs fell through to a shared
+    // UNKNOWN row. NOTE: adding the codes here only extends the vocabulary;
+    // each bookmaker's normalizer (betcris/lebull/lvbet/superbet-normalizer.ts,
+    // out of scope for this catalog-only pass) still needs its own raw-text
+    // selection mapping updated to actually emit OWN_GOAL/NO_GOAL instead of
+    // UNKNOWN.
+    selections: ["HEADER", "PENALTY", "FREE_KICK", "OWN_GOAL", "NO_GOAL", "OTHER"],
     // audit-match (Arsenal vs Coventry City), closing round: same
     // SINGLE_SELECTION-only-shows-one-outcome issue as FIRST_GOAL_TIME_30MIN
-    // above, here with 4 mutually exclusive methods; COMBINATION renders an
-    // arbitrary number of outcomes so all 4 stay visible.
+    // above, here with mutually exclusive methods; COMBINATION renders an
+    // arbitrary number of outcomes so all of them stay visible.
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { HEADER: "Pierwszy gol strzelony głową", PENALTY: "Pierwszy gol z rzutu karnego", FREE_KICK: "Pierwszy gol z rzutu wolnego", OTHER: "Pierwszy gol w inny sposób" },
+    descriptionTemplates: { HEADER: "Pierwszy gol strzelony głową", PENALTY: "Pierwszy gol z rzutu karnego", FREE_KICK: "Pierwszy gol z rzutu wolnego", OWN_GOAL: "Pierwszy gol samobójczy", NO_GOAL: "Nie padnie żadna bramka", OTHER: "Pierwszy gol w inny sposób" },
     displayOrder: 316,
   },
   {
@@ -9121,9 +9247,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Obstawiasz, czy pierwszy gol w meczu padnie przed, czy po wybranej minucie (np. 1., 5., 10. lub 15.).", en: "Bet on whether the first goal of the match falls before or after a chosen minute mark (e.g. the 1st, 5th, 10th or 15th)." },
     hasParameter: true,
     parameterType: "decimal",
-    selections: ["UNDER_1MIN", "OVER_1MIN", "UNDER_5MIN", "OVER_5MIN", "UNDER_10MIN", "OVER_10MIN", "UNDER_15MIN", "OVER_15MIN"],
+    // audit-match (Arsenal vs Coventry City), catalog issue 11/12: superbet
+    // already emits UNDER_20MIN/25MIN/35MIN (and OVER_ counterparts) for
+    // both the 0.5 and 1.5 goal-count params, but they were absent from the
+    // enum — orphaned with no Polish label.
+    selections: ["UNDER_1MIN", "OVER_1MIN", "UNDER_5MIN", "OVER_5MIN", "UNDER_10MIN", "OVER_10MIN", "UNDER_15MIN", "OVER_15MIN", "UNDER_20MIN", "OVER_20MIN", "UNDER_25MIN", "OVER_25MIN", "UNDER_35MIN", "OVER_35MIN"],
     viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { UNDER_1MIN: "Gol padnie do 1. minuty", OVER_1MIN: "Gol padnie po 1. minucie", UNDER_5MIN: "Gol padnie do 5. minuty", OVER_5MIN: "Gol padnie po 5. minucie", UNDER_10MIN: "Gol padnie do 10. minuty", OVER_10MIN: "Gol padnie po 10. minucie", UNDER_15MIN: "Gol padnie do 15. minuty", OVER_15MIN: "Gol padnie po 15. minucie" },
+    descriptionTemplates: { UNDER_1MIN: "Gol padnie do 1. minuty", OVER_1MIN: "Gol padnie po 1. minucie", UNDER_5MIN: "Gol padnie do 5. minuty", OVER_5MIN: "Gol padnie po 5. minucie", UNDER_10MIN: "Gol padnie do 10. minuty", OVER_10MIN: "Gol padnie po 10. minucie", UNDER_15MIN: "Gol padnie do 15. minuty", OVER_15MIN: "Gol padnie po 15. minucie", UNDER_20MIN: "Gol padnie do 20. minuty", OVER_20MIN: "Gol padnie po 20. minucie", UNDER_25MIN: "Gol padnie do 25. minuty", OVER_25MIN: "Gol padnie po 25. minucie", UNDER_35MIN: "Gol padnie do 35. minuty", OVER_35MIN: "Gol padnie po 35. minucie" },
     displayOrder: 522,
   },
   {

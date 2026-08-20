@@ -7487,10 +7487,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:1",
         "matchedBy": "id",
-        "paramValue": "15",
+        "paramValue": "1",
         "parameters": null,
         "selections": [
           {
@@ -7506,7 +7506,7 @@
         ]
       },
       "index": 226,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 1-15 min"
     },
     {
@@ -7616,10 +7616,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:45-60",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:45",
         "matchedBy": "id",
-        "paramValue": "45-60",
+        "paramValue": "45",
         "parameters": null,
         "selections": [
           {
@@ -7635,7 +7635,7 @@
         ]
       },
       "index": 230,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 45-60 min"
     },
     {
@@ -7673,10 +7673,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:76-90",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:76",
         "matchedBy": "id",
-        "paramValue": "76-90",
+        "paramValue": "76",
         "parameters": null,
         "selections": [
           {
@@ -7692,7 +7692,7 @@
         ]
       },
       "index": 232,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 76-90+ min"
     },
     {
@@ -8049,10 +8049,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:11-20",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:11",
         "matchedBy": "id",
-        "paramValue": "11-20",
+        "paramValue": "11",
         "parameters": null,
         "selections": [
           {
@@ -8068,17 +8068,17 @@
         ]
       },
       "index": 243,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 11-20 min"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:31-40",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:31",
         "matchedBy": "id",
-        "paramValue": "31-40",
+        "paramValue": "31",
         "parameters": null,
         "selections": [
           {
@@ -8094,17 +8094,17 @@
         ]
       },
       "index": 244,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 31-40 min"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:41-50",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:41",
         "matchedBy": "id",
-        "paramValue": "41-50",
+        "paramValue": "41",
         "parameters": null,
         "selections": [
           {
@@ -8120,17 +8120,17 @@
         ]
       },
       "index": 245,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 41-50 min"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:51-60",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:51",
         "matchedBy": "id",
-        "paramValue": "51-60",
+        "paramValue": "51",
         "parameters": null,
         "selections": [
           {
@@ -8146,17 +8146,17 @@
         ]
       },
       "index": 246,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 51-60 min"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:71-80",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:71",
         "matchedBy": "id",
-        "paramValue": "71-80",
+        "paramValue": "71",
         "parameters": null,
         "selections": [
           {
@@ -8172,17 +8172,17 @@
         ]
       },
       "index": 247,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 71-80 min"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:81-90",
+        "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:81",
         "matchedBy": "id",
-        "paramValue": "81-90",
+        "paramValue": "81",
         "parameters": null,
         "selections": [
           {
@@ -8198,7 +8198,7 @@
         ]
       },
       "index": 248,
-      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+      "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
       "rawName": "suma między 81-90+ min."
     },
     {

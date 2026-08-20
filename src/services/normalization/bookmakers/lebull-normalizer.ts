@@ -150,15 +150,29 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // static id map — see the comment there.
   421317: "HALF_TIME_AND_SECOND_HALF_RESULT",
   262275: "BOTH_HALVES_OVER_COMBO",
-  270586: "TIME_PERIOD_TOTAL_GOALS",
+  // Round 9 /audit-match (Arsenal vs Coventry City): these ids ("suma
+  // między X-Y min") are lebull's disjoint-segment goal-total family — the
+  // SAME product shape as 270588/270825/270827 below, which were already
+  // correctly split off to their own TIME_BAND_TOTAL_GOALS/
+  // TIME_SEGMENT_TOTAL_GOALS/TIME_PERIOD_GOALS codes. Sharing the generic
+  // TIME_PERIOD_TOTAL_GOALS code with fuksiarz's structurally different
+  // cumulative-from-kickoff windows ("first N minutes, over threshold X.5")
+  // mixed two incompatible bet shapes into one comparison column — a "15"
+  // row (fuksiarz: goals in the first 15 minutes) sitting next to an
+  // "11-20" row (lebull: goals scored strictly within that 10-minute slice)
+  // isn't a real "same bet, different price" comparison. Consolidated onto
+  // TIME_SEGMENT_TOTAL_GOALS so the disjoint-segment family stays together
+  // under codes fuksiarz never uses, and TIME_PERIOD_TOTAL_GOALS becomes
+  // fuksiarz's alone.
+  270586: "TIME_SEGMENT_TOTAL_GOALS",
   268285: "TIME_PERIOD_RESULT",
-  270587: "TIME_PERIOD_TOTAL_GOALS",
+  270587: "TIME_SEGMENT_TOTAL_GOALS",
   270588: "TIME_BAND_TOTAL_GOALS",
   268287: "TIME_PERIOD_RESULT",
-  270589: "TIME_PERIOD_TOTAL_GOALS",
-  270590: "TIME_PERIOD_TOTAL_GOALS",
+  270589: "TIME_SEGMENT_TOTAL_GOALS",
+  270590: "TIME_SEGMENT_TOTAL_GOALS",
   268289: "TIME_PERIOD_RESULT",
-  270591: "TIME_PERIOD_TOTAL_GOALS",
+  270591: "TIME_SEGMENT_TOTAL_GOALS",
   270618: "TIME_PERIOD_RESULT",
   175094: "TIME_PERIOD_RESULT",
   175095: "TIME_PERIOD_RESULT",
@@ -173,14 +187,14 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   270619: "TIME_PERIOD_RESULT",
   270621: "TIME_PERIOD_RESULT",
   270825: "TIME_SEGMENT_TOTAL_GOALS",
-  270826: "TIME_PERIOD_TOTAL_GOALS",
+  270826: "TIME_SEGMENT_TOTAL_GOALS",
   270827: "TIME_PERIOD_GOALS",
-  270828: "TIME_PERIOD_TOTAL_GOALS",
-  270829: "TIME_PERIOD_TOTAL_GOALS",
-  270830: "TIME_PERIOD_TOTAL_GOALS",
-  270831: "TIME_PERIOD_TOTAL_GOALS",
-  270832: "TIME_PERIOD_TOTAL_GOALS",
-  270833: "TIME_PERIOD_TOTAL_GOALS",
+  270828: "TIME_SEGMENT_TOTAL_GOALS",
+  270829: "TIME_SEGMENT_TOTAL_GOALS",
+  270830: "TIME_SEGMENT_TOTAL_GOALS",
+  270831: "TIME_SEGMENT_TOTAL_GOALS",
+  270832: "TIME_SEGMENT_TOTAL_GOALS",
+  270833: "TIME_SEGMENT_TOTAL_GOALS",
   // Team-scoped odd/even: verified against 6 peers (home EVEN 1.77-1.88 /
   // ODD 1.80-1.90, away EVEN 1.37-1.42 / ODD 2.57-2.82).
   2381: "HOME_TEAM_ODD_EVEN_GOALS",

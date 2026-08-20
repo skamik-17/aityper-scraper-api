@@ -10,7 +10,10 @@ import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, Ma
 import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
 
-export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Promise<{
+export async function getAllLatestOdds(
+  leagueSlug: string = "ekstraklasa",
+  options: { onlyMarketKeys?: string[] } = {}
+): Promise<{
   matches: MatchOdds[];
   lastUpdated: string | null;
   bookmakerStatus: Record<PolishBookmaker, BookmakerStatus>;
@@ -18,11 +21,29 @@ export async function getAllLatestOdds(leagueSlug: string = "ekstraklasa"): Prom
   const aggregatedData = await getAggregatedOdds(leagueSlug);
   const lastScrape = await getLastSuccessfulScrapeTime();
   const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
+  const { onlyMarketKeys } = options;
 
   const matches: MatchOdds[] = aggregatedData.map((row) => {
     const markets: MatchOdds["markets"] = {};
 
     for (const [marketKey, marketData] of Object.entries(row.markets || {})) {
+      // Every current frontend consumer of this endpoint (verified by
+      // grepping every `.markets[...]` access across the whole frontend
+      // repo) only ever reads the MATCH_WINNER market - for the 1X2
+      // indicator shown while browsing/searching matches. Everything else
+      // (every parameter line, every player market, every OTHER-bucket
+      // entry) was being fully built and shipped to the browser for
+      // nothing: for a single Premier League match that's ~6800
+      // (market x bookmaker) entries and several MB of JSON that gets
+      // downloaded, parsed, and thrown away unread - repeated on every
+      // poll. Callers that DO need full data (the single-match detail
+      // page) go through a completely different endpoint
+      // (/api/matches/:home/:away/normalized-markets) and never call this
+      // function at all, so skipping unlisted markets here is safe.
+      if (onlyMarketKeys && !onlyMarketKeys.includes(marketKey)) {
+        continue;
+      }
+
       const bestOdds: BestOdds = {};
       const bookmakerOdds: Record<string, { selections: any[]; eventUrl?: string; scrapedAt: string }> = {};
 

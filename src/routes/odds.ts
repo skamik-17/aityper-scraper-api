@@ -36,13 +36,28 @@ import {
 const router = Router();
 
 /**
+ * Every current frontend consumer of the match-list endpoints below (GET
+ * /api/odds and POST /api/odds/batch) only reads the MATCH_WINNER market -
+ * for a compact 1X2 indicator while browsing/searching matches across
+ * leagues. Restricting to this by default cuts a single Premier League
+ * match's payload from several MB to a few KB. Pass ?full=true (GET) or
+ * {"full": true} (POST body) to opt back into the complete per-bookmaker
+ * breakdown for every market if a future consumer needs it.
+ */
+const MATCH_LIST_MARKET_KEYS = ["MATCH_WINNER"];
+
+/**
  * GET /api/odds
  * Get all latest odds for all matches
  */
 router.get("/", asyncHandler(async (req, res) => {
   const league = (req.query.league as string) || "ekstraklasa";
+  const full = req.query.full === "true";
 
-  const { matches, lastUpdated, bookmakerStatus } = await getAllLatestOdds(league);
+  const { matches, lastUpdated, bookmakerStatus } = await getAllLatestOdds(
+    league,
+    full ? {} : { onlyMarketKeys: MATCH_LIST_MARKET_KEYS }
+  );
 
   const data: OddsResponseData = { matches };
   const meta: OddsResponseMeta = {
@@ -178,7 +193,7 @@ router.get("/match/full-offer", asyncHandler(async (req, res) => {
  * Get odds for multiple leagues in a single request
  */
 router.post("/batch", asyncHandler(async (req, res) => {
-  const { leagues } = req.body as { leagues?: string[] };
+  const { leagues, full } = req.body as { leagues?: string[]; full?: boolean };
 
   if (!leagues || !Array.isArray(leagues) || leagues.length === 0) {
     throw new ApiError(
@@ -188,11 +203,13 @@ router.post("/batch", asyncHandler(async (req, res) => {
     );
   }
 
+  const oddsOptions = full ? {} : { onlyMarketKeys: MATCH_LIST_MARKET_KEYS };
+
   // Fetch all leagues in parallel
   const results = await Promise.all(
     leagues.map(async (league) => {
       try {
-        return { league, ...(await getAllLatestOdds(league)) };
+        return { league, ...(await getAllLatestOdds(league, oddsOptions)) };
       } catch (error) {
         return { league, matches: [], lastUpdated: null, bookmakerStatus: {}, error: true };
       }

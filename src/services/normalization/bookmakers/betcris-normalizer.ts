@@ -125,6 +125,15 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "SecondHalfFirstTeamToScore": "SECOND_HALF_FIRST_GOAL",
   "SecondHalfAwayTeamToWinWithExactMargin": "SECOND_HALF_AWAY_WIN_EXACT_MARGIN",
   "SecondHalfHomeTeamToWinWithExactMargin": "SECOND_HALF_HOME_WIN_EXACT_MARGIN",
+  // audit-match (Arsenal vs Coventry City) round2: full-match and 1st-half
+  // counterparts of the SECOND_HALF_HOME/AWAY_WIN_EXACT_MARGIN pair above —
+  // the catalog now declares HOME/AWAY_WIN_EXACT_MARGIN and
+  // FIRST_HALF_HOME/AWAY_WIN_EXACT_MARGIN, so route these Swarm ids there
+  // instead of falling through to OTHER.
+  "HomeTeamToWinWithExactMargin": "HOME_WIN_EXACT_MARGIN",
+  "AwayTeamToWinWithExactMargin": "AWAY_WIN_EXACT_MARGIN",
+  "FirstHalfHomeTeamToWinWithExactMargin": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+  "FirstHalfAwayTeamToWinWithExactMargin": "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
   "FirstHalfAwayTeamToWinToNil": "HALF_TIME_AWAY_WIN_TO_NIL",
   "FirstHalfHomeTeamToWinToNil": "HALF_TIME_HOME_WIN_TO_NIL",
   "FirstGoalMethod": "FIRST_GOAL_METHOD",
@@ -990,14 +999,15 @@ function normalizeSelectionForMarket(
 
     case "FIRST_GOAL_METHOD":
       // Betcris quotes ("W inny sposób", "Głową", "Bezpośrednio z rzutu
-      // karnego", "Bezpośrednio z rzutu wolnego") plus two legs the catalog
-      // has no code for ("Nie będzie bramki" / no goal, "Gol samobójczy" /
-      // own goal) — those two fall through to UNKNOWN and are dropped, same
-      // as superbet's equivalent uncoded legs for this market.
+      // karnego", "Bezpośrednio z rzutu wolnego") plus "Nie będzie bramki"
+      // (no goal) and "Gol samobójczy" (own goal) — the catalog now declares
+      // OWN_GOAL/NO_GOAL selections for this market, so route both here too.
       if (/g[łl]ow[ąa]/i.test(lowerTrimmed)) return "HEADER" as NormalizedSelection;
       if (/karnego/i.test(lowerTrimmed)) return "PENALTY" as NormalizedSelection;
       if (/wolnego/i.test(lowerTrimmed)) return "FREE_KICK" as NormalizedSelection;
       if (/inny\s+spos[oó]b/i.test(lowerTrimmed)) return "OTHER" as NormalizedSelection;
+      if (/samob[oó]jczy|samob[oó]j/i.test(lowerTrimmed)) return "OWN_GOAL" as NormalizedSelection;
+      if (/nie\s+b[eę]dzie\s+bramki|no\s*goal|bez\s+gola|brak\s+gola/i.test(lowerTrimmed)) return "NO_GOAL" as NormalizedSelection;
       return "UNKNOWN" as NormalizedSelection;
 
     case "FIRST_GOAL_TIME":
@@ -1149,6 +1159,20 @@ function extractParamValue(
   // (audit-match: Arsenal vs Coventry City — see catalog entry comment for
   // the cross-bookmaker collision this caused).
   if (marketCode === "CORNERS_RACE_TO") {
+    return raw.paramValue && raw.paramValue !== "" ? raw.paramValue.replace(",", ".") : undefined;
+  }
+
+  // HOME/AWAY_WIN_EXACT_MARGIN and FIRST_HALF_HOME/AWAY_WIN_EXACT_MARGIN
+  // carry the margin (1-4) directly in raw.paramValue from the Swarm "base"
+  // field, same as CORNERS_RACE_TO above. These are YES/NO props, not
+  // over/under or handicap shaped, so they fall through the two lists below
+  // (audit-match: Arsenal vs Coventry City round2).
+  if (
+    marketCode === "HOME_WIN_EXACT_MARGIN" ||
+    marketCode === "AWAY_WIN_EXACT_MARGIN" ||
+    marketCode === "FIRST_HALF_HOME_WIN_EXACT_MARGIN" ||
+    marketCode === "FIRST_HALF_AWAY_WIN_EXACT_MARGIN"
+  ) {
     return raw.paramValue && raw.paramValue !== "" ? raw.paramValue.replace(",", ".") : undefined;
   }
 

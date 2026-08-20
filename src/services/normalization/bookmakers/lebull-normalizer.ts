@@ -888,13 +888,17 @@ function normalizeSelectionForMarket(
       // gola głową", "Gol samobójczy") — audit /audit-match (Arsenal vs
       // Coventry City) found none of these were mapped, so every entry fell
       // through the default 1x2 resolver to UNKNOWN and the whole bookmaker
-      // was dropped from the market. "Gol samobójczy" (own goal) has no
-      // catalog slot here (mirrors betcris' equivalent uncoded leg) and stays
-      // UNKNOWN/dropped.
+      // was dropped from the market. Round 2: the catalog now declares an
+      // OWN_GOAL slot for this market, so "Gol samobójczy" routes there
+      // instead of staying UNKNOWN. LeBull's "Metoda 1. gola" (stake type
+      // 68) offer has exactly 5 legs (open play, header, free kick, penalty,
+      // own goal) and no "no goal scored" leg, so there is no NO_GOAL case
+      // to add here.
       // "Gol z gry/bez gola głową" (open-play goal / not-a-header) also
       // contains the "głową" substring, so it must be checked before the
       // header pattern to avoid being misrouted to HEADER.
       if (/gol\s*z\s*gry/i.test(normalized)) return "OTHER" as NormalizedSelection;
+      if (/samob[oó]jcz/i.test(normalized)) return "OWN_GOAL" as NormalizedSelection;
       if (/g[łl]ow[ąa]/i.test(normalized)) return "HEADER" as NormalizedSelection;
       if (/karny/i.test(normalized)) return "PENALTY" as NormalizedSelection;
       if (/wolny/i.test(normalized)) return "FREE_KICK" as NormalizedSelection;

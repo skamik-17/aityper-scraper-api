@@ -497,7 +497,7 @@
             "odds": 1.45
           },
           {
-            "code": "UNKNOWN",
+            "code": "OWN_GOAL",
             "label": "Gol samobójczy",
             "odds": 21
           },
@@ -507,7 +507,7 @@
             "odds": 7.8
           },
           {
-            "code": "UNKNOWN",
+            "code": "NO_GOAL",
             "label": "Nie będzie bramki",
             "odds": 9.2
           }
@@ -7495,23 +7495,80 @@
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+        "marketKey": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "Tak",
+            "odds": 6.7
+          },
+          {
+            "code": "NO",
+            "label": "Nie",
+            "odds": 1.075
+          }
+        ]
+      },
       "index": 265,
-      "marketCode": "OTHER",
+      "marketCode": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
       "rawName": "1. połowa - Francja wygra dokładną różnicą goli "
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
+        "marketKey": "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "Tak",
+            "odds": 5.85
+          },
+          {
+            "code": "NO",
+            "label": "Nie",
+            "odds": 1.1
+          }
+        ]
+      },
       "index": 266,
-      "marketCode": "OTHER",
+      "marketCode": "FIRST_HALF_AWAY_WIN_EXACT_MARGIN",
       "rawName": "1. połowa - Maroko wygra dokładną różnicą goli "
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+        "marketKey": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "Tak",
+            "odds": 3.1
+          },
+          {
+            "code": "NO",
+            "label": "Nie",
+            "odds": 1.33
+          }
+        ]
+      },
       "index": 267,
-      "marketCode": "OTHER",
+      "marketCode": "FIRST_HALF_HOME_WIN_EXACT_MARGIN",
       "rawName": "1. połowa - Francja wygra dokładną różnicą goli "
     },
     {

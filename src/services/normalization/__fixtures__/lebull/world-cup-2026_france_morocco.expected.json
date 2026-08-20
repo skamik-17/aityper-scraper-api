@@ -3134,7 +3134,7 @@
             "odds": 7.8
           },
           {
-            "code": "UNKNOWN",
+            "code": "OWN_GOAL",
             "label": "Gol samobójczy",
             "odds": 21
           }

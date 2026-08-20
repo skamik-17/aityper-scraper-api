@@ -29,7 +29,11 @@ function run(raw: RawBookmakerMarket, ctx: NormalizationContext) {
 }
 
 describe("forbet audit fixes", () => {
-  it("routes player goals special to PLAYER_GOALS with player param", () => {
+  it("routes player goals special to PLAYER_GOALS with player param, dropping the 1+ tier that duplicates GOALSCORER_ANYTIME", () => {
+    // audit-loop cluster #1: forbet's own separate anytime-goalscorer board
+    // (gameType 12 -> GOALSCORER_ANYTIME) already prices this player's "will
+    // score" bet near-identically, so the "1+" tier of this ladder is
+    // dropped to stop double-listing the same bet under two cards.
     const out = run(
       {
         bookmakerMarketId: "-99999",
@@ -44,7 +48,7 @@ describe("forbet audit fixes", () => {
     );
     expect(out.marketCode).toBe("PLAYER_GOALS");
     expect(out.paramValue).toBe("Wanner, Paul");
-    expect(out.selections.map((s) => s.code)).toEqual(["1+", "2+", "3+"]);
+    expect(out.selections.map((s) => s.code)).toEqual(["2+", "3+"]);
   });
 
   it("routes 2nd-half team totals away from TOTAL_GOALS", () => {
@@ -216,7 +220,11 @@ describe("forbet audit fixes", () => {
     ]);
   });
 
-  it("maps away-team half-with-more-goals to TEAM_HALF_WITH_MORE_GOALS param AWAY", () => {
+  // Audit cluster #8 (2026-08-19): -239/-240 used to route to the isolated
+  // TEAM_HALF_WITH_MORE_GOALS key (now retired). They now merge onto the
+  // shared HOME_/AWAY_HALF_WITH_MOST_GOALS codes 9+ other bookmakers pool
+  // under, with plain 1st/2nd/Draw selections and no paramValue.
+  it("maps away-team half-with-more-goals to AWAY_HALF_WITH_MOST_GOALS", () => {
     const out = run(
       {
         bookmakerMarketId: "-240",
@@ -229,16 +237,16 @@ describe("forbet audit fixes", () => {
       },
       ctxA
     );
-    expect(out.marketCode).toBe("TEAM_HALF_WITH_MORE_GOALS");
-    expect(out.paramValue).toBe("AWAY");
+    expect(out.marketCode).toBe("AWAY_HALF_WITH_MOST_GOALS");
+    expect(out.paramValue).toBeUndefined();
     expect(out.selections.map((s) => s.code)).toEqual([
-      "AWAY_1ST",
-      "AWAY_2ND",
-      "AWAY_EQUAL",
+      "1st",
+      "2nd",
+      "Draw",
     ]);
   });
 
-  it("maps home-team half-with-more-goals to TEAM_HALF_WITH_MORE_GOALS param HOME", () => {
+  it("maps home-team half-with-more-goals to HOME_HALF_WITH_MOST_GOALS", () => {
     const out = run(
       {
         bookmakerMarketId: "-239",
@@ -251,12 +259,12 @@ describe("forbet audit fixes", () => {
       },
       ctxB
     );
-    expect(out.marketCode).toBe("TEAM_HALF_WITH_MORE_GOALS");
-    expect(out.paramValue).toBe("HOME");
+    expect(out.marketCode).toBe("HOME_HALF_WITH_MOST_GOALS");
+    expect(out.paramValue).toBeUndefined();
     expect(out.selections.map((s) => s.code)).toEqual([
-      "HOME_1ST",
-      "HOME_2ND",
-      "HOME_EQUAL",
+      "1st",
+      "2nd",
+      "Draw",
     ]);
   });
 
@@ -708,6 +716,10 @@ describe("forbet audit fixes", () => {
   });
 
   it("reroutes clean-sheet and win-at-least-one-half team markets", () => {
+    // Audit cluster #0 (findings 3/4): the dedicated HALF_TIME_*_CLEAN_SHEET
+    // catalog codes are retired — "{team} won't concede" is the same
+    // real-world proposition as "opponent won't score". Route to the
+    // OPPOSING side's HALF_TIME_*_TO_SCORE code with inverted Tak/Nie.
     const cs = run(
       {
         bookmakerMarketId: "-2546",
@@ -719,7 +731,8 @@ describe("forbet audit fixes", () => {
       },
       ctxA
     );
-    expect(cs.marketCode).toBe("HALF_TIME_AWAY_CLEAN_SHEET");
+    expect(cs.marketCode).toBe("HALF_TIME_HOME_TO_SCORE");
+    expect(cs.selections.map((s) => s.code)).toEqual(["NO", "YES"]);
 
     const half = run(
       {
@@ -756,17 +769,25 @@ describe("forbet audit fixes", () => {
   });
 
   it("routes single-name player goals prop to PLAYER_GOALS, not TOTAL_GOALS", () => {
+    // audit-loop cluster #1: a "1+"-only quote for this market is now
+    // dropped entirely (it duplicates GOALSCORER_ANYTIME and forbet's raw
+    // capture shows no bare "1+" entry that also lacks a 2+/3+ tier), so
+    // this fixture carries a 2+ price too — the point under test is the
+    // single-name (no comma) player-name routing, not the tier vocabulary.
     const out = run(
       {
         bookmakerMarketId: "8",
         name: "Richard - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)",
-        selections: [{ name: "Richard 1+", odds: 8.4 }],
+        selections: [
+          { name: "Richard 1+", odds: 8.4 },
+          { name: "Richard 2+", odds: 60 },
+        ],
       },
       ctxC
     );
     expect(out.marketCode).toBe("PLAYER_GOALS");
     expect(out.paramValue).toBe("Richard");
-    expect(out.selections.map((s) => s.code)).toEqual(["1+"]);
+    expect(out.selections.map((s) => s.code)).toEqual(["2+"]);
   });
 
   it("routes double chance + totals combo to DOUBLE_CHANCE_TOTAL", () => {

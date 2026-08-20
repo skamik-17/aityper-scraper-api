@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   parseOverUnderLine,
   normalize1x2Selection,
   normalizeOverUnderSelection,
@@ -82,11 +83,30 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-271": "CORNERS_RANGE",
   "-2901": "MULTI_RESULT",
   138: "OWN_GOAL",
-  "-8037": "DRAW_OR_OVER_2_5",
+  // Cluster #3 (RESULT_OR_TOTAL fragmentation): the full "win-or-goals" combo
+  // family ("<team> wygra lub powyżej/poniżej 2.5 goli" / "remis w meczu lub
+  // powyżej/poniżej 2.5 goli") pools into the shared, parameterized
+  // RESULT_OR_TOTAL catalog code (same one superbet already uses). Only
+  // -8037 (draw-or-over) had a mapping before - the other five ids fell
+  // through resolveForbetSpecialMarket's "Wydarzy się min. jedno z" branch
+  // straight to OTHER, dropping forbet's odds for these bets entirely. The
+  // combo-specific selection (HOME_OVER/DRAW_UNDER/etc.) is resolved from
+  // raw.name by resolveResultOrTotalCombo in normalizeMarket below.
+  "-8035": "RESULT_OR_TOTAL", // "<home> wygra lub powyżej 2.5 goli"
+  "-8036": "RESULT_OR_TOTAL", // "<home> wygra lub poniżej 2.5 goli"
+  "-8039": "RESULT_OR_TOTAL", // "<away> wygra lub powyżej 2.5 goli"
+  "-8040": "RESULT_OR_TOTAL", // "<away> wygra lub poniżej 2.5 goli"
+  "-8037": "RESULT_OR_TOTAL", // "remis w meczu lub powyżej 2.5 goli"
+  "-8038": "RESULT_OR_TOTAL", // "remis w meczu lub poniżej 2.5 goli"
   "-30234": "HALF_TIME_SUBSTITUTION",
   38: "HALF_WITH_MORE_GOALS",
-  "-239": "TEAM_HALF_WITH_MORE_GOALS",
-  "-240": "TEAM_HALF_WITH_MORE_GOALS",
+  // -239/-240 are forBET's per-team "<Team> - połowa z większą liczbą goli"
+  // variants; map through the generic code so FORBET_TEAM_SIDED_VARIANTS below
+  // reroutes them by detected team side into the shared HOME_/AWAY_
+  // HALF_WITH_MOST_GOALS codes peer bookmakers already pool under (audit
+  // cluster #8, 2026-08-19; was the isolated TEAM_HALF_WITH_MORE_GOALS key).
+  "-239": "HALF_WITH_MORE_GOALS",
+  "-240": "HALF_WITH_MORE_GOALS",
   "-30199": "MOST_SHOTS_ON_TARGET",
   "-30149": "TOTAL_SHOTS_ON_TARGET",
   "-338": "WINNING_MARGIN",
@@ -266,6 +286,14 @@ const OVERRIDE_EXEMPT_MARKETS = new Set<NormalizedMarketType>([
   "BOTH_PLAYERS_ANYTIME",
   "TWO_PLAYERS_ANYTIME",
   "THREE_PLAYERS_ANYTIME",
+  // Exempted so the dedicated switch case below can invert Tak/Nie instead
+  // of the generic override short-circuiting straight to YES/NO (audit
+  // cluster #0, findings 3/4 — see FORBET_TEAM_SIDED_VARIANTS' clean-sheet
+  // reroute for why these codes carry inverted polarity here).
+  "HALF_TIME_HOME_TO_SCORE",
+  "HALF_TIME_AWAY_TO_SCORE",
+  "SECOND_HALF_HOME_TO_SCORE",
+  "SECOND_HALF_AWAY_TO_SCORE",
 ]);
 
 /**
@@ -334,14 +362,17 @@ function detectTeamSide(
  * line — the resolved side becomes the paramValue.
  */
 const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
-  "TEAM_HALF_WITH_MORE_GOALS",
   "TEAM_WIN_MATCH",
-  "WIN_OR_BTTS",
+  // WIN_OR_BTTS retired (cluster #12: "Result or BTTS" fragmentation) - it
+  // was never actually reachable here (no id map entry, no name-pattern
+  // route ever resolved forBET's "Wydarzy się min. jedno z: <team> wygra
+  // lub obie drużyny strzelą gola" to it; that raw market is deliberately
+  // kept as OTHER, see resolveForbetSpecialMarket).
   "TEAM_WIN_OR_CLEAN_SHEET",
   // CORNERS_TEAM_RANGE is parameterized by team (param HOME/AWAY, catalog
-  // validParameters) rather than split into separate HOME_/AWAY_ codes — same
-  // shape as TEAM_HALF_WITH_MORE_GOALS above. Audit /audit-match,
-  // premier-league Arsenal vs Coventry City: ids -265 (home) / -266 (away)
+  // validParameters) rather than split into separate HOME_/AWAY_ codes.
+  // Audit /audit-match, premier-league Arsenal vs Coventry City: ids -265
+  // (home) / -266 (away)
   // both mapped straight to CORNERS_TEAM_RANGE with no paramValue, so the
   // resulting unparameterized key never matched the catalog's HOME/AWAY
   // parameter buckets and forbet's whole ladder (incl. the market-best 0-2
@@ -370,9 +401,11 @@ const FORBET_TEAM_SIDED_VARIANTS: Partial<
     home: "HOME_WIN_AT_LEAST_ONE_HALF",
     away: "AWAY_WIN_AT_LEAST_ONE_HALF",
   },
-  // NOTE: TEAM_HALF_WITH_MORE_GOALS is NOT rerouted per side — the catalog code
-  // is parameterized by team (param HOME/AWAY) with side-prefixed selections
-  // (HOME_1ST, …), which is where peer bookmakers (betclic) aggregate.
+  // Per-team "<Team> - połowa z większą liczbą goli" (ids -239/-240) reroutes
+  // onto the shared HOME_/AWAY_HALF_WITH_MOST_GOALS codes 9+ other bookmakers
+  // already pool under — was the isolated TEAM_HALF_WITH_MORE_GOALS key
+  // (audit cluster #8, 2026-08-19).
+  HALF_WITH_MORE_GOALS: { home: "HOME_HALF_WITH_MOST_GOALS", away: "AWAY_HALF_WITH_MOST_GOALS" },
   HALF_TIME_HOME_EXACT_CARDS: {
     home: "HALF_TIME_HOME_EXACT_CARDS",
     away: "HALF_TIME_AWAY_EXACT_CARDS",
@@ -382,13 +415,21 @@ const FORBET_TEAM_SIDED_VARIANTS: Partial<
     home: "HALF_TIME_HOME_EXACT_CORNERS",
     away: "HALF_TIME_AWAY_EXACT_CORNERS",
   },
+  // Retired the dedicated HALF_TIME/SECOND_HALF_*_CLEAN_SHEET catalog codes
+  // (audit cluster #0, findings 3/4): "{team} won't concede" is the same
+  // real-world proposition as "opponent won't score", and this half-scoped
+  // family had a bookmaker pool fully disjoint from the *_TO_SCORE family.
+  // Route to the OPPOSING side's TO_SCORE code — note home/away are SWAPPED
+  // versus the usual same-side variant map, and the selection switch below
+  // inverts Tak/Nie accordingly (forbet has no other raw source for the
+  // half-scoped TO_SCORE codes, so the inversion there is unconditional).
   HALF_TIME_HOME_CLEAN_SHEET: {
-    home: "HALF_TIME_HOME_CLEAN_SHEET",
-    away: "HALF_TIME_AWAY_CLEAN_SHEET",
+    home: "HALF_TIME_AWAY_TO_SCORE",
+    away: "HALF_TIME_HOME_TO_SCORE",
   },
   SECOND_HALF_HOME_CLEAN_SHEET: {
-    home: "SECOND_HALF_HOME_CLEAN_SHEET",
-    away: "SECOND_HALF_AWAY_CLEAN_SHEET",
+    home: "SECOND_HALF_AWAY_TO_SCORE",
+    away: "SECOND_HALF_HOME_TO_SCORE",
   },
   HOME_TEAM_TOTAL_OFFSIDES: {
     home: "HOME_TEAM_TOTAL_OFFSIDES",
@@ -398,6 +439,16 @@ const FORBET_TEAM_SIDED_VARIANTS: Partial<
     home: "HOME_TEAM_TOTAL_FOULS",
     away: "AWAY_TEAM_TOTAL_FOULS",
   },
+  // Per-half team cards ("1. połowa - kartki - {home/away}", ids -184/-186):
+  // reroute off the retired combined-vocabulary HALF_TIME_CARDS_TEAM code
+  // (formerly HOME_OVER/HOME_UNDER/AWAY_OVER/AWAY_UNDER on one shared param
+  // axis) onto the per-side codes betcris/superbet already use — forbet
+  // (with fuksiarz, lvbet) was fragmented into a separate three-key card
+  // for this bet (audit cluster #0, findings 2/7/9).
+  HALF_TIME_CARDS_TEAM: {
+    home: "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+    away: "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+  },
 };
 
 /**
@@ -405,6 +456,50 @@ const FORBET_TEAM_SIDED_VARIANTS: Partial<
  * the generic name patterns: forBET reuses generic game-type ids for combo
  * and special markets (e.g. gameType 5 carries "1. połowa/mecz" = HT/FT).
  */
+/**
+ * Cluster #3 (RESULT_OR_TOTAL fragmentation): resolves a raw "win-or-goals"
+ * combo market name ("Wydarzy się min. jedno z: <team> wygra lub
+ * powyżej/poniżej X goli" / "... remis w meczu lub powyżej/poniżej X goli")
+ * to the specific six-way selection code the pooled RESULT_OR_TOTAL catalog
+ * market expects (mirroring superbet's "Argentyna lub poniżej 0.5" ->
+ * HOME_UNDER parsing). Returns null for anything else, including a
+ * team-named leg that fails to resolve to HOME/AWAY.
+ */
+function resolveResultOrTotalCombo(
+  rawName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  // Strip the "Wydarzy się min. jedno z: " wrapper first — without this, the
+  // unanchored team regex below happily captured that whole prefix PLUS the
+  // team name as its match group (e.g. "wydarzy sie min. jedno z: coventry"
+  // instead of "coventry"), which resolveTeamSide only resolved to AWAY by
+  // accident when the extra text still contained the away team's full name
+  // as a substring. For a single-word raw mention ("Coventry") against a
+  // multi-word context name ("Coventry City") neither substring-inclusion
+  // direction matched with the prefix still attached, so every AWAY leg
+  // silently failed team resolution and the whole entry got dropped.
+  const name = normalizeForbetName(rawName).replace(
+    /^wydarzy sie min\.?\s*jedno z:\s*/,
+    ""
+  );
+
+  const teamMatch = name.match(/^(.+?)\s+wygra\s+lub\s+(powyzej|ponizej)\b/);
+  if (teamMatch) {
+    const side = resolveTeamSide(teamMatch[1], ctx);
+    const isOver = teamMatch[2] === "powyzej";
+    if (side === "HOME") return isOver ? "HOME_OVER" : "HOME_UNDER";
+    if (side === "AWAY") return isOver ? "AWAY_OVER" : "AWAY_UNDER";
+    return null;
+  }
+
+  const drawMatch = name.match(/^remis w meczu lub\s+(powyzej|ponizej)\b/);
+  if (drawMatch) {
+    return drawMatch[1] === "powyzej" ? "DRAW_OVER" : "DRAW_UNDER";
+  }
+
+  return null;
+}
+
 function resolveForbetSpecialMarket(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -417,8 +512,9 @@ function resolveForbetSpecialMarket(
   // showed "…: remis w meczu lub obie drużyny strzelą gola" (2.09 / 1.61)
   // matching the generic /obie.*strzelą/ pattern and taking over BTTS, which
   // pushed forBET's real "Obie drużyny strzelą gola" market out of the offer.
-  // Only variants with a dedicated catalog code (e.g. -8037 → DRAW_OR_OVER_2_5)
-  // keep one; the rest must stay out of the canonical markets they name.
+  // Only variants with a dedicated catalog code (e.g. the six win-or-goals
+  // ids -8035/-8036/-8037/-8038/-8039/-8040 → RESULT_OR_TOTAL) keep one; the
+  // rest must stay out of the canonical markets they name.
   if (/^wydarzy sie min\.? jedno z/.test(name)) {
     return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
   }
@@ -812,6 +908,22 @@ function normalizeSelectionForMarket(
     case "CLEAN_SHEET":
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
+    // forbet only ever reaches these four codes via the clean-sheet reroute
+    // in FORBET_TEAM_SIDED_VARIANTS ("{opponent} zachowa czyste konto" ->
+    // this side's TO_SCORE) — it has no other raw source for the
+    // half-scoped TO_SCORE codes, so inverting unconditionally is safe
+    // (audit cluster #0, findings 3/4). Clean sheet Tak (opponent concedes
+    // nothing) means THIS side did NOT score.
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE": {
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "NO";
+      if (yesNo === "NO") return "YES";
+      return trimmed as NormalizedSelection;
+    }
+
     // 1X2-style markets with a "no goal/corner/card" outcome ("brak" → NONE)
     case "FIRST_TEAM_TO_SCORE":
     case "LAST_TEAM_TO_SCORE":
@@ -906,11 +1018,17 @@ function normalizeSelectionForMarket(
     case "TOTAL_XG":
       return normalizeOverUnderSelection(trimmed);
 
+    // Per-side per-half card codes (FORBET_TEAM_SIDED_VARIANTS already
+    // resolved the side into the market code itself): bare OVER/UNDER, no
+    // prefix.
+    case "HALF_TIME_HOME_TEAM_TOTAL_CARDS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_CARDS":
+      return normalizeOverUnderSelection(trimmed);
+
     // Side-prefixed team totals ("Poniżej 0.5" → HOME_UNDER/AWAY_UNDER
     // depending on which team the raw market name is scoped to)
     case "TEAM_TOTAL_GOALS":
     case "CARDS_TEAM":
-    case "HALF_TIME_CARDS_TEAM":
     case "HALF_TIME_CORNERS_TEAM":
     case "SECOND_HALF_CORNERS_TEAM":
     case "TEAM_TOTAL_GOALS_FIRST_60MIN": {
@@ -1008,19 +1126,6 @@ function normalizeSelectionForMarket(
         const side = resolveTeamSide(only[1], ctx);
         if (side === "HOME") return "ONE_TEAM_HOME";
         if (side === "AWAY") return "ONE_TEAM_AWAY";
-      }
-      return trimmed as NormalizedSelection;
-    }
-
-    // Team-scoped half comparison — catalog encodes the side in the selection
-    // codes (HOME_1ST, …) and the team in the parameter (HOME/AWAY).
-    case "TEAM_HALF_WITH_MORE_GOALS": {
-      const side = rawMarketName ? detectTeamSide(rawMarketName, ctx) : null;
-      if (!side) return trimmed as NormalizedSelection;
-      if (/^1\.?\s*polowa/.test(normalized)) return `${side}_1ST` as NormalizedSelection;
-      if (/^2\.?\s*polowa/.test(normalized)) return `${side}_2ND` as NormalizedSelection;
-      if (/^(remis|x|rowno|zadna)/.test(normalized)) {
-        return `${side}_EQUAL` as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -1332,7 +1437,8 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "HALF_TIME_CORNERS_TEAM",
   "SECOND_HALF_CORNERS_TEAM",
   "CARDS_TEAM",
-  "HALF_TIME_CARDS_TEAM",
+  "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+  "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
   "TOTAL_SHOTS",
   "TOTAL_SHOTS_ON_TARGET",
   "TEAM_TOTAL_SHOTS",
@@ -1350,6 +1456,7 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "RESULT_AND_TOTAL",
   "HALF_TIME_RESULT_AND_TOTAL",
   "SECOND_HALF_RESULT_AND_TOTAL",
+  "RESULT_OR_TOTAL",
   "DOUBLE_CHANCE_TOTAL",
   "BOTH_HALVES_OVER_GOALS",
   "BOTH_HALVES_UNDER_GOALS",
@@ -1569,23 +1676,84 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       if (hasTrio) marketCode = "THREE_PLAYERS_ANYTIME";
     }
 
-    // TEAM_HALF_WITH_MORE_GOALS needs a resolvable team side for both the
-    // parameter (HOME/AWAY) and the side-prefixed selection codes; without it
-    // the entry would pollute the shared market under a phantom "base" bucket.
-    if (marketCode === "TEAM_HALF_WITH_MORE_GOALS" && !detectTeamSide(raw.name, ctx)) {
-      marketCode = "OTHER";
-    }
-
     if (!isValidMarketCode(marketCode)) {
       console.error(`[forbet] Market code "${marketCode}" not in catalog`);
       return null;
     }
 
-    const paramValue = extractParamValue(marketCode, raw, ctx);
+    // Cluster #3: unlike superbet's single raw market that already lists all
+    // six HOME_OVER/DRAW_UNDER/etc. selections together, forbet quotes each
+    // team x direction leg as its OWN two-way Tak/Nie market ("Wydarzy się
+    // min. jedno z: <team> wygra lub powyżej 2.5 goli": tak/nie). Only the
+    // "tak" price is the six-way selection's price; "nie" has no counterpart
+    // in that vocabulary — mapping it through .map() below would collide all
+    // six raw entries' "nie" prices onto one meaningless shared "NO" code
+    // (first-quote-wins dedup in the grouper), so it is filtered out here
+    // rather than routed through the generic per-selection switch.
+    if (marketCode === "RESULT_OR_TOTAL") {
+      const combo = resolveResultOrTotalCombo(raw.name, ctx);
+      const yesSelection = raw.selections.find(
+        (sel) => normalizeYesNoSelection(sel.name) === "YES"
+      );
+      if (!combo || !yesSelection) {
+        console.warn(
+          `[forbet] RESULT_OR_TOTAL: could not resolve combo/tak leg for "${raw.name}"`
+        );
+        return null;
+      }
+      const paramValue = extractParamValue(marketCode, raw, ctx);
+      const marketKey = buildMarketKey(marketCode, paramValue);
+      return {
+        marketCode,
+        paramValue,
+        marketKey,
+        selections: [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }],
+        debug: {
+          rawName: raw.name,
+          rawId: gameTypeId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
+
+    let paramValue = extractParamValue(marketCode, raw, ctx);
+
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet — collapse onto BOTH_HALVES_GOALS so it pools with
+    // every other bookmaker's Tak/Nie card instead of forking into its own
+    // BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
+      marketCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
+    }
     const marketKey = buildMarketKey(marketCode, paramValue);
 
+    // audit-loop cluster #1 (PLAYER_GOALS duplicates the anytime scorer
+    // board): forbet already quotes a dedicated per-player anytime board
+    // (gameType 12 -> GOALSCORER_ANYTIME). Its separate "<player> - liczba
+    // goli" ladder's "1+" tier is a near-identical price for the exact same
+    // event — checked against a fresh raw capture: 35 shared players, ratio
+    // 0.87-1.20 (median ~1.0), i.e. the same product quoted twice, not a
+    // distinct one. (etoto's equivalent "1+" tier is NOT dropped: its price
+    // is consistently 10-60% shorter than its own anytime board across all
+    // 34 shared players, so it prices as a genuinely different totals-style
+    // product there and both are kept.) Dropping "1+" removes the
+    // double-listed card without losing real odds; forbet publishes no
+    // separate PLAYER_2_OR_MORE_GOALS/PLAYER_3_OR_MORE_GOALS ids, so the
+    // 2+/3+ tiers stay pooled here. When a raw entry only ever quoted "1+",
+    // nothing remains after the filter and the market is dropped entirely
+    // — GOALSCORER_ANYTIME already carries that player.
+    const rawSelections =
+      marketCode === "PLAYER_GOALS"
+        ? raw.selections.filter((sel) => !/\b1\+\s*$/.test(sel.name.trim()))
+        : raw.selections;
+    if (marketCode === "PLAYER_GOALS" && rawSelections.length === 0) {
+      return null;
+    }
+
     const selections = mergeDuplicateSelectionCodes(
-      raw.selections.map((sel) => ({
+      rawSelections.map((sel) => ({
         code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, raw.name),
         label: sel.name,
         odds: sel.odds,

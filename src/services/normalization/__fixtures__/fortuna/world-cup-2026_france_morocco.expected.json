@@ -29353,26 +29353,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HOME_CLEAN_SHEET",
-        "marketKey": "HOME_CLEAN_SHEET",
+        "marketCode": "AWAY_TEAM_TO_SCORE",
+        "marketKey": "AWAY_TEAM_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.69
           },
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.05
           }
         ]
       },
       "index": 1833,
-      "marketCode": "HOME_CLEAN_SHEET",
+      "marketCode": "AWAY_TEAM_TO_SCORE",
       "rawName": "Francja nie straci gola"
     },
     {
@@ -32006,26 +32006,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_OR_OVER_GOALS",
-        "marketKey": "TEAM_WIN_OR_OVER_GOALS:AWAY:2.5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
-        "paramValue": "AWAY:2.5",
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "NO",
-            "label": "Nie (oba warunki nie zostaną spełnione)",
-            "odds": 2.09
-          },
-          {
-            "code": "YES",
+            "code": "AWAY_OVER",
             "label": "Tak (przynajmniej 1 warunek zostanie spełniony)",
             "odds": 1.69
           }
         ]
       },
       "index": 1960,
-      "marketCode": "TEAM_WIN_OR_OVER_GOALS",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Maroko wygra / powyżej 2.5 goli"
     },
     {
@@ -32145,26 +32140,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_OR_OVER_GOALS",
-        "marketKey": "TEAM_WIN_OR_OVER_GOALS:HOME:2.5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
-        "paramValue": "HOME:2.5",
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "NO",
-            "label": "Nie (oba warunki nie zostaną spełnione)",
-            "odds": 3.2
-          },
-          {
-            "code": "YES",
+            "code": "HOME_OVER",
             "label": "Tak (przynajmniej 1 warunek zostanie spełniony)",
             "odds": 1.32
           }
         ]
       },
       "index": 1969,
-      "marketCode": "TEAM_WIN_OR_OVER_GOALS",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Francja wygra / powyżej 2.5 goli"
     },
     {
@@ -32376,8 +32366,8 @@
       "blessed": false,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CORNERS_TEAM_RANGE",
-        "marketKey": "HALF_TIME_CORNERS_TEAM_RANGE",
+        "marketCode": "HALF_TIME_AWAY_EXACT_CORNERS",
+        "marketKey": "HALF_TIME_AWAY_EXACT_CORNERS",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -32391,19 +32381,24 @@
             "code": "0-1",
             "label": "0-1",
             "odds": 1.68
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 6.4
           }
         ]
       },
       "index": 1980,
-      "marketCode": "HALF_TIME_CORNERS_TEAM_RANGE",
+      "marketCode": "HALF_TIME_AWAY_EXACT_CORNERS",
       "rawName": "1.połowa: Maroko przedział rzutów rożnych"
     },
     {
       "blessed": false,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CORNERS_TEAM_RANGE",
-        "marketKey": "HALF_TIME_CORNERS_TEAM_RANGE",
+        "marketCode": "HALF_TIME_HOME_EXACT_CORNERS",
+        "marketKey": "HALF_TIME_HOME_EXACT_CORNERS",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -32414,6 +32409,11 @@
             "odds": 2.55
           },
           {
+            "code": "3",
+            "label": "3",
+            "odds": 4.4
+          },
+          {
             "code": "0-1",
             "label": "0-1",
             "odds": 3.65
@@ -32421,33 +32421,28 @@
         ]
       },
       "index": 1981,
-      "marketCode": "HALF_TIME_CORNERS_TEAM_RANGE",
+      "marketCode": "HALF_TIME_HOME_EXACT_CORNERS",
       "rawName": "1. połowa: Francja przedział rzutów rożnych"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_OR_TOTAL_UNDER",
-        "marketKey": "TEAM_WIN_OR_TOTAL_UNDER:AWAY:2.5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
-        "paramValue": "AWAY:2.5",
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_UNDER",
             "label": "Tak (przynajmniej 1 warunek zostanie spełniony)",
             "odds": 1.57
-          },
-          {
-            "code": "NO",
-            "label": "Nie (oba warunki nie zostaną spełnione)",
-            "odds": 2.31
           }
         ]
       },
       "index": 1982,
-      "marketCode": "TEAM_WIN_OR_TOTAL_UNDER",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Maroko wygra / poniżej 2.5 gola"
     },
     {

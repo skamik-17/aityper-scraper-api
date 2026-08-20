@@ -294,6 +294,18 @@ const PLAYER_PROP_SPLIT_GAME_TYPES = new Set<number>([
   -200338, // PLAYER_OFFSIDES ("Zawodnik 2+ spalonych")
   -200332, // PLAYER_FOULS_WON
   -200339, // PLAYER_SAVES
+  // audit-loop cluster #4: -200337/-200327/-200331 used to stay as one
+  // roster-wide market (outcome name = player, threshold only in the game
+  // name), which the normalizer routed to their own threshold-less
+  // PLAYER_DROPDOWN codes (ASSIST_SCORER_ANYTIME / PLAYER_SHOTS_ANYTIME /
+  // PLAYER_FOULS_OVER) instead of pooling with every other bookmaker's
+  // per-player assists/shots/fouls stat-line ladders. Splitting them here
+  // (paramValue = player, selection = threshold) lets the normalizer route
+  // them straight into PLAYER_ASSISTS / PLAYER_SHOTS / PLAYER_FOULS, same as
+  // PLAYER_FOULS_WON above.
+  -200337, // PLAYER_ASSISTS ("Zawodnik zaliczy 1+ asyst")
+  -200327, // PLAYER_SHOTS ("Zawodnik odda N+ strzałów")
+  -200331, // PLAYER_FOULS ("Zawodnik popełni N+ fauli")
 ]);
 
 /**

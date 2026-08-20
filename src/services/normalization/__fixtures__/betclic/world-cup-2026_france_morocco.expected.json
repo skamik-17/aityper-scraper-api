@@ -12160,104 +12160,104 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_HOME_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_AWAY_TO_SCORE",
+        "marketKey": "HALF_TIME_AWAY_TO_SCORE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.34
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 2.98
           }
         ]
       },
       "index": 122,
-      "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_AWAY_TO_SCORE",
       "rawName": "Czyste konto- 1. połowa - Francja"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_AWAY_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_HOME_TO_SCORE",
+        "marketKey": "HALF_TIME_HOME_TO_SCORE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.07
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.68
           }
         ]
       },
       "index": 123,
-      "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_HOME_TO_SCORE",
       "rawName": "Czyste konto- 1. połowa - Maroko"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_HOME_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
+        "marketKey": "SECOND_HALF_AWAY_TO_SCORE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.47
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 2.52
           }
         ]
       },
       "index": 124,
-      "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
       "rawName": "Czyste konto- 2. połowa - Francja"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_AWAY_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_HOME_TO_SCORE",
+        "marketKey": "SECOND_HALF_HOME_TO_SCORE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.35
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.53
           }
         ]
       },
       "index": 125,
-      "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_HOME_TO_SCORE",
       "rawName": "Czyste konto- 2. połowa - Maroko"
     },
     {
@@ -12403,10 +12403,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BOTH_HALVES_OVER_GOALS",
-        "marketKey": "BOTH_HALVES_OVER_GOALS:0.5",
+        "marketCode": "BOTH_HALVES_GOALS",
+        "marketKey": "BOTH_HALVES_GOALS",
         "matchedBy": "pattern",
-        "paramValue": "0.5",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -12422,7 +12422,7 @@
         ]
       },
       "index": 130,
-      "marketCode": "BOTH_HALVES_OVER_GOALS",
+      "marketCode": "BOTH_HALVES_GOALS",
       "rawName": "Obie połowy powyżej 0,5 gola"
     },
     {
@@ -12455,62 +12455,62 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
-        "marketKey": "TEAM_HALF_WITH_MORE_GOALS:HOME",
+        "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+        "marketKey": "HOME_HALF_WITH_MOST_GOALS",
         "matchedBy": "pattern",
-        "paramValue": "HOME",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_1ST",
+            "code": "1st",
             "label": "1. Połowa",
             "odds": 3
           },
           {
-            "code": "HOME_EQUAL",
+            "code": "Draw",
             "label": "Remis ",
             "odds": 2.72
           },
           {
-            "code": "HOME_2ND",
+            "code": "2nd",
             "label": "2. Połowa",
             "odds": 2.4
           }
         ]
       },
       "index": 132,
-      "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
+      "marketCode": "HOME_HALF_WITH_MOST_GOALS",
       "rawName": "Połowa z większą ilością goli - Francja"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
-        "marketKey": "TEAM_HALF_WITH_MORE_GOALS:AWAY",
+        "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+        "marketKey": "AWAY_HALF_WITH_MOST_GOALS",
         "matchedBy": "pattern",
-        "paramValue": "AWAY",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_1ST",
+            "code": "1st",
             "label": "1. Połowa",
             "odds": 4.2
           },
           {
-            "code": "AWAY_EQUAL",
+            "code": "Draw",
             "label": "Remis ",
             "odds": 1.75
           },
           {
-            "code": "AWAY_2ND",
+            "code": "2nd",
             "label": "2. Połowa",
             "odds": 3.22
           }
         ]
       },
       "index": 133,
-      "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
+      "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
       "rawName": "Połowa z większą ilością goli - Maroko"
     },
     {
@@ -15151,10 +15151,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:5.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:0.5",
         "matchedBy": "name",
-        "paramValue": "5.5",
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
@@ -15170,17 +15170,17 @@
         ]
       },
       "index": 225,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:15.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:1.5",
         "matchedBy": "name",
-        "paramValue": "15.5",
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
@@ -15196,17 +15196,17 @@
         ]
       },
       "index": 226,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:25.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:2.5",
         "matchedBy": "name",
-        "paramValue": "25.5",
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
@@ -15222,17 +15222,17 @@
         ]
       },
       "index": 227,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:35.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:3.5",
         "matchedBy": "name",
-        "paramValue": "35.5",
+        "paramValue": "3.5",
         "parameters": null,
         "selections": [
           {
@@ -15248,17 +15248,17 @@
         ]
       },
       "index": 228,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:45.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:4.5",
         "matchedBy": "name",
-        "paramValue": "45.5",
+        "paramValue": "4.5",
         "parameters": null,
         "selections": [
           {
@@ -15274,7 +15274,7 @@
         ]
       },
       "index": 229,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej"
     },
     {
@@ -15312,8 +15312,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "FIRST_HALF_CARDS_1X2",
-        "marketKey": "FIRST_HALF_CARDS_1X2",
+        "marketCode": "HALF_TIME_CARDS_RACE",
+        "marketKey": "HALF_TIME_CARDS_RACE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -15336,7 +15336,7 @@
         ]
       },
       "index": 231,
-      "marketCode": "FIRST_HALF_CARDS_1X2",
+      "marketCode": "HALF_TIME_CARDS_RACE",
       "rawName": "Kartki 1X2 - 1. połowa"
     },
     {
@@ -15843,10 +15843,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
-        "marketKey": "HALF_TIME_CARDS_POINTS_OVER_UNDER:5.5",
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:0.5",
         "matchedBy": "name",
-        "paramValue": "5.5",
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
@@ -15862,17 +15862,17 @@
         ]
       },
       "index": 247,
-      "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej - 1. połowa"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
-        "marketKey": "HALF_TIME_CARDS_POINTS_OVER_UNDER:15.5",
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:1.5",
         "matchedBy": "name",
-        "paramValue": "15.5",
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
@@ -15888,17 +15888,17 @@
         ]
       },
       "index": 248,
-      "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej - 1. połowa"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
-        "marketKey": "HALF_TIME_CARDS_POINTS_OVER_UNDER:25.5",
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:2.5",
         "matchedBy": "name",
-        "paramValue": "25.5",
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
@@ -15914,7 +15914,7 @@
         ]
       },
       "index": 249,
-      "marketCode": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
       "rawName": "Punkty za kartki Powyżej/Poniżej - 1. połowa"
     },
     {
@@ -16435,8 +16435,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_1X2",
-        "marketKey": "CLEARANCES_1X2",
+        "marketCode": "TACKLES_1X2",
+        "marketKey": "TACKLES_1X2",
         "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
@@ -16459,15 +16459,15 @@
         ]
       },
       "index": 269,
-      "marketCode": "CLEARANCES_1X2",
+      "marketCode": "TACKLES_1X2",
       "rawName": "Odbiory 1X2 (OPTA) (z dogrywką)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:32.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:32.5",
         "matchedBy": "name",
         "paramValue": "32.5",
         "parameters": null,
@@ -16485,15 +16485,15 @@
         ]
       },
       "index": 270,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów (OPTA) (z dogrywką)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:36.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:36.5",
         "matchedBy": "name",
         "paramValue": "36.5",
         "parameters": null,
@@ -16511,15 +16511,15 @@
         ]
       },
       "index": 271,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów (OPTA) (z dogrywką)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:41.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:41.5",
         "matchedBy": "name",
         "paramValue": "41.5",
         "parameters": null,
@@ -16537,7 +16537,7 @@
         ]
       },
       "index": 272,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów (OPTA) (z dogrywką)"
     },
     {

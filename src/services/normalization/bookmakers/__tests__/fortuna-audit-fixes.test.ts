@@ -486,11 +486,13 @@ describe("fortuna audit fixes", () => {
     expect(out).toBeNull();
   });
 
-  it("routes home 'nie straci gola' to HOME_CLEAN_SHEET and away to AWAY_CLEAN_SHEET", () => {
-    // Audit /audit-match (premier-league Arsenal vs Coventry City): the away
-    // variant DOES have a catalog code (AWAY_CLEAN_SHEET) — the previous
-    // "drop it, no code yet" comment was stale and silently discarded a
-    // genuine market.
+  it("routes home 'nie straci gola' to AWAY_TEAM_TO_SCORE (inverted) and away to HOME_TEAM_TO_SCORE (inverted)", () => {
+    // Audit cluster #0 (findings 3/4): the dedicated HOME/AWAY_CLEAN_SHEET
+    // catalog codes are retired — "{team} won't concede" is the same
+    // real-world proposition as "opponent won't score", and this code only
+    // had 2 bookmakers (fortuna, etoto) against 12 on *_TEAM_TO_SCORE.
+    // Route to the OPPOSING side's TO_SCORE code with inverted YES/NO
+    // instead of a separate, near-empty pool.
     const home = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-1f",
@@ -502,8 +504,8 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(home?.marketCode).toBe("HOME_CLEAN_SHEET");
-    expect(home?.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
+    expect(home?.marketCode).toBe("AWAY_TEAM_TO_SCORE");
+    expect(home?.selections.map((s) => s.code)).toEqual(["NO", "YES"]);
 
     const away = fortunaNormalizer.normalizeMarket(
       {
@@ -516,8 +518,8 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(away?.marketCode).toBe("AWAY_CLEAN_SHEET");
-    expect(away?.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
+    expect(away?.marketCode).toBe("HOME_TEAM_TO_SCORE");
+    expect(away?.selections.map((s) => s.code)).toEqual(["NO", "YES"]);
   });
 
   it("excludes 'Wynik meczu lub 2 gol(e) przewagi' from MATCH_WINNER", () => {
@@ -791,7 +793,11 @@ describe("fortuna audit fixes", () => {
     expect(out?.selections.map((s) => s.code)).toEqual(["NONE", "AWAY", "HOME"]);
   });
 
-  it("maps TEAM_WIN_OR_* 'Tak (przynajmniej...)' selections to YES/NO", () => {
+  it("maps the win-or-goals 2x2 grid ('Tak (przynajmniej...)') into pooled RESULT_OR_TOTAL", () => {
+    // Cluster #3 (RESULT_OR_TOTAL fragmentation): id 00-7e is the away
+    // team's "wins or under 2.5" leg - only the "Tak" price survives (it IS
+    // the AWAY_UNDER price the pooled market expects); "Nie" has no
+    // counterpart in RESULT_OR_TOTAL's six-way vocabulary and is dropped.
     const out = fortunaNormalizer.normalizeMarket(
       {
         bookmakerMarketId: "ufo:mtyp:00-7e",
@@ -803,8 +809,11 @@ describe("fortuna audit fixes", () => {
       },
       ctxSUI
     );
-    expect(out?.marketCode).toBe("TEAM_WIN_OR_TOTAL_UNDER");
-    expect(out?.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
+    expect(out?.marketCode).toBe("RESULT_OR_TOTAL");
+    expect(out?.paramValue).toBe("2.5");
+    expect(out?.selections).toEqual([
+      { code: "AWAY_UNDER", label: "Tak (przynajmniej 1 warunek zostanie spełniony)", odds: 1.19 },
+    ]);
   });
 
   it("passes CORNERS_RANGE literal band codes through", () => {
@@ -1236,19 +1245,45 @@ describe("fortuna audit fixes", () => {
     expect(secondHalfHandicapPush?.selections.map((s) => s.code)).toEqual(["HOME", "AWAY"]);
   });
 
-  it("routes a half-scoped, team-scoped corner range instead of falling into OTHER", () => {
+  // audit cluster #11: this raw market's real vocabulary ("0-1"/"2"/"3"/"4+",
+  // verified against the live capture for world-cup-2026 France vs Morocco)
+  // is the SAME grouped exact-corners scheme betclic/betfan/etoto/forbet/
+  // fuksiarz/sts already pool under HALF_TIME_HOME/AWAY_EXACT_CORNERS, not
+  // the differently-banded HALF_TIME_CORNERS_TEAM_RANGE code (whose "3+"
+  // bucket has no "3" slot and was silently dropping the exact "3" price).
+  it("routes a half-scoped, team-scoped corner range into the shared HALF_TIME_HOME_EXACT_CORNERS pool", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
         name: "1. połowa: Francja przedział rzutów rożnych",
         selections: [
           { name: "0-1", odds: 1.9 },
-          { name: "2-3", odds: 2.5 },
-          { name: "4+", odds: 4.2 },
+          { name: "2", odds: 2.5 },
+          { name: "3", odds: 4.2 },
+          { name: "4+", odds: 8.1 },
         ],
       },
       ctxFRA
     );
-    expect(out?.marketCode).toBe("HALF_TIME_CORNERS_TEAM_RANGE");
+    expect(out?.marketCode).toBe("HALF_TIME_HOME_EXACT_CORNERS");
+    expect(out?.selections.map((s) => s.code)).toEqual(["0-1", "2", "3", "4+"]);
+  });
+
+  it("routes the away leg of the half-scoped team corner range and drops the leaked team-name selection", () => {
+    const out = fortunaNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "ufo:mtyp:00-0w",
+        name: "1.połowa: Maroko przedział rzutów rożnych",
+        selections: [
+          { name: "4+", odds: 8.4 },
+          { name: "0-1", odds: 1.68 },
+          { name: "3", odds: 6.4 },
+          { name: "Maroko", odds: 3.7 },
+        ],
+      },
+      ctxFRA
+    );
+    expect(out?.marketCode).toBe("HALF_TIME_AWAY_EXACT_CORNERS");
+    expect(out?.selections.map((s) => s.code)).toEqual(["4+", "0-1", "3"]);
   });
 
   it("maps FIRST_GOAL_AND_RESULT's English 'No goal' label to NONE", () => {

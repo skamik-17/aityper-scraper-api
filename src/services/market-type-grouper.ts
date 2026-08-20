@@ -84,6 +84,12 @@ function canonicalizeParamValue(param: string): string {
   // LVBet quotes integers with a trailing .0 while Betcris quotes them bare.
   const sided = param.match(/^(HOME|AWAY):([+-]?\d+(?:\.\d+)?)$/);
   if (sided) return `${sided[1]}:${String(parseFloat(sided[2]))}`;
+  // Time-window + goal-line compound params ("15:0.5", "75:2.5" — see
+  // TIME_PERIOD_TOTAL_GOALS's catalog comment and fuksiarz-normalizer.ts's
+  // extractParamValue) fold decimal-format variance in either half onto one
+  // canonical spelling, same reasoning as the sided-line case above.
+  const windowed = param.match(/^(\d+):([+-]?\d+(?:\.\d+)?)$/);
+  if (windowed) return `${windowed[1]}:${String(parseFloat(windowed[2]))}`;
   return param;
 }
 
@@ -99,14 +105,11 @@ function canonicalizeParamValue(param: string): string {
  */
 function extractParamFromRawName(marketType: string, rawName: string): string | null {
   switch (marketType) {
-    case "RESULT_AT_MINUTE": {
-      // "Mecz - do 5. minuty" -> "5"
+    case "TIME_PERIOD_RESULT": {
+      // "Mecz - do 5. minuty" (superbet's shape for this code) -> "5".
+      // Safety net only - superbet's own normalizer now sets paramValue
+      // directly (cluster #19 merge of the former RESULT_AT_MINUTE code).
       const m = rawName.match(/do\s+(\d+)\.?\s*minuty/i);
-      return m ? m[1] : null;
-    }
-    case "EXACT_GOALS_YN": {
-      // "Dokładnie 1 gol w meczu" -> "1"
-      const m = rawName.match(/dok[łl]adnie\s+(\d+)\s*gol/i);
       return m ? m[1] : null;
     }
     case "TIME_BAND_TOTAL_GOALS":
@@ -121,17 +124,15 @@ function extractParamFromRawName(marketType: string, rawName: string): string | 
     }
     case "WINNING_MARGIN_ANY_EXACT": {
       // "jakikolwiek zespół. Margines zwycięstwa: dokładnie 2" -> "2"
-      // (checked before ANY_TEAM_WIN_BY_MARGIN's plain-margin pattern below
-      // since both share the "Margines zwycięstwa:" prefix)
-      const m = rawName.match(/margines zwyci[eę]stwa:\s*dok[łl]adnie\s*(\d+)/i);
-      return m ? m[1] : null;
-    }
-    case "ANY_TEAM_WIN_BY_MARGIN":
-    case "ANY_TEAM_WINNING_MARGIN_EXACT": {
-      // "jakikolwiek zespół. Margines zwycięstwa: 3" -> "3" (round 7b
-      // /audit-match Arsenal vs Coventry City: ANY_TEAM_WINNING_MARGIN_EXACT
-      // is the sibling code for lebull's bare, non-"dokładnie" margin rows).
-      const m = rawName.match(/margines zwyci[eę]stwa:\s*(\d+)/i);
+      // "jakikolwiek zespół. Margines zwycięstwa: 1" -> "1"
+      // (audit-loop cluster #2, winning-margin family: lebull's raw feed
+      // uses both phrasings for the same "any team wins by exactly N goals"
+      // bet across its three market ids 650/651/652 — all three now route
+      // to this one code, so this fallback covers both wordings. The
+      // normalizer's own extractParamValue already sets paramValue directly
+      // for every current lebull row; this stays as a safety net for any
+      // future bookmaker/row that reaches the grouper without one.)
+      const m = rawName.match(/margines zwyci[eę]stwa:\s*(?:dok[łl]adnie\s*)?(\d+)/i);
       return m ? m[1] : null;
     }
     case "SCORE_REACHED":
@@ -139,6 +140,17 @@ function extractParamFromRawName(marketType: string, rawName: string): string | 
       // "1:1 w czasie meczu" / "2:0 w czasie meczu" -> "1:1" / "2:0"
       const m = rawName.match(/^(\d+:\d+)/);
       return m ? m[1] : null;
+    }
+    case "BOTH_HALVES_OVER_COMBO": {
+      // "1. Połowa powyżej (1.5) i 2. połowa powyżej (0.5)" -> "1.5/0.5"
+      // (audit cluster #20, Arsenal vs Coventry City). lebull-normalizer.ts's
+      // own extractParamValue already sets paramValue directly for its
+      // current row; this stays as a safety net for any future bookmaker/row
+      // that reaches the grouper without one.
+      const m = rawName.match(
+        /1\.\s*po[łl]owa\s*powy[żz]ej\s*\(([\d.,]+)\)\s*i\s*2\.\s*po[łl]owa\s*powy[żz]ej\s*\(([\d.,]+)\)/i
+      );
+      return m ? `${m[1].replace(",", ".")}/${m[2].replace(",", ".")}` : null;
     }
     case "TOTAL_GOALS_AND_BTTS": {
       // "Obie drużyny strzelą i poniżej/powyżej 2.5 goli" -> "2.5" (round 7b
@@ -505,20 +517,27 @@ function markSuspectOdds(parameters: MarketParameter[]): void {
  */
 function sortParameters(params: string[]): string[] {
   // Separate numeric and non-numeric params
-  const numericParams: { value: number; original: string }[] = [];
+  const numericParams: { value: number; subValue: number; original: string }[] = [];
   const specialParams: string[] = [];
 
   for (const param of params) {
     const num = parseFloat(param);
     if (!isNaN(num)) {
-      numericParams.push({ value: num, original: param });
+      // Time-window + goal-line compound params ("15:0.5", "15:1.5" — see
+      // TIME_PERIOD_TOTAL_GOALS) all share the same primary value (parseFloat
+      // stops at the colon), so sort them by the sub-line too — otherwise
+      // every line for one window ties and falls back to insertion order
+      // instead of ascending line order.
+      const windowed = param.match(/^\d+:([+-]?\d+(?:\.\d+)?)$/);
+      const subValue = windowed ? parseFloat(windowed[1]) : 0;
+      numericParams.push({ value: num, subValue, original: param });
     } else {
       specialParams.push(param);
     }
   }
 
-  // Sort numeric parameters
-  numericParams.sort((a, b) => a.value - b.value);
+  // Sort numeric parameters (primary value, then sub-line for compound params)
+  numericParams.sort((a, b) => a.value - b.value || a.subValue - b.subValue);
 
   return [
     ...numericParams.map((p) => p.original),
@@ -605,10 +624,33 @@ function getParameterLabel(param: string, marketType: string): string {
     if (!isNaN(minutes)) return `Do ${minutes}. min.`;
   }
 
-  // RESULT_AT_MINUTE's parameter is likewise a minute mark, not a goal line.
-  if (marketType === "RESULT_AT_MINUTE") {
+  // TIME_PERIOD_RESULT's parameter is a minute window, not a bare goal line
+  // or a single point in time (audit-loop cluster #19). Most bookmakers
+  // (betcris/fuksiarz/forbet/betters/sts/lvbet/superbet, and lebull for its
+  // from-kickoff windows) extract it as the END minute of a 1-to-X window
+  // ("30" meaning "1-30 min"), which reads as "Do X. min." Lebull ALSO
+  // feeds mid-match segment windows that don't start at kickoff ("Wynik
+  // meczu w przedziale 16-30 min" -> paramValue "16-30") - those must stay
+  // a "start-end" range, since "Do 16. min." would misreport a 16-30 window
+  // as an ordinary from-kickoff one. Non-numeric params (e.g. fortuna's
+  // "q1"/"q2" quarter buckets) fall through unchanged below.
+  if (marketType === "TIME_PERIOD_RESULT") {
+    if (/^\d+-\d+\+?$/.test(param)) return `${param} min.`;
     const minutes = parseFloat(param);
     if (!isNaN(minutes)) return `Do ${minutes}. min.`;
+  }
+
+  // TIME_PERIOD_TOTAL_GOALS's parameter is a two-axis "<window>:<line>"
+  // compound ("15:0.5", "75:2.5" — see the catalog comment and
+  // fuksiarz-normalizer.ts's extractParamValue: fuksiarz quotes several
+  // different goal lines for the same minute window). Render the window as
+  // the primary "Do X. min." label (same convention as TIME_PERIOD_RESULT
+  // above) with the goal line appended as an explicit sub-line qualifier,
+  // instead of surfacing the raw "15:0.5" colon string on the chip
+  // (audit-loop cluster #17).
+  if (marketType === "TIME_PERIOD_TOTAL_GOALS") {
+    const windowed = param.match(/^(\d+):([+-]?\d+(?:\.\d+)?)$/);
+    if (windowed) return `Do ${windowed[1]}. min. (linia ${windowed[2]})`;
   }
 
   // For team-parameterized markets (HOME/AWAY), translate to Polish
@@ -736,9 +778,14 @@ export function groupMarketsByTypeWithParameters(
     // normalizers never set paramValue for them, so every entry fell into
     // the shared "base" bucket with an empty, uninformative parameter chip
     // — the one detail identifying WHICH bet is on offer (round 6
-    // /audit-match Arsenal vs Coventry City: superbet's RESULT_AT_MINUTE
-    // "Mecz - do 5. minuty", betcris/lvbet's EXACT_GOALS_YN "Dokładnie 1
-    // gol...", lebull's TIME_BAND_TOTAL_GOALS/ANY_TEAM_WIN_BY_MARGIN/
+    // /audit-match Arsenal vs Coventry City: superbet's TIME_PERIOD_RESULT
+    // "Mecz - do 5. minuty" (retired as its own RESULT_AT_MINUTE code and
+    // merged here in audit-loop cluster #19 — its own normalizer now sets
+    // paramValue directly, this recovery remains only as a safety net)
+    // (betcris/lvbet's former EXACT_GOALS_YN
+    // "Dokładnie 1 gol..." card was retired in round 9 — it now merges
+    // straight into EXACT_GOALS' own "1" selection instead of needing a
+    // recovered param here), lebull's TIME_BAND_TOTAL_GOALS/
     // WINNING_MARGIN_ANY_EXACT/SCORE_REACHED/SCORE_OCCURS_DURING_MATCH all
     // spelled the parameter out in rawMarketName only). Recovering it here
     // also closes the silent-merge risk the audit flagged: a second line
@@ -1154,24 +1201,18 @@ export function groupMarketsByTypeWithParameters(
             // entry (/audit-match Arsenal vs Coventry City). Keep only the
             // first-seen raw market's selections; drop a later, differently
             // named one instead of merging its selections in.
-            // BOTH_HALVES_OVER_COMBO gets the same "differently-named raw
-            // entry -> don't concatenate" treatment even though it DOES
-            // declare a vocabulary (YES/NO). Its catalog entry is
-            // hasParameter:false but each raw label actually encodes a
-            // distinct first-half/second-half goal-threshold pair (e.g.
-            // lebull sends separate raw markets for "(1.5) i ... (0.5)" vs
-            // "(0.5) i ... (1.5)", bookmakerMarketId 262275 vs 262274) — two
-            // genuinely different bets that both reduce to a YES/NO
-            // selection pair. Without this, a bookmaker offering more than
-            // one threshold combination would have its raw entries silently
-            // concatenated into one bookmakers[] row here with mixed odds
-            // from unrelated bets (/audit-match Arsenal vs Coventry City,
-            // round 5b MINOR BOTH_HALVES_OVER_COMBO). Only one raw market
-            // (262275) currently reaches this code for this match, so this
-            // is preventive — see market-catalog.ts's BOTH_HALVES_OVER_COMBO
-            // entry for the wider parameterization gap this doesn't solve.
+            // (BOTH_HALVES_OVER_COMBO used to need this same treatment even
+            // though it DOES declare a vocabulary (YES/NO) — its raw label
+            // encodes a first-half/second-half goal-threshold pair that
+            // hasParameter:false couldn't capture, so two differently-worded
+            // pairs risked landing here with mixed odds. Audit cluster #20
+            // (Arsenal vs Coventry City) made it genuinely hasParameter:true
+            // (paramValue "<firstHalfLine>/<secondHalfLine>"), so it now
+            // takes the normal per-parameter path above this block entirely
+            // and no longer needs the extra carve-out — see
+            // market-catalog.ts's BOTH_HALVES_OVER_COMBO entry.)
             if (
-              (!hasDeclaredVocabulary || marketType === "BOTH_HALVES_OVER_COMBO") &&
+              !hasDeclaredVocabulary &&
               bmData.rawMarketName &&
               bmEntry.rawMarketName &&
               bmData.rawMarketName !== bmEntry.rawMarketName

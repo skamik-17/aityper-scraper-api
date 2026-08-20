@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -120,7 +121,11 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // the side is re-resolved from the team name in refineMarketCode anyway.
   "-267": "HALF_TIME_AWAY_EXACT_CORNERS",
   "-2953": "HALF_TIME_FIRST_CORNER",
-  "-170": "FIRST_HALF_CARDS_1X2",
+  // Same platform id -170 as etoto's HALF_TIME_CARDS_RACE ("1. połowa - kto
+  // więcej kartek") — was mapped to the now-retired FIRST_HALF_CARDS_1X2,
+  // fragmenting an otherwise-identical bet across two catalog codes (cluster
+  // #13 market-display audit).
+  "-170": "HALF_TIME_CARDS_RACE",
   "-2955": "FIRST_HALF_FIRST_CARD",
   "-250": "RED_CARD_TEAM",
   "-251": "RED_CARD_TEAM",
@@ -157,15 +162,22 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-200344": "FIRST_PLAYER_CARDED",
   "-200342": "PLAYER_RIGHT_FOOT_GOAL",
   "-200341": "PLAYER_LEFT_FOOT_GOAL",
-  "-200337": "ASSIST_SCORER_ANYTIME",
+  // audit-loop cluster #4: -200337/-200327/-200331 ("Zawodnik zaliczy N+
+  // asyst" / "Zawodnik odda N+ strzałów" / "Zawodnik popełni N+ fauli") used
+  // to route to their own threshold-less PLAYER_DROPDOWN codes
+  // (ASSIST_SCORER_ANYTIME / PLAYER_SHOTS_ANYTIME / PLAYER_FOULS_OVER),
+  // stranding these three markets away from the pooled per-player stat-line
+  // ladders every other bookmaker's assists/shots/fouls props merge into.
+  // The scraper (parser.ts PLAYER_PROP_SPLIT_GAME_TYPES) now splits each
+  // roster row into its own market with paramValue = player name, so these
+  // route straight into the shared PLAYER_ASSISTS/PLAYER_SHOTS/PLAYER_FOULS
+  // ladders instead — same shape PLAYER_FOULS_WON below already uses.
+  "-200337": "PLAYER_ASSISTS",
   "-200333": "PLAYER_SHOTS_ON_TARGET",
   "-200334": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
   "-200343": "PLAYER_HEADER_SHOTS_ON_TARGET",
-  "-200327": "PLAYER_SHOTS_ANYTIME",
-  // "Zawodnik popelni 5+ fauli" lists players as selections with the threshold
-  // in the market name -> PLAYER_FOULS_OVER (PLAYER dropdown), not PLAYER_FOULS
-  // (per-player stat lines).
-  "-200331": "PLAYER_FOULS_OVER",
+  "-200327": "PLAYER_SHOTS",
+  "-200331": "PLAYER_FOULS",
   "-200332": "PLAYER_FOULS_WON",
   "-200338": "PLAYER_OFFSIDES",
   "-200339": "PLAYER_SAVES",
@@ -662,16 +674,24 @@ function refineMarketCode(
     else if (SECOND_HALF_PREFIX.test(name)) code = halfScoped.secondHalf;
   }
 
-  // Half-scoped clean sheets are team-specific YES/NO markets in the catalog
+  // Half-scoped clean sheets are team-specific YES/NO markets — but the
+  // dedicated HALF_TIME/SECOND_HALF_*_CLEAN_SHEET catalog codes are retired
+  // (audit cluster #0, findings 3/4): "{team} won't concede" is the same
+  // real-world proposition as "opponent won't score", and this family had a
+  // bookmaker pool fully disjoint from the *_TO_SCORE family. Route to the
+  // OPPOSING side's TO_SCORE code (note home/away swap below); the
+  // selection-normalizer inverts Tak/Nie for these (betfan has no other raw
+  // source for the half-scoped TO_SCORE codes, so unconditional inversion
+  // is safe).
   if (code === "CLEAN_SHEET") {
     const firstHalf = FIRST_HALF_PREFIX.test(name);
     const secondHalf = SECOND_HALF_PREFIX.test(name);
     if (firstHalf || secondHalf) {
       const side = teamSide();
       if (side === "HOME") {
-        code = firstHalf ? "HALF_TIME_HOME_CLEAN_SHEET" : "SECOND_HALF_HOME_CLEAN_SHEET";
+        code = firstHalf ? "HALF_TIME_AWAY_TO_SCORE" : "SECOND_HALF_AWAY_TO_SCORE";
       } else if (side === "AWAY") {
-        code = firstHalf ? "HALF_TIME_AWAY_CLEAN_SHEET" : "SECOND_HALF_AWAY_CLEAN_SHEET";
+        code = firstHalf ? "HALF_TIME_HOME_TO_SCORE" : "SECOND_HALF_HOME_TO_SCORE";
       } else {
         // Half-scoped clean sheet without a resolvable team cannot be compared
         // against the full-match market
@@ -967,6 +987,22 @@ function normalizeSelectionForMarket(
       return `${teamSide}_${overUnder}` as NormalizedSelection;
     }
 
+    // betfan only ever reaches these four codes via the clean-sheet reroute
+    // above ("{opponent} zachowa czyste konto" -> this side's TO_SCORE) —
+    // it has no other raw source for the half-scoped TO_SCORE codes, so
+    // inverting unconditionally is safe (audit cluster #0, findings 3/4).
+    // Clean sheet Tak (opponent concedes nothing) means THIS side did NOT
+    // score.
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE": {
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "NO";
+      if (yesNo === "NO") return "YES";
+      return trimmed as NormalizedSelection;
+    }
+
     case "BTTS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
@@ -986,10 +1022,6 @@ function normalizeSelectionForMarket(
     case "AWAY_WIN_BOTH_HALVES":
     case "HOME_WIN_TO_NIL":
     case "AWAY_WIN_TO_NIL":
-    case "HALF_TIME_HOME_CLEAN_SHEET":
-    case "HALF_TIME_AWAY_CLEAN_SHEET":
-    case "SECOND_HALF_HOME_CLEAN_SHEET":
-    case "SECOND_HALF_AWAY_CLEAN_SHEET":
     case "RED_CARD":
     case "RED_CARD_TEAM":
     case "HALF_TIME_RED_CARD":
@@ -1028,9 +1060,9 @@ function normalizeSelectionForMarket(
     case "CORNERS_RACE":
     case "HALF_TIME_CORNERS_RACE":
     case "CARDS_RACE":
+    case "HALF_TIME_CARDS_RACE":
     case "FOUL_RACE":
-    case "MOST_SHOTS_ON_TARGET":
-    case "FIRST_HALF_CARDS_1X2": {
+    case "MOST_SHOTS_ON_TARGET": {
       const normalized = normalizeText(trimmed);
       if (normalized === "tyle samo" || normalized === "rowno") return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -1139,17 +1171,15 @@ function normalizeSelectionForMarket(
     case "PLAYER_FREE_KICK_GOAL":
     case "PLAYER_RIGHT_FOOT_GOAL":
     case "PLAYER_LEFT_FOOT_GOAL":
-    case "PLAYER_FOULS_OVER":
+    case "PLAYER_FOULS":
     case "PLAYER_FOULS_WON":
     case "PLAYER_OFFSIDES":
     case "PLAYER_SAVES":
     case "PLAYER_RED_CARD":
     case "PLAYER_GOAL_OR_ASSIST":
     case "PLAYER_GOAL_AND_ASSIST":
-    case "PLAYER_SHOTS_ANYTIME":
     case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX":
     case "PLAYER_HEADER_SHOTS_ON_TARGET":
-    case "ASSIST_SCORER_ANYTIME":
     case "PLAYER_OF_THE_MATCH":
       // Unify "Lastname, Firstname" -> "Firstname Lastname" so the same
       // player merges across bookmakers. Threshold codes ("1+", "2+") from
@@ -1373,7 +1403,7 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     const { marketCode, matchedBy, rawId } = resolveMarketCode(raw);
     const refinedCode = refineMarketCode(marketCode, raw, ctx);
-    const resolvedCode = resolveHandicapCode(refinedCode, raw);
+    let resolvedCode = resolveHandicapCode(refinedCode, raw);
 
     if (!isValidMarketCode(resolvedCode)) {
       console.error(`[betfan] Market code "${resolvedCode}" not in catalog`);
@@ -1396,6 +1426,16 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
     let paramValue = extractParamValue(resolvedCode, raw, ctx);
     if (teamSide && paramValue) {
       paramValue = `${teamSide}:${paramValue}`;
+    }
+
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet — collapse onto BOTH_HALVES_GOALS so it pools with
+    // every other bookmaker's Tak/Nie card instead of forking into its own
+    // BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(resolvedCode, paramValue);
+      resolvedCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
     }
     const marketKey = buildMarketKey(resolvedCode, paramValue);
 

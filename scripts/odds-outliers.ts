@@ -286,8 +286,10 @@ const TIME_WINDOW_PARAM_MARKETS = new Set<string>([
  */
 const MARKET_LADDER_DIRECTION: Record<string, Partial<Record<string, "rises" | "falls">>> = {
   BOTH_HALVES_UNDER_GOALS: { YES: "falls", NO: "rises" },
-  HOME_WIN_OR_UNDER: { YES: "falls", NO: "rises" },
-  AWAY_WIN_OR_UNDER: { YES: "falls", NO: "rises" },
+  // HOME_WIN_OR_UNDER / AWAY_WIN_OR_UNDER retired (cluster #3: RESULT_OR_TOTAL
+  // fragmentation) - pooled into RESULT_OR_TOTAL, whose selections are
+  // one-sided HOME_OVER/HOME_UNDER/etc. legs rather than a YES/NO pair, so
+  // this ladder-direction shape no longer applies to that market.
   WIN_OR_UNDER: { YES: "falls", NO: "rises" },
 };
 

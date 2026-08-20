@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   normalizeMarketName,
   parseDecimalLine,
   parseHandicapLine,
@@ -73,14 +74,37 @@ const BETTERS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // 332818 ("Obie drużyny suma powyżej X") is routed by name + goal line in
   // resolveMarketCode — only the 0.5/1.5 lines have catalog counterparts
   // (BTTS / BTTS_2PLUS_GOALS), so a blanket id mapping would misroute other lines.
-  332819: "BOTH_TEAMS_UNDER_GOALS",
+  // 332819 ("obie drużyny suma poniżej") is QUARANTINED to OTHER (audit
+  // cluster #20, Arsenal vs Coventry City) — unlike 332818, this raw name
+  // carries no goal threshold anywhere (same sbteam.xyz feed shape as
+  // lebull's identical id), so there is no line to parameterize
+  // BOTH_TEAMS_UNDER_GOALS with; that catalog code has been retired. See
+  // market-catalog.ts's numericId 1242 comment.
+  332819: "OTHER",
   // 40414/40415 and 39504/39505 are team-A/team-B stake-type variants
   // (team A = home side): "Algieria wygra..." carries the lower id.
   40414: "HOME_WIN_BOTH_HALVES",
   40415: "AWAY_WIN_BOTH_HALVES",
   39504: "HOME_WIN_AT_LEAST_ONE_HALF",
   39505: "AWAY_WIN_AT_LEAST_ONE_HALF",
-  30: "HALF_TIME_GOAL",
+  // Id 30 ("Gol w 1. połowie") is a plain Tak/Nie "goal in this half"
+  // market — exactly the 0.5 line of the Over/Under HALF_TIME_TOTAL_GOALS
+  // market (Over 0.5 == "yes, a goal happens"). Fold onto that fixed line
+  // instead of the standalone HALF_TIME_GOAL code, which duplicated the
+  // 0.5-line row every other bookmaker already reports under
+  // HALF_TIME_TOTAL_GOALS (audit cluster #10, market-display audit; same
+  // sbteam.xyz feed id as lebull's identical fix). See extractParamValue
+  // and normalizeSelectionForMarket for the Tak/Nie -> OVER/UNDER + fixed
+  // "0.5" param transform. Id 31 ("Gol w 2. połowie") is 30's 2nd-half
+  // twin on the same shared feed (see scrapers/bookmakers/betters/
+  // constants.ts SECOND_HALF_GOAL=31) — previously unmapped here, so it
+  // never even reached the standalone-duplicate bug, but also never
+  // pooled into SECOND_HALF_TOTAL_GOALS's 0.5 line either. Not directly
+  // observed live (betters returns no rows for the Arsenal vs Coventry
+  // City audit match), added by analogy with 30 and with lebull's
+  // identical 30/31 pair on the same sbteam.xyz backend.
+  30: "HALF_TIME_TOTAL_GOALS",
+  31: "SECOND_HALF_TOTAL_GOALS",
   332813: "BOTH_HALVES_OVER_GOALS",
   7: "HALF_WITH_MORE_GOALS",
   424467: "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE",
@@ -456,10 +480,20 @@ function normalizeSelectionForMarket(
     case "DOUBLE_CHANCE":
       return normalizeDoubleChanceSelection(trimmed);
 
+    case "HALF_TIME_TOTAL_GOALS":
+    case "SECOND_HALF_TOTAL_GOALS": {
+      // Id 30 ("Gol w 1. połowie") routes through here too, with Tak/Nie
+      // selections instead of Powyżej/Poniżej — see the id-map comment
+      // above. Tak ("yes, a goal happens") == OVER the fixed 0.5 line;
+      // Nie == UNDER it.
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "OVER";
+      if (yesNo === "NO") return "UNDER";
+      return normalizeOverUnderSelection(trimmed);
+    }
+
     case "TOTAL_GOALS":
     case "TOTAL_GOALS_ASIAN":
-    case "HALF_TIME_TOTAL_GOALS":
-    case "SECOND_HALF_TOTAL_GOALS":
     case "TEAM_TOTAL_GOALS":
     case "HOME_TEAM_TOTAL_GOALS":
     case "AWAY_TEAM_TOTAL_GOALS":
@@ -485,7 +519,6 @@ function normalizeSelectionForMarket(
     case "BTTS_BOTH_HALVES":
     case "BTTS_2PLUS_GOALS":
     case "BTTS_OR_OVER_2_5":
-    case "BOTH_TEAMS_UNDER_GOALS":
     case "BOTH_HALVES_OVER_GOALS":
     case "BOTH_HALVES_UNDER_GOALS":
     case "BOTH_TEAMS_TO_LEAD":
@@ -511,7 +544,6 @@ function normalizeSelectionForMarket(
     case "GOAL_IN_TIME_PERIOD":
     case "GOAL_IN_TIME_WINDOW":
     case "GOAL_IN_90_PLUS":
-    case "HALF_TIME_GOAL":
     case "PENALTY_AWARDED":
     case "HALF_TIME_PENALTY_AWARDED":
     case "SECOND_HALF_PENALTY_AWARDED":
@@ -637,6 +669,18 @@ function extractParamValue(marketCode: NormalizedMarketType, raw: RawBookmakerMa
     return extractTimePeriodParam(raw.name);
   }
 
+  // Ids 30/31 ("Gol w 1./2. połowie") are Tak/Nie markets with no numeric
+  // line at all — they represent the fixed 0.5 line of HALF_TIME_TOTAL_GOALS
+  // / SECOND_HALF_TOTAL_GOALS (see the id-map comment). Pin them there
+  // instead of falling through the decimal-parsing branch below, which
+  // would find no number in "Tak"/"Nie" and return undefined.
+  if (
+    (marketCode === "HALF_TIME_TOTAL_GOALS" && String(raw.bookmakerMarketId) === "30") ||
+    (marketCode === "SECOND_HALF_TOTAL_GOALS" && String(raw.bookmakerMarketId) === "31")
+  ) {
+    return "0.5";
+  }
+
   const selectionNames = raw.selections.map((s) => s.name);
   const groupName = raw.groupName ?? "";
 
@@ -681,10 +725,24 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
     }
 
     const marketMetadata = getMarketMetadata(marketCode);
-    const marketName = marketMetadata?.labels.pl ?? raw.name;
+    let marketName = marketMetadata?.labels.pl ?? raw.name;
 
-    const paramValue = extractParamValue(marketCode, raw);
-    const marketKey = buildMarketKey(marketCode, paramValue);
+    let paramValue = extractParamValue(marketCode, raw);
+
+    // audit cluster #24: "Obie połowy powyżej 0.5" (raw id 332813, sbteam.xyz
+    // feed shared with lebull) is definitionally the same bet as this
+    // bookmaker's OWN separate "Gol w obu połowach" row (raw id 32, mapped
+    // to BOTH_HALVES_GOALS above) — collapse onto that code so the grouper's
+    // existing same-bookmaker collision handling picks one and the
+    // cross-bookmaker pool merges instead of forking into two cards/prices.
+    let effectiveMarketCode: NormalizedMarketType = marketCode;
+    const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
+    if (collapsed.marketCode !== marketCode) {
+      effectiveMarketCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
+      marketName = getMarketMetadata(effectiveMarketCode)?.labels.pl ?? marketName;
+    }
+    const marketKey = buildMarketKey(effectiveMarketCode, paramValue);
 
     // A time-period market without a resolvable minute window is a truncated
     // feed row — it would land in a meaningless "base" bucket and collide
@@ -708,7 +766,7 @@ export const bettersNormalizer: BookmakerMarketNormalizer = {
     }
 
     return {
-      marketCode,
+      marketCode: effectiveMarketCode,
       marketName,
       paramValue,
       marketKey,

@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -114,12 +115,17 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "hat-trick": "HAT_TRICK",
   "bramka rezerwowego": "SUBSTITUTE_GOAL",
   "dokladna liczba kartek": "CARDS_EXACT",
-  "liczba odbiorow (opta) (z dogrywka)": "CLEARANCES_TOTAL",
-  "odbiory 1x2 (opta) (z dogrywka)": "CLEARANCES_1X2",
+  "liczba odbiorow (opta) (z dogrywka)": "TACKLES_TOTAL",
+  "odbiory 1x2 (opta) (z dogrywka)": "TACKLES_1X2",
   "pierwszy strzal": "FIRST_SHOT",
   "pierwszy celny strzal": "FIRST_SHOT_ON_TARGET",
-  "punkty za kartki powyzej/ponizej": "CARDS_POINTS_OVER_UNDER",
-  "punkty za kartki powyzej/ponizej - 1. polowa": "HALF_TIME_CARDS_POINTS_OVER_UNDER",
+  // "Punkty za kartki Powyżej/Poniżej" duplicates betclic's own "Liczba
+  // kartek" card-count market at a x10 scale — merge into CARDS_TOTAL /
+  // HALF_TIME_CARDS_TOTAL instead of the retired, isolated
+  // CARDS_POINTS_OVER_UNDER pool (see the /10 conversion in normalizeMarket,
+  // audit cluster #0, finding 6).
+  "punkty za kartki powyzej/ponizej": "CARDS_TOTAL",
+  "punkty za kartki powyzej/ponizej - 1. polowa": "HALF_TIME_CARDS_TOTAL",
   "pierwszy rozny": "FIRST_CORNER",
   "polowa z wieksza iloscia goli": "HALF_WITH_MORE_GOALS",
   "przedzial goli": "GOAL_RANGE",
@@ -208,6 +214,19 @@ const BETCLIC_MARKET_PATTERNS: Array<{
   { pattern: /^podwojna szansa\s*(?:&|i|oraz).*oba (?:zespoly|druzyny) strzela/i, code: "DOUBLE_CHANCE_BTTS" },
      { pattern: /^podwojna szansa\s*(?:&|i|oraz)\s*powyzej\s*\/\s*ponizej/i, code: "DOUBLE_CHANCE_TOTAL" },
      { pattern: /^1x2 rzuty rozne/i, code: "CORNERS_RACE" },
+  // audit-match (Arsenal vs Coventry City), cluster #25: betclic's raw name for
+  // this market is "1x2 Strzały (120 min)" (i.e. it explicitly covers extra
+  // time), unlike peers' "Mecz: więcej strzałów"/"Więcej strzałów"/"Najwięcej
+  // strzałów" which carry no time-scope suffix. Verified this is NOT a
+  // fragmentation bug worth splitting into a separate code: (1) league
+  // matches (this fixture included) never go to extra time, so the window is
+  // moot in practice; (2) betclic already applies the same "(z dogrywka)"/ET-
+  // inclusive naming to CORNERS_TOTAL and TACKLES_TOTAL raw markets elsewhere
+  // in this file and those are intentionally still pooled with peers' full-
+  // match equivalents (see the "razem z dogrywka"/"z dogrywka" regex noise
+  // stripped in resolveCornersTeamMarket/resolveTeamTacklesMarket) - keeping
+  // MOST_SHOTS consistent with that established convention rather than
+  // fragmenting the bookmaker pool per fix-pattern #5.
   { pattern: /^1x2 strzaly/i, code: "MOST_SHOTS" },
   { pattern: /^faule\s+1x2\s*\(opta\)/i, code: "FOUL_RACE" },
   { pattern: /^strzelec:/i, code: "OTHER" },
@@ -216,12 +235,18 @@ const BETCLIC_MARKET_PATTERNS: Array<{
    { pattern: /^ktorykolwiek\s+zawodnik\s+strzeli\s+gola\s*-\s*\d+\s*gracz/i, code: "THREE_PLAYERS_ANYTIME" },
    { pattern: /^ktorykolwiek\s+zawodnik\s+zaliczy\s+asyste\s*-\s*3\s+zawodnik/i, code: "PLAYER_ASSIST_TRIPLE" },
    { pattern: /^czas 1\. gola/i, code: "FIRST_GOAL_TIME" },
-   { pattern: /^kartki\s+1x2\s*-\s*1\. polowa/i, code: "FIRST_HALF_CARDS_1X2" },
+   // Merged into HALF_TIME_CARDS_RACE (cluster #13 market-display audit): same
+   // "more cards in 1st half" bet as forbet/superbet/sts/etoto's
+   // HALF_TIME_CARDS_RACE; the dedicated FIRST_HALF_CARDS_1X2 code only
+   // fragmented the bookmaker pool.
+   { pattern: /^kartki\s+1x2\s*-\s*1\. polowa/i, code: "HALF_TIME_CARDS_RACE" },
    { pattern: /^obie polowy ponizej\s+\d+[,.]?\d*\s*gol[ia]$/i, code: "BOTH_HALVES_UNDER_GOALS" },
    { pattern: /^obie polowy powyzej\s+\d+[,.]?\d*\s*gol[ia]$/i, code: "BOTH_HALVES_OVER_GOALS" },
  ];
-// NOTE: TEAM_HALF_WITH_MORE_GOALS is resolved via resolveTeamHalfWithMoreGoalsTeamSide()
-// in resolveMarketCode() which returns teamSide for distinct marketKey generation.
+// NOTE: the per-team "połowa z większą ilością goli - <Team>" market is resolved
+// via resolveTeamHalfWithMoreGoalsTeamSide() in resolveMarketCode(), which routes
+// directly to HOME_/AWAY_HALF_WITH_MOST_GOALS (see catalog numericId 239/240) —
+// the same codes peer bookmakers already pool under.
 
 function normalizeName(value: string): string {
   return value
@@ -689,8 +714,15 @@ function resolveTeamOffsidesMarket(
 /**
  * Resolves clean sheet market for a specific half and team.
  * Pattern: "Czyste konto- {1|2}. polowa - {teamName}"
- * Returns HALF_TIME_HOME/AWAY_CLEAN_SHEET for 1st half,
- * SECOND_HALF_HOME/AWAY_CLEAN_SHEET for 2nd half.
+ *
+ * Retired the dedicated HALF_TIME/SECOND_HALF_*_CLEAN_SHEET catalog codes
+ * (audit cluster #0, findings 3/4): "{team} won't concede" is the same
+ * real-world proposition as "opponent won't score", and this family had a
+ * bookmaker pool fully disjoint from the *_TO_SCORE family. Returns the
+ * OPPOSING side's HALF_TIME/SECOND_HALF_*_TO_SCORE code instead (note
+ * home/away swap below); the selection-normalizer inverts Tak/Nie for these
+ * (betclic has no other raw source for the half-scoped TO_SCORE codes, so
+ * unconditional inversion is safe).
  */
 function resolveCleanSheetHalfMarket(
   normalizedName: string,
@@ -710,13 +742,13 @@ function resolveCleanSheetHalfMarket(
   const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
   if (half === "1") {
-    if (isHome) return "HALF_TIME_HOME_CLEAN_SHEET";
-    if (isAway) return "HALF_TIME_AWAY_CLEAN_SHEET";
+    if (isHome) return "HALF_TIME_AWAY_TO_SCORE";
+    if (isAway) return "HALF_TIME_HOME_TO_SCORE";
   }
 
   if (half === "2") {
-    if (isHome) return "SECOND_HALF_HOME_CLEAN_SHEET";
-    if (isAway) return "SECOND_HALF_AWAY_CLEAN_SHEET";
+    if (isHome) return "SECOND_HALF_AWAY_TO_SCORE";
+    if (isAway) return "SECOND_HALF_HOME_TO_SCORE";
   }
 
   return null;
@@ -867,11 +899,16 @@ function resolveMarketCode(
     return { marketCode: teamExactGoals, matchedBy: "pattern" };
   }
 
-  // Resolve TEAM_HALF_WITH_MORE_GOALS with teamSide so normalizeMarket() can build
-  // a distinct marketKey per team variant (HOME/AWAY) via buildMarketKey(code, teamSide).
+  // Route to the same HOME_/AWAY_HALF_WITH_MOST_GOALS codes 9+ other
+  // bookmakers already pool under (see catalog numericId 239/240) instead of
+  // the team-parameterized TEAM_HALF_WITH_MORE_GOALS, which stranded betclic's
+  // odds on their own key. Audit cluster #8 (2026-08-19).
   const teamHalfMoreGoalsSide = resolveTeamHalfWithMoreGoalsTeamSide(normalizedName, ctx);
   if (teamHalfMoreGoalsSide) {
-    return { marketCode: "TEAM_HALF_WITH_MORE_GOALS", matchedBy: "pattern", teamSide: teamHalfMoreGoalsSide };
+    return {
+      marketCode: teamHalfMoreGoalsSide === "HOME" ? "HOME_HALF_WITH_MOST_GOALS" : "AWAY_HALF_WITH_MOST_GOALS",
+      matchedBy: "pattern",
+    };
   }
 
   const teamOddEvenGoals = resolveTeamOddEvenGoalsMarket(normalizedName, ctx);
@@ -1857,7 +1894,7 @@ function normalizeSelectionForMarket(
     case "CORNERS_RACE":
     case "HALF_TIME_CORNERS_RACE":
     case "CARDS_RACE":
-    case "FIRST_HALF_CARDS_1X2":
+    case "HALF_TIME_CARDS_RACE":
     case "FOUL_RACE":
     case "OFFSIDES_1X2":
     case "MOST_SHOTS":
@@ -1931,9 +1968,7 @@ function normalizeSelectionForMarket(
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
-    case "CARDS_POINTS_OVER_UNDER":
-    case "HALF_TIME_CARDS_POINTS_OVER_UNDER":
-    case "CLEARANCES_TOTAL":
+    case "TACKLES_TOTAL":
       return normalizeOverUnderSelection(trimmed);
 
     case "CARDS_TEAM": {
@@ -1993,11 +2028,23 @@ function normalizeSelectionForMarket(
     case "AWAY_WIN_BOTH_HALVES":
     case "HOME_WIN_AT_LEAST_ONE_HALF":
     case "AWAY_WIN_AT_LEAST_ONE_HALF":
-    case "HALF_TIME_HOME_CLEAN_SHEET":
-    case "HALF_TIME_AWAY_CLEAN_SHEET":
-    case "SECOND_HALF_HOME_CLEAN_SHEET":
-    case "SECOND_HALF_AWAY_CLEAN_SHEET":
       return normalizeYesNoSelection(trimmed);
+
+    // betclic only ever reaches these four codes via
+    // resolveCleanSheetHalfMarket's reroute ("{opponent} zachowa czyste
+    // konto" -> this side's TO_SCORE) — it has no other raw source for the
+    // half-scoped TO_SCORE codes, so inverting unconditionally is safe
+    // (audit cluster #0, findings 3/4). Clean sheet Tak (opponent concedes
+    // nothing) means THIS side did NOT score.
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE": {
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "NO";
+      if (yesNo === "NO") return "YES";
+      return trimmed as NormalizedSelection;
+    }
 
     case "TEAMS_TO_SCORE":
       return normalizeTeamsToScoreSelection(trimmed, ctx);
@@ -2047,28 +2094,17 @@ function normalizeSelectionForMarket(
     case "CORNERS_ODD_EVEN":
       return normalizeOddEvenSelection(trimmed);
 
-    case "HALF_WITH_MORE_GOALS": {
+    case "HALF_WITH_MORE_GOALS":
+    case "HOME_HALF_WITH_MOST_GOALS":
+    case "AWAY_HALF_WITH_MOST_GOALS": {
+      // Same 1st/2nd/Draw catalog selections whether the raw market is the
+      // plain (no-team) or the per-team variant — merged onto the shared
+      // HOME_/AWAY_HALF_WITH_MOST_GOALS codes peer bookmakers pool under
+      // (audit cluster #8, 2026-08-19; was TEAM_HALF_WITH_MORE_GOALS).
       const normalized = normalizeName(trimmed);
       if (normalized.includes("1. polowa") || normalized === "1") return "1st" as NormalizedSelection;
       if (normalized.includes("2. polowa") || normalized === "2") return "2nd" as NormalizedSelection;
       if (normalized.includes("remis") || normalized === "x") return "Draw" as NormalizedSelection;
-      return trimmed as NormalizedSelection;
-    }
-
-    case "TEAM_HALF_WITH_MORE_GOALS": {
-      const normalizedMarket = marketName ? normalizeName(marketName) : "";
-      const teamSide = resolveTeamHalfWithMoreGoalsTeamSide(normalizedMarket, ctx);
-      const normalized = normalizeName(trimmed);
-
-      if (normalized.includes("1. polowa") || normalized === "1") {
-        return teamSide === "HOME" ? "HOME_1ST" : "AWAY_1ST";
-      }
-      if (normalized.includes("2. polowa") || normalized === "2") {
-        return teamSide === "HOME" ? "HOME_2ND" : "AWAY_2ND";
-      }
-      if (normalized.includes("remis") || normalized === "x") {
-        return teamSide === "HOME" ? "HOME_EQUAL" : "AWAY_EQUAL";
-      }
       return trimmed as NormalizedSelection;
     }
 
@@ -2409,6 +2445,28 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
 
     let { paramValue, parameters } = extractParamValue(marketCode, raw);
 
+    // "Punkty za kartki Powyżej/Poniżej" is betclic's OWN "Liczba kartek"
+    // card-count market redisplayed on a x10 points scale (verified: every
+    // points line's odds are bit-for-bit identical to the count line at
+    // (points-0.5)/10, e.g. "Powyżej 5,5"@1.02/"Poniżej 5,5"@8.25 ==
+    // "Powyżej 0,5"@1.02/"Poniżej 0,5"@8.25) — a pure same-bookmaker
+    // duplicate under a different label/scale, not a distinct "booking
+    // points" product (audit cluster #0, finding 6). Both raw markets
+    // already resolve to CARDS_TOTAL/HALF_TIME_CARDS_TOTAL (see
+    // resolveMarketCode's name-lookup table); convert the points line back
+    // to a card count here so it lands in the SAME row as "Liczba kartek"
+    // instead of the retired, isolated CARDS_POINTS_OVER_UNDER pool.
+    if (
+      (marketCode === "CARDS_TOTAL" || marketCode === "HALF_TIME_CARDS_TOTAL") &&
+      paramValue &&
+      /^punkty za kartki/i.test(normalizeName(raw.name))
+    ) {
+      const points = parseFloat(paramValue.replace(",", "."));
+      if (!Number.isNaN(points)) {
+        paramValue = (Math.round((points - 0.5) * 10) / 100).toString();
+      }
+    }
+
     // "Oba zespoly strzela po N+ gole" = each team scores N or more,
     // i.e. both teams over (N - 0.5) goals on the decimal slider.
     if (marketCode === "BOTH_TEAMS_OVER_GOALS") {
@@ -2419,12 +2477,6 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
     }
 
     if (marketCode === "TEAM_HEADER_GOAL" && teamSide) {
-      paramValue = teamSide;
-    }
-
-    // Use teamSide as paramValue so HOME/AWAY variants produce distinct marketKeys:
-    // TEAM_HALF_WITH_MORE_GOALS_HOME vs TEAM_HALF_WITH_MORE_GOALS_AWAY
-    if (marketCode === "TEAM_HALF_WITH_MORE_GOALS" && teamSide) {
       paramValue = teamSide;
     }
 
@@ -2445,7 +2497,17 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       paramValue = teamSide;
     }
     
-    const marketKey = buildMarketKey(marketCode, paramValue);
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet — collapse onto BOTH_HALVES_GOALS so betclic's price
+    // pools with every other bookmaker's Tak/Nie card instead of forking the
+    // comparison pool into a separate BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    let effectiveMarketCode: NormalizedMarketType = marketCode;
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
+      effectiveMarketCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
+    }
+    const marketKey = buildMarketKey(effectiveMarketCode, paramValue);
 
     const mergedRawSelections = mergeHalfTimeExactCardsTail(marketCode, raw.selections);
     const selections = mergedRawSelections.map((sel) => ({
@@ -2462,7 +2524,7 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
     }
 
     return {
-      marketCode,
+      marketCode: effectiveMarketCode,
       paramValue,
       parameters,
       marketKey,

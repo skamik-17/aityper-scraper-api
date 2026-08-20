@@ -19,6 +19,32 @@ export function buildMarketKey(marketCode: string, paramValue?: string): string 
   return `${marketCode}:${paramValue.replace(",", ".")}`;
 }
 
+/**
+ * "Both halves over 0.5 goals" IS "a goal in both halves" — the 0.5
+ * threshold on a whole-goals count means "at least one goal", the exact
+ * definition of the plain BOTH_HALVES_GOALS Tak/Nie market. Bookmakers that
+ * scrape this as the bottom rung of an Over/Under ladder were routing it to
+ * BOTH_HALVES_OVER_GOALS:0.5 instead, splitting the "goal in both halves"
+ * comparison pool from bookmakers whose site only offers the plain Tak/Nie
+ * shape, AND — for a bookmaker that scrapes BOTH raw shapes (e.g. lebull's
+ * "Gol w obu połowach" + "Obie połowy powyżej 0.5") — producing two cards
+ * for the identical real-world bet at two (slightly different) prices
+ * (audit cluster #24). Collapse the 0.5 line onto BOTH_HALVES_GOALS here so
+ * every bookmaker's price for this bet pools under one key; genuine higher
+ * lines (1.5/2.5/3.5 — "both halves have 2+/3+/4+ goals") are unaffected.
+ * Call this right before buildMarketKey wherever a normalizer can resolve
+ * BOTH_HALVES_OVER_GOALS.
+ */
+export function collapseBothHalvesOverGoalsZeroFive(
+  marketCode: string,
+  paramValue: string | undefined
+): { marketCode: string; paramValue: string | undefined } {
+  if (marketCode === "BOTH_HALVES_OVER_GOALS" && paramValue === "0.5") {
+    return { marketCode: "BOTH_HALVES_GOALS", paramValue: undefined };
+  }
+  return { marketCode, paramValue };
+}
+
 export function parseDecimalLine(text: string): string | undefined {
   const match = text.match(/(\d+)[.,](\d+)/);
   if (match) return `${match[1]}.${match[2]}`;

@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   parseOverUnderLine,
   normalize1x2Selection,
   normalizeOverUnderSelection,
@@ -760,7 +761,6 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     
     case "HALF_WITH_MORE_GOALS":
-    case "TEAM_HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
       if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1st" as NormalizedSelection;
@@ -875,7 +875,6 @@ function normalizeSelectionForMarket(
     case "PLAYER_PASSES":
     case "PLAYER_2_OR_MORE_GOALS":
     case "PLAYER_3_OR_MORE_GOALS":
-    case "PLAYER_HAT_TRICK":
     case "PLAYER_TACKLES":
     case "PLAYER_INTERCEPTIONS":
     // Audit /audit-match (Arsenal vs Coventry City): these arrived with the
@@ -1522,7 +1521,17 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const paramValue = playerName ?? nameParam ?? extractParamValue(marketCode, raw);
+    let paramValue = playerName ?? nameParam ?? extractParamValue(marketCode, raw);
+
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet — collapse onto BOTH_HALVES_GOALS so it pools with
+    // every other bookmaker's Tak/Nie card instead of forking into its own
+    // BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
+      marketCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
+    }
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     const selections = raw.selections.map((sel) => ({

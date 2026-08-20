@@ -721,10 +721,6 @@ function normalizeSelectionForMarket(
     case "BOTH_HALVES_GOALS":
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
-    case "HALF_TIME_HOME_CLEAN_SHEET":
-    case "HALF_TIME_AWAY_CLEAN_SHEET":
-    case "SECOND_HALF_HOME_CLEAN_SHEET":
-    case "SECOND_HALF_AWAY_CLEAN_SHEET":
     // Audit /audit-match (Arsenal vs Coventry City): ids 43/45/46 (newly
     // mapped, see PZBUK_MARKET_ID_TO_CODE) carry "tak"/"nie" selections.
     case "HOME_WIN_BOTH_HALVES":

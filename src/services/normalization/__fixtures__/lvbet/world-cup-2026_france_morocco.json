@@ -16095,181 +16095,6 @@
       }
     },
     {
-      "index": 401,
-      "raw": {
-        "bookmakerMarketId": "",
-        "groupId": "",
-        "groupName": "Inne",
-        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
-        "selections": [
-          {
-            "name": "Redouane Halhal",
-            "odds": 3.75
-          },
-          {
-            "name": "Sofyan Amrabat",
-            "odds": 4.7
-          },
-          {
-            "name": "Gessime Yassine",
-            "odds": 4.9
-          },
-          {
-            "name": "Marwane Saadane",
-            "odds": 5
-          },
-          {
-            "name": "Ayoub El Kaabi",
-            "odds": 5
-          },
-          {
-            "name": "Anass Salah Eddine",
-            "odds": 5.3
-          },
-          {
-            "name": "Desire Doue",
-            "odds": 5.4
-          },
-          {
-            "name": "Ayyoub Bouaddi",
-            "odds": 5.5
-          },
-          {
-            "name": "Neil El Aynaoui",
-            "odds": 5.5
-          },
-          {
-            "name": "Bilal El Khannouss",
-            "odds": 6
-          },
-          {
-            "name": "Adrien Rabiot",
-            "odds": 6.25
-          },
-          {
-            "name": "Manu Kone",
-            "odds": 6.25
-          },
-          {
-            "name": "Ayoube Amaimouni",
-            "odds": 6.75
-          },
-          {
-            "name": "Aurelien Tchouameni",
-            "odds": 6.75
-          },
-          {
-            "name": "Maghnes Akliouche",
-            "odds": 7
-          },
-          {
-            "name": "Samir El Mourabet",
-            "odds": 7
-          },
-          {
-            "name": "Soufiane Rahimi",
-            "odds": 7.5
-          },
-          {
-            "name": "Achraf Hakimi",
-            "odds": 7.5
-          },
-          {
-            "name": "Amine Sbai",
-            "odds": 7.5
-          },
-          {
-            "name": "Brahim Diaz",
-            "odds": 8.25
-          },
-          {
-            "name": "Lucas Hernandez",
-            "odds": 9
-          },
-          {
-            "name": "Bradley Barcola",
-            "odds": 9
-          },
-          {
-            "name": "Lucas Digne",
-            "odds": 9
-          },
-          {
-            "name": "Warren Zaire-Emery",
-            "odds": 10
-          },
-          {
-            "name": "Maxence Lacroix",
-            "odds": 11
-          },
-          {
-            "name": "Noussair Mazraoui",
-            "odds": 11
-          },
-          {
-            "name": "Malo Gusto",
-            "odds": 12
-          },
-          {
-            "name": "Ibrahima Konate",
-            "odds": 12
-          },
-          {
-            "name": "Theo Hernandez",
-            "odds": 13
-          },
-          {
-            "name": "Azzedine Ounahi",
-            "odds": 13
-          },
-          {
-            "name": "Marcus Thuram",
-            "odds": 15
-          },
-          {
-            "name": "Michael Olise",
-            "odds": 15
-          },
-          {
-            "name": "N'Golo Kante",
-            "odds": 15
-          },
-          {
-            "name": "Rayan Cherki",
-            "odds": 15
-          },
-          {
-            "name": "William Saliba",
-            "odds": 15
-          },
-          {
-            "name": "Ousmane Dembele",
-            "odds": 15
-          },
-          {
-            "name": "Zakaria El Ouahdi",
-            "odds": 15
-          },
-          {
-            "name": "Dayot Upamecano",
-            "odds": 15
-          },
-          {
-            "name": "Issa Diop",
-            "odds": 15
-          },
-          {
-            "name": "Jules Kounde",
-            "odds": 15
-          },
-          {
-            "name": "Jean-Philippe Mateta",
-            "odds": 15
-          }
-        ]
-      }
-    },
-    {
       "index": 402,
       "raw": {
         "bookmakerMarketId": "",
@@ -29252,6 +29077,662 @@
           {
             "name": "Maroko (0.0)",
             "odds": 4.55
+          }
+        ]
+      }
+    },
+    {
+      "index": 931,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Redouane Halhal",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 3.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 932,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Sofyan Amrabat",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 4.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 933,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Gessime Yassine",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 4.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 934,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Marwane Saadane",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5
+          }
+        ]
+      }
+    },
+    {
+      "index": 935,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Ayoub El Kaabi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5
+          }
+        ]
+      }
+    },
+    {
+      "index": 936,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Anass Salah Eddine",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 937,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Desire Doue",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 938,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Ayyoub Bouaddi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 939,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Neil El Aynaoui",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 5.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 940,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Bilal El Khannouss",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 6
+          }
+        ]
+      }
+    },
+    {
+      "index": 941,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Adrien Rabiot",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 942,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Manu Kone",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 943,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Ayoube Amaimouni",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 944,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Aurelien Tchouameni",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 945,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Maghnes Akliouche",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      }
+    },
+    {
+      "index": 946,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Samir El Mourabet",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      }
+    },
+    {
+      "index": 947,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Soufiane Rahimi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 948,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Achraf Hakimi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 949,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Amine Sbai",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 950,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Brahim Diaz",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 951,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Lucas Hernandez",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      }
+    },
+    {
+      "index": 952,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Bradley Barcola",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      }
+    },
+    {
+      "index": 953,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Lucas Digne",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      }
+    },
+    {
+      "index": 954,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Warren Zaire-Emery",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 955,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Maxence Lacroix",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 956,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Noussair Mazraoui",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 957,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Malo Gusto",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 958,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Ibrahima Konate",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 959,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Theo Hernandez",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 960,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Azzedine Ounahi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 961,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Marcus Thuram",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 962,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Michael Olise",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 963,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "N'Golo Kante",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 964,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Rayan Cherki",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 965,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "William Saliba",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 966,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Ousmane Dembele",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 967,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Zakaria El Ouahdi",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 968,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Dayot Upamecano",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 969,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Issa Diop",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 970,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Jules Kounde",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 971,
+      "raw": {
+        "bookmakerMarketId": "",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+        "paramValue": "Jean-Philippe Mateta",
+        "selections": [
+          {
+            "name": "Powyzej 3.5",
+            "odds": 15
           }
         ]
       }

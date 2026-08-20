@@ -4242,26 +4242,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_OR_OVER_2_5",
-        "marketKey": "DRAW_OR_OVER_2_5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OVER",
             "label": "tak",
             "odds": 1.41
-          },
-          {
-            "code": "NO",
-            "label": "nie",
-            "odds": 2.65
           }
         ]
       },
       "index": 123,
-      "marketCode": "DRAW_OR_OVER_2_5",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Wydarzy się min. jedno z: remis w meczu lub powyżej 2.5 goli"
     },
     {
@@ -4339,62 +4334,62 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
-        "marketKey": "TEAM_HALF_WITH_MORE_GOALS:HOME",
+        "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+        "marketKey": "HOME_HALF_WITH_MOST_GOALS",
         "matchedBy": "id",
-        "paramValue": "HOME",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_1ST",
+            "code": "1st",
             "label": "1 połowa",
             "odds": 3.1
           },
           {
-            "code": "HOME_2ND",
+            "code": "2nd",
             "label": "2 połowa",
             "odds": 2.48
           },
           {
-            "code": "HOME_EQUAL",
+            "code": "Draw",
             "label": "Remis",
             "odds": 2.8
           }
         ]
       },
       "index": 128,
-      "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
+      "marketCode": "HOME_HALF_WITH_MOST_GOALS",
       "rawName": "Francja - połowa z większą liczbą goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
-        "marketKey": "TEAM_HALF_WITH_MORE_GOALS:AWAY",
+        "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+        "marketKey": "AWAY_HALF_WITH_MOST_GOALS",
         "matchedBy": "id",
-        "paramValue": "AWAY",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_1ST",
+            "code": "1st",
             "label": "1 połowa",
             "odds": 4.4
           },
           {
-            "code": "AWAY_2ND",
+            "code": "2nd",
             "label": "2 połowa",
             "odds": 3.35
           },
           {
-            "code": "AWAY_EQUAL",
+            "code": "Draw",
             "label": "Remis",
             "odds": 1.8
           }
         ]
       },
       "index": 129,
-      "marketCode": "TEAM_HALF_WITH_MORE_GOALS",
+      "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
       "rawName": "Maroko - połowa z większą liczbą goli"
     },
     {
@@ -6378,104 +6373,104 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_HOME_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_AWAY_TO_SCORE",
+        "marketKey": "HALF_TIME_AWAY_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.34
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 3
           }
         ]
       },
       "index": 196,
-      "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_AWAY_TO_SCORE",
       "rawName": "1. połowa - Francja czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_AWAY_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_HOME_TO_SCORE",
+        "marketKey": "HALF_TIME_HOME_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.07
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.68
           }
         ]
       },
       "index": 197,
-      "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_HOME_TO_SCORE",
       "rawName": "1. połowa - Maroko czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_HOME_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
+        "marketKey": "SECOND_HALF_AWAY_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.47
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 2.5
           }
         ]
       },
       "index": 198,
-      "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
       "rawName": "2. połowa - Francja czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_AWAY_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_HOME_TO_SCORE",
+        "marketKey": "SECOND_HALF_HOME_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.36
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.53
           }
         ]
       },
       "index": 199,
-      "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_HOME_TO_SCORE",
       "rawName": "2. połowa - Maroko czyste konto"
     },
     {
@@ -9910,26 +9905,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 0.5 żółtych kartek",
             "odds": 1.3
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej 0.5 żółtych kartek",
             "odds": 3.1
           }
         ]
       },
       "index": 342,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
       "rawName": "Francja Poniżej/Powyżej 0.5 żółtych kartek w 1 połowie"
     },
     {
@@ -9972,26 +9967,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej 0.5 żółtych kartek",
             "odds": 1.73
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej 0.5 żółtych kartek",
             "odds": 1.95
           }
         ]
       },
       "index": 344,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Maroko Poniżej/Powyżej 0.5 żółtych kartek w 1 połowie"
     },
     {

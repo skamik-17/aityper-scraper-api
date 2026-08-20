@@ -4006,104 +4006,104 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_HOME_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_AWAY_TO_SCORE",
+        "marketKey": "HALF_TIME_AWAY_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.35
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 3.05
           }
         ]
       },
       "index": 121,
-      "marketCode": "HALF_TIME_HOME_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_AWAY_TO_SCORE",
       "rawName": "1. połowa - Francja zachowa czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
-        "marketKey": "HALF_TIME_AWAY_CLEAN_SHEET",
+        "marketCode": "HALF_TIME_HOME_TO_SCORE",
+        "marketKey": "HALF_TIME_HOME_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.09
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.69
           }
         ]
       },
       "index": 122,
-      "marketCode": "HALF_TIME_AWAY_CLEAN_SHEET",
+      "marketCode": "HALF_TIME_HOME_TO_SCORE",
       "rawName": "1. połowa - Maroko zachowa czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_HOME_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
+        "marketKey": "SECOND_HALF_AWAY_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 1.48
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 2.55
           }
         ]
       },
       "index": 123,
-      "marketCode": "SECOND_HALF_HOME_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_AWAY_TO_SCORE",
       "rawName": "2. połowa - Francja zachowa czyste konto"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
-        "marketKey": "SECOND_HALF_AWAY_CLEAN_SHEET",
+        "marketCode": "SECOND_HALF_HOME_TO_SCORE",
+        "marketKey": "SECOND_HALF_HOME_TO_SCORE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "NO",
             "label": "Tak",
             "odds": 2.38
           },
           {
-            "code": "NO",
+            "code": "YES",
             "label": "Nie",
             "odds": 1.54
           }
         ]
       },
       "index": 124,
-      "marketCode": "SECOND_HALF_AWAY_CLEAN_SHEET",
+      "marketCode": "SECOND_HALF_HOME_TO_SCORE",
       "rawName": "2. połowa - Maroko zachowa czyste konto"
     },
     {
@@ -14826,104 +14826,99 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "WIN_OR_BTTS",
-        "marketKey": "WIN_OR_BTTS:HOME",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
-        "paramValue": "HOME",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "HOME_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.15
           },
           {
-            "code": "NO",
+            "code": "HOME_OR_BTTS_NO",
             "label": "Nie",
             "odds": 4.7
           }
         ]
       },
       "index": 376,
-      "marketCode": "WIN_OR_BTTS",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Francja wygra lub obie strzelą"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_OR_BTTS",
-        "marketKey": "DRAW_OR_BTTS",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.73
           },
           {
-            "code": "NO",
+            "code": "DRAW_OR_BTTS_NO",
             "label": "Nie",
             "odds": 2
           }
         ]
       },
       "index": 377,
-      "marketCode": "DRAW_OR_BTTS",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Remis lub obie strzelą"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "WIN_OR_BTTS",
-        "marketKey": "WIN_OR_BTTS:AWAY",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
-        "paramValue": "AWAY",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.7
           },
           {
-            "code": "NO",
+            "code": "AWAY_OR_BTTS_NO",
             "label": "Nie",
             "odds": 2.03
           }
         ]
       },
       "index": 378,
-      "marketCode": "WIN_OR_BTTS",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Maroko wygra lub obie strzelą"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HOME_WIN_OR_UNDER",
-        "marketKey": "HOME_WIN_OR_UNDER:2.5",
-        "matchedBy": "pattern",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
+        "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "HOME_UNDER",
             "label": "Tak",
             "odds": 1.1
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 6
           }
         ]
       },
       "index": 379,
-      "marketCode": "HOME_WIN_OR_UNDER",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Francja wygra lub poniżej 2.5"
     },
     {
@@ -14982,130 +14977,105 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_OR_UNDER_2_5",
-        "marketKey": "DRAW_OR_UNDER_2_5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_UNDER",
             "label": "Tak",
             "odds": 1.64
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 2.13
           }
         ]
       },
       "index": 382,
-      "marketCode": "DRAW_OR_UNDER_2_5",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Remis lub poniżej 2.5"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "AWAY_WIN_OR_UNDER",
-        "marketKey": "AWAY_WIN_OR_UNDER:2.5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_UNDER",
             "label": "Tak",
             "odds": 1.56
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 2.27
           }
         ]
       },
       "index": 383,
-      "marketCode": "AWAY_WIN_OR_UNDER",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Maroko wygra lub poniżej 2.5"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HOME_WIN_OR_OVER",
-        "marketKey": "HOME_WIN_OR_OVER:2.5",
-        "matchedBy": "pattern",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
+        "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "HOME_OVER",
             "label": "Tak",
             "odds": 1.31
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 3.2
           }
         ]
       },
       "index": 384,
-      "marketCode": "HOME_WIN_OR_OVER",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Francja wygra lub powyżej 2.5"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_OR_OVER_2_5",
-        "marketKey": "DRAW_OR_OVER_2_5",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OVER",
             "label": "Tak",
             "odds": 1.42
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 2.7
           }
         ]
       },
       "index": 385,
-      "marketCode": "DRAW_OR_OVER_2_5",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Remis lub powyżej 2.5"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "AWAY_WIN_OR_OVER",
-        "marketKey": "AWAY_WIN_OR_OVER:2.5",
-        "matchedBy": "pattern",
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
+        "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_OVER",
             "label": "Tak",
             "odds": 1.68
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 2.07
           }
         ]
       },
       "index": 386,
-      "marketCode": "AWAY_WIN_OR_OVER",
+      "marketCode": "RESULT_OR_TOTAL",
       "rawName": "Maroko wygra lub powyżej 2.5"
     },
     {

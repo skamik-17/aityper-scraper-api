@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   canonicalizePlayerName,
   parseDecimalLine,
   parseHandicapLine,
@@ -119,10 +120,21 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [126]: "AWAY_WIN_BOTH_HALVES", // "<away> wygra obie połowy"
   [127]: "HOME_WIN_AT_LEAST_ONE_HALF", // "<home> wygra którąkolwiek połowę"
   [128]: "AWAY_WIN_AT_LEAST_ONE_HALF", // "<away> wygra którąkolwiek połowę"
-  [-2545]: "HALF_TIME_HOME_CLEAN_SHEET", // "1. połowa - <home> zachowa czyste konto"
-  [-2546]: "HALF_TIME_AWAY_CLEAN_SHEET", // "1. połowa - <away> zachowa czyste konto"
-  [-2547]: "SECOND_HALF_HOME_CLEAN_SHEET", // "2. połowa - <home> zachowa czyste konto"
-  [-2548]: "SECOND_HALF_AWAY_CLEAN_SHEET", // "2. połowa - <away> zachowa czyste konto"
+  // Retired the dedicated HALF_TIME/SECOND_HALF_*_CLEAN_SHEET catalog codes
+  // (audit cluster #0, findings 3/4): "{team} won't concede" is the same
+  // real-world proposition as "opponent won't score", and this half-scoped
+  // family had a bookmaker pool fully disjoint from the *_TO_SCORE family
+  // (betfan/betclic/fortuna/pzbuk/forbet/etoto here vs sts/betcris/superbet/
+  // fuksiarz/lvbet there). Route to the OPPOSING side's TO_SCORE code; the
+  // selection-normalizer inverts YES/NO for the id-mapped entries below
+  // (etoto has no other raw source for the half-scoped TO_SCORE codes, so
+  // an unconditional inversion is safe there — unlike the full-match
+  // HOME/AWAY_TEAM_TO_SCORE codes, which etoto also reaches directly via
+  // ids -344/-343 and must NOT invert; see isCleanSheetDerivedToScore).
+  [-2545]: "HALF_TIME_AWAY_TO_SCORE", // "1. połowa - <home> zachowa czyste konto" -> away didn't score
+  [-2546]: "HALF_TIME_HOME_TO_SCORE", // "1. połowa - <away> zachowa czyste konto" -> home didn't score
+  [-2547]: "SECOND_HALF_AWAY_TO_SCORE", // "2. połowa - <home> zachowa czyste konto" -> away didn't score
+  [-2548]: "SECOND_HALF_HOME_TO_SCORE", // "2. połowa - <away> zachowa czyste konto" -> home didn't score
 
   // --- Handicaps ---
   [-458]: "ASIAN_HANDICAP", // "Handicap (-X / +X)"
@@ -172,15 +184,32 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-30008]: "SECOND_HALF_DOUBLE_CHANCE_BTTS", // "2. połowa - podwójna szansa i obie strzelą"
   [-8031]: "DOUBLE_CHANCE_HALF_TIME_BTTS", // "Podwójna szansa (mecz) i obie strzelą (1. poł.)"
   [-8032]: "DOUBLE_CHANCE_SECOND_HALF_BTTS", // "Podwójna szansa (mecz) i obie strzelą (2. poł.)"
-  [-8041]: "WIN_OR_BTTS", // "<home> wygra lub obie strzelą"
-  [-8042]: "DRAW_OR_BTTS", // "Remis lub obie strzelą"
-  [-8043]: "WIN_OR_BTTS", // "<away> wygra lub obie strzelą"
-  // Audit /audit-match: the home variant had its own code while the away one
-  // fell back to the team-less WIN_OR_UNDER — the pair was asymmetric and the
-  // away label never said whose win it was.
-  [-8040]: "AWAY_WIN_OR_UNDER", // "<away> wygra lub poniżej X"
-  [-8037]: "DRAW_OR_OVER_2_5", // "Remis lub powyżej 2.5"
-  [-8038]: "DRAW_OR_UNDER_2_5", // "Remis lub poniżej 2.5"
+  // Cluster #12 (fixed): these three raw markets are one real-world bet
+  // ("<team> wins or BTTS" / "draw or BTTS") split into 3 separate ids.
+  // Routed to the single combined RESULT_OR_BTTS code (matching lebull's
+  // own quote of the same bet) instead of the retired team-parameterized
+  // WIN_OR_BTTS / standalone DRAW_OR_BTTS codes — side is resolved via
+  // ETOTO_MARKET_ID_TEAM_SIDE below and folded into the selection code
+  // (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/NO, AWAY_OR_BTTS_YES/NO) in
+  // normalizeSelectionForMarket.
+  [-8041]: "RESULT_OR_BTTS", // "<home> wygra lub obie strzelą"
+  [-8042]: "RESULT_OR_BTTS", // "Remis lub obie strzelą"
+  [-8043]: "RESULT_OR_BTTS", // "<away> wygra lub obie strzelą"
+  // Cluster #3 (RESULT_OR_TOTAL fragmentation): this "win-or-goals" combo
+  // family used to be split across 6 per-team/per-direction catalog codes
+  // (HOME_WIN_OR_OVER, AWAY_WIN_OR_UNDER, DRAW_OR_OVER_2_5, ...) - now all
+  // six route to the shared RESULT_OR_TOTAL code (the same one superbet's
+  // "Mecz lub liczba goli (X)" uses), pooling odds across bookmakers. The
+  // specific HOME_OVER/DRAW_UNDER/etc. selection is resolved from raw.name
+  // by resolveResultOrTotalCombo in normalizeMarket below (each etoto entry
+  // is its own two-way Tak/Nie market, unlike superbet's multi-selection
+  // group, so only the "Tak" leg survives - see that branch for why).
+  [-8035]: "RESULT_OR_TOTAL", // "<home> wygra lub powyżej 2.5"
+  [-8036]: "RESULT_OR_TOTAL", // "<home> wygra lub poniżej 2.5"
+  [-8039]: "RESULT_OR_TOTAL", // "<away> wygra lub powyżej 2.5"
+  [-8040]: "RESULT_OR_TOTAL", // "<away> wygra lub poniżej 2.5"
+  [-8037]: "RESULT_OR_TOTAL", // "Remis lub powyżej 2.5"
+  [-8038]: "RESULT_OR_TOTAL", // "Remis lub poniżej 2.5"
   [-8045]: "DRAW_OR_CLEAN_SHEET", // "Remis lub którakolwiek drużyna czyste konto"
   [-8044]: "TEAM_WIN_OR_CLEAN_SHEET", // "<home> wygra lub którakolwiek drużyna czyste konto"
   [-8046]: "TEAM_WIN_OR_CLEAN_SHEET", // "<away> wygra lub którakolwiek drużyna czyste konto"
@@ -309,7 +338,6 @@ const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "RED_CARD_TEAM",
   "HALF_TIME_RED_CARD_TEAM",
   "TEAM_WIN_MATCH",
-  "WIN_OR_BTTS",
   "TEAM_WIN_OR_CLEAN_SHEET",
   "CORNERS_TEAM_RANGE",
 ]);
@@ -385,6 +413,36 @@ function normalizeEtotoName(value: string): string {
 }
 
 /**
+ * Cluster #3 (RESULT_OR_TOTAL fragmentation): resolves a raw "win-or-goals"
+ * combo market name ("<team> wygra lub powyżej/poniżej X", "Remis lub
+ * powyżej/poniżej X") to the specific six-way selection code the pooled
+ * RESULT_OR_TOTAL catalog market expects (mirroring superbet's "Argentyna
+ * lub poniżej 0.5" -> HOME_UNDER parsing). Returns null for anything else,
+ * including a team-named leg that fails to resolve to HOME/AWAY.
+ */
+function resolveResultOrTotalCombo(
+  rawName: string,
+  ctx: NormalizationContext
+): NormalizedSelection | null {
+  let match = rawName.match(/^(.+?)\s+wygra\s+lub\s+(powy[zż]ej|poni[zż]ej)\b/i);
+  if (match) {
+    const side = normalize1x2Selection(match[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+    const isOver = /powy[zż]ej/i.test(match[2]);
+    if (side === "HOME") return isOver ? "HOME_OVER" : "HOME_UNDER";
+    if (side === "AWAY") return isOver ? "AWAY_OVER" : "AWAY_UNDER";
+    return null;
+  }
+
+  match = rawName.match(/^remis\s+lub\s+(powy[zż]ej|poni[zż]ej)\b/i);
+  if (match) {
+    const isOver = /powy[zż]ej/i.test(match[1]);
+    return isOver ? "DRAW_OVER" : "DRAW_UNDER";
+  }
+
+  return null;
+}
+
+/**
  * Team-scoped raw names ("<team> wygra do zera", "2. połowa - <team> zachowa
  * czyste konto") must resolve to the side-specific catalog codes; folding them
  * into the shared WIN_TO_NIL / CLEAN_SHEET buckets mixes home and away prices
@@ -406,58 +464,72 @@ function resolveTeamScopedMarket(
     return null;
   }
 
-  // "<team> wygra lub powyżej [line]" (win-or-over combo). The sibling
-  // "wygra lub poniżej" (win-or-under) phrase is routed via a dedicated
-  // gameType id to the generic WIN_OR_UNDER code instead, so this branch is
-  // scoped to "powyżej" only to avoid touching that already-working path.
-  match = rawName.match(/^(.+?)\s+wygra\s+lub\s+powy[zż]ej\b/i);
-  if (match) {
-    const side = resolveSide(match[1]);
-    if (side === "HOME") return "HOME_WIN_OR_OVER";
-    if (side === "AWAY") return "AWAY_WIN_OR_OVER";
-    return null;
-  }
-
-  // "<team> wygra lub poniżej [line]" (win-or-under combo). The away side
-  // already has a dedicated gameType id (-8040) routed to the generic
-  // WIN_OR_UNDER code; the home side has no dedicated id and previously fell
-  // through to OTHER via the name resolver, so route it here to the
-  // catalog's HOME_WIN_OR_UNDER code (mirroring the away id's target when it
-  // also arrives by name).
-  match = rawName.match(/^(.+?)\s+wygra\s+lub\s+poni[zż]ej\b/i);
-  if (match) {
-    const side = resolveSide(match[1]);
-    if (side === "HOME") return "HOME_WIN_OR_UNDER";
-    if (side === "AWAY") return "WIN_OR_UNDER";
-    return null;
+  // "<team> wygra lub powyżej/poniżej [line]" and "remis lub powyżej/poniżej
+  // [line]" (the full win-or-goals combo family) all pool into the shared,
+  // parameterized RESULT_OR_TOTAL catalog code now (cluster #3 fix - see
+  // resolveResultOrTotalCombo and its call site in normalizeMarket below for
+  // how the specific HOME_OVER/DRAW_UNDER/etc. selection is derived from
+  // this same raw name). Previously the "poniżej" away leg fell back to the
+  // generic, team-less WIN_OR_UNDER code here while its home sibling used a
+  // dedicated code - that asymmetry no longer matters since every leg now
+  // maps to the one pooled code.
+  if (resolveResultOrTotalCombo(rawName, ctx)) {
+    return "RESULT_OR_TOTAL";
   }
 
   // "[1./2. połowa - ]<team> zachowa czyste konto"
-  match = rawName.match(
-    /^(?:([12])\.?\s*po[łl]ow[aey]\s*-\s*)?(.+?)\s+zachowa\s+czyste\s+konto\s*$/i
-  );
-  if (match) {
-    const half = match[1];
-    const side = resolveSide(match[2]);
+  //
+  // Retired the dedicated HOME/AWAY_CLEAN_SHEET and HALF_TIME/SECOND_HALF_*_
+  // CLEAN_SHEET catalog codes (audit cluster #0, findings 3/4): "{team}
+  // won't concede" is the same real-world proposition as "opponent won't
+  // score" — full-match clean sheet had only 2 bookmakers (fortuna, etoto)
+  // against 12 on *_TEAM_TO_SCORE, and the half-scoped family had a
+  // bookmaker pool fully disjoint from the *_TO_SCORE family. Route to the
+  // OPPOSING side's TO_SCORE code instead (note home/away are swapped); the
+  // main normalizeMarket below inverts Tak/Nie for any selection landing on
+  // a *_TO_SCORE code via this clean-sheet raw-name shape (isCleanSheetRawName)
+  // — etoto also reaches HOME/AWAY_TEAM_TO_SCORE directly (ids -344/-343)
+  // and those must NOT invert, so the raw-name check (not just marketCode)
+  // is what distinguishes the two sources.
+  if (CLEAN_SHEET_NAME_PATTERN.test(rawName)) {
+    const match2 = rawName.match(CLEAN_SHEET_NAME_PATTERN)!;
+    const half = match2[1];
+    const side = resolveSide(match2[2]);
     if (side === "HOME") {
-      if (half === "1") return "HALF_TIME_HOME_CLEAN_SHEET";
-      if (half === "2") return "SECOND_HALF_HOME_CLEAN_SHEET";
-      return "HOME_CLEAN_SHEET";
+      if (half === "1") return "HALF_TIME_AWAY_TO_SCORE";
+      if (half === "2") return "SECOND_HALF_AWAY_TO_SCORE";
+      return "AWAY_TEAM_TO_SCORE";
     }
     if (side === "AWAY") {
-      if (half === "1") return "HALF_TIME_AWAY_CLEAN_SHEET";
-      if (half === "2") return "SECOND_HALF_AWAY_CLEAN_SHEET";
-      // No full-match away clean-sheet YES/NO code in the catalog yet;
-      // excluding beats surfacing YES/NO inside CLEAN_SHEET's HOME/AWAY vocab.
-      return "OTHER";
+      if (half === "1") return "HALF_TIME_HOME_TO_SCORE";
+      if (half === "2") return "SECOND_HALF_HOME_TO_SCORE";
+      // Previously excluded as "OTHER" (no full-match away clean-sheet code
+      // existed) — now correctly lands on HOME_TEAM_TO_SCORE (inverted).
+      return "HOME_TEAM_TO_SCORE";
     }
-    // Half-scoped market with an unresolved team must not fall through to the
-    // generic full-match CLEAN_SHEET pattern.
+    // Half-scoped market with an unresolved team must not fall through to
+    // the generic full-match CLEAN_SHEET pattern.
     if (half) return "OTHER";
     return null;
   }
 
   return null;
+}
+
+/** Shared with isCleanSheetRawName below — keep the two in sync. */
+const CLEAN_SHEET_NAME_PATTERN =
+  /^(?:([12])\.?\s*po[łl]ow[aey]\s*-\s*)?(.+?)\s+zachowa\s+czyste\s+konto\s*$/i;
+
+/**
+ * True when a raw market name is the team-scoped clean-sheet prop
+ * resolveTeamScopedMarket reroutes to the opposing side's TO_SCORE code.
+ * Distinguishes that clean-sheet-derived source (needs YES/NO inverted)
+ * from etoto's genuine direct HOME/AWAY_TEAM_TO_SCORE raws (ids -344/-343,
+ * "<team> strzeli gola"), which share the same final marketCode but must
+ * NOT be inverted.
+ */
+function isCleanSheetRawName(rawName: string): boolean {
+  return CLEAN_SHEET_NAME_PATTERN.test(rawName);
 }
 
 function resolveMarketCodeFromName(
@@ -656,6 +728,19 @@ function normalizeSelectionForMarket(
       return `${teamSide}_${overUnder}` as NormalizedSelection;
     }
 
+    // Cluster #12: etoto quotes "<team> wins or BTTS" and "draw or BTTS" as
+    // three separate Tak/Nie raw markets (ids -8041/-8042/-8043). They all
+    // resolve to the single combined RESULT_OR_BTTS code, so the side (from
+    // teamSide, resolved via ETOTO_MARKET_ID_TEAM_SIDE) has to be folded into
+    // the selection code itself — the draw leg (-8042) has no team side, so
+    // it falls back to "DRAW".
+    case "RESULT_OR_BTTS": {
+      const yesNoBtts = normalizeYesNoSelection(trimmed);
+      if (yesNoBtts === "UNKNOWN") return "UNKNOWN";
+      const side = teamSide ?? "DRAW";
+      return `${side}_OR_BTTS_${yesNoBtts}` as NormalizedSelection;
+    }
+
     case "BTTS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
@@ -673,11 +758,14 @@ function normalizeSelectionForMarket(
     case "TEAM_WIN_AT_LEAST_ONE_HALF":
     case "HOME_WIN_BOTH_HALVES":
     case "AWAY_WIN_BOTH_HALVES":
-    case "HALF_TIME_HOME_CLEAN_SHEET":
-    case "HALF_TIME_AWAY_CLEAN_SHEET":
-    case "SECOND_HALF_HOME_CLEAN_SHEET":
-    case "SECOND_HALF_AWAY_CLEAN_SHEET":
-    case "HOME_CLEAN_SHEET":
+    // Per-half TO_SCORE codes: etoto only reaches these via the clean-sheet
+    // reroute in resolveTeamScopedMarket, so the plain YES/NO built here is
+    // inverted afterwards in the main normalizeMarket step (see
+    // isCleanSheetRawName) — audit cluster #0, findings 3/4.
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE":
     case "PENALTY_AWARDED":
     case "RED_CARD":
     case "RED_CARD_TEAM":
@@ -687,19 +775,7 @@ function normalizeSelectionForMarket(
     case "RED_CARD_OR_PENALTY":
     case "TEAM_WIN_MATCH":
     case "ANY_TEAM_TO_WIN":
-    case "WIN_OR_BTTS":
-    case "DRAW_OR_BTTS":
     case "WIN_OR_UNDER":
-    // Audit /audit-match: AWAY_WIN_OR_UNDER (id -8040) resolves via the id
-    // map (matchedBy "id"), unlike its three siblings which resolve via the
-    // name-pattern path — so it never reached this Tak/Nie branch and
-    // rendered as UNKNOWN for both selections.
-    case "AWAY_WIN_OR_UNDER":
-    case "HOME_WIN_OR_UNDER":
-    case "HOME_WIN_OR_OVER":
-    case "AWAY_WIN_OR_OVER":
-    case "DRAW_OR_OVER_2_5":
-    case "DRAW_OR_UNDER_2_5":
     case "DRAW_OR_CLEAN_SHEET":
     case "TEAM_WIN_OR_CLEAN_SHEET":
     case "EXTRA_TIME":
@@ -1165,15 +1241,67 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet — collapse onto BOTH_HALVES_GOALS so it pools with
+    // every other bookmaker's Tak/Nie card instead of forking into its own
+    // BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
+      marketCode = collapsed.marketCode as NormalizedMarketType;
+      paramValue = collapsed.paramValue;
+    }
     const marketKey = buildMarketKey(marketCode, paramValue);
     const marketMetadata = getMarketMetadata(marketCode);
     const marketName = marketMetadata?.labels.pl ?? raw.name;
 
-    const selections = raw.selections.map((sel: { name: string; odds: number }) => ({
-      code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, teamSide),
-      label: sel.name,
-      odds: sel.odds,
-    }));
+    let selections;
+    if (marketCode === "RESULT_OR_TOTAL") {
+      // Cluster #3: unlike superbet's single raw market that already lists
+      // all six HOME_OVER/DRAW_UNDER/etc. selections together, etoto quotes
+      // each team x direction leg as its OWN two-way Tak/Nie market ("<team>
+      // wygra lub powyżej 2.5": Tak/Nie). Only the "Tak" price is the
+      // six-way selection's price (e.g. Tak on "Francja wygra lub poniżej
+      // 2.5" IS the HOME_UNDER price); "Nie" has no counterpart in that
+      // vocabulary — including it would dedup-collide across all six raw
+      // entries at the same line (see the grouper's first-quote-wins
+      // dedup) and silently keep only one of six "Nie" prices under a
+      // meaningless shared "NO" code, so it is dropped entirely here.
+      const combo = resolveResultOrTotalCombo(raw.name, ctx);
+      const yesSelection = raw.selections.find(
+        (sel: { name: string }) => normalizeYesNoSelection(sel.name) === "YES"
+      );
+      if (!combo || !yesSelection) {
+        console.warn(`[etoto] RESULT_OR_TOTAL: could not resolve combo/Tak leg for "${raw.name}"`);
+        return null;
+      }
+      selections = [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }];
+    } else {
+      selections = raw.selections.map((sel: { name: string; odds: number }) => ({
+        code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, teamSide),
+        label: sel.name,
+        odds: sel.odds,
+      }));
+    }
+
+    // Clean-sheet-derived TO_SCORE entries need YES/NO inverted after the
+    // generic mapping above (audit cluster #0, findings 3/4 — see
+    // isCleanSheetRawName). Must not affect etoto's genuine direct
+    // HOME/AWAY_TEAM_TO_SCORE raws (ids -344/-343, "<team> strzeli gola"),
+    // which share the same final marketCode but are not clean-sheet-shaped.
+    if (
+      (marketCode === "HOME_TEAM_TO_SCORE" ||
+        marketCode === "AWAY_TEAM_TO_SCORE" ||
+        marketCode === "HALF_TIME_HOME_TO_SCORE" ||
+        marketCode === "HALF_TIME_AWAY_TO_SCORE" ||
+        marketCode === "SECOND_HALF_HOME_TO_SCORE" ||
+        marketCode === "SECOND_HALF_AWAY_TO_SCORE") &&
+      isCleanSheetRawName(raw.name)
+    ) {
+      selections = selections.map((sel) => ({
+        ...sel,
+        code: sel.code === "YES" ? "NO" : sel.code === "NO" ? "YES" : sel.code,
+      }));
+    }
 
     if (marketCode === "OTHER") {
       console.warn(`[etoto] Unmapped market "${raw.name}" (id: ${marketId ?? "none"})`);

@@ -100,10 +100,14 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "Team2ScoreInSecondHalf": "SECOND_HALF_AWAY_TO_SCORE",
   "Team1ScoreYes/no": "HOME_TEAM_TO_SCORE",
   "Handicap": "EUROPEAN_HANDICAP",
-  // Binary Yes/No prop ("Dokładnie 1 gol w całym meczu") — matches the
-  // EXACT_GOALS_YN code lvbet uses; it must NOT be flattened into the
-  // EXACT_GOALS 0..6+ distribution (its YES/NO selections were orphans there).
-  "Exactly1GoalsinMatch": "EXACT_GOALS_YN",
+  // Binary Yes/No prop ("Dokładnie 1 gol w całym meczu") quotes the exact
+  // same real-world bet as "TotalGoalsExact"'s "1" selection (both priced
+  // 5.55 in the audit's live capture) — round 9 /audit-match (Arsenal vs
+  // Coventry City): the old dedicated EXACT_GOALS_YN card duplicated the
+  // "1" entry of the EXACT_GOALS card instead of pooling into it. Route
+  // straight to EXACT_GOALS; the marketCode-override block below remaps
+  // YES -> "1" and drops NO (see the "Exactly1GoalsinMatch" special-case).
+  "Exactly1GoalsinMatch": "EXACT_GOALS",
   "AnytimeGoalscorerDoubleChance": "TWO_PLAYERS_ANYTIME",
   "PlayerWillScoreandTheOpponentTeamWillWin": "PLAYER_GOAL_TEAM_LOSES",
   "MatchScoreDraw": "SCORING_DRAW",
@@ -222,7 +226,7 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "2ndHalfYellowCardsOver/Under": "SECOND_HALF_CARDS_TOTAL",
   "YellowCards:2ndHalfResult": "SECOND_HALF_CARDS_1X2",
   "HalfTimeYellowCardHandicap": "HALF_TIME_CARDS_HANDICAP",
-  "YellowCards1stHalfTeam2Total": "HALF_TIME_AWAY_TEAM_CARDS",
+  "YellowCards1stHalfTeam2Total": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
   "YellowCards:1stHalfTeam1Total": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
   "1stHalfYellowCardsOver/Under": "HALF_TIME_CARDS_TOTAL",
   "HalfTimeFoulsHandicap": "HALF_TIME_FOULS_HANDICAP",
@@ -305,11 +309,12 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "GoalFromOutsidetheBox": "GOAL_OUTSIDE_BOX",
 };
 
-// Known Swarm market ids with no catalog counterpart. EXACT_GOALS_YN is not
-// parameterized, so the "exactly N goals" Yes/No props for N >= 2 would all
-// collide on one key (and mapping them onto EXACT_GOALS orphans their YES/NO
-// selections inside the 0..6+ combination). Excluded to OTHER until a
-// parameterized catalog code exists.
+// Known Swarm market ids with no catalog counterpart. The "exactly N goals"
+// Yes/No props for N >= 2 (unlike N == 1, see "Exactly1GoalsinMatch" above,
+// which is recoded onto EXACT_GOALS' "1" selection) still have no dedicated
+// per-count remap here — left excluded to OTHER rather than expanding this
+// fix beyond its audited scope (round 9 /audit-match, Arsenal vs Coventry
+// City, targeted only the observed "1" duplicate).
 const BETCRIS_EXCLUDED_MARKET_IDS = new Set<string>([
   "Exactly2GoalsinMatch",
   "Exactly3GoalsinMatch",
@@ -1088,7 +1093,7 @@ const STAT_OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "YELLOW_CARDS_TOTAL",
   "HALF_TIME_CARDS_TOTAL",
   "SECOND_HALF_CARDS_TOTAL",
-  "HALF_TIME_AWAY_TEAM_CARDS",
+  "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
   "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
   "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
   "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
@@ -1292,6 +1297,11 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
   ): NormalizedMarketOutput | null {
     let marketCode: NormalizedMarketType | null = null;
     let matchedBy: "id" | "name" | "pattern" = "id";
+    // audit-loop cluster #2 (winning-margin family): set below when HOME/
+    // AWAY_WIN_EXACT_MARGIN gets rerouted into the shared WINNING_MARGIN
+    // pool, so the later selection-transform block still knows which side
+    // this row belongs to after marketCode itself has been overwritten.
+    let winningMarginSide: "HOME" | "AWAY" | undefined;
 
     const marketType = extractMarketType(raw);
     if (marketType && BETCRIS_EXCLUDED_MARKET_IDS.has(marketType)) {
@@ -1427,6 +1437,26 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       // code instead of leaking these as UNKNOWN inside the team totals.
       marketCode = marketCode === "HOME_TEAM_TOTAL_GOALS" ? "HOME_EXACT_GOALS" : "AWAY_EXACT_GOALS";
     }
+    if (
+      (marketCode === "HOME_WIN_EXACT_MARGIN" || marketCode === "AWAY_WIN_EXACT_MARGIN") &&
+      raw.paramValue &&
+      ["1", "2", "3"].includes(raw.paramValue.trim())
+    ) {
+      // audit-loop cluster #2 (winning-margin family): "<Team> wygra
+      // dokładną różnicą goli" margin 1/2/3 are the SAME real-world
+      // outcomes the 6-bookmaker WINNING_MARGIN combination pool (sts/
+      // betfan/etoto/forbet/fuksiarz/betclic) already prices as HOME_BY_1/
+      // HOME_BY_2/HOME_BY_3PLUS — reroute into that shared pool instead of
+      // betcris sitting in its own isolated HOME/AWAY_WIN_EXACT_MARGIN
+      // code. Margin 4 has no "3+"-bucket equivalent once margin 3 already
+      // occupies it, so it deliberately stays on the standalone code (see
+      // the selection-transform block below and that catalog entry's
+      // comment). The selection-transform block converts the YES leg into
+      // the matching HOME_BY_N/AWAY_BY_N selection and drops the NO leg,
+      // which has no slot in a single-select combination market.
+      winningMarginSide = marketCode === "HOME_WIN_EXACT_MARGIN" ? "HOME" : "AWAY";
+      marketCode = "WINNING_MARGIN";
+    }
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[betcris] Market code "${marketCode}" not in catalog`);
@@ -1447,6 +1477,22 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // WINNING_MARGIN (rerouted from HOME/AWAY_WIN_EXACT_MARGIN above, margin
+    // 1/2/3 only): the YES leg IS the "<side> wins by exactly <margin>"
+    // outcome the combination market already models as a single selection
+    // (HOME_BY_1/HOME_BY_2/HOME_BY_3PLUS or the AWAY_ equivalents); the NO
+    // leg ("does not win by exactly that margin") has no matching single-
+    // select outcome in a combination market, so it is dropped rather than
+    // leaking an UNKNOWN row.
+    if (marketCode === "WINNING_MARGIN" && winningMarginSide) {
+      const margin = raw.paramValue?.trim();
+      const bucket = margin === "3" ? "3PLUS" : margin;
+      const targetCode = `${winningMarginSide}_BY_${bucket}` as NormalizedSelection;
+      selections = selections
+        .filter((sel) => sel.code === "YES")
+        .map((sel) => ({ ...sel, code: targetCode }));
+    }
 
     // CORNERS_RANGE: betcris quotes a 5-tier scale ("5 lub mniej"/"6-8"/
     // "9-11"/"12-14"/"15 lub więcej") that collapses onto the catalog's
@@ -1491,6 +1537,20 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     // go — drop it instead of leaking an UNKNOWN selection into the market.
     if (marketCode === "TOTAL_GOALS") {
       selections = selections.filter((sel) => !/^dok[lł]adnie\b/i.test(sel.label.trim()));
+    }
+
+    // "Exactly1GoalsinMatch" ("Dokładnie 1 gol w całym meczu") is a binary
+    // Tak/Nie prop for the identical real-world bet as EXACT_GOALS' "1"
+    // selection (round 9 /audit-match, Arsenal vs Coventry City: both were
+    // quoted at odds 5.55). Recode the YES leg onto the shared "1" selection
+    // so it pools with "TotalGoalsExact"'s ladder instead of rendering its
+    // own duplicate card; the NO leg ("not exactly 1 goal") has no matching
+    // EXACT_GOALS selection code, so it is dropped rather than leaking an
+    // UNKNOWN row.
+    if (marketCode === "EXACT_GOALS" && marketType === "Exactly1GoalsinMatch") {
+      selections = selections
+        .filter((sel) => /^(tak|yes)\b/i.test(sel.label.trim()))
+        .map((sel) => ({ ...sel, code: "1" as NormalizedSelection }));
     }
 
     // GOAL_RANGE/MULTI_GOAL_RANGE: drop MultiGoal's "Inny" catch-all leg
@@ -1654,6 +1714,33 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)
     ) {
       paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
+    }
+
+    // "Liczba czerwonych kartek" ("RedCardsOverUnder") never carries a
+    // visible line — betcris' raw selections are bare "Powyżej "/"Poniżej "
+    // with no number — but it is the exact same real-world bet as the
+    // whole-match RED_CARD YES/NO binary other bookmakers (betclic/betfan/
+    // forbet/sts/etoto/fortuna) already use. Alias it into RED_CARD so it
+    // pools with them instead of sitting in its own paramless
+    // "RED_CARDS_TOTAL" bucket (audit cluster #5: "Czerwona kartka w meczu"
+    // duplicate).
+    if (marketCode === "RED_CARDS_TOTAL" && paramValue === undefined) {
+      marketCode = "RED_CARD";
+      selections = selections.map((sel) => ({
+        ...sel,
+        code: sel.code === "OVER" ? "YES" : sel.code === "UNDER" ? "NO" : sel.code,
+      }));
+    }
+
+    // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
+    // both halves" bet (mirrors the RED_CARDS_TOTAL collapse just above) —
+    // collapse onto BOTH_HALVES_GOALS so it pools with every other
+    // bookmaker's Tak/Nie card instead of forking into its own
+    // BOTH_HALVES_OVER_GOALS:0.5 bucket. Selections are already YES/NO for
+    // both codes, so no remap is needed.
+    if (marketCode === "BOTH_HALVES_OVER_GOALS" && paramValue === "0.5") {
+      marketCode = "BOTH_HALVES_GOALS";
+      paramValue = undefined;
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

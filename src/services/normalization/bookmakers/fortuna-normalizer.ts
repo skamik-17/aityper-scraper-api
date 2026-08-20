@@ -135,6 +135,12 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-l6": "CARDS_TEAM", // "Mecz: <team2> - liczba Żółtych Kartek"
   "ufo:mtyp:00-gj": "CARDS_RACE", // "Mecz: więcej Żółtych Kartek"
   "ufo:mtyp:00-o0": "FIRST_CARD", // "Mecz: pierwsza żółta kartka"
+  // "Mecz: Czerwona Kartka (bez CK dla trenera i sztabu)" is a plain
+  // whole-match YES/NO ("Tak"/"Nie" selections, handled by the default
+  // switch case below) — the same bet other bookmakers already pool under
+  // RED_CARD. Was previously unmapped and fell through to OTHER (audit
+  // cluster #5: "Czerwona kartka w meczu" duplicate).
+  "ufo:mtyp:00-06": "RED_CARD",
   "ufo:mtyp:00-h3": "OFFSIDES_TOTAL", // "Mecz: liczba spalonych"
   "ufo:mtyp:00-kx": "HOME_TEAM_TOTAL_OFFSIDES", // "Mecz: <team1> - liczba spalonych"
   "ufo:mtyp:00-ky": "AWAY_TEAM_TOTAL_OFFSIDES", // "Mecz: <team2> - liczba spalonych"
@@ -174,19 +180,24 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // HALF_TIME_DOUBLE_CHANCE_BTTS, matching etoto/sts's half-time figures for
   // this fixture (10/Tak@6 vs etoto HT 1X_YES@6).
   "ufo:mtyp:00-1y": "DOUBLE_CHANCE_BTTS",
-  // audit-match (Arsenal vs Coventry City) UX gap-analysis: these 4 ids are
-  // fortuna's own {home,away} x {over,under} 2x2 grid for "team wins or
-  // total goals over/under X" — verified via fresh raw capture: 7b="Arsenal
-  // wygra / powyżej", 7c="Mecz: Arsenal wygra / poniżej" (previously entirely
+  // audit-match (Arsenal vs Coventry City) UX gap-analysis, then cluster #3
+  // (RESULT_OR_TOTAL fragmentation): these 4 ids are fortuna's own
+  // {home,away} x {over,under} 2x2 grid for "team wins or total goals
+  // over/under X" — verified via fresh raw capture: 7b="Arsenal wygra /
+  // powyżej", 7c="Mecz: Arsenal wygra / poniżej" (previously entirely
   // unmapped, logged as "Unknown market" and dropped), 7d="Coventry wygra /
-  // powyżej", 7e="Coventry wygra / poniżej". 7b used to have its own
-  // duplicate code (TEAM_WIN_OR_OVER) purely because it and 7d were mapped
-  // independently — merged into TEAM_WIN_OR_OVER_GOALS; team side for all 4
-  // now comes from FORTUNA_TEAM_SCOPED_ID_SIDE via FORTUNA_TEAM_LINE_PARAM_MARKETS.
-  "ufo:mtyp:00-7b": "TEAM_WIN_OR_OVER_GOALS",
-  "ufo:mtyp:00-7c": "TEAM_WIN_OR_TOTAL_UNDER",
-  "ufo:mtyp:00-7d": "TEAM_WIN_OR_OVER_GOALS",
-  "ufo:mtyp:00-7e": "TEAM_WIN_OR_TOTAL_UNDER",
+  // powyżej", 7e="Coventry wygra / poniżej". They used to route to two
+  // fortuna-only catalog codes (TEAM_WIN_OR_OVER_GOALS/TEAM_WIN_OR_TOTAL_
+  // UNDER, side carried in the param as "HOME:2.5"); now all 4 pool into the
+  // shared, plain-line-parameterized RESULT_OR_TOTAL code (the same one
+  // superbet already uses) so fortuna's prices merge with superbet/etoto/
+  // forbet's instead of sitting in fortuna-only cards. The specific
+  // HOME_OVER/AWAY_UNDER/etc. selection for each id comes from
+  // FORTUNA_RESULT_OR_TOTAL_ID_COMBO in normalizeMarket below.
+  "ufo:mtyp:00-7b": "RESULT_OR_TOTAL",
+  "ufo:mtyp:00-7c": "RESULT_OR_TOTAL",
+  "ufo:mtyp:00-7d": "RESULT_OR_TOTAL",
+  "ufo:mtyp:00-7e": "RESULT_OR_TOTAL",
   // Match result family
   "ufo:mtyp:00-60": "MATCH_WINNER",
   "ufo:mtyp:00-2x": "MATCH_WINNER",
@@ -239,12 +250,21 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Half-scoped clean-sheet props (audit /audit-match, premier-league
   // Arsenal vs Coventry City): each id is already team- and window-specific
   // (unlike 00-1f/00-1g, which share the TEAM_CLEAN_SHEET intermediate code
-  // and need the name router below to pick a side), so these map straight
-  // to their catalog code.
-  "ufo:mtyp:00-2o": "HALF_TIME_HOME_CLEAN_SHEET", // "1.połowa: <team1> nie straci gola"
-  "ufo:mtyp:00-2p": "HALF_TIME_AWAY_CLEAN_SHEET", // "1.połowa: <team2> nie straci gola"
-  "ufo:mtyp:00-3h": "SECOND_HALF_HOME_CLEAN_SHEET", // "2.połowa: <team1> nie straci gola"
-  "ufo:mtyp:00-3i": "SECOND_HALF_AWAY_CLEAN_SHEET", // "2.połowa: <team2> nie straci gola"
+  // and need the name router below to pick a side).
+  //
+  // Retired the dedicated HALF_TIME/SECOND_HALF_*_CLEAN_SHEET catalog codes
+  // (audit cluster #0, findings 3/4): "{team} won't concede" is the exact
+  // same real-world proposition as "opponent won't score" — with a
+  // half-disjoint bookmaker pool (this family: betfan/betclic/fortuna/
+  // pzbuk/forbet/etoto; the TO_SCORE family: sts/betcris/superbet/fuksiarz/
+  // lvbet). Route straight to the OPPOSING side's *_TO_SCORE code instead;
+  // the selection-normalizer default case below inverts YES/NO for these
+  // (fortuna has no other raw source for HALF_TIME/SECOND_HALF_*_TO_SCORE,
+  // so an unconditional inversion here is safe).
+  "ufo:mtyp:00-2o": "HALF_TIME_AWAY_TO_SCORE", // "1.połowa: <team1=home> nie straci gola" -> away didn't score
+  "ufo:mtyp:00-2p": "HALF_TIME_HOME_TO_SCORE", // "1.połowa: <team2=away> nie straci gola" -> home didn't score
+  "ufo:mtyp:00-3h": "SECOND_HALF_AWAY_TO_SCORE", // "2.połowa: <team1=home> nie straci gola" -> away didn't score
+  "ufo:mtyp:00-3i": "SECOND_HALF_HOME_TO_SCORE", // "2.połowa: <team2=away> nie straci gola" -> home didn't score
   "ufo:mtyp:00-36": "TEAM_WINS_MATCH",
   "ufo:mtyp:00-q0": "HALF_TIME_STOPPAGE_TIME_GOAL",
   "ufo:mtyp:00-q1": "SECOND_HALF_ADDED_TIME_GOAL",
@@ -451,6 +471,24 @@ function resolveFortunaTeamSide(
   return side === "HOME" || side === "AWAY" ? side : undefined;
 }
 
+/**
+ * Resolves which team a "1.połowa: <team> przedział rzutów rożnych" (1st
+ * half per-team corner range) raw market refers to. The team token sits
+ * between the half-scope prefix and "przedział", not before a "liczba"
+ * keyword like resolveFortunaTeamSide expects, so this needs its own match.
+ */
+function resolveFortunaHalfTimeCornerRangeSide(
+  rawName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | undefined {
+  if (isPlaceholderMarketName(rawName)) return undefined;
+  const stripped = stripFortunaScope(rawName);
+  const teamToken = stripped.match(/^(.+?)\s+przedzia[łl]\s/iu);
+  if (!teamToken) return undefined;
+  const side = normalize1x2Selection(teamToken[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+  return side === "HOME" || side === "AWAY" ? side : undefined;
+}
+
 // Fortuna type ids come in team1/team2 pairs; the id itself implies the side
 // when the (possibly fallback) market name cannot be team-matched. Verified
 // against the live API: the first id of each pair is always the home team.
@@ -473,13 +511,29 @@ const FORTUNA_TEAM_SCOPED_ID_SIDE: Record<string, "HOME" | "AWAY"> = {
 
 // Markets whose side lives in the parameter ("HOME:4.5"), matching the
 // betclic/forbet convention — catalog selections are plain OVER/UNDER.
+// TEAM_WIN_OR_OVER_GOALS / TEAM_WIN_OR_TOTAL_UNDER used to live here (side
+// prefixed onto the line, e.g. "HOME:2.5") but were retired into the shared
+// RESULT_OR_TOTAL code (cluster #3) - see FORTUNA_RESULT_OR_TOTAL_ID_COMBO
+// and its call site in normalizeMarket below for the replacement.
 const FORTUNA_TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "CORNERS_TEAM",
   "TEAM_TOTAL_SHOTS",
   "TEAM_TOTAL_SHOTS_ON_TARGET",
-  "TEAM_WIN_OR_OVER_GOALS",
-  "TEAM_WIN_OR_TOTAL_UNDER",
 ]);
+
+/**
+ * Cluster #3 (RESULT_OR_TOTAL fragmentation): the "team win or over/under
+ * total goals" 2x2 id grid resolves straight to the pooled RESULT_OR_TOTAL
+ * market's six-way selection code — same {home,away} x {over,under} layout
+ * as FORTUNA_TEAM_SCOPED_ID_SIDE above, just merged with the over/under leg
+ * each id represents.
+ */
+const FORTUNA_RESULT_OR_TOTAL_ID_COMBO: Record<string, NormalizedSelection> = {
+  "ufo:mtyp:00-7b": "HOME_OVER",
+  "ufo:mtyp:00-7c": "HOME_UNDER",
+  "ufo:mtyp:00-7d": "AWAY_OVER",
+  "ufo:mtyp:00-7e": "AWAY_UNDER",
+};
 
 // Side-directional codes: when the market name resolves to the opposite team
 // (Fortuna's id->side pairing is positional), flip to the counterpart code.
@@ -876,15 +930,6 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "TEAM_WIN_OR_OVER_GOALS":
-    case "TEAM_WIN_OR_TOTAL_UNDER": {
-      // "Tak (przynajmniej 1 warunek zostanie spełniony)" / "Nie (oba
-      // warunki nie zostaną spełnione)" -> YES / NO
-      if (/^tak\b/.test(normalized)) return "YES";
-      if (/^nie\b/.test(normalized)) return "NO";
-      return normalizeYesNoSelection(trimmed);
-    }
-
     case "ODD_EVEN_GOALS":
     case "HOME_TEAM_ODD_EVEN_GOALS":
     case "AWAY_TEAM_ODD_EVEN_GOALS":
@@ -928,14 +973,15 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "HALF_TIME_CORNERS_TEAM_RANGE":
-      // Genuine range/count labels ("0", "1", "3+", "0-1", "4+", ...) are
-      // already handled by the literal-catalog-code passthrough above.
-      // Fortuna bundles a separate "which team gets more 1st-half corners"
-      // prop (team names, plus a numeric "3" draw code) into the same raw
-      // entry; those labels aren't part of this count-based market's
-      // vocabulary and must not be coerced into a spurious HOME/DRAW/AWAY
-      // code via the generic 1X2 fallback below.
+    case "HALF_TIME_HOME_EXACT_CORNERS":
+    case "HALF_TIME_AWAY_EXACT_CORNERS":
+      // Genuine range/count labels ("0-1", "2", "3", "4+", ...) are already
+      // handled by the literal-catalog-code passthrough above. Fortuna
+      // bundles a separate "which team gets more 1st-half corners" prop
+      // (a leaked team-name selection) into the same raw entry; that label
+      // isn't part of this count-based market's vocabulary and must not be
+      // coerced into a spurious HOME/AWAY code via the generic 1X2 fallback
+      // below (audit cluster #11).
       return "UNKNOWN";
 
     case "GOAL_RANGE":
@@ -1009,6 +1055,24 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    // Fortuna only ever reaches these six codes via the clean-sheet router
+    // above ("{opponent} nie straci gola" -> this side's TO_SCORE) — it has
+    // no other raw market for HOME/AWAY_TEAM_TO_SCORE or the half-scoped
+    // variants, so inverting unconditionally here is safe (audit cluster
+    // #0, findings 3/4). Clean sheet YES (opponent concedes nothing) means
+    // THIS side did NOT score.
+    case "HOME_TEAM_TO_SCORE":
+    case "AWAY_TEAM_TO_SCORE":
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
+    case "SECOND_HALF_HOME_TO_SCORE":
+    case "SECOND_HALF_AWAY_TO_SCORE": {
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "NO";
+      if (yesNo === "NO") return "YES";
+      return trimmed as NormalizedSelection;
+    }
+
     default: {
       // Many Fortuna binary markets (SUBSTITUTE_GOAL, TEAM_WIN, VAR_REVIEW, ...)
       // quote plain "Tak"/"Nie" selections.
@@ -1049,24 +1113,6 @@ function extractParamValue(
   if (marketCode === "TIME_PERIOD_RESULT") {
     const quarter = normalizeMarketName(nameForParsing).match(/^(\d+)\s*\.?\s*kwart/);
     if (quarter) return `q${quarter[1]}`;
-  }
-
-  // "1.połowa: <team> przedział rzutów rożnych" is a per-team half-scoped
-  // corner range (catalog parameterType:"team"), but the raw name has no
-  // "liczba" keyword for resolveFortunaTeamSide — the team token instead sits
-  // between the half-scope prefix and "przedział". Without this, every row
-  // collapsed into one unlabeled "base" bucket (market-display audit:
-  // Arsenal vs Coventry City) instead of a HOME/AWAY-parameterized market,
-  // hiding which team the card actually describes and preventing fortuna's
-  // odds from merging with peers on the same HALF_TIME_CORNERS_TEAM_RANGE key.
-  if (marketCode === "HALF_TIME_CORNERS_TEAM_RANGE") {
-    const stripped = stripFortunaScope(nameForParsing);
-    const teamToken = stripped.match(/^(.+?)\s+przedzia[łl]\s/iu);
-    if (teamToken) {
-      const side = normalize1x2Selection(teamToken[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
-      if (side === "HOME" || side === "AWAY") return side;
-    }
-    return undefined;
   }
 
   switch (metadata.parameterType) {
@@ -1136,12 +1182,27 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       // corner range) has no stable marketTypeId observed in this fixture's
       // payload; route by name so it doesn't fall through to the generic
       // OTHER bucket, which merges it with unrelated proposition markets.
-      marketCode =
-        findMarketCodeFromName(raw.name) ??
-        (/przedzia[łl]\s+rzut[oó]w\s+ro[żz]nych/iu.test(raw.name) &&
-        /^\s*1\s*\.?\s*po[łl]owa\s*:/iu.test(raw.name)
-          ? "HALF_TIME_CORNERS_TEAM_RANGE"
-          : null);
+      // audit-match cluster #11: its "0-1"/"2"/"3"/"4+" vocabulary is the
+      // SAME grouped exact-corners scheme betclic/betfan/etoto/forbet/
+      // fuksiarz/sts already pool under HALF_TIME_HOME/AWAY_EXACT_CORNERS —
+      // route straight into those by detected team side instead of the
+      // standalone HALF_TIME_CORNERS_TEAM_RANGE code, whose different
+      // ("0","1","2","3+",...) vocabulary silently dropped the exact "3"
+      // price as UNKNOWN and left fortuna isolated from that 6-bookmaker pool.
+      const isHalfTimeCornerRange =
+        /przedzia[łl]\s+rzut[oó]w\s+ro[żz]nych/iu.test(raw.name) &&
+        /^\s*1\s*\.?\s*po[łl]owa\s*:/iu.test(raw.name);
+      let halfTimeCornerRangeCode: NormalizedMarketType | null = null;
+      if (isHalfTimeCornerRange) {
+        const side = resolveFortunaHalfTimeCornerRangeSide(raw.name, ctx);
+        halfTimeCornerRangeCode =
+          side === "HOME"
+            ? "HALF_TIME_HOME_EXACT_CORNERS"
+            : side === "AWAY"
+              ? "HALF_TIME_AWAY_EXACT_CORNERS"
+              : null;
+      }
+      marketCode = findMarketCodeFromName(raw.name) ?? halfTimeCornerRangeCode;
     }
 
     if (!marketCode) {
@@ -1268,7 +1329,12 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // "X nie straci gola" (won't concede) is a per-team YES/NO clean-sheet
-    // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team.
+    // prop, not the HOME/AWAY comparison TEAM_CLEAN_SHEET. Route by team —
+    // and to the OPPOSING side's TEAM_TO_SCORE code, not a dedicated
+    // CLEAN_SHEET code (retired: audit cluster #0, findings 3/4 — "{team}
+    // won't concede" is the same bet as "opponent won't score", and fortuna
+    // had no other source for HOME/AWAY_TEAM_TO_SCORE to collide with). The
+    // selection-normalizer default case below inverts YES/NO accordingly.
     if (marketCode === "TEAM_CLEAN_SHEET") {
       const teamPrefix = scopedName.match(/^(.+?)\s+-?\s*nie\s+straci\s+gola/i);
       if (!teamPrefix) return null;
@@ -1278,8 +1344,8 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
         ctx.awayTeam,
         ctx.league
       );
-      if (side === "HOME") marketCode = "HOME_CLEAN_SHEET";
-      else if (side === "AWAY") marketCode = "AWAY_CLEAN_SHEET";
+      if (side === "HOME") marketCode = "AWAY_TEAM_TO_SCORE";
+      else if (side === "AWAY") marketCode = "HOME_TEAM_TO_SCORE";
       else return null;
     }
 
@@ -1331,6 +1397,41 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     if (!isValidMarketCode(marketCode)) {
       console.error(`[fortuna] Market code "${marketCode}" not in catalog`);
       return null;
+    }
+
+    // Cluster #3 (RESULT_OR_TOTAL fragmentation): unlike superbet's single
+    // raw market that already lists all six HOME_OVER/DRAW_UNDER/etc.
+    // selections together, fortuna quotes each team x direction leg as its
+    // OWN two-way Tak/Nie market ("Arsenal wygra / powyżej 2.5 goli":
+    // Tak/Nie). Only the "Tak" price is the six-way selection's price; "Nie"
+    // has no counterpart in that vocabulary — mapping it through the generic
+    // per-selection path below would collide all four raw entries' "Nie"
+    // prices onto one meaningless shared "NO" code (first-quote-wins dedup
+    // in the grouper), so it is filtered out here instead.
+    if (marketCode === "RESULT_OR_TOTAL") {
+      const combo = marketId ? FORTUNA_RESULT_OR_TOTAL_ID_COMBO[marketId] : undefined;
+      const yesSelection = raw.selections.find((sel) =>
+        /^tak\b/.test(normalizeMarketName(sel.name))
+      );
+      if (!combo || !yesSelection) {
+        console.warn(
+          `[fortuna] RESULT_OR_TOTAL: could not resolve combo/Tak leg for "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
+      const paramValue = extractParamValue(marketCode, raw, ctx);
+      const marketKey = buildMarketKey(marketCode, paramValue);
+      return {
+        marketCode,
+        paramValue,
+        marketKey,
+        selections: [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }],
+        debug: {
+          rawName: raw.name,
+          rawId: marketId ?? undefined,
+          matchedBy,
+        },
+      };
     }
 
     // Per-player OPTA markets carry the player only in the market name.
@@ -1449,7 +1550,8 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode === "CORNERS_HANDICAP" ||
       // Drops the bundled "corners race" garbage rows (see the UNKNOWN case
       // above) so only genuine range/count selections reach the output.
-      marketCode === "HALF_TIME_CORNERS_TEAM_RANGE"
+      marketCode === "HALF_TIME_HOME_EXACT_CORNERS" ||
+      marketCode === "HALF_TIME_AWAY_EXACT_CORNERS"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

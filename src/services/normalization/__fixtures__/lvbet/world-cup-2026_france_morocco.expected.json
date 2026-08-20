@@ -3296,8 +3296,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "FIRST_CARD_PLAYER",
-        "marketKey": "FIRST_CARD_PLAYER",
+        "marketCode": "FIRST_PLAYER_CARDED",
+        "marketKey": "FIRST_PLAYER_CARDED",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -3560,7 +3560,7 @@
         ]
       },
       "index": 32,
-      "marketCode": "FIRST_CARD_PLAYER",
+      "marketCode": "FIRST_PLAYER_CARDED",
       "rawName": "Pierwszy zawodnik, który otrzyma kartkę"
     },
     {
@@ -3620,9 +3620,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "BOTH_TEAMS_MIN_CARDS",
-        "marketKey": "BOTH_TEAMS_MIN_CARDS",
+        "marketKey": "BOTH_TEAMS_MIN_CARDS:2",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "2",
         "parameters": null,
         "selections": [
           {
@@ -10232,8 +10232,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "LAST_YELLOW_CARD",
-        "marketKey": "LAST_YELLOW_CARD",
+        "marketCode": "LAST_CARD",
+        "marketKey": "LAST_CARD",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -10251,7 +10251,7 @@
         ]
       },
       "index": 199,
-      "marketCode": "LAST_YELLOW_CARD",
+      "marketCode": "LAST_CARD",
       "rawName": "Ostatnia żółta kartka"
     },
     {
@@ -10303,8 +10303,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "FIRST_HALF_CARDS_1X2",
-        "marketKey": "FIRST_HALF_CARDS_1X2",
+        "marketCode": "HALF_TIME_CARDS_RACE",
+        "marketKey": "HALF_TIME_CARDS_RACE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -10327,7 +10327,7 @@
         ]
       },
       "index": 203,
-      "marketCode": "FIRST_HALF_CARDS_1X2",
+      "marketCode": "HALF_TIME_CARDS_RACE",
       "rawName": "Żółte kartki - 1. połowa: Wynik"
     },
     {
@@ -10817,8 +10817,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
-        "marketKey": "SECOND_HALF_TEAM_GOAL_RANGE",
+        "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -10842,11 +10842,21 @@
             "code": "HOME_2-3",
             "label": "2-3",
             "odds": 3.2
+          },
+          {
+            "code": "HOME_2-4",
+            "label": "2-4",
+            "odds": 3.1
+          },
+          {
+            "code": "HOME_3-4",
+            "label": "3-4",
+            "odds": 9
           }
         ]
       },
       "index": 217,
-      "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
+      "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
       "rawName": "2nd Half Francja Total Goals (Extended Bands)"
     },
     {
@@ -10884,8 +10894,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
-        "marketKey": "SECOND_HALF_TEAM_GOAL_RANGE",
+        "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -10909,11 +10919,21 @@
             "code": "AWAY_2-3",
             "label": "2-3",
             "odds": 6.75
+          },
+          {
+            "code": "AWAY_2-4",
+            "label": "2-4",
+            "odds": 9.25
+          },
+          {
+            "code": "AWAY_3-4",
+            "label": "3-4",
+            "odds": 51
           }
         ]
       },
       "index": 219,
-      "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
+      "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
       "rawName": "2nd Half Maroko Total Goals (Extended Bands)"
     },
     {
@@ -11802,26 +11822,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "EXACT_GOALS_YN",
-        "marketKey": "EXACT_GOALS_YN:1",
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
         "matchedBy": "pattern",
-        "paramValue": "1",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "1",
             "label": "Tak",
             "odds": 4.05
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 1.2
           }
         ]
       },
       "index": 257,
-      "marketCode": "EXACT_GOALS_YN",
+      "marketCode": "EXACT_GOALS",
       "rawName": "Dokładnie 1 gol w meczu"
     },
     {
@@ -15251,8 +15266,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:4.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:4.5",
         "matchedBy": "pattern",
         "paramValue": "4.5",
         "parameters": null,
@@ -15270,7 +15285,7 @@
         ]
       },
       "index": 375,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 4.5"
     },
     {
@@ -16457,227 +16472,6 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_FOULS_OVER",
-        "marketKey": "PLAYER_FOULS_OVER",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "Redouane Halhal",
-            "label": "Redouane Halhal",
-            "odds": 3.75
-          },
-          {
-            "code": "Sofyan Amrabat",
-            "label": "Sofyan Amrabat",
-            "odds": 4.7
-          },
-          {
-            "code": "Gessime Yassine",
-            "label": "Gessime Yassine",
-            "odds": 4.9
-          },
-          {
-            "code": "Marwane Saadane",
-            "label": "Marwane Saadane",
-            "odds": 5
-          },
-          {
-            "code": "Ayoub El Kaabi",
-            "label": "Ayoub El Kaabi",
-            "odds": 5
-          },
-          {
-            "code": "Anass Salah Eddine",
-            "label": "Anass Salah Eddine",
-            "odds": 5.3
-          },
-          {
-            "code": "Desire Doue",
-            "label": "Desire Doue",
-            "odds": 5.4
-          },
-          {
-            "code": "Ayyoub Bouaddi",
-            "label": "Ayyoub Bouaddi",
-            "odds": 5.5
-          },
-          {
-            "code": "Neil El Aynaoui",
-            "label": "Neil El Aynaoui",
-            "odds": 5.5
-          },
-          {
-            "code": "Bilal El Khannouss",
-            "label": "Bilal El Khannouss",
-            "odds": 6
-          },
-          {
-            "code": "Adrien Rabiot",
-            "label": "Adrien Rabiot",
-            "odds": 6.25
-          },
-          {
-            "code": "Manu Kone",
-            "label": "Manu Kone",
-            "odds": 6.25
-          },
-          {
-            "code": "Ayoube Amaimouni",
-            "label": "Ayoube Amaimouni",
-            "odds": 6.75
-          },
-          {
-            "code": "Aurelien Tchouameni",
-            "label": "Aurelien Tchouameni",
-            "odds": 6.75
-          },
-          {
-            "code": "Maghnes Akliouche",
-            "label": "Maghnes Akliouche",
-            "odds": 7
-          },
-          {
-            "code": "Samir El Mourabet",
-            "label": "Samir El Mourabet",
-            "odds": 7
-          },
-          {
-            "code": "Soufiane Rahimi",
-            "label": "Soufiane Rahimi",
-            "odds": 7.5
-          },
-          {
-            "code": "Achraf Hakimi",
-            "label": "Achraf Hakimi",
-            "odds": 7.5
-          },
-          {
-            "code": "Amine Sbai",
-            "label": "Amine Sbai",
-            "odds": 7.5
-          },
-          {
-            "code": "Brahim Diaz",
-            "label": "Brahim Diaz",
-            "odds": 8.25
-          },
-          {
-            "code": "Lucas Hernandez",
-            "label": "Lucas Hernandez",
-            "odds": 9
-          },
-          {
-            "code": "Bradley Barcola",
-            "label": "Bradley Barcola",
-            "odds": 9
-          },
-          {
-            "code": "Lucas Digne",
-            "label": "Lucas Digne",
-            "odds": 9
-          },
-          {
-            "code": "Warren Zaire-Emery",
-            "label": "Warren Zaire-Emery",
-            "odds": 10
-          },
-          {
-            "code": "Maxence Lacroix",
-            "label": "Maxence Lacroix",
-            "odds": 11
-          },
-          {
-            "code": "Noussair Mazraoui",
-            "label": "Noussair Mazraoui",
-            "odds": 11
-          },
-          {
-            "code": "Malo Gusto",
-            "label": "Malo Gusto",
-            "odds": 12
-          },
-          {
-            "code": "Ibrahima Konate",
-            "label": "Ibrahima Konate",
-            "odds": 12
-          },
-          {
-            "code": "Theo Hernandez",
-            "label": "Theo Hernandez",
-            "odds": 13
-          },
-          {
-            "code": "Azzedine Ounahi",
-            "label": "Azzedine Ounahi",
-            "odds": 13
-          },
-          {
-            "code": "Marcus Thuram",
-            "label": "Marcus Thuram",
-            "odds": 15
-          },
-          {
-            "code": "Michael Olise",
-            "label": "Michael Olise",
-            "odds": 15
-          },
-          {
-            "code": "N'Golo Kante",
-            "label": "N'Golo Kante",
-            "odds": 15
-          },
-          {
-            "code": "Rayan Cherki",
-            "label": "Rayan Cherki",
-            "odds": 15
-          },
-          {
-            "code": "William Saliba",
-            "label": "William Saliba",
-            "odds": 15
-          },
-          {
-            "code": "Ousmane Dembele",
-            "label": "Ousmane Dembele",
-            "odds": 15
-          },
-          {
-            "code": "Zakaria El Ouahdi",
-            "label": "Zakaria El Ouahdi",
-            "odds": 15
-          },
-          {
-            "code": "Dayot Upamecano",
-            "label": "Dayot Upamecano",
-            "odds": 15
-          },
-          {
-            "code": "Issa Diop",
-            "label": "Issa Diop",
-            "odds": 15
-          },
-          {
-            "code": "Jules Kounde",
-            "label": "Jules Kounde",
-            "odds": 15
-          },
-          {
-            "code": "Jean-Philippe Mateta",
-            "label": "Jean-Philippe Mateta",
-            "odds": 15
-          }
-        ]
-      },
-      "index": 401,
-      "marketCode": "PLAYER_FOULS_OVER",
-      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
-    },
-    {
-      "blessed": true,
-      "expected": {
-        "customLabel": null,
         "marketCode": "OFFSIDES_HANDICAP",
         "marketKey": "OFFSIDES_HANDICAP:+0.5",
         "matchedBy": "pattern",
@@ -17520,26 +17314,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RED_CARDS_TOTAL",
-        "marketKey": "RED_CARDS_TOTAL:0.5",
+        "marketCode": "RED_CARD",
+        "marketKey": "RED_CARD",
         "matchedBy": "pattern",
-        "paramValue": "0.5",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "OVER",
+            "code": "YES",
             "label": "Powyżej (0.5)",
             "odds": 5.35
           },
           {
-            "code": "UNDER",
+            "code": "NO",
             "label": "Poniżej (0.5)",
             "odds": 1.12
           }
         ]
       },
       "index": 432,
-      "marketCode": "RED_CARDS_TOTAL",
+      "marketCode": "RED_CARD",
       "rawName": "Czerwone kartki: Suma 0.5"
     },
     {
@@ -17716,8 +17510,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:3.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:3.5",
         "matchedBy": "pattern",
         "paramValue": "3.5",
         "parameters": null,
@@ -17735,7 +17529,7 @@
         ]
       },
       "index": 441,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 3.5"
     },
     {
@@ -17756,8 +17550,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:5.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:5.5",
         "matchedBy": "pattern",
         "paramValue": "5.5",
         "parameters": null,
@@ -17775,7 +17569,7 @@
         ]
       },
       "index": 444,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 5.5"
     },
     {
@@ -17789,8 +17583,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:6.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:6.5",
         "matchedBy": "pattern",
         "paramValue": "6.5",
         "parameters": null,
@@ -17808,7 +17602,7 @@
         ]
       },
       "index": 446,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 6.5"
     },
     {
@@ -17822,8 +17616,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:2.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:2.5",
         "matchedBy": "pattern",
         "paramValue": "2.5",
         "parameters": null,
@@ -17841,7 +17635,7 @@
         ]
       },
       "index": 448,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 2.5"
     },
     {
@@ -22471,8 +22265,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:3.0",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:3.0",
         "matchedBy": "pattern",
         "paramValue": "3.0",
         "parameters": null,
@@ -22490,7 +22284,7 @@
         ]
       },
       "index": 619,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 3"
     },
     {
@@ -23476,26 +23270,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:1.0",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:1.0",
         "matchedBy": "pattern",
         "paramValue": "1.0",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej (1.0)",
             "odds": 4.4
           },
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (1.0)",
             "odds": 1.16
           }
         ]
       },
       "index": 662,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 1. połowa: Maroko - Suma 1"
     },
     {
@@ -24129,8 +23923,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:0.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
@@ -24148,7 +23942,7 @@
         ]
       },
       "index": 692,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 0.5"
     },
     {
@@ -24240,26 +24034,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_CARDS_TEAM",
-        "marketKey": "SECOND_HALF_CARDS_TEAM",
+        "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS:1.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej (1.5)",
             "odds": 3.85
           },
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (1.5)",
             "odds": 1.22
           }
         ]
       },
       "index": 697,
-      "marketCode": "SECOND_HALF_CARDS_TEAM",
+      "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 2. połowa: Francja - Suma 1.5"
     },
     {
@@ -24559,52 +24353,52 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_CARDS_TEAM",
-        "marketKey": "SECOND_HALF_CARDS_TEAM",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej (0.5)",
             "odds": 1.42
           },
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (0.5)",
             "odds": 2.65
           }
         ]
       },
       "index": 710,
-      "marketCode": "SECOND_HALF_CARDS_TEAM",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 2. połowa: Maroko - Suma 0.5"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej (0.5)",
             "odds": 2.7
           },
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (0.5)",
             "odds": 1.4
           }
         ]
       },
       "index": 711,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 1. połowa: Francja - Suma 0.5"
     },
     {
@@ -24845,26 +24639,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_CARDS_TEAM",
-        "marketKey": "SECOND_HALF_CARDS_TEAM",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS:1.0",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1.0",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej (1.0)",
             "odds": 1.92
           },
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (1.0)",
             "odds": 1.77
           }
         ]
       },
       "index": 721,
-      "marketCode": "SECOND_HALF_CARDS_TEAM",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 2. połowa: Maroko - Suma 1"
     },
     {
@@ -24897,26 +24691,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_CARDS_TEAM",
-        "marketKey": "SECOND_HALF_CARDS_TEAM",
+        "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS:1.0",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1.0",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "Powyżej (1.0)",
             "odds": 2.6
           },
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (1.0)",
             "odds": 1.42
           }
         ]
       },
       "index": 723,
-      "marketCode": "SECOND_HALF_CARDS_TEAM",
+      "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 2. połowa: Francja - Suma 1"
     },
     {
@@ -25138,26 +24932,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej (0.5)",
             "odds": 2.05
           },
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (0.5)",
             "odds": 1.7
           }
         ]
       },
       "index": 733,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 1. połowa: Maroko - Suma 0.5"
     },
     {
@@ -25320,26 +25114,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_CARDS_TEAM",
-        "marketKey": "SECOND_HALF_CARDS_TEAM",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS:1.5",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "Powyżej (1.5)",
             "odds": 2.9
           },
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "Poniżej (1.5)",
             "odds": 1.35
           }
         ]
       },
       "index": 740,
-      "marketCode": "SECOND_HALF_CARDS_TEAM",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "Żółte kartki - 2. połowa: Maroko - Suma 1.5"
     },
     {
@@ -28172,8 +27966,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_POINTS_OVER_UNDER",
-        "marketKey": "CARDS_POINTS_OVER_UNDER:1.5",
+        "marketCode": "CARDS_TOTAL",
+        "marketKey": "CARDS_TOTAL:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
@@ -28191,7 +27985,7 @@
         ]
       },
       "index": 769,
-      "marketCode": "CARDS_POINTS_OVER_UNDER",
+      "marketCode": "CARDS_TOTAL",
       "rawName": "Kartki: Suma punktów (ŻK - 1p, CzK - 2p) 1.5"
     },
     {
@@ -32147,6 +31941,867 @@
       "index": 930,
       "marketCode": "ASIAN_HANDICAP",
       "rawName": "Handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Redouane Halhal",
+        "matchedBy": "pattern",
+        "paramValue": "Redouane Halhal",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 3.75
+          }
+        ]
+      },
+      "index": 931,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Sofyan Amrabat",
+        "matchedBy": "pattern",
+        "paramValue": "Sofyan Amrabat",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 4.7
+          }
+        ]
+      },
+      "index": 932,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Gessime Yassine",
+        "matchedBy": "pattern",
+        "paramValue": "Gessime Yassine",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 4.9
+          }
+        ]
+      },
+      "index": 933,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Marwane Saadane",
+        "matchedBy": "pattern",
+        "paramValue": "Marwane Saadane",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5
+          }
+        ]
+      },
+      "index": 934,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ayoub El Kaabi",
+        "matchedBy": "pattern",
+        "paramValue": "Ayoub El Kaabi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5
+          }
+        ]
+      },
+      "index": 935,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Anass Salah Eddine",
+        "matchedBy": "pattern",
+        "paramValue": "Anass Salah Eddine",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.3
+          }
+        ]
+      },
+      "index": 936,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Desire Doue",
+        "matchedBy": "pattern",
+        "paramValue": "Desire Doue",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.4
+          }
+        ]
+      },
+      "index": 937,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ayyoub Bouaddi",
+        "matchedBy": "pattern",
+        "paramValue": "Ayyoub Bouaddi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.5
+          }
+        ]
+      },
+      "index": 938,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Neil El Aynaoui",
+        "matchedBy": "pattern",
+        "paramValue": "Neil El Aynaoui",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.5
+          }
+        ]
+      },
+      "index": 939,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Bilal El Khannouss",
+        "matchedBy": "pattern",
+        "paramValue": "Bilal El Khannouss",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6
+          }
+        ]
+      },
+      "index": 940,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Adrien Rabiot",
+        "matchedBy": "pattern",
+        "paramValue": "Adrien Rabiot",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      },
+      "index": 941,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Manu Kone",
+        "matchedBy": "pattern",
+        "paramValue": "Manu Kone",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      },
+      "index": 942,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ayoube Amaimouni",
+        "matchedBy": "pattern",
+        "paramValue": "Ayoube Amaimouni",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      },
+      "index": 943,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Aurelien Tchouameni",
+        "matchedBy": "pattern",
+        "paramValue": "Aurelien Tchouameni",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      },
+      "index": 944,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Maghnes Akliouche",
+        "matchedBy": "pattern",
+        "paramValue": "Maghnes Akliouche",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      },
+      "index": 945,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Samir El Mourabet",
+        "matchedBy": "pattern",
+        "paramValue": "Samir El Mourabet",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      },
+      "index": 946,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Soufiane Rahimi",
+        "matchedBy": "pattern",
+        "paramValue": "Soufiane Rahimi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 947,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Achraf Hakimi",
+        "matchedBy": "pattern",
+        "paramValue": "Achraf Hakimi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 948,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Amine Sbai",
+        "matchedBy": "pattern",
+        "paramValue": "Amine Sbai",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 949,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Brahim Diaz",
+        "matchedBy": "pattern",
+        "paramValue": "Brahim Diaz",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      },
+      "index": 950,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Lucas Hernandez",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Hernandez",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      },
+      "index": 951,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Bradley Barcola",
+        "matchedBy": "pattern",
+        "paramValue": "Bradley Barcola",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      },
+      "index": 952,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Lucas Digne",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Digne",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      },
+      "index": 953,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Warren Zaire-Emery",
+        "matchedBy": "pattern",
+        "paramValue": "Warren Zaire-Emery",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      },
+      "index": 954,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Maxence Lacroix",
+        "matchedBy": "pattern",
+        "paramValue": "Maxence Lacroix",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 955,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Noussair Mazraoui",
+        "matchedBy": "pattern",
+        "paramValue": "Noussair Mazraoui",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 956,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Malo Gusto",
+        "matchedBy": "pattern",
+        "paramValue": "Malo Gusto",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 957,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ibrahima Konate",
+        "matchedBy": "pattern",
+        "paramValue": "Ibrahima Konate",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 958,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Theo Hernandez",
+        "matchedBy": "pattern",
+        "paramValue": "Theo Hernandez",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 959,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Azzedine Ounahi",
+        "matchedBy": "pattern",
+        "paramValue": "Azzedine Ounahi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 960,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Marcus Thuram",
+        "matchedBy": "pattern",
+        "paramValue": "Marcus Thuram",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 961,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Michael Olise",
+        "matchedBy": "pattern",
+        "paramValue": "Michael Olise",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 962,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:N'Golo Kante",
+        "matchedBy": "pattern",
+        "paramValue": "N'Golo Kante",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 963,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Rayan Cherki",
+        "matchedBy": "pattern",
+        "paramValue": "Rayan Cherki",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 964,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:William Saliba",
+        "matchedBy": "pattern",
+        "paramValue": "William Saliba",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 965,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ousmane Dembele",
+        "matchedBy": "pattern",
+        "paramValue": "Ousmane Dembele",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 966,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Zakaria El Ouahdi",
+        "matchedBy": "pattern",
+        "paramValue": "Zakaria El Ouahdi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 967,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Dayot Upamecano",
+        "matchedBy": "pattern",
+        "paramValue": "Dayot Upamecano",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 968,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Issa Diop",
+        "matchedBy": "pattern",
+        "paramValue": "Issa Diop",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 969,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Jules Kounde",
+        "matchedBy": "pattern",
+        "paramValue": "Jules Kounde",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 970,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Jean-Philippe Mateta",
+        "matchedBy": "pattern",
+        "paramValue": "Jean-Philippe Mateta",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 971,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
     }
   ],
   "matchIdSafe": "world-cup-2026_france_morocco"

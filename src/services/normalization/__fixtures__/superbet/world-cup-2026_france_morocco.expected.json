@@ -62550,52 +62550,52 @@
       "blessed": false,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "HOME_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.15
           },
           {
-            "code": "UNKNOWN",
+            "code": "HOME_OR_BTTS_NO",
             "label": "Nie",
             "odds": 4.8
           }
         ]
       },
       "index": 2705,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Francja wygra lub obie drużyny strzelą gola"
     },
     {
       "blessed": false,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "AWAY_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.68
           },
           {
-            "code": "UNKNOWN",
+            "code": "AWAY_OR_BTTS_NO",
             "label": "Nie",
             "odds": 2.07
           }
         ]
       },
       "index": 2706,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Maroko wygra lub obie drużyny strzelą gola"
     },
     {
@@ -63148,26 +63148,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_OR_BTTS",
-        "marketKey": "DRAW_OR_BTTS",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.72
           },
           {
-            "code": "NO",
+            "code": "DRAW_OR_BTTS_NO",
             "label": "Nie",
             "odds": 2
           }
         ]
       },
       "index": 2728,
-      "marketCode": "DRAW_OR_BTTS",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Remis lub obie drużyny strzelą gola"
     },
     {
@@ -65444,8 +65444,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_GOAL_RANGE",
-        "marketKey": "HALF_TIME_TEAM_GOAL_RANGE",
+        "marketCode": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -65468,15 +65468,15 @@
         ]
       },
       "index": 2774,
-      "marketCode": "HALF_TIME_TEAM_GOAL_RANGE",
+      "marketCode": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
       "rawName": "1.połowa - Francja przedział goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_GOAL_RANGE",
-        "marketKey": "HALF_TIME_TEAM_GOAL_RANGE",
+        "marketCode": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -65499,7 +65499,7 @@
         ]
       },
       "index": 2775,
-      "marketCode": "HALF_TIME_TEAM_GOAL_RANGE",
+      "marketCode": "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
       "rawName": "1.połowa - Maroko przedział goli"
     },
     {
@@ -66422,8 +66422,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
-        "marketKey": "SECOND_HALF_TEAM_GOAL_RANGE",
+        "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -66446,15 +66446,15 @@
         ]
       },
       "index": 2807,
-      "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
+      "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
       "rawName": "2.połowa - Francja przedział goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
-        "marketKey": "SECOND_HALF_TEAM_GOAL_RANGE",
+        "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
+        "marketKey": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -66477,7 +66477,7 @@
         ]
       },
       "index": 2808,
-      "marketCode": "SECOND_HALF_TEAM_GOAL_RANGE",
+      "marketCode": "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
       "rawName": "2.połowa - Maroko przedział goli"
     },
     {
@@ -68983,13 +68983,13 @@
       "rawName": "Liczba rzutów rożnych - przedziały"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CORNERS_TEAM",
-        "marketKey": "CORNERS_TEAM",
+        "marketCode": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -69015,17 +69015,17 @@
         ]
       },
       "index": 2881,
-      "marketCode": "CORNERS_TEAM",
+      "marketCode": "CORNERS_TEAM_RANGE",
       "rawName": "Francja - przedział rzutów rożnych"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CORNERS_TEAM",
-        "marketKey": "CORNERS_TEAM",
+        "marketCode": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {
@@ -69051,7 +69051,7 @@
         ]
       },
       "index": 2882,
-      "marketCode": "CORNERS_TEAM",
+      "marketCode": "CORNERS_TEAM_RANGE",
       "rawName": "Maroko - przedział rzutów rożnych"
     },
     {
@@ -69084,8 +69084,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NTH_CORNER",
-        "marketKey": "NTH_CORNER:3",
+        "marketCode": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:3",
         "matchedBy": "id",
         "paramValue": "3",
         "parameters": null,
@@ -69108,15 +69108,15 @@
         ]
       },
       "index": 2884,
-      "marketCode": "NTH_CORNER",
+      "marketCode": "CORNERS_RACE_TO",
       "rawName": "Kto pierwszy wykona X rzutów różnych"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NTH_CORNER",
-        "marketKey": "NTH_CORNER:5",
+        "marketCode": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:5",
         "matchedBy": "id",
         "paramValue": "5",
         "parameters": null,
@@ -69139,15 +69139,15 @@
         ]
       },
       "index": 2885,
-      "marketCode": "NTH_CORNER",
+      "marketCode": "CORNERS_RACE_TO",
       "rawName": "Kto pierwszy wykona X rzutów różnych"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NTH_CORNER",
-        "marketKey": "NTH_CORNER:7",
+        "marketCode": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:7",
         "matchedBy": "id",
         "paramValue": "7",
         "parameters": null,
@@ -69170,15 +69170,15 @@
         ]
       },
       "index": 2886,
-      "marketCode": "NTH_CORNER",
+      "marketCode": "CORNERS_RACE_TO",
       "rawName": "Kto pierwszy wykona X rzutów różnych"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NTH_CORNER",
-        "marketKey": "NTH_CORNER:9",
+        "marketCode": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:9",
         "matchedBy": "id",
         "paramValue": "9",
         "parameters": null,
@@ -69201,15 +69201,15 @@
         ]
       },
       "index": 2887,
-      "marketCode": "NTH_CORNER",
+      "marketCode": "CORNERS_RACE_TO",
       "rawName": "Kto pierwszy wykona X rzutów różnych"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "NTH_CORNER",
-        "marketKey": "NTH_CORNER:11",
+        "marketCode": "CORNERS_RACE_TO",
+        "marketKey": "CORNERS_RACE_TO:11",
         "matchedBy": "id",
         "paramValue": "11",
         "parameters": null,
@@ -69232,7 +69232,7 @@
         ]
       },
       "index": 2888,
-      "marketCode": "NTH_CORNER",
+      "marketCode": "CORNERS_RACE_TO",
       "rawName": "Kto pierwszy wykona X rzutów różnych"
     },
     {
@@ -71681,8 +71681,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
-        "marketKey": "HALF_TIME_AWAY_TEAM_CARDS:0.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
@@ -71700,15 +71700,15 @@
         ]
       },
       "index": 2981,
-      "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Maroko liczba kartek"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
-        "marketKey": "HALF_TIME_AWAY_TEAM_CARDS:1.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:1.5",
         "matchedBy": "id",
         "paramValue": "1.5",
         "parameters": null,
@@ -71726,15 +71726,15 @@
         ]
       },
       "index": 2982,
-      "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Maroko liczba kartek"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
-        "marketKey": "HALF_TIME_AWAY_TEAM_CARDS:2.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
@@ -71752,7 +71752,7 @@
         ]
       },
       "index": 2983,
-      "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Maroko liczba kartek"
     },
     {
@@ -72159,26 +72159,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RED_CARDS_TOTAL",
-        "marketKey": "RED_CARDS_TOTAL:0.5",
+        "marketCode": "RED_CARD",
+        "marketKey": "RED_CARD",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "UNDER",
+            "code": "NO",
             "label": "Poniżej 0.5",
             "odds": 1.1
           },
           {
-            "code": "OVER",
+            "code": "YES",
             "label": "Powyżej 0.5",
             "odds": 5.8
           }
         ]
       },
       "index": 2999,
-      "marketCode": "RED_CARDS_TOTAL",
+      "marketCode": "RED_CARD",
       "rawName": "Liczba czerwonych kartek"
     },
     {
@@ -78505,8 +78505,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:30.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:30.5",
         "matchedBy": "id",
         "paramValue": "30.5",
         "parameters": null,
@@ -78524,15 +78524,15 @@
         ]
       },
       "index": 3245,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:31.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:31.5",
         "matchedBy": "id",
         "paramValue": "31.5",
         "parameters": null,
@@ -78550,15 +78550,15 @@
         ]
       },
       "index": 3246,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:32.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:32.5",
         "matchedBy": "id",
         "paramValue": "32.5",
         "parameters": null,
@@ -78576,15 +78576,15 @@
         ]
       },
       "index": 3247,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:33.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:33.5",
         "matchedBy": "id",
         "paramValue": "33.5",
         "parameters": null,
@@ -78602,15 +78602,15 @@
         ]
       },
       "index": 3248,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:34.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:34.5",
         "matchedBy": "id",
         "paramValue": "34.5",
         "parameters": null,
@@ -78628,15 +78628,15 @@
         ]
       },
       "index": 3249,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:35.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:35.5",
         "matchedBy": "id",
         "paramValue": "35.5",
         "parameters": null,
@@ -78654,15 +78654,15 @@
         ]
       },
       "index": 3250,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:36.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:36.5",
         "matchedBy": "id",
         "paramValue": "36.5",
         "parameters": null,
@@ -78680,15 +78680,15 @@
         ]
       },
       "index": 3251,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:37.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:37.5",
         "matchedBy": "id",
         "paramValue": "37.5",
         "parameters": null,
@@ -78706,15 +78706,15 @@
         ]
       },
       "index": 3252,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:38.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:38.5",
         "matchedBy": "id",
         "paramValue": "38.5",
         "parameters": null,
@@ -78732,15 +78732,15 @@
         ]
       },
       "index": 3253,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:39.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:39.5",
         "matchedBy": "id",
         "paramValue": "39.5",
         "parameters": null,
@@ -78758,15 +78758,15 @@
         ]
       },
       "index": 3254,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:40.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:40.5",
         "matchedBy": "id",
         "paramValue": "40.5",
         "parameters": null,
@@ -78784,15 +78784,15 @@
         ]
       },
       "index": 3255,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CLEARANCES_TOTAL",
-        "marketKey": "CLEARANCES_TOTAL:41.5",
+        "marketCode": "TACKLES_TOTAL",
+        "marketKey": "TACKLES_TOTAL:41.5",
         "matchedBy": "id",
         "paramValue": "41.5",
         "parameters": null,
@@ -78810,7 +78810,7 @@
         ]
       },
       "index": 3256,
-      "marketCode": "CLEARANCES_TOTAL",
+      "marketCode": "TACKLES_TOTAL",
       "rawName": "Liczba odbiorów"
     },
     {
@@ -88022,78 +88022,78 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_BY_MINUTE",
-        "marketKey": "GOAL_BY_MINUTE:0.5",
+        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:5:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "5:0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNDER_5MIN",
+            "code": "UNDER",
             "label": "Poniżej 0.5 - do 5. minuty",
             "odds": 1.04
           },
           {
-            "code": "OVER_5MIN",
+            "code": "OVER",
             "label": "Powyżej 0.5 - do 5. minuty",
             "odds": 8.4
           }
         ]
       },
       "index": 3627,
-      "marketCode": "GOAL_BY_MINUTE",
+      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
       "rawName": "Liczba goli - do 5. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_BY_MINUTE",
-        "marketKey": "GOAL_BY_MINUTE:0.5",
+        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:10:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "10:0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNDER_10MIN",
+            "code": "UNDER",
             "label": "Poniżej 0.5 - do 10. minuty",
             "odds": 1.15
           },
           {
-            "code": "OVER_10MIN",
+            "code": "OVER",
             "label": "Powyżej 0.5 - do 10. minuty",
             "odds": 4.8
           }
         ]
       },
       "index": 3628,
-      "marketCode": "GOAL_BY_MINUTE",
+      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
       "rawName": "Liczba goli - do 10. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_BY_MINUTE",
-        "marketKey": "GOAL_BY_MINUTE:0.5",
+        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15:0.5",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": "15:0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNDER_15MIN",
+            "code": "UNDER",
             "label": "Poniżej 0.5 - do 15. minuty",
             "odds": 1.27
           },
           {
-            "code": "OVER_15MIN",
+            "code": "OVER",
             "label": "Powyżej 0.5 - do 15. minuty",
             "odds": 3.4
           }
         ]
       },
       "index": 3629,
-      "marketCode": "GOAL_BY_MINUTE",
+      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
       "rawName": "Liczba goli - do 15. minuty"
     },
     {
@@ -88204,26 +88204,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_BY_MINUTE",
-        "marketKey": "GOAL_BY_MINUTE:1.5",
+        "marketCode": "TIME_PERIOD_TOTAL_GOALS",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15:1.5",
         "matchedBy": "id",
-        "paramValue": "1.5",
+        "paramValue": "15:1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNDER_15MIN",
+            "code": "UNDER",
             "label": "Poniżej 1.5 - do 15. minuty",
             "odds": 1.01
           },
           {
-            "code": "OVER_15MIN",
+            "code": "OVER",
             "label": "Powyżej 1.5 - do 15. minuty",
             "odds": 16
           }
         ]
       },
       "index": 3634,
-      "marketCode": "GOAL_BY_MINUTE",
+      "marketCode": "TIME_PERIOD_TOTAL_GOALS",
       "rawName": "Liczba goli - do 15. minuty"
     },
     {
@@ -88334,10 +88334,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "5",
         "parameters": null,
         "selections": [
           {
@@ -88358,17 +88358,17 @@
         ]
       },
       "index": 3639,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 5. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:10",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "10",
         "parameters": null,
         "selections": [
           {
@@ -88389,17 +88389,17 @@
         ]
       },
       "index": 3640,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 10. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:15",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "15",
         "parameters": null,
         "selections": [
           {
@@ -88420,17 +88420,17 @@
         ]
       },
       "index": 3641,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 15. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:20",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "20",
         "parameters": null,
         "selections": [
           {
@@ -88451,17 +88451,17 @@
         ]
       },
       "index": 3642,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 20. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:30",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "30",
         "parameters": null,
         "selections": [
           {
@@ -88482,17 +88482,17 @@
         ]
       },
       "index": 3643,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 30. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:35",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "35",
         "parameters": null,
         "selections": [
           {
@@ -88513,17 +88513,17 @@
         ]
       },
       "index": 3644,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 35. minuty"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RESULT_AT_MINUTE",
-        "marketKey": "RESULT_AT_MINUTE",
+        "marketCode": "TIME_PERIOD_RESULT",
+        "marketKey": "TIME_PERIOD_RESULT:40",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "40",
         "parameters": null,
         "selections": [
           {
@@ -88544,7 +88544,7 @@
         ]
       },
       "index": 3645,
-      "marketCode": "RESULT_AT_MINUTE",
+      "marketCode": "TIME_PERIOD_RESULT",
       "rawName": "Mecz - do 40. minuty"
     },
     {

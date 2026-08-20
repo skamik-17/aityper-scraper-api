@@ -4384,26 +4384,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BOTH_TEAMS_UNDER_GOALS",
-        "marketKey": "BOTH_TEAMS_UNDER_GOALS",
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "UNKNOWN",
             "label": "Tak",
             "odds": 2.37
           },
           {
-            "code": "NO",
+            "code": "UNKNOWN",
             "label": "Nie",
             "odds": 1.56
           }
         ]
       },
       "index": 133,
-      "marketCode": "BOTH_TEAMS_UNDER_GOALS",
+      "marketCode": "OTHER",
       "rawName": "obie drużyny suma poniżej"
     },
     {
@@ -4731,52 +4731,52 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_GOAL",
-        "marketKey": "HALF_TIME_GOAL",
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "OVER",
             "label": "Tak",
             "odds": 1.48
           },
           {
-            "code": "NO",
+            "code": "UNDER",
             "label": "Nie",
             "odds": 2.72
           }
         ]
       },
       "index": 145,
-      "marketCode": "HALF_TIME_GOAL",
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
       "rawName": "1. Połowa: gol"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_GOAL",
-        "marketKey": "SECOND_HALF_GOAL",
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:0.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "OVER",
             "label": "Tak",
             "odds": 1.26
           },
           {
-            "code": "NO",
+            "code": "UNDER",
             "label": "Nie",
             "odds": 4.1
           }
         ]
       },
       "index": 146,
-      "marketCode": "SECOND_HALF_GOAL",
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
       "rawName": "2. połowa: gol"
     },
     {
@@ -4809,10 +4809,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BOTH_HALVES_OVER_GOALS",
-        "marketKey": "BOTH_HALVES_OVER_GOALS:0.5",
+        "marketCode": "BOTH_HALVES_GOALS",
+        "marketKey": "BOTH_HALVES_GOALS",
         "matchedBy": "id",
-        "paramValue": "0.5",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -4828,7 +4828,7 @@
         ]
       },
       "index": 148,
-      "marketCode": "BOTH_HALVES_OVER_GOALS",
+      "marketCode": "BOTH_HALVES_GOALS",
       "rawName": "Obie połowy powyżej 0.5"
     },
     {
@@ -6158,8 +6158,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "ANY_TEAM_WINNING_MARGIN_EXACT",
-        "marketKey": "ANY_TEAM_WINNING_MARGIN_EXACT:1",
+        "marketCode": "WINNING_MARGIN_ANY_EXACT",
+        "marketKey": "WINNING_MARGIN_ANY_EXACT:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
@@ -6177,7 +6177,7 @@
         ]
       },
       "index": 182,
-      "marketCode": "ANY_TEAM_WINNING_MARGIN_EXACT",
+      "marketCode": "WINNING_MARGIN_ANY_EXACT",
       "rawName": "jakikolwiek zespół. Margines zwycięstwa: 1"
     },
     {
@@ -6210,8 +6210,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "ANY_TEAM_WIN_BY_MARGIN",
-        "marketKey": "ANY_TEAM_WIN_BY_MARGIN:3",
+        "marketCode": "WINNING_MARGIN_ANY_EXACT",
+        "marketKey": "WINNING_MARGIN_ANY_EXACT:3",
         "matchedBy": "id",
         "paramValue": "3",
         "parameters": null,
@@ -6229,7 +6229,7 @@
         ]
       },
       "index": 184,
-      "marketCode": "ANY_TEAM_WIN_BY_MARGIN",
+      "marketCode": "WINNING_MARGIN_ANY_EXACT",
       "rawName": "jakikolwiek zespół. Margines zwycięstwa: 3"
     },
     {
@@ -7380,9 +7380,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "BOTH_HALVES_OVER_COMBO",
-        "marketKey": "BOTH_HALVES_OVER_COMBO",
+        "marketKey": "BOTH_HALVES_OVER_COMBO:1.5/0.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "1.5/0.5",
         "parameters": null,
         "selections": [
           {

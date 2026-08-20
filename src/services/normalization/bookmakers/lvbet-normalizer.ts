@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  collapseBothHalvesOverGoalsZeroFive,
   normalizeMarketName,
   parseOverUnderLine,
   parseDecimalLine,
@@ -175,7 +176,12 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /zołte kartki - 2\. połowa:.*handicap/, code: "SECOND_HALF_CARDS_HANDICAP" },
   { pattern: /zołte kartki:.*handicap/, code: "CARDS_HANDICAP" },
   { pattern: /zołte kartki:.*(parzyste|nieparzyste)/, code: "CARDS_ODD_EVEN" },
-  { pattern: /zołte kartki - 1\. połowa: wynik/, code: "FIRST_HALF_CARDS_1X2" },
+  // Merged into HALF_TIME_CARDS_RACE (cluster #13 market-display audit): this
+  // raw market is the same "which side gets more cards in 1st half" bet as
+  // forbet/superbet/sts/etoto's HALF_TIME_CARDS_RACE (betfan sits on the same
+  // platform id -170 as etoto and used to disagree on the code) — a dedicated
+  // FIRST_HALF_CARDS_1X2 code just fragmented the pool with no other benefit.
+  { pattern: /zołte kartki - 1\. połowa: wynik/, code: "HALF_TIME_CARDS_RACE" },
   { pattern: /zołte kartki - 1\. połowa: suma/, code: "HALF_TIME_CARDS_TOTAL" },
   { pattern: /zołte kartki - 1\. połowa:/, code: "HALF_TIME_CARDS_TEAM" },
   { pattern: /zołte kartki - 2\. połowa: wynik/, code: "SECOND_HALF_CARDS_1X2" },
@@ -197,10 +203,28 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /zołte kartki: suma/, code: "YELLOW_CARDS_TOTAL" },
   { pattern: /zołte kartki:/, code: "CARDS_TEAM" },
   { pattern: /pierwsza zołta kartka/, code: "FIRST_CARD" },
-  { pattern: /ostatnia zołta kartka/, code: "LAST_YELLOW_CARD" },
+  // "Ostatnia żółta kartka" is the same race-timing bet as FIRST_CARD's
+  // peers (betcris' generic "TeamtoReceiveLastCard" AND its yellow-worded
+  // "MatchYellowCardLastTeam" both already sit under LAST_CARD) — a
+  // dedicated LAST_YELLOW_CARD code only fragmented this bookmaker away
+  // from betcris' identical market instead of pooling them (market-display
+  // audit cluster #14, LAST_CARD/LAST_YELLOW_CARD duplicate).
+  { pattern: /ostatnia zołta kartka/, code: "LAST_CARD" },
 
   // --- Card points ---
-  { pattern: /kartki: suma punktow/, code: "CARDS_POINTS_OVER_UNDER" },
+  // "Suma punktów (ŻK - 1p, CzK - 2p)" is a yellow=1/red=2 weighted card
+  // count — the EXACT SAME definition as CARDS_TOTAL/HALF_TIME_CARDS_TOTAL/
+  // SECOND_HALF_CARDS_TOTAL's established "red counts as 2" convention (see
+  // the YELLOW_CARDS_TOTAL comment above), just under a "points" label. The
+  // dedicated CARDS_POINTS_OVER_UNDER code only fragmented lvbet away from
+  // the much larger CARDS_TOTAL pool with no other benefit — and its
+  // half-scoped, non-team-scoped siblings ("Kartki - 1./2. połowa: Suma
+  // punktów...") were falling through to OTHER entirely (audit cluster #0,
+  // finding 6). Route by half; more specific half patterns must be checked
+  // before the general match-wide one.
+  { pattern: /^kartki - 1\. połowa: suma punktow/, code: "HALF_TIME_CARDS_TOTAL" },
+  { pattern: /^kartki - 2\. połowa: suma punktow/, code: "SECOND_HALF_CARDS_TOTAL" },
+  { pattern: /kartki: suma punktow/, code: "CARDS_TOTAL" },
   { pattern: /kartki: wynik \(zk/, code: "CARDS_POINTS_1X2" },
   // "Kartki: Handicap punktowy (ŻK - 1p, CzK - 2p)" is a disciplinary-points
   // handicap (yellow=1pt/red=2pt), a different statistic from the goal
@@ -274,7 +298,13 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // 7.5" -> "8+"). Carving it out here dropped every player from that line
   // into a separate, differently-shaped market instead of the shared ladder.
   { pattern: /zawodnicy \(strzały\)/, code: "PLAYER_SHOTS" },
-  { pattern: /zawodnicy \(faule popełnione\) - powyzej 3\.5/, code: "PLAYER_FOULS_OVER" },
+  // audit-loop cluster #4: the 3.5 threshold used to be carved out to the
+  // PLAYER_FOULS_OVER PLAYER_DROPDOWN code (same mistake as the 7.5 shots
+  // threshold above, round 8 P4) — it is NOT a separate product, just
+  // another rung of the same PLAYER_FOULS ladder (normalizeLvbetPlayerThreshold
+  // below maps "Powyżej 3.5" -> "4+"). Carving it out stranded every player
+  // from that line away from the shared PLAYER_FOULS ladder betfan/sts/etc.
+  // pool into.
   { pattern: /zawodnicy \(faule popełnione\)/, code: "PLAYER_FOULS" },
   { pattern: /zawodnicy \(faule zarobione\)/, code: "PLAYER_FOULS_WON" },
   { pattern: /odbiory- tackles/, code: "PLAYER_TACKLES" },
@@ -379,8 +409,15 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // resolveMarketCode instead — see the team-aware block after the loop.
   { pattern: /zawodnik strzeli gola w 1\. połowie/, code: "HALF_TIME_GOALSCORER_ANYTIME" },
   { pattern: /player to score in second half/, code: "SECOND_HALF_GOALSCORER_ANYTIME" },
-  { pattern: /gol w 1\. połowie/, code: "HALF_TIME_GOAL" },
-  { pattern: /gol w 2\. połowie/, code: "SECOND_HALF_GOAL" },
+  // "Gol w N. połowie" (Tak/Nie) is the fixed 0.5 line of the Over/Under
+  // per-half goals market, not a standalone product — fold it onto
+  // HALF_TIME_TOTAL_GOALS/SECOND_HALF_TOTAL_GOALS (audit cluster #10,
+  // market-display audit: this used to duplicate the 0.5-line row every
+  // other bookmaker already reports there). See extractParamValue for the
+  // fixed "0.5" param and normalizeSelectionForMarket for the Tak/Nie ->
+  // OVER/UNDER transform.
+  { pattern: /gol w 1\. połowie/, code: "HALF_TIME_TOTAL_GOALS" },
+  { pattern: /gol w 2\. połowie/, code: "SECOND_HALF_TOTAL_GOALS" },
 
   // --- Team to score (full match) & by-half ---
   // "<Team> strzeli w obu połowach" (team scores in both halves) used to be
@@ -422,7 +459,12 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // Two-player OR combos ("Podwójna szansa") must not pollute single-player markets
   { pattern: /zawodnik zanotuje asyste - podwojna szansa/, code: "PLAYER_ASSIST_PAIRS" },
   { pattern: /zawodnik zanotuje asyste/, code: "PLAYER_ASSISTS" },
-  { pattern: /pierwszy zawodnik, ktory otrzyma kartke/, code: "FIRST_CARD_PLAYER" },
+  // Duplicate-code merge (audit cluster #6): LVBet's "pierwszy zawodnik,
+  // który otrzyma kartkę" is the same real-world bet as betcris/superbet/
+  // betfan's "first player carded" — route into the shared catalog code
+  // instead of the now-retired LVBet-only FIRST_CARD_PLAYER duplicate so all
+  // four bookmakers pool under one marketKey.
+  { pattern: /pierwszy zawodnik, ktory otrzyma kartke/, code: "FIRST_PLAYER_CARDED" },
   // No catalog code exists for a two-player OR card combo yet — exclude it
   // from PLAYER_CARDS instead of mixing combo odds with single-player odds.
   { pattern: /zawodnik otrzyma kartke - podwojna szansa/, code: "OTHER" },
@@ -437,11 +479,17 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /czas zdobycia pierwszego gola/, code: "FIRST_GOAL_TIME" },
   { pattern: /1\. gol - czas/, code: "FIRST_GOAL_TIME_ALT" },
   { pattern: /bedzie wynik w trakcie meczu/, code: "SCORE_DURING_MATCH" },
-  { pattern: /dokładnie 1 gol w meczu/, code: "EXACT_GOALS_YN" },
-  // Other exact counts ("Dokładnie 3 gole w meczu") cannot share
-  // EXACT_GOALS_YN (hasParameter=false — different counts would collide on
-  // one market key) and are not over/under bets — exclude them instead of
-  // letting the generic goals patterns drop them into TOTAL_GOALS.
+  // "Dokładnie 1 gol w meczu" (Tak/Nie) quotes the identical real-world bet
+  // as EXACT_GOALS' "1" selection — round 9 /audit-match (Arsenal vs
+  // Coventry City) found it duplicated as its own EXACT_GOALS_YN card
+  // instead of pooling into EXACT_GOALS. Route to EXACT_GOALS directly; the
+  // selection remap (Tak -> "1", Nie dropped) lives in normalizeMarket's
+  // isExactOneGoalYesNo special-case below.
+  { pattern: /dokładnie 1 gol w meczu/, code: "EXACT_GOALS" },
+  // Other exact counts ("Dokładnie 3 gole w meczu") are not over/under bets
+  // and have no dedicated remap here (out of this fix's audited scope) —
+  // exclude them instead of letting the generic goals patterns drop them
+  // into TOTAL_GOALS.
   { pattern: /dokładnie \d+ gol\w* w meczu/, code: "OTHER" },
 
   // --- Win / result variants ---
@@ -593,6 +641,20 @@ function refineTeamScopedStatCode(
     const side = detectTeamSide(rawName, ctx);
     if (side) return side === "HOME" ? "HOME_TEAM_TOTAL_GOAL_KICKS" : "AWAY_TEAM_GOAL_KICKS";
   }
+  // Per-half team cards: reroute off the retired combined-vocabulary codes
+  // (HALF_TIME_CARDS_TEAM / SECOND_HALF_CARDS_TEAM, formerly HOME_OVER/
+  // HOME_UNDER/AWAY_OVER/AWAY_UNDER on one shared param axis) onto the
+  // per-side codes betcris/superbet already use — lvbet (with fuksiarz,
+  // forbet) was fragmented into a separate three-key card for this bet
+  // (audit cluster #0, findings 2/7/9).
+  if (code === "HALF_TIME_CARDS_TEAM") {
+    const side = detectTeamSide(rawName, ctx);
+    if (side) return side === "HOME" ? "HALF_TIME_HOME_TEAM_TOTAL_CARDS" : "HALF_TIME_AWAY_TEAM_TOTAL_CARDS";
+  }
+  if (code === "SECOND_HALF_CARDS_TEAM") {
+    const side = detectTeamSide(rawName, ctx);
+    if (side) return side === "HOME" ? "SECOND_HALF_HOME_TEAM_TOTAL_CARDS" : "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS";
+  }
   return code;
 }
 
@@ -738,19 +800,28 @@ function resolveMarketCode(
   }
 
   // "Total Goals (Extended Bands)" family — team-scoped variants need ctx to
-  // resolve the side, so they cannot be routed by static patterns.
+  // resolve the side, so they cannot be routed by static patterns. Raw bands
+  // here ("1-2"/"1-3"/"1-4"/"2-3"/"2-4"/"3-4"/"Każdy inny") are the
+  // cumulative-range ladder, a different bet shape from the disjoint
+  // partition ("0 lub 1"/"2 lub 3"/"4 lub więcej") the plain
+  // HALF_TIME_TEAM_GOAL_RANGE/SECOND_HALF_TEAM_GOAL_RANGE codes carry
+  // elsewhere in this file — route team-scoped variants to the dedicated
+  // MULTI codes instead of mixing the two schemes into one row (cluster #15
+  // /audit-match, see market-catalog.ts comment on
+  // HALF_TIME_TEAM_MULTI_GOAL_RANGE).
   if (/total goals \(extended bands\)/.test(normalizedName)) {
     const side = detectTeamSide(raw.name, ctx);
     if (/2nd half/.test(normalizedName)) {
       return {
-        code: side ? "SECOND_HALF_TEAM_GOAL_RANGE" : "SECOND_HALF_GOAL_RANGE",
+        code: side ? "SECOND_HALF_TEAM_MULTI_GOAL_RANGE" : "SECOND_HALF_GOAL_RANGE",
         matchedBy: "pattern",
       };
     }
     if (/1st half/.test(normalizedName)) {
-      // No catalog code exists for 1st-half team goal bands — exclude instead
-      // of polluting the match-level HALF_TIME_GOAL_RANGE.
-      return { code: side ? "OTHER" : "HALF_TIME_GOAL_RANGE", matchedBy: "pattern" };
+      return {
+        code: side ? "HALF_TIME_TEAM_MULTI_GOAL_RANGE" : "HALF_TIME_GOAL_RANGE",
+        matchedBy: "pattern",
+      };
     }
     if (side) {
       return {
@@ -1247,10 +1318,26 @@ function normalizeSelectionForMarket(
       return normalizeDoubleChanceSelection(trimmed);
     }
 
+    // "Gol w 1./2. połowie" (a plain Tak/Nie "goal in this half" market,
+    // routed here by name pattern — see LVBET_AUDIT_NAME_PATTERNS) is
+    // folded onto the fixed 0.5 line of these codes (see extractParamValue)
+    // instead of a standalone HALF_TIME_GOAL/SECOND_HALF_GOAL card that
+    // duplicated it (audit cluster #10, market-display audit). It sits
+    // alongside lvbet's genuine Asian-line "Powyżej/Poniżej" variant of the
+    // same market, so check Tak/Nie first and fall back to the shared
+    // over/under handling below.
+    case "HALF_TIME_TOTAL_GOALS":
+    case "SECOND_HALF_TOTAL_GOALS": {
+      const yesNo = normalizeYesNoSelection(trimmed);
+      if (yesNo === "YES") return "OVER";
+      if (yesNo === "NO") return "UNDER";
+      const overUnder = normalizeLvbetOverUnder(trimmed);
+      if (overUnder) return overUnder;
+      return normalizeOverUnderSelection(trimmed);
+    }
+
     case "TOTAL_GOALS":
     case "TOTAL_GOALS_ASIAN":
-    case "HALF_TIME_TOTAL_GOALS":
-    case "SECOND_HALF_TOTAL_GOALS":
     case "HOME_TEAM_TOTAL_GOALS":
     case "AWAY_TEAM_TOTAL_GOALS":
     case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
@@ -1355,8 +1442,6 @@ function normalizeSelectionForMarket(
     // (HOME_OVER/...): derive the side from the raw market name (team name or
     // "Drużyna 1/2" index) and the direction from the selection label.
     case "CARDS_TEAM":
-    case "HALF_TIME_CARDS_TEAM":
-    case "SECOND_HALF_CARDS_TEAM":
     case "HALF_TIME_CORNERS_TEAM":
     case "SECOND_HALF_CORNERS_TEAM":
     case "HALF_TIME_TEAM_FOULS": {
@@ -1369,6 +1454,16 @@ function normalizeSelectionForMarket(
       const side = detectTeamSide(rawMarketName ?? "", ctx);
       if (!side) return null;
       return `${side}_${overUnder}` as NormalizedSelection;
+    }
+
+    // Per-side per-half card codes (refineTeamScopedStatCode already resolved
+    // the side into the market code itself): bare OVER/UNDER, no prefix.
+    case "HALF_TIME_HOME_TEAM_TOTAL_CARDS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_CARDS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_CARDS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS": {
+      const overUnder = normalizeLvbetOverUnder(trimmed);
+      return overUnder ?? null;
     }
 
     case "BTTS":
@@ -1515,7 +1610,7 @@ function normalizeSelectionForMarket(
     case "FIRST_CORNER":
     case "LAST_CORNER":
     case "FIRST_CARD":
-    case "LAST_YELLOW_CARD": {
+    case "LAST_CARD": {
       const normalized = normalizeMarketName(trimmed);
       if (/^(nikt|zaden|nie bedzie|brak)/.test(normalized)) return "NONE";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -1598,6 +1693,28 @@ function normalizeSelectionForMarket(
       }
       // Drop "Każdy inny"/unparsable labels and bands the catalog does not
       // define (e.g. 2-4, 3-4) instead of leaking raw or orphan codes.
+      if (code === null) return null;
+      return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
+    }
+
+    // Cluster #15 /audit-match: LVBet's "<N>st/nd Half <Team> Total Goals
+    // (Extended Bands)" raw bands ("1-2"/"1-3"/"1-4"/"2-3"/"2-4"/"3-4"/
+    // "Każdy inny") are the cumulative-range ladder, routed here instead of
+    // the plain SECOND_HALF_TEAM_GOAL_RANGE case above (whose catalog
+    // vocabulary is now fuksiarz's disjoint partition only). Same
+    // side-prefixed digit-range parse as that case; "Każdy inny" and any
+    // band outside the catalog's declared ladder (0/1-2/1-3/1-4/2-3/2-4/
+    // 3-4/4+) are dropped rather than leaked as raw or orphan codes.
+    case "HALF_TIME_TEAM_MULTI_GOAL_RANGE":
+    case "SECOND_HALF_TEAM_MULTI_GOAL_RANGE": {
+      const side = detectTeamSide(rawMarketName ?? "", ctx) ?? "HOME";
+      let code: string | null = null;
+      if (/^\d+\+$/.test(trimmed)) code = `${side}_${trimmed}`;
+      else if (/^\d+$/.test(trimmed)) code = `${side}_${trimmed}`;
+      else {
+        const rangeMatch = trimmed.match(/^(\d+)\s*-\s*(\d+)\+?$/);
+        if (rangeMatch) code = `${side}_${rangeMatch[1]}-${rangeMatch[2]}`;
+      }
       if (code === null) return null;
       return isCatalogSelection(marketCode, code) ? (code as NormalizedSelection) : null;
     }
@@ -1770,7 +1887,6 @@ function normalizeSelectionForMarket(
     case "PLAYER_ASSISTS":
     case "PLAYER_FOULS":
     case "PLAYER_FOULS_WON":
-    case "PLAYER_FOULS_OVER":
     case "PLAYER_SHOTS":
     case "PLAYER_SHOTS_ON_TARGET":
     case "PLAYER_SHOTS_OVER":
@@ -1789,7 +1905,7 @@ function normalizeSelectionForMarket(
     case "PENALTY_SCORER":
     case "PLAYER_GOAL_TEAM_LOSES":
     case "PLAYER_GOAL_AND_RESULT":
-    case "FIRST_CARD_PLAYER": {
+    case "FIRST_PLAYER_CARDED": {
       const normalized = normalizeMarketName(trimmed);
       if (/^(nikt|zaden|zadny|bez gola|bez goli|brak gola|brak goli)$/.test(normalized)) {
         return "NONE";
@@ -1981,6 +2097,20 @@ function extractParamValue(
   // unset and fall through to the grouper's bundled-player-selection recovery.
   if (metadata.parameterType === "player" && raw.paramValue) {
     return normalizeLvbetPlayerName(raw.paramValue);
+  }
+
+  // "Gol w N. połowie" (routed here by name pattern — see
+  // LVBET_AUDIT_NAME_PATTERNS) is a Tak/Nie market with no numeric line at
+  // all; it represents the fixed 0.5 line of HALF_TIME_TOTAL_GOALS/
+  // SECOND_HALF_TOTAL_GOALS (audit cluster #10), so pin it there instead of
+  // falling through the decimal-parsing branch below, which would find no
+  // number in "Tak"/"Nie" and return undefined.
+  const normalizedMarketName = normalizeMarketName(raw.name);
+  if (marketCode === "HALF_TIME_TOTAL_GOALS" && /gol w 1\. połowie/.test(normalizedMarketName)) {
+    return "0.5";
+  }
+  if (marketCode === "SECOND_HALF_TOTAL_GOALS" && /gol w 2\. połowie/.test(normalizedMarketName)) {
+    return "0.5";
   }
 
   const selectionNames = raw.selections.map((s) => s.name);
@@ -2211,7 +2341,6 @@ const PLAYER_NAME_AS_SELECTION_CODE_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_ASSISTS",
   "PLAYER_FOULS",
   "PLAYER_FOULS_WON",
-  "PLAYER_FOULS_OVER",
   "PLAYER_SHOTS",
   "PLAYER_SHOTS_ON_TARGET",
   "PLAYER_SHOTS_OVER",
@@ -2230,7 +2359,7 @@ const PLAYER_NAME_AS_SELECTION_CODE_MARKETS = new Set<NormalizedMarketType>([
   "PENALTY_SCORER",
   "PLAYER_GOAL_TEAM_LOSES",
   "PLAYER_GOAL_AND_RESULT",
-  "FIRST_CARD_PLAYER",
+  "FIRST_PLAYER_CARDED",
 ]);
 
 /**
@@ -2306,17 +2435,31 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     }
 
     const paramValue = extractParamValue(marketCode, raw, ctx);
-    const marketKey = buildMarketKey(marketCode, paramValue);
+
+    // "Dokładnie 1 gol w meczu" (Tak/Nie) is EXACT_GOALS' "1" selection in
+    // disguise (round 9 /audit-match, Arsenal vs Coventry City: it used to
+    // render its own duplicate EXACT_GOALS_YN card). The generic EXACT_GOALS
+    // case below rejects non-numeric labels outright (it expects "0"/"1"/
+    // "4+" ladder text), so this raw market needs its own selection mapping
+    // rather than falling through the shared per-code case: recode the YES
+    // leg onto the shared "1" code so it pools with the main "Suma goli"
+    // ladder, and drop the NO leg ("not exactly 1 goal") — it has no
+    // matching EXACT_GOALS selection.
+    const isExactOneGoalYesNo = marketCode === "EXACT_GOALS" && /dokładnie 1 gol w meczu/i.test(raw.name);
 
     // Selections that resolve to null have no catalog counterpart (grouped
     // bands, catch-all buckets, ...) and are dropped so they never leak raw
     // labels or orphan codes into the cross-bookmaker aggregation.
     const siblingSelectionNames = raw.selections.map((s) => s.name);
-    let selections = raw.selections.flatMap((sel) => {
-      const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
-      if (code === null) return [];
-      return [{ code, label: sel.name, odds: sel.odds }];
-    });
+    let selections = isExactOneGoalYesNo
+      ? raw.selections
+          .filter((sel) => /^(tak|yes)\b/i.test(sel.name.trim()))
+          .map((sel) => ({ code: "1" as NormalizedSelection, label: sel.name, odds: sel.odds }))
+      : raw.selections.flatMap((sel) => {
+          const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
+          if (code === null) return [];
+          return [{ code, label: sel.name, odds: sel.odds }];
+        });
 
     // Combine raw sub-selections that collide on the same catalog code
     // (CORNERS_RANGE's 5-tier-to-3-bucket collapse; the exact-goals
@@ -2334,14 +2477,44 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
       selections = dedupePlayerNameDuplicates(selections);
     }
 
+    // "Czerwone kartki: Suma 0.5" (RED_CARDS_TOTAL's OVER/UNDER selections on
+    // the 0.5 line) is the exact same real-world bet as the whole-match
+    // RED_CARD YES/NO binary other bookmakers (betclic/betfan/forbet/sts/
+    // etoto/fortuna) already use — alias this specific line into RED_CARD so
+    // both pools merge into one comparison card instead of staying disjoint
+    // (audit cluster #5: "Czerwona kartka w meczu" duplicate).
+    let finalMarketCode: NormalizedMarketType = marketCode;
+    let finalParamValue = paramValue;
+    if (marketCode === "RED_CARDS_TOTAL" && paramValue === "0.5") {
+      finalMarketCode = "RED_CARD";
+      finalParamValue = undefined;
+      selections = selections.map((s) => ({
+        ...s,
+        code: s.code === "OVER" ? "YES" : s.code === "UNDER" ? "NO" : s.code,
+      }));
+    }
+
+    // audit cluster #24: "Obie połowy powyżej 0.5" IS the plain "goal in both
+    // halves" bet — collapse onto BOTH_HALVES_GOALS (mirrors the RED_CARDS_TOTAL
+    // collapse just above) so it pools with every other bookmaker's Tak/Nie
+    // card instead of forking into its own BOTH_HALVES_OVER_GOALS:0.5 bucket.
+    // Selections are already YES/NO for both codes, so no remap is needed.
+    {
+      const collapsed = collapseBothHalvesOverGoalsZeroFive(finalMarketCode, finalParamValue);
+      finalMarketCode = collapsed.marketCode as NormalizedMarketType;
+      finalParamValue = collapsed.paramValue;
+    }
+
+    const marketKey = buildMarketKey(finalMarketCode, finalParamValue);
+
     // A market whose every selection was dropped carries no usable data
     // (e.g. LVBet's grouped-band exact-goals product) — exclude it entirely.
     if (selections.length === 0) return null;
 
     return {
-      marketCode,
+      marketCode: finalMarketCode,
       marketKey,
-      paramValue,
+      paramValue: finalParamValue,
       selections,
       debug: {
         rawName: raw.name,

@@ -3051,26 +3051,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "EXACT_GOALS_YN",
-        "marketKey": "EXACT_GOALS_YN",
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "1",
             "label": "Tak",
             "odds": 4.05
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 1.2
           }
         ]
       },
       "index": 138,
-      "marketCode": "EXACT_GOALS_YN",
+      "marketCode": "EXACT_GOALS",
       "rawName": "Dokładnie 1 gol w całym meczu"
     },
     {
@@ -17832,8 +17827,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
-        "marketKey": "HALF_TIME_AWAY_TEAM_CARDS",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -17851,15 +17846,15 @@
         ]
       },
       "index": 522,
-      "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa. Team 2. Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
-        "marketKey": "HALF_TIME_AWAY_TEAM_CARDS",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -17877,7 +17872,7 @@
         ]
       },
       "index": 523,
-      "marketCode": "HALF_TIME_AWAY_TEAM_CARDS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa. Team 2. Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
@@ -19994,21 +19989,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RED_CARDS_TOTAL",
-        "marketKey": "RED_CARDS_TOTAL",
+        "marketCode": "RED_CARD",
+        "marketKey": "RED_CARD",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "OVER",
+            "code": "YES",
             "label": "Powyżej ",
             "odds": 15
           }
         ]
       },
       "index": 603,
-      "marketCode": "RED_CARDS_TOTAL",
+      "marketCode": "RED_CARD",
       "rawName": "Liczba czerwonych kartek"
     },
     {
@@ -20235,26 +20230,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "RED_CARDS_TOTAL",
-        "marketKey": "RED_CARDS_TOTAL",
+        "marketCode": "RED_CARD",
+        "marketKey": "RED_CARD",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "OVER",
+            "code": "YES",
             "label": "Powyżej ",
             "odds": 5.35
           },
           {
-            "code": "UNDER",
+            "code": "NO",
             "label": "Poniżej ",
             "odds": 1.12
           }
         ]
       },
       "index": 613,
-      "marketCode": "RED_CARDS_TOTAL",
+      "marketCode": "RED_CARD",
       "rawName": "Liczba czerwonych kartek"
     },
     {

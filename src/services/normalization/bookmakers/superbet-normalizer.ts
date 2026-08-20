@@ -71,9 +71,17 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   201502: "OTHER", // BTTS or over 3.5 - no catalog counterpart
   201503: "OTHER", // BTTS and over 2.5 - no catalog counterpart
   201504: "OTHER", // BTTS and over 3.5 - no catalog counterpart
-  231006: "OTHER", // "{home} wygra lub obie strzelą" - side would be lost
-  231007: "DRAW_OR_BTTS", // "Remis lub obie drużyny strzelą gola"
-  231008: "OTHER", // "{away} wygra lub obie strzelą" - side would be lost
+  // Cluster #12 (fixed): these 3 ids are one real-world bet ("<team> wins or
+  // BTTS" / "draw or BTTS") that used to be split across a dropped-to-OTHER
+  // home/away pair (side would have been lost) plus a standalone
+  // DRAW_OR_BTTS card. Routed into the single combined RESULT_OR_BTTS code
+  // instead (matching lebull's own quote of the same bet) - side is
+  // resolved via SUPERBET_SIDE_BY_MARKET_ID below and folded into the
+  // selection code in normalizeMarket (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/
+  // NO, AWAY_OR_BTTS_YES/NO), so nothing is lost any more.
+  231006: "RESULT_OR_BTTS", // "{home} wygra lub obie strzelą"
+  231007: "RESULT_OR_BTTS", // "Remis lub obie drużyny strzelą gola"
+  231008: "RESULT_OR_BTTS", // "{away} wygra lub obie strzelą"
   231009: "OTHER", // "{home} wygra lub czyste konto" - no catalog counterpart
   231010: "DRAW_OR_CLEAN_SHEET", // "Remis lub którakolwiek drużyna zachowa czyste konto"
   231011: "OTHER", // "{away} wygra lub czyste konto" - no catalog counterpart
@@ -95,8 +103,15 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200243: "HOME_TEAM_ODD_EVEN_GOALS", // "{home} - liczba goli nieparzysta/parzysta"
   200236: "AWAY_TEAM_ODD_EVEN_GOALS", // "{away} - liczba goli nieparzysta/parzysta"
   200742: "OWN_GOALS_TOTAL", // "Liczba goli samobójczych"
-  200248: "GOAL_BY_MINUTE", // "Liczba goli - do X minuty"
-  200247: "RESULT_AT_MINUTE", // "Mecz - do X minuty"
+  // audit-loop cluster #22: initial dispatch sentinel only - resolveGoalByMinuteCode
+  // below reroutes per the actual minute checkpoint(s) quoted (retired the
+  // dedicated GOAL_BY_MINUTE code, which inverted the param/selection roles).
+  200248: "TIME_PERIOD_TOTAL_GOALS", // "Liczba goli - do X minuty"
+  // Cluster #19: "Mecz - do X minuty" is the same 1-to-X-minute-window 1X2
+  // bet other bookmakers report under TIME_PERIOD_RESULT ("1-30 min. Wynik"
+  // etc.) - was its own RESULT_AT_MINUTE code (now retired), stranding
+  // superbet's quotes from the pooled market.
+  200247: "TIME_PERIOD_RESULT", // "Mecz - do X minuty"
   231000: "OTHER", // "{home} wygra lub powyżej X goli" - side would be lost
   231001: "OTHER", // "{home} wygra lub poniżej X goli" - side would be lost
   231002: "OTHER", // "Remis lub powyżej X goli" - only 2.5 exists in catalog
@@ -121,10 +136,15 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200831: "AWAY_GOAL_RANGE", // "{away} - przedział goli"
   200820: "HALF_TIME_GOAL_RANGE", // "1. połowa - przedział goli"
   200829: "SECOND_HALF_GOAL_RANGE", // "2.Połowa - przedział goli"
-  200758: "HALF_TIME_TEAM_GOAL_RANGE", // "1.połowa - {home} przedział goli"
-  200759: "HALF_TIME_TEAM_GOAL_RANGE", // "1.połowa - {away} przedział goli"
-  200760: "SECOND_HALF_TEAM_GOAL_RANGE", // "2.połowa - {home} przedział goli"
-  200761: "SECOND_HALF_TEAM_GOAL_RANGE", // "2.połowa - {away} przedział goli"
+  // Cluster #15 /audit-match: superbet's raw buckets here ("1-2"/"1-3"/"2-3")
+  // are the cumulative-range ladder, not fuksiarz's disjoint partition
+  // ("0-1"/"2-3"/"4+") that HALF_TIME_TEAM_GOAL_RANGE/SECOND_HALF_TEAM_GOAL_RANGE
+  // now exclusively declare - route to the dedicated MULTI codes instead
+  // (see market-catalog.ts comment on HALF_TIME_TEAM_MULTI_GOAL_RANGE).
+  200758: "HALF_TIME_TEAM_MULTI_GOAL_RANGE", // "1.połowa - {home} przedział goli"
+  200759: "HALF_TIME_TEAM_MULTI_GOAL_RANGE", // "1.połowa - {away} przedział goli"
+  200760: "SECOND_HALF_TEAM_MULTI_GOAL_RANGE", // "2.połowa - {home} przedział goli"
+  200761: "SECOND_HALF_TEAM_MULTI_GOAL_RANGE", // "2.połowa - {away} przedział goli"
   201803: "OTHER", // "Przedział goli w każdej połowie" - no catalog counterpart
   201804: "OTHER", // team variant of the above
   201805: "OTHER", // team variant of the above
@@ -215,13 +235,19 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // betclic/betcris/fortuna/lvbet's HOME:/AWAY: convention on this code.
   713: "CORNERS_TEAM", // "{home} - liczba rzutów rożnych"
   733: "CORNERS_TEAM", // "{away} - liczba rzutów rożnych"
-  // audit-match (Arsenal vs Coventry City): bucketed range variant ("0-2",
-  // "3-4", "5-6", "7+"), a different bet shape from the O/U ladder above -
-  // routed to the dedicated *_CORNERS_RANGE_WIDE codes (round 9: split off
-  // from HOME/AWAY_CORNERS_RANGE, which is sts's discrete-count product —
-  // structurally incompatible bucket schemes, not the same bet).
-  685: "HOME_CORNERS_RANGE_WIDE", // "{home} - przedział rzutów rożnych"
-  739: "AWAY_CORNERS_RANGE_WIDE", // "{away} - przedział rzutów rożnych"
+  // audit-match (Arsenal vs Coventry City), round 7: bucketed range variant
+  // ("0-2", "3-4", "5-6", "7+"), a different bet shape from the O/U ladder
+  // above. Round 9 routed this to dedicated *_CORNERS_RANGE_WIDE codes
+  // reasoning sts's HOME/AWAY_CORNERS_RANGE was a structurally incompatible
+  // exact-count product - but sts's own CORNERS_TEAM_RANGE case (see
+  // sts-normalizer.ts) shifts its ids 236/237 labels through the exact same
+  // "0"->"0-2","1"->"3-4","2"->"5-6","3+"->"7+" mapping onto CORNERS_TEAM_RANGE,
+  // i.e. sts, etoto, betfan, forbet and fuksiarz already pool this identical
+  // 4-bucket ladder under CORNERS_TEAM_RANGE (param HOME/AWAY). Superbet's
+  // raw selections here ("0-2"/"3-4"/"5-6"/"7+" verbatim) are the same shape,
+  // so route into that shared pool instead of the now-retired _WIDE codes.
+  685: "CORNERS_TEAM_RANGE", // "{home} - przedział rzutów rożnych"
+  739: "CORNERS_TEAM_RANGE", // "{away} - przedział rzutów rożnych"
   873: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {home} liczba rzutów rożnych"
   884: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {away} liczba rzutów rożnych"
   699: "CORNERS_RANGE", // "Liczba rzutów rożnych - przedziały"
@@ -230,7 +256,13 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   880: "HALF_TIME_CORNERS_ODD_EVEN", // "1.połowa - nieparzysta/parzysta liczba rożnych"
   717: "CORNERS_RACE", // "Liczba rzutów rożnych - H2H"
   882: "HALF_TIME_CORNERS_RACE", // "1. połowa - najwięcej rzutów rożnych"
-  706: "NTH_CORNER", // "Kto pierwszy wykona X rzutów rożnych"
+  // audit-loop cluster #23: raw name is "Kto pierwszy wykona X rzutów
+  // rożnych" ("who will FIRST reach X corner kicks") - a race-to-X-corners
+  // bet (HOME/NONE/AWAY selections, threshold as param), the exact same
+  // shape betcris/lvbet already pool under CORNERS_RACE_TO. This used to be
+  // routed to the now-retired NTH_CORNER code, which fragmented an
+  // otherwise-shared market into its own isolated single-bookmaker key.
+  706: "CORNERS_RACE_TO", // "Kto pierwszy wykona X rzutów rożnych"
   232535: "FIRST_CORNER", // "Kto wykona 1. rzut rożny"
   200684: "LAST_CORNER", // "Ostatni rzut rożny"
   881: "OTHER", // "1.połowa - kto pierwszy wykona X rożnych" - no catalog counterpart
@@ -267,7 +299,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   700: "CARDS_TEAM", // "{home} - liczba kartek"
   708: "CARDS_TEAM", // "{away} - liczba kartek"
   1010: "HALF_TIME_HOME_TEAM_TOTAL_CARDS", // "1. połowa - {home} liczba kartek"
-  1007: "HALF_TIME_AWAY_TEAM_CARDS", // "1. połowa - {away} liczba kartek"
+  1007: "HALF_TIME_AWAY_TEAM_TOTAL_CARDS", // "1. połowa - {away} liczba kartek"
   696: "CARDS_RACE", // "Najwięcej kartek"
   200840: "HALF_TIME_CARDS_RACE", // "1. połowa - najwięcej kartek"
   200246: "FIRST_CARD", // "1. kartka"
@@ -309,7 +341,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   201569: "HALF_TIME_HOME_TEAM_FOULS_TOTAL", // "1. połowa - {home} liczba fauli"
   200687: "OTHER", // "1. faul" - no catalog counterpart
   200697: "BOTH_TEAMS_FOULS_OVER", // "Każda z drużyn powyżej X fauli"
-  201659: "CLEARANCES_TOTAL", // "Liczba odbiorów"
+  201659: "TACKLES_TOTAL", // "Liczba odbiorów"
   201660: "TEAM_TOTAL_TACKLES", // "{home} - liczba odbiorów"
   201661: "TEAM_TOTAL_TACKLES", // "{away} - liczba odbiorów"
   201683: "OTHER", // "1. połowa - liczba odbiorów" - no catalog counterpart
@@ -400,6 +432,8 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   708: "AWAY", // "{away} - liczba kartek"
   713: "HOME", // "{home} - liczba rzutów rożnych"
   733: "AWAY", // "{away} - liczba rzutów rożnych"
+  685: "HOME", // "{home} - przedział rzutów rożnych" (CORNERS_TEAM_RANGE)
+  739: "AWAY", // "{away} - przedział rzutów rożnych" (CORNERS_TEAM_RANGE)
   873: "HOME", // "1. połowa - {home} liczba rzutów rożnych"
   884: "AWAY", // "1. połowa - {away} liczba rzutów rożnych"
   200758: "HOME", // "1.połowa - {home} przedział goli"
@@ -416,13 +450,15 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   240084: "AWAY", // "2. połowa - {away} liczba rzutów rożnych"
   201660: "HOME", // "{home} - liczba odbiorów"
   201661: "AWAY", // "{away} - liczba odbiorów"
+  231006: "HOME", // "{home} wygra lub obie strzelą" (RESULT_OR_BTTS)
+  231008: "AWAY", // "{away} wygra lub obie strzelą" (RESULT_OR_BTTS)
 };
 
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
   "CARDS_TEAM",
   "HALF_TIME_CORNERS_TEAM",
-  "HALF_TIME_TEAM_GOAL_RANGE",
-  "SECOND_HALF_TEAM_GOAL_RANGE",
+  "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
+  "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
   "SECOND_HALF_CORNERS_TEAM",
 ]);
 
@@ -589,7 +625,7 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_CARDS_TOTAL",
   "CARDS_TEAM",
   "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
-  "HALF_TIME_AWAY_TEAM_CARDS",
+  "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
   "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
   "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
   "HALF_TIME_CORNERS_TEAM",
@@ -616,11 +652,18 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS_ON_TARGET",
   "HALF_TIME_TOTAL_SHOTS_ON_TARGET",
   "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER",
-  "CLEARANCES_TOTAL",
+  "TACKLES_TOTAL",
   "TEAM_TOTAL_TACKLES",
   "SAVES_TOTAL",
   "POST_OR_CROSSBAR_TOTAL",
   "TEAM_TOTAL_WOODWORK_SHOTS",
+  // audit-loop cluster #22: id 200248's per-checkpoint "goals scored from
+  // kickoff to minute X" family (was GOAL_BY_MINUTE, now retired) is a bare
+  // OVER/UNDER vocabulary once the minute checkpoint moves to paramValue -
+  // see resolveGoalByMinuteCode/extractParamValue below for the
+  // "<minute>:<line>" compound param this pools onto fuksiarz's identical
+  // TIME_PERIOD_TOTAL_GOALS family.
+  "TIME_PERIOD_TOTAL_GOALS",
 ]);
 
 /**
@@ -650,8 +693,21 @@ const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
   "TOTAL_GOALS_AND_BTTS",
   "RESULT_OR_TOTAL",
   "HALFTIME_FULLTIME_AND_TOTAL",
-  "NTH_CORNER",
-  "GOAL_BY_MINUTE",
+  // audit-loop cluster #23: id 706 ("Kto pierwszy wykona X rzutów rożnych")
+  // now routes to CORNERS_RACE_TO (see the id map above) - it needs param
+  // extraction the same way the retired NTH_CORNER code did.
+  "CORNERS_RACE_TO",
+  // TIME_PERIOD_RESULT's param is the window-end minute embedded in "Mecz -
+  // do X minuty" (see extractParamValue below) - without this, extraction
+  // is skipped entirely and the market falls back to the grouper's
+  // rawMarketName recovery instead of setting paramValue directly like
+  // every other bookmaker feeding this code does.
+  "TIME_PERIOD_RESULT",
+  // CORNERS_TEAM_RANGE's catalog param is the team side (HOME/AWAY), not a
+  // numeric line - ids 685/739 always name the side (see
+  // SUPERBET_SIDE_BY_MARKET_ID), same convention sts/fuksiarz already use
+  // for this code.
+  "CORNERS_TEAM_RANGE",
 ]);
 
 /**
@@ -716,10 +772,16 @@ function isNonGoalsLineName(rawName: string): boolean {
 
 /**
  * Superbet's "Liczba goli - do X minuty" family carries the real minute
- * checkpoint only in the selection names ("Powyżej 1.5 - do 40. minuty").
- * Resolve the minute and route the market to the matching catalog code -
- * checkpoints without a catalog counterpart (e.g. 40') must not stay in
- * GOAL_BY_MINUTE where they would only produce UNKNOWN selections.
+ * checkpoint only in the market/selection names ("Powyżej 1.5 - do 40.
+ * minuty"). Resolve the minute and route the market to the matching catalog
+ * code - checkpoints without a dedicated single-window code (1/5/10/15/20/
+ * 25/35) pool onto TIME_PERIOD_TOTAL_GOALS, the same catalog code fuksiarz
+ * already uses for its identical "goals scored from kickoff to minute X"
+ * bet family (id map comment above, fuksiarz-normalizer.ts). Its param
+ * carries both axes as "<minute>:<line>" (extractParamValue below), so 20'/
+ * 25'/35' - which have no dedicated code of their own - are no longer
+ * stranded in the retired GOAL_BY_MINUTE island where the minute lived only
+ * in the selection code and the goal line masqueraded as the param.
  */
 function resolveGoalByMinuteCode(raw: RawBookmakerMarket): NormalizedMarketType {
   const minutes = new Set<string>();
@@ -730,11 +792,10 @@ function resolveGoalByMinuteCode(raw: RawBookmakerMarket): NormalizedMarketType 
   const list = Array.from(minutes);
   // audit-match (Arsenal vs Coventry City): superbet id 200248 quotes 8
   // checkpoints (5/10/15/20/25/30/35/40) - only 30 and 60 had dedicated
-  // codes; 20/25/35 have no dedicated code but share GOAL_BY_MINUTE's exact
-  // shape (param = goal line, minute lives in the selection code, see the
-  // "GOAL_BY_MINUTE" case below), so route them there too instead of OTHER.
+  // single-window codes; 1/5/10/15/20/25/35 have no dedicated code, so pool
+  // them onto TIME_PERIOD_TOTAL_GOALS instead of OTHER.
   if (list.length > 0 && list.every((m) => ["1", "5", "10", "15", "20", "25", "35"].includes(m))) {
-    return "GOAL_BY_MINUTE";
+    return "TIME_PERIOD_TOTAL_GOALS";
   }
   if (list.length > 0 && list.every((m) => m === "30")) return "FIRST_30_MIN_TOTAL_GOALS";
   // 40' has a dedicated catalog code (bare OVER/UNDER, no minute suffix
@@ -979,7 +1040,6 @@ function normalizeSelectionForMarket(
     case "BTTS_2PLUS_GOALS":
     case "BTTS_AT_LEAST_ONE_HALF":
     case "BTTS_OR_OVER_2_5":
-    case "DRAW_OR_BTTS":
     case "DRAW_OR_CLEAN_SHEET":
     case "BOTH_HALVES_GOALS":
     case "HOME_TEAM_TO_SCORE":
@@ -1073,14 +1133,13 @@ function normalizeSelectionForMarket(
     case "AWAY_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":
-    case "HALF_TIME_TEAM_GOAL_RANGE":
-    case "SECOND_HALF_TEAM_GOAL_RANGE":
+    case "HALF_TIME_TEAM_MULTI_GOAL_RANGE":
+    case "SECOND_HALF_TEAM_MULTI_GOAL_RANGE":
     case "CORNERS_RANGE":
     case "HALF_TIME_CORNERS_RANGE":
     case "HOME_CORNERS_RANGE":
     case "AWAY_CORNERS_RANGE":
-    case "HOME_CORNERS_RANGE_WIDE":
-    case "AWAY_CORNERS_RANGE_WIDE":
+    case "CORNERS_TEAM_RANGE":
       return normalizeRangeSelection(trimmed, lower);
 
     case "HALF_TIME_HOME_EXACT_GOALS": {
@@ -1261,31 +1320,20 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
-    case "GOAL_BY_MINUTE": {
-      // "Poniżej 0.5 - do 5. minuty" -> UNDER_5MIN
-      const match = trimmed.match(/^(powyżej|powyzej|poniżej|ponizej)\s+[\d.,]+\s*-\s*do\s+(\d+)\.?\s*minuty$/i);
-      if (match) {
-        const overUnder = /^pow/i.test(match[1]) ? "OVER" : "UNDER";
-        // Kept in sync with resolveGoalByMinuteCode's checkpoint list above -
-        // 20/25/35 route here (no dedicated catalog code); 30/60/40 route to
-        // their own dedicated codes and never reach this case.
-        if (["1", "5", "10", "15", "20", "25", "35"].includes(match[2])) {
-          return `${overUnder}_${match[2]}MIN` as NormalizedSelection;
-        }
-      }
-      return "UNKNOWN";
-    }
-
-    case "RESULT_AT_MINUTE": {
-      // "1 - do 5. minuty" -> HOME
+    case "TIME_PERIOD_RESULT": {
+      // superbet's only source for this code is "Mecz - do X minuty"
+      // ("1 - do 5. minuty" -> HOME) - strip the window suffix before
+      // mapping, since bare map1x2Token/normalize1x2Selection don't expect it.
       const token = trimmed.replace(/\s*-\s*do\s+\d+\.?\s*minuty$/i, "").trim();
       const mapped = map1x2Token(token);
       if (mapped) return mapped;
       return normalize1x2Selection(token, ctx.homeTeam, ctx.awayTeam, ctx.league);
     }
 
-    case "NTH_CORNER": {
-      // "3 - Argentyna" / "3 - Nikt"
+    case "CORNERS_RACE_TO": {
+      // "3 - Argentyna" / "3 - Nikt" - strip the leading threshold digits
+      // (extracted separately in extractParamValue below), leaving the
+      // team/none token for the shared HOME/NONE/AWAY vocabulary.
       const stripped = trimmed.replace(/^\d+\s*-\s*/, "").trim();
       if (isNoneSelection(stripped.toLowerCase())) return "NONE" as NormalizedSelection;
       return normalize1x2Selection(stripped, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -1461,12 +1509,48 @@ function extractParamValue(
     return extractDecimalHandicapParam(raw, ctx);
   }
 
-  if (marketCode === "NTH_CORNER") {
+  // "Mecz - do 5. minuty" -> "5" (window-end minute, matching the
+  // betcris/lebull/fuksiarz/forbet/betters/sts/lvbet convention for this
+  // same catalog code).
+  if (marketCode === "TIME_PERIOD_RESULT") {
+    const windowMatch = raw.name.match(/do\s+(\d+)\.?\s*minuty/i);
+    return windowMatch ? windowMatch[1] : undefined;
+  }
+
+  // audit-loop cluster #22: "Liczba goli - do 5. minuty" is a genuine
+  // two-axis market like fuksiarz's TIME_PERIOD_TOTAL_GOALS - the minute
+  // checkpoint ("5", from raw.name) is the primary window axis, and the
+  // goal-count line ("0.5"/"1.5", from the selections' "Poniżej/Powyżej X -
+  // do..." labels) is the sub-line qualifier within it. Encode both as
+  // "<minute>:<line>" (same colon convention as fuksiarz-normalizer.ts and
+  // market-type-grouper.ts's canonicalizeParamValue/sortParameters) instead
+  // of the retired GOAL_BY_MINUTE code's inverted shape, which put the goal
+  // line alone in paramValue and buried the real minute inside cryptic
+  // per-selection codes (UNDER_5MIN/OVER_5MIN/...).
+  if (marketCode === "TIME_PERIOD_TOTAL_GOALS") {
+    const windowMatch = raw.name.match(/do\s+(\d+)\.?\s*minuty/i);
+    const goalLine = parseOverUnderLine(selectionNames);
+    if (windowMatch && goalLine) return `${windowMatch[1]}:${goalLine}`;
+    return undefined;
+  }
+
+  if (marketCode === "CORNERS_RACE_TO") {
+    // Threshold is embedded in every selection label ("3 - Francja"), not a
+    // separate raw.paramValue field - pull it from the first selection name.
     for (const name of selectionNames) {
       const match = name.match(/^(\d+)\s*-\s/);
       if (match) return match[1];
     }
     return undefined;
+  }
+
+  // CORNERS_TEAM_RANGE's param is the team side itself (HOME/AWAY), derived
+  // from the raw market id (685=home, 739=away) via SUPERBET_SIDE_BY_MARKET_ID
+  // - not a numeric line, so it must not fall through to the O/U/decimal/
+  // integer line parsing below.
+  if (marketCode === "CORNERS_TEAM_RANGE") {
+    const idNum = raw.bookmakerMarketId ? Number(raw.bookmakerMarketId) : undefined;
+    return idNum !== undefined ? SUPERBET_SIDE_BY_MARKET_ID[idNum] : undefined;
   }
 
   const paramFromSelections = parseOverUnderLine(selectionNames);
@@ -1539,7 +1623,7 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     }
 
     // Route minute-checkpoint goal totals by the actual minute value.
-    if (marketCode === "GOAL_BY_MINUTE") {
+    if (marketCode === "TIME_PERIOD_TOTAL_GOALS") {
       marketCode = resolveGoalByMinuteCode(raw);
     }
 
@@ -1548,22 +1632,27 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    const marketMetadata = getMarketMetadata(marketCode);
-    const marketName = marketMetadata?.labels.pl ?? raw.name;
-
     const side = rawId !== undefined ? SUPERBET_SIDE_BY_MARKET_ID[rawId] : undefined;
 
     let paramValue = extractParamValue(marketCode, raw, ctx);
     if (side && SIDED_PARAM_MARKETS.has(marketCode) && paramValue) {
       paramValue = `${side}:${paramValue}`;
     }
-    const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => {
+    let selections = raw.selections.map((sel) => {
       let code = normalizeSelectionForMarket(sel.name, marketCode, ctx);
-      // Side-specific market ids feed catalog codes with side-prefixed
-      // selections (HOME_OVER, AWAY_1-2, ...).
-      if (side && SIDED_SELECTION_MARKETS.has(marketCode) && code !== "UNKNOWN") {
+      // Cluster #12: RESULT_OR_BTTS pools "<team> wins or BTTS" / "draw or
+      // BTTS" from 3 separate ids (231006 home / 231007 draw / 231008 away)
+      // into one combined card - the side has to be folded into the
+      // selection code itself (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/NO,
+      // AWAY_OR_BTTS_YES/NO), not just prefixed the way SIDED_SELECTION_
+      // MARKETS below does, since 231007 (draw) has no side at all.
+      if (marketCode === "RESULT_OR_BTTS") {
+        const yesNo = normalizeYesNoSelection(sel.name);
+        code = yesNo === "UNKNOWN" ? "UNKNOWN" : (`${side ?? "DRAW"}_OR_BTTS_${yesNo}` as NormalizedSelection);
+      } else if (side && SIDED_SELECTION_MARKETS.has(marketCode) && code !== "UNKNOWN") {
+        // Side-specific market ids feed catalog codes with side-prefixed
+        // selections (HOME_OVER, AWAY_1-2, ...).
         code = `${side}_${code}` as NormalizedSelection;
       }
       return {
@@ -1572,6 +1661,25 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
         odds: sel.odds,
       };
     });
+
+    // "Liczba czerwonych kartek" (RED_CARDS_TOTAL's OVER/UNDER selections on
+    // the 0.5 line) is the exact same real-world bet as the whole-match
+    // RED_CARD YES/NO binary other bookmakers (betclic/betfan/forbet/sts/
+    // etoto/fortuna) already use — alias this specific line into RED_CARD so
+    // both pools merge into one comparison card instead of staying disjoint
+    // (audit cluster #5: "Czerwona kartka w meczu" duplicate).
+    if (marketCode === "RED_CARDS_TOTAL" && paramValue === "0.5") {
+      marketCode = "RED_CARD";
+      paramValue = undefined;
+      selections = selections.map((s) => ({
+        ...s,
+        code: s.code === "OVER" ? "YES" : s.code === "UNDER" ? "NO" : s.code,
+      }));
+    }
+
+    const marketMetadata = getMarketMetadata(marketCode);
+    const marketName = marketMetadata?.labels.pl ?? raw.name;
+    const marketKey = buildMarketKey(marketCode, paramValue);
 
     if (marketCode === "OTHER" && matchedBy !== "id") {
       console.warn(`[superbet] Unmapped market "${raw.name}" (id: ${rawId ?? "none"})`);

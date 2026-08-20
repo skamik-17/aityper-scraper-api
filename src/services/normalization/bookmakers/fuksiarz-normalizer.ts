@@ -161,7 +161,7 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // FIRST_30_MIN_TOTAL_GOALS and TIME_PERIOD_HANDICAP / _ASIAN_HANDICAP /
   // unmapped), so siblings of the same market never lined up and the 5-min and
   // 60-min windows fell out entirely. The market key already carries both the
-  // window and the line ("TIME_PERIOD_TOTAL_GOALS:75 (2.5)"), so a single code
+  // window and the line ("TIME_PERIOD_TOTAL_GOALS:75:2.5"), so a single code
   // per family is safe.
   "-30570": "TIME_PERIOD_TOTAL_GOALS",
   "-30571": "TIME_PERIOD_TOTAL_GOALS",
@@ -454,6 +454,30 @@ function adjustMarketCode(
     if (code === "CARDS_TOTAL") return "CARDS_TOTAL_RANGE";
   }
 
+  // Per-half team goal O/U: Fuksiarz jams both teams' over/under lines into
+  // one combined-vocabulary code (HOME_OVER/HOME_UNDER/AWAY_OVER/AWAY_UNDER
+  // on a single shared param axis), stranding its odds in a card isolated
+  // from the nine other bookmakers who already pool this bet under
+  // dedicated per-side codes (HALF_TIME_HOME_TEAM_TOTAL_GOALS /
+  // HALF_TIME_AWAY_TEAM_TOTAL_GOALS / SECOND_HALF_HOME_TEAM_TOTAL_GOALS /
+  // SECOND_HALF_AWAY_TEAM_TOTAL_GOALS). Route by the team named in the raw
+  // market name so Fuksiarz merges into the same per-side pool the peers use
+  // (audit cluster #0, findings 1/5). Only applies to the plain O/U shape —
+  // the goal-bucket-panel reroute above already handled the range variant.
+  if (code === "HALF_TIME_TEAM_TOTAL_GOALS" || code === "SECOND_HALF_TEAM_TOTAL_GOALS") {
+    const isFirstHalf = code === "HALF_TIME_TEAM_TOTAL_GOALS";
+    const side = resolveTeamSide(raw.name, ctx);
+    if (side === "HOME") {
+      return isFirstHalf ? "HALF_TIME_HOME_TEAM_TOTAL_GOALS" : "SECOND_HALF_HOME_TEAM_TOTAL_GOALS";
+    }
+    if (side === "AWAY") {
+      return isFirstHalf ? "HALF_TIME_AWAY_TEAM_TOTAL_GOALS" : "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS";
+    }
+    // Side unresolvable: leave the combined code so the selection-building
+    // step's existing "drop if no side" guard excludes it rather than
+    // emitting ambiguous jammed data.
+  }
+
   // Team-sided raw markets: the id map can only point at the HOME_/TEAM_
   // variant, but Fuksiarz quotes a separate raw market per team — flip to the
   // AWAY_ catalog code when the raw name names the away team.
@@ -655,11 +679,17 @@ function resolveMarketCodeBase(
 
   // "Strzeli przynajmniej N goli/gole" — dedicated multi-goal scorer markets,
   // not extra parameter slots of GOALSCORER_ANYTIME.
+  // audit-loop cluster #1 (PLAYER_HAT_TRICK duplicate): the 3+ tier used to
+  // route here to its own PLAYER_HAT_TRICK code, stranding fuksiarz's
+  // per-player 3+ goals odds apart from the PLAYER_3_OR_MORE_GOALS pool that
+  // betcris/lvbet/superbet already share, and colliding on the label
+  // "Hat-trick" with the any-player HAT_TRICK binary market. Routed to the
+  // shared code instead; PLAYER_HAT_TRICK is retired (see market-catalog.ts).
   const scorerAtLeast = normalized.match(/^strzeli przynajmniej (\d+) gol/);
   if (scorerAtLeast) {
     const count = parseInt(scorerAtLeast[1], 10);
     if (count === 2) return { code: "PLAYER_2_OR_MORE_GOALS", matchedBy: "pattern" };
-    if (count >= 3) return { code: "PLAYER_HAT_TRICK", matchedBy: "pattern" };
+    if (count >= 3) return { code: "PLAYER_3_OR_MORE_GOALS", matchedBy: "pattern" };
     return { code: "GOALSCORER_ANYTIME", matchedBy: "pattern" };
   }
 
@@ -746,11 +776,25 @@ function resolveMarketCodeBase(
   // swallowed by "(.+) - liczba kartek" and land in the full-match market.
   const halfStatTeam = normalized.match(/^([12]) polowa - .+ - liczba (rzutow roznych|kartek)$/);
   if (halfStatTeam) {
-    const corners = halfStatTeam[2] === "rzutow roznych";
-    if (halfStatTeam[1] === "1") {
-      return { code: corners ? "HALF_TIME_CORNERS_TEAM" : "HALF_TIME_CARDS_TEAM", matchedBy: "pattern" };
+    const isFirstHalf = halfStatTeam[1] === "1";
+    if (halfStatTeam[2] === "rzutow roznych") {
+      return { code: isFirstHalf ? "HALF_TIME_CORNERS_TEAM" : "SECOND_HALF_CORNERS_TEAM", matchedBy: "pattern" };
     }
-    return { code: corners ? "SECOND_HALF_CORNERS_TEAM" : "SECOND_HALF_CARDS_TEAM", matchedBy: "pattern" };
+    // Per-half team cards: route directly to the per-side codes betcris and
+    // superbet already use (HALF_TIME_HOME/AWAY_TEAM_TOTAL_CARDS,
+    // SECOND_HALF_HOME/AWAY_TEAM_TOTAL_CARDS) instead of the retired
+    // combined-vocabulary HALF_TIME_CARDS_TEAM / SECOND_HALF_CARDS_TEAM
+    // codes, which stranded Fuksiarz (with forbet, lvbet) in a separate,
+    // three-key-fragmented card from the rest of the pool (audit cluster
+    // #0, findings 2/7/9).
+    const side = resolveTeamSide(raw.name, ctx);
+    if (side === "HOME") {
+      return { code: isFirstHalf ? "HALF_TIME_HOME_TEAM_TOTAL_CARDS" : "SECOND_HALF_HOME_TEAM_TOTAL_CARDS", matchedBy: "pattern" };
+    }
+    if (side === "AWAY") {
+      return { code: isFirstHalf ? "HALF_TIME_AWAY_TEAM_TOTAL_CARDS" : "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS", matchedBy: "pattern" };
+    }
+    return { code: "OTHER", matchedBy: "pattern" };
   }
 
   const halfStatTotal = normalized.match(/^([12]) polowa - liczba (rzutow roznych|kartek)$/);
@@ -869,14 +913,20 @@ function extractParamValue(
   if ([
     "HALF_TIME_TEAM_TOTAL_GOALS",
     "SECOND_HALF_TEAM_TOTAL_GOALS",
+    "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+    "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+    "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+    "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
     "HALF_TIME_RESULT_AND_TOTAL",
     "SECOND_HALF_RESULT_AND_TOTAL",
     "HALF_TIME_DOUBLE_CHANCE_TOTAL",
     "SECOND_HALF_DOUBLE_CHANCE_TOTAL",
     "HALF_TIME_CORNERS_TEAM",
     "SECOND_HALF_CORNERS_TEAM",
-    "HALF_TIME_CARDS_TEAM",
-    "SECOND_HALF_CARDS_TEAM",
+    "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+    "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+    "SECOND_HALF_HOME_TEAM_TOTAL_CARDS",
+    "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
     "HALF_TIME_CORNERS_TOTAL",
     "SECOND_HALF_CORNERS_TOTAL",
     "HALF_TIME_CARDS_TOTAL",
@@ -948,10 +998,20 @@ function extractParamValue(
     return minutes ? minutes[1] : parseIntegerLine(raw.name);
   }
 
-  // Time-window goal totals: keep the end minute as the base parameter, but
-  // when the raw goal line differs from the implicit 0.5 encode it into the
-  // parameter — a 1.5-goals-in-15-min line must not merge with a peer's
-  // 0.5-goals-in-15-min bucket as if directly comparable.
+  // Time-window goal totals are a genuine two-axis market: fuksiarz quotes
+  // several DIFFERENT goal lines (0.5/1.5/2.5/3.5/4.5) for the SAME minute
+  // window as separate raw entries sharing one raw.name ("Liczba goli - 15
+  // minut" appears once per line). The window is the primary axis (what a
+  // "TIME_PERIOD_TOTAL_GOALS" tab represents), the goal line is a sub-line
+  // qualifier within it — always encode both as "<minutes>:<line>" (colon
+  // convention, matching the SIDED_PARAM_MARKETS "HOME:13.5" pattern used
+  // elsewhere) instead of the old ad hoc "<minutes> (<line>)" composite that
+  // only appeared when the line deviated from the implicit 0.5 default.
+  // Mixing bare windows ("10") with parenthetical composites ("10 (1.5)")
+  // under the same param axis was itself the bug: the grouper's numeric
+  // parser/sorter/labeler could not tell the two apart as "same window,
+  // different line" (audit-loop cluster #17) — every value now carries an
+  // explicit line so the axis format is uniform and unambiguous.
   if (
     marketCode === "TIME_PERIOD_TOTAL_GOALS" ||
     marketCode === "INTERVAL_TOTAL_GOALS" ||
@@ -960,9 +1020,8 @@ function extractParamValue(
     const minutesMatch = raw.name.match(/(\d+)\s*minut/i);
     const minutes = minutesMatch ? minutesMatch[1] : parseIntegerLine(raw.name);
     if (!minutes) return parseLineFromSelections(selectionNames);
-    const goalLine = parseOverUnderLine(selectionNames);
-    if (goalLine && goalLine !== "0.5") return `${minutes} (${goalLine})`;
-    return minutes;
+    const goalLine = parseOverUnderLine(selectionNames) ?? "0.5";
+    return `${minutes}:${goalLine}`;
   }
 
   if (marketCode === "GOALSCORER_ANYTIME") {
@@ -1017,7 +1076,7 @@ function extractParamValue(
   // not market parameters.
   if (
     marketCode === "PLAYER_2_OR_MORE_GOALS" ||
-    marketCode === "PLAYER_HAT_TRICK" ||
+    marketCode === "PLAYER_3_OR_MORE_GOALS" ||
     marketCode === "SECOND_HALF_TEAM_GOAL_RANGE" ||
     marketCode === "HALF_TIME_TEAM_GOAL_RANGE" ||
     // "Strzelec 1. gola" - the "1" is the goal ordinal, not a market line.
@@ -1299,6 +1358,13 @@ function normalizeSelectionForMarket(
     case "AWAY_TEAM_TOTAL_GOALS":
     case "HALF_TIME_TEAM_TOTAL_GOALS":
     case "SECOND_HALF_TEAM_TOTAL_GOALS":
+    // Per-side per-half codes (adjustMarketCode reroutes here when the raw
+    // market's team side is resolvable): bare OVER/UNDER, no side prefix
+    // needed since the side already lives in the market code itself.
+    case "HALF_TIME_HOME_TEAM_TOTAL_GOALS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_GOALS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS":
     case "TIME_PERIOD_TOTAL_GOALS":
     case "INTERVAL_TOTAL_GOALS":
     case "FIRST_30_MIN_TOTAL_GOALS":
@@ -1334,8 +1400,16 @@ function normalizeSelectionForMarket(
     case "CARDS_TEAM":
     case "HALF_TIME_CORNERS_TEAM":
     case "SECOND_HALF_CORNERS_TEAM":
-    case "HALF_TIME_CARDS_TEAM":
-    case "SECOND_HALF_CARDS_TEAM":
+      return normalizeOverUnderSelection(trimmed);
+
+    // Per-side per-half card codes (routed here in resolveMarketCodeBase by
+    // team side): bare OVER/UNDER, no side prefix needed since the side
+    // already lives in the market code itself (matches
+    // HALF_TIME_HOME_TEAM_TOTAL_GOALS's identical pattern above).
+    case "HALF_TIME_HOME_TEAM_TOTAL_CARDS":
+    case "HALF_TIME_AWAY_TEAM_TOTAL_CARDS":
+    case "SECOND_HALF_HOME_TEAM_TOTAL_CARDS":
+    case "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS":
       return normalizeOverUnderSelection(trimmed);
 
     case "BTTS":
@@ -1535,7 +1609,7 @@ function normalizeSelectionForMarket(
     case "HOME_GOALSCORER_FIRST":
     case "AWAY_GOALSCORER_FIRST":
     case "PLAYER_2_OR_MORE_GOALS":
-    case "PLAYER_HAT_TRICK":
+    case "PLAYER_3_OR_MORE_GOALS":
     case "PLAYER_CARDS":
     case "PLAYER_PASSES":
     case "PLAYER_RED_CARD":
@@ -1626,9 +1700,7 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       marketCode === "SECOND_HALF_TEAM_GOAL_RANGE" ||
       marketCode === "CARDS_TEAM" ||
       marketCode === "HALF_TIME_CORNERS_TEAM" ||
-      marketCode === "SECOND_HALF_CORNERS_TEAM" ||
-      marketCode === "HALF_TIME_CARDS_TEAM" ||
-      marketCode === "SECOND_HALF_CARDS_TEAM"
+      marketCode === "SECOND_HALF_CORNERS_TEAM"
     ) {
       const side = resolveTeamSide(raw.name, ctx);
       if (!side) return null;

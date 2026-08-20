@@ -537,7 +537,14 @@ const GOALS_MARKETS: MarketCatalogEntry[] = [
     selectionOrder: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 24,
-    descriptionTemplates: { HOME: "{homeTeam} prowadzi w {param}. minucie", DRAW: "Remis w {param}. minucie", AWAY: "{awayTeam} prowadzi w {param}. minucie" },
+    // Audit-loop cluster #19: the parameter is the WINDOW-END minute (every
+    // normalizer feeding this code — betcris/lebull/fuksiarz/forbet/betters/
+    // sts/lvbet/superbet — extracts it from shapes like "1-30 min. Wynik" /
+    // "Mecz - do 5. minuty" as the closing minute of a 1-to-X window), not a
+    // single point in time. "prowadzi w {param}. minucie" read as "leads AT
+    // minute X" and hid that the bet actually covers the whole 1-X window;
+    // reworded to match the "Do X. min." tab label in market-type-grouper.ts.
+    descriptionTemplates: { HOME: "{homeTeam} prowadzi do {param}. minuty", DRAW: "Remis do {param}. minuty", AWAY: "{awayTeam} prowadzi do {param}. minuty" },
   },
   {
     numericId: 424,
@@ -1087,66 +1094,18 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 51,
     descriptionTemplates: { YES: "{awayTeam} strzeli w 2. połowie", NO: "{awayTeam} nie strzeli w 2. połowie" },
   },
-  {
-    numericId: 442,
-    code: "SECOND_HALF_HOME_CLEAN_SHEET",
-    slug: "second-half-home-clean-sheet",
-    category: MarketCategory.POLOWY,
-    subCategory: "gole-2h",
-    labels: { pl: "2. połowa - czyste konto gospodarzy", en: "Home Clean Sheet (2nd Half)" },
-    descriptions: { pl: "Czy gospodarze nie stracą gola w 2. połowie?", en: "Will home team keep a clean sheet in the second half?" },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    selectionOrder: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 52,
-    descriptionTemplates: { YES: "{homeTeam} zachowa czyste konto w 2. połowie", NO: "{homeTeam} nie zachowa czystego konta w 2. połowie" },
-  },
-  {
-    numericId: 443,
-    code: "SECOND_HALF_AWAY_CLEAN_SHEET",
-    slug: "second-half-away-clean-sheet",
-    category: MarketCategory.POLOWY,
-    subCategory: "gole-2h",
-    labels: { pl: "2. połowa - czyste konto gości", en: "Away Clean Sheet (2nd Half)" },
-    descriptions: { pl: "Czy goście nie stracą gola w 2. połowie?", en: "Will away team keep a clean sheet in the second half?" },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    selectionOrder: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 53,
-    descriptionTemplates: { YES: "{awayTeam} zachowa czyste konto w 2. połowie", NO: "{awayTeam} nie zachowa czystego konta w 2. połowie" },
-  },
-  {
-    numericId: 445,
-    code: "HALF_TIME_HOME_CLEAN_SHEET",
-    slug: "half-time-home-clean-sheet",
-    category: MarketCategory.POLOWY,
-    subCategory: "gole-1h",
-    labels: { pl: "1. połowa - czyste konto gospodarzy", en: "Home Clean Sheet (1st Half)" },
-    descriptions: { pl: "Czy gospodarze nie stracą gola w 1. połowie?", en: "Will home team keep a clean sheet in the first half?" },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    selectionOrder: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 54,
-    descriptionTemplates: { YES: "{homeTeam} zachowa czyste konto w 1. połowie", NO: "{homeTeam} nie zachowa czystego konta w 1. połowie" },
-  },
-  {
-    numericId: 446,
-    code: "HALF_TIME_AWAY_CLEAN_SHEET",
-    slug: "half-time-away-clean-sheet",
-    category: MarketCategory.POLOWY,
-    subCategory: "gole-1h",
-    labels: { pl: "1. połowa - czyste konto gości", en: "Away Clean Sheet (1st Half)" },
-    descriptions: { pl: "Czy goście nie stracą gola w 1. połowie?", en: "Will away team keep a clean sheet in the first half?" },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    selectionOrder: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    displayOrder: 55,
-    descriptionTemplates: { YES: "{awayTeam} zachowa czyste konto w 1. połowie", NO: "{awayTeam} nie zachowa czystego konta w 1. połowie" },
-  },
+  // SECOND_HALF_HOME_CLEAN_SHEET (442) / SECOND_HALF_AWAY_CLEAN_SHEET (443) /
+  // HALF_TIME_HOME_CLEAN_SHEET (445) / HALF_TIME_AWAY_CLEAN_SHEET (446)
+  // retired (audit cluster #0, findings 3/4): "{team} won't concede" is the
+  // exact same real-world proposition as "opponent won't score" — this
+  // family's bookmaker pool (betfan/betclic/fortuna/pzbuk/forbet/etoto) was
+  // fully disjoint from the *_TO_SCORE family's pool (sts/betcris/superbet/
+  // fuksiarz/lvbet). All six normalizers now route the clean-sheet raw
+  // straight into the OPPOSING side's HALF_TIME/SECOND_HALF_*_TO_SCORE code
+  // with inverted YES/NO, merging both 5-6 bookmaker pools into one. forbet
+  // still carries "HALF_TIME_HOME_CLEAN_SHEET"/"SECOND_HALF_HOME_CLEAN_SHEET"
+  // as transient intermediate values (FORBET_TEAM_SIDED_VARIANTS) — never
+  // emitted as a final marketCode.
   {
     numericId: 403,
     code: "HALF_TIME_HEADER_GOAL",
@@ -1196,21 +1155,6 @@ const HALF_TIME_MARKETS: MarketCatalogEntry[] = [
       ANY: "Którykolwiek zawodnik strzeli z rzutu karnego w 1. połowie",
       NONE: "Żaden zespół nie strzeli z rzutu karnego w 1. połowie",
     },
-  },
-  {
-    numericId: 435,
-    code: "FIRST_HALF_CARDS_1X2",
-    slug: "first-half-cards-1x2",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Kartki 1X2 - 1. połowa", en: "Cards 1X2 - 1st Half" },
-    descriptions: { pl: "Która drużyna otrzyma więcej kartek w pierwszej połowie?", en: "Which team will receive more cards in the first half?" },
-    hasParameter: false,
-    selections: ["HOME", "DRAW", "AWAY"],
-    selectionOrder: ["HOME", "DRAW", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
-    displayOrder: 56,
-    descriptionTemplates: { HOME: "{homeTeam} więcej kartek w 1. połowie", DRAW: "Remis kartek w 1. połowie", AWAY: "{awayTeam} więcej kartek w 1. połowie" },
   },
   {
     numericId: 436,
@@ -1714,21 +1658,6 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     selections: ["YES", "NO"],
     viewType: ViewType.PLAYER_DROPDOWN,
     descriptionTemplates: { YES: "{param} strzeli 4 lub więcej goli", NO: "{param} NIE strzeli 4 lub więcej goli" },
-    displayOrder: 71,
-  },
-  {
-    numericId: 62,
-    code: "PLAYER_HAT_TRICK",
-    slug: "player-hat-trick",
-    category: MarketCategory.ZAWODNICY,
-    subCategory: "strzelcy",
-    labels: { pl: "Hat-trick", en: "Hat-trick" },
-    descriptions: { pl: "Zawodnik strzeli 3 gole w jednym meczu", en: "Player to score 3 goals in one match" },
-    hasParameter: true,
-    parameterType: "player",
-    selections: ["YES", "NO"],
-    viewType: ViewType.PLAYER_DROPDOWN,
-    descriptionTemplates: { YES: "Zawodnik strzeli hat-tricka (3 lub więcej goli)", NO: "Zawodnik nie strzeli hat-tricka" },
     displayOrder: 71,
   },
   {
@@ -2991,6 +2920,12 @@ const COMBINATION_MARKETS: MarketCatalogEntry[] = [
       "1:2, 1:3 lub 1:4",
       "3:2, 4:2, 4:3 lub 5:1",
       "2:3, 2:4, 3:4 lub 1:5",
+      // Kept in sync with `selections` above (audit cluster #18): betcris/lvbet's
+      // 3-outcome variant codes were added to `selections` but omitted here,
+      // which pushed them to the end of the rendered list instead of sitting
+      // next to their 4-outcome sibling group.
+      "3:2, 4:2 lub 4:3",
+      "2:3, 2:4 lub 3:4",
       "Inne zwycięstwo gospodarzy",
       "Inne zwycięstwo gości",
       "X",
@@ -3320,29 +3255,11 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 212,
     descriptionTemplates: { "1st": "1. połowa", "2nd": "2. połowa", "Draw": "Równo" }
   },
-  {
-    numericId: 213,
-    code: "TEAM_HALF_WITH_MORE_GOALS",
-    slug: "team-half-with-more-goals",
-    category: MarketCategory.GOLE,
-    subCategory: "porownanie-polow",
-    labels: { pl: "Połowa z większą liczbą goli drużyny", en: "Team Half with Most Goals" },
-    descriptions: { pl: "W której połowie drużyna strzeli więcej goli?", en: "In which half will team score more goals?" },
-    hasParameter: true,
-    parameterType: "team",
-    validParameters: ["HOME", "AWAY"],
-    selections: ["HOME_1ST", "HOME_2ND", "HOME_EQUAL", "AWAY_1ST", "AWAY_2ND", "AWAY_EQUAL"],
-    viewType: ViewType.COMBINATION,
-    displayOrder: 213,
-    descriptionTemplates: {
-      HOME_1ST: "{homeTeam}: 1. połowa",
-      HOME_2ND: "{homeTeam}: 2. połowa",
-      HOME_EQUAL: "{homeTeam}: Równo",
-      AWAY_1ST: "{awayTeam}: 1. połowa",
-      AWAY_2ND: "{awayTeam}: 2. połowa",
-      AWAY_EQUAL: "{awayTeam}: Równo"
-    }
-  },
+  // numericId 213 / TEAM_HALF_WITH_MORE_GOALS retired (audit cluster #8,
+  // 2026-08-19): betclic and forbet were the only bookmakers producing it,
+  // stranding their odds off the HOME_/AWAY_HALF_WITH_MOST_GOALS key 9+ other
+  // bookmakers already pool under. Both normalizers now route directly to
+  // those codes; nothing maps to this code any more.
   {
     numericId: 214,
     code: "BTTS_BY_HALF",
@@ -3415,7 +3332,11 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "decimal",
     parameterFormat: "decimal",
-    validParameters: ["0.5", "1.5", "2.5", "3.5"],
+    // audit cluster #24: "over 0.5" IS the plain "goal in both halves" bet —
+    // every bookmaker normalizer now collapses that line onto BOTH_HALVES_GOALS
+    // (see collapseBothHalvesOverGoalsZeroFive in normalization/helpers), so
+    // "0.5" is no longer a reachable param here. Genuine higher lines stay.
+    validParameters: ["1.5", "2.5", "3.5"],
     selections: ["YES", "NO"],
     selectionOrder: ["YES", "NO"],
     viewType: ViewType.PARAMETER_SLIDER,
@@ -3435,8 +3356,8 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     // axis), so the home team's ladder overwrote the away team's — e.g.
     // fuksiarz's "Coventry - liczba rzutow roznych" and "Arsenal - liczba
     // rzutow roznych" are two DIFFERENT teams' ladders, not two rungs of one
-    // ladder. Parameterize by team like TEAM_HALF_WITH_MORE_GOALS so each
-    // side gets its own row. Bookmaker normalizers still need to emit
+    // ladder. Parameterize by team (validParameters HOME/AWAY, same shape as
+    // CORNERS_TEAM) so each side gets its own row. Bookmaker normalizers still need to emit
     // paramValue "HOME"/"AWAY" for this code — tracked separately, out of
     // scope for this catalog-only change.
     hasParameter: true,
@@ -3792,10 +3713,15 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     // sts's exact-count product ONLY (0/1/2/3+). superbet's structurally
     // different 2-wide-bucket product ("0-2"/"3-4"/"5-6"/"7+") used to be
     // declared here too (catalog issue 7/12) so neither bookmaker's raw
-    // selections were flagged as orphan — but showing both bucket schemes
-    // in one comparison row implied a same-bet comparability that doesn't
-    // exist. Split superbet's shape out to its own HOME_CORNERS_RANGE_WIDE
-    // code instead.
+    // selections were flagged as orphan. Round 9 briefly split it out to a
+    // dedicated HOME_CORNERS_RANGE_WIDE code, but that shape is actually
+    // identical to the ladder sts/etoto/betfan/forbet/fuksiarz already pool
+    // under CORNERS_TEAM_RANGE (param HOME/AWAY) - sts's own selections here
+    // are the same "0"/"1"/"2"/"3+" values, just shifted (see sts-normalizer
+    // CORNERS_TEAM_RANGE case: "0"->"0-2","1"->"3-4","2"->"5-6","3+"->"7+").
+    // Round 7 (cluster #7) retired HOME_CORNERS_RANGE_WIDE and routed
+    // superbet into CORNERS_TEAM_RANGE instead, so this code stays the
+    // sts-only exact-count product.
     selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
     descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych" },
@@ -3812,50 +3738,14 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     hasParameter: false,
     // Round 9 /audit-match (Arsenal vs Coventry City): same split as
     // HOME_CORNERS_RANGE above — this code is now sts's exact-count product
-    // only; superbet's 2-wide-bucket product moved to AWAY_CORNERS_RANGE_WIDE.
+    // only. Round 7 (cluster #7) retired the short-lived
+    // AWAY_CORNERS_RANGE_WIDE code and routed superbet's 2-wide-bucket
+    // product into CORNERS_TEAM_RANGE instead (identical ladder to what
+    // sts/etoto/betfan/forbet/fuksiarz already pool there, param HOME/AWAY).
     selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
     descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych" },
     displayOrder: 238
-  },
-  {
-    numericId: 1427,
-    code: "HOME_CORNERS_RANGE_WIDE",
-    slug: "home-corners-range-wide",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "rozne",
-    labels: { pl: "Gospodarz - przedział rożnych (szeroki)", en: "Home Corners Range (Wide)" },
-    descriptions: { pl: "Przedział rożnych gospodarzy w szerszych, 2-progowych kubełkach.", en: "Home team corners range using wider, 2-wide bucket thresholds." },
-    hasParameter: false,
-    // Round 9 /audit-match (Arsenal vs Coventry City): superbet's raw offer
-    // ("Arsenal - przedział rzutów rożnych") uses 2-wide top buckets
-    // "5-6"/"7+" instead of sts's discrete "0"/"1"/"2"/"3+" scheme — split
-    // into its own code so the two structurally different bucket products
-    // don't sit in one comparison row implying false comparability.
-    selections: ["0-2", "3-4", "5-6", "7+"],
-    viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5-6": "Gospodarze zdobędą 5-6 rzutów rożnych", "7+": "Gospodarze zdobędą 7 lub więcej rzutów rożnych" },
-    // displayOrder must be an integer (DB column is INTEGER, no UNIQUE
-    // constraint) - a decimal here (237.5) passed TS but broke the
-    // market_types sync with a Postgres type error, which in turn made
-    // every insert referencing this numericId fail its FK constraint.
-    // Sorts after the whole 1-300ish range used by hand-placed entries;
-    // harmless tie with numericId 1428 below, no collision with anything else.
-    displayOrder: 1427
-  },
-  {
-    numericId: 1428,
-    code: "AWAY_CORNERS_RANGE_WIDE",
-    slug: "away-corners-range-wide",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "rozne",
-    labels: { pl: "Gość - przedział rożnych (szeroki)", en: "Away Corners Range (Wide)" },
-    descriptions: { pl: "Przedział rożnych gości w szerszych, 2-progowych kubełkach.", en: "Away team corners range using wider, 2-wide bucket thresholds." },
-    hasParameter: false,
-    selections: ["0-2", "3-4", "5-6", "7+"],
-    viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5-6": "Goście zdobędą 5-6 rzutów rożnych", "7+": "Goście zdobędą 7 lub więcej rzutów rożnych" },
-    displayOrder: 1428
   },
   {
     numericId: 239,
@@ -4344,13 +4234,18 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 268,
   },
   {
+    // Audit /audit-match: "Liczba odbiorow" is the match-total sibling of
+    // TEAM_TOTAL_TACKLES (superbet ids 201660/201661, "{team} - liczba odbiorow")
+    // - same underlying "odbiory" (tackles/ball recoveries) stat, not clearances
+    // ("wybicia"). The old code/label ("CLEARANCES_TOTAL", "(OPTA)" suffix not
+    // present in any raw market name) was wrong on both counts.
     numericId: 465,
-    code: "CLEARANCES_TOTAL",
-    slug: "clearances-total",
+    code: "TACKLES_TOTAL",
+    slug: "tackles-total",
     category: MarketCategory.STATYSTYKI,
-    subCategory: "opta",
-    labels: { pl: "Liczba odbiorów (OPTA)", en: "Total Clearances (OPTA)" },
-    descriptions: { pl: "Łączna liczba odbiorów w meczu", en: "Total clearances in match" },
+    subCategory: "obrona",
+    labels: { pl: "Liczba odbiorów", en: "Total Tackles" },
+    descriptions: { pl: "Łączna liczba odbiorów w meczu", en: "Total tackles/ball recoveries in match" },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
@@ -4360,12 +4255,12 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
   },
   {
     numericId: 466,
-    code: "CLEARANCES_1X2",
-    slug: "clearances-1x2",
+    code: "TACKLES_1X2",
+    slug: "tackles-1x2",
     category: MarketCategory.STATYSTYKI,
-    subCategory: "opta",
-    labels: { pl: "Odbiory 1X2 (OPTA)", en: "Clearances 1X2 (OPTA)" },
-    descriptions: { pl: "Która drużyna wykona więcej odbiorów?", en: "Which team makes more clearances?" },
+    subCategory: "obrona",
+    labels: { pl: "Odbiory 1X2", en: "Tackles 1X2" },
+    descriptions: { pl: "Która drużyna wykona więcej odbiorów?", en: "Which team makes more tackles?" },
     hasParameter: false,
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
@@ -4407,29 +4302,28 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.STATYSTYKI,
     subCategory: "kartki",
     labels: { pl: "Punkty za kartki Powyżej/Poniżej", en: "Cards Points Over/Under" },
-    descriptions: { pl: "Suma punktów za kartki (żółta 10, czerwona 25)", en: "Total card points (yellow 10, red 25)" },
+    // Was documented as "yellow 10, red 25" (the industry-standard "match
+    // booking points" scale), but the sole remaining producer (betcris,
+    // "MatchBookingCommonTotalOverUnder2Way") labels its own raw market
+    // "ŻK=1 pkt, CZK=2 pkt" — a plain yellow=1/red=2 weighted card count,
+    // the same definition CARDS_TOTAL's peers already use. Corrected the
+    // description; betclic's and lvbet's identically-shaped raw markets
+    // were merged directly into CARDS_TOTAL/HALF_TIME_CARDS_TOTAL/
+    // SECOND_HALF_CARDS_TOTAL instead of this code (audit cluster #0,
+    // finding 6) — betcris stays here only because its raw scrape carries
+    // no parseable numeric line to convert.
+    descriptions: { pl: "Suma punktów za kartki (żółta 1, czerwona 2)", en: "Total card points (yellow 1, red 2)" },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
     descriptionTemplates: { OVER: "Powyżej {param} punktów za kartki", UNDER: "Poniżej {param} punktów za kartki" },
     displayOrder: 273,
-  },
-  {
-    numericId: 470,
-    code: "HALF_TIME_CARDS_POINTS_OVER_UNDER",
-    slug: "half-time-cards-points-over-under",
-    category: MarketCategory.POLOWY,
-    subCategory: "kartki-1h",
-    labels: { pl: "Punkty za kartki Powyżej/Poniżej - 1. połowa", en: "HT Cards Points Over/Under" },
-    descriptions: { pl: "Suma punktów za kartki w 1. połowie", en: "Total card points in 1st half" },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["OVER", "UNDER"],
-    viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { OVER: "Powyżej {param} punktów za kartki w 1. połowie", UNDER: "Poniżej {param} punktów za kartki w 1. połowie" },
-    displayOrder: 274,
   }
+  // HALF_TIME_CARDS_POINTS_OVER_UNDER (numericId 470) retired (audit
+  // cluster #0, finding 6): its sole producer (betclic) is a same-bookmaker
+  // duplicate of "Liczba kartek - 1. połowa" at a x10 scale — now merged
+  // directly into HALF_TIME_CARDS_TOTAL. Zero remaining references.
 ];
 
 // ===== Match-audit wave (2026-06-27): codes required by cross-bookmaker audit fixes =====
@@ -4491,20 +4385,6 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 500,
   },
   {
-    numericId: 1287,
-    code: "DRAW_OR_UNDER_2_5",
-    slug: "draw-or-under-2-5",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Remis lub poniżej 2.5 gola", en: "Draw Or Under 2 5" },
-    descriptions: { pl: "Wygrywa, jeśli mecz zakończy się remisem albo padnie mniej goli niż wynosi wybrana linia — TAK oznacza spełnienie choć jednego z tych warunków, NIE oznacza że oba zawiodły.", en: "Wins if the match ends in a draw or fewer goals fall than the chosen line — YES means at least one condition is met, NO means neither was." },
-    hasParameter: false,
-    selections: ["YES","NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Remis lub poniżej 2.5 gola w meczu", NO: "Ani remis, ani poniżej 2.5 gola" },
-    displayOrder: 500,
-  },
-  {
     numericId: 1288,
     code: "TEAM_WIN_OR_CLEAN_SHEET",
     slug: "team-win-or-clean-sheet",
@@ -4524,6 +4404,19 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 500,
   },
   {
+    // Cluster #15 /audit-match: this code used to declare the UNION of two
+    // incompatible bookmaker bucket schemes - fuksiarz's disjoint 3-way
+    // partition ("0-1"/"2-3"/"4+", implied probs sum ~1) and superbet/lvbet's
+    // overlapping cumulative-range ladder ("1-2"/"1-3"/"1-4"/"2-3"/"2-4"/
+    // "3-4", implied probs sum well above 1 - the SAME team scoring 2 goals
+    // satisfies three of those bets at once). The old STAT_RANGE + decimal
+    // parameterType shape also forced the grouper's "exact" param fallback,
+    // which pooled both schemes onto one row despite them not being the same
+    // bet. Same conflation the full-match GOAL_RANGE/MULTI_GOAL_RANGE split
+    // already fixed - mirrored here: this code stays fuksiarz's disjoint
+    // partition only (COMBINATION, no parameter, like HOME_GOAL_RANGE/
+    // HALF_TIME_GOAL_RANGE); the ladder scheme moved to the new
+    // HALF_TIME_TEAM_MULTI_GOAL_RANGE code below.
     numericId: 1289,
     code: "HALF_TIME_TEAM_GOAL_RANGE",
     slug: "half-time-team-goal-range",
@@ -4531,11 +4424,31 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole-1h",
     labels: { pl: "Gole drużyny w 1. połowie - przedział", en: "Half Time Team Goal Range" },
     descriptions: { pl: "Obstawiasz przedział, w jakim zmieści się liczba goli wybranej drużyny strzelonych w 1. połowie.", en: "Bet on the range into which the chosen team's first-half goal tally falls." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["HOME_0-1","HOME_1-2","HOME_1-3","HOME_2-3","HOME_4+","AWAY_0-1","AWAY_1-2","AWAY_1-3","AWAY_2-3","AWAY_4+"],
-    viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { "HOME_0-1": "{homeTeam} strzeli 0-1 gola w 1. połowie", "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 1. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 1. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 1. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub więcej goli w 1. połowie", "AWAY_0-1": "{awayTeam} strzeli 0-1 gola w 1. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 1. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 1. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 1. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub więcej goli w 1. połowie" },
+    hasParameter: false,
+    selections: ["HOME_0-1","HOME_2-3","HOME_4+","AWAY_0-1","AWAY_2-3","AWAY_4+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_0-1": "{homeTeam} strzeli 0-1 gola w 1. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 1. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub więcej goli w 1. połowie", "AWAY_0-1": "{awayTeam} strzeli 0-1 gola w 1. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 1. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub więcej goli w 1. połowie" },
+    displayOrder: 500,
+  },
+  {
+    // Cluster #15 /audit-match: the cumulative-range ladder half of the old
+    // HALF_TIME_TEAM_GOAL_RANGE conflation (superbet's raw "1-2"/"1-3"/"2-3",
+    // lvbet's "1st Half <Team> Total Goals (Extended Bands)" raw "1-2"/"1-3"/
+    // "1-4"/"2-3"/"2-4"/"3-4"/"Każdy inny") - see the comment on
+    // HALF_TIME_TEAM_GOAL_RANGE above. A team scoring 2 goals satisfies
+    // "1-2", "1-3" AND "2-3" simultaneously, so this is not the same bet
+    // shape as the disjoint partition and must not share a row with it.
+    numericId: 1427,
+    code: "HALF_TIME_TEAM_MULTI_GOAL_RANGE",
+    slug: "half-time-team-multi-goal-range",
+    category: MarketCategory.POLOWY,
+    subCategory: "gole-1h",
+    labels: { pl: "Gole drużyny w 1. połowie - multi-przedział", en: "Half Time Team Multi Goal Range" },
+    descriptions: { pl: "Obstawiasz skumulowany przedział, w jakim zmieści się liczba goli wybranej drużyny strzelonych w 1. połowie.", en: "Bet on the cumulative range into which the chosen team's first-half goal tally falls." },
+    hasParameter: false,
+    selections: ["HOME_0","HOME_1-2","HOME_1-3","HOME_1-4","HOME_2-3","HOME_2-4","HOME_3-4","HOME_4+","AWAY_0","AWAY_1-2","AWAY_1-3","AWAY_1-4","AWAY_2-3","AWAY_2-4","AWAY_3-4","AWAY_4+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_0": "{homeTeam} nie strzeli gola w 1. połowie", "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 1. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 1. połowie", "HOME_1-4": "{homeTeam} strzeli 1-4 gole w 1. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 1. połowie", "HOME_2-4": "{homeTeam} strzeli 2-4 gole w 1. połowie", "HOME_3-4": "{homeTeam} strzeli 3-4 gole w 1. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub więcej goli w 1. połowie", "AWAY_0": "{awayTeam} nie strzeli gola w 1. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 1. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 1. połowie", "AWAY_1-4": "{awayTeam} strzeli 1-4 gole w 1. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 1. połowie", "AWAY_2-4": "{awayTeam} strzeli 2-4 gole w 1. połowie", "AWAY_3-4": "{awayTeam} strzeli 3-4 gole w 1. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub więcej goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -5028,20 +4941,11 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { "0-1": "Wskazana drużyna strzeli 0-1 goli", "2-3": "Wskazana drużyna strzeli 2-3 goli", "4-6": "Wskazana drużyna strzeli 4-6 goli", "7+": "Wskazana drużyna strzeli 7 lub więcej goli" },
     displayOrder: 500,
   },
-  {
-    numericId: 1324,
-    code: "AWAY_CLEAN_SHEET",
-    slug: "away-clean-sheet",
-    category: MarketCategory.GOLE,
-    subCategory: "czyste-konto",
-    labels: { pl: "Czyste konto gości", en: "Away Clean Sheet" },
-    descriptions: { pl: "Wygrywa, jeśli drużyna gościnna nie straci ani jednego gola w całym meczu.", en: "Wins if the away team does not concede a single goal in the whole match." },
-    hasParameter: false,
-    selections: ["YES","NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "{awayTeam} zachowa czyste konto", NO: "{awayTeam} straci przynajmniej gola" },
-    displayOrder: 500,
-  },
+  // AWAY_CLEAN_SHEET (1324) retired (audit cluster #0, findings 3/4): "away
+  // won't concede" is the same proposition as "home team to score", and
+  // this code only had 2 bookmakers (fortuna, etoto) against 12 on
+  // HOME_TEAM_TO_SCORE. Both now route into HOME_TEAM_TO_SCORE with
+  // inverted YES/NO (see fortuna/etoto normalizers).
   {
     numericId: 1325,
     code: "MATCH_RESULT_OR_WIN_BY_2",
@@ -5083,66 +4987,6 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "{awayTeam} wygra mecz", NO: "{awayTeam} nie wygra meczu" },
     displayOrder: 500,
-  },
-  {
-    numericId: 1328,
-    code: "HOME_WIN_OR_OVER",
-    slug: "home-win-or-over",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Gospodarz wygra lub powyżej (linia)", en: "Home Win Or Over" },
-    descriptions: { pl: "TAK, jeśli gospodarz wygra mecz lub liczba goli w spotkaniu przekroczy wybraną linię — wystarczy jeden ze scenariuszy.", en: "YES if the home team wins or total match goals exceed the chosen line — either scenario is enough." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES","NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "{homeTeam} wygrywa lub powyżej {param} goli w meczu", NO: "{homeTeam} nie wygrywa i poniżej {param} goli w meczu" },
-    displayOrder: 500,
-  },
-  {
-    numericId: 1329,
-    code: "AWAY_WIN_OR_OVER",
-    slug: "away-win-or-over",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Gość wygra lub powyżej (linia)", en: "Away Win Or Over" },
-    descriptions: { pl: "TAK, jeśli gość wygra mecz lub liczba goli w spotkaniu przekroczy wybraną linię — wystarczy jeden ze scenariuszy.", en: "YES if the away team wins or total match goals exceed the chosen line — either scenario is enough." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES","NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "{awayTeam} wygrywa lub powyżej {param} goli w meczu", NO: "{awayTeam} nie wygrywa i poniżej {param} goli w meczu" },
-    displayOrder: 500,
-  },
-  {
-    numericId: 1330,
-    code: "HOME_WIN_OR_UNDER",
-    slug: "home-win-or-under",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Gospodarz wygra lub poniżej (linia)", en: "Home Win Or Under" },
-    descriptions: { pl: "TAK, jeśli gospodarz wygra mecz lub liczba goli w spotkaniu będzie niższa od wybranej linii — wystarczy jeden ze scenariuszy.", en: "YES if the home team wins or total match goals fall below the chosen line — either scenario is enough." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES","NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "{homeTeam} wygrywa lub poniżej {param} goli w meczu", NO: "{homeTeam} nie wygrywa i powyżej {param} goli w meczu" },
-    displayOrder: 500,
-  },
-  {
-    numericId: 1412,
-    code: "AWAY_WIN_OR_UNDER",
-    slug: "away-win-or-under",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Gość wygra lub poniżej (linia)", en: "Away Win Or Under" },
-    descriptions: { pl: "TAK, jeśli gość wygra mecz lub liczba goli w spotkaniu będzie niższa od wybranej linii — wystarczy jeden ze scenariuszy.", en: "YES if the away team wins or total match goals fall below the chosen line — either scenario is enough." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES","NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "{awayTeam} wygrywa lub poniżej {param} goli w meczu", NO: "{awayTeam} nie wygrywa i powyżej {param} goli w meczu" },
-    displayOrder: 501,
   },
   {
     numericId: 1331,
@@ -5601,8 +5445,14 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład wygrywa, jeśli obie drużyny popełnią więcej niż określony próg fauli każda.", en: "The bet wins if both teams each commit more than a set number of fouls." },
     hasParameter: true,
     parameterType: "decimal",
+    // audit cluster #5: single-selection "each team over X" markets have no
+    // UNDER leg, so STAT_RANGE (a two-sided over/under slider) rendered a
+    // degenerate slider with only one usable side. SINGLE_SELECTION already
+    // supports a real hasParameter:true multi-value line (see
+    // TOTAL_GOALS_MINIMUM) while showing exactly the one OVER button this
+    // family actually has.
     selections: ["OVER"],
-    viewType: ViewType.STAT_RANGE,
+    viewType: ViewType.SINGLE_SELECTION,
     descriptionTemplates: { OVER: "Obie drużyny popełnią powyżej {param} fauli każda" },
     displayOrder: 277,
   },
@@ -5616,10 +5466,50 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Zakład wygrywa, jeśli obie drużyny mają więcej niż określony próg spalonych każda.", en: "The bet wins if both teams each register more than a set number of offsides." },
     hasParameter: true,
     parameterType: "decimal",
+    // See BOTH_TEAMS_FOULS_OVER above for why this moved off STAT_RANGE.
     selections: ["OVER"],
-    viewType: ViewType.STAT_RANGE,
+    viewType: ViewType.SINGLE_SELECTION,
     descriptionTemplates: { OVER: "Obie drużyny będą na spalonym więcej niż {param} razy każda" },
     displayOrder: 278,
+  },
+  {
+    // audit cluster #5: STS's "Każda drużyna powyżej X rzutów rożnych" (raw
+    // ids 2097/2098) was already routed by sts-normalizer.ts to
+    // EACH_TEAM_TOTAL_CORNERS_OVER / EACH_TEAM_TOTAL_CARDS_OVER — same
+    // "each team over a per-team threshold" shape as BOTH_TEAMS_FOULS_OVER /
+    // EACH_TEAM_OFFSIDES above — but neither code existed in the catalog, so
+    // isValidMarketCode rejected them and both fell into OTHER. No
+    // normalizer change needed, just adding these two siblings.
+    numericId: 9501,
+    code: "EACH_TEAM_TOTAL_CORNERS_OVER",
+    slug: "each-team-total-corners-over",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "rozne",
+    labels: { pl: "Każda drużyna - rzuty rożne (powyżej)", en: "Each Team Total Corners Over" },
+    descriptions: { pl: "Zakład wygrywa, jeśli obie drużyny wykonają więcej niż określony próg rzutów rożnych każda.", en: "The bet wins if both teams each register more than a set number of corners." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["OVER"],
+    viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { OVER: "Obie drużyny wykonają powyżej {param} rzutów rożnych każda" },
+    displayOrder: 9501,
+  },
+  {
+    // See EACH_TEAM_TOTAL_CORNERS_OVER above — same STS routing gap, cards
+    // variant (raw id 2098).
+    numericId: 9502,
+    code: "EACH_TEAM_TOTAL_CARDS_OVER",
+    slug: "each-team-total-cards-over",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "kartki",
+    labels: { pl: "Każda drużyna - kartki (powyżej)", en: "Each Team Total Cards Over" },
+    descriptions: { pl: "Zakład wygrywa, jeśli obie drużyny otrzymają więcej niż określony próg kartek każda.", en: "The bet wins if both teams each receive more than a set number of cards." },
+    hasParameter: true,
+    parameterType: "decimal",
+    selections: ["OVER"],
+    viewType: ViewType.SINGLE_SELECTION,
+    descriptionTemplates: { OVER: "Obie drużyny otrzymają powyżej {param} kartek każda" },
+    displayOrder: 9502,
   },
   {
     numericId: 1014,
@@ -5825,14 +5715,21 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Liczba goli w przedziale czasowym", en: "Time Period Total Goals" },
     descriptions: { pl: "Liczba goli strzelonych w danym okresie meczu, powyżej lub poniżej określonej linii.", en: "Goals scored during a given period of the match, above or below a set line." },
     hasParameter: true,
-    // The parameter is a minute window ("15", "16-30", "76-90"), not a goal
-    // line — the goal line is fixed at 0.5 across bookmakers. "integer"
-    // keeps the grouper's decimal-only numeric guard from dropping every
-    // non-cumulative window (audit-match: Arsenal vs Coventry City — 11 of
-    // 15 lebull minute-window markets were silently discarded because
-    // "decimal" only accepts /^[+-]?\d+(\.\d+)?$/ params, matching
-    // TIME_PERIOD_RESULT (numericId 48), which already uses "integer" for
-    // the same "16-30" style window).
+    // The parameter's PRIMARY axis is a minute window ("15", "16-30",
+    // "76-90"). It is a genuine two-axis market though: fuksiarz quotes
+    // several different goal lines (0.5/1.5/2.5/3.5/.../.5) for the SAME
+    // window, so paramValue carries both as "<window>:<line>" (e.g. "15:0.5",
+    // "15:1.5" — see fuksiarz-normalizer.ts's TIME_PERIOD_TOTAL_GOALS
+    // extractParamValue and market-type-grouper.ts's getParameterLabel/
+    // sortParameters, which know this colon convention). Never a bare goal
+    // line without its window prefix, and never the old ad hoc
+    // "<window> (<line>)" composite — that mixed-format axis was itself a
+    // bug (audit-loop cluster #17). "integer" keeps the grouper's
+    // decimal-only numeric guard from dropping every non-cumulative window
+    // (audit-match: Arsenal vs Coventry City — 11 of 15 lebull minute-window
+    // markets were silently discarded because "decimal" only accepts
+    // /^[+-]?\d+(\.\d+)?$/ params, matching TIME_PERIOD_RESULT (numericId
+    // 48), which already uses "integer" for the same "16-30" style window).
     parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.PARAMETER_SLIDER,
@@ -6158,9 +6055,20 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // into the OTHER catalog (hasParameter: false) — only the last-
     // processed margin's "Nie" leg survived, losing 7 of 8 selections and
     // all 4 margin values. Parameterized on the margin, mirroring
-    // SECOND_HALF_HOME/AWAY_WIN_EXACT_MARGIN above. NOTE:
-    // betcris-normalizer.ts (out of scope for this catalog-only pass) still
-    // needs to route "HomeTeamToWinWithExactMargin" here instead of OTHER.
+    // SECOND_HALF_HOME/AWAY_WIN_EXACT_MARGIN above.
+    //
+    // audit-loop cluster #2 (winning-margin family): this code was an
+    // isolated single-bookmaker pool, sitting outside the 6-bookmaker
+    // WINNING_MARGIN combination-market pool (sts/betfan/etoto/forbet/
+    // fuksiarz/betclic) even though margins 1-3 here are the SAME real-world
+    // outcomes those bookmakers already price as HOME_BY_1/HOME_BY_2/
+    // HOME_BY_3PLUS. betcris-normalizer.ts now reroutes margin 1/2/3 into
+    // WINNING_MARGIN's shared pool; margin 4 has no "3+"-bucket equivalent
+    // once margin 3 already occupies it (folding both into HOME_BY_3PLUS
+    // would either lose one exact-margin quote to the grouper's no-"+"-
+    // suffix dedup, or falsely conflate two different exact-margin
+    // probabilities into one price), so this code now only ever carries
+    // margin >= 4.
     numericId: 1423,
     code: "HOME_WIN_EXACT_MARGIN",
     slug: "home-win-exact-margin",
@@ -6178,7 +6086,9 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
   {
     // audit-match (Arsenal vs Coventry City), catalog issue 1/12: away-side
     // counterpart of HOME_WIN_EXACT_MARGIN above (betcris
-    // "AwayTeamToWinWithExactMargin").
+    // "AwayTeamToWinWithExactMargin"). Same audit-loop cluster #2 margin-1/2/3
+    // reroute into WINNING_MARGIN's AWAY_BY_1/AWAY_BY_2/AWAY_BY_3PLUS applies
+    // here too — see HOME_WIN_EXACT_MARGIN's comment above.
     numericId: 1424,
     code: "AWAY_WIN_EXACT_MARGIN",
     slug: "away-win-exact-margin",
@@ -6477,10 +6387,14 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // lvbet's "race to 9" (2.37/34/1.55) — a false cross-bookmaker price
     // match, not just a coverage gap. Parameterizing by the race threshold
     // keeps each line separate.
+    // audit-loop cluster #23: superbet's own race-to-X-corners quotes (id
+    // 706, merged into this code from the retired NTH_CORNER) go as high as
+    // "11" in observed fixtures, one past betcris/lvbet's 3/5/7/9 set - widen
+    // the bound so it still reflects every bookmaker actually pooled here.
     hasParameter: true,
     parameterType: "integer",
     parameterFormat: "integer",
-    validParameters: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+    validParameters: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
     selections: ["HOME", "NONE", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     displayOrder: 329,
@@ -6590,6 +6504,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
+    // Unified with the HOME sibling and both HALF_TIME_ counterparts to the
+    // same viewType — the mirror pair used to disagree (STAT_RANGE here vs
+    // PARAMETER_SLIDER on home), silently reshaping the card depending on
+    // which side of the same bet you were looking at (audit cluster #0,
+    // findings 2/7/9).
     viewType: ViewType.STAT_RANGE,
     descriptionTemplates: { OVER: "{awayTeam} powyżej {param} kartek w 2. połowie", UNDER: "{awayTeam} poniżej {param} kartek w 2. połowie" },
     displayOrder: 336,
@@ -6605,7 +6524,8 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.PARAMETER_SLIDER,
+    // See SECOND_HALF_AWAY_TEAM_TOTAL_CARDS above — unified to STAT_RANGE.
+    viewType: ViewType.STAT_RANGE,
     descriptionTemplates: { OVER: "{homeTeam} powyżej {param} kartek w 2. połowie", UNDER: "{homeTeam} poniżej {param} kartek w 2. połowie" },
     displayOrder: 337,
   },
@@ -6656,32 +6576,41 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
   },
   {
     numericId: 1076,
-    code: "HALF_TIME_AWAY_TEAM_CARDS",
-    slug: "half-time-away-team-cards",
-    category: MarketCategory.POLOWY,
-    subCategory: "specjalne-1h",
-    labels: { pl: "Kartki gości - 1. połowa", en: "Half Time Away Team Cards" },
+    // Renamed from HALF_TIME_AWAY_TEAM_CARDS to match the HOME sibling's
+    // _TOTAL_ naming and the SECOND_HALF_*_TEAM_TOTAL_CARDS pair; moved out
+    // of POLOWY/specjalne-1h into STATYSTYKI/kartki alongside its HOME
+    // sibling and the 2H pair, and unified to STAT_RANGE — this 1H family
+    // was scattered across two categories/subCategories with a mirror-pair
+    // viewType mismatch (STAT_RANGE home vs PARAMETER_SLIDER away), on top
+    // of the id-map still pointing three other bookmakers at a *third*,
+    // combined-vocabulary code (HALF_TIME_CARDS_TEAM, now retired — see
+    // fuksiarz/forbet/lvbet normalizers) (audit cluster #0, findings 2/7/9).
+    code: "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+    slug: "half-time-away-team-total-cards",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "kartki",
+    labels: { pl: "1. połowa - kartki gości", en: "Half Time Away Team Total Cards" },
     descriptions: { pl: "Liczba kartek (żółtych i czerwonych) pokazanych drużynie gości w samej 1. połowie, w stosunku do wybranego progu.", en: "Number of cards (yellow and red) shown to the away team in the first half alone, against a chosen threshold." },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.PARAMETER_SLIDER,
-    descriptionTemplates: { OVER: "Powyzej {param} kartek {awayTeam} w 1. połowie", UNDER: "Ponizej {param} kartek {awayTeam} w 1. połowie" },
+    viewType: ViewType.STAT_RANGE,
+    descriptionTemplates: { OVER: "Powyżej {param} kartek {awayTeam} w 1. połowie", UNDER: "Poniżej {param} kartek {awayTeam} w 1. połowie" },
     displayOrder: 341,
   },
   {
     numericId: 1077,
     code: "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
     slug: "half-time-home-team-total-cards",
-    category: MarketCategory.POLOWY,
-    subCategory: "specjalne-1h",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "kartki",
     labels: { pl: "1. połowa - kartki gospodarzy", en: "Half Time Home Team Total Cards" },
     descriptions: { pl: "Liczba kartek (żółtych i czerwonych) pokazanych drużynie gospodarzy w samej 1. połowie, w stosunku do wybranego progu.", en: "Number of cards (yellow and red) shown to the home team in the first half alone, against a chosen threshold." },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { OVER: "Powyzej {param} kartek {homeTeam} w 1. połowie", UNDER: "Ponizej {param} kartek {homeTeam} w 1. połowie" },
+    descriptionTemplates: { OVER: "Powyżej {param} kartek {homeTeam} w 1. połowie", UNDER: "Poniżej {param} kartek {homeTeam} w 1. połowie" },
     displayOrder: 342,
   },
   {
@@ -7387,39 +7316,16 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Drużyna wygra mecz", NO: "Drużyna nie wygra meczu" },
     displayOrder: 389,
   },
-  {
-    numericId: 1125,
-    code: "WIN_OR_BTTS",
-    slug: "win-or-btts",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-btts",
-    labels: { pl: "Wygrana lub obie strzelą", en: "Win or BTTS" },
-    descriptions: { pl: "TAK, jeśli wskazana drużyna wygra mecz lub obie drużyny strzelą gola w spotkaniu — wystarczy jeden z tych warunków.", en: "YES if the selected team wins the match or both teams score — either condition is enough." },
-        // Audit /audit-match (Arsenal vs Coventry City): the home and away variants
-    // of this bet collided on one key — one silently overwrote the other and
-    // the label never said whose win it was (forbet/etoto quote both sides).
-    // A team parameter keeps them apart and makes the chip self-describing.
-    hasParameter: true,
-    parameterType: "team",
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Zwycięstwo dowolnej drużyny lub gol obu zespołów", NO: "Remis i nie obie drużyny strzelą gola" },
-    displayOrder: 390,
-  },
-  {
-    numericId: 1126,
-    code: "DRAW_OR_BTTS",
-    slug: "draw-or-btts",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-btts",
-    labels: { pl: "Remis lub obie strzelą", en: "Draw or BTTS" },
-    descriptions: { pl: "TAK, jeśli mecz zakończy się remisem lub obie drużyny strzelą gola — wystarczy jeden z tych warunków.", en: "YES if the match ends in a draw or both teams score — either condition is enough." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Remis lub gol obu drużyn", NO: "Zwycięstwo jednej z drużyn i nie obie strzelą" },
-    displayOrder: 391,
-  },
+  // numericId 1125 (WIN_OR_BTTS) and 1126 (DRAW_OR_BTTS) retired — audit-loop
+  // cluster #12, "Result or BTTS" fragmentation: they split one real-world
+  // bet ("<team> wins or BTTS" / "draw or BTTS") into up to 3 separate cards
+  // per bookmaker (a team-parameterized WIN_OR_BTTS card per side plus a
+  // standalone DRAW_OR_BTTS card) while lebull already quoted the exact same
+  // bet as ONE combined RESULT_OR_BTTS card (HOME_OR_BTTS_YES/NO,
+  // DRAW_OR_BTTS_YES/NO, AWAY_OR_BTTS_YES/NO — see numericId 1211 below).
+  // etoto and superbet's per-side raw markets are now routed into
+  // RESULT_OR_BTTS instead of these two codes, so every bookmaker pools
+  // under the one card lebull already established.
   {
     numericId: 1127,
     code: "WIN_OR_UNDER",
@@ -7434,20 +7340,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.PARAMETERIZED_COMBINATION,
     descriptionTemplates: { YES: "Zwycięstwo drużyny lub poniżej {param} goli", NO: "Brak zwycięstwa i powyżej {param} goli" },
     displayOrder: 392,
-  },
-  {
-    numericId: 1128,
-    code: "DRAW_OR_OVER_2_5",
-    slug: "draw-or-over-2-5",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Remis lub +2.5 gola", en: "Draw or Over 2.5" },
-    descriptions: { pl: "Zakład wygrywa, jeśli mecz skończy się remisem lub liczba bramek przekroczy ustaloną linię — wystarczy spełnienie jednego z tych warunków.", en: "The bet wins if the match ends in a draw or the total goals exceed a set line — either condition is enough." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Remis lub powyżej 2.5 gola w meczu", NO: "Zwycięstwo jednej z drużyn i poniżej 2.5 gola" },
-    displayOrder: 393,
   },
   {
     numericId: 1129,
@@ -7864,21 +7756,14 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} wykona pierwszy rożny w 1. połowie", NONE: "Brak rzutu rożnego w 1. połowie", AWAY: "{awayTeam} wykona pierwszy rożny w 1. połowie" },
     displayOrder: 416,
   },
-  {
-    numericId: 1152,
-    code: "HALF_TIME_CARDS_TEAM",
-    slug: "half-time-cards-team",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Kartki drużyny 1. połowa", en: "Half Time Cards Team" },
-    descriptions: { pl: "Obstawiasz, czy liczba kartek wybranej drużyny w pierwszej połowie będzie powyżej czy poniżej ustalonego progu.", en: "Bet on whether a chosen team's number of cards in the first half is above or below a set line." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
-    viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} kartek w 1. połowie", HOME_UNDER: "{homeTeam} poniżej {param} kartek w 1. połowie", AWAY_OVER: "{awayTeam} powyżej {param} kartek w 1. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} kartek w 1. połowie" },
-    displayOrder: 417,
-  },
+  // HALF_TIME_CARDS_TEAM (numericId 1152) retired (audit cluster #0,
+  // findings 2/7/9): its combined HOME_OVER/HOME_UNDER/AWAY_OVER/AWAY_UNDER
+  // vocabulary fragmented forbet/fuksiarz/lvbet away from the per-side
+  // HALF_TIME_HOME_TEAM_TOTAL_CARDS / HALF_TIME_AWAY_TEAM_TOTAL_CARDS codes
+  // betcris/superbet already use. Those three normalizers now route
+  // directly into the per-side codes; the type still carries
+  // "HALF_TIME_CARDS_TEAM" as a transient intermediate value (see
+  // forbet/lvbet normalizers) but it is never emitted as a final marketCode.
   {
     numericId: 1153,
     code: "MISSED_PENALTY",
@@ -7950,20 +7835,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 422,
   },
   {
-    numericId: 1158,
-    code: "FIRST_CARD_PLAYER",
-    slug: "first-card-player",
-    category: MarketCategory.ZAWODNICY,
-    subCategory: "kartki",
-    labels: { pl: "Pierwszy zawodnik, który otrzyma kartkę", en: "First Card Player" },
-    descriptions: { pl: "Obstawiasz, który zawodnik jako pierwszy w meczu zobaczy żółtą lub czerwoną kartkę.", en: "Bet on which player is shown the first yellow or red card of the match." },
-    hasParameter: true,
-    parameterType: "player",
-    selections: ["PLAYER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
-    displayOrder: 423,
-  },
-  {
     numericId: 1159,
     code: "SCORE_DURING_MATCH",
     slug: "score-during-match",
@@ -7976,20 +7847,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.SCORE_GRID,
     descriptionTemplates: { "0-1": "Wynik 0-1 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-2": "Wynik 0-2 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-3": "Wynik 0-3 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)", "0-4": "Wynik 0-4 pojawi się na tablicy w pewnym momencie meczu (niekoniecznie na jego koniec)" },
     displayOrder: 424,
-  },
-  {
-    numericId: 1160,
-    code: "HALF_TIME_GOAL",
-    slug: "half-time-goal",
-    category: MarketCategory.POLOWY,
-    subCategory: "polowy",
-    labels: { pl: "Gol w 1. połowie", en: "Half Time Goal" },
-    descriptions: { pl: "Sprawdza, czy w 1. połowie padnie choć jedna bramka, niezależnie od strzelca.", en: "Checks whether at least one goal is scored during the first half, by either team." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Padnie gol w 1. połowie", NO: "Brak gola w 1. połowie" },
-    displayOrder: 425,
   },
   {
     numericId: 1161,
@@ -8034,20 +7891,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 428,
   },
   {
-    numericId: 1164,
-    code: "LAST_YELLOW_CARD",
-    slug: "last-yellow-card",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Ostatnia żółta kartka", en: "Last Yellow Card" },
-    descriptions: { pl: "Obstawiasz, którego zespołu zawodnik otrzyma ostatnią żółtą kartkę w meczu; opcja NONE dotyczy meczu bez żadnej żółtej kartki.", en: "Bet on which team's player receives the last yellow card of the match; the NONE option covers a match with no yellow cards at all." },
-    hasParameter: false,
-    selections: ["HOME", "NONE", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
-    descriptionTemplates: { HOME: "Ostatnią żółtą kartkę zobaczy {homeTeam}", NONE: "Brak żółtych kartek w meczu", AWAY: "Ostatnią żółtą kartkę zobaczy {awayTeam}" },
-    displayOrder: 429,
-  },
-  {
     numericId: 1165,
     code: "DIRECT_RED_CARD",
     slug: "direct-red-card",
@@ -8069,31 +7912,27 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "kartki",
     labels: { pl: "Obie drużyny otrzymają min. kartki", en: "Both Teams Min Cards" },
     descriptions: { pl: "Zakład rozstrzyga, czy obie drużyny otrzymają co najmniej ustaloną minimalną liczbę kartek w meczu.", en: "Settles on whether both teams receive at least a set minimum number of cards during the match." },
-    hasParameter: false,
+    // Audit cluster #20 (Arsenal vs Coventry City): hasParameter was false,
+    // but lvbet's raw name spells the threshold out ("Obie drużyny otrzymają
+    // min. 2 kartki") and the descriptionTemplates below already referenced
+    // {param} — the number was simply never captured, so every line
+    // collapsed into one unlabeled "min. kartek" card. lvbet-normalizer.ts's
+    // generic "integer" extraction (parseIntegerLine on the raw name) picks
+    // the number up with no further code changes needed.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Obie drużyny z min. {param} kartek", NO: "Przynajmniej jedna drużyna poniżej {param} kartek" },
     displayOrder: 433,
   },
-  {
-    numericId: 1169,
-    code: "EXACT_GOALS_YN",
-    slug: "exact-goals-yn",
-    category: MarketCategory.GOLE,
-    subCategory: "gole",
-    labels: { pl: "Dokładnie X goli w meczu", en: "Exact Goals Yn" },
-    descriptions: { pl: "Czy w meczu padnie dokladnie okreslona liczba goli, ani wiecej, ani mniej.", en: "Whether the match will end with exactly a specified number of goals, neither more nor fewer." },
-    // Audit round 6 /audit-match (Arsenal vs Coventry City): both betcris and
-    // lvbet's raw name spells out the exact goal count ("Dokładnie 1 gol w
-    // meczu"), but hasParameter:false discarded it into a blank parameter.
-    // The grouper recovers the count from rawMarketName.
-    hasParameter: true,
-    parameterType: "integer",
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Dokładnie {param} goli w meczu", NO: "Inna liczba goli niż {param} w meczu" },
-    displayOrder: 434,
-  },
+  // numericId 1169 (EXACT_GOALS_YN, "Dokładnie X goli w meczu") retired —
+  // round 9 /audit-match (Arsenal vs Coventry City): its Tak/Nie card
+  // duplicated EXACT_GOALS' "1" selection (both bookmakers that fed it,
+  // betcris and lvbet, quoted identical odds under both cards). betcris/
+  // lvbet's "Exactly1GoalsinMatch"/"dokładnie 1 gol w meczu" raw markets
+  // now route straight into EXACT_GOALS with the YES leg recoded onto its
+  // "1" selection (see those normalizers) instead of a standalone code.
   {
     numericId: 1170,
     code: "HALF_TIME_LAST_TEAM_TO_SCORE",
@@ -8123,6 +7962,16 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 436,
   },
   {
+    // Cluster #15 /audit-match: same conflation as HALF_TIME_TEAM_GOAL_RANGE
+    // (see the comment there) - this code used to declare ONLY superbet/
+    // lvbet's cumulative-range ladder ("1-2"/"1-3"/"1-4"/"2-3"/"4+"), which
+    // silently DROPPED fuksiarz's disjoint-partition rows entirely (its
+    // "HOME_0-1" leg wasn't in the declared vocabulary, so the STAT_RANGE
+    // "exact"-param `.every()` check failed and the decimal-parameterType
+    // "no base bucket" guard discarded the whole entry). This code is now
+    // fuksiarz's disjoint partition only (COMBINATION, no parameter); the
+    // ladder scheme moved to the new SECOND_HALF_TEAM_MULTI_GOAL_RANGE code
+    // below.
     numericId: 1172,
     code: "SECOND_HALF_TEAM_GOAL_RANGE",
     slug: "second-half-team-goal-range",
@@ -8130,25 +7979,29 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "polowy",
     labels: { pl: "Gole drużyny w 2. połowie - przedział", en: "Second Half Team Goal Range" },
     descriptions: { pl: "Ile bramek strzeli wybrana druzyna w samej 2. polowie - obstawiasz konkretny przedzial liczby goli tej druzyny.", en: "How many goals the selected team scores in the second half alone - you bet on a specific range of that team's goal count." },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["HOME_1-2", "HOME_1-3", "HOME_1-4", "HOME_2-3", "HOME_4+", "AWAY_1-2", "AWAY_1-3", "AWAY_1-4", "AWAY_2-3", "AWAY_4+"],
-    viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 2. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 2. połowie", "HOME_1-4": "{homeTeam} strzeli 1-4 gole w 2. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 2. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub wiecej goli w 2. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 2. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 2. połowie", "AWAY_1-4": "{awayTeam} strzeli 1-4 gole w 2. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 2. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub wiecej goli w 2. połowie" },
+    hasParameter: false,
+    selections: ["HOME_0-1", "HOME_2-3", "HOME_4+", "AWAY_0-1", "AWAY_2-3", "AWAY_4+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_0-1": "{homeTeam} strzeli 0-1 gola w 2. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 2. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub wiecej goli w 2. połowie", "AWAY_0-1": "{awayTeam} strzeli 0-1 gola w 2. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 2. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub wiecej goli w 2. połowie" },
     displayOrder: 437,
   },
   {
-    numericId: 1173,
-    code: "SECOND_HALF_GOAL",
-    slug: "second-half-goal",
+    // Cluster #15 /audit-match: the cumulative-range ladder half of the old
+    // SECOND_HALF_TEAM_GOAL_RANGE conflation (superbet's raw "1-2"/"1-3"/
+    // "2-3", lvbet's "2nd Half <Team> Total Goals (Extended Bands)" raw
+    // "1-2"/"1-3"/"1-4"/"2-3"/"2-4"/"3-4"/"Każdy inny") - see the comment on
+    // HALF_TIME_TEAM_MULTI_GOAL_RANGE.
+    numericId: 1428,
+    code: "SECOND_HALF_TEAM_MULTI_GOAL_RANGE",
+    slug: "second-half-team-multi-goal-range",
     category: MarketCategory.POLOWY,
     subCategory: "polowy",
-    labels: { pl: "Gol w 2. połowie", en: "Second Half Goal" },
-    descriptions: { pl: "Sprawdza, czy w 2. polowie padnie choc jedna bramka, niezaleznie od strzelca.", en: "Checks whether at least one goal is scored during the second half, by either team." },
+    labels: { pl: "Gole drużyny w 2. połowie - multi-przedział", en: "Second Half Team Multi Goal Range" },
+    descriptions: { pl: "Ile bramek strzeli wybrana druzyna w samej 2. polowie - obstawiasz skumulowany przedzial liczby goli tej druzyny.", en: "How many goals the selected team scores in the second half alone - you bet on a cumulative range of that team's goal count." },
     hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Padnie gol w 2. połowie", NO: "Brak gola w 2. połowie" },
+    selections: ["HOME_0", "HOME_1-2", "HOME_1-3", "HOME_1-4", "HOME_2-3", "HOME_2-4", "HOME_3-4", "HOME_4+", "AWAY_0", "AWAY_1-2", "AWAY_1-3", "AWAY_1-4", "AWAY_2-3", "AWAY_2-4", "AWAY_3-4", "AWAY_4+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "HOME_0": "{homeTeam} nie strzeli gola w 2. połowie", "HOME_1-2": "{homeTeam} strzeli 1-2 gole w 2. połowie", "HOME_1-3": "{homeTeam} strzeli 1-3 gole w 2. połowie", "HOME_1-4": "{homeTeam} strzeli 1-4 gole w 2. połowie", "HOME_2-3": "{homeTeam} strzeli 2-3 gole w 2. połowie", "HOME_2-4": "{homeTeam} strzeli 2-4 gole w 2. połowie", "HOME_3-4": "{homeTeam} strzeli 3-4 gole w 2. połowie", "HOME_4+": "{homeTeam} strzeli 4 lub wiecej goli w 2. połowie", "AWAY_0": "{awayTeam} nie strzeli gola w 2. połowie", "AWAY_1-2": "{awayTeam} strzeli 1-2 gole w 2. połowie", "AWAY_1-3": "{awayTeam} strzeli 1-3 gole w 2. połowie", "AWAY_1-4": "{awayTeam} strzeli 1-4 gole w 2. połowie", "AWAY_2-3": "{awayTeam} strzeli 2-3 gole w 2. połowie", "AWAY_2-4": "{awayTeam} strzeli 2-4 gole w 2. połowie", "AWAY_3-4": "{awayTeam} strzeli 3-4 gole w 2. połowie", "AWAY_4+": "{awayTeam} strzeli 4 lub wiecej goli w 2. połowie" },
     displayOrder: 438,
   },
   {
@@ -8181,20 +8034,10 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { HOME: "{homeTeam} strzeli ostatniego gola 2. połowy", AWAY: "{awayTeam} strzeli ostatniego gola 2. połowy", NONE: "Brak goli w 2. połowie" },
     displayOrder: 440,
   },
-  {
-    numericId: 1176,
-    code: "SECOND_HALF_CARDS_TEAM",
-    slug: "second-half-cards-team",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "kartki",
-    labels: { pl: "Kartki drużyny - 2. połowa", en: "Second Half Cards Team" },
-    descriptions: { pl: "Obstawiasz, czy liczba kartek wybranej drużyny w drugiej połowie będzie powyżej czy poniżej ustalonego progu.", en: "Bet on whether a chosen team's number of cards in the second half is above or below a set line." },
-    hasParameter: false,
-    selections: ["HOME_OVER", "HOME_UNDER", "AWAY_OVER", "AWAY_UNDER"],
-    viewType: ViewType.COMBINATION,
-    descriptionTemplates: { HOME_OVER: "{homeTeam} powyżej {param} kartek w 2. połowie", HOME_UNDER: "{homeTeam} poniżej {param} kartek w 2. połowie", AWAY_OVER: "{awayTeam} powyżej {param} kartek w 2. połowie", AWAY_UNDER: "{awayTeam} poniżej {param} kartek w 2. połowie" },
-    displayOrder: 441,
-  },
+  // SECOND_HALF_CARDS_TEAM (numericId 1176) retired alongside
+  // HALF_TIME_CARDS_TEAM above (audit cluster #0, findings 2/7/9) — see that
+  // comment. fuksiarz/lvbet now route directly into
+  // SECOND_HALF_HOME_TEAM_TOTAL_CARDS / SECOND_HALF_AWAY_TEAM_TOTAL_CARDS.
   {
     numericId: 1177,
     code: "GOALKEEPER_SAVES_OVER",
@@ -8223,20 +8066,14 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Co najmniej jeden zespół strzeli {param}+ goli", NO: "Żaden zespół nie strzeli {param}+ goli" },
     displayOrder: 443,
   },
-  {
-    numericId: 1179,
-    code: "PLAYER_FOULS_OVER",
-    slug: "player-fouls-over",
-    category: MarketCategory.ZAWODNICY,
-    subCategory: "faule",
-    labels: { pl: "Faule zawodnika powyżej progu", en: "Player Fouls Over" },
-    descriptions: { pl: "Liczba fauli popełnionych przez zawodnika w trakcie meczu przekroczy wybrany próg.", en: "The number of fouls committed by the player during the match exceeds the selected threshold." },
-    hasParameter: true,
-    parameterType: "player",
-    selections: ["PLAYER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
-    displayOrder: 444,
-  },
+  // audit-loop cluster #4: PLAYER_FOULS_OVER (numericId 1179) retired. It was
+  // a PLAYER_DROPDOWN duplicate of PLAYER_FOULS (one card per threshold,
+  // listing every player) fed only by betfan's -200331 raw id and lvbet's
+  // hardcoded "faule popełnione - powyzej 3.5" special case. Both now split
+  // per-player and route into PLAYER_FOULS's own "1+".."4+" ladder instead
+  // (paramValue = player, selection = threshold), matching how
+  // PLAYER_FOULS_WON already pools the sibling stat. Do not recreate this
+  // code without pooling it into PLAYER_FOULS first.
   {
     numericId: 1180,
     code: "TEAM_TOTAL_THROW_INS",
@@ -8287,9 +8124,18 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "auty",
     labels: { pl: "Wrzuty z autu - pierwsze 10 minut", en: "First Period Throw Ins" },
     descriptions: { pl: "Liczba wrzutów z autu w pierwszych 10 minutach meczu — powyżej lub poniżej ustalonego progu.", en: "Number of throw-ins in the first 10 minutes of the match — over or under a set line." },
-    hasParameter: false,
+    // Audit cluster #20 (Arsenal vs Coventry City): hasParameter was false
+    // (with descriptionTemplates below still referencing {param}), unlike
+    // its exact sibling FIRST_10_MIN_CORNERS_TOTAL — same "Pierwsze 10 minut
+    // (00:00 – 09:59): <stat> X.5" raw shape from lvbet, just for throw-ins
+    // instead of corners. Matching that sibling's hasParameter/parameterType/
+    // viewType lets lvbet-normalizer.ts's existing generic "decimal"
+    // extraction (parseDecimalLine on the raw name) pick the line up with no
+    // further normalizer changes.
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.STAT_RANGE,
     descriptionTemplates: { OVER: "Powyżej {param} autów w pierwszych 10 minutach", UNDER: "Poniżej {param} autów w pierwszych 10 minutach" },
     displayOrder: 448,
   },
@@ -8606,34 +8452,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.PLAYER_DROPDOWN,
     displayOrder: 469,
   },
-  {
-    numericId: 1205,
-    code: "ASSIST_SCORER_ANYTIME",
-    slug: "assist-scorer-anytime",
-    category: MarketCategory.ZAWODNICY,
-    subCategory: "asysty",
-    labels: { pl: "Strzelec asysty w meczu", en: "Assist Scorer Anytime" },
-    descriptions: { pl: "Wybrany zawodnik zaliczy asystę przy golu w dowolnym momencie meczu.", en: "The selected player records an assist for a goal at any point in the match." },
-    hasParameter: true,
-    parameterType: "player",
-    selections: ["PLAYER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
-    displayOrder: 470,
-  },
-  {
-    numericId: 1206,
-    code: "PLAYER_SHOTS_ANYTIME",
-    slug: "player-shots-anytime",
-    category: MarketCategory.ZAWODNICY,
-    subCategory: "strzaly",
-    labels: { pl: "Zawodnik odda X+ strzałów", en: "Player Shots Anytime" },
-    descriptions: { pl: "Zawodnik odda co najmniej wybraną liczbę strzałów w trakcie meczu.", en: "The player takes at least the selected number of shots during the match." },
-    hasParameter: true,
-    parameterType: "player",
-    selections: ["PLAYER"],
-    viewType: ViewType.PLAYER_DROPDOWN,
-    displayOrder: 471,
-  },
+  // audit-loop cluster #4: ASSIST_SCORER_ANYTIME (numericId 1205) and
+  // PLAYER_SHOTS_ANYTIME (numericId 1206) retired. Both were PLAYER_DROPDOWN
+  // duplicates (one card per threshold, listing every player) fed only by
+  // betfan's raw ids -200337 / -200327. betfan now splits those rows
+  // per-player at the scraper (parser.ts PLAYER_PROP_SPLIT_GAME_TYPES) and
+  // routes them into the pooled PLAYER_ASSISTS / PLAYER_SHOTS stat-line
+  // ladders instead (paramValue = player, selection = threshold). Do not
+  // recreate these codes without pooling into PLAYER_ASSISTS/PLAYER_SHOTS
+  // first.
   {
     numericId: 1207,
     code: "ONE_TEAM_TO_SCORE",
@@ -9147,20 +8974,21 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Wskazany wynik wystąpi w trakcie meczu", NO: "Wskazany wynik nie wystąpi w trakcie meczu" },
     displayOrder: 506,
   },
-  {
-    numericId: 1242,
-    code: "BOTH_TEAMS_UNDER_GOALS",
-    slug: "both-teams-under-goals",
-    category: MarketCategory.GOLE,
-    subCategory: "gole",
-    labels: { pl: "Obie drużyny - suma poniżej", en: "Both Teams Under Goals" },
-    descriptions: { pl: "Sprawdzasz, czy suma bramek strzelonych łącznie przez obie drużyny nie przekroczy określonego progu.", en: "Bet on whether the combined number of goals scored by both teams stays below a set threshold." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Obie drużyny zdobędą mniej niż {param} goli", NO: "Któraś drużyna zdobędzie {param} goli lub więcej" },
-    displayOrder: 507,
-  },
+  // numericId 1242 (BOTH_TEAMS_UNDER_GOALS, "Obie drużyny - suma poniżej")
+  // quarantined — audit cluster #20 (Arsenal vs Coventry City): its two
+  // producers, lebull and betters (both id 332819 on the shared sbteam.xyz
+  // feed), send the raw name "obie drużyny suma poniżej" with NO number
+  // anywhere in the payload (name/groupName/selections all threshold-free —
+  // unlike the sibling id 332818 "suma powyżej X" market, which does spell
+  // the line out). hasParameter:false silently dropped the {param} in the
+  // descriptionTemplates below, rendering an ambiguous "obie drużyny
+  // zdobędą mniej niż ? goli" card whose actual threshold no bettor could
+  // see. There is no recoverable line to parameterize this with, so both
+  // normalizers now route their 332819 entry to OTHER instead (see
+  // lebull-normalizer.ts / betters-normalizer.ts) and this code is retired
+  // rather than left declared-but-unreachable. Re-add it (hasParameter:
+  // true, parameterType: "decimal") if a future feed change ever exposes
+  // the threshold.
   {
     numericId: 1243,
     code: "SECOND_HALF_RESULT_OR_BTTS",
@@ -9190,26 +9018,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 509,
   },
   {
-    numericId: 1245,
-    code: "ANY_TEAM_WINNING_MARGIN_EXACT",
-    slug: "any-team-winning-margin-exact",
-    category: MarketCategory.GOLE,
-    subCategory: "gole",
-    labels: { pl: "Jakikolwiek zespół - dokładny margines zwycięstwa", en: "Any Team Winning Margin Exact" },
-    descriptions: { pl: "Obstawiasz, czy zwycięzca meczu (którakolwiek drużyna) wygra dokładnie z ustaloną różnicą bramek.", en: "Bet on whether the winning team, whichever it is, wins by exactly a specified goal margin." },
-    // Round 7b /audit-match (Arsenal vs Coventry City): same pattern as the
-    // sibling WINNING_MARGIN_ANY_EXACT/ANY_TEAM_WIN_BY_MARGIN codes fixed in
-    // round 6 — lebull's raw name spells out the margin ("Margines
-    // zwycięstwa: 1"), but hasParameter:false left the {param} placeholder
-    // above unsubstituted. The grouper recovers the margin from rawMarketName.
-    hasParameter: true,
-    parameterType: "integer",
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
-    displayOrder: 510,
-  },
-  {
     numericId: 1246,
     code: "WINNING_MARGIN_ANY_EXACT",
     slug: "winning-margin-any-exact",
@@ -9221,31 +9029,25 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // name spells out the exact margin ("Margines zwycięstwa: dokładnie
     // 2"), but hasParameter:false left the {param} placeholder above
     // unsubstituted. The grouper recovers the margin from rawMarketName.
+    //
+    // audit-loop cluster #2 (winning-margin family): this code was one of
+    // THREE near-identical codes lebull's own normalizer split its single
+    // "any team wins by exactly N goals" family across — 650/651/652
+    // (margin 1/2/3) landed on ANY_TEAM_WINNING_MARGIN_EXACT/
+    // WINNING_MARGIN_ANY_EXACT/ANY_TEAM_WIN_BY_MARGIN respectively, even
+    // though all three raw names share the identical "jakikolwiek zespół.
+    // Margines zwycięstwa: N" shape (ANY_TEAM_WIN_BY_MARGIN's "at least N"
+    // label/description was also wrong for its raw data — margin 3 there is
+    // EXACT, not "3 or more"). All three ids now route here; the other two
+    // codes are retired. viewType switched to PARAMETER_SLIDER to match the
+    // YES/NO+exact-integer-param convention used by the sibling HOME_WIN_
+    // EXACT_MARGIN/AWAY_WIN_EXACT_MARGIN codes below.
     hasParameter: true,
     parameterType: "integer",
     selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.PARAMETER_SLIDER,
     descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
-    displayOrder: 511,
-  },
-  {
-    numericId: 1247,
-    code: "ANY_TEAM_WIN_BY_MARGIN",
-    slug: "any-team-win-by-margin",
-    category: MarketCategory.GOLE,
-    subCategory: "gole",
-    labels: { pl: "Dowolna drużyna wygra z marginesem X goli", en: "Any Team Win by Margin" },
-    descriptions: { pl: "Obstawiasz, czy któraś z drużyn wygra z przewagą co najmniej tylu bramek, ile wskazuje wybrany margines.", en: "Bet on whether either team wins by a margin of at least the specified number of goals." },
-    // Audit round 6 /audit-match (Arsenal vs Coventry City): lebull's raw
-    // name spells out the margin ("Margines zwycięstwa: 3"), but
-    // hasParameter:false left the {param} placeholder above unsubstituted.
-    // The grouper recovers the margin from rawMarketName.
-    hasParameter: true,
-    parameterType: "integer",
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Zwycięstwo z przewagą co najmniej {param} goli", NO: "Brak zwycięstwa z przewagą {param} goli" },
-    displayOrder: 512,
+    displayOrder: 510,
   },
   {
     numericId: 1248,
@@ -9329,24 +9131,24 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 517,
   },
   {
-    // NOTE (audit-match Arsenal vs Coventry City, round 5b MINOR
-    // BOTH_HALVES_OVER_COMBO): hasParameter is false, but each bookmaker's
-    // raw label actually encodes a distinct first-half/second-half goal
-    // threshold pair (lebull sends separate raw markets per pair, e.g.
-    // "1. Połowa powyżej (1.5) i 2. połowa powyżej (0.5)" vs "... (0.5) i
-    // ... (1.5)"). Only ONE pair (bookmakerMarketId 262275, "1.5/0.5")
-    // currently reaches this code for lebull — its siblings aren't in
-    // lebull-normalizer.ts's LEBULL_MARKET_ID_TO_CODE and fall through to
-    // OTHER — so there is no live cross-bookmaker collision today.
-    // market-type-grouper.ts's per-bookmaker collapse step now refuses to
-    // concatenate two differently-worded raw entries under this code (so a
-    // future normalizer change that maps a second threshold pair here won't
-    // silently mix its odds into another pair's row), but that is a
-    // narrow safety net, not real parameterization: every pair still
-    // displays under one unlabeled "base" bucket. A full fix needs the
-    // threshold pair to become a genuine catalog parameter (hasParameter:
-    // true) AND the owning bookmaker normalizer(s) to populate paramValue
-    // from the raw label — cross-cutting work outside a catalog-only change.
+    // NOTE (audit-match Arsenal vs Coventry City, round 5b MINOR, resolved
+    // audit cluster #20): each bookmaker's raw label encodes a distinct
+    // first-half/second-half goal threshold PAIR (lebull sends separate raw
+    // markets per pair, e.g. "1. Połowa powyżej (1.5) i 2. połowa powyżej
+    // (0.5)" vs "... (0.5) i ... (1.5)"). hasParameter used to be false, so
+    // both numbers were dropped and every pair collapsed into one
+    // unlabeled "base" bucket even though the descriptionTemplates below
+    // already referenced {param}. Now genuinely parameterized: paramValue
+    // is "<firstHalfLine>/<secondHalfLine>" (e.g. "1.5/0.5"), extracted by
+    // lebull-normalizer.ts's extractParamValue and, as a safety net, by
+    // market-type-grouper.ts's extractParamFromRawName. parameterType is
+    // "score" (not "decimal") specifically because the value is a compound
+    // pair, not a single line — decimal's stricter grouper guards would
+    // reject/drop it. Only ONE pair (bookmakerMarketId 262275) currently
+    // reaches this code for lebull; its siblings aren't in
+    // LEBULL_MARKET_ID_TO_CODE and fall through to OTHER, but a future
+    // normalizer change that maps a second pair here now gets its own
+    // distinct parameter bucket instead of silently mixing odds.
     numericId: 1253,
     code: "BOTH_HALVES_OVER_COMBO",
     slug: "both-halves-over-combo",
@@ -9354,10 +9156,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "kombinacje",
     labels: { pl: "1. połowa powyżej i 2. połowa powyżej", en: "Both Halves Over Combo" },
     descriptions: { pl: "Zakład trafiony, gdy liczba bramek przekroczy ustaloną linię zarówno w pierwszej, jak i w drugiej połowie osobno.", en: "The bet lands when the goal count exceeds a set line in both the first half and the second half separately." },
-    hasParameter: false,
+    hasParameter: true,
+    parameterType: "score",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Powyżej {param} goli w obu połowach", NO: "Brak powyżej {param} goli w co najmniej jednej połowie" },
+    descriptionTemplates: { YES: "Powyżej {param} goli (1. połowa / 2. połowa)", NO: "Brak powyżej {param} goli w co najmniej jednej połowie (1. połowa / 2. połowa)" },
     displayOrder: 518,
   },
   {
@@ -9430,50 +9233,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
     displayOrder: 521,
   },
-  // ===== Wave-B expansion: placeholder/superbet-pzbuk catalog codes =====
-  {
-    numericId: 1257,
-    code: "GOAL_BY_MINUTE",
-    slug: "goal-by-minute",
-    category: MarketCategory.GOLE,
-    subCategory: "przedzialy",
-    labels: { pl: "Gol do minuty", en: "Goal by Minute" },
-    // Round 7b /audit-match (Arsenal vs Coventry City): the parameter axis
-    // (0.5/1.5) is a GOAL-COUNT threshold ("Liczba goli - do X. minuty" ==
-    // number of goals scored by minute X), not a minute itself — the minute
-    // checkpoint is instead encoded per-selection (UNDER_5MIN..OVER_35MIN).
-    // The previous wording implied the parameter tab picks the minute.
-    descriptions: { pl: "Obstawiasz, ile bramek padnie do wybranej minuty meczu — zakładka 0.5 dotyczy przynajmniej 1 gola, zakładka 1.5 przynajmniej 2 goli, a konkretna minuta (np. 5., 10., 15.) jest wybierana wśród przycisków.", en: "Bet on how many goals are scored by a given minute of the match — the 0.5 tab covers at least 1 goal, the 1.5 tab at least 2 goals, and the specific minute checkpoint (e.g. 5th, 10th, 15th) is chosen among the buttons." },
-    hasParameter: true,
-    parameterType: "decimal",
-    // audit-match (Arsenal vs Coventry City), catalog issue 11/12: superbet
-    // already emits UNDER_20MIN/25MIN/35MIN (and OVER_ counterparts) for
-    // both the 0.5 and 1.5 goal-count params, but they were absent from the
-    // enum — orphaned with no Polish label.
-    selections: ["UNDER_1MIN", "OVER_1MIN", "UNDER_5MIN", "OVER_5MIN", "UNDER_10MIN", "OVER_10MIN", "UNDER_15MIN", "OVER_15MIN", "UNDER_20MIN", "OVER_20MIN", "UNDER_25MIN", "OVER_25MIN", "UNDER_35MIN", "OVER_35MIN"],
-    viewType: ViewType.STAT_RANGE,
-    descriptionTemplates: { UNDER_1MIN: "Gol padnie do 1. minuty", OVER_1MIN: "Gol padnie po 1. minucie", UNDER_5MIN: "Gol padnie do 5. minuty", OVER_5MIN: "Gol padnie po 5. minucie", UNDER_10MIN: "Gol padnie do 10. minuty", OVER_10MIN: "Gol padnie po 10. minucie", UNDER_15MIN: "Gol padnie do 15. minuty", OVER_15MIN: "Gol padnie po 15. minucie", UNDER_20MIN: "Gol padnie do 20. minuty", OVER_20MIN: "Gol padnie po 20. minucie", UNDER_25MIN: "Gol padnie do 25. minuty", OVER_25MIN: "Gol padnie po 25. minucie", UNDER_35MIN: "Gol padnie do 35. minuty", OVER_35MIN: "Gol padnie po 35. minucie" },
-    displayOrder: 522,
-  },
-  {
-    numericId: 1258,
-    code: "RESULT_AT_MINUTE",
-    slug: "result-at-minute",
-    category: MarketCategory.WYNIK_MECZU,
-    subCategory: "podstawowe",
-    labels: { pl: "Wynik o danej minucie", en: "Result at Minute" },
-    descriptions: { pl: "Obstawiasz, jaki będzie stan meczu (1X2) w konkretnej, wskazanej minucie gry.", en: "Bet on the match state (1X2) at a specific, chosen minute of play." },
-    // Audit round 6 /audit-match (Arsenal vs Coventry City): the minute IS
-    // the bet (superbet's "Mecz - do 5. minuty"), but hasParameter:false
-    // discarded it, rendering an unlabeled generic 1X2 chip. The grouper
-    // recovers the minute from rawMarketName (extractParamFromRawName).
-    hasParameter: true,
-    parameterType: "integer",
-    selections: ["HOME", "DRAW", "AWAY"],
-    viewType: ViewType.TRIPLE_BUTTONS,
-    descriptionTemplates: { HOME: "{homeTeam} prowadzi o {param} minucie", DRAW: "Remis o {param} minucie", AWAY: "{awayTeam} prowadzi o {param} minucie" },
-    displayOrder: 523,
-  },
+  // GOAL_BY_MINUTE (numericId 1257) retired (audit-loop cluster #22): it
+  // inverted the param/selection roles - the goal-count line (0.5/1.5) sat
+  // in paramValue while the real minute checkpoint was buried in cryptic
+  // per-selection codes (UNDER_5MIN/OVER_5MIN/...). superbet's "Liczba goli
+  // - do X minuty" family (id 200248) now routes to TIME_PERIOD_TOTAL_GOALS
+  // instead, pooling with fuksiarz's identical "goals scored from kickoff to
+  // minute X" bet under that code's "<minute>:<line>" compound param and
+  // plain OVER/UNDER selections - see superbet-normalizer.ts's
+  // resolveGoalByMinuteCode/extractParamValue.
   {
     numericId: 1259,
     code: "TOTAL_GOALS_OVER_PICK",
@@ -9502,6 +9270,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // logic, since a home win requires >=1 goal). The label "Wynik LUB Gole"
     // already says OR; the description previously said AND ("muszą się
     // zgadzać jednocześnie").
+    // Cluster #3 (RESULT_OR_TOTAL fragmentation): this is now also the pooled
+    // target for etoto, forbet, and fortuna, which used to fragment the same
+    // "win-or-goals" bet family across 8 retired per-team/per-direction codes
+    // (HOME_WIN_OR_OVER, AWAY_WIN_OR_UNDER, DRAW_OR_OVER_2_5,
+    // TEAM_WIN_OR_OVER_GOALS, ...). Each of those bookmakers quotes the six
+    // combos as separate two-way Tak/Nie markets (unlike superbet's single
+    // multi-selection group), so their normalizers keep only the "Tak" leg
+    // per combo — see resolveResultOrTotalCombo (etoto/forbet) and
+    // FORTUNA_RESULT_OR_TOTAL_ID_COMBO (fortuna).
     descriptions: { pl: "Łączysz wynik meczu z liczbą bramek powyżej lub poniżej ustalonej linii — kupon wygrywa, jeśli spełniony jest wynik meczu LUB warunek liczby goli.", en: "Combines the match result with the total goals being over or under a set line — the bet wins if either the match result or the goal-total condition is met." },
     hasParameter: true,
     parameterType: "decimal",
@@ -9509,21 +9286,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     viewType: ViewType.PARAMETERIZED_COMBINATION,
     descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli", DRAW_OVER: "Remis i powyżej {param} goli", DRAW_UNDER: "Remis i poniżej {param} goli", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli" },
     displayOrder: 525,
-  },
-  {
-    numericId: 1261,
-    code: "NTH_CORNER",
-    slug: "nth-corner",
-    category: MarketCategory.STATYSTYKI,
-    subCategory: "rozne",
-    labels: { pl: "N-ty rzut rożny", en: "Nth Corner" },
-    descriptions: { pl: "Obstawiasz, która drużyna wykona rzut rożny o wskazanym numerze w kolejności w meczu — dostępna jest też opcja, że taki rożny w ogóle nie padnie.", en: "Bet on which team takes the corner kick with the specified sequence number in the match — an option also covers that corner not occurring at all." },
-    hasParameter: true,
-    parameterType: "integer",
-    selections: ["HOME", "NONE", "AWAY"],
-    viewType: ViewType.PARAMETER_SLIDER,
-    descriptionTemplates: { HOME: "{param}. rożny dla {homeTeam}", NONE: "Nie będzie {param}. rożnego w meczu", AWAY: "{param}. rożny dla {awayTeam}" },
-    displayOrder: 526,
   },
   {
     numericId: 1262,
@@ -9645,50 +9407,6 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 534,
   },
   {
-    // audit-match (Arsenal vs Coventry City) UX gap-analysis: merged with the
-    // former TEAM_WIN_OR_OVER (numericId 1272) — fortuna offers this market
-    // once per side (ids ufo:mtyp:00-7b home / 00-7d away) and each id had
-    // been mapped to its own independently-created code, producing two rows
-    // with the identical Polish label. hasParameter was also false, so the
-    // goal line in the raw name ("Arsenal wygra / powyżej 2.5 goli") was
-    // discarded. Team side now comes via FORTUNA_TEAM_LINE_PARAM_MARKETS
-    // (prefixes paramValue as "HOME:2.5"/"AWAY:2.5"), mirroring CORNERS_TEAM.
-    numericId: 1270,
-    code: "TEAM_WIN_OR_OVER_GOALS",
-    slug: "team-win-or-over-goals",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Wygrana drużyny lub powyżej X goli", en: "Team Win or Over Goals" },
-    descriptions: { pl: "Wygrana wybranej drużyny LUB co najmniej X+1 goli w meczu", en: "Selected team wins OR the match has at least X+1 goals" },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES", "NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "Wskazana drużyna wygra mecz LUB łączna liczba goli w meczu przekroczy {param}", NO: "Wskazana drużyna nie wygra I łączna liczba goli w meczu nie przekroczy {param}" },
-    displayOrder: 535,
-  },
-  {
-    numericId: 1271,
-    code: "TEAM_WIN_OR_TOTAL_UNDER",
-    slug: "team-win-or-total-under",
-    category: MarketCategory.KOMBINACJE,
-    subCategory: "wynik-gole",
-    labels: { pl: "Wygrana drużyny lub poniżej X goli", en: "Team Win or Total Under" },
-    // audit-match (Arsenal vs Coventry City) UX gap-analysis: fortuna offers
-    // this once per side too (ids ufo:mtyp:00-7c home / 00-7e away); 00-7c
-    // was previously entirely unmapped (logged "Unknown market", dropped —
-    // Arsenal's own price for this market never reached the API). Both ids
-    // now route here and team side comes via FORTUNA_TEAM_LINE_PARAM_MARKETS,
-    // same mechanism as the OVER sibling above.
-    descriptions: { pl: "Wygrana wybranej drużyny LUB nie więcej niż X goli w meczu", en: "Selected team wins OR the match has at most X goals" },
-    hasParameter: true,
-    parameterType: "decimal",
-    selections: ["YES", "NO"],
-    viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { YES: "Zwycięstwo drużyny lub poniżej {param} goli", NO: "Brak zwycięstwa i powyżej {param} goli" },
-    displayOrder: 536,
-  },
-  {
     numericId: 1273,
     code: "VAR_REVIEW",
     slug: "var-review",
@@ -9744,20 +9462,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptionTemplates: { YES: "Drużyna wygra mecz", NO: "Drużyna nie wygra meczu" },
     displayOrder: 541,
   },
-  {
-    numericId: 1277,
-    code: "HOME_CLEAN_SHEET",
-    slug: "home-clean-sheet",
-    category: MarketCategory.GOLE,
-    subCategory: "czyste-konto",
-    labels: { pl: "Czyste konto gospodarzy", en: "Home Clean Sheet" },
-    descriptions: { pl: "Obstawiasz, czy gospodarze nie stracą żadnej bramki w całym meczu.", en: "Bet on whether the home team concedes no goals throughout the match." },
-    hasParameter: false,
-    selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "{homeTeam} nie straci gola w meczu", NO: "{homeTeam} straci przynajmniej jednego gola" },
-    displayOrder: 542,
-  },
+  // HOME_CLEAN_SHEET (1277) retired (audit cluster #0, findings 3/4): "home
+  // won't concede" is the same proposition as "away team to score", and
+  // this code only had 2 bookmakers (fortuna, etoto) against 12 on
+  // AWAY_TEAM_TO_SCORE. Both now route into AWAY_TEAM_TO_SCORE with
+  // inverted YES/NO (see fortuna/etoto normalizers).
   {
     numericId: 1278,
     code: "TEAM_WINS_MATCH",
@@ -10144,10 +9853,6 @@ export const SELECTION_LABELS: Record<string, string> = {
   ZERO_TEAMS: "Brak goli", ONE_TEAM_HOME: "Tylko 1", ONE_TEAM_AWAY: "Tylko 2", TWO_TEAMS: "Obie",
   // PENALTY_GOAL selections
   TEAM_HOME: "Gospodarze", TEAM_AWAY: "Goście", ANY: "Dowolna",
-  // TEAM_HALF_WITH_MORE_GOALS selections (short labels for buttons; team context comes from parameter)
-  HOME_1ST: "1. połowa", HOME_2ND: "2. połowa", HOME_EQUAL: "Równo",
-  AWAY_1ST: "1. połowa", AWAY_2ND: "2. połowa", AWAY_EQUAL: "Równo",
-
   // audit-match (Arsenal vs Coventry City) UX gap-analysis, 2026-08-20: 152 selection
   // codes used across 42 catalog entries had no entry here and rendered as raw
   // SNAKE_CASE/English text to real users (confirmed live: "EXACTLY", "OTHER",

@@ -5095,401 +5095,401 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 1.97
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 1.75
           }
         ]
       },
       "index": 135,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:1",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_GOALS:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1",
             "odds": 1.32
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 1",
             "odds": 3.1
           }
         ]
       },
       "index": 136,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "id",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.17
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 4.45
           }
         ]
       },
       "index": 137,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:2",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_GOALS:2",
         "matchedBy": "id",
         "paramValue": "2",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 2",
             "odds": 1.02
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 2",
             "odds": 10
           }
         ]
       },
       "index": 138,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 2.5",
             "odds": 1.01
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 2.5",
             "odds": 11
           }
         ]
       },
       "index": 139,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 1.3
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 3.2
           }
         ]
       },
       "index": 140,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:1",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1",
             "odds": 1.02
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 1",
             "odds": 10
           }
         ]
       },
       "index": 141,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "id",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.01
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 11
           }
         ]
       },
       "index": 142,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:2",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:2",
         "matchedBy": "id",
         "paramValue": "2",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 2",
             "odds": 50
           }
         ]
       },
       "index": 143,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
-        "marketKey": "HALF_TIME_TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 2.5",
             "odds": 50
           }
         ]
       },
       "index": 144,
-      "marketCode": "HALF_TIME_TEAM_TOTAL_GOALS",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "1. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 2.5
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 1.47
           }
         ]
       },
       "index": 145,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "id",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.3
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 3.2
           }
         ]
       },
       "index": 146,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 2.5",
             "odds": 1.05
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 2.5",
             "odds": 7.8
           }
         ]
       },
       "index": 147,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Francja - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:0.5",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS:0.5",
         "matchedBy": "id",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 1.45
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 2.55
           }
         ]
       },
       "index": 148,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:1.5",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS:1.5",
         "matchedBy": "id",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.03
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 9
           }
         ]
       },
       "index": 149,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Maroko - liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TEAM_TOTAL_GOALS:2.5",
+        "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS:2.5",
         "matchedBy": "id",
         "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 2.5",
             "odds": 50
           }
         ]
       },
       "index": 150,
-      "marketCode": "SECOND_HALF_TEAM_TOTAL_GOALS",
+      "marketCode": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
       "rawName": "2. połowa - Maroko - liczba goli"
     },
     {
@@ -9483,104 +9483,104 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 1.72
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 2
           }
         ]
       },
       "index": 293,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Francja - liczba kartek"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:1.5",
+        "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_HOME_TEAM_TOTAL_CARDS:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "HOME_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.1
           },
           {
-            "code": "HOME_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 5.85
           }
         ]
       },
       "index": 294,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_HOME_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Francja - liczba kartek"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:0.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:0.5",
         "matchedBy": "pattern",
         "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 0.5",
             "odds": 1.83
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 0.5",
             "odds": 1.87
           }
         ]
       },
       "index": 295,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Maroko - liczba kartek"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_CARDS_TEAM",
-        "marketKey": "HALF_TIME_CARDS_TEAM:1.5",
+        "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
+        "marketKey": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "AWAY_UNDER",
+            "code": "UNDER",
             "label": "poniżej 1.5",
             "odds": 1.13
           },
           {
-            "code": "AWAY_OVER",
+            "code": "OVER",
             "label": "powyżej 1.5",
             "odds": 5.15
           }
         ]
       },
       "index": 296,
-      "marketCode": "HALF_TIME_CARDS_TEAM",
+      "marketCode": "HALF_TIME_AWAY_TEAM_TOTAL_CARDS",
       "rawName": "1. połowa - Maroko - liczba kartek"
     },
     {
@@ -12152,9 +12152,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:5",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:5:0.5",
         "matchedBy": "id",
-        "paramValue": "5",
+        "paramValue": "5:0.5",
         "parameters": null,
         "selections": [
           {
@@ -12178,9 +12178,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:10",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:10:0.5",
         "matchedBy": "id",
-        "paramValue": "10",
+        "paramValue": "10:0.5",
         "parameters": null,
         "selections": [
           {
@@ -12204,9 +12204,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:10 (1.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:10:1.5",
         "matchedBy": "id",
-        "paramValue": "10 (1.5)",
+        "paramValue": "10:1.5",
         "parameters": null,
         "selections": [
           {
@@ -12225,9 +12225,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15:0.5",
         "matchedBy": "id",
-        "paramValue": "15",
+        "paramValue": "15:0.5",
         "parameters": null,
         "selections": [
           {
@@ -12251,9 +12251,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15 (1.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:15:1.5",
         "matchedBy": "id",
-        "paramValue": "15 (1.5)",
+        "paramValue": "15:1.5",
         "parameters": null,
         "selections": [
           {
@@ -12277,9 +12277,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30:0.5",
         "matchedBy": "id",
-        "paramValue": "30",
+        "paramValue": "30:0.5",
         "parameters": null,
         "selections": [
           {
@@ -12303,9 +12303,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30 (1.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30:1.5",
         "matchedBy": "id",
-        "paramValue": "30 (1.5)",
+        "paramValue": "30:1.5",
         "parameters": null,
         "selections": [
           {
@@ -12329,9 +12329,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30 (2.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:30:2.5",
         "matchedBy": "id",
-        "paramValue": "30 (2.5)",
+        "paramValue": "30:2.5",
         "parameters": null,
         "selections": [
           {
@@ -12454,9 +12454,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75:0.5",
         "matchedBy": "id",
-        "paramValue": "75",
+        "paramValue": "75:0.5",
         "parameters": null,
         "selections": [
           {
@@ -12480,9 +12480,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75 (1.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75:1.5",
         "matchedBy": "id",
-        "paramValue": "75 (1.5)",
+        "paramValue": "75:1.5",
         "parameters": null,
         "selections": [
           {
@@ -12506,9 +12506,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75 (2.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75:2.5",
         "matchedBy": "id",
-        "paramValue": "75 (2.5)",
+        "paramValue": "75:2.5",
         "parameters": null,
         "selections": [
           {
@@ -12532,9 +12532,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75 (3.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75:3.5",
         "matchedBy": "id",
-        "paramValue": "75 (3.5)",
+        "paramValue": "75:3.5",
         "parameters": null,
         "selections": [
           {
@@ -12558,9 +12558,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_TOTAL_GOALS",
-        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75 (4.5)",
+        "marketKey": "TIME_PERIOD_TOTAL_GOALS:75:4.5",
         "matchedBy": "id",
-        "paramValue": "75 (4.5)",
+        "paramValue": "75:4.5",
         "parameters": null,
         "selections": [
           {
@@ -13963,8 +13963,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_HAT_TRICK",
-        "marketKey": "PLAYER_HAT_TRICK",
+        "marketCode": "PLAYER_3_OR_MORE_GOALS",
+        "marketKey": "PLAYER_3_OR_MORE_GOALS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -14197,7 +14197,7 @@
         ]
       },
       "index": 398,
-      "marketCode": "PLAYER_HAT_TRICK",
+      "marketCode": "PLAYER_3_OR_MORE_GOALS",
       "rawName": "Strzeli przynajmniej 3 gole"
     },
     {

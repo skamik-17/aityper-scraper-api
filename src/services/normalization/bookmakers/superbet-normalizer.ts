@@ -1091,6 +1091,14 @@ function normalizeSelectionForMarket(
       if (lower.includes("głów") || lower.includes("glow")) return "HEADER" as NormalizedSelection;
       if (lower.includes("karny")) return "PENALTY" as NormalizedSelection;
       if (lower.includes("wolny")) return "FREE_KICK" as NormalizedSelection;
+      // audit-match (Arsenal vs Coventry City): superbet's raw offer for this
+      // market ("Sposób zdobycia 1. gola") also quotes "samobój" (own goal)
+      // and "bez gola" (no goal scored) - both were previously undeclared and
+      // fell through to UNKNOWN. Catalog now declares OWN_GOAL/NO_GOAL (see
+      // market-catalog.ts FIRST_GOAL_METHOD comment); match the same raw text
+      // as betcris/lvbet's own normalizers for the same two legs.
+      if (lower.includes("samobój") || lower.includes("samoboj")) return "OWN_GOAL" as NormalizedSelection;
+      if (lower.includes("bez gola") || lower.includes("brak gola")) return "NO_GOAL" as NormalizedSelection;
       if (lower === "strzał" || lower === "strzal") return "OTHER" as NormalizedSelection;
       return "UNKNOWN";
 

@@ -86740,7 +86740,7 @@
             "odds": 4.7
           },
           {
-            "code": "UNKNOWN",
+            "code": "OWN_GOAL",
             "label": "samobój",
             "odds": 15
           },
@@ -86755,7 +86755,7 @@
             "odds": 17
           },
           {
-            "code": "UNKNOWN",
+            "code": "NO_GOAL",
             "label": "bez gola",
             "odds": 7.2
           }

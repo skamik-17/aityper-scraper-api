@@ -140,6 +140,16 @@ function extractParamFromRawName(marketType: string, rawName: string): string | 
       const m = rawName.match(/^(\d+:\d+)/);
       return m ? m[1] : null;
     }
+    case "TOTAL_GOALS_AND_BTTS": {
+      // "Obie drużyny strzelą i poniżej/powyżej 2.5 goli" -> "2.5" (round 7b
+      // /audit-match Arsenal vs Coventry City: forbet's raw name spells out
+      // the line, but its normalizer never sets paramValue for this market —
+      // every other bookmaker does — so forbet's already-correctly-mapped
+      // OVER_YES/UNDER_YES/OVER_NO/UNDER_NO selections fell into the "base"
+      // bucket and were silently dropped by the decimal drop guard below.)
+      const m = rawName.match(/(\d+(?:[.,]\d+)?)\s*gol/i);
+      return m ? m[1].replace(",", ".") : null;
+    }
     default:
       return null;
   }
@@ -752,11 +762,15 @@ export function groupMarketsByTypeWithParameters(
     // parameter bucket to land in). Key them under a distinct, stable,
     // non-numeric parameter ("exact") so they surface as their own
     // comparison row instead of vanishing; the guards below only ever match
-    // "base", so "exact" passes through untouched.
+    // "base", so "exact" passes through untouched. Scoped to STAT_RANGE only
+    // — a COMBINATION market like TOTAL_GOALS_AND_BTTS also declares a closed
+    // non-OVER/UNDER vocabulary (OVER_YES/UNDER_YES/OVER_NO/UNDER_NO) that
+    // legitimately needs a real decimal line, not this bucket fallback.
     if (
       param === "base" &&
       parameterType === "decimal" &&
       entryDef &&
+      entryDef.viewType === "STAT_RANGE" &&
       market.selections.length > 0 &&
       market.selections.every((sel) => {
         const code = sel.normalizedName || sel.name;

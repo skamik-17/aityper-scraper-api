@@ -1764,6 +1764,26 @@ function normalizeCorrectScoreGroupSelection(
 // split without needing a per-player table — so the fixup table is gone.
 
 /**
+ * Betclic itself truncates a few long surnames when it builds combined
+ * "PlayerA & PlayerB[/ PlayerC]" strings for its player-combo markets
+ * (PLAYER_PAIR / PLAYER_TRIO), even though the very same player is spelled
+ * out in full on single-player markets from other bookmakers.
+ *
+ * (audit-match, Arsenal vs Coventry City): Betclic's raw combo selections
+ * read "Gabriel Mag & V. Gyokeres", "D. Rice & Gabriel Mag & K. Havertz",
+ * etc. — "Gabriel Magalhães" cut short to "Gabriel Mag" — while betcris/
+ * lvbet spell the same Arsenal defender out as "Gabriel Magalhaes" /
+ * "G. Magalhaes". Left uncorrected, toComboPlayerForm() would reduce the
+ * truncated raw string to the bogus combo code "G. Mag", which can never
+ * merge with the "G. Magalhaes" code every other bookmaker produces for the
+ * same real-world player, silently breaking best-odds comparison for any
+ * combo involving him.
+ */
+function canonicalizeBetclicPlayerName(raw: string): string {
+  return canonicalizePlayerName(raw).replace(/\bGabriel Mag\b/gu, "Gabriel Magalhaes");
+}
+
+/**
  * Builds a stable selection code for player-combination markets from the
  * player list itself. Betclic separates players with "/" or "&"
  * ("L. Diaz / Luis Suárez", "B. Embolo & L. Diaz & Cucho Hernandez"); each
@@ -1802,11 +1822,11 @@ function normalizePlayerComboSelection(selectionName: string): NormalizedSelecti
   const players = masked
     .split(/\s*[/&]\s*/)
     .map((part) => part.replace(/@@BETCLIC_PAREN_(\d+)@@/g, (_, idx) => parenSpans[Number(idx)]))
-    .map((part) => toComboPlayerForm(canonicalizePlayerName(part)))
+    .map((part) => toComboPlayerForm(canonicalizeBetclicPlayerName(part)))
     .filter((part) => part.length > 0);
 
   if (players.length < 2) {
-    return toComboPlayerForm(canonicalizePlayerName(selectionName)) as NormalizedSelection;
+    return toComboPlayerForm(canonicalizeBetclicPlayerName(selectionName)) as NormalizedSelection;
   }
 
   return players

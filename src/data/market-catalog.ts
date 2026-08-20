@@ -9181,6 +9181,24 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 517,
   },
   {
+    // NOTE (audit-match Arsenal vs Coventry City, round 5b MINOR
+    // BOTH_HALVES_OVER_COMBO): hasParameter is false, but each bookmaker's
+    // raw label actually encodes a distinct first-half/second-half goal
+    // threshold pair (lebull sends separate raw markets per pair, e.g.
+    // "1. Połowa powyżej (1.5) i 2. połowa powyżej (0.5)" vs "... (0.5) i
+    // ... (1.5)"). Only ONE pair (bookmakerMarketId 262275, "1.5/0.5")
+    // currently reaches this code for lebull — its siblings aren't in
+    // lebull-normalizer.ts's LEBULL_MARKET_ID_TO_CODE and fall through to
+    // OTHER — so there is no live cross-bookmaker collision today.
+    // market-type-grouper.ts's per-bookmaker collapse step now refuses to
+    // concatenate two differently-worded raw entries under this code (so a
+    // future normalizer change that maps a second threshold pair here won't
+    // silently mix its odds into another pair's row), but that is a
+    // narrow safety net, not real parameterization: every pair still
+    // displays under one unlabeled "base" bucket. A full fix needs the
+    // threshold pair to become a genuine catalog parameter (hasParameter:
+    // true) AND the owning bookmaker normalizer(s) to populate paramValue
+    // from the raw label — cross-cutting work outside a catalog-only change.
     numericId: 1253,
     code: "BOTH_HALVES_OVER_COMBO",
     slug: "both-halves-over-combo",

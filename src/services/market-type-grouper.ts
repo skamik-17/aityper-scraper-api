@@ -972,8 +972,24 @@ export function groupMarketsByTypeWithParameters(
             // entry (/audit-match Arsenal vs Coventry City). Keep only the
             // first-seen raw market's selections; drop a later, differently
             // named one instead of merging its selections in.
+            // BOTH_HALVES_OVER_COMBO gets the same "differently-named raw
+            // entry -> don't concatenate" treatment even though it DOES
+            // declare a vocabulary (YES/NO). Its catalog entry is
+            // hasParameter:false but each raw label actually encodes a
+            // distinct first-half/second-half goal-threshold pair (e.g.
+            // lebull sends separate raw markets for "(1.5) i ... (0.5)" vs
+            // "(0.5) i ... (1.5)", bookmakerMarketId 262275 vs 262274) — two
+            // genuinely different bets that both reduce to a YES/NO
+            // selection pair. Without this, a bookmaker offering more than
+            // one threshold combination would have its raw entries silently
+            // concatenated into one bookmakers[] row here with mixed odds
+            // from unrelated bets (/audit-match Arsenal vs Coventry City,
+            // round 5b MINOR BOTH_HALVES_OVER_COMBO). Only one raw market
+            // (262275) currently reaches this code for this match, so this
+            // is preventive — see market-catalog.ts's BOTH_HALVES_OVER_COMBO
+            // entry for the wider parameterization gap this doesn't solve.
             if (
-              !hasDeclaredVocabulary &&
+              (!hasDeclaredVocabulary || marketType === "BOTH_HALVES_OVER_COMBO") &&
               bmData.rawMarketName &&
               bmEntry.rawMarketName &&
               bmData.rawMarketName !== bmEntry.rawMarketName

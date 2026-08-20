@@ -602,6 +602,25 @@ function normalizeBetcrisPlayerCombo(selectionName: string): NormalizedSelection
   return canonicalizePlayerComboSelection(selectionName) as NormalizedSelection;
 }
 
+/**
+ * Betcris-specific full-name aliases: betcris (and lvbet, which shares the
+ * same feed and is fixed separately in its own normalizer) quote a small
+ * number of players under a longer legal/registered name than every other
+ * bookmaker's roster form, which strands the same real-world player in a
+ * second dropdown parameter row instead of joining the shared one (round8
+ * audit betcris-audit issue 8: "Victor Torp Overgaard" vs. everyone else's
+ * "Victor Torp").
+ */
+const BETCRIS_PLAYER_NAME_ALIASES: Record<string, string> = {
+  "victor torp overgaard": "Victor Torp",
+};
+
+function canonicalizeBetcrisPlayerName(name: string): string {
+  const canonical = canonicalizePlayerName(name);
+  const alias = BETCRIS_PLAYER_NAME_ALIASES[canonical.toLowerCase()];
+  return alias ?? canonical;
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -922,7 +941,7 @@ function normalizeSelectionForMarket(
       // branch below (no player is ever literally named "Tak").
       if (/^(tak|yes)$/i.test(lowerTrimmed)) return "YES";
       // Canonical "Firstname Lastname" order shared across all bookmakers.
-      return canonicalizePlayerName(
+      return canonicalizeBetcrisPlayerName(
         trimmed.replace(/^\d+\.\s*/, "")
       ) as NormalizedSelection;
 
@@ -1476,12 +1495,12 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       // numeric line (the already-working single-market-per-player shape)
       // stays on the raw.name fallback below.
       if (raw.paramValue && !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)) {
-        paramValue = canonicalizePlayerName(raw.paramValue);
+        paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
       } else {
         const playerMatch = raw.name.match(/^([^(.:]+?)\s*\(/);
         const playerName = playerMatch?.[1]?.trim();
         if (playerName && !/^zawodnik/i.test(playerName)) {
-          paramValue = canonicalizePlayerName(playerName);
+          paramValue = canonicalizeBetcrisPlayerName(playerName);
         }
       }
     }
@@ -1553,7 +1572,7 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       raw.paramValue &&
       !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)
     ) {
-      paramValue = canonicalizePlayerName(raw.paramValue);
+      paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

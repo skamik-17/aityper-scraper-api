@@ -24,11 +24,18 @@ export interface AggregatedMatchOdds {
   last_updated: string;
 }
 
-export async function getAggregatedOdds(leagueSlug: string = "ekstraklasa"): Promise<AggregatedMatchOdds[]> {
+export async function getAggregatedOdds(
+  leagueSlug: string = "ekstraklasa",
+  marketKeys?: string[]
+): Promise<AggregatedMatchOdds[]> {
   const supabase = getSupabase();
 
+  // p_market_keys prunes rows inside get_matches_with_odds() itself, before
+  // the DISTINCT ON / GROUP BY / jsonb_object_agg work - passing undefined
+  // (-> NULL in Postgres) keeps the original, unfiltered behavior.
   const { data, error } = await (supabase.rpc as any)("get_matches_with_odds", {
     p_league_slug: leagueSlug,
+    p_market_keys: marketKeys ?? null,
   });
 
   if (error) {

@@ -18,15 +18,21 @@ export async function getAllLatestOdds(
   lastUpdated: string | null;
   bookmakerStatus: Record<PolishBookmaker, BookmakerStatus>;
 }> {
-  const aggregatedData = await getAggregatedOdds(leagueSlug);
+  const { onlyMarketKeys } = options;
+  // Pruned inside get_matches_with_odds() itself (migration 10) - Postgres
+  // never builds the JSON for a market this call doesn't want, instead of
+  // building everything and having the loop below throw most of it away.
+  const aggregatedData = await getAggregatedOdds(leagueSlug, onlyMarketKeys);
   const lastScrape = await getLastSuccessfulScrapeTime();
   const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
-  const { onlyMarketKeys } = options;
 
   const matches: MatchOdds[] = aggregatedData.map((row) => {
     const markets: MatchOdds["markets"] = {};
 
     for (const [marketKey, marketData] of Object.entries(row.markets || {})) {
+      // Belt-and-suspenders: the SQL layer already filters to
+      // onlyMarketKeys, so this is normally a no-op, but keeps this
+      // function correct on its own if the RPC signature ever drifts.
       // Every current frontend consumer of this endpoint (verified by
       // grepping every `.markets[...]` access across the whole frontend
       // repo) only ever reads the MATCH_WINNER market - for the 1X2

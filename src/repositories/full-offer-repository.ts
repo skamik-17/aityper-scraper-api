@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
 import type { ScrapedMarket, MarketSelection } from "../types/full-offer.js";
@@ -12,7 +13,7 @@ import {
   MARKET_BY_CODE,
 } from "../data/market-catalog.js";
 
-interface OddsInsert {
+export interface OddsInsert {
   match_id: string;
   league_slug: string;
   home_team: string;
@@ -77,6 +78,56 @@ function getMarketTypeId(normalizedType: string): number | null {
 }
 
 /**
+ * OTHER is the catch-all bucket every raw market a bookmaker's normalizer
+ * fails to classify collapses to (normalizedType/marketKey "OTHER", no
+ * distinguishing parameter). Used bare as mergeMarketRecord()'s map key,
+ * this made ALL of one bookmaker's unrelated unmapped raw markets collide
+ * into ONE DB row per (match, bookmaker) — e.g. pzbuk's real 15-selection
+ * "Handicap" grid absorbing a full scorer list, O/U thresholds, ODD/EVEN,
+ * exact goal counts, asian handicap lines and exact scores under one row,
+ * 136 selections deep; forbet's genuine 2-selection tak/nie market polluted
+ * with 5 extra selections from an unrelated goals-count market (audit-match
+ * Arsenal vs Coventry City, round 4 P-repo-other-collision).
+ *
+ * Give OTHER a per-raw-market suffix here so each raw market gets its own
+ * DB row instead of merging. Prefer the bookmaker's own raw market id
+ * (stable, present on ScrapedMarket — see bookmakerMarketId in
+ * ../types/full-offer.js — and carried through normalizeMarketsForBookmaker
+ * via its `...market` spread); fall back to a hash of the raw market name
+ * when no id is available. Both are deterministic across re-scrapes of the
+ * SAME raw market, so a re-scrape updates the same row via the upsert's
+ * (match_id, bookmaker, market_key, scraped_at) conflict target instead of
+ * duplicating it, and pruneStaleOddsRows() (which prunes by match+bookmaker+
+ * scraped_at only, never by market_key) keeps cleaning up old scrapes
+ * exactly as before.
+ *
+ * This suffix stays fully opaque to every downstream reader: market-type-
+ * grouper.ts groups by normalizedType (not this literal string), and
+ * getFullOfferByMatch()/the "odds" table's views resolve category/market
+ * code from the market_type_id FK — never by parsing market_key — so OTHER
+ * still renders as ONE catch-all API category, just made of several clean
+ * per-raw-market rows instead of one polluted merge.
+ *
+ * Only the literal "OTHER" catch-all is touched; every other (legitimate
+ * parameterized-ladder, e.g. PLAYER_SHOTS) marketKey is returned unchanged,
+ * so mergeMarketRecord()'s ladder-merge behavior (see its own docstring
+ * below) is untouched.
+ */
+export function resolveStorageMarketKey(market: ScrapedMarket, computedKey: string): string {
+  if (computedKey !== "OTHER") return computedKey;
+
+  if (market.bookmakerMarketId) {
+    return `OTHER:id:${market.bookmakerMarketId}`;
+  }
+
+  const nameHash = createHash("sha1")
+    .update(market.name || "", "utf8")
+    .digest("hex")
+    .slice(0, 10);
+  return `OTHER:name:${nameHash}`;
+}
+
+/**
  * Adds one normalized market's record into a per-marketKey map, MERGING
  * selections instead of letting a marketKey collision silently overwrite the
  * whole prior record. Same-bookmaker raw markets legitimately collide on one
@@ -94,7 +145,7 @@ function getMarketTypeId(normalizedType: string): number | null {
  * the normalizer rather than disjoint thresholds — logged as a misroute
  * signal instead of being silently dropped.
  */
-function mergeMarketRecord(
+export function mergeMarketRecord(
   recordsMap: Map<string, OddsInsert>,
   marketKey: string,
   incoming: OddsInsert
@@ -198,7 +249,7 @@ export async function saveFullOfferMarkets(
       continue;
     }
 
-    const marketKey = market.marketKey || market.normalizedType!;
+    const marketKey = resolveStorageMarketKey(market, market.marketKey || market.normalizedType!);
 
     mergeMarketRecord(recordsMap, marketKey, {
       match_id: matchId,
@@ -488,7 +539,7 @@ export async function saveBatchFullOfferMarkets(
         continue;
       }
 
-      const marketKey = market.marketKey || market.normalizedType!;
+      const marketKey = resolveStorageMarketKey(market, market.marketKey || market.normalizedType!);
 
       mergeMarketRecord(recordsMap, marketKey, {
         match_id: matchId,

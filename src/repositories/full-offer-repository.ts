@@ -199,6 +199,7 @@ export function mergeMarketRecord(
     existing.selections.map((sel) => selectionCollisionKey(sel))
   );
   let collidedCode: string | undefined;
+  let addedNewSelection = false;
   for (const sel of incoming.selections) {
     const code = selectionCollisionKey(sel);
     if (existingCodes.has(code)) {
@@ -207,6 +208,26 @@ export function mergeMarketRecord(
     }
     existing.selections.push(sel);
     existingCodes.add(code);
+    addedNewSelection = true;
+  }
+
+  // A merge that genuinely contributed new selections (e.g. CARDS_TEAM
+  // combining a bookmaker's separate "Arsenal - liczba kartek" and
+  // "Coventry - liczba kartek" raw markets into one HOME/AWAY row) left
+  // raw_market_name pointing at whichever raw market arrived first, silently
+  // misattributing the label for every selection that came from the OTHER
+  // source market. Concatenate distinct names instead so the displayed label
+  // reflects every raw market this row's selections actually came from
+  // (audit-match Arsenal vs Coventry City, round 7).
+  if (
+    addedNewSelection &&
+    incoming.raw_market_name &&
+    incoming.raw_market_name !== existing.raw_market_name
+  ) {
+    const existingNames = (existing.raw_market_name ?? "").split(" / ").filter(Boolean);
+    if (!existingNames.includes(incoming.raw_market_name)) {
+      existing.raw_market_name = [...existingNames, incoming.raw_market_name].join(" / ");
+    }
   }
 
   if (collidedCode) {

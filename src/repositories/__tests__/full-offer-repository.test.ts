@@ -233,3 +233,69 @@ describe("mergeMarketRecord with within-market UNKNOWN-selection collisions (rou
     expect(row.selections[0].odds).toBe(1.9);
   });
 });
+
+describe("mergeMarketRecord raw_market_name concatenation (round 7)", () => {
+  it("concatenates distinct source names when a merge genuinely adds new selections", () => {
+    // CARDS_TEAM (audit-match Arsenal vs Coventry City, round 6/7): a
+    // bookmaker's separate "Arsenal - liczba kartek" (HOME_OVER/HOME_UNDER)
+    // and "Coventry - liczba kartek" (AWAY_OVER/AWAY_UNDER) raw markets
+    // legitimately merge into one HOME/AWAY row via declared vocabulary.
+    // Before the fix, raw_market_name kept only the first-seen name, silently
+    // misattributing the label for the second market's selections.
+    const recordsMap = new Map<string, OddsInsert>();
+    const arsenalCards: OddsInsert = {
+      match_id: "premier-league:arsenal:coventry-city",
+      league_slug: "premier-league",
+      home_team: "Arsenal",
+      away_team: "Coventry City",
+      bookmaker: "superbet" as any,
+      market_type_id: 99,
+      market_key: "CARDS_TEAM:1.5",
+      raw_market_name: "Arsenal - liczba kartek",
+      selections: [
+        { name: "Powyżej 1.5", odds: 1.5, normalizedName: "HOME_OVER" as any },
+        { name: "Poniżej 1.5", odds: 2.5, normalizedName: "HOME_UNDER" as any },
+      ],
+      scraped_at: "2026-08-20T00:00:00.000Z",
+    };
+    const coventryCards: OddsInsert = {
+      ...arsenalCards,
+      raw_market_name: "Coventry - liczba kartek",
+      selections: [
+        { name: "Powyżej 1.5", odds: 3.5, normalizedName: "AWAY_OVER" as any },
+        { name: "Poniżej 1.5", odds: 1.3, normalizedName: "AWAY_UNDER" as any },
+      ],
+    };
+
+    mergeMarketRecord(recordsMap, "CARDS_TEAM:1.5", arsenalCards);
+    mergeMarketRecord(recordsMap, "CARDS_TEAM:1.5", coventryCards);
+
+    const row = recordsMap.get("CARDS_TEAM:1.5")!;
+    expect(row.selections).toHaveLength(4);
+    expect(row.raw_market_name).toBe("Arsenal - liczba kartek / Coventry - liczba kartek");
+  });
+
+  it("does not append a name when the merge adds no new selections (pure collision)", () => {
+    const recordsMap = new Map<string, OddsInsert>();
+    const first: OddsInsert = {
+      match_id: "premier-league:arsenal:coventry-city",
+      league_slug: "premier-league",
+      home_team: "Arsenal",
+      away_team: "Coventry City",
+      bookmaker: "superbet" as any,
+      market_type_id: 99,
+      market_key: "CARDS_TEAM:1.5",
+      raw_market_name: "Arsenal - liczba kartek",
+      selections: [{ name: "Powyżej 1.5", odds: 1.5, normalizedName: "HOME_OVER" as any }],
+      scraped_at: "2026-08-20T00:00:00.000Z",
+    };
+    const duplicate: OddsInsert = { ...first, raw_market_name: "Arsenal - liczba kartek (duplicate feed)" };
+
+    mergeMarketRecord(recordsMap, "CARDS_TEAM:1.5", first);
+    mergeMarketRecord(recordsMap, "CARDS_TEAM:1.5", duplicate);
+
+    const row = recordsMap.get("CARDS_TEAM:1.5")!;
+    expect(row.selections).toHaveLength(1);
+    expect(row.raw_market_name).toBe("Arsenal - liczba kartek");
+  });
+});

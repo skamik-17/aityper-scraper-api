@@ -735,6 +735,32 @@ function resolveMarketCode(
     return { code: "HALF_WITH_MORE_GOALS", matchedBy: "pattern" };
   }
 
+  // "<Team> - Liczba goli (przedziały)" (e.g. "Arsenal - Liczba goli
+  // (przedziały)", "Coventry City - Liczba goli (przedziały)") is a
+  // team-scoped cumulative goal-band ladder (selections "1-2"/"1-3"/"1-4"/
+  // "2-3"/"2-4"/"3-4"/"Każdy inny"), not an over/under total — it shares the
+  // "liczba goli" substring with the plain team total-goals family below,
+  // which used to force-fit its band labels into OVER/UNDER parsing and
+  // leave every selection UNKNOWN (audit-match, Arsenal vs Coventry City,
+  // GOLE/HOME_TEAM_TOTAL_GOALS, round 7b MINOR). Route it to the existing
+  // team goal-range codes instead (their catalog selection lists — 0/0-1/
+  // 1-2/1-3/2-3/4+ — already only accept a subset of LVBet's bands; the
+  // "1-4"/"2-4"/"3-4"/"Każdy inny" extras are dropped by
+  // normalizeSelectionForMarket, same as the existing HOME_GOAL_RANGE/
+  // AWAY_GOAL_RANGE handling for other bookmakers' extended-band offers).
+  // Anchored on a literal dash right before "liczba goli" so the half-scoped
+  // team variant ("1./2. Połowa - <Team> liczba goli (przedziały)", no dash
+  // there) and the match-level half variants ("1./2. Połowa - Liczba goli
+  // (przedziały)", no team name so detectTeamSide returns null) fall through
+  // unchanged to the generic block below. "przedzia.y" is deliberately a
+  // one-char wildcard, not a typo — see the NFD/"ł" note further down.
+  if (/^.+\s-\sliczba goli \(przedzia.y\)$/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    if (side) {
+      return { code: side === "HOME" ? "HOME_GOAL_RANGE" : "AWAY_GOAL_RANGE", matchedBy: "pattern" };
+    }
+  }
+
   // Team-scoped goal totals ("Austria - Suma goli", "2. Połowa - Argentyna
   // liczba goli", "2. Połowa - <Team> dokładna liczba goli (przedział)") must
   // not be merged into the match-level TOTAL_GOALS family.

@@ -1474,11 +1474,15 @@ function normalizeSelectionForMarket(
     case "CARDS_EXACT":
       // Catalog groups the low tail into a single "0-3" bucket.
       if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) <= 3) return "0-3" as NormalizedSelection;
-      // The catalog's only open-ended tier is "12+" — a combined "7+"/"8+"/...
-      // tail bucket has no single matching code (7,8,9,10,11 are all separate
-      // discrete codes) and cannot be merged into one of them without
-      // fabricating a wrong probability, so drop it instead of leaking the
-      // raw "N+" text as an orphan selection.
+      // Fuksiarz's own ladder tops out at an open "7+" tier (confirmed via
+      // raw ground truth, audit-match round 5b) — the catalog carries this
+      // as its own code alongside the discrete "7", so pass it through as-is
+      // instead of fabricating a probability by merging into "7" or "12+".
+      if (trimmed === "7+") return "7+" as NormalizedSelection;
+      // No other open-ended tail ("8+"/"9+"/"10+"/"11+") has a matching
+      // catalog code (8,9,10,11 are all separate discrete codes) and merging
+      // one into a discrete code would fabricate a wrong probability, so
+      // drop it instead of leaking the raw "N+" text as an orphan selection.
       if (/^\d+\+$/.test(trimmed) && trimmed !== "12+") return "UNKNOWN";
       return trimmed as NormalizedSelection;
 

@@ -4207,9 +4207,13 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Dokładna liczba kartek", en: "Exact Cards" },
     descriptions: { pl: "Dokładna łączna liczba kartek w meczu", en: "Exact total cards in match" },
     hasParameter: false,
-    selections: ["0-3", "4", "5", "6", "7", "8", "9", "10", "11", "12+"],
+    // fuksiarz caps its own ladder at an open "7+" tier instead of continuing
+    // the discrete 7/8/9/10/11/12+ scheme every other bookmaker uses here —
+    // kept as an ADDITIONAL code (not a replacement for "7") so peers with
+    // the finer breakdown are unaffected; see fuksiarz-normalizer.ts CARDS_EXACT case.
+    selections: ["0-3", "4", "5", "6", "7", "7+", "8", "9", "10", "11", "12+"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0-3": "W meczu padnie łącznie 0-3 kartek", "4": "W meczu padnie łącznie 4 kartek", "5": "W meczu padnie łącznie 5 kartek", "6": "W meczu padnie łącznie 6 kartek", "7": "W meczu padnie łącznie 7 kartek", "8": "W meczu padnie łącznie 8 kartek", "9": "W meczu padnie łącznie 9 kartek", "10": "W meczu padnie łącznie 10 kartek", "11": "W meczu padnie łącznie 11 kartek", "12+": "W meczu padnie łącznie 12 lub więcej kartek" },
+    descriptionTemplates: { "0-3": "W meczu padnie łącznie 0-3 kartek", "4": "W meczu padnie łącznie 4 kartek", "5": "W meczu padnie łącznie 5 kartek", "6": "W meczu padnie łącznie 6 kartek", "7": "W meczu padnie łącznie 7 kartek", "7+": "W meczu padnie łącznie 7 lub więcej kartek", "8": "W meczu padnie łącznie 8 kartek", "9": "W meczu padnie łącznie 9 kartek", "10": "W meczu padnie łącznie 10 kartek", "11": "W meczu padnie łącznie 11 kartek", "12+": "W meczu padnie łącznie 12 lub więcej kartek" },
     displayOrder: 264,
   },
   {

@@ -91,9 +91,19 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // Multi Result market. No catalog code models this overlapping shape, so
   // route it to OTHER (dropped) instead.
   40424: "OTHER",
-  311019: "SCORE_REACHED",
-  311021: "SCORE_OCCURS_DURING_MATCH",
-  311022: "SCORE_TO_OCCUR",
+  // 311019/311021/311022 are per-score instances of ONE product ("X:Y w
+  // czasie meczu" - will this score occur at any point). They were mapped
+  // to three separate one-off codes (SCORE_REACHED / SCORE_OCCURS_DURING_
+  // MATCH / SCORE_TO_OCCUR), rendering three near-identically-labeled
+  // Tak/Nie cards, while lvbet quotes the same product as one
+  // SCORE_DURING_MATCH grid with per-score odds. Routed into that grid:
+  // the score becomes the selection code and "Tak" carries the price (see
+  // the selections transform below; the same YES-collapse convention as
+  // RESULT_AND_GOAL_RANGE / MULTI_RESULT). Market-display audit, Arsenal
+  // vs Coventry City.
+  311019: "SCORE_DURING_MATCH",
+  311021: "SCORE_DURING_MATCH",
+  311022: "SCORE_DURING_MATCH",
   333182: "BTTS_BY_HALF",
   332816: "BTTS_AT_LEAST_ONE_HALF",
   262063: "BTTS_BOTH_HALVES",
@@ -766,9 +776,6 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_GOAL":
     case "SECOND_HALF_GOAL":
     case "GOAL_IN_TIME_PERIOD":
-    case "SCORE_REACHED":
-    case "SCORE_OCCURS_DURING_MATCH":
-    case "SCORE_TO_OCCUR":
     case "ANY_TEAM_WINNING_MARGIN_EXACT":
     case "WINNING_MARGIN_ANY_EXACT":
     case "ANY_TEAM_WIN_BY_MARGIN":
@@ -1261,6 +1268,22 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
         selections = raw.selections
           .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")
           .map((sel) => ({ code: comboCode, label: sel.name, odds: sel.odds }));
+      }
+    }
+
+    // Per-score "X:Y w czasie meczu" instances (ids 311019/311021/311022,
+    // see LEBULL_MARKET_ID_TO_CODE above) are quoted as Tak/Nie: "Tak" IS
+    // the score's price for the shared SCORE_DURING_MATCH grid (lvbet's
+    // code for the identical product); "Nie" has no negation slot in the
+    // grid and is dropped, same convention as RESULT_AND_GOAL_RANGE /
+    // MULTI_RESULT above.
+    if (marketCode === "SCORE_DURING_MATCH") {
+      const scoreMatch = raw.name.match(/^(\d+)\s*[:–\-]\s*(\d+)\s+w\s+czasie\s+meczu/i);
+      const scoreCode = scoreMatch ? parseScoreSelection(`${scoreMatch[1]}:${scoreMatch[2]}`) : null;
+      if (scoreCode) {
+        selections = raw.selections
+          .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")
+          .map((sel) => ({ code: scoreCode as NormalizedSelection, label: sel.name, odds: sel.odds }));
       }
     }
 

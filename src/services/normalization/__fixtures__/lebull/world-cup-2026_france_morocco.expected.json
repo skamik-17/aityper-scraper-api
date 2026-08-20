@@ -3364,26 +3364,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SCORE_REACHED",
-        "marketKey": "SCORE_REACHED",
+        "marketCode": "SCORE_DURING_MATCH",
+        "marketKey": "SCORE_DURING_MATCH",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "1-1",
             "label": "Tak",
             "odds": 2.93
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 1.39
           }
         ]
       },
       "index": 93,
-      "marketCode": "SCORE_REACHED",
+      "marketCode": "SCORE_DURING_MATCH",
       "rawName": "1:1 w czasie meczu"
     },
     {
@@ -3416,52 +3411,42 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SCORE_OCCURS_DURING_MATCH",
-        "marketKey": "SCORE_OCCURS_DURING_MATCH",
+        "marketCode": "SCORE_DURING_MATCH",
+        "marketKey": "SCORE_DURING_MATCH",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "2-0",
             "label": "Tak",
             "odds": 2.6
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 1.47
           }
         ]
       },
       "index": 95,
-      "marketCode": "SCORE_OCCURS_DURING_MATCH",
+      "marketCode": "SCORE_DURING_MATCH",
       "rawName": "2:0 w czasie meczu"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SCORE_TO_OCCUR",
-        "marketKey": "SCORE_TO_OCCUR",
+        "marketCode": "SCORE_DURING_MATCH",
+        "marketKey": "SCORE_DURING_MATCH",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "0-2",
             "label": "Tak",
             "odds": 10
-          },
-          {
-            "code": "NO",
-            "label": "Nie",
-            "odds": 1.03
           }
         ]
       },
       "index": 96,
-      "marketCode": "SCORE_TO_OCCUR",
+      "marketCode": "SCORE_DURING_MATCH",
       "rawName": "0:2 w czasie meczu"
     },
     {

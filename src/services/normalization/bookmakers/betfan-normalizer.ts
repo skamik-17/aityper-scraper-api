@@ -312,6 +312,11 @@ function normalizeText(value: string): string {
  */
 const BETFAN_PLAYER_NAME_ALIASES: Record<string, string> = {
   munir: "Munir Mohamedi",
+  // Betfan lists Coventry's Ellis Simms with his full middle name ("Simms,
+  // Ellis Reco"), while other bookmakers (betcris, lvbet) canonicalize to
+  // the shorter "Ellis Simms" used everywhere else in the industry — fold
+  // to the shared canonical form so odds compare against the same row.
+  "ellis reco simms": "Ellis Simms",
 };
 
 function canonicalizeBetfanPlayerName(name: string): string {

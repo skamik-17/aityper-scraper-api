@@ -11828,8 +11828,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_AT_LEAST_ONE_HALF",
-        "marketKey": "DRAW_AT_LEAST_ONE_HALF",
+        "marketCode": "DRAW_IN_AT_LEAST_ONE_HALF",
+        "marketKey": "DRAW_IN_AT_LEAST_ONE_HALF",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -11847,7 +11847,7 @@
         ]
       },
       "index": 258,
-      "marketCode": "DRAW_AT_LEAST_ONE_HALF",
+      "marketCode": "DRAW_IN_AT_LEAST_ONE_HALF",
       "rawName": "Remis przynajmniej w jednej z połów"
     },
     {
@@ -12906,8 +12906,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_BOTH_HALVES",
-        "marketKey": "TEAM_WIN_BOTH_HALVES",
+        "marketCode": "HOME_WIN_BOTH_HALVES",
+        "marketKey": "HOME_WIN_BOTH_HALVES",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -12925,7 +12925,7 @@
         ]
       },
       "index": 287,
-      "marketCode": "TEAM_WIN_BOTH_HALVES",
+      "marketCode": "HOME_WIN_BOTH_HALVES",
       "rawName": "Francja wygra obie połowy"
     },
     {

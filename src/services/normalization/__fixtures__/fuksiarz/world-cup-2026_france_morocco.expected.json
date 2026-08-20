@@ -10669,10 +10669,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
-        "marketKey": "TEAM_WIN_AT_LEAST_ONE_HALF:HOME",
+        "marketCode": "HOME_WIN_AT_LEAST_ONE_HALF",
+        "marketKey": "HOME_WIN_AT_LEAST_ONE_HALF",
         "matchedBy": "id",
-        "paramValue": "HOME",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -10688,17 +10688,17 @@
         ]
       },
       "index": 319,
-      "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
+      "marketCode": "HOME_WIN_AT_LEAST_ONE_HALF",
       "rawName": "Francja wygra przynajmniej jedną połowę"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
-        "marketKey": "TEAM_WIN_AT_LEAST_ONE_HALF:AWAY",
+        "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
+        "marketKey": "AWAY_WIN_AT_LEAST_ONE_HALF",
         "matchedBy": "id",
-        "paramValue": "AWAY",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -10714,7 +10714,7 @@
         ]
       },
       "index": 320,
-      "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
+      "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
       "rawName": "Maroko wygra przynajmniej jedną połowę"
     },
     {

@@ -440,11 +440,21 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // "<Team> wygra do zera" (full-match win-to-nil) is routed team-aware
   // further down (via detectTeamSide), same as the half-scoped variant —
   // used to be hardcoded to the Belgium/New Zealand fixture's team names.
-  { pattern: /wygra obie połowy/, code: "TEAM_WIN_BOTH_HALVES" },
+  // "<Team> wygra obie połowy" is likewise routed team-aware further down
+  // (via detectTeamSide) to HOME/AWAY_WIN_BOTH_HALVES — a static pattern here
+  // used to route it to the team-parameterized TEAM_WIN_BOTH_HALVES with no
+  // param filled, rendering an ambiguous "Wygra obie połowy" card stranded
+  // from the 9 other bookmakers' HOME/AWAY pools (live-data audit, Arsenal
+  // vs Coventry City).
   // "<Team> wygra przynajmniej jedną połowę" is routed team-aware further
   // down (via detectTeamSide) instead of a static pattern here, since a
   // static regex cannot tell which team's name appears in the raw label.
-  { pattern: /remis przynajmniej w jednej z połow/, code: "DRAW_AT_LEAST_ONE_HALF" },
+  // Routed to DRAW_IN_AT_LEAST_ONE_HALF (betcris/lebull's code for the
+  // identical bet) instead of the twin DRAW_AT_LEAST_ONE_HALF code - the two
+  // codes rendered as two separate, identically-priced cards and split the
+  // bookmaker comparison pool (market-display audit, Arsenal vs Coventry:
+  // lvbet 1.90/1.80 alone vs betcris 1.90/1.80 + lebull in the other card).
+  { pattern: /remis przynajmniej w jednej z połow/, code: "DRAW_IN_AT_LEAST_ONE_HALF" },
   { pattern: /wygra pierwsza połowe \/ wygra druga połowe/, code: "HALF_TIME_SECOND_HALF_RESULT" },
   // "LV Zaliczka" is a 3-way (HOME/DRAW/AWAY) insured-1X2 promo product; the
   // catalog's WIN_OR_WIN_BY_2 is strictly binary HOME/AWAY, so mapping it
@@ -525,6 +535,9 @@ function detectTeamSide(
     .replace(/\(extended bands\)/gi, " ")
     .replace(/\(przedział\)/gi, " ")
     .replace(/połowa z większą liczbą goli/gi, " ")
+    // Win/result phrases: without stripping them, Polish exonym team names
+    // ("Francja wygra obie połowy") never reach the alias matcher cleanly.
+    .replace(/wygra obie połowy/gi, " ")
     .replace(/dokładna liczba goli/gi, " ")
     .replace(/suma goli|liczba goli|total goals/gi, " ")
     // Stat-market phrases ("Faule: Kolumbia suma", "Auty: Kolumbia suma",
@@ -684,6 +697,28 @@ function resolveMarketCode(
           ? "HOME_WIN_AT_LEAST_ONE_HALF"
           : side === "AWAY"
             ? "AWAY_WIN_AT_LEAST_ONE_HALF"
+            : "OTHER",
+      matchedBy: "pattern",
+    };
+  }
+
+  // "<Team> wygra obie połowy" (team wins both halves) — resolve the side
+  // from the raw name so the bet lands in the HOME/AWAY_WIN_BOTH_HALVES
+  // pools shared with the other bookmakers. The team-parameterized
+  // TEAM_WIN_BOTH_HALVES it used to route to never got its param filled, so
+  // the UI card read as a bare "Wygra obie połowy" with no team indication
+  // (live-data audit, Arsenal vs Coventry City: lvbet's Arsenal quote
+  // 2.17/1.60 sat alone in that twin card while 9 peers priced the same bet
+  // in HOME_WIN_BOTH_HALVES at 2.09-2.25). Unresolvable names fall to OTHER
+  // rather than an ambiguous shared card.
+  if (/wygra obie połowy/.test(normalizedName)) {
+    const side = detectTeamSide(raw.name, ctx);
+    return {
+      code:
+        side === "HOME"
+          ? "HOME_WIN_BOTH_HALVES"
+          : side === "AWAY"
+            ? "AWAY_WIN_BOTH_HALVES"
             : "OTHER",
       matchedBy: "pattern",
     };
@@ -1328,7 +1363,6 @@ function normalizeSelectionForMarket(
     case "SECOND_HALF_BTTS":
     case "OWN_GOAL":
     case "SUBSTITUTE_GOAL":
-    case "TEAM_WIN_BOTH_HALVES":
     case "BOTH_HALVES_GOALS":
     case "BOTH_HALVES_UNDER_GOALS":
     case "BOTH_HALVES_OVER_GOALS":

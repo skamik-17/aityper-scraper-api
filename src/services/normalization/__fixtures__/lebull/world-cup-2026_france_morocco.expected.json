@@ -4670,7 +4670,7 @@
         "customLabel": null,
         "marketCode": "HOME_WIN_AT_LEAST_ONE_HALF",
         "marketKey": "HOME_WIN_AT_LEAST_ONE_HALF",
-        "matchedBy": "id",
+        "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -4694,10 +4694,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
-        "marketKey": "TEAM_WIN_AT_LEAST_ONE_HALF:AWAY",
-        "matchedBy": "id",
-        "paramValue": "AWAY",
+        "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
+        "marketKey": "AWAY_WIN_AT_LEAST_ONE_HALF",
+        "matchedBy": "pattern",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -4713,7 +4713,7 @@
         ]
       },
       "index": 143,
-      "marketCode": "TEAM_WIN_AT_LEAST_ONE_HALF",
+      "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
       "rawName": "Maroko wygra co najmniej jedną połowę"
     },
     {

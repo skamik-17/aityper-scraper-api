@@ -28659,10 +28659,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WINS_MATCH",
-        "marketKey": "TEAM_WINS_MATCH",
+        "marketCode": "TEAM_WIN_MATCH",
+        "marketKey": "TEAM_WIN_MATCH:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {
@@ -28678,7 +28678,7 @@
         ]
       },
       "index": 1808,
-      "marketCode": "TEAM_WINS_MATCH",
+      "marketCode": "TEAM_WIN_MATCH",
       "rawName": "Maroko wygra mecz"
     },
     {
@@ -28725,10 +28725,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TEAM_WIN",
-        "marketKey": "TEAM_WIN",
+        "marketCode": "TEAM_WIN_MATCH",
+        "marketKey": "TEAM_WIN_MATCH:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -28744,7 +28744,7 @@
         ]
       },
       "index": 1812,
-      "marketCode": "TEAM_WIN",
+      "marketCode": "TEAM_WIN_MATCH",
       "rawName": "Francja wygra mecz"
     },
     {
@@ -29086,8 +29086,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "MATCH_HAS_WINNER",
-        "marketKey": "MATCH_HAS_WINNER",
+        "marketCode": "ANY_TEAM_TO_WIN",
+        "marketKey": "ANY_TEAM_TO_WIN",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -29105,7 +29105,7 @@
         ]
       },
       "index": 1826,
-      "marketCode": "MATCH_HAS_WINNER",
+      "marketCode": "ANY_TEAM_TO_WIN",
       "rawName": "Jedna z drużyn wygra mecz"
     },
     {

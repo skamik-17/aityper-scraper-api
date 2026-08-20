@@ -2422,9 +2422,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_WIN_MATCH",
-        "marketKey": "TEAM_WIN_MATCH",
+        "marketKey": "TEAM_WIN_MATCH:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -2448,9 +2448,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_WIN_MATCH",
-        "marketKey": "TEAM_WIN_MATCH",
+        "marketKey": "TEAM_WIN_MATCH:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {

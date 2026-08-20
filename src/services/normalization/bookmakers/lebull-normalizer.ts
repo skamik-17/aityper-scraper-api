@@ -103,8 +103,15 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   332819: "BOTH_TEAMS_UNDER_GOALS",
   350077: "SECOND_HALF_RESULT_OR_BTTS",
   40414: "HOME_WIN_BOTH_HALVES",
+  // 39504/39505 ("<Team> wygra co najmniej jedną połowę") are the team-A/
+  // team-B variants on the sbteam.xyz feed. Routed primarily by the
+  // name-pattern + team-side detection block in resolveMarketCode into the
+  // side-specific codes every other bookmaker uses; these id entries are the
+  // fallback when the raw name cannot be matched to a side. A previous
+  // TEAM_WIN_AT_LEAST_ONE_HALF mapping for 39505 split lebull's rows across
+  // two coding schemes (live audit, Arsenal vs Coventry City).
   39504: "HOME_WIN_AT_LEAST_ONE_HALF",
-  39505: "TEAM_WIN_AT_LEAST_ONE_HALF",
+  39505: "AWAY_WIN_AT_LEAST_ONE_HALF",
   332821: "EACH_TEAM_WINS_ONE_HALF",
   30: "HALF_TIME_GOAL",
   31: "SECOND_HALF_GOAL",
@@ -532,6 +539,32 @@ function resolveMarketCode(
     if (side === "AWAY") return { marketCode: "AWAY_WIN_TO_NIL", matchedBy: "pattern" };
   }
 
+  // "<Team> wygra co najmniej jedną połowę" (stake types 39504/39505) —
+  // resolve which side the named team plays and route to the side-specific
+  // catalog codes used by every other bookmaker. Routing by id alone split
+  // lebull's rows across two coding schemes (39504 landed in
+  // HOME_WIN_AT_LEAST_ONE_HALF while 39505 landed in the team-parameterized
+  // TEAM_WIN_AT_LEAST_ONE_HALF), fragmenting the comparison pools.
+  const winEitherHalfMatch = raw.name.match(
+    // NOTE: \S (not \w) after "jedn" — JS \w never matches "ą" in "jedną".
+    /^(.+?)\s+wygra\s+(?:co\s+najmniej|przynajmniej)\s+jedn\S*\s+po[łl]ow/iu
+  );
+  if (winEitherHalfMatch) {
+    const side = normalize1x2Selection(
+      winEitherHalfMatch[1].trim(),
+      ctx.homeTeam,
+      ctx.awayTeam,
+      ctx.league
+    );
+    if (side === "HOME") {
+      return { marketCode: "HOME_WIN_AT_LEAST_ONE_HALF", matchedBy: "pattern" };
+    }
+    if (side === "AWAY") {
+      return { marketCode: "AWAY_WIN_AT_LEAST_ONE_HALF", matchedBy: "pattern" };
+    }
+    // Unknown team name: fall through to the 39504/39505 id fallback below.
+  }
+
   // "<Team>: wygra różnicą 1 gola lub remis" (stake type 543) — a team-specific
   // Tak/Nie bet; resolve which side the named team plays and route to the
   // matching one-sided catalog code (both exist since round 1). Never fall
@@ -720,8 +753,8 @@ function normalizeSelectionForMarket(
     case "BOTH_HALVES_OVER_GOALS":
     case "BOTH_HALVES_UNDER_GOALS":
     case "BOTH_HALVES_OVER_COMBO":
-    case "TEAM_WIN_AT_LEAST_ONE_HALF":
     case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
     case "HOME_WIN_BOTH_HALVES":
     case "EACH_TEAM_WINS_ONE_HALF":
     case "HOME_WIN_TO_NIL":
@@ -1038,23 +1071,6 @@ function extractParamValue(
       const m = sel.name.match(/\(([+-]?\d+(?:[.,]\d+)?)\)/);
       if (m) return parseHandicapLine(m[1]);
     }
-    return undefined;
-  }
-
-  // "Kolumbia wygra co najmniej jedną połowę" — the parameter is the SIDE of
-  // the named team (HOME/AWAY, matching the fuksiarz convention), not a goal
-  // line; the numeric fallbacks below would leave it in the "base" bucket.
-  if (marketCode === "TEAM_WIN_AT_LEAST_ONE_HALF") {
-    const teamMatch = raw.name.match(
-      /^(.+?)\s+wygra\s+(?:co\s+najmniej|przynajmniej)\s+jedn/i
-    );
-    if (teamMatch) {
-      const side = normalize1x2Selection(teamMatch[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
-      if (side === "HOME" || side === "AWAY") return side;
-    }
-    // Stake type 39505 is the team-B (away) variant on the sbteam.xyz feed.
-    // (The factory passes numeric ids as numbers, so compare as string.)
-    if (String(raw.bookmakerMarketId) === "39505") return "AWAY";
     return undefined;
   }
 

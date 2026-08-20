@@ -252,7 +252,12 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // 00-2f live-verified as "1.połowa: dwójtyp" (its odds were previously
   // inconsistent with full-match double chance for exactly this reason).
   "ufo:mtyp:00-2f": "HALF_TIME_DOUBLE_CHANCE",
-  "ufo:mtyp:00-39": "MATCH_HAS_WINNER",
+  // "Jedna z drużyn wygra mecz" = the same bet as etoto/forbet's
+  // ANY_TEAM_TO_WIN ("Którakolwiek z drużyn wygra mecz") - routed there so
+  // all three bookmakers share one comparison card instead of fortuna
+  // rendering an identically-priced twin (market-display audit: fortuna
+  // 1.10/6.00 alone vs etoto 1.10/6.00 + forbet 1.11/6.40 in the other card).
+  "ufo:mtyp:00-39": "ANY_TEAM_TO_WIN",
   "ufo:mtyp:00-1u": "HOME_HALF_WITH_MOST_GOALS",
 };
 
@@ -1260,6 +1265,29 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       else return null;
     }
 
+    // "X wygra mecz" (Tak/Nie) is the two-way team-wins prop etoto/forbet
+    // quote as TEAM_WIN_MATCH with a HOME/AWAY parameter. Fortuna splits it
+    // into two positional ids (00-38 first team, 00-36 second team) that
+    // were mapped to two separate parameterless codes (TEAM_WIN /
+    // TEAM_WINS_MATCH), so the UI rendered two ambiguous cards ("Drużyna
+    // wygra mecz" - which team?) and fortuna's quotes never merged into the
+    // shared TEAM_WIN_MATCH comparison rows (market-display audit). Route
+    // both ids into TEAM_WIN_MATCH with the side as the parameter.
+    let teamWinMatchSide: "HOME" | "AWAY" | undefined;
+    if (marketCode === "TEAM_WIN" || marketCode === "TEAM_WINS_MATCH") {
+      const teamPrefix = scopedName.match(/^(.+?)\s+wygra\s+mecz/i);
+      if (!teamPrefix) return null;
+      const side = normalize1x2Selection(
+        teamPrefix[1].trim(),
+        ctx.homeTeam,
+        ctx.awayTeam,
+        ctx.league
+      );
+      if (side !== "HOME" && side !== "AWAY") return null;
+      marketCode = "TEAM_WIN_MATCH";
+      teamWinMatchSide = side;
+    }
+
     // Side-directional team codes (team goals/fouls/offsides): flip to the
     // counterpart code when the label names the opposite team — the id->side
     // pairing is positional and the label is authoritative.
@@ -1322,6 +1350,13 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     let paramValue =
       parlayPlayerParam ??
       (playerName && isPlayerMarket ? playerName : extractParamValue(marketCode, raw, ctx));
+
+    // TEAM_WIN_MATCH is parameterized by team side (see the 00-36/00-38
+    // router above) - without this, both teams' rows would share the bare
+    // "TEAM_WIN_MATCH" key and storage would silently keep only one.
+    if (teamWinMatchSide) {
+      paramValue = teamWinMatchSide;
+    }
 
     // Side-in-parameter team markets combine the side with the numeric line
     // ("HOME:4.5") so home/away lines never collide on the market key.

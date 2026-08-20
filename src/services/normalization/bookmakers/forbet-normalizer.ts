@@ -432,6 +432,18 @@ function resolveForbetSpecialMarket(
     return "SECOND_HALF_EXACT_GOALS";
   }
 
+  // The 1st-half twin of the rule above was missed when it was added -
+  // forbet's "1. połowa - liczba goli" (0/1/2/3+) kept falling through the
+  // team-scoped branch into OTHER, where it rendered inside the fused
+  // "Inne" catch-all card instead of the HALF_TIME_EXACT_GOALS comparison
+  // row (market-display audit, Arsenal vs Coventry City).
+  if (
+    /^1\.?\s*polowa\s*-\s*liczba goli$/.test(name) &&
+    raw.selections.every((sel) => /^\d+\+?$/.test(sel.name.trim()))
+  ) {
+    return "HALF_TIME_EXACT_GOALS";
+  }
+
   // "<Team> - liczba goli" carries EXACT goal counts (0 / 1 / 2 / 3+), not an
   // over/under ladder — audit /audit-match found both forbet variants landing
   // in the match-wide TOTAL_GOALS with every selection UNKNOWN.
@@ -1339,8 +1351,15 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "TOTAL_GOALS_BY_60_MIN",
   "TOTAL_GOALS_BY_60MIN",
   "TEAM_TOTAL_GOALS_FIRST_60MIN",
-  "TEAM_HALF_WITH_MORE_GOALS",
-  "CORNERS_TEAM_RANGE",
+  // All team-parameterised markets (param = HOME/AWAY resolved from the raw
+  // market name). Audit /audit-match (Arsenal vs Coventry City): TEAM_WIN_MATCH
+  // (and its set-mates WIN_OR_BTTS, TEAM_WIN_OR_CLEAN_SHEET) sat in
+  // FORBET_TEAM_PARAM_MARKETS but not in this gate list, so extractParamValue
+  // returned undefined before reaching the team-side branch and "Arsenal FC
+  // wygra mecz" landed under a meaningless "base" param instead of HOME —
+  // never merging with peer bookmakers' HOME/AWAY rows. Spreading the set
+  // keeps the two lists from drifting apart again.
+  ...FORBET_TEAM_PARAM_MARKETS,
   ...PLAYER_PARAM_MARKETS,
 ];
 

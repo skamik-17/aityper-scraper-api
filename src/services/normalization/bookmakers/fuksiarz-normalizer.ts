@@ -130,9 +130,17 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "125": "HOME_WIN_BOTH_HALVES",
   "126": "HOME_WIN_BOTH_HALVES",
   "15": "PENALTY_AWARDED",
-  "127": "TEAM_WIN_AT_LEAST_ONE_HALF",
+  // "<Team> wygra przynajmniej jedną połowę" (ids 127/128) is quoted per team
+  // — map to the HOME_ side-specific catalog code (where the other nine
+  // bookmakers keep this bet) and let the AWAY_SIDE_VARIANT flip below
+  // resolve the away-team raw market to AWAY_WIN_AT_LEAST_ONE_HALF, same
+  // pattern as the "wygra obie połowy" sibling (125/126). The old
+  // TEAM_WIN_AT_LEAST_ONE_HALF param route duplicated the bet in the UI and
+  // excluded fuksiarz from the main comparison pool (audit-match, Arsenal vs
+  // Coventry City).
+  "127": "HOME_WIN_AT_LEAST_ONE_HALF",
   "-30331": "PENALTY_AWARDED_TEAM",
-  "128": "TEAM_WIN_AT_LEAST_ONE_HALF",
+  "128": "HOME_WIN_AT_LEAST_ONE_HALF",
   "-30332": "PENALTY_AWARDED_TEAM",
   "106": "HOME_SCORE_BOTH_HALVES",
   "107": "HOME_SCORE_BOTH_HALVES",
@@ -266,6 +274,7 @@ const AWAY_SIDE_VARIANT: Partial<Record<NormalizedMarketType, NormalizedMarketTy
   HOME_WIN_TO_NIL: "AWAY_WIN_TO_NIL",
   HOME_SCORE_BOTH_HALVES: "AWAY_SCORE_BOTH_HALVES",
   HOME_WIN_BOTH_HALVES: "AWAY_WIN_BOTH_HALVES",
+  HOME_WIN_AT_LEAST_ONE_HALF: "AWAY_WIN_AT_LEAST_ONE_HALF",
   HALF_TIME_HOME_WIN_TO_NIL: "HALF_TIME_AWAY_WIN_TO_NIL",
   SECOND_HALF_HOME_WIN_TO_NIL: "SECOND_HALF_AWAY_WIN_TO_NIL",
   HOME_EXACT_GOALS: "AWAY_EXACT_GOALS",
@@ -974,11 +983,6 @@ function extractParamValue(
     return soleName ? canonicalizeFuksiarzPlayerName(soleName.replace(/^\d+\.\s*/, "").trim()) : undefined;
   }
 
-  // Same convention as the STS normalizer: the parameter is the team side.
-  if (marketCode === "TEAM_WIN_AT_LEAST_ONE_HALF") {
-    return resolveTeamSide(raw.name, ctx) ?? undefined;
-  }
-
   // CORNERS_TEAM_RANGE's catalog parameter is the team side (HOME/AWAY), not
   // a line — the range buckets ("0-2"/"3-4"/"5-6"/"7+") carry no numeric
   // threshold to parse. Without this, the generic line-parsing fallback
@@ -1329,7 +1333,8 @@ function normalizeSelectionForMarket(
     case "BTTS_BOTH_HALVES":
     case "BTTS_2PLUS_GOALS":
     case "OWN_GOAL":
-    case "TEAM_WIN_AT_LEAST_ONE_HALF":
+    case "HOME_WIN_AT_LEAST_ONE_HALF":
+    case "AWAY_WIN_AT_LEAST_ONE_HALF":
     case "TEAM_WIN_BOTH_HALVES":
     case "AWAY_WIN_BOTH_HALVES":
     case "HOME_WIN_TO_NIL":

@@ -3782,15 +3782,17 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gospodarz - przedział rożnych", en: "Home Corners Range" },
     descriptions: { pl: "Przedział rożnych gospodarzy", en: "Home team corners range" },
     hasParameter: false,
-    // audit-match (Arsenal vs Coventry City), catalog issue 7/12: superbet's
-    // raw offer ("Arsenal - przedział rzutów rożnych") uses 2-wide top
-    // buckets "5-6"/"7+" instead of a single "5+" bucket — both '5+' (sts-
-    // style single top bucket, still kept for back-compat) and '5-6'/'7+'
-    // (superbet-style) are declared so neither bookmaker's real selections
-    // are flagged as orphan/unrecognized.
-    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
+    // Round 9 /audit-match (Arsenal vs Coventry City): this code is now
+    // sts's exact-count product ONLY (0/1/2/3+). superbet's structurally
+    // different 2-wide-bucket product ("0-2"/"3-4"/"5-6"/"7+") used to be
+    // declared here too (catalog issue 7/12) so neither bookmaker's raw
+    // selections were flagged as orphan — but showing both bucket schemes
+    // in one comparison row implied a same-bet comparability that doesn't
+    // exist. Split superbet's shape out to its own HOME_CORNERS_RANGE_WIDE
+    // code instead.
+    selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych", "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5+": "Gospodarze zdobędą 5 lub więcej rzutów rożnych", "5-6": "Gospodarze zdobędą 5-6 rzutów rożnych", "7+": "Gospodarze zdobędą 7 lub więcej rzutów rożnych" },
+    descriptionTemplates: { "0": "Gospodarze nie zdobędą żadnego rzutu rożnego", "1": "Gospodarze zdobędą 1 rzutów rożnych", "2": "Gospodarze zdobędą 2 rzutów rożnych", "3+": "Gospodarze zdobędą 3 lub więcej rzutów rożnych" },
     displayOrder: 237
   },
   {
@@ -3802,14 +3804,46 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "Gość - przedział rożnych", en: "Away Corners Range" },
     descriptions: { pl: "Przedział rożnych gości", en: "Away team corners range" },
     hasParameter: false,
-    // audit-match (Arsenal vs Coventry City), catalog issue 7/12: same fix
-    // as HOME_CORNERS_RANGE above — superbet's away-side raw offer
-    // ("Coventry City - przedział rzutów rożnych") uses the same '5-6'/'7+'
-    // 2-wide top buckets instead of a single '5+'.
-    selections: ["0", "1", "2", "3+", "0-2", "3-4", "5+", "5-6", "7+"],
+    // Round 9 /audit-match (Arsenal vs Coventry City): same split as
+    // HOME_CORNERS_RANGE above — this code is now sts's exact-count product
+    // only; superbet's 2-wide-bucket product moved to AWAY_CORNERS_RANGE_WIDE.
+    selections: ["0", "1", "2", "3+"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych", "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5+": "Goście zdobędą 5 lub więcej rzutów rożnych", "5-6": "Goście zdobędą 5-6 rzutów rożnych", "7+": "Goście zdobędą 7 lub więcej rzutów rożnych" },
+    descriptionTemplates: { "0": "Goście nie zdobędą żadnego rzutu rożnego", "1": "Goście zdobędą 1 rzutów rożnych", "2": "Goście zdobędą 2 rzutów rożnych", "3+": "Goście zdobędą 3 lub więcej rzutów rożnych" },
     displayOrder: 238
+  },
+  {
+    numericId: 1427,
+    code: "HOME_CORNERS_RANGE_WIDE",
+    slug: "home-corners-range-wide",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "rozne",
+    labels: { pl: "Gospodarz - przedział rożnych (szeroki)", en: "Home Corners Range (Wide)" },
+    descriptions: { pl: "Przedział rożnych gospodarzy w szerszych, 2-progowych kubełkach.", en: "Home team corners range using wider, 2-wide bucket thresholds." },
+    hasParameter: false,
+    // Round 9 /audit-match (Arsenal vs Coventry City): superbet's raw offer
+    // ("Arsenal - przedział rzutów rożnych") uses 2-wide top buckets
+    // "5-6"/"7+" instead of sts's discrete "0"/"1"/"2"/"3+" scheme — split
+    // into its own code so the two structurally different bucket products
+    // don't sit in one comparison row implying false comparability.
+    selections: ["0-2", "3-4", "5-6", "7+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5-6": "Gospodarze zdobędą 5-6 rzutów rożnych", "7+": "Gospodarze zdobędą 7 lub więcej rzutów rożnych" },
+    displayOrder: 237.5
+  },
+  {
+    numericId: 1428,
+    code: "AWAY_CORNERS_RANGE_WIDE",
+    slug: "away-corners-range-wide",
+    category: MarketCategory.STATYSTYKI,
+    subCategory: "rozne",
+    labels: { pl: "Gość - przedział rożnych (szeroki)", en: "Away Corners Range (Wide)" },
+    descriptions: { pl: "Przedział rożnych gości w szerszych, 2-progowych kubełkach.", en: "Away team corners range using wider, 2-wide bucket thresholds." },
+    hasParameter: false,
+    selections: ["0-2", "3-4", "5-6", "7+"],
+    viewType: ViewType.COMBINATION,
+    descriptionTemplates: { "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5-6": "Goście zdobędą 5-6 rzutów rożnych", "7+": "Goście zdobędą 7 lub więcej rzutów rożnych" },
+    displayOrder: 238.5
   },
   {
     numericId: 239,

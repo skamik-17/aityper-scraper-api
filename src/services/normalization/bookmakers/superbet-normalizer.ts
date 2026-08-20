@@ -217,10 +217,11 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   733: "CORNERS_TEAM", // "{away} - liczba rzutów rożnych"
   // audit-match (Arsenal vs Coventry City): bucketed range variant ("0-2",
   // "3-4", "5-6", "7+"), a different bet shape from the O/U ladder above -
-  // routed to the dedicated HOME/AWAY_CORNERS_RANGE codes instead of
-  // colliding with CORNERS_TEAM's over/under selections.
-  685: "HOME_CORNERS_RANGE", // "{home} - przedział rzutów rożnych"
-  739: "AWAY_CORNERS_RANGE", // "{away} - przedział rzutów rożnych"
+  // routed to the dedicated *_CORNERS_RANGE_WIDE codes (round 9: split off
+  // from HOME/AWAY_CORNERS_RANGE, which is sts's discrete-count product —
+  // structurally incompatible bucket schemes, not the same bet).
+  685: "HOME_CORNERS_RANGE_WIDE", // "{home} - przedział rzutów rożnych"
+  739: "AWAY_CORNERS_RANGE_WIDE", // "{away} - przedział rzutów rożnych"
   873: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {home} liczba rzutów rożnych"
   884: "HALF_TIME_CORNERS_TEAM", // "1. połowa - {away} liczba rzutów rożnych"
   699: "CORNERS_RANGE", // "Liczba rzutów rożnych - przedziały"
@@ -1069,6 +1070,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CORNERS_RANGE":
     case "HOME_CORNERS_RANGE":
     case "AWAY_CORNERS_RANGE":
+    case "HOME_CORNERS_RANGE_WIDE":
+    case "AWAY_CORNERS_RANGE_WIDE":
       return normalizeRangeSelection(trimmed, lower);
 
     case "HALF_TIME_HOME_EXACT_GOALS": {

@@ -111,7 +111,12 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   725: "OTHER", // "Mecz od X do Y minuty"
 
   // ===== Goals - ranges / exact =====
-  200807: "GOAL_RANGE", // "Przedział goli"
+  // 200807 quotes the overlapping-band "multigoal" ladder (1-2..5-6, no 0/
+  // 4+/6+/7+ exhaustive-partition buckets) - the same shape sts sends under
+  // MULTI_GOAL_RANGE, not the disjoint exhaustive-partition GOAL_RANGE
+  // family (confirmed via live re-scrape: exactly 15/15 selections match
+  // MULTI_GOAL_RANGE's ladder, none match GOAL_RANGE-only codes like 0/4+).
+  200807: "MULTI_GOAL_RANGE", // "Przedział goli"
   200818: "HOME_GOAL_RANGE", // "{home} - przedział goli"
   200831: "AWAY_GOAL_RANGE", // "{away} - przedział goli"
   200820: "HALF_TIME_GOAL_RANGE", // "1. połowa - przedział goli"
@@ -135,6 +140,8 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   200810: "FIRST_GOAL_AND_RESULT", // "1. gol & mecz"
 
   // ===== Halves =====
+  200255: "HALF_TIME_HOME_TO_SCORE", // "1.połowa - {home} strzeli gola"
+  200242: "HALF_TIME_AWAY_TO_SCORE", // "1.połowa - {away} strzeli gola"
   574: "HALF_WITH_MORE_GOALS", // "Połowa z większą liczbą goli"
   200813: "HOME_HALF_WITH_MOST_GOALS", // "Połowa z największą liczbą goli {home}"
   200827: "AWAY_HALF_WITH_MOST_GOALS", // "Połowa z największą liczbą goli {away}"
@@ -429,20 +436,29 @@ const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
  *    every superbet corners-per-team line silently dropped (paramValue
  *    undefined -> bare key shared with the wrong shape). Peers (betclic,
  *    betcris, fortuna, lvbet) already key this code by HOME:/AWAY: line.
- *  - CARDS_TEAM, HALF_TIME_CORNERS_TEAM, TEAM_TOTAL_WOODWORK_SHOTS,
- *    SECOND_HALF_CORNERS_TEAM: catalog selections ARE side-prefixed
- *    (HOME_OVER/AWAY_OVER, via SIDED_SELECTION_MARKETS) but the side was
- *    only in the selection code, not the parameter - two raw markets (home
- *    line, away line) then collided on the SAME (type, param) key and the
- *    market-type-grouper's rawMarketName guard silently dropped whichever
- *    arrived second (confirmed: HALF_TIME_CORNERS_TEAM:1.5 showed only the
- *    away team's odds, Arsenal's identical-shaped line vanished).
+ *  - HALF_TIME_CORNERS_TEAM, TEAM_TOTAL_WOODWORK_SHOTS, SECOND_HALF_CORNERS_TEAM:
+ *    catalog selections ARE side-prefixed (HOME_OVER/AWAY_OVER, via
+ *    SIDED_SELECTION_MARKETS) but the side was only in the selection code,
+ *    not the parameter - two raw markets (home line, away line) then
+ *    collided on the SAME (type, param) key and the market-type-grouper's
+ *    rawMarketName guard silently dropped whichever arrived second
+ *    (confirmed: HALF_TIME_CORNERS_TEAM:1.5 showed only the away team's
+ *    odds, Arsenal's identical-shaped line vanished).
+ *  - CARDS_TEAM was here too until audit round 6 (Arsenal vs Coventry City):
+ *    the grouper has since grown a disjoint-selection-code merge path
+ *    (market-type-grouper.ts "Case 2", hasDeclaredVocabulary) that safely
+ *    merges two same-param raw markets with non-overlapping selection codes
+ *    for any catalog entry with a declared vocabulary - CARDS_TEAM qualifies
+ *    (HOME_OVER/HOME_UNDER/AWAY_OVER/AWAY_UNDER), so the side-prefixed param
+ *    was no longer needed and was actively splitting superbet's per-team
+ *    cards O/U into two non-comparable "HOME:X"/"AWAY:X" rows instead of the
+ *    single bare-"X" row peers (betcris/lvbet/fuksiarz) share. Left here
+ *    for the other three markets, which were not re-verified this round.
  */
 const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS_ON_TARGET",
   "TEAM_TOTAL_SHOTS",
   "CORNERS_TEAM",
-  "CARDS_TEAM",
   "HALF_TIME_CORNERS_TEAM",
   "TEAM_TOTAL_WOODWORK_SHOTS",
   "SECOND_HALF_CORNERS_TEAM",
@@ -955,6 +971,8 @@ function normalizeSelectionForMarket(
     case "BOTH_HALVES_GOALS":
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
+    case "HALF_TIME_HOME_TO_SCORE":
+    case "HALF_TIME_AWAY_TO_SCORE":
     case "HOME_WIN_BOTH_HALVES":
     case "AWAY_WIN_BOTH_HALVES":
     case "HOME_WIN_AT_LEAST_ONE_HALF":

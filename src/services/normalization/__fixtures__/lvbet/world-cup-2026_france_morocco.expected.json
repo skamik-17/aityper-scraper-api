@@ -12559,6 +12559,16 @@
             "code": "PENALTY",
             "label": "Z rzutu karnego",
             "odds": 8.75
+          },
+          {
+            "code": "OWN_GOAL",
+            "label": "Gol samobójczy",
+            "odds": 25
+          },
+          {
+            "code": "NO_GOAL",
+            "label": "Bez goli",
+            "odds": 10
           }
         ]
       },

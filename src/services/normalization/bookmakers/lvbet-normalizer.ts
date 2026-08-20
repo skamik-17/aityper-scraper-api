@@ -1653,15 +1653,17 @@ function normalizeSelectionForMarket(
     // City, GOLE/FIRST_GOAL_METHOD): had no dedicated case, so every
     // selection fell through the default branch's YES/NO -> OVER/UNDER ->
     // 1X2 fallbacks and landed on UNKNOWN, collapsing all 6 raw prices into
-    // one shared UNKNOWN row. The catalog's 4-outcome shape (HEADER/PENALTY/
-    // FREE_KICK/OTHER) has no slot for "Gol samobójczy" (own goal) or "Bez
-    // goli" (no goals) — drop those two instead of leaking them as UNKNOWN.
+    // one shared UNKNOWN row. The catalog now has 6 outcomes (HEADER/PENALTY/
+    // FREE_KICK/OWN_GOAL/NO_GOAL/OTHER, see market-catalog.ts) so "Gol
+    // samobójczy" (own goal) and "Bez goli" (no goals) map instead of dropping.
     case "FIRST_GOAL_METHOD": {
       const normalized = normalizeMarketName(trimmed);
       if (/^z głowki$/.test(normalized)) return "HEADER" as NormalizedSelection;
       if (/^z rzutu karnego$/.test(normalized)) return "PENALTY" as NormalizedSelection;
       if (/^z rzutu wolnego$/.test(normalized)) return "FREE_KICK" as NormalizedSelection;
       if (/^inna metoda$/.test(normalized)) return "OTHER" as NormalizedSelection;
+      if (/^gol samobojczy$/.test(normalized)) return "OWN_GOAL" as NormalizedSelection;
+      if (/^bez goli$/.test(normalized)) return "NO_GOAL" as NormalizedSelection;
       return null;
     }
 

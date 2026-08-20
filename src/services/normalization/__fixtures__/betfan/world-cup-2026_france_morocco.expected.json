@@ -5189,9 +5189,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "SECOND_HALF_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:1",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1",
         "parameters": null,
         "selections": [
           {
@@ -5241,9 +5241,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "SECOND_HALF_TOTAL_GOALS",
-        "marketKey": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:2",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "2",
         "parameters": null,
         "selections": [
           {

@@ -1275,6 +1275,25 @@ function normalizeSelectionForMarket(
   }
 }
 
+// Betfan quotes whole-number over/under lines as bare Polish text ("Poniżej
+// 2"/"Powyżej 2") with no decimal point and no leading sign, while its
+// half-number lines ("Poniżej 1.5") carry a decimal point that the shared
+// parseOverUnderLine picks up fine. The shared helper's own integer branch
+// only matches signed literals ("+2"/"-2", the handicap-style shape), so it
+// never matches these. Without a paramValue, a hasParameter:true "decimal"
+// market is dropped entirely by the grouper (see the CORNERS_TEAM_RANGE
+// comment below), so every whole-goal line silently vanished from betfan's
+// TOTAL_GOALS and HALF_TIME_TOTAL_GOALS offers (audit-match, Arsenal vs
+// Coventry City: line "2" missing from TOTAL_GOALS, line "1" missing from
+// HALF_TIME_TOTAL_GOALS, even though both are present in the raw offer).
+function parseBetfanBareIntegerOverUnderLine(selectionNames: string[]): string | undefined {
+  for (const name of selectionNames) {
+    const match = name.trim().match(/^(?:powy[żz]ej|poni[żz]ej)\s+(\d+)$/i);
+    if (match) return match[1];
+  }
+  return undefined;
+}
+
 function extractParamValue(
   marketCode: NormalizedMarketType,
   raw: RawBookmakerMarket,
@@ -1333,7 +1352,8 @@ function extractParamValue(
       return (
         parseDecimalLine(raw.name) ??
         parseDecimalLine(groupName) ??
-        parseOverUnderLine(selectionNames)
+        parseOverUnderLine(selectionNames) ??
+        parseBetfanBareIntegerOverUnderLine(selectionNames)
       );
   }
 }

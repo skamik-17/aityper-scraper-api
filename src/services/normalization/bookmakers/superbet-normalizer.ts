@@ -628,6 +628,25 @@ const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
   "GOAL_BY_MINUTE",
 ]);
 
+/**
+ * Superbet-specific full-name aliases: superbet quotes a small number of
+ * players under a longer legal/registered name (including a middle name)
+ * than every other bookmaker's roster form, which strands the same
+ * real-world player in a second dropdown/parameter row instead of joining
+ * the shared one (audit-match, Arsenal vs Coventry City, PLAYER_GOAL_AND_ASSIST:
+ * superbet's "Mason-Clark, Ephron Jardell" never merged with betcris/betfan/
+ * lvbet/sts's "Ephron Mason-Clark").
+ */
+const SUPERBET_PLAYER_NAME_ALIASES: Record<string, string> = {
+  "ephron jardell mason-clark": "Ephron Mason-Clark",
+};
+
+function canonicalizeSuperbetPlayerName(name: string): string {
+  const canonical = canonicalizePlayerName(name);
+  const alias = SUPERBET_PLAYER_NAME_ALIASES[canonical.toLowerCase()];
+  return alias ?? canonical;
+}
+
 function extractSuperbetMarketId(marketName: string): number | null {
   const match = marketName.match(/^Rynek\s+(\d+)$/iu);
   return match ? Number(match[1]) : null;
@@ -820,6 +839,16 @@ function normalizeSuperbetHandicapSelection(
   return normalize1x2Selection(stripped || trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 }
 
+// Canonical HT/FT double-result ordering used by the market-catalog codes
+// for DOUBLE_RESULT_PAIR ("1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1",
+// "2/X", "2/2" - HT outer loop, FT inner loop, each 1/X/2). Superbet's raw
+// selections join the two legs in arbitrary order ("2/X lub 2/1"), which
+// produces an out-of-catalog code ("2/X_OR_2/1") instead of the canonical
+// "2/1_OR_2/X" - sort each pair by this index before joining so every
+// superbet selection lands on a catalog-defined code (audit-match, Arsenal
+// vs Coventry City, DOUBLE_RESULT_PAIR: "2/X_OR_2/1" orphaned).
+const HT_FT_PAIR_ORDER = ["1/1", "1/X", "1/2", "X/1", "X/X", "X/2", "2/1", "2/X", "2/2"];
+
 function normalizeSelectionForMarket(
   selectionName: string,
   marketCode: NormalizedMarketType,
@@ -1000,7 +1029,10 @@ function normalizeSelectionForMarket(
       const match = trimmed.match(/^([1X2]\s*\/\s*[1X2])\s+lub\s+([1X2]\s*\/\s*[1X2])$/i);
       if (match) {
         const compact = (part: string) => part.replace(/\s+/g, "").toUpperCase();
-        return `${compact(match[1])}_OR_${compact(match[2])}` as NormalizedSelection;
+        const [first, second] = [compact(match[1]), compact(match[2])].sort(
+          (a, b) => HT_FT_PAIR_ORDER.indexOf(a) - HT_FT_PAIR_ORDER.indexOf(b)
+        );
+        return `${first}_OR_${second}` as NormalizedSelection;
       }
       return "UNKNOWN";
     }
@@ -1259,13 +1291,13 @@ function normalizeSelectionForMarket(
       // price is never merged into the 1+ comparison column.
       const withLine = cleaned.match(/^(.+?)\s*-\s*powy[żz]ej\s+(\d+(?:[.,]\d+)?)\s*$/iu);
       if (withLine) {
-        const player = canonicalizePlayerName(withLine[1].trim());
+        const player = canonicalizeSuperbetPlayerName(withLine[1].trim());
         const atLeast = Math.floor(parseFloat(withLine[2].replace(",", "."))) + 1;
         return (atLeast <= 1 ? player : `${player} ${atLeast}+`) as NormalizedSelection;
       }
       // Superbet quotes players as "Lastname, Firstname"; canonicalize to
       // "Firstname Lastname" so selections line up across bookmakers.
-      return canonicalizePlayerName(cleaned) as NormalizedSelection;
+      return canonicalizeSuperbetPlayerName(cleaned) as NormalizedSelection;
     }
 
     // Per-player stat-line markets (see PLAYER_STAT_PARAM_MARKETS): the
@@ -1375,7 +1407,7 @@ function extractParamValue(
       const cleaned = name.replace(/^\d+\.\s*/, "").trim();
       const withLine = cleaned.match(/^(.+?)\s*-\s*powy[żz]ej\s+\d+(?:[.,]\d+)?\s*$/iu);
       const playerPart = withLine ? withLine[1] : cleaned;
-      if (playerPart) return canonicalizePlayerName(playerPart.trim());
+      if (playerPart) return canonicalizeSuperbetPlayerName(playerPart.trim());
     }
     return undefined;
   }

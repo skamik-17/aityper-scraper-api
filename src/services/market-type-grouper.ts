@@ -563,6 +563,12 @@ function extractEmbeddedHandicapLine(rawName: string): number | null {
 function getParameterLabel(param: string, marketType: string): string {
   if (param === "base") return "";
 
+  // The synthetic bucket-vocabulary marker (see groupMarketsByTypeWithParameters)
+  // groups "0-4"/"5-6"/"7+" or "0".."6+" ladder selections that have no
+  // numeric line of their own — give the tab a readable label instead of the
+  // bare internal marker string.
+  if (param === "exact") return "Dokładna liczba";
+
   const marketDef = getMarketByCode(marketType);
 
   // Handicap markets: paramValue is the home team's signed line.
@@ -734,6 +740,32 @@ export function groupMarketsByTypeWithParameters(
       if (extracted) param = canonicalizeParamValue(extracted);
     }
 
+    // Bucket-shaped sub-markets ("0-4"/"5-6"/"7+", or "0".."6+") that the
+    // catalog declares as extra selections alongside OVER/UNDER (today:
+    // HALF_TIME_CORNERS_TOTAL, HALF_TIME_CARDS_TOTAL) have no numeric line of
+    // their own, so they stay on "base" here — where the decimal-parameterType
+    // drop guard below would silently discard a genuine, currently-priced
+    // bookmaker row (round 7b /audit-match Arsenal vs Coventry City: betclic's
+    // "Liczba Kartek - 1. połowa" 0/1/2/3/4/5/6+ ladder and betclic/etoto's
+    // "0-4"/"5-6"/"7+" HT corners buckets — both normalizers already emit
+    // these exact catalog codes, but nothing downstream ever gave them a
+    // parameter bucket to land in). Key them under a distinct, stable,
+    // non-numeric parameter ("exact") so they surface as their own
+    // comparison row instead of vanishing; the guards below only ever match
+    // "base", so "exact" passes through untouched.
+    if (
+      param === "base" &&
+      parameterType === "decimal" &&
+      entryDef &&
+      market.selections.length > 0 &&
+      market.selections.every((sel) => {
+        const code = sel.normalizedName || sel.name;
+        return code !== "OVER" && code !== "UNDER" && entryDef.selections.includes(code);
+      })
+    ) {
+      param = "exact";
+    }
+
     // Player-scoped markets key their parameter by player name; unify the
     // name order so the same player merges across bookmakers.
     if (parameterType === "player" && param !== "base") {
@@ -772,9 +804,12 @@ export function groupMarketsByTypeWithParameters(
     // On numeric-line markets, reject params that are neither a number nor a
     // side-scoped line ("HOME:5.5"): bare side tokens or score notation mean
     // the line failed to parse upstream and would render as a garbage chip.
+    // "exact" is exempted — it is the deliberate bucket-vocabulary marker set
+    // above, not an unparsed line, so this guard must not undo that recovery.
     if (
       parameterType === "decimal" &&
       param !== "base" &&
+      param !== "exact" &&
       !/^[+-]?\d+(\.\d+)?$/.test(param) &&
       !/^(HOME|AWAY):[+-]?\d+(\.\d+)?$/.test(param)
     ) {

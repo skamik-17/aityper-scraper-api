@@ -9351,7 +9351,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.GOLE,
     subCategory: "przedzialy",
     labels: { pl: "Gol do minuty", en: "Goal by Minute" },
-    descriptions: { pl: "Obstawiasz, czy pierwszy gol w meczu padnie przed, czy po wybranej minucie (np. 1., 5., 10. lub 15.).", en: "Bet on whether the first goal of the match falls before or after a chosen minute mark (e.g. the 1st, 5th, 10th or 15th)." },
+    // Round 7b /audit-match (Arsenal vs Coventry City): the parameter axis
+    // (0.5/1.5) is a GOAL-COUNT threshold ("Liczba goli - do X. minuty" ==
+    // number of goals scored by minute X), not a minute itself — the minute
+    // checkpoint is instead encoded per-selection (UNDER_5MIN..OVER_35MIN).
+    // The previous wording implied the parameter tab picks the minute.
+    descriptions: { pl: "Obstawiasz, ile bramek padnie do wybranej minuty meczu — zakładka 0.5 dotyczy przynajmniej 1 gola, zakładka 1.5 przynajmniej 2 goli, a konkretna minuta (np. 5., 10., 15.) jest wybierana wśród przycisków.", en: "Bet on how many goals are scored by a given minute of the match — the 0.5 tab covers at least 1 goal, the 1.5 tab at least 2 goals, and the specific minute checkpoint (e.g. 5th, 10th, 15th) is chosen among the buttons." },
     hasParameter: true,
     parameterType: "decimal",
     // audit-match (Arsenal vs Coventry City), catalog issue 11/12: superbet

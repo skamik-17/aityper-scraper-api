@@ -5789,7 +5789,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Wskazujesz, w którym przedziale czasowym (1-30, 31-60 lub od 61. minuty) padnie pierwszy gol meczu.", en: "Pick the time window (1-30, 31-60, or from the 61st minute) in which the first goal of the match is scored." },
     hasParameter: false,
     selections: ["1-30", "31-60", "61+"],
-    viewType: ViewType.SINGLE_SELECTION,
+    // audit-match (Arsenal vs Coventry City), closing round: SINGLE_SELECTION
+    // is for markets with exactly one bettable outcome and only ever renders
+    // the first one it finds (see SingleSelection.tsx) — with 3 mutually
+    // exclusive time windows here, that silently dropped 2 of 3 selections.
+    // Found by the visual-judge pass (view_type_mismatch, matches mechanical
+    // flag too).
+    viewType: ViewType.TRIPLE_BUTTONS,
     descriptionTemplates: { "1-30": "Pierwszy gol meczu padnie między 1. a 30. minutą", "31-60": "Pierwszy gol meczu padnie między 31. a 60. minutą", "61+": "Pierwszy gol meczu padnie po 61. minucie (lub nie padnie wcale)" },
     displayOrder: 296,
   },
@@ -6057,7 +6063,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "W jaki sposob padnie pierwsza bramka meczu - glowa, rzut karny, rzut wolny bezposredni czy inny sposob.", en: "How the first goal of the match will be scored - header, penalty, direct free kick, or other method." },
     hasParameter: false,
     selections: ["HEADER", "PENALTY", "FREE_KICK", "OTHER"],
-    viewType: ViewType.SINGLE_SELECTION,
+    // audit-match (Arsenal vs Coventry City), closing round: same
+    // SINGLE_SELECTION-only-shows-one-outcome issue as FIRST_GOAL_TIME_30MIN
+    // above, here with 4 mutually exclusive methods; COMBINATION renders an
+    // arbitrary number of outcomes so all 4 stay visible.
+    viewType: ViewType.COMBINATION,
     descriptionTemplates: { HEADER: "Pierwszy gol strzelony głową", PENALTY: "Pierwszy gol z rzutu karnego", FREE_KICK: "Pierwszy gol z rzutu wolnego", OTHER: "Pierwszy gol w inny sposób" },
     displayOrder: 316,
   },

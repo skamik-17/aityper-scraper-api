@@ -97,8 +97,14 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-188": "SECOND_HALF_DOUBLE_CHANCE",
   "-283": "SECOND_HALF_DRAW_NO_BET",
   "121": "SECOND_HALF_BTTS",
-  "-30419": "SECOND_HALF_WIN_TO_NIL",
-  "-30420": "SECOND_HALF_WIN_TO_NIL",
+  // "2. połowa - Arsenal wygra do zera" / "...Coventry..." are team-specific
+  // bets (which team wins the 2nd half to nil), not the generic "either team"
+  // SECOND_HALF_WIN_TO_NIL code — map to the HOME_ variant and let the
+  // AWAY_SIDE_VARIANT flip below resolve -30420 to the AWAY_ code (same
+  // pattern already used for the HALF_TIME_ sibling above; audit-match
+  // Arsenal vs Coventry City, round 7).
+  "-30419": "SECOND_HALF_HOME_WIN_TO_NIL",
+  "-30420": "SECOND_HALF_HOME_WIN_TO_NIL",
   "-30627": "SECOND_HALF_EXACT_GOALS",
   "-30628": "SECOND_HALF_HOME_EXACT_GOALS",
   "-30629": "SECOND_HALF_HOME_EXACT_GOALS",
@@ -261,6 +267,7 @@ const AWAY_SIDE_VARIANT: Partial<Record<NormalizedMarketType, NormalizedMarketTy
   HOME_SCORE_BOTH_HALVES: "AWAY_SCORE_BOTH_HALVES",
   HOME_WIN_BOTH_HALVES: "AWAY_WIN_BOTH_HALVES",
   HALF_TIME_HOME_WIN_TO_NIL: "HALF_TIME_AWAY_WIN_TO_NIL",
+  SECOND_HALF_HOME_WIN_TO_NIL: "SECOND_HALF_AWAY_WIN_TO_NIL",
   HOME_EXACT_GOALS: "AWAY_EXACT_GOALS",
   HALF_TIME_HOME_EXACT_CORNERS: "HALF_TIME_AWAY_EXACT_CORNERS",
   HOME_TEAM_TOTAL_OFFSIDES: "AWAY_TEAM_TOTAL_OFFSIDES",
@@ -1329,6 +1336,15 @@ function normalizeSelectionForMarket(
     case "AWAY_WIN_TO_NIL":
     case "HALF_TIME_WIN_TO_NIL":
     case "SECOND_HALF_WIN_TO_NIL":
+    // Team-sided variants (AWAY_SIDE_VARIANT flips the market code to these,
+    // not the generic codes above) need the same tak/nie -> YES/NO handling;
+    // they fell through to the default case before, leaving raw Polish text
+    // as the normalizedName instead of YES/NO (audit-match Arsenal vs
+    // Coventry City, round 7).
+    case "HALF_TIME_HOME_WIN_TO_NIL":
+    case "HALF_TIME_AWAY_WIN_TO_NIL":
+    case "SECOND_HALF_HOME_WIN_TO_NIL":
+    case "SECOND_HALF_AWAY_WIN_TO_NIL":
     case "HOME_SCORE_BOTH_HALVES":
     case "AWAY_SCORE_BOTH_HALVES":
       return normalizeYesNoSelection(trimmed);

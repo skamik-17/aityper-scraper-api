@@ -7173,8 +7173,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_WIN_TO_NIL",
-        "marketKey": "SECOND_HALF_WIN_TO_NIL",
+        "marketCode": "SECOND_HALF_HOME_WIN_TO_NIL",
+        "marketKey": "SECOND_HALF_HOME_WIN_TO_NIL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -7192,15 +7192,15 @@
         ]
       },
       "index": 208,
-      "marketCode": "SECOND_HALF_WIN_TO_NIL",
+      "marketCode": "SECOND_HALF_HOME_WIN_TO_NIL",
       "rawName": "2. połowa - Francja wygra do zera"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "SECOND_HALF_WIN_TO_NIL",
-        "marketKey": "SECOND_HALF_WIN_TO_NIL",
+        "marketCode": "SECOND_HALF_AWAY_WIN_TO_NIL",
+        "marketKey": "SECOND_HALF_AWAY_WIN_TO_NIL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -7218,7 +7218,7 @@
         ]
       },
       "index": 209,
-      "marketCode": "SECOND_HALF_WIN_TO_NIL",
+      "marketCode": "SECOND_HALF_AWAY_WIN_TO_NIL",
       "rawName": "2. połowa - Maroko wygra do zera"
     },
     {

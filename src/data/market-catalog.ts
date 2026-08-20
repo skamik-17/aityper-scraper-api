@@ -3829,7 +3829,13 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["0-2", "3-4", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
     descriptionTemplates: { "0-2": "Gospodarze zdobędą 0-2 rzutów rożnych", "3-4": "Gospodarze zdobędą 3-4 rzutów rożnych", "5-6": "Gospodarze zdobędą 5-6 rzutów rożnych", "7+": "Gospodarze zdobędą 7 lub więcej rzutów rożnych" },
-    displayOrder: 237.5
+    // displayOrder must be an integer (DB column is INTEGER, no UNIQUE
+    // constraint) - a decimal here (237.5) passed TS but broke the
+    // market_types sync with a Postgres type error, which in turn made
+    // every insert referencing this numericId fail its FK constraint.
+    // Sorts after the whole 1-300ish range used by hand-placed entries;
+    // harmless tie with numericId 1428 below, no collision with anything else.
+    displayOrder: 1427
   },
   {
     numericId: 1428,
@@ -3843,7 +3849,7 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     selections: ["0-2", "3-4", "5-6", "7+"],
     viewType: ViewType.COMBINATION,
     descriptionTemplates: { "0-2": "Goście zdobędą 0-2 rzutów rożnych", "3-4": "Goście zdobędą 3-4 rzutów rożnych", "5-6": "Goście zdobędą 5-6 rzutów rożnych", "7+": "Goście zdobędą 7 lub więcej rzutów rożnych" },
-    displayOrder: 238.5
+    displayOrder: 1428
   },
   {
     numericId: 239,

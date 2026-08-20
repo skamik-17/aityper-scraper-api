@@ -132,8 +132,17 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   36: "AWAY_EXACT_GOALS",
   47: "HOME_WIN_TO_NIL",
   48: "AWAY_WIN_TO_NIL",
-  236: "HOME_CORNERS_RANGE",
-  237: "AWAY_CORNERS_RANGE",
+  // Was HOME_/AWAY_CORNERS_RANGE with bare "0"/"1"/"2"/"3+" selections
+  // passed through literally. Market-display audit (Arsenal vs Coventry
+  // City) proved these are NOT exact counts: STS's own odds only make sense
+  // as the same wide 2-corner buckets peers quote under CORNERS_TEAM_RANGE
+  // (probability-order check, 4 exact cross-bookmaker odds collisions, and
+  // the precedent already fixed for the half-time twin below via
+  // htCornersRangeShift). Routed into the shared CORNERS_TEAM_RANGE pool
+  // instead of a dedicated sts-only code the entire "exact count" premise
+  // of which turned out to be wrong.
+  236: "CORNERS_TEAM_RANGE",
+  237: "CORNERS_TEAM_RANGE",
   814: "HOME_GOAL_RANGE",
   815: "AWAY_GOAL_RANGE",
 
@@ -997,8 +1006,18 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    case "HOME_CORNERS_RANGE":
-    case "AWAY_CORNERS_RANGE":
+    case "CORNERS_TEAM_RANGE": {
+      // Same STS bucket-label quirk as CORNERS_RANGE/HALF_TIME_CORNERS_RANGE
+      // above, for the full-match per-team grid (ids 236/237, was routed to
+      // dedicated HOME_/AWAY_CORNERS_RANGE codes with these same raw labels
+      // passed through literally as "exact counts" - market-display audit,
+      // Arsenal vs Coventry City, proved that premise wrong).
+      const teamCornersRangeShift: Record<string, string> = { "0": "0-2", "1": "3-4", "2": "5-6", "3+": "7+" };
+      const shiftedTeam = teamCornersRangeShift[trimmed];
+      if (shiftedTeam) return shiftedTeam as NormalizedSelection;
+      return trimmed as NormalizedSelection;
+    }
+
     case "PLAYER_GOALS":
     case "PLAYER_FOULS_WON":
     case "PLAYER_FOULS":
@@ -1125,10 +1144,22 @@ function extractParamValue(
     "EACH_TEAM_TOTAL_CARDS_OVER",
     "FIRST_GOAL_TIME",
     "TIME_PERIOD_RESULT",
+    "CORNERS_TEAM_RANGE",
   ];
 
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
+
+  // CORNERS_TEAM_RANGE's catalog param is the team side (HOME/AWAY), not a
+  // numeric line - ids 236/237 always name the side in the raw market name
+  // ("1. drużyna" = home, "2. drużyna" = away), same convention used for
+  // CORNERS_TEAM's HOME_/AWAY_ selection prefix above.
+  if (marketCode === "CORNERS_TEAM_RANGE") {
+    const n = raw.name.toLowerCase();
+    if (n.includes("1. dru")) return "HOME";
+    if (n.includes("2. dru")) return "AWAY";
+    return undefined;
+  }
 
   // Extract interval type from raw market name (e.g., "1. gol - przedziały 15-minutowe" → "15min")
   if (marketCode === "FIRST_GOAL_TIME") {

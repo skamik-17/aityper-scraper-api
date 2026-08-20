@@ -6064,6 +6064,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     displayOrder: 312,
   },
   {
+    // Round 6 /audit-match (Arsenal vs Coventry City): betcris quotes THREE
+    // separate margin lines (paramValue 1/2/3) under this single
+    // bookmakerMarketId, but hasParameter:false meant they all collapsed
+    // onto one unparameterized marketKey at the repository layer — only the
+    // last-processed margin's YES/NO survived, silently dropping the other
+    // two (incl. the best "win by exactly 1" price, 2.85). Parameterize on
+    // the margin exactly like the already-correct SECOND_HALF_AWAY_WIN_
+    // EXACT_MARGIN sibling right above; betcris-normalizer.ts's paramValue
+    // extraction for this code is already wired (see its extractParamValue).
     numericId: 1048,
     code: "SECOND_HALF_HOME_WIN_EXACT_MARGIN",
     slug: "second-half-home-win-exact-margin",
@@ -6071,9 +6080,10 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "specjalne-2h",
     labels: { pl: "2. połowa - gospodarz wygra dokładną różnicą goli", en: "Second Half Home Win Exact Margin" },
     descriptions: { pl: "Sprawdza, czy gospodarz wygra 2. połowę dokładnie o wybraną różnicę bramek (np. 1:0 w tej połowie się liczy, 2:0 już nie).", en: "Checks whether the home team wins the second half by exactly the selected goal margin (e.g. 1:0 in that half counts, 2:0 does not)." },
-    hasParameter: false,
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["YES", "NO"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.PARAMETER_SLIDER,
     descriptionTemplates: { YES: "{homeTeam} wygrywa 2. połowę dokładnie różnicą {param} goli", NO: "{homeTeam} nie wygrywa 2. połowy dokładnie tą różnicą" },
     displayOrder: 313,
   },

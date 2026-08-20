@@ -891,8 +891,23 @@ export function groupMarketsByTypeWithParameters(
           selectionType = canonicalizePlayerName(selectionType);
         }
 
+        // Dedup KEY only — kept separate from the stored `type` below. Plain
+        // `selectionType` treats the generic normalizer fallback "UNKNOWN" as
+        // a real, distinguishing code (non-empty string), so when one raw
+        // market has several genuinely different selections that all land on
+        // "UNKNOWN" (e.g. an Over/Under pair, or several paramValue lines,
+        // under the catch-all OTHER bucket), every one after the first
+        // collided away here even though full-offer-repository.ts's
+        // mergeMarketRecord() already stores all of them correctly (audit-
+        // match Arsenal vs Coventry City, round 5c: lvbet's "1-15 min. -
+        // Arsenal liczba goli 1" DB row has all 4 Over/Under x 2-line
+        // selections, but this grouper still displayed only 1). Falling back
+        // to the raw name for "UNKNOWN" mirrors that same fix one layer up,
+        // in the API-response-building path instead of the DB-write path.
+        const dedupKey = selectionType === "UNKNOWN" ? `UNKNOWN:${selection.name}` : selectionType;
+
         // Check if this selection type already exists
-        if (existingSelections.has(selectionType)) {
+        if (existingSelections.has(dedupKey)) {
           // Duplicate selection type within the same raw market. An
           // open-ended bucket code ("2+", "5+", ...) is BY DEFINITION an
           // aggregate of every tail outcome it covers, so when a bookmaker's
@@ -907,21 +922,25 @@ export function groupMarketsByTypeWithParameters(
           // wins" behavior — overwriting with a different code's price there
           // would silently mix two unrelated outcomes.
           if (selectionType.endsWith("+")) {
-            const existing = existingSelections.get(selectionType)!;
+            const existing = existingSelections.get(dedupKey)!;
             if (existing.odds > 0 && selection.odds > 0) {
               existing.odds = Math.round((1 / (1 / existing.odds + 1 / selection.odds)) * 100) / 100;
             }
           }
         } else {
-          // Add new selection
-          const label = buildSelectionLabel(selectionType, selection.name);
+          // Add new selection. For the generic "UNKNOWN" code, fall back to
+          // the raw bookmaker text as the label — otherwise several distinct
+          // UNKNOWN selections would render as visually identical, unlabeled
+          // rows even after the dedup fix above stops dropping them.
+          const label = buildSelectionLabel(selectionType, selection.name) ??
+            (selectionType === "UNKNOWN" ? selection.name : undefined);
           bmEntry.selections.push({
             type: selectionType,
             odds: selection.odds,
             hasNoTaxPromo: false, // TODO: Detect no-tax promotions
             ...(label ? { label } : {}),
           });
-          existingSelections.set(selectionType, bmEntry.selections[bmEntry.selections.length - 1]);
+          existingSelections.set(dedupKey, bmEntry.selections[bmEntry.selections.length - 1]);
         }
       }
     }

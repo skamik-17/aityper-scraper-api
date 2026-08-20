@@ -166,8 +166,14 @@ function getHandicapStakeSide(stake: LebullStake): "home" | "away" | null {
 
 /**
  * Sentinel odds guard: the sbteam.xyz feed pads some markets with placeholder
- * quotes (0, 1.0, 1.01) that are not real prices and would poison best-odds
+ * quotes (0, 1.0) that are not real prices and would poison best-odds
  * comparisons downstream.
+ *
+ * NOTE: 1.01 itself is a genuine short price on lopsided markets (e.g. a
+ * near-certain favorite in a Draw No Bet or Double Chance market), so the
+ * threshold check below must be inclusive (`>=`) — an earlier strict `>`
+ * comparison silently dropped these legitimate 1.01 selections, producing
+ * one-sided markets (missing HOME/YES leg) downstream.
  */
 const MIN_VALID_ODDS = 1.01;
 
@@ -372,7 +378,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
       (stake) => (stake.stakeName || "").trim().toLowerCase() === "tak"
     );
     multiResultStakeTypeIds.add(stakeType.stakeTypeId);
-    if (yesStake && (yesStake.betFactor || 0) > MIN_VALID_ODDS) {
+    if (yesStake && (yesStake.betFactor || 0) >= MIN_VALID_ODDS) {
       multiResultSelections.push({
         name: combo,
         odds: yesStake.betFactor || 0,
@@ -471,7 +477,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
             odds: stake.betFactor || 0,
             externalId: stake.stakeId ? String(stake.stakeId) : undefined,
           }))
-          .filter((sel) => sel.odds > MIN_VALID_ODDS);
+          .filter((sel) => sel.odds >= MIN_VALID_ODDS);
 
         if (selections.length > 0) {
           markets.push({
@@ -495,7 +501,7 @@ export function parseAllMarkets(event: LebullEvent, teams?: ParsedTeams): Scrape
           odds: stake.betFactor || 0,
           externalId: stake.stakeId ? String(stake.stakeId) : undefined,
         }))
-        .filter((sel) => sel.odds > MIN_VALID_ODDS);
+        .filter((sel) => sel.odds >= MIN_VALID_ODDS);
 
       if (selections.length > 0) {
         markets.push({

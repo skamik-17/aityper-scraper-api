@@ -17087,9 +17087,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_RED_CARD_TEAM",
-        "marketKey": "HALF_TIME_RED_CARD_TEAM",
+        "marketKey": "HALF_TIME_RED_CARD_TEAM:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -17113,9 +17113,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "HALF_TIME_RED_CARD_TEAM",
-        "marketKey": "HALF_TIME_RED_CARD_TEAM",
+        "marketKey": "HALF_TIME_RED_CARD_TEAM:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {

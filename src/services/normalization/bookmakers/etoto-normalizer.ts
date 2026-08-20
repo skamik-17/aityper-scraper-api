@@ -290,6 +290,13 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   // away-side corners-range offer entirely. See ETOTO_TEAM_PARAM_MARKETS.
   [-265]: "HOME", // "<home> suma rzutów rożnych"
   [-266]: "AWAY", // "<away> suma rzutów rożnych"
+  // Audit /audit-match (Arsenal vs Coventry City), round 8: the full-match
+  // RED_CARD_TEAM sibling (-250/-251) was already wired above, but the
+  // half-time variant's ids were missing from this table entirely, so
+  // HALF_TIME_RED_CARD_TEAM fell through to the "base" bucket for both
+  // teams and collided (team identity unresolved).
+  [-248]: "HOME", // "1. połowa - <home> czerwona kartka"
+  [-249]: "AWAY", // "1. połowa - <away> czerwona kartka"
 };
 
 /**
@@ -300,6 +307,7 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
  */
 const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "RED_CARD_TEAM",
+  "HALF_TIME_RED_CARD_TEAM",
   "TEAM_WIN_MATCH",
   "WIN_OR_BTTS",
   "TEAM_WIN_OR_CLEAN_SHEET",

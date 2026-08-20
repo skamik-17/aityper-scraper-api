@@ -107,7 +107,12 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-30518": "HALF_TIME_HOME_EXACT_CORNERS",
   "-2954": "HALF_TIME_CORNERS_HANDICAP",
   "-30515": "CARDS_EXACT",
-  "-30516": "HALF_TIME_CARDS_TOTAL",
+  // "1. połowa - dokładna liczba kartek" (0/1/2/3/4+) is an exact-count
+  // distribution, not an over/under line — map straight to the dedicated
+  // HALF_TIME_CARDS_EXACT catalog code (audit-match, Arsenal vs Coventry
+  // City, round 9 CT-1/other) instead of HALF_TIME_CARDS_TOTAL, whose bucket
+  // labels used to collide with the OTHER catch-all bucket.
+  "-30516": "HALF_TIME_CARDS_EXACT",
   "-30314": "CARDS_HANDICAP",
   "22": "RED_CARD",
   "-250": "RED_CARD_TEAM",
@@ -290,6 +295,13 @@ function normalizeText(value: string): string {
  */
 const FUKSIARZ_PLAYER_NAME_ALIASES: Record<string, string> = {
   "Onyeka Frank, Ogochukwu": "Frank Onyeka",
+  // Fuksiarz abbreviates Victor Torp's given name to a single initial
+  // ("Torp, V"), so the generic comma-swap yields "V Torp" instead of the
+  // full "Victor Torp" every other bookmaker (sts/betfan) quotes — stranding
+  // this player's odds in their own single-book parameter row instead of
+  // merging into the shared row (audit-match, Arsenal vs Coventry City,
+  // PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX round 9).
+  "Torp, V": "Victor Torp",
 };
 
 function canonicalizeFuksiarzPlayerName(raw: string): string {
@@ -415,16 +427,15 @@ function adjustMarketCode(
     // product (audit-match, Arsenal vs Coventry City, round 8 CT-2).
     if (code === "CORNERS_TEAM") return "CORNERS_TEAM_RANGE";
     // Bracket panels of corners/cards totals ("0-5"/"6-8"/"9-11"/"12-14"/"15+",
-    // "0-2"/"3-5"/"6+") have no matching catalog vocabulary — they must not be
-    // wedged into the OVER/UNDER parameter sliders as a fake "0" line.
-    if (code === "CORNERS_TOTAL" || code === "CARDS_TOTAL") return "OTHER";
-  }
-
-  // "1. połowa - dokładna liczba kartek" is an exact-count distribution
-  // (0/1/2/3/4+), not an over/under line of HALF_TIME_CARDS_TOTAL — there is
-  // no half-time exact-cards catalog code yet, so exclude it.
-  if (code === "HALF_TIME_CARDS_TOTAL" && /dokladna liczba kartek/.test(normalizeText(raw.name))) {
-    return "OTHER";
+    // "0-2"/"3-5"/"6+") have dedicated catalog vocabulary (CORNERS_TOTAL_RANGE /
+    // CARDS_TOTAL_RANGE) — without this reroute they were wedged into the
+    // OVER/UNDER parameter sliders as a fake "0" line, or (worse) collapsed
+    // into the generic OTHER bucket where fuksiarz's "Liczba rzutów rożnych"
+    // bucket panel and "Liczba kartek" bucket panel silently merged their
+    // selections into one shared, mislabeled row (audit-match, Arsenal vs
+    // Coventry City, round 9 CT-1/other).
+    if (code === "CORNERS_TOTAL") return "CORNERS_TOTAL_RANGE";
+    if (code === "CARDS_TOTAL") return "CARDS_TOTAL_RANGE";
   }
 
   // Team-sided raw markets: the id map can only point at the HOME_/TEAM_
@@ -890,13 +901,25 @@ function extractParamValue(
     );
   }
 
-  // Per-half Asian handicap and per-half corners handicap: the line lives in
-  // the selection labels ("Algieria (+2.5)"), never in the raw name (which
-  // holds the half number — parsing it would yield a bogus "1" line).
+  // Per-half Asian handicap, per-half corners handicap and the cards
+  // handicap: the line lives in the selection labels ("Algieria (+2.5)",
+  // "Arsenal (-0.5)"), never in the raw name (which for per-half markets
+  // holds the half number — parsing it would yield a bogus "1" line; for
+  // "Kartki - handicap" it holds no number at all).
+  //
+  // CARDS_HANDICAP specifically must use this team-embedded-sign extraction
+  // rather than falling through to the generic parseLineFromSelections below:
+  // that generic path's parseOverUnderLine strips the sign from a match like
+  // "-0.5" (its capture group excludes the leading sign), so "Arsenal (-0.5)"
+  // and "Arsenal (+0.5)" — two DIFFERENT lines fuksiarz quotes side by side —
+  // both collapsed onto the same unsigned "0.5" parameter, silently dropping
+  // one line's odds and misfiling the other's home/away odds under the wrong
+  // sign (audit-match, Arsenal vs Coventry City, round 9 CT-7).
   if (
     marketCode === "FIRST_HALF_ASIAN_HANDICAP" ||
     marketCode === "SECOND_HALF_ASIAN_HANDICAP" ||
-    marketCode === "HALF_TIME_CORNERS_HANDICAP"
+    marketCode === "HALF_TIME_CORNERS_HANDICAP" ||
+    marketCode === "CARDS_HANDICAP"
   ) {
     return extractHandicapLineFromSelections(raw, ctx);
   }
@@ -955,6 +978,16 @@ function extractParamValue(
   // below would derive a phantom decimal param from the first bucket label.
   if (marketCode === "CORNERS_TEAM_RANGE") {
     return resolveTeamSide(raw.name, ctx) ?? undefined;
+  }
+
+  // CORNERS_TOTAL_RANGE / CARDS_TOTAL_RANGE bundle every bucket ("0-5"/"6-8"/
+  // "9-11"/"12-14"/"15+", "0-2"/"3-5"/"6+") as selections of ONE raw market —
+  // there is no per-bucket numeric line to parse. Without this, the generic
+  // line-parsing fallback below would derive a phantom decimal "0" param from
+  // the first bucket label ("0-5" -> "0"), same defect CORNERS_TEAM_RANGE had
+  // (audit-match, Arsenal vs Coventry City, round 9 CT-1/other).
+  if (marketCode === "CORNERS_TOTAL_RANGE" || marketCode === "CARDS_TOTAL_RANGE") {
+    return undefined;
   }
 
   // Digits in these raw names are goal thresholds or half numbers,

@@ -424,10 +424,17 @@ function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationConte
 //   Gustavo Hamer) stranded a duplicate "G. Hamer" row instead of merging
 //   into the full "Gustavo Hamer" form used by betcris/betfan/lvbet/superbet
 //   (audit /audit-match, Arsenal vs Coventry City, PLAYER_GOAL_AND_ASSIST).
+// - "Simms E." (same abbreviated-firstname shorthand, this time for
+//   Coventry's Ellis Simms) reorders to "E. Simms" via the generic flip
+//   above, which stranded a duplicate row under PLAYER_DROPDOWN markets
+//   (e.g. PLAYER_GOAL_AND_ASSIST) instead of merging into the full
+//   "Ellis Simms" form used by betcris/betfan/lvbet (round 7b MINOR audit,
+//   Arsenal vs Coventry City).
 const STS_PLAYER_NAME_OVERRIDES: Record<string, string> = {
   "Borges Rodrigues R.": "Raphael Borges Rodrigues",
   "Brau Miguel Angel": "Miguel Angel Brau Blanquez",
   "Hamer G.": "Gustavo Hamer",
+  "Simms E.": "Ellis Simms",
 };
 
 // Shared reorder+override logic for STS's "Lastname Firstname" player names,

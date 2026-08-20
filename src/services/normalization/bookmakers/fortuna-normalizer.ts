@@ -99,7 +99,12 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-2k": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS", // "1.połowa: <team2> liczba goli"
   "ufo:mtyp:00-3c": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS", // "2.połowa: <team1> liczba goli"
   "ufo:mtyp:00-3d": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS", // "2.połowa: <team2> liczba goli"
-  "ufo:mtyp:00-24": "GOAL_RANGE", // "Mecz: multigole"
+  // "Mecz: multigole" is fortuna's cumulative Multigoal ladder (17 overlapping
+  // bands: 0, 1-2..5-6, 7+ — several are simultaneously true for one final
+  // score), structurally distinct from GOAL_RANGE's exhaustive disjoint
+  // partition. MULTI_GOAL_RANGE's own catalog entry documents this exact
+  // full-match-only scope (audit-match Arsenal vs Coventry City, round 6/7).
+  "ufo:mtyp:00-24": "MULTI_GOAL_RANGE", // "Mecz: multigole"
   // Per-team and per-half "multigole" variants (audit /audit-match,
   // premier-league Arsenal vs Coventry City): same 4-way goal-band product
   // as 00-24, just scoped to one team or one half. Catalog codes exist
@@ -929,6 +934,7 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
 
     case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE":
     case "HOME_GOAL_RANGE":
     case "AWAY_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":

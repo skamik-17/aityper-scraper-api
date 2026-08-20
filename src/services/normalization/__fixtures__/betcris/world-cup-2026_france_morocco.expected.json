@@ -17294,8 +17294,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -17313,7 +17313,7 @@
         ]
       },
       "index": 490,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
@@ -17372,8 +17372,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -17391,7 +17391,7 @@
         ]
       },
       "index": 495,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
@@ -18101,8 +18101,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -18120,15 +18120,15 @@
         ]
       },
       "index": 536,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -18146,15 +18146,15 @@
         ]
       },
       "index": 537,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -18172,15 +18172,15 @@
         ]
       },
       "index": 538,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -18198,7 +18198,7 @@
         ]
       },
       "index": 539,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {
@@ -42181,8 +42181,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -42200,7 +42200,7 @@
         ]
       },
       "index": 1641,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla zawodnika)"
     },
     {

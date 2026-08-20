@@ -207,7 +207,14 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "YellowCardsHandicap": "CARDS_HANDICAP",
   "Team2YellowCardsOverUnder": "CARDS_TEAM",
   "Team1YellowCardsOverUnder": "CARDS_TEAM",
-  "YellowCardsOverUnder": "CARDS_TOTAL",
+  // "Liczba żółtych kartek (liczy się tylko pierwsza żółta kartka dla
+  // zawodnika)" — YELLOW cards only, explicitly excluding a player's second
+  // yellow/red. This is a different bet definition than CARDS_TOTAL, whose
+  // peers (e.g. forbet) weight a red card as 2 in the total — merging
+  // betcris' yellow-only counts into CARDS_TOTAL silently corrupted that
+  // market's definition and best-odds (round6 audit: Arsenal vs Coventry
+  // City). Route to the dedicated YELLOW_CARDS_TOTAL catalog code instead.
+  "YellowCardsOverUnder": "YELLOW_CARDS_TOTAL",
   "FoulsResult": "FOUL_RACE",
   "YellowCards:2ndHalfAsianHandicap": "SECOND_HALF_CARDS_HANDICAP",
   "YellowCards:2ndHalfTeam2Total": "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
@@ -1058,6 +1065,16 @@ const OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "AT_LEAST_ONE_TEAM_OVER_GOALS",
   // HT/FT + total combo carries its goal line in the Swarm base field
   "HALFTIME_FULLTIME_AND_TOTAL",
+  // "Liczba goli 3-drogowo" (bookmakerMarketId "Total3") is name-matched to
+  // TOTAL_GOALS then rewritten to TOTAL_GOALS_3WAY below on the "3-drogowo"
+  // suffix, and carries its goal-count line in the same Swarm "base" field
+  // as every other goal total. Without this entry, extractParamValue always
+  // returned undefined for it, and — because the catalog entry is
+  // parameterType "decimal" — the grouper's base-bucket guard silently
+  // dropped ALL 6 of betcris' lines (1-6) from TOTAL_GOALS_3WAY entirely
+  // (round6 audit: Arsenal vs Coventry City, betcris missing from every
+  // threshold while lvbet covered all six).
+  "TOTAL_GOALS_3WAY",
 ];
 
 // Stat-prop O/U markets (cards/corners/fouls/offsides/shots/throw-ins/goal
@@ -1066,6 +1083,9 @@ const OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
 // (visible as an unlabeled parameter next to peers' 0.5/1.5/2.5).
 const STAT_OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "CARDS_TOTAL",
+  // Shares the same Swarm "base" line convention as CARDS_TOTAL above (see
+  // the YellowCardsOverUnder -> YELLOW_CARDS_TOTAL id-mapping comment).
+  "YELLOW_CARDS_TOTAL",
   "HALF_TIME_CARDS_TOTAL",
   "SECOND_HALF_CARDS_TOTAL",
   "HALF_TIME_AWAY_TEAM_CARDS",
@@ -1166,12 +1186,22 @@ function extractParamValue(
   // carry the margin (1-4) directly in raw.paramValue from the Swarm "base"
   // field, same as CORNERS_RACE_TO above. These are YES/NO props, not
   // over/under or handicap shaped, so they fall through the two lists below
-  // (audit-match: Arsenal vs Coventry City round2).
+  // (audit-match: Arsenal vs Coventry City round2). SECOND_HALF_HOME/AWAY_
+  // WIN_EXACT_MARGIN share the exact same Swarm shape but were missing from
+  // this list, so extractParamValue always returned undefined for them: on
+  // the decimal-parameterized AWAY side this made every margin line collapse
+  // onto the grouper's rejected "base" bucket (parameterType "decimal" +
+  // param "base" is dropped outright), silently deleting the whole betcris
+  // entry from the market; on the HOME side (round6 audit found its catalog
+  // entry itself still has hasParameter:false, a catalog-only fix) this was
+  // moot until that gets fixed, but the extraction must be correct either way.
   if (
     marketCode === "HOME_WIN_EXACT_MARGIN" ||
     marketCode === "AWAY_WIN_EXACT_MARGIN" ||
     marketCode === "FIRST_HALF_HOME_WIN_EXACT_MARGIN" ||
-    marketCode === "FIRST_HALF_AWAY_WIN_EXACT_MARGIN"
+    marketCode === "FIRST_HALF_AWAY_WIN_EXACT_MARGIN" ||
+    marketCode === "SECOND_HALF_HOME_WIN_EXACT_MARGIN" ||
+    marketCode === "SECOND_HALF_AWAY_WIN_EXACT_MARGIN"
   ) {
     return raw.paramValue && raw.paramValue !== "" ? raw.paramValue.replace(",", ".") : undefined;
   }

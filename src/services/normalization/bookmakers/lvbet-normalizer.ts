@@ -280,7 +280,14 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // "Podwójna szansa" player combos are two-player OR bets — structurally
   // different from single-player markets; route them to pair codes first.
   { pattern: /strzelec pierwszego gola - podwojna szansa/, code: "ANY_PLAYER_FIRST_GOAL" },
-  { pattern: /strzelec bramki - podwojna szansa/, code: "TWO_PLAYERS_ANYTIME" },
+  // Raw label is "Strzelec gola - Podwójna szansa" (matching its sibling
+  // "Strzelec gola - Potrójna szansa" below, both using "gola" not "bramki")
+  // — the previous "strzelec bramki - podwojna szansa" pattern never matched
+  // anything (audit-match, Arsenal vs Coventry City, WYNIK_MECZU/
+  // DOUBLE_CHANCE: this dead pattern let all 91 player-pair combo cells fall
+  // through to the generic "podwojna szansa" catch-all and pollute the
+  // full-match DOUBLE_CHANCE market with an UNKNOWN-typed selection).
+  { pattern: /strzelec gola - podwojna szansa/, code: "TWO_PLAYERS_ANYTIME" },
   { pattern: /pierwszy strzelec/, code: "GOALSCORER_FIRST" },
   { pattern: /ostatni strzelec/, code: "GOALSCORER_LAST" },
   { pattern: /strzelec pierwszego gola/, code: "GOALSCORER_FIRST" },
@@ -330,6 +337,16 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /1\. połowa - wynik i obie druzyny strzela/, code: "HALF_TIME_RESULT_AND_BTTS" },
   { pattern: /2\. połowa - wynik i obie druzyny strzela/, code: "SECOND_HALF_RESULT_AND_BTTS" },
   { pattern: /wynik i obie druzyny strzela/, code: "RESULT_AND_BTTS" },
+  // "1./2. Połowa - Podwójna szansa" (half-scoped double chance) shares the
+  // "podwojna szansa" substring with the generic full-match DOUBLE_CHANCE
+  // catch-all (LVBET_MARKET_NAME_PATTERNS, checked only after this list) and
+  // used to collide onto it — a genuinely different product (2nd-half-only
+  // odds 1.04/1.25/2.55) was overwriting the full-match market's own
+  // 1.03/1.09/4.5 (audit-match, Arsenal vs Coventry City, WYNIK_MECZU/
+  // DOUBLE_CHANCE). Both catalog codes already exist and share the same
+  // selection shape as DOUBLE_CHANCE in normalizeSelectionForMarket.
+  { pattern: /1\. połowa - podwojna szansa/, code: "HALF_TIME_DOUBLE_CHANCE" },
+  { pattern: /2\. połowa - podwojna szansa/, code: "SECOND_HALF_DOUBLE_CHANCE" },
   // Odd/even goal counts phrased as "Liczba goli: nieparzysta/parzysta" must not
   // fall into the over/under TOTAL_GOALS family
   { pattern: /1\. połowa - liczba goli: nieparzysta/, code: "HALF_TIME_ODD_EVEN_GOALS" },
@@ -958,11 +975,27 @@ function resolveMarketCode(
   //   total-goals combo, 5 line variants, 14-18 cells each) and "Podwójna
   //   szansa oraz suma goli (przedziały)" (48 cells) both contain "suma
   //   goli" -> were landing in plain TOTAL_GOALS.
+  // NOTE: "przedzia.y" below is deliberately a one-char wildcard, not a typo
+  // for "przedzialy" — normalizeMarketName's NFD diacritic strip removes the
+  // accent from ó/ą/ż/etc. but Polish "ł" has NO NFD decomposition, so it
+  // survives untouched as "ł" (audit-match, Arsenal vs Coventry City: an
+  // ASCII-"l" literal here never matched the real normalized string, letting
+  // this exact combo fall through to the "podwojna szansa" catch-all and
+  // pollute full-match DOUBLE_CHANCE with 46 unrelated UNKNOWN cells).
   if (
     normalizedName === "podwojna szansa i obie druzyny strzela" ||
-    normalizedName === "podwojna szansa oraz suma goli (przedzialy)" ||
+    /^podwojna szansa oraz suma goli \(przedzia.y\)$/.test(normalizedName) ||
     /^\(do przerwy \/ koniec meczu\) i suma goli [\d.]+ [\d.]+$/.test(normalizedName)
   ) {
+    return { code: "OTHER", matchedBy: "pattern" };
+  }
+  // "Podwójna szansa Combo" (double-chance x total-goals/BTTS/win-to-nil
+  // multi-way parlay, 27 cells with inconsistent "Drużyna 1"/team-name
+  // labels) shares the same "podwojna szansa" substring and no catalog shape
+  // fits it — exclude it the same way as the sibling combo products above
+  // instead of letting it pollute full-match DOUBLE_CHANCE (audit-match,
+  // Arsenal vs Coventry City, WYNIK_MECZU/DOUBLE_CHANCE).
+  if (normalizedName === "podwojna szansa combo") {
     return { code: "OTHER", matchedBy: "pattern" };
   }
 
@@ -984,6 +1017,26 @@ function resolveMarketCode(
 function isCatalogSelection(marketCode: NormalizedMarketType, code: string): boolean {
   const metadata = getMarketMetadata(marketCode);
   return metadata ? metadata.selections.includes(code) : false;
+}
+
+/**
+ * LVBet quotes some players by a longer/differently-composed name than the
+ * network-wide canonical form other bookmakers converge on for the SAME
+ * real person, so the shared canonicalizePlayerName() helper (which only
+ * reorders "Lastname, Firstname" -> "Firstname Lastname") does not merge
+ * them (audit-match, Arsenal vs Coventry City, ZAWODNICY/
+ * PLAYER_GOAL_AND_ASSIST): LVBet's "Victor Torp Overgaard" (his full legal
+ * surname) vs betfan/etoto/forbet/sts/superbet's "Torp, Victor" ->
+ * "Victor Torp", fragmenting one player's odds across two selection codes.
+ * Add further real-world aliases here as they are found.
+ */
+const LVBET_PLAYER_NAME_ALIASES: Record<string, string> = {
+  "victor torp overgaard": "Victor Torp",
+};
+
+function normalizeLvbetPlayerName(raw: string): string {
+  const alias = LVBET_PLAYER_NAME_ALIASES[normalizeMarketName(raw)];
+  return alias ?? canonicalizePlayerName(raw);
 }
 
 /**
@@ -1596,6 +1649,22 @@ function normalizeSelectionForMarket(
       return "UNKNOWN" as NormalizedSelection;
     }
 
+    // "Sposób zdobycia pierwszego gola" (audit-match, Arsenal vs Coventry
+    // City, GOLE/FIRST_GOAL_METHOD): had no dedicated case, so every
+    // selection fell through the default branch's YES/NO -> OVER/UNDER ->
+    // 1X2 fallbacks and landed on UNKNOWN, collapsing all 6 raw prices into
+    // one shared UNKNOWN row. The catalog's 4-outcome shape (HEADER/PENALTY/
+    // FREE_KICK/OTHER) has no slot for "Gol samobójczy" (own goal) or "Bez
+    // goli" (no goals) — drop those two instead of leaking them as UNKNOWN.
+    case "FIRST_GOAL_METHOD": {
+      const normalized = normalizeMarketName(trimmed);
+      if (/^z głowki$/.test(normalized)) return "HEADER" as NormalizedSelection;
+      if (/^z rzutu karnego$/.test(normalized)) return "PENALTY" as NormalizedSelection;
+      if (/^z rzutu wolnego$/.test(normalized)) return "FREE_KICK" as NormalizedSelection;
+      if (/^inna metoda$/.test(normalized)) return "OTHER" as NormalizedSelection;
+      return null;
+    }
+
     // Single-player markets: keep each player as its own selection code (the
     // raw label is the player name) instead of collapsing all into UNKNOWN.
     case "GOALSCORER_FIRST":
@@ -1667,8 +1736,9 @@ function normalizeSelectionForMarket(
       }
       // Unify player-name order via the shared canonical form
       // ("Lastname, Firstname" -> "Firstname Lastname") so lvbet merges with
-      // bookmakers quoting the comma convention.
-      return canonicalizePlayerName(trimmed) as NormalizedSelection;
+      // bookmakers quoting the comma convention, plus lvbet-specific
+      // full-name aliases (see LVBET_PLAYER_NAME_ALIASES).
+      return normalizeLvbetPlayerName(trimmed) as NormalizedSelection;
     }
 
     // Player pair/trio combos: reduce to the shared "I. Surname & I. Surname"
@@ -1821,7 +1891,7 @@ function extractParamValue(
   // split (e.g. GOALSCORER_ANYTIME, GOALKEEPER_SAVES_OVER) leave raw.paramValue
   // unset and fall through to the grouper's bundled-player-selection recovery.
   if (metadata.parameterType === "player" && raw.paramValue) {
-    return canonicalizePlayerName(raw.paramValue);
+    return normalizeLvbetPlayerName(raw.paramValue);
   }
 
   const selectionNames = raw.selections.map((s) => s.name);

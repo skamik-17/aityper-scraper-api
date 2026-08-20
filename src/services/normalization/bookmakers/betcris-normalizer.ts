@@ -1524,18 +1524,30 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     // 1+/2+/3+/4+ tiers) — a bare "OVER" from betcris' single-threshold
     // "musi rozpocząć: Powyżej N" bulk markets is always an orphan. Convert
     // it to the matching N+ tier using the numeric line the parser recovers
-    // into raw.name ("... Powyżej 3.5" -> over 3.5 -> "4+"); fall back to the
-    // lowest tier when no line can be recovered.
+    // into raw.name ("... Powyżej 2.5" -> over 2.5 -> "3+"). Gate against the
+    // catalog's own declared selection set (same convention as PLAYER_SHOTS/
+    // PLAYER_SHOTS_ON_TARGET below) instead of the previous 4-tier CLAMP: the
+    // clamp forced betcris' "Powyżej 4.5" (5+, no catalog tier) into the same
+    // "4+" bucket as the genuine "Powyżej 3.5" row for the same player, and
+    // whichever raw market processed later silently overwrote the other's
+    // odds under one shared code (round8 audit betcris-audit issue 1 —
+    // flagged as a placeholder_odds anomaly on 3+/4+ tiers; root cause is
+    // this collision, not a substituted default). An out-of-range tier is
+    // now dropped instead of colliding with its neighbor.
     if (
       (marketCode === "PLAYER_FOULS" || marketCode === "PLAYER_FOULS_WON") &&
       selections.some((sel) => sel.code === "OVER")
     ) {
       const lineMatch = raw.name.match(/powy[żz]ej\s+([\d.,]+)\s*$/i);
       const line = lineMatch ? parseFloat(lineMatch[1].replace(",", ".")) : undefined;
-      const tier = line !== undefined ? Math.min(4, Math.max(1, Math.floor(line) + 1)) : 1;
-      selections = selections.map((sel) =>
-        sel.code === "OVER" ? { ...sel, code: `${tier}+` as NormalizedSelection } : sel
-      );
+      const catalogSelections = getMarketByCode(marketCode)?.selections;
+      selections = selections.flatMap((sel) => {
+        if (sel.code !== "OVER") return [sel];
+        if (line === undefined) return [{ ...sel, code: "1+" as NormalizedSelection }];
+        const tier = `${Math.floor(line) + 1}+`;
+        if (!catalogSelections?.includes(tier)) return [];
+        return [{ ...sel, code: tier as NormalizedSelection }];
+      });
     }
 
     // PLAYER_SHOTS/PLAYER_SHOTS_ON_TARGET: betcris publishes one raw market

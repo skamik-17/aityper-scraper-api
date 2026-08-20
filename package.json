@@ -1,8 +1,14 @@
 {
-  "name": "aityper-backend",
+  "name": "aityper-scraper-api",
   "version": "1.0.0",
-  "description": "Backend service for AITyper - scrapes odds from Polish bookmakers",
+  "description": "Scraper and odds API service for AITyper - scrapes odds from Polish bookmakers, normalizes them, and serves them over HTTP",
   "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skamik-17/aityper-scraper-api.git"
+  },
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",

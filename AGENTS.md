@@ -1,25 +1,28 @@
-# BACKEND KNOWLEDGE BASE
+# AITYPER SCRAPER API - KNOWLEDGE BASE
 
 ## OVERVIEW
-Express + Playwright backend for scraping and normalization.
+Express + Playwright service for scraping, normalizing, and serving Polish bookmaker
+odds. Standalone repo, companion to the `aityper` frontend repo (communicates over
+HTTP only - no shared code).
 
 ## STRUCTURE
 ```
-backend/
+.
 ├── src/          # API, scrapers, services
 ├── scripts/      # DB and maintenance scripts
-├── supabase/     # Local Supabase config
-└── dist/         # Build output
+├── supabase/     # Migrations and local Supabase config
+└── dist/         # Build output (gitignored)
 ```
 
 ## WHERE TO LOOK
 | Task | Location | Notes |
 |------|----------|-------|
-| Server entry | `backend/src/index.ts` | Express app boot and scheduler |
-| Routes | `backend/src/routes/` | API handlers |
-| Scrapers | `backend/src/scrapers/` | Playwright scrapers + base |
-| Services | `backend/src/services/` | Scrape orchestration and normalization |
-| Repos | `backend/src/repositories/` | Supabase queries |
+| Server entry | `src/index.ts` | Express app boot and scheduler |
+| Routes | `src/routes/` | API handlers |
+| Scrapers | `src/scrapers/` | Playwright scrapers + base |
+| Services | `src/services/` | Scrape orchestration and normalization |
+| Repos | `src/repositories/` | Supabase queries |
+| Market catalog | `src/data/market-catalog.ts` | Single source of truth for canonical market codes |
 
 ## CONVENTIONS
 - NodeNext ESM; include `.js` extensions in imports.

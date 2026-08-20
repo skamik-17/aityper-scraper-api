@@ -10,7 +10,7 @@
 import { describe, it, expect } from "vitest";
 import { groupMarketsByTypeWithParameters } from "../market-type-grouper.js";
 import type { ScrapedMarket } from "../../types/full-offer.js";
-import { isUsableOdds } from "../../../../src/lib/odds-quarantine.js";
+import { isUsableOdds } from "../../lib/odds-quarantine.js";
 
 function mkMarket(overrides: Partial<ScrapedMarket>): ScrapedMarket {
   return {

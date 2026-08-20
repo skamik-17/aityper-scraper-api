@@ -124,16 +124,26 @@ export function resolveStorageMarketKey(market: ScrapedMarket, computedKey: stri
   // City, round 7: betcris' 0.5 line's Over/Under was silently dropped by
   // mergeMarketRecord even after the id-only suffix, since bookmakerMarketId
   // alone couldn't tell the two lines apart).
-  if (market.bookmakerMarketId) {
-    const paramSuffix = market.paramValue ? `:${market.paramValue}` : "";
-    return `OTHER:id:${market.bookmakerMarketId}${paramSuffix}`;
-  }
+  const paramSuffix = market.paramValue ? `:${market.paramValue}` : "";
 
+  // A bookmakerMarketId is also NOT always a 1:1 stand-in for "this specific
+  // raw market" — some bookmakers reuse one id across many structurally
+  // identical instances distinguished only by their raw name (sts reuses id
+  // 1264, "<player> - liczba celnych strzałów (musi wyjść w '11')", once per
+  // player, with no separate paramValue field carrying the player identity).
+  // Fold a name hash into the id-based suffix too, or every player's OTHER
+  // row collides into one (audit-match Arsenal vs Coventry City, round 8:
+  // this is what the previous id-only suffix produced once id 1264 started
+  // routing to OTHER instead of a real catalog code).
   const nameHash = createHash("sha1")
     .update(market.name || "", "utf8")
     .digest("hex")
     .slice(0, 10);
-  const paramSuffix = market.paramValue ? `:${market.paramValue}` : "";
+
+  if (market.bookmakerMarketId) {
+    return `OTHER:id:${market.bookmakerMarketId}:${nameHash}${paramSuffix}`;
+  }
+
   return `OTHER:name:${nameHash}${paramSuffix}`;
 }
 

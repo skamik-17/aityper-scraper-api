@@ -52,7 +52,27 @@ describe("resolveStorageMarketKey", () => {
       "OTHER",
     );
     expect(key).not.toBe("OTHER");
-    expect(key).toBe("OTHER:id:14");
+    // Round 8: the id-based suffix also folds in a hash of the raw name (see
+    // "distinguishes two raw markets that share one bookmakerMarketId" below
+    // for why), so this is a prefix match rather than an exact string.
+    expect(key.startsWith("OTHER:id:14:")).toBe(true);
+  });
+
+  it("distinguishes two raw markets that share one bookmakerMarketId but differ by name", () => {
+    // sts reuses one bookmakerMarketId across many structurally identical
+    // raw markets — one per player — with the player identity living only in
+    // the raw name, not a separate paramValue (audit-match Arsenal vs
+    // Coventry City, round 8: id 1264 "<player> - liczba celnych strzałów").
+    // An id-only suffix collided every player's row into one.
+    const keyA = resolveStorageMarketKey(
+      scrapedMarket({ name: "Saka Bukayo - liczba celnych strzałów", bookmakerMarketId: "1264" }),
+      "OTHER",
+    );
+    const keyB = resolveStorageMarketKey(
+      scrapedMarket({ name: "Madueke Noni - liczba celnych strzałów", bookmakerMarketId: "1264" }),
+      "OTHER",
+    );
+    expect(keyA).not.toBe(keyB);
   });
 
   it("gives two different raw markets with different ids two different keys", () => {
@@ -113,16 +133,18 @@ describe("mergeMarketRecord with OTHER-catchall key suffixing", () => {
       ],
     });
 
+    const keys: string[] = [];
     for (const market of [handicapGrid, scorerList]) {
       const marketKey = resolveStorageMarketKey(market, market.marketKey || market.normalizedType!);
+      keys.push(marketKey);
       mergeMarketRecord(recordsMap, marketKey, insertFrom(market, marketKey));
     }
 
     // Root cause fixed: two rows, not one polluted merge.
     expect(recordsMap.size).toBe(2);
 
-    const handicapRow = recordsMap.get("OTHER:id:14")!;
-    const scorerRow = recordsMap.get("OTHER:id:72")!;
+    const handicapRow = recordsMap.get(keys[0])!;
+    const scorerRow = recordsMap.get(keys[1])!;
     expect(handicapRow).toBeDefined();
     expect(scorerRow).toBeDefined();
 

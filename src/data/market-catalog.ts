@@ -9754,8 +9754,16 @@ export const SELECTION_LABELS: Record<string, string> = {
   HOME: "1", DRAW: "X", AWAY: "2", HOME_OR_DRAW: "1X", DRAW_OR_AWAY: "X2",
   HOME_OR_AWAY: "12", OVER: "Ponad", UNDER: "Poniżej", YES: "Tak", NO: "Nie",
   ODD: "Nieparzyste", EVEN: "Parzyste", UNKNOWN: "?", NONE: "Brak",
-  HOME_OVER: "1 i -", HOME_UNDER: "1 i +", DRAW_OVER: "X i -", DRAW_UNDER: "X i +",
-  AWAY_OVER: "2 i -", AWAY_UNDER: "2 i +", HOME_YES: "1 i tak", HOME_NO: "1 i nie",
+  // audit-match (Arsenal vs Coventry City), closing round: +/- signs were
+  // swapped here (OVER labelled "-", UNDER labelled "+") — inconsistent with
+  // every other OVER/UNDER pair in this map (OVER_YES/UNDER_YES below,
+  // HOME_HOME_OVER/UNDER etc. further down) and with this market's own
+  // descriptionTemplates, which all agree OVER = "ponad/powyżej" (above).
+  // Found by a visual-judge pass that compared rendered button odds against
+  // the raw per-bookmaker selection type (CARDS_TEAM, CORNERS_TEAM,
+  // RESULT_AND_TOTAL and siblings all render through this shared map).
+  HOME_OVER: "1 i +", HOME_UNDER: "1 i -", DRAW_OVER: "X i +", DRAW_UNDER: "X i -",
+  AWAY_OVER: "2 i +", AWAY_UNDER: "2 i -", HOME_YES: "1 i tak", HOME_NO: "1 i nie",
   DRAW_YES: "X i tak", DRAW_NO: "X i nie", AWAY_YES: "2 i tak", AWAY_NO: "2 i nie",
   OVER_YES: "+ i tak", UNDER_YES: "- i tak", OVER_NO: "+ i nie", UNDER_NO: "- i nie",
   "1X_YES": "1X i tak", "1X_NO": "1X i nie", "X2_YES": "X2 i tak", "X2_NO": "X2 i nie",

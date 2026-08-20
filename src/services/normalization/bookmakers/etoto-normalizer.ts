@@ -282,6 +282,14 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   [-8046]: "AWAY", // "<away> wygra lub którakolwiek drużyna czyste konto"
   [-8036]: "HOME", // "<home> wygra lub poniżej 2.5"
   [-8040]: "AWAY", // "<away> wygra lub poniżej 2.5"
+  // Audit /audit-match (Arsenal vs Coventry City), round 6: CORNERS_TEAM_RANGE
+  // has no numeric line in its raw name ("<team> - przedział goli"/"suma
+  // rzutów rożnych"), so extractParamValue's decimal fallback returned
+  // undefined for both sides and they collided on one (code, undefined)
+  // bucket — the home ladder overwrote the away ladder, dropping etoto's
+  // away-side corners-range offer entirely. See ETOTO_TEAM_PARAM_MARKETS.
+  [-265]: "HOME", // "<home> suma rzutów rożnych"
+  [-266]: "AWAY", // "<away> suma rzutów rożnych"
 };
 
 /**
@@ -295,6 +303,7 @@ const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_WIN_MATCH",
   "WIN_OR_BTTS",
   "TEAM_WIN_OR_CLEAN_SHEET",
+  "CORNERS_TEAM_RANGE",
 ]);
 
 /**

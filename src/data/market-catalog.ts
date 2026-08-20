@@ -2580,7 +2580,18 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     subCategory: "czerwone-kartki",
     labels: { pl: "Czerwona kartka drużyny", en: "Team Red Card" },
     descriptions: { pl: "Czy konkretna drużyna otrzyma czerwoną kartkę?", en: "Will a specific team receive a red card?" },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): this bet is
+    // inherently team-specific (home vs away), but with hasParameter:false
+    // the grouper's dummy-parameter collapse (see market-type-grouper.ts)
+    // concatenated a bookmaker's separate Arsenal and Coventry raw markets
+    // into one flat 4-selection (2x YES/2x NO) bucket with no way to tell
+    // which pair belonged to which team — the repository layer already
+    // stores them under distinct RED_CARD_TEAM:HOME / RED_CARD_TEAM:AWAY
+    // keys with param_value HOME/AWAY, so declaring the parameter here is
+    // enough to keep them apart; no normalizer change needed.
+    hasParameter: true,
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["YES", "NO"],
     selectionOrder: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
@@ -7380,7 +7391,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "czerwone-kartki",
     labels: { pl: "Czerwona kartka drużyny - 1. połowa", en: "Half Time Red Card Team" },
     descriptions: { pl: "Zakład rozstrzyga, czy wskazana drużyna otrzyma czerwoną kartkę w pierwszej połowie meczu.", en: "Settles on whether the given team receives a red card during the first half." },
-    hasParameter: false,
+    // Same team-specific defect as RED_CARD_TEAM (round 6 /audit-match
+    // Arsenal vs Coventry City) — declared preventively even though this
+    // match only has one bookmaker's single-team row today.
+    hasParameter: true,
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Czerwona kartka padnie w 1. połowie", NO: "Brak czerwonej kartki w 1. połowie" },
@@ -7987,7 +8003,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Dokładnie X goli w meczu", en: "Exact Goals Yn" },
     descriptions: { pl: "Czy w meczu padnie dokladnie okreslona liczba goli, ani wiecej, ani mniej.", en: "Whether the match will end with exactly a specified number of goals, neither more nor fewer." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): both betcris and
+    // lvbet's raw name spells out the exact goal count ("Dokładnie 1 gol w
+    // meczu"), but hasParameter:false discarded it into a blank parameter.
+    // The grouper recovers the count from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Dokładnie {param} goli w meczu", NO: "Inna liczba goli niż {param} w meczu" },
@@ -8582,9 +8603,14 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // Audit /audit-match: lebull quotes windows starting at 1, superbet only
     // windows starting at 2/3 — with just the "1-x" family catalogued the two
     // bookmakers shared no column at all and 18 superbet prices were orphans.
-    selections: ["1X_1-2", "1X_1-3", "1X_1-4", "1X_1-5", "1X_2-3", "1X_2-4", "1X_2-5", "1X_2-6", "1X_3-5", "1X_3-6", "X2_1-2", "X2_1-3", "X2_1-4", "X2_1-5", "X2_2-3", "X2_2-4", "X2_2-5", "X2_2-6", "X2_3-5", "X2_3-6", "12_1-2", "12_1-3", "12_1-4", "12_1-5", "12_2-3", "12_2-4", "12_2-5", "12_2-6", "12_3-5", "12_3-6"],
+    // Round 6 /audit-match (Arsenal vs Coventry City): lebull's own single
+    // "Podwójna szansa i przedział goli" market additionally quotes 3-4,
+    // 4-5, 4-6, 5-6 bands (all three double-chance prefixes) plus an X2 1-6
+    // band that were entirely absent from the enum, silently dropping 12 of
+    // its 41 raw selections (verified against ground-truth raw capture).
+    selections: ["1X_1-2", "1X_1-3", "1X_1-4", "1X_1-5", "1X_2-3", "1X_2-4", "1X_2-5", "1X_2-6", "1X_3-4", "1X_3-5", "1X_3-6", "1X_4-5", "1X_4-6", "1X_5-6", "X2_1-2", "X2_1-3", "X2_1-4", "X2_1-5", "X2_1-6", "X2_2-3", "X2_2-4", "X2_2-5", "X2_2-6", "X2_3-4", "X2_3-5", "X2_3-6", "X2_4-5", "X2_4-6", "12_1-2", "12_1-3", "12_1-4", "12_1-5", "12_2-3", "12_2-4", "12_2-5", "12_2-6", "12_3-4", "12_3-5", "12_3-6", "12_4-5", "12_4-6", "12_5-6"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "1X_1-2": "1X i 1-2 goli", "1X_1-3": "1X i 1-3 goli", "1X_1-4": "1X i 1-4 goli", "1X_1-5": "1X i 1-5 goli", "1X_2-3": "1X i 2-3 goli", "1X_2-4": "1X i 2-4 goli", "1X_2-5": "1X i 2-5 goli", "1X_2-6": "1X i 2-6 goli", "1X_3-5": "1X i 3-5 goli", "1X_3-6": "1X i 3-6 goli", "X2_1-2": "X2 i 1-2 goli", "X2_1-3": "X2 i 1-3 goli", "X2_1-4": "X2 i 1-4 goli", "X2_1-5": "X2 i 1-5 goli", "X2_2-3": "X2 i 2-3 goli", "X2_2-4": "X2 i 2-4 goli", "X2_2-5": "X2 i 2-5 goli", "X2_2-6": "X2 i 2-6 goli", "X2_3-5": "X2 i 3-5 goli", "X2_3-6": "X2 i 3-6 goli", "12_1-2": "12 i 1-2 goli", "12_1-3": "12 i 1-3 goli", "12_1-4": "12 i 1-4 goli", "12_1-5": "12 i 1-5 goli", "12_2-3": "12 i 2-3 goli", "12_2-4": "12 i 2-4 goli", "12_2-5": "12 i 2-5 goli", "12_2-6": "12 i 2-6 goli", "12_3-5": "12 i 3-5 goli", "12_3-6": "12 i 3-6 goli" },
+    descriptionTemplates: { "1X_1-2": "1X i 1-2 goli", "1X_1-3": "1X i 1-3 goli", "1X_1-4": "1X i 1-4 goli", "1X_1-5": "1X i 1-5 goli", "1X_2-3": "1X i 2-3 goli", "1X_2-4": "1X i 2-4 goli", "1X_2-5": "1X i 2-5 goli", "1X_2-6": "1X i 2-6 goli", "1X_3-4": "1X i 3-4 goli", "1X_3-5": "1X i 3-5 goli", "1X_3-6": "1X i 3-6 goli", "1X_4-5": "1X i 4-5 goli", "1X_4-6": "1X i 4-6 goli", "1X_5-6": "1X i 5-6 goli", "X2_1-2": "X2 i 1-2 goli", "X2_1-3": "X2 i 1-3 goli", "X2_1-4": "X2 i 1-4 goli", "X2_1-5": "X2 i 1-5 goli", "X2_1-6": "X2 i 1-6 goli", "X2_2-3": "X2 i 2-3 goli", "X2_2-4": "X2 i 2-4 goli", "X2_2-5": "X2 i 2-5 goli", "X2_2-6": "X2 i 2-6 goli", "X2_3-4": "X2 i 3-4 goli", "X2_3-5": "X2 i 3-5 goli", "X2_3-6": "X2 i 3-6 goli", "X2_4-5": "X2 i 4-5 goli", "X2_4-6": "X2 i 4-6 goli", "12_1-2": "12 i 1-2 goli", "12_1-3": "12 i 1-3 goli", "12_1-4": "12 i 1-4 goli", "12_1-5": "12 i 1-5 goli", "12_2-3": "12 i 2-3 goli", "12_2-4": "12 i 2-4 goli", "12_2-5": "12 i 2-5 goli", "12_2-6": "12 i 2-6 goli", "12_3-4": "12 i 3-4 goli", "12_3-5": "12 i 3-5 goli", "12_3-6": "12 i 3-6 goli", "12_4-5": "12 i 4-5 goli", "12_4-6": "12 i 4-6 goli", "12_5-6": "12 i 5-6 goli" },
     displayOrder: 475,
   },
   {
@@ -8985,10 +9011,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "pelny-mecz",
     labels: { pl: "Wynik pojawi się w meczu", en: "Score Reached" },
     descriptions: { pl: "Rozstrzyga, czy podany wynik zostanie osiągnięty w którymkolwiek momencie meczu, niezależnie od wyniku końcowego.", en: "Settles whether the given score is reached at any point during the match, regardless of the final result." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): lebull's raw
+    // name is score-specific ("1:1 w czasie meczu"), but hasParameter:false
+    // discarded the score into a blank parameter. The grouper recovers it
+    // from rawMarketName (extractParamFromRawName).
+    hasParameter: true,
+    parameterType: "score",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Wskazany wynik pojawi się w trakcie meczu", NO: "Wskazany wynik nie pojawi się w meczu" },
+    descriptionTemplates: { YES: "Wynik {param} pojawi się w trakcie meczu", NO: "Wynik {param} nie pojawi się w meczu" },
     displayOrder: 504,
   },
   {
@@ -8999,10 +9030,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "pelny-mecz",
     labels: { pl: "Wynik w trakcie meczu", en: "Score Occurs During Match" },
     descriptions: { pl: "Zakład TAK/NIE na to, czy wskazany wynik pojawi się w dowolnym momencie meczu.", en: "A yes/no bet on whether the given score appears at any point during the match." },
-    hasParameter: false,
+    // Same defect and fix as SCORE_REACHED above (lebull's "2:0 w czasie meczu").
+    hasParameter: true,
+    parameterType: "score",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { YES: "Wskazany wynik wystąpi w trakcie meczu", NO: "Wskazany wynik nie wystąpi w trakcie meczu" },
+    descriptionTemplates: { YES: "Wynik {param} wystąpi w trakcie meczu", NO: "Wynik {param} nie wystąpi w trakcie meczu" },
     displayOrder: 505,
   },
   {
@@ -9083,7 +9116,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Dowolna drużyna wygra dokładnie o X goli", en: "Winning Margin Any Exact" },
     descriptions: { pl: "Obstawiasz, czy któraś z drużyn zwycięży dokładnie ustaloną liczbą bramek przewagi, niezależnie od tego, która to drużyna.", en: "Bet on whether either team wins by exactly a set number of goals, regardless of which side it is." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): lebull's raw
+    // name spells out the exact margin ("Margines zwycięstwa: dokładnie
+    // 2"), but hasParameter:false left the {param} placeholder above
+    // unsubstituted. The grouper recovers the margin from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
@@ -9097,7 +9135,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Dowolna drużyna wygra z marginesem X goli", en: "Any Team Win by Margin" },
     descriptions: { pl: "Obstawiasz, czy któraś z drużyn wygra z przewagą co najmniej tylu bramek, ile wskazuje wybrany margines.", en: "Bet on whether either team wins by a margin of at least the specified number of goals." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): lebull's raw
+    // name spells out the margin ("Margines zwycięstwa: 3"), but
+    // hasParameter:false left the {param} placeholder above unsubstituted.
+    // The grouper recovers the margin from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Zwycięstwo z przewagą co najmniej {param} goli", NO: "Brak zwycięstwa z przewagą {param} goli" },
@@ -9224,7 +9267,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "linia-golowa",
     labels: { pl: "Gole w przedziale minutowym", en: "Time Band Total Goals" },
     descriptions: { pl: "Obstawiasz, czy liczba goli strzelonych w wybranym przedziale minutowym meczu przekroczy określony próg.", en: "Bet on whether the number of goals scored within a selected minute range of the match exceeds a set threshold." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): lebull's raw
+    // name spells out the minute band ("suma między 31-45+ min"), but
+    // hasParameter:false left the {param} placeholder above unsubstituted.
+    // The grouper recovers the band ("31-45+") from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
@@ -9286,7 +9334,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "podstawowe",
     labels: { pl: "Wynik o danej minucie", en: "Result at Minute" },
     descriptions: { pl: "Obstawiasz, jaki będzie stan meczu (1X2) w konkretnej, wskazanej minucie gry.", en: "Bet on the match state (1X2) at a specific, chosen minute of play." },
-    hasParameter: false,
+    // Audit round 6 /audit-match (Arsenal vs Coventry City): the minute IS
+    // the bet (superbet's "Mecz - do 5. minuty"), but hasParameter:false
+    // discarded it, rendering an unlabeled generic 1X2 chip. The grouper
+    // recovers the minute from rawMarketName (extractParamFromRawName).
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["HOME", "DRAW", "AWAY"],
     viewType: ViewType.TRIPLE_BUTTONS,
     descriptionTemplates: { HOME: "{homeTeam} prowadzi o {param} minucie", DRAW: "Remis o {param} minucie", AWAY: "{awayTeam} prowadzi o {param} minucie" },

@@ -88,6 +88,56 @@ function canonicalizeParamValue(param: string): string {
 }
 
 /**
+ * Recovers the defining parameter of a handful of catalog codes straight
+ * from rawMarketName when the normalizer never set paramValue for them (see
+ * the call site in groupMarketsByTypeWithParameters for the audit finding).
+ * Deliberately narrow — one pattern per known-affected code — rather than a
+ * generic "guess a number out of the name" heuristic, so it never misfires
+ * on an unrelated market that happens to share the same catalog code.
+ * Returns null (leaving the entry on "base", subject to the normal
+ * base-bucket handling) when the raw text doesn't match the expected shape.
+ */
+function extractParamFromRawName(marketType: string, rawName: string): string | null {
+  switch (marketType) {
+    case "RESULT_AT_MINUTE": {
+      // "Mecz - do 5. minuty" -> "5"
+      const m = rawName.match(/do\s+(\d+)\.?\s*minuty/i);
+      return m ? m[1] : null;
+    }
+    case "EXACT_GOALS_YN": {
+      // "Dokładnie 1 gol w meczu" -> "1"
+      const m = rawName.match(/dok[łl]adnie\s+(\d+)\s*gol/i);
+      return m ? m[1] : null;
+    }
+    case "TIME_BAND_TOTAL_GOALS": {
+      // "suma między 31-45+ min" -> "31-45+"
+      const m = rawName.match(/mi[eę]dzy\s+(\d+\s*-\s*\d+\+?)\s*min/i);
+      return m ? m[1].replace(/\s+/g, "") : null;
+    }
+    case "WINNING_MARGIN_ANY_EXACT": {
+      // "jakikolwiek zespół. Margines zwycięstwa: dokładnie 2" -> "2"
+      // (checked before ANY_TEAM_WIN_BY_MARGIN's plain-margin pattern below
+      // since both share the "Margines zwycięstwa:" prefix)
+      const m = rawName.match(/margines zwyci[eę]stwa:\s*dok[łl]adnie\s*(\d+)/i);
+      return m ? m[1] : null;
+    }
+    case "ANY_TEAM_WIN_BY_MARGIN": {
+      // "jakikolwiek zespół. Margines zwycięstwa: 3" -> "3"
+      const m = rawName.match(/margines zwyci[eę]stwa:\s*(\d+)/i);
+      return m ? m[1] : null;
+    }
+    case "SCORE_REACHED":
+    case "SCORE_OCCURS_DURING_MATCH": {
+      // "1:1 w czasie meczu" / "2:0 w czasie meczu" -> "1:1" / "2:0"
+      const m = rawName.match(/^(\d+:\d+)/);
+      return m ? m[1] : null;
+    }
+    default:
+      return null;
+  }
+}
+
+/**
  * Recovers a market whose normalizer bundled multiple parameter lines'
  * selections into one entry (paramValue unset) by extracting the line number
  * embedded in each selection's raw label and splitting into one synthetic
@@ -531,6 +581,12 @@ function getParameterLabel(param: string, marketType: string): string {
     if (!isNaN(minutes)) return `Do ${minutes}. min.`;
   }
 
+  // RESULT_AT_MINUTE's parameter is likewise a minute mark, not a goal line.
+  if (marketType === "RESULT_AT_MINUTE") {
+    const minutes = parseFloat(param);
+    if (!isNaN(minutes)) return `Do ${minutes}. min.`;
+  }
+
   // For team-parameterized markets (HOME/AWAY), translate to Polish
   if (marketDef?.parameterType === "team") {
     if (param === "HOME") return "Gospodarze";
@@ -623,11 +679,52 @@ export function groupMarketsByTypeWithParameters(
     markets: Array<{ market: ScrapedMarket; bookmaker: string; param: string }>;
   }>();
 
+  // Precompute which (marketType, bookmaker) pairs already have a REAL,
+  // extracted team parameter (HOME/AWAY) — used below to tell a truly stale
+  // duplicate row (a properly-parameterized sibling from the SAME bookmaker
+  // supersedes it, see the "TEAM_WIN_AT_LEAST_ONE_HALF" test) apart from a
+  // bookmaker's ONLY offer for this market, which merely never had its team
+  // identity extracted (round 6 /audit-match Arsenal vs Coventry City:
+  // TEAM_WIN_MATCH's own catalog entry already declares parameterType
+  // "team", yet forbet's sole "Arsenal FC wygra mecz" row — no HOME/AWAY
+  // sibling of its own — was dropped outright by the blanket base-drop
+  // below, silently hiding a genuinely best-in-market 1.17 price; same root
+  // cause was about to hit RED_CARD_TEAM's forbet/fuksiarz/betfan/lebull
+  // rows once that catalog entry gained the same team parameter).
+  const bookmakerHasRealTeamParam = new Set<string>();
+  for (const { market, bookmaker } of expandedInput) {
+    const marketType = market.normalizedType || "OTHER";
+    const entryDef = getMarketByCode(marketType);
+    if ((entryDef?.hasParameter ? entryDef.parameterType : undefined) !== "team") continue;
+    if (canonicalizeParamValue(market.paramValue || "base") !== "base") {
+      bookmakerHasRealTeamParam.add(`${marketType}:${bookmaker}`);
+    }
+  }
+
   for (const { market, bookmaker } of expandedInput) {
     const marketType = market.normalizedType || "OTHER";
     const entryDef = getMarketByCode(marketType);
     const parameterType = entryDef?.hasParameter ? entryDef.parameterType : undefined;
     let param = canonicalizeParamValue(market.paramValue || "base");
+
+    // A handful of catalog codes are inherently parameterized (a specific
+    // minute, exact goal count, minute band, margin, or score) but their
+    // normalizers never set paramValue for them, so every entry fell into
+    // the shared "base" bucket with an empty, uninformative parameter chip
+    // — the one detail identifying WHICH bet is on offer (round 6
+    // /audit-match Arsenal vs Coventry City: superbet's RESULT_AT_MINUTE
+    // "Mecz - do 5. minuty", betcris/lvbet's EXACT_GOALS_YN "Dokładnie 1
+    // gol...", lebull's TIME_BAND_TOTAL_GOALS/ANY_TEAM_WIN_BY_MARGIN/
+    // WINNING_MARGIN_ANY_EXACT/SCORE_REACHED/SCORE_OCCURS_DURING_MATCH all
+    // spelled the parameter out in rawMarketName only). Recovering it here
+    // also closes the silent-merge risk the audit flagged: a second line
+    // with a different minute/count/margin/score would otherwise collide
+    // on the same blank "base" parameter. Only fires when paramValue is
+    // genuinely absent — a bookmaker that already sets it is untouched.
+    if (param === "base") {
+      const extracted = extractParamFromRawName(marketType, market.name || "");
+      if (extracted) param = canonicalizeParamValue(extracted);
+    }
 
     // Player-scoped markets key their parameter by player name; unify the
     // name order so the same player merges across bookmakers.
@@ -635,7 +732,7 @@ export function groupMarketsByTypeWithParameters(
       param = canonicalizePlayerName(param);
     }
 
-    // Line/team-parameterized markets must not accumulate a "base" bucket: an
+    // Line-parameterized markets must not accumulate a "base" bucket: an
     // entry with no extractable parameter there is almost always a misrouted
     // market or a stale row keyed under an old market_key. Player markets are
     // exempt — the player identity may live in the selection instead.
@@ -648,9 +745,18 @@ export function groupMarketsByTypeWithParameters(
     // ['base_visible']). Silently exposing that generic bucket to end users
     // inside a line-selector UI is worse than omitting the bookmaker
     // entirely for this match until its normalizer is fixed.
+    //
+    // Team-parameterized markets get a narrower version of the same guard:
+    // only drop a "base" entry when the SAME bookmaker also has a real
+    // HOME/AWAY row for this market type (a genuinely stale/superseded
+    // duplicate, per bookmakerHasRealTeamParam above). When "base" is that
+    // bookmaker's ONLY offer, dropping it would silently delete a real,
+    // currently-priced market instead of a leftover — keep it visible under
+    // an unlabeled parameter rather than erase it.
     if (
       param === "base" &&
-      (parameterType === "decimal" || parameterType === "team" || parameterType === "handicap" || parameterType === "integer")
+      (parameterType === "decimal" || parameterType === "handicap" || parameterType === "integer" ||
+        (parameterType === "team" && bookmakerHasRealTeamParam.has(`${marketType}:${bookmaker}`)))
     ) {
       continue;
     }

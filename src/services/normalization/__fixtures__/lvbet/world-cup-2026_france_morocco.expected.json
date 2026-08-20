@@ -11803,9 +11803,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "EXACT_GOALS_YN",
-        "marketKey": "EXACT_GOALS_YN",
+        "marketKey": "EXACT_GOALS_YN:1",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "1",
         "parameters": null,
         "selections": [
           {

@@ -1164,6 +1164,21 @@ function extractParamValue(
     return windowMatch ? windowMatch[1] : undefined;
   }
 
+  // TIME_PERIOD_ASIAN_HANDICAP: per the catalog entry's parameterType
+  // "integer", this code's parameter is the time-WINDOW-length bucket (same
+  // convention fuksiarz uses), not the handicap magnitude — betcris only
+  // ever maps this code from the single "1-60 min. Handicap" market
+  // (bookmakerMarketId "1-60Handicap"), so without extracting the window end
+  // here the row had no paramValue at all and fell into the grouper's bare
+  // "base" bucket with an empty label (round8 audit betcris-audit issue 9).
+  // Deliberately NOT added to HANDICAP_PARAM_MARKETS below: that list treats
+  // its paramValue as a signed goal handicap, which this catalog code's
+  // parameter is explicitly documented not to be.
+  if (marketCode === "TIME_PERIOD_ASIAN_HANDICAP") {
+    const windowMatch = raw.name.match(/\b1\s*[-–]\s*(\d{1,2})\s*\.?\s*min/i);
+    return windowMatch ? windowMatch[1] : undefined;
+  }
+
   const isOverUnder =
     OVER_UNDER_PARAM_MARKETS.includes(marketCode) ||
     STAT_OVER_UNDER_PARAM_MARKETS.includes(marketCode);

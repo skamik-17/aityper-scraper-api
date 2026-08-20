@@ -1314,9 +1314,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_PERIOD_ASIAN_HANDICAP",
-        "marketKey": "TIME_PERIOD_ASIAN_HANDICAP",
+        "marketKey": "TIME_PERIOD_ASIAN_HANDICAP:60",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "60",
         "parameters": null,
         "selections": [
           {

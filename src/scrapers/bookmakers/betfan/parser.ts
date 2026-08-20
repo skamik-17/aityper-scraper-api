@@ -307,6 +307,51 @@ function extractPlayerPropThreshold(marketName: string): string {
 }
 
 /**
+ * Betfan occasionally serves the same conceptual market twice within one
+ * event's games array under an identical computed name + market-type id, but
+ * at different selection granularities (e.g. "1. polowa - liczba goli" as
+ * both a detailed 0/1/2/3+ ladder and a compact 0/1/2+ toggle, both under
+ * gameType -233). Keeping both merges into one self-contradictory selection
+ * list for a single bookmaker (a bookmaker can't simultaneously quote "2"
+ * (exactly two) and "2+" (two or more) as separate live prices for the same
+ * market). Restricted to unparameterized bare-digit/threshold ladders
+ * (paramValue undefined, e.g. exact-goal-count markets) so it never touches
+ * the player-prop splits above, which legitimately repeat the same
+ * name+id across many players with a distinguishing paramValue.
+ */
+function dedupeExactCountLadders(markets: ScrapedMarket[]): ScrapedMarket[] {
+  const isBareCountLadder = (m: ScrapedMarket): boolean =>
+    m.paramValue === undefined &&
+    m.selections.length > 0 &&
+    m.selections.every((sel) => /^\d+\+?$/.test(sel.name.trim()));
+
+  const groups = new Map<string, ScrapedMarket[]>();
+  for (const m of markets) {
+    if (!isBareCountLadder(m)) continue;
+    const key = `${m.bookmakerMarketId ?? ""}::${m.name}`;
+    const list = groups.get(key);
+    if (list) list.push(m);
+    else groups.set(key, [m]);
+  }
+
+  const dropped = new Set<ScrapedMarket>();
+  for (const list of groups.values()) {
+    if (list.length < 2) continue;
+    // Keep the most granular ladder (most selections); ties keep the
+    // first-seen entry.
+    let keep = list[0];
+    for (const candidate of list.slice(1)) {
+      if (candidate.selections.length > keep.selections.length) keep = candidate;
+    }
+    for (const m of list) {
+      if (m !== keep) dropped.add(m);
+    }
+  }
+
+  return dropped.size > 0 ? markets.filter((m) => !dropped.has(m)) : markets;
+}
+
+/**
  * Parse ALL markets from event data into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -380,7 +425,7 @@ export function parseAllMarkets(event: BetfanEvent): ScrapedMarket[] {
     }
   }
 
-  return markets;
+  return dedupeExactCountLadders(markets);
 }
 
 /**

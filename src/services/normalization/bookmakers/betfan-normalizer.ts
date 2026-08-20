@@ -101,6 +101,16 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-265": "CORNERS_TEAM_RANGE",
   "-2971": "FIRST_CORNER",
   "-266": "CORNERS_TEAM_RANGE",
+  // audit-match (Arsenal vs Coventry City): betfan's name-based override
+  // ("liczba goli" below) routed BOTH the exact-count ladder (id -227:
+  // 0/1/2/3/4/5/6+) and the disjoint-band table (id -225: "Liczba goli -
+  // przedzial bramkowy", 0-1/2-3/4-6/7+) to GOAL_RANGE, silently merging two
+  // different widgets into one 11-selection chimera. forbet/etoto/fuksiarz
+  // already disambiguate the same shared platform ids as EXACT_GOALS (-227)
+  // vs GOAL_RANGE (-225); mirror that split here. This id match wins over
+  // the name-based override below.
+  "-227": "EXACT_GOALS",
+  "-225": "GOAL_RANGE",
   "105": "HALF_TIME_CORNERS_TOTAL",
   "171": "CARDS_RACE",
   "-261": "HALF_TIME_CORNERS_RACE",
@@ -1267,7 +1277,8 @@ function normalizeSelectionForMarket(
 
 function extractParamValue(
   marketCode: NormalizedMarketType,
-  raw: RawBookmakerMarket
+  raw: RawBookmakerMarket,
+  ctx: NormalizationContext
 ): string | undefined {
   // Parser-provided parameter takes precedence: player-prop splits set the
   // player name here (checked before the hasParameter guard because some
@@ -1284,6 +1295,16 @@ function extractParamValue(
   const groupName = raw.groupName ?? "";
 
   switch (metadata.parameterType) {
+    // audit-match (Arsenal vs Coventry City), CORNERS_TEAM_RANGE gap: the
+    // catalog declares parameterType "team" with validParameters HOME/AWAY
+    // (round 8 CT-5), but this switch had no case for it, so paramValue
+    // fell through to the decimal branch and came back undefined for band
+    // selections like "0-2"/"3-4" - a hasParameter:true market with no
+    // paramValue is dropped entirely by the grouper, silently omitting
+    // betfan's whole corners-range offer. Resolve the side directly from
+    // the team name embedded in the raw market name instead.
+    case "team":
+      return detectTeamSide(raw.name, ctx) ?? undefined;
     case "handicap": {
       // Strip a leading half indicator ("2. polowa - handicap ...") so the
       // half number is not mistaken for the handicap line.
@@ -1352,7 +1373,7 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
 
     const teamSide = TEAM_LINE_PARAM_MARKETS.has(resolvedCode) ? detectTeamSide(raw.name, ctx) : null;
 
-    let paramValue = extractParamValue(resolvedCode, raw);
+    let paramValue = extractParamValue(resolvedCode, raw, ctx);
     if (teamSide && paramValue) {
       paramValue = `${teamSide}:${paramValue}`;
     }

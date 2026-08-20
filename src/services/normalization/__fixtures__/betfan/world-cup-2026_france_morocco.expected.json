@@ -7705,9 +7705,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_TEAM_RANGE",
-        "marketKey": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -7767,9 +7767,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_TEAM_RANGE",
-        "marketKey": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {
@@ -8581,9 +8581,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RED_CARD_TEAM",
-        "marketKey": "RED_CARD_TEAM",
+        "marketKey": "RED_CARD_TEAM:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -8607,9 +8607,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RED_CARD_TEAM",
-        "marketKey": "RED_CARD_TEAM",
+        "marketKey": "RED_CARD_TEAM:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {
@@ -10017,9 +10017,9 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_RANGE",
-        "marketKey": "GOAL_RANGE",
-        "matchedBy": "name",
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10061,16 +10061,16 @@
         ]
       },
       "index": 332,
-      "marketCode": "GOAL_RANGE",
+      "marketCode": "EXACT_GOALS",
       "rawName": "Liczba goli"
     },
     {
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_RANGE",
-        "marketKey": "GOAL_RANGE",
-        "matchedBy": "name",
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [
@@ -10107,7 +10107,7 @@
         ]
       },
       "index": 333,
-      "marketCode": "GOAL_RANGE",
+      "marketCode": "EXACT_GOALS",
       "rawName": "Liczba goli"
     },
     {
@@ -10116,7 +10116,7 @@
         "customLabel": null,
         "marketCode": "GOAL_RANGE",
         "marketKey": "GOAL_RANGE",
-        "matchedBy": "name",
+        "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
         "selections": [

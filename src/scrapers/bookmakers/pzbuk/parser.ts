@@ -285,6 +285,14 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "152": "Więcej rzutów rożnych",
   "163": "Więcej rożnych 1. połowa",
   "133": "Dokładna liczba kartek - gospodarze",
+  // Round 7b MINOR fix (STATYSTYKI/CORNERS_HANDICAP, premier-league Arsenal
+  // vs Coventry City): id 155 still surfaced the generic "Rynek 155"
+  // placeholder even though its identity is confirmed in
+  // pzbuk-normalizer.ts (155 -> CORNERS_HANDICAP, see the audit note there
+  // for the odds proof) — selections/odds were already correctly mapped,
+  // only the raw display name was a placeholder. Label matches the
+  // canonical Polish label used for CORNERS_HANDICAP in market-catalog.ts.
+  "155": "Rzuty rożne - handicap",
 };
 
 /**

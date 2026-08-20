@@ -955,6 +955,16 @@ function extractParamValue(
     // raw paramValue field (e.g. "-4.5") is already supplied per-line by the
     // parser, exactly like ASIAN_HANDICAP/EUROPEAN_HANDICAP above.
     "CORNERS_HANDICAP",
+    // Round 7b MINOR fix (STATYSTYKI/HALF_TIME_CORNERS_TOTAL, premier-league
+    // Arsenal vs Coventry City): same bug as CORNERS_HANDICAP above —
+    // HALF_TIME_CORNERS_TOTAL (id 167) was missing from this list, so all
+    // three lines pzbuk offers (3.5/4.5/5.5) collapsed onto the same
+    // paramless marketKey and only one survived in the DB, which meant the
+    // market never matched any of the catalog's parameterized buckets and
+    // silently dropped out of the aggregated API response entirely. The
+    // parser already forwards the per-line paramValue (e.g. "4.5"), same as
+    // the sibling full-match CORNERS_TOTAL market already in this list.
+    "HALF_TIME_CORNERS_TOTAL",
   ];
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;

@@ -109,8 +109,13 @@ function extractParamFromRawName(marketType: string, rawName: string): string | 
       const m = rawName.match(/dok[łl]adnie\s+(\d+)\s*gol/i);
       return m ? m[1] : null;
     }
-    case "TIME_BAND_TOTAL_GOALS": {
-      // "suma między 31-45+ min" -> "31-45+"
+    case "TIME_BAND_TOTAL_GOALS":
+    case "TIME_SEGMENT_TOTAL_GOALS":
+    case "TIME_PERIOD_GOALS": {
+      // "suma między 31-45+ min" -> "31-45+" / "suma między 1-10 min" -> "1-10"
+      // / "suma między 21-30 min" -> "21-30" (round 7b /audit-match Arsenal vs
+      // Coventry City: same lebull "suma między X-Y min" shape as
+      // TIME_BAND_TOTAL_GOALS, just routed under sibling catalog codes).
       const m = rawName.match(/mi[eę]dzy\s+(\d+\s*-\s*\d+\+?)\s*min/i);
       return m ? m[1].replace(/\s+/g, "") : null;
     }
@@ -121,8 +126,11 @@ function extractParamFromRawName(marketType: string, rawName: string): string | 
       const m = rawName.match(/margines zwyci[eę]stwa:\s*dok[łl]adnie\s*(\d+)/i);
       return m ? m[1] : null;
     }
-    case "ANY_TEAM_WIN_BY_MARGIN": {
-      // "jakikolwiek zespół. Margines zwycięstwa: 3" -> "3"
+    case "ANY_TEAM_WIN_BY_MARGIN":
+    case "ANY_TEAM_WINNING_MARGIN_EXACT": {
+      // "jakikolwiek zespół. Margines zwycięstwa: 3" -> "3" (round 7b
+      // /audit-match Arsenal vs Coventry City: ANY_TEAM_WINNING_MARGIN_EXACT
+      // is the sibling code for lebull's bare, non-"dokładnie" margin rows).
       const m = rawName.match(/margines zwyci[eę]stwa:\s*(\d+)/i);
       return m ? m[1] : null;
     }

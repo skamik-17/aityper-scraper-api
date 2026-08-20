@@ -6174,9 +6174,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "ANY_TEAM_WINNING_MARGIN_EXACT",
-        "marketKey": "ANY_TEAM_WINNING_MARGIN_EXACT",
+        "marketKey": "ANY_TEAM_WINNING_MARGIN_EXACT:1",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "1",
         "parameters": null,
         "selections": [
           {
@@ -8024,9 +8024,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TIME_SEGMENT_TOTAL_GOALS",
-        "marketKey": "TIME_SEGMENT_TOTAL_GOALS",
+        "marketKey": "TIME_SEGMENT_TOTAL_GOALS:1",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "1",
         "parameters": null,
         "selections": [
           {

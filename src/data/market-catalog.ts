@@ -1803,9 +1803,13 @@ const PLAYER_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "Liczba obronionych strzałów przez bramkarza", en: "Number of saves by goalkeeper" },
     hasParameter: true,
     parameterType: "player",
-    selections: ["2+", "3+", "4+", "5+", "6+", "7+"],
+    // Round 7b /audit-match (Arsenal vs Coventry City): sts genuinely offers
+    // a "1+" save line for every goalkeeper (RAW BOOKMAKER OFFER confirmed
+    // Rushworth/Raya/Kepa/Setford all quote 1+), but the catalog's
+    // vocabulary previously started at "2+".
+    selections: ["1+", "2+", "3+", "4+", "5+", "6+", "7+"],
     viewType: ViewType.PLAYER_STAT_LINES,
-    descriptionTemplates: { "2+": "{param} obroni 2 lub więcej strzałów", "3+": "{param} obroni 3 lub więcej strzałów", "4+": "{param} obroni 4 lub więcej strzałów", "5+": "{param} obroni 5 lub więcej strzałów", "6+": "{param} obroni 6 lub więcej strzałów", "7+": "{param} obroni 7 lub więcej strzałów" },
+    descriptionTemplates: { "1+": "{param} obroni 1 lub więcej strzałów", "2+": "{param} obroni 2 lub więcej strzałów", "3+": "{param} obroni 3 lub więcej strzałów", "4+": "{param} obroni 4 lub więcej strzałów", "5+": "{param} obroni 5 lub więcej strzałów", "6+": "{param} obroni 6 lub więcej strzałów", "7+": "{param} obroni 7 lub więcej strzałów" },
     displayOrder: 75,
   },
   {
@@ -4146,7 +4150,12 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.ZAWODNICY,
     subCategory: "strzelcy",
     labels: { pl: "Jeden z graczy strzeli w obu połowach", en: "Same Player Scores In Both Halves" },
-    descriptions: { pl: "Ten sam wybrany gracz strzeli w obu połowach", en: "The same selected player scores in both halves" },
+    // Round 7b /audit-match (Arsenal vs Coventry City): selections are
+    // PLAYER_PAIR (two different named players), and betclic's raw offer
+    // "Jeden z graczy strzeli w obu połowach" confirms it — the description
+    // used to describe a single-player bet, which does not match the actual
+    // product (either of the two named players scoring in each half).
+    descriptions: { pl: "Jeden z dwóch wybranych graczy strzeli w każdej z dwóch połów meczu", en: "Either of the two selected players scores in each of the two halves" },
     hasParameter: false,
     parameterType: "player",
     selections: ["PLAYER_PAIR"],
@@ -9112,7 +9121,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Jakikolwiek zespół - dokładny margines zwycięstwa", en: "Any Team Winning Margin Exact" },
     descriptions: { pl: "Obstawiasz, czy zwycięzca meczu (którakolwiek drużyna) wygra dokładnie z ustaloną różnicą bramek.", en: "Bet on whether the winning team, whichever it is, wins by exactly a specified goal margin." },
-    hasParameter: false,
+    // Round 7b /audit-match (Arsenal vs Coventry City): same pattern as the
+    // sibling WINNING_MARGIN_ANY_EXACT/ANY_TEAM_WIN_BY_MARGIN codes fixed in
+    // round 6 — lebull's raw name spells out the margin ("Margines
+    // zwycięstwa: 1"), but hasParameter:false left the {param} placeholder
+    // above unsubstituted. The grouper recovers the margin from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["YES", "NO"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { YES: "Któraś drużyna wygra dokładnie o {param} goli", NO: "Żadna drużyna nie wygra dokładnie o {param} goli" },
@@ -9296,7 +9311,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "linia-golowa",
     labels: { pl: "Suma goli w przedziale czasowym", en: "Time Segment Total Goals" },
     descriptions: { pl: "Obstawiasz, czy suma goli strzelonych w danym segmencie czasowym meczu przekroczy określony próg.", en: "Bet on whether the total goals scored within a given time segment of the match exceed a set threshold." },
-    hasParameter: false,
+    // Round 7b /audit-match (Arsenal vs Coventry City): same pattern as
+    // TIME_BAND_TOTAL_GOALS fixed in round 6 — lebull's raw name spells out
+    // the minute segment ("suma między 1-10 min"), but hasParameter:false
+    // left the {param} placeholder above unsubstituted. The grouper
+    // recovers the segment ("1-10") from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
@@ -9310,7 +9331,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "linia-golowa",
     labels: { pl: "Gole w przedziale czasowym", en: "Time Period Goals" },
     descriptions: { pl: "Obstawiasz, czy liczba goli padniętych w wybranym okresie trwania meczu przekroczy określony próg.", en: "Bet on whether the number of goals scored during a chosen period of the match exceeds a set threshold." },
-    hasParameter: false,
+    // Round 7b /audit-match (Arsenal vs Coventry City): same pattern as
+    // TIME_BAND_TOTAL_GOALS fixed in round 6 — lebull's raw name spells out
+    // the minute period ("suma między 21-30 min"), but hasParameter:false
+    // left the {param} placeholder above unsubstituted. The grouper
+    // recovers the period ("21-30") from rawMarketName.
+    hasParameter: true,
+    parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
     descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
@@ -9377,7 +9404,13 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.KOMBINACJE,
     subCategory: "wynik-gole",
     labels: { pl: "Wynik lub Gole", en: "Result or Total" },
-    descriptions: { pl: "Łączysz wynik meczu z liczbą bramek powyżej lub poniżej ustalonej linii — oba elementy muszą się zgadzać jednocześnie.", en: "Combines the match result with the total goals being over or under a set line — both elements must match at once." },
+    // Round 7b /audit-match (Arsenal vs Coventry City): superbet's odds are
+    // only mathematically consistent with OR semantics (e.g. HOME_UNDER at
+    // line 0.5 prices at 1.10 — a mathematical impossibility under AND
+    // logic, since a home win requires >=1 goal). The label "Wynik LUB Gole"
+    // already says OR; the description previously said AND ("muszą się
+    // zgadzać jednocześnie").
+    descriptions: { pl: "Łączysz wynik meczu z liczbą bramek powyżej lub poniżej ustalonej linii — kupon wygrywa, jeśli spełniony jest wynik meczu LUB warunek liczby goli.", en: "Combines the match result with the total goals being over or under a set line — the bet wins if either the match result or the goal-total condition is met." },
     hasParameter: true,
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],

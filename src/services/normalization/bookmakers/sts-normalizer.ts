@@ -72,9 +72,17 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // every other bookmaker offers, while STS's own unconditional markets
   // (ids 2394/2395/2396/2397/2404, 42 players each) were dropped entirely.
   1851: "PLAYER_SHOTS_LINEUP",
-  1263: "PLAYER_SHOTS_LINEUP",
   1852: "PLAYER_SHOTS_ON_TARGET_LINEUP",
-  1264: "PLAYER_SHOTS_ON_TARGET_LINEUP",
+  // ids 1263/1264 ("<player> - liczba (celnych) strzałów (musi wyjść w '11')")
+  // are a STRUCTURALLY DIFFERENT bet from 1851/1852: a single signed
+  // handicap/spread line ("+1.5"/"-1.5") per player, not a cumulative
+  // "N+" ladder. Previously merged into the same *_LINEUP code as 1851/1852,
+  // producing selection sets that mixed "+1.5"/"-1.5" alongside "1+".."5+"
+  // for the same player — nonsensical side by side (audit-match Arsenal vs
+  // Coventry City, round 8: /audit-match flagged this as mixed_vocabulary).
+  // No dedicated "player handicap line" catalog code exists yet, so route
+  // to the generic OTHER catch-all (still fully visible, per-player raw
+  // name preserved) instead of forcing it into the wrong shape.
   1853: "PLAYER_PASSES_LINEUP",
   1855: "PLAYER_CARDS_LINEUP",
   1854: "PLAYER_TACKLES_LINEUP",

@@ -1032,6 +1032,20 @@ function isCatalogSelection(marketCode: NormalizedMarketType, code: string): boo
  */
 const LVBET_PLAYER_NAME_ALIASES: Record<string, string> = {
   "victor torp overgaard": "Victor Torp",
+  // Audit-match (Arsenal vs Coventry City, round 6/5c): LVBet's "Coventry
+  // City - Pierwszy strzelec" (AWAY_GOALSCORER_FIRST) lists both a
+  // short-form and a full-legal-name (with middle name) row for the SAME
+  // real player at DIFFERENT prices — "Ellis Reco Simms" 4.7 alongside
+  // "Ellis Simms" 6.75, and "Ephron Jardell Mason-Clark" 6.75 alongside
+  // "Ephron Mason-Clark" 9.5. Without this alias both rows keep distinct
+  // codes and the downstream grouper's first-seen-wins tie-break (which
+  // sees "Reco"/"Jardell" first, since it precedes the short form in
+  // LVBet's own selection order) shows the WORSE price under the short
+  // canonical name. Folding both onto the canonical short form here lets
+  // dedupePlayerNameDuplicates (below) resolve the collision by keeping the
+  // higher (correct, better-for-the-bettor) price instead.
+  "ellis reco simms": "Ellis Simms",
+  "ephron jardell mason-clark": "Ephron Mason-Clark",
 };
 
 function normalizeLvbetPlayerName(raw: string): string {
@@ -2093,6 +2107,84 @@ function mergeDuplicateCodedSelections(
   return order.map((code) => byCode.get(code)!);
 }
 
+/**
+ * Markets whose raw selection LABEL is itself the player's name (see the
+ * shared case block in normalizeSelectionForMarket ending in
+ * `normalizeLvbetPlayerName(trimmed)`). When LVBET_PLAYER_NAME_ALIASES folds
+ * two raw rows for the SAME real player onto one code within one of these
+ * markets, dedupePlayerNameDuplicates must resolve the resulting collision.
+ */
+const PLAYER_NAME_AS_SELECTION_CODE_MARKETS = new Set<NormalizedMarketType>([
+  "GOALSCORER_FIRST",
+  "GOALSCORER_LAST",
+  "GOALSCORER_ANYTIME",
+  "HOME_GOALSCORER_FIRST",
+  "AWAY_GOALSCORER_FIRST",
+  "HOME_GOALSCORER_LAST",
+  "AWAY_GOALSCORER_LAST",
+  "HALF_TIME_GOALSCORER_ANYTIME",
+  "SECOND_HALF_GOALSCORER_ANYTIME",
+  "PLAYER_GOALS",
+  "PLAYER_CARDS",
+  "PLAYER_ASSISTS",
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_FOULS_OVER",
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_SHOTS_OVER",
+  "PLAYER_TACKLES",
+  "PLAYER_SAVES",
+  "GOALKEEPER_SAVES_OVER",
+  "PLAYER_RED_CARD",
+  "PLAYER_HEADER_GOAL",
+  "PLAYER_GOAL_AND_ASSIST",
+  "PLAYER_GOAL_OR_ASSIST",
+  "PLAYER_GOAL_OUTSIDE_BOX",
+  "PLAYER_SCORES_BOTH_HALVES",
+  "PLAYER_2_OR_MORE_GOALS",
+  "PLAYER_3_OR_MORE_GOALS",
+  "PLAYER_4_OR_MORE_GOALS",
+  "PENALTY_SCORER",
+  "PLAYER_GOAL_TEAM_LOSES",
+  "PLAYER_GOAL_AND_RESULT",
+  "FIRST_CARD_PLAYER",
+]);
+
+/**
+ * Resolves a same-code collision caused by LVBET_PLAYER_NAME_ALIASES folding
+ * two distinct raw rows for the SAME real player (e.g. "Ellis Reco Simms"
+ * and "Ellis Simms", audit-match Arsenal vs Coventry City round 6) onto one
+ * selection code within a single raw market. Unlike
+ * mergeDuplicateCodedSelections (which sums implied probability because its
+ * callers combine genuinely DIFFERENT sub-outcomes into one bucket), both
+ * rows here price the EXACT SAME real-world bet — LVBet's own duplicate
+ * listing, not two alternative ways to win — so the correct resolution is to
+ * keep the single best (highest) price instead of blending them into a
+ * lower, fabricated one.
+ */
+function dedupePlayerNameDuplicates(
+  selections: Array<{ code: NormalizedSelection; label: string; odds: number }>
+): Array<{ code: NormalizedSelection; label: string; odds: number }> {
+  const byCode = new Map<string, { code: NormalizedSelection; label: string; odds: number }>();
+  const order: string[] = [];
+
+  for (const sel of selections) {
+    const existing = byCode.get(sel.code);
+    if (!existing) {
+      byCode.set(sel.code, { ...sel });
+      order.push(sel.code);
+      continue;
+    }
+    if (sel.odds > existing.odds) {
+      existing.odds = sel.odds;
+      existing.label = sel.label;
+    }
+  }
+
+  return order.map((code) => byCode.get(code)!);
+}
+
 export const lvbetNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "lvbet",
 
@@ -2150,6 +2242,14 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     // downstream dedup silently drop one of them.
     if (marketCode === "CORNERS_RANGE" || EXACT_GOALS_MERGE_FAMILY.has(marketCode)) {
       selections = mergeDuplicateCodedSelections(selections);
+    }
+
+    // A player-name-aliased duplicate (LVBET_PLAYER_NAME_ALIASES, e.g. "Ellis
+    // Reco Simms" -> "Ellis Simms") collides on the SAME selection code
+    // within one raw market — keep the single best price instead of letting
+    // downstream first-seen-wins tie-breaks surface the worse duplicate.
+    if (PLAYER_NAME_AS_SELECTION_CODE_MARKETS.has(marketCode)) {
+      selections = dedupePlayerNameDuplicates(selections);
     }
 
     // A market whose every selection was dropped carries no usable data

@@ -1254,6 +1254,31 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    // Stake type 40424 ("Multiwynik") is a combo-builder product routed to
+    // OTHER (see LEBULL_MARKET_ID_TO_CODE): each of its 8-11 selections is a
+    // genuinely distinct "either of these 3 exact scores" bet (e.g. "1:0,
+    // 2:0 lub 2:1" vs "1:0, 2:0 lub 3:0"), but the default OTHER resolver
+    // (normalize1x2Selection, via the switch's default case) cannot parse
+    // score-triple text and collapses every combo onto the shared "UNKNOWN"
+    // code. Selections sharing one code collide when the repository merges
+    // same-code rows (mergeMarketRecord keeps only the first-seen odds), so
+    // 7 of the 8 combos were silently lost, leaving only 1 surviving per
+    // scrape. OTHER has no fixed catalog vocabulary (selections: []), so
+    // derive a deterministic per-combo code straight from the raw
+    // score-triple text instead (e.g. "1:0, 2:0 lub 2:1" -> "1-0_2-0_2-1"):
+    // stable across scrapes (identical raw text always yields the same code,
+    // so re-scrapes update rather than duplicate) and distinct across all 8
+    // combos in this match's offer.
+    if (marketCode === "OTHER" && String(raw.bookmakerMarketId) === "40424") {
+      selections = raw.selections.map((sel) => {
+        const scores = sel.name.match(/\d+\s*:\s*\d+/g);
+        const code = scores?.length
+          ? scores.map((s) => s.replace(/\s*:\s*/, "-")).join("_")
+          : "UNKNOWN";
+        return { code: code as NormalizedSelection, label: sel.name, odds: sel.odds };
+      });
+    }
+
     // Markets whose catalog vocabulary is closed (time-period 1X2/totals and
     // the combo grids mapped above) must not surface unmappable raw labels:
     // a stray outcome from another market family or an unrepresentable combo

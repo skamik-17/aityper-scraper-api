@@ -13258,17 +13258,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. połowa",
             "odds": 3.25
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "równo",
             "odds": 3.3
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2. połowa",
             "odds": 2.05
           }

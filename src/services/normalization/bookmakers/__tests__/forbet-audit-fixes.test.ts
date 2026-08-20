@@ -121,7 +121,7 @@ describe("forbet audit fixes", () => {
     expect(out.selections.map((s) => s.code)).toEqual(["0", "1-2", "1-3", "2-3", "4+"]);
   });
 
-  it("maps HALF_WITH_MORE_GOALS halves to 1st/2nd/Draw", () => {
+  it("maps HALF_WITH_MORE_GOALS halves to 1ST_HALF/2ND_HALF/DRAW", () => {
     const out = run(
       {
         bookmakerMarketId: "38",
@@ -135,7 +135,7 @@ describe("forbet audit fixes", () => {
       ctxA
     );
     expect(out.marketCode).toBe("HALF_WITH_MORE_GOALS");
-    expect(out.selections.map((s) => s.code)).toEqual(["1st", "2nd", "Draw"]);
+    expect(out.selections.map((s) => s.code)).toEqual(["1ST_HALF", "2ND_HALF", "DRAW"]);
   });
 
   it("routes 2H double chance + BTTS combo away from DOUBLE_CHANCE", () => {
@@ -223,7 +223,8 @@ describe("forbet audit fixes", () => {
   // Audit cluster #8 (2026-08-19): -239/-240 used to route to the isolated
   // TEAM_HALF_WITH_MORE_GOALS key (now retired). They now merge onto the
   // shared HOME_/AWAY_HALF_WITH_MOST_GOALS codes 9+ other bookmakers pool
-  // under, with plain 1st/2nd/Draw selections and no paramValue.
+  // under, with canonical 1ST_HALF/2ND_HALF/DRAW selections (audit-loop
+  // minor cluster #1, 2026-08-20) and no paramValue.
   it("maps away-team half-with-more-goals to AWAY_HALF_WITH_MOST_GOALS", () => {
     const out = run(
       {
@@ -240,9 +241,9 @@ describe("forbet audit fixes", () => {
     expect(out.marketCode).toBe("AWAY_HALF_WITH_MOST_GOALS");
     expect(out.paramValue).toBeUndefined();
     expect(out.selections.map((s) => s.code)).toEqual([
-      "1st",
-      "2nd",
-      "Draw",
+      "1ST_HALF",
+      "2ND_HALF",
+      "DRAW",
     ]);
   });
 
@@ -262,9 +263,9 @@ describe("forbet audit fixes", () => {
     expect(out.marketCode).toBe("HOME_HALF_WITH_MOST_GOALS");
     expect(out.paramValue).toBeUndefined();
     expect(out.selections.map((s) => s.code)).toEqual([
-      "1st",
-      "2nd",
-      "Draw",
+      "1ST_HALF",
+      "2ND_HALF",
+      "DRAW",
     ]);
   });
 
@@ -833,7 +834,7 @@ describe("forbet audit fixes", () => {
       ctxC
     );
     expect(out.marketCode).toBe("BTTS_BY_HALF");
-    expect(out.selections.map((s) => s.code)).toEqual(["None", "1st", "2nd", "Both"]);
+    expect(out.selections.map((s) => s.code)).toEqual(["NONE", "1ST_HALF", "2ND_HALF", "BOTH"]);
   });
 
   it("maps home-team goals before minute 30 with O/U codes and minute param", () => {

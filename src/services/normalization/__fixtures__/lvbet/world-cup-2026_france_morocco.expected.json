@@ -40,31 +40,31 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_WITH_MORE_CORNERS",
-        "marketKey": "HALF_WITH_MORE_CORNERS",
+        "marketCode": "HALF_WITH_MOST_CORNERS",
+        "marketKey": "HALF_WITH_MOST_CORNERS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 2.65
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 7.75
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 1.75
           }
         ]
       },
       "index": 3,
-      "marketCode": "HALF_WITH_MORE_CORNERS",
+      "marketCode": "HALF_WITH_MOST_CORNERS",
       "rawName": "Połowa z największą liczbą rzutów rożnych"
     },
     {
@@ -3619,10 +3619,10 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "BOTH_TEAMS_MIN_CARDS",
-        "marketKey": "BOTH_TEAMS_MIN_CARDS:2",
+        "marketCode": "BOTH_TEAMS_2PLUS_CARDS",
+        "marketKey": "BOTH_TEAMS_2PLUS_CARDS",
         "matchedBy": "pattern",
-        "paramValue": "2",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
@@ -3638,7 +3638,7 @@
         ]
       },
       "index": 35,
-      "marketCode": "BOTH_TEAMS_MIN_CARDS",
+      "marketCode": "BOTH_TEAMS_2PLUS_CARDS",
       "rawName": "Obie drużyny otrzymają min. 2 kartki"
     },
     {
@@ -7854,22 +7854,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Both",
+            "code": "BOTH",
             "label": "Tak/Tak",
             "odds": 8.5
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Tak/Nie",
             "odds": 7
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Nie/Tak",
             "odds": 3.7
           },
           {
-            "code": "None",
+            "code": "NONE",
             "label": "Nie/Nie",
             "odds": 1.38
           }
@@ -11625,17 +11625,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 3.4
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 2.85
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 2.32
           }
@@ -12159,17 +12159,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 5.3
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 1.85
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 2.9
           }
@@ -13021,8 +13021,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DIFFERENT_HALF_WINNERS",
-        "marketKey": "DIFFERENT_HALF_WINNERS",
+        "marketCode": "EACH_TEAM_WINS_ONE_HALF",
+        "marketKey": "EACH_TEAM_WINS_ONE_HALF",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
@@ -13040,7 +13040,7 @@
         ]
       },
       "index": 291,
-      "marketCode": "DIFFERENT_HALF_WINNERS",
+      "marketCode": "EACH_TEAM_WINS_ONE_HALF",
       "rawName": "Obie połowy wygrają różne drużyny"
     },
     {
@@ -13249,17 +13249,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 3.55
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 3.55
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 1.95
           }

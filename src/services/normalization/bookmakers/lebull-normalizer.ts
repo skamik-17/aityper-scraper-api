@@ -21,6 +21,7 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 
@@ -195,7 +196,11 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   5685189: "OTHER",
   5685190: "OTHER",
   671: "OTHER",
-  421317: "HALF_TIME_AND_SECOND_HALF_RESULT",
+  // audit-loop cluster #4 (MINOR pass): merged into HALF_TIME_SECOND_HALF_RESULT
+  // - HALF_TIME_AND_SECOND_HALF_RESULT was a byte-for-byte duplicate catalog
+  // code that only lebull ever populated, isolating its quotes from
+  // betcris/lvbet's identical "1. połowa / 2. połowa" market.
+  421317: "HALF_TIME_SECOND_HALF_RESULT",
   262275: "BOTH_HALVES_OVER_COMBO",
   // Round 9 /audit-match (Arsenal vs Coventry City): these ids ("suma
   // między X-Y min") are lebull's disjoint-segment goal-total family — the
@@ -376,7 +381,8 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "TOTAL_GOALS_AND_BTTS",
   "SECOND_HALF_RESULT_OR_BTTS",
   "RESULT_OR_BTTS",
-  "HALF_TIME_AND_SECOND_HALF_RESULT",
+  // Merged from HALF_TIME_AND_SECOND_HALF_RESULT (audit-loop cluster #4).
+  "HALF_TIME_SECOND_HALF_RESULT",
   "DOUBLE_CHANCE_GOAL_RANGE",
   "HALFTIME_FULLTIME",
   "MULTI_RESULT",
@@ -492,9 +498,12 @@ function resolveMarketCode(
       .replace(/^dok[lł]adny\s+wynik\s+/i, "")
       .trim()
       .replace(/\s+/g, " ");
-    const comboCode = /^(x|remis)$/i.test(combo) ? "X" : combo;
+    // Structured GROUP_<h>_<a>__... token (see normalizeMultiResultSelection)
+    // instead of the raw combo text, so membership is checked against the
+    // canonical catalog codes, not the raw Polish sentence.
+    const comboCode = normalizeMultiResultSelection(combo, ctx.homeTeam, ctx.awayTeam, ctx.league);
     const multiMeta = getMarketMetadata("MULTI_RESULT");
-    if (multiMeta?.selections.includes(comboCode)) {
+    if (comboCode && multiMeta?.selections.includes(comboCode)) {
       return { marketCode: "MULTI_RESULT", matchedBy: "pattern" };
     }
     return { marketCode: "OTHER", matchedBy: "pattern" };
@@ -839,31 +848,33 @@ function normalizeSelectionForMarket(
 
     case "BTTS_BY_HALF":
       // Raw labels are "Tak/Tak", "Tak/Nie", "Nie/Tak", "Nie/Nie"
-      // (BTTS in 1st half / BTTS in 2nd half).
-      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
-      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
+      // (BTTS in 1st half / BTTS in 2nd half). Canonical
+      // 1ST_HALF/2ND_HALF/BOTH/NONE (audit-loop minor cluster #1).
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "BOTH" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
     case "HALF_WITH_MORE_GOALS":
       // Raw labels compare halves: "1. > 2." (1st half higher), "1. < 2.",
-      // "1. = 2." — catalog selections are 1st/2nd/Draw. The per-team
-      // variants ("Arsenal. Połowa z wyższą sumą goli", routed to
-      // HOME_/AWAY_HALF_WITH_MOST_GOALS in resolveMarketCode) use the exact
-      // same selection vocabulary as the match-wide market, so they share
-      // this branch. Without it they fell through to the default 1x2
-      // resolver, collapsed all three legs to UNKNOWN, and the grouper's
-      // duplicate-type guard kept only the first quote.
-      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return "Draw" as NormalizedSelection;
+      // "1. = 2." — catalog selections are canonical 1ST_HALF/2ND_HALF/DRAW
+      // (audit-loop minor cluster #1). The per-team variants ("Arsenal.
+      // Połowa z wyższą sumą goli", routed to HOME_/AWAY_HALF_WITH_MOST_GOALS
+      // in resolveMarketCode) use the exact same selection vocabulary as the
+      // match-wide market, so they share this branch. Without it they fell
+      // through to the default 1x2 resolver, collapsed all three legs to
+      // UNKNOWN, and the grouper's duplicate-type guard kept only the first
+      // quote.
+      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return "DRAW" as NormalizedSelection;
       // "ł" survives normalizeMarketName (NFD does not decompose it).
-      if (/1\.?\s*po[lł]ow/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/2\.?\s*po[lł]ow/.test(normalized)) return "2nd" as NormalizedSelection;
-      if (/^(remis|rowno)/.test(normalized)) return "Draw" as NormalizedSelection;
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
+      if (/^(remis|rowno)/.test(normalized)) return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
     case "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE": {
@@ -936,7 +947,7 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
-    case "HALF_TIME_AND_SECOND_HALF_RESULT": {
+    case "HALF_TIME_SECOND_HALF_RESULT": {
       // "1. połowa Kolumbia + 2. połowa remis" (separator can also be "i" and
       // "2.połowa" may lack the space) -> AWAY_DRAW.
       const halves = trimmed.match(
@@ -952,15 +963,17 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
-    case "MULTI_RESULT":
-      // Combo labels arrive pre-merged from the parser and equal the catalog
-      // codes ("1:0, 2:0 lub 3:0", ..., "X"); Tak/Nie sub-market quotes are
-      // rewritten in normalizeMarket instead.
-      if (/^(x|remis)$/.test(normalized)) return "X" as NormalizedSelection;
-      if (getMarketMetadata("MULTI_RESULT")?.selections.includes(trimmed)) {
-        return trimmed as NormalizedSelection;
+    case "MULTI_RESULT": {
+      // Combo labels arrive pre-merged from the parser; canonicalize to the
+      // structured GROUP_<h>_<a>__... token (see normalizeMultiResultSelection)
+      // and verify it against the catalog before trusting it. Tak/Nie
+      // sub-market quotes are rewritten in normalizeMarket instead.
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical && getMarketMetadata("MULTI_RESULT")?.selections.includes(canonical)) {
+        return canonical;
       }
       return "UNKNOWN";
+    }
 
     case "GOALSCORER_FIRST":
     case "GOALSCORER_LAST":
@@ -1324,7 +1337,7 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
     // one. Rather than surface an unverifiable price as if authoritative,
     // drop every code that shows disagreeing odds within this single raw
     // market row.
-    if (marketCode === "HALF_TIME_AND_SECOND_HALF_RESULT") {
+    if (marketCode === "HALF_TIME_SECOND_HALF_RESULT") {
       const oddsByCode = new Map<string, Set<number>>();
       for (const sel of selections) {
         if (!oddsByCode.has(sel.code)) oddsByCode.set(sel.code, new Set());
@@ -1414,14 +1427,16 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
     }
 
     // Per-combo "Dokładny wynik 1:0, 2:0 lub 3:0" sub-markets are quoted as
-    // Tak/Nie: "Tak" IS the combo's price (the catalog code equals the combo
-    // text); "Nie" has no slot in the mutually exclusive catalog and is dropped.
+    // Tak/Nie: "Tak" IS the combo's price; "Nie" has no slot in the mutually
+    // exclusive catalog and is dropped. Canonicalize to the structured
+    // GROUP_<h>_<a>__... token (see normalizeMultiResultSelection) instead of
+    // trusting the raw combo text to equal the catalog code verbatim.
     if (marketCode === "MULTI_RESULT") {
       const comboMatch = raw.name.match(/^dok[lł]adny\s+wynik\s+(.+)$/i);
       if (comboMatch) {
         const comboRaw = comboMatch[1].trim().replace(/\s+/g, " ");
-        const combo = /^(x|remis)$/i.test(comboRaw) ? "X" : comboRaw;
-        if (getMarketMetadata("MULTI_RESULT")?.selections.includes(combo)) {
+        const combo = normalizeMultiResultSelection(comboRaw, ctx.homeTeam, ctx.awayTeam, ctx.league);
+        if (combo && getMarketMetadata("MULTI_RESULT")?.selections.includes(combo)) {
           selections = raw.selections
             .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")
             .map((sel) => ({

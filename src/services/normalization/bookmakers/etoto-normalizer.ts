@@ -9,6 +9,7 @@ import type {
 import {
   buildMarketKey,
   collapseBothHalvesOverGoalsZeroFive,
+  rerouteWholeGoalLineToAsian,
   canonicalizePlayerName,
   parseDecimalLine,
   parseHandicapLine,
@@ -21,6 +22,7 @@ import {
   normalizeYesNoSelection,
   parseScoreSelection,
   parseHtFtSelection,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 
@@ -845,9 +847,10 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
-      if (/^1\.?\s*polowa/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/^2\.?\s*polowa/.test(normalized)) return "2nd" as NormalizedSelection;
-      if (/^(x$|po rowno|rowno|remis)/.test(normalized)) return "Draw" as NormalizedSelection;
+      // Canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
+      if (/^1\.?\s*polowa/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/^2\.?\s*polowa/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
+      if (/^(x$|po rowno|rowno|remis)/.test(normalized)) return "DRAW" as NormalizedSelection;
       return "UNKNOWN";
 
     case "TEAMS_TO_SCORE": {
@@ -865,10 +868,10 @@ function normalizeSelectionForMarket(
     case "BTTS_BY_HALF": {
       const match = normalized.match(/^(tak|nie)\s*\/\s*(tak|nie)$/);
       if (match) {
-        if (match[1] === "tak" && match[2] === "tak") return "Both" as NormalizedSelection;
-        if (match[1] === "tak") return "1st" as NormalizedSelection;
-        if (match[2] === "tak") return "2nd" as NormalizedSelection;
-        return "None" as NormalizedSelection;
+        if (match[1] === "tak" && match[2] === "tak") return "BOTH" as NormalizedSelection;
+        if (match[1] === "tak") return "1ST_HALF" as NormalizedSelection;
+        if (match[2] === "tak") return "2ND_HALF" as NormalizedSelection;
+        return "NONE" as NormalizedSelection;
       }
       return "UNKNOWN";
     }
@@ -1029,17 +1032,14 @@ function normalizeSelectionForMarket(
       return "UNKNOWN";
     }
 
-    // Catalog uses the raw combo strings ("1:0, 2:0 lub 3:0", "X") verbatim,
-    // except the "other win" legs which eToto quotes lowercase and in the
-    // wrong grammatical case ("inne zwycięstwo gospodarze"/"goście") instead
-    // of the catalog's capitalized genitive form.
+    // Structured GROUP_<h>_<a>__... tokens (see normalizeMultiResultSelection)
+    // sidestep the grammatical-case drift eToto used to need special-cased
+    // fixes for ("inne zwycięstwo gospodarze"/"goście" instead of the
+    // catalog's genitive form) since the "other win" phrasing is matched by
+    // stem, not by the exact catalog string.
     case "MULTI_RESULT": {
-      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(normalized)) {
-        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
-      }
-      if (/^inne\s+zwyci[eę]stwo\s+go[sś]ci/i.test(normalized)) {
-        return "Inne zwycięstwo gości" as NormalizedSelection;
-      }
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 
@@ -1249,6 +1249,15 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       const collapsed = collapseBothHalvesOverGoalsZeroFive(marketCode, paramValue);
       marketCode = collapsed.marketCode as NormalizedMarketType;
       paramValue = collapsed.paramValue;
+    }
+    // audit cluster #12: etoto's "Suma X goli" id (8) spans the whole
+    // 0.5..5.5 ladder undifferentiated — reroute bare-integer lines to
+    // TOTAL_GOALS_ASIAN so they pool with every other bookmaker's
+    // whole-number lines instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(marketCode, paramValue);
+      marketCode = rerouted.marketCode as NormalizedMarketType;
+      paramValue = rerouted.paramValue;
     }
     const marketKey = buildMarketKey(marketCode, paramValue);
     const marketMetadata = getMarketMetadata(marketCode);

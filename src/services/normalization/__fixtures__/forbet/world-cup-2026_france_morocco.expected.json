@@ -4310,17 +4310,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 połowa",
             "odds": 2.85
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2 połowa",
             "odds": 2.07
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Remis",
             "odds": 3.15
           }
@@ -4341,17 +4341,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 połowa",
             "odds": 3.1
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2 połowa",
             "odds": 2.48
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Remis",
             "odds": 2.8
           }
@@ -4372,17 +4372,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 połowa",
             "odds": 4.4
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2 połowa",
             "odds": 3.35
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Remis",
             "odds": 1.8
           }
@@ -6614,22 +6614,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "None",
+            "code": "NONE",
             "label": "nie/nie",
             "odds": 1.33
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "tak/nie",
             "odds": 5.2
           },
           {
-            "code": "Both",
+            "code": "BOTH",
             "label": "tak/tak",
             "odds": 19
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "nie/tak",
             "odds": 3.9
           }

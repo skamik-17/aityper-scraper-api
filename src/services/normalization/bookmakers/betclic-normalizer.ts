@@ -148,7 +148,11 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "wiecej rzutow roznych": "CORNERS_RACE",
   "pierwszy zespol ktory otrzyma kartke": "FIRST_CARD",
   "liczba rzutow roznych - 1. polowa": "HALF_TIME_CORNERS_TOTAL",
-  "liczba kartek - 1. polowa": "HALF_TIME_CARDS_TOTAL",
+  // "Liczba Kartek - 1. połowa" is an exact-count ladder (0/1/2/3/4/5/6+),
+  // not an OVER/UNDER line market — route to the dedicated COMBINATION
+  // code instead of HALF_TIME_CARDS_TOTAL, same fix already applied to
+  // fuksiarz's equivalent bucket panel (audit cluster #0, finding 2).
+  "liczba kartek - 1. polowa": "HALF_TIME_CARDS_EXACT",
   "rzuty rozne handicap": "CORNERS_HANDICAP",
   "rzuty rozne handicap (2-way) 1. polowa": "HALF_TIME_CORNERS_HANDICAP",
   "wynik i gole": "RESULT_AND_TOTAL",
@@ -206,6 +210,14 @@ const BETCLIC_MARKET_PATTERNS: Array<{
      { pattern: /^gol.*rzut.*karn.*2\. polowa/i, code: "SECOND_HALF_PENALTY_GOAL" },
     { pattern: /^1\. polowa - nastepny \d+ rzut rozny$/i, code: "NEXT_CORNER_1H" },
      { pattern: /^1\. polowa - ostatni rzut rozny$/i, code: "HALF_TIME_LAST_CORNER" },
+    // NOTE: this regex fallback (no dash — "Liczba Kartek 1. połowa") is the
+    // pre-split genuine OVER/UNDER decimal-line variant of this raw market
+    // (odds evidence: selections "Powyżej 0,5"/"Poniżej 0,5" etc, one row
+    // per line) — it must stay on HALF_TIME_CARDS_TOTAL. Only the exact-
+    // string map entry above ("liczba kartek - 1. polowa", WITH dash — the
+    // single raw market bundling the whole 0/1/2/3/4/5/6+ exact-count
+    // ladder as its selections) routes to HALF_TIME_CARDS_EXACT; audit
+    // cluster #0, finding 2 — don't collapse these two distinct raw shapes.
     { pattern: /^liczba kartek\s*1\.?\s*polowa/i, code: "HALF_TIME_CARDS_TOTAL" },
      { pattern: /^podwojna szansa\s*\(1\.?\s*polowa\s+lub\s+mecz\)/i, code: "HT_OR_FT_RESULT" },
      { pattern: /^podwojna szansa.*\(.*lub.*\)/i, code: "DOUBLE_CHANCE" },
@@ -2074,14 +2086,14 @@ function normalizeSelectionForMarket(
 
     case "BTTS_BY_HALF": {
       const normalized = normalizeName(trimmed);
-      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
-      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
-      if (normalized.includes("1. polowa") || normalized === "1") return "1st" as NormalizedSelection;
-      if (normalized.includes("2. polowa") || normalized === "2") return "2nd" as NormalizedSelection;
-      if (normalized.includes("obie") || normalized.includes("both") || normalized === "rowno") return "Both" as NormalizedSelection;
-      if (normalized.includes("zadnej") || normalized.includes("zadna") || normalized.includes("none") || normalized.includes("bez goli") || normalized.includes("brak goli")) return "None" as NormalizedSelection;
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "BOTH" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "NONE" as NormalizedSelection;
+      if (normalized.includes("1. polowa") || normalized === "1") return "1ST_HALF" as NormalizedSelection;
+      if (normalized.includes("2. polowa") || normalized === "2") return "2ND_HALF" as NormalizedSelection;
+      if (normalized.includes("obie") || normalized.includes("both") || normalized === "rowno") return "BOTH" as NormalizedSelection;
+      if (normalized.includes("zadnej") || normalized.includes("zadna") || normalized.includes("none") || normalized.includes("bez goli") || normalized.includes("brak goli")) return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -2097,14 +2109,16 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS": {
-      // Same 1st/2nd/Draw catalog selections whether the raw market is the
-      // plain (no-team) or the per-team variant — merged onto the shared
-      // HOME_/AWAY_HALF_WITH_MOST_GOALS codes peer bookmakers pool under
-      // (audit cluster #8, 2026-08-19; was TEAM_HALF_WITH_MORE_GOALS).
+      // Same canonical 1ST_HALF/2ND_HALF/DRAW catalog selections whether the
+      // raw market is the plain (no-team) or the per-team variant — merged
+      // onto the shared HOME_/AWAY_HALF_WITH_MOST_GOALS codes peer
+      // bookmakers pool under (audit cluster #8, 2026-08-19; was
+      // TEAM_HALF_WITH_MORE_GOALS). Tokens canonicalized from mixed-case
+      // "1st"/"2nd"/"Draw" in audit-loop minor cluster #1.
       const normalized = normalizeName(trimmed);
-      if (normalized.includes("1. polowa") || normalized === "1") return "1st" as NormalizedSelection;
-      if (normalized.includes("2. polowa") || normalized === "2") return "2nd" as NormalizedSelection;
-      if (normalized.includes("remis") || normalized === "x") return "Draw" as NormalizedSelection;
+      if (normalized.includes("1. polowa") || normalized === "1") return "1ST_HALF" as NormalizedSelection;
+      if (normalized.includes("2. polowa") || normalized === "2") return "2ND_HALF" as NormalizedSelection;
+      if (normalized.includes("remis") || normalized === "x") return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -2184,6 +2198,7 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_HOME_EXACT_CORNERS":
     case "HALF_TIME_AWAY_EXACT_CORNERS":
     case "HALF_TIME_CARDS_TOTAL":
+    case "HALF_TIME_CARDS_EXACT":
     case "HALF_TIME_CORNERS_TOTAL": {
       const sel = trimmed.trim();
       // Range/exact-count variants first

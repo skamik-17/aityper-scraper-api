@@ -4282,22 +4282,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Both",
+            "code": "BOTH",
             "label": "Tak/Tak",
             "odds": 18.5
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Tak/Nie",
             "odds": 8
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Nie/Tak",
             "odds": 4.25
           },
           {
-            "code": "None",
+            "code": "NONE",
             "label": "Nie/Nie",
             "odds": 1.52
           }
@@ -4946,17 +4946,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1. < 2.",
             "odds": 2.01
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1. = 2.",
             "odds": 3.65
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. > 2.",
             "odds": 3.6
           }
@@ -4977,17 +4977,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1. < 2.",
             "odds": 2.26
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1. = 2.",
             "odds": 2.93
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. > 2.",
             "odds": 3.8
           }
@@ -5008,17 +5008,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1. < 2.",
             "odds": 3.25
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1. = 2.",
             "odds": 1.84
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. > 2.",
             "odds": 5.05
           }
@@ -7302,8 +7302,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_AND_SECOND_HALF_RESULT",
-        "marketKey": "HALF_TIME_AND_SECOND_HALF_RESULT",
+        "marketCode": "HALF_TIME_SECOND_HALF_RESULT",
+        "marketKey": "HALF_TIME_SECOND_HALF_RESULT",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -7346,7 +7346,7 @@
         ]
       },
       "index": 221,
-      "marketCode": "HALF_TIME_AND_SECOND_HALF_RESULT",
+      "marketCode": "HALF_TIME_SECOND_HALF_RESULT",
       "rawName": "1. połowa + 2. połowa"
     },
     {

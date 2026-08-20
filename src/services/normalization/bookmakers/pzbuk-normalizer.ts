@@ -18,6 +18,7 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { isValidMarketCode } from "../../../data/market-catalog.js";
 
@@ -572,10 +573,10 @@ function normalizeSelectionForMarket(
       if (grid) {
         const first = grid[1] === "tak" || grid[1] === "yes";
         const second = grid[2] === "tak" || grid[2] === "yes";
-        if (first && second) return "Both" as NormalizedSelection;
-        if (first) return "1st" as NormalizedSelection;
-        if (second) return "2nd" as NormalizedSelection;
-        return "None" as NormalizedSelection;
+        if (first && second) return "BOTH" as NormalizedSelection;
+        if (first) return "1ST_HALF" as NormalizedSelection;
+        if (second) return "2ND_HALF" as NormalizedSelection;
+        return "NONE" as NormalizedSelection;
       }
       return "UNKNOWN";
     }
@@ -704,13 +705,13 @@ function normalizeSelectionForMarket(
     case "AWAY_HALF_WITH_MOST_GOALS": {
       const lower = trimmed.toLowerCase();
       if (/1\.?\s*po[łl]ow/.test(lower) || /^(1st|pierwsza)/.test(lower)) {
-        return "1st" as NormalizedSelection;
+        return "1ST_HALF" as NormalizedSelection;
       }
       if (/2\.?\s*po[łl]ow/.test(lower) || /^(2nd|druga)/.test(lower)) {
-        return "2nd" as NormalizedSelection;
+        return "2ND_HALF" as NormalizedSelection;
       }
       if (/^(po\s+)?(r[óo]wno|remis|equal|draw|x)$/.test(lower)) {
-        return "Draw" as NormalizedSelection;
+        return "DRAW" as NormalizedSelection;
       }
       return "UNKNOWN";
     }
@@ -766,21 +767,13 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT": {
-      // Catalog's canonical draw code is "X" — mapping "remis" through the
-      // 1X2 helper produced "DRAW", stranding the draw price outside the
-      // catalog selection set. Multi-score buckets pass through as-is.
-      if (/^(x|remis|draw)$/i.test(trimmed)) return "X" as NormalizedSelection;
-      // Audit r5 (France vs Morocco): pzbuk lowercases the "other win" rows
-      // ("inne zwycięstwo gospodarzy"/"inne zwycięstwo gości") while the
-      // catalog's canonical strings are capitalized — align casing so these
-      // match the catalog exactly instead of surviving as an uncomparable
-      // raw-cased duplicate selection.
-      if (/^inne zwyci[eę]stwo gospodarzy$/i.test(trimmed)) {
-        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
-      }
-      if (/^inne zwyci[eę]stwo go[śs]ci$/i.test(trimmed)) {
-        return "Inne zwycięstwo gości" as NormalizedSelection;
-      }
+      // Structured GROUP_<h>_<a>__... tokens (see
+      // normalizeMultiResultSelection) sidestep the casing drift pzbuk used
+      // to need special-cased fixes for ("inne zwycięstwo gospodarzy" was
+      // quoted lowercase; "remis" needed its own draw-code alias) since the
+      // score pairs are parsed directly instead of string-matched verbatim.
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 

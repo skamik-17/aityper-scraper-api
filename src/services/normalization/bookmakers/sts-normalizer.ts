@@ -18,6 +18,7 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { isValidMarketCode, getCategoryForMarket } from "../../../data/market-catalog.js";
 
@@ -116,10 +117,18 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
   31: "AWAY_TEAM_TOTAL_GOALS",
-  // Same reasoning as id 80/110 above: route the "z możliwym zwrotem"
-  // whole-number line into the plain TOTAL_GOALS family instead of the
-  // bookmaker-exclusive *_ASIAN code.
-  23: "TOTAL_GOALS",
+  // audit cluster #12: id 23 is STS's own "Liczba goli (z możliwym
+  // zwrotem)" whole-number line — its own raw label already says "possible
+  // refund", the exact Polish text TOTAL_GOALS_ASIAN's catalog label uses
+  // (parameterType "integer", validParameters "1".."6", built for exactly
+  // this push-on-exact-line shape). A prior round routed it into the plain
+  // TOTAL_GOALS family instead, reasoning that other bookmakers fold their
+  // whole-number lines in there too — true, but that turned out to be a bug
+  // on THEIR side (betcris/betfan/etoto/fortuna/fuksiarz/lvbet now reroute
+  // bare-integer TOTAL_GOALS rows to TOTAL_GOALS_ASIAN post-mapping, see
+  // rerouteWholeGoalLineToAsian in helpers/index.ts), not a convention to
+  // match. Route id 23 to TOTAL_GOALS_ASIAN directly so it pools with them.
+  23: "TOTAL_GOALS_ASIAN",
 
   43: "BTTS",
   121: "SECOND_HALF_BTTS",
@@ -295,7 +304,10 @@ const STS_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType; ex
 
   // Goals markets - with parameter extraction
   { pattern: /^liczba\s+goli\s+(\d+[.,]\d+)$/i, code: "TOTAL_GOALS", extractParam: (m) => m[1]?.replace(",", ".") },
-  { pattern: /^liczba\s+goli\s+\(zwrot\)\s*(\d+)$/i, code: "TOTAL_GOALS", extractParam: (m) => m[1] },
+  // audit cluster #12: this "(zwrot)" spelling is the same push/refund
+  // whole-number line as id 23 above ("Liczba goli (z możliwym zwrotem) N")
+  // — route it to TOTAL_GOALS_ASIAN too so both spellings pool together.
+  { pattern: /^liczba\s+goli\s+\(zwrot\)\s*(\d+)$/i, code: "TOTAL_GOALS_ASIAN", extractParam: (m) => m[1] },
   { pattern: /^obie\s+dru[zż]yny\s+strzel[aą]$/i, code: "BTTS" },
 
   // Half-time markets
@@ -750,22 +762,24 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     
     case "BTTS_BY_HALF":
-      if (lower === "tak / nie" || lower === "tak/nie") return "1st" as NormalizedSelection;
-      if (lower === "nie / tak" || lower === "nie/tak") return "2nd" as NormalizedSelection;
-      if (lower === "tak / tak" || lower === "tak/tak") return "Both" as NormalizedSelection;
-      if (lower === "nie / nie" || lower === "nie/nie") return "None" as NormalizedSelection;
-      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1st" as NormalizedSelection;
-      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "2nd" as NormalizedSelection;
-      if (lower.includes("obie") || lower.includes("both") || lower === "równo") return "Both" as NormalizedSelection;
-      if (lower.includes("żadna") || lower.includes("zadna") || lower.includes("none") || lower.includes("bez goli") || lower.includes("brak goli")) return "None" as NormalizedSelection;
+      // Canonical 1ST_HALF/2ND_HALF/BOTH/NONE (audit-loop minor cluster #1).
+      if (lower === "tak / nie" || lower === "tak/nie") return "1ST_HALF" as NormalizedSelection;
+      if (lower === "nie / tak" || lower === "nie/tak") return "2ND_HALF" as NormalizedSelection;
+      if (lower === "tak / tak" || lower === "tak/tak") return "BOTH" as NormalizedSelection;
+      if (lower === "nie / nie" || lower === "nie/nie") return "NONE" as NormalizedSelection;
+      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1ST_HALF" as NormalizedSelection;
+      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "2ND_HALF" as NormalizedSelection;
+      if (lower.includes("obie") || lower.includes("both") || lower === "równo") return "BOTH" as NormalizedSelection;
+      if (lower.includes("żadna") || lower.includes("zadna") || lower.includes("none") || lower.includes("bez goli") || lower.includes("brak goli")) return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
-    
+
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
-      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1st" as NormalizedSelection;
-      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "2nd" as NormalizedSelection;
-      if (lower === "remis" || lower === "równo") return "Draw" as NormalizedSelection;
+      // Canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
+      if (lower.includes("1. połowa") || lower.includes("1 polowa")) return "1ST_HALF" as NormalizedSelection;
+      if (lower.includes("2. połowa") || lower.includes("2 polowa")) return "2ND_HALF" as NormalizedSelection;
+      if (lower === "remis" || lower === "równo") return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
     case "HOME_SCORE_BOTH_HALVES":
@@ -827,8 +841,14 @@ function normalizeSelectionForMarket(
     case "HT_FT_CORRECT_SCORE":
       return trimmed as NormalizedSelection;
 
-    case "MULTI_RESULT":
+    case "MULTI_RESULT": {
+      // Structured GROUP_<h>_<a>__... tokens (see normalizeMultiResultSelection)
+      // instead of trusting STS's raw text to already equal the catalog
+      // string verbatim.
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
+    }
 
     case "HALFTIME_FULLTIME_AND_TOTAL": {
       // Format: "<HT> / <FT> i <sign><line>"
@@ -1208,17 +1228,19 @@ function extractParamValue(
   }
 
   // Extract the whole-number "z możliwym zwrotem" (push) line from selection
-  // names (e.g., "+1", "-2") for TOTAL_GOALS / HALF_TIME_TOTAL_GOALS /
+  // names (e.g., "+1", "-2") for TOTAL_GOALS_ASIAN / HALF_TIME_TOTAL_GOALS /
   // SECOND_HALF_TOTAL_GOALS. STS quotes this push line as its own market
-  // (ids 23/80/110) instead of folding it into the ".5" over/under ladder,
-  // but the line itself is the same TOTAL_GOALS family every other
-  // bookmaker publishes - id23 param "1" prices identically to
-  // betcris/etoto/fortuna/fuksiarz/lvbet's plain "Liczba goli 1" line - so
+  // (ids 23/80/110) instead of folding it into the ".5" over/under ladder.
+  // id 23 now routes straight to TOTAL_GOALS_ASIAN (audit cluster #12: its
+  // own "z możliwym zwrotem" label is the exact catalog definition of that
+  // code, matching every other bookmaker's whole-number line there too), so
   // it must resolve to the same bare integer param ("1", not "1.0") those
-  // peers use, or the row won't merge. Whole-.5 lines for these three codes
-  // fall through unchanged to the generic parseOverUnderLine() below.
+  // peers use, or the row won't merge. ids 80/110 still route to
+  // HALF_TIME_TOTAL_GOALS/SECOND_HALF_TOTAL_GOALS unchanged (out of this
+  // cluster's scope). Whole-.5 lines for these codes fall through unchanged
+  // to the generic parseOverUnderLine() below.
   if (
-    marketCode === "TOTAL_GOALS" ||
+    marketCode === "TOTAL_GOALS_ASIAN" ||
     marketCode === "HALF_TIME_TOTAL_GOALS" ||
     marketCode === "SECOND_HALF_TOTAL_GOALS"
   ) {

@@ -22,6 +22,7 @@ import {
   parseIntegerLine,
   parseOverUnderLine,
   parseScoreSelection,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
@@ -306,7 +307,13 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   233941: "RED_CARDS_TOTAL", // "Liczba czerwonych kartek"
   233942: "OTHER", // "{home} liczba czerwonych kartek" - no catalog counterpart
   233943: "OTHER", // "{away} liczba czerwonych kartek" - no catalog counterpart
-  231045: "OTHER", // "Każda z drużyn powyżej X kartek - tak/nie" shape mismatch
+  // audit-loop cluster #9 (minor pass): same "each team over X" shape as
+  // BOTH_TEAMS_FOULS_OVER/EACH_TEAM_OFFSIDES below - the raw entry quotes
+  // both a "tak" and "nie" leg (unlike its OVER-only siblings), but the
+  // catalog vocabulary here is OVER only too; the "nie" leg is dropped the
+  // same way normalizeSuperbetSelection already drops it for the sibling
+  // markets below.
+  231045: "EACH_TEAM_TOTAL_CARDS_OVER", // "Każda z drużyn powyżej X kartek - tak/nie"
   695: "OTHER", // minute-interval cards count
   723: "OTHER", // minute-interval cards 1X2
 
@@ -325,7 +332,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   201615: "OTHER", // "1. połowa - {home} liczba strzałów" - no catalog counterpart
   201616: "OTHER", // "1. połowa - {away} liczba strzałów" - no catalog counterpart
   200709: "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER", // "Każda z drużyn powyżej X celnych strzałów"
-  201597: "OTHER", // "Każda z drużyn powyżej X strzałów" - no catalog counterpart
+  201597: "EACH_TEAM_TOTAL_SHOTS_OVER", // "Każda z drużyn powyżej X strzałów"
   201610: "OTHER", // "1. połowa - najwięcej strzałów" - no catalog counterpart
   230900: "THROW_INS_TOTAL", // "Liczba rzutów z autu"
   230901: "HOME_TEAM_TOTAL_THROW_INS", // "Liczba rzutów z autu - {home}"
@@ -333,7 +340,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   230909: "OTHER", // "1. połowa - liczba rzutów z autu" - no catalog counterpart
   230910: "OTHER", // HT team throw-ins - no catalog counterpart
   230911: "OTHER", // HT team throw-ins - no catalog counterpart
-  230904: "OTHER", // "Każda drużyna powyżej X rzutów z autu" - no catalog counterpart
+  230904: "EACH_TEAM_TOTAL_THROW_INS_OVER", // "Każda drużyna powyżej X rzutów z autu"
   200690: "FOULS_TOTAL", // "Liczba fauli"
   200691: "HOME_TEAM_TOTAL_FOULS", // "Liczba fauli - {home}"
   200692: "AWAY_TEAM_TOTAL_FOULS", // "Liczba fauli - {away}"
@@ -364,7 +371,7 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   238103: "SAVES_TOTAL", // "Liczba obronionych strzałów przez bramkarza"
   234753: "OTHER", // "{home} - obronione strzały" - no catalog counterpart
   234754: "OTHER", // "{away} - obronione strzały" - no catalog counterpart
-  238104: "OTHER", // "Każda z drużyn powyżej X obron" - no catalog counterpart
+  238104: "EACH_TEAM_TOTAL_SAVES_OVER", // "Każda z drużyn powyżej X obron"
   238105: "OTHER", // HT team saves - no catalog counterpart
   238106: "OTHER", // HT team saves - no catalog counterpart
   238107: "OTHER", // "1. połowa - obronione strzały" - no catalog counterpart
@@ -598,6 +605,23 @@ const SCORE_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_EUROPEAN_HANDICAP",
 ]);
 
+// audit-loop cluster #9 (minor pass): "each team over a per-team threshold"
+// family - catalog vocabulary is OVER only (see market-catalog.ts, e.g.
+// BOTH_TEAMS_FOULS_OVER). Most raw markets in this family only ever quote
+// the "tak" leg, but at least one (id 231045, cards) quotes a genuine "nie"
+// complement too - selections normalize that leg to UNKNOWN, and
+// normalizeMarket filters it out below so the family stays a single OVER
+// button everywhere, matching its declared catalog shape.
+const EACH_TEAM_OVER_ONLY_MARKETS = new Set<NormalizedMarketType>([
+  "BOTH_TEAMS_FOULS_OVER",
+  "EACH_TEAM_OFFSIDES",
+  "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER",
+  "EACH_TEAM_TOTAL_CARDS_OVER",
+  "EACH_TEAM_TOTAL_SHOTS_OVER",
+  "EACH_TEAM_TOTAL_THROW_INS_OVER",
+  "EACH_TEAM_TOTAL_SAVES_OVER",
+]);
+
 const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "TOTAL_GOALS",
   "TOTAL_GOALS_ASIAN",
@@ -630,6 +654,10 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_AWAY_TEAM_TOTAL_CARDS",
   "HALF_TIME_CORNERS_TEAM",
   "RED_CARDS_TOTAL",
+  // audit-loop cluster #9 (minor pass): "each team over X" siblings that
+  // previously fell into OTHER for lack of a catalog counterpart - see the
+  // id-map comments above (231045/201597/230904/238104).
+  "EACH_TEAM_TOTAL_CARDS_OVER",
   "FOULS_TOTAL",
   "HOME_TEAM_TOTAL_FOULS",
   "AWAY_TEAM_TOTAL_FOULS",
@@ -643,6 +671,7 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "THROW_INS_TOTAL",
   "HOME_TEAM_TOTAL_THROW_INS",
   "AWAY_TEAM_TOTAL_THROW_INS",
+  "EACH_TEAM_TOTAL_THROW_INS_OVER",
   "GOAL_KICKS_TOTAL",
   "HOME_TEAM_TOTAL_GOAL_KICKS",
   "AWAY_TEAM_GOAL_KICKS",
@@ -652,9 +681,11 @@ const OVER_UNDER_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS_ON_TARGET",
   "HALF_TIME_TOTAL_SHOTS_ON_TARGET",
   "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER",
+  "EACH_TEAM_TOTAL_SHOTS_OVER",
   "TACKLES_TOTAL",
   "TEAM_TOTAL_TACKLES",
   "SAVES_TOTAL",
+  "EACH_TEAM_TOTAL_SAVES_OVER",
   "POST_OR_CROSSBAR_TOTAL",
   "TEAM_TOTAL_WOODWORK_SHOTS",
   // audit-loop cluster #22: id 200248's per-checkpoint "goals scored from
@@ -961,20 +992,21 @@ function normalizeSelectionForMarket(
   }
 
   if (OVER_UNDER_MARKETS.has(marketCode)) {
+    // "Każda z drużyn powyżej X ..." markets (each-team-over-threshold
+    // family): the catalog defines OVER only. Checked before the generic O/U
+    // parser below because some of these raw labels ("Powyżej 0.5 - tak" /
+    // "Powyżej 0.5 - nie", e.g. id 231045's cards variant) start with
+    // "Powyżej" on BOTH legs - the generic parser would misread the "nie"
+    // leg as OVER too (it only looks at the leading word). Others embed the
+    // full market phrase instead ("Każda z drużyn powyżej 8.5 fauli - tak"),
+    // which the generic parser can't read at all either way. Either way, the
+    // trailing "tak"/"nie" suffix is the only reliable signal here.
+    if (EACH_TEAM_OVER_ONLY_MARKETS.has(marketCode)) {
+      return /(^|[\s-])nie\s*$/iu.test(trimmed) ? "UNKNOWN" : "OVER";
+    }
     // Team-scoped ranges ("<3", "3-4", "5+") share ids with plain O/U lines.
     const ou = normalizeOverUnderSelection(trimmed);
     if (ou !== "UNKNOWN") return ou;
-    // "Każda z drużyn powyżej X ..." markets: the catalog defines OVER only
-    // and the parser already drops the "nie" leg, but the surviving leg's
-    // label embeds the full market phrase ("Każda z drużyn powyżej 8.5 fauli
-    // - tak") instead of starting with "Powyżej", so it missed the O/U parse.
-    if (
-      marketCode === "BOTH_TEAMS_FOULS_OVER" ||
-      marketCode === "EACH_TEAM_OFFSIDES" ||
-      marketCode === "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER"
-    ) {
-      return /(^|[\s-])nie\s*$/iu.test(trimmed) ? "UNKNOWN" : "OVER";
-    }
     if (marketCode === "CORNERS_TEAM") {
       return normalizeRangeSelection(trimmed, lower);
     }
@@ -1097,21 +1129,15 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
     }
 
-    case "MULTI_RESULT":
-      // Catalog codes are the literal Polish labels, e.g. "1:0, 2:0 lub 3:0",
-      // plus "X" for the draw - Superbet quotes the draw as "Remis"/"0".
-      if (/^(remis|x|0)$/i.test(trimmed)) return "X" as NormalizedSelection;
-            // Audit /audit-match (Arsenal vs Coventry City): the "other win" legs are
-      // quoted lowercase (and forBET even in the wrong grammatical case,
-      // "inne zwycięstwo gospodarze"), so they never matched the catalog's
-      // capitalized genitive codes and every one of those prices was dropped.
-      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(trimmed)) {
-        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
-      }
-      if (/^inne\s+zwyci[eę]stwo\s+go[sś]c/i.test(trimmed)) {
-        return "Inne zwycięstwo gości" as NormalizedSelection;
-      }
+    case "MULTI_RESULT": {
+      // Structured GROUP_<h>_<a>__... tokens (see normalizeMultiResultSelection)
+      // sidestep the casing/grammar drift this used to need special-cased
+      // fixes for (Superbet quotes the draw as "Remis"/"0" and the "other
+      // win" legs lowercase) since matching is by stem, not exact string.
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
+    }
 
     case "DOUBLE_RESULT_PAIR": {
       // "1/1 lub X/1" -> catalog code "1/1_OR_X/1". Superbet's raw market
@@ -1155,20 +1181,21 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
-      if (/1\.?\s*po[łl]owa/iu.test(lower)) return "1st" as NormalizedSelection;
-      if (/2\.?\s*po[łl]owa/iu.test(lower)) return "2nd" as NormalizedSelection;
+      // Canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
+      if (/1\.?\s*po[łl]owa/iu.test(lower)) return "1ST_HALF" as NormalizedSelection;
+      if (/2\.?\s*po[łl]owa/iu.test(lower)) return "2ND_HALF" as NormalizedSelection;
       if (lower === "równo" || lower === "rowno" || lower === "remis") {
-        return "Draw" as NormalizedSelection;
+        return "DRAW" as NormalizedSelection;
       }
       return "UNKNOWN";
 
     case "BTTS_BY_HALF": {
       // "Tak/Nie" = both score in 1st half only, etc.
       const compact = lower.replace(/\s+/g, "");
-      if (compact === "tak/tak") return "Both" as NormalizedSelection;
-      if (compact === "tak/nie") return "1st" as NormalizedSelection;
-      if (compact === "nie/tak") return "2nd" as NormalizedSelection;
-      if (compact === "nie/nie") return "None" as NormalizedSelection;
+      if (compact === "tak/tak") return "BOTH" as NormalizedSelection;
+      if (compact === "tak/nie") return "1ST_HALF" as NormalizedSelection;
+      if (compact === "nie/tak") return "2ND_HALF" as NormalizedSelection;
+      if (compact === "nie/nie") return "NONE" as NormalizedSelection;
       return "UNKNOWN";
     }
 
@@ -1661,6 +1688,15 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
         odds: sel.odds,
       };
     });
+
+    // Each-team-over-only family (see EACH_TEAM_OVER_ONLY_MARKETS above):
+    // the raw "nie" complement (id 231045's cards variant confirmed to
+    // quote one) normalizes to UNKNOWN - drop it instead of emitting it, so
+    // the market stays the single OVER button its catalog entry declares
+    // instead of surfacing a second, unlabeled-looking button online.
+    if (EACH_TEAM_OVER_ONLY_MARKETS.has(marketCode)) {
+      selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+    }
 
     // "Liczba czerwonych kartek" (RED_CARDS_TOTAL's OVER/UNDER selections on
     // the 0.5 line) is the exact same real-world bet as the whole-match

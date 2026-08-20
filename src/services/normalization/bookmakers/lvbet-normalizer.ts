@@ -9,6 +9,7 @@ import type {
 import {
   buildMarketKey,
   collapseBothHalvesOverGoalsZeroFive,
+  rerouteWholeGoalLineToAsian,
   normalizeMarketName,
   parseOverUnderLine,
   parseDecimalLine,
@@ -22,6 +23,7 @@ import {
   parseHtFtSelection,
   canonicalizePlayerName,
   canonicalizePlayerComboSelection,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { matchToCanonical } from "../../../utils/team-matcher.js";
@@ -157,7 +159,10 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /rzuty rozne:/, code: "CORNERS_TEAM" },
   { pattern: /pierwszy rzut rozny/, code: "FIRST_CORNER" },
   { pattern: /ostatni rzut rozny/, code: "LAST_CORNER" },
-  { pattern: /połowa z najwieksza liczba rzutow roznych/, code: "HALF_WITH_MORE_CORNERS" },
+  // audit-loop minor cluster #1: retired HALF_WITH_MORE_CORNERS as a
+  // duplicate of betcris's HALF_WITH_MOST_CORNERS (same market — which half
+  // sees more corners — just phrased "more" vs "most"); routed here.
+  { pattern: /połowa z najwieksza liczba rzutow roznych/, code: "HALF_WITH_MOST_CORNERS" },
 
   // --- Fouls (faule) ---
   // Foul handicaps must not fall into the team/total foul buckets.
@@ -506,10 +511,13 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // down (via detectTeamSide) instead of a static pattern here, since a
   // static regex cannot tell which team's name appears in the raw label.
   // Routed to DRAW_IN_AT_LEAST_ONE_HALF (betcris/lebull's code for the
-  // identical bet) instead of the twin DRAW_AT_LEAST_ONE_HALF code - the two
-  // codes rendered as two separate, identically-priced cards and split the
-  // bookmaker comparison pool (market-display audit, Arsenal vs Coventry:
-  // lvbet 1.90/1.80 alone vs betcris 1.90/1.80 + lebull in the other card).
+  // identical bet) instead of the now-retired twin DRAW_AT_LEAST_ONE_HALF
+  // code - the two codes used to render as two separate, identically-priced
+  // cards and split the bookmaker comparison pool (market-display audit,
+  // Arsenal vs Coventry: lvbet 1.90/1.80 alone vs betcris 1.90/1.80 + lebull
+  // in the other card). The dead twin code has since been removed from the
+  // catalog entirely (market-display MINOR pass, "draw in at least one
+  // half" duplicate cleanup).
   { pattern: /remis przynajmniej w jednej z połow/, code: "DRAW_IN_AT_LEAST_ONE_HALF" },
   { pattern: /wygra pierwsza połowe \/ wygra druga połowe/, code: "HALF_TIME_SECOND_HALF_RESULT" },
   // "LV Zaliczka" is a 3-way (HOME/DRAW/AWAY) insured-1X2 promo product; the
@@ -529,9 +537,32 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // --- Both halves goals ---
   { pattern: /obie połowy powyzej/, code: "BOTH_HALVES_OVER_GOALS" },
   { pattern: /obie połowy ponizej/, code: "BOTH_HALVES_UNDER_GOALS" },
-  { pattern: /obie połowy wygraja rozne/, code: "DIFFERENT_HALF_WINNERS" },
+  // "Obie połowy wygrają różne drużyny" is the same bet as lebull's
+  // "każdy zespół wygra jedną połowę" — both settle on whether one team
+  // wins the first half and the other (a different team) wins the second
+  // half, with a draw in either half voiding a YES. The catalog carried
+  // two codes (DIFFERENT_HALF_WINNERS under KOMBINACJE and
+  // EACH_TEAM_WINS_ONE_HALF under WYNIK_MECZU/specjalne, next to the rest
+  // of the half-win family), splitting lvbet's odds from lebull's into two
+  // duplicate cards for the same real-world bet (market-display audit
+  // cluster #3, Arsenal vs Coventry City). Routed onto the surviving,
+  // better-categorized EACH_TEAM_WINS_ONE_HALF; DIFFERENT_HALF_WINNERS has
+  // been retired from the catalog.
+  { pattern: /obie połowy wygraja rozne/, code: "EACH_TEAM_WINS_ONE_HALF" },
 
   // --- Both teams cards / BTTS-by-half ---
+  // "Obie drużyny otrzymają min. 2 kartki" is the identical real-world bet
+  // as betcris's param-less BOTH_TEAMS_2PLUS_CARDS ("Obie drużyny otrzymają
+  // 2 lub więcej kartek") — routing it through the generic BOTH_TEAMS_MIN_
+  // CARDS:2 pattern below produced a second, differently-keyed card for the
+  // same bet (audit cluster #5: lvbet 3.65/1.25 stranded from betcris'
+  // 3.40/1.27 under the same YES/NO bet). Special-case the "min. 2" line
+  // onto BOTH_TEAMS_2PLUS_CARDS (hasParameter: false, so extractParamValue
+  // drops the "2" automatically) BEFORE the generic pattern below; any
+  // other minimum (min. 3, min. 4, ...) still falls through to the
+  // parameterized BOTH_TEAMS_MIN_CARDS code, since no other bookmaker
+  // publishes those lines yet.
+  { pattern: /obie druzyny otrzymaja min\.?\s*2\s*kartki/, code: "BOTH_TEAMS_2PLUS_CARDS" },
   { pattern: /obie druzyny otrzymaja min/, code: "BOTH_TEAMS_MIN_CARDS" },
   { pattern: /obie druzyny otrzymaja kartke/, code: "BOTH_TEAMS_CARDED" },
   { pattern: /kartka w obu połowach/, code: "BOTH_HALVES_CARDS" },
@@ -1541,15 +1572,11 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT": {
-      // "1-0 / 2-0 / 3-0" -> catalog code "1:0, 2:0 lub 3:0" (mirrors the
-      // betcris normalizer's transform for the identical raw grouping).
-      const scores = trimmed.split("/").map((part) => part.trim());
-      if (scores.length >= 2 && scores.every((s) => /^\d+\s*-\s*\d+$/.test(s))) {
-        const colonScores = scores.map((s) => s.replace(/\s*-\s*/, ":"));
-        const last = colonScores[colonScores.length - 1];
-        return `${colonScores.slice(0, -1).join(", ")} lub ${last}` as NormalizedSelection;
-      }
-      if (/^(x|remis)$/i.test(trimmed)) return "X" as NormalizedSelection;
+      // "1-0 / 2-0 / 3-0" -> structured GROUP_1_0__2_0__3_0 token (mirrors
+      // the betcris normalizer's transform for the identical raw grouping;
+      // see normalizeMultiResultSelection).
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 
@@ -1720,18 +1747,19 @@ function normalizeSelectionForMarket(
     }
 
     case "HALF_WITH_MORE_GOALS":
-    case "HALF_WITH_MORE_CORNERS":
+    case "HALF_WITH_MOST_CORNERS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS": {
-      // LVBet renders half comparison as "1 > 2" / "1 = 2" / "1 < 2"
-      if (/^1\s*>\s*2$/.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^1\s*<\s*2$/.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^1\s*=\s*2$/.test(trimmed)) return "Draw" as NormalizedSelection;
+      // LVBet renders half comparison as "1 > 2" / "1 = 2" / "1 < 2" —
+      // canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
+      if (/^1\s*>\s*2$/.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^1\s*<\s*2$/.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^1\s*=\s*2$/.test(trimmed)) return "DRAW" as NormalizedSelection;
       const normalized = normalizeMarketName(trimmed);
-      if (normalized.includes("1. połowa")) return "1st" as NormalizedSelection;
-      if (normalized.includes("2. połowa")) return "2nd" as NormalizedSelection;
+      if (normalized.includes("1. połowa")) return "1ST_HALF" as NormalizedSelection;
+      if (normalized.includes("2. połowa")) return "2ND_HALF" as NormalizedSelection;
       if (normalized.includes("remis") || normalized.includes("rowno")) {
-        return "Draw" as NormalizedSelection;
+        return "DRAW" as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }
@@ -1749,11 +1777,12 @@ function normalizeSelectionForMarket(
     }
 
     case "BTTS_BY_HALF": {
-      // "Tak/Tak" = both halves, "Tak/Nie" = 1st only, "Nie/Tak" = 2nd only
-      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "Both" as NormalizedSelection;
-      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "None" as NormalizedSelection;
+      // "Tak/Tak" = both halves, "Tak/Nie" = 1st only, "Nie/Tak" = 2nd only —
+      // canonical 1ST_HALF/2ND_HALF/BOTH/NONE (audit-loop minor cluster #1).
+      if (/^tak\s*\/\s*tak$/i.test(trimmed)) return "BOTH" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/i.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/i.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/i.test(trimmed)) return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -2503,6 +2532,18 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
       const collapsed = collapseBothHalvesOverGoalsZeroFive(finalMarketCode, finalParamValue);
       finalMarketCode = collapsed.marketCode as NormalizedMarketType;
       finalParamValue = collapsed.paramValue;
+    }
+
+    // audit cluster #12: lvbet's plain "Suma/Liczba goli" ladder pattern
+    // spans 0.5..5.5 undifferentiated (the dedicated "azjatycka ..." reroute
+    // above only catches raw names that literally say "Asian", i.e. the
+    // genuine quarter-line totals) — reroute bare-integer whole lines to
+    // TOTAL_GOALS_ASIAN so they pool with every other bookmaker's
+    // whole-number lines instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(finalMarketCode, finalParamValue);
+      finalMarketCode = rerouted.marketCode as NormalizedMarketType;
+      finalParamValue = rerouted.paramValue;
     }
 
     const marketKey = buildMarketKey(finalMarketCode, finalParamValue);

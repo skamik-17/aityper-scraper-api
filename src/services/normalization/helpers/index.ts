@@ -45,6 +45,41 @@ export function collapseBothHalvesOverGoalsZeroFive(
   return { marketCode, paramValue };
 }
 
+/**
+ * A whole-number total-goals line ("Liczba goli 1") carries a push/refund
+ * risk on an exact-line hit that a half-line ("Liczba goli 1.5") structurally
+ * cannot — market-catalog.ts gives that shape its own TOTAL_GOALS_ASIAN
+ * sibling (parameterType "integer", validParameters "1".."6", label "Liczba
+ * goli (z możliwym zwrotem)") specifically so the refund note only ever shows
+ * on lines that can actually push. Several bookmakers' TOTAL_GOALS routing
+ * (id-map or market-type based) is shared across the whole ladder and can't
+ * distinguish a whole line from a half line up front, so their whole-number
+ * rows land in the plain TOTAL_GOALS card instead — fragmenting one real bet
+ * ("total goals, line 1") across two cards while peers that DO separate them
+ * (e.g. lebull) pool correctly (audit cluster #12). Call this right before
+ * buildMarketKey wherever a normalizer can resolve plain TOTAL_GOALS with a
+ * whole-number paramValue — it reroutes to the *_ASIAN sibling so every
+ * bookmaker's whole-number line lands in the same card. Accepts BOTH a
+ * bare-integer param ("1", the sts/etoto/fortuna/betcris convention) and a
+ * decimal-formatted whole number ("1.0", the lvbet/fuksiarz convention,
+ * since their line comes from a "Powyżej (1.0)" selection label / "Liczba
+ * goli 1.0" raw name rather than a dedicated push-market id) and normalizes
+ * either to the bare-integer form so the resulting marketKey
+ * ("TOTAL_GOALS_ASIAN:1") actually merges with the other bookmakers instead
+ * of forking a second "TOTAL_GOALS_ASIAN:1.0" bucket.
+ */
+export function rerouteWholeGoalLineToAsian(
+  marketCode: string,
+  paramValue: string | undefined
+): { marketCode: string; paramValue: string | undefined } {
+  if (marketCode !== "TOTAL_GOALS" || paramValue === undefined) {
+    return { marketCode, paramValue };
+  }
+  const whole = paramValue.match(/^(\d+)(?:\.0)?$/);
+  if (!whole) return { marketCode, paramValue };
+  return { marketCode: "TOTAL_GOALS_ASIAN", paramValue: whole[1] };
+}
+
 export function parseDecimalLine(text: string): string | undefined {
   const match = text.match(/(\d+)[.,](\d+)/);
   if (match) return `${match[1]}.${match[2]}`;
@@ -257,6 +292,74 @@ export function parseHtFtSelection(selectionName: string): string | null {
     c === "1" ? "HOME" : c.toUpperCase() === "X" ? "DRAW" : "AWAY";
 
   return `${toSide(match[1])}_${toSide(match[2])}`;
+}
+
+/**
+ * Canonicalizes a MULTI_RESULT ("multiwynik"/grouped-scoreline) selection to
+ * a structured GROUP_<h>_<a>__<h>_<a>... token instead of leaving the raw
+ * Polish sentence ("1:0, 2:0 lub 3:0") as the selection itself. Using that
+ * sentence as the pooling key is fragile — every bookmaker has to reproduce
+ * the exact punctuation/casing/wording to compare (several already needed
+ * one-off casing fixes just to match), and any mismatch silently strands a
+ * price as an uncomparable duplicate instead of merging under the shared
+ * catalog code. It also breaks the frontend's generic selection-label
+ * fallback, which title-cases unrecognized tokens word-by-word and mangles
+ * "lub" mid-sentence into "Lub". Parsing the actual score pairs out of the
+ * text sidesteps all of that, and the token doubles as documentation: a
+ * bookmaker's 3-score variant ("3:2, 4:2 lub 4:3") naturally produces a
+ * different token than a 4-score variant ("... lub 5:1") instead of the two
+ * colliding under a shared "group N" index.
+ *
+ * Also resolves the two MULTI_RESULT legs quoted outside the scoreline
+ * buckets: the draw ("X"/"remis"/"0") and the open-ended "win by any other
+ * score" catch-all, phrased either generically
+ * ("inne zwycięstwo gospodarzy/gości") or with the team named directly
+ * ("Francja wygra dowolnym innym wynikiem" — pass homeTeam/awayTeam/league
+ * so that shape resolves too).
+ *
+ * Accepts colon- or dash-separated score pairs, joined by comma/space/slash/
+ * "lub"/"i" in any combination, covering every raw shape seen across
+ * bookmakers ("1:0, 2:0 lub 3:0", "1:0 2:0 3:0", "1-0 / 2-0 / 3-0", ...).
+ *
+ * Returns null when the text matches none of the above so callers can fall
+ * back to their own handling instead of minting a bogus token.
+ */
+export function normalizeMultiResultSelection(
+  selectionName: string,
+  homeTeam?: string,
+  awayTeam?: string,
+  league?: string
+): NormalizedSelection | null {
+  const trimmed = selectionName.trim();
+  const normalized = normalizeMarketName(trimmed);
+
+  if (normalized === "x" || normalized === "remis" || normalized === "draw" || normalized === "0") {
+    return "X" as NormalizedSelection;
+  }
+
+  if (/inne\s+zwyciestwo\s+gospodarz/.test(normalized)) {
+    return "HOME_OTHER" as NormalizedSelection;
+  }
+  if (/inne\s+zwyciestwo\s+gosci/.test(normalized)) {
+    return "AWAY_OTHER" as NormalizedSelection;
+  }
+
+  // Team-named "any other score" catch-all (Fortuna's shape: "<Team> wygra
+  // dowolnym innym wynikiem").
+  const otherWinMatch = trimmed.match(/^(.+?)\s+wygra\s+dowolnym\s+innym\s+wynikiem/iu);
+  if (otherWinMatch) {
+    const side = normalize1x2Selection(otherWinMatch[1].trim(), homeTeam, awayTeam, league);
+    if (side === "HOME") return "HOME_OTHER" as NormalizedSelection;
+    if (side === "AWAY") return "AWAY_OTHER" as NormalizedSelection;
+  }
+
+  const scores = trimmed.match(/\d+\s*[:-]\s*\d+/g);
+  if (scores && scores.length >= 2) {
+    const token = scores.map((pair) => pair.replace(/\s*[:-]\s*/, "_")).join("__");
+    return `GROUP_${token}` as NormalizedSelection;
+  }
+
+  return null;
 }
 
 export function normalizeAsianHandicap3WaySelection(

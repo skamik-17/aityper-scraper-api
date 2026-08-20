@@ -19,10 +19,10 @@ describe("Betclic BTTS By Half Normalization", () => {
 
     expect(result?.marketCode).toBe("BTTS_BY_HALF");
     expect(result?.selections.map(selection => selection.code)).toEqual([
-      "Both",
-      "1st",
-      "2nd",
-      "None"
+      "BOTH",
+      "1ST_HALF",
+      "2ND_HALF",
+      "NONE"
     ]);
   });
 });

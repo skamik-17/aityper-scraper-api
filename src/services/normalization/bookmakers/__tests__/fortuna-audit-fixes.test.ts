@@ -129,7 +129,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(out?.selections.map((s) => s.code)).toEqual(["1st", "2nd", "Draw"]);
+    expect(out?.selections.map((s) => s.code)).toEqual(["1ST_HALF", "2ND_HALF", "DRAW"]);
   });
 
   it("routes away-team half market to AWAY_HALF_WITH_MOST_GOALS with mapped selections", () => {
@@ -146,7 +146,7 @@ describe("fortuna audit fixes", () => {
       ctxARG
     );
     expect(out?.marketCode).toBe("AWAY_HALF_WITH_MOST_GOALS");
-    expect(out?.selections.map((s) => s.code)).toEqual(["1st", "2nd", "Draw"]);
+    expect(out?.selections.map((s) => s.code)).toEqual(["1ST_HALF", "2ND_HALF", "DRAW"]);
   });
 
   it("maps FIRST/LAST_TEAM_TO_SCORE 'Nikt' -> NONE and teams to sides", () => {
@@ -201,7 +201,7 @@ describe("fortuna audit fixes", () => {
       },
       ctxDZA
     );
-    expect(out?.selections.map((s) => s.code)).toEqual(["Both", "1st", "2nd", "None"]);
+    expect(out?.selections.map((s) => s.code)).toEqual(["BOTH", "1ST_HALF", "2ND_HALF", "NONE"]);
   });
 
   it("maps SUBSTITUTE_GOAL Tak/Nie -> YES/NO", () => {
@@ -728,8 +728,8 @@ describe("fortuna audit fixes", () => {
       ctxSUI
     );
     expect(out?.selections.map((s) => s.code)).toEqual([
-      "1:0, 2:0 lub 3:0",
-      "3:2, 4:2, 4:3 lub 5:1",
+      "GROUP_1_0__2_0__3_0",
+      "GROUP_3_2__4_2__4_3__5_1",
       "X",
     ]);
   });

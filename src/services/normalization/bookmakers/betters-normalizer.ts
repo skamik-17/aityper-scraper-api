@@ -564,13 +564,16 @@ function normalizeSelectionForMarket(
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
       // Raw labels compare halves: "1. > 2." (1st half has more goals),
-      // "1. < 2.", "1. = 2." — catalog selections are 1st/2nd/Draw.
-      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return toSelection("1st");
-      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return toSelection("2nd");
-      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return toSelection("Draw");
-      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("1st");
-      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("2nd");
-      if (/^(remis|r[oó]wno)/.test(normalized)) return toSelection("Draw");
+      // "1. < 2.", "1. = 2." — catalog selections are canonical
+      // 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1: previously
+      // mixed-case "1st"/"2nd"/"Draw" literals cast around the shared
+      // NormalizedSelection enum instead of extending it).
+      if (/^1\.?\s*>\s*2\.?$/.test(trimmed)) return toSelection("1ST_HALF");
+      if (/^1\.?\s*<\s*2\.?$/.test(trimmed)) return toSelection("2ND_HALF");
+      if (/^1\.?\s*=\s*2\.?$/.test(trimmed)) return toSelection("DRAW");
+      if (/1\.?\s*po[lł]ow/.test(normalized)) return toSelection("1ST_HALF");
+      if (/2\.?\s*po[lł]ow/.test(normalized)) return toSelection("2ND_HALF");
+      if (/^(remis|r[oó]wno)/.test(normalized)) return toSelection("DRAW");
       return toSelection(trimmed);
 
     case "HALF_WITH_MORE_GOALS_DOUBLE_CHANCE": {

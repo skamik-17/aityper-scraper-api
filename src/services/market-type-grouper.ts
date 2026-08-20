@@ -653,6 +653,16 @@ function getParameterLabel(param: string, marketType: string): string {
     if (windowed) return `Do ${windowed[1]}. min. (linia ${windowed[2]})`;
   }
 
+  // BOTH_HALVES_OVER_COMBO's parameter is a two-axis "<1st-half line>/
+  // <2nd-half line>" compound (see market-catalog.ts's entry and
+  // lebull-normalizer.ts's extractParamValue) — surfacing the raw "1.5/0.5"
+  // slash string left the actual bet (which line applies to which half)
+  // invisible on the chip (audit cluster #0, finding 6).
+  if (marketType === "BOTH_HALVES_OVER_COMBO") {
+    const pair = param.match(/^([\d.]+)\/([\d.]+)$/);
+    if (pair) return `1.poł. +${pair[1]} i 2.poł. +${pair[2]}`;
+  }
+
   // For team-parameterized markets (HOME/AWAY), translate to Polish
   if (marketDef?.parameterType === "team") {
     if (param === "HOME") return "Gospodarze";
@@ -917,6 +927,25 @@ export function groupMarketsByTypeWithParameters(
       entryDef.selections.length > 0 &&
       market.selections.some((sel) => (sel.normalizedName || sel.name) === "UNKNOWN") &&
       market.selections.some((sel) => entryDef.selections.includes(sel.normalizedName || sel.name))
+    ) {
+      continue;
+    }
+
+    // Zero-line period handicap guard: a European handicap of "0" places no
+    // advantage on either side, so it prices the exact same event as the
+    // plain period result market (HALF_TIME_RESULT / SECOND_HALF_RESULT) —
+    // it is not a distinct bet, just the same 1X2 outcome quoted under the
+    // handicap product. Several bookmakers' raw handicap ladders include
+    // this line (e.g. forbet/betcris/lvbet "Handicap 0:0"), which otherwise
+    // surfaces as a redundant "0" parameter card duplicating the period
+    // result market right next to it (audit cluster #7, Arsenal vs Coventry
+    // City: FIRST_HALF_EUROPEAN_HANDICAP/SECOND_HALF_EUROPEAN_HANDICAP both
+    // carried a "0" line matching HALF_TIME_RESULT/SECOND_HALF_RESULT).
+    // Drop just this line; every other line is a genuine distinct handicap
+    // bet and stays untouched.
+    if (
+      (marketType === "FIRST_HALF_EUROPEAN_HANDICAP" || marketType === "SECOND_HALF_EUROPEAN_HANDICAP") &&
+      param === "0"
     ) {
       continue;
     }

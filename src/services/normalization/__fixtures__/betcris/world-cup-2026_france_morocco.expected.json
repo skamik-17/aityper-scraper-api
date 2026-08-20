@@ -845,17 +845,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 1.81
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 5.1
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 2.8
           }
@@ -876,17 +876,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1 > 2",
             "odds": 3.3
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "1 < 2",
             "odds": 2.28
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "1 = 2",
             "odds": 2.79
           }
@@ -4941,17 +4941,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": " 1 > 2",
             "odds": 3.47
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": " 1 = 2",
             "odds": 3.47
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": " 1 < 2",
             "odds": 1.92
           }
@@ -16584,17 +16584,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "  1 > 2",
             "odds": 2.6
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "  1 = 2",
             "odds": 7.6
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "  1 < 2",
             "odds": 1.71
           }

@@ -265,6 +265,9 @@ export const NormalizedMarketType = {
   CORNERS_TEAM: "CORNERS_TEAM",
   EACH_TEAM_TOTAL_CORNERS_OVER: "EACH_TEAM_TOTAL_CORNERS_OVER",
   EACH_TEAM_TOTAL_CARDS_OVER: "EACH_TEAM_TOTAL_CARDS_OVER",
+  EACH_TEAM_TOTAL_SHOTS_OVER: "EACH_TEAM_TOTAL_SHOTS_OVER",
+  EACH_TEAM_TOTAL_THROW_INS_OVER: "EACH_TEAM_TOTAL_THROW_INS_OVER",
+  EACH_TEAM_TOTAL_SAVES_OVER: "EACH_TEAM_TOTAL_SAVES_OVER",
    CORNERS_RACE: "CORNERS_RACE",
     FOUL_RACE: "FOUL_RACE",
     CORNERS_RANGE: "CORNERS_RANGE",
@@ -558,12 +561,13 @@ export const NormalizedMarketType = {
   HALF_TIME_CARDS_TEAM: "HALF_TIME_CARDS_TEAM",
   MISSED_PENALTY: "MISSED_PENALTY",
   PLAYER_GOAL_TEAM_LOSES: "PLAYER_GOAL_TEAM_LOSES",
-  HALF_WITH_MORE_CORNERS: "HALF_WITH_MORE_CORNERS",
-  DRAW_AT_LEAST_ONE_HALF: "DRAW_AT_LEAST_ONE_HALF",
+  // HALF_WITH_MORE_CORNERS retired (audit-loop minor cluster #1,
+  // 2026-08-20): duplicate of HALF_WITH_MOST_CORNERS — both wrapped the
+  // identical "which half sees more corners" market, one bookmaker each
+  // (lvbet / betcris). lvbet now routes into HALF_WITH_MOST_CORNERS.
   KICKOFF_TEAM: "KICKOFF_TEAM",
   SCORE_DURING_MATCH: "SCORE_DURING_MATCH",
   PLAYER_GOAL_FIRST_10_MIN: "PLAYER_GOAL_FIRST_10_MIN",
-  DIFFERENT_HALF_WINNERS: "DIFFERENT_HALF_WINNERS",
   SECOND_HALF_RED_CARD: "SECOND_HALF_RED_CARD",
   DIRECT_RED_CARD: "DIRECT_RED_CARD",
   BOTH_TEAMS_MIN_CARDS: "BOTH_TEAMS_MIN_CARDS",
@@ -653,7 +657,10 @@ export const NormalizedMarketType = {
   WIN_BY_1_OR_DRAW: "WIN_BY_1_OR_DRAW",
   FIRST_GOAL_HALF: "FIRST_GOAL_HALF",
   TEAM_MINUTES_LEADING: "TEAM_MINUTES_LEADING",
-  HALF_TIME_AND_SECOND_HALF_RESULT: "HALF_TIME_AND_SECOND_HALF_RESULT",
+  // HALF_TIME_AND_SECOND_HALF_RESULT retired (audit-loop cluster #4, MINOR
+  // pass): byte-for-byte duplicate of HALF_TIME_SECOND_HALF_RESULT, only
+  // ever populated by lebull (raw bookmakerMarketId 421317) — merged so
+  // lebull's quotes pool with betcris/lvbet instead of sitting isolated.
   BOTH_HALVES_OVER_COMBO: "BOTH_HALVES_OVER_COMBO",
   TIME_BAND_TOTAL_GOALS: "TIME_BAND_TOTAL_GOALS",
   TIME_SEGMENT_TOTAL_GOALS: "TIME_SEGMENT_TOTAL_GOALS",
@@ -882,6 +889,16 @@ export const NormalizedSelection = {
     AWAY_1ST: "AWAY_1ST",
     AWAY_2ND: "AWAY_2ND",
     AWAY_EQUAL: "AWAY_EQUAL",
+    // Half-comparison family (audit-loop minor cluster #1, 2026-08-20):
+    // canonical tokens for "which half had more X" markets
+    // (HALF_WITH_MORE_GOALS, HOME_/AWAY_HALF_WITH_MOST_GOALS,
+    // HALF_WITH_MOST_CORNERS, BTTS_BY_HALF). DRAW/NONE already exist above
+    // and are reused here for "equal halves" / "neither half". Replaces the
+    // former mixed-case "1st"/"2nd"/"Both"/"None" literals that were cast
+    // around this dictionary instead of extending it.
+    "1ST_HALF": "1ST_HALF",
+    "2ND_HALF": "2ND_HALF",
+    BOTH: "BOTH",
   } as const;
   export type NormalizedSelection = (typeof NormalizedSelection)[keyof typeof NormalizedSelection];
 

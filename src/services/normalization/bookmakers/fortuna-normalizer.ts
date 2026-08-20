@@ -20,6 +20,8 @@ import {
   normalizeOddEvenSelection,
   parseScoreSelection,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
+  rerouteWholeGoalLineToAsian,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { MARKET_TYPE_IDS } from "../../../scrapers/bookmakers/fortuna/constants.js";
@@ -757,6 +759,7 @@ function normalizeSelectionForMarket(
       return normalizeDoubleChanceSelection(trimmed);
 
     case "TOTAL_GOALS":
+    case "TOTAL_GOALS_ASIAN":
     case "HALF_TIME_TOTAL_GOALS":
     case "SECOND_HALF_TOTAL_GOALS":
     case "HOME_TEAM_TOTAL_GOALS":
@@ -892,23 +895,14 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT": {
-      // Space-separated score groups ("1:0 2:0 3:0") -> the catalog's comma
-      // form ("1:0, 2:0 lub 3:0"); the draw leg maps to code "X".
+      // Space-separated score groups ("1:0 2:0 3:0") -> the catalog's
+      // structured GROUP_1_0__2_0__3_0 token; the draw leg maps to "X"; the
+      // team-named catch-all ("Francja wygra dowolnym innym wynikiem" - a win
+      // by any score not covered by the enumerated score-group buckets) maps
+      // to HOME_OTHER/AWAY_OTHER. See normalizeMultiResultSelection.
       if (isFortunaDrawLabel(trimmed)) return "X" as NormalizedSelection;
-      const scores = trimmed.match(/\d+:\d+/g);
-      if (scores && scores.length >= 2) {
-        const code = `${scores.slice(0, -1).join(", ")} lub ${scores[scores.length - 1]}`;
-        return code as NormalizedSelection;
-      }
-      // Catch-all leg ("Francja wygra dowolnym innym wynikiem" - a win by
-      // any score not covered by the enumerated score-group buckets above)
-      // -> the catalog's "Inne zwycięstwo <side>" code.
-      const otherWinMatch = trimmed.match(/^(.+?)\s+wygra\s+dowolnym\s+innym\s+wynikiem/iu);
-      if (otherWinMatch) {
-        const side = normalize1x2Selection(otherWinMatch[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
-        if (side === "HOME") return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
-        if (side === "AWAY") return "Inne zwycięstwo gości" as NormalizedSelection;
-      }
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 
@@ -1023,18 +1017,19 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
-      // "Pierwszy/Pierwsza", "Drugi/Druga", "Rowno/Równo"
-      if (/^pierwsz/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/^drug/.test(normalized)) return "2nd" as NormalizedSelection;
-      if (/^(rown|remis)/.test(normalized)) return "Draw" as NormalizedSelection;
+      // "Pierwszy/Pierwsza", "Drugi/Druga", "Rowno/Równo" — canonical
+      // 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
+      if (/^pierwsz/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/^drug/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
+      if (/^(rown|remis)/.test(normalized)) return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
 
     case "BTTS_BY_HALF": {
       const compact = normalized.replace(/\s*\/\s*/g, "/");
-      if (compact === "tak/tak") return "Both" as NormalizedSelection;
-      if (compact === "tak/nie") return "1st" as NormalizedSelection;
-      if (compact === "nie/tak") return "2nd" as NormalizedSelection;
-      if (compact === "nie/nie") return "None" as NormalizedSelection;
+      if (compact === "tak/tak") return "BOTH" as NormalizedSelection;
+      if (compact === "tak/nie") return "1ST_HALF" as NormalizedSelection;
+      if (compact === "nie/tak") return "2ND_HALF" as NormalizedSelection;
+      if (compact === "nie/nie") return "NONE" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -1488,6 +1483,17 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     ) {
       if (!paramValue) return null;
       paramValue = `${teamSide}:${paramValue}`;
+    }
+
+    // audit cluster #12: fortuna's OVER_UNDER marketTypeId spans the whole
+    // 0.5..5.5 ladder with no push/no-push distinction up front — reroute the
+    // bare-integer rows (no push-risk half lines) to TOTAL_GOALS_ASIAN so
+    // they pool with every other bookmaker's whole-number lines there
+    // instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(marketCode, paramValue);
+      marketCode = rerouted.marketCode as NormalizedMarketType;
+      paramValue = rerouted.paramValue;
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

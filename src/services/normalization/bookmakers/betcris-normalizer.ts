@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  rerouteWholeGoalLineToAsian,
   parseOverUnderLine,
   parseHandicapLine,
   parseDecimalLine,
@@ -21,6 +22,7 @@ import {
   parseHtFtSelection,
   canonicalizePlayerName,
   canonicalizePlayerComboSelection,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
@@ -752,13 +754,16 @@ function normalizeSelectionForMarket(
     case "AWAY_HALF_WITH_MOST_GOALS":
     case "HALF_WITH_MOST_CORNERS": {
       // Betcris encodes the halves comparison as "1 > 2" (1st half more
-      // goals/corners), "1 < 2" (2nd half more) and "1 = 2" (equal)
-      if (/^1\s*>\s*2$/.test(trimmed)) return "1st" as NormalizedSelection;
-      if (/^1\s*<\s*2$/.test(trimmed)) return "2nd" as NormalizedSelection;
-      if (/^1\s*=\s*2$/.test(trimmed)) return "Draw" as NormalizedSelection;
-      if (/1\.?\s*po[lł]ow/i.test(lowerTrimmed)) return "1st" as NormalizedSelection;
-      if (/2\.?\s*po[lł]ow/i.test(lowerTrimmed)) return "2nd" as NormalizedSelection;
-      if (/^(remis|r[oó]wno)$/i.test(lowerTrimmed)) return "Draw" as NormalizedSelection;
+      // goals/corners), "1 < 2" (2nd half more) and "1 = 2" (equal) — mapped
+      // onto the canonical 1ST_HALF/2ND_HALF/DRAW tokens (audit-loop minor
+      // cluster #1: previously mixed-case "1st"/"2nd"/"Draw" literals cast
+      // around the shared NormalizedSelection enum instead of extending it).
+      if (/^1\s*>\s*2$/.test(trimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/^1\s*<\s*2$/.test(trimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^1\s*=\s*2$/.test(trimmed)) return "DRAW" as NormalizedSelection;
+      if (/1\.?\s*po[lł]ow/i.test(lowerTrimmed)) return "1ST_HALF" as NormalizedSelection;
+      if (/2\.?\s*po[lł]ow/i.test(lowerTrimmed)) return "2ND_HALF" as NormalizedSelection;
+      if (/^(remis|r[oó]wno)$/i.test(lowerTrimmed)) return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -856,14 +861,10 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT": {
-      // " 1-0 / 2-0 / 3-0" -> catalog code "1:0, 2:0 lub 3:0"
-      const scores = trimmed.split("/").map((part) => part.trim());
-      if (scores.length >= 2 && scores.every((s) => /^\d+\s*-\s*\d+$/.test(s))) {
-        const colonScores = scores.map((s) => s.replace(/\s*-\s*/, ":"));
-        const last = colonScores[colonScores.length - 1];
-        return `${colonScores.slice(0, -1).join(", ")} lub ${last}` as NormalizedSelection;
-      }
-      if (/^(x|remis)$/i.test(lowerTrimmed)) return "X" as NormalizedSelection;
+      // " 1-0 / 2-0 / 3-0" -> structured GROUP_1_0__2_0__3_0 token (see
+      // normalizeMultiResultSelection).
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 
@@ -1741,6 +1742,17 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     if (marketCode === "BOTH_HALVES_OVER_GOALS" && paramValue === "0.5") {
       marketCode = "BOTH_HALVES_GOALS";
       paramValue = undefined;
+    }
+
+    // audit cluster #12: betcris' plain OverUnder id spans the whole
+    // 0.5..5.5+ ladder undifferentiated (unlike the dedicated "azjatyck"
+    // quarter-line reroute above) — reroute bare-integer lines to
+    // TOTAL_GOALS_ASIAN so they pool with every other bookmaker's
+    // whole-number lines instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(marketCode, paramValue);
+      marketCode = rerouted.marketCode as NormalizedMarketType;
+      paramValue = rerouted.paramValue;
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

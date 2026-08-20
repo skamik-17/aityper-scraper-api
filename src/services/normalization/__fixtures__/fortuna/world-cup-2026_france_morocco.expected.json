@@ -27866,8 +27866,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS",
-        "marketKey": "TOTAL_GOALS:4",
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:4",
         "matchedBy": "id",
         "paramValue": "4",
         "parameters": null,
@@ -27885,7 +27885,7 @@
         ]
       },
       "index": 1772,
-      "marketCode": "TOTAL_GOALS",
+      "marketCode": "TOTAL_GOALS_ASIAN",
       "rawName": "Mecz: liczba goli 4"
     },
     {
@@ -28240,8 +28240,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS",
-        "marketKey": "TOTAL_GOALS:5",
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:5",
         "matchedBy": "id",
         "paramValue": "5",
         "parameters": null,
@@ -28259,7 +28259,7 @@
         ]
       },
       "index": 1792,
-      "marketCode": "TOTAL_GOALS",
+      "marketCode": "TOTAL_GOALS_ASIAN",
       "rawName": "Mecz: liczba goli 5"
     },
     {
@@ -28808,8 +28808,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS",
-        "marketKey": "TOTAL_GOALS:1",
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:1",
         "matchedBy": "id",
         "paramValue": "1",
         "parameters": null,
@@ -28827,7 +28827,7 @@
         ]
       },
       "index": 1815,
-      "marketCode": "TOTAL_GOALS",
+      "marketCode": "TOTAL_GOALS_ASIAN",
       "rawName": "Mecz: liczba goli 1"
     },
     {
@@ -28905,22 +28905,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Both",
+            "code": "BOTH",
             "label": "Tak/Tak",
             "odds": 20
           },
           {
-            "code": "None",
+            "code": "NONE",
             "label": "Nie/Nie",
             "odds": 1.37
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Tak/Nie",
             "odds": 5.6
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Nie/Tak",
             "odds": 4.1
           }
@@ -29000,17 +29000,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Druga",
             "odds": 3.25
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Pierwsza",
             "odds": 4.3
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Równo",
             "odds": 1.79
           }
@@ -29112,8 +29112,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS",
-        "marketKey": "TOTAL_GOALS:3",
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:3",
         "matchedBy": "id",
         "paramValue": "3",
         "parameters": null,
@@ -29131,7 +29131,7 @@
         ]
       },
       "index": 1827,
-      "marketCode": "TOTAL_GOALS",
+      "marketCode": "TOTAL_GOALS_ASIAN",
       "rawName": "Mecz: liczba goli 3"
     },
     {
@@ -29824,17 +29824,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Rowno",
             "odds": 3.3
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Pierwszy",
             "odds": 3
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Drugi",
             "odds": 2.16
           }
@@ -30325,8 +30325,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "TOTAL_GOALS",
-        "marketKey": "TOTAL_GOALS:2",
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:2",
         "matchedBy": "id",
         "paramValue": "2",
         "parameters": null,
@@ -30344,7 +30344,7 @@
         ]
       },
       "index": 1864,
-      "marketCode": "TOTAL_GOALS",
+      "marketCode": "TOTAL_GOALS_ASIAN",
       "rawName": "Mecz: liczba goli 2"
     },
     {
@@ -30730,17 +30730,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "Rowno",
             "odds": 2.75
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Pierwszy",
             "odds": 3.05
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Drugi",
             "odds": 2.44
           }

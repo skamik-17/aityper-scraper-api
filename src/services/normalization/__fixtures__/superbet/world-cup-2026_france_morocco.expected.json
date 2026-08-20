@@ -60555,22 +60555,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "Both",
+            "code": "BOTH",
             "label": "Tak/Tak",
             "odds": 20
           },
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "Tak/Nie",
             "odds": 7.3
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "Nie/Tak",
             "odds": 3.8
           },
           {
-            "code": "None",
+            "code": "NONE",
             "label": "Nie/Nie",
             "odds": 1.46
           }
@@ -63725,17 +63725,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1.Połowa",
             "odds": 3.35
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "remis",
             "odds": 3.35
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2.Połowa",
             "odds": 1.95
           }
@@ -63756,17 +63756,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. Połowa",
             "odds": 3.35
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "równo",
             "odds": 2.77
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2. Połowa",
             "odds": 2.22
           }
@@ -63787,17 +63787,17 @@
         "parameters": null,
         "selections": [
           {
-            "code": "1st",
+            "code": "1ST_HALF",
             "label": "1. Połowa",
             "odds": 4.75
           },
           {
-            "code": "Draw",
+            "code": "DRAW",
             "label": "równo",
             "odds": 1.83
           },
           {
-            "code": "2nd",
+            "code": "2ND_HALF",
             "label": "2. Połowa",
             "odds": 2.85
           }
@@ -71304,81 +71304,66 @@
       "rawName": "Maroko - liczba kartek"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_CARDS_OVER:0.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 0.5 - tak",
             "odds": 1.48
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Powyżej 0.5 - nie",
-            "odds": 2.52
           }
         ]
       },
       "index": 2967,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
       "rawName": "Każda z drużyn powyżej X kartek"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_CARDS_OVER:1.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 1.5 - tak",
             "odds": 3.55
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Powyżej 1.5 - nie",
-            "odds": 1.27
           }
         ]
       },
       "index": 2968,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
       "rawName": "Każda z drużyn powyżej X kartek"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_CARDS_OVER:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 2.5 - tak",
             "odds": 10
-          },
-          {
-            "code": "UNKNOWN",
-            "label": "Powyżej 2.5 - nie",
-            "odds": 1.04
           }
         ]
       },
       "index": 2969,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_CARDS_OVER",
       "rawName": "Każda z drużyn powyżej X kartek"
     },
     {
@@ -75947,150 +75932,150 @@
       "rawName": "Liczba strzałów Maroko"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:4.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "4.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 4.5 - tak",
             "odds": 1.09
           }
         ]
       },
       "index": 3145,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:5.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "5.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 5.5 - tak",
             "odds": 1.21
           }
         ]
       },
       "index": 3146,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:6.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "6.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 6.5 - tak",
             "odds": 1.39
           }
         ]
       },
       "index": 3147,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:7.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "7.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 7.5 - tak",
             "odds": 1.67
           }
         ]
       },
       "index": 3148,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:8.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "8.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 8.5 - tak",
             "odds": 2.12
           }
         ]
       },
       "index": 3149,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:9.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "9.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 9.5 - tak",
             "odds": 2.8
           }
         ]
       },
       "index": 3150,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SHOTS_OVER:10.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "10.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 10.5 - tak",
             "odds": 3.9
           }
         ]
       },
       "index": 3151,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SHOTS_OVER",
       "rawName": "Każda z drużyn powyżej X strzałów"
     },
     {
@@ -82628,87 +82613,87 @@
       "rawName": "Maroko - liczba obronionych strzałów przez bramkarza"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SAVES_OVER:0.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "0.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 0.5 - tak",
             "odds": 1.09
           }
         ]
       },
       "index": 3426,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
       "rawName": "Każda z drużyn powyżej X obronionych strzałów przez bramkarza"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SAVES_OVER:1.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "1.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 1.5 - tak",
             "odds": 1.54
           }
         ]
       },
       "index": 3427,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
       "rawName": "Każda z drużyn powyżej X obronionych strzałów przez bramkarza"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SAVES_OVER:2.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "2.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 2.5 - tak",
             "odds": 2.75
           }
         ]
       },
       "index": 3428,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
       "rawName": "Każda z drużyn powyżej X obronionych strzałów przez bramkarza"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_SAVES_OVER:3.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "3.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 3.5 - tak",
             "odds": 5.7
           }
         ]
       },
       "index": 3429,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_SAVES_OVER",
       "rawName": "Każda z drużyn powyżej X obronionych strzałów przez bramkarza"
     },
     {
@@ -83540,150 +83525,150 @@
       "rawName": "2. połowa - Maroko liczba spalonych"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:11.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "11.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 11.5 - Tak",
             "odds": 1.14
           }
         ]
       },
       "index": 3463,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:12.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "12.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 12.5 - Tak",
             "odds": 1.27
           }
         ]
       },
       "index": 3464,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:13.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "13.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 13.5 - Tak",
             "odds": 1.47
           }
         ]
       },
       "index": 3465,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:14.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "14.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 14.5 - Tak",
             "odds": 1.78
           }
         ]
       },
       "index": 3466,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:15.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "15.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 15.5 - Tak",
             "odds": 2.3
           }
         ]
       },
       "index": 3467,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:16.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "16.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 16.5 - Tak",
             "odds": 3.1
           }
         ]
       },
       "index": 3468,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_THROW_INS_OVER:17.5",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "17.5",
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OVER",
             "label": "Powyżej 17.5 - Tak",
             "odds": 4.3
           }
         ]
       },
       "index": 3469,
-      "marketCode": "OTHER",
+      "marketCode": "EACH_TEAM_TOTAL_THROW_INS_OVER",
       "rawName": "Każda drużyna powyżej X rzutów z autu"
     },
     {

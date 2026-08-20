@@ -9,6 +9,7 @@ import type {
 import {
   buildMarketKey,
   collapseBothHalvesOverGoalsZeroFive,
+  rerouteWholeGoalLineToAsian,
   parseDecimalLine,
   parseHandicapLine,
   parseIntegerLine,
@@ -22,6 +23,7 @@ import {
   parseScoreSelection,
   parseHtFtSelection,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { GAME_TYPES } from "../../../scrapers/bookmakers/betfan/constants.js";
@@ -1142,8 +1144,8 @@ function normalizeSelectionForMarket(
     }
 
     case "MULTI_RESULT": {
-      const normalized = normalizeText(trimmed);
-      if (normalized === "remis" || normalized === "x") return "X" as NormalizedSelection;
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
     }
 
@@ -1229,21 +1231,22 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS": {
+      // Canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
       const normalized = normalizeText(trimmed);
-      if (/^1/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/^2/.test(normalized)) return "2nd" as NormalizedSelection;
+      if (/^1/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/^2/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
       if (normalized === "tyle samo" || normalized === "remis" || normalized === "x" || normalized === "rowno") {
-        return "Draw" as NormalizedSelection;
+        return "DRAW" as NormalizedSelection;
       }
       return "UNKNOWN";
     }
 
     case "BTTS_BY_HALF": {
       const normalized = normalizeText(trimmed);
-      if (/^tak\s*\/\s*tak$/.test(normalized)) return "Both" as NormalizedSelection;
-      if (/^tak\s*\/\s*nie$/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/^nie\s*\/\s*tak$/.test(normalized)) return "2nd" as NormalizedSelection;
-      if (/^nie\s*\/\s*nie$/.test(normalized)) return "None" as NormalizedSelection;
+      if (/^tak\s*\/\s*tak$/.test(normalized)) return "BOTH" as NormalizedSelection;
+      if (/^tak\s*\/\s*nie$/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*tak$/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
+      if (/^nie\s*\/\s*nie$/.test(normalized)) return "NONE" as NormalizedSelection;
       return "UNKNOWN";
     }
 
@@ -1436,6 +1439,15 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
       const collapsed = collapseBothHalvesOverGoalsZeroFive(resolvedCode, paramValue);
       resolvedCode = collapsed.marketCode as NormalizedMarketType;
       paramValue = collapsed.paramValue;
+    }
+    // audit cluster #12: betfan's OVER_UNDER game type spans the whole
+    // 0.5..5.5 ladder undifferentiated — reroute bare-integer lines to
+    // TOTAL_GOALS_ASIAN so they pool with every other bookmaker's
+    // whole-number lines instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(resolvedCode, paramValue);
+      resolvedCode = rerouted.marketCode as NormalizedMarketType;
+      paramValue = rerouted.paramValue;
     }
     const marketKey = buildMarketKey(resolvedCode, paramValue);
 

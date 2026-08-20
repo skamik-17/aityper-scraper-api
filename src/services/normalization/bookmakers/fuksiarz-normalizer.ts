@@ -8,6 +8,7 @@ import type {
 } from "../types.js";
 import {
   buildMarketKey,
+  rerouteWholeGoalLineToAsian,
   parseOverUnderLine,
   parseDecimalLine,
   parseIntegerLine,
@@ -1518,10 +1519,11 @@ function normalizeSelectionForMarket(
       return normalizeRangeSelection(trimmed);
 
     case "HALF_WITH_MORE_GOALS": {
+      // Canonical 1ST_HALF/2ND_HALF/DRAW (audit-loop minor cluster #1).
       const normalized = normalizeText(trimmed);
-      if (/rowno|remis|zadna/.test(normalized)) return "Draw" as NormalizedSelection;
-      if (/^1\b/.test(normalized) || normalized.includes("pierwsza")) return "1st" as NormalizedSelection;
-      if (/^2\b/.test(normalized) || normalized.includes("druga")) return "2nd" as NormalizedSelection;
+      if (/rowno|remis|zadna/.test(normalized)) return "DRAW" as NormalizedSelection;
+      if (/^1\b/.test(normalized) || normalized.includes("pierwsza")) return "1ST_HALF" as NormalizedSelection;
+      if (/^2\b/.test(normalized) || normalized.includes("druga")) return "2ND_HALF" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -1648,7 +1650,7 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "fuksiarz",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
-    const { code: marketCode, matchedBy } = resolveMarketCode(raw, ctx);
+    let { code: marketCode, matchedBy } = resolveMarketCode(raw, ctx);
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[fuksiarz] Market code "${marketCode}" not in catalog for "${raw.name}"`);
@@ -1676,6 +1678,17 @@ export const fuksiarzNormalizer: BookmakerMarketNormalizer = {
       const side = resolveTeamSide(raw.name, ctx);
       if (!side) return null;
       paramValue = `${side}:${paramValue}`;
+    }
+
+    // audit cluster #12: fuksiarz's id-based map (id 8) short-circuits the
+    // smarter name-pattern route below (which DOES distinguish "X.0" from
+    // "X.5") for the whole 0.5..5.0 ladder — reroute bare-integer lines to
+    // TOTAL_GOALS_ASIAN here too so they pool with every other bookmaker's
+    // whole-number lines instead of fragmenting the "line 1" card.
+    {
+      const rerouted = rerouteWholeGoalLineToAsian(marketCode, paramValue);
+      marketCode = rerouted.marketCode as NormalizedMarketType;
+      paramValue = rerouted.paramValue;
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

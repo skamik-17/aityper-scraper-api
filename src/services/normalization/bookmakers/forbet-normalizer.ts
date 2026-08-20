@@ -19,6 +19,7 @@ import {
   parseHtFtSelection,
   parseHandicapLine,
   canonicalizePlayerName,
+  normalizeMultiResultSelection,
 } from "../helpers/index.js";
 import { isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
@@ -1133,10 +1134,11 @@ function normalizeSelectionForMarket(
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS": {
-      // Catalog codes are "1st" / "2nd" / "Draw"
-      if (/^1\.?\s*polowa/.test(normalized)) return "1st" as NormalizedSelection;
-      if (/^2\.?\s*polowa/.test(normalized)) return "2nd" as NormalizedSelection;
-      if (/^(remis|x|zadna)/.test(normalized)) return "Draw" as NormalizedSelection;
+      // Catalog codes are canonical "1ST_HALF" / "2ND_HALF" / "DRAW"
+      // (audit-loop minor cluster #1).
+      if (/^1\.?\s*polowa/.test(normalized)) return "1ST_HALF" as NormalizedSelection;
+      if (/^2\.?\s*polowa/.test(normalized)) return "2ND_HALF" as NormalizedSelection;
+      if (/^(remis|x|zadna)/.test(normalized)) return "DRAW" as NormalizedSelection;
       return trimmed as NormalizedSelection;
     }
 
@@ -1256,21 +1258,16 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
-    // Catalog uses the raw combo strings ("1:0, 2:0 lub 3:0") verbatim and
-    // "X" for the draw bucket (literal passthrough covers the combos).
-    case "MULTI_RESULT":
-      if (/^(remis|x)$/.test(normalized)) return "X" as NormalizedSelection;
-            // Audit /audit-match (Arsenal vs Coventry City): the "other win" legs are
-      // quoted lowercase (and forBET even in the wrong grammatical case,
-      // "inne zwycięstwo gospodarze"), so they never matched the catalog's
-      // capitalized genitive codes and every one of those prices was dropped.
-      if (/^inne\s+zwyci[eę]stwo\s+gospodarz/i.test(trimmed)) {
-        return "Inne zwycięstwo gospodarzy" as NormalizedSelection;
-      }
-      if (/^inne\s+zwyci[eę]stwo\s+go[sś]c/i.test(trimmed)) {
-        return "Inne zwycięstwo gości" as NormalizedSelection;
-      }
+    // Structured GROUP_<h>_<a>__... tokens (see normalizeMultiResultSelection)
+    // sidestep the casing/grammar drift this used to need special-cased
+    // fixes for (forBET quotes the "other win" legs lowercase and even in
+    // the wrong grammatical case, "inne zwycięstwo gospodarze") since
+    // matching is by stem, not exact string.
+    case "MULTI_RESULT": {
+      const canonical = normalizeMultiResultSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (canonical) return canonical;
       return trimmed as NormalizedSelection;
+    }
 
     // "Tak i powyżej 2.5 goli" → OVER_YES (BTTS × totals combo)
     case "TOTAL_GOALS_AND_BTTS": {
@@ -1308,13 +1305,14 @@ function normalizeSelectionForMarket(
 
     case "BTTS_BY_HALF": {
       // "tak/nie" = BTTS in 1st half only, "nie/tak" = 2nd only, "tak/tak" =
-      // both halves, "nie/nie" = neither — catalog codes 1st/2nd/Both/None.
+      // both halves, "nie/nie" = neither — catalog codes canonical
+      // 1ST_HALF/2ND_HALF/BOTH/NONE (audit-loop minor cluster #1).
       const combo = normalized.match(/^(tak|nie)\s*\/\s*(tak|nie)$/);
       if (combo) {
         if (combo[1] === "tak") {
-          return (combo[2] === "tak" ? "Both" : "1st") as NormalizedSelection;
+          return (combo[2] === "tak" ? "BOTH" : "1ST_HALF") as NormalizedSelection;
         }
-        return (combo[2] === "tak" ? "2nd" : "None") as NormalizedSelection;
+        return (combo[2] === "tak" ? "2ND_HALF" : "NONE") as NormalizedSelection;
       }
       return trimmed as NormalizedSelection;
     }

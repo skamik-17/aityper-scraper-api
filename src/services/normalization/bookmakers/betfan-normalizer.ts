@@ -140,6 +140,11 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // PLAYER_FREE_KICK_GOAL description verbatim; unmapped it fell through to
   // OTHER and collapsed to a single UNKNOWN selection.
   "-200175": "PLAYER_FREE_KICK_GOAL",
+  // "Pierwszy zawodnik ukarany kartka" (48 player rows in this match, e.g.
+  // "Onyeka, Frank"=6.8) matches the catalog's FIRST_PLAYER_CARDED
+  // description verbatim; unmapped it fell through to OTHER and collapsed
+  // to a single UNKNOWN selection, dropping 47 players and the survivor's name.
+  "-200344": "FIRST_PLAYER_CARDED",
   "-200342": "PLAYER_RIGHT_FOOT_GOAL",
   "-200341": "PLAYER_LEFT_FOOT_GOAL",
   "-200337": "ASSIST_SCORER_ANYTIME",
@@ -1109,6 +1114,7 @@ function normalizeSelectionForMarket(
     case "HOME_GOALSCORER_LAST":
     case "AWAY_GOALSCORER_LAST":
     case "HALF_TIME_GOALSCORER_ANYTIME":
+    case "FIRST_PLAYER_CARDED":
     case "PLAYER_SHOTS":
     case "PLAYER_CARDS":
     case "PLAYER_ASSISTS":

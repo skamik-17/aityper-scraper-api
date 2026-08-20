@@ -165,3 +165,71 @@ describe("mergeMarketRecord with OTHER-catchall key suffixing", () => {
     expect(row.selections.map((s) => s.name)).toEqual(["2+", "3+", "4+"]);
   });
 });
+
+describe("mergeMarketRecord with within-market UNKNOWN-selection collisions (round 5)", () => {
+  it("keeps all four legs of a raw OTHER market whose selections all normalize to the generic UNKNOWN code", () => {
+    // betcris' "1-15 min. Liczba goli" (audit-match Arsenal vs Coventry
+    // City, round 5): one raw market, 2 paramValues x Over/Under = 4
+    // genuinely different selections. The normalizer can't classify any of
+    // them beyond OTHER, so every selection.normalizedName is the generic
+    // "UNKNOWN" fallback (factory.ts). Before the fix, the plain
+    // `sel.normalizedName || sel.name` dedup key treated "UNKNOWN" as one
+    // shared code (it's a truthy string, so `||` never fell through to the
+    // distinct raw name) and every selection after the first collided away.
+    const recordsMap = new Map<string, OddsInsert>();
+    const goalsFirst15Min = scrapedMarket({
+      name: "1-15 min. Liczba goli",
+      bookmakerMarketId: "501",
+      selections: [
+        { name: "Powyżej 0.5", odds: 1.9, normalizedName: "UNKNOWN" as any },
+        { name: "Poniżej 0.5", odds: 1.85, normalizedName: "UNKNOWN" as any },
+        { name: "Powyżej 1.5", odds: 4.5, normalizedName: "UNKNOWN" as any },
+        { name: "Poniżej 1.5", odds: 1.18, normalizedName: "UNKNOWN" as any },
+      ],
+    });
+
+    const marketKey = resolveStorageMarketKey(
+      goalsFirst15Min,
+      goalsFirst15Min.marketKey || goalsFirst15Min.normalizedType!,
+    );
+    mergeMarketRecord(recordsMap, marketKey, insertFrom(goalsFirst15Min, marketKey));
+
+    const row = recordsMap.get(marketKey)!;
+    expect(row).toBeDefined();
+    expect(row.selections).toHaveLength(4);
+    expect(row.selections.map((s) => s.name)).toEqual([
+      "Powyżej 0.5",
+      "Poniżej 0.5",
+      "Powyżej 1.5",
+      "Poniżej 1.5",
+    ]);
+  });
+
+  it("still collapses a genuine duplicate (same raw name AND UNKNOWN code) instead of double-counting", () => {
+    const recordsMap = new Map<string, OddsInsert>();
+    const marketA = scrapedMarket({
+      name: "Dziwny rynek",
+      bookmakerMarketId: "999",
+      selections: [{ name: "Tak", odds: 1.9, normalizedName: "UNKNOWN" as any }],
+    });
+    const marketAAgain = scrapedMarket({
+      name: "Dziwny rynek",
+      bookmakerMarketId: "999",
+      selections: [{ name: "Tak", odds: 1.95, normalizedName: "UNKNOWN" as any }],
+    });
+
+    const keyA = resolveStorageMarketKey(marketA, marketA.marketKey || marketA.normalizedType!);
+    mergeMarketRecord(recordsMap, keyA, insertFrom(marketA, keyA));
+    const keyB = resolveStorageMarketKey(
+      marketAAgain,
+      marketAAgain.marketKey || marketAAgain.normalizedType!,
+    );
+    mergeMarketRecord(recordsMap, keyB, insertFrom(marketAAgain, keyB));
+
+    const row = recordsMap.get(keyA)!;
+    // First-seen odds win on a genuine collision, matching mergeMarketRecord's
+    // documented ladder-merge behavior — still just one "Tak" selection.
+    expect(row.selections).toHaveLength(1);
+    expect(row.selections[0].odds).toBe(1.9);
+  });
+});

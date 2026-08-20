@@ -145,6 +145,35 @@ export function resolveStorageMarketKey(market: ScrapedMarket, computedKey: stri
  * the normalizer rather than disjoint thresholds — logged as a misroute
  * signal instead of being silently dropped.
  */
+/**
+ * Collision-detection key for one selection within mergeMarketRecord(). Uses
+ * normalizedName when it actually distinguishes the selection, but falls
+ * back to the raw name when normalizedName is the generic "UNKNOWN" bucket
+ * every normalizer's default case assigns to selections it can't classify
+ * (see e.g. factory.ts's `normalizedName: "UNKNOWN" as NormalizedSelection`
+ * fallback, and per-bookmaker OTHER-market normalization).
+ *
+ * Plain `sel.normalizedName || sel.name` treats "UNKNOWN" as a real,
+ * distinguishing code — it's a non-empty string, so `||` never falls
+ * through to `sel.name`. That silently collapsed several genuinely
+ * different selections inside ONE already-correctly-isolated raw market
+ * (e.g. betcris' "1-15 min. Liczba goli" with 2 paramValues x Over/Under =
+ * 4 selections, all typed UNKNOWN) down to just one kept row, since every
+ * later "UNKNOWN" selection collided with the first (audit-match Arsenal
+ * vs Coventry City, round 5: INNE/OTHER BROKEN finding across betcris,
+ * lvbet, lebull, superbet, etoto).
+ *
+ * This only changes the DEDUP KEY, not the stored value — `normalizedName`
+ * on the selection object itself stays "UNKNOWN" untouched, so any
+ * downstream code keying off normalizedName sees the same value as before.
+ */
+function selectionCollisionKey(sel: MarketSelection): string {
+  if (sel.normalizedName && sel.normalizedName !== "UNKNOWN") {
+    return sel.normalizedName;
+  }
+  return sel.name;
+}
+
 export function mergeMarketRecord(
   recordsMap: Map<string, OddsInsert>,
   marketKey: string,
@@ -157,11 +186,11 @@ export function mergeMarketRecord(
   }
 
   const existingCodes = new Set(
-    existing.selections.map((sel) => sel.normalizedName || sel.name)
+    existing.selections.map((sel) => selectionCollisionKey(sel))
   );
   let collidedCode: string | undefined;
   for (const sel of incoming.selections) {
-    const code = sel.normalizedName || sel.name;
+    const code = selectionCollisionKey(sel);
     if (existingCodes.has(code)) {
       collidedCode = code;
       continue;

@@ -5653,9 +5653,15 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     labels: { pl: "1. połowa - gospodarz - dokładna liczba goli", en: "Half Time Home Exact Goals" },
     descriptions: { pl: "Obstawiasz dokładną liczbę goli strzelonych przez gospodarzy w 1. połowie.", en: "Bet on the exact number of goals scored by the home team in the first half." },
     hasParameter: false,
-    selections: ["0", "1", "2", "3"],
+    // lvbet's own ladder tops out at an open "2+" tier instead of a discrete
+    // "3" (half-time goal counts above 2 are rare enough that bookmakers
+    // often collapse the tail) — kept as an ADDITIONAL code alongside the
+    // existing discrete "3" so peers with the finer breakdown are
+    // unaffected, same pattern as CARDS_EXACT's fuksiarz "7+" fix (audit-
+    // match Arsenal vs Coventry City, round 7b).
+    selections: ["0", "1", "2", "2+", "3"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { "0": "Gospodarze nie strzelą gola w 1. połowie", "1": "Gospodarze strzelą dokładnie 1 goli w 1. połowie", "2": "Gospodarze strzelą dokładnie 2 goli w 1. połowie", "3": "Gospodarze strzelą dokładnie 3 goli w 1. połowie" },
+    descriptionTemplates: { "0": "Gospodarze nie strzelą gola w 1. połowie", "1": "Gospodarze strzelą dokładnie 1 goli w 1. połowie", "2": "Gospodarze strzelą dokładnie 2 goli w 1. połowie", "2+": "Gospodarze strzelą 2 lub więcej goli w 1. połowie", "3": "Gospodarze strzelą dokładnie 3 goli w 1. połowie" },
     displayOrder: 284,
   },
   {

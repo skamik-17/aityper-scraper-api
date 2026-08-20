@@ -91,6 +91,12 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "ktorykolwiek zawodnik zaliczy asyste": "PLAYER_ASSIST_PAIRS",
   "ktorykolwiek zawodnik zaliczy asyste - 3 zawodnik": "PLAYER_ASSIST_TRIPLE",
   "obaj gracze strzela": "BOTH_PLAYERS_ANYTIME",
+  // audit-match (Arsenal vs Coventry City) round 2: half-time counterpart of
+  // BOTH_PLAYERS_ANYTIME above (AND semantics), was falling through to the
+  // generic OTHER bucket. Mirrors HALF_TIME_TWO_PLAYERS_ANYTIME's
+  // relationship to TWO_PLAYERS_ANYTIME. See market-catalog.ts entry
+  // HALF_TIME_BOTH_PLAYERS_ANYTIME for the odds/shape evidence.
+  "obaj gracze strzela w 1. polowa": "HALF_TIME_BOTH_PLAYERS_ANYTIME",
   "obaj gracze strzela w obu polowach": "BOTH_PLAYERS_SCORE_BOTH_HALVES",
   "jeden z graczy strzeli pierwszego gola": "ANY_PLAYER_FIRST_GOAL",
   "jeden z graczy strzeli w obu polowach": "SAME_PLAYER_SCORES_BOTH_HALVES",
@@ -2172,6 +2178,7 @@ function normalizeSelectionForMarket(
     case "TWO_PLAYERS_ANYTIME":
     case "BOTH_PLAYERS_ANYTIME":
     case "HALF_TIME_TWO_PLAYERS_ANYTIME":
+    case "HALF_TIME_BOTH_PLAYERS_ANYTIME":
     case "SECOND_HALF_TWO_PLAYERS_ANYTIME":
     case "ANY_PLAYER_FIRST_GOAL":
     case "SAME_PLAYER_SCORES_BOTH_HALVES":

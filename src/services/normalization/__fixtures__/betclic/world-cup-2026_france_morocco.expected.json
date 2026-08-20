@@ -9543,39 +9543,39 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
-        "matchedBy": "pattern",
+        "marketCode": "HALF_TIME_BOTH_PLAYERS_ANYTIME",
+        "marketKey": "HALF_TIME_BOTH_PLAYERS_ANYTIME",
+        "matchedBy": "name",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "M. Thuram & K. Mbappe",
+            "code": "K. Mbappe & M. Thuram",
             "label": "M. Thuram & K. Mbappe",
             "odds": 13.75
           },
           {
-            "code": "K. Mbappe & J. Mateta",
+            "code": "J. Mateta & K. Mbappe",
             "label": "K. Mbappe & J. Mateta",
             "odds": 14
           },
           {
-            "code": "O. Dembélé & K. Mbappe",
+            "code": "K. Mbappe & O. Dembele",
             "label": "O. Dembélé & K. Mbappe",
             "odds": 14.5
           },
           {
-            "code": "K. Mbappe & D. Doué",
+            "code": "D. Doue & K. Mbappe",
             "label": "K. Mbappe & D. Doué",
             "odds": 17.5
           },
           {
-            "code": "K. Mbappe & B. Barcola",
+            "code": "B. Barcola & K. Mbappe",
             "label": "K. Mbappe & B. Barcola",
             "odds": 17.5
           },
           {
-            "code": "M. Thuram & J. Mateta",
+            "code": "J. Mateta & M. Thuram",
             "label": "M. Thuram & J. Mateta",
             "odds": 22
           },
@@ -9585,57 +9585,57 @@
             "odds": 23
           },
           {
-            "code": "O. Dembélé & M. Thuram",
+            "code": "M. Thuram & O. Dembele",
             "label": "O. Dembélé & M. Thuram",
             "odds": 23
           },
           {
-            "code": "O. Dembélé & J. Mateta",
+            "code": "J. Mateta & O. Dembele",
             "label": "O. Dembélé & J. Mateta",
             "odds": 23
           },
           {
-            "code": "K. Mbappe & A. El Kaabi",
+            "code": "A. El Kaabi & K. Mbappe",
             "label": "K. Mbappe & A. El Kaabi",
             "odds": 24
           },
           {
-            "code": "K. Mbappe & B. Díaz",
+            "code": "B. Diaz & K. Mbappe",
             "label": "K. Mbappe & B. Díaz",
             "odds": 28
           },
           {
-            "code": "M. Thuram & D. Doué",
+            "code": "D. Doue & M. Thuram",
             "label": "M. Thuram & D. Doué",
             "odds": 28
           },
           {
-            "code": "J. Mateta & D. Doué",
+            "code": "D. Doue & J. Mateta",
             "label": "J. Mateta & D. Doué",
             "odds": 28
           },
           {
-            "code": "J. Mateta & B. Barcola",
+            "code": "B. Barcola & J. Mateta",
             "label": "J. Mateta & B. Barcola",
             "odds": 28
           },
           {
-            "code": "M. Thuram & B. Barcola",
+            "code": "B. Barcola & M. Thuram",
             "label": "M. Thuram & B. Barcola",
             "odds": 28
           },
           {
-            "code": "O. Dembélé & D. Doué",
+            "code": "D. Doue & O. Dembele",
             "label": "O. Dembélé & D. Doué",
             "odds": 29
           },
           {
-            "code": "O. Dembélé & B. Barcola",
+            "code": "B. Barcola & O. Dembele",
             "label": "O. Dembélé & B. Barcola",
             "odds": 29
           },
           {
-            "code": "K. Mbappe & A. Ounahi",
+            "code": "A. Ounahi & K. Mbappe",
             "label": "K. Mbappe & A. Ounahi",
             "odds": 33
           },
@@ -9645,12 +9645,12 @@
             "odds": 35
           },
           {
-            "code": "K. Mbappe & Ayoube Amaimouni",
+            "code": "A. Amaimouni & K. Mbappe",
             "label": "K. Mbappe & Ayoube Amaimouni",
             "odds": 38
           },
           {
-            "code": "M. Thuram & A. El Kaabi",
+            "code": "A. El Kaabi & M. Thuram",
             "label": "M. Thuram & A. El Kaabi",
             "odds": 38
           },
@@ -9660,57 +9660,57 @@
             "odds": 38
           },
           {
-            "code": "O. Dembélé & S. Rahimi",
+            "code": "O. Dembele & S. Rahimi",
             "label": "O. Dembélé & S. Rahimi",
             "odds": 38
           },
           {
-            "code": "B. Barcola & D. Doué",
+            "code": "B. Barcola & D. Doue",
             "label": "B. Barcola & D. Doué",
             "odds": 38
           },
           {
-            "code": "K. Mbappe & A. Sbai",
+            "code": "A. Sbai & K. Mbappe",
             "label": "K. Mbappe & A. Sbai",
             "odds": 40
           },
           {
-            "code": "J. Mateta & A. El Kaabi",
+            "code": "A. El Kaabi & J. Mateta",
             "label": "J. Mateta & A. El Kaabi",
             "odds": 40
           },
           {
-            "code": "O. Dembélé & A. El Kaabi",
+            "code": "A. El Kaabi & O. Dembele",
             "label": "O. Dembélé & A. El Kaabi",
             "odds": 40
           },
           {
-            "code": "M. Thuram & B. Díaz",
+            "code": "B. Diaz & M. Thuram",
             "label": "M. Thuram & B. Díaz",
             "odds": 45
           },
           {
-            "code": "B. Díaz & J. Mateta",
+            "code": "B. Diaz & J. Mateta",
             "label": "B. Díaz & J. Mateta",
             "odds": 45
           },
           {
-            "code": "O. Dembélé & B. Díaz",
+            "code": "B. Diaz & O. Dembele",
             "label": "O. Dembélé & B. Díaz",
             "odds": 48
           },
           {
-            "code": "S. Rahimi & D. Doué",
+            "code": "D. Doue & S. Rahimi",
             "label": "S. Rahimi & D. Doué",
             "odds": 48
           },
           {
-            "code": "S. Rahimi & B. Barcola",
+            "code": "B. Barcola & S. Rahimi",
             "label": "S. Rahimi & B. Barcola",
             "odds": 48
           },
           {
-            "code": "A. El Kaabi & D. Doué",
+            "code": "A. El Kaabi & D. Doue",
             "label": "A. El Kaabi & D. Doué",
             "odds": 50
           },
@@ -9720,57 +9720,57 @@
             "odds": 50
           },
           {
-            "code": "O. Dembélé & A. Ounahi",
+            "code": "A. Ounahi & O. Dembele",
             "label": "O. Dembélé & A. Ounahi",
             "odds": 55
           },
           {
-            "code": "M. Thuram & A. Ounahi",
+            "code": "A. Ounahi & M. Thuram",
             "label": "M. Thuram & A. Ounahi",
             "odds": 55
           },
           {
-            "code": "J. Mateta & A. Ounahi",
+            "code": "A. Ounahi & J. Mateta",
             "label": "J. Mateta & A. Ounahi",
             "odds": 55
           },
           {
-            "code": "M. Thuram & Ayoube Amaimouni",
+            "code": "A. Amaimouni & M. Thuram",
             "label": "M. Thuram & Ayoube Amaimouni",
             "odds": 60
           },
           {
-            "code": "M. Thuram & A. Sbai",
+            "code": "A. Sbai & M. Thuram",
             "label": "M. Thuram & A. Sbai",
             "odds": 60
           },
           {
-            "code": "J. Mateta & Ayoube Amaimouni",
+            "code": "A. Amaimouni & J. Mateta",
             "label": "J. Mateta & Ayoube Amaimouni",
             "odds": 60
           },
           {
-            "code": "O. Dembélé & Ayoube Amaimouni",
+            "code": "A. Amaimouni & O. Dembele",
             "label": "O. Dembélé & Ayoube Amaimouni",
             "odds": 60
           },
           {
-            "code": "B. Díaz & D. Doué",
+            "code": "B. Diaz & D. Doue",
             "label": "B. Díaz & D. Doué",
             "odds": 60
           },
           {
-            "code": "B. Díaz & B. Barcola",
+            "code": "B. Barcola & B. Diaz",
             "label": "B. Díaz & B. Barcola",
             "odds": 60
           },
           {
-            "code": "J. Mateta & A. Sbai",
+            "code": "A. Sbai & J. Mateta",
             "label": "J. Mateta & A. Sbai",
             "odds": 65
           },
           {
-            "code": "O. Dembélé & A. Sbai",
+            "code": "A. Sbai & O. Dembele",
             "label": "O. Dembélé & A. Sbai",
             "odds": 65
           },
@@ -9780,24 +9780,24 @@
             "odds": 70
           },
           {
-            "code": "A. Ounahi & D. Doué",
+            "code": "A. Ounahi & D. Doue",
             "label": "A. Ounahi & D. Doué",
             "odds": 70
           },
           {
-            "code": "B. Díaz & S. Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "B. Díaz & S. Rahimi",
             "odds": 70
           },
           {
-            "code": "B. Barcola & A. Ounahi",
+            "code": "A. Ounahi & B. Barcola",
             "label": "B. Barcola & A. Ounahi",
             "odds": 70
           }
         ]
       },
       "index": 90,
-      "marketCode": "OTHER",
+      "marketCode": "HALF_TIME_BOTH_PLAYERS_ANYTIME",
       "rawName": "Obaj gracze strzelą w 1. połowa"
     },
     {

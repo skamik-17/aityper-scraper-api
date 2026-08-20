@@ -79,7 +79,18 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   607: "HT_OR_FT_RESULT",
   68: "FIRST_GOAL_METHOD",
   682: "CORRECT_SCORE",
-  40424: "MULTI_RESULT",
+  // Stake type 40424 ("Multiwynik", groupName "Dokladny wynik") is NOT the
+  // standard Multi Result market: audit /audit-match (Arsenal vs Coventry
+  // City, and world-cup-2026 France vs Morocco fixture) confirms it is a
+  // combo-builder product quoting 8-11 OVERLAPPING 3-score buckets (e.g.
+  // "1:0, 2:0 lub 2:1" and "1:0, 2:0 lub 3:0" both include the 1:0 outcome)
+  // that do not partition the scoreline space the way MULTI_RESULT's catalog
+  // vocabulary does. Only one row happens to textually match a standard
+  // MULTI_RESULT bucket; mapping the id there silently dropped the other
+  // 7-10 combos and misrepresented lebull as offering a single-selection
+  // Multi Result market. No catalog code models this overlapping shape, so
+  // route it to OTHER (dropped) instead.
+  40424: "OTHER",
   311019: "SCORE_REACHED",
   311021: "SCORE_OCCURS_DURING_MATCH",
   311022: "SCORE_TO_OCCUR",
@@ -297,6 +308,17 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "DOUBLE_CHANCE_GOAL_RANGE",
   "HALFTIME_FULLTIME",
   "MULTI_RESULT",
+  // audit-match (Arsenal vs Coventry City): each of lebull's per-range "Suma
+  // goli: X-Y" Tak/Nie sub-markets is only kept when the range has a catalog
+  // slot (see the GOAL_RANGE/MULTI_GOAL_RANGE/HOME_GOAL_RANGE/AWAY_GOAL_RANGE
+  // handling below); uncataloged buckets (e.g. HOME_GOAL_RANGE's "3-4",
+  // MULTI_GOAL_RANGE's "0-1") keep their generic Tak/Nie -> UNKNOWN mapping
+  // and must be dropped here rather than surfaced as a bare "UNKNOWN"
+  // selection with no catalog label.
+  "GOAL_RANGE",
+  "MULTI_GOAL_RANGE",
+  "HOME_GOAL_RANGE",
+  "AWAY_GOAL_RANGE",
   // Closed 1st/2nd/Draw vocabulary (market-catalog.ts): any unmapped label
   // (e.g. a future sbteam.xyz wording change) is noise, not a real leg.
   "HALF_WITH_MORE_GOALS",
@@ -551,7 +573,16 @@ function resolveMarketCode(
   if (isGoalRangeLine && !isDecimalGoalLine) {
     if (rangeSide === "HOME") return { marketCode: "HOME_GOAL_RANGE", matchedBy: "pattern" };
     if (rangeSide === "AWAY") return { marketCode: "AWAY_GOAL_RANGE", matchedBy: "pattern" };
-    return { marketCode: "GOAL_RANGE", matchedBy: "pattern" };
+    // audit-match (Arsenal vs Coventry City): lebull's whole-match "Suma
+    // goli: X-Y" lines are always separate, per-range, independent Tak/Nie
+    // propositions (e.g. "0-1", "1-2", "2-3", "3-4", "4-5", "4-6" alongside
+    // the wider "1-3"/"2-4"/"3-5"), never a single market quoting a disjoint,
+    // exhaustive partition of the scoreline space. Those OVERLAPPING ranges
+    // (total=2 satisfies both "1-2" and "2-3") are the same cumulative-ladder
+    // shape MULTI_GOAL_RANGE was added for (etoto/forbet "Przedział goli" /
+    // "Multi-gole"), not the disjoint-band GOAL_RANGE, whose COMBINATION
+    // viewType implies mutual exclusivity these ranges do not have.
+    return { marketCode: "MULTI_GOAL_RANGE", matchedBy: "pattern" };
   }
 
   // "Suma goli N" (no dash/plus, no team prefix) quoted powyżej/poniżej is a
@@ -852,6 +883,23 @@ function normalizeSelectionForMarket(
       // "Od 1 do 10 min." -> "1-10", "Od 16 do 30 min." -> "16-30", etc.
       return normalizeGoalTimeRangeSelection(trimmed);
 
+    case "FIRST_GOAL_METHOD":
+      // LeBull quotes ("Gol głową", "Rzuty wolny", "Karny", "Gol z gry/bez
+      // gola głową", "Gol samobójczy") — audit /audit-match (Arsenal vs
+      // Coventry City) found none of these were mapped, so every entry fell
+      // through the default 1x2 resolver to UNKNOWN and the whole bookmaker
+      // was dropped from the market. "Gol samobójczy" (own goal) has no
+      // catalog slot here (mirrors betcris' equivalent uncoded leg) and stays
+      // UNKNOWN/dropped.
+      // "Gol z gry/bez gola głową" (open-play goal / not-a-header) also
+      // contains the "głową" substring, so it must be checked before the
+      // header pattern to avoid being misrouted to HEADER.
+      if (/gol\s*z\s*gry/i.test(normalized)) return "OTHER" as NormalizedSelection;
+      if (/g[łl]ow[ąa]/i.test(normalized)) return "HEADER" as NormalizedSelection;
+      if (/karny/i.test(normalized)) return "PENALTY" as NormalizedSelection;
+      if (/wolny/i.test(normalized)) return "FREE_KICK" as NormalizedSelection;
+      return "UNKNOWN";
+
     case "RESULT_AND_TOTAL": {
       // "Szwajcaria i powyżej" -> HOME_OVER, "Remis i poniżej" -> DRAW_UNDER.
       const m = trimmed.match(/^(.+?)\s+i\s+(powy[żz]ej|poni[żz]ej)/i);
@@ -1127,10 +1175,11 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
     // or the team-scoped "Arsenal: suma goli: 0-1") is quoted as Tak/Nie:
     // "Tak" IS the range-band price (catalog code "3-5" / "0" / "7+"); "Nie"
     // has no negation slot in the mutually exclusive GOAL_RANGE /
-    // HOME_GOAL_RANGE / AWAY_GOAL_RANGE catalogs and must be dropped, not
-    // left UNKNOWN.
+    // MULTI_GOAL_RANGE / HOME_GOAL_RANGE / AWAY_GOAL_RANGE catalogs and must
+    // be dropped, not left UNKNOWN.
     if (
       marketCode === "GOAL_RANGE" ||
+      marketCode === "MULTI_GOAL_RANGE" ||
       marketCode === "HOME_GOAL_RANGE" ||
       marketCode === "AWAY_GOAL_RANGE"
     ) {
@@ -1151,9 +1200,12 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
             : undefined;
       // NOTE: HOME_GOAL_RANGE/AWAY_GOAL_RANGE catalog entries do not (yet)
       // list "3-4" as a valid selection (lebull publishes it, e.g. id 283
-      // "Arsenal: suma goli: 3-4"); until the catalog is extended, such rows
-      // fall through the includes() guard below and keep their generic
-      // Tak/Nie -> UNKNOWN mapping rather than being silently mis-tagged.
+      // "Arsenal: suma goli: 3-4"), and MULTI_GOAL_RANGE does not (yet) list
+      // "0-1" (lebull's bottom rung, id 275 "Suma goli: 0-1") — until the
+      // catalog is extended, such rows fall through the includes() guard
+      // below and keep their generic Tak/Nie -> UNKNOWN mapping, which
+      // UNKNOWN_FILTERED_MARKETS then drops rather than silently mis-tagging
+      // or leaking a bare "UNKNOWN" selection to users.
       if (rangeCode && getMarketMetadata(marketCode)?.selections.includes(rangeCode)) {
         selections = raw.selections
           .filter((sel) => normalizeYesNoSelection(sel.name) === "YES")

@@ -3114,22 +3114,22 @@
         "parameters": null,
         "selections": [
           {
-            "code": "UNKNOWN",
+            "code": "OTHER",
             "label": "Gol z gry/bez gola głową",
             "odds": 1.41
           },
           {
-            "code": "UNKNOWN",
+            "code": "HEADER",
             "label": "Gol głową",
             "odds": 4.9
           },
           {
-            "code": "UNKNOWN",
+            "code": "FREE_KICK",
             "label": "Rzuty wolny",
             "odds": 19
           },
           {
-            "code": "UNKNOWN",
+            "code": "PENALTY",
             "label": "Karny",
             "odds": 7.8
           },

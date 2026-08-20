@@ -152,7 +152,13 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   810: "SECOND_HALF_DOUBLE_CHANCE_BTTS",
   811: "DOUBLE_CHANCE_BTTS",
   812: "DOUBLE_CHANCE_TOTAL",
-  813: "GOAL_RANGE",
+  // Audit /audit-loop round 6 (Arsenal vs Coventry City): "Liczba goli -
+  // przedziały" (813) lists 17 overlapping/cumulative bands (0, 1-2..1-6,
+  // 2-3..2-6, 3-4..3-6, 4-5, 4-6, 5-6, 7+) - this is the same cumulative
+  // multi-goal ladder etoto/forbet quote as MULTI_GOAL_RANGE, not the
+  // disjoint exhaustive-partition GOAL_RANGE family. The selection set
+  // matches the MULTI_GOAL_RANGE catalog entry exactly (17/17).
+  813: "MULTI_GOAL_RANGE",
   816: "MULTI_RESULT",
   817: "HALF_TIME_GOAL_RANGE",
   818: "SECOND_HALF_GOAL_RANGE",
@@ -460,6 +466,7 @@ function normalizeSelectionForMarket(
   // numeric selection-ID overrides must NOT be applied to them
   const numericSelectionMarkets = [
     "GOAL_RANGE",
+    "MULTI_GOAL_RANGE",
     "TEAM_GOAL_RANGE",
     "HALF_TIME_GOAL_RANGE",
     "SECOND_HALF_GOAL_RANGE",
@@ -923,6 +930,7 @@ function normalizeSelectionForMarket(
     }
 
     case "GOAL_RANGE":
+    case "MULTI_GOAL_RANGE":
     case "TEAM_GOAL_RANGE":
     case "HALF_TIME_GOAL_RANGE":
     case "SECOND_HALF_GOAL_RANGE":

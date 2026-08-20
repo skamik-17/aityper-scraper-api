@@ -1051,6 +1051,24 @@ function extractParamValue(
     if (quarter) return `q${quarter[1]}`;
   }
 
+  // "1.połowa: <team> przedział rzutów rożnych" is a per-team half-scoped
+  // corner range (catalog parameterType:"team"), but the raw name has no
+  // "liczba" keyword for resolveFortunaTeamSide — the team token instead sits
+  // between the half-scope prefix and "przedział". Without this, every row
+  // collapsed into one unlabeled "base" bucket (market-display audit:
+  // Arsenal vs Coventry City) instead of a HOME/AWAY-parameterized market,
+  // hiding which team the card actually describes and preventing fortuna's
+  // odds from merging with peers on the same HALF_TIME_CORNERS_TEAM_RANGE key.
+  if (marketCode === "HALF_TIME_CORNERS_TEAM_RANGE") {
+    const stripped = stripFortunaScope(nameForParsing);
+    const teamToken = stripped.match(/^(.+?)\s+przedzia[łl]\s/iu);
+    if (teamToken) {
+      const side = normalize1x2Selection(teamToken[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (side === "HOME" || side === "AWAY") return side;
+    }
+    return undefined;
+  }
+
   switch (metadata.parameterType) {
     case "handicap": {
       const scoreStyle =

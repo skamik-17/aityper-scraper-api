@@ -9826,9 +9826,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RED_CARD_TEAM",
-        "marketKey": "RED_CARD_TEAM",
+        "marketKey": "RED_CARD_TEAM:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -9852,9 +9852,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "RED_CARD_TEAM",
-        "marketKey": "RED_CARD_TEAM",
+        "marketKey": "RED_CARD_TEAM:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {

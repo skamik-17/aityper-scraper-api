@@ -347,6 +347,14 @@ const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   // parameter buckets and forbet's whole ladder (incl. the market-best 0-2
   // price) silently dropped out of the aggregated market entirely.
   "CORNERS_TEAM_RANGE",
+  // RED_CARD_TEAM (ids -250/-251) quotes each team separately ("Arsenal FC
+  // otrzyma czerwoną kartkę" / "Coventry otrzyma czerwoną kartkę") but the id
+  // map only points at the bare code with no paramValue, so both teams'
+  // entries fell into the shared unparameterized "base" bucket — a phantom
+  // third, unlabeled selector alongside peer bookmakers' HOME/AWAY buckets,
+  // and it hid forbet's price from the per-side comparison. Audit /audit-match
+  // (Arsenal vs Coventry City), RED_CARD_TEAM finding.
+  "RED_CARD_TEAM",
 ]);
 
 const FORBET_TEAM_SIDED_VARIANTS: Partial<

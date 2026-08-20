@@ -8159,7 +8159,9 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "gole",
     labels: { pl: "Drużyna strzeli w pierwszej/drugiej połowie", en: "Team Score by Half" },
     descriptions: { pl: "Wybierasz, czy dana drużyna strzeli gola w pierwszej i w drugiej połowie — odpowiedź tak/nie łączona dla obu części meczu.", en: "Pick whether the chosen team scores in the first half and in the second half — a combined yes/no answer covering both halves." },
-    hasParameter: false,
+    hasParameter: true,
+    parameterType: "team",
+    validParameters: ["HOME", "AWAY"],
     selections: ["YES_YES", "YES_NO", "NO_YES", "NO_NO"],
     viewType: ViewType.COMBINATION,
     descriptionTemplates: { YES_YES: "{param} strzeli w obu połowach", YES_NO: "{param} strzeli tylko w pierwszej połowie", NO_YES: "{param} strzeli tylko w drugiej połowie", NO_NO: "{param} nie strzeli w żadnej połowie" },
@@ -8342,9 +8344,22 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     subCategory: "kartki",
     labels: { pl: "Żółte kartki w meczu", en: "Yellow Cards Total" },
     descriptions: { pl: "Łączna liczba żółtych kartek pokazanych obu drużynom w meczu — powyżej lub poniżej ustalonego progu.", en: "Total number of yellow cards shown to both teams during the match — over or under a set line." },
-    hasParameter: false,
+    // Was hasParameter:false / BINARY_BUTTONS despite descriptionTemplates
+    // already referencing {param} - a pre-existing inconsistency. Market-
+    // display audit (Arsenal vs Coventry City) found betcris quoting 3
+    // O/U lines flattened into this one unparameterized 2-button card
+    // (undecidable which line each pair of odds belonged to) and lvbet
+    // splitting its own yellow-card line ladder between this code (bare-
+    // integer lines) and CARDS_TOTAL (decimal lines) purely because of a
+    // parsing gap, not a real distinction - CARDS_TOTAL's peers additionally
+    // count a red card as 2, so folding yellow-only lines in there corrupts
+    // that market's definition too (round6 audit comment in betcris-
+    // normalizer.ts). Parameterized like CARDS_TOTAL so every line renders
+    // as its own row instead of being crushed into one ambiguous card.
+    hasParameter: true,
+    parameterType: "decimal",
     selections: ["OVER", "UNDER"],
-    viewType: ViewType.BINARY_BUTTONS,
+    viewType: ViewType.STAT_RANGE,
     descriptionTemplates: { OVER: "Ponad {param} żółtych kartek w meczu", UNDER: "Poniżej {param} żółtych kartek w meczu" },
     displayOrder: 452,
   },
@@ -9377,11 +9392,22 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     // the minute segment ("suma między 1-10 min"), but hasParameter:false
     // left the {param} placeholder above unsubstituted. The grouper
     // recovers the segment ("1-10") from rawMarketName.
+    //
+    // Market-display audit follow-up: {param} is a MINUTE RANGE ("1-15",
+    // "31-45+"), never a goal count — lebull's raw feed has no numeric
+    // goal-count line for this market at all (bare "powyżej"/"poniżej"
+    // selections with nothing quantified in the market name, group name,
+    // or selection labels). The templates below previously read "Powyżej
+    // {param} goli..." ("Over {param} goals...") which would render as the
+    // nonsensical "Over 1-15 goals" once {param} carries the full range
+    // instead of a bare start-minute placeholder. Reworded to describe a
+    // goal happening within the window, not a fabricated goal-count
+    // threshold this market never actually offers.
     hasParameter: true,
     parameterType: "integer",
     selections: ["OVER", "UNDER"],
     viewType: ViewType.BINARY_BUTTONS,
-    descriptionTemplates: { OVER: "Powyżej {param} goli w tym przedziale", UNDER: "Poniżej {param} goli w tym przedziale" },
+    descriptionTemplates: { OVER: "Padnie gol w przedziale {param} min", UNDER: "Nie padnie gol w przedziale {param} min" },
     displayOrder: 520,
   },
   {
@@ -10219,13 +10245,21 @@ export const SELECTION_LABELS: Record<string, string> = {
   "AWAY_2-3": "Gość 2-3", "AWAY_2-4": "Gość 2-4", "AWAY_2-5": "Gość 2-5", "AWAY_2-6": "Gość 2-6",
   "AWAY_3-5": "Gość 3-5", "AWAY_3-6": "Gość 3-6", "AWAY_4+": "Gość 4+", AWAY_OTHER: "Gość inny wynik",
 
-  // CORRECT_SCORE_GROUP (grouped correct-score buckets; exact margin mapping is not
-  // documented anywhere in the source data, so these are honest generic bucket names
-  // rather than guessed specifics)
-  HOME_WIN_GROUP_0: "Gosp. - grupa 0", HOME_WIN_GROUP_1: "Gosp. - grupa 1",
-  HOME_WIN_GROUP_2: "Gosp. - grupa 2", HOME_WIN_GROUP_3: "Gosp. - grupa 3",
-  AWAY_WIN_GROUP_1: "Gość - grupa 1", AWAY_WIN_GROUP_2: "Gość - grupa 2", AWAY_WIN_GROUP_3: "Gość - grupa 3",
-  AWAY_WIN_GROUP_4: "Gość - grupa 4",
+  // CORRECT_SCORE_GROUP (grouped correct-score buckets). The generic
+  // "grupa N" labels below were wrong - despite this comment previously
+  // claiming the score membership "is not documented anywhere in the
+  // source data", the exact scores ARE known: they're baked into betclic-
+  // normalizer.ts's own selection-matching regexes (e.g. HOME_WIN_GROUP_0
+  // only matches raw text "1-0, 2-0 lub 3-0") and were already captured,
+  // correctly, in this same catalog entry's descriptionTemplates above -
+  // just never surfaced to the button label itself. Market-display audit
+  // (Arsenal vs Coventry City) found the rendered card showed bare "Gosp. -
+  // grupa 1" vs "grupa 2" buttons with no way to know which scores each
+  // covered - the bet was literally unknowable from the UI.
+  HOME_WIN_GROUP_0: "Gosp. 1:0, 2:0, 3:0", HOME_WIN_GROUP_1: "Gosp. 4:0, 5:0, 6:0",
+  HOME_WIN_GROUP_2: "Gosp. 2:1, 3:1, 4:1", HOME_WIN_GROUP_3: "Gosp. 3:2, 4:2, 4:3, 5:1",
+  AWAY_WIN_GROUP_1: "Gość 0:1, 0:2, 0:3", AWAY_WIN_GROUP_2: "Gość 0:4, 0:5, 0:6", AWAY_WIN_GROUP_3: "Gość 1:2, 1:3, 1:4",
+  AWAY_WIN_GROUP_4: "Gość 2:3, 2:4, 3:4, 1:5",
 
   // MULTI_RESULT (already self-documenting sentence codes; X = draw, matches the app's own 1/X/2 shorthand)
   X: "X",

@@ -414,6 +414,8 @@ const SUPERBET_SIDE_BY_MARKET_ID: Record<number, "HOME" | "AWAY"> = {
   233529: "AWAY", // "{away} - strzały w obramowanie"
   240083: "HOME", // "2. połowa - {home} liczba rzutów rożnych"
   240084: "AWAY", // "2. połowa - {away} liczba rzutów rożnych"
+  201660: "HOME", // "{home} - liczba odbiorów"
+  201661: "AWAY", // "{away} - liczba odbiorów"
 };
 
 const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
@@ -455,6 +457,12 @@ const SIDED_SELECTION_MARKETS = new Set<NormalizedMarketType>([
  *    cards O/U into two non-comparable "HOME:X"/"AWAY:X" rows instead of the
  *    single bare-"X" row peers (betcris/lvbet/fuksiarz) share. Left here
  *    for the other three markets, which were not re-verified this round.
+ *  - TEAM_TOTAL_TACKLES: catalog selections are bare OVER/UNDER (same shape
+ *    as TEAM_TOTAL_SHOTS) - without the side in param, home/away tackle
+ *    lines for different numeric thresholds landed under unlabeled bare
+ *    numeric params ("13.5", "16.5") with nothing in the UI naming the team
+ *    (confirmed: Arsenal vs Coventry City, "Odbiory drużyny" 13.5 = Arsenal,
+ *    16.5 = Coventry, indistinguishable to the user).
  */
 const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_TOTAL_SHOTS_ON_TARGET",
@@ -463,6 +471,7 @@ const SIDED_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_CORNERS_TEAM",
   "TEAM_TOTAL_WOODWORK_SHOTS",
   "SECOND_HALF_CORNERS_TEAM",
+  "TEAM_TOTAL_TACKLES",
 ]);
 
 const SUPERBET_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {

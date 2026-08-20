@@ -991,6 +991,18 @@ function extractParamValue(
     return resolveTeamSide(raw.name, ctx) ?? undefined;
   }
 
+  // RED_CARD_TEAM's catalog parameter is the team side (HOME/AWAY) — the id
+  // map (-250/-251) can't tell which team a given raw market names, and the
+  // raw name ("Arsenal - czerwona kartka") has no numeric line to parse.
+  // Without this, the generic line-parsing fallback below returns undefined
+  // and both the home-team and away-team raw markets collapse onto the bare
+  // "RED_CARD_TEAM" key, stranding fuksiarz's odds in an unlabeled parameter
+  // bucket instead of merging into the HOME/AWAY rows every other bookmaker
+  // uses for this bet (audit-match, Arsenal vs Coventry City).
+  if (marketCode === "RED_CARD_TEAM") {
+    return resolveTeamSide(raw.name, ctx) ?? undefined;
+  }
+
   // CORNERS_TOTAL_RANGE / CARDS_TOTAL_RANGE bundle every bucket ("0-5"/"6-8"/
   // "9-11"/"12-14"/"15+", "0-2"/"3-5"/"6+") as selections of ONE raw market —
   // there is no per-bucket numeric line to parse. Without this, the generic

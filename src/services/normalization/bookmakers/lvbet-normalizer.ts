@@ -185,8 +185,16 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // all-cards CARDS_RACE mixed structurally different products (confirmed
   // odds outlier vs peers). No yellow-only 1X2 catalog code exists yet.
   { pattern: /zołte kartki: wynik/, code: "OTHER" },
-  { pattern: /zołte kartki: suma \d+$/, code: "YELLOW_CARDS_TOTAL" },
-  { pattern: /zołte kartki: suma/, code: "CARDS_TOTAL" },
+  // Was split by line-value formatting: a bare-integer line ("Suma 3")
+  // matched the first, more specific pattern and landed here, while
+  // decimal lines ("Suma 2.5"/"Suma 3.5" - same "Żółte kartki: Suma" raw
+  // family, just a different line) fell through to the generic pattern
+  // below and got routed into CARDS_TOTAL - a different market whose peers
+  // (e.g. forbet) count a red card as 2, silently corrupting a yellow-only
+  // count under an all-cards definition. One raw market, one catalog code,
+  // regardless of whether the line happens to be a whole number
+  // (market-display audit, Arsenal vs Coventry City).
+  { pattern: /zołte kartki: suma/, code: "YELLOW_CARDS_TOTAL" },
   { pattern: /zołte kartki:/, code: "CARDS_TEAM" },
   { pattern: /pierwsza zołta kartka/, code: "FIRST_CARD" },
   { pattern: /ostatnia zołta kartka/, code: "LAST_YELLOW_CARD" },
@@ -538,6 +546,11 @@ function detectTeamSide(
     // Win/result phrases: without stripping them, Polish exonym team names
     // ("Francja wygra obie połowy") never reach the alias matcher cleanly.
     .replace(/wygra obie połowy/gi, " ")
+    // TEAM_SCORE_BY_HALF's own label ("Francja Strzeli w pierwszej/drugiej
+    // połowie") — without stripping it, a Polish-exonym team name never
+    // reaches the alias matcher, so the "team" parameterType case in
+    // extractParamValue silently returned no side for World Cup fixtures.
+    .replace(/strzeli w pierwszej\/drugiej połowie/gi, " ")
     .replace(/dokładna liczba goli/gi, " ")
     .replace(/suma goli|liczba goli|total goals/gi, " ")
     // Stat-market phrases ("Faule: Kolumbia suma", "Auty: Kolumbia suma",
@@ -2006,6 +2019,15 @@ function extractParamValue(
       }
       return line;
     }
+    case "team":
+      // "<Team> Strzeli w pierwszej/drugiej połowie" (TEAM_SCORE_BY_HALF) has
+      // no numeric/decimal line — the team identity itself IS the parameter.
+      // Without a resolved param the market key collapsed every team's
+      // combined-half-scoring quote onto one unlabeled bucket (market-display
+      // audit, Arsenal vs Coventry City: Coventry's YES_NO/YES_YES/NO_NO/
+      // NO_YES prices rendered under a bare "Drużyna strzeli w pierwszej/
+      // drugiej połowie" card with no team indication).
+      return detectTeamSide(marketName, ctx) ?? undefined;
     default:
       return parseOverUnderLine(selectionNames) ?? parseLvbetStatLine(selectionNames);
   }

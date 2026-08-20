@@ -159,12 +159,18 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   677: "FIRST_GOAL_HALF",
   261964: "RACE_TO_GOALS",
   261965: "RACE_TO_GOALS",
-  40497: "TOTAL_GOAL_MINUTES",
-  5685190: "TEAM_GOAL_MINUTES_SUM",
-  671: "DRAW_MINUTES_TOTAL",
-  // 670/672 ("<Team> liczba minut na prowadzeniu") are handled by the
-  // name-pattern + team-side detection block in resolveMarketCode, not this
-  // static id map — see the comment there.
+  // 40497 ("łączna liczba minut goli"), 5685189/5685190 ("<Team> suma minut,
+  // w których padnie gol"), 671 ("Łączna liczba minut remisowych") and
+  // 670/672 ("<Team> liczba minut na prowadzeniu") are all routed to OTHER
+  // by the name-pattern block in resolveMarketCode (see the comment there):
+  // audit /audit-match (Arsenal vs Coventry City) found lebull's raw feed
+  // never publishes a line for this market family, so TOTAL_GOAL_MINUTES /
+  // TEAM_GOAL_MINUTES_SUM / DRAW_MINUTES_TOTAL / TEAM_MINUTES_LEADING would
+  // otherwise render Over/Under buttons with no threshold to bet on.
+  40497: "OTHER",
+  5685189: "OTHER",
+  5685190: "OTHER",
+  671: "OTHER",
   421317: "HALF_TIME_AND_SECOND_HALF_RESULT",
   262275: "BOTH_HALVES_OVER_COMBO",
   // Round 9 /audit-match (Arsenal vs Coventry City): these ids ("suma
@@ -181,10 +187,21 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // TIME_SEGMENT_TOTAL_GOALS so the disjoint-segment family stays together
   // under codes fuksiarz never uses, and TIME_PERIOD_TOTAL_GOALS becomes
   // fuksiarz's alone.
+  //
+  // audit-match (Arsenal vs Coventry City) round 2: TIME_BAND_TOTAL_GOALS
+  // (270588) and TIME_PERIOD_GOALS (270827) turned out to be the exact same
+  // "suma między X-Y min" product as TIME_SEGMENT_TOTAL_GOALS, just split
+  // onto two extra one-off codes purely because those two ids had been
+  // mapped independently — three near-identically-labeled cards ("Suma
+  // goli w przedziale czasowym" / "Gole w przedziale czasowym" / "Gole w
+  // przedziale minutowym") for what is a single bet family. lebull is the
+  // sole emitter of all three catalog codes (grep verified), so it is safe
+  // to fold both into TIME_SEGMENT_TOTAL_GOALS, which already carries the
+  // other 9 ids of this family.
   270586: "TIME_SEGMENT_TOTAL_GOALS",
   268285: "TIME_PERIOD_RESULT",
   270587: "TIME_SEGMENT_TOTAL_GOALS",
-  270588: "TIME_BAND_TOTAL_GOALS",
+  270588: "TIME_SEGMENT_TOTAL_GOALS",
   268287: "TIME_PERIOD_RESULT",
   270589: "TIME_SEGMENT_TOTAL_GOALS",
   270590: "TIME_SEGMENT_TOTAL_GOALS",
@@ -205,7 +222,7 @@ const LEBULL_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   270621: "TIME_PERIOD_RESULT",
   270825: "TIME_SEGMENT_TOTAL_GOALS",
   270826: "TIME_SEGMENT_TOTAL_GOALS",
-  270827: "TIME_PERIOD_GOALS",
+  270827: "TIME_SEGMENT_TOTAL_GOALS",
   270828: "TIME_SEGMENT_TOTAL_GOALS",
   270829: "TIME_SEGMENT_TOTAL_GOALS",
   270830: "TIME_SEGMENT_TOTAL_GOALS",
@@ -417,25 +434,23 @@ function resolveMarketCode(
     return { marketCode: "HALF_WITH_MORE_GOALS", matchedBy: "pattern" };
   }
 
-  // "<Team> liczba minut na prowadzeniu" (ids 670/672) is the same market
-  // offered once per side; audit /audit-match (Arsenal vs Coventry City)
-  // found it split across two catalog codes (TEAM_MINUTES_IN_LEAD id 670,
-  // TEAM_MINUTES_LEADING id 672) purely because each id had been mapped
-  // independently, producing two rows with the identical Polish label and no
-  // team information in either. Detect the side from the raw name (not the
-  // id, which is not guaranteed stable per side across fixtures) and encode
-  // it into the selection instead, mirroring the existing CARDS_TEAM /
-  // SECOND_HALF_CARDS_TEAM HOME_OVER/AWAY_OVER pattern.
+  // "<Team> liczba minut na prowadzeniu" (ids 670/672, and the un-team-scoped
+  // siblings 40497/5685189/5685190/671 mapped below) previously routed to
+  // TEAM_MINUTES_LEADING/TOTAL_GOAL_MINUTES/TEAM_GOAL_MINUTES_SUM/
+  // DRAW_MINUTES_TOTAL with an OVER/UNDER selection but no line param at
+  // all — the catalog declares hasParameter:false for every one of these
+  // four codes, so there was never anywhere to put a threshold even if one
+  // existed. Audit /audit-match (Arsenal vs Coventry City) checked lebull's
+  // raw feed for a hidden line: selections are the bare pair "powyżej" /
+  // "poniżej" with no number embedded in the market name, group name, or
+  // selection labels, and no other field on the row (verified against the
+  // golden fixture, ids 40497/670/671/672/5685189/5685190 — same shape for
+  // every one of the 6 rows in this family). lebull genuinely never
+  // publishes a line for this market family; rendering Over/Under buttons
+  // with nothing to be over/under is an undecidable bet, not a labeling
+  // nitpick, so route it to OTHER instead of fabricating a param.
   if (/liczba minut na prowadzeniu/i.test(normalizedName)) {
-    const teamPrefix = raw.name.match(/^(.+?)\s+liczba minut na prowadzeniu/iu);
-    const side = teamPrefix
-      ? normalize1x2Selection(teamPrefix[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league)
-      : "UNKNOWN";
-    return {
-      marketCode: "TEAM_MINUTES_LEADING",
-      matchedBy: "pattern",
-      teamSide: side === "HOME" || side === "AWAY" ? side : undefined,
-    };
+    return { marketCode: "OTHER", matchedBy: "pattern" };
   }
 
   const direct = LEBULL_MARKET_NAME_TO_CODE[normalizedName];
@@ -475,7 +490,7 @@ function resolveMarketCode(
       ctx.league
     );
     if (sentOffSide === "HOME" || sentOffSide === "AWAY") {
-      return { marketCode: "RED_CARD_TEAM", matchedBy: "pattern" };
+      return { marketCode: "RED_CARD_TEAM", matchedBy: "pattern", teamSide: sentOffSide };
     }
   }
 
@@ -1043,7 +1058,8 @@ function normalizeSelectionForMarket(
 function extractParamValue(
   marketCode: NormalizedMarketType,
   raw: RawBookmakerMarket,
-  ctx: NormalizationContext
+  ctx: NormalizationContext,
+  teamSide?: "HOME" | "AWAY"
 ): string | undefined {
   const metadata = getMarketMetadata(marketCode);
   if (!metadata?.hasParameter) return undefined;
@@ -1054,6 +1070,25 @@ function extractParamValue(
   // aggregate across bookmakers instead of colliding in the "base" bucket.
   if (marketCode === "TIME_PERIOD_RESULT" || marketCode === "TIME_PERIOD_TOTAL_GOALS") {
     return extractTimePeriodParam(raw.name);
+  }
+
+  // audit-match (Arsenal vs Coventry City) round 2, Finding C: disjoint-
+  // segment goal markets ("suma między 1-15 min", "suma między 81-90+
+  // min.") fell into the generic "integer" branch below, which grabs the
+  // FIRST bare number in the name — the START minute only (e.g. "1"). That
+  // (a) rendered a bare digit with no visible end-minute/range in the UI,
+  // an ambiguous "Over/Under 1?" bet, and (b) silently collided two
+  // DIFFERENT windows that happen to share a start minute: "suma między
+  // 1-15 min" (the 6-way split, ids 270586-270591) and "suma między 1-10
+  // min" (the 9-way split, ids 270825-270833) both landed on
+  // TIME_SEGMENT_TOTAL_GOALS:1, so only whichever quote was processed last
+  // survived. Keep the FULL "start-end"/"start-end+" range as the
+  // parameter (mirrors the grouper's own extractParamFromRawName recovery
+  // pattern for this exact code, market-type-grouper.ts) so every window
+  // gets its own unique bucket and the label shows the whole range.
+  if (marketCode === "TIME_SEGMENT_TOTAL_GOALS") {
+    const rangeMatch = raw.name.match(/mi[eę]dzy\s+(\d+)\s*[-–]\s*(\d+\+?)\s*min/i);
+    if (rangeMatch) return `${rangeMatch[1]}-${rangeMatch[2]}`;
   }
 
   // 3-way handicap names contain a literal "3" ("Handicap 3-drogowy") that
@@ -1086,6 +1121,27 @@ function extractParamValue(
   const marketName = raw.name;
 
   switch (metadata.parameterType) {
+    // audit-match (Arsenal vs Coventry City): RED_CARD_TEAM declares
+    // parameterType "team" (validParameters HOME/AWAY) but this switch had no
+    // case for it, so paramValue fell through to the decimal branch and came
+    // back undefined for "Zawodnik zostanie usunięty z boiska. <Team>" —
+    // every team-scoped row collapsed into the same param-less "base"
+    // bucket, stranding one team's price behind the other's instead of
+    // keying them apart like the 4 other bookmakers' HOME/AWAY rows.
+    // Prefer the side resolveMarketCode already resolved (it isolates just
+    // the trailing team token, e.g. "Francja", before matching — required
+    // for World Cup fixtures where ctx.homeTeam/awayTeam are the canonical
+    // English names ("France") but lebull's raw text is Polish ("Francja"):
+    // running normalize1x2Selection over the WHOLE sentence here instead
+    // would feed matchToCanonical a multi-word sentence it cannot alias-
+    // match, silently returning UNKNOWN). Only fall back to a fresh
+    // whole-name match for markets that don't route through that block.
+    case "team": {
+      if (teamSide === "HOME" || teamSide === "AWAY") return teamSide;
+      const side = normalize1x2Selection(marketName, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      return side === "HOME" || side === "AWAY" ? side : undefined;
+    }
+
     case "handicap":
       return (
         parseHandicapLine(marketName) ??
@@ -1130,7 +1186,7 @@ export const lebullNormalizer: BookmakerMarketNormalizer = {
     const marketMetadata = getMarketMetadata(marketCode);
     const marketName = marketMetadata?.labels.pl ?? raw.name;
 
-    const paramValue = extractParamValue(marketCode, raw, ctx);
+    const paramValue = extractParamValue(marketCode, raw, ctx, teamSide);
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     // A time-period market without a resolvable minute window is a truncated

@@ -13116,9 +13116,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_SCORE_BY_HALF",
-        "marketKey": "TEAM_SCORE_BY_HALF",
+        "marketKey": "TEAM_SCORE_BY_HALF:HOME",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -13166,9 +13166,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_SCORE_BY_HALF",
-        "marketKey": "TEAM_SCORE_BY_HALF",
+        "marketKey": "TEAM_SCORE_BY_HALF:AWAY",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {
@@ -14066,8 +14066,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL:4.5",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:4.5",
         "matchedBy": "pattern",
         "paramValue": "4.5",
         "parameters": null,
@@ -14085,7 +14085,7 @@
         ]
       },
       "index": 343,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Żółte kartki: Suma 4.5"
     },
     {
@@ -24181,8 +24181,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL:3.5",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:3.5",
         "matchedBy": "pattern",
         "paramValue": "3.5",
         "parameters": null,
@@ -24200,7 +24200,7 @@
         ]
       },
       "index": 694,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Żółte kartki: Suma 3.5"
     },
     {
@@ -24422,8 +24422,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL:2.5",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:2.5",
         "matchedBy": "pattern",
         "paramValue": "2.5",
         "parameters": null,
@@ -24441,7 +24441,7 @@
         ]
       },
       "index": 704,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Żółte kartki: Suma 2.5"
     },
     {
@@ -24664,9 +24664,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "YELLOW_CARDS_TOTAL",
-        "marketKey": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:2.0",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "2.0",
         "parameters": null,
         "selections": [
           {
@@ -24742,9 +24742,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "YELLOW_CARDS_TOTAL",
-        "marketKey": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:4.0",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "4.0",
         "parameters": null,
         "selections": [
           {
@@ -24820,9 +24820,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "YELLOW_CARDS_TOTAL",
-        "marketKey": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:3.0",
         "matchedBy": "pattern",
-        "paramValue": null,
+        "paramValue": "3.0",
         "parameters": null,
         "selections": [
           {
@@ -25242,8 +25242,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "CARDS_TOTAL",
-        "marketKey": "CARDS_TOTAL:1.5",
+        "marketCode": "YELLOW_CARDS_TOTAL",
+        "marketKey": "YELLOW_CARDS_TOTAL:1.5",
         "matchedBy": "pattern",
         "paramValue": "1.5",
         "parameters": null,
@@ -25261,7 +25261,7 @@
         ]
       },
       "index": 737,
-      "marketCode": "CARDS_TOTAL",
+      "marketCode": "YELLOW_CARDS_TOTAL",
       "rawName": "Żółte kartki: Suma 1.5"
     },
     {

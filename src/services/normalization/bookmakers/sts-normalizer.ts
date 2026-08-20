@@ -414,18 +414,36 @@ function normalizeSts1x2Selection(selectionName: string, ctx: NormalizationConte
 // "Miguel Angel Brau Blanquez" already established by peer bookmakers.
 // A general reorder heuristic would guess wrong for one of the two shapes,
 // so these are pinned explicitly rather than inferred.
+// - "Hamer G." (STS's own abbreviated-firstname shorthand for Coventry's
+//   Gustavo Hamer) stranded a duplicate "G. Hamer" row instead of merging
+//   into the full "Gustavo Hamer" form used by betcris/betfan/lvbet/superbet
+//   (audit /audit-match, Arsenal vs Coventry City, PLAYER_GOAL_AND_ASSIST).
 const STS_PLAYER_NAME_OVERRIDES: Record<string, string> = {
   "Borges Rodrigues R.": "Raphael Borges Rodrigues",
   "Brau Miguel Angel": "Miguel Angel Brau Blanquez",
+  "Hamer G.": "Gustavo Hamer",
 };
 
-function stsPlayerNameSelection(trimmed: string): NormalizedSelection {
+// Shared reorder+override logic for STS's "Lastname Firstname" player names,
+// usable both where the player is a SELECTION (stsPlayerNameSelection) and
+// where the player is a PARAM extracted from the raw market name (e.g.
+// "Vieira Fabio - asysty" -> paramValue). Previously only the selection path
+// applied this flip, so param-extracted names like "Vieira Fabio" and
+// "Zubimendi Martin" passed canonicalizePlayerName() unchanged (no comma to
+// swap on) and stranded a duplicate "Lastname Firstname" row instead of
+// merging with peers' canonical "Fabio Vieira" / "Martin Zubimendi" (audit
+// /audit-match, Arsenal vs Coventry City, PLAYER_ASSISTS).
+function stsCanonicalizePlayerName(trimmed: string): string {
   const nameOnly = trimmed.replace(/^\d+\.\s*/, "").trim();
   const override = STS_PLAYER_NAME_OVERRIDES[nameOnly];
-  if (override) return override as NormalizedSelection;
+  if (override) return override;
   const tokens = nameOnly.split(/\s+/);
   const reordered = tokens.length === 2 ? `${tokens[1]} ${tokens[0]}` : nameOnly;
-  return canonicalizePlayerName(reordered) as NormalizedSelection;
+  return canonicalizePlayerName(reordered);
+}
+
+function stsPlayerNameSelection(trimmed: string): NormalizedSelection {
+  return stsCanonicalizePlayerName(trimmed) as NormalizedSelection;
 }
 
 function normalizeSelectionForMarket(
@@ -1416,9 +1434,10 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     }
 
     // Player-name params must be canonical ("Firstname Lastname") so player
-    // markets group across bookmakers regardless of "Lastname, Firstname" raws
+    // markets group across bookmakers regardless of STS's "Lastname Firstname"
+    // (no comma) raws - see stsCanonicalizePlayerName for the reorder logic.
     if (playerName) {
-      playerName = canonicalizePlayerName(playerName.trim());
+      playerName = stsCanonicalizePlayerName(playerName.trim());
     }
 
     let marketCode: NormalizedMarketType | null = null;

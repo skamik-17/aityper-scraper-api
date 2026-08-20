@@ -116,15 +116,25 @@ function getMarketTypeId(normalizedType: string): number | null {
 export function resolveStorageMarketKey(market: ScrapedMarket, computedKey: string): string {
   if (computedKey !== "OTHER") return computedKey;
 
+  // A bookmaker can legitimately publish several raw markets that share one
+  // bookmakerMarketId but differ by paramValue (e.g. betcris' "1-15 min.
+  // Liczba goli" over/under, one id shared by a 1.0 line and a 0.5 line) —
+  // fold paramValue into the id-based suffix too, or the two lines still
+  // collide on the same OTHER:id:<id> row (audit-match Arsenal vs Coventry
+  // City, round 7: betcris' 0.5 line's Over/Under was silently dropped by
+  // mergeMarketRecord even after the id-only suffix, since bookmakerMarketId
+  // alone couldn't tell the two lines apart).
   if (market.bookmakerMarketId) {
-    return `OTHER:id:${market.bookmakerMarketId}`;
+    const paramSuffix = market.paramValue ? `:${market.paramValue}` : "";
+    return `OTHER:id:${market.bookmakerMarketId}${paramSuffix}`;
   }
 
   const nameHash = createHash("sha1")
     .update(market.name || "", "utf8")
     .digest("hex")
     .slice(0, 10);
-  return `OTHER:name:${nameHash}`;
+  const paramSuffix = market.paramValue ? `:${market.paramValue}` : "";
+  return `OTHER:name:${nameHash}${paramSuffix}`;
 }
 
 /**

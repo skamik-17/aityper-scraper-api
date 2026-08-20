@@ -128,11 +128,19 @@ function toNormalizedMarket(
 ): NormalizedMarket {
   if (!output) {
     console.warn(`[Normalizer] Market mapped to OTHER: "${originalName}"`);
-    const truncatedName = originalName.slice(0, 30).replace(/\s+/g, "-");
+    // Bare "OTHER" (not a truncated-name-based key) so this flows through
+    // full-offer-repository.ts's resolveStorageMarketKey() — the single
+    // authority for giving each distinct raw OTHER market its own storage
+    // row (by bookmakerMarketId+paramValue, or a name hash). A locally-
+    // computed truncated-name key here bypassed that logic entirely, since
+    // resolveStorageMarketKey only rewrites the exact bare string "OTHER"
+    // (audit-match Arsenal vs Coventry City, round 7: this is why betcris'
+    // "1-15 min. Liczba goli" two paramValue lines still collided even
+    // after resolveStorageMarketKey learned to fold in paramValue).
     return {
       name: originalName,
       normalizedType: "OTHER",
-      marketKey: `OTHER:${truncatedName}`,
+      marketKey: "OTHER",
       category: MC.INNE,
       selections: originalSelections.map((sel) => ({
         name: sel.name,

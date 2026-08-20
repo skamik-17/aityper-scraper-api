@@ -277,16 +277,13 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
  * carries 40+ players as selections with no paramValue, so it collapses into
  * the shared "base" bucket and strands its odds away from peers' per-player
  * rows. Splits into one synthetic market per player, keyed by canonicalized
- * name. The selection code itself is a best-effort default (the catalog's
- * first declared code, e.g. "YES") since a bare flat odds number carries no
- * further signal on which tier it represents — recovering the player
- * identity and odds is the priority; callers needing an exact tier should
- * fix the bookmaker's normalizer directly. Returns null when selections
- * don't confidently look like a name list, or no fallback code exists.
+ * name. Returns null when selections don't confidently look like a name
+ * list, or no fallback code exists.
  */
 function splitBundledPlayerSelections(
   market: ScrapedMarket,
   fallbackSelectionCode: string | undefined,
+  declaredSelectionCodes: readonly string[] = [],
 ): ScrapedMarket[] | null {
   if (market.selections.length < 2 || !fallbackSelectionCode) return null;
   // A bookmaker's catch-all "no scorer" outcome (normalized to the catalog
@@ -300,21 +297,66 @@ function splitBundledPlayerSelections(
   // per player (/audit-match Arsenal vs Coventry City, round 8
   // P3-grouper-split-tolerate-none-selection).
   const isCatchAll = (code: string): boolean => code === "NONE";
+
+  // Some bookmakers (fuksiarz) glue the outcome tier onto the player name
+  // inside the selection code itself instead of the catalog's plain player
+  // name — e.g. PLAYER_ASSISTS's "Riccardo Calafiori 1+" (tier "1+" is one of
+  // this market's own declared codes). The trailing tier token is not a
+  // letter-only word, so looksLikePlayerName rejects the whole string and
+  // previously sent every selection to the shared "base" bucket instead of
+  // splitting per player (/audit-match Arsenal vs Coventry City: fuksiarz's
+  // 40 PLAYER_ASSISTS rows). Recognize a trailing token that matches one of
+  // this market's declared codes, strip it off, and use it as the REAL
+  // per-selection tier instead of collapsing everyone onto
+  // fallbackSelectionCode.
+  const declaredCodes = new Set(declaredSelectionCodes);
+  const stripDeclaredSuffix = (code: string): { name: string; selectionCode: string } | null => {
+    const idx = code.lastIndexOf(" ");
+    if (idx <= 0) return null;
+    const suffix = code.slice(idx + 1);
+    const namePart = code.slice(0, idx);
+    if (!declaredCodes.has(suffix) || !looksLikePlayerName(namePart)) return null;
+    return { name: namePart, selectionCode: suffix };
+  };
+
+  const parsed = new Map<number, { name: string; selectionCode: string }>();
   let nameLike = 0;
-  for (const sel of market.selections) {
+  market.selections.forEach((sel, i) => {
     const code = sel.normalizedName || sel.name;
-    if (isCatchAll(code)) continue;
-    if (!looksLikePlayerName(code)) return null;
-    nameLike++;
-  }
-  // Require a real name list, not a lone catch-all masquerading as one.
-  if (nameLike < 2) return null;
-  return market.selections.map((sel) => {
+    if (isCatchAll(code)) return;
+    if (looksLikePlayerName(code)) {
+      parsed.set(i, { name: code, selectionCode: fallbackSelectionCode });
+      nameLike++;
+      return;
+    }
+    const stripped = stripDeclaredSuffix(code);
+    if (stripped) {
+      parsed.set(i, stripped);
+      nameLike++;
+    }
+  });
+  // Every non-catch-all selection must resolve to a player name (directly or
+  // via a stripped declared-code suffix) — a single unresolved selection
+  // means this isn't confidently a name list, so bail rather than guess.
+  const nonCatchAllCount = market.selections.filter(
+    (sel) => !isCatchAll(sel.normalizedName || sel.name),
+  ).length;
+  if (nameLike < 2 || nameLike !== nonCatchAllCount) return null;
+
+  return market.selections.map((sel, i) => {
     const code = sel.normalizedName || sel.name;
+    if (isCatchAll(code)) {
+      return {
+        ...market,
+        paramValue: "NONE",
+        selections: [{ name: sel.name, normalizedName: fallbackSelectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
+      };
+    }
+    const { name, selectionCode } = parsed.get(i)!;
     return {
       ...market,
-      paramValue: isCatchAll(code) ? "NONE" : canonicalizePlayerName(code),
-      selections: [{ name: sel.name, normalizedName: fallbackSelectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
+      paramValue: canonicalizePlayerName(name),
+      selections: [{ name: sel.name, normalizedName: selectionCode as ScrapedMarket["selections"][number]["normalizedName"], odds: sel.odds }],
     };
   });
 }
@@ -430,7 +472,31 @@ function formatHandicapLine(value: number): string {
 function isLineBasedHandicap(marketType: string): boolean {
   if (!marketType.includes("HANDICAP")) return false;
   // CORRECT_SCORE_HANDICAP or similar score-format handicaps are excluded
+  const entry = getMarketByCode(marketType);
+  // TIME_PERIOD_ASIAN_HANDICAP (and any future market like it) declares
+  // parameterType: "integer" specifically because its parameter is a
+  // DIFFERENT axis (the time-window bucket in minutes, e.g. fuksiarz's
+  // "5"/"10"/"15"/"30"), not the handicap goal line. Treating that bucket as
+  // a signed handicap line rendered nonsense labels like "Gospodarze (+5)"
+  // for the 5-MINUTE window, implying a 5-goal handicap (/audit-match
+  // Arsenal vs Coventry City). See extractEmbeddedHandicapLine below for
+  // where the real goal line is recovered from instead.
+  if (entry?.parameterType === "integer") return false;
   return true;
+}
+
+/**
+ * Extracts an explicit Asian-handicap goal line embedded in a raw selection
+ * label, e.g. "Arsenal (-0.5)" -> -0.5. Used for markets whose catalog
+ * parameter is a different axis (see isLineBasedHandicap's "integer" gate
+ * above) where the real per-selection handicap value only exists inside the
+ * raw text a bookmaker sent, not in the market's own paramValue.
+ */
+function extractEmbeddedHandicapLine(rawName: string): number | null {
+  const m = rawName.match(/\(([+-]?\d+(?:\.\d+)?)\)/);
+  if (!m) return null;
+  const value = parseFloat(m[1]);
+  return Number.isNaN(value) ? null : value;
 }
 
 /**
@@ -455,6 +521,15 @@ function getParameterLabel(param: string, marketType: string): string {
   // Side-scoped stat lines ("HOME:7.5") are user-facing chips; render the side in Polish.
   const sided = param.match(/^(HOME|AWAY):(.+)$/);
   if (sided) return `${sided[1] === "HOME" ? "Gospodarze" : "Goście"} ${sided[2]}`;
+
+  // Windowed handicap markets whose parameter is the time-window bucket, not
+  // the goal line (see isLineBasedHandicap's "integer" gate) — render the
+  // bucket as a minute window instead of the bare number, so the chip reads
+  // "Do 15. min." instead of an ambiguous "15".
+  if (marketType.includes("HANDICAP") && marketDef?.parameterType === "integer") {
+    const minutes = parseFloat(param);
+    if (!isNaN(minutes)) return `Do ${minutes}. min.`;
+  }
 
   // For team-parameterized markets (HOME/AWAY), translate to Polish
   if (marketDef?.parameterType === "team") {
@@ -534,7 +609,7 @@ export function groupMarketsByTypeWithParameters(
       if (split) return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
     } else if (parameterType === "player") {
       const fallbackCode = catalogEntry?.selections?.[0];
-      const split = splitBundledPlayerSelections(entry.market, fallbackCode);
+      const split = splitBundledPlayerSelections(entry.market, fallbackCode, catalogEntry?.selections ?? []);
       if (split) return split.map((market) => ({ market, bookmaker: entry.bookmaker }));
     }
     return [entry];
@@ -564,7 +639,19 @@ export function groupMarketsByTypeWithParameters(
     // entry with no extractable parameter there is almost always a misrouted
     // market or a stale row keyed under an old market_key. Player markets are
     // exempt — the player identity may live in the selection instead.
-    if (param === "base" && (parameterType === "decimal" || parameterType === "team")) {
+    // "handicap"/"integer" markets (HANDICAP_SELECTOR view) get the same
+    // treatment: a bookmaker whose normalizer failed to extract the line (or
+    // time-window bucket) shows up here as an unparsed, empty-labeled "base"
+    // parameter sitting alongside the properly-parameterized lines from its
+    // peers — e.g. pzbuk CORNERS_HANDICAP / betcris FIRST_15_MIN_HANDICAP
+    // (/audit-match Arsenal vs Coventry City, param_anomalies:
+    // ['base_visible']). Silently exposing that generic bucket to end users
+    // inside a line-selector UI is worse than omitting the bookmaker
+    // entirely for this match until its normalizer is fixed.
+    if (
+      param === "base" &&
+      (parameterType === "decimal" || parameterType === "team" || parameterType === "handicap" || parameterType === "integer")
+    ) {
       continue;
     }
 
@@ -643,12 +730,27 @@ export function groupMarketsByTypeWithParameters(
     // Group by parameter
     const paramGroups = new Map<string, MarketParameter>();
     const handicapMarket = isLineBasedHandicap(marketType);
+    // The windowed-handicap case isLineBasedHandicap excludes (parameterType
+    // "integer") still needs a selection label — just sourced from the raw
+    // text instead of the (wrong-axis) paramKey. See extractEmbeddedHandicapLine.
+    const windowedHandicapWithEmbeddedLine =
+      !handicapMarket && marketType.includes("HANDICAP") && getMarketByCode(marketType)?.parameterType === "integer";
 
     // Computed once per market type and reused both by the rawMarketName-
     // collision overlap check below and by the selection-code canonicalization
     // loop further down, so a player's selection code is compared on the same
     // normalized basis in both places.
     const isPlayerSelectionMarket = isPlayerSelectionMarketType(marketType);
+
+    // Whether this catalog entry declares a real, closed selection
+    // vocabulary (e.g. HOME_OVER/AWAY_OVER for a side-scoped market). Only
+    // markets with such a vocabulary can legitimately have two differently-
+    // named raw entries be DISJOINT SIDES of the same market (see case 2
+    // below) — the OTHER/INNE catch-all declares selections: [] precisely
+    // because it carries arbitrary, unrelated raw markets, so two
+    // differently-named OTHER entries colliding on (bookmaker, "base") are
+    // never legitimately "two sides of one bet" and must not be merged.
+    const hasDeclaredVocabulary = (getMarketByCode(marketType)?.selections?.length ?? 0) > 0;
 
     // Player-keyed markets: fold the spelling variants of one footballer into
     // a single parameter before grouping, using the whole market's name set.
@@ -730,6 +832,20 @@ export function groupMarketsByTypeWithParameters(
           } else {
             continue;
           }
+        } else if (!hasDeclaredVocabulary) {
+          // Case (2) requires a market whose catalog vocabulary confirms two
+          // differently-named raw entries are genuinely two sides of ONE
+          // bet. Without that (the OTHER catch-all), a name/id mismatch
+          // means these are two UNRELATED raw markets that both happened to
+          // land on the same (bookmaker, "base") bucket — e.g. forbet's
+          // "Wydarzy się min. jedno z: ... wygra lub powyżej 2.5 goli"
+          // (tak/nie) and its unrelated "1. połowa - liczba goli" count
+          // market colliding under OTHER (/audit-match Arsenal vs Coventry
+          // City). Concatenating their selections under the first raw name
+          // silently misrepresents the second market's source and pollutes
+          // the bucket. Keep the first-seen raw market and drop the rest
+          // instead of merging.
+          continue;
         }
       }
 
@@ -741,13 +857,27 @@ export function groupMarketsByTypeWithParameters(
 
       // For handicap markets, compute per-team+line labels so each outcome is self-describing
       const homeLine = handicapMarket ? parseFloat(paramKey) : NaN;
-      const buildSelectionLabel = (selType: string): string | undefined => {
-        if (!handicapMarket || isNaN(homeLine)) return undefined;
-        if (selType === "HOME") return `Gospodarze (${formatHandicapLine(homeLine)})`;
-        if (selType === "AWAY") return `Goście (${formatHandicapLine(-homeLine)})`;
-        // Draw in 3-way handicap: anchor the line to the home perspective so the reader can tell
-        // the exact goal-difference the draw bet covers (matches Betclic's own "Remis (Chelsea -2)" wording).
-        if (selType === "DRAW") return `Remis (Gospodarze ${formatHandicapLine(homeLine)})`;
+      const buildSelectionLabel = (selType: string, rawSelectionName: string): string | undefined => {
+        if (handicapMarket && !isNaN(homeLine)) {
+          if (selType === "HOME") return `Gospodarze (${formatHandicapLine(homeLine)})`;
+          if (selType === "AWAY") return `Goście (${formatHandicapLine(-homeLine)})`;
+          // Draw in 3-way handicap: anchor the line to the home perspective so the reader can tell
+          // the exact goal-difference the draw bet covers (matches Betclic's own "Remis (Chelsea -2)" wording).
+          if (selType === "DRAW") return `Remis (Gospodarze ${formatHandicapLine(homeLine)})`;
+          return undefined;
+        }
+        // Windowed handicap (paramKey is the time window, not the goal
+        // line): each selection carries its OWN handicap line embedded in
+        // the raw bookmaker text (e.g. fuksiarz "Arsenal (-0.5)"), already
+        // signed from that team's own perspective — unlike the shared-param
+        // case above, there is no home/away mirroring to do.
+        if (windowedHandicapWithEmbeddedLine && (selType === "HOME" || selType === "AWAY")) {
+          const embedded = extractEmbeddedHandicapLine(rawSelectionName);
+          if (embedded === null) return undefined;
+          return selType === "HOME"
+            ? `Gospodarze (${formatHandicapLine(embedded)})`
+            : `Goście (${formatHandicapLine(embedded)})`;
+        }
         return undefined;
       };
 
@@ -784,7 +914,7 @@ export function groupMarketsByTypeWithParameters(
           }
         } else {
           // Add new selection
-          const label = buildSelectionLabel(selectionType);
+          const label = buildSelectionLabel(selectionType, selection.name);
           bmEntry.selections.push({
             type: selectionType,
             odds: selection.odds,
@@ -825,6 +955,31 @@ export function groupMarketsByTypeWithParameters(
             }
 
             const bmData = bookmakersMap.get(bmEntry.bookmaker)!;
+
+            // This collapse-to-one-dummy-parameter step flattens EVERY
+            // paramGroup bucket for a bookmaker together, so it is the real
+            // merge point for the OTHER/INNE catch-all: two of a bookmaker's
+            // raw markets rarely collide on the SAME paramKey (the collision
+            // guard above only catches that), but under OTHER they almost
+            // always land in the SAME dummy parameter regardless of paramKey.
+            // Without a declared catalog vocabulary there is no way to
+            // confirm a differently-named raw entry is a legitimate extra
+            // selection group of the SAME bet (see hasDeclaredVocabulary
+            // above) — e.g. forbet's "Wydarzy się min. jedno z: ... wygra
+            // lub powyżej 2.5 goli" (tak/nie) and its unrelated "1. połowa -
+            // liczba goli" count market both fall under OTHER for the same
+            // bookmaker and were silently concatenated into one bookmakers[]
+            // entry (/audit-match Arsenal vs Coventry City). Keep only the
+            // first-seen raw market's selections; drop a later, differently
+            // named one instead of merging its selections in.
+            if (
+              !hasDeclaredVocabulary &&
+              bmData.rawMarketName &&
+              bmEntry.rawMarketName &&
+              bmData.rawMarketName !== bmEntry.rawMarketName
+            ) {
+              continue;
+            }
 
             if (marketDef?.viewType === "BINARY_BUTTONS" || marketDef?.viewType === "TRIPLE_BUTTONS" || marketDef?.viewType === "PARAMETER_SLIDER" || marketDef?.viewType === "COMBINATION") {
               for (const selection of bmEntry.selections) {

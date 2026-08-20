@@ -136,6 +136,49 @@ describe("grouper audit fixes — no silent cross-market odds merge", () => {
     expect(bm.selections[0].odds).toBe(1.45);
   });
 
+  it("does not concatenate two unrelated raw markets sharing the OTHER catch-all bucket (no declared vocabulary)", () => {
+    // /audit-match Arsenal vs Coventry City: forbet's genuine 2-way combo bet
+    // "Wydarzy się min. jedno z: Arsenal FC wygra lub powyżej 2.5 goli"
+    // (tak/nie) and its unrelated "1. połowa - liczba goli" count market both
+    // route to the uncatalogued OTHER type at the same (bookmaker, "base")
+    // bucket. Unlike DOUBLE_CHANCE above, OTHER declares selections: [] (no
+    // real vocabulary), so a disjoint-code collision here can never be "two
+    // sides of one bet" and must not be merged into one bookmakers[] entry.
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Wydarzy się min. jedno z: Arsenal FC wygra lub powyżej 2.5 goli",
+          type: "OTHER",
+          normalizedType: "OTHER" as ScrapedMarket["normalizedType"],
+          marketKey: "OTHER",
+          selections: [
+            { name: "tak", normalizedName: "YES", odds: 1.1 },
+            { name: "nie", normalizedName: "NO", odds: 5.4 },
+          ],
+        }),
+        bookmaker: "forbet",
+      },
+      {
+        market: mkMarket({
+          name: "1. połowa - liczba goli",
+          type: "OTHER",
+          normalizedType: "OTHER" as ScrapedMarket["normalizedType"],
+          marketKey: "OTHER",
+          selections: [
+            { name: "0", normalizedName: "0", odds: 3.8 },
+            { name: "1", normalizedName: "1", odds: 2.6 },
+            { name: "2", normalizedName: "2", odds: 3.6 },
+            { name: "3+", normalizedName: "3+", odds: 5 },
+          ],
+        }),
+        bookmaker: "forbet",
+      },
+    ]);
+    const bm = result[0].parameters[0].bookmakers.find((b) => b.bookmaker === "forbet")!;
+    expect(bm.rawMarketName).toBe("Wydarzy się min. jedno z: Arsenal FC wygra lub powyżej 2.5 goli");
+    expect(bm.selections.map((s) => s.type).sort()).toEqual(["NO", "YES"]);
+  });
+
   it("still merges selections from the same raw market split across rows", () => {
     const result = groupMarketsByTypeWithParameters([
       {
@@ -243,6 +286,50 @@ describe("grouper audit fixes — no 'base' bucket on team-parameterized markets
     ]);
     const params = result[0].parameters.map((p) => p.value);
     expect(params).toEqual(["AWAY"]);
+  });
+});
+
+describe("grouper audit fixes — no 'base' bucket on handicap-line markets", () => {
+  // /audit-match Arsenal vs Coventry City (param_anomalies: ['base_visible']):
+  // a bookmaker whose normalizer failed to extract the handicap line landed
+  // in a phantom empty-labeled "base" parameter next to the real numeric
+  // lines from its peers inside a HANDICAP_SELECTOR view — e.g. betcris'
+  // FIRST_15_MIN_HANDICAP row duplicating lvbet's "0" line under "base"
+  // instead of merging into it, and pzbuk's "Rynek 155" CORNERS_HANDICAP.
+  it("drops a betcris entry with no extracted line instead of a phantom 'base' duplicate of the '0' line", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "1-15 min. - Handicap",
+          type: "FIRST_15_MIN_HANDICAP",
+          normalizedType: "FIRST_15_MIN_HANDICAP" as ScrapedMarket["normalizedType"],
+          marketKey: "FIRST_15_MIN_HANDICAP:0",
+          paramValue: "0",
+          selections: [
+            { name: "1", normalizedName: "HOME", odds: 1.12 },
+            { name: "2", normalizedName: "AWAY", odds: 5.35 },
+          ],
+        }),
+        bookmaker: "lvbet",
+      },
+      {
+        market: mkMarket({
+          name: "1-15 min. Handicap",
+          type: "FIRST_15_MIN_HANDICAP",
+          normalizedType: "FIRST_15_MIN_HANDICAP" as ScrapedMarket["normalizedType"],
+          marketKey: "FIRST_15_MIN_HANDICAP",
+          paramValue: undefined,
+          selections: [
+            { name: "Coventry City", normalizedName: "AWAY", odds: 5.35 },
+            { name: "Arsenal", normalizedName: "HOME", odds: 1.12 },
+          ],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+    const params = result[0].parameters.map((p) => p.value);
+    expect(params).toEqual(["0"]);
+    expect(result[0].parameters[0].bookmakers.find((b) => b.bookmaker === "betcris")).toBeUndefined();
   });
 });
 
@@ -490,6 +577,39 @@ describe("grouper audit fixes — recovers player markets bundled into one raw e
     expect(olise.bookmakers.find((b) => b.bookmaker === "lvbet")!.selections[0].odds).toBe(3);
   });
 
+  it("splits a bundled entry whose selection codes glue the outcome tier onto the player name (fuksiarz PLAYER_ASSISTS)", () => {
+    // /audit-match Arsenal vs Coventry City: fuksiarz's "Zaliczy asystę" market
+    // lists every player as a selection with codes like "Riccardo Calafiori 1+"
+    // — the "1+" tier glued onto the name instead of being its own selection
+    // type. The trailing "1+" isn't letters, so it used to fail
+    // looksLikePlayerName entirely and dump all 40+ rows into the shared
+    // "base" bucket, silently excluding fuksiarz from every per-player
+    // comparison in this market.
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Zaliczy asystę",
+          type: "PLAYER_ASSISTS",
+          normalizedType: "PLAYER_ASSISTS" as ScrapedMarket["normalizedType"],
+          marketKey: "PLAYER_ASSISTS",
+          paramValue: undefined,
+          selections: [
+            { name: "Calafiori, Riccardo", normalizedName: "Riccardo Calafiori 1+", odds: 5.2 },
+            { name: "Eccles, Josh", normalizedName: "Josh Eccles 1+", odds: 11 },
+          ],
+        }),
+        bookmaker: "fuksiarz",
+      },
+    ]);
+
+    const params = result[0].parameters.map((p) => p.value).sort();
+    expect(params).toEqual(["Josh Eccles", "Riccardo Calafiori"]);
+
+    const calafiori = result[0].parameters.find((p) => p.value === "Riccardo Calafiori")!;
+    const fuksiarzEntry = calafiori.bookmakers.find((b) => b.bookmaker === "fuksiarz")!;
+    expect(fuksiarzEntry.selections).toEqual([{ type: "1+", odds: 5.2, hasNoTaxPromo: false }]);
+  });
+
   it("does not split a genuinely single-player raw market (nothing to recover)", () => {
     const result = groupMarketsByTypeWithParameters([
       {
@@ -660,5 +780,82 @@ describe("grouper audit fixes — player-name canonicalization on COMBINATION-vi
     ]);
     const labels = result[0].parameters.map((p) => p.label).sort();
     expect(labels).toEqual(["Gospodarze 7", "Goście 2"]);
+  });
+});
+
+describe("grouper audit fixes — windowed handicap markets don't conflate axes (TIME_PERIOD_ASIAN_HANDICAP)", () => {
+  // /audit-match Arsenal vs Coventry City: TIME_PERIOD_ASIAN_HANDICAP's
+  // catalog parameter is the TIME WINDOW in minutes (fuksiarz "5"/"10"/
+  // "15"/"30"), not the goal handicap line — but the shared handicap-line
+  // label builder treated paramKey as a signed goal line, rendering
+  // "Gospodarze (+5)" for a 5-MINUTE window (implying a 5-goal handicap).
+  // The real per-selection line lives embedded in the raw bookmaker text
+  // instead (e.g. "Arsenal (-0.5)").
+  it("renders the parameter chip as a minute window, not a fabricated handicap line", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Handicap - 5 minut (00:01-5:00)",
+          type: "TIME_PERIOD_ASIAN_HANDICAP",
+          normalizedType: "TIME_PERIOD_ASIAN_HANDICAP" as ScrapedMarket["normalizedType"],
+          marketKey: "TIME_PERIOD_ASIAN_HANDICAP",
+          paramValue: "5",
+          selections: [
+            { name: "Arsenal (-0.5)", normalizedName: "HOME", odds: 5.8 },
+            { name: "Coventry (+0.5)", normalizedName: "AWAY", odds: 1.09 },
+          ],
+        }),
+        bookmaker: "fuksiarz",
+      },
+    ]);
+    const param = result[0].parameters[0];
+    expect(param.value).toBe("5");
+    expect(param.label).toBe("Do 5. min.");
+  });
+
+  it("labels each selection with its OWN embedded handicap line instead of mirroring paramKey", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "Handicap - 15 minut (00:01-15:00)",
+          type: "TIME_PERIOD_ASIAN_HANDICAP",
+          normalizedType: "TIME_PERIOD_ASIAN_HANDICAP" as ScrapedMarket["normalizedType"],
+          marketKey: "TIME_PERIOD_ASIAN_HANDICAP",
+          paramValue: "15",
+          selections: [
+            { name: "Arsenal (-1.5)", normalizedName: "HOME", odds: 10 },
+            { name: "Coventry (+1.5)", normalizedName: "AWAY", odds: 1.01 },
+          ],
+        }),
+        bookmaker: "fuksiarz",
+      },
+    ]);
+    const bm = result[0].parameters[0].bookmakers[0];
+    const home = bm.selections.find((s) => s.type === "HOME")!;
+    const away = bm.selections.find((s) => s.type === "AWAY")!;
+    expect(home.label).toBe("Gospodarze (-1.5)");
+    expect(away.label).toBe("Goście (+1.5)");
+  });
+
+  it("omits the selection label (instead of a fabricated one) when no line is embedded in the raw text", () => {
+    const result = groupMarketsByTypeWithParameters([
+      {
+        market: mkMarket({
+          name: "1-60 min. Handicap",
+          type: "TIME_PERIOD_ASIAN_HANDICAP",
+          normalizedType: "TIME_PERIOD_ASIAN_HANDICAP" as ScrapedMarket["normalizedType"],
+          marketKey: "TIME_PERIOD_ASIAN_HANDICAP",
+          paramValue: "60",
+          selections: [
+            { name: " Arsenal ", normalizedName: "HOME", odds: 1.62 },
+            { name: "Coventry   City ", normalizedName: "AWAY", odds: 2.15 },
+          ],
+        }),
+        bookmaker: "betcris",
+      },
+    ]);
+    const bm = result[0].parameters[0].bookmakers[0];
+    expect(bm.selections.find((s) => s.type === "HOME")?.label).toBeUndefined();
+    expect(bm.selections.find((s) => s.type === "AWAY")?.label).toBeUndefined();
   });
 });

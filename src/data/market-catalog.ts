@@ -2384,7 +2384,11 @@ const STATISTICS_MARKETS: MarketCatalogEntry[] = [
     slug: "cards-exact-range",
     category: MarketCategory.STATYSTYKI,
     subCategory: "kartki",
-    labels: { pl: "Dokładna liczba kartek", en: "Exact Card Count Range" },
+    // Was also "Dokładna liczba kartek" - identical to CARDS_EXACT's label,
+    // so the STATYSTYKI category showed two same-named cards for two
+    // structurally different products (sts's disjoint range partition here
+    // vs betclic/fuksiarz's bottom-bucket+exact ladder in CARDS_EXACT).
+    labels: { pl: "Przedział liczby kartek", en: "Card Count Range" },
     descriptions: { pl: "W jakim przedziale będzie liczba kartek?", en: "What range will the card count fall in?" },
     hasParameter: false,
     selections: ["0-1", "2-3", "4-5", "6-7", "8+", "0-2", "3-4", "5-6", "7+", "9+"],
@@ -3115,7 +3119,9 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     slug: "half-time-draw-no-bet",
     category: MarketCategory.POLOWY,
     subCategory: "wynik-1h",
-    labels: { pl: "Remis = zwrot 1. połowa", en: "Draw No Bet 1st Half" },
+    // Harmonized with the 2nd-half sibling ("2. połowa - zakład bez remisu")
+    // - the pair used two unrelated naming styles for the same product.
+    labels: { pl: "1. połowa - zakład bez remisu", en: "Draw No Bet 1st Half" },
     descriptions: { pl: "Zakład bez remisu w pierwszej połowie", en: "Draw no bet in first half" },
     hasParameter: false,
     selections: ["HOME", "AWAY"],
@@ -4236,7 +4242,10 @@ const ADDITIONAL_MARKETS: MarketCatalogEntry[] = [
     slug: "hat-trick",
     category: MarketCategory.ZAWODNICY,
     subCategory: "strzelcy",
-    labels: { pl: "Hat-trick", en: "Hat-trick" },
+    // Was bare "Hat-trick" - identical to PLAYER_HAT_TRICK's label, so the
+    // ZAWODNICY category showed two same-named cards: this any-player YES/NO
+    // bet and the per-player dropdown. Disambiguated to say whose hat-trick.
+    labels: { pl: "Hat-trick w meczu (dowolny zawodnik)", en: "Hat-trick by Any Player" },
     descriptions: { pl: "Czy któryś zawodnik zdobędzie hat-trick (3+ gole)?", en: "Will any player score a hat-trick?" },
     hasParameter: false,
     selections: ["YES", "NO"],
@@ -6301,7 +6310,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     descriptions: { pl: "W ktorym 10-minutowym przedziale padnie pierwszy gol goscia.", en: "In which 10-minute interval the away team will score their first goal." },
     hasParameter: false,
     selections: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],
-    viewType: ViewType.SINGLE_SELECTION,
+    // Was SINGLE_SELECTION, which renders exactly ONE button - for a
+    // 10-outcome time-bucket market that hid 9 of the 10 outcomes. The HOME
+    // twin below already uses COMBINATION (market-display audit, Arsenal vs
+    // Coventry City).
+    viewType: ViewType.COMBINATION,
     descriptionTemplates: { "1-10": "Pierwszy gol {awayTeam} w 1-10 min", "11-20": "Pierwszy gol {awayTeam} w 11-20 min", "21-30": "Pierwszy gol {awayTeam} w 21-30 min", "31-40": "Pierwszy gol {awayTeam} w 31-40 min", "41-50": "Pierwszy gol {awayTeam} w 41-50 min", "51-60": "Pierwszy gol {awayTeam} w 51-60 min", "61-70": "Pierwszy gol {awayTeam} w 61-70 min", "71-80": "Pierwszy gol {awayTeam} w 71-80 min", "81-90": "Pierwszy gol {awayTeam} w 81-90 min", NONE: "{awayTeam} nie strzeli gola w meczu" },
     displayOrder: 318,
   },
@@ -6311,7 +6324,9 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     slug: "home-first-goal-time",
     category: MarketCategory.GOLE,
     subCategory: "pierwszy-ostatni",
-    labels: { pl: "Czas pierwszego gola gospodarza (10 min)", en: "Home First Goal Time" },
+    // Label style harmonized with the AWAY twin above ("Gość - czas
+    // pierwszego gola (10 min)") so the two cards read as an obvious pair.
+    labels: { pl: "Gospodarz - czas pierwszego gola (10 min)", en: "Home First Goal Time" },
     descriptions: { pl: "W ktorym 10-minutowym przedziale padnie pierwszy gol gospodarza.", en: "In which 10-minute interval the home team will score their first goal." },
     hasParameter: false,
     selections: ["1-10", "11-20", "21-30", "31-40", "41-50", "51-60", "61-70", "71-80", "81-90", "NONE"],

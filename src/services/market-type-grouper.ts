@@ -1299,6 +1299,17 @@ export function buildCategoriesWithMarketTypes(
   }
 
   for (const market of marketsByType) {
+    // The OTHER catch-all bucket is an internal normalization fallback, not
+    // a product: it merges UNRELATED raw bookmaker markets under one card
+    // and its selections carry type "UNKNOWN", which the frontend renders
+    // as literal "UNKNOWN" button labels with meaningless odds comparison
+    // (market-display audit, Arsenal vs Coventry City: forbet's 1st-half
+    // goal count + etoto's HT/FT combo + betcris's 1-75min BTTS all fused
+    // into one "Inne" card). Audit tooling reads raw endpoints/DB directly,
+    // so hiding it here only affects the user-facing display.
+    if (market.type === "OTHER") {
+      continue;
+    }
     const category = market.category || MarketCategory.INNE;
     categoryMap.get(category)?.push(market);
   }

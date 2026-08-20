@@ -3599,11 +3599,11 @@
       "rawName": "Rynek 142"
     },
     {
-      "blessed": false,
+      "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "GOAL_RANGE",
-        "marketKey": "GOAL_RANGE",
+        "marketCode": "HOME_EXACT_CARDS",
+        "marketKey": "HOME_EXACT_CARDS",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -3631,7 +3631,7 @@
         ]
       },
       "index": 110,
-      "marketCode": "GOAL_RANGE",
+      "marketCode": "HOME_EXACT_CARDS",
       "rawName": "Rynek 133"
     },
     {

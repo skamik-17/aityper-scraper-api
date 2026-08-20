@@ -250,7 +250,17 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "127": "OTHER",
   "128": "TOTAL_SHOTS",
   "129": "OTHER",
-  "133": "GOAL_RANGE",
+  // Audit r4 (Arsenal vs Coventry City): id 133 was guess-mapped to
+  // GOAL_RANGE, but its odds (0-1=1.34, 2=3.44, 3=7.97, 4+=17.7) are an
+  // almost exact match for forbet's confirmed "Arsenal FC - liczba kartek"
+  // HOME_EXACT_CARDS market (0-1=1.33, 2=3.3, 3=7.6, 4+=17) and etoto's
+  // confirmed "Arsenal suma kartek" HOME_EXACT_CARDS (0-1=1.38, 2=3.65,
+  // 3=8.5, 4+=14) for the same fixture — this is the home team's total
+  // cards range, not a match/team goal range at all. The same id in the
+  // France vs Morocco fixture (0-1=1.54, 2=3.39, 3=6.98, 4+=13.51) follows
+  // the same decreasing-probability card-count shape for that match's home
+  // favorite. Re-route to HOME_EXACT_CARDS.
+  "133": "HOME_EXACT_CARDS",
   // Audit /audit-match (Arsenal vs Coventry City): id 134's implied
   // probabilities ("0-1" 43.1%, "2" 33.9%, "3" 24.8%, "4+" 20.3%) do not
   // match a total-goals distribution derived from pzbuk's own confirmed
@@ -659,7 +669,11 @@ function normalizeSelectionForMarket(
     // use the same literal bucket codes as the catalog — map them identically
     // instead of the 1X2 default that produced UNKNOWN/HOME/AWAY orphans.
     case "CORNERS_RANGE":
-    case "HALF_TIME_HOME_EXACT_CARDS": {
+    case "HALF_TIME_HOME_EXACT_CARDS":
+    // Audit r4: id 133 re-routed from GOAL_RANGE to HOME_EXACT_CARDS (see
+    // PZBUK_MARKET_ID_TO_CODE) uses the identical "0-1"/"2"/"3"/"4+"
+    // bucket vocabulary as the other range/exact-count markets above.
+    case "HOME_EXACT_CARDS": {
       // "bez gola" / "0 goli" → "0"
       if (/^(bez gola|bez goli|brak goli|0 goli)$/i.test(trimmed)) {
         return "0" as NormalizedSelection;

@@ -124,7 +124,8 @@ export interface NormalizerFacade {
 function toNormalizedMarket(
   output: NormalizedMarketOutput | null,
   originalName: string,
-  originalSelections: Array<{ name: string; odds: number }>
+  originalSelections: Array<{ name: string; odds: number }>,
+  originalParamValue?: string
 ): NormalizedMarket {
   if (!output) {
     console.warn(`[Normalizer] Market mapped to OTHER: "${originalName}"`);
@@ -137,11 +138,15 @@ function toNormalizedMarket(
     // (audit-match Arsenal vs Coventry City, round 7: this is why betcris'
     // "1-15 min. Liczba goli" two paramValue lines still collided even
     // after resolveStorageMarketKey learned to fold in paramValue).
+    // originalParamValue also has to be carried through here — this branch
+    // never touched it before, so resolveStorageMarketKey's paramValue
+    // suffix had nothing to work with even after that fix landed.
     return {
       name: originalName,
       normalizedType: "OTHER",
       marketKey: "OTHER",
       category: MC.INNE,
+      paramValue: originalParamValue,
       selections: originalSelections.map((sel) => ({
         name: sel.name,
         normalizedName: "UNKNOWN" as NormalizedSelection,
@@ -238,7 +243,7 @@ export function createNormalizer(): NormalizerFacade {
       if (!normalizer) {
         // No normalizer for this bookmaker - return fallback
         console.warn(`[Normalizer] No normalizer found for bookmaker: ${bookmaker}`);
-        return toNormalizedMarket(null, market.name, market.selections);
+        return toNormalizedMarket(null, market.name, market.selections, market.paramValue);
       }
 
       const ctx: NormalizationContext = {
@@ -279,7 +284,7 @@ export function createNormalizer(): NormalizerFacade {
       }
 
       const output = normalizer.normalizeMarket(rawMarket, ctx);
-      return toNormalizedMarket(output, market.name, market.selections);
+      return toNormalizedMarket(output, market.name, market.selections, market.paramValue);
     },
 
     normalizeBatch(markets, bookmaker, homeTeam, awayTeam, league) {

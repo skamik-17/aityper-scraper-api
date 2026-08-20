@@ -263,6 +263,18 @@ export function parseAllMarkets(
   }
   const isSentinelPadding = (oddsCounts.get(SENTINEL_ODDS) || 0) >= SENTINEL_MIN_REPEATS;
 
+  // forBET occasionally serves the SAME named market twice under the SAME
+  // gameType, as two distinct feed instances with different selection
+  // granularity — e.g. "1. połowa - liczba goli" (gameType -233) once as the
+  // full 0/1/2/3+ ladder and once as an alternate, coarser 0/1/2+ ladder.
+  // Keeping both would silently pool their selections into a single
+  // downstream market row, producing a self-contradictory offer (both "2"
+  // and "2+" and "3+" attributed to one bookmaker) — audit /audit-match,
+  // premier-league Arsenal vs Coventry City found the aggregated market
+  // showing a phantom "2+" selection that did not belong to the referenced
+  // raw offer. Only the first-seen instance per (gameType, name) is kept.
+  const seenMarketKeys = new Set<string>();
+
   // Process each game (market) in the event
   for (const game of games) {
     const outcomes = game.outcomes || [];
@@ -288,6 +300,12 @@ export function parseAllMarkets(
 
     // Only add markets with valid selections
     if (selections.length > 0) {
+      const dedupeKey = `${gameType}::${marketName}`;
+      if (seenMarketKeys.has(dedupeKey)) {
+        continue;
+      }
+      seenMarketKeys.add(dedupeKey);
+
       markets.push({
         name: marketName,
         // Carry the stable forBET game type id so the normalization audit

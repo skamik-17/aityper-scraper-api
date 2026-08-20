@@ -8521,9 +8521,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_TEAM_RANGE",
-        "marketKey": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:HOME",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "HOME",
         "parameters": null,
         "selections": [
           {
@@ -8557,9 +8557,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "CORNERS_TEAM_RANGE",
-        "marketKey": "CORNERS_TEAM_RANGE",
+        "marketKey": "CORNERS_TEAM_RANGE:AWAY",
         "matchedBy": "id",
-        "paramValue": null,
+        "paramValue": "AWAY",
         "parameters": null,
         "selections": [
           {

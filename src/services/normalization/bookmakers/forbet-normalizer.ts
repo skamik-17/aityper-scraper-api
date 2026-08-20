@@ -338,6 +338,15 @@ const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_WIN_MATCH",
   "WIN_OR_BTTS",
   "TEAM_WIN_OR_CLEAN_SHEET",
+  // CORNERS_TEAM_RANGE is parameterized by team (param HOME/AWAY, catalog
+  // validParameters) rather than split into separate HOME_/AWAY_ codes — same
+  // shape as TEAM_HALF_WITH_MORE_GOALS above. Audit /audit-match,
+  // premier-league Arsenal vs Coventry City: ids -265 (home) / -266 (away)
+  // both mapped straight to CORNERS_TEAM_RANGE with no paramValue, so the
+  // resulting unparameterized key never matched the catalog's HOME/AWAY
+  // parameter buckets and forbet's whole ladder (incl. the market-best 0-2
+  // price) silently dropped out of the aggregated market entirely.
+  "CORNERS_TEAM_RANGE",
 ]);
 
 const FORBET_TEAM_SIDED_VARIANTS: Partial<
@@ -1331,6 +1340,7 @@ const PARAMETERIZED_MARKETS: NormalizedMarketType[] = [
   "TOTAL_GOALS_BY_60MIN",
   "TEAM_TOTAL_GOALS_FIRST_60MIN",
   "TEAM_HALF_WITH_MORE_GOALS",
+  "CORNERS_TEAM_RANGE",
   ...PLAYER_PARAM_MARKETS,
 ];
 

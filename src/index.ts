@@ -4,6 +4,7 @@
  */
 
 import express from "express";
+import compression from "compression";
 import cors from "cors";
 import { CONFIG, validateConfig } from "./config/index.js";
 import { testConnection } from "./config/database.js";
@@ -23,6 +24,10 @@ try {
 const app = express();
 
 // Middleware
+// gzip/brotli every response. /api/odds/market-types alone is ~516 KB of
+// JSON on a cold client and made up ~45% of a match page's wire payload;
+// this reference catalogue compresses hard.
+app.use(compression());
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN || "*",

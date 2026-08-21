@@ -263,6 +263,11 @@ router.post("/batch", asyncHandler(async (req, res) => {
  * Returns: marketTypes, selectionLabels, categories
  */
 router.get("/market-types", asyncHandler(async (_req, res) => {
+  // Reference data, not match data: it only changes when the catalogue is
+  // re-synced, so let clients and any proxy hold it rather than re-download
+  // half a megabyte on every cold visit.
+  res.set("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400");
+
   // Fetch latest definitions from DB to ensure runtime is in sync with migrations
   const supabase = getSupabase();
   const { data: dbMarkets } = await supabase

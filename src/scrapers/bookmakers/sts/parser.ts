@@ -130,6 +130,22 @@ export function parseFixtures(
       for (const [fixId, fix] of Object.entries(tourn.FX || {})) {
         if (!fix.H?.n || !fix.A?.n) continue;
 
+        // A real fixture never has the same club on both sides. This has
+        // been observed live: one STS scrape captured a WebSocket frame
+        // where fix.H.n was already equal to fix.A.n (the away team's name
+        // duplicated into the home slot), producing a "Manchester United vs
+        // Manchester United" row that survived because nothing downstream
+        // checks home !== away either. Comparing case-insensitively/trimmed
+        // here, before the slug, before canonicalization, before the
+        // match_id, is the first point both raw names exist together and
+        // has zero false-positive risk.
+        if (fix.H.n.trim().toLowerCase() === fix.A.n.trim().toLowerCase()) {
+          console.warn(
+            `[STS] Dropping self-fixture ${fixId}: "${fix.H.n}" vs "${fix.A.n}"`
+          );
+          continue;
+        }
+
         fixtures.push({
           id: fixId,
           home: fix.H.n,

@@ -353,6 +353,23 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
                 continue;
               }
 
+              // Two genuinely different raw names can still canonicalize to
+              // the SAME club - observed live: "Stockton Town" and
+              // "Alfreton Town" (a non-league fixture that slipped past the
+              // tournament filter) both fuzzy-matched onto the Premier
+              // League's "Luton Town" whitelist entry, producing a "Luton
+              // Town vs Luton Town" row. This is the exact call site where
+              // two distinct inputs became one output, so it is the one
+              // place that can name both raw inputs in the warning - which
+              // is the diagnostic this bug otherwise leaves no trace of.
+              if (homeMatch.id === awayMatch.id) {
+                console.warn(
+                  `[STS/FullOffer] Dropping "${fixture.home}" vs "${fixture.away}": ` +
+                    `both canonicalize to ${homeMatch.name}`
+                );
+                continue;
+              }
+
               const homeCanonical = homeMatch.name;
               const awayCanonical = awayMatch.name;
 

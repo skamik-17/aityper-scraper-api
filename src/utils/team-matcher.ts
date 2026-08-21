@@ -645,14 +645,33 @@ export function matchToCanonical(
     return exactMatch;
   }
 
-  // 3. Check if normalized contains canonical or vice versa
-  for (const team of teams) {
-    if (
-      normalized.includes(team.normalized) ||
-      team.normalized.includes(normalized)
-    ) {
-      return team;
-    }
+  // 3. Check if normalized contains canonical or vice versa.
+  //
+  // A length-based cutoff was considered and rejected: the actual reported
+  // false positives ("United" -> Manchester United, "City" -> Coventry
+  // City, "Town" -> Ipswich Town) are all exactly 4 characters, so a
+  // `length < 4` guard blocks none of them - while a `length <= 4` guard
+  // would also block "Lech" -> Lech Poznan, a real, legitimately-shortened
+  // Ekstraklasa scraper spelling that must keep matching. Length isn't what
+  // makes "united"/"city"/"town" dangerous; being a common suffix shared by
+  // several clubs in the SAME league is. So: collect every team the
+  // substring test accepts, and only return one when there is exactly one -
+  // an ambiguous fragment (matched by 2+ real clubs, or by none because it's
+  // "" matching everything) falls through to fuzzy matching instead of
+  // silently resolving to whichever team happened to be listed first.
+  const substringMatches = teams.filter(
+    (team) =>
+      normalized.length > 0 &&
+      (normalized.includes(team.normalized) || team.normalized.includes(normalized))
+  );
+  if (substringMatches.length === 1) {
+    return substringMatches[0];
+  }
+  if (substringMatches.length > 1 && process.env.TEAM_MATCHER_DEBUG === "true") {
+    console.warn(
+      `[TeamMatcher] Ambiguous substring match for "${scrapedName}" in "${league}": ` +
+        `${substringMatches.map((t) => t.name).join(", ")} - falling through to fuzzy match`
+    );
   }
 
   // 4. Fuzzy match as last resort

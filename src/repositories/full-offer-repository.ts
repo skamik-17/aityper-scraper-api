@@ -595,6 +595,22 @@ export async function saveBatchFullOfferMarkets(
     const canonicalHome = getCanonicalTeamName(match.homeTeam, leagueSlug);
     const canonicalAway = getCanonicalTeamName(match.awayTeam, leagueSlug);
 
+    // One guard for all 14 bookmakers: the STS scraper has its own check
+    // right after its own canonicalization (sts/index.ts), but the other 13
+    // scrapers never see this comparison, and generateMatchId() re-runs the
+    // same fuzzy matcher (via getNormalizedTeamName -> matchToCanonical) for
+    // every one of them. This is the single funnel every bookmaker's write
+    // passes through, so it is the one place this has to hold regardless of
+    // which scraper produced the row.
+    if (matchId.split(":")[1] === matchId.split(":")[2]) {
+      console.error(
+        `[FullOfferRepository] Dropping degenerate match from ${bookmaker}: ` +
+          `"${match.homeTeam}" vs "${match.awayTeam}" both resolved to matchId ${matchId}`
+      );
+      result.filtered++;
+      continue;
+    }
+
     const recordsMap = new Map<string, OddsInsert>();
 
     for (const market of match.markets) {

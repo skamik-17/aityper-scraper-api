@@ -40,6 +40,22 @@ router.get(
       );
     }
 
+    // Same guard as getAllLatestOdds (odds-service.ts): a degenerate row
+    // (home === away) is a scraper defect that reached the database, not a
+    // real match - this by-id route has its own read path and was returning
+    // 200 for one regardless of the list-endpoint filter.
+    if (row.home_team === row.away_team) {
+      console.error(
+        `[NormalizedMarkets] Suppressing degenerate match ${matchId}: ` +
+          `homeTeam === awayTeam ("${row.home_team}")`
+      );
+      throw new ApiError(
+        404,
+        ERROR_CODES.MATCH_NOT_FOUND,
+        `Match not found: ${matchId}`
+      );
+    }
+
     const data: MatchInfoResponse = {
       matchId: row.match_id,
       homeTeam: row.home_team,
@@ -98,6 +114,26 @@ router.get(
         400,
         ERROR_CODES.INVALID_PARAMS,
         "Missing required parameters: homeTeam, awayTeam"
+      );
+    }
+
+    // Same guard as the other two match routes, at the one place this
+    // specific route (by team name, not matchId) can apply it before doing
+    // any DB work: a real fixture never has the same club on both sides.
+    // This is what the frontend's own match page calls, so it is the route
+    // that turns a degenerate row into a bettable coupon entry if left
+    // unguarded - confirmed live: this route returned 200 for
+    // "Manchester United" vs "Manchester United" while the by-id route
+    // above already 404s for the same underlying row.
+    if (homeTeam.trim().toLowerCase() === awayTeam.trim().toLowerCase()) {
+      console.error(
+        `[NormalizedMarkets] Suppressing degenerate match request: ` +
+          `"${homeTeam}" vs "${awayTeam}" (${league})`
+      );
+      throw new ApiError(
+        404,
+        ERROR_CODES.MATCH_NOT_FOUND,
+        `No normalized markets found for match: ${homeTeam} vs ${awayTeam}`
       );
     }
 

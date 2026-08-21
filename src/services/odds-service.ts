@@ -81,6 +81,22 @@ export async function getAllLatestOdds(
       startTime: row.start_time ?? undefined,
       markets,
     };
+  }).filter((m) => {
+    // Layer 1 (scraper/matcher guards) only protects future writes - the
+    // database can already hold a degenerate row from before those guards
+    // existed, or from a bookmaker/league this deploy hasn't scraped since.
+    // This is the last place that owns the response contract, so it must
+    // refuse to publish a match no real fixture could ever be. Logged at
+    // error, not warn: a suppressed match here means a scraper defect
+    // reached the database, which must stay visible, not silently vanish.
+    if (m.homeTeam === m.awayTeam) {
+      console.error(
+        `[OddsService] Suppressing degenerate match ${m.matchId} (${leagueSlug}): ` +
+          `homeTeam === awayTeam ("${m.homeTeam}")`
+      );
+      return false;
+    }
+    return true;
   });
 
   let lastUpdated: string | null = null;
@@ -107,6 +123,19 @@ export async function getOddsForMatch(
   }
 
   const firstRow = oddsData[0];
+
+  // Same guard as getAllLatestOdds: refuse to publish a degenerate row.
+  // This route resolves by team name rather than matchId, so it reaches a
+  // different DB read (getMatchOdds) than the by-id route above - both
+  // paths into the same bad data need their own check.
+  if (firstRow.home_team === firstRow.away_team) {
+    console.error(
+      `[OddsService] Suppressing degenerate match ${firstRow.match_id} (${leagueSlug}): ` +
+        `homeTeam === awayTeam ("${firstRow.home_team}")`
+    );
+    return null;
+  }
+
   const match: MatchOdds = {
     matchId: firstRow.match_id,
     homeTeam: firstRow.home_team,

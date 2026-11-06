@@ -8,6 +8,7 @@ import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-match
 import { calculateBestOdds } from "../utils/market-aggregation.js";
 import { RepositoryError } from "../utils/errors.js";
 import { fetchAllRows } from "../utils/supabase-pagination.js";
+import { formatDbError } from "../services/run-outcome.js";
 import {
   CANONICAL_MARKET_CODES,
   MARKET_BY_CODE,
@@ -563,6 +564,11 @@ export interface BatchSaveResult {
   filtered: number;
   errors: number;
   matchesProcessed: number;
+  /** Upsert batches that returned an error, out of `totalBatches`. */
+  failedBatches: number;
+  totalBatches: number;
+  /** formatDbError() of the first failed batch, so the cause survives the run. */
+  firstError: string | null;
 }
 
 export async function saveBatchFullOfferMarkets(
@@ -577,7 +583,15 @@ export async function saveBatchFullOfferMarkets(
   leagueSlug: string = "ekstraklasa"
 ): Promise<BatchSaveResult> {
   const supabase = getSupabase();
-  const result: BatchSaveResult = { inserted: 0, filtered: 0, errors: 0, matchesProcessed: 0 };
+  const result: BatchSaveResult = {
+    inserted: 0,
+    filtered: 0,
+    errors: 0,
+    matchesProcessed: 0,
+    failedBatches: 0,
+    totalBatches: 0,
+    firstError: null,
+  };
 
   if (matches.length === 0) {
     return result;
@@ -657,6 +671,7 @@ export async function saveBatchFullOfferMarkets(
   const BATCH_SIZE = 500;
   for (let i = 0; i < allRecords.length; i += BATCH_SIZE) {
     const batch = allRecords.slice(i, i + BATCH_SIZE);
+    result.totalBatches++;
 
     const { error } = await (supabase as any)
       .from("odds")
@@ -668,6 +683,8 @@ export async function saveBatchFullOfferMarkets(
     if (error) {
       console.error(`[FullOfferRepo] Batch insert error (batch ${Math.floor(i / BATCH_SIZE) + 1}):`, error);
       result.errors += batch.length;
+      result.failedBatches++;
+      result.firstError ??= formatDbError(error);
     } else {
       result.inserted += batch.length;
     }

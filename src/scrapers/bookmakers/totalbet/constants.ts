@@ -16,6 +16,26 @@ export const BASE_URL = "https://totalbet.pl";
 export const API_BASE_URL = "https://totalbet.pl/rest/market";
 
 /**
+ * Base URL of the UUID platform's "dealer" API (league list and event detail)
+ */
+export const DEALER_API_BASE_URL = "https://totalbet.pl/dealer/bdata/v1/bet";
+
+/**
+ * Events requested per league list page (the API accepts per_page=100)
+ */
+export const LIST_PAGE_SIZE = 100;
+
+/**
+ * Upper bound on list pages fetched per league, whatever total_pages says
+ */
+export const MAX_LIST_PAGES = 10;
+
+/**
+ * Pause between two event-detail requests, in milliseconds
+ */
+export const DETAIL_DELAY_MS = 250;
+
+/**
  * Category IDs for Totalbet API (legacy numeric platform)
  * These are used to filter events by league in API requests
  * Found via network inspection of the Totalbet website

@@ -246,8 +246,9 @@ export const OUTCOME_TYPES = {
 /**
  * WebSocket URL pattern for identifying PZBuk sportsbook data stream.
  * Matches the JSON-envelope socket (`sportsbook-api/ws?franchiseCode=…&locale=…`).
- * The legacy RSocket path (`sportsbook-api/websocket`) does not match, so a
- * transport rollback shows up as a "no socket matched" capture failure.
+ * The legacy RSocket path (`sportsbook-api/websocket`) does not match: a
+ * transport rollback to it captures no frames, so the scrape fails instead of
+ * returning data.
  */
 export const WEBSOCKET_URL_PATTERN = "sportsbook-api/ws";
 

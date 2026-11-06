@@ -13,7 +13,7 @@ describe("pzbuk ws transport", () => {
     expect(league.socketUrl).toBe("wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl");
     expect(league.socketUrl.includes(WEBSOCKET_URL_PATTERN)).toBe(true);
     // The legacy RSocket path ("/websocket") does not contain "sportsbook-api/ws": a transport
-    // rollback surfaces as a concrete "no socket matched" capture failure, never as silent data.
+    // rollback to it captures no frames, so the scrape fails instead of returning data.
     expect("wss://www.pzbuk.pl/sportsbook-api/websocket".includes(WEBSOCKET_URL_PATTERN)).toBe(false);
   });
   it("reads chunkSize from the SETUP frame", () => {

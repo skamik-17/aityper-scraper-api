@@ -1,47 +1,52 @@
+import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import { parseMarket, parseAllMarkets } from "../parser.js";
+import { parseAllMarkets, parseExtendedMarkets } from "../parser.js";
 import type { LVBetMarket } from "../types.js";
 
 /**
- * These tests verify that LVBet full-offer markets surface RICH data for the
- * normalization audit: a real human-readable market name and a stable
- * bookmakerMarketId carried from the raw API market id.
+ * These tests run the parser over a verbatim capture of the LVBet
+ * client-api/v5 markets/search payload (Arsenal vs Hull City, 2026-11-06,
+ * 39 raw markets in payload order). The real payload carries `market_id`,
+ * `selection_id`, `markets_class_id` and a numeric `line`; the old synthetic
+ * `{ id, line: "2.5" }` shape hid every mismatch between our types and the
+ * API.
  */
-describe("LVBet parseMarket - rich audit data", () => {
-  const sampleMarket: LVBetMarket = {
-    id: 998877,
-    match_id: "m-123",
-    name: "Suma goli",
-    line: "2.5",
-    selections: [
-      { id: 1, name: "Powyżej", order: 0, rate: { decimal: 1.85 }, status: "active" },
-      { id: 2, name: "Poniżej", order: 1, rate: { decimal: 1.95 }, status: "active" },
-    ],
-  };
+const evidence = JSON.parse(
+  readFileSync(new URL("./fixtures/markets-search-arsenal-hull-2026-11-06.json", import.meta.url), "utf8")
+) as LVBetMarket[];
+const teams = { homeTeam: "Arsenal", awayTeam: "Hull City" };
 
-  it("produces a real, non-placeholder human-readable market name", () => {
-    const result = parseMarket(sampleMarket);
-    expect(result).not.toBeNull();
-    // Real API label is used (with line appended), never a generic placeholder.
-    expect(result!.name).toBe("Suma goli 2.5");
-    expect(result!.name).not.toMatch(/^Unknown/);
-    expect(result!.name).not.toMatch(/^Rynek\s/);
-    expect(result!.name).not.toMatch(/^Selection/);
+describe("LVBet parser - v5 payload shape", () => {
+  it("keeps both same-named 'Arsenal - Dokładna liczba goli' variants (de-duplicates by market_id)", () => {
+    const parsed = parseAllMarkets(evidence, teams).filter((m) => m.name === "Arsenal - Dokładna liczba goli");
+    expect(parsed.map((m) => m.selections.map((s) => s.name))).toEqual([
+      ["0 lub 1", "2 lub 3", "4 do 6", "7 lub więcej"],
+      ["0", "1", "2", "3", "4+"],
+    ]);
+    expect(parsed[1].selections.map((s) => s.odds)).toEqual([7.25, 4.75, 3.4, 3.8, 3.1]);
   });
 
-  it("carries the stable LVBet market id as bookmakerMarketId", () => {
-    const result = parseMarket(sampleMarket);
-    expect(result).not.toBeNull();
-    expect(result!.bookmakerMarketId).toBe("998877");
-    expect(result!.bookmakerMarketId).toBeTruthy();
+  it("keeps both 'Dokładna liczba goli' and both '1. Połowa - Arsenal dokładna liczba goli' variants", () => {
+    const names = parseAllMarkets(evidence, teams).map((m) => m.name);
+    expect(names.filter((n) => n === "Dokładna liczba goli")).toHaveLength(2);
+    expect(names.filter((n) => n === "1. Połowa - Arsenal dokładna liczba goli")).toHaveLength(2);
   });
 
-  it("exposes bookmakerMarketId for every market via parseAllMarkets", () => {
-    const markets = parseAllMarkets([sampleMarket]);
-    expect(markets.length).toBeGreaterThan(0);
-    for (const m of markets) {
-      expect(m.bookmakerMarketId).toBeTruthy();
-      expect(m.name).toBeTruthy();
-    }
+  it("carries markets_class_id as bookmakerMarketId and selection_id as externalId", () => {
+    const ou = parseAllMarkets(evidence, teams).find((m) => m.name === "Liczba goli 2.5")!;
+    expect(ou.bookmakerMarketId).toBe("3499");
+    expect(ou.selections.map((s) => [s.name, s.odds, s.externalId])).toEqual([
+      ["Powyżej (2.5)", 1.55, "bc:7392415565"],
+      ["Poniżej (2.5)", 2.5, "bc:7392415566"],
+    ]);
+  });
+
+  it("never emits the literal externalId 'undefined'", () => {
+    for (const m of parseAllMarkets(evidence, teams)) for (const s of m.selections) expect(s.externalId).not.toBe("undefined");
+  });
+
+  it("parseExtendedMarkets accepts a numeric line", () => {
+    const ext = parseExtendedMarkets(evidence);
+    expect(ext.marketOverUnder?.["2.5"]).toMatchObject({ over: 1.55, under: 2.5 });
   });
 });

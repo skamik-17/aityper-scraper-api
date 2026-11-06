@@ -265,7 +265,7 @@ function convertSelections(
     .map((s) => ({
       name: s.name || `Selection ${s.order}`,
       odds: s.rate?.decimal || 0,
-      externalId: String(s.id),
+      externalId: s.selection_id,
       status: s.status === "active" ? ("active" as const) : undefined,
     }))
     // Decimal odds <= 1.0 are suspended/placeholder cells (zero payout is
@@ -300,9 +300,10 @@ export function parseMarket(
 
   return {
     name: marketName,
-    // Carry the stable LVBet market id so the normalization audit can match
-    // by id instead of relying on brittle name-regex matching.
-    bookmakerMarketId: market.id != null ? String(market.id) : undefined,
+    // Carry the LVBet market-type (class) id. It is shared by sibling
+    // products (one class can cover several market names), so any id-keyed
+    // lookup downstream must also check the name.
+    bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
     groupName: getMarketGroup(market.name || ""),
     type: getMarketType(market.name || ""),
     selections: convertSelections(validSelections, teams),
@@ -441,7 +442,7 @@ function splitBulkPlayerListMarket(
 
     results.push({
       name: marketName,
-      bookmakerMarketId: market.id != null ? String(market.id) : undefined,
+      bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
       groupName: getMarketGroup(market.name || ""),
       type: getMarketType(market.name || ""),
       paramValue: sel.name,
@@ -465,12 +466,11 @@ export function parseAllMarkets(
   const seenPlayerParams = new Set<string>();
 
   for (const market of markets) {
-    // Create unique key to avoid duplicates. Prefer the stable market id:
-    // LVBet can expose several market instances under the same name (e.g.
-    // player lists split across instances) and deduping by name alone would
-    // silently drop all but the first instance.
-    const key =
-      market.id != null ? `id:${market.id}` : `${market.name}_${market.line || ""}`;
+    // Create unique key to avoid duplicates. Prefer the per-instance
+    // market_id: LVBet publishes distinct products under the same name and
+    // line (e.g. the exact and the range "Arsenal - Dokładna liczba goli"),
+    // and deduping by name alone silently drops all but the first one.
+    const key = market.market_id ?? `${market.name}_${market.line ?? ""}`;
     if (seenKeys.has(key)) continue;
     seenKeys.add(key);
 
@@ -541,8 +541,10 @@ export function parseExtendedMarkets(markets: LVBetMarket[]): {
 
     // Over/Under
     if (isOverUnderMarket(market) && market.line) {
-      const line = parseFloat(market.line);
-      if (line > 0 && market.line.includes(".5")) {
+      // The v5 payload sends a numeric line; older captures sent a string.
+      const lineText = String(market.line);
+      const line = parseFloat(lineText);
+      if (line > 0 && lineText.includes(".5")) {
         const lineStr = line.toFixed(1);
         const odds = parseOverUnderOdds(market.selections);
         if (odds.over > 0 && odds.under > 0) {

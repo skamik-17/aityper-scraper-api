@@ -14,6 +14,12 @@ import type {
 } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
 import { browserPool } from "./browser-pool.js";
+import {
+  attachNavigationRecorder,
+  enrichFullOfferFailure,
+  isFailedOrEmptyResult,
+  type NavigationRecorder,
+} from "./navigation-diagnostics.js";
 
 // Default browser options
 const DEFAULT_USER_AGENT =
@@ -359,9 +365,27 @@ export abstract class PlaywrightScraper {
       );
     }
 
+    // Records HTTP status, host and websockets so a failed or empty result
+    // carries the navigation cause. Read by the error handler too.
+    let recorder: NavigationRecorder | null = null;
+
     return this.executeWithBrowser(
-      async (page) => scrapeLogic(page, league),
-      (error, duration) => this.createFullOfferErrorResult(league, error, duration)
+      async (page) => {
+        const rec = attachNavigationRecorder(page);
+        recorder = rec;
+        try {
+          const result = await scrapeLogic(page, league);
+          if (!isFailedOrEmptyResult(result)) return result;
+          return enrichFullOfferFailure(result, await rec.snapshot(page));
+        } finally {
+          rec.detach();
+        }
+      },
+      (error, duration) => {
+        const result = this.createFullOfferErrorResult(league, error, duration);
+        // The page may already be closed or crashed: use what was recorded so far.
+        return recorder ? enrichFullOfferFailure(result, recorder.current()) : result;
+      }
     );
   }
 

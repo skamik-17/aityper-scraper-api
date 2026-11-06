@@ -454,6 +454,97 @@ function splitBulkPlayerListMarket(
 }
 
 /**
+ * LVBet market group that holds the per-player stat ladders: one market per
+ * stat, every player's tiers bundled as "<Player> <N>+" selections.
+ */
+const PLAYER_STAT_LADDER_GROUP = "Zawodnicy - statystyki";
+
+/**
+ * Normalized names (normalizeMarketName output) of the "Zawodnicy -
+ * statystyki" ladders that have a player-parameter catalog code. Must stay in
+ * sync with LVBET_PLAYER_LADDER_PATTERNS in lvbet-normalizer.ts (a test ties
+ * the two). A ladder missing here stays unsplit, and the normalizer then
+ * drops it to OTHER instead of publishing "<Player> <N>+" as a player code.
+ */
+export const PLAYER_STAT_LADDER_NAMES: ReadonlySet<string> = new Set([
+  "strzały",
+  "strzały celne",
+  "popełnione faule",
+  "faule na zawodniku",
+  "odbiory (tackle)",
+  "asysty",
+  "spalone zawodnika",
+  "obrony bramkarza",
+  "strzały celne głowa",
+  "strzały celne spoza pola karnego",
+]);
+
+const PLAYER_LADDER_SELECTION_PATTERN = /^(.+\S)\s+(\d+)\+$/;
+
+/**
+ * Splits a "Zawodnicy - statystyki" ladder ("Strzały": "Viktor Gyokeres 3+",
+ * "Viktor Gyokeres 4+", ...) into one ScrapedMarket per player, carrying the
+ * player via `paramValue` and each tier N as a "Powyzej <N - 0.5>" selection,
+ * so the normalizer reuses the bulk-split "Powyżej X" -> "N+" tier mapping.
+ * Returns null (the market stays unsplit) unless the market is in the ladder
+ * group, its name is a mapped ladder, and every valid selection has the
+ * "<Player> <N>+" shape: any drift leaves the whole ladder unsplit rather
+ * than guessing a player out of an unknown label.
+ */
+export function splitPlayerStatLadderMarket(
+  market: LVBetMarket,
+  seenPlayerParams: Set<string>
+): ScrapedMarket[] | null {
+  if (market.markets_group?.name !== PLAYER_STAT_LADDER_GROUP) return null;
+
+  const normalizedName = normalizeMarketName(market.name || "");
+  if (!PLAYER_STAT_LADDER_NAMES.has(normalizedName)) return null;
+
+  const selections = convertSelections(market.selections ?? []);
+  if (selections.length === 0) return null;
+
+  const tiersByPlayer = new Map<string, Array<{ tier: number; selection: MarketSelection }>>();
+  for (const selection of selections) {
+    const match = selection.name.match(PLAYER_LADDER_SELECTION_PATTERN);
+    if (!match) return null;
+    const player = match[1];
+    const tier = Number(match[2]);
+    const tiers = tiersByPlayer.get(player) ?? [];
+    // Two prices for one player's tier is not a known shape: picking either
+    // would be a guess, so leave the whole ladder unsplit.
+    if (tiers.some((t) => t.tier === tier)) return null;
+    tiers.push({ tier, selection });
+    tiersByPlayer.set(player, tiers);
+  }
+
+  const results: ScrapedMarket[] = [];
+  for (const [player, tiers] of tiersByPlayer) {
+    // A second market instance of the same ladder must not emit the same
+    // player twice (the rows would collide on one downstream market key).
+    const dedupeKey = `ladder::${normalizedName}::${player}`;
+    if (seenPlayerParams.has(dedupeKey)) continue;
+    seenPlayerParams.add(dedupeKey);
+
+    results.push({
+      name: market.name,
+      bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
+      groupName: getMarketGroup(market.name || ""),
+      type: getMarketType(market.name || ""),
+      paramValue: player,
+      selections: tiers
+        .sort((a, b) => a.tier - b.tier)
+        .map(({ tier, selection }) => ({
+          name: `Powyzej ${tier - 0.5}`,
+          odds: selection.odds,
+          externalId: selection.externalId,
+        })),
+    });
+  }
+
+  return results.length > 0 ? results : null;
+}
+
+/**
  * Parse ALL markets from LVBet markets array into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -477,6 +568,12 @@ export function parseAllMarkets(
     const bulkSplit = splitBulkPlayerListMarket(market, teams, seenPlayerParams);
     if (bulkSplit) {
       result.push(...bulkSplit);
+      continue;
+    }
+
+    const ladderSplit = splitPlayerStatLadderMarket(market, seenPlayerParams);
+    if (ladderSplit) {
+      result.push(...ladderSplit);
       continue;
     }
 

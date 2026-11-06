@@ -98,6 +98,28 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
   { pattern: /suma goli|liczba goli|dokładna liczba goli|gole|bramek/, code: "TOTAL_GOALS" },
 ];
 
+/**
+ * LVBet's per-player stat ladders (market group "Zawodnicy - statystyki",
+ * one market per stat with "<Player> <N>+" selections), matched on the exact
+ * normalized market name. The parser (splitPlayerStatLadderMarket in the
+ * scraper's parser.ts) splits each ladder into one row per player with the
+ * player in paramValue and "Powyzej <N - 0.5>" tiers; normalizeMarket accepts
+ * only those split rows. Must stay in sync with the parser's
+ * PLAYER_STAT_LADDER_NAMES (a test ties the two).
+ */
+export const LVBET_PLAYER_LADDER_PATTERNS: ReadonlyArray<{ pattern: RegExp; code: NormalizedMarketType }> = [
+  { pattern: /^strzały$/, code: "PLAYER_SHOTS" },
+  { pattern: /^strzały celne$/, code: "PLAYER_SHOTS_ON_TARGET" },
+  { pattern: /^popełnione faule$/, code: "PLAYER_FOULS" },
+  { pattern: /^faule na zawodniku$/, code: "PLAYER_FOULS_WON" },
+  { pattern: /^odbiory \(tackle\)$/, code: "PLAYER_TACKLES" },
+  { pattern: /^asysty$/, code: "PLAYER_ASSISTS" },
+  { pattern: /^spalone zawodnika$/, code: "PLAYER_OFFSIDES" },
+  { pattern: /^obrony bramkarza$/, code: "PLAYER_SAVES" },
+  { pattern: /^strzały celne głowa$/, code: "PLAYER_HEADER_SHOTS_ON_TARGET" },
+  { pattern: /^strzały celne spoza pola karnego$/, code: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX" },
+];
+
 // Audited name-pattern -> code mappings.
 // LVBET exposes no stable market id, so markets are recognized purely by their
 // (normalized: lowercased, diacritics-stripped, whitespace-collapsed) name.
@@ -105,6 +127,14 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
 // team/player names and over/under lines. Order matters: more specific patterns
 // MUST appear before generic catch-alls within the same family.
 const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketType }> = [
+  // --- Per-player stat ladders (exact names, see LVBET_PLAYER_LADDER_PATTERNS) ---
+  ...LVBET_PLAYER_LADDER_PATTERNS,
+  // "Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa" prices
+  // "either of two players scores or assists" ("<A> or <B>" selections). The
+  // unanchored single-player PLAYER_GOAL_OR_ASSIST pattern further down
+  // would otherwise swallow it and publish each pair as a fake "player".
+  { pattern: /zawodnik strzeli gola lub zanotuje asyste - podwojna szansa/, code: "TWO_PLAYERS_GOAL_OR_ASSIST" },
+
   // --- Time-period stats (must precede generic corner/throw-in families) ---
   // A prior special case routed ONLY the "…Rzuty rożne 0.5" line to the
   // param-less TIME_PERIOD_CORNERS_TOTAL catalog code (hasParameter: false —
@@ -474,7 +504,8 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // from PLAYER_CARDS instead of mixing combo odds with single-player odds.
   { pattern: /zawodnik otrzyma kartke - podwojna szansa/, code: "OTHER" },
   { pattern: /zawodnik otrzyma kartke/, code: "PLAYER_CARDS" },
-  { pattern: /strzeli gola i zaliczy asyste/, code: "PLAYER_GOAL_AND_ASSIST" },
+  // Renamed by LVBet to "Zawodnik strzeli gola i zanotuje asystę" (2026-11).
+  { pattern: /strzeli gola i (zaliczy|zanotuje) asyste/, code: "PLAYER_GOAL_AND_ASSIST" },
   { pattern: /rezerwowy strzeli bramke/, code: "SUBSTITUTE_GOAL" },
   { pattern: /goal by a direct free kick/, code: "FREE_KICK_GOAL" },
   { pattern: /an own goal in the match/, code: "OWN_GOAL" },
@@ -1921,6 +1952,9 @@ function normalizeSelectionForMarket(
     case "PLAYER_SHOTS_OVER":
     case "PLAYER_TACKLES":
     case "PLAYER_SAVES":
+    case "PLAYER_OFFSIDES":
+    case "PLAYER_HEADER_SHOTS_ON_TARGET":
+    case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX":
     case "GOALKEEPER_SAVES_OVER":
     case "PLAYER_RED_CARD":
     case "PLAYER_HEADER_GOAL":
@@ -1988,6 +2022,7 @@ function normalizeSelectionForMarket(
     case "ALL_PLAYERS_SCORE":
     case "ANY_PLAYER_FIRST_GOAL":
     case "PLAYER_ASSIST_PAIRS":
+    case "TWO_PLAYERS_GOAL_OR_ASSIST":
       return canonicalizePlayerComboSelection(trimmed) as NormalizedSelection;
 
     default: {
@@ -2450,6 +2485,14 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
     if (isTimeWindowScoped(raw.name) && !isTimeScopedCode(marketCode)) marketCode = "OTHER";
     const { matchedBy } = resolved;
 
+    // A "Zawodnicy - statystyki" ladder carries its player only through the
+    // parser split (paramValue). An unsplit ladder (renamed group, a tier
+    // label off the "<Player> <N>+" shape) must never reach the player-name
+    // passthrough, which would publish "Abdulkadir Omur 1+" as a player.
+    const normalizedRawName = normalizeMarketName(raw.name);
+    const isPlayerStatLadder = LVBET_PLAYER_LADDER_PATTERNS.some(({ pattern }) => pattern.test(normalizedRawName));
+    if (isPlayerStatLadder && !raw.paramValue) return null;
+
     // Deliberately excluded markets must not share the single "OTHER" market
     // key: unrelated YES/NO props (e.g. half-time exact-margin bets) were
     // merging with other bookmakers' props under one pseudo-market. Returning
@@ -2489,6 +2532,13 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
           if (code === null) return [];
           return [{ code, label: sel.name, odds: sel.odds }];
         });
+
+    // Every ladder tier must land on a literal "N+" catalog tier. A tier past
+    // the catalog ladder would otherwise fall back to the line-less OVER code
+    // (normalizeLvbetPlayerThreshold) and publish a price for the wrong bet.
+    if (isPlayerStatLadder) {
+      selections = selections.filter((s) => /^\d+\+$/.test(s.code));
+    }
 
     // Combine raw sub-selections that collide on the same catalog code
     // (CORNERS_RANGE's 5-tier-to-3-bucket collapse; the exact-goals

@@ -55,7 +55,27 @@ export interface RawAuditMarket {
   groupName?: string;
   bookmakerMarketId?: string;
   paramValue?: string;
-  selections: { name: string; odds: number }[];
+  selections: RawAuditSelection[];
+}
+
+/** A raw selection; `externalId` is the bookmaker's own outcome id when the scraper has one. */
+export interface RawAuditSelection {
+  name: string;
+  odds: number;
+  externalId?: string;
+}
+
+/**
+ * Copy a raw selection for the normalizer or the archive. `externalId` is kept
+ * only when set (id-keyed normalizers map by it), so selections without one
+ * serialize exactly as before.
+ */
+function copyRawSelection(s: RawAuditSelection): RawAuditSelection {
+  return {
+    name: s.name,
+    odds: s.odds,
+    ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -172,7 +192,7 @@ export function scrapedMarketsToRaw(markets: ScrapedMarket[]): RawAuditMarket[] 
     groupName: m.groupName,
     bookmakerMarketId: m.bookmakerMarketId ? String(m.bookmakerMarketId) : undefined,
     paramValue: m.paramValue,
-    selections: m.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: m.selections.map(copyRawSelection),
   }));
 }
 
@@ -240,7 +260,7 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
       name: raw.name,
       groupName: raw.groupName,
       paramValue: raw.paramValue,
-      selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+      selections: raw.selections.map(copyRawSelection),
     };
     return { raw, normalized: normalizer.normalizeMarket(forNorm, ctx) };
   });
@@ -372,7 +392,9 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
         groupName: raw.groupName ?? "",
         groupId: "",
         bookmakerMarketId: String(raw.bookmakerMarketId ?? ""),
-        selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+        // Only when set, so archives of markets without one stay byte-identical.
+        ...(raw.paramValue !== undefined ? { paramValue: raw.paramValue } : {}),
+        selections: raw.selections.map(copyRawSelection),
       },
       normalized: {
         marketCode: normalized?.marketCode ?? "OTHER",
@@ -453,7 +475,7 @@ function analyzeMarket(
       bookmakerMarketId: raw.bookmakerMarketId,
       groupName: raw.groupName,
       paramValue: raw.paramValue,
-      selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+      selections: raw.selections.map(copyRawSelection),
     },
     ctx,
   );

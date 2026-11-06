@@ -52,6 +52,8 @@ import type {
 interface ArchiveSelection {
   name: string;
   odds: number;
+  /** Archived only when the scraper set one (id-keyed normalizers map by it). */
+  externalId?: string;
 }
 
 /** Raw market block exactly as archived by the prep-audit scripts. */
@@ -60,7 +62,7 @@ interface ArchiveRawMarket {
   groupName?: string;
   groupId?: string;
   bookmakerMarketId?: string | number;
-  /** Not archived today (prep drops it); kept for forward compatibility. */
+  /** Archived only when the scraper set one. */
   paramValue?: string | null;
   selections: ArchiveSelection[];
 }
@@ -136,7 +138,11 @@ function toRawBookmakerMarket(raw: ArchiveRawMarket): RawBookmakerMarket {
     name: raw.name,
     groupName: raw.groupName || undefined,
     paramValue: raw.paramValue || undefined,
-    selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: raw.selections.map((s) => ({
+      name: s.name,
+      odds: s.odds,
+      ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+    })),
   };
 }
 

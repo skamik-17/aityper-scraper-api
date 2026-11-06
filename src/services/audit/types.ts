@@ -49,7 +49,10 @@ export interface PrepMarketEntry {
     groupName: string;
     groupId: string;
     bookmakerMarketId: string;
-    selections: { name: string; odds: number }[];
+    /** Present only when the scraper set one (pre-extracted line / specifier). */
+    paramValue?: string;
+    /** `externalId` is present only when the scraper set one. */
+    selections: { name: string; odds: number; externalId?: string }[];
   };
   normalized: {
     marketCode: string;

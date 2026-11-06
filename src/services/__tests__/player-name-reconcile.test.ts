@@ -164,3 +164,65 @@ describe("reconcilePlayerNameVariants", () => {
     expect(market.parameters[0].bookmakers.map((b) => b.bookmaker).sort()).toEqual(["fuksiarz", "superbet"]);
   });
 });
+
+describe("reconcilePlayerNameVariants - stranded abbreviated rows (2026-11)", () => {
+  it("folds an initial when peers disagree only on hyphen and case", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["J. van Hecke", ["fuksiarz"]],
+      ["Jan Paul van Hecke", ["betcris", "fortuna", "lvbet"]],
+      ["Jan-Paul van Hecke", ["betfan", "etoto", "superbet"]],
+    ]));
+    expect(alias.get("J. van Hecke")).toBe("Jan Paul van Hecke");
+    expect(alias.get("Jan-Paul van Hecke")).toBe("Jan Paul van Hecke");
+  });
+  it("merges a hyphenated and a spaced double surname", () => {
+    const alias = reconcilePlayerNameVariants(names([["Jens Hjerto-Dahl", ["betfan", "sts"]], ["Jens Hjerto Dahl", ["fortuna"]]]));
+    expect(alias.get("Jens Hjerto Dahl")).toBe("Jens Hjerto-Dahl");
+  });
+  it("does not let a hyphen create a new surname match", () => {
+    const alias = reconcilePlayerNameVariants(names([["D. Lewin", ["fuksiarz"]], ["Dominic Calvert-Lewin", ["betfan"]]]));
+    expect(alias.size).toBe(0);
+  });
+  it("ignores LVBet combo params when clustering", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["D. Calvert-Lewin", ["fuksiarz"]],
+      ["Dominic Calvert-Lewin", ["betcris", "betfan", "forbet", "fortuna", "lvbet", "superbet"]],
+      ["Dominic Solanke or Dominic Calvert-Lewin", ["lvbet"]],
+      ["Omar Marmoush or Dominic Calvert-Lewin", ["lvbet"]],
+      ["Dominic Calvert-Lewin or Harry Wilson", ["lvbet"]],
+    ]));
+    expect(alias.get("D. Calvert-Lewin")).toBe("Dominic Calvert-Lewin");
+    expect(alias.has("Dominic Solanke or Dominic Calvert-Lewin")).toBe(false);
+  });
+  it("never folds a combo into a single player", () => {
+    // lvbet quotes "Jayden Bogle" @4.75 and "Jayden Bogle or Mohammed Kudus" @2.0.
+    const alias = reconcilePlayerNameVariants(names([
+      ["Jayden Bogle", ["betcris", "lvbet"]], ["J. Bogle", ["fuksiarz"]], ["Jayden Bogle or Mohammed Kudus", ["lvbet"]],
+    ]));
+    expect(alias.has("Jayden Bogle or Mohammed Kudus")).toBe(false);
+    expect(alias.get("J. Bogle")).toBe("Jayden Bogle");
+  });
+  it("folds an initial out of a non-clique cluster when its full-name candidates agree", () => {
+    // Lee-Tot PLAYER_RED_CARD: fortuna's sentence param fits "Jan Paul van Hecke" but not "J. van Hecke".
+    const alias = reconcilePlayerNameVariants(names([
+      ["J. van Hecke", ["fuksiarz"]],
+      ["Jan Paul van Hecke", ["betcris", "lvbet"]],
+      ["Jan-Paul van Hecke", ["betfan", "superbet"]],
+      ["Jan Paul van Hecke wyrzucony z boiska", ["fortuna"]],
+    ]));
+    expect(alias.get("J. van Hecke")).toBe("Jan Paul van Hecke");
+  });
+  it("keeps folding Fortuna's red-card sentence into the player (guard)", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["Bruno Guimaraes", ["betfan", "superbet"]], ["Bruno Guimaraes wyrzucony z boiska", ["fortuna"]],
+    ]));
+    expect(alias.get("Bruno Guimaraes wyrzucony z boiska")).toBe("Bruno Guimaraes");
+  });
+  it("leaves an initial alone when its candidates are different first names (guard)", () => {
+    // Tim / Timothy: needs a nickname table, out of scope.
+    const alias = reconcilePlayerNameVariants(names([
+      ["T. Iroegbunam", ["fuksiarz"]], ["Tim Iroegbunam", ["betfan"]], ["Timothy Iroegbunam", ["betcris", "lvbet"]],
+    ]));
+    expect(alias.size).toBe(0);
+  });
+});

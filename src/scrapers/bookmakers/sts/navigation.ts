@@ -95,6 +95,111 @@ async function waitForData(
 }
 
 /**
+ * Header line of an STS WebSocket frame, e.g.
+ * `{"s":"f_f2921896_pl","n":1793982199183325,"f":1}`.
+ * `s` is the subscription; `f: 1` marks a full snapshot, deltas omit it.
+ */
+interface STSFrameHeader {
+  s: string;
+  f?: number;
+}
+
+/** Subscription of a fixture frame: `f_<fixtureId>_pl` */
+const FIXTURE_SUBSCRIPTION = /^f_(f\d+)_pl$/;
+
+/**
+ * Parse the header (first line) of a frame. Only the first line is read, so
+ * a multi-megabyte i_pl frame costs one short JSON.parse.
+ */
+function parseFrameHeader(payload: string): STSFrameHeader | null {
+  const newline = payload.indexOf("\n");
+  const headerLine = newline === -1 ? payload : payload.slice(0, newline);
+  try {
+    const header: unknown = JSON.parse(headerLine);
+    if (
+      typeof header === "object" &&
+      header !== null &&
+      typeof (header as { s?: unknown }).s === "string"
+    ) {
+      return header as STSFrameHeader;
+    }
+  } catch {
+    // Not an STS header line (ping, binary payload, truncated frame)
+  }
+  return null;
+}
+
+/**
+ * True when the frame's header marks a full snapshot (`"f":1`).
+ * Delta frames carry the same subscription without `f`.
+ */
+export function isSnapshotFrame(payload: string): boolean {
+  return parseFrameHeader(payload)?.f === 1;
+}
+
+/**
+ * Record one WebSocket frame into the capture result.
+ *
+ * - `i_pl` (fixture list + main markets): keep the longest frame.
+ * - `f_<fixtureId>_pl` (extended markets): store snapshots only. A newer
+ *   snapshot replaces an older one; a delta never replaces a snapshot,
+ *   because a delta alone parses to a near-empty market list.
+ */
+export function recordStsFrame(result: WSCaptureResult, payload: string): void {
+  const header = parseFrameHeader(payload);
+  if (!header) return;
+
+  if (header.s === "i_pl") {
+    if (payload.length > result.initialData.length) {
+      result.initialData = payload;
+    }
+    return;
+  }
+
+  const fixtureMatch = FIXTURE_SUBSCRIPTION.exec(header.s);
+  if (!fixtureMatch || header.f !== 1) return;
+
+  // The snapshot body is the second line; a header-only frame has no markets
+  const bodyStart = payload.indexOf("\n") + 1;
+  if (bodyStart === 0) return;
+  const bodyEnd = payload.indexOf("\n", bodyStart);
+  try {
+    const body: unknown = JSON.parse(
+      payload.slice(bodyStart, bodyEnd === -1 ? undefined : bodyEnd)
+    );
+    if (typeof body === "object" && body !== null && !Array.isArray(body)) {
+      result.fixtureData.set(fixtureMatch[1], body as STSWebSocketData);
+    }
+  } catch {
+    // Incomplete snapshot frame: keep whatever was stored before
+  }
+}
+
+/** True when a full snapshot frame for the fixture has been recorded */
+export function hasFixtureSnapshot(result: WSCaptureResult, fixtureId: string): boolean {
+  return result.fixtureData.has(fixtureId);
+}
+
+/**
+ * Capture a match page until its fixture snapshot arrives.
+ * An attempt without the snapshot, or one that failed to navigate (`null`),
+ * counts as a miss and is retried. Returns `null` after `attempts` misses,
+ * so the caller can skip the match instead of emitting a partial one.
+ */
+export async function captureMatchWithRetry(
+  capture: (eventUrl: string) => Promise<WSCaptureResult | null>,
+  eventUrl: string,
+  fixtureId: string,
+  attempts = 2
+): Promise<WSCaptureResult | null> {
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const result = await capture(eventUrl);
+    if (result && hasFixtureSnapshot(result, fixtureId)) return result;
+  }
+  return null;
+}
+
+/**
  * Set up WebSocket listener for capturing STS data
  * Returns captured data through the result object
  */
@@ -104,25 +209,7 @@ function setupWebSocketCapture(page: Page, result: WSCaptureResult): void {
 
     ws.on("framereceived", (frame) => {
       const data = typeof frame.payload === "string" ? frame.payload : "";
-
-      // Capture initial data (largest message with "i_pl" subscription)
-      // This contains the fixture list with team names
-      if (data.includes('"s":"i_pl"') && data.length > result.initialData.length) {
-        result.initialData = data;
-      }
-
-      // Capture fixture-specific data (contains extended markets)
-      // Format: "s":"f_{fixtureId}_pl"
-      const fixtureMatch = data.match(/"s":"f_(f\d+)_pl"/);
-      if (fixtureMatch && data.length > 1000) {
-        try {
-          const lines = data.split("\n");
-          const jsonData = JSON.parse(lines[1] || lines[0]) as STSWebSocketData;
-          result.fixtureData.set(fixtureMatch[1], jsonData);
-        } catch {
-          // Ignore parse errors for incomplete frames
-        }
-      }
+      recordStsFrame(result, data);
     });
   });
 }
@@ -227,23 +314,19 @@ export async function navigateAndCaptureMatchData(
     // Handle cookie consent
     await handleCookieConsent(page);
 
-    // Wait for fixture-specific data or initial data
-    // The match page triggers subscription for the specific fixture
-    // Increased timeout from 5s to 10s for slower connections
-    await waitForData(
-      () =>
-        (fixtureId && result.fixtureData.has(fixtureId)) ||
-        result.initialData.length > 100000,
-      10000
-    );
+    // Wait for the fixture snapshot. The match page subscribes to
+    // f_<fixtureId>_pl; i_pl usually lands first (~0.5 s earlier on live
+    // captures), so leaving when i_pl arrives would drop the extended markets.
+    await waitForData(() => hasFixtureSnapshot(result, fixtureId), WS_DATA_TIMEOUT);
 
-    if (!result.fixtureData.has(fixtureId) && !result.initialData) {
+    const hasSnapshot = hasFixtureSnapshot(result, fixtureId);
+    if (!hasSnapshot && !result.initialData) {
       console.error("[STS/Navigation] No WebSocket data received for match");
       return null;
     }
 
     console.log(
-      `[STS/Navigation] Captured match data (fixture: ${fixtureId}, initial: ${result.initialData.length} bytes)`
+      `[STS/Navigation] Captured match data (fixture: ${fixtureId}, snapshot: ${hasSnapshot ? "yes" : "no"}, initial: ${result.initialData.length} bytes)`
     );
     return result;
   } catch (error) {

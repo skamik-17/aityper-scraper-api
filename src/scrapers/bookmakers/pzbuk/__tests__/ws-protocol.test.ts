@@ -1,7 +1,17 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import { decodeFrame, initialStatesOf, subscribedGroupIds, FrameAssembler } from "../ws-protocol.js";
+import {
+  decodeFrame,
+  initialStatesOf,
+  subscribedGroupIds,
+  FrameAssembler,
+  SingleEventAccumulator,
+  describeCaptureFailure,
+  emptyDiagnostics,
+  isEmptyListing,
+} from "../ws-protocol.js";
 import { WEBSOCKET_URL_PATTERN } from "../constants.js";
+import { parseAllMarkets, parseTeamNames } from "../parser.js";
 
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8"));
 const league = load("ws-league-frames.json");
@@ -81,5 +91,95 @@ describe("pzbuk FrameAssembler", () => {
     a.setChunkSize(size);
     const results = split(bytes, size).map((p) => a.push(p));
     expect(results.at(-1)).toBe(group1);
+  });
+});
+
+const states = (frames: any[], skipStream?: number) => frames.filter((f) => f.dir === "recv").flatMap((f) => {
+  const d = decodeFrame(f.text);
+  return d.kind === "data" && d.streamId !== skipStream ? initialStatesOf(d) : [];
+});
+const GROUPS = [1, 2, 7, 8, 12, 13, 15, 17, 19, 28];
+
+describe("pzbuk SingleEventAccumulator", () => {
+  it("unions markets and selections across all market-group messages", () => {
+    const acc = new SingleEventAccumulator();
+    states(event.frames).forEach((s) => acc.add(s));
+    const snap = acc.snapshot()!;
+    expect(snap.events[0].id).toBe(4408475);
+    expect(acc.stats()).toEqual({ selections: 656, markets: 157, marketGroupsDeclared: GROUPS, marketGroupsSeen: GROUPS });
+  });
+  it("ignores multi-event listing messages on the event page", () => {
+    const acc = new SingleEventAccumulator();
+    const listing = states(event.frames).find((s) => s.events.length === 3 && s.selections.length === 18)!;
+    expect(acc.add(listing)).toBe(false);
+    expect(acc.snapshot()).toBeNull();
+  });
+  it("reports a market group that never answered", () => {
+    const acc = new SingleEventAccumulator();
+    states(event.frames, 11).forEach((s) => acc.add(s)); // stream 11 = group 28 "Zawodnicy"
+    expect(acc.stats().marketGroupsSeen).toEqual([1, 2, 7, 8, 12, 13, 15, 17, 19]);
+    expect(acc.snapshot()).not.toBeNull();
+  });
+  it("rejects single-event payloads for another event", () => {
+    const acc = new SingleEventAccumulator(4408509);
+    expect(states(event.frames).map((s) => acc.add(s)).some(Boolean)).toBe(false);
+    expect(acc.snapshot()).toBeNull();
+  });
+  it("keeps only the latest Active copy of a selection (no stale price)", () => {
+    // Synthetic: no fixture selection changes price or status between streams.
+    const ev = states(event.frames).find((s) => s.events.length === 1)!.events[0];
+    const sel = { id: "s1", name: "x", trueOdds: 1.8, marketId: "m1", marketTypeId: "1", eventId: ev.id, outcomeType: "Home", status: "Active", order: 0 };
+    const acc = new SingleEventAccumulator(ev.id);
+    acc.add({ events: [ev], markets: [], selections: [sel] });
+    acc.add({ events: [ev], markets: [], selections: [{ ...sel, trueOdds: 1.85 }] });
+    expect(acc.snapshot()!.selections.map((s) => s.trueOdds)).toEqual([1.85]);
+    acc.add({ events: [ev], markets: [], selections: [{ ...sel, status: "Suspended" }] });
+    expect(acc.stats().selections).toBe(0);
+    expect(acc.snapshot()).toBeNull();
+  });
+  it("maps header texts to market-group ids", () => {
+    const acc = new SingleEventAccumulator(4408475);
+    states(event.frames).forEach((s) => acc.add(s));
+    // marketGroups["2"].name is "Gole " (trailing space) on the wire
+    expect(["Popularne", "Gole", "1 połowa", "Nieznane"].map((t) => acc.groupIdForHeader(t))).toEqual([1, 2, 7, null]);
+  });
+  it("feeds parseAllMarkets real API names (no placeholders) and raw selection labels", () => {
+    const acc = new SingleEventAccumulator();
+    states(event.frames).forEach((s) => acc.add(s));
+    const snap = acc.snapshot()!;
+    const markets = parseAllMarkets(snap, snap.events[0].id, parseTeamNames(snap.events[0]));
+    expect(markets).toHaveLength(147);
+    expect(markets.filter((m) => /^Rynek \d+$/.test(m.name))).toEqual([]);
+    expect(markets.find((m) => m.bookmakerMarketId === "167" && m.paramValue === "4.5")?.name).toBe("1. Połowa - Suma rzutów rożnych");
+    const x12 = markets.find((m) => m.bookmakerMarketId === "1")!;
+    expect([x12.name, x12.selections.map((s) => [s.name, s.odds])]).toEqual(["1x2", [["Everton FC", 1.66], ["Remis", 3.92], ["Coventry City", 4.91]]]);
+    expect(markets.find((m) => m.bookmakerMarketId === "10")!.selections.map((s) => s.name))
+      .toEqual(["Everton FC lub remis", "Everton FC lub Coventry City", "remis lub Coventry City"]);
+  });
+});
+
+describe("pzbuk describeCaptureFailure", () => {
+  const WS = "wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl";
+  it("names the sockets when none matched", () => {
+    expect(describeCaptureFailure(emptyDiagnostics())).toBe('no socket matched "sportsbook-api/ws" (sockets seen: none)');
+  });
+  it("names the decode error when the socket matched", () => {
+    expect(describeCaptureFailure({ ...emptyDiagnostics(), socketUrls: [WS], matchedSockets: 1, framesReceived: 2, invalidFrames: 1,
+      lastInvalidError: "Unexpected non-whitespace character after JSON at position 233949" }))
+      .toBe("socket matched but no INITIAL_STATE decoded (frames: 2, invalid: 1, last error: Unexpected non-whitespace character after JSON at position 233949)");
+  });
+  it("reports INITIAL_STATE without a usable snapshot", () => {
+    expect(describeCaptureFailure({ ...emptyDiagnostics(), socketUrls: [WS], matchedSockets: 1, framesReceived: 3, initialStates: 2, maxEvents: 20 }))
+      .toBe("2 INITIAL_STATE message(s) but no usable snapshot (max events per message: 20, frames: 3)");
+  });
+  it("reports an empty listing", () => {
+    const d = { ...emptyDiagnostics(), socketUrls: [WS], matchedSockets: 1, framesReceived: 2, initialStates: 1, maxEvents: 0 };
+    expect([isEmptyListing(d), isEmptyListing(emptyDiagnostics())]).toEqual([true, false]);
+    expect(describeCaptureFailure(d)).toBe("listing is empty (1 INITIAL_STATE message(s) with 0 events, frames: 2)");
+  });
+  it("names the last server control frame", () => {
+    expect(describeCaptureFailure({ ...emptyDiagnostics(), socketUrls: [WS], matchedSockets: 1, framesReceived: 2,
+      lastControl: { type: "ERROR", message: "Unknown route" } }))
+      .toBe("socket matched but no INITIAL_STATE decoded (frames: 2, invalid: 0, last control: ERROR Unknown route)");
   });
 });

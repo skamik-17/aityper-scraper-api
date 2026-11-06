@@ -12,9 +12,21 @@
  * The legacy RSocket frame shape (binary header followed by a bare
  * `[{type:"INITIAL_STATE",…}]` array) is still decoded in case the matched
  * socket serves it again.
+ *
+ * An event page subscribes one stream per market group; `SingleEventAccumulator`
+ * merges their INITIAL_STATE payloads into one snapshot. `CaptureDiagnostics`
+ * records what a capture saw, and `describeCaptureFailure` names why it
+ * produced nothing.
  */
 
-import type { PZBukInitialState, PZBukWebSocketMessage } from "./types.js";
+import { WEBSOCKET_URL_PATTERN } from "./constants.js";
+import type {
+  PZBukEvent,
+  PZBukInitialState,
+  PZBukMarket,
+  PZBukSelection,
+  PZBukWebSocketMessage,
+} from "./types.js";
 
 export type DecodedFrame =
   | { kind: "setup"; chunkSize: number }
@@ -139,4 +151,150 @@ export class FrameAssembler {
     this.chunks = [];
     return text;
   }
+}
+
+export interface AccumulatorStats {
+  selections: number;
+  markets: number;
+  marketGroupsDeclared: number[];
+  marketGroupsSeen: number[];
+}
+
+const ascending = (a: number, b: number) => a - b;
+
+/** Group ids every market of a payload is listed under (the payload's subscribed group). */
+function commonGroupIds(markets: PZBukMarket[]): number[] {
+  const lists = markets.map((m) => {
+    const ids = m.marketType?.marketGroupIds;
+    return Array.isArray(ids) ? ids : [];
+  });
+  return lists.reduce((common, ids) => common.filter((id) => ids.includes(id)));
+}
+
+/**
+ * Merges the single-event INITIAL_STATE payloads of one event page into one
+ * snapshot. The page opens one stream per market group, and each stream
+ * delivers only that group's markets, so the full offer is their union.
+ * Multi-event payloads (the listing widget on the event page) are ignored.
+ */
+export class SingleEventAccumulator {
+  private event: PZBukEvent | null = null;
+  private readonly markets = new Map<string, PZBukMarket>();
+  private readonly selections = new Map<string, PZBukSelection>();
+  private readonly seenGroups = new Set<number>();
+
+  /** When set, single-event payloads for any other event are rejected. */
+  constructor(private readonly expectedEventId?: number | string) {}
+
+  /** Returns true only for a merged single-event payload. */
+  add(state: PZBukInitialState): boolean {
+    if (state.events.length !== 1) return false;
+    const [event] = state.events;
+    if (this.expectedEventId !== undefined && String(event.id) !== String(this.expectedEventId)) return false;
+    this.event ??= event;
+    for (const market of state.markets) this.markets.set(market.id, market);
+    for (const selection of state.selections) {
+      // The latest state of a selection wins: a later non-Active copy removes
+      // the earlier Active price instead of leaving it stale in the snapshot.
+      if (selection.status === "Active") this.selections.set(selection.id, selection);
+      else this.selections.delete(selection.id);
+    }
+    if (state.markets.length > 0) {
+      for (const id of commonGroupIds(state.markets)) this.seenGroups.add(id);
+    }
+    return true;
+  }
+
+  /** The merged state, or null until at least one Active selection is merged. */
+  snapshot(): PZBukInitialState | null {
+    if (this.event === null || this.selections.size === 0) return null;
+    return {
+      events: [this.event],
+      markets: [...this.markets.values()],
+      selections: [...this.selections.values()],
+    };
+  }
+
+  stats(): AccumulatorStats {
+    return {
+      selections: this.selections.size,
+      markets: this.markets.size,
+      marketGroupsDeclared: Object.keys(this.event?.marketGroups ?? {}).map(Number).sort(ascending),
+      marketGroupsSeen: [...this.seenGroups].sort(ascending),
+    };
+  }
+
+  /** Market-group id whose name matches a header text (trimmed, case-insensitive). */
+  groupIdForHeader(headerText: string): number | null {
+    const wanted = headerText.trim().toLowerCase();
+    for (const [id, group] of Object.entries(this.event?.marketGroups ?? {})) {
+      if (typeof group?.name === "string" && group.name.trim().toLowerCase() === wanted) return Number(id);
+    }
+    return null;
+  }
+}
+
+/** What one capture saw on the wire, for logs and failure messages. */
+export interface CaptureDiagnostics {
+  socketUrls: string[];
+  matchedSockets: number;
+  framesReceived: number;
+  invalidFrames: number;
+  lastInvalidError: string | null;
+  /** FrameAssembler.push calls that returned null (chunk continuations). */
+  chunkedFrames: number;
+  /** Byte length of the largest complete (reassembled) frame. */
+  maxFrameBytes: number;
+  initialStates: number;
+  /** Max events.length over the decoded INITIAL_STATE payloads. */
+  maxEvents: number;
+  /** Last received non-SETUP control frame. */
+  lastControl: { type: string; message: string | null } | null;
+  groups?: { declared: number[]; seen: number[] };
+}
+
+export function emptyDiagnostics(): CaptureDiagnostics {
+  return {
+    socketUrls: [],
+    matchedSockets: 0,
+    framesReceived: 0,
+    invalidFrames: 0,
+    lastInvalidError: null,
+    chunkedFrames: 0,
+    maxFrameBytes: 0,
+    initialStates: 0,
+    maxEvents: 0,
+    lastControl: null,
+  };
+}
+
+/** The socket answered with INITIAL_STATE, but no message carried any event. */
+export function isEmptyListing(d: CaptureDiagnostics): boolean {
+  return d.initialStates > 0 && d.maxEvents === 0;
+}
+
+function lastFrameDetails(d: CaptureDiagnostics): string {
+  let details = "";
+  if (d.lastInvalidError) details += `, last error: ${d.lastInvalidError}`;
+  if (d.lastControl) {
+    details += `, last control: ${d.lastControl.type}`;
+    if (d.lastControl.message) details += ` ${d.lastControl.message}`;
+  }
+  return details;
+}
+
+/** One-line cause of a capture that produced no usable snapshot. */
+export function describeCaptureFailure(d: CaptureDiagnostics): string {
+  if (d.matchedSockets === 0) {
+    const seen = d.socketUrls.length > 0 ? d.socketUrls.join(", ") : "none";
+    return `no socket matched "${WEBSOCKET_URL_PATTERN}" (sockets seen: ${seen})`;
+  }
+  const details = lastFrameDetails(d);
+  if (d.initialStates === 0) {
+    return `socket matched but no INITIAL_STATE decoded (frames: ${d.framesReceived}, invalid: ${d.invalidFrames}${details})`;
+  }
+  if (isEmptyListing(d)) {
+    return `listing is empty (${d.initialStates} INITIAL_STATE message(s) with 0 events, frames: ${d.framesReceived}${details})`;
+  }
+  return `${d.initialStates} INITIAL_STATE message(s) but no usable snapshot (max events per message: ${d.maxEvents}, frames: ${d.framesReceived}${details})`;
 }

@@ -1,0 +1,3 @@
+# Read-only PostgREST select, 2026-11-06 (local Supabase http://127.0.0.1:54321; key from .env, not shown):
+# curl -s "$SUPABASE_URL/rest/v1/market_types?code=eq.MATCH_RESULT_OR_WIN_BY_2&select=id,code,name_pl,view_type,category,selections,has_parameter" -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY"
+[{"id":1325,"code":"MATCH_RESULT_OR_WIN_BY_2","name_pl":"Wynik meczu lub 2 gole przewagi","view_type":"TRIPLE_BUTTONS","category":"WYNIK_MECZU","selections":["HOME","DRAW","AWAY"],"has_parameter":false}]

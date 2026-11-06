@@ -1,0 +1,28 @@
+$ cd /tmp/claude-1000/-home-skamik-Documents-repositories-personal-aityper/3627e2c8-f787-4f71-8a6a-348993c930fc/scratchpad/recovery/observability && SUPABASE_URL=http://127.0.0.1:59999 SUPABASE_SERVICE_KEY=dummy timeout 240 <repo>/node_modules/.bin/tsx repro-db-down.mts forbet
+(run 2026-11-06T16:27:40Z on CURRENT code; closed port => zero DB writes; output trimmed: forbet navigation lines 5-464 omitted)
+[ScraperService] Starting scrape for premier-league
+[ScraperService] Starting full offer scrape for premier-league
+[Aggregator/FullOffer] Starting run 50a12b0c-89a9-43fe-8173-fc718d1b3bdd for premier-league with 1 bookmakers
+[Aggregator/FullOffer] Starting forbet scraper for premier-league
+...
+[FullOfferRepo] Batch insert error (batch 1): {
+  message: 'TypeError: fetch failed',
+  details: 'TypeError: fetch failed\n' +
+    '\n' +
+    'Caused by: Error: connect ECONNREFUSED 127.0.0.1:59999 (ECONNREFUSED)\n' +
+    'Error: connect ECONNREFUSED 127.0.0.1:59999\n' +
+    '    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)\n' +
+    '    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)',
+  hint: '',
+  code: ''
+}
+... (batches 2-12 identical)
+[Aggregator/FullOffer] forbet completed: 20 matches, 0 markets saved
+[Aggregator/FullOffer] forbet had 1 errors
+[Aggregator/FullOffer] Run 50a12b0c-89a9-43fe-8173-fc718d1b3bdd completed in 7969ms: 1 success, 0 errors, 20 total matches, 5995 total markets
+[ScraperService] Full offer completed: 1 bookmakers success, 20 matches, 5995 markets
+[BrowserPool] Closing all 1 browsers
+[BrowserPool] All browsers closed
+[ScraperService] Browser pool closed
+SCRAPE_RESULT {"runId":"50a12b0c-89a9-43fe-8173-fc718d1b3bdd","league":"premier-league","startedAt":"2026-11-06T16:27:40.830Z","completedAt":"2026-11-06T16:27:48.826Z","duration":7996,"successCount":1,"errorCount":0,"uniqueMatches":20,"marketsScraped":5995,"errors":[]}
+HEALTH [{"scraper":"forbet","successRate":100,"avgDuration":7171,"status":"healthy","lastError":null}]

@@ -1,0 +1,124 @@
+# STS log excerpts, backend.log (ANSI stripped). Run 1 = 15:45Z startup, run 2 = 16:00Z scheduled, run 3 = 17:00Z scheduled (line numbers = cleaned log; any `sed` ANSI-stripped copy of the same log has the same numbers).
+## Run 1 per-match counts
+229:[STS/FullOffer] Found 36 fixtures for premier-league
+459:[STS/FullOffer] Manchester United vs Aston Villa: 434 markets
+1341:[STS/FullOffer] Leeds vs Tottenham: 453 markets
+1852:[STS/FullOffer] Fulham vs Newcastle: 435 markets
+10847:[STS/FullOffer] Arsenal vs Hull City: 467 markets
+28609:[STS/FullOffer] Everton vs Coventry City: 434 markets
+28664:[STS/FullOffer] Nottingham vs Manchester City : 432 markets
+28784:[STS/FullOffer] Sunderland vs Chelsea: 440 markets
+28789:[STS/FullOffer] Crystal Palace  vs Liverpool: 448 markets
+28810:[STS/FullOffer] Brighton vs Brentford: 467 markets
+28823:[STS/FullOffer] Ipswich Town vs Bournemouth: 459 markets
+28826:[STS/FullOffer] Newcastle vs Arsenal: 153 markets
+28831:[STS/FullOffer] Chelsea vs Leeds: 155 markets
+28839:[STS/FullOffer] Liverpool vs Manchester United: 156 markets
+28845:[STS/FullOffer] Tottenham vs Ipswich Town: 154 markets
+28848:[STS/FullOffer] Aston Villa vs Sunderland: 155 markets
+28853:[STS/FullOffer] Hull City vs Brighton: 154 markets
+28858:[STS/FullOffer] Bournemouth vs Nottingham: 153 markets
+28865:[STS/FullOffer] Manchester City  vs Fulham: 154 markets
+28868:[STS/FullOffer] Coventry City vs Crystal Palace : 155 markets
+28873:[STS/FullOffer] Brentford vs Everton: 155 markets
+28940:[STS/FullOffer] Completed: 20 matches, 6013 total markets
+## Run 2 per-match counts
+36530:[STS/FullOffer] Found 36 fixtures for premier-league
+36775:[STS/FullOffer] Manchester United vs Aston Villa: 434 markets
+37570:[STS/FullOffer] Leeds vs Tottenham: 1 markets
+37647:[STS/FullOffer] Fulham vs Newcastle: 435 markets
+63409:[STS/FullOffer] Arsenal vs Hull City: 467 markets
+63475:[STS/FullOffer] Everton vs Coventry City: 434 markets
+63596:[STS/FullOffer] Nottingham vs Manchester City : 1 markets
+63622:[STS/FullOffer] Sunderland vs Chelsea: 440 markets
+63625:[STS/FullOffer] Crystal Palace  vs Liverpool: 448 markets
+63628:[STS/FullOffer] Brighton vs Brentford: 467 markets
+63632:[STS/FullOffer] Ipswich Town vs Bournemouth: 459 markets
+63643:[STS/FullOffer] Newcastle vs Arsenal: 153 markets
+63653:[STS/FullOffer] Chelsea vs Leeds: 155 markets
+63659:[STS/FullOffer] Liverpool vs Manchester United: 156 markets
+63667:[STS/FullOffer] Tottenham vs Ipswich Town: 154 markets
+63677:[STS/FullOffer] Aston Villa vs Sunderland: 155 markets
+63684:[STS/FullOffer] Hull City vs Brighton: 154 markets
+63688:[STS/FullOffer] Bournemouth vs Nottingham: 153 markets
+63693:[STS/FullOffer] Manchester City  vs Fulham: 154 markets
+63697:[STS/FullOffer] Coventry City vs Crystal Palace : 155 markets
+63700:[STS/FullOffer] Brentford vs Everton: 155 markets
+63766:[STS/FullOffer] Completed: 20 matches, 5130 total markets
+## Run 2 navigation for the two 1-market matches
+36778:[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/leeds-tottenham/f2921896
+37569:[STS/Navigation] Captured match data (fixture: f2921896, initial: 3227268 bytes)
+63476:[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/nottingham-manchester-city/f2921900
+63595:[STS/Navigation] Captured match data (fixture: f2921900, initial: 3230601 bytes)
+## Run 2 stale-row prune that wiped the previous good STS snapshot
+65453:[FullOfferRepo] Pruned 453 stale row(s) for sts/premier-league:leeds united:tottenham hotspur
+65457:[FullOfferRepo] Pruned 432 stale row(s) for sts/premier-league:nottingham forest:manchester city
+## Run 2 skipped non-PL fixtures (navigated, then dropped)
+63704:[STS/FullOffer] Skipping Quorn FC vs Alfreton Town: Teams not in premier-league whitelist
+63709:[STS/FullOffer] Skipping Avro FC vs Warrington Town: Teams not in premier-league whitelist
+63712:[STS/FullOffer] Skipping Lancaster City vs Cleethorpes Town: Teams not in premier-league whitelist
+63715:[STS/FullOffer] Skipping Hyde United vs Redcar Athletic: Teams not in premier-league whitelist
+63718:[STS/FullOffer] Skipping AFC Emley vs Whitby Town: Teams not in premier-league whitelist
+63721:[STS/FullOffer] Skipping Stockton Town vs Curzon Ashton: Teams not in premier-league whitelist
+63725:[STS/FullOffer] Skipping Warrington Rylands vs Gainsborough Trinity: Teams not in premier-league whitelist
+63731:[STS/FullOffer] Skipping Leek Town vs Ilkeston Town: Teams not in premier-league whitelist
+63739:[STS/FullOffer] Skipping Bamber Bridge vs Bury FC: Teams not in premier-league whitelist
+63742:[STS/FullOffer] Skipping Workington AFC vs Ashton United: Teams not in premier-league whitelist
+63745:[STS/FullOffer] Skipping Brentford U21 vs Wolverhampton U21: Youth team match
+63748:[STS/FullOffer] Skipping Stoke City U21 vs Fulham U21: Youth team match
+63752:[STS/FullOffer] Skipping Nottingham U21 vs Leicester City U21: Youth team match
+63756:[STS/FullOffer] Skipping Sunderland U21 vs Blackburn Rovers U21: Youth team match
+63761:[STS/FullOffer] Skipping Reading FC U21 vs Newcastle United U21: Youth team match
+63765:[STS/FullOffer] Skipping Southampton U21 vs Norwich City U21: Youth team match
+## Run 2 unknown STS market ids (count by id)
+    278 2003
+    278 2008
+    278 2146
+      8 2291
+## Run 2 sample unknown names
+[sts] Unknown market: "Crooks Matt - asysty" (id: 2146)
+[sts] Unknown market: "Crooks Matt - celne strzały" (id: 2008)
+[sts] Unknown market: "Crooks Matt - strzały" (id: 2003)
+[sts] Unknown market: "Zawodnik - otrzyma 1. kartkę" (id: 2291)
+## Run 3 (17:00Z scheduled) per-match counts + captures of the 1-market matches (line numbers = cleaned log)
+67222:[Scheduler] Starting scheduled scrape at 2026-11-06T17:00:00.386Z
+67384:[STS/FullOffer] Found 36 fixtures for premier-league
+67589:[STS/FullOffer] Manchester United vs Aston Villa: 1 markets
+68130:[STS/FullOffer] Leeds vs Tottenham: 1 markets
+71169:[STS/FullOffer] Fulham vs Newcastle: 1 markets
+94427:[STS/FullOffer] Arsenal vs Hull City: 467 markets
+94537:[STS/FullOffer] Everton vs Coventry City: 1 markets
+94674:[STS/FullOffer] Nottingham vs Manchester City : 432 markets
+94679:[STS/FullOffer] Sunderland vs Chelsea: 440 markets
+94684:[STS/FullOffer] Crystal Palace  vs Liverpool: 446 markets
+94689:[STS/FullOffer] Brighton vs Brentford: 1 markets
+94694:[STS/FullOffer] Ipswich Town vs Bournemouth: 457 markets
+94697:[STS/FullOffer] Newcastle vs Arsenal: 151 markets
+94719:[STS/FullOffer] Chelsea vs Leeds: 153 markets
+94756:[STS/FullOffer] Liverpool vs Manchester United: 154 markets
+94761:[STS/FullOffer] Tottenham vs Ipswich Town: 152 markets
+94783:[STS/FullOffer] Aston Villa vs Sunderland: 153 markets
+94786:[STS/FullOffer] Hull City vs Brighton: 152 markets
+94794:[STS/FullOffer] Bournemouth vs Nottingham: 151 markets
+94802:[STS/FullOffer] Manchester City  vs Fulham: 152 markets
+94806:[STS/FullOffer] Coventry City vs Crystal Palace : 153 markets
+94816:[STS/FullOffer] Brentford vs Everton: 153 markets
+99780:[STS/FullOffer] Completed: 20 matches, 3771 total markets
+67588:[STS/Navigation] Captured match data (fixture: f2921895, initial: 3256513 bytes)
+68129:[STS/Navigation] Captured match data (fixture: f2921896, initial: 3256998 bytes)
+71168:[STS/Navigation] Captured match data (fixture: f2921897, initial: 3256802 bytes)
+94426:[STS/Navigation] Captured match data (fixture: f2921898, initial: 3259809 bytes)
+94536:[STS/Navigation] Captured match data (fixture: f2921899, initial: 3259809 bytes)
+94685:[STS/Navigation] Navigating to match: https://www.sts.pl/kursy/brighton-brentford/f2921903
+94688:[STS/Navigation] Captured match data (fixture: f2921903, initial: 3260538 bytes)
+## Run 3 prune (replaces run-2 rows; 1-row writes replaced full snapshots, Forest-City healed 1 -> 432)
+100836:[FullOfferRepo] Pruned 434 stale row(s) for sts/premier-league:manchester united:aston villa
+100837:[FullOfferRepo] Pruned 1 stale row(s) for sts/premier-league:leeds united:tottenham hotspur
+100838:[FullOfferRepo] Pruned 435 stale row(s) for sts/premier-league:fulham:newcastle united
+100839:[FullOfferRepo] Pruned 467 stale row(s) for sts/premier-league:arsenal:hull city
+100840:[FullOfferRepo] Pruned 434 stale row(s) for sts/premier-league:everton:coventry city
+100841:[FullOfferRepo] Pruned 1 stale row(s) for sts/premier-league:nottingham forest:manchester city
+100842:[FullOfferRepo] Pruned 440 stale row(s) for sts/premier-league:sunderland:chelsea
+100843:[FullOfferRepo] Pruned 448 stale row(s) for sts/premier-league:crystal palace:liverpool
+100844:[FullOfferRepo] Pruned 467 stale row(s) for sts/premier-league:brighton hove albion:brentford
+100845:[FullOfferRepo] Pruned 459 stale row(s) for sts/premier-league:ipswich town:afc bournemouth

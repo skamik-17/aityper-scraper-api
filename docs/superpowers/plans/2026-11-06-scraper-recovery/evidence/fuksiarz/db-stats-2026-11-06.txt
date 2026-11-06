@@ -1,0 +1,4 @@
+arsenal__hull_city__fuksiarz.json {"rows": 356, "codes": 137, "sel": 1434, "UNKNOWN": 0, "UNK%": 0.0, "OTHERrows": 5, "OTHERsel%": 0.3, "scrapedAt": {"2026-11-06T16:00": 356}, "extIdMissing": 44, "normNameLooksRaw": 53}
+everton__coventry_city__fuksiarz.json {"rows": 515, "codes": 152, "sel": 1752, "UNKNOWN": 0, "UNK%": 0.0, "OTHERrows": 10, "OTHERsel%": 1.9, "scrapedAt": {"2026-11-06T16:00": 515}, "extIdMissing": 44, "normNameLooksRaw": 80}
+leeds_united__tottenham_hotspur__fuksiarz.json {"rows": 476, "codes": 141, "sel": 1720, "UNKNOWN": 0, "UNK%": 0.0, "OTHERrows": 10, "OTHERsel%": 1.5, "scrapedAt": {"2026-11-06T16:00": 476}, "extIdMissing": 48, "normNameLooksRaw": 76}
+manchester_city__fulham__fuksiarz.json {"rows": 223, "codes": 103, "sel": 1007, "UNKNOWN": 0, "UNK%": 0.0, "OTHERrows": 0, "OTHERsel%": 0.0, "scrapedAt": {"2026-11-06T16:00": 223}, "extIdMissing": 31, "normNameLooksRaw": 56}

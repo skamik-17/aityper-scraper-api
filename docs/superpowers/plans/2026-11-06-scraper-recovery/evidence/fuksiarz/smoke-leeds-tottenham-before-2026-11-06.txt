@@ -1,0 +1,66 @@
+# Fuksiarz discovery smoke, Leeds United - Tottenham Hotspur (https://fuksiarz.pl/szczegoly/23464740), CURRENT code, 2026-11-06
+
+## Run A (review, ~17:10Z): --market "głową"
+📊 SUMMARY
+====================================================================================================
+Total markets: 18
+✅ Mapped: 1
+❌ Unmapped/OTHER: 17
+⚠️  With issues: 17
+Strzeli gola głową                       → PLAYER_HEADER_GOAL        PLAYER_DROPDOWN    
+
+❌ UNMAPPED MARKETS:
+   Odda co najmniej 1 celny strzał głową    [E. Ampadu]
+   Odda co najmniej 1 celny strzał głową    [J. Bahoya]
+   Odda co najmniej 1 celny strzał głową    [M. Bard]
+   Odda co najmniej 1 celny strzał głową    [J. Bijol]
+   Odda co najmniej 1 celny strzał głową    [D. Calvert-Lewin]
+   Odda co najmniej 1 celny strzał głową    [N. Elvedi]
+   Odda co najmniej 1 celny strzał głową    [D. James]
+   Odda co najmniej 1 c
+## Run B (17:36:20Z, no --market): SUMMARY header (the rest of the piped output was lost when timeout killed the pipeline; write raw output to a file first)
+📊 SUMMARY
+====================================================================================================
+Total markets: 710
+✅ Mapped: 685
+❌ Unmapped/OTHER: 25
+⚠️  With issues: 38
+
+## Offline cross-check on evidence/fuksiarz/event-leeds-tottenham-2026-11-06.json (same 710 markets), unmapped/OTHER by raw name
+current : 25 = Zakłady specjalne #3/#4/#4.1/#4.2 (1 each), Odda co najmniej 1 celny strzał głową (15), Odda co najmniej 2 celne strzały głową (2), Każda drużyna powyżej 1.5/2.5/3.5/4.5 rzutu rożnego (1 each)
+patched : 4 = Zakłady specjalne #3/#4/#4.1/#4.2 (3 edits of Task 4 applied to a scratch copy of fuksiarz-normalizer.ts)
+
+## Run C (17:40:01Z, no --market, raw output redirected to a file first = the plan's smoke command): complete
+📊 SUMMARY
+====================================================================================================
+Total markets: 710
+✅ Mapped: 685
+❌ Unmapped/OTHER: 25
+⚠️  With issues: 38
+❌ UNMAPPED MARKETS:
+   Zakłady specjalne #3                     [Każda drużyna powyżej 1,5 żółtej kartki]
+   Zakłady specjalne #4                     [Każda drużyna powyżej 1,5 rzutu rożnego w każdej połowie]
+   Zakłady specjalne #4.1                   [Leeds powyżej 1,5 rzutu rożnego w każdej połowie]
+   Zakłady specjalne #4.2                   [Tottenham powyżej 1,5 rzutu rożnego w każdej połowie]
+   Odda co najmniej 1 celny strzał głową    [E. Ampadu]
+   Odda co najmniej 1 celny strzał głową    [J. Bahoya]
+   Odda co najmniej 1 celny strzał głową    [M. Bard]
+   Odda co najmniej 1 celny strzał głową    [J. Bijol]
+   Odda co najmniej 1 celny strzał głową    [D. Calvert-Lewin]
+   Odda co najmniej 1 celny strzał głową    [N. Elvedi]
+   Odda co najmniej 1 celny strzał głową    [D. James]
+   Odda co najmniej 1 celny strzał głową    [J. Justin]
+   Odda co najmniej 1 celny strzał głową    [S. Longstaff]
+   Odda co najmniej 1 celny strzał głową    [T. Muharemovic]
+   Odda co najmniej 1 celny strzał głową    [L. Nmecha]
+   Odda co najmniej 1 celny strzał głową    [N. Okafor]
+   Odda co najmniej 1 celny strzał głową    [A. Stach]
+   Odda co najmniej 1 celny strzał głową    [A. Tanaka]
+   Odda co najmniej 1 celny strzał głową    [H. Wilson]
+   Odda co najmniej 2 celne strzały głową   [D. Calvert-Lewin]
+   Odda co najmniej 2 celne strzały głową   [L. Nmecha]
+   Każda drużyna powyżej 1.5 rzutu rożnego  [powyżej 1.5]
+   Każda drużyna powyżej 2.5 rzutu rożnego  [powyżej 2.5]
+   Każda drużyna powyżej 3.5 rzutu rożnego  [powyżej 3.5]
+   Każda drużyna powyżej 4.5 rzutu rożnego  [powyżej 4.5]
+grep -cE '^   (Odda co najmniej [12] .*głową|Każda drużyna powyżej)' on the UNMAPPED list -> 21

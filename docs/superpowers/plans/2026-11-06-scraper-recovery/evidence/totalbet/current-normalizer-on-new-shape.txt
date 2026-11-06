@@ -1,0 +1,26 @@
+# CURRENT totalbet-normalizer.ts applied to the new component_lists shape (flattened one raw market per market_uuid), 3 PL events
+markets 1312 OTHER 1225 share 0.934
+codes [('OTHER', 1225), ('TOTAL_GOALS', 81), ('MATCH_WINNER', 3), ('ODD_EVEN_GOALS', 3)]
+UNKNOWN selections 7469 / 8065
+wrong-by-id-collision examples:
+  id 10 'Podwójna szansa - Cały mecz' -> ODD_EVEN_GOALS ODD_EVEN_GOALS matchedBy id
+  id 8 'Strzeli 1 gola - Cały mecz' -> TOTAL_GOALS TOTAL_GOALS matchedBy id
+wrong-by-pattern examples (/suma goli/ -> TOTAL_GOALS):
+   'Dokładna liczba goli' -> TOTAL_GOALS
+   'Suma goli (przedziały)' -> TOTAL_GOALS
+   '<H> – dokładna liczba goli' -> TOTAL_GOALS
+   '<A> - dokładna liczba goli' -> TOTAL_GOALS
+   'Połowa z większą liczbą goli - <H>' -> TOTAL_GOALS
+   'Połowa z większą liczbą goli - <A>' -> TOTAL_GOALS
+   '1. połowa - Dokładna liczba goli' -> TOTAL_GOALS
+   'Połowa - Wynik + suma goli - 1. Połowa' -> TOTAL_GOALS:1.5
+   'Połowa - Wynik + suma goli - 2. Połowa' -> TOTAL_GOALS:1.5
+   '2. połowa - Dokładna liczba goli' -> TOTAL_GOALS
+   'Suma goli + obie drużyny strzelą' -> TOTAL_GOALS:2.5
+   'Podwójna szansa + suma goli' -> TOTAL_GOALS:1.5
+   'Połowa z największą liczbą goli/punktów' -> TOTAL_GOALS
+   '1. połowa/wynik końcowy + suma goli' -> TOTAL_GOALS:1.5
+   '1. połowa/wynik końcowy + 1. połowa suma goli' -> TOTAL_GOALS:0.5
+   '1. połowa/wynik końcowy + dokładna liczba goli' -> TOTAL_GOALS
+   'Suma goli parzysta/nieparzysta - <H>' -> TOTAL_GOALS
+   'Suma goli parzysta/nieparzysta - <A>' -> TOTAL_GOALS

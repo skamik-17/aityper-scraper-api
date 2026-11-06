@@ -1,0 +1,7 @@
+[BrowserPool] Creating new browser (1/14)
+[Betters/FullOffer] Capturing data for league: premier-league
+[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+[Betters/Navigation] Capture timeout after 8000ms
+[BrowserPool] Browser released (1 available, 1 total)
+[audit-core] scrapeFullOffer(premier-league) failed or empty: No events found from API
+[discovery] No match found

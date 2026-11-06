@@ -1,0 +1,15 @@
+# node_modules/.bin/tsx docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/fortuna/aug-renormalize.mts   (2026-11-06T17:37Z, CURRENT code; input = aityper repo docs/match-audit/.tmp/raw/premier_league_arsenal_coventry_city.json, Fortuna raw captured 2026-08-20)
+aug raw 955 OTHER 320 unknown warnings 318
+00-2n "1.połowa: obie drużyny strzelą gola" -> OTHER
+00-1h "Mecz: Arsenal - wygra do zera" -> OTHER
+00-1o "Mecz: Arsenal - wygra obie połowy" -> OTHER
+00-1r "Mecz: Arsenal - wygra przynajmniej jedną połowę" -> OTHER
+00-2b "Mecz: Arsenal - strzeli gola w obu połowach" -> OTHER
+00-09 "Mecz: wynik/różnica zwycięstwa" -> OTHER
+00-19 "Mecz: suma goli" -> OTHER
+00-16 "Arsenal dokładna liczba goli" -> OTHER
+00-0n "Mecz: Coventry - przedział rzutów rożnych" -> OTHER
+00-30 "Mecz: Arsenal wygra / obie drużyny strzelą gola" -> OTHER
+00-6z absent
+00-hs "SuperSub: Grimes, Matt lub jego zmiennik otrzyma żółtą kart -> OTHER
+00-lq "1.połowa: Tchaouna, Loum liczba goli (OPTA)" -> OTHER

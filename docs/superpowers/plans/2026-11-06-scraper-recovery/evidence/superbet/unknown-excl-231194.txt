@@ -1,0 +1,11 @@
+# UNKNOWN share of selections, offline A/B, bet-builder combos (id 231194) excluded
+# Inputs: out.json written by evidence/lvbet/tools/offline-norm.ts (HEAD 377b47e)
+#   August: aityper/docs/match-audit/.tmp/raw-r13-superbet/premier_league_arsenal_coventry_city.json (Arsenal / Coventry City)
+#   Today : parseAllMarkets(event 14438716) via evidence/lvbet/tools/superbet-parse.ts (Arsenal / Hull City)
+# Command (per out.json):
+#   python3 -I -c "import json;d=json.load(open('out.json'));s=[x for r in d['rows'] if str(r['bmid'])!='231194' for x in r['sels']];print(len(s),sum(x[1]=='UNKNOWN' for x in s),round(100*sum(x[1]=='UNKNOWN' for x in s)/len(s),1))"
+offline-aug: selections unknown pct = 4149 2021 48.7
+offline-now: selections unknown pct = 4145 2143 51.7
+# UNKNOWN selections by id (ids 236222, 238453 only):
+offline-aug: {}
+offline-now: {'236222': 183, '238453': 118}

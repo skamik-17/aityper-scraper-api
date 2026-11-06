@@ -1,0 +1,19 @@
+# python3 -I evidence/etoto/acceptance_check.py on the CURRENT (unfixed) code, run 2026-11-06 ~17:05Z against the 17:00Z scrape (run 3).
+# Expected after Tasks 1-3 while a matchday event carries ids 162/163/168/169/-30727/-30728/-30591: etoto_sideless 0, etoto_shared > 0, etoto_fouls_rows > 0, penalty_awarded_etoto non-empty.
+fixtures 20 orphans 0
+1x2_n 60 max_pct 3.7 mean_pct 1.0 over10 0
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS_ON_TARGET 3.5
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS_ON_TARGET 4.5
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS 10.5
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS 17.5
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_FOULS 11.5
+  SIDELESS premier-league:everton:coventry city TEAM_TOTAL_FOULS 12.5
+etoto_sideless 6 etoto_shared 0 etoto_solo 0 etoto_fouls_rows 0 etoto_fouls_shared 0
+ou25_n 40 max_pct 1.8
+penalty_awarded_etoto 0 []
+unknown_selections 0
+
+# Pre-check (gameType presence), 2026-11-06 17:03Z. Columns: event, eventGames count, team-stat/penalty ids present.
+6224065 Everton - Coventry KO 1793995200000 508 [-30728, -30727, -30591, 162, 163, 168, 169]
+6224070 Leeds - Tottenham KO 1794054600000 485 []
+6224078 Arsenal - Hull City KO 1794063600000 492 []

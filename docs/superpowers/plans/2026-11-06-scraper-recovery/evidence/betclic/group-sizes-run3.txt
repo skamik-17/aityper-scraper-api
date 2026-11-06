@@ -1,0 +1,161 @@
+# Run 3 (scheduled 2026-11-06T17:00Z; cleaned backend.log lines 67273-94553): [Betclic/Navigation] Group lines + per-match total. Group lines precede the match's 'markets total' line.
+67294: [Betclic/Navigation] Group TOP: 181559 bytes
+67295: [Betclic/Navigation] Group WYNIK: 51110 bytes
+67296: [Betclic/Navigation] Group STRZELCY: 1073915 bytes
+67297: [Betclic/Navigation] Group GOLE: 58919 bytes
+67298: [Betclic/Navigation] Group METODA_GOLA: 181801 bytes
+67299: [Betclic/Navigation] Group HANDICAP: 11502 bytes
+67300: [Betclic/Navigation] Group STATYSTYKI: 441284 bytes
+67307: [Betclic/FullOffer] Everton vs Coventry: 276 markets total
+67330: [Betclic/Navigation] Group TOP: 194129 bytes
+67331: [Betclic/Navigation] Group WYNIK: 50191 bytes
+67332: [Betclic/Navigation] Group STRZELCY: 1269860 bytes
+67333: [Betclic/Navigation] Group GOLE: 59015 bytes
+67334: [Betclic/Navigation] Group METODA_GOLA: 194131 bytes
+67335: [Betclic/Navigation] Group HANDICAP: 11425 bytes
+67336: [Betclic/Navigation] Group STATYSTYKI: 458916 bytes
+67343: [Betclic/FullOffer] Leeds vs Tottenham: 279 markets total
+67386: [Betclic/Navigation] Group TOP: 169451 bytes
+67387: [Betclic/Navigation] Group WYNIK: 50517 bytes
+67388: [Betclic/Navigation] Group STRZELCY: 470841 bytes
+67389: [Betclic/Navigation] Group GOLE: 59461 bytes
+67390: [Betclic/Navigation] Group METODA_GOLA: 169451 bytes
+67391: [Betclic/Navigation] Group HANDICAP: 11701 bytes
+67392: [Betclic/Navigation] Group STATYSTYKI: 415639 bytes
+67399: [Betclic/FullOffer] Fulham vs Newcastle: 254 markets total
+67427: [Betclic/Navigation] Group TOP: 197816 bytes
+67428: [Betclic/Navigation] Group WYNIK: 49250 bytes
+67429: [Betclic/Navigation] Group STRZELCY: 1295527 bytes
+67430: [Betclic/Navigation] Group GOLE: 57402 bytes
+67431: [Betclic/Navigation] Group METODA_GOLA: 197816 bytes
+67432: [Betclic/Navigation] Group HANDICAP: 11926 bytes
+67433: [Betclic/Navigation] Group STATYSTYKI: 505557 bytes
+67440: [Betclic/FullOffer] Arsenal vs Hull: 265 markets total
+67487: [Betclic/Navigation] Group TOP: 173326 bytes
+67488: [Betclic/Navigation] Group WYNIK: 56360 bytes
+67489: [Betclic/Navigation] Group STRZELCY: 1115261 bytes
+67490: [Betclic/Navigation] Group GOLE: 60412 bytes
+67491: [Betclic/Navigation] Group METODA_GOLA: 173474 bytes
+67492: [Betclic/Navigation] Group HANDICAP: 11580 bytes
+67493: [Betclic/Navigation] Group STATYSTYKI: 203821 bytes
+67500: [Betclic/FullOffer] Nottingham Forest vs Manchester City: 220 markets total
+67538: [Betclic/Navigation] Group TOP: 172940 bytes
+67539: [Betclic/Navigation] Group WYNIK: 51370 bytes
+67540: [Betclic/Navigation] Group STRZELCY: 1032577 bytes
+67541: [Betclic/Navigation] Group GOLE: 59173 bytes
+67542: [Betclic/Navigation] Group METODA_GOLA: 172940 bytes
+67543: [Betclic/Navigation] Group HANDICAP: 11618 bytes
+67544: [Betclic/Navigation] Group STATYSTYKI: 240422 bytes
+67551: [Betclic/FullOffer] Sunderland vs Chelsea: 218 markets total
+67593: [Betclic/Navigation] Group TOP: 172680 bytes
+67594: [Betclic/Navigation] Group WYNIK: 51705 bytes
+67595: [Betclic/Navigation] Group STRZELCY: 1075658 bytes
+67596: [Betclic/Navigation] Group GOLE: 59484 bytes
+67597: [Betclic/Navigation] Group METODA_GOLA: 172682 bytes
+67598: [Betclic/Navigation] Group HANDICAP: 11750 bytes
+67599: [Betclic/Navigation] Group STATYSTYKI: 204684 bytes
+67606: [Betclic/FullOffer] Ipswich vs Bournemouth: 218 markets total
+67651: [Betclic/Navigation] Group TOP: 179823 bytes
+67652: [Betclic/Navigation] Group WYNIK: 54147 bytes
+67653: [Betclic/Navigation] Group STRZELCY: 1062466 bytes
+67654: [Betclic/Navigation] Group GOLE: 60220 bytes
+67655: [Betclic/Navigation] Group METODA_GOLA: 179823 bytes
+67656: [Betclic/Navigation] Group HANDICAP: 12027 bytes
+67657: [Betclic/Navigation] Group STATYSTYKI: 264421 bytes
+67664: [Betclic/FullOffer] Crystal Palace vs Liverpool: 220 markets total
+68094: [Betclic/Navigation] Group TOP: 195677 bytes
+68095: [Betclic/Navigation] Group WYNIK: 51424 bytes
+68096: [Betclic/Navigation] Group STRZELCY: 458148 bytes
+68097: [Betclic/Navigation] Group GOLE: 59732 bytes
+68098: [Betclic/Navigation] Group METODA_GOLA: 195677 bytes
+68099: [Betclic/Navigation] Group HANDICAP: 11718 bytes
+68100: [Betclic/Navigation] Group STATYSTYKI: 244361 bytes
+68107: [Betclic/FullOffer] Brighton vs Brentford: 196 markets total
+68139: [Betclic/Navigation] Group TOP: 173029 bytes
+68140: [Betclic/Navigation] Group WYNIK: 54993 bytes
+68141: [Betclic/Navigation] Group STRZELCY: 149811 bytes
+68142: [Betclic/Navigation] Group GOLE: 60958 bytes
+68143: [Betclic/Navigation] Group METODA_GOLA: 173029 bytes
+68144: [Betclic/Navigation] Group HANDICAP: 12171 bytes
+68145: [Betclic/Navigation] Group STATYSTYKI: 215440 bytes
+68152: [Betclic/FullOffer] Manchester United vs Aston Villa: 196 markets total
+68432: [Betclic/Navigation] Group TOP: 20307 bytes
+68433: [Betclic/Navigation] Group WYNIK: 49347 bytes
+68434: [Betclic/Navigation] Group STRZELCY: 20307 bytes
+68435: [Betclic/Navigation] Group GOLE: 49610 bytes
+68436: [Betclic/Navigation] Group METODA_GOLA: 20307 bytes
+68437: [Betclic/Navigation] Group HANDICAP: 8304 bytes
+68438: [Betclic/Navigation] Group STATYSTYKI: 20307 bytes
+68445: [Betclic/FullOffer] Manchester City vs Fulham: 110 markets total
+68473: [Betclic/Navigation] Group TOP: 15095 bytes
+68474: [Betclic/Navigation] Group WYNIK: 49739 bytes
+68475: [Betclic/Navigation] Group STRZELCY: 15095 bytes
+68476: [Betclic/Navigation] Group GOLE: 49376 bytes
+68477: [Betclic/Navigation] Group METODA_GOLA: 15095 bytes
+68478: [Betclic/Navigation] Group HANDICAP: 8306 bytes
+68479: [Betclic/Navigation] Group STATYSTYKI: 15095 bytes
+68486: [Betclic/FullOffer] Aston Villa vs Sunderland: 112 markets total
+71153: [Betclic/Navigation] Group TOP: 15393 bytes
+71154: [Betclic/Navigation] Group WYNIK: 24250 bytes
+71155: [Betclic/Navigation] Group STRZELCY: 15393 bytes
+71156: [Betclic/Navigation] Group GOLE: 49861 bytes
+71157: [Betclic/Navigation] Group METODA_GOLA: 15393 bytes
+71158: [Betclic/Navigation] Group HANDICAP: 8360 bytes
+71159: [Betclic/Navigation] Group STATYSTYKI: 15393 bytes
+71166: [Betclic/FullOffer] Bournemouth vs Nottingham Forest: 80 markets total
+79843: [Betclic/Navigation] Group TOP: 15344 bytes
+79844: [Betclic/Navigation] Group WYNIK: 49457 bytes
+79845: [Betclic/Navigation] Group STRZELCY: 15344 bytes
+79846: [Betclic/Navigation] Group GOLE: 49688 bytes
+79847: [Betclic/Navigation] Group METODA_GOLA: 15344 bytes
+79848: [Betclic/Navigation] Group HANDICAP: 8314 bytes
+79849: [Betclic/Navigation] Group STATYSTYKI: 15344 bytes
+79856: [Betclic/FullOffer] Coventry vs Crystal Palace: 111 markets total
+79896: [Betclic/Navigation] Group TOP: 14864 bytes
+79897: [Betclic/Navigation] Group WYNIK: 47968 bytes
+79898: [Betclic/Navigation] Group STRZELCY: 14864 bytes
+79899: [Betclic/Navigation] Group GOLE: 48430 bytes
+79900: [Betclic/Navigation] Group METODA_GOLA: 14864 bytes
+79901: [Betclic/Navigation] Group HANDICAP: 8264 bytes
+79902: [Betclic/Navigation] Group STATYSTYKI: 14864 bytes
+79909: [Betclic/FullOffer] Tottenham vs Ipswich: 110 markets total
+94428: [Betclic/Navigation] Group TOP: 17527 bytes
+94429: [Betclic/Navigation] Group WYNIK: 46982 bytes
+94430: [Betclic/Navigation] Group STRZELCY: 17527 bytes
+94431: [Betclic/Navigation] Group GOLE: 48769 bytes
+94432: [Betclic/Navigation] Group METODA_GOLA: 17527 bytes
+94433: [Betclic/Navigation] Group HANDICAP: 8231 bytes
+94434: [Betclic/Navigation] Group STATYSTYKI: 17527 bytes
+94441: [Betclic/FullOffer] Chelsea vs Leeds: 112 markets total
+94476: [Betclic/Navigation] Group TOP: 19750 bytes
+94477: [Betclic/Navigation] Group WYNIK: 48221 bytes
+94478: [Betclic/Navigation] Group STRZELCY: 19750 bytes
+94479: [Betclic/Navigation] Group GOLE: 48314 bytes
+94480: [Betclic/Navigation] Group METODA_GOLA: 19750 bytes
+94481: [Betclic/Navigation] Group HANDICAP: 8264 bytes
+94482: [Betclic/Navigation] Group STATYSTYKI: 19750 bytes
+94489: [Betclic/FullOffer] Newcastle vs Arsenal: 111 markets total
+94496: [Betclic/Navigation] Group TOP: 14619 bytes
+94497: [Betclic/Navigation] Group WYNIK: 46888 bytes
+94498: [Betclic/Navigation] Group STRZELCY: 14619 bytes
+94499: [Betclic/Navigation] Group GOLE: 48052 bytes
+94500: [Betclic/Navigation] Group METODA_GOLA: 14619 bytes
+94501: [Betclic/Navigation] Group HANDICAP: 8230 bytes
+94502: [Betclic/Navigation] Group STATYSTYKI: 14619 bytes
+94509: [Betclic/FullOffer] Hull vs Brighton: 111 markets total
+94516: [Betclic/Navigation] Group TOP: 18388 bytes
+94517: [Betclic/Navigation] Group WYNIK: 50658 bytes
+94518: [Betclic/Navigation] Group STRZELCY: 18388 bytes
+94519: [Betclic/Navigation] Group GOLE: 49829 bytes
+94520: [Betclic/Navigation] Group METODA_GOLA: 18388 bytes
+94521: [Betclic/Navigation] Group HANDICAP: 8338 bytes
+94522: [Betclic/Navigation] Group STATYSTYKI: 18388 bytes
+94529: [Betclic/FullOffer] Liverpool vs Manchester United: 111 markets total
+94539: [Betclic/Navigation] Group TOP: 14860 bytes
+94540: [Betclic/Navigation] Group WYNIK: 47709 bytes
+94541: [Betclic/Navigation] Group STRZELCY: 14860 bytes
+94542: [Betclic/Navigation] Group GOLE: 49041 bytes
+94543: [Betclic/Navigation] Group METODA_GOLA: 14860 bytes
+94544: [Betclic/Navigation] Group HANDICAP: 8262 bytes
+94545: [Betclic/Navigation] Group STATYSTYKI: 14860 bytes
+94552: [Betclic/FullOffer] Brentford vs Everton: 110 markets total

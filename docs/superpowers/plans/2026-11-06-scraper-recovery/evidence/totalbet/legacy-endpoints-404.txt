@@ -1,0 +1,4 @@
+# Legacy numeric endpoints, re-checked 2026-11-06 (curl -A 'Mozilla/5.0')
+404 text/html; charset=utf-8 60649B  https://totalbet.pl/rest/market/categories/multi/7124/events
+404 text/html; charset=utf-8 60649B  https://totalbet.pl/rest/market/events/1
+404 text/html; charset=utf-8 60649B  https://totalbet.pl/zaklady-sportowe/Pilka-nozna/7124/1

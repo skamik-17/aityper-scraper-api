@@ -1,0 +1,510 @@
+   1823 236222	Zawodnik - liczba odbiorów
+   1778 236216	Zawodnik - liczba popełnionych fauli
+   1664 238449	Zawodnik - liczba fauli na zawodniku
+   1218 236220	Zawodnik - liczba celnych strzałów
+   1177 238453	Zawodnik - liczba odbiorów na zawodniku
+   1012 238485	Zawodnik - liczba strzałów spoza pola karnego
+   1012 238477	Zawodnik - liczba strzałów prawą nogą
+    965 238473	Zawodnik - liczba strzałów lewą nogą
+    781 238461	Zawodnik - liczba celnych strzałów prawą nogą
+    685 238457	Zawodnik - liczba celnych strzałów lewą nogą
+    672 239621	Zawodnik - liczba asyst
+    647 238469	Zawodnik - liczba celnych strzałów spoza pola karnego
+     68 200685	Każda z drużyn powyżej X rzutów rożnych
+     36 201590	Liczba strzałów
+     30 239159	Którykolwiek z zawodników odda powyżej X strzałów
+     30 239157	Którykolwiek z zawodników odda powyżej X celnych strzałów
+     26 239160	Którykolwiek z zawodników powyżej X odbiorów
+     23 239161	Którykolwiek z zawodników popełni powyżej X fauli
+     20 568	1.połowa - dokładna liczba goli
+     20 541	Dokładna liczba goli
+     20 239156	Którykolwiek z zawodników strzeli powyżej X goli
+     20 238108	1. połowa - każda z drużyn powyżej X obronionych strzałów przez bramkarza
+     20 232510	Remis w obu połowach
+     20 231389	1.Połowa - liczba goli & liczba goli w meczu
+     20 201520	1.połowa liczba goli lub 2.połowa liczba goli
+     20 201505	1.połowa liczba goli & 2.połowa liczba goli
+     17 201666	Każda z drużyn powyżej X odbiorów
+     16 230937	Każda drużyna powyżej X wybić od bramki
+     10 879	1.połowa - wykona 1. rzut rożny
+     10 737	1. gol od 5:00 do 9:59 minuty
+     10 737	1. gol od 0:00 do 4:59 minuty
+     10 722	1. gol od 10:00 do 19:59 minuty
+     10 722	1. gol od 0:00 do 9:59 minuty
+     10 239804	Faul od 1:00 do 1:59 minuty
+     10 239804	Faul od 0:00 do 0:59 minuty
+     10 239158	Którykolwiek z zawodników powyżej X spalonych
+      8 1011	1.połowa - dokładna liczba kartek
+      6 240122	2. połowa - liczba spalonych
+      6 240117	2. połowa - liczba rzutów z autu
+      6 240102	2. połowa - liczba fauli
+      6 240100	2. połowa - liczba strzałów - handicap
+      6 240097	2. połowa - liczba strzałów
+      6 240096	2. połowa - najwięcej strzałów
+      6 240092	2. połowa - liczba celnych strzałów
+      6 239805	Wybicie od bramki od 1:00 do 1:59 minuty
+      6 239805	Wybicie od bramki od 0:00 do 0:59 minuty
+      4 692	Dokładna liczba kartek
+      2 239807	Spalony od 1:00 do 1:59 minuty
+      2 239807	Spalony od 0:00 do 0:59 minuty
+      1 569	1.połowa - Tottenham - dokładna liczba goli
+      1 569	1.połowa - Sunderland - dokładna liczba goli
+      1 569	1.połowa - Nottingham Forest - dokładna liczba goli
+      1 569	1.połowa - Newcastle - dokładna liczba goli
+      1 569	1.połowa - Manchester United - dokładna liczba goli
+      1 569	1.połowa - Manchester City - dokładna liczba goli
+      1 569	1.połowa - Liverpool - dokładna liczba goli
+      1 569	1.połowa - Leeds United - dokładna liczba goli
+      1 569	1.połowa - Ipswich - dokładna liczba goli
+      1 569	1.połowa - Hull City - dokładna liczba goli
+      1 569	1.połowa - Fulham - dokładna liczba goli
+      1 569	1.połowa - Everton - dokładna liczba goli
+      1 569	1.połowa - Crystal Palace - dokładna liczba goli
+      1 569	1.połowa - Coventry City - dokładna liczba goli
+      1 569	1.połowa - Chelsea - dokładna liczba goli
+      1 569	1.połowa - Brighton - dokładna liczba goli
+      1 569	1.połowa - Brentford - dokładna liczba goli
+      1 569	1.połowa - Bournemouth - dokładna liczba goli
+      1 569	1.połowa - Aston Villa - dokładna liczba goli
+      1 569	1.połowa - Arsenal - dokładna liczba goli
+      1 545	Tottenham - dokładna liczba goli
+      1 545	Sunderland - dokładna liczba goli
+      1 545	Nottingham Forest - dokładna liczba goli
+      1 545	Newcastle - dokładna liczba goli
+      1 545	Manchester United - dokładna liczba goli
+      1 545	Manchester City - dokładna liczba goli
+      1 545	Liverpool - dokładna liczba goli
+      1 545	Leeds United - dokładna liczba goli
+      1 545	Ipswich - dokładna liczba goli
+      1 545	Hull City - dokładna liczba goli
+      1 545	Fulham - dokładna liczba goli
+      1 545	Everton - dokładna liczba goli
+      1 545	Crystal Palace - dokładna liczba goli
+      1 545	Coventry City - dokładna liczba goli
+      1 545	Chelsea - dokładna liczba goli
+      1 545	Brighton - dokładna liczba goli
+      1 545	Brentford - dokładna liczba goli
+      1 545	Bournemouth - dokładna liczba goli
+      1 545	Aston Villa - dokładna liczba goli
+      1 545	Arsenal - dokładna liczba goli
+      1 540	Tottenham - dokładna liczba goli
+      1 540	Sunderland - dokładna liczba goli
+      1 540	Nottingham Forest - dokładna liczba goli
+      1 540	Newcastle - dokładna liczba goli
+      1 540	Manchester United - dokładna liczba goli
+      1 540	Manchester City - dokładna liczba goli
+      1 540	Liverpool - dokładna liczba goli
+      1 540	Leeds United - dokładna liczba goli
+      1 540	Ipswich - dokładna liczba goli
+      1 540	Hull City - dokładna liczba goli
+      1 540	Fulham - dokładna liczba goli
+      1 540	Everton - dokładna liczba goli
+      1 540	Crystal Palace - dokładna liczba goli
+      1 540	Coventry City - dokładna liczba goli
+      1 540	Chelsea - dokładna liczba goli
+      1 540	Brighton - dokładna liczba goli
+      1 540	Brentford - dokładna liczba goli
+      1 540	Bournemouth - dokładna liczba goli
+      1 540	Aston Villa - dokładna liczba goli
+      1 540	Arsenal - dokładna liczba goli
+      1 2530	Tottenham strzeli gola
+      1 2530	Sunderland strzeli gola
+      1 2530	Nottingham Forest strzeli gola
+      1 2530	Newcastle strzeli gola
+      1 2530	Manchester United strzeli gola
+      1 2530	Manchester City strzeli gola
+      1 2530	Liverpool strzeli gola
+      1 2530	Leeds United strzeli gola
+      1 2530	Ipswich strzeli gola
+      1 2530	Hull City strzeli gola
+      1 2530	Fulham strzeli gola
+      1 2530	Everton strzeli gola
+      1 2530	Crystal Palace strzeli gola
+      1 2530	Coventry City strzeli gola
+      1 2530	Chelsea strzeli gola
+      1 2530	Brighton strzeli gola
+      1 2530	Brentford strzeli gola
+      1 2530	Bournemouth strzeli gola
+      1 2530	Aston Villa strzeli gola
+      1 2530	Arsenal strzeli gola
+      1 2528	Tottenham strzeli gola
+      1 2528	Sunderland strzeli gola
+      1 2528	Nottingham Forest strzeli gola
+      1 2528	Newcastle strzeli gola
+      1 2528	Manchester United strzeli gola
+      1 2528	Manchester City strzeli gola
+      1 2528	Liverpool strzeli gola
+      1 2528	Leeds United strzeli gola
+      1 2528	Ipswich strzeli gola
+      1 2528	Hull City strzeli gola
+      1 2528	Fulham strzeli gola
+      1 2528	Everton strzeli gola
+      1 2528	Crystal Palace strzeli gola
+      1 2528	Coventry City strzeli gola
+      1 2528	Chelsea strzeli gola
+      1 2528	Brighton strzeli gola
+      1 2528	Brentford strzeli gola
+      1 2528	Bournemouth strzeli gola
+      1 2528	Aston Villa strzeli gola
+      1 2528	Arsenal strzeli gola
+      1 240124	2. połowa - Tottenham liczba spalonych
+      1 240124	2. połowa - Manchester City liczba spalonych
+      1 240124	2. połowa - Liverpool liczba spalonych
+      1 240124	2. połowa - Hull City liczba spalonych
+      1 240124	2. połowa - Chelsea liczba spalonych
+      1 240124	2. połowa - Aston Villa liczba spalonych
+      1 240123	2. połowa - Sunderland liczba spalonych
+      1 240123	2. połowa - Nottingham Forest liczba spalonych
+      1 240123	2. połowa - Manchester United liczba spalonych
+      1 240123	2. połowa - Leeds United liczba spalonych
+      1 240123	2. połowa - Crystal Palace liczba spalonych
+      1 240123	2. połowa - Arsenal liczba spalonych
+      1 240119	2. połowa - Tottenham liczba rzutów z autu
+      1 240119	2. połowa - Manchester City liczba rzutów z autu
+      1 240119	2. połowa - Liverpool liczba rzutów z autu
+      1 240119	2. połowa - Hull City liczba rzutów z autu
+      1 240119	2. połowa - Chelsea liczba rzutów z autu
+      1 240119	2. połowa - Aston Villa liczba rzutów z autu
+      1 240118	2. połowa - Sunderland liczba rzutów z autu
+      1 240118	2. połowa - Nottingham Forest liczba rzutów z autu
+      1 240118	2. połowa - Manchester United liczba rzutów z autu
+      1 240118	2. połowa - Leeds United liczba rzutów z autu
+      1 240118	2. połowa - Crystal Palace liczba rzutów z autu
+      1 240118	2. połowa - Arsenal liczba rzutów z autu
+      1 240104	2. połowa - Tottenham liczba fauli
+      1 240104	2. połowa - Manchester City liczba fauli
+      1 240104	2. połowa - Liverpool liczba fauli
+      1 240104	2. połowa - Hull City liczba fauli
+      1 240104	2. połowa - Chelsea liczba fauli
+      1 240104	2. połowa - Aston Villa liczba fauli
+      1 240103	2. połowa - Sunderland liczba fauli
+      1 240103	2. połowa - Nottingham Forest liczba fauli
+      1 240103	2. połowa - Manchester United liczba fauli
+      1 240103	2. połowa - Leeds United liczba fauli
+      1 240103	2. połowa - Crystal Palace liczba fauli
+      1 240103	2. połowa - Arsenal liczba fauli
+      1 240099	2. połowa - Tottenham liczba strzałów
+      1 240099	2. połowa - Manchester City liczba strzałów
+      1 240099	2. połowa - Liverpool liczba strzałów
+      1 240099	2. połowa - Hull City liczba strzałów
+      1 240099	2. połowa - Chelsea liczba strzałów
+      1 240099	2. połowa - Aston Villa liczba strzałów
+      1 240098	2. połowa - Sunderland liczba strzałów
+      1 240098	2. połowa - Nottingham Forest liczba strzałów
+      1 240098	2. połowa - Manchester United liczba strzałów
+      1 240098	2. połowa - Leeds United liczba strzałów
+      1 240098	2. połowa - Crystal Palace liczba strzałów
+      1 240098	2. połowa - Arsenal liczba strzałów
+      1 240094	2. połowa - Tottenham liczba celnych strzałów
+      1 240094	2. połowa - Manchester City liczba celnych strzałów
+      1 240094	2. połowa - Liverpool liczba celnych strzałów
+      1 240094	2. połowa - Hull City liczba celnych strzałów
+      1 240094	2. połowa - Chelsea liczba celnych strzałów
+      1 240094	2. połowa - Aston Villa liczba celnych strzałów
+      1 240093	2. połowa - Sunderland liczba celnych strzałów
+      1 240093	2. połowa - Nottingham Forest liczba celnych strzałów
+      1 240093	2. połowa - Manchester United liczba celnych strzałów
+      1 240093	2. połowa - Leeds United liczba celnych strzałów
+      1 240093	2. połowa - Crystal Palace liczba celnych strzałów
+      1 240093	2. połowa - Arsenal liczba celnych strzałów
+      1 239959	Przyznany rzut karny, czerwona kartka & gol samobójczy
+      1 237115	Nicolas Jackson odda strzał w obramowanie bramki
+      1 237115	Matheus Cunha odda strzał w obramowanie bramki
+      1 237115	John McGinn odda strzał w obramowanie bramki
+      1 237115	Johan Manzambi odda strzał w obramowanie bramki
+      1 237115	Bryan Mbeumo odda strzał w obramowanie bramki
+      1 237115	Bruno Fernandes odda strzał w obramowanie bramki
+      1 237115	Amad Diallo odda strzał w obramowanie bramki
+      1 237115	Alysson Edward Franco da Rocha odda strzał w obramowanie bramki
+      1 237094	Którykolwiek zawodnik otrzyma kartkę w doliczonym czasie 2. połowy
+      1 237093	Czerwona kartka lub gol w doliczonym czasie 2. połowy
+      1 237092	Każda drużyna wykona rzut rożny z każdego narożnika boiska
+      1 237090	Zawodnik - strzeli gola z przewrotki
+      1 237089	Zawodnik rezerwowy strzeli gola
+      1 237088	Zawodnik - strzeli gola spoza pola karnego
+      1 237086	Którykolwiek bramkarz zaliczy asystę
+      1 237084	4+ celnych strzałów spoza pola karnego
+      1 237083	Sędzia podejdzie do monitora VAR co najmniej dwa razy
+      1 237082	Sędzia podejdzie do monitora VAR i nie zmieni pierwotnej decyzji
+      1 237081	Sędzia podejdzie do monitora VAR i po weryfikacji podyktuje rzut karny
+      1 237080	Unai Emery otrzyma kartkę
+      1 237080	Michael Carrick otrzyma kartkę
+      1 237079	Michael Carrick & Unai Emery każdy otrzyma kartkę
+      1 237078	Youri Tielemans & John McGinn sfaulują się nawzajem
+      1 237078	Leny Yoro & Johan Manzambi sfaulują się nawzajem
+      1 237078	Bruno Fernandes & Boubacar Kamara sfaulują się nawzajem
+      1 237078	Amad Diallo & Ian Maatsen sfaulują się nawzajem
+      1 237077	Youri Tielemans & Boubacar Kamara popełnią łącznie 5+ fauli
+      1 237077	Kobbie Mainoo & Lamare Bogarde popełnią łącznie 4+ fauli
+      1 237077	John McGinn & Bruno Fernandes popełnią łącznie 4+ fauli
+      1 237077	Andrey Santos & Leon Goretzka popełnią łącznie 5+ fauli
+      1 237076	Matheus Cunha & Johan Manzambi oddadzą łącznie 3+ celnych strzałów
+      1 237076	Bryan Mbeumo & Nicolas Jackson oddadzą łącznie 3+ celnych strzałów
+      1 237076	Bruno Fernandes & John McGinn oddadzą łącznie 2+ celnych strzałów
+      1 237076	Amad Diallo & Alysson Edward Franco da Rocha oddadzą łącznie 3+ celnych strzałów
+      1 237074	Każdy bramkarz zostanie sfaulowany
+      1 237073	Każdy bramkarz obroni strzał w każdej połowie
+      1 233953	Everton strzeli w obu połowach; Everton wygra mecz
+      1 232978	1. połowa - Tottenham liczba celnych strzałów
+      1 232978	1. połowa - Newcastle liczba celnych strzałów
+      1 232978	1. połowa - Manchester City liczba celnych strzałów
+      1 232978	1. połowa - Liverpool liczba celnych strzałów
+      1 232978	1. połowa - Hull City liczba celnych strzałów
+      1 232978	1. połowa - Coventry City liczba celnych strzałów
+      1 232978	1. połowa - Chelsea liczba celnych strzałów
+      1 232978	1. połowa - Brentford liczba celnych strzałów
+      1 232978	1. połowa - Bournemouth liczba celnych strzałów
+      1 232978	1. połowa - Aston Villa liczba celnych strzałów
+      1 232516	Tottenham będzie prowadzić w dowolnym momencie
+      1 232516	Sunderland będzie prowadzić w dowolnym momencie
+      1 232516	Nottingham Forest będzie prowadzić w dowolnym momencie
+      1 232516	Newcastle będzie prowadzić w dowolnym momencie
+      1 232516	Manchester United będzie prowadzić w dowolnym momencie
+      1 232516	Manchester City będzie prowadzić w dowolnym momencie
+      1 232516	Liverpool będzie prowadzić w dowolnym momencie
+      1 232516	Leeds United będzie prowadzić w dowolnym momencie
+      1 232516	Ipswich będzie prowadzić w dowolnym momencie
+      1 232516	Hull City będzie prowadzić w dowolnym momencie
+      1 232516	Fulham będzie prowadzić w dowolnym momencie
+      1 232516	Everton będzie prowadzić w dowolnym momencie
+      1 232516	Crystal Palace będzie prowadzić w dowolnym momencie
+      1 232516	Coventry City będzie prowadzić w dowolnym momencie
+      1 232516	Chelsea będzie prowadzić w dowolnym momencie
+      1 232516	Brighton będzie prowadzić w dowolnym momencie
+      1 232516	Brentford będzie prowadzić w dowolnym momencie
+      1 232516	Aston Villa będzie prowadzić w dowolnym momencie
+      1 232516	Arsenal będzie prowadzić w dowolnym momencie
+      1 232515	Tottenham będzie prowadzić w dowolnym momencie
+      1 232515	Sunderland będzie prowadzić w dowolnym momencie
+      1 232515	Nottingham Forest będzie prowadzić w dowolnym momencie
+      1 232515	Newcastle będzie prowadzić w dowolnym momencie
+      1 232515	Manchester United będzie prowadzić w dowolnym momencie
+      1 232515	Manchester City będzie prowadzić w dowolnym momencie
+      1 232515	Liverpool będzie prowadzić w dowolnym momencie
+      1 232515	Leeds United będzie prowadzić w dowolnym momencie
+      1 232515	Ipswich będzie prowadzić w dowolnym momencie
+      1 232515	Hull City będzie prowadzić w dowolnym momencie
+      1 232515	Fulham będzie prowadzić w dowolnym momencie
+      1 232515	Everton będzie prowadzić w dowolnym momencie
+      1 232515	Crystal Palace będzie prowadzić w dowolnym momencie
+      1 232515	Coventry City będzie prowadzić w dowolnym momencie
+      1 232515	Chelsea będzie prowadzić w dowolnym momencie
+      1 232515	Brighton będzie prowadzić w dowolnym momencie
+      1 232515	Brentford będzie prowadzić w dowolnym momencie
+      1 232515	Aston Villa będzie prowadzić w dowolnym momencie
+      1 232515	Arsenal będzie prowadzić w dowolnym momencie
+      1 232514	Tottenham wygra wcześniej przegrywając
+      1 232514	Sunderland wygra wcześniej przegrywając
+      1 232514	Nottingham Forest wygra wcześniej przegrywając
+      1 232514	Newcastle wygra wcześniej przegrywając
+      1 232514	Manchester United wygra wcześniej przegrywając
+      1 232514	Manchester City wygra wcześniej przegrywając
+      1 232514	Liverpool wygra wcześniej przegrywając
+      1 232514	Leeds United wygra wcześniej przegrywając
+      1 232514	Everton wygra wcześniej przegrywając
+      1 232514	Crystal Palace wygra wcześniej przegrywając
+      1 232514	Coventry City wygra wcześniej przegrywając
+      1 232514	Chelsea wygra wcześniej przegrywając
+      1 232514	Brighton wygra wcześniej przegrywając
+      1 232514	Brentford wygra wcześniej przegrywając
+      1 232514	Aston Villa wygra wcześniej przegrywając
+      1 232514	Arsenal wygra wcześniej przegrywając
+      1 232513	Tottenham wygra wcześniej przegrywając
+      1 232513	Sunderland wygra wcześniej przegrywając
+      1 232513	Nottingham Forest wygra wcześniej przegrywając
+      1 232513	Newcastle wygra wcześniej przegrywając
+      1 232513	Manchester United wygra wcześniej przegrywając
+      1 232513	Manchester City wygra wcześniej przegrywając
+      1 232513	Liverpool wygra wcześniej przegrywając
+      1 232513	Leeds United wygra wcześniej przegrywając
+      1 232513	Ipswich wygra wcześniej przegrywając
+      1 232513	Hull City wygra wcześniej przegrywając
+      1 232513	Fulham wygra wcześniej przegrywając
+      1 232513	Everton wygra wcześniej przegrywając
+      1 232513	Crystal Palace wygra wcześniej przegrywając
+      1 232513	Coventry City wygra wcześniej przegrywając
+      1 232513	Chelsea wygra wcześniej przegrywając
+      1 232513	Brighton wygra wcześniej przegrywając
+      1 232513	Brentford wygra wcześniej przegrywając
+      1 232513	Aston Villa wygra wcześniej przegrywając
+      1 232513	Arsenal wygra wcześniej przegrywając
+      1 232508	Tottenham strzeli co najmniej 2 gole z rzędu
+      1 232508	Sunderland strzeli co najmniej 2 gole z rzędu
+      1 232508	Nottingham Forest strzeli co najmniej 2 gole z rzędu
+      1 232508	Newcastle strzeli co najmniej 2 gole z rzędu
+      1 232508	Manchester United strzeli co najmniej 2 gole z rzędu
+      1 232508	Manchester City strzeli co najmniej 2 gole z rzędu
+      1 232508	Liverpool strzeli co najmniej 2 gole z rzędu
+      1 232508	Leeds United strzeli co najmniej 2 gole z rzędu
+      1 232508	Ipswich strzeli co najmniej 2 gole z rzędu
+      1 232508	Hull City strzeli co najmniej 2 gole z rzędu
+      1 232508	Fulham strzeli co najmniej 2 gole z rzędu
+      1 232508	Everton strzeli co najmniej 2 gole z rzędu
+      1 232508	Crystal Palace strzeli co najmniej 2 gole z rzędu
+      1 232508	Coventry City strzeli co najmniej 2 gole z rzędu
+      1 232508	Chelsea strzeli co najmniej 2 gole z rzędu
+      1 232508	Brighton strzeli co najmniej 2 gole z rzędu
+      1 232508	Brentford strzeli co najmniej 2 gole z rzędu
+      1 232508	Aston Villa strzeli co najmniej 2 gole z rzędu
+      1 232508	Arsenal strzeli co najmniej 2 gole z rzędu
+      1 232507	Tottenham strzeli co najmniej 2 gole z rzędu
+      1 232507	Sunderland strzeli co najmniej 2 gole z rzędu
+      1 232507	Nottingham Forest strzeli co najmniej 2 gole z rzędu
+      1 232507	Newcastle strzeli co najmniej 2 gole z rzędu
+      1 232507	Manchester United strzeli co najmniej 2 gole z rzędu
+      1 232507	Manchester City strzeli co najmniej 2 gole z rzędu
+      1 232507	Liverpool strzeli co najmniej 2 gole z rzędu
+      1 232507	Leeds United strzeli co najmniej 2 gole z rzędu
+      1 232507	Ipswich strzeli co najmniej 2 gole z rzędu
+      1 232507	Hull City strzeli co najmniej 2 gole z rzędu
+      1 232507	Fulham strzeli co najmniej 2 gole z rzędu
+      1 232507	Everton strzeli co najmniej 2 gole z rzędu
+      1 232507	Crystal Palace strzeli co najmniej 2 gole z rzędu
+      1 232507	Coventry City strzeli co najmniej 2 gole z rzędu
+      1 232507	Chelsea strzeli co najmniej 2 gole z rzędu
+      1 232507	Brighton strzeli co najmniej 2 gole z rzędu
+      1 232507	Brentford strzeli co najmniej 2 gole z rzędu
+      1 232507	Aston Villa strzeli co najmniej 2 gole z rzędu
+      1 232507	Arsenal strzeli co najmniej 2 gole z rzędu
+      1 231526	Tottenham - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Sunderland - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Nottingham Forest - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Newcastle - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Manchester United - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Manchester City - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Liverpool - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Leeds United - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Ipswich - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Hull City - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Fulham - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Everton - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Crystal Palace - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Coventry City - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Chelsea - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Brighton - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Brentford - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Bournemouth - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Aston Villa - 1.połowa liczba goli & liczba goli w meczu
+      1 231526	Arsenal - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Tottenham - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Sunderland - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Nottingham Forest - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Newcastle - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Manchester United - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Manchester City - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Liverpool - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Leeds United - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Ipswich - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Hull City - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Fulham - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Everton - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Crystal Palace - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Coventry City - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Chelsea - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Brighton - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Brentford - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Bournemouth - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Aston Villa - 1.połowa liczba goli & liczba goli w meczu
+      1 231525	Arsenal - 1.połowa liczba goli & liczba goli w meczu
+      1 201764	1. połowa - Sunderland liczba spalonych
+      1 201764	1. połowa - Nottingham Forest liczba spalonych
+      1 201764	1. połowa - Manchester United liczba spalonych
+      1 201764	1. połowa - Leeds United liczba spalonych
+      1 201764	1. połowa - Crystal Palace liczba spalonych
+      1 201764	1. połowa - Arsenal liczba spalonych
+      1 201570	1. połowa - Tottenham liczba fauli
+      1 201570	1. połowa - Manchester City liczba fauli
+      1 201570	1. połowa - Liverpool liczba fauli
+      1 201570	1. połowa - Hull City liczba fauli
+      1 201570	1. połowa - Chelsea liczba fauli
+      1 201570	1. połowa - Aston Villa liczba fauli
+      1 201527	1. połowa - Sunderland liczba celnych strzałów
+      1 201527	1. połowa - Nottingham Forest liczba celnych strzałów
+      1 201527	1. połowa - Manchester United liczba celnych strzałów
+      1 201527	1. połowa - Leeds United liczba celnych strzałów
+      1 201527	1. połowa - Ipswich liczba celnych strzałów
+      1 201527	1. połowa - Fulham liczba celnych strzałów
+      1 201527	1. połowa - Everton liczba celnych strzałów
+      1 201527	1. połowa - Crystal Palace liczba celnych strzałów
+      1 201527	1. połowa - Brighton liczba celnych strzałów
+      1 201527	1. połowa - Arsenal liczba celnych strzałów
+      1 201518	Tottenham - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Sunderland - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Nottingham Forest - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Newcastle - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Manchester United - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Manchester City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Liverpool - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Leeds United - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Ipswich - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Hull City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Fulham - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Everton - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Crystal Palace - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Coventry City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Chelsea - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Brighton - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Brentford - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Bournemouth - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Aston Villa - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201518	Arsenal - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Tottenham - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Sunderland - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Nottingham Forest - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Newcastle - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Manchester United - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Manchester City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Liverpool - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Leeds United - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Ipswich - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Hull City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Fulham - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Everton - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Crystal Palace - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Coventry City - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Chelsea - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Brighton - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Brentford - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Bournemouth - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Aston Villa - 1.połowa liczba goli & 2.połowa liczba goli
+      1 201517	Arsenal - 1.połowa liczba goli & 2.połowa liczba goli
+      1 200941	2.połowa - Tottenham strzeli gola
+      1 200941	2.połowa - Sunderland strzeli gola
+      1 200941	2.połowa - Nottingham Forest strzeli gola
+      1 200941	2.połowa - Newcastle strzeli gola
+      1 200941	2.połowa - Manchester United strzeli gola
+      1 200941	2.połowa - Manchester City strzeli gola
+      1 200941	2.połowa - Liverpool strzeli gola
+      1 200941	2.połowa - Leeds United strzeli gola
+      1 200941	2.połowa - Ipswich strzeli gola
+      1 200941	2.połowa - Hull City strzeli gola
+      1 200941	2.połowa - Fulham strzeli gola
+      1 200941	2.połowa - Everton strzeli gola
+      1 200941	2.połowa - Crystal Palace strzeli gola
+      1 200941	2.połowa - Coventry City strzeli gola
+      1 200941	2.połowa - Chelsea strzeli gola
+      1 200941	2.połowa - Brighton strzeli gola
+      1 200941	2.połowa - Brentford strzeli gola
+      1 200941	2.połowa - Bournemouth strzeli gola
+      1 200941	2.połowa - Aston Villa strzeli gola
+      1 200941	2.połowa - Arsenal strzeli gola
+      1 200940	2.połowa - Tottenham strzeli gola
+      1 200940	2.połowa - Sunderland strzeli gola
+      1 200940	2.połowa - Nottingham Forest strzeli gola
+      1 200940	2.połowa - Newcastle strzeli gola
+      1 200940	2.połowa - Manchester United strzeli gola
+      1 200940	2.połowa - Manchester City strzeli gola
+      1 200940	2.połowa - Liverpool strzeli gola
+      1 200940	2.połowa - Leeds United strzeli gola
+      1 200940	2.połowa - Ipswich strzeli gola
+      1 200940	2.połowa - Hull City strzeli gola
+      1 200940	2.połowa - Fulham strzeli gola
+      1 200940	2.połowa - Everton strzeli gola
+      1 200940	2.połowa - Crystal Palace strzeli gola
+      1 200940	2.połowa - Coventry City strzeli gola
+      1 200940	2.połowa - Chelsea strzeli gola
+      1 200940	2.połowa - Brighton strzeli gola
+      1 200940	2.połowa - Brentford strzeli gola
+      1 200940	2.połowa - Bournemouth strzeli gola
+      1 200940	2.połowa - Aston Villa strzeli gola
+      1 200940	2.połowa - Arsenal strzeli gola

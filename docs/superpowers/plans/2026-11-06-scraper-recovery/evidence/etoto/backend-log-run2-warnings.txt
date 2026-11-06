@@ -1,0 +1,6 @@
+# run 2 (2026-11-06T16:00Z) distinct etoto normalizer warnings with counts
+     20 [etoto] Skipping unsupported market "1. poł./mecz i suma goli 2.5 w 1. poł" (id: -30005): no catalog code yet
+     20 [etoto] Skipping unsupported market "1. poł./mecz i suma goli 1.5 w 1. poł" (id: -30005): no catalog code yet
+     20 [etoto] Skipping unsupported market "1. poł./mecz i suma goli 0.5 w 1. poł" (id: -30005): no catalog code yet
+     20 [etoto] Skipping unsupported market "1. poł./mecz i dokładna suma goli" (id: -30006): no catalog code yet
+      1 [etoto] Unmapped market "Suma 0.5 rzutów karnych" (id: -30591)

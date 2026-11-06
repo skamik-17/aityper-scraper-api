@@ -1,0 +1,8 @@
+# Standalone smoke command run against the CURRENT (unfixed) code, 2026-11-06 17:22 CET
+$ cd /home/skamik/Documents/repositories/personal/aityper-scraper-api && timeout 900 npx tsx -e "<pzbuk smoke one-liner, see pzbuk.md Acceptance criteria>"
+[BrowserPool] Creating new browser (1/14)
+[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+[PZBuk/WS] Max wait reached with 0 selections
+[BrowserPool] Browser released (1 available, 1 total)
+SMOKE {"success":false,"error":"No WebSocket data captured","matches":0,"markets":0,"durationMs":25211}
+real 0m26.810s

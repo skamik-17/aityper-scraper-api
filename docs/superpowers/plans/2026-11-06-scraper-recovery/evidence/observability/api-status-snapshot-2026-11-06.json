@@ -1,0 +1,350 @@
+{
+ "capturedAt": "2026-11-06T16:25:51.737779+00:00",
+ "GET /api/odds?league=premier-league (meta only)": {
+  "http": 200,
+  "meta": {
+   "league": "premier-league",
+   "totalMatches": 20,
+   "lastUpdated": null,
+   "nextUpdate": "2026-11-06T17:00:00.000Z",
+   "scrapeIntervalMinutes": 60,
+   "bookmakerStatus": {
+    "sts": "available",
+    "fortuna": "stale",
+    "betclic": "stale",
+    "superbet": "stale",
+    "lvbet": "stale",
+    "fuksiarz": "stale",
+    "betfan": "stale",
+    "forbet": "stale",
+    "etoto": "stale",
+    "betters": "stale",
+    "lebull": "stale",
+    "betcris": "stale",
+    "pzbuk": "stale",
+    "totalbet": "stale"
+   }
+  }
+ },
+ "POST /api/odds/batch {leagues:[premier-league]} (meta only)": {
+  "http": 200,
+  "meta": {
+   "leagues": [
+    "premier-league"
+   ],
+   "totalMatches": 20,
+   "lastUpdated": null,
+   "nextUpdate": "2026-11-06T17:00:00.000Z",
+   "scrapeIntervalMinutes": 60,
+   "bookmakerStatus": {
+    "sts": "available",
+    "fortuna": "stale",
+    "betclic": "stale",
+    "superbet": "stale",
+    "lvbet": "stale",
+    "fuksiarz": "stale",
+    "betfan": "stale",
+    "forbet": "stale",
+    "etoto": "stale",
+    "betters": "stale",
+    "lebull": "stale",
+    "betcris": "stale",
+    "pzbuk": "stale",
+    "totalbet": "stale"
+   }
+  }
+ },
+ "GET /api/bookmakers": {
+  "http": 200,
+  "body": {
+   "success": true,
+   "data": {
+    "bookmakers": [
+     {
+      "id": "sts",
+      "name": "STS",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": true
+     },
+     {
+      "id": "fortuna",
+      "name": "Fortuna",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "betclic",
+      "name": "Betclic",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "superbet",
+      "name": "Superbet",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "lvbet",
+      "name": "LVBet",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "fuksiarz",
+      "name": "Fuksiarz",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "betfan",
+      "name": "BETFAN",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "forbet",
+      "name": "forBET",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "etoto",
+      "name": "eToto",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "betters",
+      "name": "Betters",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "lebull",
+      "name": "Le Bull",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "betcris",
+      "name": "Betcris",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "pzbuk",
+      "name": "PZBuk",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": false
+     },
+     {
+      "id": "totalbet",
+      "name": "TOTALbet",
+      "status": "stale",
+      "lastSuccessfulScrape": null,
+      "matchesFound": 0,
+      "avgScrapeDurationMs": null,
+      "hasNoTaxPromo": true
+     }
+    ]
+   },
+   "meta": {
+    "totalBookmakers": 14,
+    "availableCount": 0,
+    "errorCount": 14
+   }
+  }
+ },
+ "GET /api/health": {
+  "http": 200,
+  "body": {
+   "success": true,
+   "data": {
+    "status": "ok",
+    "timestamp": "2026-11-06T16:25:51.927Z",
+    "uptime": 2513,
+    "version": "1.0.0",
+    "database": "connected",
+    "lastScrapeStarted": "2026-11-06T16:00:00.350Z",
+    "lastScrapeCompleted": "2026-11-06T16:02:49.798Z",
+    "lastScrapeDuration": 169,
+    "lastScrapeStats": {
+     "premier-league": {
+      "startedAt": "2026-11-06T16:00:00.350Z",
+      "completedAt": "2026-11-06T16:02:49.798Z",
+      "duration": 169,
+      "successCount": 9,
+      "errorCount": 5,
+      "uniqueMatches": 180,
+      "marketsScraped": 90752
+     }
+    }
+   }
+  }
+ },
+ "GET /api/admin/scrapers/health (no auth)": {
+  "http": 401,
+  "body": {
+   "success": false,
+   "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Missing authorization header"
+   }
+  }
+ },
+ "GET /api/admin/scrapers/health (Bearer dev-api-key)": {
+  "http": 200,
+  "body": {
+   "success": true,
+   "data": {
+    "scrapers": [
+     {
+      "scraper": "betters",
+      "successRate": 0,
+      "avgDuration": 0,
+      "status": "failing",
+      "lastError": "No events found from API"
+     },
+     {
+      "scraper": "lebull",
+      "successRate": 0,
+      "avgDuration": 0,
+      "status": "failing",
+      "lastError": "No events found from API"
+     },
+     {
+      "scraper": "pzbuk",
+      "successRate": 0,
+      "avgDuration": 0,
+      "status": "failing",
+      "lastError": "No WebSocket data captured"
+     },
+     {
+      "scraper": "totalbet",
+      "successRate": 0,
+      "avgDuration": 0,
+      "status": "failing",
+      "lastError": "No events found from API"
+     },
+     {
+      "scraper": "betcris",
+      "successRate": 50,
+      "avgDuration": 163890,
+      "status": "degraded",
+      "lastError": "No WebSocket data captured"
+     },
+     {
+      "scraper": "sts",
+      "successRate": 100,
+      "avgDuration": 163735,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "fortuna",
+      "successRate": 100,
+      "avgDuration": 38672,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "betclic",
+      "successRate": 100,
+      "avgDuration": 50980,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "superbet",
+      "successRate": 100,
+      "avgDuration": 40719,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "lvbet",
+      "successRate": 100,
+      "avgDuration": 40759,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "fuksiarz",
+      "successRate": 100,
+      "avgDuration": 27962,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "betfan",
+      "successRate": 100,
+      "avgDuration": 32138,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "forbet",
+      "successRate": 100,
+      "avgDuration": 27851,
+      "status": "healthy",
+      "lastError": null
+     },
+     {
+      "scraper": "etoto",
+      "successRate": 100,
+      "avgDuration": 30766,
+      "status": "healthy",
+      "lastError": null
+     }
+    ],
+    "failingScrapers": [],
+    "summary": {
+     "total": 14,
+     "healthy": 9,
+     "degraded": 1,
+     "failing": 4
+    }
+   }
+  }
+ }
+}

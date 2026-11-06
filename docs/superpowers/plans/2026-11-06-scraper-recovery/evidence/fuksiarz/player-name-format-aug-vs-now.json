@@ -1,0 +1,72 @@
+{
+ "aug_arsenal_coventry": {
+  "Strzeli gola": [
+   "Amenda, Aurèle",
+   "Bidwell, Jake",
+   "Calafiori, Riccardo",
+   "Dasilva, J",
+   "Eccles, Josh",
+   "Eze, Eberechi",
+   "Gabriel Jesus",
+   "Grimes, M"
+  ],
+  "Zaliczy asystę": [
+   "Calafiori, Riccardo",
+   "Eccles, Josh",
+   "Eze, Eberechi",
+   "Gabriel Jesus",
+   "Gyökeres, Viktor",
+   "Havertz, Kai",
+   "Hincapie, Piero",
+   "Lewis-Skelly, Myles"
+  ],
+  "Strzelec 1. gola": [
+   "Amenda, Aurèle",
+   "White, Ben",
+   "Thomas, Bobby",
+   "Thomas-Asante, B",
+   "Saka, Bukayo",
+   "Mosquera, Cristhian",
+   "Rice, Declan",
+   "Eze, Eberechi"
+  ],
+  "Odda co najmniej 1 celny strzał": [
+   "White, Ben"
+  ]
+ },
+ "now_arsenal_hull": {
+  "Strzeli gola": [
+   "A. Ömür",
+   "S. Ajayi",
+   "B. White",
+   "B. Norton-Cuffy",
+   "B. Guimaraes",
+   "C. Mouzakitis",
+   "C. Tzolis",
+   "C. Mosquera"
+  ],
+  "Zaliczy asystę": [
+   "R. Calafiori",
+   "E. Eze",
+   "B. Guimaraes",
+   "V. Gyökeres",
+   "K. Havertz",
+   "M. Lewis-Skelly",
+   "N. Madueke",
+   "G. Magalhães"
+  ],
+  "Strzelec 1. gola": [
+   "S. Ajayi",
+   "M. Bachir Belloumi",
+   "R. Calafiori",
+   "M. Cho",
+   "L. Coyle",
+   "M. Crooks",
+   "J. Egan",
+   "E. Eze"
+  ],
+  "Odda co najmniej 1 celny strzał": [
+   "M. Bachir Belloumi"
+  ]
+ }
+}

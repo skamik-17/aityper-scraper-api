@@ -1,0 +1,38 @@
+===== live/betters2 events 2749 tournaments 652
+  ekstraklasa     1669818868635406336 name='Ekstraklasa' slug='ekstraklasa' cat=1669818868555714560 prio=1000 types={'match': 9, 'tournament': 1} chunks=[0, 1, 2]
+  premier-league  1669818860469096448 name='Premier League' slug='premier-league' cat=1669818860410376192 prio=999 types={'match': 11, 'tournament': 1} chunks=[1]
+  laliga          1669819032615915520 name='La Liga' slug='laliga' cat=1669817290067152896 prio=998 types={'match': 10, 'tournament': 1} chunks=[1]
+  serie-a         1669819042829045760 name='Serie A' slug='serie-a' cat=1669819042774519808 prio=997 types={'match': 10, 'tournament': 1} chunks=[1]
+  ligue-1         1669818844560101376 name='Ligue 1' slug='ligue-1' cat=1669818844505575424 prio=995 types={'match': 9, 'tournament': 1} chunks=[1]
+  world-cup       1670073988614852608 name='Mistrzostwa Świata' slug='world-cup' cat=1669818805871841280 prio=0 types={'tournament': 1} chunks=[1]
+    2725815896848338956 match 2026-11-06T20:00:00 ["'Everton FC'", "'Coventry City'"] state {'provider': 'e6035978', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.64', '2': '3.9', '3': '5.2'}
+    2725816334213586962 match 2026-11-07T12:30:00 ["'Leeds United'", "'Tottenham Hotspur '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '2.74', '2': '3.3', '3': '2.54'}
+    2725818574789816354 match 2026-11-07T15:00:00 ["'Fulham FC'", "'Newcastle United '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.98', '2': '3.65', '3': '3.5'}
+    2725816334213586981 match 2026-11-07T15:00:00 ["'Arsenal FC'", "'Hull City'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.16', '2': '7.4', '3': '16.0'}
+    2725824060671029267 match 2026-11-07T17:30:00 ["'Nottingham Forest'", "'Manchester City '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '4.4', '2': '3.9', '3': '1.7'}
+    2726134779970986001 match 2026-11-08T14:00:00 ["'Ipswich Town'", "'AFC Bournemouth'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '3.8', '2': '3.65', '3': '1.88'}
+    2726134779970986002 match 2026-11-08T14:00:00 ["'Crystal Palace '", "'Liverpool FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '5.4', '2': '4.2', '3': '1.55'}
+    2726134779970986003 match 2026-11-08T14:00:00 ["'Brighton & Hove Albion '", "'Brentford FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.87', '2': '3.75', '3': '3.7'}
+    2726134779970986000 match 2026-11-08T14:00:00 ["'FC Sunderland'", "'Chelsea FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '3.7', '2': '3.6', '3': '1.92'}
+    2726177353700085769 match 2026-11-08T16:30:00 ["'Manchester United FC'", "'Aston Villa FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '2.12', '2': '3.6', '3': '3.1'}
+    2725446939305979931 match 2026-11-22T16:30:00 ["'Liverpool FC'", "'Manchester United FC'"] state {'provider': 'f7843f09', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.79', '2': '3.85', '3': '3.85'}
+    2697520988786135084 tournament 2027-05-30T00:00:00 ["'England Premier League'", "'Zakłady długoterminowe'"] state {'provider': 'b7656e30', 'status': 0, 'match_status': 0} mk ['2000000', '2000053', '2000054', '2000055', '2000057', '2001000'] 1x2 {}
+===== live/lebull events 2743 tournaments 654
+  ekstraklasa     1669818868635406336 name='Ekstraklasa' slug='ekstraklasa' cat=1669818868555714560 prio=550 types={'match': 9, 'tournament': 1} chunks=[0, 1, 2]
+  premier-league  1669818860469096448 name='Premier League' slug='premier-league' cat=1669818860410376192 prio=548 types={'match': 11, 'tournament': 1} chunks=[1]
+  laliga          1669819032615915520 name='La Liga' slug='laliga' cat=1669817290067152896 prio=547 types={'match': 10, 'tournament': 1} chunks=[1]
+  serie-a         1669819042829045760 name='Serie A' slug='serie-a' cat=1669819042774519808 prio=544 types={'match': 10, 'tournament': 1} chunks=[1]
+  ligue-1         1669818844560101376 name='Ligue 1' slug='ligue-1' cat=1669818844505575424 prio=546 types={'match': 9, 'tournament': 1} chunks=[1]
+  world-cup       1670073988614852608 name='Mistrzostwa Świata' slug='world-cup' cat=1669818805871841280 prio=10 types={'tournament': 1} chunks=[1]
+    2725815896848338956 match 2026-11-06T20:00:00 ["'Everton FC'", "'Coventry City'"] state {'provider': 'e6035978', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.65', '2': '3.95', '3': '5.2'}
+    2725816334213586962 match 2026-11-07T12:30:00 ["'Leeds United'", "'Tottenham Hotspur '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '2.76', '2': '3.3', '3': '2.56'}
+    2725818574789816354 match 2026-11-07T15:00:00 ["'Fulham FC'", "'Newcastle United '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.99', '2': '3.7', '3': '3.55'}
+    2725816334213586981 match 2026-11-07T15:00:00 ["'Arsenal FC'", "'Hull City'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.16', '2': '7.6', '3': '16.0'}
+    2725824060671029267 match 2026-11-07T17:30:00 ["'Nottingham Forest'", "'Manchester City '"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '4.5', '2': '3.95', '3': '1.72'}
+    2726134779970986001 match 2026-11-08T14:00:00 ["'Ipswich Town'", "'AFC Bournemouth'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '3.85', '2': '3.7', '3': '1.9'}
+    2726134779970986002 match 2026-11-08T14:00:00 ["'Crystal Palace '", "'Liverpool FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '5.4', '2': '4.3', '3': '1.56'}
+    2726134779970986003 match 2026-11-08T14:00:00 ["'Brighton & Hove Albion '", "'Brentford FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.88', '2': '3.8', '3': '3.75'}
+    2726134779970986000 match 2026-11-08T14:00:00 ["'FC Sunderland'", "'Chelsea FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '3.75', '2': '3.65', '3': '1.94'}
+    2726177353700085769 match 2026-11-08T16:30:00 ["'Manchester United FC'", "'Aston Villa FC'"] state {'provider': '77308e7c', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '2.14', '2': '3.65', '3': '3.1'}
+    2725446939305979931 match 2026-11-22T16:30:00 ["'Liverpool FC'", "'Manchester United FC'"] state {'provider': 'f7843f09', 'status': 0, 'match_status': 0} mk ['1', '10', '16', '18'] 1x2 {'1': '1.8', '2': '3.9', '3': '3.9'}
+    2697520988786135084 tournament 2027-05-30T00:00:00 ["'England Premier League'", "'Zakłady długoterminowe'"] state {'provider': 'b7656e30', 'status': 0, 'match_status': 0} mk ['2000000', '2001000'] 1x2 {}

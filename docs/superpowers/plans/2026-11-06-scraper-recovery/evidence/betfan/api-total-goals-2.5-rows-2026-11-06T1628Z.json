@@ -1,0 +1,757 @@
+{
+ "_note": "TOTAL_GOALS 2.5 rows per match from GET /api/matches/<H>/<A>/normalized-markets?league=premier-league&category=GOLE, 2026-11-06 ~16:28Z",
+ "rows": {
+  "AFC_Bournemouth__Nottingham_Forest": {
+   "betclic": {
+    "OVER": 1.68,
+    "UNDER": 1.9
+   },
+   "betcris": {
+    "OVER": 1.75,
+    "UNDER": 2
+   },
+   "betfan": {
+    "UNDER": 1.93,
+    "OVER": 1.75
+   },
+   "etoto": {
+    "UNDER": 1.95,
+    "OVER": 1.76
+   },
+   "forbet": {
+    "UNDER": 1.95,
+    "OVER": 1.76
+   },
+   "fortuna": {
+    "UNDER": 1.93,
+    "OVER": 1.74
+   },
+   "fuksiarz": {
+    "UNDER": 1.93,
+    "OVER": 1.78
+   },
+   "sts": {
+    "OVER": 1.78,
+    "UNDER": 1.98
+   },
+   "superbet": {
+    "UNDER": 1.97,
+    "OVER": 1.77
+   }
+  },
+  "Arsenal__Hull_City": {
+   "betclic": {
+    "OVER": 1.51,
+    "UNDER": 2.45
+   },
+   "betcris": {
+    "OVER": 1.52,
+    "UNDER": 2.42
+   },
+   "betfan": {
+    "UNDER": 2.45,
+    "OVER": 1.52
+   },
+   "etoto": {
+    "UNDER": 2.42,
+    "OVER": 1.5
+   },
+   "forbet": {
+    "UNDER": 2.4,
+    "OVER": 1.51
+   },
+   "fortuna": {
+    "UNDER": 2.37,
+    "OVER": 1.53
+   },
+   "fuksiarz": {
+    "UNDER": 2.4,
+    "OVER": 1.5
+   },
+   "sts": {
+    "OVER": 1.54,
+    "UNDER": 2.5
+   },
+   "superbet": {
+    "UNDER": 2.47,
+    "OVER": 1.53
+   }
+  },
+  "Aston_Villa__Sunderland": {
+   "betclic": {
+    "OVER": 1.64,
+    "UNDER": 1.96
+   },
+   "betcris": {
+    "OVER": 1.72,
+    "UNDER": 2.05
+   },
+   "betfan": {
+    "UNDER": 1.98,
+    "OVER": 1.7
+   },
+   "etoto": {
+    "UNDER": 2.01,
+    "OVER": 1.72
+   },
+   "forbet": {
+    "UNDER": 2.01,
+    "OVER": 1.72
+   },
+   "fortuna": {
+    "UNDER": 1.98,
+    "OVER": 1.7
+   },
+   "fuksiarz": {
+    "UNDER": 2.05,
+    "OVER": 1.7
+   },
+   "sts": {
+    "OVER": 1.72,
+    "UNDER": 2.02
+   },
+   "superbet": {
+    "UNDER": 2.02,
+    "OVER": 1.72
+   }
+  },
+  "Brentford__Everton": {
+   "betclic": {
+    "OVER": 1.62,
+    "UNDER": 1.98
+   },
+   "betcris": {
+    "OVER": 1.72,
+    "UNDER": 2.05
+   },
+   "betfan": {
+    "UNDER": 2,
+    "OVER": 1.68
+   },
+   "etoto": {
+    "UNDER": 2.04,
+    "OVER": 1.69
+   },
+   "forbet": {
+    "UNDER": 2.04,
+    "OVER": 1.69
+   },
+   "fortuna": {
+    "UNDER": 2.02,
+    "OVER": 1.68
+   },
+   "fuksiarz": {
+    "UNDER": 2.05,
+    "OVER": 1.68
+   },
+   "sts": {
+    "OVER": 1.7,
+    "UNDER": 2.05
+   },
+   "superbet": {
+    "UNDER": 2.05,
+    "OVER": 1.7
+   }
+  },
+  "Brighton_and_Hove_Albion__Brentford": {
+   "betclic": {
+    "OVER": 1.55,
+    "UNDER": 2.35
+   },
+   "betcris": {
+    "OVER": 1.56,
+    "UNDER": 2.33
+   },
+   "betfan": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "etoto": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "forbet": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "fortuna": {
+    "OVER": 1.56,
+    "UNDER": 2.32
+   },
+   "fuksiarz": {
+    "UNDER": 2.25,
+    "OVER": 1.57
+   },
+   "sts": {
+    "OVER": 1.58,
+    "UNDER": 2.4
+   },
+   "superbet": {
+    "UNDER": 2.35,
+    "OVER": 1.59
+   }
+  },
+  "Chelsea__Leeds_United": {
+   "betclic": {
+    "OVER": 1.63,
+    "UNDER": 1.98
+   },
+   "betcris": {
+    "OVER": 1.71,
+    "UNDER": 2.06
+   },
+   "betfan": {
+    "UNDER": 2,
+    "OVER": 1.68
+   },
+   "etoto": {
+    "UNDER": 2.04,
+    "OVER": 1.7
+   },
+   "forbet": {
+    "UNDER": 2.04,
+    "OVER": 1.7
+   },
+   "fortuna": {
+    "UNDER": 2.01,
+    "OVER": 1.68
+   },
+   "fuksiarz": {
+    "UNDER": 2.05,
+    "OVER": 1.7
+   },
+   "sts": {
+    "OVER": 1.72,
+    "UNDER": 2.05
+   },
+   "superbet": {
+    "UNDER": 2.05,
+    "OVER": 1.7
+   }
+  },
+  "Coventry_City__Crystal_Palace": {
+   "betclic": {
+    "OVER": 1.62,
+    "UNDER": 2
+   },
+   "betcris": {
+    "UNDER": 2.08,
+    "OVER": 1.69
+   },
+   "betfan": {
+    "UNDER": 2.05,
+    "OVER": 1.67
+   },
+   "etoto": {
+    "UNDER": 2.05,
+    "OVER": 1.69
+   },
+   "forbet": {
+    "UNDER": 2.05,
+    "OVER": 1.69
+   },
+   "fortuna": {
+    "OVER": 1.67,
+    "UNDER": 2.02
+   },
+   "fuksiarz": {
+    "UNDER": 2.05,
+    "OVER": 1.7
+   },
+   "sts": {
+    "OVER": 1.7,
+    "UNDER": 2.05
+   },
+   "superbet": {
+    "UNDER": 2.07,
+    "OVER": 1.69
+   }
+  },
+  "Crystal_Palace__Liverpool": {
+   "betclic": {
+    "OVER": 1.54,
+    "UNDER": 2.38
+   },
+   "betcris": {
+    "OVER": 1.55,
+    "UNDER": 2.35
+   },
+   "betfan": {
+    "UNDER": 2.35,
+    "OVER": 1.52
+   },
+   "etoto": {
+    "UNDER": 2.36,
+    "OVER": 1.53
+   },
+   "forbet": {
+    "UNDER": 2.33,
+    "OVER": 1.53
+   },
+   "fortuna": {
+    "OVER": 1.54,
+    "UNDER": 2.36
+   },
+   "fuksiarz": {
+    "UNDER": 2.4,
+    "OVER": 1.5
+   },
+   "sts": {
+    "OVER": 1.57,
+    "UNDER": 2.4
+   },
+   "superbet": {
+    "UNDER": 2.4,
+    "OVER": 1.56
+   }
+  },
+  "Everton__Coventry_City": {
+   "betclic": {
+    "OVER": 1.76,
+    "UNDER": 2
+   },
+   "betcris": {
+    "OVER": 1.79,
+    "UNDER": 2.02
+   },
+   "betfan": {
+    "UNDER": 2,
+    "OVER": 1.75
+   },
+   "etoto": {
+    "UNDER": 1.99,
+    "OVER": 1.73
+   },
+   "forbet": {
+    "UNDER": 1.96,
+    "OVER": 1.75
+   },
+   "fortuna": {
+    "OVER": 1.79,
+    "UNDER": 1.99
+   },
+   "fuksiarz": {
+    "UNDER": 2,
+    "OVER": 1.73
+   },
+   "sts": {
+    "OVER": 1.8,
+    "UNDER": 2.02
+   },
+   "superbet": {
+    "UNDER": 2.02,
+    "OVER": 1.78
+   }
+  },
+  "Fulham__Newcastle_United": {
+   "betclic": {
+    "OVER": 1.63,
+    "UNDER": 2.2
+   },
+   "betcris": {
+    "OVER": 1.65,
+    "UNDER": 2.15
+   },
+   "betfan": {
+    "UNDER": 2.2,
+    "OVER": 1.63
+   },
+   "etoto": {
+    "UNDER": 2.17,
+    "OVER": 1.61
+   },
+   "forbet": {
+    "UNDER": 2.16,
+    "OVER": 1.62
+   },
+   "fortuna": {
+    "UNDER": 2.12,
+    "OVER": 1.67
+   },
+   "fuksiarz": {
+    "UNDER": 2.15,
+    "OVER": 1.62
+   },
+   "sts": {
+    "OVER": 1.67,
+    "UNDER": 2.25
+   },
+   "superbet": {
+    "UNDER": 2.22,
+    "OVER": 1.65
+   }
+  },
+  "Hull_City__Brighton_and_Hove_Albion": {
+   "betclic": {
+    "OVER": 1.56,
+    "UNDER": 2.1
+   },
+   "betcris": {
+    "UNDER": 2.17,
+    "OVER": 1.64
+   },
+   "betfan": {
+    "UNDER": 2.15,
+    "OVER": 1.62
+   },
+   "etoto": {
+    "UNDER": 2.16,
+    "OVER": 1.62
+   },
+   "forbet": {
+    "UNDER": 2.16,
+    "OVER": 1.62
+   },
+   "fortuna": {
+    "OVER": 1.61,
+    "UNDER": 2.13
+   },
+   "fuksiarz": {
+    "UNDER": 2.2,
+    "OVER": 1.6
+   },
+   "sts": {
+    "OVER": 1.65,
+    "UNDER": 2.2
+   },
+   "superbet": {
+    "UNDER": 2.17,
+    "OVER": 1.63
+   }
+  },
+  "Ipswich_Town__AFC_Bournemouth": {
+   "betclic": {
+    "OVER": 1.68,
+    "UNDER": 2.1
+   },
+   "betcris": {
+    "OVER": 1.7,
+    "UNDER": 2.07
+   },
+   "betfan": {
+    "UNDER": 2.1,
+    "OVER": 1.67
+   },
+   "etoto": {
+    "UNDER": 2.07,
+    "OVER": 1.68
+   },
+   "forbet": {
+    "UNDER": 2.07,
+    "OVER": 1.68
+   },
+   "fortuna": {
+    "UNDER": 2.08,
+    "OVER": 1.69
+   },
+   "fuksiarz": {
+    "UNDER": 2.1,
+    "OVER": 1.65
+   },
+   "sts": {
+    "OVER": 1.72,
+    "UNDER": 2.12
+   },
+   "superbet": {
+    "UNDER": 2.12,
+    "OVER": 1.71
+   }
+  },
+  "Leeds_United__Tottenham_Hotspur": {
+   "betclic": {
+    "OVER": 1.89,
+    "UNDER": 1.85
+   },
+   "betcris": {
+    "OVER": 1.93,
+    "UNDER": 1.81
+   },
+   "betfan": {
+    "UNDER": 1.85,
+    "OVER": 1.88
+   },
+   "etoto": {
+    "UNDER": 1.83,
+    "OVER": 1.87
+   },
+   "forbet": {
+    "UNDER": 1.82,
+    "OVER": 1.89
+   },
+   "fortuna": {
+    "UNDER": 1.83,
+    "OVER": 1.9
+   },
+   "fuksiarz": {
+    "UNDER": 1.8,
+    "OVER": 1.9
+   },
+   "superbet": {
+    "UNDER": 1.87,
+    "OVER": 1.92
+   }
+  },
+  "Liverpool__Manchester_United": {
+   "betclic": {
+    "OVER": 1.49,
+    "UNDER": 2.23
+   },
+   "betcris": {
+    "UNDER": 2.33,
+    "OVER": 1.56
+   },
+   "betfan": {
+    "UNDER": 2.3,
+    "OVER": 1.53
+   },
+   "etoto": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "forbet": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "fortuna": {
+    "OVER": 1.53,
+    "UNDER": 2.27
+   },
+   "fuksiarz": {
+    "UNDER": 2.25,
+    "OVER": 1.57
+   },
+   "sts": {
+    "OVER": 1.56,
+    "UNDER": 2.35
+   },
+   "superbet": {
+    "UNDER": 2.32,
+    "OVER": 1.55
+   }
+  },
+  "Manchester_City__Fulham": {
+   "betclic": {
+    "OVER": 1.41,
+    "UNDER": 2.43
+   },
+   "betcris": {
+    "OVER": 1.47,
+    "UNDER": 2.57
+   },
+   "betfan": {
+    "UNDER": 2.5,
+    "OVER": 1.45
+   },
+   "etoto": {
+    "UNDER": 2.5,
+    "OVER": 1.46
+   },
+   "forbet": {
+    "UNDER": 2.5,
+    "OVER": 1.46
+   },
+   "fortuna": {
+    "UNDER": 2.47,
+    "OVER": 1.45
+   },
+   "fuksiarz": {
+    "UNDER": 2.55,
+    "OVER": 1.45
+   },
+   "sts": {
+    "OVER": 1.47,
+    "UNDER": 2.55
+   },
+   "superbet": {
+    "UNDER": 2.55,
+    "OVER": 1.46
+   }
+  },
+  "Manchester_United__Aston_Villa": {
+   "betclic": {
+    "OVER": 1.54,
+    "UNDER": 2.37
+   },
+   "betcris": {
+    "OVER": 1.56,
+    "UNDER": 2.33
+   },
+   "betfan": {
+    "UNDER": 2.35,
+    "OVER": 1.53
+   },
+   "etoto": {
+    "UNDER": 2.34,
+    "OVER": 1.53
+   },
+   "forbet": {
+    "UNDER": 2.32,
+    "OVER": 1.54
+   },
+   "fortuna": {
+    "UNDER": 2.34,
+    "OVER": 1.55
+   },
+   "fuksiarz": {
+    "UNDER": 2.3,
+    "OVER": 1.55
+   },
+   "sts": {
+    "OVER": 1.57,
+    "UNDER": 2.35
+   },
+   "superbet": {
+    "UNDER": 2.37,
+    "OVER": 1.57
+   }
+  },
+  "Newcastle_United__Arsenal": {
+   "betclic": {
+    "OVER": 1.61,
+    "UNDER": 2
+   },
+   "betcris": {
+    "OVER": 1.67,
+    "UNDER": 2.12
+   },
+   "betfan": {
+    "UNDER": 2.05,
+    "OVER": 1.67
+   },
+   "etoto": {
+    "UNDER": 2.07,
+    "OVER": 1.68
+   },
+   "forbet": {
+    "UNDER": 2.07,
+    "OVER": 1.68
+   },
+   "fortuna": {
+    "UNDER": 2.04,
+    "OVER": 1.66
+   },
+   "fuksiarz": {
+    "UNDER": 2.1,
+    "OVER": 1.67
+   },
+   "sts": {
+    "OVER": 1.7,
+    "UNDER": 2.1
+   },
+   "superbet": {
+    "UNDER": 2.07,
+    "OVER": 1.68
+   }
+  },
+  "Nottingham_Forest__Manchester_City": {
+   "betclic": {
+    "OVER": 1.6,
+    "UNDER": 2.25
+   },
+   "betcris": {
+    "OVER": 1.62,
+    "UNDER": 2.21
+   },
+   "betfan": {
+    "UNDER": 2.2,
+    "OVER": 1.58
+   },
+   "etoto": {
+    "UNDER": 2.22,
+    "OVER": 1.59
+   },
+   "forbet": {
+    "UNDER": 2.2,
+    "OVER": 1.6
+   },
+   "fortuna": {
+    "UNDER": 2.22,
+    "OVER": 1.61
+   },
+   "fuksiarz": {
+    "UNDER": 2.25,
+    "OVER": 1.58
+   },
+   "superbet": {
+    "UNDER": 2.27,
+    "OVER": 1.62
+   }
+  },
+  "Sunderland__Chelsea": {
+   "betclic": {
+    "OVER": 1.76,
+    "UNDER": 2
+   },
+   "betcris": {
+    "UNDER": 2.02,
+    "OVER": 1.74
+   },
+   "betfan": {
+    "UNDER": 1.98,
+    "OVER": 1.75
+   },
+   "etoto": {
+    "UNDER": 1.98,
+    "OVER": 1.74
+   },
+   "forbet": {
+    "UNDER": 1.96,
+    "OVER": 1.76
+   },
+   "fortuna": {
+    "OVER": 1.77,
+    "UNDER": 1.97
+   },
+   "fuksiarz": {
+    "UNDER": 1.95,
+    "OVER": 1.77
+   },
+   "sts": {
+    "OVER": 1.8,
+    "UNDER": 2.02
+   },
+   "superbet": {
+    "UNDER": 2,
+    "OVER": 1.8
+   }
+  },
+  "Tottenham_Hotspur__Ipswich_Town": {
+   "betclic": {
+    "OVER": 1.5,
+    "UNDER": 2.2
+   },
+   "betcris": {
+    "OVER": 1.57,
+    "UNDER": 2.3
+   },
+   "betfan": {
+    "UNDER": 2.25,
+    "OVER": 1.55
+   },
+   "etoto": {
+    "UNDER": 2.27,
+    "OVER": 1.56
+   },
+   "forbet": {
+    "UNDER": 2.27,
+    "OVER": 1.56
+   },
+   "fortuna": {
+    "OVER": 1.54,
+    "UNDER": 2.23
+   },
+   "fuksiarz": {
+    "UNDER": 2.35,
+    "OVER": 1.53
+   },
+   "sts": {
+    "OVER": 1.57,
+    "UNDER": 2.3
+   },
+   "superbet": {
+    "UNDER": 2.3,
+    "OVER": 1.56
+   }
+  }
+ }
+}

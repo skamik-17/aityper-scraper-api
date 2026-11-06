@@ -1,0 +1,15 @@
+# node_modules/.bin/tsx docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betclic/stream-probe.mts 1261715874385920 5000   (Arsenal vs Hull, 7 groups in parallel, unloaded, 2026-11-06 17:31Z; times in ms from request start; endedAt -1 = server did not end the stream within holdMs)
+{"group":"TOP","headersAt":281,"completeAt":387,"endedAt":-1,"flag":0,"frameBytes":197816,"b64Chars":263764,"chunks":22}
+{"group":"WYNIK","headersAt":159,"completeAt":227,"endedAt":-1,"flag":0,"frameBytes":49250,"b64Chars":65676,"chunks":6}
+{"group":"STRZELCY","headersAt":235,"completeAt":608,"endedAt":-1,"flag":0,"frameBytes":1295527,"b64Chars":1727376,"chunks":126}
+{"group":"GOLE","headersAt":166,"completeAt":235,"endedAt":-1,"flag":0,"frameBytes":57396,"b64Chars":76536,"chunks":7}
+{"group":"METODA_GOLA","headersAt":149,"completeAt":247,"endedAt":-1,"flag":0,"frameBytes":197816,"b64Chars":263764,"chunks":23}
+{"group":"HANDICAP","headersAt":156,"completeAt":190,"endedAt":-1,"flag":0,"frameBytes":11926,"b64Chars":15908,"chunks":2}
+{"group":"STATYSTYKI","headersAt":777,"completeAt":923,"endedAt":-1,"flag":0,"frameBytes":505565,"b64Chars":674096,"chunks":45}
+# Independent review probe (2 sequential requests, 8 s hold, 2026-11-06 ~17:10Z):
+HANDICAP status 200 headersAt 183 ms ctype application/grpc-web-text grpc-status hdr - te chunked
+HANDICAP first frame complete at 215 ms; flag 0 len 11926 chunks 2 chars 15908
+HANDICAP after 8000 ms: ended false chars 15908 padRuns 0 decoded 11931 firstFrameBytes 11931 extraChars 0 
+STRZELCY status 200 headersAt 158 ms ctype application/grpc-web-text grpc-status hdr - te chunked
+STRZELCY first frame complete at 531 ms; flag 0 len 1295527 chunks 113 chars 1727376
+STRZELCY after 8000 ms: ended false chars 1727376 padRuns 0 decoded 1295532 firstFrameBytes 1295532 extraChars 0 

@@ -1,0 +1,45 @@
+{
+ "sockets": [
+  {
+   "url": "wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl",
+   "oldMatch": false,
+   "newMatch": true
+  }
+ ],
+ "frames": [
+  {
+   "binary": true,
+   "bytes": 36,
+   "head": "{\"type\":\"SETUP\",\"chunkSize\":1048576}",
+   "envType": "SETUP",
+   "events": null,
+   "sel": null,
+   "legacySliceParse": null
+  },
+  {
+   "binary": true,
+   "bytes": 234144,
+   "head": "{\"type\":\"DATA\",\"streamId\":1,\"payload\":[{\"type\":\"INITIAL_STAT",
+   "envType": "DATA/INITIAL_STATE idType=number mtid=number",
+   "events": 20,
+   "sel": 120,
+   "legacySliceParse": "Unexpected non-whitespace character after JSON at position 233949"
+  },
+  {
+   "binary": true,
+   "bytes": 121,
+   "head": "{\"type\":\"DATA\",\"streamId\":1,\"payload\":[{\"type\":\"SELECTION_DE",
+   "envType": "DATA/SELECTION_DELTA idType=undefined mtid=undefined",
+   "legacySliceParse": "Unexpected non-whitespace character after JSON at position 82"
+  },
+  {
+   "binary": true,
+   "bytes": 1163,
+   "head": "{\"type\":\"DATA\",\"streamId\":1,\"payload\":[{\"type\":\"EVENT_DELTA\"",
+   "envType": "DATA/EVENT_DELTA idType=undefined mtid=undefined",
+   "legacySliceParse": "Unexpected non-whitespace character after JSON at position 1121"
+  }
+ ],
+ "status": 200,
+ "final": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league"
+}

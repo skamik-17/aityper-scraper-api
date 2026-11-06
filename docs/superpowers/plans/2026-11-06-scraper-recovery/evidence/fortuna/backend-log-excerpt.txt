@@ -1,0 +1,158 @@
+# Fortuna log excerpts, backend.log (ANSI stripped). Run 1 = lines < 36350, run 2 = 36350..67221 (16:00Z), run 3 = lines >= 67222 (17:00Z). Run 3 per-match raw counts: Everton-Coventry 1283, Fulham-Newcastle 1212, Man.United-Aston Villa 1154, Sunderland-Chelsea 1210 (others as runs 1/2).
+## Per-match counts (identical in both runs)
+106:[Fortuna/FullOffer] Found 20 fixtures
+140:[Fortuna/FullOffer] Bournemouth vs Nottingham: 109 markets
+208:[Fortuna/FullOffer] Coventry City vs Crystal Palace: 110 markets
+223:[Fortuna/FullOffer] Tottenham vs Ipswich: 109 markets
+274:[Fortuna/FullOffer] Everton vs Coventry City: 1282 markets
+285:[Fortuna/FullOffer] Aston Villa vs Sunderland: 109 markets
+316:[Fortuna/FullOffer] Newcastle vs Arsenal: 109 markets
+359:[Fortuna/FullOffer] Fulham vs Newcastle: 1213 markets
+407:[Fortuna/FullOffer] Arsenal vs Hull: 1265 markets
+455:[Fortuna/FullOffer] Nottingham vs Man.City: 1241 markets
+500:[Fortuna/FullOffer] Leeds vs Tottenham: 1152 markets
+962:[Fortuna/FullOffer] Hull vs Brighton: 109 markets
+1078:[Fortuna/FullOffer] Liverpool vs Man.United: 109 markets
+1333:[Fortuna/FullOffer] Ipswich vs Bournemouth: 1176 markets
+1344:[Fortuna/FullOffer] Brighton vs Brentford: 1154 markets
+1665:[Fortuna/FullOffer] Man.United vs Aston Villa: 1150 markets
+1831:[Fortuna/FullOffer] Sunderland vs Chelsea: 1210 markets
+1858:[Fortuna/FullOffer] Crystal Palace vs Liverpool: 1181 markets
+1879:[Fortuna/FullOffer] Brentford vs Everton: 109 markets
+1884:[Fortuna/FullOffer] Chelsea vs Leeds: 109 markets
+1887:[Fortuna/FullOffer] Man.City vs Fulham: 109 markets
+1890:[Fortuna/FullOffer] Completed: 20 matches, 13115 total markets
+36414:[Fortuna/FullOffer] Found 20 fixtures
+36443:[Fortuna/FullOffer] Bournemouth vs Nottingham: 109 markets
+36532:[Fortuna/FullOffer] Coventry City vs Crystal Palace: 110 markets
+36575:[Fortuna/FullOffer] Tottenham vs Ipswich: 109 markets
+36645:[Fortuna/FullOffer] Everton vs Coventry City: 1282 markets
+36662:[Fortuna/FullOffer] Aston Villa vs Sunderland: 109 markets
+36675:[Fortuna/FullOffer] Newcastle vs Arsenal: 109 markets
+36713:[Fortuna/FullOffer] Fulham vs Newcastle: 1213 markets
+36737:[Fortuna/FullOffer] Arsenal vs Hull: 1265 markets
+36779:[Fortuna/FullOffer] Nottingham vs Man.City: 1241 markets
+36824:[Fortuna/FullOffer] Leeds vs Tottenham: 1152 markets
+36861:[Fortuna/FullOffer] Hull vs Brighton: 109 markets
+36876:[Fortuna/FullOffer] Liverpool vs Man.United: 109 markets
+37568:[Fortuna/FullOffer] Ipswich vs Bournemouth: 1176 markets
+37585:[Fortuna/FullOffer] Brighton vs Brentford: 1154 markets
+37610:[Fortuna/FullOffer] Man.United vs Aston Villa: 1150 markets
+37636:[Fortuna/FullOffer] Sunderland vs Chelsea: 1210 markets
+37650:[Fortuna/FullOffer] Crystal Palace vs Liverpool: 1181 markets
+37674:[Fortuna/FullOffer] Brentford vs Everton: 109 markets
+40305:[Fortuna/FullOffer] Chelsea vs Leeds: 109 markets
+40308:[Fortuna/FullOffer] Man.City vs Fulham: 109 markets
+40309:[Fortuna/FullOffer] Completed: 20 matches, 13115 total markets
+## Aggregator
+10822:[Aggregator/FullOffer] fortuna completed: 20 matches, 0 markets saved
+63433:[Aggregator/FullOffer] fortuna completed: 20 matches, 12897 markets saved
+## marketKey collisions (line numbers = backend.log; run 1 < 36350 <= run 2 < 67222 <= run 3 started 17:00Z)
+## per run: total 28/28/29; HALF_TIME_RESULT 9/9/10; player keys 19/19/19 (all Ipswich Town vs AFC Bournemouth). Total over 3 runs: 85.
+## (an earlier version of this file listed the run-1 lines under a 'run 2' header, with line numbers of a run-2 slice file; replaced 2026-11-06)
+## run 1 (all lines):
+10486: "HOME" for fortuna HALF_TIME_RESULT (premier-league:everton:coventry city)
+10487: "HOME" for fortuna HALF_TIME_RESULT (premier-league:fulham:newcastle united)
+10488: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:arsenal:hull city)
+10489: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:nottingham forest:manchester city)
+10490: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:leeds united:tottenham hotspur)
+10491: "HOME" for fortuna HALF_TIME_RESULT (premier-league:ipswich town:afc bournemouth)
+10492: "1+" for fortuna PLAYER_OFFSIDES_1H (premier-league:ipswich town:afc bournemouth)
+10493: "2+" for fortuna PLAYER_SHOTS_OUTSIDE_BOX (premier-league:ipswich town:afc bournemouth)
+10494: "1+" for fortuna PLAYER_ASSISTS (premier-league:ipswich town:afc bournemouth)
+10495: "YES" for fortuna PLAYER_CARDS (premier-league:ipswich town:afc bournemouth)
+10496: "2+" for fortuna PLAYER_SHOTS_IN_BOX (premier-league:ipswich town:afc bournemouth)
+10497: "1+" for fortuna PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX (premier-league:ipswich town:afc bournemouth)
+10498: "1+" for fortuna PLAYER_HEADER_SHOTS_ON_TARGET (premier-league:ipswich town:afc bournemouth)
+10499: "2+" for fortuna PLAYER_SHOTS_ON_TARGET (premier-league:ipswich town:afc bournemouth)
+10500: "4+" for fortuna PLAYER_SHOTS (premier-league:ipswich town:afc bournemouth)
+10501: "1+" for fortuna PLAYER_HEADER_GOAL (premier-league:ipswich town:afc bournemouth)
+10502: "2+" for fortuna PLAYER_GOALS (premier-league:ipswich town:afc bournemouth)
+10503: "Tak" for fortuna GOALSCORER_LAST (premier-league:ipswich town:afc bournemouth)
+10504: "1+" for fortuna PLAYER_FOOT_GOAL (premier-league:ipswich town:afc bournemouth)
+10505: "1+" for fortuna PLAYER_FOULS (premier-league:ipswich town:afc bournemouth)
+10506: "1+" for fortuna PLAYER_GOAL_OUTSIDE_BOX (premier-league:ipswich town:afc bournemouth)
+10507: "Tak" for fortuna PLAYER_GOAL_OR_ASSIST (premier-league:ipswich town:afc bournemouth)
+10508: "Tak" for fortuna GOALSCORER_FIRST (premier-league:ipswich town:afc bournemouth)
+10509: "YES" for fortuna PLAYER_FIRST_OR_LAST_GOAL (premier-league:ipswich town:afc bournemouth)
+10510: "1+" for fortuna PLAYER_PENALTY_AREA_GOAL (premier-league:ipswich town:afc bournemouth)
+10511: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:brighton hove albion:brentford)
+10512: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:sunderland:chelsea)
+10513: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:crystal palace:liverpool)
+## run 3, HALF_TIME_RESULT only (adds Manchester United vs Aston Villa):
+79814: "HOME" for fortuna HALF_TIME_RESULT (premier-league:everton:coventry city)
+79815: "HOME" for fortuna HALF_TIME_RESULT (premier-league:fulham:newcastle united)
+79816: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:arsenal:hull city)
+79817: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:nottingham forest:manchester city)
+79818: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:leeds united:tottenham hotspur)
+79819: "HOME" for fortuna HALF_TIME_RESULT (premier-league:ipswich town:afc bournemouth)
+79839: "DRAW" for fortuna HALF_TIME_RESULT (premier-league:brighton hove albion:brentford)
+79840: "HOME" for fortuna HALF_TIME_RESULT (premier-league:manchester united:aston villa)
+79841: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:sunderland:chelsea)
+79842: "AWAY" for fortuna HALF_TIME_RESULT (premier-league:crystal palace:liverpool)
+## run 3 unknown-market lines: 4278 (runs 1/2: 4277)
+## [fortuna] Unknown market lines per run
+run1: 4277  run2: 4277
+## Run 2 unknown ids (count, id, sample name)
+470	ufo:mtyp:00-6z	Coventry wygra, obie drużyny strzelą gola , każda drużyna powyżej 4.5 rzuty rożne
+297	ufo:mtyp:00-hs	SuperSub: Rushworth, Carl lub jego zmiennik otrzyma żółtą kartkę (reg.czas)(OPTA)
+277	ufo:mtyp:00-ok	Dibling, Tyler liczba strzałów w światło bramki z pola karnego (OPTA)
+277	ufo:mtyp:00-og	Rohl, Merlin liczba strzałów w światło bramki nogą  (OPTA)
+277	ufo:mtyp:00-o7	SuperSub: Thomas, Bobby lub jego zmiennik strzeli pierwszego gola w meczu (OPTA)
+277	ufo:mtyp:00-lq	1.połowa: Tchaouna, Loum liczba goli (OPTA)
+277	ufo:mtyp:00-lo	SuperSub: Dibling, Tyler i jego zmiennik - liczba strzałów (reg.czas)(OPTA)
+277	ufo:mtyp:00-he	Rohl, Merlin lub jego zmiennik zanotuje asystę (reg.czas)(OPTA)
+277	ufo:mtyp:00-ev	Rudoni, Jack lub jego zmiennik strzeli gola (reg.czas)(OPTA)
+276	ufo:mtyp:00-lj	Dibling, Tyler i jego zmiennik - liczba fauli (reg.czas)(OPTA)
+206	ufo:mtyp:00-li	SuperSub: Maitland-Niles, Ainsley i jego zmiennik - liczba strzałów w światło bramki
+139	ufo:mtyp:00-oq	SuperSub: Barry, Thierno lub jego zmiennik strzeli pierwszego gola dla Everton (OPTA
+139	ufo:mtyp:00-oo	SuperSub: Armstrong, Harrison lub jego zmiennik strzeli ostatniego gola dla Everton (O
+138	ufo:mtyp:00-or	SuperSub: Tchaouna, Loum lub jego zmiennik strzeli pierwszego gola dla Coventry City�
+138	ufo:mtyp:00-op	SuperSub: Thomas, Bobby lub jego zmiennik strzeli ostatniego gola dla  Coventry City 
+20	ufo:mtyp:00-k6	Mecz: liczba asyst w meczu
+20	ufo:mtyp:00-2n	1.połowa: obie drużyny strzelą gola
+20	ufo:mtyp:00-2c	Mecz: Nottingham - strzeli gola w obu połowach
+20	ufo:mtyp:00-2b	Mecz: Bournemouth - strzeli gola w obu połowach
+20	ufo:mtyp:00-1s	Mecz: Nottingham - wygra przynajmniej jedną połowę
+20	ufo:mtyp:00-1r	Mecz: Bournemouth - wygra przynajmniej jedną połowę
+20	ufo:mtyp:00-1o	Mecz: Bournemouth - wygra obie połowy
+20	ufo:mtyp:00-1i	Mecz: Nottingham - wygra do zera
+20	ufo:mtyp:00-1h	Mecz: Bournemouth - wygra do zera
+20	ufo:mtyp:00-09	Mecz: wynik/różnica zwycięstwa
+19	ufo:mtyp:00-1p	Mecz: Nottingham - wygra obie połowy
+10	ufo:mtyp:00-p5	Coventry City liczba czerwonych kartek
+10	ufo:mtyp:00-p4	Everton liczba czerwonych kartek
+10	ufo:mtyp:00-ka	Mecz: gol zdobyty przez drużynę grającą w osłabieniu po czerwonej kartce
+10	ufo:mtyp:00-k9	Gol zdobyty przez drużynę grającą w przewadze po czerwonej kartce przeciwnika
+10	ufo:mtyp:00-k7	Mecz: gol zdobyty strzałem głową
+10	ufo:mtyp:00-bv	Mecz: gol samobójczy
+10	ufo:mtyp:00-bu	Mecz: rzut karny lub czerwona kartka (Nie liczy się: CK dla ławki, po meczu, dla sztabu)
+10	ufo:mtyp:00-bt	Mecz: rzut karny i czerwona kartka
+10	ufo:mtyp:00-9a	Mecz: rzut karny
+10	ufo:mtyp:00-6j	Mecz: Remis / powyżej 2.5 goli
+10	ufo:mtyp:00-6i	Mecz: Remis / poniżej 2.5 gola
+10	ufo:mtyp:00-3e	2.połowa: dokładna liczba goli
+10	ufo:mtyp:00-35	Mecz: Coventry City wygra / min. jedna z drużyn nie straci gola
+10	ufo:mtyp:00-34	Mecz: Remis / min. jedna z drużyn nie straci gola
+10	ufo:mtyp:00-33	Mecz: Everton wygra / min. jedna z drużyn nie straci gola
+10	ufo:mtyp:00-32	Mecz: Coventry City wygra / obie drużyny strzelą gola
+10	ufo:mtyp:00-31	Mecz: Remis / obie drużyny strzelą gola
+10	ufo:mtyp:00-30	Mecz: Everton wygra / obie drużyny strzelą gola
+10	ufo:mtyp:00-1x	Mecz: dwójtyp/obie drużyny strzelą gola w 2.połowie
+10	ufo:mtyp:00-1w	Mecz: dwójtyp/obie drużyny strzelą gola w 1.połowie
+10	ufo:mtyp:00-19	Mecz: suma goli
+10	ufo:mtyp:00-17	Coventry City dokładna liczba goli
+10	ufo:mtyp:00-16	Everton dokładna liczba goli
+10	ufo:mtyp:00-0n	Mecz: Coventry City - przedział rzutów rożnych
+10	ufo:mtyp:00-0m	Mecz: Everton - przedział rzutów rożnych
+10	ufo:mtyp:00-0d	1.połowa: Coventry City - Czerwona Kartka (bez CK dla trenera i sztabu)
+10	ufo:mtyp:00-0c	1.połowa: Everton - Czerwona Kartka (bez CK dla trenera i sztabu)
+10	ufo:mtyp:00-0a	1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)
+10	ufo:mtyp:00-08	Mecz: Coventry City - Czerwona Kartka (bez CK dla trenera i sztabu)
+10	ufo:mtyp:00-07	Mecz: Everton - Czerwona Kartka (bez CK dla trenera i sztabu)
+8	ufo:mtyp:00-0f	Mecz: 1.rzut rożny
+4	ufo:mtyp:00-2v	1.połowa/mecz i 1.połowa liczba goli 0.5
+1	ufo:mtyp:00-r9	Mecz: Każda drużyna wykona 4 lub więcej rzutów rożnych
+1	ufo:mtyp:00-r8	Mecz: Każda drużyna wykona 3 lub więcej rzutów rożnych
+1	ufo:mtyp:00-r6	2.połowa: liczba rzutów karnych 0.5
+1	ufo:mtyp:00-r5	1.połowa: liczba rzutów karnych 0.5

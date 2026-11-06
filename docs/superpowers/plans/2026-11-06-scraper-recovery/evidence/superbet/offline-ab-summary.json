@@ -1,0 +1,691 @@
+{
+ "method": "CURRENT normalizer (git HEAD 377b47e) run offline over (a) the August raw bundle docs/match-audit/.tmp/raw*/premier_league_arsenal_coventry_city.json (frontend repo) and (b) a live 2026-11-06 capture of Arsenal vs Hull City parsed with the CURRENT parser; tools in evidence/lvbet/tools/",
+ "aug_arsenal_coventry": {
+  "markets": 2445,
+  "codes": 169,
+  "selections": 4544,
+  "unknownSel": 2416,
+  "unknownPct": 53.2,
+  "otherMarkets": 1957,
+  "otherMarketPct": 80,
+  "otherSelPct": 53.1,
+  "distinctOtherNames": 540,
+  "warns": 1312
+ },
+ "now_arsenal_hull": {
+  "markets": 2610,
+  "codes": 185,
+  "selections": 4585,
+  "unknownSel": 2583,
+  "unknownPct": 56.3,
+  "otherMarkets": 2104,
+  "otherMarketPct": 80.6,
+  "otherSelPct": 56.3,
+  "distinctOtherNames": 607,
+  "warns": 1400
+ },
+ "codesLost": [],
+ "codesGained": [
+  "AWAY_TEAM_GOAL_KICKS",
+  "AWAY_TEAM_TOTAL_THROW_INS",
+  "EACH_TEAM_TOTAL_THROW_INS_OVER",
+  "FIRST_GOAL_KICK",
+  "FIRST_OFFSIDE",
+  "GOAL_KICKS_TOTAL",
+  "HALF_TIME_FOULS_TOTAL",
+  "HALF_TIME_HOME_TEAM_FOULS_TOTAL",
+  "HALF_TIME_SHOTS_HANDICAP",
+  "HOME_TEAM_TOTAL_GOAL_KICKS",
+  "HOME_TEAM_TOTAL_THROW_INS",
+  "SHOTS_HANDICAP",
+  "SHOTS_ON_TARGET_HANDICAP",
+  "TACKLES_TOTAL",
+  "TEAM_TOTAL_TACKLES",
+  "THROW_INS_TOTAL"
+ ],
+ "lostDetail": {},
+ "otherNamesNow": [
+  [
+   "Zawodnik - liczba odbiorów",
+   183
+  ],
+  [
+   "Zawodnik - liczba popełnionych fauli",
+   172
+  ],
+  [
+   "Zawodnik - liczba fauli na zawodniku",
+   161
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów",
+   122
+  ],
+  [
+   "Zawodnik - liczba odbiorów na zawodniku",
+   118
+  ],
+  [
+   "Zawodnik - liczba strzałów spoza pola karnego",
+   102
+  ],
+  [
+   "Zawodnik - liczba strzałów prawą nogą",
+   95
+  ],
+  [
+   "Zawodnik - liczba strzałów lewą nogą",
+   93
+  ],
+  [
+   "Zawodnik - liczba strzałów głową",
+   83
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów lewą nogą",
+   71
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów prawą nogą",
+   71
+  ],
+  [
+   "Zawodnik - liczba asyst",
+   67
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów spoza pola karnego",
+   63
+  ],
+  [
+   "Zawodnik - strzeli 1. gola dla Hull City",
+   21
+  ],
+  [
+   "Zawodnik - strzeli 1. gola dla Arsenal",
+   20
+  ],
+  [
+   "Każda z drużyn powyżej X rzutów rożnych",
+   6
+  ],
+  [
+   "Arsenal wygra lub powyżej X goli w meczu",
+   5
+  ],
+  [
+   "Hull City wygra lub poniżej X goli w meczu",
+   5
+  ],
+  [
+   "Hull City wygra lub powyżej X goli w meczu",
+   5
+  ],
+  [
+   "Remis lub poniżej X goli w meczu",
+   5
+  ],
+  [
+   "Remis lub powyżej X goli w meczu",
+   5
+  ],
+  [
+   "Hull City - liczba obronionych strzałów przez bramkarza",
+   5
+  ],
+  [
+   "Arsenal - liczba obronionych strzałów przez bramkarza",
+   4
+  ],
+  [
+   "Liczba strzałów",
+   3
+  ],
+  [
+   "Arsenal wygra lub poniżej X goli w meczu",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników odda powyżej X celnych strzałów",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników powyżej X odbiorów",
+   3
+  ],
+  [
+   "Każda z drużyn powyżej X odbiorów",
+   3
+  ],
+  [
+   "1. połowa - liczba obronionych strzałów przez bramkarza",
+   3
+  ],
+  [
+   "Liczba rzutów rożnych od 10:00 do 19:59 minuty",
+   3
+  ],
+  [
+   "Liczba celnych strzałów od 0:00 do 9:59 minuty",
+   3
+  ],
+  [
+   "Liczba celnych strzałów od 10:00 do 19:59 minuty",
+   3
+  ],
+  [
+   "Liczba fauli od 0:00 do 9:59 minuty",
+   3
+  ],
+  [
+   "Liczba fauli od 10:00 do 19:59 minuty",
+   3
+  ],
+  [
+   "Liczba rzutów z autu od 0:00 do 9:59 minuty",
+   3
+  ],
+  [
+   "Liczba rzutów z autu od 10:00 do 19:59 minuty",
+   3
+  ],
+  [
+   "Liczba wybić od bramki od 0:00 do 9:59 minuty",
+   3
+  ],
+  [
+   "Liczba wybić od bramki od 10:00 do 19:59 minuty",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników odda powyżej X strzałów",
+   2
+  ],
+  [
+   "Którykolwiek z zawodników popełni powyżej X fauli",
+   2
+  ],
+  [
+   "Którykolwiek z zawodników powyżej X spalonych",
+   2
+  ],
+  [
+   "Którykolwiek z zawodników strzeli powyżej X goli",
+   2
+  ],
+  [
+   "Liczba przyznanych rzutów karnych",
+   2
+  ],
+  [
+   "Każda drużyna powyżej X wybić od bramki",
+   2
+  ],
+  [
+   "1. połowa - każda z drużyn powyżej X obronionych strzałów przez bramkarza",
+   2
+  ],
+  [
+   "Liczba goli od 10:00 do 19:59 minuty",
+   2
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 1.5 gola; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Powyżej 6.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Powyżej 0.5 gola w 2.połowie; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 0.5 gola; Arsenal wykona powyżej 4.5 rz.rożnych",
+   1
+  ],
+  [
+   "Arsenal będzie prowadzić w dowolnym momencie meczu; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Arsenal będzie prowadzić w dowolnym momencie meczu; Arsenal strzeli powyżej 0.5 gola w 1.połowie",
+   1
+  ],
+  [
+   "Arsenal wygra mecz; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Poniżej 11.5 celnych strzałów w meczu; Poniżej 4.5 gola w meczu",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie; Powyżej 5.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Poniżej 5.5 kartek w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Arsenal wygra lub zremisuje; Hull City strzeli poniżej 1.5 gola; Arsenal strzeli powyżej 1.5 gola",
+   1
+  ],
+  [
+   "Tim Iroegbunam powyżej 1.5 odbiorów; Elliot Stroud powyżej 1.5 odbiorów",
+   1
+  ],
+  [
+   "Tim Iroegbunam popełni powyżej 0.5 fauli; Oliver McBurnie popełni powyżej 0.5 fauli; Mohamed Belloumi popełni powyżej 0.5 fauli",
+   1
+  ],
+  [
+   "Arsenal najwięcej celnych strzałów; Arsenal wygra mecz; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Powyżej 7.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Poniżej 4.5 gola w meczu; Poniżej 4.5 kartek w meczu",
+   1
+  ],
+  [
+   "Christos Tzolis powyżej 2.5 strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 1.5 gola; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Powyżej 2.5 gola w meczu; Arsenal strzeli powyżej 1.5 gola",
+   1
+  ],
+  [
+   "Poniżej 6.5 gola w meczu; Powyżej 1.5 gola w meczu; Powyżej 0.5 gola w 1.połowie; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Christos Tzolis powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Kai Havertz powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 2.5 spalonych w meczu; Poniżej 4.5 gola w meczu",
+   1
+  ],
+  [
+   "Kai Havertz powyżej 2.5 strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Kai Havertz powyżej 0.5 celnych strzałów; Noni Madueke powyżej 0.5 celnych strzałów",
+   1
+  ],
+  [
+   "Arsenal strzeli w obu połowach; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Powyżej 8.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Każda z drużyn powyżej 0.5 rz.rożnych; Każda z drużyn powyżej 0.5 kartek",
+   1
+  ],
+  [
+   "Poniżej 10.5 celnych strzałów w meczu; Poniżej 4.5 gola w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Kai Havertz powyżej 0.5 celnych strzałów; Christos Tzolis powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Poniżej 11.5 celnych strzałów w meczu; Poniżej 5.5 gola w meczu; Poniżej 4.5 kartek w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Powyżej 2.5 gola w meczu; Poniżej 4.5 kartek w meczu",
+   1
+  ],
+  [
+   "Bruno Guimaraes powyżej 1.5 odbiorów; Declan Rice powyżej 1.5 odbiorów",
+   1
+  ]
+ ],
+ "otherNamesAug": [
+  [
+   "Zawodnik - liczba popełnionych fauli",
+   208
+  ],
+  [
+   "Zawodnik - liczba fauli na zawodniku",
+   193
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów",
+   151
+  ],
+  [
+   "Zawodnik - liczba strzałów prawą nogą",
+   115
+  ],
+  [
+   "Zawodnik - liczba strzałów lewą nogą",
+   113
+  ],
+  [
+   "Zawodnik - liczba strzałów spoza pola karnego",
+   113
+  ],
+  [
+   "Zawodnik - liczba strzałów głową",
+   99
+  ],
+  [
+   "Zawodnik - liczba asyst",
+   92
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów prawą nogą",
+   92
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów lewą nogą",
+   87
+  ],
+  [
+   "Zawodnik - liczba celnych strzałów spoza pola karnego",
+   73
+  ],
+  [
+   "Zawodnik - strzeli 1. gola dla Coventry City",
+   25
+  ],
+  [
+   "Zawodnik - strzeli 1. gola dla Arsenal",
+   23
+  ],
+  [
+   "Każda z drużyn powyżej X rzutów rożnych",
+   6
+  ],
+  [
+   "Coventry City wygra lub poniżej X goli w meczu",
+   5
+  ],
+  [
+   "Arsenal wygra lub powyżej X goli w meczu",
+   5
+  ],
+  [
+   "Coventry City wygra lub powyżej X goli w meczu",
+   5
+  ],
+  [
+   "Remis lub poniżej X goli w meczu",
+   5
+  ],
+  [
+   "Arsenal wygra lub poniżej X goli w meczu",
+   4
+  ],
+  [
+   "Remis lub powyżej X goli w meczu",
+   4
+  ],
+  [
+   "Liczba strzałów",
+   3
+  ],
+  [
+   "Arsenal - liczba obronionych strzałów przez bramkarza",
+   3
+  ],
+  [
+   "Coventry City - liczba obronionych strzałów przez bramkarza",
+   3
+  ],
+  [
+   "1. połowa - liczba obronionych strzałów przez bramkarza",
+   3
+  ],
+  [
+   "1. połowa - każda z drużyn powyżej X obronionych strzałów przez bramkarza",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników odda powyżej X celnych strzałów",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników odda powyżej X strzałów",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników popełni powyżej X fauli",
+   3
+  ],
+  [
+   "Którykolwiek z zawodników strzeli powyżej X goli",
+   2
+  ],
+  [
+   "Liczba przyznanych rzutów karnych",
+   2
+  ],
+  [
+   "Liczba goli od 10:00 do 19:59 minuty",
+   2
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Poniżej 5.5 kartek w meczu",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 0.5 gola; Arsenal wykona powyżej 4.5 rz.rożnych",
+   1
+  ],
+  [
+   "Arsenal będzie prowadzić w dowolnym momencie meczu; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Powyżej 6.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 1.5 gola; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 0.5 gola w 2.połowie; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Arsenal wygra mecz; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Arsenal będzie prowadzić w dowolnym momencie meczu; Arsenal strzeli powyżej 0.5 gola w 1.połowie",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie; Powyżej 5.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Arsenal wygra lub zremisuje; Coventry City strzeli poniżej 1.5 gola; Arsenal strzeli powyżej 1.5 gola",
+   1
+  ],
+  [
+   "Arsenal najwięcej celnych strzałów; Arsenal wygra mecz; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Poniżej 10.5 celnych strzałów w meczu; Poniżej 4.5 gola w meczu",
+   1
+  ],
+  [
+   "Poniżej 5.5 gola w meczu; Poniżej 5.5 kartek w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 1.5 gola; Arsenal wykona więcej rz.rożnych",
+   1
+  ],
+  [
+   "Tzolis, Christos powyżej 2.5 strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 2.5 spalonych w meczu; Poniżej 4.5 gola w meczu",
+   1
+  ],
+  [
+   "Coventry City powyżej 7.5 fauli; Coventry City otrzyma powyżej 1.5 kartek",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Powyżej 7.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Poniżej 6.5 gola w meczu; Powyżej 1.5 gola w meczu; Powyżej 0.5 gola w 1.połowie; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Każda z drużyn powyżej 0.5 rz.rożnych; Każda z drużyn powyżej 0.5 kartek",
+   1
+  ],
+  [
+   "Havertz, Kai powyżej 0.5 celnych strzałów; Madueke, Noni powyżej 0.5 celnych strzałów",
+   1
+  ],
+  [
+   "Powyżej 2.5 gola w meczu; Arsenal strzeli powyżej 1.5 gola",
+   1
+  ],
+  [
+   "Poniżej 4.5 gola w meczu; Poniżej 4.5 kartek w meczu",
+   1
+  ],
+  [
+   "Arsenal powyżej 7.5 fauli; Arsenal otrzyma powyżej 0.5 kartek",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Tzolis, Christos powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Havertz, Kai powyżej 2.5 strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Havertz, Kai powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Arsenal powyżej 4.5 celnych strzałów; Arsenal strzeli powyżej 0.5 gola; Arsenal wykona powyżej 5.5 rz.rożnych",
+   1
+  ],
+  [
+   "Simms, Ellis Reco popełni powyżej 0.5 fauli; Thomas-Asante, Brandon popełni powyżej 0.5 fauli; Amenda, Aurele popełni powyżej 0.5 fauli",
+   1
+  ],
+  [
+   "Tzolis, Christos powyżej 2.5 strzałów; Havertz, Kai powyżej 2.5 strzałów",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Powyżej 8.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Powyżej 1.5 gola w meczu; Powyżej 1.5 kartek w meczu; Powyżej 7.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Poniżej 4.5 gola w meczu; Powyżej 2.5 kartek w meczu",
+   1
+  ],
+  [
+   "Arsenal powyżej 5.5 celnych strzałów; Arsenal strzeli powyżej 1.5 gola",
+   1
+  ],
+  [
+   "Arsenal wygra lub zremisuje; Arsenal strzeli powyżej 0.5 gola; Arsenal otrzyma powyżej 0.5 kartek; Arsenal wykona powyżej 4.5 rz.rożnych",
+   1
+  ],
+  [
+   "Poniżej 4.5 gola w meczu; Poniżej 11.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Havertz, Kai powyżej 0.5 celnych strzałów; Tzolis, Christos powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 1.5 gola; Arsenal wykona powyżej 5.5 rz.rożnych",
+   1
+  ],
+  [
+   "Arsenal strzeli w obu połowach; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Havertz, Kai powyżej 0.5 celnych strzałów; Madueke, Noni powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Poniżej 9.5 celnych strzałów w meczu; Poniżej 4.5 gola w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Tzolis, Christos powyżej 0.5 celnych strzałów; Madueke, Noni powyżej 0.5 celnych strzałów; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Guimaraes, Bruno popełni powyżej 0.5 fauli; Havertz, Kai popełni powyżej 0.5 fauli; Calafiori, Riccardo popełni powyżej 0.5 fauli",
+   1
+  ],
+  [
+   "Arsenal wygra lub zremisuje; Arsenal strzeli powyżej 2.5 gola",
+   1
+  ],
+  [
+   "Gyokeres, Viktor strzeli gola; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Poniżej 10.5 celnych strzałów w meczu; Poniżej 5.5 gola w meczu; Poniżej 4.5 kartek w meczu; Poniżej 13.5 rz.rożnych w meczu",
+   1
+  ],
+  [
+   "Arsenal strzeli powyżej 2.5 gola; Arsenal wygra mecz",
+   1
+  ],
+  [
+   "Każda z drużyn powyżej 0.5 rz.rożnych; Powyżej 2.5 gola w meczu; Powyżej 1.5 kartek w meczu",
+   1
+  ]
+ ]
+}

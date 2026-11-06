@@ -1,0 +1,217 @@
+{
+ "method": "CURRENT normalizer (git HEAD 377b47e) run offline over (a) the August raw bundle docs/match-audit/.tmp/raw*/premier_league_arsenal_coventry_city.json (frontend repo) and (b) a live 2026-11-06 capture of Arsenal vs Hull City parsed with the CURRENT parser; tools in evidence/lvbet/tools/",
+ "aug_arsenal_coventry": {
+  "markets": 676,
+  "codes": 138,
+  "selections": 1678,
+  "unknownSel": 0,
+  "unknownPct": 0,
+  "otherMarkets": 0,
+  "otherMarketPct": 0,
+  "otherSelPct": 0,
+  "distinctOtherNames": 0,
+  "warns": 0
+ },
+ "now_arsenal_hull": {
+  "markets": 411,
+  "codes": 137,
+  "selections": 1439,
+  "unknownSel": 0,
+  "unknownPct": 0,
+  "otherMarkets": 5,
+  "otherMarketPct": 1.2,
+  "otherSelPct": 0.3,
+  "distinctOtherNames": 5,
+  "warns": 0
+ },
+ "codesLost": [
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX"
+ ],
+ "codesGained": [
+  "HT_OR_FT_RESULT",
+  "OTHER",
+  "OWN_GOAL",
+  "PENALTY_AWARDED"
+ ],
+ "lostDetail": {
+  "PLAYER_FOULS": {
+   "augRawNames": [
+    "Popełni co najmniej 1 faul",
+    "Popełni co najmniej 2 faule"
+   ],
+   "augSample": [
+    {
+     "name": "Popełni co najmniej 1 faul",
+     "groupName": "Inne",
+     "bmid": "-4897",
+     "param": "Aurele Amenda",
+     "code": "PLAYER_FOULS",
+     "key": "PLAYER_FOULS:Aurele Amenda",
+     "sels": [
+      [
+       "Amenda, Aurèle",
+       "1+",
+       1.22
+      ]
+     ]
+    },
+    {
+     "name": "Popełni co najmniej 1 faul",
+     "groupName": "Inne",
+     "bmid": "-4897",
+     "param": "Riccardo Calafiori",
+     "code": "PLAYER_FOULS",
+     "key": "PLAYER_FOULS:Riccardo Calafiori",
+     "sels": [
+      [
+       "Calafiori, Riccardo",
+       "1+",
+       1.26
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_FOULS_WON": {
+   "augRawNames": [
+    "Wywalczy co najmniej 1 faul",
+    "Wywalczy co najmniej 2 faule"
+   ],
+   "augSample": [
+    {
+     "name": "Wywalczy co najmniej 1 faul",
+     "groupName": "Inne",
+     "bmid": "-4899",
+     "param": "Aurele Amenda",
+     "code": "PLAYER_FOULS_WON",
+     "key": "PLAYER_FOULS_WON:Aurele Amenda",
+     "sels": [
+      [
+       "Amenda, Aurèle",
+       "1+",
+       1.64
+      ]
+     ]
+    },
+    {
+     "name": "Wywalczy co najmniej 1 faul",
+     "groupName": "Inne",
+     "bmid": "-4899",
+     "param": "Jake Bidwell",
+     "code": "PLAYER_FOULS_WON",
+     "key": "PLAYER_FOULS_WON:Jake Bidwell",
+     "sels": [
+      [
+       "Bidwell, Jake",
+       "1+",
+       1.84
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_SHOTS": {
+   "augRawNames": [
+    "Odda co najmniej 1 strzał",
+    "Odda co najmniej 2 strzały",
+    "Odda co najmniej 3 strzały"
+   ],
+   "augSample": [
+    {
+     "name": "Odda co najmniej 1 strzał",
+     "groupName": "Inne",
+     "bmid": "-30519",
+     "param": "Aurele Amenda",
+     "code": "PLAYER_SHOTS",
+     "key": "PLAYER_SHOTS:Aurele Amenda",
+     "sels": [
+      [
+       "Amenda, Aurèle",
+       "1+",
+       2.75
+      ]
+     ]
+    },
+    {
+     "name": "Odda co najmniej 1 strzał",
+     "groupName": "Inne",
+     "bmid": "-30519",
+     "param": "Riccardo Calafiori",
+     "code": "PLAYER_SHOTS",
+     "key": "PLAYER_SHOTS:Riccardo Calafiori",
+     "sels": [
+      [
+       "Calafiori, Riccardo",
+       "1+",
+       1.2
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX": {
+   "augRawNames": [
+    "Odda co najmniej 1 celny strzał spoza pola karnego",
+    "Odda co najmniej 2 celne strzały spoza pola karnego"
+   ],
+   "augSample": [
+    {
+     "name": "Odda co najmniej 1 celny strzał spoza pola karnego",
+     "groupName": "Inne",
+     "bmid": "-4893",
+     "param": "Riccardo Calafiori",
+     "code": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+     "key": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX:Riccardo Calafiori",
+     "sels": [
+      [
+       "Calafiori, Riccardo",
+       "1+",
+       4.6
+      ]
+     ]
+    },
+    {
+     "name": "Odda co najmniej 1 celny strzał spoza pola karnego",
+     "groupName": "Inne",
+     "bmid": "-4893",
+     "param": "Max Dowman",
+     "code": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+     "key": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX:Max Dowman",
+     "sels": [
+      [
+       "Dowman, Max",
+       "1+",
+       2.95
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "otherNamesNow": [
+  [
+   "Zakłady specjalne #4.1",
+   1
+  ],
+  [
+   "Każda drużyna powyżej 1.5 rzutu rożnego",
+   1
+  ],
+  [
+   "Każda drużyna powyżej 2.5 rzutu rożnego",
+   1
+  ],
+  [
+   "Każda drużyna powyżej 3.5 rzutu rożnego",
+   1
+  ],
+  [
+   "Każda drużyna powyżej 4.5 rzutu rożnego",
+   1
+  ]
+ ],
+ "otherNamesAug": []
+}

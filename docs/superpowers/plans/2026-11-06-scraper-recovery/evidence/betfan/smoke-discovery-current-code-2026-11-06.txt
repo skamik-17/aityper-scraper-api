@@ -1,0 +1,65 @@
+[BrowserPool] Creating new browser (1/14)
+[Betfan/FullOffer] Found 20 events
+[Betfan/FullOffer] Everton vs Coventry City: 877 markets
+[Betfan/FullOffer] Leeds United vs Tottenham: 897 markets
+[Betfan/FullOffer] Arsenal vs Hull: 978 markets
+[Betfan/FullOffer] Fulham vs Newcastle: 900 markets
+[Betfan/FullOffer] Nottingham Forest vs Manchester City: 802 markets
+[Betfan/FullOffer] Sunderland vs Chelsea: 821 markets
+[Betfan/FullOffer] Crystal Palace vs Liverpool: 864 markets
+[Betfan/FullOffer] Ipswich vs Bournemouth: 860 markets
+[Betfan/FullOffer] Brighton vs Brentford: 911 markets
+[Betfan/FullOffer] Manchester United vs Aston Villa: 817 markets
+[Betfan/FullOffer] Manchester City vs Fulham: 83 markets
+[Betfan/FullOffer] Coventry City vs Crystal Palace: 84 markets
+[Betfan/FullOffer] Aston Villa vs Sunderland: 84 markets
+[Betfan/FullOffer] Bournemouth vs Nottingham Forest: 85 markets
+[Betfan/FullOffer] Chelsea vs Leeds United: 85 markets
+[Betfan/FullOffer] Tottenham vs Ipswich: 82 markets
+[Betfan/FullOffer] Newcastle vs Arsenal: 82 markets
+[Betfan/FullOffer] Hull vs Brighton: 82 markets
+[Betfan/FullOffer] Liverpool vs Manchester United: 85 markets
+[Betfan/FullOffer] Brentford vs Everton: 85 markets
+[Betfan/FullOffer] Completed: 20 matches, 9564 total markets
+[BrowserPool] Browser released (1 available, 1 total)
+...
+📦 MARKET: Liczba celnych strzałów na bramkę (OPTA)	   Market Key: TOTAL_SHOTS_ON_TARGET:7.5
+📦 MARKET: Liczba celnych strzałów na bramkę (OPTA)	   Market Key: TOTAL_SHOTS_ON_TARGET:8.5
+📦 MARKET: Liczba celnych strzałów na bramkę (OPTA)	   Market Key: TOTAL_SHOTS_ON_TARGET:9.5
+📦 MARKET: Everton - liczba celnych strzałów na bramkę (OPTA)	   Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:4.5
+📦 MARKET: Everton - liczba celnych strzałów na bramkę (OPTA)	   Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:5.5
+📦 MARKET: Coventry City - liczba celnych strzałów na bramkę (OPTA)	   Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:2.5
+📦 MARKET: Coventry City - liczba celnych strzałów na bramkę (OPTA)	   Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:3.5
+📦 MARKET: Liczba strzałów (OPTA)	   Market Key: TOTAL_SHOTS:28.5
+📦 MARKET: Everton - liczba strzałów (OPTA)	   Market Key: TEAM_TOTAL_SHOTS:16.5
+📦 MARKET: Coventry City - liczba strzałów (OPTA)	   Market Key: TEAM_TOTAL_SHOTS:11.5
+📦 MARKET: Liczba fauli (OPTA)	   Market Key: FOULS_TOTAL:22.5
+📦 MARKET: Everton - liczba fauli (OPTA)	   Market Key: TEAM_TOTAL_FOULS:10.5
+📦 MARKET: Coventry City - liczba fauli (OPTA)	   Market Key: OTHER
+📊 SUMMARY
+====================================================================================================
+Total markets: 17
+✅ Mapped: 16
+❌ Unmapped/OTHER: 1
+⚠️  With issues: 1
+Kto więcej celnych strzałów (OPTA)       → MOST_SHOTS_ON_TARGET      TRIPLE_BUTTONS     
+Liczba celnych strzałów na bramkę (OPTA  → TOTAL_SHOTS_ON_TARGET     STAT_RANGE         
+Liczba celnych strzałów na bramkę (OPTA  → TOTAL_SHOTS_ON_TARGET     STAT_RANGE         
+Liczba celnych strzałów na bramkę (OPTA  → TOTAL_SHOTS_ON_TARGET     STAT_RANGE         
+Everton - liczba celnych strzałów na br  → TEAM_TOTAL_SHOTS_ON_TARGET STAT_RANGE         
+Everton - liczba celnych strzałów na br  → TEAM_TOTAL_SHOTS_ON_TARGET STAT_RANGE         
+Coventry City - liczba celnych strzałów  → TEAM_TOTAL_SHOTS_ON_TARGET STAT_RANGE         
+Coventry City - liczba celnych strzałów  → TEAM_TOTAL_SHOTS_ON_TARGET STAT_RANGE         
+Liczba strzałów (OPTA)                   → TOTAL_SHOTS               STAT_RANGE         
+Everton - liczba strzałów (OPTA)         → TEAM_TOTAL_SHOTS          STAT_RANGE         
+Coventry City - liczba strzałów (OPTA)   → TEAM_TOTAL_SHOTS          STAT_RANGE         
+Liczba fauli (OPTA)                      → FOULS_TOTAL               STAT_RANGE         
+Everton - liczba fauli (OPTA)            → TEAM_TOTAL_FOULS          STAT_RANGE         
+Liczba spalonych (OPTA)                  → OFFSIDES_TOTAL            STAT_RANGE         
+Everton - Liczba spalonych (OPTA)        → HOME_TEAM_TOTAL_OFFSIDES  STAT_RANGE         
+Coventry City - Liczba spalonych (OPTA)  → AWAY_TEAM_TOTAL_OFFSIDES  STAT_RANGE         
+
+❌ UNMAPPED MARKETS:
+   Coventry City - liczba fauli (OPTA)      [Poniżej 12.5, Powyżej 12.5]
+betfan exit 124
+# timeout 240 fired after the summary (process does not exit by itself; BrowserPool keeps Chromium alive)

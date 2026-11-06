@@ -1,0 +1,46 @@
+[forBET/FullOffer] Found 20 events, fetching details for each...
+[forBET/FullOffer] Everton vs Coventry: 494 markets
+[forBET/FullOffer] Leeds United vs Tottenham: 465 markets
+[forBET/FullOffer] Arsenal FC vs Hull City: 470 markets
+[forBET/FullOffer] Fulham FC vs Newcastle: 456 markets
+[forBET/FullOffer] Nottingham vs Manchester City: 476 markets
+[forBET/FullOffer] Ipswich vs Bournemouth: 427 markets
+[forBET/FullOffer] Brighton vs Brentford: 436 markets
+[forBET/FullOffer] Sunderland vs Chelsea: 419 markets
+[forBET/FullOffer] Crystal Palace vs Liverpool: 419 markets
+[forBET/FullOffer] Manchester United vs Aston Villa: 448 markets
+[forBET/FullOffer] Manchester City vs Fulham FC: 149 markets
+[forBET/FullOffer] Bournemouth vs Nottingham: 148 markets
+[forBET/FullOffer] Tottenham vs Ipswich: 148 markets
+[forBET/FullOffer] Coventry vs Crystal Palace: 149 markets
+[forBET/FullOffer] Chelsea vs Leeds United: 149 markets
+[forBET/FullOffer] Aston Villa vs Sunderland: 149 markets
+[forBET/FullOffer] Newcastle vs Arsenal FC: 148 markets
+[forBET/FullOffer] Hull City vs Brighton: 148 markets
+[forBET/FullOffer] Liverpool vs Manchester United: 149 markets
+[forBET/FullOffer] Brentford vs Everton: 149 markets
+[forBET/FullOffer] Completed: 20 matches, 5996 total markets
+[Aggregator/FullOffer] forbet completed: 20 matches, 0 markets saved
+[forBET/FullOffer] Found 20 events, fetching details for each...
+[forBET/FullOffer] Everton vs Coventry: 494 markets
+[forBET/FullOffer] Leeds United vs Tottenham: 465 markets
+[forBET/FullOffer] Arsenal FC vs Hull City: 470 markets
+[forBET/FullOffer] Fulham FC vs Newcastle: 456 markets
+[forBET/FullOffer] Nottingham vs Manchester City: 476 markets
+[forBET/FullOffer] Ipswich vs Bournemouth: 427 markets
+[forBET/FullOffer] Brighton vs Brentford: 435 markets
+[forBET/FullOffer] Sunderland vs Chelsea: 419 markets
+[forBET/FullOffer] Crystal Palace vs Liverpool: 419 markets
+[forBET/FullOffer] Manchester United vs Aston Villa: 448 markets
+[forBET/FullOffer] Manchester City vs Fulham FC: 149 markets
+[forBET/FullOffer] Bournemouth vs Nottingham: 148 markets
+[forBET/FullOffer] Tottenham vs Ipswich: 148 markets
+[forBET/FullOffer] Coventry vs Crystal Palace: 149 markets
+[forBET/FullOffer] Chelsea vs Leeds United: 149 markets
+[forBET/FullOffer] Aston Villa vs Sunderland: 149 markets
+[forBET/FullOffer] Newcastle vs Arsenal FC: 148 markets
+[forBET/FullOffer] Hull City vs Brighton: 148 markets
+[forBET/FullOffer] Liverpool vs Manchester United: 149 markets
+[forBET/FullOffer] Brentford vs Everton: 149 markets
+[forBET/FullOffer] Completed: 20 matches, 5995 total markets
+[Aggregator/FullOffer] forbet completed: 20 matches, 5869 markets saved

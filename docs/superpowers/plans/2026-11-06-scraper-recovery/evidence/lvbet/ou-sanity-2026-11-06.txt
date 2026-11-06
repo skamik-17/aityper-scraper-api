@@ -1,0 +1,9 @@
+nm-ars-hul.json 1.5 lvbet {'OVER': 1.16, 'UNDER': 5.15} {'OVER': '+0.0%', 'UNDER': '+8.4%'} sels: ['OVER', 'UNDER']
+nm-ars-hul.json 2.5 lvbet MISSING
+nm-ars-hul.json 3.5 lvbet MISSING
+nm-lee-tot.json 1.5 lvbet {'OVER': 1.3, 'UNDER': 3.45} {'OVER': '+1.6%', 'UNDER': '+2.2%'} sels: ['OVER', 'UNDER']
+nm-lee-tot.json 2.5 lvbet MISSING
+nm-lee-tot.json 3.5 lvbet MISSING
+nm-mci-ful.json 1.5 lvbet {'OVER': 1.14, 'UNDER': 5.6} {'OVER': '+0.0%', 'UNDER': '+12.0%'} sels: ['OVER', 'UNDER']
+nm-mci-ful.json 2.5 lvbet MISSING
+nm-mci-ful.json 3.5 lvbet MISSING

@@ -1,0 +1,1149 @@
+{
+ "method": "CURRENT normalizer (git HEAD 377b47e) run offline over (a) the August raw bundle docs/match-audit/.tmp/raw*/premier_league_arsenal_coventry_city.json (frontend repo) and (b) a live 2026-11-06 capture of Arsenal vs Hull City parsed with the CURRENT parser; tools in evidence/lvbet/tools/",
+ "aug_arsenal_coventry": {
+  "markets": 1378,
+  "codes": 162,
+  "selections": 3899,
+  "unknownSel": 867,
+  "unknownPct": 22.2,
+  "otherMarkets": 149,
+  "otherMarketPct": 10.8,
+  "otherSelPct": 19.2,
+  "distinctOtherNames": 98,
+  "warns": 149
+ },
+ "now_arsenal_hull": {
+  "markets": 628,
+  "codes": 160,
+  "selections": 5415,
+  "unknownSel": 3243,
+  "unknownPct": 59.9,
+  "otherMarkets": 151,
+  "otherMarketPct": 24,
+  "otherSelPct": 51.1,
+  "distinctOtherNames": 130,
+  "warns": 151
+ },
+ "codesLost": [
+  "BOTH_TEAMS_2PLUS_CARDS",
+  "HALF_TIME_HOME_EXACT_GOALS",
+  "HOME_EXACT_GOALS",
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_GOAL_AND_ASSIST",
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET",
+  "RED_CARDS_TOTAL"
+ ],
+ "codesGained": [
+  "ANY_PLAYER_FIRST_GOAL",
+  "CARDS_POINTS_1X2",
+  "CARDS_POINTS_HANDICAP",
+  "DIRECT_RED_CARD",
+  "LAST_CORNER",
+  "PLAYER_ASSIST_PAIRS",
+  "SECOND_HALF_RED_CARD"
+ ],
+ "lostDetail": {
+  "BOTH_TEAMS_2PLUS_CARDS": {
+   "augRawNames": [
+    "Obie drużyny otrzymają min. 2 kartki"
+   ],
+   "augSample": [
+    {
+     "name": "Obie drużyny otrzymają min. 2 kartki",
+     "groupName": "Gole",
+     "code": "BOTH_TEAMS_2PLUS_CARDS",
+     "key": "BOTH_TEAMS_2PLUS_CARDS",
+     "sels": [
+      [
+       "Tak",
+       "YES",
+       3.6
+      ],
+      [
+       "Nie",
+       "NO",
+       1.25
+      ]
+     ]
+    }
+   ]
+  },
+  "HALF_TIME_HOME_EXACT_GOALS": {
+   "augRawNames": [
+    "1. Połowa - Arsenal dokładna liczba goli"
+   ],
+   "augSample": [
+    {
+     "name": "1. Połowa - Arsenal dokładna liczba goli",
+     "groupName": "Gole",
+     "code": "HALF_TIME_HOME_EXACT_GOALS",
+     "key": "HALF_TIME_HOME_EXACT_GOALS",
+     "sels": [
+      [
+       "0",
+       "0",
+       2.85
+      ],
+      [
+       "1",
+       "1",
+       2.55
+      ],
+      [
+       "2+",
+       "2+",
+       2.55
+      ]
+     ]
+    }
+   ]
+  },
+  "HOME_EXACT_GOALS": {
+   "augRawNames": [
+    "Arsenal - Dokładna liczba goli"
+   ],
+   "augSample": [
+    {
+     "name": "Arsenal - Dokładna liczba goli",
+     "groupName": "Gole",
+     "code": "HOME_EXACT_GOALS",
+     "key": "HOME_EXACT_GOALS",
+     "sels": [
+      [
+       "0",
+       "0",
+       7.75
+      ],
+      [
+       "1",
+       "1",
+       4.5
+      ],
+      [
+       "2",
+       "2",
+       3.35
+      ],
+      [
+       "3",
+       "3",
+       3.85
+      ],
+      [
+       "4+",
+       "4+",
+       3.25
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_FOULS": {
+   "augRawNames": [
+    "Zawodnicy (faule popełnione) - powyżej 0.5 (musi rozpocząć w wyjściowej \"11\") 0.5",
+    "Zawodnicy (faule popełnione) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+    "Zawodnicy (faule popełnione) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+    "Zawodnicy (faule popełnione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+   ],
+   "augSample": [
+    {
+     "name": "Zawodnicy (faule popełnione) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+     "groupName": "Inne",
+     "param": "Gustavo Hamer",
+     "code": "PLAYER_FOULS",
+     "key": "PLAYER_FOULS:Gustavo Hamer",
+     "sels": [
+      [
+       "Powyzej 1.5",
+       "2+",
+       1.4
+      ]
+     ]
+    },
+    {
+     "name": "Zawodnicy (faule popełnione) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+     "groupName": "Inne",
+     "param": "Frank Onyeka",
+     "code": "PLAYER_FOULS",
+     "key": "PLAYER_FOULS:Frank Onyeka",
+     "sels": [
+      [
+       "Powyzej 1.5",
+       "2+",
+       1.42
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_FOULS_WON": {
+   "augRawNames": [
+    "Zawodnicy (faule zarobione) - powyżej 0.5 (musi rozpocząć w wyjściowej \"11\") 0.5",
+    "Zawodnicy (faule zarobione) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+    "Zawodnicy (faule zarobione) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+    "Zawodnicy (faule zarobione) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5"
+   ],
+   "augSample": [
+    {
+     "name": "Zawodnicy (faule zarobione) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+     "groupName": "Inne",
+     "param": "Max Dowman",
+     "code": "PLAYER_FOULS_WON",
+     "key": "PLAYER_FOULS_WON:Max Dowman",
+     "sels": [
+      [
+       "Powyzej 2.5",
+       "3+",
+       2.17
+      ]
+     ]
+    },
+    {
+     "name": "Zawodnicy (faule zarobione) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+     "groupName": "Inne",
+     "param": "Bruno Guimaraes",
+     "code": "PLAYER_FOULS_WON",
+     "key": "PLAYER_FOULS_WON:Bruno Guimaraes",
+     "sels": [
+      [
+       "Powyzej 2.5",
+       "3+",
+       2.42
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_GOAL_AND_ASSIST": {
+   "augRawNames": [
+    "Strzeli gola i zaliczy asystę"
+   ],
+   "augSample": [
+    {
+     "name": "Strzeli gola i zaliczy asystę",
+     "groupName": "Inne",
+     "code": "PLAYER_GOAL_AND_ASSIST",
+     "key": "PLAYER_GOAL_AND_ASSIST",
+     "sels": [
+      [
+       "Christos Tzolis",
+       "Christos Tzolis",
+       4.9
+      ],
+      [
+       "Bukayo Saka",
+       "Bukayo Saka",
+       5.9
+      ],
+      [
+       "Reiss Nelson",
+       "Reiss Nelson",
+       6.25
+      ],
+      [
+       "Kai Havertz",
+       "Kai Havertz",
+       6.75
+      ],
+      [
+       "Gabriel Jesus",
+       "Gabriel Jesus",
+       7.25
+      ],
+      [
+       "Viktor Gyokeres",
+       "Viktor Gyokeres",
+       7.5
+      ],
+      [
+       "Max Dowman",
+       "Max Dowman",
+       7.75
+      ],
+      [
+       "Noni Madueke",
+       "Noni Madueke",
+       7.75
+      ],
+      [
+       "Fabio Vieira",
+       "Fabio Vieira",
+       7.75
+      ],
+      [
+       "Gabriel Martinelli",
+       "Gabriel Martinelli",
+       8
+      ],
+      [
+       "Eberechi Eze",
+       "Eberechi Eze",
+       8.25
+      ],
+      [
+       "Martin Odegaard",
+       "Martin Odegaard",
+       9.5
+      ],
+      [
+       "Mikel Merino",
+       "Mikel Merino",
+       9.75
+      ],
+      [
+       "Ethan Nwaneri",
+       "Ethan Nwaneri",
+       9.75
+      ],
+      [
+       "Bruno Guimaraes",
+       "Bruno Guimaraes",
+       13
+      ],
+      [
+       "Declan Rice",
+       "Declan Rice",
+       14
+      ],
+      [
+       "Riccardo Calafiori",
+       "Riccardo Calafiori",
+       21
+      ],
+      [
+       "Myles Lewis-Skelly",
+       "Myles Lewis-Skelly",
+       23
+      ],
+      [
+       "Ephron Mason-Clark",
+       "Ephron Mason-Clark",
+       25
+      ],
+      [
+       "Martin Zubimendi",
+       "Martin Zubimendi",
+       25
+      ],
+      [
+       "Ellis Simms",
+       "Ellis Simms",
+       29
+      ],
+      [
+       "Ben White",
+       "Ben White",
+       29
+      ],
+      [
+       "Victor Torp Overgaard",
+       "Victor Torp",
+       31
+      ],
+      [
+       "Sidiki Cherif",
+       "Sidiki Cherif",
+       36
+      ],
+      [
+       "Cristhian Mosquera",
+       "Cristhian Mosquera",
+       36
+      ],
+      [
+       "Gabriel Magalhaes",
+       "Gabriel Magalhaes",
+       46
+      ],
+      [
+       "Gustavo Hamer",
+       "Gustavo Hamer",
+       51
+      ],
+      [
+       "Piero Hincapie",
+       "Piero Hincapie",
+       51
+      ],
+      [
+       "Brandon Thomas-Asante",
+       "Brandon Thomas-Asante",
+       56
+      ],
+      [
+       "Jack Rudoni",
+       "Jack Rudoni",
+       56
+      ],
+      [
+       "Taiwo Awoniyi",
+       "Taiwo Awoniyi",
+       61
+      ],
+      [
+       "Tatsuhiro Sakamoto",
+       "Tatsuhiro Sakamoto",
+       67
+      ],
+      [
+       "Loum Tchaouna",
+       "Loum Tchaouna",
+       67
+      ],
+      [
+       "Josh Eccles",
+       "Josh Eccles",
+       67
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_SHOTS": {
+   "augRawNames": [
+    "Zawodnicy (strzały) - powyżej 0.5 (musi rozpocząć w wyjściowej \"11\") 0.5",
+    "Zawodnicy (strzały) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+    "Zawodnicy (strzały) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+    "Zawodnicy (strzały) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+    "Zawodnicy (strzały) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\") 4.5",
+    "Zawodnicy (strzały) - powyżej 5.5 (musi rozpocząć w wyjściowej \"11\") 5.5"
+   ],
+   "augSample": [
+    {
+     "name": "Zawodnicy (strzały) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+     "groupName": "Inne",
+     "param": "Christos Tzolis",
+     "code": "PLAYER_SHOTS",
+     "key": "PLAYER_SHOTS:Christos Tzolis",
+     "sels": [
+      [
+       "Powyzej 2.5",
+       "3+",
+       1.25
+      ]
+     ]
+    },
+    {
+     "name": "Zawodnicy (strzały) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+     "groupName": "Inne",
+     "param": "Viktor Gyokeres",
+     "code": "PLAYER_SHOTS",
+     "key": "PLAYER_SHOTS:Viktor Gyokeres",
+     "sels": [
+      [
+       "Powyzej 2.5",
+       "3+",
+       1.28
+      ]
+     ]
+    }
+   ]
+  },
+  "PLAYER_SHOTS_ON_TARGET": {
+   "augRawNames": [
+    "Zawodnicy (strzały celne) - powyżej 0.5 (musi rozpocząć w wyjściowej \"11\") 0.5",
+    "Zawodnicy (strzały celne) - powyżej 1.5 (musi rozpocząć w wyjściowej \"11\") 1.5",
+    "Zawodnicy (strzały celne) - powyżej 2.5 (musi rozpocząć w wyjściowej \"11\") 2.5",
+    "Zawodnicy (strzały celne) - powyżej 3.5 (musi rozpocząć w wyjściowej \"11\") 3.5",
+    "Zawodnicy (strzały celne) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\") 4.5"
+   ],
+   "augSample": [
+    {
+     "name": "Zawodnicy (strzały celne) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\") 4.5",
+     "groupName": "Inne",
+     "param": "Viktor Gyokeres",
+     "code": "PLAYER_SHOTS_ON_TARGET",
+     "key": "PLAYER_SHOTS_ON_TARGET:Viktor Gyokeres",
+     "sels": [
+      [
+       "Powyzej 4.5",
+       "5+",
+       13
+      ]
+     ]
+    },
+    {
+     "name": "Zawodnicy (strzały celne) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\") 4.5",
+     "groupName": "Inne",
+     "param": "Gabriel Jesus",
+     "code": "PLAYER_SHOTS_ON_TARGET",
+     "key": "PLAYER_SHOTS_ON_TARGET:Gabriel Jesus",
+     "sels": [
+      [
+       "Powyzej 4.5",
+       "5+",
+       19
+      ]
+     ]
+    }
+   ]
+  },
+  "RED_CARDS_TOTAL": {
+   "augRawNames": [
+    "Czerwone kartki: Suma 1.5"
+   ],
+   "augSample": [
+    {
+     "name": "Czerwone kartki: Suma 1.5",
+     "groupName": "Kartki",
+     "param": "1.5",
+     "code": "RED_CARDS_TOTAL",
+     "key": "RED_CARDS_TOTAL:1.5",
+     "sels": [
+      [
+       "Powyżej (1.5)",
+       "OVER",
+       16
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "otherNamesNow": [
+  [
+   "Rzuty rożne: 2. połowa",
+   4
+  ],
+  [
+   "Kartki: Hull City - Suma punktów (ŻK - 1p, CzK - 2p)",
+   3
+  ],
+  [
+   "Kartki: Arsenal - Suma punktów (ŻK - 1p, CzK - 2p)",
+   3
+  ],
+  [
+   "Handicap - Suma goli w pierwszej połowie vs. Suma goli w drugiej połowie",
+   3
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59) - Arsenal: Rzuty rożne",
+   2
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59) - Hull City: Rzuty rożne",
+   2
+  ],
+  [
+   "1-75 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-30 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-75 min. - Hull City liczba goli",
+   2
+  ],
+  [
+   "1-60 min. - Hull City liczba goli",
+   2
+  ],
+  [
+   "1-75 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-15 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-60 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-60 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-30 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-15 min. - Liczba goli",
+   2
+  ],
+  [
+   "Kartki - 1. połowa: Arsenal - Suma punktów (ŻK - 1p, CzK - 2p)",
+   1
+  ],
+  [
+   "Kartki - 1. połowa: Hull City - Suma punktów (ŻK - 1p, CzK - 2p)",
+   1
+  ],
+  [
+   "Arsenal wygra dokładnie 3.0 golami",
+   1
+  ],
+  [
+   "Outcome And Arsenal Total Goals (3.5)",
+   1
+  ],
+  [
+   "Arsenal wygra dokładnie 4.0 golami",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal wygra dokładnie (3.0) golami",
+   1
+  ],
+  [
+   "Outcome And Hull City Total Goals (3.5)",
+   1
+  ],
+  [
+   "2. Połowa - Hull City wygra dokładnie (1.0) golami",
+   1
+  ],
+  [
+   "Arsenal wygra i strzeli dokładnie 3.0 goli",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (3.0) golami",
+   1
+  ],
+  [
+   "Outcome And Hull City Total Goals (1.5)",
+   1
+  ],
+  [
+   "Outcome And Arsenal Total Goals (2.5)",
+   1
+  ],
+  [
+   "1-60 min. - Handicap",
+   1
+  ],
+  [
+   "Outcome And Hull City Total Goals (2.5)",
+   1
+  ],
+  [
+   "1-30 min. - Hull City liczba goli",
+   1
+  ],
+  [
+   "1-75 min. - Handicap",
+   1
+  ],
+  [
+   "Arsenal wygra i strzeli dokładnie 2.0 goli",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (1.0) golami",
+   1
+  ],
+  [
+   "Arsenal wygra dokładnie 1.0 golami",
+   1
+  ],
+  [
+   "Outcome And Arsenal Total Goals (1.5)",
+   1
+  ],
+  [
+   "1-30 min. - Handicap",
+   1
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59): Rzuty wolne",
+   1
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59): Wybicia od bramki",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (2.0) golami",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal wygra dokładnie (2.0) golami",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal wygra dokładnie (1.0) golami",
+   1
+  ],
+  [
+   "1-15 min. - Hull City liczba goli",
+   1
+  ],
+  [
+   "Arsenal wygra i strzeli dokładnie 1.0 goli",
+   1
+  ],
+  [
+   "Arsenal wygra i strzeli dokładnie 4.0 goli",
+   1
+  ],
+  [
+   "Arsenal wygra dokładnie 2.0 golami",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Rzut rożny",
+   1
+  ],
+  [
+   "Żółte kartki: Podwójna szansa (liczy się tylko pierwsza żółta kartka dla zawodnika)",
+   1
+  ],
+  [
+   "Żółte kartki: Wynik (liczy się tylko pierwsza żółta kartka dla zawodnika)",
+   1
+  ],
+  [
+   "Gol samobójczy w meczu",
+   1
+  ],
+  [
+   "Strzały w obramowanie (słupek/poprzeczka)",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola z rzutu wolnego",
+   1
+  ],
+  [
+   "2 rzuty karne w meczu",
+   1
+  ],
+  [
+   "Spalone zawodnika",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola w 2. połowie",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola prawą nogą",
+   1
+  ],
+  [
+   "Strzały celne głową",
+   1
+  ],
+  [
+   "Strzały celne",
+   1
+  ],
+  [
+   "Strzały celne zawodnika - 2. połowa",
+   1
+  ],
+  [
+   "Strzały celne zawodnika - 1. połowa",
+   1
+  ],
+  [
+   "Popełnione faule",
+   1
+  ],
+  [
+   "Strzały celne lewą nogą",
+   1
+  ],
+  [
+   "Strzały celne spoza pola karnego",
+   1
+  ],
+  [
+   "Podania celne",
+   1
+  ],
+  [
+   "Podania (celne + niecelne)",
+   1
+  ],
+  [
+   "Strzeli w pierwszych 10. minutach",
+   1
+  ],
+  [
+   "Strzały celne prawą nogą",
+   1
+  ],
+  [
+   "Obrony bramkarza",
+   1
+  ],
+  [
+   "Strzały spoza pola karnego",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Gol",
+   1
+  ],
+  [
+   "Hull City strzeli gola / zwycięzca meczu",
+   1
+  ],
+  [
+   "Strzały",
+   1
+  ],
+  [
+   "Czerwona kartka: Hull City",
+   1
+  ],
+  [
+   "Oba zespoły otrzymają kartkę w obu połowach",
+   1
+  ],
+  [
+   "Zespół otrzyma pierwszą kartkę",
+   1
+  ],
+  [
+   "Drużyna, która strzeli pierwszego gola (cały mecz) i wynik 2. połowy",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola lewą nogą",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola i zanotuje asystę",
+   1
+  ],
+  [
+   "Strzały celne zawodnika - Każda połowa",
+   1
+  ],
+  [
+   "Hull City Przyznany rzut karny",
+   1
+  ]
+ ],
+ "otherNamesAug": [
+  [
+   "Zawodnicy (faule popełnione) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\")",
+   17
+  ],
+  [
+   "Zawodnicy (faule zarobione) - powyżej 4.5 (musi rozpocząć w wyjściowej \"11\")",
+   15
+  ],
+  [
+   "Rzuty rożne: 2. połowa",
+   4
+  ],
+  [
+   "Kartki: Arsenal - Suma punktów (ŻK - 1p, CzK - 2p)",
+   3
+  ],
+  [
+   "Kartki: Coventry City - Suma punktów (ŻK - 1p, CzK - 2p)",
+   3
+  ],
+  [
+   "Handicap - Suma goli w pierwszej połowie vs. Suma goli w drugiej połowie",
+   3
+  ],
+  [
+   "1-60 min. - Coventry City liczba goli",
+   2
+  ],
+  [
+   "1-15 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-75 min. - Liczba goli",
+   2
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59) - Arsenal: Rzuty rożne",
+   2
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59) - Coventry City: Rzuty rożne",
+   2
+  ],
+  [
+   "1-30 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-30 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-60 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-15 min. - Liczba goli",
+   2
+  ],
+  [
+   "1-60 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-75 min. - Arsenal liczba goli",
+   2
+  ],
+  [
+   "1-75 min. - Coventry City liczba goli",
+   2
+  ],
+  [
+   "Arsenal strzeli gola / zwycięzca meczu",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola w 2. połowie",
+   1
+  ],
+  [
+   "2 rzuty karne w meczu",
+   1
+  ],
+  [
+   "Gol samobójczy w meczu",
+   1
+  ],
+  [
+   "Arsenal będzie przegrywać i wygra mecz",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Gol",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal dokładna liczba goli (przedział)",
+   1
+  ],
+  [
+   "Zawodnik dostanie żółtą kartkę",
+   1
+  ],
+  [
+   "Czerwona kartka: Arsenal",
+   1
+  ],
+  [
+   "Czerwona kartka: Coventry City",
+   1
+  ],
+  [
+   "2. Połowa - Coventry City dokładna liczba goli (przedział)",
+   1
+  ],
+  [
+   "Podwójna szansa i obie drużyny strzelą",
+   1
+  ],
+  [
+   "1. Połowa - Coventry City dokładna liczba goli",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal dokładna liczba goli",
+   1
+  ],
+  [
+   "Wynik 1. połowy/Wynik meczu",
+   1
+  ],
+  [
+   "Coventry City Wygra 1. połowę, ale nie wygra meczu",
+   1
+  ],
+  [
+   "Dokładnie 2 gole w meczu",
+   1
+  ],
+  [
+   "Arsenal wygra dwoma lub trzema golami",
+   1
+  ],
+  [
+   "1-30 min. - Obie drużyny strzelą gola",
+   1
+  ],
+  [
+   "Zakład bez Arsenal",
+   1
+  ],
+  [
+   "Dokładnie 4 gole w meczu",
+   1
+  ],
+  [
+   "Coventry City margines zwycięstwa",
+   1
+  ],
+  [
+   "Mix szans",
+   1
+  ],
+  [
+   "Arsenal Wygra 1. połowę, ale nie wygra meczu",
+   1
+  ],
+  [
+   "Zakład bez Coventry City",
+   1
+  ],
+  [
+   "Rezultat i dokładny wynik",
+   1
+  ],
+  [
+   "Drużyna, która strzeli pierwszego gola (cały mecz) i wynik 2. połowy",
+   1
+  ],
+  [
+   "Dokładnie 3 gole w meczu",
+   1
+  ],
+  [
+   "Coventry City strzeli gola / zwycięzca meczu",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Wybicie od bramki",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Rzut rożny",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Wrzut z autu",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Rzut karny",
+   1
+  ],
+  [
+   "Pierwsza minuta (00:00 – 00:59): Rzut wolny",
+   1
+  ],
+  [
+   "Kombinowana suma goli",
+   1
+  ],
+  [
+   "Drużyna, która strzeli pierwszego gola i wynik meczu",
+   1
+  ],
+  [
+   "Arsenal margines zwycięstwa",
+   1
+  ],
+  [
+   "1-75 min. - Obie drużyny strzelą gola",
+   1
+  ],
+  [
+   "1. Połowa lub zwycięzca meczu",
+   1
+  ],
+  [
+   "Podwójna szansa Combo",
+   1
+  ],
+  [
+   "1-15 min. - Obie drużyny strzelą gola",
+   1
+  ],
+  [
+   "1-60 min. - Obie drużyny strzelą gola",
+   1
+  ],
+  [
+   "2. Połowa - Coventry City dokładna liczba goli",
+   1
+  ],
+  [
+   "Zawodnik strzeli gola i jego zespół wygra",
+   1
+  ],
+  [
+   "Drużyna wygra mecz lub będzie prowadzić dwoma bramkami (LV Zaliczka)",
+   1
+  ],
+  [
+   "Podwójna szansa oraz suma goli (przedziały)",
+   1
+  ],
+  [
+   "Żółte kartki: Wynik",
+   1
+  ],
+  [
+   "Żółte kartki: Podwójna szansa",
+   1
+  ],
+  [
+   "Drużyna, która strzeli pierwszego gola (cały mecz) i wynik 1. połowy",
+   1
+  ],
+  [
+   "2. Połowa - Arsenal wygra dokładnie (2.0) golami",
+   1
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59): Rzuty wolne",
+   1
+  ],
+  [
+   "Pierwsze 10 minut (00:00 – 09:59): Wybicia od bramki",
+   1
+  ],
+  [
+   "Kartki - 1. połowa: Arsenal - Suma punktów (ŻK - 1p, CzK - 2p)",
+   1
+  ],
+  [
+   "Kartki - 1. połowa: Coventry City - Suma punktów (ŻK - 1p, CzK - 2p)",
+   1
+  ],
+  [
+   "1. Połowa - Coventry City wygra dokładnie (1.0) golami",
+   1
+  ],
+  [
+   "Arsenal wygra i strzeli dokładnie 2.0 goli",
+   1
+  ],
+  [
+   "Outcome And Arsenal Total Goals (1.5)",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (1.0) golami",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (2.0) golami",
+   1
+  ],
+  [
+   "1. Połowa - Arsenal wygra dokładnie (3.0) golami",
+   1
+  ],
+  [
+   "Arsenal wygra dokładnie 2.0 golami",
+   1
+  ],
+  [
+   "Outcome And Arsenal Total Goals (3.5)",
+   1
+  ]
+ ]
+}

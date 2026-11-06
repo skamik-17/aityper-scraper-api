@@ -1,0 +1,11 @@
+$ cd /tmp/claude-1000/-home-skamik-Documents-repositories-personal-aityper/3627e2c8-f787-4f71-8a6a-348993c930fc/scratchpad/recovery/observability && timeout 120 /home/skamik/Documents/repositories/personal/aityper-scraper-api/node_modules/.bin/tsx smoke-current.mts betters premier-league
+(run 2026-11-06 ~16:18Z on CURRENT code, no DB access)
+[BrowserPool] Creating new browser (1/14)
+[Betters/FullOffer] Capturing data for league: premier-league
+[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+[Betters/Navigation] Capture timeout after 8000ms
+[BrowserPool] Browser released (1 available, 1 total)
+[BrowserPool] Closing all 1 browsers
+[BrowserPool] All browsers closed
+SMOKE_RESULT {"bookmaker":"betters","league":"premier-league","success":false,"matches":0,"markets":0,"error":"No events found from API","durationMs":8165}
+exit=1

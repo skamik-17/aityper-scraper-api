@@ -1,0 +1,29 @@
+# acceptance-check.py on the UNFIXED code, 2026-11-06T17:12Z, last premier-league run in backend.log (exit 1 expected before the fix)
+BAD_EH2 premier-league:afc bournemouth:nottingham forest TurboPrzewaga - 2 gole przewagi lub wygrana 0.824074074074074
+BAD_EH2 premier-league:arsenal:hull city TurboPrzewaga - 2 gole przewagi lub wygrana None
+BAD_EH2 premier-league:aston villa:sunderland TurboPrzewaga - 2 gole przewagi lub wygrana 0.619047619047619
+BAD_EH2 premier-league:brentford:everton TurboPrzewaga - 2 gole przewagi lub wygrana 0.7314814814814815
+BAD_EH2 premier-league:brighton hove albion:brentford TurboPrzewaga - 2 gole przewagi lub wygrana 0.6944444444444444
+BAD_EH2 premier-league:chelsea:leeds united TurboPrzewaga - 2 gole przewagi lub wygrana 0.660377358490566
+BAD_EH2 premier-league:coventry city:crystal palace TurboPrzewaga - 2 gole przewagi lub wygrana 0.9735682819383266
+BAD_EH2 premier-league:crystal palace:liverpool TurboPrzewaga - 2 gole przewagi lub wygrana 2.1067961165048543
+BAD_EH2 premier-league:everton:coventry city TurboPrzewaga - 2 gole przewagi lub wygrana 0.5652173913043477
+BAD_EH2 premier-league:fulham:newcastle united TurboPrzewaga - 2 gole przewagi lub wygrana 0.7808219178082189
+BAD_EH2 premier-league:hull city:brighton hove albion TurboPrzewaga - 2 gole przewagi lub wygrana 2.2258064516129035
+BAD_EH2 premier-league:ipswich town:afc bournemouth TurboPrzewaga - 2 gole przewagi lub wygrana 1.6235741444866922
+BAD_EH2 premier-league:leeds united:tottenham hotspur TurboPrzewaga - 2 gole przewagi lub wygrana 1.2844827586206897
+BAD_EH2 premier-league:liverpool:manchester united TurboPrzewaga - 2 gole przewagi lub wygrana 0.6448598130841121
+BAD_EH2 premier-league:manchester city:fulham TurboPrzewaga - 2 gole przewagi lub wygrana 0.37254901960784303
+BAD_EH2 premier-league:manchester united:aston villa TurboPrzewaga - 2 gole przewagi lub wygrana 0.8392857142857142
+BAD_EH2 premier-league:newcastle united:arsenal TurboPrzewaga - 2 gole przewagi lub wygrana 2.243243243243243
+BAD_EH2 premier-league:nottingham forest:manchester city TurboPrzewaga - 2 gole przewagi lub wygrana 1.846975088967972
+BAD_EH2 premier-league:sunderland:chelsea TurboPrzewaga - 2 gole przewagi lub wygrana 1.6744186046511629
+BAD_EH2 premier-league:tottenham hotspur:ipswich town TurboPrzewaga - 2 gole przewagi lub wygrana 0.40776699029126207
+N 20 low_raw 0 collisions 19 bad_eh2_rows 20 matches_with_forbet_turbo (MATCH_RESULT_OR_WIN_BY_2) 0 unknown_sel 0 max_dev_1x2 0.037 (n=60) max_dev_ou25 0.019 (n=40)
+PASS low_raw == 0
+FAIL collisions == 0
+FAIL bad_eh2_rows == 0
+FAIL matches_with_forbet_turbo >= N-1
+PASS unknown_sel == 0
+PASS max_dev_1x2 <= 0.10
+PASS max_dev_ou25 <= 0.10

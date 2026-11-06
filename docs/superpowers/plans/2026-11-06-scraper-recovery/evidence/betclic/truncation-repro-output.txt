@@ -1,0 +1,7 @@
+# node_modules/.bin/tsx docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betclic/truncation-repro.mts <dir with the 7 captured 1261715874385920_<GROUP>.b64>   (CURRENT parser, 2026-11-06 17:30Z; captures not kept: STRZELCY is 1.7 MB)
+{"sizesB64":{"TOP":263760,"WYNIK":65676,"STRZELCY":1727088,"GOLE":76536,"METODA_GOLA":263764,"HANDICAP":15908,"STATYSTYKI":675260},"full":265,"strzelcy_cut_103808_chars":242,"strzelcy_cut_at_run1_size_388976B":242,"strzelcy_cut_90pct":242,"statystyki_cut_half":152}
+# Small groups kept in this folder (current processResponse emulation; columns: file, b64 chars used, message bytes, parseAllMarketsFromProto count):
+arsenal-hull_HANDICAP.grpc-web-text.b64 15908 11926 4
+arsenal-hull_HANDICAP.grpc-web-text.b64 8000 5995 0
+arsenal-hull_TOP.grpc-web-text.b64 263760 197814 29
+arsenal-hull_TOP.grpc-web-text.b64 8000 5995 0

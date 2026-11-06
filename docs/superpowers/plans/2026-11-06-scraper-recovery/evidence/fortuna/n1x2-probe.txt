@@ -1,0 +1,26 @@
+# normalize1x2Selection(prefix, home, away, "premier-league") on the CURRENT code (src/services/normalization/helpers/index.ts:195), 2026-11-06 - shows the fuzzy matching that rules out "longest prefix that resolves to a side".
+"Aston Villa George" | Manchester United v Aston Villa => AWAY
+"Aston Villa" | Manchester United v Aston Villa => AWAY
+"Villa" | Manchester United v Aston Villa => AWAY
+"Aston" | Manchester United v Aston Villa => AWAY
+"Man.United Tielemans," | Manchester United v Aston Villa => UNKNOWN
+"Man.United" | Manchester United v Aston Villa => HOME
+"Man.City" | Nottingham Forest v Manchester City => AWAY
+"Man.City Rodri" | Nottingham Forest v Manchester City => UNKNOWN
+"Coventry City Thomas," | Everton v Coventry City => AWAY
+"Coventry City" | Everton v Coventry City => AWAY
+"Coventry" | Everton v Coventry City => AWAY
+"Crystal Palace" | Crystal Palace v Liverpool => HOME
+"Crystal Palace Nketiah," | Crystal Palace v Liverpool => HOME
+"Nottingham" | Nottingham Forest v Manchester City => HOME
+"Murillo" | Nottingham Forest v Manchester City => UNKNOWN
+"Nottingham Murillo" | Nottingham Forest v Manchester City => HOME
+"Hull Lucas" | Arsenal v Hull City => AWAY
+"Hull" | Arsenal v Hull City => AWAY
+"George Lawrence Hemmings" | Manchester United v Aston Villa => UNKNOWN
+"Chelsea Estevao" | Sunderland v Chelsea => AWAY
+"Kevin" | Fulham v Newcastle United => UNKNOWN
+"Newcastle" | Fulham v Newcastle United => AWAY
+"Man" | Manchester United v Aston Villa => HOME
+"United" | Manchester United v Aston Villa => HOME
+"City" | Nottingham Forest v Manchester City => AWAY

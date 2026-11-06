@@ -1,0 +1,23 @@
+[LVBet/FullOffer] Found 20 matches
+[LVBet/FullOffer] Manchester United vs Aston Villa: 642 markets
+[LVBet/FullOffer] Liverpool vs Manchester United: 353 markets
+[LVBet/FullOffer] Ipswich Town vs Bournemouth: 622 markets
+[LVBet/FullOffer] Crystal Palace vs Liverpool: 641 markets
+[LVBet/FullOffer] Aston Villa vs Sunderland: 338 markets
+[LVBet/FullOffer] Manchester City vs Fulham: 349 markets
+[LVBet/FullOffer] Chelsea vs Leeds United: 340 markets
+[LVBet/FullOffer] Brentford vs Everton: 343 markets
+[LVBet/FullOffer] Hull City vs Brighton: 339 markets
+[LVBet/FullOffer] Coventry City vs Crystal Palace: 344 markets
+[LVBet/FullOffer] Tottenham Hotspur vs Ipswich Town: 342 markets
+[LVBet/FullOffer] Bournemouth vs Nottingham Forest: 339 markets
+[LVBet/FullOffer] Leeds United vs Tottenham Hotspur: 623 markets
+[LVBet/FullOffer] Brighton vs Brentford: 641 markets
+[LVBet/FullOffer] Everton vs Coventry City: 663 markets
+[LVBet/FullOffer] Nottingham Forest vs Manchester City: 625 markets
+[LVBet/FullOffer] Newcastle United vs Arsenal: 341 markets
+[LVBet/FullOffer] Fulham vs Newcastle United: 629 markets
+[LVBet/FullOffer] Arsenal vs Hull City: 628 markets
+[LVBet/FullOffer] Sunderland vs Chelsea: 615 markets
+[LVBet/FullOffer] Completed: 20 matches, 9757 total markets
+[Aggregator/FullOffer] lvbet completed: 20 matches, 9427 markets saved

@@ -1,0 +1,222 @@
+[
+ {
+  "match_id": "bc:31340665",
+  "date": "2026-11-08T16:30:00+00:00",
+  "home": [
+   "Manchester United"
+  ],
+  "away": [
+   "Aston Villa"
+  ],
+  "markets_count": 571
+ },
+ {
+  "match_id": "bc:31419299",
+  "date": "2026-11-22T16:30:00+00:00",
+  "home": [
+   "Liverpool"
+  ],
+  "away": [
+   "Manchester United"
+  ],
+  "markets_count": 358
+ },
+ {
+  "match_id": "bc:31340648",
+  "date": "2026-11-08T14:00:00+00:00",
+  "home": [
+   "Ipswich Town"
+  ],
+  "away": [
+   "Bournemouth"
+  ],
+  "markets_count": 545
+ },
+ {
+  "match_id": "bc:31340666",
+  "date": "2026-11-08T14:00:00+00:00",
+  "home": [
+   "Crystal Palace"
+  ],
+  "away": [
+   "Liverpool"
+  ],
+  "markets_count": 568
+ },
+ {
+  "match_id": "bc:31419246",
+  "date": "2026-11-21T15:00:00+00:00",
+  "home": [
+   "Aston Villa"
+  ],
+  "away": [
+   "Sunderland"
+  ],
+  "markets_count": 343
+ },
+ {
+  "match_id": "bc:31419243",
+  "date": "2026-11-21T12:30:00+00:00",
+  "home": [
+   "Manchester City"
+  ],
+  "away": [
+   "Fulham"
+  ],
+  "markets_count": 354
+ },
+ {
+  "match_id": "bc:31419245",
+  "date": "2026-11-21T15:00:00+00:00",
+  "home": [
+   "Chelsea"
+  ],
+  "away": [
+   "Leeds United"
+  ],
+  "markets_count": 345
+ },
+ {
+  "match_id": "bc:31419244",
+  "date": "2026-11-23T20:00:00+00:00",
+  "home": [
+   "Brentford"
+  ],
+  "away": [
+   "Everton"
+  ],
+  "markets_count": 348
+ },
+ {
+  "match_id": "bc:31419297",
+  "date": "2026-11-22T14:00:00+00:00",
+  "home": [
+   "Hull City"
+  ],
+  "away": [
+   "Brighton"
+  ],
+  "markets_count": 344
+ },
+ {
+  "match_id": "bc:31419300",
+  "date": "2026-11-21T15:00:00+00:00",
+  "home": [
+   "Coventry City"
+  ],
+  "away": [
+   "Crystal Palace"
+  ],
+  "markets_count": 349
+ },
+ {
+  "match_id": "bc:31419298",
+  "date": "2026-11-21T15:00:00+00:00",
+  "home": [
+   "Tottenham Hotspur"
+  ],
+  "away": [
+   "Ipswich Town"
+  ],
+  "markets_count": 347
+ },
+ {
+  "match_id": "bc:31419296",
+  "date": "2026-11-21T15:00:00+00:00",
+  "home": [
+   "Bournemouth"
+  ],
+  "away": [
+   "Nottingham Forest"
+  ],
+  "markets_count": 344
+ },
+ {
+  "match_id": "bc:31333513",
+  "date": "2026-11-07T12:30:00+00:00",
+  "home": [
+   "Leeds United"
+  ],
+  "away": [
+   "Tottenham Hotspur"
+  ],
+  "markets_count": 558
+ },
+ {
+  "match_id": "bc:31340647",
+  "date": "2026-11-08T14:00:00+00:00",
+  "home": [
+   "Brighton"
+  ],
+  "away": [
+   "Brentford"
+  ],
+  "markets_count": 570
+ },
+ {
+  "match_id": "bc:31321159",
+  "date": "2026-11-06T20:00:00+00:00",
+  "home": [
+   "Everton"
+  ],
+  "away": [
+   "Coventry City"
+  ],
+  "markets_count": 600
+ },
+ {
+  "match_id": "bc:31333512",
+  "date": "2026-11-07T17:30:00+00:00",
+  "home": [
+   "Nottingham Forest"
+  ],
+  "away": [
+   "Manchester City"
+  ],
+  "markets_count": 554
+ },
+ {
+  "match_id": "bc:31419348",
+  "date": "2026-11-21T17:30:00+00:00",
+  "home": [
+   "Newcastle United"
+  ],
+  "away": [
+   "Arsenal"
+  ],
+  "markets_count": 346
+ },
+ {
+  "match_id": "bc:31333514",
+  "date": "2026-11-07T15:00:00+00:00",
+  "home": [
+   "Fulham"
+  ],
+  "away": [
+   "Newcastle United"
+  ],
+  "markets_count": 564
+ },
+ {
+  "match_id": "bc:31333515",
+  "date": "2026-11-07T15:00:00+00:00",
+  "home": [
+   "Arsenal"
+  ],
+  "away": [
+   "Hull City"
+  ],
+  "markets_count": 549
+ },
+ {
+  "match_id": "bc:31340664",
+  "date": "2026-11-08T14:00:00+00:00",
+  "home": [
+   "Sunderland"
+  ],
+  "away": [
+   "Chelsea"
+  ],
+  "markets_count": 552
+ }
+]

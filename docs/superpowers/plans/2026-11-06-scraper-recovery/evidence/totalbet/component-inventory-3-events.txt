@@ -1,0 +1,378 @@
+# Component inventory over 3 PL detail payloads (Everton-Coventry 488, Leeds-Tottenham 439, Crystal Palace-Liverpool 385 markets), captured 2026-11-06
+PER FILE
+  detail-495716e5-fd45-43e5-8947-a0bf3ff676ab.json {'name': 'Everton - Coventry City', 'market_count': 488, 'components': 375, 'distinct_market_uuids': 488}
+  detail-0e45932b-1433-4cf5-b658-5c308b7c2b60.json {'name': 'Leeds - Tottenham', 'market_count': 439, 'components': 325, 'distinct_market_uuids': 439}
+  detail-f91beb39-9b93-4b91-a3b1-a1063efec44d.json {'name': 'Crystal Palace  - Liverpool', 'market_count': 385, 'components': 278, 'distinct_market_uuids': 385}
+COMPONENT TYPES (summed over files) {'single_market': 772, 'markets_in_columns': 108, 'total': 65, 'handicap_2col': 15, 'handicap_3col': 9, 'exact_result': 9}
+CELL TYPES {'label': 10948, 'outcome': 11127, 'empty': 189}
+LABEL KEYS {('text', 'type'): 10699, ('market_id', 'text', 'type'): 249}
+OUTCOME KEYS {('betbuilder_available', 'market_status', 'market_uuid', 'name', 'odds', 'outcome_status', 'type', 'uuid'): 11127}
+MARKETS PER COMPONENT {('single_market', 1): 772, ('markets_in_columns', 3): 33, ('total', '5+'): 13, ('markets_in_columns', 2): 75, ('total', 4): 5, ('handicap_2col', 4): 3, ('handicap_3col', '5+'): 3, ('total', 3): 25, ('total', 2): 6, ('handicap_2col', 3): 10, ('handicap_3col', 4): 6, ('exact_result', 1): 9, ('total', 1): 16, ('handicap_2col', 2): 2}
+LABELS WITH market_id 163
+   ('Podwójna szansa', 'Cały mecz', '10') 3
+   ('Remis = zwrot', 'Cały mecz', '11') 3
+   ('Kartki - Kto więcej', 'Cały mecz', '136') 3
+   ('Otrzyma <N> kartkę', 'Cały mecz', '137') 3
+   ('Drużyna - dokładna liczba kartek', 'Everton', '143') 1
+   ('Drużyna - dokładna liczba kartek', 'Leeds', '143') 1
+   ('Drużyna - dokładna liczba kartek', 'Crystal Palace ', '143') 1
+   ('Drużyna - dokładna liczba kartek', 'Coventry City', '144') 1
+   ('Drużyna - dokładna liczba kartek', 'Tottenham', '144') 1
+   ('Drużyna - dokładna liczba kartek', 'Liverpool', '144') 1
+   ('Czerwona kartka', 'Cały mecz', '146') 3
+   ('Drużyna - czerwona kartka', 'Everton', '147') 1
+   ('Drużyna - czerwona kartka', 'Leeds', '147') 1
+   ('Drużyna - czerwona kartka', 'Crystal Palace ', '147') 1
+   ('Drużyna - czerwona kartka', 'Coventry City', '148') 1
+   ('Drużyna - czerwona kartka', 'Tottenham', '148') 1
+   ('Drużyna - czerwona kartka', 'Liverpool', '148') 1
+   ('Kartki - Kto więcej', '1. Połowa', '149') 3
+   ('Otrzyma <N> kartkę', '1. Połowa', '150') 3
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Everton', '156') 1
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Leeds', '156') 1
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Crystal Palace ', '156') 1
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Coventry City', '157') 1
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Tottenham', '157') 1
+   ('<N>. połowa - Drużyna - dokładna liczba kartek', 'Liverpool', '157') 1
+   ('Czerwona kartka', '1. Połowa', '159') 3
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Everton', '160') 1
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Leeds', '160') 1
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Crystal Palace ', '160') 1
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Coventry City', '161') 1
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Tottenham', '161') 1
+   ('<N>. połowa - Drużyna - czerwona kartka', 'Liverpool', '161') 1
+   ('Rzuty rożne - Kto więcej', 'Cały mecz', '162') 3
+   ('<N> rzut rożny', 'Cały mecz', '163') 3
+   ('Ostatni rzut rożny', 'Cały mecz', '164') 3
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Everton', '170') 1
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Leeds', '170') 1
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Crystal Palace ', '170') 1
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Coventry City', '171') 1
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Tottenham', '171') 1
+   ('Drużyna - Suma rzutów rożnych (przedziały)', 'Liverpool', '171') 1
+   ('Suma rzutów rożnych parzysta/nieparzysta', 'Cały mecz', '172') 3
+   ('Rzuty rożne - Kto więcej', '1. Połowa', '173') 3
+   ('<N> rzut rożny', '1. Połowa', '174') 3
+   ('Ostatni rzut rożny', '1. Połowa', '175') 3
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Everton', '180') 1
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Leeds', '180') 1
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Crystal Palace ', '180') 1
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Coventry City', '181') 1
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Tottenham', '181') 1
+   ('<N>. połowa - Drużyna - dokładna liczba rzutów rożnych', 'Liverpool', '181') 1
+   ('Suma rzutów rożnych parzysta/nieparzysta', '1. Połowa', '183') 3
+   ('Parzyste/Nieparzyste', 'Cały mecz', '26') 3
+   ('Suma goli parzysta/nieparzysta', 'Everton', '27') 1
+   ('Suma goli parzysta/nieparzysta', 'Leeds', '27') 1
+   ('Suma goli parzysta/nieparzysta', 'Crystal Palace ', '27') 1
+   ('Suma goli parzysta/nieparzysta', 'Coventry City', '28') 1
+   ('Suma goli parzysta/nieparzysta', 'Tottenham', '28') 1
+   ('Suma goli parzysta/nieparzysta', 'Liverpool', '28') 1
+   ('Obie drużyny strzelą gola', 'Cały mecz', '29') 3
+   ('Strzeli gola', 'Coventry City', '31') 1
+   ('Strzeli gola', 'Tottenham', '31') 1
+   ('Strzeli gola', 'Liverpool', '31') 1
+   ('Strzeli gola', 'Everton', '32') 1
+   ('Strzeli gola', 'Leeds', '32') 1
+   ('Strzeli gola', 'Crystal Palace ', '32') 1
+   ('Wygra do zera', 'Everton', '33') 1
+   ('Wygra do zera', 'Leeds', '33') 1
+   ('Wygra do zera', 'Crystal Palace ', '33') 1
+   ('Wygra do zera', 'Coventry City', '34') 1
+   ('Wygra do zera', 'Tottenham', '34') 1
+   ('Wygra do zera', 'Liverpool', '34') 1
+   ('Wynik + obie drużyny strzelą gola', 'Cały mecz', '35') 3
+   ('Wygra obie połowy', 'Everton', '48') 1
+   ('Wygra obie połowy', 'Leeds', '48') 1
+   ('Wygra obie połowy', 'Crystal Palace ', '48') 1
+   ('Wygra obie połowy', 'Coventry City', '49') 1
+   ('Wygra obie połowy', 'Tottenham', '49') 1
+   ('Wygra obie połowy', 'Liverpool', '49') 1
+   ('Wygra jakąkolwiek połowę', 'Everton', '50') 1
+   ('Wygra jakąkolwiek połowę', 'Leeds', '50') 1
+   ('Wygra jakąkolwiek połowę', 'Crystal Palace ', '50') 1
+   ('Wygra jakąkolwiek połowę', 'Coventry City', '51') 1
+   ('Wygra jakąkolwiek połowę', 'Tottenham', '51') 1
+   ('Wygra jakąkolwiek połowę', 'Liverpool', '51') 1
+   ('Połowa z większą liczbą goli', 'Everton', '53') 1
+   ('Połowa z większą liczbą goli', 'Leeds', '53') 1
+   ('Połowa z większą liczbą goli', 'Crystal Palace ', '53') 1
+   ('Połowa z większą liczbą goli', 'Coventry City', '54') 1
+   ('Połowa z większą liczbą goli', 'Tottenham', '54') 1
+   ('Połowa z większą liczbą goli', 'Liverpool', '54') 1
+   ('Podwójna szansa + obie drużyny strzelą', '1. Połowa', '542') 3
+   ('Wynik + obie drużyny strzelą gola', '2. Połowa', '543') 3
+   ('Połowa - Wynik + suma goli', '2. Połowa', '544') 3
+   ('Podwójna szansa + obie drużyny strzelą', '2. Połowa', '545') 3
+   ('Podwójna szansa + obie drużyny strzelą', 'Cały mecz', '546') 3
+   ('Zdobędzie gola w obu połowach', 'Everton', '56') 1
+   ('Zdobędzie gola w obu połowach', 'Leeds', '56') 1
+   ('Zdobędzie gola w obu połowach', 'Crystal Palace ', '56') 1
+   ('Zdobędzie gola w obu połowach', 'Coventry City', '57') 1
+   ('Zdobędzie gola w obu połowach', 'Tottenham', '57') 1
+   ('Zdobędzie gola w obu połowach', 'Liverpool', '57') 1
+   ('Wynik połowy', '1. Połowa', '60') 3
+   ('Strzeli <N> gola', '1. Połowa', '62') 3
+   ('Podwójna szansa', '1. Połowa', '63') 3
+   ('Remis = zwrot', '1. Połowa', '64') 3
+   ('Parzyste/Nieparzyste', '1. Połowa', '74') 3
+   ('Obie drużyny strzelą gola', '1. Połowa', '75') 3
+   ('<N>. połowa - Strzeli gola', 'Coventry City', '76') 1
+   ('<N>. połowa - Strzeli gola', 'Tottenham', '76') 1
+   ('<N>. połowa - Strzeli gola', 'Liverpool', '76') 1
+   ('<N>. połowa - Strzeli gola', 'Everton', '77') 1
+   ('<N>. połowa - Strzeli gola', 'Leeds', '77') 1
+   ('<N>. połowa - Strzeli gola', 'Crystal Palace ', '77') 1
+   ('Wynik + obie drużyny strzelą gola', '1. Połowa', '78') 3
+   ('Połowa - Wynik + suma goli', '1. Połowa', '79') 3
+   ('Strzeli <N> gola', 'Cały mecz', '8') 3
+   ('Wynik połowy', '2. Połowa', '83') 3
+   ('Strzeli <N> gola', '2. Połowa', '84') 3
+   ('Podwójna szansa', '2. Połowa', '85') 3
+   ('Wynik meczu lub powyżej <N>', 'Everton', '854') 1
+   ('Wynik meczu lub powyżej <N>', 'Leeds', '854') 1
+   ('Wynik meczu lub powyżej <N>', 'Crystal Palace ', '854') 1
+   ('Wynik meczu lub poniżej <N>', 'Everton', '855') 1
+   ('Wynik meczu lub poniżej <N>', 'Leeds', '855') 1
+   ('Wynik meczu lub poniżej <N>', 'Crystal Palace ', '855') 1
+   ('Wynik meczu lub powyżej <N>', 'Remis', '856') 3
+   ('Wynik meczu lub poniżej <N>', 'Remis', '857') 3
+   ('Wynik meczu lub powyżej <N>', 'Coventry City', '858') 1
+   ('Wynik meczu lub powyżej <N>', 'Tottenham', '858') 1
+   ('Wynik meczu lub powyżej <N>', 'Liverpool', '858') 1
+   ('Wynik meczu lub poniżej <N>', 'Coventry City', '859') 1
+   ('Wynik meczu lub poniżej <N>', 'Tottenham', '859') 1
+   ('Wynik meczu lub poniżej <N>', 'Liverpool', '859') 1
+   ('Remis = zwrot', '2. Połowa', '86') 3
+   ('Wynik meczu lub obie drużyny strzelą', 'Everton', '860') 1
+   ('Wynik meczu lub obie drużyny strzelą', 'Leeds', '860') 1
+   ('Wynik meczu lub obie drużyny strzelą', 'Crystal Palace ', '860') 1
+   ('Wynik meczu lub obie drużyny strzelą', 'Remis', '861') 3
+   ('Wynik meczu lub obie drużyny strzelą', 'Coventry City', '862') 1
+   ('Wynik meczu lub obie drużyny strzelą', 'Tottenham', '862') 1
+   ('Wynik meczu lub obie drużyny strzelą', 'Liverpool', '862') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Everton', '863') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Leeds', '863') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Crystal Palace ', '863') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Remis', '864') 3
+   ('Wynik meczu lub którakolwiek czyste konto', 'Coventry City', '865') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Tottenham', '865') 1
+   ('Wynik meczu lub którakolwiek czyste konto', 'Liverpool', '865') 1
+   ('Wygra spotkanie', 'Coventry City', '879') 1
+   ('Wygra spotkanie', 'Tottenham', '879') 1
+   ('Wygra spotkanie', 'Liverpool', '879') 1
+   ('Wygra spotkanie', 'Everton', '880') 1
+   ('Wygra spotkanie', 'Leeds', '880') 1
+   ('Wygra spotkanie', 'Crystal Palace ', '880') 1
+   ('Parzyste/Nieparzyste', '2. Połowa', '94') 3
+   ('Obie drużyny strzelą gola', '2. Połowa', '95') 3
+   ('<N>. połowa - Strzeli gola', 'Coventry City', '96') 1
+   ('<N>. połowa - Strzeli gola', 'Tottenham', '96') 1
+   ('<N>. połowa - Strzeli gola', 'Liverpool', '96') 1
+   ('<N>. połowa - Strzeli gola', 'Everton', '97') 1
+   ('<N>. połowa - Strzeli gola', 'Leeds', '97') 1
+   ('<N>. połowa - Strzeli gola', 'Crystal Palace ', '97') 1
+== single_market 122
+    103 Zawodnik - suma asyst (wł. z ew. dogrywką)
+    103 Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką)
+    103 Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką)
+    99 Zawodnik - liczba podań (wł. z ew. dogrywką)
+    12 Wynik + Total (suma) 
+    12 Podwójna szansa + suma goli
+    12 <N>. połowa/wynik końcowy + suma goli
+    10 Liczba celnych strzałów w meczu <N>+
+    10 <HOME> liczba celnych strzałów <N>+
+    10 <AWAY> liczba celnych strzałów <N>+
+    9 🔄 TOTALzmiana: Liczba celnych strzałów zawodnika <N>+
+    9 🔄 TOTALzmiana: Liczba strzałów zawodnika <N>+ 
+    9 🔄 TOTALzmiana: Liczba fauli zawodnika <N>+
+    9 Liczba fauli na zawodniku: <N>+
+    9 Liczba obron bramkarza: <N>+
+    9 <N>. połowa/wynik końcowy + <N>. połowa suma goli
+    6 <N>. połowa - Dokładna liczba goli
+    6 Podwójna szansa (mecz) + obie drużyny strzelą (<N>. połowa)
+    6 Kiedy zostanie strzelony <N>. gol (<N> minut)
+    5 Liczba strzałów w meczu <N>+
+    5 <HOME> liczba strzałów <N>+
+    5 <AWAY> liczba strzałów <N>+
+    3 Wynik meczu
+    3 🚀 TOTALprzewaga: Drużyna wygra lub będzie prowadziła różnicą dwóch goli w meczu
+    3 Dwie szanse (<N>. połowa lub mecz)
+    3 Który zespół zdobędzie gola
+    3 🔄 TOTALzmiana: Zawodnik strzeli gola 
+    3 Zawodnik strzeli gola
+    3 Obie połowy powyżej <N>
+    3 Obie połowy poniżej <N>
+    3 Dokładna liczba goli
+    3 Suma goli (przedziały)
+    3 <AWAY> - dokładna liczba goli
+    3 Suma goli + obie drużyny strzelą
+    3 Strzeli <N>. gola + wynik meczu
+    3 Suma rzutów rożnych (przedziały)
+    3 Każda drużyna powyżej <N> rożnych
+    3 <N>. połowa - Suma rzutów rożnych (przedziały)
+    3 Zawodnik strzeli <N>. gola
+    3 <AWAY> - pierwszy strzelec gola
+    3 Zawodnik strzeli ostatniego gola
+    3 🔄 TOTALzmiana: Zawodnik otrzyma kartkę
+    3 Zawodnik otrzyma pierwszą kartkę w meczu
+    3 Zawodnik otrzyma żółtą kartkę
+    3 🔄 TOTALzmiana: Otrzyma czerwoną kartkę
+    3 Dokładna liczba kartek
+    3 <N>. Połowa - Dokładna liczba kartek
+    3 <N> minut - Wynik od <N> do <N> min
+    3 Ostatni gol
+    3 Połowa z największą liczbą goli/punktów
+    3 🔄 TOTALzmiana: Zawodnik strzeli gola lub zaliczy asystę
+    3 Zawodnik strzeli gola i zaliczy asystę
+    3 Zawodnik strzeli gola w <N>. połowie
+    3 Zawodnik strzeli gola głową
+    3 Zawodnik strzeli gola prawą nogą
+    3 Zawodnik strzeli gola lewą nogą
+    3 Strzelec gola spoza pola karnego
+    3 Zawodnik strzeli gola z rzutu wolnego
+    3 🔄 TOTALzmiana: Liczba asyst zawodnika <N>+
+    3 Liczba celnych strzałów głową zawodnika: <N>+
+    3 Zawodnik: <N> + celnych strzałów prawą nogą
+    3 Zawodnik: <N> + celnych strzałów lewą nogą
+    3 Liczba strzałów celnych zawodnika spoza pola karnego: <N>+
+    3 Liczba spalonych zawodnika: <N>+
+    3 <N>. połowa/wynik końcowy
+    3 <N>. połowa/wynik końcowy + dokładna liczba goli
+    3 <N>. połowa/wynik końcowy - dokładny wynik
+    3 Zwycięstwo <AWAY> = zwrot
+    3 Rozmiar zwycięstwa
+    3 Którakolwiek z drużyn wygra
+    3 <N>./<N>.połowa  - Obie drużyny strzelą gola
+    3 Multi-wyniki
+    3 Którykolwiek z zawodników odda powyżej <N> strzałów
+    2 Wynik dowolnej połowy meczu
+    2 Obie drużyny strzelą w przynajmniej jednej połowie meczu
+    2 Gol w obu połowach
+    2 <HOME> – dokładna liczba goli
+    2 <HOME> - pierwszy strzelec gola
+    2 Obie drużyny powyżej <N> fauli
+    2 Obie strzelą gola i każda drużyna powyżej <N> rożnych
+    2 Zwycięstwo <HOME> = zwrot
+    2 Którykolwiek z zawodników odda powyżej <N> celnych strzałów
+    1 🔥 TOTALboost: powyżej <N>,<N> gola + powyżej <N>,<N> celnych strzałów
+    1 Każda z drużyn powyżej <N> rzutu rożnego w każdej połowie
+    1 <HOME> powyżej <N> rzutu rożnego w każdej połowie
+    1 <AWAY> powyżej <N> rzutu rożnego w każdej połowie
+    1 Obie drużyny powyżej <N> celnych strzałów
+    1 Obie drużyny powyżej <N> strzałów
+    1 Obie drużyny powyżej <N> spalonych
+    1 Suma obronionych strzałów przez bramkarza
+    1 <HOME> - suma obronionych strzałów przez bramkarza
+    1 <AWAY> - suma obronionych strzałów przez bramkarza
+    1 Obie drużyny powyżej <N> obronionych strzałów przez bramkarza
+    1 <HOME>: wygra i wykona powyżej <N> rzutów rożnych
+    1 <AWAY>: wygra i wykona powyżej <N> rzutów rożnych
+    1 <HOME>: nie przegra i wykona powyżej <N> rzutów rożnych
+    1 <AWAY>: nie przegra i wykona powyżej <N> rzutów rożnych
+    1 <HOME>: nie przegra i otrzyma ponad <N> kartek
+    1 <AWAY>: nie przegra i otrzyma ponad <N> kartek
+    1 <HOME>: nie przegra, powyżej <N> rzutów rożnych i <N> kartek
+    1 <AWAY> nie przegra, powyżej <N> rzutów rożnych i <N> kartek
+    1 <HOME>: strzeli gola i powyżej <N> rzutów rożnych
+    1 <AWAY>: strzeli gola i powyżej <N> rzutów rożnych
+    1 <HOME>: strzeli gola i powyżej <N> kartek
+    1 <AWAY>: strzeli gola i powyżej <N> kartek
+    1 <HOME>: strzeli gola, powyżej <N> rożnych i <N> kartki
+    1 <AWAY>: strzeli gola, powyżej <N> rożnych i <N> kartki
+    1 <HOME> strzeli gola, a <AWAY> otrzyma co najmniej <N> kartki
+    1 <AWAY> strzeli gola, a <HOME> otrzyma co najmniej <N> kartki
+    1 Każda drużyna powyżej <N> celnego strzału w każdej połowie
+    1 <HOME> powyżej <N> celnego w każdej połowie
+    1 <AWAY> powyżej <N> celnego w każdej połowie
+    1 Czy w meczu będzie "łamak"?
+    1 Rzut karny
+    1 Czy będzie karny lub czerwona kartka
+    1 Rzut karny i czerwona kartka
+    1 Każda drużyna powyżej <N> kartki
+    1 Padnie gol samobójczy
+    1 Strzał w słupek lub poprzeczkę
+    1 <HOME>  – dokładna liczba goli
+    1 <HOME>  - pierwszy strzelec gola
+    1 Zwycięstwo <HOME>  = zwrot
+== markets_in_columns 35
+    6 <N>. połowa - Strzeli gola
+    3 Podwójna szansa
+    3 Obie drużyny strzelą gola
+    3 Strzeli gola
+    3 Remis = zwrot
+    3 Wynik + obie drużyny strzelą gola
+    3 Wygra do zera
+    3 Wygra obie połowy
+    3 Wygra jakąkolwiek połowę
+    3 Zdobędzie gola w obu połowach
+    3 Połowa z większą liczbą goli
+    3 Wygra spotkanie
+    3 Wynik połowy
+    3 Strzeli <N> gola
+    3 Połowa - Wynik + suma goli
+    3 Podwójna szansa + obie drużyny strzelą
+    3 Rzuty rożne - Kto więcej
+    3 Drużyna - Suma rzutów rożnych (przedziały)
+    3 <N>. połowa - Drużyna - dokładna liczba rzutów rożnych
+    3 <N> rzut rożny
+    3 Ostatni rzut rożny
+    3 Suma rzutów rożnych parzysta/nieparzysta
+    3 Kartki - Kto więcej
+    3 Czerwona kartka
+    3 Drużyna - czerwona kartka
+    3 Drużyna - dokładna liczba kartek
+    3 Otrzyma <N> kartkę
+    3 <N>. połowa - Drużyna - czerwona kartka
+    3 <N>. połowa - Drużyna - dokładna liczba kartek
+    3 Wynik meczu lub obie drużyny strzelą
+    3 Wynik meczu lub którakolwiek czyste konto
+    3 Wynik meczu lub powyżej <N>
+    3 Wynik meczu lub poniżej <N>
+    3 Parzyste/Nieparzyste
+    3 Suma goli parzysta/nieparzysta
+== total 31
+    6 <N>. połowa - Total (suma)
+    6 <N>. połowa - <AWAY> - Total (suma)
+    4 <N>. połowa - <HOME> - Total (suma)
+    3 Total (suma)
+    3 <AWAY> - Total (suma)
+    3 Suma rzutów rożnych
+    3 Suma kartek
+    3 <AWAY> - suma rzutów rożnych
+    3 <N>. połowa - Suma rzutów rożnych
+    3 <N>. Połowa - Suma kartek
+    2 <HOME> - Total (suma)
+    2 <HOME> - suma rzutów rożnych
+    2 <N>. połowa - <HOME> - suma rzutów rożnych
+    2 <N>. połowa - <AWAY> - suma rzutów rożnych
+    2 <HOME> - suma kartek
+    2 <AWAY> - suma kartek
+    2 <N>. połowa - <HOME>  - Total (suma)
+    1 Suma celnych strzałów
+    1 <HOME> - suma celnych strzałów
+    1 <AWAY> - suma celnych strzałów
+    1 Suma strzałów
+    1 <HOME> - suma strzałów
+    1 <AWAY> - suma strzałów
+    1 Suma fauli
+    1 <HOME> - suma fauli
+    1 <AWAY> - suma fauli
+    1 Suma spalonych
+    1 <HOME> - suma spalonych
+    1 <AWAY> - suma spalonych
+    1 <HOME>  - Total (suma)
+    1 <HOME>  - suma rzutów rożnych
+== handicap_2col 5
+    3 Handicap
+    3 <N>. Połowa - handicap
+    3 <N>. Połowa - Handicap
+    3 Rzuty rożne - Handicap
+    3 <N>. połowa - Rzuty rożne handicap
+== handicap_3col 3
+    3 Handicap 
+    3 <N>. Połowa - Handicap
+    3 <N>. połowa - Handicap
+== exact_result 2
+    6 <N>. Połowa - Dokładny wynik
+    3 Dokładny wynik

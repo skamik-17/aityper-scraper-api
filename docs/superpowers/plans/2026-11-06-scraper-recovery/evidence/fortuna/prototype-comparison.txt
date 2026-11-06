@@ -1,0 +1,135 @@
+# Scratch PROTOTYPE (evidence/fortuna/prototype.diff) vs CURRENT code on ONE capture (smoke --from, 2026-11-06 17:38Z, 20 PL matches).
+# Prototype was run by swapping fortunaNormalizer.normalizeMarket at runtime in a scratch wrapper; the repo was not modified.
+otherMarketShare 0.3291 -> 0.3018; unknownSelectionShare 0.273 -> 0.237; 'without extractable player' warnings 0 -> 0
+requiredCodeMatchCounts current: {"HALF_TIME_RESULT": 20, "HALF_TIME_CORNERS_RACE": 0, "SECOND_HALF_CORNERS_RACE": 0, "PENALTY_AWARDED": 0, "RED_CARD_AND_PENALTY": 0, "OWN_GOAL": 0, "HEADER_GOAL": 0, "ASSISTS_TOTAL": 0, "HALF_TIME_BTTS": 0, "HOME_WIN_TO_NIL": 0, "AWAY_WIN_TO_NIL": 0, "WINNING_MARGIN": 0, "HOME_WIN_BOTH_HALVES": 0, "HOME_SCORE_BOTH_HALVES": 0, "AWAY_SCORE_BOTH_HALVES": 0, "HOME_WIN_AT_LEAST_ONE_HALF": 0, "AWAY_WIN_AT_LEAST_ONE_HALF": 0, "HOME_EXACT_GOALS": 0, "AWAY_EXACT_GOALS": 0, "RED_CARD_TEAM": 0, "HALF_TIME_RED_CARD_TEAM": 0, "HALF_TIME_RED_CARD": 0, "SECOND_HALF_EXACT_GOALS": 0, "FIRST_CORNER": 0, "ODD_EVEN_GOALS": 0}
+requiredCodeMatchCounts proto:   {"HALF_TIME_RESULT": 20, "HALF_TIME_CORNERS_RACE": 10, "SECOND_HALF_CORNERS_RACE": 0, "PENALTY_AWARDED": 10, "RED_CARD_AND_PENALTY": 10, "OWN_GOAL": 10, "HEADER_GOAL": 10, "ASSISTS_TOTAL": 10, "HALF_TIME_BTTS": 20, "HOME_WIN_TO_NIL": 20, "AWAY_WIN_TO_NIL": 20, "WINNING_MARGIN": 20, "HOME_WIN_BOTH_HALVES": 20, "HOME_SCORE_BOTH_HALVES": 20, "AWAY_SCORE_BOTH_HALVES": 20, "HOME_WIN_AT_LEAST_ONE_HALF": 20, "AWAY_WIN_AT_LEAST_ONE_HALF": 20, "HOME_EXACT_GOALS": 10, "AWAY_EXACT_GOALS": 10, "RED_CARD_TEAM": 10, "HALF_TIME_RED_CARD_TEAM": 10, "HALF_TIME_RED_CARD": 10, "SECOND_HALF_EXACT_GOALS": 10, "FIRST_CORNER": 9, "ODD_EVEN_GOALS": 10}
+match | raw | idRaw (raw markets with PLAN_IDS) | normalized cur->proto | other cur->proto | delta==idRaw
+AFC Bournemouth vs Nottingham Forest | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Coventry City vs Crystal Palace | 110 | 10 | 98->108 (+10) | 12->2 (-10) | OK
+Tottenham Hotspur vs Ipswich Town | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Everton vs Coventry City | 1283 | 26 | 830->856 (+26) | 453->427 (-26) | OK
+Aston Villa vs Sunderland | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Newcastle United vs Arsenal | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Fulham vs Newcastle United | 1213 | 26 | 788->814 (+26) | 425->399 (-26) | OK
+Arsenal vs Hull City | 1265 | 24 | 824->848 (+24) | 441->417 (-24) | OK
+Nottingham Forest vs Manchester City | 1242 | 26 | 809->835 (+26) | 433->407 (-26) | OK
+Leeds United vs Tottenham Hotspur | 1152 | 26 | 751->777 (+26) | 401->375 (-26) | OK
+Hull City vs Brighton and Hove Albion | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Liverpool vs Manchester United | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Ipswich Town vs AFC Bournemouth | 1176 | 26 | 768->794 (+26) | 408->382 (-26) | OK
+Brighton and Hove Albion vs Brentford | 1154 | 26 | 751->777 (+26) | 403->377 (-26) | OK
+Manchester United vs Aston Villa | 1152 | 26 | 750->776 (+26) | 402->376 (-26) | OK
+Sunderland vs Chelsea | 1207 | 26 | 787->813 (+26) | 420->394 (-26) | OK
+Crystal Palace vs Liverpool | 1181 | 26 | 770->796 (+26) | 411->385 (-26) | OK
+Brentford vs Everton | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Chelsea vs Leeds United | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+Manchester City vs Fulham | 109 | 10 | 97->107 (+10) | 12->2 (-10) | OK
+
+# First prototype run ANCHORED verbMatch with ^ (as the review suggested): 12 player markets lost their player and hit the null guard
+# (Leeds vs Tottenham 6, Brighton vs Brentford 6), because verbMatch requires every surname token to be capitalised:
+#   'Van de Ven, Micky strzeli ostatniego gola w meczu (OPTA)'   current GOALSCORER_LAST:Micky Ven -> anchored: no match -> dropped
+#   'Loureiro da Costa, Joao Pedro strzeli gola głową (OPTA)'     current PLAYER_HEADER_GOAL:Joao Pedro Costa -> anchored: dropped
+# Unanchored (final prototype): 0 drops, delta==idRaw on all 20 matches. => the plan does NOT anchor verbMatch.
+
+# Player-key changes on the capture (prototype vs current): 115 'base' rows get a player (Murillo, Chema, Kevin, Estevao, Rayan, Evanilson x19 each, Alisson x1);
+# 70 params lose a leaked team token (Man.City x15, Man.United/Aston Villa x26 incl. 'Villa George Lawrence Hemmings', Crystal Palace x12, Coventry City x17). No other player key changes.
+
+# Edge-case probe, CURRENT (cur) vs PROTOTYPE (proto); synthetic rows are marked in fortuna.md
+cur   00-0p HT corners => {"c":"HALF_TIME_RESULT","k":"HALF_TIME_RESULT","s":["AWAY@5","HOME@1.32","DRAW@6"]} 
+proto 00-0p HT corners => {"c":"HALF_TIME_CORNERS_RACE","k":"HALF_TIME_CORNERS_RACE","s":["AWAY@5","HOME@1.32","DRAW@6"]} 
+cur   00-0p 2H corners => {"c":"SECOND_HALF_RESULT","k":"SECOND_HALF_RESULT","s":["AWAY@4","HOME@1.4","DRAW@5.5"]} 
+proto 00-0p 2H corners => {"c":"SECOND_HALF_CORNERS_RACE","k":"SECOND_HALF_CORNERS_RACE","s":["AWAY@4","HOME@1.4","DRAW@5.5"]} 
+cur   00-0p Mecz corners => {"c":"MATCH_WINNER","k":"MATCH_WINNER","s":["AWAY@6.4","HOME@1.14","DRAW@12"]} 
+proto 00-0p Mecz corners => {"c":"CORNERS_RACE","k":"CORNERS_RACE","s":["AWAY@6.4","HOME@1.14","DRAW@12"]} 
+cur   00-0e Mecz corners => {"c":"CORNERS_RACE","k":"CORNERS_RACE","s":["AWAY@6.4","DRAW@12","HOME@1.14"]} 
+proto 00-0e Mecz corners => {"c":"CORNERS_RACE","k":"CORNERS_RACE","s":["AWAY@6.4","DRAW@12","HOME@1.14"]} 
+cur   00-2d HT => {"c":"HALF_TIME_RESULT","k":"HALF_TIME_RESULT","s":["AWAY@12","DRAW@2.95","HOME@1.5"]} 
+proto 00-2d HT => {"c":"HALF_TIME_RESULT","k":"HALF_TIME_RESULT","s":["AWAY@12","DRAW@2.95","HOME@1.5"]} 
+cur   ManUtd Tielemans => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Youri United Tielemans","p":"Youri United Tielemans","s":["PLAYER@9"]} 
+proto ManUtd Tielemans => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Youri Tielemans","p":"Youri Tielemans","s":["PLAYER@9"]} 
+cur   Villa McGinn => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:John Villa McGinn","p":"John Villa McGinn","s":["PLAYER@13"]} 
+proto Villa McGinn => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:John McGinn","p":"John McGinn","s":["PLAYER@13"]} 
+cur   ManCity Dias => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Ruben City Dias","p":"Ruben City Dias","s":["PLAYER@26"]} 
+proto ManCity Dias => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Ruben Dias","p":"Ruben Dias","s":["PLAYER@26"]} 
+cur   ManCity Rodri => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Man.City Rodri","p":"Man.City Rodri","s":["PLAYER@21"]} 
+proto ManCity Rodri => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Rodri","p":"Rodri","s":["PLAYER@21"]} 
+cur   Villa Emi => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Villa Emi","p":"Villa Emi","s":["PLAYER@15"]} 
+proto Villa Emi => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Emi","p":"Emi","s":["PLAYER@15"]} 
+cur   Coventry Thomas => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Bobby City Thomas","p":"Bobby City Thomas","s":["PLAYER@11"]} 
+proto Coventry Thomas => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Bobby Thomas","p":"Bobby Thomas","s":["PLAYER@11"]} 
+cur   Nottingham Murillo FGS => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST","s":["Tak@30"]} 
+proto Nottingham Murillo FGS => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Murillo","p":"Murillo","s":["PLAYER@30"]} 
+cur   Murillo shots => {"c":"PLAYER_SHOTS","k":"PLAYER_SHOTS","s":["1+@1.7","2+@4.25"]} 
+proto Murillo shots => {"c":"PLAYER_SHOTS","k":"PLAYER_SHOTS:Murillo","p":"Murillo","s":["1+@1.7","2+@4.25"]} 
+cur   Diomande shots => {"c":"PLAYER_SHOTS","k":"PLAYER_SHOTS:Ousmane Diomande","p":"Ousmane Diomande","s":["2+@7","1+@2.25"]} 
+proto Diomande shots => {"c":"PLAYER_SHOTS","k":"PLAYER_SHOTS:Ousmane Diomande","p":"Ousmane Diomande","s":["2+@7","1+@2.25"]} 
+cur   team guard => {"c":"PLAYER_SHOTS","k":"PLAYER_SHOTS","s":["1+@1.1"]} 
+proto team guard => null WARN:[fortuna] Player market without extractable player: "Nottingham - liczba strzałów (OPTA)" (id: ufo:mtyp:00-lf)
+cur   Belammari => {"c":"PLAYER_OFFSIDES_1H","k":"PLAYER_OFFSIDES_1H:Youssef Belammari","p":"Youssef Belammari","s":["1+@3"]} 
+proto Belammari => {"c":"PLAYER_OFFSIDES_1H","k":"PLAYER_OFFSIDES_1H:Youssef Belammari","p":"Youssef Belammari","s":["1+@3"]} 
+cur   k6 2.5 nbsp => null WARN:[fortuna] Unknown market: "Mecz: liczba asyst w meczu" (id: ufo:mtyp:00-k6)
+proto k6 2.5 nbsp => {"c":"ASSISTS_TOTAL","k":"ASSISTS_TOTAL:2.5","p":"2.5","s":["OVER@2.3","UNDER@1.56"]} 
+cur   Upamecano red => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["YES@34"]} 
+proto Upamecano red => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["YES@34"]} 
+cur   Villa Hemmings => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Villa George Lawrence Hemmings","p":"Villa George Lawrence Hemmings","s":["PLAYER@34"]} 
+proto Villa Hemmings => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:George Lawrence Hemmings","p":"George Lawrence Hemmings","s":["PLAYER@34"]} 
+cur   Hull Herrington => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Lucas Herrington","p":"Lucas Herrington","s":["PLAYER@26"]} 
+proto Hull Herrington => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Lucas Herrington","p":"Lucas Herrington","s":["PLAYER@26"]} 
+cur   Palace Nketiah => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Eddie Palace Nketiah","p":"Eddie Palace Nketiah","s":["PLAYER@9"]} 
+proto Palace Nketiah => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Eddie Nketiah","p":"Eddie Nketiah","s":["PLAYER@9"]} 
+cur   Maroko Diop => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Issa Diop","p":"Issa Diop","s":["PLAYER@30"]} 
+proto Maroko Diop => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Issa Diop","p":"Issa Diop","s":["PLAYER@30"]} 
+cur   WZP Cabral => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Jovane Cabral","p":"Jovane Cabral","s":["PLAYER@30"]} 
+proto WZP Cabral => {"c":"GOALSCORER_FIRST","k":"GOALSCORER_FIRST:Jovane Cabral","p":"Jovane Cabral","s":["PLAYER@30"]} 
+cur   Murillo red => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["Murillo wyrzucony z boiska@29"]} 
+proto Murillo red => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["Murillo wyrzucony z boiska@29"]} 
+cur   Upamecano red real => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["Dayot Upamecano wyrzucony z boiska@29"]} 
+proto Upamecano red real => {"c":"PLAYER_RED_CARD","k":"PLAYER_RED_CARD","s":["Dayot Upamecano wyrzucony z boiska@29"]} 
+cur   1h swapped name => null WARN:[fortuna] Unknown market: "Mecz: Hull - wygra do zera" (id: ufo:mtyp:00-1h)
+proto 1h swapped name => {"c":"AWAY_WIN_TO_NIL","k":"AWAY_WIN_TO_NIL","s":["YES@9.2","NO@1.01"]} 
+cur   16 parser-fixed digits => null WARN:[fortuna] Unknown market: "Arsenal dokładna liczba goli" (id: ufo:mtyp:00-16)
+proto 16 parser-fixed digits => {"c":"HOME_EXACT_GOALS","k":"HOME_EXACT_GOALS","s":["2@3.55","3+@1.85","1@4.7","0@12"]} 
+cur   3e parser-fixed digits => null WARN:[fortuna] Unknown market: "2.połowa: dokładna liczba goli" (id: ufo:mtyp:00-3e)
+proto 3e parser-fixed digits => {"c":"SECOND_HALF_EXACT_GOALS","k":"SECOND_HALF_EXACT_GOALS","s":["0@4.9","1@2.95","2+@1.81"]} 
+cur   0f first corner => null WARN:[fortuna] Unknown market: "Mecz: 1.rzut rożny" (id: ufo:mtyp:00-0f)
+proto 0f first corner => {"c":"FIRST_CORNER","k":"FIRST_CORNER","s":["HOME@2.2","AWAY@1.6"]} 
+cur   p1 win by 2 => null 
+proto p1 win by 2 => null 
+
+# WC golden fixture (world-cup-2026_france_morocco), CURRENT vs PROTOTYPE, entry by entry
+{"fixture":"world-cup-2026_france_morocco","ctx":{"awayTeam":"Morocco","homeTeam":"France","league":"world-cup-2026","leagueName":"world-cup-2026"},"entries":2010,"changed":27,"blessedChanged":[861],"guardWarns":0}
+   unblessed {"i":860,"id":"ufo:mtyp:00-0f","name":"Mecz: 1.rzut rożny","cur":"null","pro":"FIRST_CORNER|FIRST_CORNER|AWAY@2.55,HOME@1.45"}
+   BLESSED {"i":861,"id":"ufo:mtyp:00-0p","name":"1. połowa: więcej rzutów rożnych","cur":"HALF_TIME_RESULT|HALF_TIME_RESULT|HOME@1.46,DRAW@5.4,AWAY@4","pro":"HALF_TIME_CORNERS_RACE|HALF_TIME_CORNERS_RACE|HOME@1.46,DRAW@5.4,AWAY@4"}
+   unblessed {"i":1751,"id":"ufo:mtyp:00-bv","name":"Mecz: gol samobójczy","cur":"null","pro":"OWN_GOAL|OWN_GOAL|NO@1.05,YES@8"}
+   unblessed {"i":1774,"id":"ufo:mtyp:00-2c","name":"Mecz: Maroko - strzeli gola w obu połowach","cur":"null","pro":"AWAY_SCORE_BOTH_HALVES|AWAY_SCORE_BOTH_HALVES|NO@1.08,YES@6.6"}
+   unblessed {"i":1802,"id":"ufo:mtyp:00-2n","name":"1.połowa: obie drużyny strzelą gola","cur":"null","pro":"HALF_TIME_BTTS|HALF_TIME_BTTS|YES@4.8,NO@1.15"}
+   unblessed {"i":1809,"id":"ufo:mtyp:00-1i","name":"Mecz: Maroko - wygra do zera","cur":"null","pro":"AWAY_WIN_TO_NIL|AWAY_WIN_TO_NIL|YES@6.6,NO@1.05"}
+   unblessed {"i":1817,"id":"ufo:mtyp:00-1o","name":"Mecz: Francja - wygra obie połowy","cur":"null","pro":"HOME_WIN_BOTH_HALVES|HOME_WIN_BOTH_HALVES|NO@1.2,YES@4"}
+   unblessed {"i":1821,"id":"ufo:mtyp:00-2b","name":"Mecz: Francja - strzeli gola w obu połowach","cur":"null","pro":"HOME_SCORE_BOTH_HALVES|HOME_SCORE_BOTH_HALVES|NO@1.43,YES@2.6"}
+   unblessed {"i":1834,"id":"ufo:mtyp:00-1s","name":"Mecz: Maroko - wygra przynajmniej jedną połowę","cur":"null","pro":"AWAY_WIN_AT_LEAST_ONE_HALF|AWAY_WIN_AT_LEAST_ONE_HALF|NO@1.35,YES@2.95"}
+   unblessed {"i":1858,"id":"ufo:mtyp:00-09","name":"Mecz: wynik/różnica zwycięstwa","cur":"null","pro":"WINNING_MARGIN|WINNING_MARGIN|AWAY_BY_1@7.6,HOME_BY_3PLUS@5.2,HOME_BY_2@4.6,HOME_BY_1@3.5,DRAW@3.6,AWAY_BY_3PLUS@80,AWAY_BY_2@23"}
+   unblessed {"i":1872,"id":"ufo:mtyp:00-1p","name":"Mecz: Maroko - wygra obie połowy","cur":"null","pro":"AWAY_WIN_BOTH_HALVES|AWAY_WIN_BOTH_HALVES|YES@12,NO@1.01"}
+   unblessed {"i":1876,"id":"ufo:mtyp:00-1r","name":"Mecz: Francja - wygra przynajmniej jedną połowę","cur":"null","pro":"HOME_WIN_AT_LEAST_ONE_HALF|HOME_WIN_AT_LEAST_ONE_HALF|NO@3,YES@1.34"}
+   unblessed {"i":1883,"id":"ufo:mtyp:00-1h","name":"Mecz: Francja - wygra do zera","cur":"null","pro":"HOME_WIN_TO_NIL|HOME_WIN_TO_NIL|NO@1.47,YES@2.39"}
+   unblessed {"i":1897,"id":"ufo:mtyp:00-k7","name":"Mecz: gol zdobyty strzałem głową","cur":"null","pro":"HEADER_GOAL|HEADER_GOAL|NO@1.38,YES@2.85"}
+   unblessed {"i":1898,"id":"ufo:mtyp:00-bt","name":"Mecz: rzut karny i czerwona kartka","cur":"null","pro":"RED_CARD_AND_PENALTY|RED_CARD_AND_PENALTY|NO@1.02,YES@11"}
+   unblessed {"i":1900,"id":"ufo:mtyp:00-k6","name":"Mecz: liczba asyst w meczu","cur":"null","pro":"ASSISTS_TOTAL|ASSISTS_TOTAL:2.5|OVER@3.25,UNDER@1.3"}
+   unblessed {"i":1902,"id":"ufo:mtyp:00-9a","name":"Mecz: rzut karny","cur":"null","pro":"PENALTY_AWARDED|PENALTY_AWARDED|NO@1.32,YES@3.15"}
+   unblessed {"i":1903,"id":"ufo:mtyp:00-k6","name":"Mecz: liczba asyst w meczu","cur":"null","pro":"ASSISTS_TOTAL|ASSISTS_TOTAL:1.5|OVER@1.47,UNDER@2.53"}
+   unblessed {"i":1936,"id":"ufo:mtyp:00-08","name":"Mecz: Maroko - Czerwona Kartka (bez CK dla trenera i sztabu)","cur":"null","pro":"RED_CARD_TEAM|RED_CARD_TEAM:AWAY|YES@8.6,NO@1.05"}
+   unblessed {"i":1955,"id":"ufo:mtyp:00-19","name":"Mecz: suma goli","cur":"null","pro":"ODD_EVEN_GOALS|ODD_EVEN_GOALS|ODD@1.95,EVEN@1.86"}
+   unblessed {"i":1956,"id":"ufo:mtyp:00-3e","name":"2.połowa: dokładna liczba goli","cur":"null","pro":"SECOND_HALF_EXACT_GOALS|SECOND_HALF_EXACT_GOALS|2+@2.21,0@3.7,1@2.65"}
+   unblessed {"i":1959,"id":"ufo:mtyp:00-0c","name":"1.połowa: Francja - Czerwona Kartka (bez CK dla trenera i sztabu)","cur":"null","pro":"HALF_TIME_RED_CARD_TEAM|HALF_TIME_RED_CARD_TEAM:HOME|NO@1.01,YES@12"}
+   unblessed {"i":1962,"id":"ufo:mtyp:00-07","name":"Mecz: Francja - Czerwona Kartka (bez CK dla trenera i sztabu)","cur":"null","pro":"RED_CARD_TEAM|RED_CARD_TEAM:HOME|NO@1.04,YES@9.4"}
+   unblessed {"i":1967,"id":"ufo:mtyp:00-0d","name":"1.połowa: Maroko - Czerwona Kartka (bez CK dla trenera i sztabu)","cur":"null","pro":"HALF_TIME_RED_CARD_TEAM|HALF_TIME_RED_CARD_TEAM:AWAY|NO@1.01,YES@12"}
+   unblessed {"i":1991,"id":"ufo:mtyp:00-16","name":"Francja dokładna liczba goli","cur":"null","pro":"HOME_EXACT_GOALS|HOME_EXACT_GOALS|3+@3.3,2@3.3,0@5,1@2.95"}
+   unblessed {"i":1992,"id":"ufo:mtyp:00-17","name":"Maroko dokładna liczba goli","cur":"null","pro":"AWAY_EXACT_GOALS|AWAY_EXACT_GOALS|1@2.42,0@1.98,2@5.8,3+@17"}
+   unblessed {"i":1995,"id":"ufo:mtyp:00-0a","name":"1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)","cur":"null","pro":"HALF_TIME_RED_CARD|HALF_TIME_RED_CARD|YES@11,NO@1.01"}
+
+# Corners-race name under other MATCH_WINNER ids, CURRENT (cur) vs PROTOTYPE (proto), ctx Arsenal/Hull City
+cur ufo:mtyp:00-60 MATCH_WINNER AWAY@6.4,HOME@1.14,DRAW@12
+cur ufo:mtyp:00-2x MATCH_WINNER AWAY@6.4,HOME@1.14,DRAW@12
+cur 00-60 plain MATCH_WINNER HOME@1.16,DRAW@7.2,AWAY@15.5
+proto ufo:mtyp:00-60 CORNERS_RACE AWAY@6.4,HOME@1.14,DRAW@12
+proto ufo:mtyp:00-2x CORNERS_RACE AWAY@6.4,HOME@1.14,DRAW@12
+proto 00-60 plain MATCH_WINNER HOME@1.16,DRAW@7.2,AWAY@15.5

@@ -1,0 +1,2016 @@
+{
+ "_note": "Per-event descriptions (players list + markets 38/39/40 only). lebull v4 response was byte-identical.",
+ "players": [
+  {
+   "id": "ab:player:1161002:512:81709",
+   "name": "Martin Dúbravka",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:554982",
+   "name": "Tarik Muharemovic",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:69125",
+   "name": "Ethan Ampadu",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:64679",
+   "name": "Dominic Calvert-Lewin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1152180",
+   "name": "James Trafford",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1068492",
+   "name": "Marcos Senesi",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:934889",
+   "name": "Ethan Ampadu",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:762292",
+   "name": "Harry Wilson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:379166",
+   "name": "James Maddison",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:496822",
+   "name": "Mohammed Kudus",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1036054",
+   "name": "Pedro Porro",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1040456",
+   "name": "Noah Okafor",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:81167",
+   "name": "Jan Paul Van Hecke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1063135",
+   "name": "Jaka Bijol",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:308018",
+   "name": "Destiny Udogie",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:444674",
+   "name": "Dominic Solanke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:501477",
+   "name": "Jayden Bogle",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:55293",
+   "name": "Andrew Robertson",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1104368",
+   "name": "Brenden Aaronson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:501470",
+   "name": "Anton Stach",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:801252",
+   "name": "Dominic Solanke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:118416",
+   "name": "Lucas Bergvall",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1305553",
+   "name": "Archie Gray",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:75948",
+   "name": "Pedro Porro",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:878522",
+   "name": "Daniel James",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:959755",
+   "name": "Gabriel Gudmundsson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:99416",
+   "name": "Micky van de Ven",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1389167",
+   "name": "Lucas Bergvall",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:552846",
+   "name": "Sandro Tonali",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:770848",
+   "name": "Dominic Calvert-Lewin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:717401",
+   "name": "Ben Davies",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:88092",
+   "name": "Melvin Bard",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:501475",
+   "name": "Jaka Bijol",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:551482",
+   "name": "Jan-Paul van Hecke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1046131",
+   "name": "Jayden Bogle",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:53242",
+   "name": "Ben Davies",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1017575",
+   "name": "Sandro Tonali",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1028466",
+   "name": "Joe Rodon",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1359117",
+   "name": "Jean Bahoya",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:564362",
+   "name": "Nico Elvedi",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1067570",
+   "name": "Mohammed Kudus",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1358146",
+   "name": "Mateus Goncalo Espanha Fernandes",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:501465",
+   "name": "Lukas Nmecha",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:567185",
+   "name": "Tosin Adarabioyo",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:97311",
+   "name": "Alex Cairns",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:78214",
+   "name": "Jaka Bijol",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:385249",
+   "name": "Micky van de Ven",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:821147",
+   "name": "Michael Zetterer",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:501473",
+   "name": "Sean Longstaff",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1235323",
+   "name": "Anton Stach",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:59342",
+   "name": "Harry Wilson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1295172",
+   "name": "Micky van de Ven",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:551480",
+   "name": "Andy Robertson",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:90330",
+   "name": "Destiny Udogie",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:88342",
+   "name": "Marcos Senesi",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:997244",
+   "name": "Brandon Austin",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1464302",
+   "name": "Callum Olusesi",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:94708",
+   "name": "Omar Marmoush",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:267287",
+   "name": "Daniel James",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:779005",
+   "name": "Nico Elvedi",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:367541",
+   "name": "Pedro Porro",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:68893",
+   "name": "James Justin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:133607",
+   "name": "Callum Olusesi",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:983072",
+   "name": "Rodrigo Bentancur",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:86363",
+   "name": "Ao Tanaka",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:88971",
+   "name": "Brandon Austin",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:85210",
+   "name": "Noah Okafor",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:553321",
+   "name": "Harry Wilson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:79412",
+   "name": "Mohammed Kudus",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:565779",
+   "name": "Omar Marmoush",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:131147",
+   "name": "Antonin Kinsky",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:501466",
+   "name": "Ao Tanaka",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1326182",
+   "name": "James Justin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:552485",
+   "name": "Mateus Goncalo Espanha Fernandes",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:62614",
+   "name": "Nico Elvedi",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:71672",
+   "name": "Daniel James",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:298160",
+   "name": "Brenden Aaronson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:72512",
+   "name": "Gabriel Gudmundsson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:71666",
+   "name": "Joe Rodon",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:80605",
+   "name": "Brenden Aaronson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:84093",
+   "name": "Ilia Gruev",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:382476",
+   "name": "Ethan Ampadu",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:551481",
+   "name": "Marcos Senesi",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:504500",
+   "name": "Dominic Calvert-Lewin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:97178",
+   "name": "Anton Stach",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:99702",
+   "name": "Michael Zetterer",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1298911",
+   "name": "Mathys Tel",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:111682",
+   "name": "Jean-Matteo Bahoya",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1415401",
+   "name": "Antonin Kinsky",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:570414",
+   "name": "Alex Cairns",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:98324",
+   "name": "James Trafford",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1162555",
+   "name": "Destiny Udogie",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:112412",
+   "name": "Mateus Goncalo Espanha Fernandes",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:447035",
+   "name": "Martin Dúbravka",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:85576",
+   "name": "Conor Gallagher",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1557375",
+   "name": "Luca Williams-Barnett",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1199794",
+   "name": "Omar Marmoush",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:288462",
+   "name": "Dejan Kulusekvski",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:67770",
+   "name": "Tosin Adarabioyo",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:819558",
+   "name": "Lukas Nmecha",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:71566",
+   "name": "Sean Longstaff",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:436228",
+   "name": "Archie Gray",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1121154",
+   "name": "Conor Gallagher",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:473599",
+   "name": "Mathys Tel",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:76995",
+   "name": "Jayden Bogle",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:567744",
+   "name": "Melvin Bard",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1276163",
+   "name": "Tarik Muharemovic",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:4641:532202",
+   "name": "Conor Gallagher",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:712:100864",
+   "name": "Tarik Muharemovic",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:805454",
+   "name": "Tosin Adarabioyo",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:4641:149049",
+   "name": "Ben Davies",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1250695",
+   "name": "Savio Moreira de Oliveira",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:761573",
+   "name": "James Maddison",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1154125",
+   "name": "Melvin Bard",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:501469",
+   "name": "Gabriel Gudmundsson",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:82570",
+   "name": "Dejan Kulusekvski",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1132773",
+   "name": "Ilia Gruev",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:712:76124",
+   "name": "Lukas Nmecha",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:1456783",
+   "name": "Alfie Cresswell",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "dst:player:277857:6404:505617",
+   "name": "Noah Okafor",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:729925",
+   "name": "Andrew Robertson",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:61651",
+   "name": "Dominic Solanke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:122401:1051232",
+   "name": "Dejan Kulusekvski",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:104171",
+   "name": "Mathys Tel",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:74758",
+   "name": "Sandro Tonali",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:72596",
+   "name": "Rodrigo Bentancur",
+   "competitor_id": "33"
+  },
+  {
+   "id": "bg:player:14040159:10210:1101292",
+   "name": "Ao Tanaka",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:10210:965506",
+   "name": "Sean Longstaff",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "ab:player:1161002:512:61931",
+   "name": "James Maddison",
+   "competitor_id": "33"
+  },
+  {
+   "id": "dst:player:277857:6404:506184",
+   "name": "James Justin",
+   "competitor_id": "217974"
+  },
+  {
+   "id": "bg:player:14040159:122401:1088913",
+   "name": "Jan Paul Van Hecke",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:107245",
+   "name": "Archie Gray",
+   "competitor_id": "33"
+  },
+  {
+   "id": "ab:player:1161002:512:133606",
+   "name": "Luca Williams-Barnett",
+   "competitor_id": "33"
+  }
+ ],
+ "markets": {
+  "38": {
+   "name": "1. strzelec gola",
+   "variants": {
+    "goalnr=1|type=general": [
+     {
+      "name": "1. strzelec gola",
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       },
+       {
+        "id": "ab:player:1161002:512:67770",
+        "name": "Tosin Adarabioyo",
+        "player_id": "ab:player:1161002:512:67770",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:62614",
+        "name": "Nico Elvedi",
+        "player_id": "ab:player:1161002:712:62614",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1295172",
+        "name": "Micky van de Ven",
+        "player_id": "bg:player:14040159:122401:1295172",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1359117",
+        "name": "Jean Bahoya",
+        "player_id": "bg:player:14040159:10210:1359117",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1199794",
+        "name": "Omar Marmoush",
+        "player_id": "bg:player:14040159:122401:1199794",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1101292",
+        "name": "Ao Tanaka",
+        "player_id": "bg:player:14040159:10210:1101292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:761573",
+        "name": "James Maddison",
+        "player_id": "bg:player:14040159:122401:761573",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1358146",
+        "name": "Mateus Goncalo Espanha Fernandes",
+        "player_id": "bg:player:14040159:122401:1358146",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:111682",
+        "name": "Jean-Matteo Bahoya",
+        "player_id": "ab:player:1161002:712:111682",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1235323",
+        "name": "Anton Stach",
+        "player_id": "bg:player:14040159:10210:1235323",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:85210",
+        "name": "Noah Okafor",
+        "player_id": "ab:player:1161002:712:85210",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:983072",
+        "name": "Rodrigo Bentancur",
+        "player_id": "bg:player:14040159:122401:983072",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1121154",
+        "name": "Conor Gallagher",
+        "player_id": "bg:player:14040159:122401:1121154",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1051232",
+        "name": "Dejan Kulusekvski",
+        "player_id": "bg:player:14040159:122401:1051232",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:79412",
+        "name": "Mohammed Kudus",
+        "player_id": "ab:player:1161002:512:79412",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:959755",
+        "name": "Gabriel Gudmundsson",
+        "player_id": "bg:player:14040159:10210:959755",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:133607",
+        "name": "Callum Olusesi",
+        "player_id": "ab:player:1161002:512:133607",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:78214",
+        "name": "Jaka Bijol",
+        "player_id": "ab:player:1161002:712:78214",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:86363",
+        "name": "Ao Tanaka",
+        "player_id": "ab:player:1161002:712:86363",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:80605",
+        "name": "Brenden Aaronson",
+        "player_id": "ab:player:1161002:712:80605",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:717401",
+        "name": "Ben Davies",
+        "player_id": "bg:player:14040159:122401:717401",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:779005",
+        "name": "Nico Elvedi",
+        "player_id": "bg:player:14040159:10210:779005",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:74758",
+        "name": "Sandro Tonali",
+        "player_id": "ab:player:1161002:512:74758",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:819558",
+        "name": "Lukas Nmecha",
+        "player_id": "bg:player:14040159:10210:819558",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:64679",
+        "name": "Dominic Calvert-Lewin",
+        "player_id": "ab:player:1161002:712:64679",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:99416",
+        "name": "Micky van de Ven",
+        "player_id": "ab:player:1161002:512:99416",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:88342",
+        "name": "Marcos Senesi",
+        "player_id": "ab:player:1161002:512:88342",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1104368",
+        "name": "Brenden Aaronson",
+        "player_id": "bg:player:14040159:10210:1104368",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:88092",
+        "name": "Melvin Bard",
+        "player_id": "ab:player:1161002:712:88092",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1063135",
+        "name": "Jaka Bijol",
+        "player_id": "bg:player:14040159:10210:1063135",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1298911",
+        "name": "Mathys Tel",
+        "player_id": "bg:player:14040159:122401:1298911",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1028466",
+        "name": "Joe Rodon",
+        "player_id": "bg:player:14040159:10210:1028466",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:71672",
+        "name": "Daniel James",
+        "player_id": "ab:player:1161002:712:71672",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1088913",
+        "name": "Jan Paul Van Hecke",
+        "player_id": "bg:player:14040159:122401:1088913",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:69125",
+        "name": "Ethan Ampadu",
+        "player_id": "ab:player:1161002:712:69125",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1250695",
+        "name": "Savio Moreira de Oliveira",
+        "player_id": "bg:player:14040159:122401:1250695",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1067570",
+        "name": "Mohammed Kudus",
+        "player_id": "bg:player:14040159:122401:1067570",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:729925",
+        "name": "Andrew Robertson",
+        "player_id": "bg:player:14040159:122401:729925",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:878522",
+        "name": "Daniel James",
+        "player_id": "bg:player:14040159:10210:878522",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1132773",
+        "name": "Ilia Gruev",
+        "player_id": "bg:player:14040159:10210:1132773",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1046131",
+        "name": "Jayden Bogle",
+        "player_id": "bg:player:14040159:10210:1046131",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:133606",
+        "name": "Luca Williams-Barnett",
+        "player_id": "ab:player:1161002:512:133606",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:55293",
+        "name": "Andrew Robertson",
+        "player_id": "ab:player:1161002:512:55293",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:100864",
+        "name": "Tarik Muharemovic",
+        "player_id": "ab:player:1161002:712:100864",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:90330",
+        "name": "Destiny Udogie",
+        "player_id": "ab:player:1161002:512:90330",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1305553",
+        "name": "Archie Gray",
+        "player_id": "bg:player:14040159:122401:1305553",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:72512",
+        "name": "Gabriel Gudmundsson",
+        "player_id": "ab:player:1161002:712:72512",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1162555",
+        "name": "Destiny Udogie",
+        "player_id": "bg:player:14040159:122401:1162555",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1557375",
+        "name": "Luca Williams-Barnett",
+        "player_id": "bg:player:14040159:122401:1557375",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:801252",
+        "name": "Dominic Solanke",
+        "player_id": "bg:player:14040159:122401:801252",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1036054",
+        "name": "Pedro Porro",
+        "player_id": "bg:player:14040159:122401:1036054",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1456783",
+        "name": "Alfie Cresswell",
+        "player_id": "bg:player:14040159:10210:1456783",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:934889",
+        "name": "Ethan Ampadu",
+        "player_id": "bg:player:14040159:10210:934889",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:81167",
+        "name": "Jan Paul Van Hecke",
+        "player_id": "ab:player:1161002:512:81167",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:770848",
+        "name": "Dominic Calvert-Lewin",
+        "player_id": "bg:player:14040159:10210:770848",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:75948",
+        "name": "Pedro Porro",
+        "player_id": "ab:player:1161002:512:75948",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:84093",
+        "name": "Ilia Gruev",
+        "player_id": "ab:player:1161002:712:84093",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:71666",
+        "name": "Joe Rodon",
+        "player_id": "ab:player:1161002:712:71666",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1276163",
+        "name": "Tarik Muharemovic",
+        "player_id": "bg:player:14040159:10210:1276163",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:104171",
+        "name": "Mathys Tel",
+        "player_id": "ab:player:1161002:512:104171",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:118416",
+        "name": "Lucas Bergvall",
+        "player_id": "ab:player:1161002:512:118416",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:112412",
+        "name": "Mateus Goncalo Espanha Fernandes",
+        "player_id": "ab:player:1161002:512:112412",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:72596",
+        "name": "Rodrigo Bentancur",
+        "player_id": "ab:player:1161002:512:72596",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:61931",
+        "name": "James Maddison",
+        "player_id": "ab:player:1161002:512:61931",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:97178",
+        "name": "Anton Stach",
+        "player_id": "ab:player:1161002:712:97178",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1326182",
+        "name": "James Justin",
+        "player_id": "bg:player:14040159:10210:1326182",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:76995",
+        "name": "Jayden Bogle",
+        "player_id": "ab:player:1161002:712:76995",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:762292",
+        "name": "Harry Wilson",
+        "player_id": "bg:player:14040159:10210:762292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:61651",
+        "name": "Dominic Solanke",
+        "player_id": "ab:player:1161002:512:61651",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:965506",
+        "name": "Sean Longstaff",
+        "player_id": "bg:player:14040159:10210:965506",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:53242",
+        "name": "Ben Davies",
+        "player_id": "ab:player:1161002:512:53242",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1154125",
+        "name": "Melvin Bard",
+        "player_id": "bg:player:14040159:10210:1154125",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1464302",
+        "name": "Callum Olusesi",
+        "player_id": "bg:player:14040159:122401:1464302",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1017575",
+        "name": "Sandro Tonali",
+        "player_id": "bg:player:14040159:122401:1017575",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:82570",
+        "name": "Dejan Kulusekvski",
+        "player_id": "ab:player:1161002:512:82570",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1389167",
+        "name": "Lucas Bergvall",
+        "player_id": "bg:player:14040159:122401:1389167",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1068492",
+        "name": "Marcos Senesi",
+        "player_id": "bg:player:14040159:122401:1068492",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:85576",
+        "name": "Conor Gallagher",
+        "player_id": "ab:player:1161002:512:85576",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:71566",
+        "name": "Sean Longstaff",
+        "player_id": "ab:player:1161002:712:71566",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:94708",
+        "name": "Omar Marmoush",
+        "player_id": "ab:player:1161002:512:94708",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:107245",
+        "name": "Archie Gray",
+        "player_id": "ab:player:1161002:512:107245",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1040456",
+        "name": "Noah Okafor",
+        "player_id": "bg:player:14040159:10210:1040456",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:68893",
+        "name": "James Justin",
+        "player_id": "ab:player:1161002:712:68893",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:805454",
+        "name": "Tosin Adarabioyo",
+        "player_id": "bg:player:14040159:122401:805454",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:59342",
+        "name": "Harry Wilson",
+        "player_id": "ab:player:1161002:712:59342",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:76124",
+        "name": "Lukas Nmecha",
+        "player_id": "ab:player:1161002:712:76124",
+        "competitor_id": "217974"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "39": {
+   "name": "Ostatni strzelec gola",
+   "variants": {
+    "type=general": [
+     {
+      "name": "Ostatni strzelec gola",
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       },
+       {
+        "id": "bg:player:14040159:122401:1051232",
+        "name": "Dejan Kulusekvski",
+        "player_id": "bg:player:14040159:122401:1051232",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:959755",
+        "name": "Gabriel Gudmundsson",
+        "player_id": "bg:player:14040159:10210:959755",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:717401",
+        "name": "Ben Davies",
+        "player_id": "bg:player:14040159:122401:717401",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1028466",
+        "name": "Joe Rodon",
+        "player_id": "bg:player:14040159:10210:1028466",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1295172",
+        "name": "Micky van de Ven",
+        "player_id": "bg:player:14040159:122401:1295172",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1046131",
+        "name": "Jayden Bogle",
+        "player_id": "bg:player:14040159:10210:1046131",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1359117",
+        "name": "Jean Bahoya",
+        "player_id": "bg:player:14040159:10210:1359117",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:770848",
+        "name": "Dominic Calvert-Lewin",
+        "player_id": "bg:player:14040159:10210:770848",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1276163",
+        "name": "Tarik Muharemovic",
+        "player_id": "bg:player:14040159:10210:1276163",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1326182",
+        "name": "James Justin",
+        "player_id": "bg:player:14040159:10210:1326182",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:762292",
+        "name": "Harry Wilson",
+        "player_id": "bg:player:14040159:10210:762292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1199794",
+        "name": "Omar Marmoush",
+        "player_id": "bg:player:14040159:122401:1199794",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1068492",
+        "name": "Marcos Senesi",
+        "player_id": "bg:player:14040159:122401:1068492",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1101292",
+        "name": "Ao Tanaka",
+        "player_id": "bg:player:14040159:10210:1101292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:761573",
+        "name": "James Maddison",
+        "player_id": "bg:player:14040159:122401:761573",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1358146",
+        "name": "Mateus Goncalo Espanha Fernandes",
+        "player_id": "bg:player:14040159:122401:1358146",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1235323",
+        "name": "Anton Stach",
+        "player_id": "bg:player:14040159:10210:1235323",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:983072",
+        "name": "Rodrigo Bentancur",
+        "player_id": "bg:player:14040159:122401:983072",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1121154",
+        "name": "Conor Gallagher",
+        "player_id": "bg:player:14040159:122401:1121154",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:779005",
+        "name": "Nico Elvedi",
+        "player_id": "bg:player:14040159:10210:779005",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:819558",
+        "name": "Lukas Nmecha",
+        "player_id": "bg:player:14040159:10210:819558",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1104368",
+        "name": "Brenden Aaronson",
+        "player_id": "bg:player:14040159:10210:1104368",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1063135",
+        "name": "Jaka Bijol",
+        "player_id": "bg:player:14040159:10210:1063135",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1298911",
+        "name": "Mathys Tel",
+        "player_id": "bg:player:14040159:122401:1298911",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1088913",
+        "name": "Jan Paul Van Hecke",
+        "player_id": "bg:player:14040159:122401:1088913",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1250695",
+        "name": "Savio Moreira de Oliveira",
+        "player_id": "bg:player:14040159:122401:1250695",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1067570",
+        "name": "Mohammed Kudus",
+        "player_id": "bg:player:14040159:122401:1067570",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:729925",
+        "name": "Andrew Robertson",
+        "player_id": "bg:player:14040159:122401:729925",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:878522",
+        "name": "Daniel James",
+        "player_id": "bg:player:14040159:10210:878522",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1132773",
+        "name": "Ilia Gruev",
+        "player_id": "bg:player:14040159:10210:1132773",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1305553",
+        "name": "Archie Gray",
+        "player_id": "bg:player:14040159:122401:1305553",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1162555",
+        "name": "Destiny Udogie",
+        "player_id": "bg:player:14040159:122401:1162555",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1557375",
+        "name": "Luca Williams-Barnett",
+        "player_id": "bg:player:14040159:122401:1557375",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:801252",
+        "name": "Dominic Solanke",
+        "player_id": "bg:player:14040159:122401:801252",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1036054",
+        "name": "Pedro Porro",
+        "player_id": "bg:player:14040159:122401:1036054",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1456783",
+        "name": "Alfie Cresswell",
+        "player_id": "bg:player:14040159:10210:1456783",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:934889",
+        "name": "Ethan Ampadu",
+        "player_id": "bg:player:14040159:10210:934889",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:965506",
+        "name": "Sean Longstaff",
+        "player_id": "bg:player:14040159:10210:965506",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1154125",
+        "name": "Melvin Bard",
+        "player_id": "bg:player:14040159:10210:1154125",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1464302",
+        "name": "Callum Olusesi",
+        "player_id": "bg:player:14040159:122401:1464302",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1017575",
+        "name": "Sandro Tonali",
+        "player_id": "bg:player:14040159:122401:1017575",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1389167",
+        "name": "Lucas Bergvall",
+        "player_id": "bg:player:14040159:122401:1389167",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1040456",
+        "name": "Noah Okafor",
+        "player_id": "bg:player:14040159:10210:1040456",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:805454",
+        "name": "Tosin Adarabioyo",
+        "player_id": "bg:player:14040159:122401:805454",
+        "competitor_id": "33"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "40": {
+   "name": "Strzelec gola w dowolnym momencie",
+   "variants": {
+    "type=general": [
+     {
+      "name": "Strzelec gola w dowolnym momencie",
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       },
+       {
+        "id": "ab:player:1161002:512:67770",
+        "name": "Tosin Adarabioyo",
+        "player_id": "ab:player:1161002:512:67770",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:62614",
+        "name": "Nico Elvedi",
+        "player_id": "ab:player:1161002:712:62614",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1295172",
+        "name": "Micky van de Ven",
+        "player_id": "bg:player:14040159:122401:1295172",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1359117",
+        "name": "Jean Bahoya",
+        "player_id": "bg:player:14040159:10210:1359117",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1199794",
+        "name": "Omar Marmoush",
+        "player_id": "bg:player:14040159:122401:1199794",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1101292",
+        "name": "Ao Tanaka",
+        "player_id": "bg:player:14040159:10210:1101292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:761573",
+        "name": "James Maddison",
+        "player_id": "bg:player:14040159:122401:761573",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1358146",
+        "name": "Mateus Goncalo Espanha Fernandes",
+        "player_id": "bg:player:14040159:122401:1358146",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:111682",
+        "name": "Jean-Matteo Bahoya",
+        "player_id": "ab:player:1161002:712:111682",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1235323",
+        "name": "Anton Stach",
+        "player_id": "bg:player:14040159:10210:1235323",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:85210",
+        "name": "Noah Okafor",
+        "player_id": "ab:player:1161002:712:85210",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:983072",
+        "name": "Rodrigo Bentancur",
+        "player_id": "bg:player:14040159:122401:983072",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1121154",
+        "name": "Conor Gallagher",
+        "player_id": "bg:player:14040159:122401:1121154",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1051232",
+        "name": "Dejan Kulusekvski",
+        "player_id": "bg:player:14040159:122401:1051232",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:79412",
+        "name": "Mohammed Kudus",
+        "player_id": "ab:player:1161002:512:79412",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:959755",
+        "name": "Gabriel Gudmundsson",
+        "player_id": "bg:player:14040159:10210:959755",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:133607",
+        "name": "Callum Olusesi",
+        "player_id": "ab:player:1161002:512:133607",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:78214",
+        "name": "Jaka Bijol",
+        "player_id": "ab:player:1161002:712:78214",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:86363",
+        "name": "Ao Tanaka",
+        "player_id": "ab:player:1161002:712:86363",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:80605",
+        "name": "Brenden Aaronson",
+        "player_id": "ab:player:1161002:712:80605",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:717401",
+        "name": "Ben Davies",
+        "player_id": "bg:player:14040159:122401:717401",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:779005",
+        "name": "Nico Elvedi",
+        "player_id": "bg:player:14040159:10210:779005",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:74758",
+        "name": "Sandro Tonali",
+        "player_id": "ab:player:1161002:512:74758",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:819558",
+        "name": "Lukas Nmecha",
+        "player_id": "bg:player:14040159:10210:819558",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:64679",
+        "name": "Dominic Calvert-Lewin",
+        "player_id": "ab:player:1161002:712:64679",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:99416",
+        "name": "Micky van de Ven",
+        "player_id": "ab:player:1161002:512:99416",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:88342",
+        "name": "Marcos Senesi",
+        "player_id": "ab:player:1161002:512:88342",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1104368",
+        "name": "Brenden Aaronson",
+        "player_id": "bg:player:14040159:10210:1104368",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:88092",
+        "name": "Melvin Bard",
+        "player_id": "ab:player:1161002:712:88092",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1063135",
+        "name": "Jaka Bijol",
+        "player_id": "bg:player:14040159:10210:1063135",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1298911",
+        "name": "Mathys Tel",
+        "player_id": "bg:player:14040159:122401:1298911",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1028466",
+        "name": "Joe Rodon",
+        "player_id": "bg:player:14040159:10210:1028466",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:71672",
+        "name": "Daniel James",
+        "player_id": "ab:player:1161002:712:71672",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1088913",
+        "name": "Jan Paul Van Hecke",
+        "player_id": "bg:player:14040159:122401:1088913",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:69125",
+        "name": "Ethan Ampadu",
+        "player_id": "ab:player:1161002:712:69125",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1250695",
+        "name": "Savio Moreira de Oliveira",
+        "player_id": "bg:player:14040159:122401:1250695",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1067570",
+        "name": "Mohammed Kudus",
+        "player_id": "bg:player:14040159:122401:1067570",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:729925",
+        "name": "Andrew Robertson",
+        "player_id": "bg:player:14040159:122401:729925",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:878522",
+        "name": "Daniel James",
+        "player_id": "bg:player:14040159:10210:878522",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1132773",
+        "name": "Ilia Gruev",
+        "player_id": "bg:player:14040159:10210:1132773",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1046131",
+        "name": "Jayden Bogle",
+        "player_id": "bg:player:14040159:10210:1046131",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:133606",
+        "name": "Luca Williams-Barnett",
+        "player_id": "ab:player:1161002:512:133606",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:55293",
+        "name": "Andrew Robertson",
+        "player_id": "ab:player:1161002:512:55293",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:100864",
+        "name": "Tarik Muharemovic",
+        "player_id": "ab:player:1161002:712:100864",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:90330",
+        "name": "Destiny Udogie",
+        "player_id": "ab:player:1161002:512:90330",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1305553",
+        "name": "Archie Gray",
+        "player_id": "bg:player:14040159:122401:1305553",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:72512",
+        "name": "Gabriel Gudmundsson",
+        "player_id": "ab:player:1161002:712:72512",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1162555",
+        "name": "Destiny Udogie",
+        "player_id": "bg:player:14040159:122401:1162555",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1557375",
+        "name": "Luca Williams-Barnett",
+        "player_id": "bg:player:14040159:122401:1557375",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:801252",
+        "name": "Dominic Solanke",
+        "player_id": "bg:player:14040159:122401:801252",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1036054",
+        "name": "Pedro Porro",
+        "player_id": "bg:player:14040159:122401:1036054",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1456783",
+        "name": "Alfie Cresswell",
+        "player_id": "bg:player:14040159:10210:1456783",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:934889",
+        "name": "Ethan Ampadu",
+        "player_id": "bg:player:14040159:10210:934889",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:81167",
+        "name": "Jan Paul Van Hecke",
+        "player_id": "ab:player:1161002:512:81167",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:770848",
+        "name": "Dominic Calvert-Lewin",
+        "player_id": "bg:player:14040159:10210:770848",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:75948",
+        "name": "Pedro Porro",
+        "player_id": "ab:player:1161002:512:75948",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:84093",
+        "name": "Ilia Gruev",
+        "player_id": "ab:player:1161002:712:84093",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:71666",
+        "name": "Joe Rodon",
+        "player_id": "ab:player:1161002:712:71666",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1276163",
+        "name": "Tarik Muharemovic",
+        "player_id": "bg:player:14040159:10210:1276163",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:104171",
+        "name": "Mathys Tel",
+        "player_id": "ab:player:1161002:512:104171",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:118416",
+        "name": "Lucas Bergvall",
+        "player_id": "ab:player:1161002:512:118416",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:112412",
+        "name": "Mateus Goncalo Espanha Fernandes",
+        "player_id": "ab:player:1161002:512:112412",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:72596",
+        "name": "Rodrigo Bentancur",
+        "player_id": "ab:player:1161002:512:72596",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:61931",
+        "name": "James Maddison",
+        "player_id": "ab:player:1161002:512:61931",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:97178",
+        "name": "Anton Stach",
+        "player_id": "ab:player:1161002:712:97178",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:1326182",
+        "name": "James Justin",
+        "player_id": "bg:player:14040159:10210:1326182",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:76995",
+        "name": "Jayden Bogle",
+        "player_id": "ab:player:1161002:712:76995",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:10210:762292",
+        "name": "Harry Wilson",
+        "player_id": "bg:player:14040159:10210:762292",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:61651",
+        "name": "Dominic Solanke",
+        "player_id": "ab:player:1161002:512:61651",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:965506",
+        "name": "Sean Longstaff",
+        "player_id": "bg:player:14040159:10210:965506",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:53242",
+        "name": "Ben Davies",
+        "player_id": "ab:player:1161002:512:53242",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1154125",
+        "name": "Melvin Bard",
+        "player_id": "bg:player:14040159:10210:1154125",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:1464302",
+        "name": "Callum Olusesi",
+        "player_id": "bg:player:14040159:122401:1464302",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1017575",
+        "name": "Sandro Tonali",
+        "player_id": "bg:player:14040159:122401:1017575",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:82570",
+        "name": "Dejan Kulusekvski",
+        "player_id": "ab:player:1161002:512:82570",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1389167",
+        "name": "Lucas Bergvall",
+        "player_id": "bg:player:14040159:122401:1389167",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:122401:1068492",
+        "name": "Marcos Senesi",
+        "player_id": "bg:player:14040159:122401:1068492",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:85576",
+        "name": "Conor Gallagher",
+        "player_id": "ab:player:1161002:512:85576",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:71566",
+        "name": "Sean Longstaff",
+        "player_id": "ab:player:1161002:712:71566",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:512:94708",
+        "name": "Omar Marmoush",
+        "player_id": "ab:player:1161002:512:94708",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:512:107245",
+        "name": "Archie Gray",
+        "player_id": "ab:player:1161002:512:107245",
+        "competitor_id": "33"
+       },
+       {
+        "id": "bg:player:14040159:10210:1040456",
+        "name": "Noah Okafor",
+        "player_id": "bg:player:14040159:10210:1040456",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:68893",
+        "name": "James Justin",
+        "player_id": "ab:player:1161002:712:68893",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "bg:player:14040159:122401:805454",
+        "name": "Tosin Adarabioyo",
+        "player_id": "bg:player:14040159:122401:805454",
+        "competitor_id": "33"
+       },
+       {
+        "id": "ab:player:1161002:712:59342",
+        "name": "Harry Wilson",
+        "player_id": "ab:player:1161002:712:59342",
+        "competitor_id": "217974"
+       },
+       {
+        "id": "ab:player:1161002:712:76124",
+        "name": "Lukas Nmecha",
+        "player_id": "ab:player:1161002:712:76124",
+        "competitor_id": "217974"
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

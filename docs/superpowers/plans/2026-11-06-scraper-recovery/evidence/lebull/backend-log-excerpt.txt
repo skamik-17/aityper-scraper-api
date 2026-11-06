@@ -1,0 +1,19 @@
+# Excerpt of the live dev-server log (ANSI stripped), runs at 16:45 and 17:00 on 2026-11-06
+83:[Betters/FullOffer] Capturing data for league: premier-league
+85:[LeBull/FullOffer] Capturing data for league: premier-league
+92:[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+93:[LeBull/Navigation] Navigating to: https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+220:[Betters/Navigation] Capture timeout after 8000ms
+221:[LeBull/Navigation] Capture timeout after 8000ms
+233:[Aggregator/FullOffer] betters completed: success=false, 0 matches
+235:[Aggregator/FullOffer] lebull completed: success=false, 0 matches
+35886:[Aggregator/FullOffer] Run 7067e5f0-35c2-4bae-a045-5501547505a7 completed in 166289ms: 10 success, 4 errors, 200 total matches, 101713 total markets
+36384:[LeBull/FullOffer] Capturing data for league: premier-league
+36387:[Betters/FullOffer] Capturing data for league: premier-league
+36395:[LeBull/Navigation] Navigating to: https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+36397:[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+36485:[LeBull/Navigation] Capture timeout after 8000ms
+36486:[Betters/Navigation] Capture timeout after 8000ms
+36516:[Aggregator/FullOffer] lebull completed: success=false, 0 matches
+36518:[Aggregator/FullOffer] betters completed: success=false, 0 matches
+65473:[Aggregator/FullOffer] Run 440d2fc6-658b-46fe-b288-05261faa0caf completed in 169447ms: 9 success, 5 errors, 180 total matches, 90752 total markets

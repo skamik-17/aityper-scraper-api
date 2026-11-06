@@ -1,0 +1,1741 @@
+{
+ "_note": "GET /api/matches/Everton/Coventry%20City/normalized-markets?league=premier-league (2026-11-06 ~16:17Z), team-stat markets only. Side-less params ('17.5') vs peers' side-prefixed params ('HOME:17.5').",
+ "markets": [
+  {
+   "type": "TEAM_TOTAL_SHOTS_ON_TARGET",
+   "label": "Celne strzały drużyny",
+   "viewType": "STAT_RANGE",
+   "parameters": [
+    {
+     "value": "2.5",
+     "label": "2.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Coventry City - liczba celnych strzałów na bramkę (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         2.55
+        ],
+        [
+         "OVER",
+         1.45
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "3.5",
+     "label": "3.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Coventry City - liczba celnych strzałów na bramkę (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.68
+        ],
+        [
+         "OVER",
+         2.05
+        ]
+       ]
+      },
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Coventry suma 3.5 strzałów celnych",
+       "selections": [
+        [
+         "UNDER",
+         1.65
+        ],
+        [
+         "OVER",
+         2.1
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "4.5",
+     "label": "4.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Everton - liczba celnych strzałów na bramkę (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         2.4
+        ],
+        [
+         "OVER",
+         1.5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Everton suma 4.5 strzałów celnych",
+       "selections": [
+        [
+         "UNDER",
+         2.4
+        ],
+        [
+         "OVER",
+         1.5
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "5.5",
+     "label": "5.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Everton - liczba celnych strzałów na bramkę (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.72
+        ],
+        [
+         "OVER",
+         2
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:1.5",
+     "label": "Goście 1.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz:Coventry City - liczba strzałów w światło bramki 1.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.11
+        ],
+        [
+         "UNDER",
+         5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         4.65
+        ],
+        [
+         "OVER",
+         1.11
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:2.5",
+     "label": "Goście 2.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         1.32
+        ],
+        [
+         "UNDER",
+         2.5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz:Coventry City - liczba strzałów w światło bramki 2.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.42
+        ],
+        [
+         "UNDER",
+         2.65
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.75
+        ],
+        [
+         "OVER",
+         1.38
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         2.55
+        ],
+        [
+         "OVER",
+         1.41
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:3.5",
+     "label": "Goście 3.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         1.9
+        ],
+        [
+         "UNDER",
+         1.62
+        ]
+       ]
+      },
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Coventry - liczba celnych strzałów na bramkę",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         2.05
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz:Coventry City - liczba strzałów w światło bramki 3.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         2
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:4.5",
+     "label": "Goście 4.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         2.9
+        ],
+        [
+         "UNDER",
+         1.25
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz:Coventry City - liczba strzałów w światło bramki 4.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         3.1
+        ],
+        [
+         "UNDER",
+         1.32
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.29
+        ],
+        [
+         "OVER",
+         3.2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.29
+        ],
+        [
+         "OVER",
+         2.95
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:5.5",
+     "label": "Goście 5.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz:Coventry City - liczba strzałów w światło bramki 5.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         5
+        ],
+        [
+         "UNDER",
+         1.12
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.11
+        ],
+        [
+         "OVER",
+         4.6
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:6.5",
+     "label": "Goście 6.5",
+     "bookmakers": [
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.02
+        ],
+        [
+         "OVER",
+         7.1
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:2.5",
+     "label": "Gospodarze 2.5",
+     "bookmakers": [
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         5.25
+        ],
+        [
+         "OVER",
+         1.07
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:3.5",
+     "label": "Gospodarze 3.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         1.1
+        ],
+        [
+         "UNDER",
+         4
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów w światło bramki 3.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.24
+        ],
+        [
+         "UNDER",
+         3.5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         3.15
+        ],
+        [
+         "OVER",
+         1.26
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:4.5",
+     "label": "Gospodarze 4.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         1.32
+        ],
+        [
+         "UNDER",
+         2.5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów w światło bramki 4.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.55
+        ],
+        [
+         "UNDER",
+         2.25
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.55
+        ],
+        [
+         "OVER",
+         1.43
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         2.12
+        ],
+        [
+         "OVER",
+         1.61
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:5.5",
+     "label": "Gospodarze 5.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         1.72
+        ],
+        [
+         "UNDER",
+         1.78
+        ]
+       ]
+      },
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Everton - liczba celnych strzałów na bramkę",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów w światło bramki 5.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.65
+        ],
+        [
+         "OVER",
+         2.1
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.75
+        ],
+        [
+         "OVER",
+         1.93
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.58
+        ],
+        [
+         "OVER",
+         2.17
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:6.5",
+     "label": "Gospodarze 6.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         2.35
+        ],
+        [
+         "UNDER",
+         1.38
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów w światło bramki 6.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         3
+        ],
+        [
+         "UNDER",
+         1.32
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba celnych strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.38
+        ],
+        [
+         "OVER",
+         2.75
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.28
+        ],
+        [
+         "OVER",
+         3.05
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:7.5",
+     "label": "Gospodarze 7.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba celnych strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         3.4
+        ],
+        [
+         "UNDER",
+         1.17
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów w światło bramki 7.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.16
+        ],
+        [
+         "OVER",
+         4.5
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba celnych strzałów - Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.12
+        ],
+        [
+         "OVER",
+         4.4
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "TEAM_TOTAL_SHOTS",
+   "label": "Strzały drużyny",
+   "viewType": "STAT_RANGE",
+   "parameters": [
+    {
+     "value": "10.5",
+     "label": "10.5",
+     "bookmakers": [
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Coventry suma 10.5 strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.4
+        ],
+        [
+         "OVER",
+         1.5
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "11.5",
+     "label": "11.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Coventry City - liczba strzałów (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.95
+        ],
+        [
+         "OVER",
+         1.75
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "16.5",
+     "label": "16.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Everton - liczba strzałów (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.85
+        ],
+        [
+         "OVER",
+         1.85
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "17.5",
+     "label": "17.5",
+     "bookmakers": [
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Everton suma 17.5 strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.68
+        ],
+        [
+         "OVER",
+         2.05
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:10.5",
+     "label": "Goście 10.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         1.72
+        ],
+        [
+         "UNDER",
+         1.78
+        ]
+       ]
+      },
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Coventry - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.05
+        ],
+        [
+         "OVER",
+         1.65
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba strzałów 10.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.88
+        ],
+        [
+         "OVER",
+         1.82
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.25
+        ],
+        [
+         "OVER",
+         1.52
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.97
+        ],
+        [
+         "OVER",
+         1.73
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:11.5",
+     "label": "Goście 11.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba strzałów 11.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         2.2
+        ],
+        [
+         "UNDER",
+         1.58
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.87
+        ],
+        [
+         "OVER",
+         1.77
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.65
+        ],
+        [
+         "OVER",
+         2.07
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:12.5",
+     "label": "Goście 12.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba strzałów 12.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.38
+        ],
+        [
+         "OVER",
+         2.7
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.6
+        ],
+        [
+         "OVER",
+         2.1
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.41
+        ],
+        [
+         "OVER",
+         2.52
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:13.5",
+     "label": "Goście 13.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         3.2
+        ],
+        [
+         "UNDER",
+         1.19
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.27
+        ],
+        [
+         "OVER",
+         3.1
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:7.5",
+     "label": "Goście 7.5",
+     "bookmakers": [
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         3.9
+        ],
+        [
+         "OVER",
+         1.16
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:8.5",
+     "label": "Goście 8.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Coventry",
+       "selections": [
+        [
+         "OVER",
+         1.25
+        ],
+        [
+         "UNDER",
+         2.85
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba strzałów 8.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         3
+        ],
+        [
+         "OVER",
+         1.32
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         2.95
+        ],
+        [
+         "OVER",
+         1.29
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "AWAY:9.5",
+     "label": "Goście 9.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba strzałów 9.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.52
+        ],
+        [
+         "UNDER",
+         2.3
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         2.4
+        ],
+        [
+         "OVER",
+         1.47
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:14.5",
+     "label": "Gospodarze 14.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         1.28
+        ],
+        [
+         "UNDER",
+         2.75
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         2.82
+        ],
+        [
+         "OVER",
+         1.32
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:15.5",
+     "label": "Gospodarze 15.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów 15.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.5
+        ],
+        [
+         "UNDER",
+         2.35
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2.05
+        ],
+        [
+         "OVER",
+         1.62
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         2.37
+        ],
+        [
+         "OVER",
+         1.47
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:16.5",
+     "label": "Gospodarze 16.5",
+     "bookmakers": [
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Everton - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         2
+        ],
+        [
+         "OVER",
+         1.7
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów 16.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         2
+        ],
+        [
+         "OVER",
+         1.7
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.77
+        ],
+        [
+         "OVER",
+         1.87
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         2.02
+        ],
+        [
+         "OVER",
+         1.67
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:17.5",
+     "label": "Gospodarze 17.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         1.85
+        ],
+        [
+         "UNDER",
+         1.62
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów 17.5 (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.95
+        ],
+        [
+         "UNDER",
+         1.72
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba strzałów",
+       "selections": [
+        [
+         "UNDER",
+         1.55
+        ],
+        [
+         "OVER",
+         2.2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.76
+        ],
+        [
+         "OVER",
+         1.92
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:18.5",
+     "label": "Gospodarze 18.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów 18.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.52
+        ],
+        [
+         "OVER",
+         2.3
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.54
+        ],
+        [
+         "OVER",
+         2.22
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:19.5",
+     "label": "Gospodarze 19.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba strzałów 19.5 (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.38
+        ],
+        [
+         "OVER",
+         2.75
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.39
+        ],
+        [
+         "OVER",
+         2.6
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "HOME:20.5",
+     "label": "Gospodarze 20.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betclic",
+       "rawMarketName": "Liczba strzałów w meczu (OPTA) - Everton",
+       "selections": [
+        [
+         "OVER",
+         3.1
+        ],
+        [
+         "UNDER",
+         1.2
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba strzałów Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.27
+        ],
+        [
+         "OVER",
+         3.05
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "TEAM_TOTAL_FOULS",
+   "label": "Faule drużyny",
+   "viewType": "STAT_RANGE",
+   "parameters": [
+    {
+     "value": "9.5",
+     "label": "9.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Everton - liczba popełnionych fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.8
+        ],
+        [
+         "OVER",
+         1.8
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "10.5",
+     "label": "10.5",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Everton - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         2
+        ],
+        [
+         "OVER",
+         1.7
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "11.5",
+     "label": "11.5",
+     "bookmakers": [
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Everton suma 11.5 fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.83
+        ],
+        [
+         "OVER",
+         1.87
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "12.5",
+     "label": "12.5",
+     "bookmakers": [
+      {
+       "bookmaker": "etoto",
+       "rawMarketName": "Coventry suma 12.5 fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.65
+        ],
+        [
+         "OVER",
+         2.1
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fuksiarz",
+       "rawMarketName": "Coventry - liczba popełnionych fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.7
+        ],
+        [
+         "OVER",
+         1.9
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "HOME_TEAM_TOTAL_FOULS",
+   "label": "Faule gospodarzy",
+   "viewType": "STAT_RANGE",
+   "parameters": [
+    {
+     "value": "9.5",
+     "label": "9.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.52
+        ],
+        [
+         "UNDER",
+         2.3
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba fauli - Everton",
+       "selections": [
+        [
+         "UNDER",
+         1.82
+        ],
+        [
+         "OVER",
+         1.8
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "10.5",
+     "label": "10.5",
+     "bookmakers": [
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Everton - liczba popełnionych fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.75
+        ],
+        [
+         "OVER",
+         1.9
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "OVER",
+         1.88
+        ],
+        [
+         "UNDER",
+         1.8
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "11.5",
+     "label": "11.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Everton - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.48
+        ],
+        [
+         "OVER",
+         2.4
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "AWAY_TEAM_TOTAL_FOULS",
+   "label": "Faule gości",
+   "viewType": "PARAMETER_SLIDER",
+   "parameters": [
+    {
+     "value": "11.5",
+     "label": "11.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         2.3
+        ],
+        [
+         "OVER",
+         1.52
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "12.5",
+     "label": "12.5",
+     "bookmakers": [
+      {
+       "bookmaker": "forbet",
+       "rawMarketName": "Coventry - liczba popełnionych fauli",
+       "selections": [
+        [
+         "UNDER",
+         1.9
+        ],
+        [
+         "OVER",
+         1.75
+        ]
+       ]
+      },
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.85
+        ],
+        [
+         "OVER",
+         1.82
+        ]
+       ]
+      },
+      {
+       "bookmaker": "superbet",
+       "rawMarketName": "Liczba fauli - Coventry City",
+       "selections": [
+        [
+         "UNDER",
+         1.73
+        ],
+        [
+         "OVER",
+         1.9
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "value": "13.5",
+     "label": "13.5",
+     "bookmakers": [
+      {
+       "bookmaker": "fortuna",
+       "rawMarketName": "Mecz: Coventry City - liczba fauli (OPTA)",
+       "selections": [
+        [
+         "UNDER",
+         1.55
+        ],
+        [
+         "OVER",
+         2.25
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "TEAM_CORNERS_BOTH_HALVES_OVER",
+   "label": "Drużyna - powyżej X rożnych w każdej połowie",
+   "viewType": "BINARY_BUTTONS",
+   "parameters": [
+    {
+     "value": "",
+     "label": "",
+     "bookmakers": [
+      {
+       "bookmaker": "betfan",
+       "rawMarketName": "Everton powyżej 1.5 rzutów rożnych w każdej połowie",
+       "selections": [
+        [
+         "YES",
+         1.65
+        ]
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,24 @@
+[Superbet/FullOffer] Found 20 events
+[Superbet/FullOffer] 20 upcoming events with an active offer
+[Superbet/FullOffer] Everton vs Coventry City: 2706 markets
+[Superbet/FullOffer] Leeds United vs Tottenham: 2655 markets
+[Superbet/FullOffer] Arsenal vs Hull City: 2588 markets
+[Superbet/FullOffer] Fulham vs Newcastle: 2624 markets
+[Superbet/FullOffer] Nottingham Forest vs Manchester City: 2498 markets
+[Superbet/FullOffer] Brighton vs Brentford: 2660 markets
+[Superbet/FullOffer] Crystal Palace vs Liverpool: 2658 markets
+[Superbet/FullOffer] Ipswich vs Bournemouth: 2813 markets
+[Superbet/FullOffer] Sunderland vs Chelsea: 2378 markets
+[Superbet/FullOffer] Manchester United vs Aston Villa: 2473 markets
+[Superbet/FullOffer] Manchester City vs Fulham: 323 markets
+[Superbet/FullOffer] Aston Villa vs Sunderland: 325 markets
+[Superbet/FullOffer] Bournemouth vs Nottingham Forest: 326 markets
+[Superbet/FullOffer] Chelsea vs Leeds United: 327 markets
+[Superbet/FullOffer] Coventry City vs Crystal Palace: 339 markets
+[Superbet/FullOffer] Tottenham vs Ipswich: 321 markets
+[Superbet/FullOffer] Newcastle vs Arsenal: 340 markets
+[Superbet/FullOffer] Hull City vs Brighton: 341 markets
+[Superbet/FullOffer] Liverpool vs Manchester United: 351 markets
+[Superbet/FullOffer] Brentford vs Everton: 344 markets
+[Superbet/FullOffer] Completed: 20 matches, 29390 total markets
+[Aggregator/FullOffer] superbet completed: 20 matches, 13353 markets saved

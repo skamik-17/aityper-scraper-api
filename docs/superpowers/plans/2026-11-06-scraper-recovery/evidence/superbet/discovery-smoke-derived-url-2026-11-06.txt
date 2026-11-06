@@ -1,0 +1,120 @@
+# Derived-URL smoke, run 2026-11-06T17:34Z on HEAD 377b47e; pipeline exit=124 (timeout 300, pipefail)
+🏆 MATCH: Everton vs Coventry City (premier-league)
+📊 SUMMARY
+====================================================================================================
+Total markets: 110
+✅ Mapped: 79
+❌ Unmapped/OTHER: 31
+⚠️  With issues: 32
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Liczba goli                              → TOTAL_GOALS               PARAMETER_SLIDER   
+Everton - liczba goli                    → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Everton - liczba goli                    → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Everton - liczba goli                    → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Everton - liczba goli                    → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Everton - liczba goli                    → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Coventry City - liczba goli              → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Coventry City - liczba goli              → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Coventry City - liczba goli              → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+1.połowa - liczba goli                   → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1.połowa - liczba goli                   → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1.połowa - liczba goli                   → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1.połowa - liczba goli                   → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+Mecz & liczba goli (0.5)                 → RESULT_AND_TOTAL          COMBINATION        
+Mecz & liczba goli (1.5)                 → RESULT_AND_TOTAL          COMBINATION        
+Mecz & liczba goli (2.5)                 → RESULT_AND_TOTAL          COMBINATION        
+Mecz & liczba goli (3.5)                 → RESULT_AND_TOTAL          COMBINATION        
+Mecz & liczba goli (4.5)                 → RESULT_AND_TOTAL          COMBINATION        
+Podwójna szansa & liczba goli (1.5)      → DOUBLE_CHANCE_TOTAL       COMBINATION        
+Podwójna szansa & liczba goli (2.5)      → DOUBLE_CHANCE_TOTAL       COMBINATION        
+Podwójna szansa & liczba goli (3.5)      → DOUBLE_CHANCE_TOTAL       COMBINATION        
+Podwójna szansa & liczba goli (4.5)      → DOUBLE_CHANCE_TOTAL       COMBINATION        
+Podwójna szansa & liczba goli (5.5)      → DOUBLE_CHANCE_TOTAL       COMBINATION        
+Liczba goli & obie drużyny strzelą       → TOTAL_GOALS_AND_BTTS      COMBINATION        
+Liczba goli & obie drużyny strzelą       → TOTAL_GOALS_AND_BTTS      COMBINATION        
+Liczba goli & obie drużyny strzelą       → TOTAL_GOALS_AND_BTTS      COMBINATION        
+Liczba goli & obie drużyny strzelą       → TOTAL_GOALS_AND_BTTS      COMBINATION        
+Liczba goli & obie drużyny strzelą       → TOTAL_GOALS_AND_BTTS      COMBINATION        
+Mecz lub liczba goli (0.5)               → RESULT_OR_TOTAL           PARAMETERIZED_COM  
+Mecz lub liczba goli (1.5)               → RESULT_OR_TOTAL           PARAMETERIZED_COM  
+Mecz lub liczba goli (2.5)               → RESULT_OR_TOTAL           PARAMETERIZED_COM  
+Mecz lub liczba goli (3.5)               → RESULT_OR_TOTAL           PARAMETERIZED_COM  
+Mecz lub liczba goli (4.5)               → RESULT_OR_TOTAL           PARAMETERIZED_COM  
+1. połowa/mecz & liczba goli (1.5)       → HALFTIME_FULLTIME_AND_TOTAL COMBINATION        
+1. połowa/mecz & liczba goli (2.5)       → HALFTIME_FULLTIME_AND_TOTAL COMBINATION        
+1. połowa/mecz & liczba goli (3.5)       → HALFTIME_FULLTIME_AND_TOTAL COMBINATION        
+1. połowa/mecz & liczba goli (4.5)       → HALFTIME_FULLTIME_AND_TOTAL COMBINATION        
+1. połowa/mecz & liczba goli (5.5)       → HALFTIME_FULLTIME_AND_TOTAL COMBINATION        
+1.połowa - Everton - liczba goli         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1.połowa - Everton - liczba goli         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1.połowa - Everton - liczba goli         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1.połowa - Coventry City - liczba goli   → HALF_TIME_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1.połowa - Coventry City - liczba goli   → HALF_TIME_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1.połowa - Everton - dokładna liczba go  → HALF_TIME_HOME_EXACT_GOALS COMBINATION        ⚠️ 1
+2.połowa - liczba goli                   → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2.połowa - liczba goli                   → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2.połowa - liczba goli                   → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2.połowa - liczba goli                   → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2.połowa - liczba goli                   → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2.połowa - Everton - liczba goli         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2.połowa - Everton - liczba goli         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2.połowa - Everton - liczba goli         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2.połowa - Coventry City - liczba goli   → SECOND_HALF_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2.połowa - Coventry City - liczba goli   → SECOND_HALF_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+Liczba goli samobójczych                 → OWN_GOALS_TOTAL           PARAMETER_SLIDER   
+Nieparzysta/parzysta liczba goli         → ODD_EVEN_GOALS            BINARY_BUTTONS     
+Everton - liczba goli nieparzysta/parzy  → HOME_TEAM_ODD_EVEN_GOALS  BINARY_BUTTONS     
+Coventry City - liczba goli nieparzysta  → AWAY_TEAM_ODD_EVEN_GOALS  BINARY_BUTTONS     
+1.połowa - liczba goli nieparzysta/parz  → HALF_TIME_ODD_EVEN_GOALS  BINARY_BUTTONS     
+Liczba goli - do 5. minuty               → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 10. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 15. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 20. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 25. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 30. minuty              → FIRST_30_MIN_TOTAL_GOALS  PARAMETER_SLIDER   
+Liczba goli - do 35. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 40. minuty              → TOTAL_GOALS_BY_40_MIN     PARAMETER_SLIDER   
+Liczba goli - do 15. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 20. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 25. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 30. minuty              → FIRST_30_MIN_TOTAL_GOALS  PARAMETER_SLIDER   
+Liczba goli - do 35. minuty              → TIME_PERIOD_TOTAL_GOALS   PARAMETER_SLIDER   
+Liczba goli - do 40. minuty              → TOTAL_GOALS_BY_40_MIN     PARAMETER_SLIDER   
+
+❌ UNMAPPED MARKETS:
+   1.Połowa - liczba goli & liczba goli w meczu [Powyżej 0.5 & Powyżej 1.5, Powyżej 0.5 & Poniżej 1.5, Poniżej 0.5 & Powyżej 1.5]
+   1.połowa liczba goli & 2.połowa liczba goli [powyżej 0.5 & powyżej 0.5, powyżej 0.5 & poniżej 0.5, powyżej 0.5 & powyżej 1.5]
+   1.połowa liczba goli lub 2.połowa liczba goli [powyżej 1.5 lub powyżej 1.5, powyżej 1.5 lub poniżej 1.5, powyżej 1.5 lub powyżej 2.5]
+   Dokładna liczba goli                     [0, 1, 2]
+   Everton - dokładna liczba goli           [0, 1, 2]
+   Coventry City - dokładna liczba goli     [0, 1, 2]
+   Everton - 1.połowa liczba goli & liczba goli w meczu [Powyżej 0.5 & Powyżej 1.5, Powyżej 0.5 & Poniżej 1.5, Poniżej 0.5 & Powyżej 1.5]
+   Coventry City - 1.połowa liczba goli & liczba goli w meczu [Powyżej 0.5 & Powyżej 1.5, Powyżej 0.5 & Poniżej 1.5, Poniżej 0.5 & Powyżej 1.5]
+   Everton - 1.połowa liczba goli & 2.połowa liczba goli [powyżej 0.5 & powyżej 0.5, powyżej 0.5 & poniżej 0.5, powyżej 0.5 & powyżej 1.5]
+   Coventry City - 1.połowa liczba goli & 2.połowa liczba goli [powyżej 0.5 & powyżej 0.5, powyżej 0.5 & poniżej 0.5, powyżej 0.5 & powyżej 1.5]
+   Mecz & Everton liczba goli (0.5)         [Remis & poniżej 0.5, Coventry City & poniżej 0.5, Everton & powyżej 0.5]
+   Mecz & Everton liczba goli (1.5)         [Everton & poniżej 1.5, Remis & poniżej 1.5, Coventry City & poniżej 1.5]
+   Mecz & Everton liczba goli (2.5)         [Everton & poniżej 2.5, Remis & poniżej 2.5, Coventry City & poniżej 2.5]
+   Mecz & Everton liczba goli (3.5)         [Everton & poniżej 3.5, Remis & poniżej 3.5, Coventry City & poniżej 3.5]
+   Mecz & Everton liczba goli (4.5)         [Everton & poniżej 4.5, Remis & poniżej 4.5, Coventry City & poniżej 4.5]
+   Mecz & Coventry City liczba goli (0.5)   [Everton & poniżej 0.5, Remis & poniżej 0.5, Everton & powyżej 0.5]
+   Mecz & Coventry City liczba goli (1.5)   [Everton & poniżej 1.5, Remis & poniżej 1.5, Coventry City & poniżej 1.5]
+   Mecz & Coventry City liczba goli (2.5)   [Everton & poniżej 2.5, Remis & poniżej 2.5, Coventry City & poniżej 2.5]
+   Mecz & Coventry City liczba goli (3.5)   [Everton & poniżej 3.5, Remis & poniżej 3.5, Coventry City & poniżej 3.5]
+   Mecz & Coventry City liczba goli (4.5)   [Everton & poniżej 4.5, Remis & poniżej 4.5, Coventry City & poniżej 4.5]
+   Mecz lub 1.połowa liczba goli (0.5)      [Everton lub poniżej 0.5, remis lub poniżej 0.5, Coventry City lub poniżej 0.5]
+   Mecz lub 1.połowa liczba goli (1.5)      [Everton lub poniżej 1.5, remis lub poniżej 1.5, Coventry City lub poniżej 1.5]
+   Mecz lub 1.połowa liczba goli (2.5)      [Everton lub poniżej 2.5, remis lub poniżej 2.5, Coventry City lub poniżej 2.5]
+   Mecz lub 1.połowa liczba goli (3.5)      [remis lub poniżej 3.5, Coventry City lub poniżej 3.5, Everton lub powyżej 3.5]
+   Mecz lub 1.połowa liczba goli (4.5)      [Everton lub powyżej 4.5, remis lub powyżej 4.5, Coventry City lub powyżej 4.5]
+   1.połowa - dokładna liczba goli          [0, 1, 2]
+   1.połowa - Coventry City - dokładna liczba goli [0, 1, 2]
+   Liczba goli od 0:00 do 4:59 minuty       [poniżej 0.5, powyżej 0.5]
+   Liczba goli od 5:00 do 9:59 minuty       [poniżej 0.5, powyżej 0.5]
+   Liczba goli od 0:00 do 9:59 minuty       [poniżej 0.5, powyżej 0.5]
+   Liczba goli od 10:00 do 19:59 minuty     [poniżej 0.5, powyżej 0.5]

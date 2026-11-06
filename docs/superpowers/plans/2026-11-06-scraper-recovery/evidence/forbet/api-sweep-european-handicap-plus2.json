@@ -1,0 +1,125 @@
+{
+ "_note": "API sweep 2026-11-06 ~16:20Z: GET /api/matches/<H>/<A>/normalized-markets?league=premier-league&category=HANDICAP, EUROPEAN_HANDICAP param '2' (+2). forbetHome = forbet HOME odds on that row, peerMedianHome = median HOME of other bookmakers on the same row (null = no peer quotes +2).",
+ "rows": [
+  {
+   "match": "AFC_Bournemouth__Nottingham_Forest",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.97,
+   "peerMedianHome": 1.08
+  },
+  {
+   "match": "Arsenal__Hull_City",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.16,
+   "peerMedianHome": null
+  },
+  {
+   "match": "Aston_Villa__Sunderland",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.7,
+   "peerMedianHome": 1.05
+  },
+  {
+   "match": "Brentford__Everton",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.87,
+   "peerMedianHome": 1.08
+  },
+  {
+   "match": "Brighton_and_Hove_Albion__Brentford",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.83,
+   "peerMedianHome": 1.08
+  },
+  {
+   "match": "Chelsea__Leeds_United",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.76,
+   "peerMedianHome": 1.06
+  },
+  {
+   "match": "Coventry_City__Crystal_Palace",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 2.24,
+   "peerMedianHome": 1.1349999999999998
+  },
+  {
+   "match": "Crystal_Palace__Liverpool",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 4.7,
+   "peerMedianHome": 1.545
+  },
+  {
+   "match": "Everton__Coventry_City",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.63,
+   "peerMedianHome": 1.04
+  },
+  {
+   "match": "Fulham__Newcastle_United",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.95,
+   "peerMedianHome": 1.09
+  },
+  {
+   "match": "Hull_City__Brighton_and_Hove_Albion",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 5,
+   "peerMedianHome": 1.55
+  },
+  {
+   "match": "Ipswich_Town__AFC_Bournemouth",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 3.45,
+   "peerMedianHome": 1.315
+  },
+  {
+   "match": "Leeds_United__Tottenham_Hotspur",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 2.65,
+   "peerMedianHome": 1.16
+  },
+  {
+   "match": "Liverpool__Manchester_United",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.76,
+   "peerMedianHome": 1.07
+  },
+  {
+   "match": "Manchester_City__Fulham",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.4,
+   "peerMedianHome": 1.02
+  },
+  {
+   "match": "Manchester_United__Aston_Villa",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 2.06,
+   "peerMedianHome": 1.12
+  },
+  {
+   "match": "Newcastle_United__Arsenal",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 4.8,
+   "peerMedianHome": 1.48
+  },
+  {
+   "match": "Nottingham_Forest__Manchester_City",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 4,
+   "peerMedianHome": 1.41
+  },
+  {
+   "match": "Sunderland__Chelsea",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 3.5,
+   "peerMedianHome": 1.3
+  },
+  {
+   "match": "Tottenham_Hotspur__Ipswich_Town",
+   "forbetRawMarketName": "TurboPrzewaga - 2 gole przewag",
+   "forbetHome": 1.45,
+   "peerMedianHome": 1.03
+  }
+ ]
+}

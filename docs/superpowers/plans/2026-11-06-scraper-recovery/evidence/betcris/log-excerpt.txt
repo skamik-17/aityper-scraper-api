@@ -1,0 +1,69 @@
+# Excerpt of the dev-server log (ANSI stripped). Source: backend.log of the running tsx-watch service. Timestamps on HTTP lines are UTC.
+## Run 1 (startup scrape, 15:45Z) - betcris (betcris is the FIRST page to navigate in this burst)
+[Aggregator/FullOffer] Starting run 7067e5f0-35c2-4bae-a045-5501547505a7 for premier-league with 14 bookmakers
+[Aggregator/FullOffer] Starting betcris scraper for premier-league
+[BrowserPool] Creating new browser (11/14)
+[Aggregator/FullOffer] Starting pzbuk scraper for premier-league
+[BrowserPool] Creating new browser (12/14)
+[Aggregator/FullOffer] Starting totalbet scraper for premier-league
+[BrowserPool] Creating new browser (13/14)
+[Betcris/Navigation] Navigating to: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538
+[eToto/Navigation] Navigating to: https://www.etoto.pl
+[Betcris/FullOffer] Found 20 games for premier-league
+[Betcris/Navigation] Navigating to match: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538/31321159
+[Betcris/FullOffer] Everton vs Coventry   City: 679 markets
+[Betcris/FullOffer] Newcastle vs Arsenal: 347 markets
+[Betcris/FullOffer] Completed: 20 matches, 9966 total markets
+[Aggregator/FullOffer] betcris completed: 20 matches, 9753 markets saved
+[Aggregator/FullOffer] Run 7067e5f0-35c2-4bae-a045-5501547505a7 completed in 166289ms: 10 success, 4 errors, 200 total matches, 101713 total markets
+## Run 2 (scheduled 16:00:00Z) - betcris (betcris navigates 6th after lebull/superbet/lvbet/betters/fuksiarz; no line between nav and failure; "Found N games" never printed)
+[Scheduler] Starting scheduled scrape at 2026-11-06T16:00:00.349Z
+[Aggregator/FullOffer] Starting run 440d2fc6-658b-46fe-b288-05261faa0caf for premier-league with 14 bookmakers
+[Aggregator/FullOffer] Starting lebull scraper for premier-league
+[BrowserPool] Creating new browser (10/14)
+[Aggregator/FullOffer] Starting betcris scraper for premier-league
+[BrowserPool] Creating new browser (11/14)
+[Betcris/Navigation] Navigating to: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538
+[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+[2026-11-06T16:00:15.901Z] POST /api/odds/batch
+[2026-11-06T16:00:16.725Z] POST /api/odds/batch
+[2026-11-06T16:00:16.752Z] POST /api/odds/batch
+[LVBet/FullOffer] Crystal Palace vs Liverpool: 641 markets
+[BrowserPool] Browser released (4 available, 13 total)
+[Aggregator/FullOffer] betcris completed: success=false, 0 matches
+[2026-11-06T16:00:21.102Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+[Aggregator/FullOffer] Run 440d2fc6-658b-46fe-b288-05261faa0caf completed in 169447ms: 9 success, 5 errors, 180 total matches, 90752 total markets
+## In-memory health (GET /api/admin/scrapers/health, 16:1xZ)
+{"scraper":"betcris","successRate":50,"avgDuration":163890,"status":"degraded","lastError":"No WebSocket data captured"}
+## Run 1 FullOfferRepo collision warnings (betcris, first match only)
+[FullOfferRepo] marketKey collision with overlapping selection code "1" for betcris EXACT_GOALS (premier-league:everton:coventry city) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for betcris FIRST_CARD (premier-league:everton:coventry city) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for betcris LAST_CARD (premier-league:everton:coventry city) — possible misroute, keeping first-seen odds
+## Run 1: unknown betcris market warnings: total lines / unique Swarm types
+2243
+146
+## Run 3 (scheduled 17:00:00Z) - betcris succeeded; listing capture finished >= 9.2 s after navigation (after the 17:00:11.321Z line; navigation logged before 17:00:02.163Z) and, since it succeeded, <= 12 s: at the edge of the fixed window
+[Scheduler] Starting scheduled scrape at 2026-11-06T17:00:00.386Z
+[Aggregator/FullOffer] Starting betcris scraper for premier-league
+[Betcris/Navigation] Navigating to: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538
+[2026-11-06T17:00:02.163Z] GET /api/matches/premier-league%3Acrystal%20palace%3Aliverpool
+[Betters/Navigation] Capture timeout after 8000ms
+[LeBull/Navigation] Capture timeout after 8000ms
+[2026-11-06T17:00:11.321Z] POST /api/odds/batch
+[Betcris/FullOffer] Found 20 games for premier-league
+[2026-11-06T17:00:15.264Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+[Aggregator/FullOffer] betcris completed: 20 matches, 9592 markets saved
+## Relative marker per run: betcris 'Found 20 games' vs the 8 s LeBull/Betters capture timeouts started in the same burst
+run1: Found (line 214) BEFORE the 8 s timeouts (220-221); run2: timeouts (36485-6) then betcris failure (36618); run3: timeouts (67361-2) then Found (67413)
+## Run 2 HTTP request lines served by the same Node process (16:00:00-16:00:22Z). The frontend polls /normalized-markets (~2 MB response) every ~3.3 s; gap 08.181 -> 21.102 (12.9 s) during the betcris window, while other requests were still logged at 14.907-16.752, so the loop was heavily loaded, not blocked for 12 s in one piece
+[2026-11-06T16:00:01.181Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+[2026-11-06T16:00:04.941Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+[2026-11-06T16:00:06.550Z] POST /api/odds/batch
+[2026-11-06T16:00:06.808Z] POST /api/odds/batch
+[2026-11-06T16:00:08.181Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+[2026-11-06T16:00:14.907Z] GET /api/odds/market-types
+[2026-11-06T16:00:15.901Z] POST /api/odds/batch
+[2026-11-06T16:00:16.725Z] POST /api/odds/batch
+[2026-11-06T16:00:16.752Z] POST /api/odds/batch
+[2026-11-06T16:00:21.102Z] GET /api/matches/Arsenal/Coventry%20City/normalized-markets
+## Betcris position among '/Navigation] Navigating to' lines from each run start (one counting basis): run1 #1 (success), run2 #4 (failure), run3 #9 (success) - non-monotonic, context only

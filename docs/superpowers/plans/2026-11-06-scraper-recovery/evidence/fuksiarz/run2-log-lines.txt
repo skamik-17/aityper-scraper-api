@@ -1,0 +1,23 @@
+[Fuksiarz/FullOffer] Found 20 events
+[Fuksiarz/FullOffer] Everton vs Coventry: 753 markets
+[Fuksiarz/FullOffer] Leeds vs Tottenham: 710 markets
+[Fuksiarz/FullOffer] Arsenal vs Hull City: 411 markets
+[Fuksiarz/FullOffer] Fulham vs Newcastle: 709 markets
+[Fuksiarz/FullOffer] Nottingham vs Manchester City: 416 markets
+[Fuksiarz/FullOffer] Crystal Palace vs Liverpool: 420 markets
+[Fuksiarz/FullOffer] Sunderland vs Chelsea: 535 markets
+[Fuksiarz/FullOffer] Brighton vs Brentford: 530 markets
+[Fuksiarz/FullOffer] Ipswich vs Bournemouth: 538 markets
+[Fuksiarz/FullOffer] Manchester United vs Aston Villa: 431 markets
+[Fuksiarz/FullOffer] Manchester City vs Fulham: 256 markets
+[Fuksiarz/FullOffer] Tottenham vs Ipswich: 267 markets
+[Fuksiarz/FullOffer] Coventry vs Crystal Palace: 262 markets
+[Fuksiarz/FullOffer] Bournemouth vs Nottingham: 225 markets
+[Fuksiarz/FullOffer] Chelsea vs Leeds: 256 markets
+[Fuksiarz/FullOffer] Aston Villa vs Sunderland: 219 markets
+[Fuksiarz/FullOffer] Newcastle vs Arsenal: 259 markets
+[Fuksiarz/FullOffer] Hull City vs Brighton: 265 markets
+[Fuksiarz/FullOffer] Liverpool vs Manchester United: 208 markets
+[Fuksiarz/FullOffer] Brentford vs Everton: 208 markets
+[Fuksiarz/FullOffer] Completed: 20 matches, 7878 total markets
+[Aggregator/FullOffer] fuksiarz completed: 20 matches, 6222 markets saved

@@ -1,0 +1,21 @@
+afc bournemouth:nottingham forest | superbet | HOME=2 DRAW=3.35 AWAY=3.35 | -0.5% -4.3% -4.3%
+arsenal:hull city | superbet | HOME=1.17 DRAW=7.5 AWAY=14 | +0.0% +3.4% -12.5%
+aston villa:sunderland | superbet | HOME=1.71 DRAW=3.65 AWAY=4.15 | -0.6% -3.9% -5.7%
+brentford:everton | superbet | HOME=1.9 DRAW=3.5 AWAY=3.5 | -0.5% -4.1% -5.4%
+brighton hove albion:brentford | superbet | HOME=1.92 DRAW=3.75 AWAY=3.55 | +2.1% -1.3% -3.5%
+chelsea:leeds united | superbet | HOME=1.78 DRAW=3.55 AWAY=3.9 | -1.1% -5.3% -4.9%
+coventry city:crystal palace | superbet | HOME=2.3 DRAW=3.35 AWAY=2.75 | -2.1% -4.3% -3.2%
+crystal palace:liverpool | superbet | HOME=5.1 DRAW=4.25 AWAY=1.56 | -3.8% -2.3% +0.6%
+everton:coventry city | superbet | HOME=1.67 DRAW=4 AWAY=4.9 | +1.2% +1.3% -2.0%
+fulham:newcastle united | superbet | HOME=2.05 DRAW=3.65 AWAY=3.45 | +1.5% +0.6% +1.5%
+hull city:brighton hove albion | superbet | HOME=5.1 DRAW=4.1 AWAY=1.51 | -8.9% -4.7% -1.9%
+ipswich town:afc bournemouth | superbet | HOME=3.65 DRAW=3.65 AWAY=1.92 | -2.7% -1.1% +0.5%
+leeds united:tottenham hotspur | superbet | HOME=2.8 DRAW=3.3 AWAY=2.52 | +0.0% +0.0% +0.8%
+liverpool:manchester united | superbet | HOME=1.78 DRAW=3.7 AWAY=3.7 | -2.2% -3.9% -5.1%
+manchester city:fulham | superbet | HOME=1.4 DRAW=4.6 AWAY=5.8 | -0.7% -4.2% -9.4%
+manchester united:aston villa | superbet | HOME=2.17 DRAW=3.55 AWAY=3.05 | -0.5% -1.4% -1.0%
+newcastle united:arsenal | superbet | HOME=4.8 DRAW=4 AWAY=1.56 | -7.7% -2.4% -1.3%
+nottingham forest:manchester city | superbet | HOME=4.3 DRAW=3.85 AWAY=1.73 | -2.3% -1.3% +0.0%
+sunderland:chelsea | superbet | HOME=3.65 DRAW=3.55 AWAY=1.95 | -2.4% +0.0% +0.5%
+tottenham hotspur:ipswich town | superbet | HOME=1.45 DRAW=4.35 AWAY=5.45 | -2.0% -3.3% -9.2%
+worst abs deviation vs median of other bookmakers: {'superbet': 12.5, 'lvbet': 12.6, 'fuksiarz': 12.5}

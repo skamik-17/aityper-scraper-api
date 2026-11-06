@@ -1,0 +1,145 @@
+# Excerpts of the running service log (tsx watch, started ~2026-11-06T15:44Z), ANSI stripped.
+# Line numbers refer to the cleaned snapshot (65932 lines) taken 2026-11-06T16:15Z.
+
+## A. Startup with Supabase down: warn-only, market_types sync skipped, scheduler starts anyway (lines 1-49)
+L    1:     
+L    2:     > aityper-scraper-api@1.0.0 dev
+L    3:     > tsx watch src/index.ts
+L    4:     
+L    5:     [Server] Testing database connection...
+L    6:     Database connection test failed: {
+L    7:       message: 'TypeError: fetch failed',
+L    8:       details: 'TypeError: fetch failed\n' +
+L    9:         '\n' +
+L   10:         'Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\n' +
+L   11:         'Error: connect ECONNREFUSED 127.0.0.1:54321\n' +
+L   12:         '    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)',
+L   13:       hint: '',
+L   14:       code: ''
+L   15:     }
+L   16:     [Server] Database connection failed - some features may not work
+L   17:     [Server] Starting scheduler...
+L   18:     [Scheduler] Starting with cron: */60 * * * * (every 60 minutes)
+L   19:     [Scheduler] Enabled leagues: premier-league
+L   20:     [Scheduler] Scheduled jobs started
+L   21:     [Server] Running on http://localhost:3001
+L   22:     [Server] Environment: development
+L   23:     [Server] Scrapers: ON
+L   24:     [Server] Scrape interval: 60 minutes
+L   25:     [tsdbFixturesRepo] countUpcomingTsdbFixtures error: {
+L   26:       message: 'TypeError: fetch failed',
+L   27:       details: 'TypeError: fetch failed\n' +
+L   28:         '\n' +
+L   29:         'Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\n' +
+L   30:         'Error: connect ECONNREFUSED 127.0.0.1:54321\n' +
+L   31:         '    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)',
+L   32:       hint: '',
+L   33:       code: ''
+L   34:     }
+L   35:     [Scheduler] Initial TSDB sync failed: {
+L   36:       message: 'TypeError: fetch failed',
+L   37:       details: 'TypeError: fetch failed\n' +
+L   38:         '\n' +
+L   39:         'Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\n' +
+L   40:         'Error: connect ECONNREFUSED 127.0.0.1:54321\n' +
+L   41:         '    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)',
+L   42:       hint: '',
+L   43:       code: ''
+L   44:     }
+L   45:     [Scheduler] Running initial scrape on startup for all leagues
+L   46:     [Scheduler] Scraping 1 leagues in parallel...
+L   47:     [Scheduler] Starting premier-league...
+L   48:     [ScraperService] Starting scrape for premier-league
+L   49:     [ScraperService] Starting full offer scrape for premier-league
+
+## B. One persistence failure block (forbet, run 1) - the cause is only in this console.error, never in any result
+L 1082: [FullOfferRepo] Batch insert error (batch 12): {
+L 1083:   message: 'TypeError: fetch failed',
+L 1084:   details: 'TypeError: fetch failed\n' +
+L 1085:     '\n' +
+L 1086:     'Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\n' +
+L 1087:     'Error: connect ECONNREFUSED 127.0.0.1:54321\n' +
+L 1088:     '    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)\n' +
+L 1089:     '    at TCPConnectWrap.callbackTrampoline (node:internal/async_hooks:130:17)',
+L 1090:   hint: '',
+L 1091:   code: ''
+L 1092: }
+L 1093: [Aggregator/FullOffer] forbet completed: 20 matches, 0 markets saved
+L 1094: [Aggregator/FullOffer] forbet had 1 errors
+L 1095: [BrowserPool] Browser released (5 available, 13 total)
+
+## C. All per-bookmaker completion lines + run summaries (both runs)
+L45:[Scheduler] Running initial scrape on startup for all leagues
+L134:[Aggregator/FullOffer] totalbet completed: success=false, 0 matches
+L233:[Aggregator/FullOffer] betters completed: success=false, 0 matches
+L235:[Aggregator/FullOffer] lebull completed: success=false, 0 matches
+L1093:[Aggregator/FullOffer] forbet completed: 20 matches, 0 markets saved
+L1094:[Aggregator/FullOffer] forbet had 1 errors
+L1325:[Aggregator/FullOffer] fuksiarz completed: 20 matches, 0 markets saved
+L1326:[Aggregator/FullOffer] fuksiarz had 1 errors
+L1331:[Aggregator/FullOffer] pzbuk completed: success=false, 0 matches
+L1723:[Aggregator/FullOffer] betfan completed: 20 matches, 0 markets saved
+L1724:[Aggregator/FullOffer] betfan had 1 errors
+L1825:[Aggregator/FullOffer] etoto completed: 20 matches, 0 markets saved
+L1826:[Aggregator/FullOffer] etoto had 1 errors
+L10822:[Aggregator/FullOffer] fortuna completed: 20 matches, 0 markets saved
+L10823:[Aggregator/FullOffer] fortuna had 1 errors
+L25669:[Aggregator/FullOffer] superbet completed: 20 matches, 0 markets saved
+L25670:[Aggregator/FullOffer] superbet had 1 errors
+L28622:[Aggregator/FullOffer] lvbet completed: 20 matches, 0 markets saved
+L28623:[Aggregator/FullOffer] lvbet had 1 errors
+L28782:[Aggregator/FullOffer] betclic completed: 20 matches, 3262 markets saved
+L31038:[Aggregator/FullOffer] sts completed: 20 matches, 6013 markets saved
+L35885:[Aggregator/FullOffer] betcris completed: 20 matches, 9753 markets saved
+L35886:[Aggregator/FullOffer] Run 7067e5f0-35c2-4bae-a045-5501547505a7 completed in 166289ms: 10 success, 4 errors, 200 total matches, 101713 total markets
+L35887:[ScraperService] Full offer completed: 10 bookmakers success, 200 matches, 101713 markets
+L35888:[Scheduler] premier-league completed: 10 success, 200 matches
+L35892:[Scheduler] Initial scrape completed: 10 success, 200 matches across 1 leagues
+L36350:[Scheduler] Starting scheduled scrape at 2026-11-06T16:00:00.349Z
+L36439:[Aggregator/FullOffer] totalbet completed: success=false, 0 matches
+L36516:[Aggregator/FullOffer] lebull completed: success=false, 0 matches
+L36518:[Aggregator/FullOffer] betters completed: success=false, 0 matches
+L36618:[Aggregator/FullOffer] betcris completed: success=false, 0 matches
+L36730:[Aggregator/FullOffer] pzbuk completed: success=false, 0 matches
+L37612:[Aggregator/FullOffer] fuksiarz completed: 20 matches, 6222 markets saved
+L37614:[Aggregator/FullOffer] forbet completed: 20 matches, 5869 markets saved
+L37615:[Aggregator/FullOffer] etoto completed: 20 matches, 6553 markets saved
+L37643:[Aggregator/FullOffer] betfan completed: 20 matches, 5600 markets saved
+L63413:[Aggregator/FullOffer] lvbet completed: 20 matches, 9427 markets saved
+L63433:[Aggregator/FullOffer] fortuna completed: 20 matches, 12897 markets saved
+L63434:[Aggregator/FullOffer] superbet completed: 20 matches, 13353 markets saved
+L63617:[Aggregator/FullOffer] betclic completed: 20 matches, 3150 markets saved
+L65472:[Aggregator/FullOffer] sts completed: 20 matches, 5130 markets saved
+L65473:[Aggregator/FullOffer] Run 440d2fc6-658b-46fe-b288-05261faa0caf completed in 169447ms: 9 success, 5 errors, 180 total matches, 90752 total markets
+L65474:[ScraperService] Full offer completed: 9 bookmakers success, 180 matches, 90752 markets
+L65475:[Scheduler] premier-league completed: 9 success, 180 matches
+L65479:[Scheduler] All leagues completed: 9 success, 5 errors, 180 matches
+
+## D. The only cause-bearing lines for the 0-match bookmakers (never propagated to result/health)
+L79:[Betcris/Navigation] Navigating to: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538
+L82:[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+L92:[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+L93:[LeBull/Navigation] Navigating to: https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+L113:[Totalbet/Navigation] API error: HTTP 404
+L220:[Betters/Navigation] Capture timeout after 8000ms
+L221:[LeBull/Navigation] Capture timeout after 8000ms
+L1327:[PZBuk/WS] Max wait reached with 0 selections
+L36389:[Betcris/Navigation] Navigating to: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538
+L36394:[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+L36395:[LeBull/Navigation] Navigating to: https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+L36397:[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+L36437:[Totalbet/Navigation] API error: HTTP 404
+L36485:[LeBull/Navigation] Capture timeout after 8000ms
+L36486:[Betters/Navigation] Capture timeout after 8000ms
+L36721:[PZBuk/WS] Max wait reached with 0 selections
+
+## E. Persistence error count in run 1
+Batch insert error lines: 123  (first at L926, last at L28616)
+Cause breakdown of the 123 batch errors (message / code / Caused by):
+    104 message: 'TypeError: fetch failed'
+     80 Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\n
+     19 message: 'Could not query the database for the schema cache. Retrying.'
+     19 code: 'PGRST002'
+     16 Caused by: SocketError: other side closed (UND_ERR_SOCKET)\n
+      8 Caused by: Error: write EPIPE (EPIPE)\n
+ECONNREFUSED occurrences (any context): 85

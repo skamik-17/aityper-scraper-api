@@ -1,0 +1,19 @@
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:everton:coventry city) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:leeds united:tottenham hotspur) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:fulham:newcastle united) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:nottingham forest:manchester city) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:ipswich town:afc bournemouth) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:brighton hove albion:brentford) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:sunderland:chelsea) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:crystal palace:liverpool) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:manchester united:aston villa) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:manchester city:fulham) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:afc bournemouth:nottingham forest) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:tottenham hotspur:ipswich town) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:coventry city:crystal palace) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:chelsea:leeds united) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:aston villa:sunderland) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:newcastle united:arsenal) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:hull city:brighton hove albion) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:liverpool:manchester united) — possible misroute, keeping first-seen odds
+[FullOfferRepo] marketKey collision with overlapping selection code "AWAY" for forbet EUROPEAN_HANDICAP:+2 (premier-league:brentford:everton) — possible misroute, keeping first-seen odds

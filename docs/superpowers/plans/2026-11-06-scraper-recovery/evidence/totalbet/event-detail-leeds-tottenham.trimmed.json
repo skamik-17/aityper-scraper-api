@@ -1,0 +1,5299 @@
+{
+ "data": {
+  "event": {
+   "name": "Leeds - Tottenham",
+   "status": "active",
+   "type": "prematch",
+   "path": [
+    {
+     "name": "Piłka nożna",
+     "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9"
+    },
+    {
+     "name": "Anglia",
+     "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c"
+    },
+    {
+     "name": "Premier League",
+     "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf"
+    }
+   ],
+   "result": ":",
+   "components": [],
+   "category": {
+    "name": "Anglia",
+    "type": "sport",
+    "level": "category",
+    "image": null,
+    "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "icon": "https://cdn.totalbet.pl/categories/b3fefc74-697a-4164-b81c-ce43966a4fd6.svg",
+    "parent_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "header_photo": null,
+    "three_d_icon": null
+   },
+   "uuid": "0e45932b-1433-4cf5-b658-5c308b7c2b60",
+   "betbuilder_available": true,
+   "participants": [
+    {
+     "name": "Leeds",
+     "uuid": "5904ce00-3b05-433e-8e4d-6bae9fa0f981",
+     "image_source": null
+    },
+    {
+     "name": "Tottenham",
+     "uuid": "1261e375-09f3-4ef7-8971-c91799be7bd3",
+     "image_source": null
+    }
+   ],
+   "event_layout": "horizontal",
+   "mobile_statscore_widget_id": "67e3cded6b587a60a98542e5",
+   "statscore_widget_id": "67a4c28b3ed1d6f55eb65bcb",
+   "tournament": {
+    "name": "Premier League",
+    "type": "sport",
+    "level": "tournament",
+    "image": "https://cdn.totalbet.pl/categories/483fe2dd-cda6-44ec-a168-e83750755f83.svg",
+    "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+    "icon": null,
+    "parent_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "header_photo": null,
+    "three_d_icon": "https://cdn.totalbet.pl/categories/e01f0ee2-2ec9-4f6a-a966-d3b169355f77.svg"
+   },
+   "tournament_uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+   "category_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+   "start_at": "2026-11-07T12:30:00Z",
+   "discipline_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+   "market_count": 439,
+   "additional_info": "🚀 TOTALprzewaga dostępna!",
+   "jackpot_available": false,
+   "matchday": 10,
+   "type_participants": "pair",
+   "discipline": {
+    "name": "Piłka nożna",
+    "type": "sport",
+    "level": "sport",
+    "image": "https://cdn.totalbet.pl/categories/5e27e539-7ee3-47b2-b3cd-e3655300ab06.svg",
+    "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "icon": "https://cdn.totalbet.pl/categories/0abf437f-9ab9-4826-9fcd-c40dafde9c8a.svg",
+    "parent_uuid": null,
+    "header_photo": "https://cdn.totalbet.pl/categories/72e9000b-1a8c-431e-a6e7-d2d17aa7c267.jpg",
+    "three_d_icon": "https://cdn.totalbet.pl/categories/870b3543-eea3-4f3d-8690-3a0ae2659fcf.svg"
+   },
+   "component_lists": [
+    {
+     "name": "Wynik meczu",
+     "type": "single_market",
+     "sort_order": 1,
+     "slug": "single_market_e4b81f14-2a48-4222-9b4d-452b240f673a",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "72031d6c-075a-4b58-b7ae-46741cd4ad34",
+        "betbuilder_available": true,
+        "market_uuid": "e4b81f14-2a48-4222-9b4d-452b240f673a",
+        "odds": "2.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "0320ab7d-a331-4503-a9f7-395d6104160c",
+        "betbuilder_available": true,
+        "market_uuid": "e4b81f14-2a48-4222-9b4d-452b240f673a",
+        "odds": "3.35",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "08675e0f-067f-4d9b-b18c-7b6df0f7a2a0",
+        "betbuilder_available": true,
+        "market_uuid": "e4b81f14-2a48-4222-9b4d-452b240f673a",
+        "odds": "2.47",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie (zakład nie uwzględnia dogrywki, podobnie jak w przypadku pozostałych zakładów, chyba, że ich opis lub specyfika - np. Awans - stanowią inaczej)",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa",
+     "type": "markets_in_columns",
+     "sort_order": 3,
+     "slug": "podwajna_szansa",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "10"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "63"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "85"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds lub remis"
+       },
+       {
+        "name": "Leeds lub remis",
+        "type": "outcome",
+        "uuid": "b85f4adb-5cbe-43b4-b0ea-9a0dbe995ff7",
+        "betbuilder_available": true,
+        "market_uuid": "a0561eb1-c7cb-4c42-88f2-c76338031cc6",
+        "odds": "1.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds lub remis",
+        "type": "outcome",
+        "uuid": "337af8fd-3a88-4ccb-a79c-ed2df73c5c5e",
+        "betbuilder_available": true,
+        "market_uuid": "30bd4466-0a14-4a5f-9162-eaf62f2c12d3",
+        "odds": "1.31",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds lub remis",
+        "type": "outcome",
+        "uuid": "54dd571f-1ec5-406a-971e-d7dec3950b8d",
+        "betbuilder_available": true,
+        "market_uuid": "3d4a995a-fe5a-4976-84d6-ad5d24ce87b3",
+        "odds": "1.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds lub Tottenham"
+       },
+       {
+        "name": "Leeds lub Tottenham",
+        "type": "outcome",
+        "uuid": "293de5a3-44d8-43d8-81ce-31fe06adfff4",
+        "betbuilder_available": true,
+        "market_uuid": "a0561eb1-c7cb-4c42-88f2-c76338031cc6",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds lub Tottenham",
+        "type": "outcome",
+        "uuid": "e56074dd-f795-4abc-a6eb-4ed738b10ce0",
+        "betbuilder_available": true,
+        "market_uuid": "30bd4466-0a14-4a5f-9162-eaf62f2c12d3",
+        "odds": "1.57",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds lub Tottenham",
+        "type": "outcome",
+        "uuid": "eee0727a-faff-4b07-8ed1-3add472bae18",
+        "betbuilder_available": true,
+        "market_uuid": "3d4a995a-fe5a-4976-84d6-ad5d24ce87b3",
+        "odds": "1.43",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis lub Tottenham"
+       },
+       {
+        "name": "remis lub Tottenham",
+        "type": "outcome",
+        "uuid": "daf04fed-71b5-48b1-85e6-2c151eb95915",
+        "betbuilder_available": true,
+        "market_uuid": "a0561eb1-c7cb-4c42-88f2-c76338031cc6",
+        "odds": "1.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis lub Tottenham",
+        "type": "outcome",
+        "uuid": "3fcec96d-acc8-4108-ac81-a117ecf42a8f",
+        "betbuilder_available": true,
+        "market_uuid": "30bd4466-0a14-4a5f-9162-eaf62f2c12d3",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis lub Tottenham",
+        "type": "outcome",
+        "uuid": "2ee08f43-4f0a-4b6b-b091-2e703011544d",
+        "betbuilder_available": true,
+        "market_uuid": "3d4a995a-fe5a-4976-84d6-ad5d24ce87b3",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się dana część spotkania wybierając dwie z trzech opcji.",
+     "product_active": true
+    },
+    {
+     "name": "Obie drużyny strzelą gola",
+     "type": "markets_in_columns",
+     "sort_order": 6,
+     "slug": "obie_druayny_strzela_gola",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "29"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "75"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "95"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "971bb438-ec99-4f8f-80ba-a47171b8da9c",
+        "betbuilder_available": true,
+        "market_uuid": "97c41676-37e1-4a0c-8b38-7e6393dd4ab1",
+        "odds": "1.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "92bf6b96-8ba5-4a9f-bae1-e07e5700a1e6",
+        "betbuilder_available": true,
+        "market_uuid": "7ff37744-134e-4d45-b4af-b3b8ac700e4b",
+        "odds": "4.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "345d5d8c-ee87-431d-b7c3-9ccda60e50b2",
+        "betbuilder_available": true,
+        "market_uuid": "5369a84e-dc77-4a4c-ae2d-380d87b9321d",
+        "odds": "3.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "487ad503-df0b-4b03-8e24-6a6e7f905a78",
+        "betbuilder_available": true,
+        "market_uuid": "97c41676-37e1-4a0c-8b38-7e6393dd4ab1",
+        "odds": "2.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "50ec09d0-e739-4f3f-9687-f41c369f06b1",
+        "betbuilder_available": true,
+        "market_uuid": "7ff37744-134e-4d45-b4af-b3b8ac700e4b",
+        "odds": "1.19",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "bd2ca423-e268-4570-8690-188cfeee79c6",
+        "betbuilder_available": true,
+        "market_uuid": "5369a84e-dc77-4a4c-ae2d-380d87b9321d",
+        "odds": "1.29",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować, czy oba zespoły strzelą gola w danej części spotkania.",
+     "product_active": true
+    },
+    {
+     "name": "Total (suma)",
+     "type": "total",
+     "sort_order": 7,
+     "slug": "suma",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "15baa351-560d-4fe3-88ec-23d325aa6f98",
+        "betbuilder_available": true,
+        "market_uuid": "17f3d5eb-8b64-4121-beaa-f2f637e8c6f9",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "aadfc037-a4e7-42c2-b5cf-e01c87f44fa2",
+        "betbuilder_available": true,
+        "market_uuid": "17f3d5eb-8b64-4121-beaa-f2f637e8c6f9",
+        "odds": "1.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "fbe9bfbc-9f6d-4f87-af22-b8701e50228e",
+        "betbuilder_available": true,
+        "market_uuid": "72f56988-b2ef-47e0-aeb5-a2e22fea9a99",
+        "odds": "3.35",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "42c3aca1-bc76-441b-87f5-66b1e5ae9ceb",
+        "betbuilder_available": true,
+        "market_uuid": "72f56988-b2ef-47e0-aeb5-a2e22fea9a99",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "09054ea3-9603-4e5c-a69d-2e8553176535",
+        "betbuilder_available": true,
+        "market_uuid": "c6490dff-f6fb-4469-a35d-c285ffc8c123",
+        "odds": "1.82",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "e67aa466-bb4f-4802-b62d-fd255c05cc13",
+        "betbuilder_available": true,
+        "market_uuid": "c6490dff-f6fb-4469-a35d-c285ffc8c123",
+        "odds": "1.89",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "1c4d9120-e154-405e-8c2f-c83e31d74939",
+        "betbuilder_available": true,
+        "market_uuid": "0b149e65-18e2-44ec-aa99-a9f8d378b09b",
+        "odds": "1.31",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "46d4a321-84a4-43f5-a7b5-460d89eb8c5a",
+        "betbuilder_available": true,
+        "market_uuid": "0b149e65-18e2-44ec-aa99-a9f8d378b09b",
+        "odds": "3.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "00858b7e-3267-4d7b-8e2e-9641159476b5",
+        "betbuilder_available": true,
+        "market_uuid": "d9ce439e-f6a0-4cee-88a8-3b754b3113fb",
+        "odds": "1.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "4607450d-5fa0-4f79-9da6-9d07a0957e89",
+        "betbuilder_available": true,
+        "market_uuid": "d9ce439e-f6a0-4cee-88a8-3b754b3113fb",
+        "odds": "5.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5.5"
+       },
+       {
+        "name": "poniżej 5.5",
+        "type": "outcome",
+        "uuid": "cf96904f-b6c5-43e5-84c9-3af69360f57b",
+        "betbuilder_available": true,
+        "market_uuid": "2824d7c3-1b84-41c6-9251-89295a0a6a0d",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 5.5",
+        "type": "outcome",
+        "uuid": "662e4acd-f477-4bea-8f2c-497cf3d25c0d",
+        "betbuilder_available": true,
+        "market_uuid": "2824d7c3-1b84-41c6-9251-89295a0a6a0d",
+        "odds": "9.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma goli/punktów w meczu przekroczy wartość określoną w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 13,
+     "slug": "strzeli_gola",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds",
+        "market_id": "32"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham",
+        "market_id": "31"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "5b503160-29e1-4c76-af09-8eaeb8c6be4c",
+        "betbuilder_available": true,
+        "market_uuid": "260c7f5a-a465-44aa-91c5-f19efbbcf2ef",
+        "odds": "3.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "35a5f842-c3b3-4cdd-9dd0-f710c1f289fd",
+        "betbuilder_available": true,
+        "market_uuid": "57e262f0-2514-4c72-b0c2-eab0b1748fa7",
+        "odds": "3.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "22caaf10-2e04-4427-8636-fa98650c64b1",
+        "betbuilder_available": true,
+        "market_uuid": "260c7f5a-a465-44aa-91c5-f19efbbcf2ef",
+        "odds": "1.31",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "0460c1ac-bd07-4e96-b6f6-8e2c1ebe2645",
+        "betbuilder_available": true,
+        "market_uuid": "57e262f0-2514-4c72-b0c2-eab0b1748fa7",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola.",
+     "product_active": true
+    },
+    {
+     "name": "Leeds - Total (suma)",
+     "type": "total",
+     "sort_order": 15,
+     "slug": "competitor1_total_suma",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "3a57052f-d387-4b21-9e28-6cec069d88ef",
+        "betbuilder_available": true,
+        "market_uuid": "b92b2760-5f3c-48c5-8f81-0d087ac08da3",
+        "odds": "3.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "c7800bc0-a1c8-440a-bdcf-70d46e50c598",
+        "betbuilder_available": true,
+        "market_uuid": "b92b2760-5f3c-48c5-8f81-0d087ac08da3",
+        "odds": "1.31",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "d54ff6c2-f667-4786-a622-e61041efef23",
+        "betbuilder_available": true,
+        "market_uuid": "437d8ecf-9d77-4f74-a785-877ef6aa7fe5",
+        "odds": "1.48",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "2d0dbe4b-2486-4263-9355-426029c8eb3f",
+        "betbuilder_available": true,
+        "market_uuid": "437d8ecf-9d77-4f74-a785-877ef6aa7fe5",
+        "odds": "2.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "35f81802-bf69-4305-a622-20b5844622d9",
+        "betbuilder_available": true,
+        "market_uuid": "63f40745-2047-4354-838d-a3841939fdb6",
+        "odds": "1.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "b412468a-52a3-46c1-b367-e6d09eeca25d",
+        "betbuilder_available": true,
+        "market_uuid": "63f40745-2047-4354-838d-a3841939fdb6",
+        "odds": "5.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "16e2c7b9-c3eb-493d-b4ae-20358d8a8870",
+        "betbuilder_available": true,
+        "market_uuid": "c5ef8851-1b50-4776-9843-e5c6f73e1050",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "bb5e4389-da37-489f-a52d-a08ef55ca1aa",
+        "betbuilder_available": true,
+        "market_uuid": "c5ef8851-1b50-4776-9843-e5c6f73e1050",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "bfabeeb1-5e58-44f9-ab3c-5ee005d44e28",
+        "betbuilder_available": true,
+        "market_uuid": "9e203da0-40f4-4e48-b4a8-3b2198092250",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "126a65de-c4bf-4f12-b782-278b01988e93",
+        "betbuilder_available": true,
+        "market_uuid": "9e203da0-40f4-4e48-b4a8-3b2198092250",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma goli/punktów zdobytych przez drużynę wymienioną na pierwszym miejscu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "Tottenham - Total (suma)",
+     "type": "total",
+     "sort_order": 20,
+     "slug": "competitor2_total_suma",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "fcf4c116-099a-44e9-b95b-f2db745aaf3f",
+        "betbuilder_available": true,
+        "market_uuid": "3bef2e75-229d-48c2-b2fe-d27d71cd80ea",
+        "odds": "3.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "a97c7743-0883-4ff5-bd3d-908b6f6c9eae",
+        "betbuilder_available": true,
+        "market_uuid": "3bef2e75-229d-48c2-b2fe-d27d71cd80ea",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "72485433-c0f0-4ca4-aab9-ad65320ea346",
+        "betbuilder_available": true,
+        "market_uuid": "5c0eaa2e-1d3d-4b87-aece-85bba36a2e90",
+        "odds": "1.55",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "42b16a24-02a0-417d-95d4-ed1fd9edb32d",
+        "betbuilder_available": true,
+        "market_uuid": "5c0eaa2e-1d3d-4b87-aece-85bba36a2e90",
+        "odds": "2.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "553ec6af-f59b-4a1f-a29a-27f5070c6dba",
+        "betbuilder_available": true,
+        "market_uuid": "52213c11-5134-470b-8b12-3c54a77d07d8",
+        "odds": "1.14",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "1a9f1ecc-d933-4b91-b91d-432e1ad982e5",
+        "betbuilder_available": true,
+        "market_uuid": "52213c11-5134-470b-8b12-3c54a77d07d8",
+        "odds": "4.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "5bfdc2e4-4638-44bc-9a16-c9ba8beaddf9",
+        "betbuilder_available": true,
+        "market_uuid": "f1ded563-bb87-4a41-ba71-7e8c07d325b7",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "c65e9e24-a975-4e34-9e2f-9af9afcf7146",
+        "betbuilder_available": true,
+        "market_uuid": "f1ded563-bb87-4a41-ba71-7e8c07d325b7",
+        "odds": "9.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "4ca6564c-5b08-4be3-87c5-93cbe8f123f4",
+        "betbuilder_available": true,
+        "market_uuid": "0be161bb-09e5-473d-9971-8baace6019d8",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "6290b9d0-fb39-4228-af8e-ab4caa8005ce",
+        "betbuilder_available": true,
+        "market_uuid": "0be161bb-09e5-473d-9971-8baace6019d8",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma goli/punktów zdobytych przez drużynę wymienioną na pierwszym miejscu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "Handicap",
+     "type": "handicap_2col",
+     "sort_order": 25,
+     "slug": "handicap",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Leeds (-1.5)",
+        "type": "outcome",
+        "uuid": "736b2b36-4b9e-4467-8477-70f74809faf0",
+        "betbuilder_available": false,
+        "market_uuid": "c5a74c7b-16b0-4263-8959-0cd313b6c76f",
+        "odds": "5.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Tottenham (+1.5)",
+        "type": "outcome",
+        "uuid": "09513ce7-7029-4aa8-99ac-1bf2681f24cc",
+        "betbuilder_available": false,
+        "market_uuid": "c5a74c7b-16b0-4263-8959-0cd313b6c76f",
+        "odds": "1.13",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Leeds (-0.5)",
+        "type": "outcome",
+        "uuid": "9b45d4a3-0586-4ec0-9c54-a0301d32e19c",
+        "betbuilder_available": false,
+        "market_uuid": "d0830d42-fa60-402b-bd90-05085127321e",
+        "odds": "2.64",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Tottenham (+0.5)",
+        "type": "outcome",
+        "uuid": "019ea9ee-d24b-45da-910b-5b58b41c000b",
+        "betbuilder_available": false,
+        "market_uuid": "d0830d42-fa60-402b-bd90-05085127321e",
+        "odds": "1.43",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Leeds (+0.5)",
+        "type": "outcome",
+        "uuid": "ab9852a1-edc4-449a-b9b1-002afab3a3d3",
+        "betbuilder_available": false,
+        "market_uuid": "5f8d282e-801d-4937-b187-c3f6861bbfee",
+        "odds": "1.51",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Tottenham (-0.5)",
+        "type": "outcome",
+        "uuid": "1294efdc-ba96-4ace-b05f-79f852f4e2a6",
+        "betbuilder_available": false,
+        "market_uuid": "5f8d282e-801d-4937-b187-c3f6861bbfee",
+        "odds": "2.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Leeds (+1.5)",
+        "type": "outcome",
+        "uuid": "17250b3d-fbbe-43c8-ae58-4baa75d60d13",
+        "betbuilder_available": false,
+        "market_uuid": "5b10ce2a-6b6b-4b8d-8cf8-adfcb6b9919b",
+        "odds": "1.16",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Tottenham (-1.5)",
+        "type": "outcome",
+        "uuid": "5673549f-c9ac-485d-a366-c954c4a7ef9e",
+        "betbuilder_available": false,
+        "market_uuid": "5b10ce2a-6b6b-4b8d-8cf8-adfcb6b9919b",
+        "odds": "4.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "product_active": true
+    },
+    {
+     "name": "Handicap ",
+     "type": "handicap_3col",
+     "sort_order": 29,
+     "slug": "handicap_hcp",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Leeds (1:0)",
+        "type": "outcome",
+        "uuid": "6e93cf8c-742f-454b-acd3-8ef29cba4ac8",
+        "betbuilder_available": true,
+        "market_uuid": "eb24d5cf-0330-4ebf-8108-5da8b2a6d16e",
+        "odds": "1.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "7df85123-8068-487d-9cff-f1fe337d374f",
+        "betbuilder_available": true,
+        "market_uuid": "eb24d5cf-0330-4ebf-8108-5da8b2a6d16e",
+        "odds": "4.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (1:0)",
+        "type": "outcome",
+        "uuid": "99f69562-ef88-4722-a355-77e44e3b5cfe",
+        "betbuilder_available": true,
+        "market_uuid": "eb24d5cf-0330-4ebf-8108-5da8b2a6d16e",
+        "odds": "4.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "name": "Leeds (2:0)",
+        "type": "outcome",
+        "uuid": "1df4de69-77a5-4239-be48-47f583b58569",
+        "betbuilder_available": true,
+        "market_uuid": "4f986e52-7ccb-4eee-9d4d-05680e7fda53",
+        "odds": "1.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (2:0)",
+        "type": "outcome",
+        "uuid": "7d7b7820-bcdc-4fe2-8e7c-9892666cf6b0",
+        "betbuilder_available": true,
+        "market_uuid": "4f986e52-7ccb-4eee-9d4d-05680e7fda53",
+        "odds": "6.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (2:0)",
+        "type": "outcome",
+        "uuid": "0ac169c7-1622-4a8c-96ba-4e1104b24ce8",
+        "betbuilder_available": true,
+        "market_uuid": "4f986e52-7ccb-4eee-9d4d-05680e7fda53",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:0"
+       },
+       {
+        "name": "Leeds (3:0)",
+        "type": "outcome",
+        "uuid": "48ad571d-c1d8-44ee-abb6-b2e67e1abfb0",
+        "betbuilder_available": true,
+        "market_uuid": "25a1fb86-0479-43a2-94f3-34afe001710b",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (3:0)",
+        "type": "outcome",
+        "uuid": "4206c879-5519-4c79-a05d-45e2166a410a",
+        "betbuilder_available": true,
+        "market_uuid": "25a1fb86-0479-43a2-94f3-34afe001710b",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (3:0)",
+        "type": "outcome",
+        "uuid": "d5270cb0-d506-46f1-bc16-aa34f78c62ef",
+        "betbuilder_available": true,
+        "market_uuid": "25a1fb86-0479-43a2-94f3-34afe001710b",
+        "odds": "25.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:0"
+       },
+       {
+        "name": "Leeds (4:0)",
+        "type": "outcome",
+        "uuid": "a3bda344-0aa0-4d68-9edd-8aab9778ea6a",
+        "betbuilder_available": true,
+        "market_uuid": "c572a113-d3ab-440c-bf79-6e75bdda30e8",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (4:0)",
+        "type": "outcome",
+        "uuid": "292fe07c-3e92-444e-8978-1cd1966d3a81",
+        "betbuilder_available": true,
+        "market_uuid": "c572a113-d3ab-440c-bf79-6e75bdda30e8",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (4:0)",
+        "type": "outcome",
+        "uuid": "5cca6421-6207-429d-9d3d-ebd988d85079",
+        "betbuilder_available": true,
+        "market_uuid": "c572a113-d3ab-440c-bf79-6e75bdda30e8",
+        "odds": "40.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Leeds (0:1)",
+        "type": "outcome",
+        "uuid": "fad597b3-efac-4153-9680-f4a24cd4ca18",
+        "betbuilder_available": true,
+        "market_uuid": "f8ef3e75-a1ba-41c6-a36a-245b06f11b5a",
+        "odds": "5.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "f41d4a75-dd02-4d02-9207-ed182461bfb6",
+        "betbuilder_available": true,
+        "market_uuid": "f8ef3e75-a1ba-41c6-a36a-245b06f11b5a",
+        "odds": "4.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:1)",
+        "type": "outcome",
+        "uuid": "4a7dfd53-4b1b-4efd-8068-a0712fd24c08",
+        "betbuilder_available": true,
+        "market_uuid": "f8ef3e75-a1ba-41c6-a36a-245b06f11b5a",
+        "odds": "1.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Leeds (0:2)",
+        "type": "outcome",
+        "uuid": "c85d4ade-3d1c-43c3-a74c-ec463400c618",
+        "betbuilder_available": true,
+        "market_uuid": "946c070e-c53f-4091-af36-13733f7e600e",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "4c2065b7-d8c6-40b1-bba1-09f161b149f2",
+        "betbuilder_available": true,
+        "market_uuid": "946c070e-c53f-4091-af36-13733f7e600e",
+        "odds": "7.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:2)",
+        "type": "outcome",
+        "uuid": "1b60b546-a94a-4453-8610-7399a74e2b7d",
+        "betbuilder_available": true,
+        "market_uuid": "946c070e-c53f-4091-af36-13733f7e600e",
+        "odds": "1.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:3"
+       },
+       {
+        "name": "Leeds (0:3)",
+        "type": "outcome",
+        "uuid": "5b635f99-eed7-474a-8a84-a6f35df4f714",
+        "betbuilder_available": true,
+        "market_uuid": "2612f5ec-8a42-4361-b948-426992ef8fca",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:3)",
+        "type": "outcome",
+        "uuid": "353e725a-bcd2-497e-b4fb-8cc4142c5779",
+        "betbuilder_available": true,
+        "market_uuid": "2612f5ec-8a42-4361-b948-426992ef8fca",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:3)",
+        "type": "outcome",
+        "uuid": "e9d607a8-054c-45f0-b1df-95c6da987b38",
+        "betbuilder_available": true,
+        "market_uuid": "2612f5ec-8a42-4361-b948-426992ef8fca",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "product_active": true
+    },
+    {
+     "name": "Remis = zwrot",
+     "type": "markets_in_columns",
+     "sort_order": 38,
+     "slug": "test",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "11"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "64"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "86"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "604c7de1-1b16-4fc9-955e-e96086505a8a",
+        "betbuilder_available": false,
+        "market_uuid": "4d6cca67-24ab-4917-b398-2967e2a65c17",
+        "odds": "1.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "a18b5550-10ea-4463-9c0b-1c65bec3b661",
+        "betbuilder_available": false,
+        "market_uuid": "1510ceb9-c90e-474f-9b3c-5050ce6127d4",
+        "odds": "1.91",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "95bc6a56-b759-4cdc-89c4-e35117b87d7a",
+        "betbuilder_available": false,
+        "market_uuid": "1662492b-9522-482a-97f1-62c8ef734bbe",
+        "odds": "1.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "551b3ad8-4c23-4ec3-b84d-ad08c2762418",
+        "betbuilder_available": false,
+        "market_uuid": "4d6cca67-24ab-4917-b398-2967e2a65c17",
+        "odds": "1.77",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "d24746a8-d8e2-4866-a8bf-c9bea084f6e0",
+        "betbuilder_available": false,
+        "market_uuid": "1510ceb9-c90e-474f-9b3c-5050ce6127d4",
+        "odds": "1.77",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "15306b87-9968-4fe2-a2e9-7673305ee776",
+        "betbuilder_available": false,
+        "market_uuid": "1662492b-9522-482a-97f1-62c8ef734bbe",
+        "odds": "1.77",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się dana część spotkania. W przypadku remisu następuje zwrot stawki.",
+     "product_active": true
+    },
+    {
+     "name": "Suma rzutów rożnych",
+     "type": "total",
+     "sort_order": 39,
+     "slug": "suma_rzutaw_roanych",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "7.5"
+       },
+       {
+        "name": "poniżej 7.5",
+        "type": "outcome",
+        "uuid": "eb205cc7-e408-43fb-9fe7-fe9cdb02e524",
+        "betbuilder_available": true,
+        "market_uuid": "22c839c9-f283-4499-95d3-b9a5d5b449e5",
+        "odds": "3.47",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 7.5",
+        "type": "outcome",
+        "uuid": "eedb1542-6ffd-4fc0-9573-8b6e266143a3",
+        "betbuilder_available": true,
+        "market_uuid": "22c839c9-f283-4499-95d3-b9a5d5b449e5",
+        "odds": "1.26",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "8.5"
+       },
+       {
+        "name": "poniżej 8.5",
+        "type": "outcome",
+        "uuid": "9d907c9c-06b1-4f66-9a8a-9e609af537c6",
+        "betbuilder_available": true,
+        "market_uuid": "14d6d2bb-ca9a-44e1-96cc-fa3834ff36ab",
+        "odds": "2.53",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 8.5",
+        "type": "outcome",
+        "uuid": "cdd01021-8dd8-41c4-b770-10479ef1caa9",
+        "betbuilder_available": true,
+        "market_uuid": "14d6d2bb-ca9a-44e1-96cc-fa3834ff36ab",
+        "odds": "1.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "9.5"
+       },
+       {
+        "name": "poniżej 9.5",
+        "type": "outcome",
+        "uuid": "4f5dd5c0-d627-4947-be16-344c61254a74",
+        "betbuilder_available": true,
+        "market_uuid": "b8a01724-c919-474e-8637-6f0b76a56920",
+        "odds": "1.96",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 9.5",
+        "type": "outcome",
+        "uuid": "80987464-c293-4292-8d3d-f56c2748966f",
+        "betbuilder_available": true,
+        "market_uuid": "b8a01724-c919-474e-8637-6f0b76a56920",
+        "odds": "1.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "10.5"
+       },
+       {
+        "name": "poniżej 10.5",
+        "type": "outcome",
+        "uuid": "bf8f734b-61e7-49bc-b4e8-73d858e25dbb",
+        "betbuilder_available": true,
+        "market_uuid": "9d258c9a-3296-4070-822a-576d2bb79e5b",
+        "odds": "1.61",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 10.5",
+        "type": "outcome",
+        "uuid": "daa1885f-deb0-4db6-8693-05e2d0680dc1",
+        "betbuilder_available": true,
+        "market_uuid": "9d258c9a-3296-4070-822a-576d2bb79e5b",
+        "odds": "2.18",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "11.5"
+       },
+       {
+        "name": "poniżej 11.5",
+        "type": "outcome",
+        "uuid": "2ac931a7-bbfe-4742-bbc7-38fc7d9c86dc",
+        "betbuilder_available": true,
+        "market_uuid": "3650073d-d292-47ce-973a-f5d8bd93e0ec",
+        "odds": "1.38",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 11.5",
+        "type": "outcome",
+        "uuid": "18908c13-222c-4286-8d0f-b72b28e0b9b5",
+        "betbuilder_available": true,
+        "market_uuid": "3650073d-d292-47ce-973a-f5d8bd93e0ec",
+        "odds": "2.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma rzutów rożnych w meczu będzie wyższa czy niższa od wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "Suma kartek",
+     "type": "total",
+     "sort_order": 44,
+     "slug": "suma_kartek_w_meczu",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "d22e36e4-c622-4e29-ad57-caa8f9162e20",
+        "betbuilder_available": true,
+        "market_uuid": "b3e4fade-97be-4782-babe-ba5385cb3aa8",
+        "odds": "5.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "9a66d5f1-b2e9-4e1b-af53-1e3cc4cfe675",
+        "betbuilder_available": true,
+        "market_uuid": "b3e4fade-97be-4782-babe-ba5385cb3aa8",
+        "odds": "1.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "71098ecd-647c-4f0c-8716-05c8dee06308",
+        "betbuilder_available": true,
+        "market_uuid": "587b172e-f43a-4895-8e62-aac6fd848900",
+        "odds": "3.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "87e97c4d-c582-4474-903a-63fb30582c7a",
+        "betbuilder_available": true,
+        "market_uuid": "587b172e-f43a-4895-8e62-aac6fd848900",
+        "odds": "1.32",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "192ff724-4e9b-41c2-b553-eadcf1b3d2a0",
+        "betbuilder_available": true,
+        "market_uuid": "b047161c-08f6-4981-a056-e9aa9810db59",
+        "odds": "1.96",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "bc9648c2-3f19-4a95-b2f9-7be0a2efb74f",
+        "betbuilder_available": true,
+        "market_uuid": "b047161c-08f6-4981-a056-e9aa9810db59",
+        "odds": "1.72",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5.5"
+       },
+       {
+        "name": "poniżej 5.5",
+        "type": "outcome",
+        "uuid": "cff6856f-41be-41d0-acbb-bac4e21fe652",
+        "betbuilder_available": true,
+        "market_uuid": "5ac2f038-d62a-4188-940a-512faf3a2bd0",
+        "odds": "1.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 5.5",
+        "type": "outcome",
+        "uuid": "70838d03-3622-4538-9a4e-af85390469e2",
+        "betbuilder_available": true,
+        "market_uuid": "5ac2f038-d62a-4188-940a-512faf3a2bd0",
+        "odds": "2.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "6.5"
+       },
+       {
+        "name": "poniżej 6.5",
+        "type": "outcome",
+        "uuid": "25dc5299-09b3-47cd-b98e-fb4f088bc9db",
+        "betbuilder_available": true,
+        "market_uuid": "e62cfe57-e921-4774-9ed1-de2706b8c48d",
+        "odds": "1.21",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 6.5",
+        "type": "outcome",
+        "uuid": "314d063b-7e62-4893-9536-665288c75ecc",
+        "betbuilder_available": true,
+        "market_uuid": "e62cfe57-e921-4774-9ed1-de2706b8c48d",
+        "odds": "3.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma kartek w meczu przekroczy określoną w zakładzie wartość. ",
+     "product_active": true
+    },
+    {
+     "name": "Zawodnik strzeli gola",
+     "type": "single_market",
+     "sort_order": 50,
+     "slug": "single_market_02b652ad-d069-44ac-bab5-2612b0272519",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "bez gola"
+       },
+       {
+        "name": "bez gola",
+        "type": "outcome",
+        "uuid": "7aefa56d-6998-4b41-9122-b73fce78d632",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "0.00",
+        "market_status": "active",
+        "outcome_status": "closed"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Calvert-Lewin, Dominic"
+       },
+       {
+        "name": "Calvert-Lewin, Dominic",
+        "type": "outcome",
+        "uuid": "17ab81ea-88e3-4043-8fc8-d4b79fc6835d",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "2.67",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Nmecha, Lukas"
+       },
+       {
+        "name": "Nmecha, Lukas",
+        "type": "outcome",
+        "uuid": "15ff1967-bb38-4479-b323-f3c213bb1e9b",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "3.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Solanke, Dominic"
+       },
+       {
+        "name": "Solanke, Dominic",
+        "type": "outcome",
+        "uuid": "7ba2bb20-33f3-4a03-a085-96924028ccf2",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "3.27",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Marmoush, Omar"
+       },
+       {
+        "name": "Marmoush, Omar",
+        "type": "outcome",
+        "uuid": "c8a4a534-d6c7-48de-9d35-40f99b4d766a",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "3.55",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Okafor, Noah"
+       },
+       {
+        "name": "Okafor, Noah",
+        "type": "outcome",
+        "uuid": "5e011f0c-2116-4c62-bdd1-fa84186b6717",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "3.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Wilson, Harry"
+       },
+       {
+        "name": "Wilson, Harry",
+        "type": "outcome",
+        "uuid": "8bff229f-c0a9-4bc6-b530-0e3527e6506e",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "3.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "James, Daniel"
+       },
+       {
+        "name": "James, Daniel",
+        "type": "outcome",
+        "uuid": "66664a02-9353-49c2-b88b-3dfc8445b47c",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Kulusekvski, Dejan"
+       },
+       {
+        "name": "Kulusekvski, Dejan",
+        "type": "outcome",
+        "uuid": "9ebbe2a2-ab2a-4817-8986-eccd04ab4212",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.45",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tel, Mathys"
+       },
+       {
+        "name": "Tel, Mathys",
+        "type": "outcome",
+        "uuid": "61b3717d-4649-497f-8b2d-8c60b1bdf3ea",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.45",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Kudus, Mohammed"
+       },
+       {
+        "name": "Kudus, Mohammed",
+        "type": "outcome",
+        "uuid": "81effe21-c3db-4748-8e15-380ffd16c577",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Bahoya, Jean Matteo"
+       },
+       {
+        "name": "Bahoya, Jean Matteo",
+        "type": "outcome",
+        "uuid": "cae7aec5-cc0f-4d7d-8f6a-e1c8b301dae8",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Maddison, James"
+       },
+       {
+        "name": "Maddison, James",
+        "type": "outcome",
+        "uuid": "f0e070d2-7ea2-4ddd-9456-b0489ab54c1d",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "4.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Aaronson, Brenden"
+       },
+       {
+        "name": "Aaronson, Brenden",
+        "type": "outcome",
+        "uuid": "12c37668-2f00-4454-ba31-ac8cf346fcf5",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "5.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Stach, Anton"
+       },
+       {
+        "name": "Stach, Anton",
+        "type": "outcome",
+        "uuid": "4ed8430c-4fa1-45c4-ad6c-37e59a4d8ea3",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "6.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Gallagher, Conor"
+       },
+       {
+        "name": "Gallagher, Conor",
+        "type": "outcome",
+        "uuid": "f730ec62-8b7e-45c5-9f8c-8e1e7f22a0a9",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "6.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Longstaff, Sean"
+       },
+       {
+        "name": "Longstaff, Sean",
+        "type": "outcome",
+        "uuid": "30bf5bd4-0442-422a-8000-7f56e65d78c4",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "6.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tanaka, Ao"
+       },
+       {
+        "name": "Tanaka, Ao",
+        "type": "outcome",
+        "uuid": "af06053a-9130-45f2-9f31-75d86a787483",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Bergvall, Lucas"
+       },
+       {
+        "name": "Bergvall, Lucas",
+        "type": "outcome",
+        "uuid": "570e8cb4-eee6-4849-8ee9-c2d6c499be03",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "closed"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tonali, Sandro"
+       },
+       {
+        "name": "Tonali, Sandro",
+        "type": "outcome",
+        "uuid": "81ffa350-633d-4826-b1c5-6a08eb0f7e2f",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fernandes, Mateus"
+       },
+       {
+        "name": "Fernandes, Mateus",
+        "type": "outcome",
+        "uuid": "21a59f6f-d65c-4480-9c17-5d82179ba0c3",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Bogle, Jayden"
+       },
+       {
+        "name": "Bogle, Jayden",
+        "type": "outcome",
+        "uuid": "fafb1615-528c-40e5-9bb1-17ab5af10a7b",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "8.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Porro, Pedro"
+       },
+       {
+        "name": "Porro, Pedro",
+        "type": "outcome",
+        "uuid": "cd8471c1-e27b-4294-869f-8deefff00d28",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "van de Ven, Micky"
+       },
+       {
+        "name": "van de Ven, Micky",
+        "type": "outcome",
+        "uuid": "59e8b244-c4a3-4283-b3d0-ded054ab049d",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "van Hecke, Jan-Paul"
+       },
+       {
+        "name": "van Hecke, Jan-Paul",
+        "type": "outcome",
+        "uuid": "8abbf61e-4b1c-43e5-b896-af0e8f1af6ae",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Justin, James"
+       },
+       {
+        "name": "Justin, James",
+        "type": "outcome",
+        "uuid": "8b5ee821-eac3-47f8-b6a6-c3e9b9065303",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Gray, Archie"
+       },
+       {
+        "name": "Gray, Archie",
+        "type": "outcome",
+        "uuid": "95f83a4d-4dba-43e2-9aac-a7b04454b4f8",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Davies, Ben"
+       },
+       {
+        "name": "Davies, Ben",
+        "type": "outcome",
+        "uuid": "8ec94a7e-d6fd-4bca-a5c6-2879df7d0d4c",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Elvedi, Nico"
+       },
+       {
+        "name": "Elvedi, Nico",
+        "type": "outcome",
+        "uuid": "da42db45-cd82-4a13-99b2-728e367f913e",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Gruev, Ilia"
+       },
+       {
+        "name": "Gruev, Ilia",
+        "type": "outcome",
+        "uuid": "19a114e5-c9fe-4f34-890d-5292be1b2e92",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Bard, Melvin"
+       },
+       {
+        "name": "Bard, Melvin",
+        "type": "outcome",
+        "uuid": "27ff4335-efd5-46c9-85c9-02447a98babc",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Muharemovic, Tarik"
+       },
+       {
+        "name": "Muharemovic, Tarik",
+        "type": "outcome",
+        "uuid": "3bd07429-6d2e-4448-bb3b-e69ce7ee1557",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Gudmundsson, Gabriel"
+       },
+       {
+        "name": "Gudmundsson, Gabriel",
+        "type": "outcome",
+        "uuid": "49a9c267-2328-404c-a993-94be28a8acc9",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Ampadu, Ethan"
+       },
+       {
+        "name": "Ampadu, Ethan",
+        "type": "outcome",
+        "uuid": "bce1fe74-d066-463b-9b99-3839466a630b",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Bijol, Jaka"
+       },
+       {
+        "name": "Bijol, Jaka",
+        "type": "outcome",
+        "uuid": "3be9abad-0daa-480b-a220-91db52a01426",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Robertson, Andy"
+       },
+       {
+        "name": "Robertson, Andy",
+        "type": "outcome",
+        "uuid": "e4fe92f2-b7db-4ace-be47-ad7a3e979770",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "15.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Udogie, Destiny"
+       },
+       {
+        "name": "Udogie, Destiny",
+        "type": "outcome",
+        "uuid": "6314f21b-1914-4834-99e7-d61d9412d1b9",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "15.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Senesi, Marcos"
+       },
+       {
+        "name": "Senesi, Marcos",
+        "type": "outcome",
+        "uuid": "66f196d8-2ac3-4a8f-9285-88d46a099653",
+        "betbuilder_available": true,
+        "market_uuid": "02b652ad-d069-44ac-bab5-2612b0272519",
+        "odds": "16.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować, który z zawodników zdobędzie gola w meczu",
+     "product_active": true
+    },
+    {
+     "name": "Wygra do zera",
+     "type": "markets_in_columns",
+     "sort_order": 61,
+     "slug": "wygra_do_zera",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds",
+        "market_id": "33"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham",
+        "market_id": "34"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "256fedb2-b7d8-4355-ba17-961388beaa4e",
+        "betbuilder_available": true,
+        "market_uuid": "09de5b5b-04d8-44ee-98ab-9bac95a98a79",
+        "odds": "4.55",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "907fe502-8ec1-474d-b827-c5c0fda66c47",
+        "betbuilder_available": true,
+        "market_uuid": "d7b5643f-862c-432d-bc92-cb41aabf9664",
+        "odds": "4.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "f7d74111-e074-44e0-9cb3-47093bed6a5a",
+        "betbuilder_available": true,
+        "market_uuid": "09de5b5b-04d8-44ee-98ab-9bac95a98a79",
+        "odds": "1.16",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "077dd6f4-6ffb-4769-8a9a-f056339b95c4",
+        "betbuilder_available": true,
+        "market_uuid": "d7b5643f-862c-432d-bc92-cb41aabf9664",
+        "odds": "1.19",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie wygra mecz nie tracąc gola w spotkaniu.",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + Total (suma) ",
+     "type": "single_market",
+     "sort_order": 73,
+     "slug": "single_market_e0cb9f10-a96d-4324-bc75-0b262e019b79",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds + poniżej 1.5"
+       },
+       {
+        "name": "Leeds + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "86391e9e-62a9-402f-8c86-a9bc37340fbb",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "9.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds + powyżej 1.5"
+       },
+       {
+        "name": "Leeds + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "3b5429db-8e7c-45f6-a41d-356d00b10fc2",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "3.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis + poniżej 1.5"
+       },
+       {
+        "name": "remis + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "13169229-30f2-4b67-ade4-cbb110e2a326",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis + powyżej 1.5"
+       },
+       {
+        "name": "remis + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "37e9d340-8396-4d25-9a75-03ec5250afbb",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "4.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham + poniżej 1.5"
+       },
+       {
+        "name": "Tottenham + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "ccf57720-a45b-4631-84fd-78827afaf0a4",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "9.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham + powyżej 1.5"
+       },
+       {
+        "name": "Tottenham + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "bad0f836-c040-4d7e-a32c-72ce2f665460",
+        "betbuilder_available": false,
+        "market_uuid": "e0cb9f10-a96d-4324-bc75-0b262e019b79",
+        "odds": "3.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w spotkaniu oraz czy suma goli/punktów przekroczy określoną w zakładzie wartość.",
+     "product_active": true
+    },
+    {
+     "name": "Wynik połowy",
+     "type": "markets_in_columns",
+     "sort_order": 77,
+     "slug": "wynikpolowy",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "60"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "83"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "28b32036-2c22-4fc6-b3d0-f07ff51b3e1c",
+        "betbuilder_available": true,
+        "market_uuid": "66e1a8ae-7481-4731-978e-9b9ab71c8985",
+        "odds": "3.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "d50d6aed-e72b-4dd0-9d6a-255ebbc8a5ec",
+        "betbuilder_available": true,
+        "market_uuid": "eda7a45c-099a-4ebc-8f15-83527a7ce6b6",
+        "odds": "3.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "24dd568d-c350-4034-8df5-326b5a19b783",
+        "betbuilder_available": true,
+        "market_uuid": "66e1a8ae-7481-4731-978e-9b9ab71c8985",
+        "odds": "2.16",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "c45c93c5-cc15-49af-a666-ad18d04aec24",
+        "betbuilder_available": true,
+        "market_uuid": "eda7a45c-099a-4ebc-8f15-83527a7ce6b6",
+        "odds": "2.54",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "e0d2c690-16d3-4705-bdbc-3144e3692841",
+        "betbuilder_available": true,
+        "market_uuid": "66e1a8ae-7481-4731-978e-9b9ab71c8985",
+        "odds": "3.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "ddb9ad7e-4398-4cc8-8839-5079c0ad99ef",
+        "betbuilder_available": true,
+        "market_uuid": "eda7a45c-099a-4ebc-8f15-83527a7ce6b6",
+        "odds": "2.81",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się wskazana połowa meczu.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Total (suma)",
+     "type": "total",
+     "sort_order": 81,
+     "slug": "1_poaowa_suma",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "31d5e972-9e17-4cd9-bf09-ec4a4585ee66",
+        "betbuilder_available": true,
+        "market_uuid": "b6464060-44f7-4a8e-a433-544c039acb35",
+        "odds": "2.79",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "8adb131c-52bc-4774-93cb-8ee7a939037b",
+        "betbuilder_available": true,
+        "market_uuid": "b6464060-44f7-4a8e-a433-544c039acb35",
+        "odds": "1.39",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "73c99598-d3a4-40d0-b8d1-486ccfa25411",
+        "betbuilder_available": true,
+        "market_uuid": "f3d18aab-16f1-4e75-adf0-e6b115592a8e",
+        "odds": "1.41",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "cdf24733-67b0-47de-af8c-486a090ee743",
+        "betbuilder_available": true,
+        "market_uuid": "f3d18aab-16f1-4e75-adf0-e6b115592a8e",
+        "odds": "2.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "7e4b5bdc-98ba-42ba-97eb-ceb875edb896",
+        "betbuilder_available": true,
+        "market_uuid": "04b46f9d-337a-47af-9bba-acd626b3ccb3",
+        "odds": "1.09",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "792b7204-0712-49a4-9943-202dddef0f99",
+        "betbuilder_available": true,
+        "market_uuid": "04b46f9d-337a-47af-9bba-acd626b3ccb3",
+        "odds": "6.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma goli/punktów w pierwszej połowie będzie mieściła się poniżej czy powyżej wskazanej wartości. ",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 84,
+     "slug": "1_polowa_czyste_konto",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds",
+        "market_id": "77"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham",
+        "market_id": "76"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "dab80057-5ebe-41fc-aa03-49936fc59441",
+        "betbuilder_available": true,
+        "market_uuid": "47c0211e-edd6-41dc-be41-f6bd321682a1",
+        "odds": "1.61",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "bab33db9-f4e8-4ec0-8980-1f3ded08e4a0",
+        "betbuilder_available": true,
+        "market_uuid": "d85e987d-94e6-4250-a887-5ac70d655641",
+        "odds": "1.67",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "2afcefe1-db2b-491e-8da6-c11a973f236c",
+        "betbuilder_available": true,
+        "market_uuid": "47c0211e-edd6-41dc-be41-f6bd321682a1",
+        "odds": "2.08",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "f1aa3af1-583c-424b-bbc3-e2b3aef80a0c",
+        "betbuilder_available": true,
+        "market_uuid": "d85e987d-94e6-4250-a887-5ac70d655641",
+        "odds": "2.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w pierwszej połowie.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Leeds - Total (suma)",
+     "type": "total",
+     "sort_order": 86,
+     "slug": "1_poaowa_competitor_1_suma_goli",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "d9010de3-62fe-4dc8-ac26-d7a8dff8896a",
+        "betbuilder_available": true,
+        "market_uuid": "d956df2f-44ad-4c2f-bba0-470ff111ee9d",
+        "odds": "1.64",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "a4944be8-0d75-4678-80d8-ca46fe721c37",
+        "betbuilder_available": true,
+        "market_uuid": "d956df2f-44ad-4c2f-bba0-470ff111ee9d",
+        "odds": "2.13",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "6bbe3f53-a858-4ec2-9b63-15113d5940bd",
+        "betbuilder_available": true,
+        "market_uuid": "ac9f0454-a32d-4810-9086-324f4a1b997c",
+        "odds": "1.08",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "fbe3cf6d-2e5f-467f-989d-1f94f802740a",
+        "betbuilder_available": true,
+        "market_uuid": "ac9f0454-a32d-4810-9086-324f4a1b997c",
+        "odds": "6.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "7954f4a9-9e37-4381-85ff-19d495961d8a",
+        "betbuilder_available": true,
+        "market_uuid": "75a8354f-6eaf-403f-81d5-b26c4c617e0b",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "5d602446-42ad-4996-ab23-d7cf24593e63",
+        "betbuilder_available": true,
+        "market_uuid": "75a8354f-6eaf-403f-81d5-b26c4c617e0b",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w pierwszej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Tottenham - Total (suma)",
+     "type": "total",
+     "sort_order": 89,
+     "slug": "1_poaowa_competitor_2_suma_goli",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "0ea832b5-afe9-4f90-9291-18535746b801",
+        "betbuilder_available": true,
+        "market_uuid": "cff2d61a-756b-4508-ba33-13fc2f1146bc",
+        "odds": "1.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "add994d1-645f-482a-bdc4-2623200a08c0",
+        "betbuilder_available": true,
+        "market_uuid": "cff2d61a-756b-4508-ba33-13fc2f1146bc",
+        "odds": "2.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "2e893d74-259a-4d0c-a768-a6a77d8c1fef",
+        "betbuilder_available": true,
+        "market_uuid": "2e6b7ea9-3a36-4dde-be11-b02eb6d70525",
+        "odds": "1.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "97d8ff4e-21d3-4dd9-87cb-e4f8f46709d8",
+        "betbuilder_available": true,
+        "market_uuid": "2e6b7ea9-3a36-4dde-be11-b02eb6d70525",
+        "odds": "5.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "7ffd7909-d136-4b78-ae4f-9fd551fb5326",
+        "betbuilder_available": true,
+        "market_uuid": "82896d45-494b-4c1f-ad54-eb228be41fef",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "d41a1307-93a7-4322-9a8b-e648974abddb",
+        "betbuilder_available": true,
+        "market_uuid": "82896d45-494b-4c1f-ad54-eb228be41fef",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w pierwszej połowie drużyna wymieniona jako druga.",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - handicap",
+     "type": "handicap_2col",
+     "sort_order": 92,
+     "slug": "1_poaowa_handicap",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Leeds (-0.5)",
+        "type": "outcome",
+        "uuid": "fb911a29-a9e2-46a7-9d71-8c50696cc666",
+        "betbuilder_available": false,
+        "market_uuid": "3277690b-3d47-43a9-b6a7-5b8cae4c7cf4",
+        "odds": "3.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Tottenham (+0.5)",
+        "type": "outcome",
+        "uuid": "955b27a9-3e91-44a5-a658-8c34931568eb",
+        "betbuilder_available": false,
+        "market_uuid": "3277690b-3d47-43a9-b6a7-5b8cae4c7cf4",
+        "odds": "1.29",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Leeds (+0.5)",
+        "type": "outcome",
+        "uuid": "b597b149-519b-4e92-a2be-69a31efc8d3b",
+        "betbuilder_available": false,
+        "market_uuid": "1d0269f9-7ac6-426a-a57d-aff0aac486a4",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Tottenham (-0.5)",
+        "type": "outcome",
+        "uuid": "e505585b-37e6-4358-9f6c-b880e5701335",
+        "betbuilder_available": false,
+        "market_uuid": "1d0269f9-7ac6-426a-a57d-aff0aac486a4",
+        "odds": "2.87",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - Handicap",
+     "type": "handicap_3col",
+     "sort_order": 94,
+     "slug": "1_poaowa_handicap_3way",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Leeds (1:0)",
+        "type": "outcome",
+        "uuid": "af6ed700-5bed-4070-a9f7-f718e726dd19",
+        "betbuilder_available": true,
+        "market_uuid": "c45e5474-a160-4fab-ac87-325c81ecf040",
+        "odds": "1.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "37d43c60-38fe-4a0f-9b11-8e4a4bbb9ef1",
+        "betbuilder_available": true,
+        "market_uuid": "c45e5474-a160-4fab-ac87-325c81ecf040",
+        "odds": "3.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (1:0)",
+        "type": "outcome",
+        "uuid": "a5277746-479c-40a8-946a-a14921517fb3",
+        "betbuilder_available": true,
+        "market_uuid": "c45e5474-a160-4fab-ac87-325c81ecf040",
+        "odds": "9.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "name": "Leeds (2:0)",
+        "type": "outcome",
+        "uuid": "4732a130-a8bf-45be-9b02-c9629251c969",
+        "betbuilder_available": true,
+        "market_uuid": "54085f1e-6b4a-4d2d-9b93-f898c7d14d7f",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (2:0)",
+        "type": "outcome",
+        "uuid": "29f59ce4-c396-493d-834e-2d9aa63a504b",
+        "betbuilder_available": true,
+        "market_uuid": "54085f1e-6b4a-4d2d-9b93-f898c7d14d7f",
+        "odds": "6.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (2:0)",
+        "type": "outcome",
+        "uuid": "bf97bacd-0f11-45e6-a50e-cd8b4e69f276",
+        "betbuilder_available": true,
+        "market_uuid": "54085f1e-6b4a-4d2d-9b93-f898c7d14d7f",
+        "odds": "27.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Leeds (0:1)",
+        "type": "outcome",
+        "uuid": "f8bf4729-5b18-4193-968f-30864bb87aaa",
+        "betbuilder_available": true,
+        "market_uuid": "aca5325d-65b2-45fc-ac06-00c64538f1d7",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "f0a7a487-4a05-4238-bcec-974f68257a3a",
+        "betbuilder_available": true,
+        "market_uuid": "aca5325d-65b2-45fc-ac06-00c64538f1d7",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:1)",
+        "type": "outcome",
+        "uuid": "1d22a4c3-a975-4e99-826a-b58c8311f638",
+        "betbuilder_available": true,
+        "market_uuid": "aca5325d-65b2-45fc-ac06-00c64538f1d7",
+        "odds": "1.26",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Leeds (0:2)",
+        "type": "outcome",
+        "uuid": "2de93540-ef96-4d13-b3b2-ea5210c84733",
+        "betbuilder_available": true,
+        "market_uuid": "7377ec1f-11f4-4b20-b621-72356ae633b5",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "2ef26e33-a12d-45a2-a674-96dcd47e6cac",
+        "betbuilder_available": true,
+        "market_uuid": "7377ec1f-11f4-4b20-b621-72356ae633b5",
+        "odds": "7.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:2)",
+        "type": "outcome",
+        "uuid": "4d666c0b-86e9-4157-b2bb-5f7173bec6e6",
+        "betbuilder_available": true,
+        "market_uuid": "7377ec1f-11f4-4b20-b621-72356ae633b5",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa uwzględniając doliczenie handicapu jednej z drużyn. ",
+     "product_active": true
+    },
+    {
+     "name": "Strzeli 1 gola",
+     "type": "markets_in_columns",
+     "sort_order": 98,
+     "slug": "strzeli_goalnr_gola",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "8"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "62"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "84"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "316d73fb-4ff7-47f7-92d6-08e8f29eecfd",
+        "betbuilder_available": true,
+        "market_uuid": "77d09097-7ce0-4190-8b4d-6d3095ccefdc",
+        "odds": "2.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "40966c3f-e885-4e0a-b49d-68032d47486e",
+        "betbuilder_available": true,
+        "market_uuid": "268e3cb4-dc6c-4c17-84a8-57f418a6ac76",
+        "odds": "2.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Leeds",
+        "type": "outcome",
+        "uuid": "8033022b-4c20-4faf-bb30-fe73f3ef6a37",
+        "betbuilder_available": true,
+        "market_uuid": "c6b808bc-ab61-475d-8a6e-253834f9b4ea",
+        "odds": "2.43",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nikt"
+       },
+       {
+        "name": "nikt",
+        "type": "outcome",
+        "uuid": "d358ddcd-5e71-438a-ace9-43d0431d1524",
+        "betbuilder_available": true,
+        "market_uuid": "77d09097-7ce0-4190-8b4d-6d3095ccefdc",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nikt",
+        "type": "outcome",
+        "uuid": "3bed918b-18b1-4725-bc7f-c74c7f583ea0",
+        "betbuilder_available": true,
+        "market_uuid": "268e3cb4-dc6c-4c17-84a8-57f418a6ac76",
+        "odds": "2.86",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nikt",
+        "type": "outcome",
+        "uuid": "e34e8c6a-c523-4680-8aa5-7f5f33b4752f",
+        "betbuilder_available": true,
+        "market_uuid": "c6b808bc-ab61-475d-8a6e-253834f9b4ea",
+        "odds": "3.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Tottenham"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "2a4b10fe-1bd3-4b31-8db3-db90325b92eb",
+        "betbuilder_available": true,
+        "market_uuid": "77d09097-7ce0-4190-8b4d-6d3095ccefdc",
+        "odds": "1.93",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "913c2e7e-dcd8-46b6-9ad0-c31baeaac74d",
+        "betbuilder_available": true,
+        "market_uuid": "268e3cb4-dc6c-4c17-84a8-57f418a6ac76",
+        "odds": "2.59",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham",
+        "type": "outcome",
+        "uuid": "bb855fd1-5fd5-4d17-8f3a-a5c740b26d93",
+        "betbuilder_available": true,
+        "market_uuid": "c6b808bc-ab61-475d-8a6e-253834f9b4ea",
+        "odds": "2.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować, która drużyna strzeli wskazanego gola w wymienionej części spotkania.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Total (suma)",
+     "type": "total",
+     "sort_order": 106,
+     "slug": "2_poaowa_suma",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "97cde2f4-4802-439b-ae7d-34fffcd158ff",
+        "betbuilder_available": true,
+        "market_uuid": "6a24e067-71b5-4e0a-8472-1a2136bf3ccc",
+        "odds": "3.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "86a2df78-e3f1-4e1f-a2b2-d1a70ca0d214",
+        "betbuilder_available": true,
+        "market_uuid": "6a24e067-71b5-4e0a-8472-1a2136bf3ccc",
+        "odds": "1.23",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "af1194db-e977-4194-b0a9-b81cf43a5bb0",
+        "betbuilder_available": true,
+        "market_uuid": "46040854-8b98-4d05-981c-a729531c60fe",
+        "odds": "1.66",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "2e1b2467-490d-4b16-a336-a77a99e3d8ca",
+        "betbuilder_available": true,
+        "market_uuid": "46040854-8b98-4d05-981c-a729531c60fe",
+        "odds": "2.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "d07c493f-4d8b-4095-83d8-906b1673ca7d",
+        "betbuilder_available": true,
+        "market_uuid": "1f31dc5c-e77c-4646-b04d-887c9e63e09e",
+        "odds": "1.17",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "0c47f40c-ae18-453e-bc47-e125b11e16d0",
+        "betbuilder_available": true,
+        "market_uuid": "1f31dc5c-e77c-4646-b04d-887c9e63e09e",
+        "odds": "4.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy suma goli/punktów w drugiej połowie będzie mieściła się poniżej czy powyżej wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 109,
+     "slug": "2_polowa_czyste_konto",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds",
+        "market_id": "97"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham",
+        "market_id": "96"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "54fafce4-4801-41f5-a083-fe20075da836",
+        "betbuilder_available": true,
+        "market_uuid": "16bcf7b2-5b1a-4f77-92b3-fb805b4fd681",
+        "odds": "1.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "8b484143-3090-4403-9f18-1901e3b6a682",
+        "betbuilder_available": true,
+        "market_uuid": "221e74f7-4d55-49a9-a74c-4a1f1dfb6faa",
+        "odds": "1.92",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "9d4fdfbb-db90-4ee9-b565-5719c725554a",
+        "betbuilder_available": true,
+        "market_uuid": "16bcf7b2-5b1a-4f77-92b3-fb805b4fd681",
+        "odds": "1.79",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "ccb0a00f-20ac-4b92-a40e-8aea4c88b459",
+        "betbuilder_available": true,
+        "market_uuid": "221e74f7-4d55-49a9-a74c-4a1f1dfb6faa",
+        "odds": "1.73",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w drugiej połowie.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Leeds - Total (suma)",
+     "type": "total",
+     "sort_order": 111,
+     "slug": "2_poaowa_competitor1_suma_goli_",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "84221868-f673-4d62-84a6-0086d604237c",
+        "betbuilder_available": true,
+        "market_uuid": "c319a4e9-efb0-4aaa-84df-3bffdca4ac98",
+        "odds": "1.88",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "d95ac534-c85b-43d6-82ae-b024ce30fc51",
+        "betbuilder_available": true,
+        "market_uuid": "c319a4e9-efb0-4aaa-84df-3bffdca4ac98",
+        "odds": "1.82",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "e9cd00e3-8b75-413d-90cc-88fe7adb8620",
+        "betbuilder_available": true,
+        "market_uuid": "bf03e155-3883-499f-8d97-e4da562b2b09",
+        "odds": "1.14",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "44309892-8c7b-41e4-87e9-de699d6e92e9",
+        "betbuilder_available": true,
+        "market_uuid": "bf03e155-3883-499f-8d97-e4da562b2b09",
+        "odds": "4.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "1876e15d-5e0d-48df-8305-b0f60abde382",
+        "betbuilder_available": true,
+        "market_uuid": "1818fef8-98bb-41e2-9234-32b19a853c6c",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "8f4c9173-a4f5-4032-991c-a1942d5cd8b8",
+        "betbuilder_available": true,
+        "market_uuid": "1818fef8-98bb-41e2-9234-32b19a853c6c",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Tottenham - Total (suma)",
+     "type": "total",
+     "sort_order": 114,
+     "slug": "2_poaowa_competitor2_suma_goli_",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "eff2fa66-243e-43bd-b014-781afe28495c",
+        "betbuilder_available": true,
+        "market_uuid": "559657d0-4ef2-4bea-a205-03e71ee23c99",
+        "odds": "1.96",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "df8a1a22-9cbd-4255-8aa7-ba1dde48ae42",
+        "betbuilder_available": true,
+        "market_uuid": "559657d0-4ef2-4bea-a205-03e71ee23c99",
+        "odds": "1.76",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "8624f2c8-2dd4-46c6-90b9-b41148880ac6",
+        "betbuilder_available": true,
+        "market_uuid": "42eb72de-6392-4f0a-8116-4df5d61b2c87",
+        "odds": "1.16",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "3e50fcbf-1bea-4ae9-aa55-e2c5ea44054a",
+        "betbuilder_available": true,
+        "market_uuid": "42eb72de-6392-4f0a-8116-4df5d61b2c87",
+        "odds": "4.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "0c070c61-1201-4736-a64b-dfa99f878d3a",
+        "betbuilder_available": true,
+        "market_uuid": "2fec246b-b3b2-4547-8686-c4e4c780f3d7",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "60724e49-ea7f-49ac-ac61-d25beb15eb43",
+        "betbuilder_available": true,
+        "market_uuid": "2fec246b-b3b2-4547-8686-c4e4c780f3d7",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "2. Połowa - Handicap",
+     "type": "handicap_2col",
+     "sort_order": 117,
+     "slug": "2_poaowa_handicap",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Leeds (-0.5)",
+        "type": "outcome",
+        "uuid": "f4b0bbc4-4eba-4378-9ea6-91b9d7ab8746",
+        "betbuilder_available": false,
+        "market_uuid": "eee6334a-a3cf-46e7-8458-af68af5c7e93",
+        "odds": "2.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Tottenham (+0.5)",
+        "type": "outcome",
+        "uuid": "c13a9234-9970-4c8d-9d0e-d46d3a20b570",
+        "betbuilder_available": false,
+        "market_uuid": "eee6334a-a3cf-46e7-8458-af68af5c7e93",
+        "odds": "1.35",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Leeds (+0.5)",
+        "type": "outcome",
+        "uuid": "7f9fa096-d5f7-428d-a10f-4f60e522e771",
+        "betbuilder_available": false,
+        "market_uuid": "9a5d7880-921c-4168-91d3-35066f80c1fc",
+        "odds": "1.39",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Tottenham (-0.5)",
+        "type": "outcome",
+        "uuid": "664c314a-b25e-447e-81c1-5261d81213ce",
+        "betbuilder_available": false,
+        "market_uuid": "9a5d7880-921c-4168-91d3-35066f80c1fc",
+        "odds": "2.62",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się druga połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Handicap",
+     "type": "handicap_3col",
+     "sort_order": 119,
+     "slug": "2_poaowa_handicap_3",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Leeds (1:0)",
+        "type": "outcome",
+        "uuid": "9734956d-e4f8-4a08-a48f-c485642ac956",
+        "betbuilder_available": true,
+        "market_uuid": "44e431b4-8387-46ae-9c35-f579f0fd7899",
+        "odds": "1.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "b74c108b-3e45-4a51-a90d-2519e99835e0",
+        "betbuilder_available": true,
+        "market_uuid": "44e431b4-8387-46ae-9c35-f579f0fd7899",
+        "odds": "3.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (1:0)",
+        "type": "outcome",
+        "uuid": "1f822184-4bd9-4586-a0d2-c5e936c741ed",
+        "betbuilder_available": true,
+        "market_uuid": "44e431b4-8387-46ae-9c35-f579f0fd7899",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "name": "Leeds (2:0)",
+        "type": "outcome",
+        "uuid": "e860aa3d-fc0a-40d5-bfd8-addeb6113cb0",
+        "betbuilder_available": true,
+        "market_uuid": "0ebc787a-28be-4827-8c8c-ab0031fdea1d",
+        "odds": "1.06",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (2:0)",
+        "type": "outcome",
+        "uuid": "b2681d1a-f342-4b15-b4ce-edb9afe5c325",
+        "betbuilder_available": true,
+        "market_uuid": "0ebc787a-28be-4827-8c8c-ab0031fdea1d",
+        "odds": "6.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (2:0)",
+        "type": "outcome",
+        "uuid": "67b85425-95a5-436b-9111-85417923ffbd",
+        "betbuilder_available": true,
+        "market_uuid": "0ebc787a-28be-4827-8c8c-ab0031fdea1d",
+        "odds": "20.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Leeds (0:1)",
+        "type": "outcome",
+        "uuid": "68e18da5-f55f-4d85-a7eb-4df331692fff",
+        "betbuilder_available": true,
+        "market_uuid": "5d0d2db6-fe24-4739-ae1f-fa231c778b79",
+        "odds": "8.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "a861c6b0-4a85-4993-9e07-9ad73a4920ba",
+        "betbuilder_available": true,
+        "market_uuid": "5d0d2db6-fe24-4739-ae1f-fa231c778b79",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:1)",
+        "type": "outcome",
+        "uuid": "efbd1bc6-2203-4a7a-aa75-2023dae41228",
+        "betbuilder_available": true,
+        "market_uuid": "5d0d2db6-fe24-4739-ae1f-fa231c778b79",
+        "odds": "1.32",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Leeds (0:2)",
+        "type": "outcome",
+        "uuid": "b6269473-2de1-4321-9c45-767bded1b0d1",
+        "betbuilder_available": true,
+        "market_uuid": "78b48546-28b4-4e8f-b32f-65267711739b",
+        "odds": "22.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "512677e3-8395-4655-84fe-254b550f9281",
+        "betbuilder_available": true,
+        "market_uuid": "78b48546-28b4-4e8f-b32f-65267711739b",
+        "odds": "6.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Tottenham (0:2)",
+        "type": "outcome",
+        "uuid": "beadf357-2e42-438c-bc84-3b3ddf1874de",
+        "betbuilder_available": true,
+        "market_uuid": "78b48546-28b4-4e8f-b32f-65267711739b",
+        "odds": "1.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się druga połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + suma goli",
+     "type": "single_market",
+     "sort_order": 128,
+     "slug": "single_market_90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds/remis + poniżej 1.5"
+       },
+       {
+        "name": "Leeds/remis + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "a30dc681-fb2c-4999-9a85-f1a8d5fe1114",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "5.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds/Tottenham + poniżej 1.5"
+       },
+       {
+        "name": "Leeds/Tottenham + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "fc1ba8a4-26f6-47b2-b4db-c75fff66d0c4",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "4.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis/Tottenham + poniżej 1.5"
+       },
+       {
+        "name": "remis/Tottenham + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "6b1203d3-ddb5-4e9f-8e2f-957f750280ad",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "4.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds/remis + powyżej 1.5"
+       },
+       {
+        "name": "Leeds/remis + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "ed2ab67a-e5d8-437d-a835-53343d22f192",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "1.96",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Leeds/Tottenham + powyżej 1.5"
+       },
+       {
+        "name": "Leeds/Tottenham + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "4913671e-06ab-4d17-8c23-25ee6dded0dd",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "1.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis/Tottenham + powyżej 1.5"
+       },
+       {
+        "name": "remis/Tottenham + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "c9d76c17-7586-44f5-b17b-181a59542dff",
+        "betbuilder_available": false,
+        "market_uuid": "90cbe3ab-aa36-4f7a-848b-7f5dadd5f3a5",
+        "odds": "1.84",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować rozstrzygnięcie meczu wybierając dwie z trzech opcji oraz dodatkowo czy w meczu suma goli będzie poniżej czy powyżej określonej wartości. ",
+     "product_active": true
+    },
+    {
+     "name": "Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 138,
+     "slug": "dokaadny_wynik",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "1f34de71-c8de-4c39-b7d9-da7096a2b559",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "db1bfbdb-e991-4698-ac54-d081f4bd6ee1",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "9.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "4c913b3b-b21a-4b2b-b087-4680c11f7591",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "7.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "91b43d62-3b07-48ca-886e-7e1eb82949fe",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "27e29819-aa89-4a8e-a179-d9bb86c758b1",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "5.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "e5888f8e-57ab-43ea-91ae-c829f3c66d96",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "da804507-c315-48a9-9dbc-d23f6f3faf55",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "9.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "b2156ebc-8fc2-451d-a80e-afb80082b05a",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "98b92f7e-f294-4e32-b9ce-29ad2de07f7f",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "8.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:0"
+       },
+       {
+        "type": "label",
+        "text": "3:3"
+       },
+       {
+        "type": "label",
+        "text": "0:3"
+       }
+      ],
+      [
+       {
+        "name": "3:0",
+        "type": "outcome",
+        "uuid": "bfc22677-c872-46dc-b8aa-68f2f18365fc",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "3:3",
+        "type": "outcome",
+        "uuid": "dec7a83a-3044-4535-bee4-b3f477c7560b",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "60.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:3",
+        "type": "outcome",
+        "uuid": "bf90ea02-63d3-4f6f-b94a-330ef80d76b2",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "25.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:3"
+       }
+      ],
+      [
+       {
+        "name": "3:1",
+        "type": "outcome",
+        "uuid": "75890de6-2708-4489-aa6a-dda941198939",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "20.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:3",
+        "type": "outcome",
+        "uuid": "bf2de843-3ef2-4bb0-8192-9fcc3eaf03ef",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "18.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:2"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "2:3"
+       }
+      ],
+      [
+       {
+        "name": "3:2",
+        "type": "outcome",
+        "uuid": "44dd4820-798d-4e50-b83c-a06d1fc5b556",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "2:3",
+        "type": "outcome",
+        "uuid": "5e2a732e-967c-48c5-9f64-a881eef291e8",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "27.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:4"
+       }
+      ],
+      [
+       {
+        "name": "4:0",
+        "type": "outcome",
+        "uuid": "c889cf7a-9ad7-4076-8058-b80e14f8453d",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "90.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:4",
+        "type": "outcome",
+        "uuid": "2500018d-00c7-4379-bbdf-4bf22ed5de28",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "70.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:4"
+       }
+      ],
+      [
+       {
+        "name": "4:1",
+        "type": "outcome",
+        "uuid": "29033110-9254-4984-b436-55a6e5b4f64c",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "60.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:4",
+        "type": "outcome",
+        "uuid": "88eff746-453d-4994-9e78-4a0a234c0bbf",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "50.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:2"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "2:4"
+       }
+      ],
+      [
+       {
+        "name": "4:2",
+        "type": "outcome",
+        "uuid": "e84c4488-0bee-42a6-a21d-d3fac6e982b8",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "90.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "2:4",
+        "type": "outcome",
+        "uuid": "8d1e8d61-fadb-4af4-9a5c-bdcc985bb067",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "80.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:5"
+       }
+      ],
+      [
+       {
+        "name": "5:0",
+        "type": "outcome",
+        "uuid": "b0ed3d8b-488e-44d7-8b14-1d7b4efbda4d",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:5",
+        "type": "outcome",
+        "uuid": "447d9adf-d1ce-48f0-9977-4f566352c340",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:5"
+       }
+      ],
+      [
+       {
+        "name": "5:1",
+        "type": "outcome",
+        "uuid": "4bb08adc-789a-4e52-b68f-be099baeff0a",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:5",
+        "type": "outcome",
+        "uuid": "e7735dc2-705e-429b-8d93-b8b681249cac",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "6:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:6"
+       }
+      ],
+      [
+       {
+        "name": "6:0",
+        "type": "outcome",
+        "uuid": "7eca562f-8cd2-4d64-9514-d7355400640e",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:6",
+        "type": "outcome",
+        "uuid": "07ffbaf5-fba1-4a92-94e5-0729f21d6c7c",
+        "betbuilder_available": true,
+        "market_uuid": "13b31cf9-9e05-4e50-8314-779e8d604ed1",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować dokładny wynik, jakim zakończy się spotkanie.",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 139,
+     "slug": "1_poaowa_dokaadny_wynik",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "27b44b5f-d24c-43a4-951b-64cca3d22d85",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "4.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "343d81c4-e3df-4126-877c-0b10020abfa5",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "2.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "0e2a5059-78f2-42aa-838e-a820661acd97",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "4.55",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "bc70614c-cac5-4271-a5c1-96a90ea428eb",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "16.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "2d7edca9-d3ac-46a8-b604-66a0032a2fbc",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "92cad7c8-44c7-4d5b-9295-f01019fa648d",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "3e5f16f3-3428-411d-ad50-58db8d717a0e",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "27.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "22ec887d-c5a5-4c3b-9fad-d4acf2c76631",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "90.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "e339e374-389f-4f41-a512-24bd3bdb6ff2",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "25.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "inny"
+       },
+       {
+        "type": "empty"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "name": "inny",
+        "type": "outcome",
+        "uuid": "2295f481-2bfc-45c5-b32a-72e7d0af5741",
+        "betbuilder_available": true,
+        "market_uuid": "6f37730c-69f4-461a-b978-d396f4017327",
+        "odds": "18.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować dokładny wynik pierwszej połowy.",
+     "product_active": true
+    },
+    {
+     "name": "2. Połowa - Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 140,
+     "slug": "2_poaowa_dokaadny_wynik",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "ffe2bc65-a3d6-45b7-a84e-b8a1c3cbe304",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "5.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "42c652ae-e359-481e-8fea-51f20c6d6594",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "3e8fa500-f8b6-426a-9373-64ac7ae98bc7",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "4.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "89bfeb50-da0d-447a-8d24-d50e31224cd0",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "c557e27b-2bac-4101-961e-0c7772591464",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "6.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "3ed9c278-ea30-44db-a48b-3801091f7cf9",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "938a7345-1205-40f4-853c-62a77d2a79bf",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "19.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "82d32181-dd9f-42a2-b485-95cee1d42814",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "50.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "ca8a547f-c113-4e8a-92b5-c73d5f8aa8f5",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "18.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "inny"
+       },
+       {
+        "type": "empty"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "name": "inny",
+        "type": "outcome",
+        "uuid": "a26e1963-7fec-47b7-b6f5-1e5a1073bc57",
+        "betbuilder_available": true,
+        "market_uuid": "dc569250-707f-4cad-9add-d4ea0f0a592e",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować dokładny wynik drugiej połowy.",
+     "product_active": true
+    },
+    {
+     "name": "Rzuty rożne - Handicap",
+     "type": "handicap_2col",
+     "sort_order": 148,
+     "slug": "rzuty_roane_handicap",
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Leeds"
+       },
+       {
+        "type": "label",
+        "text": "Tottenham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Leeds (-0.5)",
+        "type": "outcome",
+        "uuid": "4ebc55b9-68ec-4e4b-b4c2-3cabe68d5b84",
+        "betbuilder_available": true,
+        "market_uuid": "00055947-05a4-4e7a-9af9-53e4bca97a2e",
+        "odds": "2.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Tottenham (+0.5)",
+        "type": "outcome",
+        "uuid": "30644869-4907-421b-bab1-d03e9e03082f",
+        "betbuilder_available": true,
+        "market_uuid": "00055947-05a4-4e7a-9af9-53e4bca97a2e",
+        "odds": "1.63",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Leeds (+0.5)",
+        "type": "outcome",
+        "uuid": "45c5b043-94f9-41cd-85fa-594974839e88",
+        "betbuilder_available": true,
+        "market_uuid": "ad62d5ed-0ac2-411d-abd5-503057ce16d2",
+        "odds": "1.69",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Tottenham (-0.5)",
+        "type": "outcome",
+        "uuid": "2f2d4355-be6b-4a4a-aea4-d6a1bdb2864a",
+        "betbuilder_available": true,
+        "market_uuid": "ad62d5ed-0ac2-411d-abd5-503057ce16d2",
+        "odds": "1.96",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Leeds (+1.5)",
+        "type": "outcome",
+        "uuid": "dd166e36-99ea-4311-8960-99ab7e5b4640",
+        "betbuilder_available": true,
+        "market_uuid": "68ae6076-07b4-4924-b609-104a9cfa36ef",
+        "odds": "1.44",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Tottenham (-1.5)",
+        "type": "outcome",
+        "uuid": "f8c4ab7c-1d05-4b23-929b-c1f7bf394543",
+        "betbuilder_available": true,
+        "market_uuid": "68ae6076-07b4-4924-b609-104a9cfa36ef",
+        "odds": "2.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować która z drużyn wykona w meczu więcej rzutów rożnych uwzględniając wartość handicapu. ",
+     "product_active": true
+    },
+    {
+     "name": "Parzyste/Nieparzyste",
+     "type": "markets_in_columns",
+     "sort_order": 438,
+     "slug": "parzystenieparzyste",
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "26"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "74"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "94"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nieparzysta"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "49589dda-b2e6-445f-b277-687c28465371",
+        "betbuilder_available": true,
+        "market_uuid": "8450765c-6f25-4eaa-842f-2cf31728f644",
+        "odds": "1.92",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "a11b096d-703a-4171-a64f-cfcca73f7a20",
+        "betbuilder_available": true,
+        "market_uuid": "2b6b4425-f92b-453c-9932-adc79520bfec",
+        "odds": "2.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "8bd0c097-5ba9-4c3b-bdef-eb2b72a1d5a1",
+        "betbuilder_available": true,
+        "market_uuid": "637841c1-c6b1-464a-874f-4d62c2dcc696",
+        "odds": "1.91",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "parzysta"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "d31cab45-3f07-43d7-9924-81d0d5035637",
+        "betbuilder_available": true,
+        "market_uuid": "8450765c-6f25-4eaa-842f-2cf31728f644",
+        "odds": "1.79",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "bcf04ae8-4b6c-4eff-9c78-c972f9ede996",
+        "betbuilder_available": true,
+        "market_uuid": "2b6b4425-f92b-453c-9932-adc79520bfec",
+        "odds": "1.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "96bbf8b6-2f47-4da2-b6e0-7523e3c7c8bd",
+        "betbuilder_available": true,
+        "market_uuid": "637841c1-c6b1-464a-874f-4d62c2dcc696",
+        "odds": "1.73",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "game_groups": [],
+     "tooltip": "Należy wytypować czy w danej części spotkania padnie parzysta czy nieparzysta liczba goli/punktów. 0 traktowane jest jako liczba parzysta.",
+     "product_active": true
+    }
+   ],
+   "jackpot_prize_pool": null,
+   "tipster_eid": "m:sr:match:72221384"
+  }
+ },
+ "state": "success",
+ "_meta": null
+}

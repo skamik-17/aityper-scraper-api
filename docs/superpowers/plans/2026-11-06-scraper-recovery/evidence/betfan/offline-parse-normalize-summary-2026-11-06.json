@@ -1,0 +1,48 @@
+{
+ "_note": "Offline parseAllMarkets + normalizeMarketsForBookmaker on the raw-event-*.json captures, current code (2026-11-06). other = OTHER markets out of rawCount parsed markets.",
+ "summary": {
+  "40932978 everton-coventry": {
+   "home": "Everton",
+   "away": "Coventry City",
+   "rawCount": 876,
+   "canonical": 871,
+   "other": 5,
+   "none": 0,
+   "unknownSels": 0,
+   "distinctCodes": 140,
+   "otherNames": [
+    [
+     "Coventry City - liczba fauli (OPTA)",
+     1
+    ],
+    [
+     "Coventry City powyżej 1.5 rzutów rożnych w każdej połowie",
+     1
+    ],
+    [
+     "Obie drużyny strzelą gola i każda drużyna powyżej 2.5 rzutów rożnych",
+     1
+    ],
+    [
+     "Obie drużyny strzelą gola i każda drużyna powyżej 3.5 rzutów rożnych",
+     1
+    ],
+    [
+     "Obie drużyny strzelą gola i każda drużyna powyżej 1.5 kartek",
+     1
+    ]
+   ]
+  },
+  "40933001 arsenal-hull": {
+   "home": "Arsenal",
+   "away": "Hull City",
+   "rawCount": 978,
+   "canonical": 978,
+   "other": 0,
+   "none": 0,
+   "unknownSels": 0,
+   "distinctCodes": 123,
+   "otherNames": []
+  }
+ }
+}

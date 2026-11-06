@@ -1,0 +1,107 @@
+{
+ "_note": "Penalty markets for Everton v Coventry captured 2026-11-06 ~16:20Z (raw /rest/market/events payloads of the same platform). etoto has only -30591; its sibling brands forbet and betfan still publish id 15 for the same match.",
+ "etoto_6224065": [
+  {
+   "gameId": 506958307,
+   "gameName": "Suma 0.5 rzutów karnych",
+   "gameType": -30591,
+   "gameCode": 0,
+   "argument": 0.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556621,
+     "outcomeName": "Poniżej 0.5",
+     "outcomeOdds": 1.25,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556622,
+     "outcomeName": "Powyżej 0.5",
+     "outcomeOdds": 3.55,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  }
+ ],
+ "forbet_57945881": [
+  {
+   "gameId": 648981589,
+   "gameName": "Rzut karny",
+   "gameType": 15,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    3
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 469670116,
+     "outcomeName": "Tak",
+     "outcomeOdds": 3.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 469670117,
+     "outcomeName": "Nie",
+     "outcomeOdds": 1.25,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  }
+ ],
+ "betfan_40932978": [
+  {
+   "gameId": 1437333276,
+   "gameName": "Rzut karny w meczu",
+   "gameType": 15,
+   "gameCode": 180399,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828631691,
+     "outcomeName": "Tak",
+     "outcomeOdds": 3.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828631694,
+     "outcomeName": "Nie",
+     "outcomeOdds": 1.27,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  }
+ ]
+}

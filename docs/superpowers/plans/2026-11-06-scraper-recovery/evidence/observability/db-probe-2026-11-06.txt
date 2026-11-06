@@ -1,0 +1,43 @@
+# PostgREST probes, captured 2026-11-06T16:26:03Z against SUPABASE_URL=http://127.0.0.1:54321 (local), read-only GET/HEAD
+# supabase/config.toml:18 -> max_rows = 1000
+
+## 1. Total premier-league rows in odds (HEAD, Prefer: count=exact)
+GET /rest/v1/odds?league_slug=eq.premier-league&select=bookmaker
+Content-Range: 0-999/185672
+
+## 2. Exact query issued by getBookmakerStatus() (src/repositories/odds-repository.ts:134-138) - no limit, no paging
+GET /rest/v1/odds?league_slug=eq.premier-league&select=bookmaker,scraped_at&order=scraped_at.desc
+rows returned: 1000  by bookmaker: {'sts': 1000}
+
+## 3. Per-bookmaker latest scraped_at (limit=1) and row count - what the status SHOULD be based on
+sts latest=[{"scraped_at":"2026-11-06T16:02:49.048+00:00"}] Content-Range: 0-999/16243
+fortuna latest=[{"scraped_at":"2026-11-06T16:00:45.385+00:00"}] Content-Range: 0-999/27495
+betclic latest=[{"scraped_at":"2026-11-06T16:00:54.051+00:00"}] Content-Range: 0-999/7457
+superbet latest=[{"scraped_at":"2026-11-06T16:00:46.014+00:00"}] Content-Range: 0-999/30637
+lvbet latest=[{"scraped_at":"2026-11-06T16:00:43.873+00:00"}] Content-Range: 0-999/20506
+fuksiarz latest=[{"scraped_at":"2026-11-06T16:00:33.997+00:00"}] Content-Range: 0-999/15249
+betfan latest=[{"scraped_at":"2026-11-06T16:00:38.841+00:00"}] Content-Range: 0-999/13076
+forbet latest=[{"scraped_at":"2026-11-06T16:00:35.746+00:00"}] Content-Range: 0-999/13216
+etoto latest=[{"scraped_at":"2026-11-06T16:00:35.985+00:00"}] Content-Range: 0-999/14881
+betters latest=[] Content-Range: */0
+lebull latest=[{"scraped_at":"2026-08-22T08:00:07.846+00:00"}] Content-Range: 0-999/2250
+betcris latest=[{"scraped_at":"2026-11-06T15:46:48.552+00:00"}] Content-Range: 0-999/21635
+pzbuk latest=[{"scraped_at":"2026-08-24T14:03:32.135+00:00"}] Content-Range: 0-999/3027
+totalbet latest=[] Content-Range: */0
+
+## 4. scraper_runs table (insertScraperRuns imported but never called)
+Content-Range: */0
+
+## 5. Supabase containers (label com.supabase.cli.project=backend)
+supabase_studio_backend	running	Up 41 minutes (healthy)
+supabase_pg_meta_backend	running	Up 41 minutes (healthy)
+supabase_edge_runtime_backend	exited	Exited (255) 10 months ago
+supabase_storage_backend	running	Up 41 minutes (healthy)
+supabase_rest_backend	running	Up 41 minutes
+supabase_realtime_backend	running	Up 41 minutes (healthy)
+supabase_inbucket_backend	running	Up 41 minutes (healthy)
+supabase_auth_backend	running	Up 41 minutes (healthy)
+supabase_kong_backend	running	Up 41 minutes (healthy)
+supabase_vector_backend	running	Up 8 days (healthy)
+supabase_analytics_backend	running	Up 41 minutes (healthy)
+supabase_db_backend	running	Up 41 minutes (healthy)

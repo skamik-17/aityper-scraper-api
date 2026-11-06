@@ -1,0 +1,23 @@
+# Normalized-markets measurements (GET /api/matches/<H>/<A>/normalized-markets?league=premier-league, 2026-11-06 ~16:17Z, run-2 data) vs August baseline docs/match-audit/.tmp/premier-league_arsenal_coventry_city.json (aityper repo, fetched 2026-08-20T03:00Z). OTHER is hidden by the API (market-type-grouper.ts:1380), so OTHER counts here are always 0; see smoke-current-sts.txt for the OTHER share.
+# offvocab = selection type outside the catalog vocabulary of its code (player-combination markets legitimately use player names).
+== premier-league_arsenal_coventry_city.json markets 411
+  sts      codes= 148 entries= 1309 sels=  3190 OTHER entries=  1 sels=   2 UNKNOWN=   0 (0.0%) offvocab=250 dupSel=0
+     offvocab: [(('PLAYER_TACKLES_LINEUP', '4+'), 34), (('PLAYER_TACKLES_LINEUP', '5+'), 34), (('PLAYER_TACKLES_LINEUP', '6+'), 28), (('PLAYER_SHOTS_ON_TARGET_LINEUP', '+0.5'), 6), (('PLAYER_SHOTS_ON_TARGET_LINEUP', '-0.5'), 6), (('PLAYER_SHOTS_LINEUP', '+2.5'), 5), (('PLAYER_SHOTS_LINEUP', '-2.5'), 5), (('PLAYER_FOULS_WON', '5+'), 4)]
+     OTHER raw: [('1. drużyna - czerwona kartka', 1)]
+== nm_arsenal_hull.json markets 379
+  sts      codes= 132 entries=  621 sels=  1338 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=0 dupSel=0
+== nm_everton_coventry.json markets 383
+  sts      codes= 134 entries=  566 sels=  1266 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=1 dupSel=0
+     offvocab: [(('FIRST_CORNER', 'NONE'), 1)]
+== nm_leeds_tottenham.json markets 367
+  sts      codes=   1 entries=    1 sels=     3 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=0 dupSel=0
+== nm_forest_city.json markets 365
+  sts      codes=   1 entries=    1 sels=     3 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=0 dupSel=0
+== nm_spurs_ipswich.json markets 180
+  sts      codes=  95 entries=  154 sels=   592 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=0 dupSel=0
+
+# Catalog code diff: August Arsenal vs Coventry City vs Nov (Arsenal vs Hull City, Everton vs Coventry City)
+== sts aug codes 149 now union 134 now intersection 132
+ LOST (in Aug, in neither now): [('AWAY_CORNERS_RANGE', 1), ('GOALSCORER_ANYTIME', 49), ('GOAL_RANGE', 1), ('HOME_CORNERS_RANGE', 1), ('OTHER', 1), ('PLAYER_ASSISTS', 43), ('PLAYER_ASSISTS_LINEUP', 33), ('PLAYER_CARDS', 48), ('PLAYER_CARDS_LINEUP', 34), ('PLAYER_FOULS', 47), ('PLAYER_FOULS_WON', 43), ('PLAYER_GOALS_LINEUP', 34), ('PLAYER_GOAL_OR_ASSIST', 44), ('PLAYER_PASSES_LINEUP', 17), ('PLAYER_RED_CARD', 48), ('PLAYER_SHOTS', 43), ('PLAYER_SHOTS_LINEUP', 34), ('PLAYER_SHOTS_ON_TARGET', 43), ('PLAYER_SHOTS_ON_TARGET_LINEUP', 34), ('PLAYER_TACKLES_LINEUP', 34)]
+ NEW (in both now, not Aug): ['CORNERS_TEAM_RANGE', 'MULTI_GOAL_RANGE', 'TOTAL_GOALS_ASIAN']
+ BIG DROPS (>50%, aug>=4): []

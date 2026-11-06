@@ -1,0 +1,103 @@
+{
+ "url": "https://www.sts.pl/kursy/leeds-tottenham/f2921896",
+ "note": "Standalone capture 2026-11-06T16:28Z, ms since page.goto start; only wss://www.sts.pl/sbk/api/sbk frames > 1000 bytes. Snapshot frames carry \"f\":1 in the header line, deltas do not.",
+ "frames": [
+  {
+   "t": 3391,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "i_pl",
+   "len": 3290817,
+   "idx": 22
+  },
+  {
+   "t": 3595,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "rcm_f2921896",
+   "len": 4864,
+   "idx": 25
+  },
+  {
+   "t": 3883,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 206563,
+   "idx": 26
+  },
+  {
+   "t": 3889,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 4516,
+   "idx": 27
+  },
+  {
+   "t": 3894,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 4441,
+   "idx": 28
+  },
+  {
+   "t": 4505,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 206563,
+   "idx": 31
+  },
+  {
+   "t": 4508,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 4516,
+   "idx": 32
+  },
+  {
+   "t": 4512,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "f_f2921896_pl",
+   "len": 4441,
+   "idx": 33
+  },
+  {
+   "t": 4758,
+   "url": "wss://www.sts.pl/sbk/api/sbk",
+   "s": "i_pl",
+   "len": 1185,
+   "idx": 34
+  }
+ ],
+ "subscribe": [
+  {
+   "t": 2113,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\",\"n\":0}]}"
+  },
+  {
+   "t": 2113,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\",\"n\":0},{\"s\":\"f_f2921896_pl\",\"n\":0}]}"
+  },
+  {
+   "t": 2113,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\",\"n\":0},{\"s\":\"f_f2921896_pl\",\"n\":0},{\"s\":\"rcm_f2921896\",\"n\":0}]}"
+  },
+  {
+   "t": 2182,
+   "p": "{\"t\":2,\"i\":1,\"u\": \"bonus.req/status\"}\n{\"active\":true}"
+  },
+  {
+   "t": 2238,
+   "p": "{\"t\":2,\"i\":3,\"u\":\"bonus.req/top\"}\n{\"campaignId\":\"maraton-261106\",\"fromRankSeq\":0,\"search\":\"\",\"group\":\"\",\"name\":\"\",\"playerView\":true}"
+  },
+  {
+   "t": 3398,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\"},{\"s\":\"rcm_f2921896\",\"n\":0}]}"
+  },
+  {
+   "t": 3398,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\"},{\"s\":\"rcm_f2921896\",\"n\":0},{\"s\":\"f_f2921896_pl\",\"n\":0}]}"
+  },
+  {
+   "t": 3894,
+   "p": "{\"t\":1,\"u\":[{\"s\":\"i_pl\"},{\"s\":\"rcm_f2921896\"},{\"s\":\"f_f2921896_pl\"}]}"
+  }
+ ]
+}

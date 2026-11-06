@@ -1,0 +1,56 @@
+{
+ "_source": "recorder-proto.mts run 2026-11-06 ~16:20Z (headless Chromium, scraper UA, locale pl-PL). Same targets the current scrapers hit: betters league URL, totalbet base + old REST API via page fetch, pzbuk league page.",
+ "betters": {
+  "documents": [
+   {
+    "requestedUrl": "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485",
+    "finalUrl": "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485",
+    "status": 404
+   }
+  ],
+  "failedRequests": [],
+  "websockets": [],
+  "finalUrl": "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485",
+  "title": "404 Not Found",
+  "gotoError": null
+ },
+ "totalbet": {
+  "documents": [
+   {
+    "requestedUrl": "https://totalbet.pl/",
+    "finalUrl": "https://totalbet.pl/",
+    "status": 200
+   }
+  ],
+  "failedRequests": [
+   {
+    "url": "https://totalbet.pl/rest/market/categories/multi/7124/events",
+    "status": 404,
+    "resourceType": "fetch"
+   }
+  ],
+  "websockets": [
+   "wss://totalbet.pl/gateway/socket/websocket?vsn=3.0.0",
+   "wss://totalbet.pl/games/socket/websocket?vsn=3.0.0"
+  ],
+  "finalUrl": "https://totalbet.pl/",
+  "title": "TOTALbet / zakłady bukmacherskie",
+  "gotoError": null
+ },
+ "pzbuk": {
+  "documents": [
+   {
+    "requestedUrl": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league",
+    "finalUrl": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league",
+    "status": 200
+   }
+  ],
+  "failedRequests": [],
+  "websockets": [
+   "wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl"
+  ],
+  "finalUrl": "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-premier-league",
+  "title": "Premier League | Zakłady sportowe w PZBuk | Legalny bukmacher | Piłka Nożna",
+  "gotoError": null
+ }
+}

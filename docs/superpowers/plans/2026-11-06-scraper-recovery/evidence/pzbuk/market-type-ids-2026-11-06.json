@@ -1,0 +1,2053 @@
+{
+ "rows": [
+  {
+   "id": "1",
+   "golden": "1x2",
+   "now": "1x2",
+   "orig": "1x2",
+   "goldenCode": "MATCH_WINNER",
+   "nowCode": "MATCH_WINNER"
+  },
+  {
+   "id": "8",
+   "golden": "1. gol",
+   "now": "1. gol",
+   "orig": "{SpecialIntValue1}. goal",
+   "goldenCode": "FIRST_TEAM_TO_SCORE",
+   "nowCode": "FIRST_TEAM_TO_SCORE"
+  },
+  {
+   "id": "9",
+   "golden": "Rynek 9",
+   "now": "Ostatni gol",
+   "orig": "Last goal",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "10",
+   "golden": "Podwójna szansa",
+   "now": "Podwójna szansa",
+   "orig": "Double chance",
+   "goldenCode": "DOUBLE_CHANCE",
+   "nowCode": "DOUBLE_CHANCE"
+  },
+  {
+   "id": "11",
+   "golden": "Remis bez zakładu",
+   "now": "Remis bez zakładu",
+   "orig": "Draw no bet",
+   "goldenCode": "DRAW_NO_BET",
+   "nowCode": "DRAW_NO_BET"
+  },
+  {
+   "id": "12",
+   "golden": "Pierwszy strzelec",
+   "now": "Everton FC bez zakładu",
+   "orig": "{Game.Competitors[0].Competitor.Name} no bet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "13",
+   "golden": "Ostatni strzelec",
+   "now": "Coventry City bez zakładu",
+   "orig": "{Game.Competitors[1].Competitor.Name} no bet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "14",
+   "golden": "Handicap",
+   "now": "Handicap",
+   "orig": "Handicap {SpecialStringValue1}",
+   "goldenCode": "GOALSCORER_ANYTIME",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "17",
+   "golden": "Suma goli",
+   "now": "Suma goli",
+   "orig": "Total",
+   "goldenCode": "TOTAL_GOALS",
+   "nowCode": "TOTAL_GOALS"
+  },
+  {
+   "id": "18",
+   "golden": "Liczba goli 1. polowa 0.5 | Liczba goli 1. polowa 1.5 | Liczba goli 1.",
+   "now": "Everton FC Liczba Goli",
+   "orig": "{Game.Competitors[0].Competitor.Name} total",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "19",
+   "golden": "Gole gospodarzy 0.5 | Gole gospodarzy 1.5",
+   "now": "Coventry City Liczba Goli",
+   "orig": "{Game.Competitors[1].Competitor.Name} total",
+   "goldenCode": "HOME_TEAM_TOTAL_GOALS",
+   "nowCode": "AWAY_TEAM_TOTAL_GOALS"
+  },
+  {
+   "id": "21",
+   "golden": "Parzyste/Nieparzyste",
+   "now": "Everton FC Dokładna liczba goli",
+   "orig": "{Game.Competitors[0].Competitor.Name} exact goals",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "22",
+   "golden": "Wynik 2. polowy",
+   "now": "Coventry City Dokładna liczba goli",
+   "orig": "{Game.Competitors[1].Competitor.Name} exact goals",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "23",
+   "golden": "Liczba goli 2. polowa 0",
+   "now": "Zakres liczby goli",
+   "orig": "Goal range",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "24",
+   "golden": "Gospodarze wygrają obie polowy",
+   "now": "Nieparzyste/Parzyste",
+   "orig": "Odd/even",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "25",
+   "golden": "Goscie wygrają obie polowy",
+   "now": "Everton FC Parzyste/Nieparzyste",
+   "orig": "{Game.Competitors[0].Competitor.Name} odd/even",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "26",
+   "golden": "Gospodarze wygrają ktorąkolwiek polowe",
+   "now": "Coventry City Parzyste/Nieparzyste",
+   "orig": "{Game.Competitors[1].Competitor.Name} odd/even",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "27",
+   "golden": "Oba zespoły zdobędą gola",
+   "now": "Oba zespoły zdobędą gola",
+   "orig": "Both teams to score",
+   "goldenCode": "BTTS",
+   "nowCode": "BTTS"
+  },
+  {
+   "id": "29",
+   "golden": "Obie strzelą 1. polowa",
+   "now": "Everton FC czyste konto",
+   "orig": "{Game.Competitors[0].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "30",
+   "golden": "Obie strzelą 2. polowa",
+   "now": "Coventry City czyste konto",
+   "orig": "{Game.Competitors[1].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "33",
+   "golden": "Wynik meczu i obie drużyny strzelą",
+   "now": "1x2 & Oba zespoły zdobędą gola",
+   "orig": "1x2 & both teams to score",
+   "goldenCode": "RESULT_AND_BTTS",
+   "nowCode": "RESULT_AND_BTTS"
+  },
+  {
+   "id": "34",
+   "golden": "Liczba goli i obie drużyny strzelą 2.5",
+   "now": "Suma & Oba zespoły zdobędą gola",
+   "orig": "Total & both teams to score",
+   "goldenCode": "TOTAL_GOALS_AND_BTTS",
+   "nowCode": "TOTAL_GOALS_AND_BTTS"
+  },
+  {
+   "id": "35",
+   "golden": "Wynik meczu i liczba goli 1.5 | Wynik meczu i liczba goli 2.5 | Wynik ",
+   "now": "1x2 & Suma",
+   "orig": "1x2 & total",
+   "goldenCode": "RESULT_AND_TOTAL",
+   "nowCode": "RESULT_AND_TOTAL"
+  },
+  {
+   "id": "40",
+   "golden": "Wynik + liczba goli 0",
+   "now": "Dokładny wynik",
+   "orig": "Correct score",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "42",
+   "golden": "Połowa/Reg. czas gry",
+   "now": "Połowa/Reg. czas gry",
+   "orig": "Halftime/fulltime",
+   "goldenCode": "HALFTIME_FULLTIME",
+   "nowCode": "HALFTIME_FULLTIME"
+  },
+  {
+   "id": "43",
+   "golden": "Rynek 43",
+   "now": "Everton FC wygra obie połowy",
+   "orig": "{Game.Competitors[0].Competitor.Name} to win both halves",
+   "goldenCode": "OTHER",
+   "nowCode": "HOME_WIN_BOTH_HALVES"
+  },
+  {
+   "id": "44",
+   "golden": "Rynek 44",
+   "now": "Coventry City wygra obie połowy",
+   "orig": "{Game.Competitors[1].Competitor.Name} to win both halves",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "45",
+   "golden": "Rynek 45",
+   "now": "Everton FC wygra jakąkolwiek połowę",
+   "orig": "{Game.Competitors[0].Competitor.Name} to win either half",
+   "goldenCode": "OTHER",
+   "nowCode": "HOME_WIN_AT_LEAST_ONE_HALF"
+  },
+  {
+   "id": "46",
+   "golden": "Rynek 46",
+   "now": "Coventry City wygra jakąkolwiek połowę",
+   "orig": "{Game.Competitors[1].Competitor.Name} to win either half",
+   "goldenCode": "OTHER",
+   "nowCode": "AWAY_WIN_AT_LEAST_ONE_HALF"
+  },
+  {
+   "id": "47",
+   "golden": "Połowa z większą liczbą goli",
+   "now": "Połowa z największą liczbą goli",
+   "orig": "Highest scoring half",
+   "goldenCode": "HALF_WITH_MORE_GOALS",
+   "nowCode": "HALF_WITH_MORE_GOALS"
+  },
+  {
+   "id": "48",
+   "golden": "Gospodarz - połowa z większą liczbą goli",
+   "now": "Everton FC Połowa z największą liczbą goli",
+   "orig": "{Game.Competitors[0].Competitor.Name} highest scoring half",
+   "goldenCode": "HOME_HALF_WITH_MOST_GOALS",
+   "nowCode": "HOME_HALF_WITH_MOST_GOALS"
+  },
+  {
+   "id": "49",
+   "golden": "Gość - połowa z większą liczbą goli",
+   "now": "Coventry City Połowa z największą liczbą goli",
+   "orig": "{Game.Competitors[1].Competitor.Name} highest scoring half",
+   "goldenCode": "AWAY_HALF_WITH_MOST_GOALS",
+   "nowCode": "AWAY_HALF_WITH_MOST_GOALS"
+  },
+  {
+   "id": "50",
+   "golden": "BTTS w połowach",
+   "now": "1./2.Połowa Oba zespoły zdobędą gola",
+   "orig": "1st/2nd half both teams to score",
+   "goldenCode": "BTTS_BY_HALF",
+   "nowCode": "BTTS_BY_HALF"
+  },
+  {
+   "id": "51",
+   "golden": "Rynek 51",
+   "now": "Everton FC zdobędzie gola w obu połowach",
+   "orig": "{Game.Competitors[0].Competitor.Name} to score in both halve",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "52",
+   "golden": "Rynek 52",
+   "now": "Coventry City zdobędzie gola w obu połowach",
+   "orig": "{Game.Competitors[1].Competitor.Name} to score in both halve",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "53",
+   "golden": "Rynek 53",
+   "now": "Obie połowy ponad 1.5",
+   "orig": "Both halves over {SpecialSingleValue1}",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "54",
+   "golden": "Rynek 54",
+   "now": "Obie połowy poniżej 1.5",
+   "orig": "Both halves under {SpecialSingleValue1}",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "55",
+   "golden": "1. Połowa - 1x2",
+   "now": "1. Połowa - 1x2",
+   "orig": "1st half - 1x2",
+   "goldenCode": "MATCH_WINNER",
+   "nowCode": "HALF_TIME_RESULT"
+  },
+  {
+   "id": "57",
+   "golden": "Pierwszy gol 1. połowy",
+   "now": "1. Połowa - 1. gol",
+   "orig": "1st half - {SpecialIntValue1}. goal",
+   "goldenCode": "HALF_TIME_FIRST_GOAL",
+   "nowCode": "HALF_TIME_FIRST_GOAL"
+  },
+  {
+   "id": "58",
+   "golden": "Rynek 58",
+   "now": "1. Połowa - Podwójna szansa",
+   "orig": "1st half - double chance",
+   "goldenCode": "OTHER",
+   "nowCode": "DOUBLE_CHANCE"
+  },
+  {
+   "id": "59",
+   "golden": "Rynek 59",
+   "now": "1. Połowa - Remis bez zakładu",
+   "orig": "1st half - draw no bet",
+   "goldenCode": "OTHER",
+   "nowCode": "DRAW_NO_BET"
+  },
+  {
+   "id": "60",
+   "golden": "Rynek 60",
+   "now": "1. Połowa - handicap",
+   "orig": "1st half - handicap {SpecialStringValue1}",
+   "goldenCode": "OTHER",
+   "nowCode": "EUROPEAN_HANDICAP"
+  },
+  {
+   "id": "61",
+   "golden": "Rynek 61",
+   "now": "1. Połowa - handicap",
+   "orig": "1st half - handicap",
+   "goldenCode": "OTHER",
+   "nowCode": "EUROPEAN_HANDICAP"
+  },
+  {
+   "id": "62",
+   "golden": "1. Połowa - Suma",
+   "now": "1. Połowa - Suma",
+   "orig": "1st half - total",
+   "goldenCode": "HALF_TIME_TOTAL_GOALS",
+   "nowCode": "HALF_TIME_TOTAL_GOALS"
+  },
+  {
+   "id": "63",
+   "golden": "Rynek 63",
+   "now": "1. Połowa - Everton FC Suma",
+   "orig": "1st half - {Game.Competitors[0].Competitor.Name} total",
+   "goldenCode": "HALF_TIME_TOTAL_GOALS",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "64",
+   "golden": "Rynek 64",
+   "now": "1. Połowa - Coventry City Suma",
+   "orig": "1st half - {Game.Competitors[1].Competitor.Name} total",
+   "goldenCode": "HALF_TIME_TOTAL_GOALS",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "65",
+   "golden": "Rynek 65",
+   "now": "1. Połowa - Dokładna liczba goli",
+   "orig": "1st half - exact goals",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "68",
+   "golden": "Rynek 68",
+   "now": "1. Połowa - Parzyste/Nieparzyste",
+   "orig": "1st half - odd/even",
+   "goldenCode": "OTHER",
+   "nowCode": "HALF_TIME_ODD_EVEN_GOALS"
+  },
+  {
+   "id": "69",
+   "golden": "Obie drużyny strzelą - 1. połowa",
+   "now": "1. Połowa - Oba zespoły zdobędą gola",
+   "orig": "1st half - both teams to score",
+   "goldenCode": "HALF_TIME_BTTS",
+   "nowCode": "HALF_TIME_BTTS"
+  },
+  {
+   "id": "70",
+   "golden": "Rynek 70",
+   "now": "1. Połowa - Everton FC czyste konto",
+   "orig": "1st half - {Game.Competitors[0].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "71",
+   "golden": "Rynek 71",
+   "now": "1. Połowa - Coventry City czyste konto",
+   "orig": "1st half - {Game.Competitors[1].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "72",
+   "golden": "Rynek 72",
+   "now": "1. Połowa - 1x2 & Oba zespoły zdobędą gola",
+   "orig": "1st half - 1x2 & both teams to score",
+   "goldenCode": "RESULT_AND_BTTS",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "73",
+   "golden": "Rynek 73",
+   "now": "1. Połowa - 1x2 & Suma",
+   "orig": "1st half - 1x2 & total",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "75",
+   "golden": "Rynek 75",
+   "now": "1. Połowa - Dokładny wynik",
+   "orig": "1st half - correct score",
+   "goldenCode": "OTHER",
+   "nowCode": "CORRECT_SCORE"
+  },
+  {
+   "id": "76",
+   "golden": "Rynek 76",
+   "now": "2. Połowa - 1x2",
+   "orig": "2nd half - 1x2",
+   "goldenCode": "OTHER",
+   "nowCode": "SECOND_HALF_RESULT"
+  },
+  {
+   "id": "77",
+   "golden": "Pierwszy gol 2. połowy",
+   "now": "2. Połowa - 1. gol",
+   "orig": "2nd half - {SpecialIntValue1}. goal",
+   "goldenCode": "SECOND_HALF_FIRST_GOAL",
+   "nowCode": "SECOND_HALF_FIRST_GOAL"
+  },
+  {
+   "id": "79",
+   "golden": "Zakład bez remisu",
+   "now": "2. Połowa - Remis bez zakładu",
+   "orig": "2nd half - draw no bet",
+   "goldenCode": "DRAW_NO_BET",
+   "nowCode": "DRAW_NO_BET"
+  },
+  {
+   "id": "80",
+   "golden": "Rynek 80",
+   "now": "2. Połowa - handicap",
+   "orig": "2nd half - handicap {SpecialStringValue1}",
+   "goldenCode": "OTHER",
+   "nowCode": "EUROPEAN_HANDICAP"
+  },
+  {
+   "id": "81",
+   "golden": "Rynek 81",
+   "now": "2. Połowa - handicap",
+   "orig": "2nd half - handicap",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "82",
+   "golden": "Rynek 82",
+   "now": "2. Połowa - Suma",
+   "orig": "2nd half - total",
+   "goldenCode": "OTHER",
+   "nowCode": "SECOND_HALF_TOTAL_GOALS"
+  },
+  {
+   "id": "83",
+   "golden": "Rynek 83",
+   "now": "2. Połowa - Everton FC Suma",
+   "orig": "2nd half - {Game.Competitors[0].Competitor.Name} total",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "84",
+   "golden": "Rynek 84",
+   "now": "2. Połowa - Coventry City Suma",
+   "orig": "2nd half - {Game.Competitors[1].Competitor.Name} total",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "85",
+   "golden": "Dokładna liczba goli - 2. połowa",
+   "now": "2. Połowa - Dokładna liczba goli",
+   "orig": "2nd half - exact goals",
+   "goldenCode": "SECOND_HALF_EXACT_GOALS",
+   "nowCode": "SECOND_HALF_EXACT_GOALS"
+  },
+  {
+   "id": "86",
+   "golden": "Parzysta/nieparzysta liczba goli",
+   "now": "2. Połowa - Parzyste/Nieparzyste",
+   "orig": "2nd half - odd/even",
+   "goldenCode": "SECOND_HALF_ODD_EVEN_GOALS",
+   "nowCode": "SECOND_HALF_ODD_EVEN_GOALS"
+  },
+  {
+   "id": "87",
+   "golden": "Rynek 87",
+   "now": "2. Połowa - Oba zespoły zdobędą gola",
+   "orig": "2nd half - both teams to score",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "88",
+   "golden": "Rynek 88",
+   "now": "2. Połowa - Everton FC czyste konto",
+   "orig": "2nd half - {Game.Competitors[0].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "89",
+   "golden": "Rynek 89",
+   "now": "2. Połowa - Coventry City czyste konto",
+   "orig": "2nd half - {Game.Competitors[1].Competitor.Name} clean sheet",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "90",
+   "golden": "Dokładny wynik 2. połowy",
+   "now": "2. Połowa - Dokładny wynik",
+   "orig": "2nd half - correct score",
+   "goldenCode": "SECOND_HALF_CORRECT_SCORE",
+   "nowCode": "SECOND_HALF_CORRECT_SCORE"
+  },
+  {
+   "id": "91",
+   "golden": "Czas pierwszego gola (15 min)",
+   "now": "Kiedy zostanie strzelony 1. gol (15 min interwał)",
+   "orig": "When will the {SpecialIntValue1}. goal be scored (15 min int",
+   "goldenCode": "FIRST_GOAL_TIME_ALT",
+   "nowCode": "FIRST_GOAL_TIME_ALT"
+  },
+  {
+   "id": "92",
+   "golden": "Czas pierwszego gola (10 min)",
+   "now": "Kiedy zostanie strzelony 1. gol (10 min interwał)",
+   "orig": "When will the {SpecialIntValue1}. goal be scored (10 min int",
+   "goldenCode": "FIRST_GOAL_TIME",
+   "nowCode": "FIRST_GOAL_TIME"
+  },
+  {
+   "id": "126",
+   "golden": "Wynik meczu",
+   "now": "Kartki 1x2",
+   "orig": "Booking 1x2",
+   "goldenCode": "MATCH_WINNER",
+   "nowCode": "MATCH_WINNER"
+  },
+  {
+   "id": "129",
+   "golden": "Rynek 129",
+   "now": "Suma kartek",
+   "orig": "Total bookings",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "133",
+   "golden": "Rynek 133",
+   "now": "Everton FC Dokładna liczba kartek",
+   "orig": "{Game.Competitors[0].Competitor.Name} exact bookings",
+   "goldenCode": "HOME_EXACT_CARDS",
+   "nowCode": "HOME_EXACT_CARDS"
+  },
+  {
+   "id": "134",
+   "golden": "Rynek 134",
+   "now": "Coventry City Dokładna liczba kartek",
+   "orig": "{Game.Competitors[1].Competitor.Name} exact bookings",
+   "goldenCode": "GOAL_RANGE",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "136",
+   "golden": "Rynek 136",
+   "now": "Czerwona kartka",
+   "orig": "Sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "137",
+   "golden": "Rynek 137",
+   "now": "Everton FC czerwona kartka",
+   "orig": "{Game.Competitors[0].Competitor.Name} sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "138",
+   "golden": "Rynek 138",
+   "now": "Coventry City czerwona kartka",
+   "orig": "{Game.Competitors[1].Competitor.Name} sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "139",
+   "golden": "Rynek 139",
+   "now": "1. Połowa - Kartki 1x2",
+   "orig": "1st half - booking 1x2",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "140",
+   "golden": "Rynek 140",
+   "now": "1. Połowa - 1. kartka",
+   "orig": "1st half - {SpecialIntValue1}. booking",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "142",
+   "golden": "Rynek 142",
+   "now": "1. Połowa - Suma kartek",
+   "orig": "1st half - total bookings",
+   "goldenCode": "OTHER",
+   "nowCode": "HALF_TIME_TOTAL_GOALS"
+  },
+  {
+   "id": "146",
+   "golden": "Rynek 146",
+   "now": "1. Połowa - Everton FC Dokładna liczba kartek",
+   "orig": "1st half - {Game.Competitors[0].Competitor.Name} exact booki",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "147",
+   "golden": "Dokładna liczba kartek - gospodarze - 1. połowa",
+   "now": "1. Połowa - Coventry City Dokładna liczba kartek",
+   "orig": "1st half - {Game.Competitors[1].Competitor.Name} exact booki",
+   "goldenCode": "HALF_TIME_HOME_EXACT_CARDS",
+   "nowCode": "HALF_TIME_HOME_EXACT_CARDS"
+  },
+  {
+   "id": "149",
+   "golden": "Rynek 149",
+   "now": "1. Połowa - czerwona kartka",
+   "orig": "1st half - sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "150",
+   "golden": "Rynek 150",
+   "now": "1. Połowa - Everton FC czerwona kartka",
+   "orig": "1st half - {Game.Competitors[0].Competitor.Name} sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "151",
+   "golden": "Rynek 151",
+   "now": "1. Połowa - Coventry City czerwona kartka",
+   "orig": "1st half - {Game.Competitors[1].Competitor.Name} sending off",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "152",
+   "golden": "Rynek 152",
+   "now": "Rzut rożny 1x2",
+   "orig": "Corner 1x2",
+   "goldenCode": "MATCH_WINNER",
+   "nowCode": "CORNERS_RACE"
+  },
+  {
+   "id": "155",
+   "golden": "Rynek 155",
+   "now": "Rzuty rożne Handicap",
+   "orig": "Corner handicap",
+   "goldenCode": "OTHER",
+   "nowCode": "CORNERS_HANDICAP"
+  },
+  {
+   "id": "156",
+   "golden": "Rzuty rożne 9.5 | Rzuty rożne 8.5 | Rzuty rożne 10.5 | Rzuty rożne 11.",
+   "now": "Suma rzutów rożnych",
+   "orig": "Total corners",
+   "goldenCode": "CORNERS_TOTAL",
+   "nowCode": "CORNERS_TOTAL"
+  },
+  {
+   "id": "157",
+   "golden": "Rynek 157",
+   "now": "Everton FC Suma rzutów rożnych",
+   "orig": "{Game.Competitors[0].Competitor.Name} total corners",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "158",
+   "golden": "Rynek 158",
+   "now": "Coventry City Suma rzutów rożnych",
+   "orig": "{Game.Competitors[1].Competitor.Name} total corners",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "159",
+   "golden": "Przedział rzutów rożnych",
+   "now": "Zakres liczby rzutów rożnych",
+   "orig": "Corner range",
+   "goldenCode": "CORNERS_RANGE",
+   "nowCode": "CORNERS_RANGE"
+  },
+  {
+   "id": "162",
+   "golden": "Rynek 162",
+   "now": "Parzyste/Nieparzyste rzuty rożne",
+   "orig": "Odd/even corners",
+   "goldenCode": "CORNERS_ODD_EVEN",
+   "nowCode": "CORNERS_ODD_EVEN"
+  },
+  {
+   "id": "163",
+   "golden": "Rynek 163",
+   "now": "1. Połowa - Rzut rożny 1x2",
+   "orig": "1st half - corner 1x2",
+   "goldenCode": "OTHER",
+   "nowCode": "HALF_TIME_CORNERS_RACE"
+  },
+  {
+   "id": "166",
+   "golden": "Rynek 166",
+   "now": "1. Połowa - Rzuty rożne Handicap",
+   "orig": "1st half - corner handicap",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "167",
+   "golden": "Rynek 167",
+   "now": "1. Połowa - Suma rzutów rożnych",
+   "orig": "1st half - total corners",
+   "goldenCode": "OTHER",
+   "nowCode": "HALF_TIME_TOTAL_GOALS"
+  },
+  {
+   "id": "173",
+   "golden": "Rynek 173",
+   "now": "1. Połowa - Parzyste/Nieparzyste rzuty rożne",
+   "orig": "1st half - odd/even corners",
+   "goldenCode": "HALF_TIME_CORNERS_ODD_EVEN",
+   "nowCode": "HALF_TIME_CORNERS_ODD_EVEN"
+  },
+  {
+   "id": "498",
+   "golden": "Podwójna szansa i obie drużyny strzelą",
+   "now": "Podwójna szansa (mecz) & 1. połowa oba zespoły strzelą",
+   "orig": "Double chance (match) & 1st half both teams score",
+   "goldenCode": "DOUBLE_CHANCE_BTTS",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "499",
+   "golden": "Rynek 499",
+   "now": "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą",
+   "orig": "Double chance (match) & 2nd half both teams score",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "500",
+   "golden": "Rynek 500",
+   "now": "1. Połowa - Podwójna szansa & oba zespoły strzelą",
+   "orig": "1st half - double chance & both teams to score",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "503",
+   "golden": "Rynek 503",
+   "now": "2. Połowa - Podwójna szansa & oba zespoły strzelą",
+   "orig": "2nd half - double chance & both teams to score",
+   "goldenCode": "DOUBLE_CHANCE_BTTS",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "504",
+   "golden": "Rynek 504",
+   "now": "Podwójna szansa & oba zespoły strzelą",
+   "orig": "Double chance & both teams to score",
+   "goldenCode": "DOUBLE_CHANCE_BTTS",
+   "nowCode": "DOUBLE_CHANCE_BTTS"
+  },
+  {
+   "id": "509",
+   "golden": "Multiwynik",
+   "now": "Dokładny multi-wynik",
+   "orig": "Multiscores",
+   "goldenCode": "MULTI_RESULT",
+   "nowCode": "MULTI_RESULT"
+  },
+  {
+   "id": "2099",
+   "golden": "Early Payout",
+   "now": "Early Payout",
+   "orig": "1x2 ({SpecialIntValue1}up)",
+   "goldenCode": "MATCH_WINNER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "2179",
+   "golden": "Zawodnik (lub zmiennik) strzeli gola",
+   "now": "Zawodnik (lub zmiennik) strzeli gola",
+   "orig": "Player to score (sure sub)",
+   "goldenCode": "GOALSCORER_ANYTIME",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "2186",
+   "golden": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę",
+   "now": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę",
+   "orig": "Player to score or assist (sure sub)",
+   "goldenCode": "OTHER",
+   "nowCode": "OTHER"
+  },
+  {
+   "id": "2395",
+   "golden": "Zawodnik z kartką (lub zmiennik)",
+   "now": "Zawodnik z kartką (lub zmiennik)",
+   "orig": "Player to be carded (sure sub)",
+   "goldenCode": "GOALSCORER_ANYTIME",
+   "nowCode": "OTHER"
+  }
+ ],
+ "captureIds": {
+  "1": {
+   "names": [
+    "1x2"
+   ],
+   "originalName": "1x2",
+   "nowCodes": [
+    "MATCH_WINNER"
+   ]
+  },
+  "8": {
+   "names": [
+    "1. gol"
+   ],
+   "originalName": "{SpecialIntValue1}. goal",
+   "nowCodes": [
+    "FIRST_TEAM_TO_SCORE"
+   ]
+  },
+  "9": {
+   "names": [
+    "Ostatni gol"
+   ],
+   "originalName": "Last goal",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "10": {
+   "names": [
+    "Podwójna szansa"
+   ],
+   "originalName": "Double chance",
+   "nowCodes": [
+    "DOUBLE_CHANCE"
+   ]
+  },
+  "11": {
+   "names": [
+    "Remis bez zakładu"
+   ],
+   "originalName": "Draw no bet",
+   "nowCodes": [
+    "DRAW_NO_BET"
+   ]
+  },
+  "12": {
+   "names": [
+    "Everton FC bez zakładu"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} no bet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "13": {
+   "names": [
+    "Coventry City bez zakładu"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} no bet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "14": {
+   "names": [
+    "Handicap"
+   ],
+   "originalName": "Handicap {SpecialStringValue1}",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "17": {
+   "names": [
+    "Suma goli"
+   ],
+   "originalName": "Total",
+   "nowCodes": [
+    "TOTAL_GOALS"
+   ]
+  },
+  "18": {
+   "names": [
+    "Everton FC Liczba Goli"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "19": {
+   "names": [
+    "Coventry City Liczba Goli"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} total",
+   "nowCodes": [
+    "AWAY_TEAM_TOTAL_GOALS"
+   ]
+  },
+  "21": {
+   "names": [
+    "Everton FC Dokładna liczba goli"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} exact goals",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "22": {
+   "names": [
+    "Coventry City Dokładna liczba goli"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} exact goals",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "23": {
+   "names": [
+    "Zakres liczby goli"
+   ],
+   "originalName": "Goal range",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "24": {
+   "names": [
+    "Nieparzyste/Parzyste"
+   ],
+   "originalName": "Odd/even",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "25": {
+   "names": [
+    "Everton FC Parzyste/Nieparzyste"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} odd/even",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "26": {
+   "names": [
+    "Coventry City Parzyste/Nieparzyste"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} odd/even",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "27": {
+   "names": [
+    "Oba zespoły zdobędą gola"
+   ],
+   "originalName": "Both teams to score",
+   "nowCodes": [
+    "BTTS"
+   ]
+  },
+  "29": {
+   "names": [
+    "Everton FC czyste konto"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "30": {
+   "names": [
+    "Coventry City czyste konto"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "33": {
+   "names": [
+    "1x2 & Oba zespoły zdobędą gola"
+   ],
+   "originalName": "1x2 & both teams to score",
+   "nowCodes": [
+    "RESULT_AND_BTTS"
+   ]
+  },
+  "34": {
+   "names": [
+    "Suma & Oba zespoły zdobędą gola"
+   ],
+   "originalName": "Total & both teams to score",
+   "nowCodes": [
+    "TOTAL_GOALS_AND_BTTS"
+   ]
+  },
+  "35": {
+   "names": [
+    "1x2 & Suma"
+   ],
+   "originalName": "1x2 & total",
+   "nowCodes": [
+    "RESULT_AND_TOTAL"
+   ]
+  },
+  "36": {
+   "names": [
+    "1. strzelec gola"
+   ],
+   "originalName": "{SpecialIntValue1}. goalscorer",
+   "nowCodes": [
+    "EXACT_GOALS"
+   ]
+  },
+  "37": {
+   "names": [
+    "Strzelec ostatniego gola"
+   ],
+   "originalName": "Last goalscorer",
+   "nowCodes": [
+    "HOME_EXACT_GOALS"
+   ]
+  },
+  "40": {
+   "names": [
+    "Dokładny wynik"
+   ],
+   "originalName": "Correct score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "42": {
+   "names": [
+    "Połowa/Reg. czas gry"
+   ],
+   "originalName": "Halftime/fulltime",
+   "nowCodes": [
+    "HALFTIME_FULLTIME"
+   ]
+  },
+  "43": {
+   "names": [
+    "Everton FC wygra obie połowy"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} to win both halves",
+   "nowCodes": [
+    "HOME_WIN_BOTH_HALVES"
+   ]
+  },
+  "44": {
+   "names": [
+    "Coventry City wygra obie połowy"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} to win both halves",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "45": {
+   "names": [
+    "Everton FC wygra jakąkolwiek połowę"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} to win either half",
+   "nowCodes": [
+    "HOME_WIN_AT_LEAST_ONE_HALF"
+   ]
+  },
+  "46": {
+   "names": [
+    "Coventry City wygra jakąkolwiek połowę"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} to win either half",
+   "nowCodes": [
+    "AWAY_WIN_AT_LEAST_ONE_HALF"
+   ]
+  },
+  "47": {
+   "names": [
+    "Połowa z największą liczbą goli"
+   ],
+   "originalName": "Highest scoring half",
+   "nowCodes": [
+    "HALF_WITH_MORE_GOALS"
+   ]
+  },
+  "48": {
+   "names": [
+    "Everton FC Połowa z największą liczbą goli"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} highest scoring half",
+   "nowCodes": [
+    "HOME_HALF_WITH_MOST_GOALS"
+   ]
+  },
+  "49": {
+   "names": [
+    "Coventry City Połowa z największą liczbą goli"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} highest scoring half",
+   "nowCodes": [
+    "AWAY_HALF_WITH_MOST_GOALS"
+   ]
+  },
+  "50": {
+   "names": [
+    "1./2.Połowa Oba zespoły zdobędą gola"
+   ],
+   "originalName": "1st/2nd half both teams to score",
+   "nowCodes": [
+    "BTTS_BY_HALF"
+   ]
+  },
+  "51": {
+   "names": [
+    "Everton FC zdobędzie gola w obu połowach"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} to score in both halves",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "52": {
+   "names": [
+    "Coventry City zdobędzie gola w obu połowach"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} to score in both halves",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "53": {
+   "names": [
+    "Obie połowy ponad 1.5"
+   ],
+   "originalName": "Both halves over {SpecialSingleValue1}",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "54": {
+   "names": [
+    "Obie połowy poniżej 1.5"
+   ],
+   "originalName": "Both halves under {SpecialSingleValue1}",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "55": {
+   "names": [
+    "1. Połowa - 1x2"
+   ],
+   "originalName": "1st half - 1x2",
+   "nowCodes": [
+    "HALF_TIME_RESULT"
+   ]
+  },
+  "57": {
+   "names": [
+    "1. Połowa - 1. gol"
+   ],
+   "originalName": "1st half - {SpecialIntValue1}. goal",
+   "nowCodes": [
+    "HALF_TIME_FIRST_GOAL"
+   ]
+  },
+  "58": {
+   "names": [
+    "1. Połowa - Podwójna szansa"
+   ],
+   "originalName": "1st half - double chance",
+   "nowCodes": [
+    "DOUBLE_CHANCE"
+   ]
+  },
+  "59": {
+   "names": [
+    "1. Połowa - Remis bez zakładu"
+   ],
+   "originalName": "1st half - draw no bet",
+   "nowCodes": [
+    "DRAW_NO_BET"
+   ]
+  },
+  "60": {
+   "names": [
+    "1. Połowa - handicap"
+   ],
+   "originalName": "1st half - handicap {SpecialStringValue1}",
+   "nowCodes": [
+    "EUROPEAN_HANDICAP"
+   ]
+  },
+  "61": {
+   "names": [
+    "1. Połowa - handicap"
+   ],
+   "originalName": "1st half - handicap",
+   "nowCodes": [
+    "EUROPEAN_HANDICAP"
+   ]
+  },
+  "62": {
+   "names": [
+    "1. Połowa - Suma"
+   ],
+   "originalName": "1st half - total",
+   "nowCodes": [
+    "HALF_TIME_TOTAL_GOALS"
+   ]
+  },
+  "63": {
+   "names": [
+    "1. Połowa - Everton FC Suma"
+   ],
+   "originalName": "1st half - {Game.Competitors[0].Competitor.Name} total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "64": {
+   "names": [
+    "1. Połowa - Coventry City Suma"
+   ],
+   "originalName": "1st half - {Game.Competitors[1].Competitor.Name} total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "65": {
+   "names": [
+    "1. Połowa - Dokładna liczba goli"
+   ],
+   "originalName": "1st half - exact goals",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "68": {
+   "names": [
+    "1. Połowa - Parzyste/Nieparzyste"
+   ],
+   "originalName": "1st half - odd/even",
+   "nowCodes": [
+    "HALF_TIME_ODD_EVEN_GOALS"
+   ]
+  },
+  "69": {
+   "names": [
+    "1. Połowa - Oba zespoły zdobędą gola"
+   ],
+   "originalName": "1st half - both teams to score",
+   "nowCodes": [
+    "HALF_TIME_BTTS"
+   ]
+  },
+  "70": {
+   "names": [
+    "1. Połowa - Everton FC czyste konto"
+   ],
+   "originalName": "1st half - {Game.Competitors[0].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "71": {
+   "names": [
+    "1. Połowa - Coventry City czyste konto"
+   ],
+   "originalName": "1st half - {Game.Competitors[1].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "72": {
+   "names": [
+    "1. Połowa - 1x2 & Oba zespoły zdobędą gola"
+   ],
+   "originalName": "1st half - 1x2 & both teams to score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "73": {
+   "names": [
+    "1. Połowa - 1x2 & Suma"
+   ],
+   "originalName": "1st half - 1x2 & total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "75": {
+   "names": [
+    "1. Połowa - Dokładny wynik"
+   ],
+   "originalName": "1st half - correct score",
+   "nowCodes": [
+    "CORRECT_SCORE"
+   ]
+  },
+  "76": {
+   "names": [
+    "2. Połowa - 1x2"
+   ],
+   "originalName": "2nd half - 1x2",
+   "nowCodes": [
+    "SECOND_HALF_RESULT"
+   ]
+  },
+  "77": {
+   "names": [
+    "2. Połowa - 1. gol"
+   ],
+   "originalName": "2nd half - {SpecialIntValue1}. goal",
+   "nowCodes": [
+    "SECOND_HALF_FIRST_GOAL"
+   ]
+  },
+  "78": {
+   "names": [
+    "2. Połowa - Podwójna szansa"
+   ],
+   "originalName": "2nd half - double chance",
+   "nowCodes": [
+    "DOUBLE_CHANCE"
+   ]
+  },
+  "79": {
+   "names": [
+    "2. Połowa - Remis bez zakładu"
+   ],
+   "originalName": "2nd half - draw no bet",
+   "nowCodes": [
+    "DRAW_NO_BET"
+   ]
+  },
+  "80": {
+   "names": [
+    "2. Połowa - handicap"
+   ],
+   "originalName": "2nd half - handicap {SpecialStringValue1}",
+   "nowCodes": [
+    "EUROPEAN_HANDICAP"
+   ]
+  },
+  "81": {
+   "names": [
+    "2. Połowa - handicap"
+   ],
+   "originalName": "2nd half - handicap",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "82": {
+   "names": [
+    "2. Połowa - Suma"
+   ],
+   "originalName": "2nd half - total",
+   "nowCodes": [
+    "SECOND_HALF_TOTAL_GOALS"
+   ]
+  },
+  "83": {
+   "names": [
+    "2. Połowa - Everton FC Suma"
+   ],
+   "originalName": "2nd half - {Game.Competitors[0].Competitor.Name} total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "84": {
+   "names": [
+    "2. Połowa - Coventry City Suma"
+   ],
+   "originalName": "2nd half - {Game.Competitors[1].Competitor.Name} total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "85": {
+   "names": [
+    "2. Połowa - Dokładna liczba goli"
+   ],
+   "originalName": "2nd half - exact goals",
+   "nowCodes": [
+    "SECOND_HALF_EXACT_GOALS"
+   ]
+  },
+  "86": {
+   "names": [
+    "2. Połowa - Parzyste/Nieparzyste"
+   ],
+   "originalName": "2nd half - odd/even",
+   "nowCodes": [
+    "SECOND_HALF_ODD_EVEN_GOALS"
+   ]
+  },
+  "87": {
+   "names": [
+    "2. Połowa - Oba zespoły zdobędą gola"
+   ],
+   "originalName": "2nd half - both teams to score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "88": {
+   "names": [
+    "2. Połowa - Everton FC czyste konto"
+   ],
+   "originalName": "2nd half - {Game.Competitors[0].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "89": {
+   "names": [
+    "2. Połowa - Coventry City czyste konto"
+   ],
+   "originalName": "2nd half - {Game.Competitors[1].Competitor.Name} clean sheet",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "90": {
+   "names": [
+    "2. Połowa - Dokładny wynik"
+   ],
+   "originalName": "2nd half - correct score",
+   "nowCodes": [
+    "SECOND_HALF_CORRECT_SCORE"
+   ]
+  },
+  "91": {
+   "names": [
+    "Kiedy zostanie strzelony 1. gol (15 min interwał)"
+   ],
+   "originalName": "When will the {SpecialIntValue1}. goal be scored (15 min interval)",
+   "nowCodes": [
+    "FIRST_GOAL_TIME_ALT"
+   ]
+  },
+  "92": {
+   "names": [
+    "Kiedy zostanie strzelony 1. gol (10 min interwał)"
+   ],
+   "originalName": "When will the {SpecialIntValue1}. goal be scored (10 min interval)",
+   "nowCodes": [
+    "FIRST_GOAL_TIME"
+   ]
+  },
+  "126": {
+   "names": [
+    "Kartki 1x2"
+   ],
+   "originalName": "Booking 1x2",
+   "nowCodes": [
+    "MATCH_WINNER"
+   ]
+  },
+  "129": {
+   "names": [
+    "Suma kartek"
+   ],
+   "originalName": "Total bookings",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "133": {
+   "names": [
+    "Everton FC Dokładna liczba kartek"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} exact bookings",
+   "nowCodes": [
+    "HOME_EXACT_CARDS"
+   ]
+  },
+  "134": {
+   "names": [
+    "Coventry City Dokładna liczba kartek"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} exact bookings",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "136": {
+   "names": [
+    "Czerwona kartka"
+   ],
+   "originalName": "Sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "137": {
+   "names": [
+    "Everton FC czerwona kartka"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "138": {
+   "names": [
+    "Coventry City czerwona kartka"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "139": {
+   "names": [
+    "1. Połowa - Kartki 1x2"
+   ],
+   "originalName": "1st half - booking 1x2",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "140": {
+   "names": [
+    "1. Połowa - 1. kartka"
+   ],
+   "originalName": "1st half - {SpecialIntValue1}. booking",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "142": {
+   "names": [
+    "1. Połowa - Suma kartek"
+   ],
+   "originalName": "1st half - total bookings",
+   "nowCodes": [
+    "HALF_TIME_TOTAL_GOALS"
+   ]
+  },
+  "146": {
+   "names": [
+    "1. Połowa - Everton FC Dokładna liczba kartek"
+   ],
+   "originalName": "1st half - {Game.Competitors[0].Competitor.Name} exact bookings",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "147": {
+   "names": [
+    "1. Połowa - Coventry City Dokładna liczba kartek"
+   ],
+   "originalName": "1st half - {Game.Competitors[1].Competitor.Name} exact bookings",
+   "nowCodes": [
+    "HALF_TIME_HOME_EXACT_CARDS"
+   ]
+  },
+  "149": {
+   "names": [
+    "1. Połowa - czerwona kartka"
+   ],
+   "originalName": "1st half - sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "150": {
+   "names": [
+    "1. Połowa - Everton FC czerwona kartka"
+   ],
+   "originalName": "1st half - {Game.Competitors[0].Competitor.Name} sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "151": {
+   "names": [
+    "1. Połowa - Coventry City czerwona kartka"
+   ],
+   "originalName": "1st half - {Game.Competitors[1].Competitor.Name} sending off",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "152": {
+   "names": [
+    "Rzut rożny 1x2"
+   ],
+   "originalName": "Corner 1x2",
+   "nowCodes": [
+    "CORNERS_RACE"
+   ]
+  },
+  "155": {
+   "names": [
+    "Rzuty rożne Handicap"
+   ],
+   "originalName": "Corner handicap",
+   "nowCodes": [
+    "CORNERS_HANDICAP"
+   ]
+  },
+  "156": {
+   "names": [
+    "Suma rzutów rożnych"
+   ],
+   "originalName": "Total corners",
+   "nowCodes": [
+    "CORNERS_TOTAL"
+   ]
+  },
+  "157": {
+   "names": [
+    "Everton FC Suma rzutów rożnych"
+   ],
+   "originalName": "{Game.Competitors[0].Competitor.Name} total corners",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "158": {
+   "names": [
+    "Coventry City Suma rzutów rożnych"
+   ],
+   "originalName": "{Game.Competitors[1].Competitor.Name} total corners",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "159": {
+   "names": [
+    "Zakres liczby rzutów rożnych"
+   ],
+   "originalName": "Corner range",
+   "nowCodes": [
+    "CORNERS_RANGE"
+   ]
+  },
+  "162": {
+   "names": [
+    "Parzyste/Nieparzyste rzuty rożne"
+   ],
+   "originalName": "Odd/even corners",
+   "nowCodes": [
+    "CORNERS_ODD_EVEN"
+   ]
+  },
+  "163": {
+   "names": [
+    "1. Połowa - Rzut rożny 1x2"
+   ],
+   "originalName": "1st half - corner 1x2",
+   "nowCodes": [
+    "HALF_TIME_CORNERS_RACE"
+   ]
+  },
+  "166": {
+   "names": [
+    "1. Połowa - Rzuty rożne Handicap"
+   ],
+   "originalName": "1st half - corner handicap",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "167": {
+   "names": [
+    "1. Połowa - Suma rzutów rożnych"
+   ],
+   "originalName": "1st half - total corners",
+   "nowCodes": [
+    "HALF_TIME_TOTAL_GOALS"
+   ]
+  },
+  "173": {
+   "names": [
+    "1. Połowa - Parzyste/Nieparzyste rzuty rożne"
+   ],
+   "originalName": "1st half - odd/even corners",
+   "nowCodes": [
+    "HALF_TIME_CORNERS_ODD_EVEN"
+   ]
+  },
+  "498": {
+   "names": [
+    "Podwójna szansa (mecz) & 1. połowa oba zespoły strzelą"
+   ],
+   "originalName": "Double chance (match) & 1st half both teams score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "499": {
+   "names": [
+    "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą"
+   ],
+   "originalName": "Double chance (match) & 2nd half both teams score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "500": {
+   "names": [
+    "1. Połowa - Podwójna szansa & oba zespoły strzelą"
+   ],
+   "originalName": "1st half - double chance & both teams to score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "501": {
+   "names": [
+    "2. Połowa - 1x2 & oba zespoły strzelą"
+   ],
+   "originalName": "2nd half - 1x2 & both teams to score",
+   "nowCodes": [
+    "RESULT_AND_BTTS"
+   ]
+  },
+  "502": {
+   "names": [
+    "2. Połowa - 1x2 & suma"
+   ],
+   "originalName": "2nd half - 1x2 & total",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "503": {
+   "names": [
+    "2. Połowa - Podwójna szansa & oba zespoły strzelą"
+   ],
+   "originalName": "2nd half - double chance & both teams to score",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "504": {
+   "names": [
+    "Podwójna szansa & oba zespoły strzelą"
+   ],
+   "originalName": "Double chance & both teams to score",
+   "nowCodes": [
+    "DOUBLE_CHANCE_BTTS"
+   ]
+  },
+  "509": {
+   "names": [
+    "Dokładny multi-wynik"
+   ],
+   "originalName": "Multiscores",
+   "nowCodes": [
+    "MULTI_RESULT"
+   ]
+  },
+  "725": {
+   "names": [
+    "Liczba goli gracza (z dogrywką)"
+   ],
+   "originalName": null,
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2070": {
+   "names": [
+    "Zawodnik strzeli gola spoza pola karnego"
+   ],
+   "originalName": "Player to score from outside of the box",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2076": {
+   "names": [
+    "1+ strzałów celnych spoza pola karnego zawodnika",
+    "2+ strzałów celnych spoza pola karnego zawodnika",
+    "3+ strzałów celnych spoza pola karnego zawodnika"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ shots on target from outside of the box",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2099": {
+   "names": [
+    "Early Payout"
+   ],
+   "originalName": "1x2 ({SpecialIntValue1}up)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2178": {
+   "names": [
+    "Gracz strzeli z rzutu wolnego"
+   ],
+   "originalName": "Player to score a free kick",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2179": {
+   "names": [
+    "Zawodnik (lub zmiennik) strzeli gola"
+   ],
+   "originalName": "Player to score (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2180": {
+   "names": [
+    "Gracz strzeli głową"
+   ],
+   "originalName": "Player to score a header",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2181": {
+   "names": [
+    "Gracz 4+obrony",
+    "Gracz 5+obrony",
+    "Gracz 6+obrony"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ saves",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2182": {
+   "names": [
+    "Zawodnik strzeli gola i zaliczy asystę"
+   ],
+   "originalName": "Player to score and assist",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2183": {
+   "names": [
+    "Zawodnik strzeli gola w pierwszej połowie"
+   ],
+   "originalName": "Player to score in 1st half",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2184": {
+   "names": [
+    "Zawodnik strzeli gola lewą nogą"
+   ],
+   "originalName": "Player to score with left foot",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2185": {
+   "names": [
+    "Zawodnik strzeli gola prawą nogą"
+   ],
+   "originalName": "Player to score with right foot",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2186": {
+   "names": [
+    "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę"
+   ],
+   "originalName": "Player to score or assist (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2393": {
+   "names": [
+    "Zawodnik z żółtą kartką"
+   ],
+   "originalName": "Player to be yellow carded",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2394": {
+   "names": [
+    "Pierwszy zawodnik z kartką"
+   ],
+   "originalName": "1st player to be carded",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2395": {
+   "names": [
+    "Zawodnik z kartką (lub zmiennik)"
+   ],
+   "originalName": "Player to be carded (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2396": {
+   "names": [
+    "Zawodnik wyrzucony z boiska (lub zmiennik)"
+   ],
+   "originalName": "Player to be sent off (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2397": {
+   "names": [
+    "strzałów 2+  zawodnika (lub zmiennika)",
+    "strzałów 3+  zawodnika (lub zmiennika)",
+    "strzałów 4+  zawodnika (lub zmiennika)",
+    "strzałów 1+  zawodnika (lub zmiennika)",
+    "strzałów 5+  zawodnika (lub zmiennika)"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ shots (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2398": {
+   "names": [
+    "+ strzałów 1 celnych zawodnika (lub zmiennika)",
+    "+ strzałów 2 celnych zawodnika (lub zmiennika)",
+    "+ strzałów 3 celnych zawodnika (lub zmiennika)",
+    "+ strzałów 4 celnych zawodnika (lub zmiennika)"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ shots on target (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2401": {
+   "names": [
+    "+ 2 fauli zawodnika (lub zmiennika)",
+    "+ 3 fauli zawodnika (lub zmiennika)",
+    "+ 4 fauli zawodnika (lub zmiennika)"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ fouls conceded (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2402": {
+   "names": [
+    "Gracz 2 +faule wywalczone",
+    "Gracz 3 +faule wywalczone",
+    "Gracz 4 +faule wywalczone",
+    "Gracz 5 +faule wywalczone"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ fouls won",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2403": {
+   "names": [
+    "+ strzałów 1 celnych głową zawodnika",
+    "+ strzałów 2 celnych głową zawodnika",
+    "+ strzałów 3 celnych głową zawodnika"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ headed shots on target",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2405": {
+   "names": [
+    "Gracz 1+ spalone",
+    "Gracz 2+ spalone",
+    "Gracz 3+ spalone"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ offsides",
+   "nowCodes": [
+    "OTHER"
+   ]
+  },
+  "2406": {
+   "names": [
+    "Zawodnik 1 z asystą (Supersub)"
+   ],
+   "originalName": "Player {SpecialIntValue1}+ assists (sure sub)",
+   "nowCodes": [
+    "OTHER"
+   ]
+  }
+ }
+}

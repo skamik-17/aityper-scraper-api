@@ -1,0 +1,7 @@
+[BrowserPool] Creating new browser (1/14)
+[Totalbet/Navigation] Navigating to base site: https://totalbet.pl
+[Totalbet/Navigation] Fetching events for category: 7124
+[Totalbet/Navigation] API error: HTTP 404
+[BrowserPool] Browser released (1 available, 1 total)
+SMOKE-NOEXIT {"success":false,"error":"No events found from API","matches":0}
+exit=124 wall=60s

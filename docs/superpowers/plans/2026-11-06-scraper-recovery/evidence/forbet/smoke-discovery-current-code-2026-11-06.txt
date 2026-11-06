@@ -1,0 +1,99 @@
+[BrowserPool] Creating new browser (1/14)
+[forBET/Navigation] Navigating to base site: https://www.iforbet.pl
+[forBET/Navigation] Fetching events from: https://www.iforbet.pl/rest/market/categories/multi/199/events?gamesClass=major
+[forBET/Navigation] Fetched 20 events for premier-league
+[forBET/FullOffer] Found 20 events, fetching details for each...
+[forBET/FullOffer] Everton vs Coventry: 494 markets
+[forBET/FullOffer] Leeds United vs Tottenham: 465 markets
+[forBET/FullOffer] Arsenal FC vs Hull City: 470 markets
+[forBET/FullOffer] Fulham FC vs Newcastle: 456 markets
+[forBET/FullOffer] Nottingham vs Manchester City: 476 markets
+[forBET/FullOffer] Ipswich vs Bournemouth: 427 markets
+[forBET/FullOffer] Brighton vs Brentford: 435 markets
+[forBET/FullOffer] Sunderland vs Chelsea: 419 markets
+[forBET/FullOffer] Crystal Palace vs Liverpool: 419 markets
+[forBET/FullOffer] Manchester United vs Aston Villa: 448 markets
+[forBET/FullOffer] Manchester City vs Fulham FC: 149 markets
+[forBET/FullOffer] Bournemouth vs Nottingham: 148 markets
+[forBET/FullOffer] Tottenham vs Ipswich: 148 markets
+[forBET/FullOffer] Coventry vs Crystal Palace: 149 markets
+[forBET/FullOffer] Chelsea vs Leeds United: 149 markets
+[forBET/FullOffer] Aston Villa vs Sunderland: 149 markets
+[forBET/FullOffer] Newcastle vs Arsenal FC: 148 markets
+[forBET/FullOffer] Hull City vs Brighton: 148 markets
+[forBET/FullOffer] Liverpool vs Manchester United: 149 markets
+[forBET/FullOffer] Brentford vs Everton: 149 markets
+[forBET/FullOffer] Completed: 20 matches, 5995 total markets
+[BrowserPool] Browser released (1 available, 1 total)
+====================================================================================================
+🔍 FORBET MARKET DISCOVERY
+🏆 MATCH: Everton vs Coventry City (premier-league)
+====================================================================================================
+
+────────────────────────────────────────────────────────────────────────────────────────────────────
+📦 MARKET: TurboPrzewaga - 2 gole przewagi lub wygrana
+────────────────────────────────────────────────────────────────────────────────────────────────────
+   Group: Inne
+
+✅ NORMALIZED: EUROPEAN_HANDICAP
+   Market Key: EUROPEAN_HANDICAP:+2
+   Param Value: +2
+   Matched By: id
+
+📚 CATALOG INFO:
+   Code: EUROPEAN_HANDICAP
+   Polish: Handicap 1X2
+   ViewType: HANDICAP_SELECTOR
+   Has Parameter: true
+   Expected Selections: [HOME, DRAW, AWAY]
+
+📊 RAW SELECTIONS (3):
+   Everton                             1.63     HOME
+   remis                               3.90     DRAW
+   Coventry                            4.50     AWAY
+
+📱 FRONTEND JSON (MarketWithParams format):
+{
+  "marketKey": "EUROPEAN_HANDICAP",
+  "type": "EUROPEAN_HANDICAP",
+  "category": "HANDICAP",
+  "label": "Handicap 1X2",
+  "viewType": "HANDICAP_SELECTOR",
+  "parameters": [
+    {
+      "value": "2",
+      "label": "Gospodarze (+2) / Goście (-2)"
+    }
+  ],
+  "hasParameters": true
+}
+
+🔧 RAW JSON:
+{
+  "name": "TurboPrzewaga - 2 gole przewagi lub wygrana",
+  "groupName": "Inne",
+  "selections": [
+    {
+      "name": "Everton",
+      "odds": 1.63
+    },
+    {
+      "name": "remis",
+      "odds": 3.9
+    },
+    {
+      "name": "Coventry",
+      "odds": 4.5
+    }
+  ]
+}
+
+====================================================================================================
+📊 SUMMARY
+====================================================================================================
+Total markets: 1
+✅ Mapped: 1
+❌ Unmapped/OTHER: 0
+⚠️  With issues: 0
+TurboPrzewaga - 2 gole przewagi lub wyg  → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+# NOTE: process did not exit after printing the summary (BrowserPool keeps Chromium alive); stopped manually after ~3 min. Wrap the command in 'timeout 240'.

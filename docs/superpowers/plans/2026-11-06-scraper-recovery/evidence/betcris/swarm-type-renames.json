@@ -1,0 +1,193 @@
+{
+ "what": "Swarm market-type ids renamed by Betcris between 2026-08-20 (golden fixture world-cup-2026_france_morocco) and 2026-11-06; selections switched from Powyżej/Poniżej + base line to an \"N+\" ladder.",
+ "mapping": [
+  {
+   "newSwarmId": "FoulsTotal",
+   "augustSwarmId": "FoulsOver/Under",
+   "catalogCode": "FOULS_TOTAL",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "'Faule. Suma' 22+ 1.46 .. 26+ 2.7"
+  },
+  {
+   "newSwarmId": "FoulsTeam1Total",
+   "augustSwarmId": "HomeTeamFoulsOver/Under",
+   "catalogCode": "HOME_TEAM_TOTAL_FOULS",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "10+ 1.35 .. 14+ 3.3"
+  },
+  {
+   "newSwarmId": "FoulsTeam2Total",
+   "augustSwarmId": "AwayTeamFoulsOver/Under",
+   "catalogCode": "AWAY_TEAM_TOTAL_FOULS",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "11+ 1.42 .. 15+ 3.6"
+  },
+  {
+   "newSwarmId": "OffsidesTotal",
+   "augustSwarmId": "OffsidesOver/Under",
+   "catalogCode": "OFFSIDES_TOTAL",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "3+ 1.26 .. 7+ 5.2"
+  },
+  {
+   "newSwarmId": "OffsidesTeam1Total",
+   "augustSwarmId": null,
+   "catalogCode": "HOME_TEAM_TOTAL_OFFSIDES",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "'Spalone. Gospodarze. Suma' 2+ 1.24 .. 6+ 6.4"
+  },
+  {
+   "newSwarmId": "OffsidesTeam2Total",
+   "augustSwarmId": null,
+   "catalogCode": "AWAY_TEAM_TOTAL_OFFSIDES",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "'Spalone. Goście. Suma' 1+ 1.39 .. 5+ 21"
+  },
+  {
+   "newSwarmId": "ShotsTeam1Total",
+   "augustSwarmId": "Shots:Team1Total",
+   "catalogCode": "TEAM_TOTAL_SHOTS (param HOME:<line>)",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "15+ 1.39 .. 21+ 3.3"
+  },
+  {
+   "newSwarmId": "ShotsonTargetTotal",
+   "augustSwarmId": "ShotsOnGoalOver/Under",
+   "catalogCode": "TOTAL_SHOTS_ON_TARGET",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "8+ 1.33 .. 13+ 4.9"
+  },
+  {
+   "newSwarmId": "ShotsonTargetTeam1Total",
+   "augustSwarmId": "ShotsongoalTeam1",
+   "catalogCode": "TEAM_TOTAL_SHOTS_ON_TARGET (param HOME:<line>)",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "5+ 1.4 .. 9+ 5.6"
+  },
+  {
+   "newSwarmId": "ShotsonTargetTeam2Total",
+   "augustSwarmId": "ShotsongoalTeam2",
+   "catalogCode": "TEAM_TOTAL_SHOTS_ON_TARGET (param AWAY:<line>)",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "3+ 1.38 .. 7+ 9"
+  },
+  {
+   "newSwarmId": "ShotsonTarget1stHalfTotal",
+   "augustSwarmId": null,
+   "catalogCode": "HALF_TIME_TOTAL_SHOTS_ON_TARGET",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "3+ 1.2 .. 7+ 5.4"
+  },
+  {
+   "newSwarmId": "ThrowInsTotal",
+   "augustSwarmId": "MatchThrowInCommonTotalOverUnder2Way",
+   "catalogCode": "THROW_INS_TOTAL",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "40+ 1.76, 41+ 1.94, 42+ 2.15"
+  },
+  {
+   "newSwarmId": "ThrowInsTeam1Total",
+   "augustSwarmId": "MatchThrowInTeam1TotalOverUnder2Way",
+   "catalogCode": "HOME_TEAM_TOTAL_THROW_INS",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "21+ 1.69 .. 23+ 2.23"
+  },
+  {
+   "newSwarmId": "ThrowInsTeam2Total",
+   "augustSwarmId": "MatchThrowInTeam2TotalOverUnder2Way1",
+   "catalogCode": "AWAY_TEAM_TOTAL_THROW_INS",
+   "parserShape": "team-ladder",
+   "sample2026_11_06": "19+ 1.77 .. 21+ 2.43"
+  },
+  {
+   "newSwarmId": "PlayerShots",
+   "augustSwarmId": "PlayerShotsOver",
+   "catalogCode": "PLAYER_SHOTS",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Ainsley Maitland-Niles 1+' 1.46, 2+ 3.1, 3+ 7.8, 4+ 19"
+  },
+  {
+   "newSwarmId": "PlayerShotsonTarget",
+   "augustSwarmId": "PlayerShotsonTargetOver / PlayerTotalShotsonTarget",
+   "catalogCode": "PLAYER_SHOTS_ON_TARGET",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Ainsley Maitland-Niles 1+' 3, 2+ 12, 3+ 25"
+  },
+  {
+   "newSwarmId": "PlayerFouls",
+   "augustSwarmId": "PlayerFoulsCommittedOver",
+   "catalogCode": "PLAYER_FOULS",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Victor Torp Overgaard 1+' 1.17 .. 4+ 7.2 (5+ exists once: no catalog tier)"
+  },
+  {
+   "newSwarmId": "PlayerFoulsWon",
+   "augustSwarmId": "PlayerToBeFouledOver",
+   "catalogCode": "PLAYER_FOULS_WON",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Kiernan Dewsbury-Hall 1+' 1.17 .. 4+ 7.2 (5+ x4: no catalog tier)"
+  },
+  {
+   "newSwarmId": "PlayerOffsides",
+   "augustSwarmId": "PlayertoBeinOffsideOver",
+   "catalogCode": "PLAYER_OFFSIDES",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Thierno Barry 1+' 1.53, 2+ 3.5, 3+ 9.5"
+  },
+  {
+   "newSwarmId": "PlayerSaves",
+   "augustSwarmId": "GoalkeeperSaves",
+   "catalogCode": "PLAYER_SAVES",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Carl Rushworth 3+' 1.35, 4+ 1.85, 5+ 2.9, 6+ 5"
+  },
+  {
+   "newSwarmId": "PlayerAssists",
+   "augustSwarmId": "ToAssistaGoal",
+   "catalogCode": "PLAYER_ASSISTS",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Kiernan Dewsbury-Hall 1+' 3.7"
+  },
+  {
+   "newSwarmId": "PlayerTackles",
+   "augustSwarmId": null,
+   "catalogCode": "PLAYER_TACKLES",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Ainsley Maitland-Niles 2+' 1.48 .. 5+ 10"
+  },
+  {
+   "newSwarmId": "PlayerShotsonTargetOutsidetheBox",
+   "augustSwarmId": null,
+   "catalogCode": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Kiernan Dewsbury-Hall 1+' 2.85, 2+ 11, 3+ 23"
+  },
+  {
+   "newSwarmId": "PlayerShotsAgainstWoodwork",
+   "augustSwarmId": "PlayerShottoHittheWoodwork",
+   "catalogCode": "PLAYER_HIT_WOODWORK",
+   "parserShape": "player-list (strip \" 1+\")",
+   "sample2026_11_06": "'Thierno Barry 1+' 7.5"
+  },
+  {
+   "newSwarmId": "PlayerHeadedShotsonTarget",
+   "augustSwarmId": null,
+   "catalogCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+   "parserShape": "player-ladder",
+   "sample2026_11_06": "'Thierno Barry 1+' 2.05, 2+ 6.2, 3+ 15, 4+ 31 (4+ not in catalog 1+..3+, dropped); 33 players in 31321159, 36 in 31333513",
+   "note": "added 2026-11-06 after plan review: catalog code exists (market-catalog.ts:2019, hasParameter true, parameterType player); peers fortuna/betfan/superbet/sts already map it"
+  }
+ ],
+ "staysOTHER_noCatalogCode": [
+  "PlayerShotsOutsidetheBox (catalog PLAYER_SHOTS_OUTSIDE_BOX has hasParameter:false)",
+  "PlayerLeftFootShotsonTarget",
+  "PlayerRightFootShotsonTarget",
+  "Player1stHalfShotsonTarget (catalog PLAYER_SHOTS_ON_TARGET_1H has hasParameter:false)",
+  "Player2ndHalfShotsonTarget",
+  "ShotsonTarget1stHalfTeam1Total",
+  "ShotsonTarget1stHalfTeam2Total",
+  "ShotsonTarget2ndHalfTotal",
+  "ShotsonTarget2ndHalfTeam1Total",
+  "ShotsonTarget2ndHalfTeam2Total"
+ ]
+}

@@ -1,0 +1,87 @@
+{
+ "probedAt": "2026-11-06T17:3xZ",
+ "what": "One Playwright page load of the betcris PL league URL (bundled Chromium, plain context, no stealth). t = ms since page.goto start.",
+ "command": "node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/probe-redirect.mjs https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+ "htmlHeadExcerpt": {
+  "source": "curl -s https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538 (HTTP 200, 481747 bytes), lines 9-19",
+  "lines": [
+   "      data-page-type=\"pageBlank\">",
+   "<head>",
+   "<!-- skrypt wykonujący redirect ze strony betcris.pl na betsport.pl -->",
+   "<script>",
+   "console.log(\"redirect1\");",
+   "</script>",
+   "<script>",
+   "console.log(\"redirect\");",
+   "let url = window.location.href;",
+   "let newUrl = url .replace(\"betcris.pl\",\"betsport.pl\");",
+   "window.location.href = newUrl;",
+   "</script>"
+  ]
+ },
+ "partnerConfigsFacts": {
+  "domain": "www.betcris.pl",
+  "siteName": "Betcris",
+  "swarmUrl": "wss://eu-swarm-ws-re.trexname.com/",
+  "verifyAgePopup": false,
+  "swarmBinaryMessageEnabled": false
+ },
+ "probe": {
+  "url": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+  "events": [
+   {
+    "t": 6,
+    "k": "navreq",
+    "url": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 98,
+    "k": "framenavigated",
+    "url": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 105,
+    "k": "navreq",
+    "url": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 195,
+    "k": "framenavigated",
+    "url": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 688,
+    "k": "dcl",
+    "url": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 688,
+    "k": "gotoResolved",
+    "status": 200,
+    "respUrl": "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+    "pageUrl": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538"
+   },
+   {
+    "t": 788,
+    "k": "ws",
+    "url": "wss://eu-swarm-springre.trexname.com/"
+   },
+   {
+    "t": 1657,
+    "k": "firstSportFrame",
+    "len": 3930
+   },
+   {
+    "t": 1999,
+    "k": "framenavigated",
+    "url": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538/31321159"
+   },
+   {
+    "t": 6695,
+    "k": "end",
+    "pageUrl": "https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538/31321159",
+    "title": "Piłka Nożna - Everton - Coventry City 06/lis/2026 21:00:00 - Premier League - Betsport Zakłady Bukmacherskie - Legalny Bukmacher bets"
+   }
+  ]
+ }
+}

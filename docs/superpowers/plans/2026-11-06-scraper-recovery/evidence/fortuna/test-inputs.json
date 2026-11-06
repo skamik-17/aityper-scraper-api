@@ -1,0 +1,1093 @@
+{
+ "source": "Fortuna full-offer capture (parseAllMarkets output, i.e. exactly what normalizeMarket receives), 2026-11-06T17:38:44.901Z, smoke-full-offer.mts --dump. NBSP (U+00A0) is preserved as \\u00a0.",
+ "evertonCoventry": {
+  "ctx": {
+   "homeTeam": "Everton",
+   "awayTeam": "Coventry City",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Coventry City\u00a0Thomas, Bobby\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 30
+     }
+    ]
+   }
+  ]
+ },
+ "arsenalHull": {
+  "ctx": {
+   "homeTeam": "Arsenal",
+   "awayTeam": "Hull City",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1o",
+    "name": "Mecz:\u00a0Arsenal\u00a0- wygra obie po\u0142owy",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 2.18
+     },
+     {
+      "name": "Nie",
+      "odds": 1.61
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2n",
+    "name": "1.po\u0142owa: obie dru\u017cyny strzel\u0105 gola",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.12
+     },
+     {
+      "name": "Tak",
+      "odds": 5.4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-p1",
+    "name": "Wynik meczu lub\u00a02\u00a0gol(e) PRZEWAGI",
+    "selections": [
+     {
+      "name": "Remis",
+      "odds": 6.5
+     },
+     {
+      "name": "Hull",
+      "odds": 12.5
+     },
+     {
+      "name": "Arsenal",
+      "odds": 1.14
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1i",
+    "name": "Mecz:\u00a0Hull\u00a0- wygra do zera",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 9.4
+     },
+     {
+      "name": "Nie",
+      "odds": 1.01
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-p1",
+    "name": "Wynik meczu lub\u00a01\u00a0gol(e) PRZEWAGI",
+    "selections": [
+     {
+      "name": "Arsenal",
+      "odds": 1.1
+     },
+     {
+      "name": "Remis",
+      "odds": 6.4
+     },
+     {
+      "name": "Hull",
+      "odds": 4.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2b",
+    "name": "Mecz:\u00a0Arsenal\u00a0- strzeli gola w obu po\u0142owach",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.99
+     },
+     {
+      "name": "Tak",
+      "odds": 1.73
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2c",
+    "name": "Mecz:\u00a0Hull\u00a0- strzeli gola w obu po\u0142owach",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 9.6
+     },
+     {
+      "name": "Nie",
+      "odds": 1.02
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1h",
+    "name": "Mecz:\u00a0Arsenal\u00a0- wygra do zera",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 1.65
+     },
+     {
+      "name": "Nie",
+      "odds": 2.02
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-09",
+    "name": "Mecz: wynik/r\u00f3\u017cnica zwyci\u0119stwa",
+    "selections": [
+     {
+      "name": "Hull/o 3 gole",
+      "odds": 100
+     },
+     {
+      "name": "Remis",
+      "odds": 7
+     },
+     {
+      "name": "Arsenal/o 2 gole",
+      "odds": 3.7
+     },
+     {
+      "name": "Arsenal/o 3 gole",
+      "odds": 2.24
+     },
+     {
+      "name": "Hull/o 1 gol",
+      "odds": 20
+     },
+     {
+      "name": "Hull/o 2 gole",
+      "odds": 90
+     },
+     {
+      "name": "Arsenal/o 1 gol",
+      "odds": 4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2d",
+    "name": "1.po\u0142owa",
+    "selections": [
+     {
+      "name": "Hull",
+      "odds": 12
+     },
+     {
+      "name": "Remis",
+      "odds": 2.95
+     },
+     {
+      "name": "Arsenal",
+      "odds": 1.49
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1r",
+    "name": "Mecz:\u00a0Arsenal\u00a0- wygra przynajmniej jedn\u0105 po\u0142ow\u0119",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 1.09
+     },
+     {
+      "name": "Nie",
+      "odds": 6
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1s",
+    "name": "Mecz:\u00a0Hull\u00a0- wygra przynajmniej jedn\u0105 po\u0142ow\u0119",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.12
+     },
+     {
+      "name": "Tak",
+      "odds": 5.4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0p",
+    "name": "1. po\u0142owa: wi\u0119cej rzut\u00f3w ro\u017cnych",
+    "selections": [
+     {
+      "name": "Hull",
+      "odds": 5.2
+     },
+     {
+      "name": "Arsenal",
+      "odds": 1.31
+     },
+     {
+      "name": "Rowno",
+      "odds": 6.2
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-bv",
+    "name": "Mecz: gol samob\u00f3jczy",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.05
+     },
+     {
+      "name": "Tak",
+      "odds": 8
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-k6",
+    "name": "Mecz: liczba asyst w meczu",
+    "selections": [
+     {
+      "name": "powy\u017cej\u00a02.5",
+      "odds": 2.3
+     },
+     {
+      "name": "poni\u017cej\u00a02.5",
+      "odds": 1.56
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-k7",
+    "name": "Mecz: gol zdobyty strza\u0142em g\u0142ow\u0105",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.45
+     },
+     {
+      "name": "Tak",
+      "odds": 2.6
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-9a",
+    "name": "Mecz: rzut karny",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.29
+     },
+     {
+      "name": "Tak",
+      "odds": 3.35
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-k6",
+    "name": "Mecz: liczba asyst w meczu",
+    "selections": [
+     {
+      "name": "powy\u017cej\u00a01.5",
+      "odds": 1.18
+     },
+     {
+      "name": "poni\u017cej\u00a01.5",
+      "odds": 4.4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-bt",
+    "name": "Mecz: rzut karny i czerwona kartka",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.01
+     },
+     {
+      "name": "Tak",
+      "odds": 12
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-bu",
+    "name": "Mecz: rzut karny lub czerwona kartka (Nie liczy si\u0119: CK dla \u0142awki, po meczu, dla sztabu)",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.52
+     },
+     {
+      "name": "Tak",
+      "odds": 2.4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0c",
+    "name": "1.po\u0142owa: Arsenal\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.01
+     },
+     {
+      "name": "Tak",
+      "odds": 12
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-08",
+    "name": "Mecz:\u00a0Hull\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.06
+     },
+     {
+      "name": "Tak",
+      "odds": 8.2
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-07",
+    "name": "Mecz:\u00a0Arsenal\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.02
+     },
+     {
+      "name": "Tak",
+      "odds": 11
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0d",
+    "name": "1.po\u0142owa: Hull -\u00a0Czerwona Kartka (bez CK dla trenera i sztabu)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 12
+     },
+     {
+      "name": "Nie",
+      "odds": 1.01
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0a",
+    "name": "1.po\u0142owa:\u00a0Czerwona Kartka (bez CK dla trenera i sztabu)",
+    "selections": [
+     {
+      "name": "Nie",
+      "odds": 1.01
+     },
+     {
+      "name": "Tak",
+      "odds": 11
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-19",
+    "name": "Mecz: suma goli",
+    "selections": [
+     {
+      "name": "parzysty",
+      "odds": 1.91
+     },
+     {
+      "name": "nieparzysty",
+      "odds": 1.9
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-3e",
+    "name": "2.po\u0142owa: dok\u0142adna liczba goli",
+    "selections": [
+     {
+      "name": "Remis",
+      "odds": 4.9
+     },
+     {
+      "name": "Arsenal",
+      "odds": 2.95
+     },
+     {
+      "name": "2+",
+      "odds": 1.81
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-16",
+    "name": "Arsenal dok\u0142adna liczba goli",
+    "selections": [
+     {
+      "name": "Hull",
+      "odds": 3.55
+     },
+     {
+      "name": "3+",
+      "odds": 1.85
+     },
+     {
+      "name": "Arsenal",
+      "odds": 4.7
+     },
+     {
+      "name": "Remis",
+      "odds": 12
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0e",
+    "name": "Mecz: wiecej rzutow roznych",
+    "selections": [
+     {
+      "name": "Hull",
+      "odds": 6.6
+     },
+     {
+      "name": "rowno",
+      "odds": 13
+     },
+     {
+      "name": "Arsenal",
+      "odds": 1.14
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-17",
+    "name": "Hull dok\u0142adna liczba goli",
+    "selections": [
+     {
+      "name": "Remis",
+      "odds": 1.54
+     },
+     {
+      "name": "Arsenal",
+      "odds": 2.8
+     },
+     {
+      "name": "3+",
+      "odds": 50
+     },
+     {
+      "name": "Hull",
+      "odds": 10
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Hull\u00a0Lucas Herrington\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 20
+     }
+    ]
+   }
+  ]
+ },
+ "forestCity": {
+  "ctx": {
+   "homeTeam": "Nottingham Forest",
+   "awayTeam": "Manchester City",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-hm",
+    "name": "Murillo\u00a0- strzeli gola lub zanotuje asyst\u0119\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 8.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-he",
+    "name": "Murillo\u00a0lub jego zmiennik zanotuje asyst\u0119\u00a0(reg.czas)(OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 13
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-la",
+    "name": "Murillo\u00a0- asystuje\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 14
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-76",
+    "name": "Murillo wyrzucony z boiska",
+    "selections": [
+     {
+      "name": "Murillo wyrzucony z boiska",
+      "odds": 29
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-lg",
+    "name": "Murillo\u00a0- liczba fauli\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "3+",
+      "odds": 4.5
+     },
+     {
+      "name": "2+",
+      "odds": 2.15
+     },
+     {
+      "name": "1+",
+      "odds": 1.23
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-lj",
+    "name": "Murillo\u00a0i jego zmiennik - liczba fauli\u00a0(reg.czas)(OPTA)",
+    "selections": [
+     {
+      "name": "3+",
+      "odds": 3.5
+     },
+     {
+      "name": "2+",
+      "odds": 1.85
+     },
+     {
+      "name": "1+",
+      "odds": 1.15
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-1p",
+    "name": "Mecz:\u00a0Man.City\u00a0- wygra obie po\u0142owy",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 4.2
+     },
+     {
+      "name": "Nie",
+      "odds": 1.18
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ld",
+    "name": "Murillo\u00a0-\u00a0liczba strza\u0142\u00f3w w \u015bwiat\u0142o bramki\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ok",
+    "name": "Murillo\u00a0liczba strza\u0142\u00f3w w \u015bwiat\u0142o bramki z pola karnego (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 5.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-lf",
+    "name": "Murillo\u00a0- liczba strza\u0142\u00f3w\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 1.7
+     },
+     {
+      "name": "2+",
+      "odds": 4.25
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-o6",
+    "name": "Murillo\u00a0- liczba strza\u0142\u00f3w w \u015bwiat\u0142o bramki spoza pola karnego (90 min)\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 16
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-og",
+    "name": "Murillo\u00a0liczba strza\u0142\u00f3w w \u015bwiat\u0142o bramki nog\u0105\u00a0\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 9
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Man.City\u00a0Dias, Ruben\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 40
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-oi",
+    "name": "Murillo\u00a0liczba strza\u0142\u00f3w w \u015bwiat\u0142o bramki g\u0142ow\u0105 (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 7.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0p",
+    "name": "1. po\u0142owa: wi\u0119cej rzut\u00f3w ro\u017cnych",
+    "selections": [
+     {
+      "name": "Nottingham",
+      "odds": 3
+     },
+     {
+      "name": "Rowno",
+      "odds": 5.2
+     },
+     {
+      "name": "Man.City",
+      "odds": 1.68
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0f",
+    "name": "Mecz:\u00a01.rzut ro\u017cny",
+    "selections": [
+     {
+      "name": "Nottingham",
+      "odds": 2.21
+     },
+     {
+      "name": "Nikt",
+      "odds": 100
+     },
+     {
+      "name": "Man.City",
+      "odds": 1.59
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-pn",
+    "name": "Murillo\u00a0liczba spalonych w 1.po\u0142owie (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 18
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-lk",
+    "name": "Murillo\u00a0- otrzyma \u017b\u00f3\u0142t\u0105 Kartk\u0119 (Nie liczy si\u0119: druga \u017bK dla zawodnika, \u017bK dla \u0142awki, po meczu)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 4
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-on",
+    "name": "Murillo\u00a0liczba strza\u0142\u00f3w spoza pola karnego (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 4.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "name": "Nottingham\u00a0Murillo\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 30
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-oe",
+    "name": "Murillo\u00a0liczba strza\u0142\u00f3w z pola karnego\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 4.75
+     },
+     {
+      "name": "1+",
+      "odds": 1.82
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-oy",
+    "name": "Murillo\u00a0strzeli gola z pola karnego (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 20
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ow",
+    "name": "Murillo\u00a0strzeli gola nog\u0105 (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 30
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-oz",
+    "name": "Murillo\u00a0strzeli gola spoza pola karnego (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 90
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ng",
+    "name": "Murillo\u00a0strzeli ostatniego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 30
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ln",
+    "name": "Murillo\u00a0- liczba goli (OPTA)",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 150
+     },
+     {
+      "name": "1+",
+      "odds": 20
+     },
+     {
+      "name": "3+",
+      "odds": 150
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ox",
+    "name": "Murillo\u00a0strzeli gola g\u0142ow\u0105 (OPTA)",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 30
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-hh",
+    "name": "Murillo\u00a0- strzeli pierwszego lub ostatniego gola w meczu\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 25
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ev",
+    "name": "Murillo\u00a0lub jego zmiennik strzeli gola\u00a0(reg.czas)(OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 17
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-lf",
+    "name": "Diomande, Ousmane\u00a0- liczba strza\u0142\u00f3w\u00a0(OPTA)",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 7
+     },
+     {
+      "name": "1+",
+      "odds": 2.25
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "name": "Nottingham\u00a0Diomande, Ousmane\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 30
+     }
+    ]
+   }
+  ]
+ },
+ "ipswichBournemouth": {
+  "ctx": {
+   "homeTeam": "Ipswich Town",
+   "awayTeam": "AFC Bournemouth",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0p",
+    "name": "1. po\u0142owa: wi\u0119cej rzut\u00f3w ro\u017cnych",
+    "selections": [
+     {
+      "name": "Bournemouth",
+      "odds": 1.95
+     },
+     {
+      "name": "Rowno",
+      "odds": 4.8
+     },
+     {
+      "name": "Ipswich",
+      "odds": 2.5
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2d",
+    "name": "1.po\u0142owa",
+    "selections": [
+     {
+      "name": "Bournemouth",
+      "odds": 2.38
+     },
+     {
+      "name": "Remis",
+      "odds": 2.3
+     },
+     {
+      "name": "Ipswich",
+      "odds": 4.1
+     }
+    ]
+   }
+  ]
+ },
+ "manUtdVilla": {
+  "ctx": {
+   "homeTeam": "Manchester United",
+   "awayTeam": "Aston Villa",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Aston Villa\u00a0McGinn, John\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 9
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Aston Villa\u00a0George Lawrence Hemmings\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 11
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-0p",
+    "name": "1. po\u0142owa: wi\u0119cej rzut\u00f3w ro\u017cnych",
+    "selections": [
+     {
+      "name": "Man.United",
+      "odds": 1.85
+     },
+     {
+      "name": "Rowno",
+      "odds": 5.2
+     },
+     {
+      "name": "Aston Villa",
+      "odds": 2.6
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "name": "Man.United\u00a0Tielemans, Youri\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 12
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-2d",
+    "name": "1.po\u0142owa",
+    "selections": [
+     {
+      "name": "Aston Villa",
+      "odds": 3.45
+     },
+     {
+      "name": "Remis",
+      "odds": 2.38
+     },
+     {
+      "name": "Man.United",
+      "odds": 2.6
+     }
+    ]
+   }
+  ]
+ },
+ "palaceLiverpool": {
+  "ctx": {
+   "homeTeam": "Crystal Palace",
+   "awayTeam": "Liverpool",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "name": "Crystal Palace\u00a0Nketiah, Eddie\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 5
+     }
+    ]
+   }
+  ]
+ },
+ "leedsTottenham": {
+  "ctx": {
+   "homeTeam": "Leeds United",
+   "awayTeam": "Tottenham Hotspur",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nh",
+    "name": "Van de Ven, Micky\u00a0strzeli ostatniego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 20
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "name": "Tottenham\u00a0Van de Ven, Micky\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 20
+     }
+    ]
+   }
+  ]
+ },
+ "brightonBrentford": {
+  "ctx": {
+   "homeTeam": "Brighton and Hove Albion",
+   "awayTeam": "Brentford",
+   "league": "premier-league"
+  },
+  "markets": [
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ng",
+    "name": "Loureiro da Costa, Joao Pedro\u00a0strzeli ostatniego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 25
+     }
+    ]
+   },
+   {
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "name": "Brighton\u00a0Loureiro da Costa, Joao Pedro\u00a0strzeli pierwszego gola w meczu (OPTA)",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 25
+     }
+    ]
+   }
+  ]
+ }
+}

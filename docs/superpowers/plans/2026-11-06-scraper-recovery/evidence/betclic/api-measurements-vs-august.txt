@@ -1,0 +1,27 @@
+# Normalized-markets measurements (GET /api/matches/<H>/<A>/normalized-markets?league=premier-league, 2026-11-06 ~16:17Z, run-2 data) vs August baseline docs/match-audit/.tmp/premier-league_arsenal_coventry_city.json (aityper repo, fetched 2026-08-20T03:00Z). OTHER is hidden by the API (market-type-grouper.ts:1380), so OTHER counts here are always 0; see smoke-current-betclic.txt for the OTHER share.
+# offvocab = selection type outside the catalog vocabulary of its code (player-combination markets legitimately use player names).
+== premier-league_arsenal_coventry_city.json markets 411
+  betclic  codes= 141 entries=  238 sels=  3553 OTHER entries=  1 sels=  51 UNKNOWN=   0 (0.0%) offvocab=2888 dupSel=2
+     offvocab: [(('TWO_PLAYERS_COMBINED_GOALS', 'G. Jesus & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'K. Havertz & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'C. Tzolis & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'B. Saka & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'G. Jesus & K. Havertz'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'E. Eze & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'M. Merino & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'N. Madueke & V. Gyokeres'), 3)]
+     dup: [('RED_CARD_TEAM', '', 'YES', 2), ('RED_CARD_TEAM', '', 'NO', 2)]
+     OTHER raw: [('Obaj gracze strzelą w 2. połowa', 1)]
+== nm_arsenal_hull.json markets 379
+  betclic  codes= 147 entries=  247 sels=  3236 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=2590 dupSel=0
+     offvocab: [(('TWO_PLAYERS_COMBINED_GOALS', 'K. Havertz & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'C. Tzolis & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'N. Madueke & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'E. Eze & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'M. Merino & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'M. Odegaard & V. Gyokeres'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'C. Tzolis & K. Havertz'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'K. Havertz & N. Madueke'), 3)]
+== nm_everton_coventry.json markets 383
+  betclic  codes= 152 entries=  255 sels=  2787 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=2117 dupSel=0
+     offvocab: [(('TWO_PLAYERS_COMBINED_GOALS', 'B. Graham & T. Barry'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'K. Dewsbury-Hall & T. Barry'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'B. Johnson & T. Barry'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'T. Barry & T. George'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'T. Awoniyi & T. Barry'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'E. Simms & T. Barry'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'T. Barry & T. Dibling'), 3), (('TWO_PLAYERS_COMBINED_GOALS', 'S. Cherif & T. Barry'), 3)]
+== nm_leeds_tottenham.json markets 367
+  betclic  codes= 134 entries=  235 sels=  1466 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=792 dupSel=0
+     offvocab: [(('PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('HALF_TIME_PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('SECOND_HALF_PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('PLAYER_ASSIST_PAIRS', 'J. Maddison & M. Kudus'), 1), (('PLAYER_ASSIST_PAIRS', 'D. Kulusevski & M. Kudus'), 1), (('PLAYER_ASSIST_PAIRS', 'D. Kulusevski & J. Maddison'), 1), (('PLAYER_ASSIST_PAIRS', 'M. Fernandes & M. Kudus'), 1), (('PLAYER_ASSIST_PAIRS', 'J. Maddison & M. Fernandes'), 1)]
+== nm_forest_city.json markets 365
+  betclic  codes= 121 entries=  188 sels=  1242 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=673 dupSel=0
+     offvocab: [(('PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('HALF_TIME_PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('SECOND_HALF_PENALTY_GOAL', 'Którakolwiek drużyna strzeli gola z rzutu karnego'), 1), (('PLAYER_ASSIST_PAIRS', 'J. Doku & R. Cherki'), 1), (('PLAYER_ASSIST_PAIRS', 'I. Ndiaye & R. Cherki'), 1), (('PLAYER_ASSIST_PAIRS', 'A. E. & R. Cherki'), 1), (('PLAYER_ASSIST_PAIRS', 'E. Fernandez & R. Cherki'), 1), (('PLAYER_ASSIST_PAIRS', 'P. Foden & R. Cherki'), 1)]
+== nm_spurs_ipswich.json markets 180
+  betclic  codes=  12 entries=   30 sels=   118 OTHER entries=  0 sels=   0 UNKNOWN=   0 (0.0%) offvocab=0 dupSel=0
+
+# Catalog code diff: August Arsenal vs Coventry City vs Nov (Arsenal vs Hull City, Everton vs Coventry City)
+== betclic aug codes 142 now union 152 now intersection 147
+ LOST (in Aug, in neither now): [('CARDS_POINTS_OVER_UNDER', 5), ('FIRST_HALF_CARDS_1X2', 1), ('HALF_TIME_AWAY_CLEAN_SHEET', 1), ('HALF_TIME_CARDS_POINTS_OVER_UNDER', 3), ('HALF_TIME_HOME_CLEAN_SHEET', 1), ('OTHER', 1), ('SECOND_HALF_AWAY_CLEAN_SHEET', 1), ('SECOND_HALF_HOME_CLEAN_SHEET', 1), ('TEAM_HALF_WITH_MORE_GOALS', 2)]
+ NEW (in both now, not Aug): ['AWAY_HALF_WITH_MOST_GOALS', 'BOTH_HALVES_GOALS', 'CARDS_TEAM', 'FOUL_RACE', 'HALF_TIME_AWAY_TO_SCORE', 'HALF_TIME_CARDS_EXACT', 'HALF_TIME_CARDS_RACE', 'HALF_TIME_HOME_TO_SCORE', 'HOME_HALF_WITH_MOST_GOALS', 'SECOND_HALF_AWAY_TO_SCORE', 'SECOND_HALF_HOME_TO_SCORE', 'TACKLES_1X2', 'TACKLES_TOTAL', 'TEAM_TOTAL_TACKLES']
+ BIG DROPS (>50%, aug>=4): []

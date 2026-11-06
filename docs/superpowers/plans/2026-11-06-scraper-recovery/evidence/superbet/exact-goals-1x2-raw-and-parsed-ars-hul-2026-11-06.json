@@ -1,0 +1,635 @@
+{
+ "source": "GET production-superbet-offer-pl /v2/pl-PL/events/14438716, captured 2026-11-06T16:23Z; parsed with HEAD 377b47e parseAllMarkets",
+ "eventId": 14438716,
+ "matchName": "Arsenal·Hull City",
+ "oddsTotal": 4713,
+ "oddsWithIdField": 0,
+ "oddsWithUuid": 4713,
+ "rawOdds": [
+  {
+   "uuid": "3b3179ac-c756-573c-8cd2-fdc0d5f5d00b",
+   "marketUuid": "d90b9734-ac7e-5e0b-b41a-e6a6c7ed1ce9",
+   "marketId": 547,
+   "outcomeId": 1470,
+   "code": "1",
+   "name": "1",
+   "marketName": "Mecz",
+   "price": 1.17,
+   "status": "active"
+  },
+  {
+   "uuid": "49ac60ac-1c1c-57e0-ae08-4b42023d1615",
+   "marketUuid": "d90b9734-ac7e-5e0b-b41a-e6a6c7ed1ce9",
+   "marketId": 547,
+   "outcomeId": 1471,
+   "code": "0",
+   "name": "X",
+   "marketName": "Mecz",
+   "price": 7.5,
+   "status": "active"
+  },
+  {
+   "uuid": "3beca3c3-e1ef-558d-8377-ca1a4079a33f",
+   "marketUuid": "d90b9734-ac7e-5e0b-b41a-e6a6c7ed1ce9",
+   "marketId": 547,
+   "outcomeId": 1472,
+   "code": "2",
+   "name": "2",
+   "marketName": "Mecz",
+   "price": 14,
+   "status": "active"
+  },
+  {
+   "uuid": "c8f0cf4f-c0df-573e-9305-b5cf247117e8",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1446,
+   "code": "0",
+   "name": "0",
+   "marketName": "Dokładna liczba goli",
+   "price": 17,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "22a65b0f-6e22-5e36-8702-4ffa7559d2a3",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1447,
+   "code": "1",
+   "name": "1",
+   "marketName": "Dokładna liczba goli",
+   "price": 6.3,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "df5f0a39-0692-5321-8d01-4a8a45200cdd",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1448,
+   "code": "2",
+   "name": "2",
+   "marketName": "Dokładna liczba goli",
+   "price": 4.3,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "8a3cf8bb-0b52-58f8-a090-13e446080fff",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1449,
+   "code": "3",
+   "name": "3",
+   "marketName": "Dokładna liczba goli",
+   "price": 4,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "2707b6fb-2d23-5291-b2e9-fcafdbc1ee24",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1450,
+   "code": "4",
+   "name": "4",
+   "marketName": "Dokładna liczba goli",
+   "price": 4.85,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "f0662fbc-588a-5c08-8d50-5b45ddea69b3",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1451,
+   "code": "5",
+   "name": "5",
+   "marketName": "Dokładna liczba goli",
+   "price": 7,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "5d48eb0d-3112-55b6-9f32-33a9998fdcb3",
+   "marketUuid": "aec98d7e-cb37-5f82-94ff-0f043950d52a",
+   "marketId": 541,
+   "outcomeId": 1452,
+   "code": "6",
+   "name": "6+",
+   "marketName": "Dokładna liczba goli",
+   "price": 7.4,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:6+"
+  },
+  {
+   "uuid": "d98766de-af00-5820-9c45-39c13e0d4948",
+   "marketUuid": "cc6f7659-170a-5c5d-b618-80105e38dab2",
+   "marketId": 540,
+   "outcomeId": 1442,
+   "code": "0",
+   "name": "0",
+   "marketName": "Arsenal - dokładna liczba goli",
+   "price": 9.5,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "8d56b5bb-88be-5200-b6fd-efce2a979e59",
+   "marketUuid": "cc6f7659-170a-5c5d-b618-80105e38dab2",
+   "marketId": 540,
+   "outcomeId": 1443,
+   "code": "1",
+   "name": "1",
+   "marketName": "Arsenal - dokładna liczba goli",
+   "price": 4.55,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "6fce568f-a989-568c-8133-8ff94c37cb20",
+   "marketUuid": "cc6f7659-170a-5c5d-b618-80105e38dab2",
+   "marketId": 540,
+   "outcomeId": 1444,
+   "code": "2",
+   "name": "2",
+   "marketName": "Arsenal - dokładna liczba goli",
+   "price": 3.55,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "073f4844-9419-5a47-aa3b-606e0c1a4779",
+   "marketUuid": "cc6f7659-170a-5c5d-b618-80105e38dab2",
+   "marketId": 540,
+   "outcomeId": 1445,
+   "code": "3",
+   "name": "3+",
+   "marketName": "Arsenal - dokładna liczba goli",
+   "price": 1.85,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "644e3876-63ac-5e86-bf7e-162514ea10ab",
+   "marketUuid": "03dc1271-7761-5726-80e7-cf05c440760b",
+   "marketId": 545,
+   "outcomeId": 1463,
+   "code": "0",
+   "name": "0",
+   "marketName": "Hull City - dokładna liczba goli",
+   "price": 1.6,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "a9819a96-3c58-536b-83cf-6d15ae116349",
+   "marketUuid": "03dc1271-7761-5726-80e7-cf05c440760b",
+   "marketId": 545,
+   "outcomeId": 1464,
+   "code": "1",
+   "name": "1",
+   "marketName": "Hull City - dokładna liczba goli",
+   "price": 2.87,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "64f24020-350e-5a6e-8605-3b347108051b",
+   "marketUuid": "03dc1271-7761-5726-80e7-cf05c440760b",
+   "marketId": 545,
+   "outcomeId": 1465,
+   "code": "2",
+   "name": "2",
+   "marketName": "Hull City - dokładna liczba goli",
+   "price": 8.2,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "4e8c116d-e597-5ff4-8b9d-85c7ea5df440",
+   "marketUuid": "03dc1271-7761-5726-80e7-cf05c440760b",
+   "marketId": 545,
+   "outcomeId": 1466,
+   "code": "3",
+   "name": "3+",
+   "marketName": "Hull City - dokładna liczba goli",
+   "price": 26,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "dc50060c-e85c-55e1-ae20-99edf985d40d",
+   "marketUuid": "7dee5e51-6fdf-5f38-9d8b-d66549e390a6",
+   "marketId": 568,
+   "outcomeId": 1550,
+   "code": "0",
+   "name": "0",
+   "marketName": "1.połowa - dokładna liczba goli",
+   "price": 3.85,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "f5258a8d-1b07-5168-9bde-e57e37f07f81",
+   "marketUuid": "7dee5e51-6fdf-5f38-9d8b-d66549e390a6",
+   "marketId": 568,
+   "outcomeId": 1551,
+   "code": "1",
+   "name": "1",
+   "marketName": "1.połowa - dokładna liczba goli",
+   "price": 2.67,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "e0cf82e2-a3c0-58a5-a099-8f0ace134d86",
+   "marketUuid": "7dee5e51-6fdf-5f38-9d8b-d66549e390a6",
+   "marketId": 568,
+   "outcomeId": 1552,
+   "code": "2",
+   "name": "2",
+   "marketName": "1.połowa - dokładna liczba goli",
+   "price": 3.55,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "6a24f10d-7b0b-5d05-b28d-494b7a20db07",
+   "marketUuid": "7dee5e51-6fdf-5f38-9d8b-d66549e390a6",
+   "marketId": 568,
+   "outcomeId": 1553,
+   "code": "3",
+   "name": "3+",
+   "marketName": "1.połowa - dokładna liczba goli",
+   "price": 4.6,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "14c468f4-2734-5f6e-9cd9-14510f63e463",
+   "marketUuid": "017695c9-7f3d-5b72-ba88-7a86d5709e9b",
+   "marketId": 558,
+   "outcomeId": 1505,
+   "code": "0",
+   "name": "0",
+   "marketName": "1.połowa - Arsenal - dokładna liczba goli",
+   "price": 3,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "fdfa118d-d607-5828-b34b-7e3b5817508d",
+   "marketUuid": "017695c9-7f3d-5b72-ba88-7a86d5709e9b",
+   "marketId": 558,
+   "outcomeId": 1506,
+   "code": "1",
+   "name": "1",
+   "marketName": "1.połowa - Arsenal - dokładna liczba goli",
+   "price": 2.5,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "4c645ad8-e759-5941-bc1b-fa1a86700905",
+   "marketUuid": "017695c9-7f3d-5b72-ba88-7a86d5709e9b",
+   "marketId": 558,
+   "outcomeId": 1507,
+   "code": "2",
+   "name": "2",
+   "marketName": "1.połowa - Arsenal - dokładna liczba goli",
+   "price": 3.75,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "6afc18a4-9f6a-5754-9b3b-428df511f367",
+   "marketUuid": "017695c9-7f3d-5b72-ba88-7a86d5709e9b",
+   "marketId": 558,
+   "outcomeId": 1508,
+   "code": "3",
+   "name": "3+",
+   "marketName": "1.połowa - Arsenal - dokładna liczba goli",
+   "price": 5.8,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "c267b14a-90e9-5ca3-bbda-6e7d118285e9",
+   "marketUuid": "6ec68d50-bf9e-5350-a482-4bc6657ecaee",
+   "marketId": 569,
+   "outcomeId": 1554,
+   "code": "0",
+   "name": "0",
+   "marketName": "1.połowa - Hull City - dokładna liczba goli",
+   "price": 1.2,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "cf00c5a2-81fa-5f5c-82bd-3a2185175c10",
+   "marketUuid": "6ec68d50-bf9e-5350-a482-4bc6657ecaee",
+   "marketId": 569,
+   "outcomeId": 1555,
+   "code": "1",
+   "name": "1",
+   "marketName": "1.połowa - Hull City - dokładna liczba goli",
+   "price": 4.4,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "0fba86c6-bd14-581d-a7ec-508ff947252f",
+   "marketUuid": "6ec68d50-bf9e-5350-a482-4bc6657ecaee",
+   "marketId": 569,
+   "outcomeId": 1556,
+   "code": "2",
+   "name": "2",
+   "marketName": "1.połowa - Hull City - dokładna liczba goli",
+   "price": 21,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  },
+  {
+   "uuid": "7b80a3ad-2463-518a-b015-96d0126e13ab",
+   "marketUuid": "6ec68d50-bf9e-5350-a482-4bc6657ecaee",
+   "marketId": 569,
+   "outcomeId": 1557,
+   "code": "3",
+   "name": "3+",
+   "marketName": "1.połowa - Hull City - dokładna liczba goli",
+   "price": 50,
+   "status": "active",
+   "specialBetValue": "sr:exact_goals:3+"
+  }
+ ],
+ "rawOddsPlayerShotsJohnEgan": [
+  {
+   "uuid": "9ef812bd-8172-5110-9eb7-fdc9f29c5dae",
+   "marketUuid": "078e8620-82d9-5419-b36e-c7ce4855e549",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "name": "John Egan - powyżej 0.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "price": 2.12,
+   "status": "active",
+   "specialBetValue": "sr:player:100578-John Egan-0.5"
+  },
+  {
+   "uuid": "f0d8832c-c4d9-5224-845e-d6f3985d272d",
+   "marketUuid": "b217c462-0deb-5d8b-bced-db5e16deafa5",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "name": "John Egan - powyżej 1.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "price": 6,
+   "status": "active",
+   "specialBetValue": "sr:player:100578-John Egan-1.5"
+  },
+  {
+   "uuid": "f4ae1381-ad32-5fd2-86c8-24d3bf71631b",
+   "marketUuid": "449136a1-d987-5363-8b4b-9e4e6e024972",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "name": "John Egan - powyżej 2.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "price": 17,
+   "status": "active",
+   "specialBetValue": "sr:player:100578-John Egan-2.5"
+  }
+ ],
+ "parsedMarkets": [
+  {
+   "name": "Mecz",
+   "bookmakerMarketId": "547",
+   "groupName": "Wynik meczu",
+   "type": "1X2",
+   "selections": [
+    {
+     "name": "Arsenal",
+     "odds": 1.17,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "Remis",
+     "odds": 7.5,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "Hull City",
+     "odds": 14,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "Dokładna liczba goli",
+   "bookmakerMarketId": "541",
+   "groupName": "Inne",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 17,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 6.3,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 4.3,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3",
+     "odds": 4,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "4",
+     "odds": 4.85,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "5",
+     "odds": 7,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "6+",
+     "odds": 7.4,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "Arsenal - dokładna liczba goli",
+   "bookmakerMarketId": "540",
+   "groupName": "Inne",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 9.5,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 4.55,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 3.55,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3+",
+     "odds": 1.85,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "Hull City - dokładna liczba goli",
+   "bookmakerMarketId": "545",
+   "groupName": "Inne",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 1.6,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 2.87,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 8.2,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3+",
+     "odds": 26,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "1.połowa - dokładna liczba goli",
+   "bookmakerMarketId": "568",
+   "groupName": "Inne",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 3.85,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 2.67,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 3.55,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3+",
+     "odds": 4.6,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "1.połowa - Arsenal - dokładna liczba goli",
+   "bookmakerMarketId": "558",
+   "groupName": "Gole",
+   "type": "ODD_EVEN",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 3,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 2.5,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 3.75,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3+",
+     "odds": 5.8,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  },
+  {
+   "name": "1.połowa - Hull City - dokładna liczba goli",
+   "bookmakerMarketId": "569",
+   "groupName": "Inne",
+   "selections": [
+    {
+     "name": "0",
+     "odds": 1.2,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "1",
+     "odds": 4.4,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "2",
+     "odds": 21,
+     "externalId": "undefined",
+     "status": "active"
+    },
+    {
+     "name": "3+",
+     "odds": 50,
+     "externalId": "undefined",
+     "status": "active"
+    }
+   ]
+  }
+ ]
+}

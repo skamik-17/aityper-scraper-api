@@ -1,0 +1,12 @@
+# Phase-1 coverage (final key table: 20 market_ids + 18 slugs + name 'Wynik meczu') over 4 PL detail captures, 2026-11-06
+Crystal Palace  - Liverpool          markets= 385 phase1= 82 (21%) phase1-selections= 227/ 2601
+Everton - Coventry City              markets= 488 phase1= 81 (17%) phase1-selections= 225/ 2705
+Leeds - Tottenham                    markets= 439 phase1= 81 (18%) phase1-selections= 225/ 2759
+Manchester City - Fulham             markets= 160 phase1= 80 (50%) phase1-selections= 223/  701
+# buckets over the 3 near-term events (1312 markets)
+1 phase-1                           244 (19%)
+2 goals/result combos & specials    253 (19%)
+3a corners                          124 (9%)
+3b cards                             90 (7%)
+3c player props                     534 (41%)
+3d match stats                       67 (5%)

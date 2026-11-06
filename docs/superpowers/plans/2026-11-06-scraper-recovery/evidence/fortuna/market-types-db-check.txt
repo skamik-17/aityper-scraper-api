@@ -1,0 +1,34 @@
+# GET http://localhost:3001/api/odds/market-types (2026-11-06 ~17:30Z). src/routes/odds.ts:288-296: a DB row gives shortLabelPl = SHORT_LABELS[code] || name_pl;
+# a file-only code (odds.ts:311-319) gives shortLabelPl = SHORT_LABELS[code] || code. Codes absent from SHORT_LABELS with shortLabelPl != code therefore come from the DB
+# (market_types row exists -> odds.market_type_id FK is satisfied -> no sync-market-types.ts needed for this plan).
+code | id | shortLabelPl | in SHORT_LABELS | branch
+HALF_TIME_CORNERS_RACE | 74 | Więcej rożnych 1. połowa | False | DB
+SECOND_HALF_CORNERS_RACE | 1148 | Więcej rożnych 2. połowa | False | DB
+CORNERS_RACE | 41 | Więcej rzutów rożnych | False | DB
+PENALTY_AWARDED | 432 | Rzut karny | False | DB
+RED_CARD_AND_PENALTY | 433 | Czerwona kartka i rzut karny | False | DB
+OWN_GOAL | 424 | Gol samobójczy | False | DB
+HEADER_GOAL | 402 | Gol głową | False | DB
+ASSISTS_TOTAL | 1354 | Asysty w meczu | False | DB
+HALF_TIME_BTTS | 19 | HT BTTS | True | DB-or-file (in SHORT_LABELS)
+HOME_WIN_TO_NIL | 231 | Gospodarz wygra do zera | False | DB
+AWAY_WIN_TO_NIL | 232 | Gość wygra do zera | False | DB
+WINNING_MARGIN | 14 | Margines zwycięstwa | False | DB
+HOME_WIN_BOTH_HALVES | 229 | Gospodarz wygra obie połowy | False | DB
+AWAY_WIN_BOTH_HALVES | 230 | Gość wygra obie połowy | False | DB
+HOME_SCORE_BOTH_HALVES | 241 | Gospodarz strzeli w obu połowach | False | DB
+AWAY_SCORE_BOTH_HALVES | 242 | Gość strzeli w obu połowach | False | DB
+HOME_WIN_AT_LEAST_ONE_HALF | 227 | Gospodarz wygra przynajmniej jedną połowę | False | DB
+AWAY_WIN_AT_LEAST_ONE_HALF | 228 | Gość wygra przynajmniej jedną połowę | False | DB
+HOME_EXACT_GOALS | 233 | Gospodarz - dokładna liczba goli | False | DB
+AWAY_EXACT_GOALS | 234 | Gość - dokładna liczba goli | False | DB
+RED_CARD_TEAM | 415 | Czerwona kartka drużyny | False | DB
+HALF_TIME_RED_CARD_TEAM | 1130 | Czerwona kartka drużyny - 1. połowa | False | DB
+HALF_TIME_RED_CARD | 431 | Czerwona kartka 1. połowa | False | DB
+SECOND_HALF_EXACT_GOALS | 208 | Dokładna liczba goli 2. połowa | False | DB
+FIRST_CORNER | 42 | Pierwszy rzut rożny | False | DB
+ODD_EVEN_GOALS | 6 | P/N | True | DB-or-file (in SHORT_LABELS)
+MATCH_RESULT_OR_WIN_BY_2 | 1325 | Wynik meczu lub 2 gole przewagi | False | DB
+PENALTY_OR_RED_CARD | 1097 | Rzut karny lub czerwona kartka w meczu | False | DB
+HALF_TIME_BTTS (id 19) and ODD_EVEN_GOALS (id 6) are in SHORT_LABELS; their low ids come from the original seed, and other bookmakers already store rows under them on Arsenal vs Hull (8 and 7 bookmakers).
+WIN_OR_WIN_BY_2 | 294 | Wygrana lub przewaga 2 goli w meczu | False | DB

@@ -1,0 +1,22 @@
+🔍 LVBET MARKET DISCOVERY
+🏆 MATCH: Arsenal vs Hull City (premier-league)
+====================================================================================================
+📊 SUMMARY
+====================================================================================================
+Total markets: 11
+✅ Mapped: 0
+❌ Unmapped/OTHER: 11
+⚠️  With issues: 11
+
+❌ UNMAPPED MARKETS:
+   Strzały w obramowanie (słupek/poprzeczka) [Abdulkadir Omur 1+, Ben White 1+, Brooke Norton-Cuffy 1+]
+   Strzały celne głową                      [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Ben White 1+]
+   Strzały celne                            [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne zawodnika - 2. połowa      [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne zawodnika - 1. połowa      [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne lewą nogą                  [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne spoza pola karnego         [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne prawą nogą                 [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Ben White 1+]
+   Strzały spoza pola karnego               [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały                                  [Abdulkadir Omur 1+, Abdulkadir Omur 2+, Abdulkadir Omur 3+]
+   Strzały celne zawodnika - Każda połowa   [Abdulkadir Omur 1+, Ben White 1+, Brooke Norton-Cuffy 1+]

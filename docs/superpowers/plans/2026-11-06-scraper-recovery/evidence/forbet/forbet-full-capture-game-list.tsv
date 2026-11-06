@@ -1,0 +1,971 @@
+# index<TAB>gameType<TAB>gameName<TAB>outcome count, for every game of the two full captures (2026-11-06 ~16:20Z, GET https://www.iforbet.pl/rest/market/events/<id>; the .full.json files keep the API envelope {code, description, data})
+## 57945881 Everton - Coventry (497 games) <- forbet-event-57945881-everton-coventry.full.json
+0	1	1X2	3
+1	-31170	TurboPrzewaga - 2 gole przewagi lub wygrana	3
+2	4	Podwójna szansa	3
+3	3	1. połowa - 1X2	3
+4	93	Remis - nie ma zakładu (remis=zwrot)	2
+5	-8132	1x2 - do przerwy lub końcowy	3
+6	8	Poniżej/powyżej 0.5 goli	2
+7	8	Poniżej/powyżej 1.5 goli	2
+8	8	Poniżej/powyżej 2.5 goli	2
+9	8	Poniżej/powyżej 3.5 goli	2
+10	8	Poniżej/powyżej 4.5 goli	2
+11	8	Poniżej/powyżej 5.5 goli	2
+12	52	Everton poniżej/powyżej 0.5 goli	2
+13	52	Everton poniżej/powyżej 1.5 goli	2
+14	52	Everton poniżej/powyżej 2.5 goli	2
+15	52	Everton poniżej/powyżej 3.5 goli	2
+16	52	Everton poniżej/powyżej 4.5 goli	2
+17	53	Coventry poniżej/powyżej 0.5 goli	2
+18	53	Coventry poniżej/powyżej 1.5 goli	2
+19	53	Coventry poniżej/powyżej 2.5 goli	2
+20	53	Coventry poniżej/powyżej 3.5 goli	2
+21	53	Coventry poniżej/powyżej 4.5 goli	2
+22	-2982	Everton - strzeli gola	2
+23	-2983	Coventry - strzeli gola	2
+24	98	Obie drużyny strzelą gola	2
+25	-2976	10 minut – 1X2 od 1 do 10	3
+26	127	Everton wygra przynajmniej jedną połowę	2
+27	128	Coventry wygra przynajmniej jedną połowę	2
+28	27	1. połowa - podwójna szansa	3
+29	-237	1. połowa - remis nie ma zakładu	2
+30	111	2. połowa - 1X2	3
+31	-188	2. połowa - podwójna szansa	3
+32	-283	2. połowa - remis nie ma zakładu	2
+33	-458	Handicap -2.5 / +2.5	2
+34	-458	Handicap -1.5 / +1.5	2
+35	-458	Handicap -0.5 / +0.5	2
+36	-458	Handicap +0.5 / -0.5	2
+37	-6048	Handicap 2:0	3
+38	-6048	Handicap 1:0	3
+39	-6048	Handicap 0:1	3
+40	-6048	Handicap 0:2	3
+41	-6048	Handicap 0:3	3
+42	-2557	1. połowa - handicap 1:0	3
+43	-2557	1. połowa - handicap 0:1	3
+44	-2557	1. połowa - handicap 0:2	3
+45	-2557	1. połowa - handicap 0:3	3
+46	-2558	2. połowa - handicap 1:0	3
+47	-2558	2. połowa - handicap 0:1	3
+48	-2558	2. połowa - handicap 0:2	3
+49	-2558	2. połowa - handicap 0:3	3
+50	-2967	1. gol	3
+51	41	Ostatni gol	3
+52	21	Liczba goli (nieparzysta/parzysta)	2
+53	102	Everton - liczba goli	4
+54	103	Coventry - liczba goli	4
+55	-2904	Everton multi-gole	5
+56	-2905	Coventry multi-gole	5
+57	106	Everton strzeli gola w obu połowach	2
+58	107	Coventry strzeli gola w obu połowach	2
+59	-284	1. połowa - poniżej/powyżej 0.5 goli	2
+60	-284	1. połowa - poniżej/powyżej 1.5 goli	2
+61	-284	1. połowa - poniżej/powyżej 2.5 goli	2
+62	-286	2. połowa - poniżej/powyżej 0.5 goli	2
+63	-286	2. połowa - poniżej/powyżej 1.5 goli	2
+64	-286	2. połowa - poniżej/powyżej 2.5 goli	2
+65	110	1. połowa - Everton poniżej/powyżej 0.5 goli	2
+66	110	1. połowa - Everton poniżej/powyżej 1.5 goli	2
+67	110	1. połowa - Everton poniżej/powyżej 2.5 goli	2
+68	117	1. połowa - Coventry poniżej/powyżej 0.5 goli	2
+69	117	1. połowa - Coventry poniżej/powyżej 1.5 goli	2
+70	117	1. połowa - Coventry poniżej/powyżej 2.5 goli	2
+71	120	1. połowa - obie drużyny strzelą gola	2
+72	125	Everton wygra obie połowy	2
+73	118	2. połowa - Everton poniżej/powyżej 0.5 goli	2
+74	118	2. połowa - Everton poniżej/powyżej 1.5 goli	2
+75	118	2. połowa - Everton poniżej/powyżej 2.5 goli	2
+76	119	2. połowa - Coventry poniżej/powyżej 0.5 goli	2
+77	119	2. połowa - Coventry poniżej/powyżej 1.5 goli	2
+78	119	2. połowa - Coventry poniżej/powyżej 2.5 goli	2
+79	126	Coventry wygra obie połowy	2
+80	121	2. połowa - obie drużyny strzelą gola	2
+81	48	Everton wygra do zera	2
+82	130	Coventry wygra do zera	2
+83	114	1. połowa - liczba goli (nieparzysta/parzysta)	2
+84	-8048	Everton wygra mecz	2
+85	-8047	Coventry wygra mecz	2
+86	-8049	Którakolwiek z drużyn wygra mecz	2
+87	164	Liczba spalonych	2
+88	12	Zdobędzie gola w meczu	38
+89	20	Dokładny wynik	26
+90	-2901	Multi-wyniki	11
+91	74	1. połowa - dokładny wynik	10
+92	-2556	2. połowa - dokładny wynik	10
+93	-228	1. połowa dokładny wynik / dokładny wynik końcowy	46
+94	-227	Liczba goli	7
+95	-225	Liczba goli	4
+96	5	1. połowa/mecz	9
+97	-8035	Wydarzy się min. jedno z: Everton wygra lub powyżej 2.5 goli	2
+98	-8036	Wydarzy się min. jedno z: Everton wygra lub poniżej 2.5 goli	2
+99	-8041	Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola	2
+100	-8044	Wydarzy się min. jedno z: Everton wygra lub którakolwiek drużyna zachowa czyste konto	2
+101	-8039	Wydarzy się min. jedno z: Coventry wygra lub powyżej 2.5 goli	2
+102	-8040	Wydarzy się min. jedno z: Coventry wygra lub poniżej 2.5 goli	2
+103	-8043	Wydarzy się min. jedno z: Coventry wygra lub obie drużyny strzelą gola	2
+104	-8046	Wydarzy się min. jedno z: Coventry wygra lub którakolwiek drużyna zachowa czyste konto	2
+105	-8037	Wydarzy się min. jedno z: remis w meczu lub powyżej 2.5 goli	2
+106	-8038	Wydarzy się min. jedno z: remis w meczu lub poniżej 2.5 goli	2
+107	-8042	Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola	2
+108	-8045	Wydarzy się min. jedno z: remis w meczu lub którakolwiek drużyna zachowa czyste konto	2
+109	38	Połowa z większą liczbą goli	3
+110	-239	Everton - połowa z większą liczbą goli	3
+111	-240	Coventry - połowa z większą liczbą goli	3
+112	-338	Różnica zwycięstwa	7
+113	-2959	Obie połowy powyżej 1.5 goli	2
+114	-2958	Obie połowy poniżej 1.5 goli	2
+115	-30199	Więcej celnych strzałów	3
+116	-30149	Liczba celnych strzałów na bramkę	2
+117	-30149	Liczba celnych strzałów na bramkę	2
+118	-30149	Liczba celnych strzałów na bramkę	2
+119	-30150	Everton - liczba celnych strzałów na bramkę	2
+120	-30151	Coventry - liczba celnych strzałów na bramkę	2
+121	-31167	Liczba strzałów	2
+122	-31168	Everton - liczba strzałów	2
+123	-31169	Coventry - liczba strzałów	2
+124	-30152	Liczba popełnionych fauli	2
+125	-30229	Everton - liczba popełnionych fauli	2
+126	-30230	Coventry - liczba popełnionych fauli	2
+127	-2972	1. połowa - 1. gol	3
+128	-2973	2. połowa - 1. gol	3
+129	-2977	Kiedy zostanie strzelony 1. gol (15 min)	7
+130	-232	Która drużyna zdobędzie gola	4
+131	-233	1. połowa - liczba goli	4
+132	-233	1. połowa - liczba goli	3
+133	-234	2. połowa - liczba goli	3
+134	-2957	Kiedy zostanie strzelony 1. gol (10 min)	10
+135	-345	1X2 i poniżej/powyżej 1.5 goli	6
+136	-345	1X2 i poniżej/powyżej 2.5 goli	6
+137	-345	1X2 i poniżej/powyżej 3.5 goli	6
+138	-345	1X2 i poniżej/powyżej 4.5 goli	6
+139	-337	2. połowa - liczba goli (nieparzysta/parzysta)	2
+140	-2720	Podwójna szansa i poniżej/powyżej 1.5 goli	6
+141	-2720	Podwójna szansa i poniżej/powyżej 2.5 goli	6
+142	-2720	Podwójna szansa i poniżej/powyżej 3.5 goli	6
+143	-2720	Podwójna szansa i poniżej/powyżej 4.5 goli	6
+144	-2543	1X2 i obie drużyny strzelą	6
+145	-2545	1. połowa - Everton czyste konto	2
+146	-2546	1. połowa - Coventry czyste konto	2
+147	-2547	2. połowa - Everton czyste konto	2
+148	-2548	2. połowa - Coventry czyste konto	2
+149	-2551	Everton - liczba goli (nieparzysta/parzysta)	2
+150	-2552	Coventry - liczba goli (nieparzysta/parzysta)	2
+151	-31157	BetPewniak #1	8
+152	-31158	BetPewniak #2	8
+153	-31165	BetPewniak #3	8
+154	-31166	BetPewniak #4	8
+155	-31159	BetPołówka #1	8
+156	-31171	BetPołówka #2	8
+157	-2555	Obie drużyny strzelą i poniżej/powyżej 2.5 goli	4
+158	-30002	1./2.Połowa - Obie drużyny strzelą gola	4
+159	-2719	Podwójna szansa i obie drużyny strzelą	6
+160	-2960	1. gol + 1X2	7
+161	-2553	1. Połowa – 1X2 + liczba goli	6
+162	-2554	1. Połowa - 1X2 + obie drużyny strzelą gola	6
+163	-30007	1. Połowa - Podwójna szansa + obie drużyny strzelą	6
+164	-8034	2. Połowa – 1X2 + liczba goli	6
+165	-8033	2. Połowa – 1X2 + obie drużyny strzelą gola	6
+166	-30682	BetWin	8
+167	-30683	BetSzot	8
+168	-30684	BetFaul	8
+169	-30685	BetMix	8
+170	-31177	BetOver #1	8
+171	-31178	BetOver #2	8
+172	-31179	BetOver #3	8
+173	-30704	Strzeli gola lub zaliczy asystę	16
+174	-30686	Everton wygra + celne strzały zawodnika (rozliczenie za soccerstats.info)	10
+175	-30687	Coventry wygra + celne strzały zawodnika (rozliczenie za soccerstats.info)	7
+176	-30688	Każdy min. 1 celny strzał (z ew. dogrywką; rozliczenie za soccerstats.info)	10
+177	-30689	Każdy min. 2 celne strzały (z ew. dogrywką; rozliczenie za soccerstats.info)	8
+178	-30702	Everton celne strzały & Zawodnik celne strzały	8
+179	-30703	Coventry celne strzały & Zawodnik celne strzały	7
+180	-30008	2. Połowa - Podwójna szansa + obie drużyny strzelą	6
+181	-30009	Multi-gole (liczba goli)	17
+182	-2902	1. Połowa - multi-gole	5
+183	-2903	2. Połowa - multi-gole	5
+184	-30238	Zakłady specjalne #1	6
+185	-30241	Zakłady specjalne #1.1	6
+186	-30246	Zakłady specjalne #2.1	4
+187	-30247	Zakłady specjalne #2.2	4
+188	-30250	Zakłady specjalne #3	6
+189	-30252	Zakłady specjalne #4	1
+190	-30253	Zakłady specjalne #5	2
+191	-30255	Zakłady specjalne #6	2
+192	-30254	Everton - zakłady specjalne #6.1	2
+193	-30256	Everton - zakłady specjalne #6.2	2
+194	-30258	Everton - zakłady specjalne #6.4	5
+195	-30260	Zakłady specjalne #7	2
+196	-30259	Coventry - zakłady specjalne #7.1	2
+197	-30261	Coventry - zakłady specjalne #7.2	2
+198	-30263	Coventry - zakłady specjalne #7.4	5
+199	160	Więcej rzutów rożnych	3
+200	23	poniżej/powyżej 6.5 rzutów rożnych	2
+201	23	poniżej/powyżej 7.5 rzutów rożnych	2
+202	23	poniżej/powyżej 8.5 rzutów rożnych	2
+203	23	poniżej/powyżej 9.5 rzutów rożnych	2
+204	23	poniżej/powyżej 10.5 rzutów rożnych	2
+205	23	poniżej/powyżej 11.5 rzutów rożnych	2
+206	23	poniżej/powyżej 12.5 rzutów rożnych	2
+207	115	Everton poniżej/powyżej 4.5 rzutów rożnych	2
+208	115	Everton poniżej/powyżej 5.5 rzutów rożnych	2
+209	115	Everton poniżej/powyżej 6.5 rzutów rożnych	2
+210	116	Coventry poniżej/powyżej 2.5 rzutów rożnych	2
+211	116	Coventry poniżej/powyżej 3.5 rzutów rożnych	2
+212	116	Coventry poniżej/powyżej 4.5 rzutów rożnych	2
+213	-265	Everton - liczba rzutów rożnych	4
+214	-266	Coventry - liczba rzutów rożnych	4
+215	105	1. połowa - poniżej/powyżej 3.5 rzutów rożnych	2
+216	105	1. połowa - poniżej/powyżej 4.5 rzutów rożnych	2
+217	105	1. połowa - poniżej/powyżej 5.5 rzutów rożnych	2
+218	-261	1. połowa - więcej rzutów rożnych	3
+219	171	Więcej kartek (czerwona kartka=2)	3
+220	13	poniżej/powyżej 2.5 kartek (czerwona kartka=2)	2
+221	13	poniżej/powyżej 3.5 kartek (czerwona kartka=2)	2
+222	13	poniżej/powyżej 4.5 kartek (czerwona kartka=2)	2
+223	13	poniżej/powyżej 5.5 kartek (czerwona kartka=2)	2
+224	132	Everton poniżej/powyżej 1.5 żółtych kartek	2
+225	132	Everton poniżej/powyżej 2.5 żółtych kartek	2
+226	-267	Coventry -  liczba rzutów rożnych w 1 połowie	4
+227	133	Coventry poniżej/powyżej 1.5 żółtych kartek	2
+228	133	Coventry poniżej/powyżej 2.5 żółtych kartek	2
+229	-268	Everton - liczba rzutów rożnych w 1 połowie	4
+230	-2971	1. rzut rożny	3
+231	-269	Ostatni rzut rożny	3
+232	-2953	1. połowa - 1. rzut rożny	3
+233	-270	1. połowa - ostatni rzut rożny	3
+234	-262	Liczba rzutów rożnych - (nieparzysta/parzysta)	2
+235	-263	1. połowa - liczba rzutów rożnych (nieparzysta/parzysta)	2
+236	-241	Everton - liczba kartek (czerwona kartka=2)	4
+237	-242	Coventry - liczba kartek (czerwona kartka=2)	4
+238	-170	1 połowa - więcej kartek (czerwona kartka=2)	3
+239	134	1. połowa - poniżej/powyżej 1.5 kartek (czerwona kartka=2)	2
+240	-244	Everton - liczba kartek w 1 połowie (czerwona kartka=2)	4
+241	-243	Coventry - liczba kartek w 1 połowie (czerwona kartka=2)	4
+242	15	Rzut karny	2
+243	22	Czerwona kartka	2
+244	-250	Everton otrzyma czerwoną kartkę	2
+245	-251	Coventry otrzyma czerwoną kartkę	2
+246	-247	Czerwona kartka w 1 połowie	2
+247	-2955	1. połowa - 1. kartka	3
+248	-2419	Mykołenko, Witalij - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+249	-2419	Branthwaite, Jarrad - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+250	-2419	Keane, Michael - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+251	-2419	Alcaraz, Carlos - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+252	-2419	Tarkowski, James - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+253	-2419	Garner, James - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+254	-2419	O'Brien, Jake - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+255	-2419	Armstrong, Harrison - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+256	-2419	Hamer, Gustavo - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+257	-2419	Rohl, Merlin - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+258	-2419	Grimes, Matt - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+259	-2419	Dasilva, Jay - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+260	-2419	George, Tyrique - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+261	-2419	Torp, Victor - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+262	-2419	Dewsbury-Hall, Kiernan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+263	-2419	Hackney, Hayden - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+264	-2419	Barry, Thierno - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+265	-2419	Dibling, Tyler - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+266	-2419	Thomas-Asante, Brandon - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+267	-2419	Mason-Clark, Ephron - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+268	-2419	Onyeka, Frank - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+269	-2419	Van Ewijk, Milan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+270	-2419	Latibeaudiere, Joel - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+271	-2419	Sakamoto, Tatsuhiro - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+272	-2419	Tchaouna, Loum - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+273	-2419	Rudoni, Jack - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+274	-2419	Mfuni, Stephen - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+275	-2419	Thomas, Bobby - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+276	-2419	Yirenkyi, Caleb - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+277	-2419	Cherif, Sidiki - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+278	-2419	Johnson, Brennan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+279	-2419	Simms, Ellis Reco - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+280	-2419	Awoniyi, Taiwo - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+281	-2419	Pinnock, Ethan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+282	-2419	Maitland-Niles, Ainsley - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+283	-2419	Gboho, Yann - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+284	-2418	Mykołenko, Witalij - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+285	-2418	Branthwaite, Jarrad - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+286	-2418	Keane, Michael - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+287	-2418	Alcaraz, Carlos - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+288	-2418	Tarkowski, James - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+289	-2418	Garner, James - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+290	-2418	O'Brien, Jake - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+291	-2418	Armstrong, Harrison - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+292	-2418	Hamer, Gustavo - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+293	-2418	Rohl, Merlin - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+294	-2418	Grimes, Matt - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+295	-2418	Dasilva, Jay - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+296	-2418	Torp, Victor - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+297	-2418	George, Tyrique - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+298	-2418	Hackney, Hayden - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+299	-2418	Dewsbury-Hall, Kiernan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+300	-2418	Barry, Thierno - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+301	-2418	Dibling, Tyler - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+302	-2418	Thomas-Asante, Brandon - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+303	-2418	Mason-Clark, Ephron - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+304	-2418	Onyeka, Frank - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+305	-2418	Van Ewijk, Milan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+306	-2418	Latibeaudiere, Joel - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+307	-2418	Sakamoto, Tatsuhiro - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+308	-2418	Tchaouna, Loum - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+309	-2418	Rudoni, Jack - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+310	-2418	Mfuni, Stephen - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+311	-2418	Thomas, Bobby - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+312	-2418	Yirenkyi, Caleb - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+313	-2418	Cherif, Sidiki - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+314	-2418	Johnson, Brennan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+315	-2418	Simms, Ellis Reco - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+316	-2418	Awoniyi, Taiwo - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+317	-2418	Pinnock, Ethan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+318	-2418	Maitland-Niles, Ainsley - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+319	-2418	Gboho, Yann - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+320	-8213	Branthwaite, Jarrad otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+321	-8213	Keane, Michael otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+322	-8213	Mykołenko, Witalij otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+323	-8213	Tarkowski, James otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+324	-8213	Garner, James otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+325	-8213	O'Brien, Jake otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+326	-8213	Armstrong, Harrison otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+327	-8213	Hamer, Gustavo otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+328	-8213	Rohl, Merlin otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+329	-8213	Grimes, Matt otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+330	-8213	Dasilva, Jay otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+331	-8213	George, Tyrique otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+332	-8213	Alcaraz, Carlos otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+333	-8213	Dewsbury-Hall, Kiernan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+334	-8213	Hackney, Hayden otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+335	-8213	Barry, Thierno otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+336	-8213	Dibling, Tyler otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+337	-8213	Thomas-Asante, Brandon otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+338	-8213	Mason-Clark, Ephron otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+339	-8213	Onyeka, Frank otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+340	-8213	Torp, Victor otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+341	-8213	Latibeaudiere, Joel otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+342	-8213	Sakamoto, Tatsuhiro otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+343	-8213	Van Ewijk, Milan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+344	-8213	Rudoni, Jack otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+345	-8213	Thomas, Bobby otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+346	-8213	Yirenkyi, Caleb otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+347	-8213	Cherif, Sidiki otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+348	-8213	Tchaouna, Loum otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+349	-8213	Johnson, Brennan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+350	-8213	Simms, Ellis Reco otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+351	-8213	Awoniyi, Taiwo otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+352	-8213	Pinnock, Ethan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+353	-8213	Maitland-Niles, Ainsley otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+354	-8213	Mfuni, Stephen otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+355	-8213	Gboho, Yann otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+356	-2412	Mykołenko, Witalij - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+357	-2412	Branthwaite, Jarrad - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+358	-2412	Keane, Michael - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+359	-2412	Alcaraz, Carlos - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+360	-2412	Tarkowski, James - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+361	-2412	Garner, James - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+362	-2412	O'Brien, Jake - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+363	-2412	Armstrong, Harrison - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+364	-2412	Hamer, Gustavo - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+365	-2412	Rohl, Merlin - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+366	-2412	Grimes, Matt - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+367	-2412	Dasilva, Jay - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+368	-2412	George, Tyrique - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+369	-2412	Torp, Victor - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+370	-2412	Dewsbury-Hall, Kiernan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+371	-2412	Hackney, Hayden - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+372	-2412	Barry, Thierno - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+373	-2412	Dibling, Tyler - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+374	-2412	Thomas-Asante, Brandon - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+375	-2412	Mason-Clark, Ephron - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+376	-2412	Onyeka, Frank - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+377	-2412	Van Ewijk, Milan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+378	-2412	Latibeaudiere, Joel - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+379	-2412	Sakamoto, Tatsuhiro - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+380	-2412	Tchaouna, Loum - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+381	-2412	Rudoni, Jack - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+382	-2412	Mfuni, Stephen - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+383	-2412	Thomas, Bobby - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+384	-2412	Yirenkyi, Caleb - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+385	-2412	Cherif, Sidiki - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+386	-2412	Johnson, Brennan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+387	-2412	Simms, Ellis Reco - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+388	-2412	Awoniyi, Taiwo - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+389	-2412	Pinnock, Ethan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+390	-2412	Maitland-Niles, Ainsley - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+391	-2412	Gboho, Yann - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+392	-2417	Mykołenko, Witalij - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+393	-2417	Branthwaite, Jarrad - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+394	-2417	Keane, Michael - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+395	-2417	Alcaraz, Carlos - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+396	-2417	Tarkowski, James - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+397	-2417	Garner, James - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+398	-2417	O'Brien, Jake - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+399	-2417	Armstrong, Harrison - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+400	-2417	Hamer, Gustavo - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+401	-2417	Rohl, Merlin - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+402	-2417	Grimes, Matt - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+403	-2417	Dasilva, Jay - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+404	-2417	George, Tyrique - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+405	-2417	Torp, Victor - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+406	-2417	Dewsbury-Hall, Kiernan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+407	-2417	Hackney, Hayden - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+408	-2417	Barry, Thierno - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+409	-2417	Dibling, Tyler - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+410	-2417	Thomas-Asante, Brandon - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+411	-2417	Mason-Clark, Ephron - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+412	-2417	Onyeka, Frank - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+413	-2417	Van Ewijk, Milan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+414	-2417	Latibeaudiere, Joel - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+415	-2417	Sakamoto, Tatsuhiro - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+416	-2417	Tchaouna, Loum - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+417	-2417	Rudoni, Jack - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+418	-2417	Mfuni, Stephen - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+419	-2417	Thomas, Bobby - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+420	-2417	Yirenkyi, Caleb - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+421	-2417	Cherif, Sidiki - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+422	-2417	Johnson, Brennan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+423	-2417	Simms, Ellis Reco - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+424	-2417	Awoniyi, Taiwo - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+425	-2417	Pinnock, Ethan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+426	-2417	Maitland-Niles, Ainsley - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+427	-2417	Gboho, Yann - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+428	-2420	Sakamoto, Tatsuhiro - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+429	-2420	Maitland-Niles, Ainsley - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+430	-2420	O'Brien, Jake - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+431	-2420	Mason-Clark, Ephron - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+432	-2420	Mfuni, Stephen - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+433	-2420	Dasilva, Jay - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+434	-2420	Torp, Victor - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+435	-2420	Mykołenko, Witalij - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+436	-2420	Yirenkyi, Caleb - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+437	-2420	Dewsbury-Hall, Kiernan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+438	-2420	Hackney, Hayden - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+439	-2420	Garner, James - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+440	-2420	Cherif, Sidiki - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+441	-2420	Armstrong, Harrison - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+442	-2420	Dibling, Tyler - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+443	-2420	Thomas-Asante, Brandon - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+444	-2420	Rohl, Merlin - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+445	-2420	Gboho, Yann - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+446	-2420	Tarkowski, James - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+447	-2420	Johnson, Brennan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+448	-2420	Grimes, Matt - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+449	-2420	Hamer, Gustavo - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+450	-2420	Simms, Ellis Reco - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+451	-2420	Van Ewijk, Milan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+452	-2420	Alcaraz, Carlos - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+453	-2420	Awoniyi, Taiwo - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+454	-2420	Pinnock, Ethan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+455	-2420	Rudoni, Jack - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+456	-2420	Latibeaudiere, Joel - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+457	-2420	Branthwaite, Jarrad - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+458	-2420	Keane, Michael - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+459	-2420	George, Tyrique - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+460	-2422	Branthwaite, Jarrad - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+461	-2422	Keane, Michael - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+462	-2422	Mykołenko, Witalij - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+463	-2422	Alcaraz, Carlos - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+464	-2422	Tarkowski, James - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+465	-2422	Garner, James - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+466	-2422	O'Brien, Jake - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+467	-2422	Armstrong, Harrison - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+468	-2422	Hamer, Gustavo - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+469	-2422	Rohl, Merlin - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+470	-2422	Grimes, Matt - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+471	-2422	Dasilva, Jay - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+472	-2422	George, Tyrique - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+473	-2422	Torp, Victor - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+474	-2422	Dewsbury-Hall, Kiernan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+475	-2422	Hackney, Hayden - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+476	-2422	Barry, Thierno - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+477	-2422	Dibling, Tyler - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+478	-2422	Thomas-Asante, Brandon - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+479	-2422	Mason-Clark, Ephron - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+480	-2422	Onyeka, Frank - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+481	-2422	Latibeaudiere, Joel - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+482	-2422	Sakamoto, Tatsuhiro - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+483	-2422	Tchaouna, Loum - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+484	-2422	Van Ewijk, Milan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+485	-2422	Rudoni, Jack - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+486	-2422	Mfuni, Stephen - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+487	-2422	Thomas, Bobby - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+488	-2422	Yirenkyi, Caleb - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+489	-2422	Cherif, Sidiki - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+490	-2422	Johnson, Brennan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+491	-2422	Simms, Ellis Reco - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+492	-2422	Awoniyi, Taiwo - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+493	-2422	Pinnock, Ethan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+494	-2422	Maitland-Niles, Ainsley - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+495	-2422	Gboho, Yann - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+496	-6008	1. połowa - handicap	2
+## 57945911 Arsenal FC - Hull City (471 games) <- forbet-event-57945911-arsenal-hull.full.json
+0	1	1X2	3
+1	-31170	TurboPrzewaga - 2 gole przewagi lub wygrana	3
+2	4	Podwójna szansa	3
+3	3	1. połowa - 1X2	3
+4	93	Remis - nie ma zakładu (remis=zwrot)	2
+5	-8132	1x2 - do przerwy lub końcowy	3
+6	8	Poniżej/powyżej 0.5 goli	2
+7	8	Poniżej/powyżej 1.5 goli	2
+8	8	Poniżej/powyżej 2.5 goli	2
+9	8	Poniżej/powyżej 3.5 goli	2
+10	8	Poniżej/powyżej 4.5 goli	2
+11	8	Poniżej/powyżej 5.5 goli	2
+12	52	Arsenal FC poniżej/powyżej 0.5 goli	2
+13	52	Arsenal FC poniżej/powyżej 1.5 goli	2
+14	52	Arsenal FC poniżej/powyżej 2.5 goli	2
+15	52	Arsenal FC poniżej/powyżej 3.5 goli	2
+16	52	Arsenal FC poniżej/powyżej 4.5 goli	2
+17	53	Hull City poniżej/powyżej 0.5 goli	2
+18	53	Hull City poniżej/powyżej 1.5 goli	2
+19	53	Hull City poniżej/powyżej 2.5 goli	2
+20	-2982	Arsenal FC - strzeli gola	2
+21	-2983	Hull City - strzeli gola	2
+22	98	Obie drużyny strzelą gola	2
+23	-2976	10 minut – 1X2 od 1 do 10	3
+24	127	Arsenal FC wygra przynajmniej jedną połowę	2
+25	128	Hull City wygra przynajmniej jedną połowę	2
+26	27	1. połowa - podwójna szansa	3
+27	-237	1. połowa - remis nie ma zakładu	2
+28	111	2. połowa - 1X2	3
+29	-188	2. połowa - podwójna szansa	3
+30	-283	2. połowa - remis nie ma zakładu	2
+31	-458	Handicap -3.5 / +3.5	2
+32	-458	Handicap -2.5 / +2.5	2
+33	-458	Handicap -1.5 / +1.5	2
+34	-458	Handicap -0.5 / +0.5	2
+35	-6048	Handicap 1:0	3
+36	-6048	Handicap 0:1	3
+37	-6048	Handicap 0:2	3
+38	-6048	Handicap 0:3	3
+39	-6048	Handicap 0:4	3
+40	-2557	1. połowa - handicap 1:0	3
+41	-2557	1. połowa - handicap 0:1	3
+42	-2557	1. połowa - handicap 0:2	3
+43	-2557	1. połowa - handicap 0:3	3
+44	-2558	2. połowa - handicap 1:0	3
+45	-2558	2. połowa - handicap 0:1	3
+46	-2558	2. połowa - handicap 0:2	3
+47	-2558	2. połowa - handicap 0:3	3
+48	-2967	1. gol	3
+49	41	Ostatni gol	3
+50	21	Liczba goli (nieparzysta/parzysta)	2
+51	102	Arsenal FC - liczba goli	4
+52	103	Hull City - liczba goli	4
+53	-2904	Arsenal FC multi-gole	5
+54	-2905	Hull City multi-gole	5
+55	106	Arsenal FC strzeli gola w obu połowach	2
+56	107	Hull City strzeli gola w obu połowach	2
+57	-284	1. połowa - poniżej/powyżej 0.5 goli	2
+58	-284	1. połowa - poniżej/powyżej 1.5 goli	2
+59	-284	1. połowa - poniżej/powyżej 2.5 goli	2
+60	-286	2. połowa - poniżej/powyżej 0.5 goli	2
+61	-286	2. połowa - poniżej/powyżej 1.5 goli	2
+62	-286	2. połowa - poniżej/powyżej 2.5 goli	2
+63	110	1. połowa - Arsenal FC poniżej/powyżej 0.5 goli	2
+64	110	1. połowa - Arsenal FC poniżej/powyżej 1.5 goli	2
+65	110	1. połowa - Arsenal FC poniżej/powyżej 2.5 goli	2
+66	117	1. połowa - Hull City poniżej/powyżej 0.5 goli	2
+67	117	1. połowa - Hull City poniżej/powyżej 1.5 goli	2
+68	120	1. połowa - obie drużyny strzelą gola	2
+69	125	Arsenal FC wygra obie połowy	2
+70	118	2. połowa - Arsenal FC poniżej/powyżej 0.5 goli	2
+71	118	2. połowa - Arsenal FC poniżej/powyżej 1.5 goli	2
+72	118	2. połowa - Arsenal FC poniżej/powyżej 2.5 goli	2
+73	119	2. połowa - Hull City poniżej/powyżej 0.5 goli	2
+74	119	2. połowa - Hull City poniżej/powyżej 1.5 goli	2
+75	121	2. połowa - obie drużyny strzelą gola	2
+76	48	Arsenal FC wygra do zera	2
+77	130	Hull City wygra do zera	2
+78	114	1. połowa - liczba goli (nieparzysta/parzysta)	2
+79	-8048	Arsenal FC wygra mecz	2
+80	-8047	Hull City wygra mecz	2
+81	-8049	Którakolwiek z drużyn wygra mecz	2
+82	12	Zdobędzie gola w meczu	44
+83	20	Dokładny wynik	26
+84	-2901	Multi-wyniki	11
+85	74	1. połowa - dokładny wynik	10
+86	-2556	2. połowa - dokładny wynik	10
+87	-228	1. połowa dokładny wynik / dokładny wynik końcowy	46
+88	-227	Liczba goli	7
+89	-225	Liczba goli	4
+90	5	1. połowa/mecz	9
+91	-8035	Wydarzy się min. jedno z: Arsenal FC wygra lub powyżej 2.5 goli	2
+92	-8036	Wydarzy się min. jedno z: Arsenal FC wygra lub poniżej 2.5 goli	2
+93	-8041	Wydarzy się min. jedno z: Arsenal FC wygra lub obie drużyny strzelą gola	2
+94	-8044	Wydarzy się min. jedno z: Arsenal FC wygra lub którakolwiek drużyna zachowa czyste konto	2
+95	-8039	Wydarzy się min. jedno z: Hull City wygra lub powyżej 2.5 goli	2
+96	-8040	Wydarzy się min. jedno z: Hull City wygra lub poniżej 2.5 goli	2
+97	-8043	Wydarzy się min. jedno z: Hull City wygra lub obie drużyny strzelą gola	2
+98	-8046	Wydarzy się min. jedno z: Hull City wygra lub którakolwiek drużyna zachowa czyste konto	2
+99	-8037	Wydarzy się min. jedno z: remis w meczu lub powyżej 2.5 goli	2
+100	-8038	Wydarzy się min. jedno z: remis w meczu lub poniżej 2.5 goli	2
+101	-8042	Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola	2
+102	-8045	Wydarzy się min. jedno z: remis w meczu lub którakolwiek drużyna zachowa czyste konto	2
+103	38	Połowa z większą liczbą goli	3
+104	-239	Arsenal FC - połowa z większą liczbą goli	3
+105	-240	Hull City - połowa z większą liczbą goli	3
+106	-338	Różnica zwycięstwa	7
+107	-2959	Obie połowy powyżej 1.5 goli	2
+108	-2958	Obie połowy poniżej 1.5 goli	2
+109	-2972	1. połowa - 1. gol	3
+110	-2973	2. połowa - 1. gol	3
+111	-2977	Kiedy zostanie strzelony 1. gol (15 min)	7
+112	-232	Która drużyna zdobędzie gola	4
+113	-233	1. połowa - liczba goli	4
+114	-233	1. połowa - liczba goli	3
+115	-234	2. połowa - liczba goli	3
+116	-2957	Kiedy zostanie strzelony 1. gol (10 min)	10
+117	-345	1X2 i poniżej/powyżej 1.5 goli	6
+118	-345	1X2 i poniżej/powyżej 2.5 goli	6
+119	-345	1X2 i poniżej/powyżej 3.5 goli	6
+120	-345	1X2 i poniżej/powyżej 4.5 goli	6
+121	-337	2. połowa - liczba goli (nieparzysta/parzysta)	2
+122	-2720	Podwójna szansa i poniżej/powyżej 1.5 goli	6
+123	-2720	Podwójna szansa i poniżej/powyżej 2.5 goli	6
+124	-2720	Podwójna szansa i poniżej/powyżej 3.5 goli	6
+125	-2720	Podwójna szansa i poniżej/powyżej 4.5 goli	6
+126	-2543	1X2 i obie drużyny strzelą	6
+127	-2545	1. połowa - Arsenal FC czyste konto	2
+128	-2546	1. połowa - Hull City czyste konto	2
+129	-2547	2. połowa - Arsenal FC czyste konto	2
+130	-2548	2. połowa - Hull City czyste konto	2
+131	-2551	Arsenal FC - liczba goli (nieparzysta/parzysta)	2
+132	-2552	Hull City - liczba goli (nieparzysta/parzysta)	2
+133	-2555	Obie drużyny strzelą i poniżej/powyżej 2.5 goli	4
+134	-30002	1./2.Połowa - Obie drużyny strzelą gola	4
+135	-2719	Podwójna szansa i obie drużyny strzelą	6
+136	-2960	1. gol + 1X2	7
+137	-2553	1. Połowa – 1X2 + liczba goli	6
+138	-2554	1. Połowa - 1X2 + obie drużyny strzelą gola	6
+139	-30007	1. Połowa - Podwójna szansa + obie drużyny strzelą	6
+140	-8034	2. Połowa – 1X2 + liczba goli	6
+141	-8033	2. Połowa – 1X2 + obie drużyny strzelą gola	6
+142	-30704	Strzeli gola lub zaliczy asystę	13
+143	-30686	Arsenal FC wygra + celne strzały zawodnika (rozliczenie za soccerstats.info)	10
+144	-30688	Każdy min. 1 celny strzał (z ew. dogrywką; rozliczenie za soccerstats.info)	10
+145	-30689	Każdy min. 2 celne strzały (z ew. dogrywką; rozliczenie za soccerstats.info)	8
+146	-30008	2. Połowa - Podwójna szansa + obie drużyny strzelą	6
+147	-30009	Multi-gole (liczba goli)	17
+148	-2902	1. Połowa - multi-gole	5
+149	-2903	2. Połowa - multi-gole	5
+150	-30238	Zakłady specjalne #1	6
+151	-30241	Zakłady specjalne #1.1	6
+152	-30246	Zakłady specjalne #2.1	4
+153	-30247	Zakłady specjalne #2.2	4
+154	-30250	Zakłady specjalne #3	6
+155	-30252	Zakłady specjalne #4	2
+156	-30253	Zakłady specjalne #5	2
+157	-30255	Zakłady specjalne #6	1
+158	-30254	Arsenal FC - zakłady specjalne #6.1	1
+159	-30256	Arsenal FC - zakłady specjalne #6.2	3
+160	-30257	Arsenal FC - zakłady specjalne #6.3	6
+161	-30258	Arsenal FC - zakłady specjalne #6.4	6
+162	-30260	Zakłady specjalne #7	1
+163	-30259	Hull City - zakłady specjalne #7.1	2
+164	-30261	Hull City - zakłady specjalne #7.2	6
+165	-30262	Hull City - zakłady specjalne #7.3	6
+166	-30263	Hull City - zakłady specjalne #7.4	6
+167	160	Więcej rzutów rożnych	3
+168	23	poniżej/powyżej 7.5 rzutów rożnych	2
+169	23	poniżej/powyżej 8.5 rzutów rożnych	2
+170	23	poniżej/powyżej 9.5 rzutów rożnych	2
+171	23	poniżej/powyżej 10.5 rzutów rożnych	2
+172	23	poniżej/powyżej 11.5 rzutów rożnych	2
+173	23	poniżej/powyżej 12.5 rzutów rożnych	2
+174	23	poniżej/powyżej 13.5 rzutów rożnych	2
+175	115	Arsenal FC poniżej/powyżej 5.5 rzutów rożnych	2
+176	115	Arsenal FC poniżej/powyżej 6.5 rzutów rożnych	2
+177	115	Arsenal FC poniżej/powyżej 7.5 rzutów rożnych	2
+178	116	Hull City poniżej/powyżej 1.5 rzutów rożnych	2
+179	116	Hull City poniżej/powyżej 2.5 rzutów rożnych	2
+180	116	Hull City poniżej/powyżej 3.5 rzutów rożnych	2
+181	-265	Arsenal FC - liczba rzutów rożnych	4
+182	-266	Hull City - liczba rzutów rożnych	4
+183	105	1. połowa - poniżej/powyżej 3.5 rzutów rożnych	2
+184	105	1. połowa - poniżej/powyżej 4.5 rzutów rożnych	2
+185	105	1. połowa - poniżej/powyżej 5.5 rzutów rożnych	2
+186	-261	1. połowa - więcej rzutów rożnych	3
+187	171	Więcej kartek (czerwona kartka=2)	3
+188	13	poniżej/powyżej 1.5 kartek (czerwona kartka=2)	2
+189	13	poniżej/powyżej 2.5 kartek (czerwona kartka=2)	2
+190	13	poniżej/powyżej 3.5 kartek (czerwona kartka=2)	2
+191	13	poniżej/powyżej 4.5 kartek (czerwona kartka=2)	2
+192	132	Arsenal FC poniżej/powyżej 0.5 żółtych kartek	2
+193	132	Arsenal FC poniżej/powyżej 1.5 żółtych kartek	2
+194	-267	Hull City -  liczba rzutów rożnych w 1 połowie	4
+195	133	Hull City poniżej/powyżej 1.5 żółtych kartek	2
+196	133	Hull City poniżej/powyżej 2.5 żółtych kartek	2
+197	-268	Arsenal FC - liczba rzutów rożnych w 1 połowie	4
+198	-262	Liczba rzutów rożnych - (nieparzysta/parzysta)	2
+199	-263	1. połowa - liczba rzutów rożnych (nieparzysta/parzysta)	2
+200	-241	Arsenal FC - liczba kartek (czerwona kartka=2)	4
+201	-242	Hull City - liczba kartek (czerwona kartka=2)	4
+202	-170	1 połowa - więcej kartek (czerwona kartka=2)	3
+203	134	1. połowa - poniżej/powyżej 0.5 kartek (czerwona kartka=2)	2
+204	134	1. połowa - poniżej/powyżej 1.5 kartek (czerwona kartka=2)	2
+205	-244	Arsenal FC - liczba kartek w 1 połowie (czerwona kartka=2)	4
+206	-243	Hull City - liczba kartek w 1 połowie (czerwona kartka=2)	4
+207	22	Czerwona kartka	2
+208	-250	Arsenal FC otrzyma czerwoną kartkę	2
+209	-251	Hull City otrzyma czerwoną kartkę	2
+210	-247	Czerwona kartka w 1 połowie	2
+211	-2955	1. połowa - 1. kartka	3
+212	-2419	Merino, Mikel - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+213	-2419	Magalhaes, Gabriel - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+214	-2419	Zubimendi, Martin - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+215	-2419	White, Ben - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+216	-2419	Havertz, Kai - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+217	-2419	Slater, Regan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+218	-2419	Lewis-Skelly, Myles - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+219	-2419	Rice, Declan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+220	-2419	Calafiori, Riccardo - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+221	-2419	Odegaard, Martin - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+222	-2419	Coyle, Lewie - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+223	-2419	Timber, Jurrien - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+224	-2419	Eze, Eberechi - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+225	-2419	Gyokeres, Viktor - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+226	-2419	Mosquera, Cristhian - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+227	-2419	Guimaraes, Bruno - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+228	-2419	Ajayi, Semi - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+229	-2419	Belloumi, Mohamed - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+230	-2419	McNair, Paddy - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+231	-2419	Egan, John - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+232	-2419	Morita, Hidemasa - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+233	-2419	Giles, Ryan - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+234	-2419	McBurnie, Oliver - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+235	-2419	Stroud, Elliot - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+236	-2419	Hincapie, Piero - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+237	-2419	Crooks, Matt - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+238	-2419	Konsa, Ezri - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+239	-2419	Thomas, Sorba - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+240	-2419	Gelhardt, Joe - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+241	-2419	Herrington, Lucas - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+242	-2419	Iroegbunam, Tim - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+243	-2419	Norton-Cuffy, Brooke - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+244	-2419	Vaz, Robinio - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+245	-2419	Tzolis, Christos - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+246	-2419	Mendy, Nobel - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+247	-2419	Madueke, Noni - liczba strzałów celnych (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+248	-2418	Magalhaes, Gabriel - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+249	-2418	Merino, Mikel - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+250	-2418	Zubimendi, Martin - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+251	-2418	White, Ben - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+252	-2418	Slater, Regan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+253	-2418	Havertz, Kai - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+254	-2418	Lewis-Skelly, Myles - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+255	-2418	Rice, Declan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+256	-2418	Calafiori, Riccardo - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+257	-2418	Odegaard, Martin - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+258	-2418	Coyle, Lewie - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+259	-2418	Timber, Jurrien - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+260	-2418	Gyokeres, Viktor - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+261	-2418	Mosquera, Cristhian - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+262	-2418	Eze, Eberechi - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+263	-2418	Guimaraes, Bruno - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+264	-2418	Ajayi, Semi - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+265	-2418	Belloumi, Mohamed - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+266	-2418	McNair, Paddy - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+267	-2418	Egan, John - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+268	-2418	Morita, Hidemasa - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+269	-2418	Giles, Ryan - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+270	-2418	McBurnie, Oliver - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+271	-2418	Stroud, Elliot - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+272	-2418	Hincapie, Piero - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+273	-2418	Crooks, Matt - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+274	-2418	Konsa, Ezri - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+275	-2418	Gelhardt, Joe - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+276	-2418	Herrington, Lucas - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+277	-2418	Iroegbunam, Tim - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+278	-2418	Norton-Cuffy, Brooke - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+279	-2418	Thomas, Sorba - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+280	-2418	Vaz, Robinio - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+281	-2418	Tzolis, Christos - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+282	-2418	Mendy, Nobel - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+283	-2418	Madueke, Noni - liczba strzałów (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+284	-8213	Merino, Mikel otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+285	-8213	Havertz, Kai otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+286	-8213	Eze, Eberechi otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+287	-8213	Guimaraes, Bruno otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+288	-8213	McBurnie, Oliver otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+289	-8213	Odegaard, Martin otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+290	-8213	Calafiori, Riccardo otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+291	-8213	Gyokeres, Viktor otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+292	-8213	Gelhardt, Joe otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+293	-8213	Zubimendi, Martin otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+294	-8213	Slater, Regan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+295	-8213	Timber, Jurrien otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+296	-8213	Vaz, Robinio otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+297	-8213	Magalhaes, Gabriel otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+298	-8213	Belloumi, Mohamed otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+299	-8213	Lewis-Skelly, Myles otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+300	-8213	Rice, Declan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+301	-8213	Stroud, Elliot otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+302	-8213	Thomas, Sorba otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+303	-8213	Morita, Hidemasa otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+304	-8213	White, Ben otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+305	-8213	Ajayi, Semi otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+306	-8213	Norton-Cuffy, Brooke otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+307	-8213	Herrington, Lucas otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+308	-8213	Iroegbunam, Tim otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+309	-8213	Konsa, Ezri otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+310	-8213	McNair, Paddy otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+311	-8213	Egan, John otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+312	-8213	Mosquera, Cristhian otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+313	-8213	Giles, Ryan otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+314	-8213	Hincapie, Piero otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+315	-8213	Coyle, Lewie otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+316	-8213	Crooks, Matt otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+317	-8213	Tzolis, Christos otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+318	-8213	Mendy, Nobel otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+319	-8213	Madueke, Noni otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+320	-8213	Dowman, Max otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+321	-8213	Saliba, William otrzyma kartkę (z ew. dogrywką; rozliczenie za soccerstats.info)	1
+322	-2412	Merino, Mikel - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+323	-2412	Magalhaes, Gabriel - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+324	-2412	Zubimendi, Martin - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+325	-2412	White, Ben - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+326	-2412	Havertz, Kai - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+327	-2412	Slater, Regan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+328	-2412	Lewis-Skelly, Myles - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+329	-2412	Rice, Declan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+330	-2412	Calafiori, Riccardo - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+331	-2412	Odegaard, Martin - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+332	-2412	Coyle, Lewie - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+333	-2412	Timber, Jurrien - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+334	-2412	Eze, Eberechi - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+335	-2412	Gyokeres, Viktor - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+336	-2412	Mosquera, Cristhian - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+337	-2412	Dowman, Max - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+338	-2412	Guimaraes, Bruno - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+339	-2412	Ajayi, Semi - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+340	-2412	Belloumi, Mohamed - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+341	-2412	McNair, Paddy - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+342	-2412	Egan, John - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+343	-2412	Morita, Hidemasa - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+344	-2412	Giles, Ryan - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+345	-2412	McBurnie, Oliver - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+346	-2412	Stroud, Elliot - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+347	-2412	Hincapie, Piero - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+348	-2412	Crooks, Matt - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+349	-2412	Konsa, Ezri - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+350	-2412	Gelhardt, Joe - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+351	-2412	Herrington, Lucas - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+352	-2412	Iroegbunam, Tim - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+353	-2412	Norton-Cuffy, Brooke - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+354	-2412	Thomas, Sorba - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+355	-2412	Vaz, Robinio - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+356	-2412	Tzolis, Christos - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+357	-2412	Mendy, Nobel - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+358	-2412	Madueke, Noni - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+359	-2412	Saliba, William - liczba asyst (z ew. dogrywką; rozliczenie za soccerstats.info)	2
+360	-2417	Merino, Mikel - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+361	-2417	Magalhaes, Gabriel - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+362	-2417	Zubimendi, Martin - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+363	-2417	White, Ben - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+364	-2417	Havertz, Kai - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+365	-2417	Slater, Regan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+366	-2417	Lewis-Skelly, Myles - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+367	-2417	Rice, Declan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+368	-2417	Calafiori, Riccardo - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+369	-2417	Odegaard, Martin - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+370	-2417	Coyle, Lewie - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+371	-2417	Timber, Jurrien - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+372	-2417	Eze, Eberechi - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+373	-2417	Gyokeres, Viktor - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+374	-2417	Mosquera, Cristhian - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+375	-2417	Guimaraes, Bruno - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+376	-2417	Ajayi, Semi - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+377	-2417	Belloumi, Mohamed - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+378	-2417	McNair, Paddy - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+379	-2417	Egan, John - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+380	-2417	Morita, Hidemasa - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+381	-2417	Giles, Ryan - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+382	-2417	McBurnie, Oliver - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+383	-2417	Stroud, Elliot - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+384	-2417	Hincapie, Piero - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+385	-2417	Crooks, Matt - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+386	-2417	Konsa, Ezri - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+387	-2417	Thomas, Sorba - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+388	-2417	Gelhardt, Joe - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+389	-2417	Herrington, Lucas - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+390	-2417	Iroegbunam, Tim - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+391	-2417	Norton-Cuffy, Brooke - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+392	-2417	Vaz, Robinio - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+393	-2417	Tzolis, Christos - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+394	-2417	Mendy, Nobel - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+395	-2417	Madueke, Noni - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+396	-2417	Saliba, William - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+397	-2417	Dowman, Max - liczba goli (z ew. dogrywką; rozliczenie za soccerstats.info)	3
+398	-2420	Mendy, Nobel - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+399	-2420	Merino, Mikel - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+400	-2420	Zubimendi, Martin - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+401	-2420	White, Ben - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+402	-2420	Eze, Eberechi - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+403	-2420	Guimaraes, Bruno - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+404	-2420	Ajayi, Semi - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+405	-2420	Iroegbunam, Tim - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+406	-2420	Norton-Cuffy, Brooke - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+407	-2420	Magalhaes, Gabriel - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+408	-2420	Madueke, Noni - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+409	-2420	Lewis-Skelly, Myles - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+410	-2420	Belloumi, Mohamed - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+411	-2420	Rice, Declan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+412	-2420	Konsa, Ezri - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+413	-2420	Tzolis, Christos - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+414	-2420	McNair, Paddy - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+415	-2420	Dowman, Max - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+416	-2420	Odegaard, Martin - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+417	-2420	Thomas, Sorba - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+418	-2420	Gelhardt, Joe - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+419	-2420	Egan, John - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+420	-2420	Morita, Hidemasa - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+421	-2420	Slater, Regan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+422	-2420	Calafiori, Riccardo - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+423	-2420	Gyokeres, Viktor - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+424	-2420	Vaz, Robinio - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+425	-2420	Timber, Jurrien - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+426	-2420	Havertz, Kai - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+427	-2420	Mosquera, Cristhian - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+428	-2420	McBurnie, Oliver - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+429	-2420	Giles, Ryan - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+430	-2420	Herrington, Lucas - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+431	-2420	Stroud, Elliot - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+432	-2420	Coyle, Lewie - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+433	-2420	Hincapie, Piero - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+434	-2420	Crooks, Matt - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+435	-2420	Saliba, William - liczba podań (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+436	-2422	Gelhardt, Joe - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+437	-2422	Magalhaes, Gabriel - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+438	-2422	Lewis-Skelly, Myles - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+439	-2422	Giles, Ryan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+440	-2422	McBurnie, Oliver - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+441	-2422	Stroud, Elliot - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+442	-2422	Herrington, Lucas - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+443	-2422	Timber, Jurrien - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+444	-2422	Ajayi, Semi - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+445	-2422	Merino, Mikel - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+446	-2422	Zubimendi, Martin - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+447	-2422	White, Ben - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+448	-2422	Eze, Eberechi - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+449	-2422	Guimaraes, Bruno - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+450	-2422	Iroegbunam, Tim - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+451	-2422	Norton-Cuffy, Brooke - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+452	-2422	Belloumi, Mohamed - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+453	-2422	Rice, Declan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+454	-2422	Konsa, Ezri - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+455	-2422	McNair, Paddy - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+456	-2422	Odegaard, Martin - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+457	-2422	Thomas, Sorba - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+458	-2422	Egan, John - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+459	-2422	Morita, Hidemasa - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+460	-2422	Slater, Regan - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+461	-2422	Calafiori, Riccardo - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+462	-2422	Vaz, Robinio - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+463	-2422	Havertz, Kai - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+464	-2422	Mosquera, Cristhian - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+465	-2422	Hincapie, Piero - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+466	-2422	Coyle, Lewie - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+467	-2422	Crooks, Matt - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	6
+468	-2422	Tzolis, Christos - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4
+469	-2422	Mendy, Nobel - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	5
+470	-2422	Madueke, Noni - liczba odbiorów - tackles (z ew. dogrywką; rozliczenie za soccerstats.info)	4

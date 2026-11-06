@@ -1,0 +1,10 @@
+# curl -s 'http://localhost:3001/api/matches/Arsenal/Hull%20City/normalized-markets?league=premier-league' | python3 -I evidence/betclic/api-check.py PENALTY_GOAL,HALF_TIME_PENALTY_GOAL,SECOND_HALF_PENALTY_GOAL,TEAM_TOTAL_TACKLES,OFFSIDES_TOTAL,FOULS_TOTAL,HOME_TEAM_TOTAL_FOULS,FIRST_OFFSIDE   (CURRENT code, 2026-11-06 17:28Z; OPTA codes print nothing because they are OTHER today)
+PENALTY_GOAL '' ['TEAM_HOME', 'TEAM_AWAY', 'Którakolwiek drużyna strzeli gola z rzutu karnego', 'NONE']
+HALF_TIME_PENALTY_GOAL '' ['TEAM_HOME', 'TEAM_AWAY', 'Którakolwiek drużyna strzeli gola z rzutu karnego']
+SECOND_HALF_PENALTY_GOAL '' ['TEAM_HOME', 'TEAM_AWAY', 'Którakolwiek drużyna strzeli gola z rzutu karnego']
+TEAM_TOTAL_TACKLES '10.5' ['OVER', 'UNDER']
+TEAM_TOTAL_TACKLES '12.5' ['OVER', 'UNDER']
+TEAM_TOTAL_TACKLES '14.5' ['OVER', 'UNDER']
+TEAM_TOTAL_TACKLES '15.5' ['OVER', 'UNDER']
+TEAM_TOTAL_TACKLES '18.5' ['OVER', 'UNDER']
+TEAM_TOTAL_TACKLES '21.5' ['OVER', 'UNDER']

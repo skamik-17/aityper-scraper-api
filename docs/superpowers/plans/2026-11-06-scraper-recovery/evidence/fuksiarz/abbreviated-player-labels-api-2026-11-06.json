@@ -1,0 +1,2533 @@
+{
+ "nm-ars-hul.json": {
+  "abbreviatedWithPeers": [
+   {
+    "type": "PLAYER_CARDS",
+    "param": "J. Butland",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "C. Mouzakitis",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "J. Hjerto-Dahl",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "M. Cho",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "C. Mouzakitis",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "J. Hjerto-Dahl",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "M. Cho",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "W. Saliba",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "A. Omur",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "B. Guimaraes",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "B. Norton-Cuffy",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "B. White",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "C. Mosquera",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "C. Mouzakitis",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "C. Tzolis",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "D. Rice",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "E. Eze",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "E. Konsa",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "E. Stroud",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "G. Magalhaes",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "J. Egan",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "J. Gelhardt",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "J. Hjerto-Dahl",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "J. Timber",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "K. Havertz",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "L. Coyle",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "L. Herrington",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Bachir Belloumi",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Cho",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Lewis-Skelly",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Merino",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Odegaard",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Zubimendi",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "N. Madueke",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "N. Mendy",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "O. McBurnie",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "P. Hincapie",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "P. McNair",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "R. Calafiori",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "R. Giles",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "R. Slater",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "S. Ajayi",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "S. Thomas",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "T. Iroegbunam",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "V. Gyokeres",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "W. Saliba",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "B. Guimaraes",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "B. White",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "C. Mosquera",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "C. Tzolis",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "D. Rice",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "E. Eze",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "G. Magalhaes",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "J. Gelhardt",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "J. Timber",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "K. Havertz",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Cho",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Lewis-Skelly",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Merino",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Odegaard",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Zubimendi",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "N. Madueke",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "O. McBurnie",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "R. Calafiori",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "V. Gyokeres",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "B. White",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "C. Mosquera",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "D. Raya",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "E. Eze",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "K. Tzolakis",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "M. Odegaard",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "M. Zubimendi",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "P. Hincapie",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "P. McNair",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "W. Saliba",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "C. Mosquera",
+    "bookmakers": [
+     "fortuna",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "B. Norton-Cuffy",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "C. Mosquera",
+    "bookmakers": [
+     "fortuna",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "H. Morita",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "J. Hjerto-Dahl",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "N. Mendy",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "W. Saliba",
+    "bookmakers": [
+     "fuksiarz",
+     "sts"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "H. Morita",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   }
+  ],
+  "abbreviatedFuksiarzOnly": [
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "H. Morita",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "H. Morita",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "D. Phillips",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "I. Meslier",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "K. Arrizabalaga",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "H. Morita",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "A. Omur",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "B. Norton-Cuffy",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "C. Mouzakitis",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "E. Konsa",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "E. Stroud",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "H. Morita",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "J. Egan",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "J. Hjerto-Dahl",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "L. Coyle",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "L. Gourna-Douath",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "L. Herrington",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Bachir Belloumi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "M. Crooks",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "N. Mendy",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "P. Hincapie",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "P. McNair",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "R. Giles",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "R. Slater",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "S. Ajayi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "S. Thomas",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "T. Iroegbunam",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "W. Saliba",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "D. Phillips",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "I. Meslier",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "J. Butland",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "K. Arrizabalaga",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "M. Bachir Belloumi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "C. O'Neill",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "M. Salmon",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "O. Zambrano",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "R. Vaz",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "T. Iroegbunam",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   }
+  ]
+ },
+ "nm-lee-tot.json": {
+  "abbreviatedWithPeers": [
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "J. Rodon",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "J. Rodon",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "A. Gray",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "A. Robertson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "A. Stach",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "A. Tanaka",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "B. Aaronson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "C. Gallagher",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "D. Calvert-Lewin",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "D. James",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "D. Solanke",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "D. Udogie",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "E. Ampadu",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "G. Gudmundsson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "H. Wilson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. Bijol",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. Bogle",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. Justin",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. Rodon",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "L. Nmecha",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. Bard",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. Fernandes",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. Kudus",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. Senesi",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. Tel",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "M. van de Ven",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "N. Elvedi",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "N. Okafor",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "P. Porro",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "S. Longstaff",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "S. Tonali",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "T. Adarabioyo",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "T. Muharemovic",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "A. Kinsky",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "D. Udogie",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "G. Gudmundsson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "J. Rodon",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "J. Trafford",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "L. Nmecha",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "M. Bard",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "M. Zetterer",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "M. van de Ven",
+    "bookmakers": [
+     "betfan",
+     "fortuna",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "N. Okafor",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "P. Porro",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "T. Adarabioyo",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz",
+     "superbet"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+    "param": "G. Gudmundsson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+    "param": "L. Nmecha",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+    "param": "N. Okafor",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "A. Gray",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "A. Robertson",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "C. Gallagher",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "D. Solanke",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "D. Udogie",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "J. Maddison",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "M. Fernandes",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "M. Kudus",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "M. Senesi",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "M. Tel",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "M. van de Ven",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "O. Marmoush",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "P. Porro",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "R. Bentancur",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "S. Tonali",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "T. Adarabioyo",
+    "bookmakers": [
+     "betfan",
+     "fuksiarz"
+    ]
+   }
+  ],
+  "abbreviatedFuksiarzOnly": [
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_FIRST",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "GOALSCORER_ANYTIME",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "A. Cairns",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "B. Austin",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_CARDS",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_ASSISTS",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_2_OR_MORE_GOALS",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_3_OR_MORE_GOALS",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS_WON",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_FOULS",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "A. Cairns",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "A. Robertson",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "B. Austin",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_RED_CARD",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_HEADER_GOAL",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "A. Cresswell",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OUTSIDE_BOX",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "A. Gray",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "A. Tanaka",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "D. Calvert-Lewin",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "D. Solanke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "J. van Hecke",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_GOAL_OR_ASSIST",
+    "param": "O. Marmoush",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+    "param": "I. Gruev",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+    "param": "J. Bahoya",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "B. Davies",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "C. Olusesi",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "D. Kulusevski",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "L. Bergvall",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "L. Williams-Barnett",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   },
+   {
+    "type": "AWAY_GOALSCORER_FIRST",
+    "param": "S. Moreira de Oliveira",
+    "bookmakers": [
+     "fuksiarz"
+    ]
+   }
+  ]
+ }
+}

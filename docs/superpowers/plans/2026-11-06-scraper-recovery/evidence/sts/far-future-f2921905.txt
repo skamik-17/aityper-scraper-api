@@ -1,0 +1,6 @@
+# Far-future fixture f2921905 Newcastle vs Arsenal (kick-off 2026-11-21T17:30Z), standalone capture 2026-11-06 ~17:13Z, parsed with the CURRENT parser; frame copied to f_f2921905_pl.newcastle-arsenal.far-future.snapshot.txt
+far-future snapshot only: 153 with i_pl: 153 i_pl only: 1
+[ '1m72 r=1 f=f2921905 m=97' ]
+# header line of the fixture frame:
+{"s":"f_f2921905_pl","n":1793984749413868,"f":1}
+{"B":{"S":{"1":{"C":{"1":{"D":5,"T":{"17":{"D":1,"FX":{"f2921905":{"A":

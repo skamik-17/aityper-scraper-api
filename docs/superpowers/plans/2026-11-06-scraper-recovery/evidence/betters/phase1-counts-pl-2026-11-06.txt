@@ -1,0 +1,14 @@
+# Phase-1 normalized-market count (phase1_count.py, integer AH -> ASIAN_HANDICAP; approximates Task 5 rules).
+# 8 events fetched live 2026-11-06T17:12Z from the betters event endpoint (raw files in the workflow scratchpad; only the thin far-future one is kept: event-2725446939305979931.json):
+2725446939305979931 1795365000 ['Liverpool FC', 'Manchester United FC'] ids=11 pairs=39 normalized=34
+2725815896848338956 1793995200 ['Everton FC', 'Coventry City'] ids=170 pairs=576 normalized=67
+2725818574789816354 1794063600 ['Fulham FC', 'Newcastle United'] ids=159 pairs=568 normalized=72
+2725824060671029267 1794072600 ['Nottingham Forest', 'Manchester City'] ids=151 pairs=564 normalized=73
+2726134779970986000 1794146400 ['FC Sunderland', 'Chelsea FC'] ids=151 pairs=532 normalized=72
+2726134779970986001 1794146400 ['Ipswich Town', 'AFC Bournemouth'] ids=151 pairs=547 normalized=72
+2726134779970986002 1794146400 ['Crystal Palace', 'Liverpool FC'] ids=151 pairs=524 normalized=71
+2726134779970986003 1794146400 ['Brighton & Hove Albion', 'Brentford FC'] ids=151 pairs=549 normalized=71
+# 3 events from the 16:45-17:35 CET evidence capture:
+2725816334213586962 1794054600 ['Leeds United', 'Tottenham Hotspur'] ids=161 pairs=560 normalized=68
+2725816334213586981 1794063600 ['Arsenal FC', 'Hull City'] ids=159 pairs=579 normalized=71
+2726177353700085769 1794155400 ['Manchester United FC', 'Aston Villa FC'] ids=140 pairs=547 normalized=66

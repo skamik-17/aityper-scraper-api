@@ -1,0 +1,18 @@
+# python3 -I evidence/betclic/check-log-vs-smoke.py <backend.clean.log> evidence/betclic/smoke-current-betclic-v2.txt  (CURRENT code; log runs 15:45Z / 16:00Z / 17:00Z vs unloaded smoke 17:29Z)
+run 1 (log line 96): matches=20 outOfTolerance=2 failedGroups=0 incompleteRetries=0 -> FAIL
+    Fulham vs Newcastle: 131 vs smoke 277 (-52.7%)
+    Arsenal vs Hull: 242 vs smoke 265 (-8.7%)
+run 2 (log line 36402): matches=20 outOfTolerance=8 failedGroups=0 incompleteRetries=0 -> FAIL
+    Leeds vs Tottenham: 256 vs smoke 279 (-8.2%)
+    Fulham vs Newcastle: 254 vs smoke 277 (-8.3%)
+    Nottingham Forest vs Manchester City: 197 vs smoke 220 (-10.5%)
+    Sunderland vs Chelsea: 195 vs smoke 218 (-10.6%)
+    Crystal Palace vs Liverpool: 159 vs smoke 220 (-27.7%)
+    Brighton vs Brentford: 196 vs smoke 219 (-10.5%)
+    Manchester United vs Aston Villa: 196 vs smoke 219 (-10.5%)
+    Tottenham vs Ipswich: 31 vs smoke 110 (-71.8%)
+run 3 (log line 67273): matches=20 outOfTolerance=4 failedGroups=0 incompleteRetries=0 -> FAIL
+    Fulham vs Newcastle: 254 vs smoke 277 (-8.3%)
+    Brighton vs Brentford: 196 vs smoke 219 (-10.5%)
+    Manchester United vs Aston Villa: 196 vs smoke 219 (-10.5%)
+    Bournemouth vs Nottingham Forest: 80 vs smoke 109 (-26.6%)

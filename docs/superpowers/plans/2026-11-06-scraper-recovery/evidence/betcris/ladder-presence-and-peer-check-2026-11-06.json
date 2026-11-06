@@ -1,0 +1,198 @@
+{
+ "what": "(1) Which stats-family ladder types each upcoming PL game carries; (2) betcris team-ladder OVER prices (N+ read as Over N-0.5) vs the peer median on the same line, only where >= 2 peers quote it.",
+ "caveat": "betcris prices are from the 16:2xZ fixture, peer prices from the DB at 17:3xZ; timestamps differ by about 1 h.",
+ "ladderTypesPresent": {
+  "31321159 Everton-Coventry (kick-off 2026-11-06T20:00Z, stat-ladders fixture)": {
+   "FoulsTotal": 1,
+   "FoulsTeam1Total": 1,
+   "FoulsTeam2Total": 1,
+   "OffsidesTotal": 1,
+   "OffsidesTeam1Total": 1,
+   "OffsidesTeam2Total": 1,
+   "ShotsTeam1Total": 1,
+   "ShotsonTargetTotal": 1,
+   "ShotsonTargetTeam1Total": 1,
+   "ShotsonTargetTeam2Total": 1,
+   "ShotsonTarget1stHalfTotal": 1,
+   "ThrowInsTotal": 1,
+   "ThrowInsTeam1Total": 1,
+   "ThrowInsTeam2Total": 1,
+   "PlayerShots": 1,
+   "PlayerShotsonTarget": 1,
+   "PlayerFouls": 1,
+   "PlayerFoulsWon": 1,
+   "PlayerOffsides": 1,
+   "PlayerSaves": 1,
+   "PlayerAssists": 1,
+   "PlayerTackles": 1,
+   "PlayerShotsonTargetOutsidetheBox": 1,
+   "PlayerHeadedShotsonTarget": 1,
+   "PlayerShotsAgainstWoodwork": 1
+  },
+  "31333513 Leeds-Tottenham (kick-off 2026-11-07T12:30Z, direct Swarm fetch 2026-11-06T17:3xZ, 565 of 582 markets)": {
+   "FoulsTotal": 0,
+   "FoulsTeam1Total": 0,
+   "FoulsTeam2Total": 0,
+   "OffsidesTotal": 0,
+   "OffsidesTeam1Total": 0,
+   "OffsidesTeam2Total": 0,
+   "ShotsTeam1Total": 0,
+   "ShotsonTargetTotal": 0,
+   "ShotsonTargetTeam1Total": 0,
+   "ShotsonTargetTeam2Total": 0,
+   "ShotsonTarget1stHalfTotal": 0,
+   "ThrowInsTotal": 0,
+   "ThrowInsTeam1Total": 0,
+   "ThrowInsTeam2Total": 0,
+   "PlayerShots": 1,
+   "PlayerShotsonTarget": 1,
+   "PlayerFouls": 1,
+   "PlayerFoulsWon": 1,
+   "PlayerOffsides": 1,
+   "PlayerSaves": 1,
+   "PlayerAssists": 1,
+   "PlayerTackles": 1,
+   "PlayerShotsonTargetOutsidetheBox": 1,
+   "PlayerHeadedShotsonTarget": 1,
+   "PlayerShotsAgainstWoodwork": 1
+  }
+ },
+ "peerCheckEvertonCoventry": {
+  "TOTAL_SHOTS_ON_TARGET": {
+   "rows": [
+    {
+     "rung": "8+",
+     "line": "7.5",
+     "betcris": 1.33,
+     "peerMedian": 1.43,
+     "nPeers": 7,
+     "devPct": -7.0
+    },
+    {
+     "rung": "9+",
+     "line": "8.5",
+     "betcris": 1.56,
+     "peerMedian": 1.7349999999999999,
+     "nPeers": 6,
+     "devPct": -10.1
+    },
+    {
+     "rung": "10+",
+     "line": "9.5",
+     "betcris": 1.93,
+     "peerMedian": 2.225,
+     "nPeers": 6,
+     "devPct": -13.3
+    },
+    {
+     "rung": "11+",
+     "line": "10.5",
+     "betcris": 2.5,
+     "peerMedian": 2.975,
+     "nPeers": 4,
+     "devPct": -16.0
+    },
+    {
+     "rung": "12+",
+     "line": "11.5",
+     "betcris": 3.45,
+     "peerMedian": 3.875,
+     "nPeers": 2,
+     "devPct": -11.0
+    }
+   ],
+   "medianDevPct": -11.0
+  },
+  "FOULS_TOTAL": {
+   "rows": [
+    {
+     "rung": "22+",
+     "line": "21.5",
+     "betcris": 1.46,
+     "peerMedian": 1.6949999999999998,
+     "nPeers": 2,
+     "devPct": -13.9
+    },
+    {
+     "rung": "23+",
+     "line": "22.5",
+     "betcris": 1.64,
+     "peerMedian": 1.81,
+     "nPeers": 4,
+     "devPct": -9.4
+    },
+    {
+     "rung": "24+",
+     "line": "23.5",
+     "betcris": 1.9,
+     "peerMedian": 1.9,
+     "nPeers": 2,
+     "devPct": 0.0
+    }
+   ],
+   "medianDevPct": -9.4
+  },
+  "THROW_INS_TOTAL": {
+   "rows": [],
+   "medianDevPct": null
+  }
+ },
+ "exactGoalsCollision": {
+  "what": "The EXACT_GOALS '1' collision pair: TotalGoalsExact ' 1' (betcris-normalizer.ts:35) vs Exactly1GoalsinMatch 'Tak' recoded to '1' (betcris-normalizer.ts:112,1551). ExactNumberOfGoals is excluded (betcris-normalizer.ts:347) and never reaches EXACT_GOALS.",
+  "31333513 Leeds-Tottenham (direct Swarm, 17:3xZ)": {
+   "TotalGoalsExact ' 1'": 4.3,
+   "Exactly1GoalsinMatch 'Tak'": 4.3,
+   "ExactNumberOfGoals 'Dokładnie 1' (excluded)": 4.3
+  },
+  "31321159 Everton-Coventry (match-31321159-frames.json SINGLE_GAME_VIEW frame)": {
+   "TotalGoalsExact ' 1'": 4.57,
+   "Exactly1GoalsinMatch 'Tak'": 4.75
+  },
+  "repositoryRule": "full-offer-repository.ts:243-247 keeps the first-seen odds on a marketKey+selection collision"
+ },
+ "normalizedMarkets1X2EvertonCoventry_17_3xZ": {
+  "HOME": [
+   1.66,
+   1.65,
+   "+0.6%"
+  ],
+  "DRAW": [
+   4.1,
+   4.0,
+   "+2.5%"
+  ],
+  "AWAY": [
+   5.5,
+   5.0,
+   "+10.0%"
+  ],
+  "format": "[betcris, peer median of 9, deviation]",
+  "healthPyUnknownOtherRows": "0 (vacuous: market-type-grouper.ts:1380 skips OTHER markets)"
+ },
+ "listingComposition": {
+  "source": "direct Swarm list 2026-11-06T17:4xZ (GID=31333513 run)",
+  "markets_count of the 20 PL games": [
+   349,
+   350,
+   350,
+   351,
+   352,
+   353,
+   354,
+   355,
+   360,
+   364,
+   571,
+   572,
+   578,
+   579,
+   582,
+   590,
+   598,
+   598,
+   604,
+   638
+  ],
+  "note": "the 10 games of the nearer matchweek (>= 571) carry the player ladders; 31419243 Manchester City-Fulham (2026-11-21, 355 of 360 markets) carries 0 of the 25 ladder types"
+ }
+}

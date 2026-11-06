@@ -1,0 +1,44 @@
+Betfan measurements, 2026-11-06 (read-only; current code on master, live service running)
+
+1. OPTA team-stat availability (gameType in 168,169,-200054,-200055,162,163), GET https://betfan.pl/api/v1/market/events/<id>
+   40932978 Everton - Coventry City   kick-off 20:00Z  fetched 16:22Z  269 games, 8 OPTA team games
+   40932978 Everton - Coventry City   kick-off 20:00Z  fetched 17:06Z  270 games, 8 OPTA team games   (T-2.9h)
+   40933001 Arsenal - Hull            kick-off 2026-11-07 15:00Z  fetched 16:22Z  242 games, 0   (T-22.6h)
+   40932985 Leeds United - Tottenham  kick-off 2026-11-07 12:30Z  fetched 16:59Z  240 games, 0   (T-19.5h)
+   => OPTA team lines appear on match day, not ~1 day ahead.
+
+2. Team-stat side check, tools/team-stat-check.py (17:07Z, pre-fix baseline):
+   SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS_ON_TARGET 2.5 / 3.5 / 4.5 / 5.5
+   SIDELESS premier-league:everton:coventry city TEAM_TOTAL_SHOTS 11.5 / 16.5
+   SIDELESS premier-league:everton:coventry city TEAM_TOTAL_FOULS 10.5
+   FOULS premier-league:everton:coventry city ['TEAM_TOTAL_FOULS']
+   betfan_sideless 7 betfan_shared 0 betfan_solo 0 betfan_team_total_fouls 1 betfan_home_fouls_matches 0 betfan_away_fouls_matches 0
+   Peers on the same match already fill AWAY_TEAM_TOTAL_FOULS:12.5 (forbet U1.9/O1.75, fortuna U1.85/O1.82, superbet U1.73/O1.9),
+   so a plain grep for "AWAY_TEAM_TOTAL_FOULS" matches before the fix too.
+
+3. 1X2 / O/U 2.5 deviation from the peer median (betfan excluded from the median), tools/odds-sanity.py
+   snapshot api-odds-premier-league-2026-11-06T1616Z.json: 1X2 n=60 max 3.6% mean 1.5%
+   snapshot api-total-goals-2.5-rows-2026-11-06T1628Z.json: O/U 2.5 n=40 max 2.2%
+   live 17:05Z: matches 20 1x2_n 60 1x2_max 3.6 1x2_mean 1.5 ou25_n 40 ou25_max 3.4
+   meta.bookmakerStatus.betfan = "stale" and meta.lastUpdated = null although betfan saved 5600 rows at 16:02Z
+   (false status; owned by observability.md (f)).
+
+4. Normalized-markets stats per match (api-stats-nm-*.json, betfan block):
+   Arsenal v Hull City       codes 123 entries 919 selections 1803 UNKNOWN 0
+   Everton v Coventry City   codes 140 entries 859 selections 1687 UNKNOWN 0
+   Manchester City v Fulham  codes  65 entries  83 selections  308 UNKNOWN 0
+
+5. Offline parse + normalize of the raw captures (offline-parse-normalize-summary-2026-11-06.json):
+   Everton v Coventry  876 parsed, 5 OTHER (0.6%): Coventry fouls (163), -200040, three -200045/-200046 combos
+   Arsenal v Hull      978 parsed, 0 OTHER
+
+6. Free-kick placeholder (-200175 "Zawodnik strzeli gola bezposrednio z rzutu wolnego"), raw-event-*.json:
+   Arsenal v Hull      38 outcomes, 38 at exactly 100
+   Everton v Coventry  33 outcomes, 32 at exactly 100, the remaining one at 44
+
+7. Golden dry probes (scripts/rebless-golden.ts, no write), unmodified tree:
+   --bookmaker betfan --dry                       -> {"changedTotal":0,"dry":true}
+   --bookmaker betfan --include-unblessed --dry   -> {"changedTotal":49,"dry":true}
+   Simulated on scratch copies of betfan-normalizer.ts with the exact plan edits (same projection as the script):
+   after Task 1: include-unblessed 64 (+15: #60-#68, #82-#87), blessed 0
+   after Task 2: include-unblessed 68 (+4: #92-#95), blessed 0; no post-fix key collisions on team-stat keys

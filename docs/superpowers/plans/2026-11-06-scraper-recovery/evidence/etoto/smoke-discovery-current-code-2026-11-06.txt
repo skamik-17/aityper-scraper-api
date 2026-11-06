@@ -1,0 +1,105 @@
+[BrowserPool] Creating new browser (1/14)
+[eToto/FullOffer] Found 22 events, fetching details for each...
+[eToto/FullOffer] Everton vs Coventry: 508 markets
+[eToto/FullOffer] Leeds vs Tottenham: 485 markets
+[eToto/FullOffer] Fulham vs Newcastle: 476 markets
+[eToto/FullOffer] Arsenal vs Hull City: 493 markets
+[eToto/FullOffer] Nottingham vs Manchester City: 498 markets
+[eToto/FullOffer] Sunderland vs Chelsea: 467 markets
+[eToto/FullOffer] Ipswich vs Bournemouth: 474 markets
+[eToto/FullOffer] Crystal Palace vs Liverpool: 466 markets
+[eToto/FullOffer] Brighton vs Brentford: 481 markets
+[eToto/FullOffer] Manchester Utd vs Aston Villa: 494 markets
+[eToto/FullOffer] Manchester City vs Fulham: 185 markets
+[eToto/FullOffer] Aston Villa vs Sunderland: 186 markets
+[eToto/FullOffer] Coventry vs Crystal Palace: 185 markets
+[eToto/FullOffer] Tottenham vs Ipswich: 185 markets
+[eToto/FullOffer] Bournemouth vs Nottingham: 183 markets
+[eToto/FullOffer] Chelsea vs Leeds: 186 markets
+[eToto/FullOffer] Newcastle vs Arsenal: 185 markets
+[eToto/FullOffer] Hull City vs Brighton: 185 markets
+[eToto/FullOffer] Liverpool vs Manchester Utd: 186 markets
+[eToto/FullOffer] Brentford vs Everton: 185 markets
+[eToto/FullOffer] Completed: 20 matches, 6693 total markets
+[BrowserPool] Browser released (1 available, 1 total)
+...
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Witalij Mykolenko
+   Param Value: Witalij Mykolenko
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Jarrad Branthwaite
+   Param Value: Jarrad Branthwaite
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Michael Keane
+   Param Value: Michael Keane
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Carlos Alcaraz
+   Param Value: Carlos Alcaraz
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:James Tarkowski
+   Param Value: James Tarkowski
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:James Garner
+   Param Value: James Garner
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Jake O'Brien
+   Param Value: Jake O'Brien
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Harrison Armstrong
+   Param Value: Harrison Armstrong
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Gustavo Hamer
+   Param Value: Gustavo Hamer
+📦 MARKET: Zawodnik - suma celnych strzałów
+✅ NORMALIZED: PLAYER_SHOTS_ON_TARGET
+   Market Key: PLAYER_SHOTS_ON_TARGET:Merlin Rohl
+   Param Value: Merlin Rohl
+📊 SUMMARY
+====================================================================================================
+Total markets: 80
+✅ Mapped: 80
+❌ Unmapped/OTHER: 0
+⚠️  With issues: 0
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+Zawodnik - suma celnych strzałów         → PLAYER_SHOTS_ON_TARGET    PLAYER_STAT_LINES  
+etoto exit 124  # timeout 240 fired after the summary: process does not exit by itself (BrowserPool keeps Chromium alive)
+
+# ---- Excerpt added 2026-11-06 ~17:10Z: every non-player market block of the same run (8 of 80; the other 72 are 'Zawodnik - suma celnych strzałów').
+# Format '<line in the full 5375-line log>: <text>'. The four TEAM_TOTAL_* keys below carry no HOME:/AWAY: side (the defect).
+4865: 📦 MARKET: Suma 7.5 strzałów celnych
+4869: ✅ NORMALIZED: TOTAL_SHOTS_ON_TARGET
+4870:    Market Key: TOTAL_SHOTS_ON_TARGET:7.5
+4918: 📦 MARKET: Suma 8.5 strzałów celnych
+4922: ✅ NORMALIZED: TOTAL_SHOTS_ON_TARGET
+4923:    Market Key: TOTAL_SHOTS_ON_TARGET:8.5
+4971: 📦 MARKET: Suma 9.5 strzałów celnych
+4975: ✅ NORMALIZED: TOTAL_SHOTS_ON_TARGET
+4976:    Market Key: TOTAL_SHOTS_ON_TARGET:9.5
+5024: 📦 MARKET: Everton suma 4.5 strzałów celnych
+5028: ✅ NORMALIZED: TEAM_TOTAL_SHOTS_ON_TARGET
+5029:    Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:4.5
+5077: 📦 MARKET: Coventry suma 3.5 strzałów celnych
+5081: ✅ NORMALIZED: TEAM_TOTAL_SHOTS_ON_TARGET
+5082:    Market Key: TEAM_TOTAL_SHOTS_ON_TARGET:3.5
+5130: 📦 MARKET: Suma 28.5 strzałów
+5134: ✅ NORMALIZED: TOTAL_SHOTS
+5135:    Market Key: TOTAL_SHOTS:28.5
+5183: 📦 MARKET: Everton suma 17.5 strzałów
+5187: ✅ NORMALIZED: TEAM_TOTAL_SHOTS
+5188:    Market Key: TEAM_TOTAL_SHOTS:17.5
+5236: 📦 MARKET: Coventry suma 10.5 strzałów
+5240: ✅ NORMALIZED: TEAM_TOTAL_SHOTS
+5241:    Market Key: TEAM_TOTAL_SHOTS:10.5

@@ -1,0 +1,1558 @@
+{
+ "note": "market_comparison rows for lvbet TOTAL_GOALS, premier-league:arsenal:hull city, scraped 2026-11-06T16:00Z. Rows :2.5/:3.5/:4.5 mix UNKNOWN legs from \"Rezultat lub ilość bramek (X)\" with OVER/UNDER; market-type-grouper.ts:925-932 then drops the whole lvbet entry. League-wide: TOTAL_GOALS:2.5 contaminated 20/20, :3.5 20/20, :1.5 clean 20/20.",
+ "rows": [
+  {
+   "market_key": "TOTAL_GOALS",
+   "market_code": "TOTAL_GOALS",
+   "param_value": null,
+   "raw_market_name": "Dokładna liczba goli / Obaj gracze strzelą łącznie przynajmniej 3 gole / Obaj gracze strzelą łącznie przynajmniej 2 gole / Wynik i liczba goli (przedział)",
+   "selections": [
+    {
+     "name": "Bez goli",
+     "odds": 14,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 1",
+     "odds": 5.85,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 2",
+     "odds": 4.05,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 3",
+     "odds": 3.85,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 4",
+     "odds": 4.55,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 5",
+     "odds": 6.75,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Dokładnie 6 lub więcej",
+     "odds": 7.25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & K. Havertz",
+     "odds": 5.5,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & C. Tzolis",
+     "odds": 7.75,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & N. Madueke",
+     "odds": 8,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & V. Gyokeres",
+     "odds": 8.5,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & E. Eze",
+     "odds": 8.5,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & V. Gyokeres",
+     "odds": 9.25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & K. Havertz",
+     "odds": 9.75,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & N. Madueke",
+     "odds": 10,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & E. Eze",
+     "odds": 11,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & K. Havertz",
+     "odds": 11,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & B. Guimaraes",
+     "odds": 11,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & K. Havertz",
+     "odds": 12,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & D. Rice",
+     "odds": 13,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & B. Guimaraes",
+     "odds": 14,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & J. Gelhardt",
+     "odds": 14,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & V. Gyokeres",
+     "odds": 14,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & M. Belloumi",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & Gabriel Mag",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & R. Calafiori",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & J. Timber",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & N. Madueke",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & B. White",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & E. Stroud",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & E. Eze",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & E. Konsa",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "V. Gyokeres & S. Thomas",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & K. Havertz",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & C. Tzolis",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Eze & N. Madueke",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & K. Havertz",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & N. Madueke",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & K. Havertz",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & C. Tzolis",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & N. Madueke",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & R. Calafiori",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & E. Eze",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & K. Havertz",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & Gabriel Mag",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & E. Eze",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & J. Timber",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & B. White",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & M. Merino",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & K. Havertz",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "K. Havertz & S. Thomas",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & K. Havertz",
+     "odds": 26,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & B. Guimaraes",
+     "odds": 26,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. Guimaraes & N. Madueke",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Eze & B. Guimaraes",
+     "odds": 31,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & B. Guimaraes",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & D. Rice",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & B. Guimaraes",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & N. Madueke",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & C. Tzolis",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & C. Tzolis",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & E. Eze",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & N. Madueke",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & N. Madueke",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & D. Rice",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & R. Calafiori",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & Gabriel Mag",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & M. Belloumi",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "R. Calafiori & N. Madueke",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & E. Eze",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & J. Timber",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & N. Madueke",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & E. Eze",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Gabriel Mag & N. Madueke",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & J. Gelhardt",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & M. Merino",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & N. Madueke",
+     "odds": 56,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & D. Rice",
+     "odds": 56,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & B. White",
+     "odds": 56,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Eze & R. Calafiori",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Eze & Gabriel Mag",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & R. Calafiori",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & Gabriel Mag",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & N. Madueke",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & J. Gelhardt",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & E. Stroud",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & E. Konsa",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "C. Tzolis & S. Thomas",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & M. Belloumi",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & M. Ødegaard",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & E. Eze",
+     "odds": 61,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & E. Eze",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & J. Timber",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & E. Eze",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & N. Madueke",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & R. Calafiori",
+     "odds": 71,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & N. Madueke",
+     "odds": 71,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & B. White",
+     "odds": 71,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "N. Madueke & S. Thomas",
+     "odds": 71,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & Gabriel Mag",
+     "odds": 76,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & E. Eze",
+     "odds": 76,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & M. Belloumi",
+     "odds": 76,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Eze & S. Thomas",
+     "odds": 76,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & E. Eze",
+     "odds": 76,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & E. Konsa",
+     "odds": 81,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & J. Timber",
+     "odds": 81,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & S. Thomas",
+     "odds": 81,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Merino & E. Stroud",
+     "odds": 81,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & B. White",
+     "odds": 86,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & B. Guimaraes",
+     "odds": 86,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & B. Guimaraes",
+     "odds": 96,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & B. Guimaraes",
+     "odds": 96,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & E. Stroud",
+     "odds": 96,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & E. Konsa",
+     "odds": 100,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Ødegaard & S. Thomas",
+     "odds": 100,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Gabriel Mag & B. Guimaraes",
+     "odds": 130,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. Guimaraes & R. Calafiori",
+     "odds": 130,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & B. Guimaraes",
+     "odds": 130,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & B. Guimaraes",
+     "odds": 140,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & B. Guimaraes",
+     "odds": 150,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & B. Guimaraes",
+     "odds": 180,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. Guimaraes & S. Thomas",
+     "odds": 180,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & B. Guimaraes",
+     "odds": 180,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & D. Rice",
+     "odds": 180,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & D. Rice",
+     "odds": 180,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & R. Calafiori",
+     "odds": 230,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & J. Gelhardt",
+     "odds": 19,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & Gabriel Mag",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & D. Rice",
+     "odds": 21,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & J. Timber",
+     "odds": 23,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & B. White",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & M. Belloumi",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & M. Belloumi",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & R. Calafiori",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & Gabriel Mag",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & Gabriel Mag",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & R. Calafiori",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & J. Timber",
+     "odds": 26,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & J. Timber",
+     "odds": 26,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Gabriel Mag & R. Calafiori",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & R. Calafiori",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & D. Rice",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & B. White",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & Gabriel Mag",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & D. Rice",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "D. Rice & S. Thomas",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & B. White",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & E. Stroud",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & E. Stroud",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & R. Calafiori",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & Gabriel Mag",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & J. Timber",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & R. Calafiori",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & Gabriel Mag",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & S. Thomas",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "O. McBurnie & E. Konsa",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & S. Thomas",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Gelhardt & E. Konsa",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & B. White",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & J. Timber",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & M. Belloumi",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & Gabriel Mag",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & R. Calafiori",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & R. Calafiori",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & Gabriel Mag",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "M. Belloumi & S. Thomas",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "R. Calafiori & S. Thomas",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & M. Belloumi",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Gabriel Mag & S. Thomas",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & J. Timber",
+     "odds": 46,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & J. Timber",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "J. Timber & S. Thomas",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & B. White",
+     "odds": 51,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & B. White",
+     "odds": 56,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "B. White & S. Thomas",
+     "odds": 56,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & E. Stroud",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Stroud & S. Thomas",
+     "odds": 67,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "E. Konsa & S. Thomas",
+     "odds": 71,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 1-2",
+     "odds": 3.25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 1-3",
+     "odds": 1.92,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 1-4",
+     "odds": 1.47,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 1-5",
+     "odds": 1.28,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 1-6",
+     "odds": 1.2,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 2-3",
+     "odds": 2.45,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 2-4",
+     "odds": 1.75,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 2-5",
+     "odds": 1.47,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 2-6",
+     "odds": 1.35,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 3-4",
+     "odds": 2.4,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 3-5",
+     "odds": 1.9,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 3-6",
+     "odds": 1.7,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 4-5",
+     "odds": 3.15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 4-6",
+     "odds": 2.7,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal i 5-6",
+     "odds": 4.8,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal and Any Other (7+ Goals)",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 2",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 2-4",
+     "odds": 12,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 2-6",
+     "odds": 11,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 4",
+     "odds": 41,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 4-6",
+     "odds": 34,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis i 6",
+     "odds": 200,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "X And Any Other (0:0 or 7+ Goals)",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 1-2",
+     "odds": 26,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 1-3",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 1-4",
+     "odds": 17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 1-5",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 1-6",
+     "odds": 15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 2-3",
+     "odds": 31,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 2-4",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 2-5",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 2-6",
+     "odds": 25,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 3-4",
+     "odds": 36,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 3-5",
+     "odds": 31,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 3-6",
+     "odds": 29,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 4-5",
+     "odds": 91,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 4-6",
+     "odds": 86,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City i 5-6",
+     "odds": 130,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City and Any Other (7+ Goals)",
+     "odds": 750,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:1.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "1.5",
+   "raw_market_name": "Liczba goli 1.5",
+   "selections": [
+    {
+     "name": "Powyżej (1.5)",
+     "odds": 1.16,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (1.5)",
+     "odds": 5.15,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:2.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "2.5",
+   "raw_market_name": "Rezultat lub ilość bramek (2.5) 2.5 / Liczba goli 2.5",
+   "selections": [
+    {
+     "name": "Arsenal lub powyżej (2.5)",
+     "odds": 1.09,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal lub poniżej (2.5)",
+     "odds": 1.03,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub powyżej (2.5)",
+     "odds": 1.3,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub poniżej (2.5)",
+     "odds": 2.17,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub powyżej (2.5)",
+     "odds": 1.42,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub poniżej (2.5)",
+     "odds": 2.15,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Powyżej (2.5)",
+     "odds": 1.55,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (2.5)",
+     "odds": 2.5,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:3.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "3.5",
+   "raw_market_name": "Rezultat lub ilość bramek (3.5) 3.5 / Liczba goli 3.5",
+   "selections": [
+    {
+     "name": "Arsenal lub powyżej (3.5)",
+     "odds": 1.1,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Arsenal lub poniżej (3.5)",
+     "odds": 1.01,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub powyżej (3.5)",
+     "odds": 1.8,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub poniżej (3.5)",
+     "odds": 1.47,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub powyżej (3.5)",
+     "odds": 1.98,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub poniżej (3.5)",
+     "odds": 1.5,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Powyżej (3.5)",
+     "odds": 2.3,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (3.5)",
+     "odds": 1.62,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:4.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "4.5",
+   "raw_market_name": "Rezultat lub ilość bramek (4.5) 4.5 / Liczba goli 4.5",
+   "selections": [
+    {
+     "name": "Arsenal lub powyżej (4.5)",
+     "odds": 1.12,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub powyżej (4.5)",
+     "odds": 2.55,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Remis lub poniżej (4.5)",
+     "odds": 1.2,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub powyżej (4.5)",
+     "odds": 3.05,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Hull City lub poniżej (4.5)",
+     "odds": 1.2,
+     "externalId": "undefined",
+     "normalizedName": "UNKNOWN"
+    },
+    {
+     "name": "Powyżej (4.5)",
+     "odds": 4,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (4.5)",
+     "odds": 1.25,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:5.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "5.5",
+   "raw_market_name": "Liczba goli 5.5",
+   "selections": [
+    {
+     "name": "Powyżej (5.5)",
+     "odds": 7.25,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (5.5)",
+     "odds": 1.09,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  },
+  {
+   "market_key": "TOTAL_GOALS:6.5",
+   "market_code": "TOTAL_GOALS",
+   "param_value": "6.5",
+   "raw_market_name": "Liczba goli 6.5",
+   "selections": [
+    {
+     "name": "Powyżej (6.5)",
+     "odds": 13,
+     "externalId": "undefined",
+     "normalizedName": "OVER"
+    },
+    {
+     "name": "Poniżej (6.5)",
+     "odds": 1.02,
+     "externalId": "undefined",
+     "normalizedName": "UNDER"
+    }
+   ],
+   "scraped_at": "2026-11-06T16:00:43.873+00:00",
+   "category": "GOLE",
+   "view_type": "PARAMETER_SLIDER"
+  }
+ ]
+}

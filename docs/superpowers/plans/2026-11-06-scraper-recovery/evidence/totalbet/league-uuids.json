@@ -1,0 +1,207 @@
+{
+ "capturedAt": "2026-11-06T16:15Z",
+ "request": "GET https://totalbet.pl/dealer/bdata/v1/bet/events?page=1&per_page=100&category_uuid=<uuid>&category_type=sport&type=standard (plain curl, no cookies)",
+ "leagues": {
+  "ekstraklasa": {
+   "uuid": "ae7d4621-313d-4df6-b3be-046b76a32938",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 9,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 9,
+     "type": "prematch"
+    },
+    {
+     "count": 9,
+     "type": "outright"
+    }
+   ],
+   "path": [
+    "Piłka nożna",
+    "Polska",
+    "Ekstraklasa"
+   ],
+   "all_tournament_uuid_match": true,
+   "prematch_events": 9,
+   "sample": [
+    "Motor Lublin - Wisła Płock",
+    "Wisła Kraków - Cracovia Kraków",
+    "Korona Kielce - Radomiak Radom"
+   ]
+  },
+  "premier-league": {
+   "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 20,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 20,
+     "type": "prematch"
+    },
+    {
+     "count": 28,
+     "type": "outright"
+    }
+   ],
+   "path": [
+    "Piłka nożna",
+    "Anglia",
+    "Premier League"
+   ],
+   "all_tournament_uuid_match": true,
+   "prematch_events": 20,
+   "sample": [
+    "Everton - Coventry City",
+    "Leeds - Tottenham",
+    "Arsenal - Hull"
+   ]
+  },
+  "laliga": {
+   "uuid": "cfb6428c-c437-4923-a370-562871d06316",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 20,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 20,
+     "type": "prematch"
+    },
+    {
+     "count": 4,
+     "type": "outright"
+    }
+   ],
+   "path": [
+    "Piłka nożna",
+    "Hiszpania",
+    "LaLiga"
+   ],
+   "all_tournament_uuid_match": true,
+   "prematch_events": 20,
+   "sample": [
+    "Sevilla - Deportivo Alaves",
+    "Malaga - Racing Santander",
+    "Espanyol - Deportivo La Coruna"
+   ]
+  },
+  "serie-a": {
+   "uuid": "0253b9f3-ab3b-4d19-ab4e-87aa8c3adb8e",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 20,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 20,
+     "type": "prematch"
+    },
+    {
+     "count": 5,
+     "type": "outright"
+    }
+   ],
+   "path": [
+    "Piłka nożna",
+    "Włochy",
+    "Serie A"
+   ],
+   "all_tournament_uuid_match": true,
+   "prematch_events": 20,
+   "sample": [
+    "Venezia FC - Udinese",
+    "Cagliari - Frosinone",
+    "Torino - Lecce"
+   ]
+  },
+  "ligue-1": {
+   "uuid": "f64248fd-8f4a-499f-8092-3408cecf2565",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 18,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 18,
+     "type": "prematch"
+    },
+    {
+     "count": 6,
+     "type": "outright"
+    }
+   ],
+   "path": [
+    "Piłka nożna",
+    "Francja",
+    "Ligue 1"
+   ],
+   "all_tournament_uuid_match": true,
+   "prematch_events": 18,
+   "sample": [
+    "Toulouse FC - RC Strasbourg",
+    "AJ Auxerre - Paris FC",
+    "PSG - Troyes AC"
+   ]
+  },
+  "world-cup-2026": {
+   "uuid": "298d1945-aed7-4b43-ba39-3dbc23a59cd0",
+   "http": 200,
+   "state": "success",
+   "pagination": {
+    "total_pages": 1,
+    "current_page": 1,
+    "items_count": 0,
+    "per_page": 100
+   },
+   "event_types": [
+    {
+     "count": 1,
+     "type": "outright"
+    }
+   ],
+   "path": null,
+   "all_tournament_uuid_match": true,
+   "prematch_events": 0,
+   "sample": []
+  }
+ },
+ "unknownCategory": {
+  "uuid": "00000000-0000-0000-0000-000000000000",
+  "http": 200,
+  "items_count": 0,
+  "event_types": [],
+  "note": "unknown UUID is NOT an error: 200 + empty list"
+ },
+ "pagination": {
+  "per_page=5,page=2": {
+   "total_pages": 4,
+   "current_page": 2,
+   "items_count": 20,
+   "per_page": 5
+  }
+ }
+}

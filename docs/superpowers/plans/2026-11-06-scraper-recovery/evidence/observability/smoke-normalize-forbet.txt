@@ -1,0 +1,3 @@
+$ cd /tmp/claude-1000/-home-skamik-Documents-repositories-personal-aityper/3627e2c8-f787-4f71-8a6a-348993c930fc/scratchpad/recovery/observability && timeout 240 <repo>/node_modules/.bin/tsx smoke-normalize.mts forbet premier-league
+(run 2026-11-06 ~16:31Z on CURRENT code, scrape + normalize, no DB access; exit=0)
+SMOKE_RESULT {"bookmaker":"forbet","league":"premier-league","status":"scraped","matches":20,"marketsFound":5995,"marketsNormalized":5995,"minMarketsPerMatch":148,"otherMarketShare":0.0661,"unknownSelectionShare":0.0376,"error":null,"durationMs":7144}

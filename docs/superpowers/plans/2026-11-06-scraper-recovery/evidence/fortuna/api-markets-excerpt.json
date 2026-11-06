@@ -1,0 +1,862 @@
+{
+ "source": "GET https://api.efortuna.pl/offer/markets/api/v1_0/fixture/<id>/markets on 2026-11-06T16:35Z; arsenalHull = ufo:mtch:1xi-0a1 (Arsenal vs Hull), forestCity = ufo:mtch:1xi-0a2 (Nottingham vs Man.City). Entries trimmed to fields parseAllMarkets reads.",
+ "arsenalHull": [
+  {
+   "id": "ufo:mkt:1xi-0a1-024",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-2d",
+   "name": "1.połowa",
+   "marketTypeName": "1.połowa",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-024-02",
+     "marketId": "ufo:mkt:1xi-0a1-024",
+     "name": "2",
+     "longName": "Hull",
+     "odds": 12.0,
+     "previousOdds": 11.0,
+     "order": {
+      "rowOrder": 3,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-9p"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-024-00",
+     "marketId": "ufo:mkt:1xi-0a1-024",
+     "name": "0",
+     "longName": "Remis",
+     "odds": 2.95,
+     "previousOdds": 2.9,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-9o"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-024-01",
+     "marketId": "ufo:mkt:1xi-0a1-024",
+     "name": "1",
+     "longName": "Arsenal",
+     "odds": 1.5,
+     "previousOdds": 1.49,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-9n"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1h7",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-0p",
+   "name": "1. połowa: więcej rzutów rożnych ",
+   "marketTypeName": "1.połowa: więcej rzutów rożnych ",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1h7-02",
+     "marketId": "ufo:mkt:1xi-0a1-1h7",
+     "name": "Hull",
+     "longName": "Hull",
+     "odds": 5.0,
+     "previousOdds": 5.2,
+     "order": {
+      "rowOrder": 3,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-1y"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1h7-01",
+     "marketId": "ufo:mkt:1xi-0a1-1h7",
+     "name": "Arsenal",
+     "longName": "Arsenal",
+     "odds": 1.32,
+     "previousOdds": 1.31,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-1w"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1h7-00",
+     "marketId": "ufo:mkt:1xi-0a1-1h7",
+     "name": "Rowno",
+     "longName": "Rowno",
+     "odds": 6.0,
+     "previousOdds": 6.2,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-1x"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gp",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-bv",
+   "name": "Mecz: gol samobójczy",
+   "marketTypeName": "Mecz: gol samobójczy",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gp-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gp",
+     "name": "Nie",
+     "longName": "Nie",
+     "odds": 1.05,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1d1"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gp-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gp",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 8.0,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1d0"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gq",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-k6",
+   "name": "Mecz: liczba asyst w meczu",
+   "marketTypeName": "Mecz: liczba asyst w meczu",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gq-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gq",
+     "name": "powyżej 2.5",
+     "longName": "powyżej 2.5",
+     "odds": 2.3,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wl"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gq-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gq",
+     "name": "poniżej 2.5",
+     "longName": "poniżej 2.5",
+     "odds": 1.56,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wk"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gn",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-k7",
+   "name": "Mecz: gol zdobyty strzałem głową",
+   "marketTypeName": "Mecz: gol zdobyty strzałem głową",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gn-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gn",
+     "name": "Nie",
+     "longName": "Nie",
+     "odds": 1.45,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wn"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gn-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gn",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 2.6,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wm"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1go",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-9a",
+   "name": "Mecz: rzut karny",
+   "marketTypeName": "Mecz: rzut karny",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1go-00",
+     "marketId": "ufo:mkt:1xi-0a1-1go",
+     "name": "Nie",
+     "longName": "Nie",
+     "odds": 1.29,
+     "previousOdds": 1.32,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-11g"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1go-01",
+     "marketId": "ufo:mkt:1xi-0a1-1go",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 3.35,
+     "previousOdds": 3.15,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-11f"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gt",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-k6",
+   "name": "Mecz: liczba asyst w meczu",
+   "marketTypeName": "Mecz: liczba asyst w meczu",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gt-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gt",
+     "name": "powyżej 1.5",
+     "longName": "powyżej 1.5",
+     "odds": 1.18,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wl"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gt-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gt",
+     "name": "poniżej 1.5",
+     "longName": "poniżej 1.5",
+     "odds": 4.4,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wk"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gx",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-ka",
+   "name": "Mecz: gol zdobyty przez drużynę grającą w osłabieniu po czerwonej kartce",
+   "marketTypeName": "Mecz: gol zdobyty przez drużynę grającą w osłabieniu po czerwonej kartce",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gx-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gx",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 30.0,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wr"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gy",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-k9",
+   "name": "Gol zdobyty przez drużynę grającą w przewadze po czerwonej kartce przeciwnika",
+   "marketTypeName": "Gol zdobyty przez drużynę grającą w przewadze po czerwonej kartce przeciwnika",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gy-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gy",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 8.0,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1wq"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gv",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-bt",
+   "name": "Mecz: rzut karny i czerwona kartka",
+   "marketTypeName": "Mecz: rzut karny i czerwona kartka (Nie liczy się: CK dla ławki, po meczu, dla sztabu)",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gv-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gv",
+     "name": "Nie",
+     "longName": "Nie",
+     "odds": 1.01,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1cx"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gv-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gv",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 12.0,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1cw"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-1gw",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-bu",
+   "name": "Mecz: rzut karny lub czerwona kartka (Nie liczy się: CK dla ławki, po meczu, dla sztabu)",
+   "marketTypeName": "Mecz: rzut karny lub czerwona kartka (Nie liczy się: CK dla ławki, po meczu, dla sztabu)",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-1gw-00",
+     "marketId": "ufo:mkt:1xi-0a1-1gw",
+     "name": "Nie",
+     "longName": "Nie",
+     "odds": 1.52,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1cz"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-1gw-01",
+     "marketId": "ufo:mkt:1xi-0a1-1gw",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 2.4,
+     "previousOdds": 1.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-1cy"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a1-0bu",
+   "fixtureId": "ufo:mtch:1xi-0a1",
+   "marketTypeId": "ufo:mtyp:00-0e",
+   "name": "Mecz: wiecej rzutow roznych",
+   "marketTypeName": "Mecz: więcej rzutów rożnych ",
+   "variant": "STANDARD",
+   "specifiers": null,
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a1-0bu-02",
+     "marketId": "ufo:mkt:1xi-0a1-0bu",
+     "name": "2",
+     "longName": "Hull",
+     "odds": 6.4,
+     "previousOdds": 6.8,
+     "order": {
+      "rowOrder": 3,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-12"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-0bu-01",
+     "marketId": "ufo:mkt:1xi-0a1-0bu",
+     "name": "Rowno",
+     "longName": "rowno",
+     "odds": 12.0,
+     "previousOdds": 11.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-11"
+    },
+    {
+     "id": "ufo:opt:1xi-0a1-0bu-00",
+     "marketId": "ufo:mkt:1xi-0a1-0bu",
+     "name": "1",
+     "longName": "Arsenal",
+     "odds": 1.14,
+     "previousOdds": 1.13,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-10"
+    }
+   ]
+  }
+ ],
+ "forestCityMononym": [
+  {
+   "id": "ufo:mkt:1xi-0a2-0zx",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-hm",
+   "name": "Murillo - strzeli gola lub zanotuje asystę (OPTA)",
+   "marketTypeName": "Zawodnik - strzeli gola lub zanotuje asystę (OPTA)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-0zx-00",
+     "marketId": "ufo:mkt:1xi-0a2-0zx",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 8.5,
+     "previousOdds": 8.5,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-1r0"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a2-0oa",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-lf",
+   "name": "Murillo - liczba strzałów (OPTA)",
+   "marketTypeName": "Zawodnik - liczba strzałów (OPTA)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-0oa-01",
+     "marketId": "ufo:mkt:1xi-0a2-0oa",
+     "name": "1+",
+     "longName": "1+",
+     "odds": 1.7,
+     "previousOdds": 1.7,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-257"
+    },
+    {
+     "id": "ufo:opt:1xi-0a2-0oa-00",
+     "marketId": "ufo:mkt:1xi-0a2-0oa",
+     "name": "2+",
+     "longName": "2+",
+     "odds": 4.25,
+     "previousOdds": 4.25,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-257"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a2-0pf",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-oi",
+   "name": "Murillo liczba strzałów w światło bramki głową (OPTA)",
+   "marketTypeName": "Zawodnik - liczba strzałów w światło bramki głową (OPTA)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-0pf-00",
+     "marketId": "ufo:mkt:1xi-0a2-0pf",
+     "name": "1+",
+     "longName": "1+",
+     "odds": 7.5,
+     "previousOdds": 7.5,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER"
+     ],
+     "optionTypeId": "ufo:otyp:00-2f4"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a2-12s",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-lk",
+   "name": "Murillo - otrzyma Żółtą Kartkę (Nie liczy się: druga ŻK dla zawodnika, ŻK dla ławki, po meczu)",
+   "marketTypeName": "Zawodnik - otrzyma Żółtą Kartkę (Nie liczy się: druga ŻK dla zawodnika, ŻK dla ławki, po meczu)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-12s-00",
+     "marketId": "ufo:mkt:1xi-0a2-12s",
+     "name": "1+",
+     "longName": "1+",
+     "odds": 4.0,
+     "previousOdds": 4.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-24v"
+    }
+   ]
+  },
+  {
+   "id": "ufo:mkt:1xi-0a2-0jw",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-ne",
+   "name": "Nottingham Murillo strzeli pierwszego gola w meczu (OPTA)",
+   "marketTypeName": "Nottingham - Zawodnik strzeli pierwszego gola w meczu (OPTA)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-0jw-00",
+     "marketId": "ufo:mkt:1xi-0a2-0jw",
+     "name": "Tak",
+     "longName": "Tak",
+     "odds": 30.0,
+     "previousOdds": 30.0,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-2d5"
+    }
+   ]
+  }
+ ],
+ "forestCityCommaPeer": [
+  {
+   "id": "ufo:mkt:1xi-0a2-0yw",
+   "fixtureId": "ufo:mtch:1xi-0a2",
+   "marketTypeId": "ufo:mtyp:00-lf",
+   "name": "Diomande, Ousmane - liczba strzałów (OPTA)",
+   "marketTypeName": "Zawodnik - liczba strzałów (OPTA)",
+   "variant": "GOALSCORER",
+   "specifiers": {
+    "teamId": "ufo:team:00-00hp"
+   },
+   "outcomes": [
+    {
+     "id": "ufo:opt:1xi-0a2-0yw-00",
+     "marketId": "ufo:mkt:1xi-0a2-0yw",
+     "name": "2+",
+     "longName": "2+",
+     "odds": 7.0,
+     "previousOdds": 7.0,
+     "order": {
+      "rowOrder": 2,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-257"
+    },
+    {
+     "id": "ufo:opt:1xi-0a2-0yw-01",
+     "marketId": "ufo:mkt:1xi-0a2-0yw",
+     "name": "1+",
+     "longName": "1+",
+     "odds": 2.25,
+     "previousOdds": 2.25,
+     "order": {
+      "rowOrder": 1,
+      "columnOrder": 0
+     },
+     "displayType": "OPEN",
+     "specifiers": null,
+     "badges": [],
+     "features": [
+      "OFFER",
+      "BB_EPS"
+     ],
+     "optionTypeId": "ufo:otyp:00-257"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+# LeBull league URL used by the current scraper (src/scrapers/bookmakers/lebull), re-checked 2026-11-06T16:58:59Z.
+# One read-only GET with the scraper desktop UA. Body is the nginx 404 page kept in ../lebull/old-ssr-host-404.html.
+$ curl -s -m 15 -A "<scraper UA>" -o /dev/null -w '%{http_code} %{url_effective} %{content_type}' https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485
+404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 text/html
+# Expected recorder issue for this document (Task 2 rule 1): document HTTP 404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485
+# Service log for the same URL: L93 / L36395 "[LeBull/Navigation] Navigating to: https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)" (backend-log-excerpts.txt section D).

@@ -1,0 +1,13 @@
+# Log excerpt from the running service (backend.log, ANSI stripped), 2026-11-06
+75:[Aggregator/FullOffer] Starting pzbuk scraper for premier-league
+82:[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+1327:[PZBuk/WS] Max wait reached with 0 selections
+1331:[Aggregator/FullOffer] pzbuk completed: success=false, 0 matches
+35886:[Aggregator/FullOffer] Run 7067e5f0-35c2-4bae-a045-5501547505a7 completed in 166289ms: 10 success, 4 errors, 200 total matches, 101713 total markets
+36350:[Scheduler] Starting scheduled scrape at 2026-11-06T16:00:00.349Z
+36380:[Aggregator/FullOffer] Starting pzbuk scraper for premier-league
+36394:[PZBuk/Navigation] Navigating to: https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/134-england-premier-league
+36721:[PZBuk/WS] Max wait reached with 0 selections
+36730:[Aggregator/FullOffer] pzbuk completed: success=false, 0 matches
+65473:[Aggregator/FullOffer] Run 440d2fc6-658b-46fe-b288-05261faa0caf completed in 169447ms: 9 success, 5 errors, 180 total matches, 90752 total markets
+65479:[Scheduler] All leagues completed: 9 success, 5 errors, 180 matches

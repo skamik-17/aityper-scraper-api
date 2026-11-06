@@ -1,0 +1,35 @@
+# python3 -I peers.py <normalized-markets JSON of Arsenal vs Hull City> <codes>   (GET /api/matches/Arsenal/Hull%20City/normalized-markets?league=premier-league, 17:43Z, run-3 data, CURRENT code)
+HALF_TIME_CORNERS_RACE	peers=9	fortuna=False	betclic,betcris,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+SECOND_HALF_CORNERS_RACE	peers=1	fortuna=False	superbet
+PENALTY_AWARDED	peers=3	fortuna=False	betcris,fuksiarz,lvbet
+RED_CARD_AND_PENALTY	peers=2	fortuna=False	betcris,lvbet
+OWN_GOAL	peers=2	fortuna=False	betcris,fuksiarz
+HEADER_GOAL	peers=1	fortuna=False	betclic
+ASSISTS_TOTAL	peers=0	fortuna=False	
+HALF_TIME_BTTS	peers=8	fortuna=False	betcris,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+HOME_WIN_TO_NIL	peers=7	fortuna=False	betcris,betfan,etoto,forbet,fuksiarz,lvbet,sts
+AWAY_WIN_TO_NIL	peers=7	fortuna=False	betcris,betfan,etoto,forbet,fuksiarz,lvbet,sts
+WINNING_MARGIN	peers=7	fortuna=False	betclic,betcris,betfan,etoto,forbet,fuksiarz,sts
+HOME_WIN_BOTH_HALVES	peers=8	fortuna=False	betclic,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+AWAY_WIN_BOTH_HALVES	peers=1	fortuna=False	fuksiarz
+HOME_SCORE_BOTH_HALVES	peers=8	fortuna=False	betclic,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+AWAY_SCORE_BOTH_HALVES	peers=8	fortuna=False	betclic,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+HOME_WIN_AT_LEAST_ONE_HALF	peers=8	fortuna=False	betclic,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+AWAY_WIN_AT_LEAST_ONE_HALF	peers=8	fortuna=False	betclic,betfan,etoto,forbet,fuksiarz,lvbet,sts,superbet
+HOME_EXACT_GOALS	peers=7	fortuna=False	betclic,betcris,betfan,etoto,forbet,fuksiarz,sts
+AWAY_EXACT_GOALS	peers=8	fortuna=False	betclic,betcris,betfan,etoto,forbet,fuksiarz,lvbet,sts
+RED_CARD_TEAM	peers=6	fortuna=False	betclic,betcris,betfan,etoto,forbet,fuksiarz
+HALF_TIME_RED_CARD_TEAM	peers=1	fortuna=False	etoto
+HALF_TIME_RED_CARD	peers=6	fortuna=False	betcris,betfan,etoto,forbet,lvbet,sts
+SECOND_HALF_EXACT_GOALS	peers=6	fortuna=False	betfan,etoto,forbet,fuksiarz,lvbet,sts
+FIRST_CORNER	peers=4	fortuna=False	betcris,fuksiarz,lvbet,superbet
+ODD_EVEN_GOALS	peers=7	fortuna=False	betclic,betcris,etoto,forbet,lvbet,sts,superbet
+PENALTY_OR_RED_CARD	peers=2	fortuna=False	betcris,lvbet
+MATCH_RESULT_OR_WIN_BY_2	peers=0	fortuna=False	
+WIN_OR_WIN_BY_2	peers=1	fortuna=False	betclic
+RESULT_OR_TOTAL	peers=3	fortuna=True	etoto,forbet,superbet
+RESULT_OR_BTTS	peers=2	fortuna=False	etoto,superbet
+DOUBLE_CHANCE_HALF_TIME_BTTS	peers=1	fortuna=False	etoto
+DOUBLE_CHANCE_SECOND_HALF_BTTS	peers=1	fortuna=False	etoto
+CORNERS_TEAM_RANGE	peers=6	fortuna=False	betfan,etoto,forbet,fuksiarz,sts,superbet
+RED_CARDS_TOTAL	peers=1	fortuna=False	betcris

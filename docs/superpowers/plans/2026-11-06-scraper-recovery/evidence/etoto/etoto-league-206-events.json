@@ -1,0 +1,137 @@
+{
+ "_note": "etoto league listing GET https://api.etoto.pl/rest/market/categories/multi/206/events (2026-11-06 ~16:21Z), reduced to id/name/start/gamesCount. 22 events = 20 fixtures + 2 combo pseudo-events rejected by isComboEvent().",
+ "events": [
+  {
+   "eventId": 6262102,
+   "eventName": "10. kolejka 06-08.11 - 10 meczów",
+   "eventStart": 1793995140000,
+   "gamesCount": 37
+  },
+  {
+   "eventId": 6224065,
+   "eventName": "Everton - Coventry",
+   "eventStart": 1793995200000,
+   "gamesCount": 508
+  },
+  {
+   "eventId": 6262615,
+   "eventName": "Dzień meczowy 07.11 - 4 mecze",
+   "eventStart": 1794054540000,
+   "gamesCount": 36
+  },
+  {
+   "eventId": 6224070,
+   "eventName": "Leeds - Tottenham",
+   "eventStart": 1794054600000,
+   "gamesCount": 485
+  },
+  {
+   "eventId": 6224074,
+   "eventName": "Fulham - Newcastle",
+   "eventStart": 1794063600000,
+   "gamesCount": 476
+  },
+  {
+   "eventId": 6224078,
+   "eventName": "Arsenal - Hull City",
+   "eventStart": 1794063600000,
+   "gamesCount": 493
+  },
+  {
+   "eventId": 6224083,
+   "eventName": "Nottingham - Manchester City",
+   "eventStart": 1794072600000,
+   "gamesCount": 498
+  },
+  {
+   "eventId": 6224081,
+   "eventName": "Sunderland - Chelsea",
+   "eventStart": 1794146400000,
+   "gamesCount": 467
+  },
+  {
+   "eventId": 6224084,
+   "eventName": "Ipswich - Bournemouth",
+   "eventStart": 1794146400000,
+   "gamesCount": 474
+  },
+  {
+   "eventId": 6224085,
+   "eventName": "Crystal Palace - Liverpool",
+   "eventStart": 1794146400000,
+   "gamesCount": 466
+  },
+  {
+   "eventId": 6224086,
+   "eventName": "Brighton - Brentford",
+   "eventStart": 1794146400000,
+   "gamesCount": 481
+  },
+  {
+   "eventId": 6224088,
+   "eventName": "Manchester Utd - Aston Villa",
+   "eventStart": 1794155400000,
+   "gamesCount": 494
+  },
+  {
+   "eventId": 6247432,
+   "eventName": "Manchester City - Fulham",
+   "eventStart": 1795264200000,
+   "gamesCount": 185
+  },
+  {
+   "eventId": 6247420,
+   "eventName": "Aston Villa - Sunderland",
+   "eventStart": 1795273200000,
+   "gamesCount": 186
+  },
+  {
+   "eventId": 6247422,
+   "eventName": "Coventry - Crystal Palace",
+   "eventStart": 1795273200000,
+   "gamesCount": 185
+  },
+  {
+   "eventId": 6247423,
+   "eventName": "Tottenham - Ipswich",
+   "eventStart": 1795273200000,
+   "gamesCount": 185
+  },
+  {
+   "eventId": 6247427,
+   "eventName": "Bournemouth - Nottingham",
+   "eventStart": 1795273200000,
+   "gamesCount": 183
+  },
+  {
+   "eventId": 6247443,
+   "eventName": "Chelsea - Leeds",
+   "eventStart": 1795273200000,
+   "gamesCount": 186
+  },
+  {
+   "eventId": 6247421,
+   "eventName": "Newcastle - Arsenal",
+   "eventStart": 1795282200000,
+   "gamesCount": 185
+  },
+  {
+   "eventId": 6247424,
+   "eventName": "Hull City - Brighton",
+   "eventStart": 1795356000000,
+   "gamesCount": 185
+  },
+  {
+   "eventId": 6247426,
+   "eventName": "Liverpool - Manchester Utd",
+   "eventStart": 1795365000000,
+   "gamesCount": 186
+  },
+  {
+   "eventId": 6247425,
+   "eventName": "Brentford - Everton",
+   "eventStart": 1795464000000,
+   "gamesCount": 185
+  }
+ ]
+}

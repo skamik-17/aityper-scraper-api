@@ -1,0 +1,46 @@
+[Betfan/FullOffer] Found 20 events
+[Betfan/FullOffer] Everton vs Coventry City: 876 markets
+[Betfan/FullOffer] Leeds United vs Tottenham: 897 markets
+[Betfan/FullOffer] Arsenal vs Hull: 978 markets
+[Betfan/FullOffer] Fulham vs Newcastle: 900 markets
+[Betfan/FullOffer] Nottingham Forest vs Manchester City: 803 markets
+[Betfan/FullOffer] Sunderland vs Chelsea: 821 markets
+[Betfan/FullOffer] Crystal Palace vs Liverpool: 866 markets
+[Betfan/FullOffer] Ipswich vs Bournemouth: 860 markets
+[Betfan/FullOffer] Brighton vs Brentford: 901 markets
+[Betfan/FullOffer] Manchester United vs Aston Villa: 814 markets
+[Betfan/FullOffer] Manchester City vs Fulham: 83 markets
+[Betfan/FullOffer] Coventry City vs Crystal Palace: 84 markets
+[Betfan/FullOffer] Aston Villa vs Sunderland: 84 markets
+[Betfan/FullOffer] Bournemouth vs Nottingham Forest: 85 markets
+[Betfan/FullOffer] Chelsea vs Leeds United: 85 markets
+[Betfan/FullOffer] Tottenham vs Ipswich: 82 markets
+[Betfan/FullOffer] Newcastle vs Arsenal: 82 markets
+[Betfan/FullOffer] Hull vs Brighton: 82 markets
+[Betfan/FullOffer] Liverpool vs Manchester United: 85 markets
+[Betfan/FullOffer] Brentford vs Everton: 85 markets
+[Betfan/FullOffer] Completed: 20 matches, 9553 total markets
+[Aggregator/FullOffer] betfan completed: 20 matches, 0 markets saved
+[Betfan/FullOffer] Found 20 events
+[Betfan/FullOffer] Everton vs Coventry City: 877 markets
+[Betfan/FullOffer] Leeds United vs Tottenham: 897 markets
+[Betfan/FullOffer] Arsenal vs Hull: 978 markets
+[Betfan/FullOffer] Fulham vs Newcastle: 900 markets
+[Betfan/FullOffer] Nottingham Forest vs Manchester City: 803 markets
+[Betfan/FullOffer] Sunderland vs Chelsea: 821 markets
+[Betfan/FullOffer] Crystal Palace vs Liverpool: 865 markets
+[Betfan/FullOffer] Ipswich vs Bournemouth: 858 markets
+[Betfan/FullOffer] Brighton vs Brentford: 905 markets
+[Betfan/FullOffer] Manchester United vs Aston Villa: 814 markets
+[Betfan/FullOffer] Manchester City vs Fulham: 83 markets
+[Betfan/FullOffer] Coventry City vs Crystal Palace: 84 markets
+[Betfan/FullOffer] Aston Villa vs Sunderland: 84 markets
+[Betfan/FullOffer] Bournemouth vs Nottingham Forest: 85 markets
+[Betfan/FullOffer] Chelsea vs Leeds United: 85 markets
+[Betfan/FullOffer] Tottenham vs Ipswich: 82 markets
+[Betfan/FullOffer] Newcastle vs Arsenal: 82 markets
+[Betfan/FullOffer] Hull vs Brighton: 82 markets
+[Betfan/FullOffer] Liverpool vs Manchester United: 85 markets
+[Betfan/FullOffer] Brentford vs Everton: 85 markets
+[Betfan/FullOffer] Completed: 20 matches, 9555 total markets
+[Aggregator/FullOffer] betfan completed: 20 matches, 5600 markets saved

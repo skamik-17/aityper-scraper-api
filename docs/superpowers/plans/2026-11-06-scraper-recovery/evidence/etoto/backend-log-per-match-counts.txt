@@ -1,0 +1,46 @@
+[eToto/FullOffer] Found 22 events, fetching details for each...
+[eToto/FullOffer] Everton vs Coventry: 508 markets
+[eToto/FullOffer] Leeds vs Tottenham: 485 markets
+[eToto/FullOffer] Fulham vs Newcastle: 476 markets
+[eToto/FullOffer] Arsenal vs Hull City: 493 markets
+[eToto/FullOffer] Nottingham vs Manchester City: 498 markets
+[eToto/FullOffer] Sunderland vs Chelsea: 467 markets
+[eToto/FullOffer] Ipswich vs Bournemouth: 474 markets
+[eToto/FullOffer] Crystal Palace vs Liverpool: 466 markets
+[eToto/FullOffer] Brighton vs Brentford: 481 markets
+[eToto/FullOffer] Manchester Utd vs Aston Villa: 494 markets
+[eToto/FullOffer] Manchester City vs Fulham: 185 markets
+[eToto/FullOffer] Aston Villa vs Sunderland: 186 markets
+[eToto/FullOffer] Coventry vs Crystal Palace: 185 markets
+[eToto/FullOffer] Tottenham vs Ipswich: 185 markets
+[eToto/FullOffer] Bournemouth vs Nottingham: 183 markets
+[eToto/FullOffer] Chelsea vs Leeds: 186 markets
+[eToto/FullOffer] Newcastle vs Arsenal: 185 markets
+[eToto/FullOffer] Hull City vs Brighton: 185 markets
+[eToto/FullOffer] Liverpool vs Manchester Utd: 186 markets
+[eToto/FullOffer] Brentford vs Everton: 185 markets
+[eToto/FullOffer] Completed: 20 matches, 6693 total markets
+[Aggregator/FullOffer] etoto completed: 20 matches, 0 markets saved
+[eToto/FullOffer] Found 22 events, fetching details for each...
+[eToto/FullOffer] Everton vs Coventry: 508 markets
+[eToto/FullOffer] Leeds vs Tottenham: 485 markets
+[eToto/FullOffer] Fulham vs Newcastle: 476 markets
+[eToto/FullOffer] Arsenal vs Hull City: 493 markets
+[eToto/FullOffer] Nottingham vs Manchester City: 498 markets
+[eToto/FullOffer] Sunderland vs Chelsea: 467 markets
+[eToto/FullOffer] Ipswich vs Bournemouth: 474 markets
+[eToto/FullOffer] Crystal Palace vs Liverpool: 466 markets
+[eToto/FullOffer] Brighton vs Brentford: 481 markets
+[eToto/FullOffer] Manchester Utd vs Aston Villa: 494 markets
+[eToto/FullOffer] Manchester City vs Fulham: 185 markets
+[eToto/FullOffer] Aston Villa vs Sunderland: 186 markets
+[eToto/FullOffer] Coventry vs Crystal Palace: 185 markets
+[eToto/FullOffer] Tottenham vs Ipswich: 185 markets
+[eToto/FullOffer] Bournemouth vs Nottingham: 183 markets
+[eToto/FullOffer] Chelsea vs Leeds: 186 markets
+[eToto/FullOffer] Newcastle vs Arsenal: 185 markets
+[eToto/FullOffer] Hull City vs Brighton: 185 markets
+[eToto/FullOffer] Liverpool vs Manchester Utd: 186 markets
+[eToto/FullOffer] Brentford vs Everton: 185 markets
+[eToto/FullOffer] Completed: 20 matches, 6693 total markets
+[Aggregator/FullOffer] etoto completed: 20 matches, 6553 markets saved

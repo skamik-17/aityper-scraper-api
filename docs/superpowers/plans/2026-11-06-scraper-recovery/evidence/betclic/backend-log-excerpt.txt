@@ -1,0 +1,90 @@
+# Betclic log excerpts, backend.log (ANSI stripped). Run 1 = lines < 36350, run 2 = lines >= 36350.
+## Per-match counts
+96:[Betclic/FullOffer] Found 20 events in listing
+127:[Betclic/FullOffer] Everton vs Coventry: 275 markets total
+165:[Betclic/FullOffer] Leeds vs Tottenham: 279 markets total
+199:[Betclic/FullOffer] Fulham vs Newcastle: 131 markets total
+252:[Betclic/FullOffer] Arsenal vs Hull: 242 markets total
+300:[Betclic/FullOffer] Nottingham Forest vs Manchester City: 220 markets total
+381:[Betclic/FullOffer] Sunderland vs Chelsea: 218 markets total
+436:[Betclic/FullOffer] Ipswich vs Bournemouth: 218 markets total
+482:[Betclic/FullOffer] Crystal Palace vs Liverpool: 220 markets total
+1034:[Betclic/FullOffer] Brighton vs Brentford: 219 markets total
+1364:[Betclic/FullOffer] Manchester United vs Aston Villa: 219 markets total
+1845:[Betclic/FullOffer] Manchester City vs Fulham: 110 markets total
+1872:[Betclic/FullOffer] Aston Villa vs Sunderland: 112 markets total
+10528:[Betclic/FullOffer] Bournemouth vs Nottingham Forest: 109 markets total
+10844:[Betclic/FullOffer] Coventry vs Crystal Palace: 111 markets total
+25332:[Betclic/FullOffer] Tottenham vs Ipswich: 110 markets total
+28311:[Betclic/FullOffer] Chelsea vs Leeds: 112 markets total
+28638:[Betclic/FullOffer] Newcastle vs Arsenal: 111 markets total
+28657:[Betclic/FullOffer] Hull vs Brighton: 111 markets total
+28679:[Betclic/FullOffer] Liverpool vs Manchester United: 111 markets total
+28700:[Betclic/FullOffer] Brentford vs Everton: 110 markets total
+28701:[Betclic/FullOffer] Completed: 20 matches, 3348 total markets
+36402:[Betclic/FullOffer] Found 20 events in listing
+36429:[Betclic/FullOffer] Everton vs Coventry: 275 markets total
+36460:[Betclic/FullOffer] Leeds vs Tottenham: 256 markets total
+36500:[Betclic/FullOffer] Fulham vs Newcastle: 254 markets total
+36548:[Betclic/FullOffer] Arsenal vs Hull: 265 markets total
+36597:[Betclic/FullOffer] Nottingham Forest vs Manchester City: 197 markets total
+36637:[Betclic/FullOffer] Sunderland vs Chelsea: 195 markets total
+36694:[Betclic/FullOffer] Ipswich vs Bournemouth: 218 markets total
+36751:[Betclic/FullOffer] Crystal Palace vs Liverpool: 159 markets total
+36804:[Betclic/FullOffer] Brighton vs Brentford: 196 markets total
+36849:[Betclic/FullOffer] Manchester United vs Aston Villa: 196 markets total
+36978:[Betclic/FullOffer] Manchester City vs Fulham: 110 markets total
+37599:[Betclic/FullOffer] Aston Villa vs Sunderland: 112 markets total
+37634:[Betclic/FullOffer] Bournemouth vs Nottingham Forest: 109 markets total
+37668:[Betclic/FullOffer] Coventry vs Crystal Palace: 111 markets total
+48948:[Betclic/FullOffer] Tottenham vs Ipswich: 31 markets total
+63427:[Betclic/FullOffer] Chelsea vs Leeds: 112 markets total
+63448:[Betclic/FullOffer] Newcastle vs Arsenal: 111 markets total
+63467:[Betclic/FullOffer] Hull vs Brighton: 111 markets total
+63490:[Betclic/FullOffer] Liverpool vs Manchester United: 111 markets total
+63511:[Betclic/FullOffer] Brentford vs Everton: 110 markets total
+63512:[Betclic/FullOffer] Completed: 20 matches, 3239 total markets
+## Aggregator
+28782:[Aggregator/FullOffer] betclic completed: 20 matches, 3262 markets saved
+63617:[Aggregator/FullOffer] betclic completed: 20 matches, 3150 markets saved
+## marketKey collisions (run 2, deduplicated by key)
+      1 TEAM_TOTAL_TACKLES:16.5 UNDER premier-league:fulham:newcastle united
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:sunderland:chelsea
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:nottingham forest:manchester city
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:manchester united:aston villa
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:leeds united:tottenham hotspur
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:ipswich town:afc bournemouth
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:fulham:newcastle united
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:everton:coventry city
+      1 HALF_TIME_CARDS_TOTAL:3.5 UNDER premier-league:brighton hove albion:brentford
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:sunderland:chelsea
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:nottingham forest:manchester city
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:manchester united:aston villa
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:leeds united:tottenham hotspur
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:ipswich town:afc bournemouth
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:fulham:newcastle united
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:everton:coventry city
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:brighton hove albion:brentford
+      1 HALF_TIME_CARDS_TOTAL:2.5 UNDER premier-league:arsenal:hull city
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:sunderland:chelsea
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:nottingham forest:manchester city
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:manchester united:aston villa
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:leeds united:tottenham hotspur
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:ipswich town:afc bournemouth
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:fulham:newcastle united
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:everton:coventry city
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:brighton hove albion:brentford
+      1 HALF_TIME_CARDS_TOTAL:1.5 UNDER premier-league:arsenal:hull city
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:sunderland:chelsea
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:nottingham forest:manchester city
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:manchester united:aston villa
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:leeds united:tottenham hotspur
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:ipswich town:afc bournemouth
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:fulham:newcastle united
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:everton:coventry city
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:brighton hove albion:brentford
+      1 HALF_TIME_CARDS_TOTAL:0.5 UNDER premier-league:arsenal:hull city
+      1 CARDS_TOTAL:6.5 UNDER premier-league:sunderland:chelsea
+      1 CARDS_TOTAL:6.5 UNDER premier-league:manchester united:aston villa
+      1 CARDS_TOTAL:6.5 UNDER premier-league:leeds united:tottenham hotspur
+      1 CARDS_TOTAL:6.5 UNDER premier-league:ipswich town:afc bournemouth

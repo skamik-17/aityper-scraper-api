@@ -121,4 +121,28 @@ describe("betfan recovery 2026-11", () => {
       ],
     ]);
   });
+
+  it("betfan team fouls use side-specific codes, away line no longer OTHER (Everton v Coventry capture)", () => {
+    const outs = normalizeCapture(ctxEC);
+    expect(keyedBy(outs, ["HOME_TEAM_TOTAL_FOULS", "AWAY_TEAM_TOTAL_FOULS", "TEAM_TOTAL_FOULS"])).toEqual({
+      "HOME_TEAM_TOTAL_FOULS:10.5": [["UNDER", 2], ["OVER", 1.7]],
+      "AWAY_TEAM_TOTAL_FOULS:12.5": [["UNDER", 1.83], ["OVER", 1.83]],
+    });
+    expect(outs.filter((o) => o.marketCode === "OTHER" && /liczba fauli/.test(o.debug?.rawName ?? ""))).toHaveLength(0);
+  });
+
+  it("betfan team fouls with an unresolvable team stay side-less TEAM_TOTAL_FOULS", () => {
+    const out = betfanNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "162",
+        name: "Arsenal - liczba fauli (OPTA)",
+        selections: [
+          { name: "Poniżej 10.5", odds: 2 },
+          { name: "Powyżej 10.5", odds: 1.7 },
+        ],
+      },
+      ctxEC
+    )!;
+    expect(out.marketCode).toBe("TEAM_TOTAL_FOULS");
+  });
 });

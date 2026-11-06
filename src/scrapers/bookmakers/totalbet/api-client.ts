@@ -126,9 +126,23 @@ export async function fetchLeagueEvents(
 export interface EventDetailResult {
   event: TotalbetDetailEvent | null;
   error?: string;
+  /**
+   * Set (with `event: null` and an explanatory `error`) when the detail answered for
+   * the right event but that event is no longer an active prematch event, e.g. it
+   * kicked off between the list call and the detail call. This is a state change,
+   * not a fetch failure: the caller skips the event entirely. It gets no list-1X2
+   * fallback and is not counted as a failed detail.
+   */
+  notPrematch?: { type: string; status: string };
 }
 
-/** Full detail (component_lists) of one event. */
+/**
+ * Full detail (component_lists) of one active prematch event.
+ *
+ * The list is filtered to active prematch events, but details are fetched one by
+ * one afterwards, so the event's state is checked again here: in-play or suspended
+ * prices must never be returned as prematch odds.
+ */
 export async function fetchEventDetail(
   eventUuid: string,
   fetchJson: FetchJson = nodeFetchJson
@@ -141,6 +155,15 @@ export async function fetchEventDetail(
     ? response.body.data.event
     : undefined;
   if (!isDetailEventFor(event, eventUuid)) return { event: null, error: `Malformed detail payload from ${url}` };
+
+  if (!isActivePrematch(event)) {
+    const { type, status } = event;
+    return {
+      event: null,
+      notPrematch: { type, status },
+      error: `Event ${eventUuid} is not an active prematch event (type=${type}, status=${status}) from ${url}`,
+    };
+  }
 
   return { event };
 }
@@ -196,18 +219,20 @@ function isKeptListEvent(candidate: unknown, categoryUuid: string): candidate is
   if (typeof candidate.uuid !== "string" || !Array.isArray(candidate.participants) || !Array.isArray(candidate.markets)) {
     return false;
   }
-  return (
-    candidate.type === "prematch" &&
-    candidate.status === "active" &&
-    candidate.tournament_uuid === categoryUuid &&
-    candidate.participants.length === 2
-  );
+  return isActivePrematch(candidate) && candidate.tournament_uuid === categoryUuid && candidate.participants.length === 2;
 }
 
 function isDetailEventFor(candidate: unknown, eventUuid: string): candidate is TotalbetDetailEvent {
   if (!isRecord(candidate) || !Array.isArray(candidate.component_lists)) return false;
+  // A missing state is schema drift, reported as malformed (loud), never as a quiet state change.
+  if (typeof candidate.type !== "string" || typeof candidate.status !== "string") return false;
   // A detail for another event would attach its odds to the wrong match.
   return typeof candidate.uuid === "string" && candidate.uuid.toLowerCase() === eventUuid.toLowerCase();
+}
+
+/** The only event state whose prices may be stored as prematch odds (list and detail alike). */
+function isActivePrematch(event: { type?: unknown; status?: unknown }): boolean {
+  return event.type === "prematch" && event.status === "active";
 }
 
 function envelopeReason(body: unknown): string | undefined {

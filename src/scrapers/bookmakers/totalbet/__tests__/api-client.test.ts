@@ -186,16 +186,64 @@ describe("totalbet api-client fetchEventDetail", () => {
     const base = detailBase();
     const requested = "495716e5-fd45-43e5-8947-a0bf3ff676ab";
     const url = DETAIL_URL(requested);
+    const { type: _type, ...noType } = base;
+    const { status: _status, ...noStatus } = base;
     const bodies = [
       { data: { event: { ...base, component_lists: [] } }, state: "success", _meta: null }, // uuid of another event
       { data: { event: { ...base, uuid: requested } }, state: "success", _meta: null }, // no component_lists
       { data: { event: null }, state: "success", _meta: null },
       { data: { event: { ...base, uuid: requested, component_lists: [] } }, state: "error", _meta: null },
+      // a missing state is a schema problem, not a state change: it must stay loud
+      { data: { event: { ...noType, uuid: requested, component_lists: [] } }, state: "success", _meta: null },
+      { data: { event: { ...noStatus, uuid: requested, component_lists: [] } }, state: "success", _meta: null },
+      { data: { event: { ...base, uuid: requested, type: null, component_lists: [] } }, state: "success", _meta: null },
       "{}",
     ];
     for (const body of bodies) {
-      expect(await fetchEventDetail(requested, fake({ [url]: ok(body) }))).toEqual({ event: null, error: `Malformed detail payload from ${url}` });
+      const r = await fetchEventDetail(requested, fake({ [url]: ok(body) }));
+      expect(r).toEqual({ event: null, error: `Malformed detail payload from ${url}` });
+      expect(r).not.toHaveProperty("notPrematch");
     }
+  });
+
+  it("fetchEventDetail accepts the prematch, active Leeds - Tottenham detail", async () => {
+    const body = load("event-detail-leeds-tottenham.trimmed.json");
+    const uuid = "0e45932b-1433-4cf5-b658-5c308b7c2b60";
+    const r = await fetchEventDetail(uuid, fake({ [DETAIL_URL(uuid)]: ok(body) }));
+    expect(r).toEqual({ event: body.data.event });
+    expect(r.event!.component_lists).toHaveLength(35);
+  });
+
+  it("fetchEventDetail tags a detail that is no longer an active prematch event", async () => {
+    // Kick-off can fall between the list call and the detail call: in-play prices must never pass as prematch odds.
+    const uuid = "0e45932b-1433-4cf5-b658-5c308b7c2b60";
+    const url = DETAIL_URL(uuid);
+    const cases = [
+      { type: "live", status: "active" },
+      { type: "prematch", status: "suspended" },
+      { type: "live", status: "suspended" },
+      { type: "outright", status: "active" },
+      { type: "Prematch", status: "active" }, // exact match, like the list filter
+    ];
+    for (const state of cases) {
+      const body = load("event-detail-leeds-tottenham.trimmed.json");
+      Object.assign(body.data.event, state);
+      const r = await fetchEventDetail(uuid, fake({ [url]: ok(body) }));
+      expect(r).toEqual({
+        event: null,
+        notPrematch: state,
+        error: `Event ${uuid} is not an active prematch event (type=${state.type}, status=${state.status}) from ${url}`,
+      });
+    }
+  });
+
+  it("fetchEventDetail checks the event identity before its state", async () => {
+    // A detail for another event is malformed even when that event is in play.
+    const requested = "495716e5-fd45-43e5-8947-a0bf3ff676ab";
+    const body = load("event-detail-leeds-tottenham.trimmed.json");
+    body.data.event.type = "live";
+    const url = DETAIL_URL(requested);
+    expect(await fetchEventDetail(requested, fake({ [url]: ok(body) }))).toEqual({ event: null, error: `Malformed detail payload from ${url}` });
   });
 });
 

@@ -147,11 +147,69 @@ export interface CaptureConfig {
 }
 
 /**
- * Result from WebSocket capture operation
+ * Why a Swarm capture attempt failed.
+ *
+ * Site-level (the page or its socket never delivered sport data):
+ * `navigation_failed`, `no_swarm_socket`, `no_sport_frames`.
+ * Content-level (the site answered, the target is not there):
+ * `competition_missing`, `no_games_with_markets`, `target_game_missing`.
  */
-export interface CaptureResult {
-  /** Captured Swarm data or null if timeout */
+export type SwarmCaptureFailure =
+  | "navigation_failed"
+  | "no_swarm_socket"
+  | "no_sport_frames"
+  | "competition_missing"
+  | "no_games_with_markets"
+  | "target_game_missing";
+
+/**
+ * Diagnostics of one capture attempt. All `*Ms` timings are ms since the
+ * attempt started (just before `page.goto`).
+ */
+export interface SwarmCaptureAttempt {
+  /** 1-based attempt number */
+  attempt: number;
+  /** When page.goto settled (resolved or rejected); null while still pending */
+  navMs: number | null;
+  /** page.goto rejection message, if it rejected */
+  navError: string | null;
+  /** Every Swarm socket URL seen during the attempt */
+  wsUrls: string[];
+  /** When the first Swarm socket opened */
+  wsOpenMs: number | null;
+  framesReceived: number;
+  nonJsonFrames: number;
+  /** Frames with code 0 and data.data.sport */
+  sportFrames: number;
+  /** League: target competition has a game with markets. Single-event: target game seen */
+  firstUsefulFrameMs: number | null;
+  failure: SwarmCaptureFailure | null;
+  /** page.title(), read only on failure */
+  pageTitle: string | null;
+  /** page.url() at attempt end (www.betsport.pl after the client redirect); null on throw */
+  finalUrl: string | null;
+  /** perf_hooks.monitorEventLoopDelay max over the attempt, rounded ms */
+  eventLoopDelayMaxMs: number | null;
+}
+
+/**
+ * Result of `captureSwarm`: the merged data of the successful attempt, or the
+ * failure of the last attempt, plus the diagnostics of every attempt.
+ */
+export interface SwarmCaptureOutcome {
   data: SwarmData | null;
-  /** Total markets found in the data */
-  marketCount: number;
+  failure: SwarmCaptureFailure | null;
+  attempts: SwarmCaptureAttempt[];
+}
+
+/**
+ * Capture deadlines and retry budget (defaults come from WS_CONFIG).
+ */
+export interface SwarmCaptureTiming {
+  /** No Swarm socket this long after page.goto settles -> failure */
+  wsOpenTimeoutMs: number;
+  /** No useful frame this long after the first Swarm socket opened -> failure */
+  firstUsefulFrameTimeoutMs: number;
+  maxAttempts: number;
+  retryBackoffMs: number;
 }

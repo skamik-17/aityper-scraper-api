@@ -164,15 +164,26 @@ export const SELECTION_CODES = {
 export const WS_CONFIG = {
   /** Minimum wait time before resolving with captured data (ms) */
   MIN_WAIT_TIME: 1000,
-  /** Maximum wait time for WebSocket data (ms) - league listing mode */
+  /** Maximum wait time for WebSocket data (ms) - league listing mode (legacy captureSwarmData only) */
   MAX_WAIT_TIME: 12000,
   /**
-   * Maximum wait time for single-event (match details) capture (ms).
-   * Larger than the league window because the full offer is streamed across
-   * an initial snapshot plus several per-market-group subscription frames that
-   * we accumulate/union before resolving.
+   * Maximum wait time for single-event (match details) capture (ms), measured
+   * from the first frame that contains the target game (firstUsefulFrameMs).
+   * The full offer is streamed across an initial snapshot plus several
+   * per-market-group subscription frames that we accumulate/union before
+   * resolving.
    */
   MAX_WAIT_TIME_SINGLE_EVENT: 16000,
+  /** No Swarm socket this long after page.goto settles (resolve or reject) -> failure (ms) */
+  WS_OPEN_TIMEOUT: 15000,
+  /** No useful frame this long after the first Swarm socket opened -> failure (ms) */
+  FIRST_USEFUL_FRAME_TIMEOUT: 30000,
+  /** Capture attempts per URL (target_game_missing is never retried) */
+  MAX_ATTEMPTS: 2,
+  /** Pause between capture attempts (ms) */
+  RETRY_BACKOFF: 3000,
+  /** The per-match loop stops after this many consecutive site-level capture failures */
+  MAX_CONSECUTIVE_MATCH_FAILURES: 3,
   /**
    * If no new markets are unioned for this long (after MIN_WAIT_TIME), the
    * accumulated offer is treated as complete even when the self-reported

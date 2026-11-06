@@ -11,6 +11,11 @@
  * We intercept WebSocket frames to capture betting data.
  */
 
+import { monitorEventLoopDelay } from "node:perf_hooks";
+// The same function as the global in production. Fake timers patch only the
+// global, so under them this stays a real I/O turn that costs no fake time
+// (a faked zero-delay timer created inside a fired timer is due 1 ms later).
+import { setImmediate } from "node:timers";
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import {
   BASE_URL,
@@ -19,7 +24,14 @@ import {
   REQUEST_TIMEOUT,
   WS_CONFIG,
 } from "./constants.js";
-import type { SwarmData, CaptureConfig } from "./types.js";
+import type {
+  SwarmData,
+  CaptureConfig,
+  SwarmCaptureAttempt,
+  SwarmCaptureFailure,
+  SwarmCaptureOutcome,
+  SwarmCaptureTiming,
+} from "./types.js";
 
 /**
  * Navigate to a league page to trigger WebSocket connection
@@ -238,6 +250,387 @@ export function captureSwarmData(
 
     page.on("websocket", onWebSocket);
   });
+}
+
+/** Failures where the page or its socket never delivered sport data. */
+const SITE_LEVEL_CAPTURE_FAILURES: ReadonlySet<SwarmCaptureFailure> = new Set<SwarmCaptureFailure>([
+  "navigation_failed",
+  "no_swarm_socket",
+  "no_sport_frames",
+]);
+
+/**
+ * Upper bound for the diagnostic page.title() read on failure: Playwright's
+ * title() has no timeout of its own, and a stalled renderer must not hang the
+ * capture.
+ */
+const PAGE_TITLE_TIMEOUT_MS = 2000;
+
+type Timer = ReturnType<typeof setTimeout>;
+
+interface CaptureAttemptResult {
+  attempt: SwarmCaptureAttempt;
+  data: SwarmData | null;
+}
+
+/**
+ * Navigate to `url` and capture its Swarm WebSocket data, with deadlines
+ * anchored at navigation/socket milestones, classified failures and a retry.
+ *
+ * Each attempt attaches the `websocket` listener, then starts `page.goto`
+ * without awaiting it, and unions every Swarm sport frame (see captureSwarmData
+ * for why frames are unioned). Completion:
+ * - league: the target competition has at least one game with markets;
+ * - single-event: the target game's markets_count is reached, or no growth for
+ *   PLATEAU_WAIT_TIME, or MAX_WAIT_TIME_SINGLE_EVENT after the target first
+ *   appeared.
+ * Deadlines:
+ * - goto settled (resolved or rejected) and no Swarm socket within
+ *   wsOpenTimeoutMs -> navigation_failed (goto rejected) / no_swarm_socket;
+ * - first socket opened and no useful frame within firstUsefulFrameTimeoutMs ->
+ *   no_sport_frames / competition_missing / no_games_with_markets /
+ *   target_game_missing.
+ * A goto rejection alone is not fatal: the betcris.pl -> betsport.pl client
+ * redirect supersedes the first document while the second one still opens the
+ * socket.
+ *
+ * Every failure except target_game_missing (game gone or live) is retried, up
+ * to maxAttempts, with fresh state and retryBackoffMs in between.
+ */
+export async function captureSwarm(
+  page: Page,
+  url: string,
+  config: CaptureConfig,
+  timing: Partial<SwarmCaptureTiming> = {}
+): Promise<SwarmCaptureOutcome> {
+  const resolved: SwarmCaptureTiming = {
+    wsOpenTimeoutMs: timing.wsOpenTimeoutMs ?? WS_CONFIG.WS_OPEN_TIMEOUT,
+    firstUsefulFrameTimeoutMs:
+      timing.firstUsefulFrameTimeoutMs ?? WS_CONFIG.FIRST_USEFUL_FRAME_TIMEOUT,
+    maxAttempts: Math.max(1, timing.maxAttempts ?? WS_CONFIG.MAX_ATTEMPTS),
+    retryBackoffMs: timing.retryBackoffMs ?? WS_CONFIG.RETRY_BACKOFF,
+  };
+  const attempts: SwarmCaptureAttempt[] = [];
+
+  for (let n = 1; ; n++) {
+    const { attempt, data } = await runCaptureAttempt(page, url, config, resolved, n);
+    attempts.push(attempt);
+
+    if (attempt.failure === null) {
+      return { data, failure: null, attempts };
+    }
+    if (attempt.failure === "target_game_missing" || n >= resolved.maxAttempts) {
+      return { data: null, failure: attempt.failure, attempts };
+    }
+
+    console.log(
+      `[Betcris/Navigation] Capture attempt ${n}/${resolved.maxAttempts} failed: ${attempt.failure}; retrying in ${resolved.retryBackoffMs} ms`
+    );
+    await new Promise<void>((resolve) => setTimeout(resolve, resolved.retryBackoffMs));
+  }
+}
+
+/**
+ * One capture attempt. Never rejects: every outcome is recorded in the attempt.
+ */
+function runCaptureAttempt(
+  page: Page,
+  url: string,
+  config: CaptureConfig,
+  timing: SwarmCaptureTiming,
+  attemptNo: number
+): Promise<CaptureAttemptResult> {
+  const { competitionId, singleEventMode = false, targetGameNumber } = config;
+  const label = singleEventMode ? "Navigating to match" : "Navigating to";
+  console.log(
+    `[Betcris/Navigation] ${label}: ${url} (attempt ${attemptNo}/${timing.maxAttempts})`
+  );
+
+  const loopDelay = monitorEventLoopDelay({ resolution: 20 });
+  loopDelay.enable();
+
+  const startedAt = Date.now();
+  const elapsed = () => Date.now() - startedAt;
+  const attempt: SwarmCaptureAttempt = {
+    attempt: attemptNo,
+    navMs: null,
+    navError: null,
+    wsUrls: [],
+    wsOpenMs: null,
+    framesReceived: 0,
+    nonJsonFrames: 0,
+    sportFrames: 0,
+    firstUsefulFrameMs: null,
+    failure: null,
+    pageTitle: null,
+    finalUrl: null,
+    eventLoopDelayMaxMs: null,
+  };
+
+  // Same scoping as captureSwarmData: keep only the target game (single-event)
+  // or the target competition (league) to bound memory on a reused page.
+  const mergeFilter: MergeFilter = {
+    competitionId: singleEventMode ? undefined : competitionId,
+    targetGameNumber: singleEventMode ? targetGameNumber : undefined,
+  };
+  const merged: SwarmData = {};
+  let bestMarketCount = 0;
+  let lastGrowthAt = startedAt;
+  let done = false;
+
+  let wsOpenTimer: Timer | undefined;
+  let firstUsefulTimer: Timer | undefined;
+  let maxWaitTimer: Timer | undefined;
+  let plateauPoll: ReturnType<typeof setInterval> | undefined;
+  const socketCleanups: Array<() => void> = [];
+
+  return new Promise<CaptureAttemptResult>((resolve) => {
+    const finish = async (failure: SwarmCaptureFailure | null): Promise<void> => {
+      if (done) return;
+      done = true;
+      clearTimeout(wsOpenTimer);
+      clearTimeout(firstUsefulTimer);
+      clearTimeout(maxWaitTimer);
+      clearInterval(plateauPoll);
+      page.off("websocket", onWebSocket);
+      for (const cleanup of socketCleanups) cleanup();
+
+      attempt.failure = failure;
+      try {
+        attempt.finalUrl = page.url();
+      } catch {
+        attempt.finalUrl = null;
+      }
+      attempt.eventLoopDelayMaxMs = Math.round(loopDelay.max / 1e6);
+      loopDelay.disable();
+      if (failure) {
+        attempt.pageTitle = await readPageTitle(page);
+      }
+      resolve({ attempt, data: failure ? null : merged });
+    };
+
+    // A deadline fired. After a long synchronous stretch Node runs expired timers
+    // before it polls for socket I/O, so frames that already arrived may still be
+    // queued: give them one setImmediate turn, then decide. A frame that completes
+    // the capture during that turn finishes it, so `done` is the completion re-check.
+    const afterQueuedIo = (decide: () => void) => {
+      setImmediate(() => {
+        if (!done) decide();
+      });
+    };
+
+    const onWsOpenDeadline = () =>
+      afterQueuedIo(() => {
+        // A socket opened during the turn: its own deadline is already armed.
+        if (attempt.wsOpenMs !== null) return;
+        void finish(attempt.navError !== null ? "navigation_failed" : "no_swarm_socket");
+      });
+
+    const onFirstUsefulDeadline = () =>
+      afterQueuedIo(() => {
+        // Single-event: the target appeared, its completion timers are running.
+        if (attempt.firstUsefulFrameMs !== null) return;
+        void finish(classifyMissingData());
+      });
+
+    const classifyMissingData = (): SwarmCaptureFailure => {
+      if (attempt.sportFrames === 0) return "no_sport_frames";
+      if (singleEventMode) return "target_game_missing";
+      if (competitionId && !checkCompetitionExists(merged, competitionId)) {
+        return "competition_missing";
+      }
+      return "no_games_with_markets";
+    };
+
+    const onTargetSeen = () => {
+      attempt.firstUsefulFrameMs = elapsed();
+      lastGrowthAt = Date.now();
+      clearTimeout(firstUsefulTimer);
+      maxWaitTimer = setTimeout(
+        () => afterQueuedIo(() => void finish(null)),
+        WS_CONFIG.MAX_WAIT_TIME_SINGLE_EVENT
+      );
+      // Plateau: no new markets unioned for a while -> treat the offer as complete.
+      plateauPoll = setInterval(() => {
+        if (done || elapsed() < WS_CONFIG.MIN_WAIT_TIME || bestMarketCount === 0) return;
+        if (Date.now() - lastGrowthAt >= WS_CONFIG.PLATEAU_WAIT_TIME) void finish(null);
+      }, WS_CONFIG.POLL_INTERVAL);
+    };
+
+    const onFrame = (frame: { payload: Buffer | string }) => {
+      if (done) return;
+      attempt.framesReceived++;
+
+      try {
+        const payload = frame.payload.toString();
+        if (!payload.startsWith("{")) {
+          attempt.nonJsonFrames++;
+          return;
+        }
+
+        let msg: any;
+        try {
+          msg = JSON.parse(payload);
+        } catch {
+          attempt.nonJsonFrames++;
+          return;
+        }
+
+        // Game data responses (sport > region > competition > game structure)
+        if (msg?.code !== 0 || !msg.data?.data?.sport) return;
+        attempt.sportFrames++;
+
+        mergeSwarmData(merged, msg.data.data as SwarmData, mergeFilter);
+        const stats = analyzeSwarmData(merged, targetGameNumber);
+
+        if (!singleEventMode) {
+          if (
+            stats.hasGamesWithMarkets &&
+            (!competitionId || checkCompetitionExists(merged, competitionId))
+          ) {
+            attempt.firstUsefulFrameMs = elapsed();
+            void finish(null);
+          }
+          return;
+        }
+
+        const currentBest = targetGameNumber
+          ? stats.targetMarketCount
+          : stats.maxGameMarketCount;
+        if (currentBest > bestMarketCount) {
+          bestMarketCount = currentBest;
+          lastGrowthAt = Date.now();
+        }
+
+        const targetSeen = targetGameNumber ? stats.hasTargetGame : stats.hasGamesWithMarkets;
+        if (targetSeen && attempt.firstUsefulFrameMs === null) {
+          onTargetSeen();
+        }
+
+        // Full offer captured: the union reached the game's self-reported total.
+        const target = targetGameNumber ? stats.targetMarketsCount : 0;
+        if (attempt.firstUsefulFrameMs !== null && target > 0 && currentBest >= target) {
+          void finish(null);
+        }
+      } catch {
+        // Unexpected frame shape - ignore the frame
+      }
+    };
+
+    const onWebSocket = (ws: PlaywrightWebSocket) => {
+      const wsUrl = ws.url();
+      // Only intercept Swarm WebSocket connections
+      if (!wsUrl.includes("swarm") && !wsUrl.includes("trexname.com")) {
+        return;
+      }
+      attempt.wsUrls.push(wsUrl);
+
+      if (attempt.wsOpenMs === null) {
+        attempt.wsOpenMs = elapsed();
+        clearTimeout(wsOpenTimer);
+        firstUsefulTimer = setTimeout(onFirstUsefulDeadline, timing.firstUsefulFrameTimeoutMs);
+      }
+
+      // A closed socket is detached; the SPA may open a new one (reconnect),
+      // which this listener picks up like the first.
+      const detach = () => {
+        ws.off("framereceived", onFrame);
+        ws.off("close", detach);
+      };
+      ws.on("framereceived", onFrame);
+      ws.on("close", detach);
+      socketCleanups.push(detach);
+    };
+
+    const onNavigationSettled = (error: unknown, rejected: boolean) => {
+      // After the attempt ended, a late rejection is swallowed here.
+      if (done || attempt.navMs !== null) return;
+      attempt.navMs = elapsed();
+      attempt.navError = rejected
+        ? error instanceof Error
+          ? error.message
+          : String(error)
+        : null;
+      if (attempt.wsOpenMs === null) {
+        wsOpenTimer = setTimeout(onWsOpenDeadline, timing.wsOpenTimeoutMs);
+      }
+    };
+
+    page.on("websocket", onWebSocket);
+
+    let navigation: Promise<unknown>;
+    try {
+      navigation = page.goto(url, {
+        timeout: REQUEST_TIMEOUT,
+        waitUntil: "domcontentloaded",
+      });
+    } catch (error) {
+      navigation = Promise.reject(error);
+    }
+    navigation.then(
+      () => onNavigationSettled(null, false),
+      (error: unknown) => onNavigationSettled(error, true)
+    );
+  });
+}
+
+/**
+ * page.title() for diagnostics; null when it throws or takes longer than
+ * PAGE_TITLE_TIMEOUT_MS.
+ */
+async function readPageTitle(page: Page): Promise<string | null> {
+  let timer: Timer | undefined;
+  try {
+    return await Promise.race([
+      page.title(),
+      new Promise<null>((resolve) => {
+        timer = setTimeout(() => resolve(null), PAGE_TITLE_TIMEOUT_MS);
+      }),
+    ]);
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** Site-level failures: the page or its Swarm socket never delivered sport data. */
+export function isSiteLevelCaptureFailure(f: SwarmCaptureFailure | null): boolean {
+  return f !== null && SITE_LEVEL_CAPTURE_FAILURES.has(f);
+}
+
+function formatMs(value: number | null | undefined): string {
+  return value === null || value === undefined ? "n/a" : String(value);
+}
+
+/** One-line failure reason with the last attempt's diagnostics. */
+export function formatCaptureFailure(outcome: SwarmCaptureOutcome): string {
+  const last = outcome.attempts[outcome.attempts.length - 1];
+  return (
+    `No WebSocket data captured: ${outcome.failure ?? "unknown"} (` +
+    `attempts=${outcome.attempts.length}, ` +
+    `navMs=${formatMs(last?.navMs)}, ` +
+    `wsOpenMs=${formatMs(last?.wsOpenMs)}, ` +
+    `frames=${last?.framesReceived ?? 0}, ` +
+    `sportFrames=${last?.sportFrames ?? 0}, ` +
+    `title="${last?.pageTitle ?? ""}", ` +
+    `finalUrl=${last?.finalUrl ?? "n/a"}, ` +
+    `loopLagMaxMs=${formatMs(last?.eventLoopDelayMaxMs)})`
+  );
+}
+
+/** One-line timings of the successful (last) attempt. */
+export function formatCaptureSuccess(outcome: SwarmCaptureOutcome): string {
+  const last = outcome.attempts[outcome.attempts.length - 1];
+  return (
+    `capture ok: ` +
+    `navMs=${formatMs(last?.navMs)}, ` +
+    `wsOpenMs=${formatMs(last?.wsOpenMs)}, ` +
+    `firstUsefulFrameMs=${formatMs(last?.firstUsefulFrameMs)}, ` +
+    `attempts=${outcome.attempts.length}, ` +
+    `loopLagMaxMs=${formatMs(last?.eventLoopDelayMaxMs)}, ` +
+    `finalUrl=${last?.finalUrl ?? "n/a"}`
+  );
 }
 
 /**

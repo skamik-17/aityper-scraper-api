@@ -17681,9 +17681,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:4.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:4.5",
         "matchedBy": "id",
-        "paramValue": "4.5",
+        "paramValue": "HOME:4.5",
         "parameters": null,
         "selections": [
           {
@@ -17707,9 +17707,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:5.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:5.5",
         "matchedBy": "id",
-        "paramValue": "5.5",
+        "paramValue": "HOME:5.5",
         "parameters": null,
         "selections": [
           {
@@ -17733,9 +17733,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:6.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:6.5",
         "matchedBy": "id",
-        "paramValue": "6.5",
+        "paramValue": "HOME:6.5",
         "parameters": null,
         "selections": [
           {
@@ -17759,9 +17759,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:2.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:2.5",
         "matchedBy": "id",
-        "paramValue": "2.5",
+        "paramValue": "AWAY:2.5",
         "parameters": null,
         "selections": [
           {
@@ -17785,9 +17785,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:3.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:3.5",
         "matchedBy": "id",
-        "paramValue": "3.5",
+        "paramValue": "AWAY:3.5",
         "parameters": null,
         "selections": [
           {
@@ -17811,9 +17811,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS_ON_TARGET",
-        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:4.5",
+        "marketKey": "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:4.5",
         "matchedBy": "id",
-        "paramValue": "4.5",
+        "paramValue": "AWAY:4.5",
         "parameters": null,
         "selections": [
           {
@@ -17915,9 +17915,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:14.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:14.5",
         "matchedBy": "id",
-        "paramValue": "14.5",
+        "paramValue": "HOME:14.5",
         "parameters": null,
         "selections": [
           {
@@ -17941,9 +17941,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:15.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:15.5",
         "matchedBy": "id",
-        "paramValue": "15.5",
+        "paramValue": "HOME:15.5",
         "parameters": null,
         "selections": [
           {
@@ -17967,9 +17967,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:16.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:HOME:16.5",
         "matchedBy": "id",
-        "paramValue": "16.5",
+        "paramValue": "HOME:16.5",
         "parameters": null,
         "selections": [
           {
@@ -17993,9 +17993,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:8.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:8.5",
         "matchedBy": "id",
-        "paramValue": "8.5",
+        "paramValue": "AWAY:8.5",
         "parameters": null,
         "selections": [
           {
@@ -18019,9 +18019,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:9.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:9.5",
         "matchedBy": "id",
-        "paramValue": "9.5",
+        "paramValue": "AWAY:9.5",
         "parameters": null,
         "selections": [
           {
@@ -18045,9 +18045,9 @@
       "expected": {
         "customLabel": null,
         "marketCode": "TEAM_TOTAL_SHOTS",
-        "marketKey": "TEAM_TOTAL_SHOTS:10.5",
+        "marketKey": "TEAM_TOTAL_SHOTS:AWAY:10.5",
         "matchedBy": "id",
-        "paramValue": "10.5",
+        "paramValue": "AWAY:10.5",
         "parameters": null,
         "selections": [
           {

@@ -328,6 +328,18 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   // teams and collided (team identity unresolved).
   [-248]: "HOME", // "1. połowa - <home> czerwona kartka"
   [-249]: "AWAY", // "1. połowa - <away> czerwona kartka"
+  // Recovery 2026-11 (Everton v Coventry capture): like CORNERS_TEAM above,
+  // the team shot catalog codes take plain OVER/UNDER selections, so the side
+  // has to live in the marketKey/paramValue (see ETOTO_TEAM_LINE_PARAM_MARKETS).
+  // Without these, both teams' lines landed on a side-less key such as
+  // "TEAM_TOTAL_SHOTS_ON_TARGET:4.5": they never merged with peers (which key
+  // on TEAM_TOTAL_SHOTS_ON_TARGET:HOME:4.5) and collided whenever both teams
+  // were quoted on the same line. The raw names and peer prices confirm the
+  // home team on 168/-30727 and the away team on 169/-30728.
+  [168]: "HOME", // "<home> suma X strzałów celnych"
+  [169]: "AWAY", // "<away> suma X strzałów celnych"
+  [-30727]: "HOME", // "<home> suma X strzałów"
+  [-30728]: "AWAY", // "<away> suma X strzałów"
 };
 
 /**
@@ -342,6 +354,18 @@ const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_WIN_MATCH",
   "TEAM_WIN_OR_CLEAN_SHEET",
   "CORNERS_TEAM_RANGE",
+]);
+
+/**
+ * Team-scoped line markets whose catalog selections are plain OVER/UNDER with
+ * no side prefix. The team side is combined with the numeric line in the
+ * paramValue (e.g. "HOME:4.5"), so the home and away variants stay on distinct
+ * marketKeys and use the same side-in-parameter convention as the peers.
+ */
+const ETOTO_TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "CORNERS_TEAM",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
 ]);
 
 /**
@@ -1230,13 +1254,15 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       paramValue = teamSide;
     } else {
       paramValue = extractParamValue(marketCode, raw);
-      // CORNERS_TEAM's catalog selections are plain OVER/UNDER with no side
-      // prefix, so the home (id 115) and away (id 116) variants must combine
-      // teamSide with the numeric line to stay on distinct marketKeys
-      // (e.g. CORNERS_TEAM:HOME:5.5 vs CORNERS_TEAM:AWAY:5.5); otherwise they
-      // collide on a single "CORNERS_TEAM:5.5" key and mix the two teams'
-      // prices into one row (see betclic-normalizer.ts for the same pattern).
-      if (marketCode === "CORNERS_TEAM" && teamSide) {
+      // CORNERS_TEAM, TEAM_TOTAL_SHOTS and TEAM_TOTAL_SHOTS_ON_TARGET have
+      // catalog selections that are plain OVER/UNDER with no side prefix, so
+      // the home (ids 115/168/-30727) and away (ids 116/169/-30728) variants
+      // must combine teamSide with the numeric line to stay on distinct
+      // marketKeys (e.g. CORNERS_TEAM:HOME:5.5 vs CORNERS_TEAM:AWAY:5.5);
+      // otherwise they collide on a single side-less key such as
+      // "CORNERS_TEAM:5.5", mix the two teams' prices into one row and never
+      // merge with peers (see betclic-normalizer.ts for the same pattern).
+      if (ETOTO_TEAM_LINE_PARAM_MARKETS.has(marketCode) && teamSide) {
         paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;
       }
     }

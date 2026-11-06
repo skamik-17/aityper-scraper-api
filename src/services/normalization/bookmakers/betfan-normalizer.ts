@@ -1394,11 +1394,19 @@ function extractParamValue(
 /**
  * Team-scoped stat lines whose catalog vocabulary carries the side in the
  * PARAMETER ("HOME:6.5"/"AWAY:6.5") rather than in a dedicated HOME_/AWAY_
- * marketCode (mirrors fortuna's convention for the same catalog codes).
- * Without the side folded into the param, both teams' lines collide on the
- * same (marketCode, param) key and only one team's odds survive.
+ * marketCode: corners, cards, shots and shots on target (mirrors fortuna's
+ * convention for the same catalog codes; forbet, fuksiarz and superbet key
+ * TEAM_TOTAL_SHOTS(_ON_TARGET) the same way). Without the side folded into
+ * the param, both teams' lines collide on the same (marketCode, param) key
+ * and only one team's odds survive, and the side-less key never pools with
+ * the peers' rows.
  */
-const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>(["CORNERS_TEAM", "CARDS_TEAM"]);
+const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "CORNERS_TEAM",
+  "CARDS_TEAM",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+]);
 
 export const betfanNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betfan",

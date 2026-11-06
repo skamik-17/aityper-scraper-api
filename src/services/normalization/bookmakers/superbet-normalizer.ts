@@ -227,6 +227,14 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // matching "Obie drużyny strzelą gola" inside the joined leg text) and to
   // silence the per-entry "[superbet] Unmapped market" warning spam.
   231194: "OTHER", // bet-builder / same-game-multi combos - no peer counterpart, never comparable
+  // Team yes/no specials. Mapped by id so they never reach the name patterns,
+  // where a team name like "Bournemouth" used to land them in TOTAL_GOALS.
+  232507: "OTHER", // "{home} strzeli co najmniej 2 gole z rzędu" - no catalog counterpart
+  232508: "OTHER", // "{away} strzeli co najmniej 2 gole z rzędu" - no catalog counterpart
+  232513: "OTHER", // "{home} wygra wcześniej przegrywając" - no catalog counterpart
+  232514: "OTHER", // "{away} wygra wcześniej przegrywając" - no catalog counterpart
+  232515: "OTHER", // "{home} będzie prowadzić w dowolnym momencie" - no catalog counterpart
+  232516: "OTHER", // "{away} będzie prowadzić w dowolnym momencie" - no catalog counterpart
 
   // ===== Corners =====
   704: "CORNERS_TOTAL", // "Liczba rzutów rożnych"
@@ -568,7 +576,9 @@ const SUPERBET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketTyp
   { pattern: /podwojna szansa|double chance/, code: "DOUBLE_CHANCE" },
   { pattern: /remis\s*=\s*zwrot|draw no bet|zaklad bez remisu/, code: "DRAW_NO_BET" },
   { pattern: /obie.*strzela|btts|gg\/?ng/, code: "BTTS" },
-  { pattern: /liczba goli|suma goli|over\/?under|o\/?u/, code: "TOTAL_GOALS" },
+  // "o/u" must be a whole token: a bare `o\/?u` matched the letters "ou"
+  // inside team/player names (Bournemouth, Toulouse, Tchaouna).
+  { pattern: /liczba goli|suma goli|over\/?under|\bo\/u\b/, code: "TOTAL_GOALS" },
   { pattern: /handicap azjatycki|asian handicap|^handicap$/, code: "ASIAN_HANDICAP" },
   { pattern: /handicap europejski|european handicap/, code: "EUROPEAN_HANDICAP" },
   { pattern: /parzyste\/?nieparzyste|nieparzysta\/?parzysta|odd\/?even/, code: "ODD_EVEN_GOALS" },

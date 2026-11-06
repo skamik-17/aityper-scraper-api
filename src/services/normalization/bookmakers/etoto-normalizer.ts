@@ -262,8 +262,13 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   // --- Other stats ---
   [161]: "FOULS_TOTAL", // "Suma X fauli"
-  [162]: "TEAM_TOTAL_FOULS", // "<home> suma X fauli"
-  [163]: "TEAM_TOTAL_FOULS", // "<away> suma X fauli"
+  // Team fouls carry the side in the code itself (HOME_/AWAY_TEAM_TOTAL_FOULS,
+  // the forbet/fortuna/superbet convention), so the key keeps the bare line
+  // (e.g. "HOME_TEAM_TOTAL_FOULS:11.5"). That is why 162/163 are deliberately
+  // absent from ETOTO_MARKET_ID_TEAM_SIDE and ETOTO_TEAM_LINE_PARAM_MARKETS:
+  // a second side prefix would give "HOME_TEAM_TOTAL_FOULS:HOME:11.5".
+  [162]: "HOME_TEAM_TOTAL_FOULS", // "<home> suma X fauli"
+  [163]: "AWAY_TEAM_TOTAL_FOULS", // "<away> suma X fauli"
   [167]: "TOTAL_SHOTS_ON_TARGET", // "Suma X strzałów celnych"
   [168]: "TEAM_TOTAL_SHOTS_ON_TARGET", // "<home> suma X strzałów celnych"
   [169]: "TEAM_TOTAL_SHOTS_ON_TARGET", // "<away> suma X strzałów celnych"
@@ -735,6 +740,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CARDS_TOTAL":
     case "FOULS_TOTAL":
     case "TEAM_TOTAL_FOULS":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
     case "TOTAL_SHOTS_ON_TARGET":
     case "TEAM_TOTAL_SHOTS_ON_TARGET":
     case "TOTAL_SHOTS":

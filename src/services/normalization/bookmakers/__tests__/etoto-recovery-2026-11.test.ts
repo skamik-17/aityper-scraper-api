@@ -91,4 +91,22 @@ describe("etoto recovery 2026-11", () => {
     expect(keys).toEqual(["FOULS_TOTAL:23.5", "TOTAL_SHOTS_ON_TARGET:7.5", "TOTAL_SHOTS_ON_TARGET:8.5",
       "TOTAL_SHOTS_ON_TARGET:9.5", "TOTAL_SHOTS:28.5"]);
   });
+
+  it("etoto team fouls use the side-specific codes (Everton v Coventry capture)", () => {
+    const keyed = Object.fromEntries(normalizeCapture(ctxEC)
+      .filter((o) => /TEAM_TOTAL_FOULS$/.test(o.marketCode))
+      .map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])]));
+    expect(keyed).toEqual({
+      "HOME_TEAM_TOTAL_FOULS:11.5": [["UNDER", 1.83], ["OVER", 1.87]],
+      "AWAY_TEAM_TOTAL_FOULS:12.5": [["UNDER", 1.65], ["OVER", 2.1]],
+    });
+  });
+
+  it("etoto same fouls line both teams (12.5) lands on HOME_ and AWAY_ codes", () => {
+    const sels = (u: number, o: number) => [{ name: "Poniżej 12.5", odds: u }, { name: "Powyżej 12.5", odds: o }];
+    const fr = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "162", name: "Francja suma 12.5 fauli", selections: sels(2.2, 1.6) }, ctxFM)!;
+    const ma = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "163", name: "Maroko suma 12.5 fauli", selections: sels(1.6, 2.2) }, ctxFM)!;
+    expect([fr.marketKey, ma.marketKey]).toEqual(["HOME_TEAM_TOTAL_FOULS:12.5", "AWAY_TEAM_TOTAL_FOULS:12.5"]);
+    expect(ma.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
+  });
 });

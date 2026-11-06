@@ -116,4 +116,70 @@ describe("forbet recovery 2026-11", () => {
     const turbo = outs.find((o) => o.marketCode === "WIN_OR_WIN_BY_2")!;
     expect(turbo.selections.map((s) => [s.code, s.odds])).toEqual([["HOME", 1.16], ["AWAY", 14]]);
   });
+
+  it("forbet Everton v Coventry alternative bets map like etoto (RESULT_OR_BTTS / TEAM_WIN_OR_CLEAN_SHEET / DRAW_OR_CLEAN_SHEET)", () => {
+    const outs = normalizeCapture("forbet-event-57945881-everton-coventry.trimmed.json", ctxEC);
+    const rob = outs.filter((o) => o.marketKey === "RESULT_OR_BTTS").flatMap((o) => o.selections.map((s) => [s.code, s.odds]));
+    expect(rob).toEqual([["HOME_OR_BTTS_YES", 1.13], ["HOME_OR_BTTS_NO", 4.7], ["AWAY_OR_BTTS_YES", 1.5], ["AWAY_OR_BTTS_NO", 2.31], ["DRAW_OR_BTTS_YES", 1.57], ["DRAW_OR_BTTS_NO", 2.16]]);
+    const cs = Object.fromEntries(outs.filter((o) => /CLEAN_SHEET/.test(o.marketCode)).map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])]));
+    expect(cs).toEqual({
+      "TEAM_WIN_OR_CLEAN_SHEET:HOME": [["YES", 1.28], ["NO", 3.15]],
+      "TEAM_WIN_OR_CLEAN_SHEET:AWAY": [["YES", 1.62], ["NO", 2.08]],
+      "DRAW_OR_CLEAN_SHEET": [["YES", 1.44], ["NO", 2.47]],
+    });
+    // Unresolved side: both teams would collapse onto the bare key
+    expect(outs.filter((o) => o.marketKey === "TEAM_WIN_OR_CLEAN_SHEET")).toHaveLength(0);
+    expect(outs.filter((o) => o.marketCode === "OTHER" && /^Wydarzy się/.test(o.debug?.rawName ?? ""))).toHaveLength(0);
+  });
+
+  it("forbet Arsenal v Hull alternative bets resolve 'Arsenal FC' / 'Hull City' to HOME / AWAY", () => {
+    const outs = normalizeCapture("forbet-event-57945911-arsenal-hull.trimmed.json", ctxAH);
+    const rob = outs.filter((o) => o.marketKey === "RESULT_OR_BTTS").flatMap((o) => o.selections.map((s) => [s.code, s.odds]));
+    expect(rob).toEqual([["HOME_OR_BTTS_YES", 1.04], ["HOME_OR_BTTS_NO", 7.4], ["AWAY_OR_BTTS_YES", 2.15], ["AWAY_OR_BTTS_NO", 1.57], ["DRAW_OR_BTTS_YES", 2.1], ["DRAW_OR_BTTS_NO", 1.6]]);
+    const cs = Object.fromEntries(outs.filter((o) => /CLEAN_SHEET/.test(o.marketCode)).map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])]));
+    expect(cs).toEqual({
+      "TEAM_WIN_OR_CLEAN_SHEET:HOME": [["YES", 1.07], ["NO", 6.2]],
+      "TEAM_WIN_OR_CLEAN_SHEET:AWAY": [["YES", 1.45], ["NO", 2.43]],
+      "DRAW_OR_CLEAN_SHEET": [["YES", 1.35], ["NO", 2.8]],
+    });
+  });
+
+  it("forbet RESULT_OR_BTTS is dropped when the result side or the tak/nie leg does not resolve", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      // Unresolvable team: tak and nie would merge into one side-less UNKNOWN row.
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: "-8041",
+        name: "Wydarzy się min. jedno z: Liverpool wygra lub obie drużyny strzelą gola",
+        selections: [{ name: "tak", odds: 1.13 }, { name: "nie", odds: 4.7 }],
+      }, ctxEC)).toBeNull();
+      // Resolved side, unrecognised selection label.
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: "-8041",
+        name: "Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola",
+        selections: [{ name: "tak", odds: 1.13 }, { name: "może", odds: 4.7 }],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(2);
+      expect(String(warn.mock.calls[0][0])).toContain("RESULT_OR_BTTS");
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("forbet TEAM_WIN_OR_CLEAN_SHEET is dropped when the team side does not resolve", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      // Without a side the price would land on the bare key, where the two
+      // teams collide and one of them is dropped.
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: "-8044",
+        name: "Wydarzy się min. jedno z: Liverpool wygra lub którakolwiek drużyna zachowa czyste konto",
+        selections: [{ name: "tak", odds: 1.28 }, { name: "nie", odds: 3.15 }],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain("TEAM_WIN_OR_CLEAN_SHEET");
+    } finally {
+      warn.mockRestore();
+    }
+  });
 });

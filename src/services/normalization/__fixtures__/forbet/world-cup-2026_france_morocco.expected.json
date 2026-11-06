@@ -4157,26 +4157,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "HOME_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.14
           },
           {
-            "code": "NO",
+            "code": "HOME_OR_BTTS_NO",
             "label": "nie",
             "odds": 4.4
           }
         ]
       },
       "index": 117,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: Francja wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4204,26 +4204,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.67
           },
           {
-            "code": "NO",
+            "code": "AWAY_OR_BTTS_NO",
             "label": "nie",
             "odds": 1.99
           }
         ]
       },
       "index": 121,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: Maroko wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4265,26 +4265,26 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.7
           },
           {
-            "code": "NO",
+            "code": "DRAW_OR_BTTS_NO",
             "label": "nie",
             "odds": 1.96
           }
         ]
       },
       "index": 125,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola"
     },
     {

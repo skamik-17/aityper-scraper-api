@@ -131,7 +131,11 @@ Expected after the fix: 148 − 20 − 27 = **101** lines for a comparable run (
   - Task 2: blessed `#22` (goal-or-assist pairs, blessed on the misroute).
   - Task 3: blessed `#257 Dokładnie 1 gol w meczu`, plus the unblessed `#230 Dokładna liczba goli`, `#775/#834/#839 Rezultat lub ilość bramek` and `#816 1. połowa - Liczba goli (3-drogowo) 1`. Task 3 pins the unblessed ones first.
   - Task 5 adds a PL fixture.
-- **Repository:** OTHER storage keys of LVBet now include `bookmakerMarketId`. The suffix becomes `OTHER:id:<class>:<hash>` instead of a name hash only (`full-offer-repository.ts` `resolveStorageMarketKey`). This is a one-time key change and harmless: the view reads the latest scrape.
+- **Repository:** OTHER storage keys of LVBet now include `bookmakerMarketId`. The suffix becomes `OTHER:id:<class>:<hash>` instead of a name hash only (`full-offer-repository.ts` `resolveStorageMarketKey`, `:144` vs `:147`). This is a one-time key change, and the views do not hide it.
+  - `latest_odds` keeps the newest row per `(match_id, bookmaker, market_key)`, not per `(match_id, bookmaker)` (`supabase/migrations/03_odds_schema_views.sql:52-60`). `market_comparison` and `getFullOfferByMatch` (`full-offer-repository.ts:375`) read it with no `scraped_at` filter. So an old `OTHER:name:<hash>` row and its new `OTHER:id:<class>:<hash>` twin are both served until the old scrape is deleted.
+  - The guard is `pruneStaleOddsRows` (`full-offer-repository.ts:267`). It deletes every older LVBet row of the match in the same save call. The batch path runs it only when the whole call had no failed upsert (`:681`). A failed batch therefore leaves every churned OTHER row (about 151 per match; live Ars–Hul has 151 `OTHER:name` keys for LVBet) duplicated until the next clean run.
+  - User impact is nil: the grouper drops OTHER (`market-type-grouper.ts:1380`). The duplicates show only in `/api/odds/match/full-offer` (no frontend caller) and in raw `market_comparison` dumps, which is why L2 requires a pruned run.
+  - Closing the window for good (filter `getFullOfferByMatch` to max `scraped_at` per match and bookmaker) changes shared behaviour for all bookmakers and is out of scope.
 - **Prior audit knowledge:** August audit items about `Zawodnicy (…)` threshold splitting (rounds 8 and 14) remain valid for the old shape but no longer apply to current PL data.
 
 ### Risks & unknowns
@@ -187,7 +191,11 @@ Dump `market_comparison` (a Supabase view) for one match through PostgREST. The 
 `lvbet_ac.py` was checked on a synthetic copy of today's Ars–Hul dump with LVBet's hidden O/U and half-time prices injected and the pairs removed. It printed `PASS | tg2.5O=1.55(+2.0%) tg2.5U=2.5(+3.3%) tg3.5O=2.3(+0.9%) tg3.5U=1.62(+2.5%)`.
 
 - L1. In the cleaned log, `[LVBet/FullOffer] Completed: 20 matches` (= fixture count). Every match with published ladders has **≥ 900** in its `[LVBet/FullOffer] <H> vs <A>: N markets` line (today 615–664).
-- L2. `python3 -I $EV/tools/db_stats.py $NM/mc-*.json` for 2 matches with ladders: `UNK%` ≤ **40** (today 58.3) and `extIdMissing` = **0** (today 4,875 of 4,875).
+- L2. `market_comparison` dumps for 2 matches with ladders.
+  - **Precondition:** take each dump only after a run whose log has `[FullOfferRepo] Pruned N stale row(s) for lvbet/<matchId>` for that match and no `[FullOfferRepo] Batch insert error` from the LVBet save. The view keeps one row per `market_key`, not per scrape, so before a prune the Task 1 OTHER key churn serves the old and new OTHER rows together (see Impact → Repository). `db_stats.py`'s `scrapedAt` dict must show a **single** bucket. Two buckets mean stale rows: discard the dump and wait for the next run.
+  - `python3 -I $EV/tools/db_stats.py $NM/mc-*.json`: `UNK%` ≤ **40** (today 58.3).
+  - Literal `"undefined"` ids: `python3 -I -c 'import json,sys; print(sum(1 for f in sys.argv[1:] for r in json.load(open(f)) for s in r["selections"] if s.get("externalId") == "undefined"))' $NM/mc-*.json` prints **0** (the Task 1 contract, `parser.ts:268`). Today it is 5,116 of 5,172 for Ars–Hul (live `/api/odds/match/full-offer`, 2026-11-07).
+  - `db_stats.py`'s `extIdMissing` is **not** a gate. It counts a missing key as missing (`db_stats.py:10`, `in ('undefined', None)`). When a normalizer filters or merges selections, `normalizeMarketsForBookmaker` rebuilds them without `externalId` (`src/services/normalization/index.ts:88-97`), and that is expected. Offline, after Task 1, the full Ars–Hul capture gives 0 literal and 56 missing ids over 11 rows: `RESULT_AND_TOTAL:1.5/2.5/3.5/4.5`, `EXACT_GOALS`, `HALF_TIME_EXACT_GOALS`, `SECOND_HALF_EXACT_GOALS`, `HOME_/AWAY_GOAL_RANGE`, `CORNERS_RANGE`, `MULTI_GOAL_RANGE`. Tasks 2–3 add more count-changing markets (tier drops, exact-goals folds), so the number grows. Record it, but do not gate on it.
 - L3. `python3 -I $EV/tools/lvbet_ac.py --ladders $NM/nm-<2 matches with ladders>.json` prints `PASS`. That requires:
   - LVBet present under PLAYER_SHOTS, PLAYER_SHOTS_ON_TARGET, PLAYER_FOULS, PLAYER_FOULS_WON, PLAYER_TACKLES, PLAYER_SAVES, PLAYER_ASSISTS, PLAYER_OFFSIDES, PLAYER_HEADER_SHOTS_ON_TARGET, PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX, PLAYER_GOAL_AND_ASSIST, HOME_EXACT_GOALS, HALF_TIME_HOME_EXACT_GOALS, RESULT_OR_TOTAL and TWO_PLAYERS_COMBINED_GOALS. AWAY_EXACT_GOALS is left out because it already works today.
   - LVBet EXACT_GOALS with ≥ 7 selections.
@@ -749,7 +757,7 @@ The archive lives in the aityper repo, where the WC archives are tracked. With t
 - Run the smoke test once, as specified in the Observations section. Expected results are listed there.
 - Then fetch the dumps and run the checks of the Live acceptance block (all commands are spelled out there):
   - L1 and L5: `grep -E '^\[LVBet/FullOffer\]'` and `grep -c 'for lvbet <KEY> '` in the cleaned log;
-  - L2: `db_stats.py` on two `market_comparison` dumps;
+  - L2: two `market_comparison` dumps, each taken after a run that logged `[FullOfferRepo] Pruned N stale row(s) for lvbet/<matchId>` with no `Batch insert error`. In the report, record `db_stats.py`'s single `scrapedAt` bucket and `UNK%`, and the literal `externalId == "undefined"` count (gate: 0). Report `extIdMissing` for information only: filtered or merged selections legitimately carry no `externalId`;
   - L3 and L4: `lvbet_ac.py` (`--ladders` for two matches with ladders; plain for all 20);
   - L6: `mw_sanity.py` on a fresh `/api/odds` dump.
 - If the run falls in a week without published ladders, record L1/L3 as "pending: no ladders" and rerun them in the first matchweek that has them. The offline O1–O3 already cover the logic.

@@ -109,4 +109,35 @@ describe("etoto recovery 2026-11", () => {
     expect([fr.marketKey, ma.marketKey]).toEqual(["HOME_TEAM_TOTAL_FOULS:12.5", "AWAY_TEAM_TOTAL_FOULS:12.5"]);
     expect(ma.selections.map((s) => s.code)).toEqual(["UNDER", "OVER"]);
   });
+
+  it("etoto 'Suma 0.5 rzutów karnych' (-30591) is PENALTY_AWARDED with over = YES", () => {
+    const pen = normalizeCapture(ctxEC).find((o) => o.debug?.rawName === "Suma 0.5 rzutów karnych")!;
+    expect(pen.marketCode).toBe("PENALTY_AWARDED");
+    expect(pen.marketKey).toBe("PENALTY_AWARDED");
+    expect(pen.selections.map((s) => [s.code, s.odds])).toEqual([["NO", 1.25], ["YES", 3.55]]);
+  });
+
+  it("etoto penalty totals at another line (-30591, 1.5) do not become PENALTY_AWARDED", () => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30591", name: "Suma 1.5 rzutów karnych",
+      selections: [{ name: "Poniżej 1.5", odds: 1.02 }, { name: "Powyżej 1.5", odds: 15 }] }, ctxEC);
+    expect(out?.marketCode).not.toBe("PENALTY_AWARDED");
+    // Stays OTHER (not null) so the "[etoto] Unmapped market" warn keeps firing.
+    expect(out?.marketCode).toBe("OTHER");
+  });
+
+  it("etoto 'Rzut karny' (id 15) still maps Tak/Nie", () => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "15", name: "Rzut karny",
+      selections: [{ name: "Tak", odds: 3.2 }, { name: "Nie", odds: 1.3 }] }, ctxEC)!;
+    expect(out.selections.map((s) => s.code)).toEqual(["YES", "NO"]);
+  });
+
+  it("etoto penalty ids 15 and -30591 give the same key and YES/NO codes, so either collision winner is correct", () => {
+    // forbet 57945881 quotes id 15 "Rzut karny" Tak 3.4 / Nie 1.25 for this same match
+    // (evidence/etoto/penalty-markets-etoto-vs-siblings-2026-11-06.json).
+    const id15 = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "15", name: "Rzut karny",
+      selections: [{ name: "Tak", odds: 3.4 }, { name: "Nie", odds: 1.25 }] }, ctxEC)!;
+    const id30591 = normalizeCapture(ctxEC).find((o) => o.debug?.rawName === "Suma 0.5 rzutów karnych")!;
+    expect(id30591.marketKey).toBe(id15.marketKey);
+    expect(id30591.selections.map((s) => s.code).sort()).toEqual(id15.selections.map((s) => s.code).sort());
+  });
 });

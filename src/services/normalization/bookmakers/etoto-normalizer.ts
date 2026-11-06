@@ -156,6 +156,10 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // --- Misc match props ---
   [-338]: "WINNING_MARGIN", // "Margines zwycięstwa"
   [15]: "PENALTY_AWARDED", // "Rzut karny"
+  // "Suma 0.5 rzutów karnych" (Poniżej/Powyżej 0.5): over 0.5 penalties is
+  // "a penalty is awarded". Only the 0.5 line qualifies; normalizeMarket
+  // keeps any other line as OTHER (see isPenaltyTotalZeroFiveLine).
+  [-30591]: "PENALTY_AWARDED",
 
   // --- Goalscorers / player props ---
   [12]: "GOALSCORER_ANYTIME", // "Strzelec gola (musi wziąć udział w meczu)"
@@ -774,6 +778,16 @@ function normalizeSelectionForMarket(
       return `${side}_OR_BTTS_${yesNoBtts}` as NormalizedSelection;
     }
 
+    // Id -30591 quotes the penalty market as a 0.5 total ("Poniżej/Powyżej
+    // 0.5"); normalizeMarket lets only that line through, where over = at
+    // least one penalty = YES. Id 15 "Rzut karny" stays plain Tak/Nie.
+    case "PENALTY_AWARDED": {
+      const overUnder = normalizeOverUnderSelection(trimmed);
+      if (overUnder === "OVER") return "YES";
+      if (overUnder === "UNDER") return "NO";
+      return normalizeYesNoSelection(trimmed);
+    }
+
     case "BTTS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
@@ -799,7 +813,6 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_TO_SCORE":
     case "SECOND_HALF_HOME_TO_SCORE":
     case "SECOND_HALF_AWAY_TO_SCORE":
-    case "PENALTY_AWARDED":
     case "RED_CARD":
     case "RED_CARD_TEAM":
     case "HALF_TIME_RED_CARD":
@@ -1151,6 +1164,18 @@ function parseSumIntegerLine(text: string): string | undefined {
 }
 
 /**
+ * Id -30591 is a penalty total ("Suma X rzutów karnych"). Only its 0.5 line
+ * ("Powyżej 0.5" = at least one penalty) is the PENALTY_AWARDED proposition.
+ * Fails closed: a missing or unparseable line does not count as 0.5.
+ */
+function isPenaltyTotalZeroFiveLine(raw: RawBookmakerMarket): boolean {
+  const line =
+    parseDecimalLine(raw.name) ??
+    parseOverUnderLine(raw.selections.map((s: { name: string }) => s.name));
+  return line !== undefined && Number(line) === 0.5;
+}
+
+/**
  * Extract the player name from "Lastname, Firstname N+" style selections.
  * All selections of a per-player eToto market reference the same player.
  */
@@ -1223,6 +1248,13 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
 
     if (marketId !== null) {
       marketCode = ETOTO_MARKET_ID_TO_CODE[marketId] ?? null;
+    }
+
+    // A -30591 penalty total at any line other than 0.5 is not "a penalty is
+    // awarded" (over 1.5 means two or more). Keep it OTHER, not null, so the
+    // "Unmapped market" warn below still flags the new line.
+    if (marketId === -30591 && !isPenaltyTotalZeroFiveLine(raw)) {
+      marketCode = "OTHER";
     }
 
     if (!marketCode) {

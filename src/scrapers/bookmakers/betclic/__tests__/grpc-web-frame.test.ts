@@ -3,11 +3,21 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PassThrough } from "node:stream";
+import { gzipSync } from "node:zlib";
 import { decodeGrpcWebTextFrame, readGrpcWebTextStream } from "../navigation.js";
 import { parseAllMarketsFromProto } from "../parser.js";
 
 const b64 = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), "fixtures", f), "utf8");
 const HANDICAP = b64("arsenal-hull_HANDICAP.grpc-web-text.b64"), TOP = b64("arsenal-hull_TOP.grpc-web-text.b64");
+
+/** One gRPC-web-text frame: flag byte + 4-byte big-endian length + message, base64-encoded */
+const grpcWebTextFrame = (flag: number, message: Buffer): string => {
+  const f = Buffer.alloc(5 + message.length);
+  f[0] = flag;
+  f.writeUInt32BE(message.length, 1);
+  message.copy(f, 5);
+  return f.toString("base64");
+};
 
 describe("decodeGrpcWebTextFrame", () => {
   it("decodeGrpcWebTextFrame: full HANDICAP response is one complete 11926-byte frame with 4 markets", () => {
@@ -87,5 +97,18 @@ describe("readGrpcWebTextStream", () => {
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.write(f.toString("base64"));
     await expect(p).rejects.toThrow(/gRPC-web trailer frame instead of data: grpc-status:5/);
+  });
+  it("readGrpcWebTextStream rejects an empty first data frame instead of resolving 0 bytes", async () => {
+    const s = new PassThrough();
+    const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
+    // The real frame follows on the same open stream; it must not be skipped silently
+    s.write(grpcWebTextFrame(0, Buffer.alloc(0)) + HANDICAP);
+    await expect(p).rejects.toThrow(/gRPC-web empty data frame/);
+  });
+  it("readGrpcWebTextStream rejects a compressed frame instead of resolving compressed bytes", async () => {
+    const s = new PassThrough();
+    const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
+    s.write(grpcWebTextFrame(0x01, gzipSync(decodeGrpcWebTextFrame(HANDICAP).message)));
+    await expect(p).rejects.toThrow(/gRPC-web compressed frame not supported/);
   });
 });

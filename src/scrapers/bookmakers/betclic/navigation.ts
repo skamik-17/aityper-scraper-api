@@ -146,7 +146,7 @@ export interface GrpcWebTextFrame {
   complete: boolean;
   /** Message length from the 5-byte frame header; null until the header is decoded */
   expectedLength: number | null;
-  /** Frame flag byte (0x80 marks a trailer frame); null until the header is decoded */
+  /** Frame flag byte (0x80 marks a trailer, 0x01 a compressed message); null until the header is decoded */
   flag: number | null;
   /** Message bytes after the header, capped at expectedLength */
   message: Buffer;
@@ -158,6 +158,8 @@ const GRPC_WEB_HEADER_BYTES = 5;
 const GRPC_WEB_HEADER_CHARS = 8;
 /** Flag bit that marks a trailer frame (grpc-status / grpc-message lines) */
 const GRPC_WEB_TRAILER_FLAG = 0x80;
+/** Flag bit that marks a compressed message (we send no grpc-accept-encoding) */
+const GRPC_WEB_COMPRESSED_FLAG = 0x01;
 
 /** Base64 length of a whole frame (header + message), padding included */
 function grpcWebTextFrameChars(messageLength: number): number {
@@ -196,7 +198,10 @@ export function decodeGrpcWebTextFrame(data: string): GrpcWebTextFrame {
  * frame is complete, without waiting for 'end', and destroys the stream.
  * It never resolves partial data: it rejects when the stream ends first,
  * when the deadline passes, when the first frame is a trailer, or on a
- * stream error, so that fetchGrpcStream retries.
+ * stream error, so that fetchGrpcStream retries. It also rejects a first
+ * frame that is compressed or empty: resolving either would lose the
+ * response silently, because the callers skip short responses and
+ * compressed bytes parse to no markets.
  */
 export function readGrpcWebTextStream(
   res: NodeJS.ReadableStream & { destroy?(): void },
@@ -247,6 +252,16 @@ export function readGrpcWebTextStream(
             .trim()
             .replace(/\r?\n/g, "; ");
           const error = new Error(`gRPC-web trailer frame instead of data: ${trailer}`);
+          settle(() => reject(error));
+          return;
+        }
+        if (header.flag !== null && (header.flag & GRPC_WEB_COMPRESSED_FLAG) !== 0) {
+          const error = new Error("gRPC-web compressed frame not supported");
+          settle(() => reject(error));
+          return;
+        }
+        if (header.expectedLength === 0) {
+          const error = new Error("gRPC-web empty data frame");
           settle(() => reject(error));
           return;
         }

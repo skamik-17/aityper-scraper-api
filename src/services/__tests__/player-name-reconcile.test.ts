@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { reconcilePlayerNameVariants } from "../market-type-grouper.js";
+import { groupMarketsByTypeWithParameters, reconcilePlayerNameVariants } from "../market-type-grouper.js";
+import type { ScrapedMarket } from "../../types/full-offer.js";
 
 /**
  * Cases taken verbatim from the /audit-match run on premier-league
@@ -115,5 +116,51 @@ describe("reconcilePlayerNameVariants", () => {
   it("is a no-op below two names", () => {
     expect(reconcilePlayerNameVariants(names([["Ben White", ["sts"]]])).size).toBe(0);
     expect(reconcilePlayerNameVariants(new Map()).size).toBe(0);
+  });
+
+  it("prefers a spelled-out first name over an initial on a bookmaker-count tie", () => {
+    const alias = reconcilePlayerNameVariants(names([["O. Zambrano", ["fuksiarz"]], ["Oscar Zambrano", ["superbet"]]]));
+    expect(alias.get("O. Zambrano")).toBe("Oscar Zambrano");
+    expect(alias.has("Oscar Zambrano")).toBe(false);
+  });
+
+  it("prefers the spelled-out first name even when the initial spelling has more bookmakers", () => {
+    const alias = reconcilePlayerNameVariants(names([["M. Salmon", ["fuksiarz", "lvbet"]], ["Marli Salmon", ["superbet"]]]));
+    expect(alias.get("M. Salmon")).toBe("Marli Salmon");
+  });
+
+  it("prefers the spelled-out first name over a longer initial spelling with a middle name", () => {
+    const alias = reconcilePlayerNameVariants(names([["M. Bachir Belloumi", ["fuksiarz"]], ["Mohamed Belloumi", ["superbet"]]]));
+    expect(alias.get("M. Bachir Belloumi")).toBe("Mohamed Belloumi");
+  });
+
+  it("folds a trailing-initial and a leading-initial spelling into the full name", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["Bachir Belloumi M.", ["sts"]], ["M. Bachir Belloumi", ["fuksiarz"]], ["Mohamed Belloumi", ["superbet"]],
+    ]));
+    expect(alias.get("Bachir Belloumi M.")).toBe("Mohamed Belloumi");
+    expect(alias.get("M. Bachir Belloumi")).toBe("Mohamed Belloumi");
+  });
+
+  it("prefers a leading initial over STS's trailing initial", () => {
+    // Guard: passes today (localeCompare tie) and must keep passing. A first-token-only
+    // abbreviation check would make "Zambrano O." win.
+    const alias = reconcilePlayerNameVariants(names([["Zambrano O.", ["sts"]], ["O. Zambrano", ["fuksiarz"]]]));
+    expect(alias.get("Zambrano O.")).toBe("O. Zambrano");
+  });
+
+  it("merges an accented initial and full name under the accent-folded full name", () => {
+    const mk = (paramValue: string, odds: number): ScrapedMarket => ({
+      name: "Celne strzały", type: "PLAYER_SHOTS_ON_TARGET", normalizedType: "PLAYER_SHOTS_ON_TARGET",
+      marketKey: `PLAYER_SHOTS_ON_TARGET:${paramValue}`, paramValue,
+      selections: [{ name: "1+", normalizedName: "1+", odds }],
+    }) as ScrapedMarket;
+    const out = groupMarketsByTypeWithParameters([
+      { market: mk("A. Ömür", 2.1), bookmaker: "fuksiarz" },
+      { market: mk("Abdulkadir Ömür", 2.05), bookmaker: "superbet" },
+    ]);
+    const market = out.find((m) => m.type === "PLAYER_SHOTS_ON_TARGET")!;
+    expect(market.parameters.map((p) => p.value)).toEqual(["Abdulkadir Omur"]);
+    expect(market.parameters[0].bookmakers.map((b) => b.bookmaker).sort()).toEqual(["fuksiarz", "superbet"]);
   });
 });

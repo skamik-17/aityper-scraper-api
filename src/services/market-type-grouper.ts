@@ -209,6 +209,32 @@ function isPlaceholderMarketName(name: string | undefined): boolean {
 }
 
 /**
+ * How abbreviated a player label is, ranked for the reconcile tie-break:
+ *
+ *   0  no initial at all          ("Oscar Zambrano")
+ *   1  the first name is initial  ("O. Zambrano", "M Grimes")
+ *   2  a later token is initial   (STS's "Zambrano O.", "Borges Rodrigues R.")
+ *
+ * A token counts as an initial only when it is a single UPPERCASE letter with
+ * an optional dot. Lowercase letters never count: Fortuna's red-card params
+ * are sentences ("Mohamed Bachir Belloumi wyrzucony z boiska") whose Polish
+ * "z" is a word, not an initial. The raw name is split as is (no lowercasing),
+ * because the case is what separates the two.
+ */
+export function abbreviationRank(name: string): 0 | 1 | 2 {
+  const tokens = name.split(/\s+/).filter(Boolean);
+  const isInitial = (token: string): boolean => /^\p{Lu}\.?$/u.test(token);
+  if (tokens.length > 0 && isInitial(tokens[0])) return 1;
+  if (tokens.slice(1).some(isInitial)) return 2;
+  return 0;
+}
+
+/** True when any token of the player label is a bare initial ("O. Zambrano", "Zambrano O."). */
+export function isAbbreviatedPlayerName(name: string): boolean {
+  return abbreviationRank(name) > 0;
+}
+
+/**
  * Reconciles the player-name variants a single market collects from different
  * bookmakers. Even after canonicalizePlayerName (order + accents), the same
  * footballer still arrives in shapes that cannot be normalized in isolation —
@@ -222,8 +248,11 @@ function isPlaceholderMarketName(name: string | undefined): boolean {
  * splitting one player's odds across two entries and hiding best-odds
  * (/audit-match, Arsenal vs Coventry City). A variant is folded into another
  * name only when the target is UNAMBIGUOUS; ties and multi-candidate matches
- * are left alone. The surviving spelling is the one more bookmakers use, so
- * the majority form wins and the result is deterministic.
+ * are left alone. The surviving spelling is the most spelled-out one (see
+ * abbreviationRank): a full first name beats a leading initial, which beats a
+ * trailing one, however many bookmakers use the abbreviation. Only among
+ * equally spelled-out names does the majority form win; the result is
+ * deterministic either way.
  */
 export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<string>>): Map<string, string> {
   const alias = new Map<string, string>();
@@ -232,8 +261,15 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
 
   const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).filter(Boolean);
   const weight = (name: string): number => bookmakersByName.get(name)?.size ?? 0;
-  /** More bookmakers wins; ties break on the longer, then lexicographically smaller name. */
+  /**
+   * The less abbreviated name wins (abbreviationRank); among equally spelled-out
+   * names more bookmakers wins, then the longer, then the lexicographically
+   * smaller name.
+   */
   const preferred = (a: string, b: string): string => {
+    const ra = abbreviationRank(a);
+    const rb = abbreviationRank(b);
+    if (ra !== rb) return ra < rb ? a : b;
     if (weight(a) !== weight(b)) return weight(a) > weight(b) ? a : b;
     const ta = tokensOf(a).length;
     const tb = tokensOf(b).length;

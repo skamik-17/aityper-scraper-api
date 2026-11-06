@@ -150,6 +150,11 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   201804: "OTHER", // team variant of the above
   201805: "OTHER", // team variant of the above
   558: "HALF_TIME_HOME_EXACT_GOALS", // "1.połowa - {home} - dokładna liczba goli"
+  541: "EXACT_GOALS", // "Dokładna liczba goli"
+  540: "HOME_EXACT_GOALS", // "{home} - dokładna liczba goli"
+  545: "AWAY_EXACT_GOALS", // "{away} - dokładna liczba goli"
+  568: "HALF_TIME_EXACT_GOALS", // "1.połowa - dokładna liczba goli"
+  569: "HALF_TIME_AWAY_EXACT_GOALS", // "1.połowa - {away} - dokładna liczba goli"
 
   // ===== First/last goal =====
   538: "FIRST_TEAM_TO_SCORE", // "1. gol"

@@ -138,3 +138,103 @@ describe("superbet: names containing 'ou' never become TOTAL_GOALS", () => {
     expect(out.marketCode).toBe("OTHER");
   });
 });
+
+describe("superbet: exact-goals family maps by id", () => {
+  // [id, marketCode, raw name, raw selections [name, odds], expected codes]
+  // Raw values from exact-goals-1x2-raw-and-parsed-ars-hul-2026-11-06.json.
+  const rows: [string, string, string, [string, number][], string[]][] = [
+    [
+      "541",
+      "EXACT_GOALS",
+      "Dokładna liczba goli",
+      [
+        ["0", 17],
+        ["1", 6.3],
+        ["2", 4.3],
+        ["3", 4],
+        ["4", 4.85],
+        ["5", 7],
+        ["6+", 7.4],
+      ],
+      ["0", "1", "2", "3", "4", "5", "6+"],
+    ],
+    [
+      "540",
+      "HOME_EXACT_GOALS",
+      "Arsenal - dokładna liczba goli",
+      [
+        ["0", 9.5],
+        ["1", 4.55],
+        ["2", 3.55],
+        ["3+", 1.85],
+      ],
+      ["0", "1", "2", "3+"],
+    ],
+    [
+      "545",
+      "AWAY_EXACT_GOALS",
+      "Hull City - dokładna liczba goli",
+      [
+        ["0", 1.6],
+        ["1", 2.87],
+        ["2", 8.2],
+        ["3+", 26],
+      ],
+      ["0", "1", "2", "3+"],
+    ],
+    [
+      "568",
+      "HALF_TIME_EXACT_GOALS",
+      "1.połowa - dokładna liczba goli",
+      [
+        ["0", 3.85],
+        ["1", 2.67],
+        ["2", 3.55],
+        ["3+", 4.6],
+      ],
+      ["0", "1", "2", "3+"],
+    ],
+    [
+      "569",
+      "HALF_TIME_AWAY_EXACT_GOALS",
+      "1.połowa - Hull City - dokładna liczba goli",
+      [
+        ["0", 1.2],
+        ["1", 4.4],
+        ["2", 21],
+        ["3+", 50],
+      ],
+      ["0", "1", "2", "3+"],
+    ],
+    // Regression: 558 was already mapped; its catalog top band is a bare "3".
+    [
+      "558",
+      "HALF_TIME_HOME_EXACT_GOALS",
+      "1.połowa - Arsenal - dokładna liczba goli",
+      [
+        ["0", 3],
+        ["1", 2.5],
+        ["2", 3.75],
+        ["3+", 5.8],
+      ],
+      ["0", "1", "2", "3"],
+    ],
+  ];
+
+  it.each(rows)("exact goals: id %s maps to %s", (id, marketCode, name, sels, codes) => {
+    const out = run(
+      {
+        bookmakerMarketId: id,
+        name,
+        selections: sels.map(([selName, odds]) => ({ name: selName, odds })),
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe(marketCode);
+    expect(out.marketKey).toBe(marketCode);
+    expect(out.paramValue).toBeUndefined();
+    expect(out.debug?.matchedBy).toBe("id");
+    expect(out.selections.map((s) => s.code)).toEqual(codes);
+    expect(out.selections.map((s) => s.odds)).toEqual(sels.map(([, odds]) => odds));
+  });
+});

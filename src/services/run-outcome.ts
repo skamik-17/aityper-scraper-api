@@ -81,8 +81,20 @@ export function classifyBookmakerRun(
 }
 
 // supabase-js reports a failed fetch as a plain object whose `details` holds the
-// undici cause, e.g. "Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)".
-const CAUSE_PATTERN = /Caused by: (?:\w*Error: )?(.+?)(?: \([A-Z_]+\))?$/m;
+// undici cause as "Caused by: <name>: <message>[ (<code>)]", e.g.
+// "Caused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)".
+// The message can be empty: a closed port on `localhost` gives the happy-eyeballs
+// AggregateError, "Caused by: AggregateError:  (ECONNREFUSED)". Group 1 is the
+// message (possibly blank), group 2 the trailing code.
+const CAUSE_PATTERN = /Caused by: (?:\w*Error:)?(.*?)(?:\(([A-Z][A-Z0-9_]*)\))?$/m;
+
+/** The socket cause behind "fetch failed": its message, else its code, else null. */
+function fetchCause(details: unknown): string | null {
+  if (typeof details !== "string") return null;
+  const match = CAUSE_PATTERN.exec(details);
+  if (!match) return null;
+  return (match[1] ?? "").trim() || match[2] || null;
+}
 
 function firstLine(text: string): string | null {
   return (
@@ -106,7 +118,7 @@ export function formatDbError(error: unknown): string {
   const { message, details, code } = error as { message?: unknown; details?: unknown; code?: unknown };
   const text = typeof message === "string" && message.length > 0 ? message : "Unknown database error";
 
-  const cause = typeof details === "string" ? CAUSE_PATTERN.exec(details)?.[1] : undefined;
+  const cause = fetchCause(details);
   if (cause) return `${text} (${cause})`;
 
   if (typeof code === "string" && code.length > 0) {

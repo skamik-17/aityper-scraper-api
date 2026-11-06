@@ -21,6 +21,52 @@ describe("formatDbError", () => {
     expect(formatDbError(shapes.epipe)).toBe("TypeError: fetch failed (write EPIPE)");
   });
 
+  it("falls back to the cause code when the cause has no message", () => {
+    // Captured 2026-11-07 on Node 20.19.5 with postgrest-js 2.89 against a closed port on
+    // http://localhost:59999: happy eyeballs tries ::1 and 127.0.0.1 and rejects with an
+    // AggregateError whose message is empty, so only the code survives in `details`.
+    const localhostRefused = {
+      message: "TypeError: fetch failed",
+      details:
+        "TypeError: fetch failed\n\nCaused by: AggregateError:  (ECONNREFUSED)\nAggregateError [ECONNREFUSED]: \n" +
+        "    at internalConnectMultiple (node:net:1122:18)\n    at afterConnectMultiple (node:net:1689:7)",
+      hint: "",
+      code: "",
+    };
+    expect(formatDbError(localhostRefused)).toBe("TypeError: fetch failed (ECONNREFUSED)");
+
+    // Synthetic: a code with digits is still recognised as the trailing code.
+    expect(
+      formatDbError({
+        message: "TypeError: fetch failed",
+        details: "TypeError: fetch failed\n\nCaused by: Error:  (ERR_HTTP2_STREAM_ERROR)\nError: \n    at x (node:internal:1:1)",
+        hint: "",
+        code: "",
+      }),
+    ).toBe("TypeError: fetch failed (ERR_HTTP2_STREAM_ERROR)");
+  });
+
+  it("ignores a cause line that carries neither a message nor a code", () => {
+    // Synthetic: postgrest-js writes "Caused by: Error: " when cause.message and cause.code are empty.
+    expect(
+      formatDbError({
+        message: "TypeError: fetch failed",
+        details: "TypeError: fetch failed\n\nCaused by: Error: \nError: \n    at x (node:internal:1:1)",
+        hint: "",
+        code: "",
+      }),
+    ).toBe("TypeError: fetch failed");
+    // A cause without a trailing code keeps its message.
+    expect(
+      formatDbError({
+        message: "TypeError: fetch failed",
+        details: "TypeError: fetch failed\n\nCaused by: Error: certificate has expired\nError: certificate has expired",
+        hint: "",
+        code: "",
+      }),
+    ).toBe("TypeError: fetch failed (certificate has expired)");
+  });
+
   it("appends the PostgREST code when there is no socket cause", () => {
     expect(formatDbError(shapes.schemaCacheNotReady)).toBe(
       "Could not query the database for the schema cache. Retrying. [PGRST002]",

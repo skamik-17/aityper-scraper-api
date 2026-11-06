@@ -219,7 +219,7 @@ npx tsx scripts/betclic-market-discovery.ts --proto
 |---------|-------|----------|
 | HTTP 403 | Missing headers | Check GRPC_HEADERS in constants.ts |
 | 0 markets | Wrong protobuf structure | Use `--proto` flag to inspect |
-| Timeout | Large response | Increase REQUEST_TIMEOUT |
+| Timeout / Incomplete gRPC-web frame | Slow or throttled stream | Check the retry warnings; raise GRPC_FRAME_DEADLINE |
 | BigInt error | Match ID overflow | Use encodeBigVarint() |
 
 ## Adding New Market Type

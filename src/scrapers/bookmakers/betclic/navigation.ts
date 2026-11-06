@@ -20,7 +20,7 @@ import {
   COMPETITION_IDS,
   LEAGUE_SLUGS,
   REQUEST_TIMEOUT,
-  GRPC_READ_TIMEOUT,
+  GRPC_FRAME_DEADLINE,
   MAX_RETRIES,
   RETRY_DELAY,
   MARKET_GROUP_FILTERS,
@@ -34,7 +34,7 @@ import { createHash } from "crypto";
  * Handles the gRPC-web frame encoding/decoding
  *
  * Note: gRPC-web uses streaming responses which may not auto-close.
- * We use node's https module with a read timeout to handle this.
+ * We use node's https module, resolving on the first complete frame.
  *
  * @param url - gRPC endpoint URL
  * @param body - Protobuf message body (without frame header)
@@ -96,44 +96,33 @@ async function fetchGrpcWithNodeHttp(
       path: parsedUrl.pathname,
       method: "POST",
       headers: GRPC_HEADERS,
+      // Socket idle timeout: it guards the wait for the response headers.
+      // Once they arrive, the frame deadline below bounds the body.
       timeout: timeoutMs,
     };
 
+    // The frame deadline counts from the request start, not from the headers
+    const startedAt = Date.now();
+
     const req = https.request(options, (res) => {
       if (res.statusCode !== 200) {
+        res.destroy();
         reject(new Error(`gRPC request failed: HTTP ${res.statusCode}`));
         return;
       }
 
-      let data = "";
-      let readComplete = false;
+      // Trailers-only response: the call failed and no data frame follows
+      const grpcStatus = res.headers["grpc-status"];
+      if (grpcStatus !== undefined && grpcStatus !== "0") {
+        res.destroy();
+        reject(new Error(`gRPC error ${grpcStatus}: ${res.headers["grpc-message"] ?? ""}`));
+        return;
+      }
 
-      const readTimeout = setTimeout(() => {
-        if (!readComplete && data.length > 0) {
-          readComplete = true;
-          res.destroy();
-          processResponse(data, resolve, reject);
-        }
-      }, GRPC_READ_TIMEOUT);
-
-      res.on("data", (chunk: Buffer) => {
-        data += chunk.toString();
-      });
-
-      res.on("end", () => {
-        if (!readComplete) {
-          readComplete = true;
-          clearTimeout(readTimeout);
-          processResponse(data, resolve, reject);
-        }
-      });
-
-      res.on("error", (err) => {
-        if (!readComplete) {
-          readComplete = true;
-          clearTimeout(readTimeout);
-          reject(err);
-        }
+      const deadlineMs = Math.max(1, GRPC_FRAME_DEADLINE - (Date.now() - startedAt));
+      readGrpcWebTextStream(res, { deadlineMs }).then(resolve, (error: Error) => {
+        req.destroy();
+        reject(error);
       });
     });
 
@@ -149,32 +138,146 @@ async function fetchGrpcWithNodeHttp(
 }
 
 /**
- * Process the base64-encoded gRPC-web response
+ * First frame of a gRPC-web-text (base64) response, decoded as far as the
+ * text received so far allows.
  */
-function processResponse(
-  data: string,
-  resolve: (value: Buffer) => void,
-  reject: (reason: Error) => void
-): void {
-  try {
-    if (data.length === 0) {
-      reject(new Error("Empty response"));
-      return;
-    }
+export interface GrpcWebTextFrame {
+  /** True once all expectedLength message bytes are decoded */
+  complete: boolean;
+  /** Message length from the 5-byte frame header; null until the header is decoded */
+  expectedLength: number | null;
+  /** Frame flag byte (0x80 marks a trailer frame); null until the header is decoded */
+  flag: number | null;
+  /** Message bytes after the header, capped at expectedLength */
+  message: Buffer;
+}
 
-    // Decode base64 response (may contain multiple frames)
-    const decoded = Buffer.from(data.replace(/[\r\n]/g, ""), "base64");
+/** gRPC-web frame header: 1 flag byte + 4-byte big-endian message length */
+const GRPC_WEB_HEADER_BYTES = 5;
+/** Two base64 quadruplets always decode to at least the 5 header bytes */
+const GRPC_WEB_HEADER_CHARS = 8;
+/** Flag bit that marks a trailer frame (grpc-status / grpc-message lines) */
+const GRPC_WEB_TRAILER_FLAG = 0x80;
 
-    // Extract message from frame (skip 5-byte header)
-    if (decoded.length > 5) {
-      const msgLen = decoded.readUInt32BE(1);
-      resolve(decoded.slice(5, 5 + msgLen));
-    } else {
-      resolve(decoded.slice(5));
-    }
-  } catch (error) {
-    reject(error instanceof Error ? error : new Error(String(error)));
+/** Base64 length of a whole frame (header + message), padding included */
+function grpcWebTextFrameChars(messageLength: number): number {
+  return Math.ceil((GRPC_WEB_HEADER_BYTES + messageLength) / 3) * 4;
+}
+
+/**
+ * Decode the first frame of a gRPC-web-text response.
+ *
+ * A chunk boundary can fall inside a base64 quadruplet, so only whole
+ * quadruplets are decoded. Characters past the first frame (a following
+ * frame on the still-open stream) are ignored.
+ */
+export function decodeGrpcWebTextFrame(data: string): GrpcWebTextFrame {
+  const text = data.replace(/[\r\n]/g, "");
+  const usable = text.length - (text.length % 4);
+
+  const header = Buffer.from(text.slice(0, Math.min(usable, GRPC_WEB_HEADER_CHARS)), "base64");
+  if (header.length < GRPC_WEB_HEADER_BYTES) {
+    return { complete: false, expectedLength: null, flag: null, message: Buffer.alloc(0) };
   }
+
+  const flag = header[0];
+  const expectedLength = header.readUInt32BE(1);
+  const frameChars = Math.min(usable, grpcWebTextFrameChars(expectedLength));
+  const decoded = Buffer.from(text.slice(0, frameChars), "base64");
+  const message = decoded.subarray(GRPC_WEB_HEADER_BYTES, GRPC_WEB_HEADER_BYTES + expectedLength);
+
+  return { complete: message.length === expectedLength, expectedLength, flag, message };
+}
+
+/**
+ * Read the first data frame of a gRPC-web-text response stream.
+ *
+ * Betclic never ends these streams, so this resolves as soon as the first
+ * frame is complete, without waiting for 'end', and destroys the stream.
+ * It never resolves partial data: it rejects when the stream ends first,
+ * when the deadline passes, when the first frame is a trailer, or on a
+ * stream error, so that fetchGrpcStream retries.
+ */
+export function readGrpcWebTextStream(
+  res: NodeJS.ReadableStream & { destroy?(): void },
+  opts: { deadlineMs: number }
+): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: string[] = [];
+    let receivedChars = 0;
+    // Base64 length of the first frame, known once its header has arrived
+    let frameChars: number | null = null;
+    let settled = false;
+
+    const progress = (): string => {
+      const frame = decodeGrpcWebTextFrame(chunks.join(""));
+      return `${frame.message.length}/${frame.expectedLength} bytes`;
+    };
+
+    // Settles exactly once. The listeners below stay attached as no-ops:
+    // destroying the stream can still emit events, and an 'error' event
+    // without a listener would crash the process.
+    const settle = (outcome: () => void): void => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(deadline);
+      res.destroy?.();
+      outcome();
+    };
+
+    const deadline = setTimeout(() => {
+      const error = new Error(`gRPC-web frame deadline (${opts.deadlineMs} ms): ${progress()}`);
+      settle(() => reject(error));
+    }, opts.deadlineMs);
+
+    res.on("data", (chunk: Buffer | string) => {
+      if (settled) return;
+      const text = chunk.toString().replace(/[\r\n]/g, "");
+      if (text.length === 0) return;
+      chunks.push(text);
+      receivedChars += text.length;
+
+      if (frameChars === null) {
+        if (receivedChars < GRPC_WEB_HEADER_CHARS) return;
+        // Decode the header once; later chunks only grow the character count
+        const header = decodeGrpcWebTextFrame(chunks.join("").slice(0, GRPC_WEB_HEADER_CHARS));
+        if (header.flag !== null && (header.flag & GRPC_WEB_TRAILER_FLAG) !== 0) {
+          const trailer = decodeGrpcWebTextFrame(chunks.join(""))
+            .message.toString("latin1")
+            .trim()
+            .replace(/\r?\n/g, "; ");
+          const error = new Error(`gRPC-web trailer frame instead of data: ${trailer}`);
+          settle(() => reject(error));
+          return;
+        }
+        // No length decoded means this is not a gRPC-web frame: never
+        // resolve it, let 'end' or the deadline reject
+        frameChars =
+          header.expectedLength === null ? Infinity : grpcWebTextFrameChars(header.expectedLength);
+      }
+
+      if (receivedChars >= frameChars) {
+        const frame = decodeGrpcWebTextFrame(chunks.join(""));
+        if (frame.complete) {
+          settle(() => resolve(frame.message));
+        } else {
+          // Enough characters but too few bytes: malformed base64. Never
+          // resolve it, let 'end' or the deadline reject.
+          frameChars = Infinity;
+        }
+      }
+    });
+
+    res.on("end", () => {
+      if (settled) return;
+      const error = new Error(`Incomplete gRPC-web frame: ${progress()}`);
+      settle(() => reject(error));
+    });
+
+    res.on("error", (error: Error) => {
+      settle(() => reject(error));
+    });
+  });
 }
 
 /**

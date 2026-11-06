@@ -14,6 +14,10 @@
  *
  * Only entries with `blessed: true` are refreshed (those are the ones
  * golden.test.ts asserts); pass --include-unblessed to refresh the rest too.
+ *
+ * It recomputes from the committed fixture raw only, so `--dry` shows
+ * normalizer drift, never raw-side changes from a re-harvest. Review a
+ * re-harvest with its own diff (see the harvest-fixtures.ts header).
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";

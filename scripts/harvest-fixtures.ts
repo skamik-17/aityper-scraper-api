@@ -32,6 +32,16 @@
  *
  * Output is deterministic: recursively sorted object keys, 2-space indent,
  * trailing newline. No timestamps are written.
+ *
+ * Reviewing a harvest: the fixture raw is the archive raw copied verbatim and
+ * the expected file comes from the same normalizer in the same run, so
+ * `rebless-golden.ts --dry` reports 0 changes for a freshly harvested pair by
+ * construction. It cannot show what a newer archive changed (for example raw
+ * `paramValue` / selection `externalId`, which `buildPrepAuditOutput` archives
+ * carry when the scraper set them and older archives lack). When re-harvesting
+ * an existing pair, inspect `git diff -- <out-dir>/<bm>/` before committing, or
+ * harvest into a scratch `--out-dir` and diff that against the committed pair.
+ * Gate new pairs on spot checks of the frozen keys and prices.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";

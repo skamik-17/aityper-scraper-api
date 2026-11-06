@@ -45,7 +45,9 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2: "CORRECT_SCORE",
   3: "HALF_TIME_RESULT",
   // Audited mappings keyed by raw bookmakerMarketId
-  "-31170": "EUROPEAN_HANDICAP",
+  // TurboPrzewaga: win or 2-goal lead at any point, 2-way on the catalog; the
+  // remis leg is the plain 1X2 draw already on MATCH_WINNER (dropped below).
+  "-31170": "WIN_OR_WIN_BY_2",
   "-8132": "HT_OR_FT_RESULT",
   "-2982": "HOME_TEAM_TO_SCORE",
   "-2983": "HOME_TEAM_TO_SCORE",
@@ -1567,6 +1569,11 @@ function extractParamValue(
         return parseHandicapLine(teamLine[2]);
       }
     }
+    // A European handicap line comes only from a score line (handled above)
+    // or a signed selection line. A stray digit in the name is not a line:
+    // "TurboPrzewaga - 2 gole przewagi lub wygrana" once became
+    // EUROPEAN_HANDICAP:+2 that way and displaced the real "Handicap 2:0".
+    if (marketCode === "EUROPEAN_HANDICAP") return undefined;
     const stripped = raw.name.replace(/^[12]\.?\s*po[lł]owa\s*[-–]?\s*/i, "");
     const handicapMatch = stripped.match(/([+-]?\d+(?:[.,]\d+)?)/);
     if (handicapMatch) return parseHandicapLine(handicapMatch[1]);
@@ -1706,6 +1713,43 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
         paramValue,
         marketKey,
         selections: [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }],
+        debug: {
+          rawName: raw.name,
+          rawId: gameTypeId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
+
+    // TurboPrzewaga (-31170, the only forbet id routed here) quotes three
+    // legs: <home> / remis / <away>. The catalog WIN_OR_WIN_BY_2 is 2-way
+    // HOME/AWAY, and forbet prices "remis" like the plain 1X2 draw that
+    // MATCH_WINNER already carries, so that leg is dropped. The team legs
+    // must resolve to exactly one HOME and one AWAY. Anything else (an
+    // unresolvable team name, both legs on one side, an extra selection)
+    // drops the market rather than guessing a side, and the legs never go
+    // through mergeDuplicateSelectionCodes, which would fabricate a price.
+    if (marketCode === "WIN_OR_WIN_BY_2") {
+      const teamLegs = raw.selections
+        .map((sel) => ({
+          code: normalizeSelectionForMarket(sel.name, "WIN_OR_WIN_BY_2", ctx, raw.name),
+          label: sel.name,
+          odds: sel.odds,
+        }))
+        .filter((sel) => sel.code !== "DRAW");
+      const home = teamLegs.filter((sel) => sel.code === "HOME");
+      const away = teamLegs.filter((sel) => sel.code === "AWAY");
+      if (teamLegs.length !== 2 || home.length !== 1 || away.length !== 1) {
+        console.warn(
+          `[forbet] WIN_OR_WIN_BY_2: could not resolve one HOME and one AWAY leg for "${raw.name}"`
+        );
+        return null;
+      }
+      return {
+        marketCode,
+        paramValue: undefined,
+        marketKey: buildMarketKey(marketCode),
+        selections: [home[0], away[0]],
         debug: {
           rawName: raw.name,
           rawId: gameTypeId ?? undefined,

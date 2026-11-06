@@ -36,21 +36,16 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "EUROPEAN_HANDICAP",
-        "marketKey": "EUROPEAN_HANDICAP:+2",
+        "marketCode": "WIN_OR_WIN_BY_2",
+        "marketKey": "WIN_OR_WIN_BY_2",
         "matchedBy": "id",
-        "paramValue": "+2",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
             "code": "HOME",
             "label": "Francja",
             "odds": 1.57
-          },
-          {
-            "code": "DRAW",
-            "label": "remis",
-            "odds": 3.9
           },
           {
             "code": "AWAY",
@@ -60,7 +55,7 @@
         ]
       },
       "index": 1,
-      "marketCode": "EUROPEAN_HANDICAP",
+      "marketCode": "WIN_OR_WIN_BY_2",
       "rawName": "TurboPrzewaga - 2 gole przewagi lub wygrana"
     },
     {

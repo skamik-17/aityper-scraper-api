@@ -203,7 +203,13 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Match result family
   "ufo:mtyp:00-60": "MATCH_WINNER",
   "ufo:mtyp:00-2x": "MATCH_WINNER",
-  "ufo:mtyp:00-0p": "MATCH_WINNER",
+  // 00-0p is not a result market: every payload seen (live PL 2026-11-06, the
+  // August Arsenal vs Coventry raw, WC golden entry 861) is the corners race
+  // "1. połowa: więcej rzutów rożnych". As MATCH_WINNER the half reroute
+  // turned it into HALF_TIME_RESULT and served it as the half-time 1X2; as
+  // CORNERS_RACE the reroute assigns HALF_TIME_/SECOND_HALF_CORNERS_RACE from
+  // the name's "1."/"2." prefix.
+  "ufo:mtyp:00-0p": "CORNERS_RACE",
   "ufo:mtyp:00-9b": "VAR_REVIEW",
   "ufo:mtyp:00-r7": "PENALTY_IN_BOTH_HALVES",
   "ufo:mtyp:00-rx": "TIME_PERIOD_RESULT", // "2.kwarta"
@@ -749,6 +755,8 @@ function normalizeSelectionForMarket(
     case "OFFSIDES_1X2":
     case "CARDS_RACE":
     case "CORNERS_RACE":
+    case "HALF_TIME_CORNERS_RACE":
+    case "SECOND_HALF_CORNERS_RACE":
       // Some Fortuna result markets label the draw leg "Równo" ("even").
       if (isFortunaDrawLabel(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -1150,6 +1158,17 @@ function extractParamValue(
   }
 }
 
+// Codes a corners-race name must never keep, mapped to the race of the same
+// scope (used when the name carries no "Mecz:"/"1.połowa:"/"2.połowa:" prefix
+// of its own). CORNERS_RACE is listed so the handicap check also covers the
+// race ids themselves (00-0e, 00-0p).
+const FORTUNA_CORNERS_RACE_BY_CODE: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
+  MATCH_WINNER: "CORNERS_RACE",
+  HALF_TIME_RESULT: "HALF_TIME_CORNERS_RACE",
+  SECOND_HALF_RESULT: "SECOND_HALF_CORNERS_RACE",
+  CORNERS_RACE: "CORNERS_RACE",
+};
+
 export const fortunaNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "fortuna",
 
@@ -1214,6 +1233,25 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode = "CORNERS_HANDICAP";
     }
 
+    // The same name-over-id rule for 1X2 codes: a corners race must never
+    // feed a 1X2 code, whatever id or scope it arrives with. 00-0p used to
+    // serve "1. połowa: więcej rzutów rożnych" as HALF_TIME_RESULT (a fake
+    // +EV draw against the real "1.połowa" 1X2). An explicit scope prefix is
+    // authoritative (the half reroute below assigns the half); an unscoped
+    // name keeps the scope of its id's code. A handicap-style corners name is
+    // neither a 1X2 nor a race, so it is dropped rather than priced as one.
+    const cornersRaceCode = FORTUNA_CORNERS_RACE_BY_CODE[marketCode];
+    if (cornersRaceCode && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
+      const unscopedName = stripFortunaScope(raw.name);
+      if (/handicap|\d+\s*:\s*\d+/iu.test(unscopedName)) {
+        console.warn(
+          `[fortuna] Corners handicap under a ${marketCode} id dropped: "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
+      marketCode = unscopedName === raw.name.trim() ? cornersRaceCode : "CORNERS_RACE";
+    }
+
     // A "2-way" handicap quoting a draw outcome is actually a 3-way handicap;
     // keep the DRAW price instead of polluting the 2-way market with it. The
     // draw label check covers "X"/"Remis"/"Równo" (incl. odds-filtered markets
@@ -1270,6 +1308,8 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
             : isHandicapStyle
               ? "FIRST_HALF_EUROPEAN_HANDICAP"
               : "HALF_TIME_RESULT";
+        } else if (marketCode === "CORNERS_RACE") {
+          marketCode = isSecondHalf ? "SECOND_HALF_CORNERS_RACE" : "HALF_TIME_CORNERS_RACE";
         } else if (marketCode === "RESULT_AND_TOTAL" && isSecondHalf) {
           marketCode = "SECOND_HALF_RESULT_AND_TOTAL";
         } else if (marketCode === "ASIAN_HANDICAP_PUSH" && isSecondHalf) {

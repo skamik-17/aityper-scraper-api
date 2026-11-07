@@ -168,6 +168,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       }
 
       const teams = parseParticipants(detail.event);
+      // Exactly one id-less, line-less "Wynik meczu": two such markets are ambiguous, so no 1X2 is read.
       const candidates = parseEventDetail(detail.event).filter(
         (m) => m.name === MATCH_WINNER_NAME && m.bookmakerMarketId === undefined && m.paramValue === undefined
       );
@@ -232,7 +233,9 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     const matches: FullMatchOffer[] = [];
     const driftErrors: string[] = [];
     // n: events whose detail answered or failed. Events skipped because they are no
-    // longer active prematch events (or have no participants) are not counted.
+    // longer active prematch events (or have no participants) are not counted, so
+    // success (k < n) still means at least one detail answered: a run in which every
+    // reachable detail failed is an outage, even with list-1X2 fallbacks.
     let detailsCounted = 0;
     // k: events whose detail failed and that fell back to the list 1X2.
     let detailsFailed = 0;
@@ -291,6 +294,8 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
         startTime: listEvent.start_at,
         scrapedAt: new Date(),
       });
+      // M for acceptance A2 (N >= 0.95*M): the count of the payload the markets were parsed
+      // from, i.e. the detail when it answered (as the drift check uses), else the list event.
       console.log(`${LOG} ${homeTeam} vs ${awayTeam}: ${markets.length} markets (market_count ${(detail.event ?? listEvent).market_count})`);
     }
 
@@ -303,6 +308,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     errorParts.push(...driftErrors);
 
     if (matches.length === 0) {
+      // The fixed text comes first; the detail and drift parts keep the HTTP reason (plan risk 8).
       return failure([`No parsable Totalbet events for ${league}`, ...errorParts].join(" | "));
     }
 

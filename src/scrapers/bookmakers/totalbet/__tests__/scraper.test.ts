@@ -168,6 +168,16 @@ describe("totalbet scraper (wiring and integrity guards)", () => {
     expect(console.warn).toHaveBeenCalledWith(expect.stringMatching(/^\[Totalbet\/FullOffer\] Detail fetch failed for 18\/20 events \(first: HTTP 404/));
   });
 
+  it("totalbet logs the detail's market_count when the detail answered, the list's otherwise", async () => {
+    // The list says 439 for Leeds; the detail, fetched later, is the payload the markets were parsed from.
+    const grown = detailWith("event-detail-leeds-tottenham.trimmed.json", (e) => { e.market_count = 441; });
+    await new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ [LEEDS]: grown }), detailDelayMs: 0 }).scrapeFullOffer("premier-league");
+    expect(console.log).toHaveBeenCalledWith("[Totalbet/FullOffer] Leeds United vs Tottenham Hotspur: 102 markets (market_count 441)");
+    expect(console.log).not.toHaveBeenCalledWith("[Totalbet/FullOffer] Leeds United vs Tottenham Hotspur: 102 markets (market_count 439)");
+    // Everton's detail 404s, so only the list event's count is known
+    expect(console.log).toHaveBeenCalledWith("[Totalbet/FullOffer] Everton vs Coventry City: 1 markets (market_count 488)");
+  });
+
   it("totalbet keeps a run with every detail OK free of errors", async () => {
     const leeds = load("event-detail-leeds-tottenham.trimmed.json");
     const list = load("pl-events-list.json");

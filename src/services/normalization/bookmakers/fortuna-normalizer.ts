@@ -124,8 +124,7 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // market. Excluded until verified live (absent from the checked fixture).
   // NOTE: 00-s6/00-rw are quarter-scoped goal totals ("2.kwarta: liczba
   // goli") — no catalog code for quarter totals; excluded.
-  // NOTE: 00-k6 is "Mecz: liczba asyst w meczu" — no ASSISTS_TOTAL catalog
-  // code; excluded (was wrongly bucketed into TOTAL_GOALS).
+  // 00-k6 "Mecz: liczba asyst w meczu" -> ASSISTS_TOTAL (O/U; the line comes from the selection).
   // Statistics (OPTA)
   "ufo:mtyp:00-0i": "CORNERS_TOTAL", // "Mecz: liczba rzutów rożnych"
   "ufo:mtyp:00-0t": "HALF_TIME_CORNERS_TOTAL", // "1.połowa: liczba rzutów rożnych"
@@ -213,6 +212,11 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-0p": "CORNERS_RACE",
   "ufo:mtyp:00-9b": "VAR_REVIEW",
   "ufo:mtyp:00-r7": "PENALTY_IN_BOTH_HALVES",
+  "ufo:mtyp:00-9a": "PENALTY_AWARDED", // "Mecz: rzut karny"
+  "ufo:mtyp:00-bt": "RED_CARD_AND_PENALTY", // "Mecz: rzut karny i czerwona kartka"
+  "ufo:mtyp:00-bv": "OWN_GOAL", // "Mecz: gol samobójczy"
+  "ufo:mtyp:00-k7": "HEADER_GOAL", // "Mecz: gol zdobyty strzałem głową"
+  "ufo:mtyp:00-k6": "ASSISTS_TOTAL", // "Mecz: liczba asyst w meczu"
   "ufo:mtyp:00-rx": "TIME_PERIOD_RESULT", // "2.kwarta"
   "ufo:mtyp:00-rz": "TIME_PERIOD_RESULT", // "3.kwarta"
   "ufo:mtyp:00-s1": "TIME_PERIOD_RESULT", // "4.kwarta"
@@ -885,6 +889,7 @@ function normalizeSelectionForMarket(
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
+    case "ASSISTS_TOTAL":
       // Integer-line phrasing: "więcej niż 2" / "mniej niż 2", also the short
       // form without "niż" ("więcej 1" / "mniej 0,5").
       if (/^wiecej\b/.test(normalized)) return "OVER";

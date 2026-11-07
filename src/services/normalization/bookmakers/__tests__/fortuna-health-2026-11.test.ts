@@ -358,3 +358,30 @@ describe("Task 2 review: team labels and name shapes outside the Premier League"
     expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections: [{ name: "1+", odds: 3 }] }, ctx)?.marketKey).toBe(key);
   });
 });
+
+describe("Task 3: five new market types", () => {
+  it.each([
+    ["00-9a", "Mecz: rzut karny", "PENALTY_AWARDED", ["NO@1.29", "YES@3.35"]],
+    ["00-bt", "Mecz: rzut karny i czerwona kartka", "RED_CARD_AND_PENALTY", ["NO@1.01", "YES@12"]],
+    ["00-bv", "Mecz: gol samobójczy", "OWN_GOAL", ["NO@1.05", "YES@8"]],
+    ["00-k7", "Mecz: gol zdobyty strzałem głową", "HEADER_GOAL", ["NO@1.45", "YES@2.6"]],
+  ])("arsenalHull %s %s -> %s", (id, _name, key, expected) => {
+    const out = run(live("arsenalHull", id).raw, ctxOf("arsenalHull"));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual(expected);
+  });
+  it("arsenalHull 00-k6 'Mecz: liczba asyst w meczu' -> one ASSISTS_TOTAL key per line", () => {
+    const outs = liveAll("arsenalHull", "00-k6").map((raw) => run(raw, ctxOf("arsenalHull")));
+    expect(outs.map((o) => o?.marketKey).sort()).toEqual(["ASSISTS_TOTAL:1.5", "ASSISTS_TOTAL:2.5"]);
+    expect(outs.map(legs)).toEqual(expect.arrayContaining([["OVER@2.3", "UNDER@1.56"], ["OVER@1.18", "UNDER@4.4"]]));
+  });
+  it("arsenalHull 00-bu stays unmapped (open question 1)", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(run(live("arsenalHull", "00-bu").raw, ctxOf("arsenalHull"))).toBeNull();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] Unknown market"));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});

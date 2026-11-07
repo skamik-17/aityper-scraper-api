@@ -1,0 +1,873 @@
+{
+ "source": "GET https://production-superbet-offer-pl.freetls.fastly.net/v2/pl-PL/events/14438722 (read-only probe, 2026-11-07T00:39Z)",
+ "eventId": 14438722,
+ "matchName": "Leeds United·Tottenham",
+ "utcDate": "2026-11-07T12:30:00Z",
+ "note": "Verbatim rows for 236218/236224/238465, selected players only, in API order. Names, prices and uuids equal the prep-audit archive premier-league_leeds-united_tottenham-hotspur__2026-11-07.json (fetched 00:22Z).",
+ "rows": [
+  {
+   "uuid": "bbfb873b-5c77-5589-81df-63a862f4af47",
+   "marketUuid": "66dddf7e-1845-5476-9808-002a4fe847e3",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 1.06,
+   "specialBetValue": "sr:player:1021607-Anton Stach-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 0.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 0.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ee653c7a-5129-5648-9420-8190c76e7b0c",
+   "marketUuid": "d128b9ff-af72-583c-8340-6e21047bd7b3",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 1.43,
+   "specialBetValue": "sr:player:1021607-Anton Stach-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 1.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 1.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ee5d2eb5-a92c-50e8-9eb4-32a1e8148e39",
+   "marketUuid": "cd0639a9-c11b-5a85-b2b4-56a9b57b7946",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 2.27,
+   "specialBetValue": "sr:player:1021607-Anton Stach-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 2.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 2.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "035e01b8-9c92-5492-b88d-bbfa9bd9013b",
+   "marketUuid": "d26c2329-d94b-56a7-a23e-dc6895ebd5f6",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 4,
+   "specialBetValue": "sr:player:1021607-Anton Stach-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 3.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 3.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "3fc2c9f5-b9a3-568e-b49f-1ebc255995d0",
+   "marketUuid": "bd9ad3ff-03a8-58db-8059-6c438ad699df",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 6.9,
+   "specialBetValue": "sr:player:1021607-Anton Stach-4.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "4.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 4.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 4.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "8d172e6a-c159-542e-98d1-82e4986ff619",
+   "marketUuid": "7123b719-ab19-56a6-8798-9f806b1afd38",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 13,
+   "specialBetValue": "sr:player:1021607-Anton Stach-5.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "5.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 5.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 5.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "7f69febd-523c-5b5a-a16b-694c25388f53",
+   "marketUuid": "d0c0891b-79f7-544c-8d0d-7c1d7dabf3e2",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 27,
+   "specialBetValue": "sr:player:1021607-Anton Stach-6.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "6.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 6.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Anton Stach powyżej 6.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "95a872f8-5fe8-588c-897f-6d50db01a4f3",
+   "marketUuid": "7a818624-6eca-5db6-b470-7a461ad0f92f",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 1.07,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 0.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 0.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ab38034a-0f26-5617-a337-20e7761fcabe",
+   "marketUuid": "93a1998e-fc36-578b-a5fe-459062b8e335",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 1.46,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 1.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 1.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "4305993d-7e5b-5a33-8113-023d00d77949",
+   "marketUuid": "192bbbf0-152a-57ea-a0ea-a1f39564531b",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 2.35,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 2.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 2.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "c03a0f8d-f52a-5dcf-90eb-76a853992ec0",
+   "marketUuid": "072b6f61-edcf-51d1-9fc8-89c0b6375645",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 4.1,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 3.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 3.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "be05a479-c4d0-5bfa-80af-a784195c77d1",
+   "marketUuid": "15b6d6ce-3e04-5d8d-92a6-a60ea5a3efbd",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 7.1,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-4.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "4.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 4.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 4.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ac6e6619-0385-56a3-a0e7-21d3aa7c4368",
+   "marketUuid": "3ec60745-3b54-50b4-897d-d6950c0c96c7",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 14,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-5.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "5.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 5.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 5.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "c60ead7a-3f2c-5a16-a707-78b1c5c13914",
+   "marketUuid": "e01da46c-0078-5a1b-b9e0-d6e6a7cff5fa",
+   "marketId": 236218,
+   "outcomeId": 12690,
+   "price": 28,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-6.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "6.5"
+   },
+   "marketGroupOrder": 646731982,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 6.5",
+   "marketName": "Zawodnik - liczba strzałów",
+   "info": "Dejan Kulusekvski powyżej 6.5 strzałów w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "6e61d12c-4b9f-5e7a-88f1-fbc684ea335c",
+   "marketUuid": "969fd1d8-6421-5fdf-881b-ddf1d841a3c2",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 2.15,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 0.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Dejan Kulusekvski powyżej 0.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "8d041d14-51d0-58f0-90d5-12f44c056010",
+   "marketUuid": "df706e16-abc2-5806-8db1-5b5c61112a62",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 6.5,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 1.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Dejan Kulusekvski powyżej 1.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "68bd83e1-7d02-5a8b-b04f-1f41935c3baf",
+   "marketUuid": "4b81bf67-3818-5bfb-b1c6-32c9cf2604c0",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 20,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 2.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Dejan Kulusekvski powyżej 2.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ce7ed3fa-b9b6-5a5b-81a9-6d1eceeddf43",
+   "marketUuid": "63113712-1c71-5e1a-942c-a776fd78c0dc",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 1.92,
+   "specialBetValue": "sr:player:1321798-Mohammed Kudus-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1321798",
+    "player_name": "Mohammed Kudus",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1321798",
+    "cp_player_ids;0": "31vPxpqnR6YnHFt9vFiir",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:01cd46e77236600c0b8764dbc5333c4d"
+   },
+   "name": "Mohammed Kudus - powyżej 0.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Mohammed Kudus powyżej 0.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "e38d00f8-40b4-5d4d-a1d1-7d8c2eab25b3",
+   "marketUuid": "f7060af8-2976-5b7b-882f-76b1cdfe8d9b",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 5.45,
+   "specialBetValue": "sr:player:1321798-Mohammed Kudus-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1321798",
+    "player_name": "Mohammed Kudus",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1321798",
+    "cp_player_ids;0": "31vPxpqnR6YnHFt9vFiir",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:01cd46e77236600c0b8764dbc5333c4d"
+   },
+   "name": "Mohammed Kudus - powyżej 1.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Mohammed Kudus powyżej 1.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "1a59f3f9-00e2-549c-b4f2-ee22bd112142",
+   "marketUuid": "fb8f2c2c-73e7-54aa-b163-3b4c195f5af5",
+   "marketId": 236224,
+   "outcomeId": 12702,
+   "price": 17,
+   "specialBetValue": "sr:player:1321798-Mohammed Kudus-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1321798",
+    "player_name": "Mohammed Kudus",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935936565,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1321798",
+    "cp_player_ids;0": "31vPxpqnR6YnHFt9vFiir",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:01cd46e77236600c0b8764dbc5333c4d"
+   },
+   "name": "Mohammed Kudus - powyżej 2.5",
+   "marketName": "Zawodnik - liczba spalonych",
+   "info": "Mohammed Kudus powyżej 2.5 spalonych w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "6f09b4bd-afc6-5dce-a3c5-d622ea228d47",
+   "marketUuid": "60f659df-17c7-54ff-bac3-6e4aeb84b048",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 8.9,
+   "specialBetValue": "sr:player:1021607-Anton Stach-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1021607",
+    "player_name": "Anton Stach",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1021607",
+    "cp_player_ids;0": "31vQ73U7c0uGljT9bqWR6",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:abefba5a2846528d1b20e076d80e7fac"
+   },
+   "name": "Anton Stach - powyżej 0.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Anton Stach powyżej 0.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "3bb06843-f49e-50c3-84b3-2508ca8ebbe1",
+   "marketUuid": "53314503-09b9-55c9-8587-6f71ef0bc4bf",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 7.1,
+   "specialBetValue": "sr:player:1065654-Dejan Kulusekvski-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1065654",
+    "player_name": "Dejan Kulusekvski",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1065654",
+    "cp_player_ids;0": "31vPy8gtfCpuEK4Wjaokp",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:1896268679a499901680068c638debb0"
+   },
+   "name": "Dejan Kulusekvski - powyżej 0.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Dejan Kulusekvski powyżej 0.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "e856f845-806e-5fa1-96cf-01fd29a0d173",
+   "marketUuid": "52242ee7-fdef-59e5-b5c7-9785e83e1eea",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 5.6,
+   "specialBetValue": "sr:player:1630352-Jan-Paul van Hecke-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1630352",
+    "player_name": "Jan-Paul van Hecke",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1630352",
+    "cp_player_ids;0": "31vPt3Amj3YyaS6V5BxMz",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:b43882d9b77bda0d65228bb01ca221fc"
+   },
+   "name": "Jan-Paul van Hecke - powyżej 0.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Jan-Paul van Hecke powyżej 0.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "186cd2e7-d4cb-500c-9bba-d7345c3a2b29",
+   "marketUuid": "c4818461-616a-50f1-b06a-fc141c723bf8",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 35,
+   "specialBetValue": "sr:player:1630352-Jan-Paul van Hecke-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:1630352",
+    "player_name": "Jan-Paul van Hecke",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:1630352",
+    "cp_player_ids;0": "31vPt3Amj3YyaS6V5BxMz",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:b43882d9b77bda0d65228bb01ca221fc"
+   },
+   "name": "Jan-Paul van Hecke - powyżej 1.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Jan-Paul van Hecke powyżej 1.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "2a2ee017-8150-52e8-a4e0-d467d0712c37",
+   "marketUuid": "d76ee05d-27a7-5a85-a015-28635f4d9be1",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 2.92,
+   "specialBetValue": "sr:player:372344-Dominic Calvert-Lewin-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:372344",
+    "player_name": "Dominic Calvert-Lewin",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:372344",
+    "cp_player_ids;0": "31vQACiWQ85Q4p5HyxVlu",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:6d9bb526aba4c328c6e017eb1053f14c"
+   },
+   "name": "Dominic Calvert-Lewin - powyżej 0.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Dominic Calvert-Lewin powyżej 0.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "2adfd192-a9c1-59ee-92f1-2fb0a90b9c05",
+   "marketUuid": "1e445d1c-5be3-57fb-94ba-a0c062bf79e6",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 11,
+   "specialBetValue": "sr:player:372344-Dominic Calvert-Lewin-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:372344",
+    "player_name": "Dominic Calvert-Lewin",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:372344",
+    "cp_player_ids;0": "31vQACiWQ85Q4p5HyxVlu",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:6d9bb526aba4c328c6e017eb1053f14c"
+   },
+   "name": "Dominic Calvert-Lewin - powyżej 1.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Dominic Calvert-Lewin powyżej 1.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "773a08fe-f21b-576e-9f47-e2675a1300c3",
+   "marketUuid": "58e6513a-67f5-5b17-bba9-d44f9140f0af",
+   "marketId": 238465,
+   "outcomeId": 16206,
+   "price": 35,
+   "specialBetValue": "sr:player:372344-Dominic Calvert-Lewin-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:372344",
+    "player_name": "Dominic Calvert-Lewin",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 936035532,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:372344",
+    "cp_player_ids;0": "31vQACiWQ85Q4p5HyxVlu",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:6d9bb526aba4c328c6e017eb1053f14c"
+   },
+   "name": "Dominic Calvert-Lewin - powyżej 2.5",
+   "marketName": "Zawodnik - liczba celnych strzałów głową",
+   "info": "Dominic Calvert-Lewin powyżej 2.5 celnych strzałów głową w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  }
+ ]
+}

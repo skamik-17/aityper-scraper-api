@@ -555,8 +555,10 @@ export function parse1X2Odds(
 ): { home: number; draw: number; away: number } {
   const result = { home: 0, draw: 0, away: 0 };
 
+  // The sportsbook-api/ws envelope delivers marketTypeId as a JSON number even
+  // though the type declares string, so the legacy helpers compare as strings.
   const matchResultSelections = selections.filter(
-    (s) => s.marketTypeId === MARKET_TYPES.MATCH_RESULT && s.status === "Active"
+    (s) => String(s.marketTypeId) === MARKET_TYPES.MATCH_RESULT && s.status === "Active"
   );
 
   for (const sel of matchResultSelections) {
@@ -588,7 +590,7 @@ export function parseDoubleChance(
   let found = false;
 
   const dcSelections = selections.filter(
-    (s) => s.marketTypeId === MARKET_TYPES.DOUBLE_CHANCE && s.status === "Active"
+    (s) => String(s.marketTypeId) === MARKET_TYPES.DOUBLE_CHANCE && s.status === "Active"
   );
 
   for (const sel of dcSelections) {
@@ -628,7 +630,7 @@ export function parseBTTS(
   let found = false;
 
   const bttsSelections = selections.filter(
-    (s) => s.marketTypeId === MARKET_TYPES.BTTS && s.status === "Active"
+    (s) => String(s.marketTypeId) === MARKET_TYPES.BTTS && s.status === "Active"
   );
 
   for (const sel of bttsSelections) {
@@ -664,7 +666,7 @@ export function parseOverUnder(
   const result: Record<string, MarketOverUnderOdds> = {};
 
   const ouSelections = selections.filter(
-    (s) => s.marketTypeId === MARKET_TYPES.OVER_UNDER && s.status === "Active"
+    (s) => String(s.marketTypeId) === MARKET_TYPES.OVER_UNDER && s.status === "Active"
   );
 
   for (const sel of ouSelections) {

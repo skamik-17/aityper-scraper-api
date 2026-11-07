@@ -32,6 +32,12 @@ export interface ScrapeStats {
   errorCount: number;
   uniqueMatches: number;
   marketsScraped: number;
+  /** Markets saved by bookmakers with an OK outcome (success or partial). */
+  marketsSaved: number;
+  /** Set when the run was refused before any scraper started. */
+  aborted: "db_unreachable" | null;
+  /** Bookmakers whose outcome was not OK, with the reason. */
+  failed: Array<{ bookmaker: string; status: string; error: string | null }>;
 }
 
 export interface HealthCheckData {

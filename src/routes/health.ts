@@ -8,6 +8,7 @@ import type { HealthCheckData } from "../types/api.js";
 import { asyncHandler } from "../middleware/error-handler.js";
 import { testConnection } from "../config/database.js";
 import { getSchedulerStatus } from "../services/scheduler-service.js";
+import { toScrapeStats } from "../services/scraper-service.js";
 
 const router = Router();
 const startTime = Date.now();
@@ -31,15 +32,7 @@ router.get("/", asyncHandler(async (_req, res) => {
         latestComplete = result.completedAt;
       }
 
-      lastScrapeStats[league] = {
-        startedAt: result.startedAt.toISOString(),
-        completedAt: result.completedAt.toISOString(),
-        duration: Math.round(result.duration / 1000),
-        successCount: result.successCount,
-        errorCount: result.errorCount,
-        uniqueMatches: result.uniqueMatches,
-        marketsScraped: result.marketsScraped,
-      };
+      lastScrapeStats[league] = toScrapeStats(result);
     }
   }
 

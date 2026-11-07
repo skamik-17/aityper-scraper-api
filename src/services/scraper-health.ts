@@ -1,9 +1,14 @@
 /**
  * Scraper Health Monitoring Service
- * Tracks success rates, average times, and error patterns per scraper
+ * Tracks success rates, average times, failure streaks and error patterns per
+ * scraper, from classified run outcomes: a bookmaker that scraped matches but
+ * saved nothing (persist_failed) or found none (empty) counts as a failure.
+ * In memory only; scraper_runs holds the persisted history.
  */
 
 import type { PolishBookmaker } from "../config/index.js";
+import { isOkRunStatus, type BookmakerRunOutcome, type BookmakerRunStatus } from "./run-outcome.js";
+import { STATUS_WINDOW_RUNS } from "./bookmaker-status.js";
 
 interface ScraperStats {
   totalRuns: number;
@@ -14,6 +19,8 @@ interface ScraperStats {
   lastError: string | null;
   lastErrorAt: Date | null;
   lastSuccessAt: Date | null;
+  lastStatus: BookmakerRunStatus | null;
+  consecutiveFailures: number;
 }
 
 interface HealthReport {
@@ -21,24 +28,32 @@ interface HealthReport {
   successRate: number;
   avgDuration: number;
   status: "healthy" | "degraded" | "failing";
+  /** Error of the newest failed run. */
   lastError: string | null;
+  lastStatus: string | null;
+  consecutiveFailures: number;
+  lastSuccessAt: string | null;
+}
+
+export interface RunAbort {
+  league: string;
+  reason: string;
+  at: string;
 }
 
 const MAX_DURATION_HISTORY = 10;
 
 class ScraperHealthService {
   private stats: Map<PolishBookmaker, ScraperStats> = new Map();
+  /** league -> bookmaker -> outcomes, newest first, at most STATUS_WINDOW_RUNS each */
+  private outcomes: Map<string, Map<PolishBookmaker, BookmakerRunOutcome[]>> = new Map();
+  private lastAbort: RunAbort | null = null;
 
   /**
-   * Record a scraper run result
+   * Record one bookmaker's classified run outcome
    */
-  recordRun(
-    bookmaker: PolishBookmaker,
-    success: boolean,
-    duration: number,
-    error?: string
-  ): void {
-    let scraperStats = this.stats.get(bookmaker);
+  recordOutcome(o: BookmakerRunOutcome): void {
+    let scraperStats = this.stats.get(o.bookmaker);
 
     if (!scraperStats) {
       scraperStats = {
@@ -50,18 +65,22 @@ class ScraperHealthService {
         lastError: null,
         lastErrorAt: null,
         lastSuccessAt: null,
+        lastStatus: null,
+        consecutiveFailures: 0,
       };
-      this.stats.set(bookmaker, scraperStats);
+      this.stats.set(o.bookmaker, scraperStats);
     }
 
     scraperStats.totalRuns++;
+    scraperStats.lastStatus = o.status;
 
-    if (success) {
+    if (isOkRunStatus(o.status)) {
       scraperStats.successCount++;
-      scraperStats.lastSuccessAt = new Date();
+      scraperStats.consecutiveFailures = 0;
+      scraperStats.lastSuccessAt = o.finishedAt;
 
       // Update duration tracking (only for successful runs)
-      scraperStats.lastDurations.push(duration);
+      scraperStats.lastDurations.push(o.durationMs);
       if (scraperStats.lastDurations.length > MAX_DURATION_HISTORY) {
         scraperStats.lastDurations.shift();
       }
@@ -70,9 +89,41 @@ class ScraperHealthService {
         scraperStats.lastDurations.length;
     } else {
       scraperStats.errorCount++;
-      scraperStats.lastError = error || "Unknown error";
-      scraperStats.lastErrorAt = new Date();
+      scraperStats.consecutiveFailures++;
+      scraperStats.lastError = o.error || "Unknown error";
+      scraperStats.lastErrorAt = o.finishedAt;
     }
+
+    let byBookmaker = this.outcomes.get(o.league);
+    if (!byBookmaker) {
+      byBookmaker = new Map();
+      this.outcomes.set(o.league, byBookmaker);
+    }
+    const history = [o, ...(byBookmaker.get(o.bookmaker) ?? [])]
+      .sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime())
+      .slice(0, STATUS_WINDOW_RUNS);
+    byBookmaker.set(o.bookmaker, history);
+  }
+
+  /**
+   * Record a run that was refused before any scraper started
+   */
+  recordAbort(league: string, reason: string, at: Date): void {
+    this.lastAbort = { league, reason, at: at.toISOString() };
+  }
+
+  getLastAbort(): RunAbort | null {
+    return this.lastAbort ? { ...this.lastAbort } : null;
+  }
+
+  /**
+   * This process's outcomes for one league, newest first
+   * (at most STATUS_WINDOW_RUNS per bookmaker)
+   */
+  getRecentOutcomes(league: string): BookmakerRunOutcome[] {
+    const byBookmaker = this.outcomes.get(league);
+    if (!byBookmaker) return [];
+    return [...byBookmaker.values()].flat().sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
   }
 
   /**
@@ -88,6 +139,9 @@ class ScraperHealthService {
         avgDuration: 0,
         status: "healthy", // No data yet
         lastError: null,
+        lastStatus: null,
+        consecutiveFailures: 0,
+        lastSuccessAt: null,
       };
     }
 
@@ -108,6 +162,9 @@ class ScraperHealthService {
       avgDuration: Math.round(stats.avgDuration),
       status,
       lastError: stats.lastError,
+      lastStatus: stats.lastStatus,
+      consecutiveFailures: stats.consecutiveFailures,
+      lastSuccessAt: stats.lastSuccessAt?.toISOString() ?? null,
     };
   }
 
@@ -163,10 +220,12 @@ class ScraperHealthService {
   }
 
   /**
-   * Reset all stats
+   * Reset all stats, the outcome history and the last abort
    */
   reset(): void {
     this.stats.clear();
+    this.outcomes.clear();
+    this.lastAbort = null;
   }
 
   /**

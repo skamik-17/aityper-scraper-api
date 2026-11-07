@@ -5,10 +5,17 @@
 
 import cron from "node-cron";
 import { CONFIG } from "../config/index.js";
+import { waitForDatabase } from "../config/database.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
 import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
+import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
 import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
+
+// At startup the local Supabase stack can still be coming up: wait for it instead of failing once.
+const STARTUP_DB_WAIT_MS = 120_000;
+// Owner decision B11: keep scraper_runs for 30 days.
+const SCRAPER_RUNS_RETENTION_DAYS = 30;
 
 interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
@@ -25,9 +32,10 @@ let isRunning = false;
 let lastResults: Map<string, ScrapeResult> = new Map();
 
 /**
- * Run scrape for all enabled leagues (in parallel for speed)
+ * Run scrape for all enabled leagues (in parallel for speed).
+ * `dbWaitMs` lets each league wait for the database instead of probing once.
  */
-async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
+export async function runAllLeaguesScrape(options?: { dbWaitMs?: number }): Promise<MultiLeagueScrapeResult> {
   const results = new Map<string, ScrapeResult>();
   let totalSuccessCount = 0;
   let totalErrorCount = 0;
@@ -41,7 +49,7 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
     console.log(`[Scheduler] Starting ${league}...`);
     try {
       // Pass closeBrowsers: false to avoid closing browsers between parallel league scrapes
-      const result = await runScrapeAndPersist(league, undefined, false);
+      const result = await runScrapeAndPersist(league, undefined, false, options);
       console.log(
         `[Scheduler] ${league} completed: ${result.successCount} success, ${result.uniqueMatches} matches`
       );
@@ -81,6 +89,50 @@ async function runAllLeaguesScrape(): Promise<MultiLeagueScrapeResult> {
     totalMarketsScraped,
     totalUniqueMatches,
   };
+}
+
+/**
+ * Daily cleanup: old odds rows, then scraper_runs older than the retention.
+ * Each step is logged and never fatal.
+ */
+export async function runDailyCleanup(): Promise<void> {
+  console.log("[Scheduler] Running daily cleanup");
+  try {
+    const result = await cleanupOldOdds();
+    console.log(`[Scheduler] Cleanup complete, deleted: ${result.deleted}`);
+  } catch (error) {
+    console.error("[Scheduler] Cleanup failed:", error);
+  }
+
+  try {
+    const deleted = await deleteScraperRunsOlderThan(SCRAPER_RUNS_RETENTION_DAYS);
+    console.log(`[Scheduler] scraper_runs older than ${SCRAPER_RUNS_RETENTION_DAYS} days deleted: ${deleted}`);
+  } catch (error) {
+    console.error(`[Scheduler] ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/**
+ * First TSDB fixture sync after startup. Waits for the database; if it never
+ * comes up, the sync is skipped loudly and the 04:00 cron is the next attempt.
+ * Never throws.
+ */
+export async function runInitialTsdbSync(dbWaitMs: number = STARTUP_DB_WAIT_MS): Promise<void> {
+  const probe = await waitForDatabase(dbWaitMs);
+  if (!probe.ok) {
+    console.error("[Scheduler] Initial TSDB sync skipped: database unreachable - " + probe.error);
+    return;
+  }
+
+  try {
+    const results = await syncStaleLeagues();
+    if (results.length > 0) {
+      const total = results.reduce((a, r) => a + r.synced, 0);
+      console.log(`[Scheduler] Initial TSDB sync complete, synced: ${total} fixtures`);
+    }
+  } catch (error) {
+    console.error("[Scheduler] Initial TSDB sync failed:", error);
+  }
 }
 
 /**
@@ -131,13 +183,7 @@ export function startScheduler(): void {
   cleanupTask = cron.schedule(
     "0 3 * * *",
     async () => {
-      console.log("[Scheduler] Running daily cleanup");
-      try {
-        const result = await cleanupOldOdds();
-        console.log(`[Scheduler] Cleanup complete, deleted: ${result.deleted}`);
-      } catch (error) {
-        console.error("[Scheduler] Cleanup failed:", error);
-      }
+      await runDailyCleanup();
     },
     {
       scheduled: true,
@@ -152,7 +198,7 @@ export function startScheduler(): void {
     console.log("[Scheduler] Running initial scrape on startup for all leagues");
     isRunning = true;
     try {
-      const multiResult = await runAllLeaguesScrape();
+      const multiResult = await runAllLeaguesScrape({ dbWaitMs: STARTUP_DB_WAIT_MS });
       lastResults = multiResult.leagues;
       console.log(
         `[Scheduler] Initial scrape completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalUniqueMatches} matches across ${CONFIG.ENABLED_LEAGUES.length} leagues`
@@ -194,16 +240,8 @@ export function startTsdbSyncJobs(): void {
     }
   );
 
-  setTimeout(async () => {
-    try {
-      const results = await syncStaleLeagues();
-      if (results.length > 0) {
-        const total = results.reduce((a, r) => a + r.synced, 0);
-        console.log(`[Scheduler] Initial TSDB sync complete, synced: ${total} fixtures`);
-      }
-    } catch (error) {
-      console.error("[Scheduler] Initial TSDB sync failed:", error);
-    }
+  setTimeout(() => {
+    void runInitialTsdbSync();
   }, 1000);
 }
 

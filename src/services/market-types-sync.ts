@@ -45,3 +45,26 @@ export async function syncMarketTypes(): Promise<{ upserted: number }> {
 
   return { upserted: rows.length };
 }
+
+let marketTypesSynced = false;
+
+/**
+ * syncMarketTypes() once per process. Success is remembered; a failure is
+ * retried by the next call, so a server that started against a DB that was
+ * still coming up syncs on its first scrape run instead of never.
+ */
+export async function ensureMarketTypesSynced(): Promise<boolean> {
+  if (marketTypesSynced) return true;
+  try {
+    await syncMarketTypes();
+    marketTypesSynced = true;
+    return true;
+  } catch (error) {
+    // syncMarketTypes() has logged a PostgREST error (a plain object) itself;
+    // an exception thrown before the upsert answered is logged here.
+    if (error instanceof Error) {
+      console.error(`[marketTypesSync] market_types sync failed: ${error.message}`);
+    }
+    return false;
+  }
+}

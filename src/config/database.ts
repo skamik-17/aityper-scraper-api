@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { CONFIG } from "./index.js";
 import type { Database } from "../types/database.js";
+import { formatDbError } from "../services/run-outcome.js";
 
 let supabaseClient: SupabaseClient<Database> | null = null;
 
@@ -20,19 +21,48 @@ export function getSupabase(): SupabaseClient<Database> {
   return supabaseClient;
 }
 
-export async function testConnection(): Promise<boolean> {
+export type DbProbe = { ok: true } | { ok: false; error: string };
+
+/**
+ * One read through PostgREST to a real table, so a PostgREST that answers
+ * while Postgres is still starting (PGRST002) counts as not ready.
+ * Never throws: an unreachable DB or a client that cannot be created
+ * gives `{ ok: false }` with the formatted cause.
+ */
+export async function probeDatabase(): Promise<DbProbe> {
   try {
-    const supabase = getSupabase();
-    const { error } = await supabase.from("market_types").select("id").limit(1);
-
+    const { error } = await getSupabase().from("market_types").select("id").limit(1);
+    // PGRST116 (no rows for a single-row read) still proves the DB answered
     if (error && error.code !== "PGRST116") {
-      console.error("Database connection test failed:", error);
-      return false;
+      return { ok: false, error: formatDbError(error) };
     }
-
-    return true;
+    return { ok: true };
   } catch (error) {
-    console.error("Database connection error:", error);
-    return false;
+    return { ok: false, error: formatDbError(error) };
   }
+}
+
+/** Probe until the DB answers or `timeoutMs` has passed; returns the last probe. */
+export async function waitForDatabase(timeoutMs: number, intervalMs = 5000): Promise<DbProbe> {
+  const deadline = Date.now() + timeoutMs;
+  let probe = await probeDatabase();
+  if (!probe.ok) {
+    console.warn(
+      `[Database] Not reachable yet, retrying every ${intervalMs / 1000}s for up to ${timeoutMs / 1000}s: ${probe.error}`
+    );
+  }
+
+  while (!probe.ok && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, Math.min(intervalMs, Math.max(0, deadline - Date.now()))));
+    probe = await probeDatabase();
+  }
+  return probe;
+}
+
+export async function testConnection(): Promise<boolean> {
+  const probe = await probeDatabase();
+  if (!probe.ok) {
+    console.error("Database connection test failed:", probe.error);
+  }
+  return probe.ok;
 }

@@ -1,0 +1,28 @@
+{
+ "slug": "lebullpl",
+ "language": "pl",
+ "languages": [
+  "en",
+  "pl",
+  "ua"
+ ],
+ "currency": "PLN",
+ "currencies": [
+  "PLN"
+ ],
+ "country_language_map": {
+  "PL": "pl"
+ },
+ "country_currency_map": {
+  "PL": "PLN"
+ },
+ "country": "PL",
+ "cdn": "https://www.lebull.pl/media/",
+ "ws": "/ws/",
+ "sb_host": "https://lebull-pl-bb.boxwebcdn.work/",
+ "bettech_brand_id": null,
+ "bettech_script": null,
+ "app_host": "https://www.lebull.pl/media/",
+ "ip": "<redacted>",
+ "constants": []
+}

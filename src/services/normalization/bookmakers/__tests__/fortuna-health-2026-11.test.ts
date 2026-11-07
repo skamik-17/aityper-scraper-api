@@ -489,3 +489,43 @@ describe("Task 4: pre-existing ids with catalog codes (00-07 and 00-08 held back
     }
   });
 });
+
+describe("Task 5: exact-goals markets", () => {
+  it.each([
+    ["00-16", "HOME_EXACT_GOALS", ["2@3.55", "3+@1.85", "1@4.7", "0@12"]],
+    ["00-17", "AWAY_EXACT_GOALS", ["0@1.54", "1@2.8", "3+@50", "2@10"]],
+    ["00-3e", "SECOND_HALF_EXACT_GOALS", ["0@4.9", "1@2.95", "2+@1.81"]],
+  ])("arsenalHull %s with today's parser labels -> %s", (id, key, expected) => {
+    const out = run(live("arsenalHull", id).raw, ctxOf("arsenalHull"));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual(expected);
+  });
+  it("digit labels from the fixed parser give the same codes (00-16)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-16", name: "Arsenal dokładna liczba goli",
+      selections: [{ name: "2", odds: 3.55 }, { name: "3+", odds: 1.85 }, { name: "1", odds: 4.7 }, { name: "0", odds: 12 }] },
+      ctxOf("arsenalHull")); // synthetic: raw-exact-goals-arsenal-hull.json after the Task 5 parser
+    expect(out?.marketKey).toBe("HOME_EXACT_GOALS");
+    expect(legs(out)).toEqual(["2@3.55", "3+@1.85", "1@4.7", "0@12"]);
+  });
+  it("a pair id follows the team named in its label (00-16 quoting Hull -> AWAY_EXACT_GOALS)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-16", name: "Hull dokładna liczba goli",
+      selections: [{ name: "0", odds: 1.55 }, { name: "1", odds: 2.8 }, { name: "3+", odds: 50 }, { name: "2", odds: 10 }] },
+      ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("AWAY_EXACT_GOALS");
+    expect(legs(out)).toEqual(["0@1.55", "1@2.8", "3+@50", "2@10"]);
+  });
+  it("a legacy label that translates outside the half's 0/1/2+ book is dropped (an away label would be '2')", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-3e", name: "2.połowa: dokładna liczba goli",
+      selections: [{ name: "Remis", odds: 4.9 }, { name: "Arsenal", odds: 2.95 }, { name: "Hull", odds: 9 }, { name: "2+", odds: 1.81 }] },
+      ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("SECOND_HALF_EXACT_GOALS");
+    expect(legs(out)).toEqual(["0@4.9", "1@2.95", "2+@1.81"]);
+  });
+  it("a digit label outside the vocabulary is dropped, never read as a 1X2 code ('3' is not a draw)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-3e", name: "2.połowa: dokładna liczba goli",
+      selections: [{ name: "0", odds: 4.9 }, { name: "1", odds: 2.95 }, { name: "2", odds: 4.2 }, { name: "3", odds: 9 }] },
+      ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("SECOND_HALF_EXACT_GOALS");
+    expect(legs(out)).toEqual(["0@4.9", "1@2.95"]);
+  });
+});

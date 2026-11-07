@@ -111,6 +111,21 @@ export function getMarketName(market: FortunaMarket): string {
 }
 
 /**
+ * Exact-goals markets: 00-16/00-17 ("<team> dokładna liczba goli") and 00-3e
+ * ("2.połowa: dokładna liczba goli"). Their outcomes are goal counts ("0",
+ * "1", "2", "3+"; the 2nd half "0", "1", "2+") whose bare-digit codes are the
+ * 1X2 codes too, so the HOME/DRAW/AWAY fallback in getSelectionName rewrote
+ * Arsenal's "2 / 3+ / 1 / 0" into "Hull / 3+ / Arsenal / Remis" (health
+ * check 2026-11-06, D6). The raw count IS the display label and the catalog
+ * selection code; they are exempt like 00-0v/00-0w.
+ */
+const EXACT_GOALS_MARKET_TYPE_IDS = new Set<string>([
+  "ufo:mtyp:00-16",
+  "ufo:mtyp:00-17",
+  "ufo:mtyp:00-3e",
+]);
+
+/**
  * Get selection display name based on outcome code and market type
  */
 function getSelectionName(
@@ -135,9 +150,11 @@ function getSelectionName(
   // team's name (audit /audit-match, premier-league Arsenal vs Coventry
   // City), destroying one of the four selections. Keep the raw band code —
   // it IS the correct display label ("0", "1", "2", ...) for this market.
+  // The exact-goals ids share the same collision (EXACT_GOALS_MARKET_TYPE_IDS).
   if (
     marketTypeId === MARKET_TYPE_IDS.ASIAN_HANDICAP ||
-    marketTypeId === MARKET_TYPE_IDS.EUROPEAN_HANDICAP
+    marketTypeId === MARKET_TYPE_IDS.EUROPEAN_HANDICAP ||
+    EXACT_GOALS_MARKET_TYPE_IDS.has(marketTypeId)
   ) {
     return code;
   }

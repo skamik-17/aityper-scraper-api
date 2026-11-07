@@ -232,6 +232,8 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-2c": "AWAY_SCORE_BOTH_HALVES",
   "ufo:mtyp:00-1r": "HOME_WIN_AT_LEAST_ONE_HALF", // "Mecz: <team1> - wygra przynajmniej jedną połowę"
   "ufo:mtyp:00-1s": "AWAY_WIN_AT_LEAST_ONE_HALF",
+  "ufo:mtyp:00-16": "HOME_EXACT_GOALS", // "<team1> dokładna liczba goli" ("0", "1", "2", "3+")
+  "ufo:mtyp:00-17": "AWAY_EXACT_GOALS",
   // NOTE: 00-07/00-08 "Mecz: <team> - Czerwona Kartka (bez CK dla trenera i
   // sztabu)" are held back from RED_CARD_TEAM, like 00-bt above. No owner
   // decision covers that settlement (cards to coaches and staff excluded),
@@ -242,6 +244,7 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-0c": "HALF_TIME_RED_CARD_TEAM", // "1.połowa: <team1> - Czerwona Kartka (...)"
   "ufo:mtyp:00-0d": "HALF_TIME_RED_CARD_TEAM",
   "ufo:mtyp:00-0a": "HALF_TIME_RED_CARD", // "1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)"
+  "ufo:mtyp:00-3e": "SECOND_HALF_EXACT_GOALS", // "2.połowa: dokładna liczba goli" ("0", "1", "2+")
   "ufo:mtyp:00-0f": "FIRST_CORNER", // "Mecz: 1.rzut rożny" (the "Nikt" leg is dropped)
   "ufo:mtyp:00-19": "ODD_EVEN_GOALS", // "Mecz: suma goli" (parzysty / nieparzysty)
   "ufo:mtyp:00-09": "WINNING_MARGIN", // "Mecz: wynik/różnica zwycięstwa" ("Arsenal/o 2 gole", "Remis")
@@ -697,6 +700,8 @@ const FORTUNA_SIDED_CODE_FLIP: Partial<
   AWAY_SCORE_BOTH_HALVES: { side: "AWAY", counterpart: "HOME_SCORE_BOTH_HALVES" },
   HOME_WIN_AT_LEAST_ONE_HALF: { side: "HOME", counterpart: "AWAY_WIN_AT_LEAST_ONE_HALF" },
   AWAY_WIN_AT_LEAST_ONE_HALF: { side: "AWAY", counterpart: "HOME_WIN_AT_LEAST_ONE_HALF" },
+  HOME_EXACT_GOALS: { side: "HOME", counterpart: "AWAY_EXACT_GOALS" },
+  AWAY_EXACT_GOALS: { side: "AWAY", counterpart: "HOME_EXACT_GOALS" },
 };
 
 /**
@@ -1241,6 +1246,29 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
     }
 
+    // Exact goals: the parser keeps the API's goal counts ("0", "1", "2",
+    // "3+"; the 2nd half "0", "1", "2+"), which already left through the
+    // literal passthrough above. Older captures and the frozen WC raw still
+    // carry the legacy parser rewrite of the codes "0"/"1"/"2" into the draw
+    // label, the home team and the away team (whichever team the market is
+    // about), so translate those back. A digit label that gets here is not a
+    // catalog code and must never reach the 1X2 matcher, which reads "3" as
+    // DRAW; a translation outside the vocabulary (a "2" in the 2nd-half book)
+    // is UNKNOWN too, and normalizeMarket drops UNKNOWN legs of these codes.
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "SECOND_HALF_EXACT_GOALS": {
+      if (/\d/.test(trimmed)) return "UNKNOWN";
+      const side = isFortunaDrawLabel(trimmed)
+        ? "DRAW"
+        : normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      const legacyCode =
+        side === "DRAW" ? "0" : side === "HOME" ? "1" : side === "AWAY" ? "2" : undefined;
+      return legacyCode && literalCatalogCodes?.includes(legacyCode)
+        ? (legacyCode as NormalizedSelection)
+        : "UNKNOWN";
+    }
+
     // "Arsenal/o 2 gole" = Arsenal wins by exactly 2. "o 3 gole" is the top
     // bucket of every observed book (they sum to ~116-121%), so it is 3+;
     // normalizeMarket drops a book that also lists a margin above 3.
@@ -1586,10 +1614,10 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // Side-directional team codes (team goals/fouls/offsides, win to nil,
-    // win/score both halves, win at least one half): flip to the counterpart
-    // code when the label names the opposite team — the id->side pairing is
-    // positional and the label is authoritative. "<team> - wygra do zera"
-    // carries no "liczba" keyword, hence the prefix fallback.
+    // win/score both halves, win at least one half, exact goals): flip to the
+    // counterpart code when the label names the opposite team — the id->side
+    // pairing is positional and the label is authoritative. "<team> - wygra
+    // do zera" carries no "liczba" keyword, hence the prefix fallback.
     const sidedFlip = FORTUNA_SIDED_CODE_FLIP[marketCode];
     if (sidedFlip) {
       const nameSide =
@@ -1817,9 +1845,13 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       marketCode === "HALF_TIME_HOME_EXACT_CORNERS" ||
       marketCode === "HALF_TIME_AWAY_EXACT_CORNERS" ||
       // FIRST_CORNER is HOME/AWAY only: Fortuna's "Nikt" (no corner) leg has
-      // no catalog code. WINNING_MARGIN drops an unresolvable label.
+      // no catalog code. WINNING_MARGIN drops an unresolvable label, and the
+      // exact-goals codes a label outside their vocabulary.
       marketCode === "FIRST_CORNER" ||
-      marketCode === "WINNING_MARGIN"
+      marketCode === "WINNING_MARGIN" ||
+      marketCode === "HOME_EXACT_GOALS" ||
+      marketCode === "AWAY_EXACT_GOALS" ||
+      marketCode === "SECOND_HALF_EXACT_GOALS"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

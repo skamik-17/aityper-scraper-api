@@ -4,7 +4,7 @@ const USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, l
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 /** `host` + `pathname` of a URL, for error messages that name the endpoint without query noise. */
-function hostAndPath(url: string): string {
+export function hostAndPath(url: string): string {
   try {
     const u = new URL(url);
     return `${u.host}${u.pathname}`;

@@ -1,131 +1,121 @@
+/**
+ * Totalbet scraper (UUID "dealer" API)
+ *
+ * Plain HTTP, no browser: one league list request, then one event-detail request
+ * per listed event, in sequence and DETAIL_DELAY_MS apart. The class still extends
+ * PlaywrightScraper only for the shared scraper interface (aggregator, audit tools);
+ * it never opens a browser.
+ *
+ * League category UUIDs come from src/config/leagues.ts. Every failure is reported
+ * in the result's error string; a run whose details all fail is a failed run even
+ * when list-1X2 fallbacks exist, because a 1X2-only offer is an outage.
+ */
+
 import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
-import { isLeagueSupported } from "../../../config/leagues.js";
+import { getBookmakerLeagueId } from "../../../config/leagues.js";
+import type { FullMatchOffer, FullOfferScraperResult, Market1X2Odds, ScrapedMarket } from "../../../types/full-offer.js";
 import type {
+  EventUrlEntry,
+  MatchDetailResult,
+  MatchIdentifier,
+  RawScrapedOdds,
   ScraperConfig,
   ScraperResult,
-  RawScrapedOdds,
-  MatchIdentifier,
-  MatchDetailResult,
-  RawScrapedMatchOdds,
-  EventUrlEntry,
 } from "../../../types/scraper.js";
-import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
-import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
+import { PlaywrightScraper } from "../../base/playwright-base.js";
 
-import { CATEGORY_IDS } from "./constants.js";
 import {
-  navigateToBaseSite,
-  fetchLeagueEvents,
-  fetchAllLeagueEvents,
-  fetchEventDetails,
-  extractEventIdFromUrl,
   buildEventUrl,
-} from "./navigation.js";
-import {
-  parseTeamNames,
-  parse1X2Odds,
-  parseDoubleChance,
-  parseBTTS,
-  parseOverUnder,
-  parseAllMarkets,
-  isValidEvent,
-} from "./parser.js";
-import type { TotalbetEvent } from "./types.js";
+  extractEventUuidFromUrl,
+  fetchEventDetail,
+  fetchLeagueEvents,
+  nodeFetchJson,
+  type FetchJson,
+} from "./api-client.js";
+import type { TotalbetDetailEvent } from "./api-types.js";
+import { DETAIL_DELAY_MS, PHASE1_CHECK_MIN_MARKETS, PHASE1_MARKET_KEYS } from "./constants.js";
+import { listEventToMatchWinnerMarket, parseEventDetail, parseParticipants } from "./grid-parser.js";
 
-const eventsCache = new ScraperCache<TotalbetEvent>({
-  name: "totalbet-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
+/** Injectable transport and pacing (tests pass a fake FetchJson and no delay). */
+export interface TotalbetDeps {
+  /** HTTP transport; defaults to Node's global fetch (nodeFetchJson). */
+  fetchJson?: FetchJson;
+  /** Pause after each event-detail request; defaults to DETAIL_DELAY_MS. */
+  detailDelayMs?: number;
+}
 
+type Teams = { homeTeam: string; awayTeam: string };
+
+const LOG = "[Totalbet/FullOffer]";
+const MATCH_WINNER_NAME = "Wynik meczu";
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Name kept for compatibility with existing imports; this scraper never opens a browser. */
 export class TotalbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "totalbet";
   config: ScraperConfig;
+  private readonly fetchJson: FetchJson;
+  private readonly detailDelayMs: number;
 
-  constructor(config?: Partial<ScraperConfig>) {
+  constructor(config?: Partial<ScraperConfig>, deps: TotalbetDeps = {}) {
     super();
     this.config = {
       ...DEFAULT_SCRAPER_CONFIGS.totalbet,
       ...config,
       enabled: true,
     };
+    this.fetchJson = deps.fetchJson ?? nodeFetchJson;
+    this.detailDelayMs = deps.detailDelayMs ?? DETAIL_DELAY_MS;
   }
 
-  private updateCache(events: TotalbetEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): TotalbetEvent | undefined {
-    return eventsCache.get(eventId);
-  }
-
+  /** League list only: one RawScrapedOdds per event with an oriented, fully active list 1X2. */
   async scrapeLeague(league: string): Promise<ScraperResult> {
-    return this.executeLeagueScrape(
-      league,
-      (l) => isLeagueSupported(l, this.bookmaker),
-      async (page, leagueSlug) => {
-        const startTime = Date.now();
-        console.log(`[Totalbet] Fetching data for category: ${CATEGORY_IDS[leagueSlug]}`);
+    const startTime = Date.now();
+    const categoryUuid = leagueCategoryUuid(league);
+    if (!categoryUuid) {
+      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
+    }
 
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createErrorResult(
-            new Error("Failed to navigate to Totalbet"),
-            Date.now() - startTime
-          );
-        }
-
-        await this.delay(500);
-        const apiData = await fetchLeagueEvents(page, leagueSlug);
-
-        if (!apiData || !apiData.data || apiData.data.length === 0) {
-          return this.createNotFoundResult(
-            "Could not fetch Totalbet API data",
-            Date.now() - startTime
-          );
-        }
-
-        console.log(`[Totalbet] Captured ${apiData.data.length} events from API`);
-        this.updateCache(apiData.data);
-
-        const matches: RawScrapedOdds[] = [];
-        for (const event of apiData.data) {
-          if (!isValidEvent(event)) continue;
-
-          const teams = parseTeamNames(event.eventName);
-          const odds1x2 = parse1X2Odds(event);
-
-          if (odds1x2.home <= 1 || odds1x2.draw <= 1 || odds1x2.away <= 1) continue;
-
-          matches.push({
-            bookmaker: this.bookmaker,
-            eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-            homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-            awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-            homeOdds: odds1x2.home,
-            drawOdds: odds1x2.draw,
-            awayOdds: odds1x2.away,
-            hasNoTaxPromo: false,
-            scrapedAt: new Date(),
-            eventUrl: buildEventUrl(event.eventId),
-          });
-        }
-
-        console.log(`[Totalbet] Found ${matches.length} matches with valid odds`);
-
-        return {
-          status: "success",
-          bookmaker: this.bookmaker,
-          data: matches,
-          duration: Date.now() - startTime,
-          timestamp: new Date(),
-        };
+    try {
+      const list = await fetchLeagueEvents(categoryUuid, this.fetchJson);
+      if (list.error) {
+        return { status: "error", bookmaker: this.bookmaker, error: list.error, duration: Date.now() - startTime, timestamp: new Date() };
       }
-    );
+
+      const matches: RawScrapedOdds[] = [];
+      for (const event of list.events) {
+        const teams = parseParticipants(event);
+        const market = listEventToMatchWinnerMarket(event);
+        if (!teams || !market) continue;
+
+        const odds = orientedMatchWinnerOdds(market, teams);
+        if (!odds) {
+          console.warn(`[Totalbet] skipped ${teams.homeTeam} vs ${teams.awayTeam}: 1X2 outcome names do not match the participants`);
+          continue;
+        }
+
+        matches.push({
+          bookmaker: this.bookmaker,
+          eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
+          homeTeam: getCanonicalTeamName(teams.homeTeam, league),
+          awayTeam: getCanonicalTeamName(teams.awayTeam, league),
+          homeOdds: odds.home,
+          drawOdds: odds.draw,
+          awayOdds: odds.away,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          eventUrl: buildEventUrl(event.uuid),
+        });
+      }
+
+      console.log(`[Totalbet] Found ${matches.length} matches with valid odds for ${league}`);
+      return { status: "success", bookmaker: this.bookmaker, data: matches, duration: Date.now() - startTime, timestamp: new Date() };
+    } catch (error) {
+      return this.createErrorResult(error, Date.now() - startTime);
+    }
   }
 
   async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
@@ -159,185 +149,223 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     };
   }
 
+  /** One event detail, reduced to its 1X2 ("Wynik meczu" in grid order home, draw, away). */
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
-    const eventId = extractEventIdFromUrl(eventUrl);
-
-    if (!eventId) {
+    const eventUuid = extractEventUuidFromUrl(eventUrl);
+    if (!eventUuid) {
       return this.createMatchDetailNotFoundResult("Invalid Totalbet event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
+    try {
+      const detail = await fetchEventDetail(eventUuid, this.fetchJson);
+      if (!detail.event) {
+        const message = detail.error ?? `No detail for Totalbet event ${eventUuid}`;
+        // An event that is no longer an active prematch event is a state change, not a fetch failure.
+        return detail.notPrematch
+          ? this.createMatchDetailNotFoundResult(message, Date.now() - startTime)
+          : this.createMatchDetailErrorResult(new Error(message), Date.now() - startTime);
+      }
+
+      const teams = parseParticipants(detail.event);
+      const candidates = parseEventDetail(detail.event).filter(
+        (m) => m.name === MATCH_WINNER_NAME && m.bookmakerMarketId === undefined && m.paramValue === undefined
+      );
+      const odds = teams && candidates.length === 1 ? orientedMatchWinnerOdds(candidates[0], teams) : null;
+      if (!teams || !odds) {
+        return this.createMatchDetailNotFoundResult(
+          `No oriented 1X2 market in Totalbet event ${eventUuid}`,
+          Date.now() - startTime
+        );
+      }
+
+      return {
+        status: "success",
+        bookmaker: this.bookmaker,
+        data: {
+          bookmaker: this.bookmaker,
+          eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
+          homeTeam: teams.homeTeam,
+          awayTeam: teams.awayTeam,
+          eventUrl,
+          hasNoTaxPromo: false,
+          scrapedAt: new Date(),
+          market1X2: odds,
+        },
+        duration: Date.now() - startTime,
+        timestamp: new Date(),
+      };
+    } catch (error) {
+      return this.createMatchDetailErrorResult(error, Date.now() - startTime);
     }
-
-    return this.executeWithBrowser(
-      async (page) => {
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createMatchDetailErrorResult(
-            new Error("Failed to navigate to Totalbet"),
-            Date.now() - startTime
-          );
-        }
-
-        await this.delay(500);
-        const allEvents = await fetchAllLeagueEvents(page);
-        this.updateCache(allEvents);
-
-        const event = allEvents.find((e) => String(e.eventId) === eventId);
-        if (!event) {
-          return this.createMatchDetailNotFoundResult("Event not found in Totalbet API", Date.now() - startTime);
-        }
-
-        return this.buildMatchDetailResult(event, eventUrl, startTime);
-      },
-      (error, duration) => this.createMatchDetailErrorResult(error, duration)
-    );
-  }
-
-  private buildMatchDetailResult(event: TotalbetEvent, eventUrl: string, startTime: number): MatchDetailResult {
-    const teams = parseTeamNames(event.eventName);
-    const odds1x2 = parse1X2Odds(event);
-    const doubleChance = parseDoubleChance(event);
-    const btts = parseBTTS(event);
-    const overUnder = parseOverUnder(event);
-
-    console.log(`[Totalbet] Parsed match details for: ${teams.homeTeam} vs ${teams.awayTeam}`);
-    console.log(
-      `[Totalbet] Markets: 1X2=${odds1x2.home > 0}, DC=${doubleChance !== null}, BTTS=${btts !== null}, O/U lines=${overUnder ? Object.keys(overUnder).length : 0}`
-    );
-
-    const matchOdds: RawScrapedMatchOdds = {
-      bookmaker: this.bookmaker,
-      eventName: event.eventName,
-      homeTeam: teams.homeTeam,
-      awayTeam: teams.awayTeam,
-      eventUrl,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
-      market1X2: { home: odds1x2.home, draw: odds1x2.draw, away: odds1x2.away },
-      marketDoubleChance: doubleChance || undefined,
-      marketBTTS: btts || undefined,
-      marketOverUnder: overUnder || undefined,
-    };
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: matchOdds,
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
   }
 
   async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
-    return this.executeFullOfferScrape(
-      league,
-      (l) => isLeagueSupported(l, this.bookmaker),
-      async (page, leagueSlug) => {
-        const startTime = Date.now();
+    const startTime = Date.now();
+    const categoryUuid = leagueCategoryUuid(league);
+    if (!categoryUuid) {
+      return this.createFullOfferErrorResult(league, new Error(`Unknown league: ${league}`), Date.now() - startTime);
+    }
 
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createFullOfferErrorResult(
-            leagueSlug,
-            new Error("Failed to navigate to Totalbet"),
-            Date.now() - startTime
-          );
-        }
-
-        await this.delay(500);
-        const apiData = await fetchLeagueEvents(page, leagueSlug);
-
-        if (!apiData || !apiData.data || apiData.data.length === 0) {
-          return {
-            success: false,
-            bookmaker: this.bookmaker,
-            league: leagueSlug,
-            matches: [],
-            error: "No events found from API",
-            duration: Date.now() - startTime,
-          };
-        }
-
-        console.log(`[Totalbet/FullOffer] Found ${apiData.data.length} events`);
-
-        const matches: FullMatchOffer[] = [];
-
-        for (const event of apiData.data) {
-          if (!isValidEvent(event)) continue;
-
-          try {
-            const detailData = await fetchEventDetails(page, String(event.eventId));
-
-            let fullEvent = event;
-            if (detailData && !detailData.error) {
-              if (detailData.data && detailData.data.eventGames) {
-                fullEvent = detailData.data;
-              } else if (detailData.eventGames) {
-                fullEvent = {
-                  eventId: detailData.eventId || event.eventId,
-                  eventName: detailData.eventName || event.eventName,
-                  categoryId: event.categoryId,
-                  startTime: event.startTime,
-                  eventGames: detailData.eventGames,
-                };
-              }
-            }
-
-            const teams = parseTeamNames(fullEvent.eventName);
-            const markets = parseAllMarkets(fullEvent, teams);
-
-            if (markets.length > 0) {
-              matches.push({
-                matchId: String(fullEvent.eventId),
-                bookmaker: this.bookmaker,
-                homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                eventUrl: buildEventUrl(fullEvent.eventId),
-                markets,
-                startTime:
-                  typeof fullEvent.startTime === "number"
-                    ? new Date(fullEvent.startTime).toISOString()
-                    : fullEvent.startTime,
-                scrapedAt: new Date(),
-              });
-
-              console.log(
-                `[Totalbet/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
-              );
-            }
-
-            await this.delay(100);
-          } catch (error) {
-            console.warn(
-              `[Totalbet/FullOffer] Failed to fetch details for event ${event.eventId}:`,
-              error
-            );
-          }
-        }
-
-        const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
-        console.log(
-          `[Totalbet/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
-        );
-
-        return {
-          success: true,
-          bookmaker: this.bookmaker,
-          league: leagueSlug,
-          matches,
-          duration: Date.now() - startTime,
-        };
-      }
-    );
+    try {
+      return await this.scrapeLeagueOffer(league, categoryUuid, startTime);
+    } catch (error) {
+      return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
+    }
   }
 
   async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
     return [];
   }
+
+  private async scrapeLeagueOffer(league: string, categoryUuid: string, startTime: number): Promise<FullOfferScraperResult> {
+    // The aggregator logs only success=false for a failed run, so the reason is logged here.
+    const failure = (error: string): FullOfferScraperResult => {
+      console.warn(`${LOG} ${league} failed: ${error}`);
+      return { success: false, bookmaker: this.bookmaker, league, matches: [], error, duration: Date.now() - startTime };
+    };
+
+    const list = await fetchLeagueEvents(categoryUuid, this.fetchJson);
+    if (list.error) return failure(list.error);
+    console.log(`${LOG} Found ${list.events.length} prematch events for ${league}`);
+
+    const matches: FullMatchOffer[] = [];
+    const driftErrors: string[] = [];
+    // n: events whose detail answered or failed. Events skipped because they are no
+    // longer active prematch events (or have no participants) are not counted.
+    let detailsCounted = 0;
+    // k: events whose detail failed and that fell back to the list 1X2.
+    let detailsFailed = 0;
+    let firstDetailError: string | undefined;
+
+    for (const listEvent of list.events) {
+      // Match identity always comes from the list event, so it never depends on detail success.
+      const teams = parseParticipants(listEvent);
+      if (!teams) {
+        console.warn(`${LOG} skipped event ${listEvent.uuid}: no named home and away participants`);
+        continue;
+      }
+      const homeTeam = getCanonicalTeamName(teams.homeTeam, league);
+      const awayTeam = getCanonicalTeamName(teams.awayTeam, league);
+
+      const detail = await fetchEventDetail(listEvent.uuid, this.fetchJson);
+      await this.delay(this.detailDelayMs);
+
+      if (detail.notPrematch) {
+        // Kicked off (or was suspended) after the list call: no prematch price may be
+        // stored for it, so there is no list-1X2 fallback either.
+        console.log(`${LOG} skipped ${homeTeam} vs ${awayTeam}: detail is ${detail.notPrematch.type}/${detail.notPrematch.status}`);
+        continue;
+      }
+      detailsCounted++;
+
+      let markets: ScrapedMarket[];
+      if (detail.event) {
+        markets = parseEventDetail(detail.event);
+        const missing = missingPhase1Keys(detail.event);
+        if (missing.length > 0) {
+          const text = `phase-1 keys missing for ${homeTeam} vs ${awayTeam}: ${missing.join(",")}`;
+          console.warn(`${LOG} ${text}`);
+          driftErrors.push(text);
+        }
+      } else {
+        detailsFailed++;
+        firstDetailError ??= detail.error;
+        console.warn(`${LOG} ${homeTeam} vs ${awayTeam}: detail fetch failed, list 1X2 only: ${detail.error}`);
+        const fallback = listEventToMatchWinnerMarket(listEvent);
+        markets = fallback ? [fallback] : [];
+      }
+
+      if (markets.length === 0) {
+        console.warn(`${LOG} skipped ${homeTeam} vs ${awayTeam}: no active market`);
+        continue;
+      }
+
+      matches.push({
+        matchId: listEvent.uuid,
+        bookmaker: this.bookmaker,
+        homeTeam,
+        awayTeam,
+        eventUrl: buildEventUrl(listEvent.uuid),
+        markets,
+        startTime: listEvent.start_at,
+        scrapedAt: new Date(),
+      });
+      console.log(`${LOG} ${homeTeam} vs ${awayTeam}: ${markets.length} markets (market_count ${(detail.event ?? listEvent).market_count})`);
+    }
+
+    const errorParts: string[] = [];
+    if (detailsFailed > 0) {
+      const text = `Detail fetch failed for ${detailsFailed}/${detailsCounted} events (first: ${firstDetailError})`;
+      console.warn(`${LOG} ${text}`);
+      errorParts.push(text);
+    }
+    errorParts.push(...driftErrors);
+
+    if (matches.length === 0) {
+      return failure([`No parsable Totalbet events for ${league}`, ...errorParts].join(" | "));
+    }
+
+    const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
+    console.log(`${LOG} Completed: ${matches.length} matches, ${totalMarkets} total markets`);
+
+    return {
+      success: detailsFailed < detailsCounted,
+      bookmaker: this.bookmaker,
+      league,
+      matches,
+      error: errorParts.length > 0 ? errorParts.join(" | ") : undefined,
+      duration: Date.now() - startTime,
+    };
+  }
+}
+
+/** The league's Totalbet category (tournament) UUID from src/config/leagues.ts, or null. */
+function leagueCategoryUuid(league: string): string | null {
+  const id = getBookmakerLeagueId(league, "totalbet");
+  return typeof id === "string" && UUID_PATTERN.test(id) ? id : null;
+}
+
+/**
+ * Home, draw and away prices of a 3-way "Wynik meczu" market, in grid (or list sort)
+ * order. Null unless the first and last outcome names are the home and away
+ * participants: a reordered grid would otherwise publish one team's price as the other's.
+ */
+function orientedMatchWinnerOdds(market: ScrapedMarket, teams: Teams): Market1X2Odds | null {
+  if (market.selections.length !== 3) return null;
+  const [home, draw, away] = market.selections;
+  if (home.name !== teams.homeTeam || away.name !== teams.awayTeam) return null;
+  return { home: home.odds, draw: draw.odds, away: away.odds };
+}
+
+/**
+ * Phase-1 keys absent from a large event's raw component_lists (slug-drift check).
+ * Keys are read before any status filtering, so suspended markets raise no alarm:
+ * every component slug, plus the market_id of each markets_in_columns header label,
+ * read with the same rules as the grid parser.
+ */
+function missingPhase1Keys(event: TotalbetDetailEvent): string[] {
+  if (!(event.market_count >= PHASE1_CHECK_MIN_MARKETS)) return [];
+
+  const present = new Set<string>();
+  for (const component of event.component_lists as unknown[]) {
+    if (!isRecord(component)) continue;
+    if (typeof component.slug === "string" && component.slug !== "") present.add(`slug:${component.slug}`);
+    if (component.type !== "markets_in_columns" || !Array.isArray(component.grid)) continue;
+
+    const header: unknown = component.grid[0];
+    if (!Array.isArray(header)) continue;
+    for (const head of header) {
+      if (isRecord(head) && head.type === "label" && typeof head.text === "string" && head.market_id) {
+        present.add(`mid:${head.market_id}`);
+      }
+    }
+  }
+  return PHASE1_MARKET_KEYS.filter((key) => !present.has(key));
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
 }
 
 export const totalbetScraper = new TotalbetPlaywrightScraper();

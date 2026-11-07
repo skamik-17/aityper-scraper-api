@@ -140,9 +140,13 @@ Expected after the fix: 148 − 20 − 27 = **101** lines for a comparable run (
 
 ### Risks & unknowns
 - Offer timing and calendar: the ladders exist only for near-term matches. On 2026-11-06 the 10 matches of Nov 6–8 had them (Everton–Coventry kicks off tonight). The 10 matches of Nov 21–23 (after the international break) have 338–353 markets and no ladders, and when LVBet publishes them is unverified. If the fix is deployed after Nov 8, the live ladder checks have nothing to measure until then. The offline acceptance block below does not depend on the calendar.
-- Name drift: the split is gated on `markets_group.name === "Zawodnicy - statystyki"` and on every selection matching `"<Player> <N>+"`. If either fails, the parser leaves the ladder unsplit and the normalizer's `paramValue` guard (Task 2) returns null, so the ladder falls back to OTHER instead of leaking `"Abdulkadir Omur 1+"` as a player code. Detection: the smoke test count and `lvbet_ac.py --ladders` (missing codes).
+- Name drift: the split is gated on `markets_group.name === "Zawodnicy - statystyki"` and on every selection matching `"<Player> <N>+"`. If either fails, the parser leaves the ladder unsplit and the normalizer's `paramValue` guard (Task 2) returns null, so the ladder falls back to OTHER instead of leaking `"Abdulkadir Omur 1+"` as a player code. Detection: the smoke test count, `lvbet_ac.py --ladders` (missing codes), and `lvbet_unsplit_ladders.py` (L1, which names every unsplit mapped ladder per match).
 - Tier cut-off: LVBet's 5+ tier for fouls and fouls won is dropped (catalog stops at 4+). It affects few players (e.g. Tim Iroegbunam 5+ @9.0).
 - Repository merge: per-player rows from LVBet's ladder now key as `PLAYER_X:<Player>`, like the August shape. Peers merge via `reconcilePlayerNameVariants`, which was verified for full names. LVBet uses full names ("Viktor Gyokeres").
+  - **Exception (found in Task 5 review, 2026-11-07): the mononym `Gabriel`.** In the 2026-11-07 Ars–Hul capture, LVBet's ladders name Gabriel Magalhães `Gabriel` in all 9 outfield ladders (`Asysty`, `Faule na zawodniku`, `Odbiory (tackle)`, `Popełnione faule`, `Spalone zawodnika`, `Strzały`, `Strzały celne`, `Strzały celne głową`, `Strzały celne spoza pola karnego`). LVBet's own goalscorer lists in the same match say `Gabriel Magalhaes`. Every peer in the live Ars–Hul `normalized-markets` sends `Gabriel Magalhaes` (34 codes, e.g. PLAYER_SHOTS: betfan/etoto/forbet/fortuna/superbet) or `G. Magalhaes` (2 codes), and none sends a bare `Gabriel`.
+  - The two never pool. `spellingKey('Gabriel')` is `gabriel`, not `gabriel magalhaes` (`market-type-grouper.ts:258-260`, step 1 at `:362-367`), and `describeSamePlayer` rejects single-token names (`:287`). A probe of `reconcilePlayerNameVariants({Gabriel: lvbet, "Gabriel Magalhaes": 5 peers})` returns no alias.
+  - So after deploy, the UI shows a separate LVBet-only `Gabriel` row beside the peers' `Gabriel Magalhaes` in those 9 codes. That is a missing comparison, not a wrong price. The golden fixture pins it (`PLAYER_SHOTS:Gabriel` #496, `PLAYER_FOULS:Gabriel` #405).
+  - `lvbet_ac.py --ladders` does **not** detect it, because its tier check counts only LVBet tiers with ≥ 2 peer quotes (`lvbet_ac.py:56-60`), so a peer-less row is skipped silently. Follow-up: open question 8.
 - Price identity of the ladders, checked offline (LVBet raw vs peers in today's API, tiers quoted by ≥ 2 peers, share within ±30 % of the peer median):
   - PLAYER_SHOTS 88 %, PLAYER_FOULS 98 %, PLAYER_SAVES 100 %, PLAYER_OFFSIDES 92 %, PLAYER_ASSISTS 84 %;
   - PLAYER_SHOTS_ON_TARGET 74 %, PLAYER_HEADER_SHOTS_ON_TARGET 69 %, PLAYER_TACKLES 63 %; median deviations −13 %, −18 % and +11 %, and every other LVBet ladder is much further off, so the identity holds;
@@ -160,6 +164,10 @@ Expected after the fix: 148 − 20 − 27 = **101** lines for a comparable run (
 5. `HALF_TIME_CARDS_TOTAL` merges a yellow-card count with card points (collision table). Keep the merge, or route the yellow-only market elsewhere?
 6. `SECOND_HALF_ASIAN_HANDICAP:-1`/`-1.5` collides in 19/20 matches. Investigating it needs a raw capture of a match whose half-time handicap ladder quotes both directions. Should that be a follow-up?
 7. Is LVBet `Strzały celne spoza pola karnego` the same product as the peers' PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX, given the −36 % median price gap? Task 2 maps it (best match). If the owner says no, drop that one pattern.
+8. Pool LVBet's mononym ladder rows `Gabriel` with the peers' `Gabriel Magalhaes` (Risks → Repository merge)? Today they stay separate.
+   - **Do not** relax `describeSamePlayer` for single-token names. Arsenal also fields Gabriel Jesus (LVBet test data, `lvbet-audit-fixes.test.ts:48,120,136`) and Gabriel Martinelli (`selection-vocab-scan.test.ts:44`), Leeds fields Gabriel Gudmundsson (2026-11-07 Leeds–Tottenham capture), and folding the wrong player is an integrity failure.
+   - If yes, add a scoped LVBet normalizer repair modelled on the `Gabriel Mag` → `Gabriel Magalhaes` repair (`lvbet-normalizer.ts:2073-2080`). Apply it only on the ladder path (the 10 `LVBET_PLAYER_LADDER_PATTERNS` codes), and only when `ctx.homeTeam` or `ctx.awayTeam` is `Arsenal`.
+   - Add a unit test for it. Then re-bless the PL golden #405/#496 with `rebless-golden.ts --dry` first, and inspect the diff. Until then the golden fixture pins `PLAYER_SHOTS:Gabriel` / `PLAYER_FOULS:Gabriel` as today's behaviour.
 
 ### Acceptance criteria
 
@@ -190,7 +198,17 @@ Dump `market_comparison` (a Supabase view) for one match through PostgREST. The 
 ```
 `lvbet_ac.py` was checked on a synthetic copy of today's Ars–Hul dump with LVBet's hidden O/U and half-time prices injected and the pairs removed. It printed `PASS | tg2.5O=1.55(+2.0%) tg2.5U=2.5(+3.3%) tg3.5O=2.3(+0.9%) tg3.5U=1.62(+2.5%)`.
 
-- L1. In the cleaned log, `[LVBet/FullOffer] Completed: 20 matches` (= fixture count). Every match with published ladders has **≥ 900** in its `[LVBet/FullOffer] <H> vs <A>: N markets` line (today 615–664).
+- L1. In the cleaned log, `[LVBet/FullOffer] Completed: 20 matches` (= that run's fixture count; a fixture that has already kicked off drops out, e.g. `Completed: 19` on 2026-11-07 after Everton–Coventry). Two gates, both required:
+  - every match with published ladders has **≥ 850** in its `[LVBet/FullOffer] <H> vs <A>: N markets` line (today 615–664);
+  - `lvbet_unsplit_ladders.py` prints `unsplit=0` for every match, i.e. **0 unsplit mapped ladder names**. Run it on the `full-offer` dumps, taken after the same pruned run as L2 (it prints `STALE` and exits 2 while pre-deploy rows are still served):
+    ```bash
+    python3 -I -c 'import json,sys,urllib.parse as u; [print(u.quote(m["homeTeam"]), u.quote(m["awayTeam"]), m["matchId"].split(":",1)[1].replace(":","_").replace(" ","-")) for m in json.load(open(sys.argv[1]))["data"]["matches"]]' $NM/odds.json \
+     | while read -r h a s; do curl -s "http://localhost:3001/api/odds/match/full-offer?home=$h&away=$a&league=premier-league" -o "$NM/fo-$s.json"; done
+    python3 -I $EV/tools/lvbet_unsplit_ladders.py $NM/fo-*.json
+    ```
+  - Why 850 and not 900: the HEAD-parser capture of 2026-11-07 01:06Z (Task 4) logged 890–975 for the 9 ladder matches (the 10th, Everton–Coventry, had kicked off) and 343–358 for the 10 others, with Leeds–Tottenham at **890**. A re-capture of Leeds–Tottenham at 01:39Z with the same parser logged 972, with all 10 mapped ladders split (321 per-player rows, 0 unsplit). The master scrape stored at 01:00Z had the same ladder player counts (36/36/40/36/25/36/36/4/36/36). So the 82-row dip at 01:06Z was not caused by fewer listed players, and its cause is unknown: a transient offer change or a transient splitter-gate miss, with no archive left of that run.
+  - The count alone cannot tell fewer markets from an unsplit ladder, because an unsplit ladder costs only (players − 1) rows, 3–39 here. So the unsplit check is the integrity gate. The floor only catches "ladders not split at all" (pre-fix 615–664).
+  - Any `unsplit > 0` is a splitter-gate defect and needs a Task 2 follow-up. Never lower the floor to make it pass. The tool's positive controls: the pre-deploy 01:00Z Leeds–Tottenham `full-offer` dump prints `FAIL split=0 unsplit=10`, and a copy of the 01:39Z archive with `Strzały` re-merged prints `FAIL split=285 unsplit=1`.
 - L2. `market_comparison` dumps for 2 matches with ladders.
   - **Precondition:** take each dump only after a run whose log has `[FullOfferRepo] Pruned N stale row(s) for lvbet/<matchId>` for that match and no `[FullOfferRepo] Batch insert error` from the LVBet save. The view keeps one row per `market_key`, not per scrape, so before a prune the Task 1 OTHER key churn serves the old and new OTHER rows together (see Impact → Repository). `db_stats.py`'s `scrapedAt` dict must show a **single** bucket. Two buckets mean stale rows: discard the dump and wait for the next run.
   - `python3 -I $EV/tools/db_stats.py $NM/mc-*.json`: `UNK%` ≤ **40** (today 58.3).
@@ -755,12 +773,22 @@ git commit -m "lvbet: golden fixture for the November premier-league market shap
 ```
 The archive lives in the aityper repo, where the WC archives are tracked. With the owner's approval, commit only that path there with `git -C /home/skamik/Documents/repositories/personal/aityper add "$ARCH"`. That working tree has unrelated uncommitted changes, so never use `-A`.
 
+**Owner hand-off, still open (EXECUTION Group E defers every frontend-repo write).** The committed PL fixture came from `premier-league_arsenal_hull_city__2026-11-07.json` (the fixture's `sourceArchive`). That archive is not yet in the aityper repo: `git -C aityper ls-files docs/audit-ledger/raw-archive/lvbet/` lists only the WC archive. Its only copy sits in the gitignored scratch dir of the lvbet worktree: `/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/lvbet/.scratch/raw-archive/lvbet/premier-league_arsenal_hull_city__2026-11-07.json` (8,769,606 bytes, sha256 `ea4c2ba8488de4a731552a1add2aa448e73c8712afcb132a1a896922b6e9638a`).
+- Copy it **before** that worktree is removed:
+  ```bash
+  cp /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/lvbet/.scratch/raw-archive/lvbet/premier-league_arsenal_hull_city__2026-11-07.json /home/skamik/Documents/repositories/personal/aityper/docs/audit-ledger/raw-archive/lvbet/
+  sha256sum /home/skamik/Documents/repositories/personal/aityper/docs/audit-ledger/raw-archive/lvbet/premier-league_arsenal_hull_city__2026-11-07.json
+  ```
+  The sum must equal the one above. With the owner's approval, run `git -C /home/skamik/Documents/repositories/personal/aityper add docs/audit-ledger/raw-archive/lvbet/premier-league_arsenal_hull_city__2026-11-07.json`, that single path and never `-A`.
+- If the archive is lost, re-harvest the **whole** PL fixture from a new capture. Do not extend it with `--bless` against a capture of another date. On a basename mismatch, harvest only WARNs and then merges entries by index (`scripts/harvest-fixtures.ts:444-457`). The indexes of two captures do not line up, so entries would be silently overwritten or misaligned.
+- The golden gate does not need the archive: `rebless-golden.ts` never reads it, and `golden.test.ts:49` only types `sourceArchive`.
+
 - [ ] **Step 5: Live acceptance** (after the owner deploys or restarts and one scheduled run completes)
 
 - Run the smoke test once, as specified in the Observations section. Expected results are listed there.
   - Check the goal-or-assist pair **by code**: `grep -cE '→ TWO_PLAYERS_GOAL_OR_ASSIST ' $SMOKE/summary.txt` prints `1`, and `grep -cE '→ PLAYER_GOAL_OR_ASSIST ' $SMOKE/summary.txt` prints `1`. The SUMMARY cuts mapped names to 39 characters (`scraper-audit-core.ts:652`), so the pair row reads `Zawodnik strzeli gola lub zanotuje asys`, the same as the single-player row. A name grep for `… - Podwójna szansa` therefore printing nothing is **not** a FAIL. `0` and `2` means the pair is still misrouted (FAIL). A `0` for the pair code together with a full-name pair row under UNMAPPED is also a FAIL. If the pair market's full name is needed, run the `--market "Podwójna szansa"` shape (a second league scrape).
 - Then fetch the dumps and run the checks of the Live acceptance block (all commands are spelled out there):
-  - L1 and L5: `grep -E '^\[LVBet/FullOffer\]'` and `grep -c 'for lvbet <KEY> '` in the cleaned log;
+  - L1 and L5: `grep -E '^\[LVBet/FullOffer\]'` and `grep -c 'for lvbet <KEY> '` in the cleaned log. L1 also needs `lvbet_unsplit_ladders.py` on the `full-offer` dumps (`unsplit=0` for every match; the market floor is ≥ 850);
   - L2: two `market_comparison` dumps, each taken after a run that logged `[FullOfferRepo] Pruned N stale row(s) for lvbet/<matchId>` with no `Batch insert error`. In the report, record `db_stats.py`'s single `scrapedAt` bucket and `UNK%`, and the literal `externalId == "undefined"` count (gate: 0). Report `extIdMissing` for information only: filtered or merged selections legitimately carry no `externalId`;
   - L3 and L4: `lvbet_ac.py` (`--ladders` for two matches with ladders; plain for all 20);
   - L6: `mw_sanity.py` on a fresh `/api/odds` dump.

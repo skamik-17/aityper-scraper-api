@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseWebSocketJson, parseFixtures, parseAllMarkets } from "../parser.js";
 import { normalizeMarketsForBookmaker } from "../../../../services/normalization/index.js";
+import type { STSWebSocketData } from "../types.js";
 
 /**
  * parseAllMarkets regression coverage for the 2026-11 STS offer, on the real
@@ -61,6 +62,62 @@ describe("STS parseAllMarkets on the 2026-11 Arsenal vs Hull City snapshot", () 
     const snapshot = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"))!;
     delete snapshot.P![`1m${fixture.stsId}`];
     expect(parseAllMarkets(fixture, snapshot, null)).toEqual([]);
+  });
+  it("ignores another fixture's r=17 group in the fixture snapshot", () => {
+    // Extra groups sit under opaque keys, so `f` is their only link to a match.
+    // Leeds vs Tottenham's r=17 entry, verbatim from its committed snapshot, is
+    // put first, so without the `f` check it would also win every name clash
+    // in the dedup (same line, Leeds prices)
+    const leedsKey = "17m5adef97b5db44544bc8c1fb00848114c";
+    const leedsGroup = parseWebSocketJson(fx("f_f2921896_pl.leeds-tottenham.snapshot.txt"))!.P![leedsKey];
+    expect(leedsGroup.f).toBe("f2921896");
+    const parseWithGroupOf = (f: string) => {
+      const snapshot = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"))!;
+      snapshot.P = { [leedsKey]: { ...leedsGroup, f }, ...snapshot.P };
+      return parseAllMarkets(fixture, snapshot, null);
+    };
+    expect(parseWithGroupOf("f2921896")).toEqual(markets);
+    // Control: the same group under Arsenal's id is read, so the `f` check is
+    // what keeps it out (Leeds' 188 has a 2.5 line at 2.5/1.47, Arsenal's none)
+    const relabelled = parseWithGroupOf(fixture.id);
+    expect(relabelled.find((m) => m.name === "1. drużyna - liczba kartek 2.5")!.selections).toEqual([
+      expect.objectContaining({ name: "+2.5", odds: 2.5 }),
+      expect.objectContaining({ name: "-2.5", odds: 1.47 }),
+    ]);
+  });
+  it("ignores other fixtures' r=17 groups in the match-page i_pl", () => {
+    // Production passes the full match-page i_pl as the second source, and it
+    // carries the r=17 groups of hundreds of other fixtures. The first entry
+    // is copied from a live i_pl (2026-11-06 17:13Z) without its unread keys
+    // Bb/p/q; 314 maps to DRAW_NO_BET. The second is synthetic: a 231 line at
+    // 9.5, a line the Arsenal snapshot does not offer, so the name dedup
+    // cannot hide it.
+    const foreignGroups = (f314: string, f231: string): NonNullable<STSWebSocketData["P"]> => ({
+      "17m005eb976bf654754b39700b58dfdc6a9": {
+        f: f314, r: 17,
+        m: { "1": {}, "314": { l: { "1": { n: "Zwycięzca meczu", o: { "4": { O: 3.6 }, "5": { O: 1.23 } } } } }, "318": {}, "324": {}, "330": {}, "333": {} },
+      },
+      "17m0000000000000000000000000000a231": {
+        f: f231, r: 17,
+        m: { "231": { l: { "1": { n: "1. drużyna - liczba rzutów rożnych", o: { "12": { O: 3.75, n: "+9.5" }, "13": { O: 1.25, n: "-9.5" } } } } } },
+      },
+    });
+    const snapshot = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"));
+    const parseWithIplGroups = (groups: NonNullable<STSWebSocketData["P"]>) => {
+      const ipl = parseWebSocketJson(fx("i_pl.trimmed.txt"))!;
+      ipl.P = { ...groups, ...ipl.P };
+      return parseAllMarkets(fixture, snapshot, ipl);
+    };
+    const injected = parseWithIplGroups(foreignGroups("f3624033", "f2921896"));
+    expect(injected).toEqual(parseWithIplGroups({}));
+    expect(injected.filter((m) => m.bookmakerMarketId === "314")).toEqual([]);
+    expect(injected.map((m) => m.name)).not.toContain("1. drużyna - liczba rzutów rożnych 9.5");
+    // Control: under Arsenal's id both groups are read, so the `f` check is
+    // what keeps them out
+    const relabelled = parseWithIplGroups(foreignGroups(fixture.id, fixture.id));
+    expect(relabelled.filter((m) => m.bookmakerMarketId === "314").map((m) => m.selections.map((s) => s.odds)))
+      .toEqual([[3.6, 1.23]]);
+    expect(relabelled.map((m) => m.name)).toContain("1. drużyna - liczba rzutów rożnych 9.5");
   });
   it("normalizes the r=17 team cards/corners lines, side from the market name", () => {
     const n = normalizeMarketsForBookmaker(markets, "sts", "Arsenal", "Hull City", "premier-league");

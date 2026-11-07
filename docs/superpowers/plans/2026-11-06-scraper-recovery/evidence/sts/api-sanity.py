@@ -1,6 +1,8 @@
 """API odds sanity for one bookmaker on one match (read-only GET).
 Usage: python3 -I api-sanity.py "<Home>" "<Away>" [bookmaker=sts] [league=premier-league] [base=http://localhost:3001]
-Prints one SANITY_RESULT JSON line; exit 0 when every check passes."""
+Prints one SANITY_RESULT JSON line; exit 0 when every check passes.
+For STS, pick a match whose fixture lists the r=17 team-stats group (see the
+CARDS_TEAM/CORNERS_TEAM note below)."""
 import json, statistics, sys, urllib.parse, urllib.request
 home, away = sys.argv[1], sys.argv[2]
 bm = sys.argv[3] if len(sys.argv) > 3 else "sts"
@@ -39,6 +41,28 @@ checks["cards_total_lines"] = sorted(cards_lines)
 checks["cards_total_ok"] = len(cards_lines) >= 4
 ct = [(k, v) for k, v in quotes("CORNERS_TEAM").items() if bm in v]
 checks["corners_team_shape_ok"] = bool(ct) and all(k[0].split(":")[0] in ("HOME", "AWAY") and k[1] in ("OVER", "UNDER") for k, _ in ct)
+
+def is_line(s):
+    try:
+        return float(s) >= 0 and s == s.strip()
+    except ValueError:
+        return False
+
+def cards_team_row_ok(param, sel):
+    """CARDS_TEAM row: param '<line>' (STS and the peer majority) or 'HOME:/AWAY:<line>'
+    (betfan/fortuna), selection HOME_/AWAY_ OVER/UNDER, and a param side must match it."""
+    side, _, line = param.rpartition(":")
+    sel_side, _, ou = sel.partition("_")
+    return (side in ("", "HOME", "AWAY") and is_line(line) and sel_side in ("HOME", "AWAY")
+            and ou in ("OVER", "UNDER") and side in ("", sel_side))
+
+# STS serves CARDS_TEAM and CORNERS_TEAM only from its r=17 team-stats group,
+# which it lists about one day before kickoff: run this on a match whose fixture
+# lists that group (smoke perMatch[].teamStats true), or both checks fail on a
+# correct offer.
+cards_team = [k for k, v in quotes("CARDS_TEAM").items() if bm in v]
+checks["cards_team_rows"] = sorted(f"{p} {s}" for p, s in cards_team)
+checks["cards_team_shape_ok"] = bool(cards_team) and all(cards_team_row_ok(p, s) for p, s in cards_team)
 ok = all(v for k, v in checks.items() if k.endswith("_ok"))
 print("SANITY_RESULT " + json.dumps({"match": f"{home} vs {away}", "bookmaker": bm, "pass": ok, **checks}))
 sys.exit(0 if ok else 1)

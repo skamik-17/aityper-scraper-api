@@ -3,7 +3,11 @@
 // Raw market names, ids and odds mirror the captured payloads in
 // docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/superbet/.
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { superbetNormalizer } from "../superbet-normalizer.js";
+import { parseAllMarkets } from "../../../../scrapers/bookmakers/superbet/parser.js";
+import type { SuperbetOddsSelection } from "../../../../scrapers/bookmakers/superbet/types.js";
 import type { NormalizationContext, RawBookmakerMarket } from "../../types.js";
 
 const bou: NormalizationContext = {
@@ -311,5 +315,149 @@ describe("superbet: today's First-Last player formats", () => {
     expect(out.marketCode).toBe("MATCH_WINNER");
     expect(out.selections.map((s) => s.code)).toEqual(["HOME", "DRAW", "AWAY"]);
     expect(out.selections.map((s) => s.odds)).toEqual([1.17, 7.5, 14]);
+  });
+});
+
+// Player stat-line markets, parsed then normalized the way the scraper does
+// it. Each player's ladder must land under its own `<CODE>:<player>` key with
+// threshold selections only; a shared key would mix players' prices.
+describe("superbet: player stat lines key the player", () => {
+  // Verbatim API rows from Arsenal - Hull City (event 14438716, 2026-11-06).
+  const sample = JSON.parse(
+    readFileSync(
+      fileURLToPath(
+        new URL("../../../../scrapers/bookmakers/superbet/__tests__/fixtures/event-14438716-odds-sample.json", import.meta.url)
+      ),
+      "utf8"
+    )
+  ) as { oddsSample: SuperbetOddsSelection[] };
+
+  function parseThenNormalize(odds: SuperbetOddsSelection[], ids: string[]) {
+    return parseAllMarkets({ eventId: 14438716, matchName: "Arsenal·Hull City", tournamentId: 0, sportId: 5, odds })
+      .filter((raw) => ids.includes(raw.bookmakerMarketId!))
+      .map((raw) => ({ raw, out: run(raw, arsHul) }));
+  }
+
+  // marketKey -> ["<code>@<odds>", ...]; the key list is returned separately
+  // so a collision (two raw markets on one key) cannot hide in the map.
+  function ladders(results: ReturnType<typeof parseThenNormalize>) {
+    const keys = results.map(({ out }) => out.marketKey);
+    const byKey = Object.fromEntries(
+      results.map(({ out }) => [out.marketKey, out.selections.map((s) => `${s.code}@${s.odds}`)])
+    );
+    return { keys, byKey };
+  }
+
+  it("236216/236222/239621 map each player's ladder to its own key", () => {
+    const results = parseThenNormalize(sample.oddsSample, ["236216", "236222", "239621"]);
+    const { keys, byKey } = ladders(results);
+
+    expect(byKey).toEqual({
+      "PLAYER_FOULS:John Egan": ["1+@1.36", "2+@2.7", "3+@5.75", "4+@13"],
+      "PLAYER_FOULS:Viktor Gyokeres": ["1+@1.33", "2+@2.55", "3+@5.4", "4+@12"],
+      "PLAYER_TACKLES:John Egan": ["1+@1.13", "2+@1.77", "3+@3.2", "4+@5.5", "5+@11"],
+      "PLAYER_TACKLES:Viktor Gyokeres": ["1+@1.53", "2+@3.35", "3+@7.3"],
+      "PLAYER_ASSISTS:John Egan": ["1+@20"],
+      // 3+ is kept although the catalog lists only YES/NO/1+/2+ (owner decision).
+      "PLAYER_ASSISTS:Viktor Gyokeres": ["1+@4.1", "2+@17", "3+@29"],
+    });
+    expect(new Set(keys).size).toBe(keys.length);
+    for (const { out } of results) {
+      expect(out.debug?.matchedBy).toBe("id");
+      expect(out.marketKey).toBe(`${out.marketCode}:${out.paramValue}`);
+    }
+  });
+
+  it("238453 (tackles suffered, no catalog code) is OTHER by id", () => {
+    const results = parseThenNormalize(sample.oddsSample, ["238453"]);
+
+    expect(results).toHaveLength(5);
+    for (const { out } of results) {
+      expect(out.marketCode).toBe("OTHER");
+      expect(out.debug?.matchedBy).toBe("id");
+    }
+  });
+
+  // Right/left-foot shot lines have no catalog code either. One real row each
+  // from parsed-ars-hul-2026-11-06.json.
+  it.each([
+    ["238477", "Zawodnik - liczba strzałów prawą nogą", 4.4],
+    ["238473", "Zawodnik - liczba strzałów lewą nogą", 6.3],
+    ["238461", "Zawodnik - liczba celnych strzałów prawą nogą", 11],
+    ["238457", "Zawodnik - liczba celnych strzałów lewą nogą", 16],
+  ] as const)("%s (%s) is OTHER by id", (id, name, odds) => {
+    const out = run(
+      { bookmakerMarketId: id, name, selections: [{ name: "John Egan - powyżej 0.5", odds }] },
+      arsHul
+    );
+    expect(out.marketCode).toBe("OTHER");
+    expect(out.debug?.matchedBy).toBe("id");
+  });
+
+  // The sample has no rows for these four ids. Names, lines and prices are
+  // real rows from parsed-ars-hul-2026-11-06.json (same event), in API order.
+  // That capture keeps no specialBetValue, so it is rebuilt in today's
+  // "sr:player:<id>-<Name>-<line>" format with the player ids the sample's
+  // specifiers carry.
+  const SR_PLAYER: Record<string, string> = {
+    "John Egan": "sr:player:100578",
+    "Viktor Gyokeres": "sr:player:869030",
+  };
+  function statRows(
+    marketId: number,
+    marketName: string,
+    player: string,
+    ladder: [line: string, price: number][]
+  ): SuperbetOddsSelection[] {
+    return ladder.map(
+      ([line, price]) =>
+        ({
+          marketId,
+          marketName,
+          name: `${player} - powyżej ${line}`,
+          price,
+          status: "active",
+          specialBetValue: `${SR_PLAYER[player]}-${player}-${line}`,
+        }) as SuperbetOddsSelection
+    );
+  }
+  const SOT = "Zawodnik - liczba celnych strzałów";
+  const FOULS_WON = "Zawodnik - liczba fauli na zawodniku";
+  const OUTSIDE = "Zawodnik - liczba strzałów spoza pola karnego";
+  const SOT_OUTSIDE = "Zawodnik - liczba celnych strzałów spoza pola karnego";
+  const moreRows: SuperbetOddsSelection[] = [
+    ...statRows(236220, SOT, "John Egan", [["0.5", 5.25], ["1.5", 31]]),
+    ...statRows(236220, SOT, "Viktor Gyokeres", [["0.5", 1.19], ["1.5", 1.92], ["2.5", 3.75], ["3.5", 7.5], ["4.5", 17]]),
+    ...statRows(238449, FOULS_WON, "John Egan", [["0.5", 1.74], ["1.5", 4.45], ["2.5", 12]]),
+    ...statRows(238449, FOULS_WON, "Viktor Gyokeres", [["0.5", 1.21], ["1.5", 2.05], ["2.5", 4.1], ["3.5", 8.1], ["4.5", 15]]),
+    ...statRows(238469, SOT_OUTSIDE, "John Egan", [["0.5", 17]]),
+    ...statRows(238469, SOT_OUTSIDE, "Viktor Gyokeres", [["0.5", 3.55], ["1.5", 15]]),
+    ...statRows(238485, OUTSIDE, "John Egan", [["0.5", 6], ["1.5", 35]]),
+    ...statRows(238485, OUTSIDE, "Viktor Gyokeres", [["0.5", 1.69], ["1.5", 4.15], ["2.5", 12]]),
+  ];
+
+  it("236220/238449/238485/238469 group one raw market per player and key the player", () => {
+    const ids = ["236220", "238449", "238485", "238469"];
+    const results = parseThenNormalize(moreRows, ids);
+    for (const id of ids) {
+      expect(results.filter(({ raw }) => raw.bookmakerMarketId === id), id).toHaveLength(2);
+    }
+    const { keys, byKey } = ladders(results);
+
+    expect(byKey).toEqual({
+      "PLAYER_SHOTS_ON_TARGET:John Egan": ["1+@5.25", "2+@31"],
+      "PLAYER_SHOTS_ON_TARGET:Viktor Gyokeres": ["1+@1.19", "2+@1.92", "3+@3.75", "4+@7.5", "5+@17"],
+      "PLAYER_FOULS_WON:John Egan": ["1+@1.74", "2+@4.45", "3+@12"],
+      "PLAYER_FOULS_WON:Viktor Gyokeres": ["1+@1.21", "2+@2.05", "3+@4.1", "4+@8.1", "5+@15"],
+      "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX:John Egan": ["1+@17"],
+      "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX:Viktor Gyokeres": ["1+@3.55", "2+@15"],
+      "PLAYER_SHOTS_OUTSIDE_BOX:John Egan": ["1+@6", "2+@35"],
+      "PLAYER_SHOTS_OUTSIDE_BOX:Viktor Gyokeres": ["1+@1.69", "2+@4.15", "3+@12"],
+    });
+    expect(new Set(keys).size).toBe(keys.length);
+    for (const { out } of results) {
+      expect(out.debug?.matchedBy).toBe("id");
+      expect(out.marketKey).toBe(`${out.marketCode}:${out.paramValue}`);
+    }
   });
 });

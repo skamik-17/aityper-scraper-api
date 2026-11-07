@@ -342,13 +342,13 @@ const PLAYER_LIST_MARKET_IDS = new Set<number>([
 ]);
 
 /**
- * Per-player STAT-LINE markets (PLAYER_SHOTS, PLAYER_OFFSIDES,
- * PLAYER_HEADER_SHOTS_ON_TARGET): unlike PLAYER_LIST_MARKET_IDS above, the
- * normalizer keys these by the PLAYER as the market parameter and reduces
- * every selection to just the threshold outcome ("1+"/"2+"), so one raw
- * group must hold exactly one player's whole ladder. Grouping by
- * marketId+specialBetValue like the generic O/U markets breaks that in both
- * formats Superbet has used:
+ * Per-player STAT-LINE markets (shots, shots on target, fouls, fouls won,
+ * tackles, assists, offsides; one catalog code per id below): unlike
+ * PLAYER_LIST_MARKET_IDS above, the normalizer keys these by the PLAYER as
+ * the market parameter and reduces every selection to just the threshold
+ * outcome ("1+"/"2+"), so one raw group must hold exactly one player's
+ * whole ladder. Grouping by marketId+specialBetValue like the generic O/U
+ * markets breaks that in both formats Superbet has used:
  * - Today (2026-11-06 capture) `specialBetValue` is
  *   `sr:player:<id>-<Name>-<line>` (e.g. "sr:player:100578-John Egan-0.5"),
  *   one value per player-line row, so that key would split every player's
@@ -368,6 +368,15 @@ const PLAYER_STAT_LINE_MARKET_IDS = new Set<number>([
   236218, // PLAYER_SHOTS: "Zawodnik - liczba strzałów"
   236224, // PLAYER_OFFSIDES: "Zawodnik - liczba spalonych"
   238465, // PLAYER_HEADER_SHOTS_ON_TARGET: "Zawodnik - liczba celnych strzałów głową"
+  236216, // PLAYER_FOULS: "Zawodnik - liczba popełnionych fauli"
+  238449, // PLAYER_FOULS_WON: "Zawodnik - liczba fauli na zawodniku"
+  236220, // PLAYER_SHOTS_ON_TARGET: "Zawodnik - liczba celnych strzałów"
+  236222, // PLAYER_TACKLES: "Zawodnik - liczba odbiorów"
+  238485, // PLAYER_SHOTS_OUTSIDE_BOX: "Zawodnik - liczba strzałów spoza pola karnego"
+  238469, // PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX: "Zawodnik - liczba celnych strzałów spoza pola karnego"
+  239621, // PLAYER_ASSISTS: "Zawodnik - liczba asyst"
+  // The OTHER-mapped stat lines (238453, 238457, 238461, 238473, 238477,
+  // 238481) are left out on purpose: OTHER has no player key to group by.
 ]);
 
 /**

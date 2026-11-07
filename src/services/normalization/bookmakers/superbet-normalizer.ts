@@ -438,6 +438,18 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   236224: "PLAYER_OFFSIDES", // "Zawodnik - liczba spalonych"
   238465: "PLAYER_HEADER_SHOTS_ON_TARGET", // "Zawodnik - liczba celnych strzałów głową"
   238481: "OTHER", // "Zawodnik - liczba strzałów głową" - no catalog counterpart
+  236216: "PLAYER_FOULS", // "Zawodnik - liczba popełnionych fauli"
+  238449: "PLAYER_FOULS_WON", // "Zawodnik - liczba fauli na zawodniku"
+  236220: "PLAYER_SHOTS_ON_TARGET", // "Zawodnik - liczba celnych strzałów"
+  236222: "PLAYER_TACKLES", // "Zawodnik - liczba odbiorów"
+  238485: "PLAYER_SHOTS_OUTSIDE_BOX", // "Zawodnik - liczba strzałów spoza pola karnego"
+  238469: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX", // "Zawodnik - liczba celnych strzałów spoza pola karnego"
+  239621: "PLAYER_ASSISTS", // "Zawodnik - liczba asyst"
+  238453: "OTHER", // "Zawodnik - liczba odbiorów na zawodniku" - no catalog counterpart
+  238477: "OTHER", // "Zawodnik - liczba strzałów prawą nogą" - no catalog counterpart
+  238473: "OTHER", // "Zawodnik - liczba strzałów lewą nogą" - no catalog counterpart
+  238461: "OTHER", // "Zawodnik - liczba celnych strzałów prawą nogą" - no catalog counterpart
+  238457: "OTHER", // "Zawodnik - liczba celnych strzałów lewą nogą" - no catalog counterpart
   233484: "TWO_PLAYERS_ANYTIME", // "Którykolwiek z zawodników strzeli gola"
   233485: "BOTH_PLAYERS_ANYTIME", // "Obaj zawodnicy strzelą gola"
 };
@@ -728,6 +740,11 @@ const PLAYER_STAT_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_PASSES",
   "PLAYER_ASSISTS",
   "PLAYER_OFFSIDES",
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_TACKLES",
+  "PLAYER_SHOTS_OUTSIDE_BOX",
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
 ]);
 
 const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
@@ -1444,7 +1461,12 @@ function normalizeSelectionForMarket(
     case "PLAYER_HEADER_SHOTS_ON_TARGET":
     case "PLAYER_PASSES":
     case "PLAYER_ASSISTS":
-    case "PLAYER_OFFSIDES": {
+    case "PLAYER_OFFSIDES":
+    case "PLAYER_FOULS":
+    case "PLAYER_FOULS_WON":
+    case "PLAYER_TACKLES":
+    case "PLAYER_SHOTS_OUTSIDE_BOX":
+    case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX": {
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
       const withLine = cleaned.match(/-\s*powy[żz]ej\s+(\d+(?:[.,]\d+)?)\s*$/iu);
       if (withLine) {

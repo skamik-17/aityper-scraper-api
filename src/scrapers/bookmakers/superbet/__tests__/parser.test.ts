@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { parseAllMarkets } from "../parser.js";
 import type { SuperbetEvent, SuperbetOddsSelection } from "../types.js";
 
@@ -213,4 +215,38 @@ describe("parseAllMarkets - per-player stat lines (sr:player specialBetValue)", 
       );
     }
   );
+});
+
+describe("parseAllMarkets - player fouls/tackles/assists stat lines", () => {
+  // Verbatim API rows from Arsenal - Hull City (event 14438716, 2026-11-06,
+  // evidence/superbet/event-odds-sample-arsenal-hull-2026-11-06.json). The
+  // rows carry no `code`, hence the cast.
+  const sample = JSON.parse(
+    readFileSync(fileURLToPath(new URL("./fixtures/event-14438716-odds-sample.json", import.meta.url)), "utf8")
+  ) as { oddsSample: SuperbetOddsSelection[] };
+  const sampleEvent: SuperbetEvent = {
+    eventId: 14438716,
+    matchName: "Arsenal·Hull City",
+    tournamentId: 0,
+    sportId: 5,
+    odds: sample.oddsSample,
+  };
+
+  it("player stat lines group one raw market per player", () => {
+    const markets = parseAllMarkets(sampleEvent);
+
+    const counts: Record<string, number> = {};
+    for (const market of markets) {
+      counts[market.bookmakerMarketId!] = (counts[market.bookmakerMarketId!] ?? 0) + 1;
+    }
+    // 238453 has no catalog code (OTHER), so it keeps one market per line;
+    // 200685 is a team corners market grouped by its threshold.
+    expect(counts).toEqual({ "236216": 2, "236222": 2, "239621": 2, "238453": 5, "200685": 6 });
+
+    // Each grouped market is one player's whole ladder, never two players.
+    for (const market of markets.filter((m) => ["236216", "236222", "239621"].includes(m.bookmakerMarketId!))) {
+      const players = new Set(market.selections.map((s) => s.name.replace(/\s*-\s*powyżej\s+[\d.]+$/u, "")));
+      expect(players.size, `${market.bookmakerMarketId} ${[...players].join(", ")}`).toBe(1);
+    }
+  });
 });

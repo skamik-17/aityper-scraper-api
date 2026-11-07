@@ -9,6 +9,14 @@ import { loadJson, loadText } from "./fixtures.js";
 const BETTERS_SNAPSHOT_PATH = "/prematch/brand/2658970707769307140/pl/";
 const isDiscoveryCall = (u: string) => u.includes("share/bootstrap") || u.includes("bt-renderer.min.js");
 
+/** Paths of every object or array under `value` that is not frozen, so a failure names them. */
+function unfrozenPaths(value: unknown, path = "$", out: string[] = []): string[] {
+  if (typeof value !== "object" || value === null) return out;
+  if (!Object.isFrozen(value)) out.push(path);
+  for (const [key, child] of Object.entries(value)) unfrozenPaths(child, `${path}.${key}`, out);
+  return out;
+}
+
 /** A betters chunk from the trimmed snapshot, re-served with some fields changed. */
 function bettersChunkWith(requestedVersion: number, patch: Record<string, unknown>): string {
   const chunks = loadJson("betters", "snapshot-trimmed.json").chunks as { requestedVersion: number }[];
@@ -186,6 +194,39 @@ describe("BetbyClient", () => {
     await expect(new BetbyClient(BETBY_BRANDS.betters, { fetchText: f }).fetchEvent("2725816334213586962")).rejects.toThrow(
       "HTTP 503 from api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/2725816334213586962",
     );
+  });
+
+  it("the cached snapshot is deep-frozen, so an in-place edit throws instead of reaching the next league", async () => {
+    // Every league scrape within 45 s shares this one object (see the concurrency test above).
+    const c = new BetbyClient(BETBY_BRANDS.betters, { fetchText: createEvidenceFetch("betters"), now: () => 0 });
+    const s = await c.fetchSnapshot();
+    expect(unfrozenPaths(s)).toEqual([]);
+
+    const leeds = s.events["2725816334213586962"];
+    const away = leeds.desc.competitors[1];
+    expect(() => { away.name = away.name.trim(); }).toThrow(TypeError);
+    expect(() => { leeds.markets["1"][""]["1"].k = "9.99"; }).toThrow(TypeError);
+    expect(() => Object.assign(leeds.markets, { "29": {} })).toThrow(TypeError);
+    expect(() => leeds.desc.competitors.push({ id: "0", name: "x" })).toThrow(TypeError);
+    expect(() => { delete s.events["2725816334213586962"]; }).toThrow(TypeError);
+    expect(() => { s.tournaments["1669818860469096448"].slug = "x"; }).toThrow(TypeError);
+
+    const again = await c.fetchSnapshot();
+    expect(again).toBe(s);
+    const leedsAgain = again.events["2725816334213586962"];
+    expect(leedsAgain.desc.competitors.map((x) => x.name)).toEqual(["Leeds United", "Tottenham Hotspur "]);
+    expect(leedsAgain.markets).toEqual(loadJson("betters", "snapshot-trimmed.json").chunks
+      .find((ch: { requestedVersion: number }) => ch.requestedVersion === 1793982002416).events["2725816334213586962"].markets);
+    expect(again.tournaments["1669818860469096448"].slug).toBe("premier-league");
+  });
+
+  it("the cached descriptions are deep-frozen too", async () => {
+    // Shared for 6 h by every event of every run.
+    const c = new BetbyClient(BETBY_BRANDS.betters, { fetchText: createEvidenceFetch("betters"), now: () => 0 });
+    const d = await c.fetchDescriptions();
+    expect(unfrozenPaths(d)).toEqual([]);
+    expect(() => { d["1"].name = "x"; }).toThrow(TypeError);
+    expect((await c.fetchDescriptions())["1"].name).toBe("1x2");
   });
 
   it("a body that is not JSON, or descriptions that are not an object, name the endpoint", async () => {

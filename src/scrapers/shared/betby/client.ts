@@ -9,6 +9,11 @@
  * fetched in parallel right after the manifest, the chain is validated, and one retry uses
  * a fresh manifest. A partial snapshot is never returned, because it would silently drop
  * matches.
+ *
+ * The cached snapshot and descriptions are deep-frozen: every caller within the TTL gets the
+ * same object, so an in-place edit (a trimmed team name, merged markets) would leak into the
+ * next league's scrape. Frozen, such an edit throws at once, because ES modules run in
+ * strict mode.
  */
 import { resolveEndpoints } from "./discovery.js";
 import { BetbyHttpError, createFetchText, hostAndPath } from "./http.js";
@@ -93,6 +98,19 @@ function chainProblems(versions: number[], chunks: unknown[]): string[] {
   return problems;
 }
 
+/**
+ * Freezes a parsed JSON value and every object and array inside it, in place. A subtree that
+ * is already frozen is skipped.
+ */
+function deepFreeze<T>(value: T): T {
+  if (typeof value === "object" && value !== null && !Object.isFrozen(value)) {
+    Object.freeze(value);
+    for (const child of Object.values(value)) deepFreeze(child);
+  }
+  return value;
+}
+
+/** Merges the chunks into one snapshot and deep-freezes it, because the cache shares it. */
 function mergeChunks(manifestVersion: number, chunks: BetbyEnvelope[]): BetbySnapshot {
   const snapshot: BetbySnapshot = { manifestVersion, events: {}, categories: {}, tournaments: {} };
   for (const chunk of chunks) {
@@ -100,7 +118,7 @@ function mergeChunks(manifestVersion: number, chunks: BetbyEnvelope[]): BetbySna
     Object.assign(snapshot.categories, chunk.categories);
     Object.assign(snapshot.tournaments, chunk.tournaments);
   }
-  return snapshot;
+  return deepFreeze(snapshot);
 }
 
 export class BetbyClient {
@@ -163,7 +181,7 @@ export class BetbyClient {
       if (!isRecord(json)) {
         throw new Error(`Betby ${this.brand.bookmaker}: market descriptions from ${hostAndPath(url)} are not a JSON object`);
       }
-      return json as BetbyMarketDescriptions;
+      return deepFreeze(json as BetbyMarketDescriptions);
     });
   }
 

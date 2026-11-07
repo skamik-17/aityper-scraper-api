@@ -82,6 +82,29 @@ describe("betclic OPTA offsides/fouls and penalty ANY", () => {
     }
   });
 
+  // FIRST_OFFSIDE has no distinct-sides guard of its own: it stays correct in
+  // derbies only because normalizeFirstCardSelection tests the full home and
+  // away names before the shared 1X2 fallback. These rows pin that order with
+  // full, short and abbreviated labels in both leg orders; routing the market
+  // through the one-shared-word 1X2 matcher would put both team legs on HOME.
+  type FirstOffsideRow = [home: string, away: string, legs: [string, number, string][]];
+  const FIRST_OFFSIDE_DERBY_ROWS: FirstOffsideRow[] = [
+    ["Newcastle United", "Manchester United", [["Newcastle United", 2.1, "HOME"], ["Manchester United", 1.7, "AWAY"]]],
+    ["Newcastle United", "Manchester United", [["Manchester United", 1.7, "AWAY"], ["Newcastle United", 2.1, "HOME"]]],
+    ["Newcastle United", "Manchester United", [["Man Utd", 1.7, "AWAY"], ["Newcastle", 2.1, "HOME"], ["Nikt", 150, "NONE"]]],
+    ["Manchester United", "Manchester City", [["Manchester City", 1.6, "AWAY"], ["Manchester United", 2.3, "HOME"]]],
+    ["Hull City", "Manchester City", [["Manchester City", 1.5, "AWAY"], ["Hull", 2.5, "HOME"]]],
+  ];
+  it.each(FIRST_OFFSIDE_DERBY_ROWS)("codes FIRST_OFFSIDE legs by side in derby #%#: %s v %s", (homeTeam, awayTeam, legs) => {
+    const out = betclicNormalizer.normalizeMarket(
+      { name: "Pierwsza drużyna, która zostanie złapana na pozycji spalonej w meczu", selections: legs.map(([name, odds]) => ({ name, odds })) },
+      { homeTeam, awayTeam, league: "premier-league" },
+    );
+    expect(out?.marketCode).toBe("FIRST_OFFSIDE");
+    expect(out?.marketKey).toBe("FIRST_OFFSIDE");
+    expect(out?.selections.map((s) => [s.label, s.code, s.odds])).toEqual(legs.map(([name, odds, code]) => [name, code, odds]));
+  });
+
   // Leg order is not fixed on Betclic (the evidence lists "Odbiory 1X2" away
   // first), so an unambiguous away-first offer must still publish.
   it("still codes an away-first Spalone 1X2 offer when the sides are distinct", () => {

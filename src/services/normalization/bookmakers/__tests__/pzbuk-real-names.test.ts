@@ -27,7 +27,19 @@ const rows: Row[] = [
   ["8", "2. gol", "0", [["Everton FC", 2.1], ["żaden", 5.0], ["Coventry City", 3.2]], "OTHER"],
   ["57", "1. Połowa - 2. gol", "0", [["Everton FC", 2.9], ["żaden", 1.9], ["Coventry City", 4.4]], "OTHER"],
   ["92", "Kiedy zostanie strzelony 2. gol (10 min interwał)", "0", [["1-10", 9.1], ["żaden", 2.2]], "OTHER"],
+  // unrendered ordinal templates: a blank market.name makes the parser fall back to marketType.name
+  // (parser.ts apiName), which still holds the template, so the live ordinal is unknown. Names are the
+  // captured marketType.name values (ws-event-frames.json) and selections are the captured "1." odds;
+  // the pairing is synthetic (no blank market.name has been observed).
+  ["8", "{SpecialIntValue1}. gol", "0", [["Everton FC", 1.5], ["żaden", 12.77], ["Coventry City", 2.75]], "OTHER"],
+  ["36", "{SpecialIntValue1}. strzelec gola", "0", SCORERS, "OTHER"],
+  ["57", "1. Połowa - {SpecialIntValue1}. gol", "0", [["Everton FC", 1.95], ["żaden", 3.14], ["Coventry City", 3.73]], "OTHER"],
+  ["77", "2. Połowa - {SpecialIntValue1}. gol", "0", [["Everton FC", 1.8], ["żaden", 4.22], ["Coventry City", 3.24]], "OTHER"],
+  ["91", "Kiedy zostanie strzelony {SpecialIntValue1}. gol (15 min interwał)", "0", [["1-15", 2.8], ["16-30", 3.59], ["31-45", 4.52], ["46-60", 7.87], ["61-75", 11.56], ["76-90", 14.75], ["żaden", 12.05]], "OTHER"],
+  ["92", "Kiedy zostanie strzelony {SpecialIntValue1}. gol (10 min interwał)", "0", [["1-10", 4.03], ["11-20", 4.52], ["21-30", 5.71], ["31-40", 7.28]], "OTHER"],
+  ["140", "1. Połowa - {SpecialIntValue1}. kartka", "0", [["Everton FC", 2.55], ["żaden", 3.29], ["Coventry City", 2.2]], "OTHER"],
   // regression guards: must not move
+  ["77", "2. Połowa - 1. gol", "0", [["Everton FC", 1.8], ["żaden", 4.22], ["Coventry City", 3.24]], "SECOND_HALF_FIRST_GOAL", ["NONE", 4.22]],
   ["1", "1x2", "0", [["Everton FC", 1.66], ["Remis", 3.92], ["Coventry City", 4.91]], "MATCH_WINNER", ["HOME", 1.66]],
   ["10", "Podwójna szansa", "0", [["Everton FC lub remis", 1.19], ["Everton FC lub Coventry City", 1.26], ["remis lub Coventry City", 2.13]], "DOUBLE_CHANCE", ["HOME_OR_DRAW", 1.19]],
   ["11", "Remis bez zakładu", "0", [["Everton FC", 1.26], ["Coventry City", 3.53]], "DRAW_NO_BET", ["AWAY", 3.53]],

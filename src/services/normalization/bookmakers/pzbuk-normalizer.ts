@@ -473,6 +473,13 @@ const PZBUK_NAME_OVERRIDES: Array<{
   // never lands in a first-goal/first-scorer code. "2. Połowa - ..." is not
   // caught: "Połowa" follows that ordinal.
   { pattern: /(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i, code: "OTHER" },
+  // Unrendered {SpecialIntValue} template, e.g. "1. Połowa - {SpecialIntValue1}.
+  // gol". The parser falls back to marketType.name when market.name is blank,
+  // and that field keeps the template, so the live ordinal (or threshold) is
+  // unknown. Without this entry ids 57/77/91/92 would reach their first-goal
+  // codes by id whatever the ordinal is. A market with no market object at all
+  // still gets the parser's id label and routes by id (open owner decision).
+  { pattern: /\{SpecialIntValue\d*\}/i, code: "OTHER" },
   // "W jaki sposób rozstrzygnie się mecz?" (regular time / extra time /
   // penalties) — catalog code added in round 1; must not land in
   // ASIAN_HANDICAP

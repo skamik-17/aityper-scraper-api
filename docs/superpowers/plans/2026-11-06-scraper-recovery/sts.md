@@ -75,7 +75,7 @@ Prices: r=17 stat lines match peers (Arsenal corners O6.5 STS 1.6 vs betclic 1.6
 
 **RC5 - tournament filter is a substring match.** `parser.ts:83` (`countryName.includes("angli")`) also accepts category 249 "Anglia Amatorzy"; `parser.ts:88` (`includes("premier league")`) accepts "Northern Premier League - Premier Division" (10 fixtures) and "Premier League 2" (6 U21 fixtures). `parseFixtures(i_pl, "premier-league")` returns 36 instead of 20; each extra fixture costs a page navigation. PL is tournament key `17` in category `1` ("Anglia"); `LEAGUE_CONFIG["premier-league"].tournamentId` is also 17 (`constants.ts:39`). Tournament keys alone are not unique: `ligue-1` (`constants.ts:57`) and `world-cup-2026` (`constants.ts:69`) are both 16, in different categories. A strict filter must therefore check the category key as well. `i_pl` lists 21 entries under `C["1"].T["17"].FX`, and 20 of them have home/away names (the 21st has no `H`).
 
-**Pre-existing since <= August: O/U lines collapse.** `constants.ts:222-245` (`OVER_UNDER_LINE_MARKET_IDS`) lacks 185 "Liczba kartek" (5 lines), 228 "Liczba rzutów rożnych" (5), 206 / 247 first-half cards / corners (3 each), so the name-based dedup in `parseAllMarkets` keeps one line: the API shows STS `CARDS_TOTAL` only at 1.5 today (Aug: only 5.5) and `CORNERS_TOTAL` only at 10.5, while peers quote 6-20 lines. 188/191/231/234 (RC4) share the problem.
+**Pre-existing since <= August: O/U lines collapse.** `constants.ts:222-245` (`OVER_UNDER_LINE_MARKET_IDS`) lacks 185 "Liczba kartek" (5 lines), 228 "Liczba rzutów rożnych" (5), 206 / 247 first-half cards / corners (3 each for Arsenal vs Hull City; Leeds vs Tottenham has 4 first-half cards lines), so the name-based dedup in `parseAllMarkets` keeps one line: the API shows STS `CARDS_TOTAL` only at 1.5 today (Aug: only 5.5) and `CORNERS_TOTAL` only at 10.5, while peers quote 6-20 lines. 188/191/231/234 (RC4) share the problem.
 
 ### What still works and must not break
 
@@ -121,6 +121,7 @@ Prices: r=17 stat lines match peers (Arsenal corners O6.5 STS 1.6 vs betclic 1.6
 - Leeds vs Tottenham: normalized >= 510. Estimate 524; today 341.
 - OTHER <= 2 per match. Only ids 197/198 `<1./2.> drużyna - czerwona kartka` remain, mapped to OTHER on purpose at `sts-normalizer.ts:206-207`. Today OTHER is 117 / 111.
 - All 12 required codes are present (today all 12 are missing): `GOALSCORER_ANYTIME`, `PLAYER_SHOTS`, `PLAYER_SHOTS_ON_TARGET`, `PLAYER_ASSISTS`, `PLAYER_CARDS`, `PLAYER_GOAL_OR_ASSIST`, `FIRST_PLAYER_CARDED`, `PLAYER_RED_CARD`, `CARDS_TEAM`, `CORNERS_TEAM`, `EACH_TEAM_TOTAL_CORNERS_OVER`, `EACH_TEAM_TOTAL_CARDS_OVER`.
+- The exact cards/corners total line sets per case (`CARDS_TOTAL`, `CORNERS_TOTAL`, `HALF_TIME_CARDS_TOTAL`, `HALF_TIME_CORNERS_TOTAL`; Task 7 Step 1 lists them), each entry `+L` = OVER and `-L` = UNDER, and no two non-OTHER entries share a (marketKey, selection code). The count bars alone cannot catch a re-collapse: losing the 12 Arsenal / 13 Leeds extra lines leaves ~525 >= 520. `parse-all-markets-2026-11.test.ts` (Task 4) pins every line's prices as well.
 - Plus: `npx tsc --noEmit` exits 0, `npx vitest run` is green, and golden `-t sts` prints `failures=0` for both STS fixtures.
 
 **B. Live smoke (single bookmaker, no DB writes).** Run it from the **worktree root** (`$WT`, see Global Constraints), using the smoke copy inside the worktree, because the script resolves `REPO` six directories above its own location. Run it only when no scheduled scrape is in flight, i.e. the last `[Scheduler] Starting scheduled scrape` line in the cleaned log is already followed by `[Scheduler] premier-league completed`:
@@ -486,6 +487,8 @@ it("keeps every cards/corners total line", () => {
 });
 ```
 
+Review fix round 1 adds a normalized block to the same file: for both snapshots (production call shape: fixture frame + `i_pl`, canonical team names) it pins the exact `CARDS_TOTAL` / `CORNERS_TOTAL` / `HALF_TIME_CARDS_TOTAL` / `HALF_TIME_CORNERS_TOTAL` line sets, every line's `+L` = OVER / `-L` = UNDER prices (checked against the raw frames), and that no two non-OTHER entries share a (marketKey, selection code). Tasks 5-6 keep it green.
+
 - [ ] **Step 2: Run and confirm failure**
 
 Run: `npx vitest run src/scrapers/bookmakers/sts/__tests__/parse-all-markets-2026-11.test.ts`
@@ -509,7 +512,7 @@ git commit -m "fix(sts): keep every cards and corners over/under line"
 
 **Files:**
 - Modify: `src/scrapers/bookmakers/sts/types.ts:148-155` (`P` entry gains `f?: string; r?: number`)
-- Modify: `src/scrapers/bookmakers/sts/constants.ts` (two new sets)
+- Modify: `src/scrapers/bookmakers/sts/constants.ts` (two new sets; reword the comment above 188/191/231/234 in `OVER_UNDER_LINE_MARKET_IDS`)
 - Modify: `src/scrapers/bookmakers/sts/parser.ts:286-293` (`parseAllMarkets` source collection)
 - Test: `src/scrapers/bookmakers/sts/__tests__/parse-all-markets-2026-11.test.ts`
 
@@ -538,14 +541,35 @@ it("skips the r=17 penalty-type markets (open question 2)", () => {
 it("does not read the r=12 '(z dogrywką)' group", () => {
   expect(byId("2414")).toHaveLength(0);
 });
+it("normalizes the r=17 team cards/corners lines, side from the market name", () => {
+  // normalizeMarketsForBookmaker is already imported in this file (Task 4 fix round 1)
+  const n = normalizeMarketsForBookmaker(markets, "sts", "Arsenal", "Hull City", "premier-league");
+  expect(n.filter((m) => m.normalizedType === "CARDS_TEAM" || m.normalizedType === "CORNERS_TEAM")
+    .map((m) => `${m.bookmakerMarketId} ${m.marketKey} ${m.selections.map((s) => `${s.name}=${s.normalizedName}@${s.odds}`).join(" ")}`)
+    .sort()).toEqual([
+    "188 CARDS_TEAM:0.5 +0.5=HOME_OVER@1.5 -0.5=HOME_UNDER@2.35",
+    "188 CARDS_TEAM:1.5 +1.5=HOME_OVER@3.4 -1.5=HOME_UNDER@1.28",
+    "191 CARDS_TEAM:0.5 +0.5=AWAY_OVER@1.1 -0.5=AWAY_UNDER@6.2",
+    "191 CARDS_TEAM:1.5 +1.5=AWAY_OVER@1.55 -1.5=AWAY_UNDER@2.35",
+    "191 CARDS_TEAM:2.5 +2.5=AWAY_OVER@2.55 -2.5=AWAY_UNDER@1.45",
+    "231 CORNERS_TEAM:HOME:6.5 +6.5=OVER@1.6 -6.5=UNDER@2.2",
+    "231 CORNERS_TEAM:HOME:7.5 +7.5=OVER@2 -7.5=UNDER@1.7",
+    "231 CORNERS_TEAM:HOME:8.5 +8.5=OVER@2.7 -8.5=UNDER@1.4",
+    "234 CORNERS_TEAM:AWAY:1.5 +1.5=OVER@1.27 -1.5=UNDER@3.5",
+    "234 CORNERS_TEAM:AWAY:2.5 +2.5=OVER@1.75 -2.5=UNDER@1.9",
+    "234 CORNERS_TEAM:AWAY:3.5 +3.5=OVER@2.7 -3.5=UNDER@1.42",
+  ]);
+});
 ```
+
+The last test pins the normalized output, so a side flip or a missing `HOME:`/`AWAY:` param fails here and not only in the live sanity check. The values were checked in Task 4 fix round 1 against the raw r=17 frame (outcome `n`/`O` read straight from the JSON) and against a simulation of this task's source collection run through the Task 3 normalizer. CARDS_TEAM:1.5 has both sides (188 HOME_*, 191 AWAY_*), CARDS_TEAM:0.5 has both sides, CARDS_TEAM:2.5 is AWAY only (188 has 2 lines, 191 has 3). The Task 5 reviewer confirms these values against the committed test. Task 4's `never publishes two prices for one (marketKey, selection)` test must stay green with the r=17 entries added (simulated: 0 duplicates).
 
 - [ ] **Step 2: Run and confirm failure**
 
 Run: `npx vitest run src/scrapers/bookmakers/sts/__tests__/parse-all-markets-2026-11.test.ts`
-Expected: FAIL - `byId("231")` / `188` / `191` / `234` / `1287` / `2287` have length 0. The 1413/1899/2131 and 2414 guards already pass.
+Expected: FAIL - `byId("231")` / `188` / `191` / `234` / `1287` / `2287` have length 0, and the normalized team-lines test gets `[]`. The 1413/1899/2131 and 2414 guards already pass.
 
-- [ ] **Step 3: Implement**: `parseAllMarkets` collects `1m${stsId}` plus the fixture's extra-group entries from each source and skips excluded ids. The extra entries inherit the existing per-line handling, so with Task 4's ids the O/U names get line suffixes.
+- [ ] **Step 3: Implement**: `parseAllMarkets` collects `1m${stsId}` plus the fixture's extra-group entries from each source and skips excluded ids. The extra entries inherit the existing per-line handling, so with Task 4's ids the O/U names get line suffixes. In the same commit, reword the comment above 188/191/231/234 in `OVER_UNDER_LINE_MARKET_IDS` (`constants.ts`, currently "Team cards/corners totals from the r=17 team-stats group (inert until parseAllMarkets reads that group)") to "Team cards/corners totals from the r=17 team-stats group, read via STS_EXTRA_GROUP_TYPES". This task makes the "inert" wording stale.
 
 - [ ] **Step 4: Run tests**
 
@@ -651,11 +675,16 @@ git commit -m "fix(sts): fold per-player scorer/card lines back into dropdowns"
 const REQUIRED = ["GOALSCORER_ANYTIME", "PLAYER_SHOTS", "PLAYER_SHOTS_ON_TARGET", "PLAYER_ASSISTS", "PLAYER_CARDS",
   "PLAYER_GOAL_OR_ASSIST", "FIRST_PLAYER_CARDED", "PLAYER_RED_CARD", "CARDS_TEAM", "CORNERS_TEAM",
   "EACH_TEAM_TOTAL_CORNERS_OVER", "EACH_TEAM_TOTAL_CARDS_OVER"];
+// Cards/corners total line sets per snapshot (Task 4). Every line's prices are pinned in parse-all-markets-2026-11.test.ts.
 const CASES = [
-  { id: "f2921898", file: "f_f2921898_pl.arsenal-hull.snapshot.txt", home: "Arsenal", away: "Hull City", minNormalized: 520 },        // est. 537, today 350
-  { id: "f2921896", file: "f_f2921896_pl.leeds-tottenham.snapshot.txt", home: "Leeds United", away: "Tottenham Hotspur", minNormalized: 510 }, // est. 524, today 341
+  { id: "f2921898", file: "f_f2921898_pl.arsenal-hull.snapshot.txt", home: "Arsenal", away: "Hull City", minNormalized: 520,        // est. 537, today 350
+    totals: { CARDS_TOTAL: ["0.5", "1.5", "2.5", "3.5", "4.5"], CORNERS_TOTAL: ["8.5", "9.5", "10.5", "11.5", "12.5"],
+      HALF_TIME_CARDS_TOTAL: ["0.5", "1.5", "2.5"], HALF_TIME_CORNERS_TOTAL: ["3.5", "4.5", "5.5"] } },
+  { id: "f2921896", file: "f_f2921896_pl.leeds-tottenham.snapshot.txt", home: "Leeds United", away: "Tottenham Hotspur", minNormalized: 510, // est. 524, today 341
+    totals: { CARDS_TOTAL: ["2.5", "3.5", "4.5", "5.5", "6.5"], CORNERS_TOTAL: ["7.5", "8.5", "9.5", "10.5", "11.5"],
+      HALF_TIME_CARDS_TOTAL: ["0.5", "1.5", "2.5", "3.5"], HALF_TIME_CORNERS_TOTAL: ["3.5", "4.5", "5.5"] } },
 ];
-it.each(CASES)("replay $home vs $away: full STS offer normalizes", ({ id, file, home, away, minNormalized }) => {
+it.each(CASES)("replay $home vs $away: full STS offer normalizes", ({ id, file, home, away, minNormalized, totals }) => {
   const ipl = parseWebSocketJson(fx("i_pl.trimmed.txt"))!;
   const fixture = parseFixtures(ipl, "premier-league").find((f) => f.id === id)!;
   const raw = parseAllMarkets(fixture, parseWebSocketJson(fx(file)), ipl);     // same call shape as index.ts:325
@@ -665,8 +694,25 @@ it.each(CASES)("replay $home vs $away: full STS offer normalizes", ({ id, file, 
   expect(other.length).toBeLessThanOrEqual(2);                                  // only 197/198 (mapped OTHER on purpose); today 117 / 111
   const codes = new Set(n.map((m) => m.normalizedType));
   for (const code of REQUIRED) expect(codes.has(code), code).toBe(true);        // today all 12 missing
+  // Every cards/corners total line stays its own entry (Task 4): the count bars above would still pass a re-collapse (~525)
+  for (const [code, lines] of Object.entries(totals)) {
+    const entries = n.filter((m) => m.normalizedType === code);
+    expect(entries.map((m) => m.marketKey).sort(), code).toEqual(lines.map((l) => `${code}:${l}`).sort());
+    for (const m of entries) {
+      const line = m.marketKey!.slice(code.length + 1);
+      expect(m.selections.map((s) => [s.name, s.normalizedName]), m.marketKey).toEqual([[`+${line}`, "OVER"], [`-${line}`, "UNDER"]]);
+    }
+  }
+  if (id === "f2921898") expect(n.find((m) => m.marketKey === "CARDS_TOTAL:2.5")!.selections.map((s) => [s.normalizedName, s.odds]))
+    .toEqual([["OVER", 1.6], ["UNDER", 2.2]]);
+  // One price per (marketKey, selection code) among non-OTHER entries
+  const keys = n.filter((m) => m.normalizedType !== "OTHER").flatMap((m) => m.selections.map((s) => `${m.marketKey}|${s.normalizedName}`));
+  const seen = new Set<string>();
+  expect(keys.filter((k) => { if (seen.has(k)) return true; seen.add(k); return false; })).toEqual([]);
 });
 ```
+
+The cards/corners and duplicate assertions run after the count bars, so Step 2's first failure messages are unchanged (`expected 350 ...` / `expected 341 ...`).
 
 - [ ] **Step 2: Prove the gate bites, then restore**
 
@@ -702,9 +748,9 @@ The run was proven today into a scratch out-dir on the pre-fix parse: entries 46
 
 - [ ] **Step 5: Review, then bless the two policy-held dropdowns**
 
-1. Print the expected entries for the ids this plan touches. For each, check `marketCode`/`marketKey` and the Crooks Matt / team-line selections against Task 3's table; the odds are the same snapshot values.
-   - ids: 2435, 2012, 2436, 2291, 2153, 2003, 2008, 2146, 188, 191, 231, 234, 1287, 2287, 185, 228.
-   - command: `python3 -I -c "import json;e=json.load(open('src/services/normalization/__fixtures__/sts/premier-league_arsenal_hull_city.expected.json'));f=json.load(open('src/services/normalization/__fixtures__/sts/premier-league_arsenal_hull_city.json'));raw={x['index']:x['raw'] for x in f['entries']};ids={'2435','2012','2436','2291','2153','2003','2008','2146','188','191','231','234','1287','2287','185','228'};[print(raw[x['index']]['bookmakerMarketId'],x['blessed'],x['expected'] and (x['expected']['marketKey'],x['expected']['selections'][:2])) for x in e['entries'] if raw[x['index']]['bookmakerMarketId'] in ids]"`
+1. Print the expected entries for the ids this plan touches. For each, check `marketCode`/`marketKey` and the Crooks Matt / team-line selections against Task 3's table, and the 185/206/228/247 lines against the Arsenal line table in `parse-all-markets-2026-11.test.ts` (Task 4); the odds are the same snapshot values.
+   - ids: 2435, 2012, 2436, 2291, 2153, 2003, 2008, 2146, 188, 191, 231, 234, 1287, 2287, 185, 228, 206, 247.
+   - command: `python3 -I -c "import json;e=json.load(open('src/services/normalization/__fixtures__/sts/premier-league_arsenal_hull_city.expected.json'));f=json.load(open('src/services/normalization/__fixtures__/sts/premier-league_arsenal_hull_city.json'));raw={x['index']:x['raw'] for x in f['entries']};ids={'2435','2012','2436','2291','2153','2003','2008','2146','188','191','231','234','1287','2287','185','228','206','247'};[print(raw[x['index']]['bookmakerMarketId'],x['blessed'],x['expected'] and (x['expected']['marketKey'],x['expected']['selections'][:2])) for x in e['entries'] if raw[x['index']]['bookmakerMarketId'] in ids]"`
 2. If any of them disagrees with the table, stop. That is a bug to fix (failing test first), not something to bless.
 3. Once they all match, refresh and force-bless only the two policy-held dropdowns: re-run Step 4's command with `--bless "Zawodnik - strzeli gola" --bless "Zawodnik - otrzyma kartkę"`. Exact raw-name match hits only the folded 2435 / 2012 markets. Every other entry stays byte-identical.
 
@@ -737,6 +783,11 @@ git commit -m "test(sts): offline replay gate and Arsenal vs Hull City golden pa
   3. `tsx watch` restarts the service and runs a startup scrape.
 - [ ] **Step 3: Three STS runs** - after >= 3 completed STS runs past `S`, run Acceptance C (`sts-run-check.py "$LOG" "$S"`). Expect `"pass": true`, exit 0.
 - [ ] **Step 4: API sanity** - pick any match with STS `raw >= 400` in the latest run (from the run's `[STS/FullOffer] <H> vs <A>: N markets` lines, or the smoke's `perMatch`) and run Acceptance D. Expect `"pass": true`, exit 0. The five matches left at 1 row (Observations) must be back to a full offer, unless they have already kicked off.
+  - Under EXECUTION.md (owner decision 1 keeps `master` untouched; rule 4 defers live checks that need a persisted scrape), Steps 2-4 cannot run in this recovery, and Step 1 is the only live step. The Task 8 report records Acceptance D as **DEFERRED**, with:
+    - command: `python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/sts/api-sanity.py "<Home>" "<Away>" sts`, for any match with STS raw >= 400 after the owner's merge and a scheduled run;
+    - expected: `SANITY_RESULT {... "pass": true ...}` with `cards_total_ok: true` and 4-5 `cards_total_lines`, exit 0;
+    - expected live shape per full-offer match: `CARDS_TOTAL` 5 lines, `CORNERS_TOTAL` 5, `HALF_TIME_CARDS_TOTAL` 3-4, `HALF_TIME_CORNERS_TOTAL` 3 (the snapshots: Arsenal 5/5/3/3, Leeds 5/5/4/3).
+  - No live check covers those line counts. The smoke reports only per-match counts and code presence, and `api-sanity.py` checks only `CARDS_TOTAL` (>= 4 lines). The calendar-independent pin for all four codes is offline: the line table in `parse-all-markets-2026-11.test.ts` (Task 4) and the replay test's `totals` (Task 7).
 - [ ] **Step 5: Clean up** - `git -C "$REPO" worktree remove "$WT"` (superpowers:finishing-a-development-branch). Keep `$EVID`.
 
 ## What to monitor after the fix

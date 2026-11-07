@@ -1,0 +1,3657 @@
+{
+  "bookmaker": "lvbet",
+  "ctx": {
+    "awayTeam": "Hull City",
+    "homeTeam": "Arsenal",
+    "league": "premier-league",
+    "leagueName": "premier-league"
+  },
+  "entries": [
+    {
+      "index": 71,
+      "raw": {
+        "bookmakerMarketId": "2020",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Rezultat lub ilość bramek (2.5) 2.5",
+        "selections": [
+          {
+            "externalId": "bc:7392423999",
+            "name": "Arsenal lub powyżej (2.5)",
+            "odds": 1.09
+          },
+          {
+            "externalId": "bc:7392424001",
+            "name": "Arsenal lub poniżej (2.5)",
+            "odds": 1.03
+          },
+          {
+            "externalId": "bc:7392424003",
+            "name": "Remis lub powyżej (2.5)",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7392424005",
+            "name": "Remis lub poniżej (2.5)",
+            "odds": 2.17
+          },
+          {
+            "externalId": "bc:7392424007",
+            "name": "Hull City lub powyżej (2.5)",
+            "odds": 1.42
+          },
+          {
+            "externalId": "bc:7392424009",
+            "name": "Hull City lub poniżej (2.5)",
+            "odds": 2.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 118,
+      "raw": {
+        "bookmakerMarketId": "5196",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "1. połowa - Liczba goli (3-drogowo) 1",
+        "selections": [
+          {
+            "externalId": "bc:7392429448",
+            "name": "Powyżej (1.0)",
+            "odds": 2.25
+          },
+          {
+            "externalId": "bc:7392429449",
+            "name": "Dokładnie (1.0)",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bc:7392429450",
+            "name": "Poniżej (1.0)",
+            "odds": 3.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 394,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Abdulkadir Omur",
+        "selections": [
+          {
+            "externalId": "bc:7444767967",
+            "name": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7444767830",
+            "name": "Powyzej 1.5",
+            "odds": 2.25
+          },
+          {
+            "externalId": "bc:7444768004",
+            "name": "Powyzej 2.5",
+            "odds": 5.1
+          },
+          {
+            "externalId": "bc:7444768005",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 395,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Ben White",
+        "selections": [
+          {
+            "externalId": "bc:7444768011",
+            "name": "Powyzej 0.5",
+            "odds": 1.6
+          },
+          {
+            "externalId": "bc:7444768012",
+            "name": "Powyzej 1.5",
+            "odds": 3.9
+          },
+          {
+            "externalId": "bc:7444768013",
+            "name": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7444768014",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 396,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Brooke Norton-Cuffy",
+        "selections": [
+          {
+            "externalId": "bc:7444768032",
+            "name": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7444768031",
+            "name": "Powyzej 1.5",
+            "odds": 2.37
+          },
+          {
+            "externalId": "bc:7444768030",
+            "name": "Powyzej 2.5",
+            "odds": 5.5
+          },
+          {
+            "externalId": "bc:7444768029",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 397,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Bruno Guimaraes",
+        "selections": [
+          {
+            "externalId": "bc:7444768035",
+            "name": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "externalId": "bc:7444768028",
+            "name": "Powyzej 1.5",
+            "odds": 2.05
+          },
+          {
+            "externalId": "bc:7444768026",
+            "name": "Powyzej 2.5",
+            "odds": 4.4
+          },
+          {
+            "externalId": "bc:7444768025",
+            "name": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 398,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Christos Mouzakitis",
+        "selections": [
+          {
+            "externalId": "bc:7444767974",
+            "name": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7444767975",
+            "name": "Powyzej 1.5",
+            "odds": 2.15
+          },
+          {
+            "externalId": "bc:7444767976",
+            "name": "Powyzej 2.5",
+            "odds": 4.35
+          },
+          {
+            "externalId": "bc:7444767977",
+            "name": "Powyzej 3.5",
+            "odds": 9.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 399,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Christos Tzolis",
+        "selections": [
+          {
+            "externalId": "bc:7444767978",
+            "name": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "externalId": "bc:7444767979",
+            "name": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "bc:7444767980",
+            "name": "Powyzej 2.5",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7444767981",
+            "name": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 400,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "David Raya",
+        "selections": [
+          {
+            "externalId": "bc:7444767990",
+            "name": "Powyzej 0.5",
+            "odds": 7.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 401,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Declan Rice",
+        "selections": [
+          {
+            "externalId": "bc:7444767991",
+            "name": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "externalId": "bc:7444767992",
+            "name": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "bc:7444767993",
+            "name": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "externalId": "bc:7444767994",
+            "name": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 402,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Eberechi Eze",
+        "selections": [
+          {
+            "externalId": "bc:7444767996",
+            "name": "Powyzej 0.5",
+            "odds": 1.57
+          },
+          {
+            "externalId": "bc:7444767997",
+            "name": "Powyzej 1.5",
+            "odds": 3.75
+          },
+          {
+            "externalId": "bc:7444767998",
+            "name": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7444767999",
+            "name": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 403,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Elliot Stroud",
+        "selections": [
+          {
+            "externalId": "bc:7444768074",
+            "name": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "externalId": "bc:7444768075",
+            "name": "Powyzej 1.5",
+            "odds": 2.1
+          },
+          {
+            "externalId": "bc:7444768076",
+            "name": "Powyzej 2.5",
+            "odds": 4.6
+          },
+          {
+            "externalId": "bc:7444768077",
+            "name": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 404,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Ezri Konsa",
+        "selections": [
+          {
+            "externalId": "bc:7444768082",
+            "name": "Powyzej 0.5",
+            "odds": 1.55
+          },
+          {
+            "externalId": "bc:7444768083",
+            "name": "Powyzej 1.5",
+            "odds": 3.7
+          },
+          {
+            "externalId": "bc:7444768084",
+            "name": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7444768085",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 405,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Gabriel",
+        "selections": [
+          {
+            "externalId": "bc:7444768086",
+            "name": "Powyzej 0.5",
+            "odds": 1.55
+          },
+          {
+            "externalId": "bc:7444768087",
+            "name": "Powyzej 1.5",
+            "odds": 3.55
+          },
+          {
+            "externalId": "bc:7444768088",
+            "name": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "externalId": "bc:7444768089",
+            "name": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 406,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Hidemasa Morita",
+        "selections": [
+          {
+            "externalId": "bc:7444768109",
+            "name": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7444768107",
+            "name": "Powyzej 1.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "bc:7444768105",
+            "name": "Powyzej 2.5",
+            "odds": 3.25
+          },
+          {
+            "externalId": "bc:7444768117",
+            "name": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      }
+    },
+    {
+      "index": 407,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Jack Butland",
+        "selections": [
+          {
+            "externalId": "bc:7444768072",
+            "name": "Powyzej 0.5",
+            "odds": 26
+          }
+        ]
+      }
+    },
+    {
+      "index": 408,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Jens Hjerto Dahl",
+        "selections": [
+          {
+            "externalId": "bc:7444768047",
+            "name": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "externalId": "bc:7444768048",
+            "name": "Powyzej 1.5",
+            "odds": 2.05
+          },
+          {
+            "externalId": "bc:7444768049",
+            "name": "Powyzej 2.5",
+            "odds": 4.3
+          },
+          {
+            "externalId": "bc:7444768050",
+            "name": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 409,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Joe Gelhardt",
+        "selections": [
+          {
+            "externalId": "bc:7444768051",
+            "name": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "externalId": "bc:7444768052",
+            "name": "Powyzej 1.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "bc:7444768053",
+            "name": "Powyzej 2.5",
+            "odds": 3.7
+          },
+          {
+            "externalId": "bc:7444768054",
+            "name": "Powyzej 3.5",
+            "odds": 8.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 410,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "John Egan",
+        "selections": [
+          {
+            "externalId": "bc:7444768055",
+            "name": "Powyzej 0.5",
+            "odds": 1.5
+          },
+          {
+            "externalId": "bc:7444768069",
+            "name": "Powyzej 1.5",
+            "odds": 3.3
+          },
+          {
+            "externalId": "bc:7444768068",
+            "name": "Powyzej 2.5",
+            "odds": 9
+          },
+          {
+            "externalId": "bc:7444768067",
+            "name": "Powyzej 3.5",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 411,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Jurrien Timber",
+        "selections": [
+          {
+            "externalId": "bc:7444768063",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444768061",
+            "name": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "bc:7444768060",
+            "name": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "externalId": "bc:7444768059",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 412,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Kai Havertz",
+        "selections": [
+          {
+            "externalId": "bc:7444768058",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444768057",
+            "name": "Powyzej 1.5",
+            "odds": 2.42
+          },
+          {
+            "externalId": "bc:7444768056",
+            "name": "Powyzej 2.5",
+            "odds": 5.7
+          },
+          {
+            "externalId": "bc:7444767969",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 413,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Konstantinos Tzolakis",
+        "selections": [
+          {
+            "externalId": "bc:7444767872",
+            "name": "Powyzej 0.5",
+            "odds": 26
+          }
+        ]
+      }
+    },
+    {
+      "index": 414,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Lewie Coyle",
+        "selections": [
+          {
+            "externalId": "bc:7444767873",
+            "name": "Powyzej 0.5",
+            "odds": 1.38
+          },
+          {
+            "externalId": "bc:7444767874",
+            "name": "Powyzej 1.5",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bc:7444767875",
+            "name": "Powyzej 2.5",
+            "odds": 6.75
+          },
+          {
+            "externalId": "bc:7444767876",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 415,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Lucas Gourna-Douath",
+        "selections": [
+          {
+            "externalId": "bc:7444767881",
+            "name": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7444767895",
+            "name": "Powyzej 1.5",
+            "odds": 1.8
+          },
+          {
+            "externalId": "bc:7444767894",
+            "name": "Powyzej 2.5",
+            "odds": 3.4
+          },
+          {
+            "externalId": "bc:7444767893",
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 416,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Lucas Herrington",
+        "selections": [
+          {
+            "externalId": "bc:7444767892",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444767891",
+            "name": "Powyzej 1.5",
+            "odds": 2.45
+          },
+          {
+            "externalId": "bc:7444767890",
+            "name": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "externalId": "bc:7444767896",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 417,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Martin Odegaard",
+        "selections": [
+          {
+            "externalId": "bc:7444767832",
+            "name": "Powyzej 0.5",
+            "odds": 1.72
+          },
+          {
+            "externalId": "bc:7444767833",
+            "name": "Powyzej 1.5",
+            "odds": 4.6
+          },
+          {
+            "externalId": "bc:7444767834",
+            "name": "Powyzej 2.5",
+            "odds": 12
+          },
+          {
+            "externalId": "bc:7444767835",
+            "name": "Powyzej 3.5",
+            "odds": 23
+          }
+        ]
+      }
+    },
+    {
+      "index": 418,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Martin Zubimendi",
+        "selections": [
+          {
+            "externalId": "bc:7444767836",
+            "name": "Powyzej 0.5",
+            "odds": 1.38
+          },
+          {
+            "externalId": "bc:7444767837",
+            "name": "Powyzej 1.5",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bc:7444767838",
+            "name": "Powyzej 2.5",
+            "odds": 7
+          },
+          {
+            "externalId": "bc:7444767839",
+            "name": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      }
+    },
+    {
+      "index": 419,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Mikel Merino",
+        "selections": [
+          {
+            "externalId": "bc:7444767852",
+            "name": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7444767853",
+            "name": "Powyzej 1.5",
+            "odds": 1.82
+          },
+          {
+            "externalId": "bc:7444767854",
+            "name": "Powyzej 2.5",
+            "odds": 3.6
+          },
+          {
+            "externalId": "bc:7444767855",
+            "name": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 420,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Mohamed Belloumi",
+        "selections": [
+          {
+            "externalId": "bc:7444767856",
+            "name": "Powyzej 0.5",
+            "odds": 1.16
+          },
+          {
+            "externalId": "bc:7444767857",
+            "name": "Powyzej 1.5",
+            "odds": 1.7
+          },
+          {
+            "externalId": "bc:7444767858",
+            "name": "Powyzej 2.5",
+            "odds": 3.1
+          },
+          {
+            "externalId": "bc:7444767859",
+            "name": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 421,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Mohamed-Ali Cho",
+        "selections": [
+          {
+            "externalId": "bc:7444767860",
+            "name": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7444767888",
+            "name": "Powyzej 1.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "bc:7444767897",
+            "name": "Powyzej 2.5",
+            "odds": 4.85
+          },
+          {
+            "externalId": "bc:7444767898",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 422,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Myles Lewis-Skelly",
+        "selections": [
+          {
+            "externalId": "bc:7444767899",
+            "name": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7444767935",
+            "name": "Powyzej 1.5",
+            "odds": 2.25
+          },
+          {
+            "externalId": "bc:7444767936",
+            "name": "Powyzej 2.5",
+            "odds": 5.1
+          },
+          {
+            "externalId": "bc:7444767937",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 423,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Nobel Mendy",
+        "selections": [
+          {
+            "externalId": "bc:7444767938",
+            "name": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "externalId": "bc:7444767939",
+            "name": "Powyzej 1.5",
+            "odds": 1.92
+          },
+          {
+            "externalId": "bc:7444767940",
+            "name": "Powyzej 2.5",
+            "odds": 3.95
+          },
+          {
+            "externalId": "bc:7444767941",
+            "name": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      }
+    },
+    {
+      "index": 424,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Noni Madueke",
+        "selections": [
+          {
+            "externalId": "bc:7444767942",
+            "name": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "externalId": "bc:7444767943",
+            "name": "Powyzej 1.5",
+            "odds": 2.85
+          },
+          {
+            "externalId": "bc:7444767944",
+            "name": "Powyzej 2.5",
+            "odds": 7.5
+          },
+          {
+            "externalId": "bc:7444767945",
+            "name": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 425,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Oli McBurnie",
+        "selections": [
+          {
+            "externalId": "bc:7444767946",
+            "name": "Powyzej 0.5",
+            "odds": 1.14
+          },
+          {
+            "externalId": "bc:7444767947",
+            "name": "Powyzej 1.5",
+            "odds": 1.6
+          },
+          {
+            "externalId": "bc:7444767948",
+            "name": "Powyzej 2.5",
+            "odds": 2.8
+          },
+          {
+            "externalId": "bc:7444767949",
+            "name": "Powyzej 3.5",
+            "odds": 5.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 426,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Regan Slater",
+        "selections": [
+          {
+            "externalId": "bc:7444767955",
+            "name": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7444767954",
+            "name": "Powyzej 1.5",
+            "odds": 2.4
+          },
+          {
+            "externalId": "bc:7444767953",
+            "name": "Powyzej 2.5",
+            "odds": 5.7
+          },
+          {
+            "externalId": "bc:7444767952",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 427,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Riccardo Calafiori",
+        "selections": [
+          {
+            "externalId": "bc:7444767934",
+            "name": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "externalId": "bc:7444767958",
+            "name": "Powyzej 1.5",
+            "odds": 2.75
+          },
+          {
+            "externalId": "bc:7444767933",
+            "name": "Powyzej 2.5",
+            "odds": 6.5
+          },
+          {
+            "externalId": "bc:7444767923",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 428,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Ryan Giles",
+        "selections": [
+          {
+            "externalId": "bc:7444767904",
+            "name": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "externalId": "bc:7444767905",
+            "name": "Powyzej 1.5",
+            "odds": 2.75
+          },
+          {
+            "externalId": "bc:7444767906",
+            "name": "Powyzej 2.5",
+            "odds": 6.25
+          },
+          {
+            "externalId": "bc:7444767907",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 429,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Semi Ajayi",
+        "selections": [
+          {
+            "externalId": "bc:7444767908",
+            "name": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "externalId": "bc:7444767909",
+            "name": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "bc:7444767910",
+            "name": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "externalId": "bc:7444767911",
+            "name": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 430,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Sorba Thomas",
+        "selections": [
+          {
+            "externalId": "bc:7444767912",
+            "name": "Powyzej 0.5",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bc:7444767913",
+            "name": "Powyzej 1.5",
+            "odds": 2.6
+          },
+          {
+            "externalId": "bc:7444767914",
+            "name": "Powyzej 2.5",
+            "odds": 6.5
+          },
+          {
+            "externalId": "bc:7444767915",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 431,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Tim Iroegbunam",
+        "selections": [
+          {
+            "externalId": "bc:7444767927",
+            "name": "Powyzej 1.5",
+            "odds": 1.4
+          },
+          {
+            "externalId": "bc:7444767926",
+            "name": "Powyzej 2.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "bc:7444767925",
+            "name": "Powyzej 3.5",
+            "odds": 4.2
+          },
+          {
+            "externalId": "bc:7444767931",
+            "name": "Powyzej 4.5",
+            "odds": 8.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 432,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "Viktor Gyokeres",
+        "selections": [
+          {
+            "externalId": "bc:7444767924",
+            "name": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7444767922",
+            "name": "Powyzej 1.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "bc:7444767921",
+            "name": "Powyzej 2.5",
+            "odds": 4.9
+          },
+          {
+            "externalId": "bc:7444767920",
+            "name": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      }
+    },
+    {
+      "index": 433,
+      "raw": {
+        "bookmakerMarketId": "15882",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Popełnione faule",
+        "paramValue": "William Saliba",
+        "selections": [
+          {
+            "externalId": "bc:7444767919",
+            "name": "Powyzej 0.5",
+            "odds": 1.62
+          },
+          {
+            "externalId": "bc:7444767918",
+            "name": "Powyzej 1.5",
+            "odds": 3.95
+          },
+          {
+            "externalId": "bc:7444767917",
+            "name": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7444768071",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 479,
+      "raw": {
+        "bookmakerMarketId": "15878",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obrony bramkarza",
+        "paramValue": "David Raya",
+        "selections": [
+          {
+            "externalId": "bc:7444763071",
+            "name": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7444763073",
+            "name": "Powyzej 1.5",
+            "odds": 1.77
+          },
+          {
+            "externalId": "bc:7444763075",
+            "name": "Powyzej 2.5",
+            "odds": 3.3
+          },
+          {
+            "externalId": "bc:7444763077",
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 480,
+      "raw": {
+        "bookmakerMarketId": "15878",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obrony bramkarza",
+        "paramValue": "Jack Butland",
+        "selections": [
+          {
+            "externalId": "bc:7444763091",
+            "name": "Powyzej 3.5",
+            "odds": 1.38
+          },
+          {
+            "externalId": "bc:7444763081",
+            "name": "Powyzej 4.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "bc:7444763065",
+            "name": "Powyzej 5.5",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bc:7444763101",
+            "name": "Powyzej 6.5",
+            "odds": 4.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 481,
+      "raw": {
+        "bookmakerMarketId": "15878",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obrony bramkarza",
+        "paramValue": "Konstantinos Tzolakis",
+        "selections": [
+          {
+            "externalId": "bc:7444763052",
+            "name": "Powyzej 3.5",
+            "odds": 1.42
+          },
+          {
+            "externalId": "bc:7444763057",
+            "name": "Powyzej 4.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444763059",
+            "name": "Powyzej 5.5",
+            "odds": 2.8
+          },
+          {
+            "externalId": "bc:7444763103",
+            "name": "Powyzej 6.5",
+            "odds": 4.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 486,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Abdulkadir Omur",
+        "selections": [
+          {
+            "externalId": "bc:7444768977",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444768841",
+            "name": "Powyzej 1.5",
+            "odds": 2.37
+          },
+          {
+            "externalId": "bc:7444769012",
+            "name": "Powyzej 2.5",
+            "odds": 5.4
+          },
+          {
+            "externalId": "bc:7444769013",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 487,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Ben White",
+        "selections": [
+          {
+            "externalId": "bc:7444769017",
+            "name": "Powyzej 0.5",
+            "odds": 1.57
+          },
+          {
+            "externalId": "bc:7444769018",
+            "name": "Powyzej 1.5",
+            "odds": 3.75
+          },
+          {
+            "externalId": "bc:7444769019",
+            "name": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7444769020",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 488,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Brooke Norton-Cuffy",
+        "selections": [
+          {
+            "externalId": "bc:7444769029",
+            "name": "Powyzej 0.5",
+            "odds": 1.67
+          },
+          {
+            "externalId": "bc:7444769030",
+            "name": "Powyzej 1.5",
+            "odds": 4.2
+          },
+          {
+            "externalId": "bc:7444769031",
+            "name": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7444769032",
+            "name": "Powyzej 3.5",
+            "odds": 25
+          }
+        ]
+      }
+    },
+    {
+      "index": 489,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Bruno Guimaraes",
+        "selections": [
+          {
+            "externalId": "bc:7449449460",
+            "name": "Powyzej 0.5",
+            "odds": 1.11
+          },
+          {
+            "externalId": "bc:7444769033",
+            "name": "Powyzej 1.5",
+            "odds": 1.47
+          },
+          {
+            "externalId": "bc:7444769034",
+            "name": "Powyzej 2.5",
+            "odds": 2.42
+          },
+          {
+            "externalId": "bc:7444769035",
+            "name": "Powyzej 3.5",
+            "odds": 4.75
+          },
+          {
+            "externalId": "bc:7444769036",
+            "name": "Powyzej 4.5",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 490,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Christos Mouzakitis",
+        "selections": [
+          {
+            "externalId": "bc:7444768983",
+            "name": "Powyzej 0.5",
+            "odds": 1.42
+          },
+          {
+            "externalId": "bc:7444768984",
+            "name": "Powyzej 1.5",
+            "odds": 2.85
+          },
+          {
+            "externalId": "bc:7444768985",
+            "name": "Powyzej 2.5",
+            "odds": 7.25
+          },
+          {
+            "externalId": "bc:7444768986",
+            "name": "Powyzej 3.5",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 491,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Christos Tzolis",
+        "selections": [
+          {
+            "externalId": "bc:7444768987",
+            "name": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bc:7444768988",
+            "name": "Powyzej 3.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444768989",
+            "name": "Powyzej 4.5",
+            "odds": 2.9
+          },
+          {
+            "externalId": "bc:7444768990",
+            "name": "Powyzej 5.5",
+            "odds": 5.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 492,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Declan Rice",
+        "selections": [
+          {
+            "externalId": "bc:7444768998",
+            "name": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7444768999",
+            "name": "Powyzej 1.5",
+            "odds": 1.77
+          },
+          {
+            "externalId": "bc:7444769000",
+            "name": "Powyzej 2.5",
+            "odds": 3.35
+          },
+          {
+            "externalId": "bc:7444769001",
+            "name": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 493,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Eberechi Eze",
+        "selections": [
+          {
+            "externalId": "bc:7444769002",
+            "name": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bc:7444769003",
+            "name": "Powyzej 3.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444769004",
+            "name": "Powyzej 4.5",
+            "odds": 2.95
+          },
+          {
+            "externalId": "bc:7444769005",
+            "name": "Powyzej 5.5",
+            "odds": 5.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 494,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Elliot Stroud",
+        "selections": [
+          {
+            "externalId": "bc:7444769057",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444769043",
+            "name": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "bc:7444769076",
+            "name": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "externalId": "bc:7444769077",
+            "name": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      }
+    },
+    {
+      "index": 495,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Ezri Konsa",
+        "selections": [
+          {
+            "externalId": "bc:7444769082",
+            "name": "Powyzej 0.5",
+            "odds": 1.6
+          },
+          {
+            "externalId": "bc:7444769083",
+            "name": "Powyzej 1.5",
+            "odds": 3.9
+          },
+          {
+            "externalId": "bc:7444769084",
+            "name": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7444769085",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 496,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Gabriel",
+        "selections": [
+          {
+            "externalId": "bc:7444769086",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444769087",
+            "name": "Powyzej 1.5",
+            "odds": 2.45
+          },
+          {
+            "externalId": "bc:7444769088",
+            "name": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "externalId": "bc:7444769090",
+            "name": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      }
+    },
+    {
+      "index": 497,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Hidemasa Morita",
+        "selections": [
+          {
+            "externalId": "bc:7444769102",
+            "name": "Powyzej 0.5",
+            "odds": 1.8
+          },
+          {
+            "externalId": "bc:7444769101",
+            "name": "Powyzej 1.5",
+            "odds": 4.9
+          },
+          {
+            "externalId": "bc:7444769100",
+            "name": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "externalId": "bc:7444769099",
+            "name": "Powyzej 3.5",
+            "odds": 26
+          }
+        ]
+      }
+    },
+    {
+      "index": 498,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Jens Hjerto Dahl",
+        "selections": [
+          {
+            "externalId": "bc:7444769049",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444769050",
+            "name": "Powyzej 1.5",
+            "odds": 2.47
+          },
+          {
+            "externalId": "bc:7444769051",
+            "name": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "externalId": "bc:7444769052",
+            "name": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      }
+    },
+    {
+      "index": 499,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Joe Gelhardt",
+        "selections": [
+          {
+            "externalId": "bc:7449449461",
+            "name": "Powyzej 0.5",
+            "odds": 1.13
+          },
+          {
+            "externalId": "bc:7444769053",
+            "name": "Powyzej 1.5",
+            "odds": 1.55
+          },
+          {
+            "externalId": "bc:7444769054",
+            "name": "Powyzej 2.5",
+            "odds": 2.6
+          },
+          {
+            "externalId": "bc:7444769055",
+            "name": "Powyzej 3.5",
+            "odds": 5.3
+          },
+          {
+            "externalId": "bc:7444769056",
+            "name": "Powyzej 4.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 500,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "John Egan",
+        "selections": [
+          {
+            "externalId": "bc:7444769058",
+            "name": "Powyzej 0.5",
+            "odds": 2.17
+          },
+          {
+            "externalId": "bc:7444769072",
+            "name": "Powyzej 1.5",
+            "odds": 7.25
+          },
+          {
+            "externalId": "bc:7444769059",
+            "name": "Powyzej 2.5",
+            "odds": 17
+          },
+          {
+            "externalId": "bc:7444769060",
+            "name": "Powyzej 3.5",
+            "odds": 36
+          }
+        ]
+      }
+    },
+    {
+      "index": 501,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Jurrien Timber",
+        "selections": [
+          {
+            "externalId": "bc:7444769065",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444769066",
+            "name": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "bc:7444769067",
+            "name": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "externalId": "bc:7444769068",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 502,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Kai Havertz",
+        "selections": [
+          {
+            "externalId": "bc:7444769069",
+            "name": "Powyzej 2.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7444769070",
+            "name": "Powyzej 3.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "bc:7444769071",
+            "name": "Powyzej 4.5",
+            "odds": 2.65
+          },
+          {
+            "externalId": "bc:7444768979",
+            "name": "Powyzej 5.5",
+            "odds": 4.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 503,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Lewie Coyle",
+        "selections": [
+          {
+            "externalId": "bc:7444768885",
+            "name": "Powyzej 0.5",
+            "odds": 2.47
+          },
+          {
+            "externalId": "bc:7444768886",
+            "name": "Powyzej 1.5",
+            "odds": 9
+          },
+          {
+            "externalId": "bc:7444768887",
+            "name": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 504,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Lucas Gourna-Douath",
+        "selections": [
+          {
+            "externalId": "bc:7444768892",
+            "name": "Powyzej 0.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "bc:7444768893",
+            "name": "Powyzej 1.5",
+            "odds": 4.7
+          },
+          {
+            "externalId": "bc:7444768894",
+            "name": "Powyzej 2.5",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7444768895",
+            "name": "Powyzej 3.5",
+            "odds": 26
+          }
+        ]
+      }
+    },
+    {
+      "index": 505,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Lucas Herrington",
+        "selections": [
+          {
+            "externalId": "bc:7444768896",
+            "name": "Powyzej 0.5",
+            "odds": 2.75
+          },
+          {
+            "externalId": "bc:7444768897",
+            "name": "Powyzej 1.5",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7444768898",
+            "name": "Powyzej 2.5",
+            "odds": 23
+          }
+        ]
+      }
+    },
+    {
+      "index": 506,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Martin Odegaard",
+        "selections": [
+          {
+            "externalId": "bc:7444768877",
+            "name": "Powyzej 1.5",
+            "odds": 1.22
+          },
+          {
+            "externalId": "bc:7444768861",
+            "name": "Powyzej 2.5",
+            "odds": 1.67
+          },
+          {
+            "externalId": "bc:7444768842",
+            "name": "Powyzej 3.5",
+            "odds": 2.65
+          },
+          {
+            "externalId": "bc:7444768843",
+            "name": "Powyzej 4.5",
+            "odds": 4.85
+          }
+        ]
+      }
+    },
+    {
+      "index": 507,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Martin Zubimendi",
+        "selections": [
+          {
+            "externalId": "bc:7444768844",
+            "name": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "externalId": "bc:7444768845",
+            "name": "Powyzej 1.5",
+            "odds": 2.12
+          },
+          {
+            "externalId": "bc:7444768846",
+            "name": "Powyzej 2.5",
+            "odds": 4.6
+          },
+          {
+            "externalId": "bc:7444768847",
+            "name": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 508,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Mikel Merino",
+        "selections": [
+          {
+            "externalId": "bc:7444768866",
+            "name": "Powyzej 1.5",
+            "odds": 1.2
+          },
+          {
+            "externalId": "bc:7444768867",
+            "name": "Powyzej 2.5",
+            "odds": 1.57
+          },
+          {
+            "externalId": "bc:7444768868",
+            "name": "Powyzej 3.5",
+            "odds": 2.42
+          },
+          {
+            "externalId": "bc:7444768869",
+            "name": "Powyzej 4.5",
+            "odds": 4.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 509,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Mohamed Belloumi",
+        "selections": [
+          {
+            "externalId": "bc:7449449462",
+            "name": "Powyzej 0.5",
+            "odds": 1.11
+          },
+          {
+            "externalId": "bc:7444768870",
+            "name": "Powyzej 1.5",
+            "odds": 1.45
+          },
+          {
+            "externalId": "bc:7444768871",
+            "name": "Powyzej 2.5",
+            "odds": 2.35
+          },
+          {
+            "externalId": "bc:7444768872",
+            "name": "Powyzej 3.5",
+            "odds": 4.5
+          },
+          {
+            "externalId": "bc:7444768873",
+            "name": "Powyzej 4.5",
+            "odds": 9.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 510,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Mohamed-Ali Cho",
+        "selections": [
+          {
+            "externalId": "bc:7444768874",
+            "name": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "externalId": "bc:7444768875",
+            "name": "Powyzej 1.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444768909",
+            "name": "Powyzej 2.5",
+            "odds": 3.65
+          },
+          {
+            "externalId": "bc:7444768911",
+            "name": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 511,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Myles Lewis-Skelly",
+        "selections": [
+          {
+            "externalId": "bc:7444768976",
+            "name": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "bc:7444768912",
+            "name": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "bc:7444768945",
+            "name": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "externalId": "bc:7444768946",
+            "name": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      }
+    },
+    {
+      "index": 512,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Nobel Mendy",
+        "selections": [
+          {
+            "externalId": "bc:7444768947",
+            "name": "Powyzej 0.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444768948",
+            "name": "Powyzej 1.5",
+            "odds": 5.5
+          },
+          {
+            "externalId": "bc:7444768949",
+            "name": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "externalId": "bc:7444768950",
+            "name": "Powyzej 3.5",
+            "odds": 31
+          }
+        ]
+      }
+    },
+    {
+      "index": 513,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Noni Madueke",
+        "selections": [
+          {
+            "externalId": "bc:7449449463",
+            "name": "Powyzej 1.5",
+            "odds": 1.13
+          },
+          {
+            "externalId": "bc:7444768951",
+            "name": "Powyzej 2.5",
+            "odds": 1.4
+          },
+          {
+            "externalId": "bc:7444768952",
+            "name": "Powyzej 3.5",
+            "odds": 1.98
+          },
+          {
+            "externalId": "bc:7444768953",
+            "name": "Powyzej 4.5",
+            "odds": 3.2
+          },
+          {
+            "externalId": "bc:7444768954",
+            "name": "Powyzej 5.5",
+            "odds": 5.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 514,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Oli McBurnie",
+        "selections": [
+          {
+            "externalId": "bc:7444768955",
+            "name": "Powyzej 0.5",
+            "odds": 1.16
+          },
+          {
+            "externalId": "bc:7444768956",
+            "name": "Powyzej 1.5",
+            "odds": 1.7
+          },
+          {
+            "externalId": "bc:7444768957",
+            "name": "Powyzej 2.5",
+            "odds": 3.1
+          },
+          {
+            "externalId": "bc:7444768959",
+            "name": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 515,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Regan Slater",
+        "selections": [
+          {
+            "externalId": "bc:7444768972",
+            "name": "Powyzej 0.5",
+            "odds": 1.67
+          },
+          {
+            "externalId": "bc:7444768973",
+            "name": "Powyzej 1.5",
+            "odds": 4.3
+          },
+          {
+            "externalId": "bc:7444768974",
+            "name": "Powyzej 2.5",
+            "odds": 12
+          },
+          {
+            "externalId": "bc:7444768975",
+            "name": "Powyzej 3.5",
+            "odds": 23
+          }
+        ]
+      }
+    },
+    {
+      "index": 516,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Riccardo Calafiori",
+        "selections": [
+          {
+            "externalId": "bc:7444768944",
+            "name": "Powyzej 0.5",
+            "odds": 1.15
+          },
+          {
+            "externalId": "bc:7444768943",
+            "name": "Powyzej 1.5",
+            "odds": 1.65
+          },
+          {
+            "externalId": "bc:7444768942",
+            "name": "Powyzej 2.5",
+            "odds": 3
+          },
+          {
+            "externalId": "bc:7444768926",
+            "name": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 517,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Ryan Giles",
+        "selections": [
+          {
+            "externalId": "bc:7444768917",
+            "name": "Powyzej 0.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "bc:7444768918",
+            "name": "Powyzej 1.5",
+            "odds": 9
+          },
+          {
+            "externalId": "bc:7444768919",
+            "name": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 518,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Semi Ajayi",
+        "selections": [
+          {
+            "externalId": "bc:7444768920",
+            "name": "Powyzej 0.5",
+            "odds": 2.45
+          },
+          {
+            "externalId": "bc:7444768921",
+            "name": "Powyzej 1.5",
+            "odds": 8.75
+          },
+          {
+            "externalId": "bc:7444768922",
+            "name": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 519,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Sorba Thomas",
+        "selections": [
+          {
+            "externalId": "bc:7444768923",
+            "name": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7444768924",
+            "name": "Powyzej 1.5",
+            "odds": 2.32
+          },
+          {
+            "externalId": "bc:7444768925",
+            "name": "Powyzej 2.5",
+            "odds": 5.2
+          },
+          {
+            "externalId": "bc:7444768927",
+            "name": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 520,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Tim Iroegbunam",
+        "selections": [
+          {
+            "externalId": "bc:7444768931",
+            "name": "Powyzej 0.5",
+            "odds": 1.62
+          },
+          {
+            "externalId": "bc:7444768932",
+            "name": "Powyzej 1.5",
+            "odds": 3.95
+          },
+          {
+            "externalId": "bc:7444768933",
+            "name": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7444768934",
+            "name": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 521,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "Viktor Gyokeres",
+        "selections": [
+          {
+            "externalId": "bc:7444768935",
+            "name": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bc:7444768936",
+            "name": "Powyzej 3.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "bc:7444768937",
+            "name": "Powyzej 4.5",
+            "odds": 2.9
+          },
+          {
+            "externalId": "bc:7444768938",
+            "name": "Powyzej 5.5",
+            "odds": 5
+          }
+        ]
+      }
+    },
+    {
+      "index": 522,
+      "raw": {
+        "bookmakerMarketId": "12238",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Strzały",
+        "paramValue": "William Saliba",
+        "selections": [
+          {
+            "externalId": "bc:7444768939",
+            "name": "Powyzej 0.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "bc:7444768940",
+            "name": "Powyzej 1.5",
+            "odds": 5.3
+          },
+          {
+            "externalId": "bc:7444769009",
+            "name": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "externalId": "bc:7449449464",
+            "name": "Powyzej 3.5",
+            "odds": 29
+          }
+        ]
+      }
+    },
+    {
+      "index": 582,
+      "raw": {
+        "bookmakerMarketId": "13940",
+        "groupId": "",
+        "groupName": "Wynik meczu",
+        "name": "Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa",
+        "selections": [
+          {
+            "externalId": "bc:7459707398",
+            "name": "Christos Tzolis or Kai Havertz",
+            "odds": 1.18
+          },
+          {
+            "externalId": "bc:7459707397",
+            "name": "Martin Odegaard or Kai Havertz",
+            "odds": 1.2
+          },
+          {
+            "externalId": "bc:7459707400",
+            "name": "Christos Tzolis or Martin Odegaard",
+            "odds": 1.22
+          },
+          {
+            "externalId": "bc:7459707396",
+            "name": "Bruno Guimaraes or Kai Havertz",
+            "odds": 1.28
+          },
+          {
+            "externalId": "bc:7459707401",
+            "name": "Christos Tzolis or Bruno Guimaraes",
+            "odds": 1.3
+          },
+          {
+            "externalId": "bc:7459707399",
+            "name": "Martin Odegaard or Bruno Guimaraes",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bc:7459707403",
+            "name": "Oliver McBurnie or Declan Rice",
+            "odds": 1.82
+          },
+          {
+            "externalId": "bc:7459707395",
+            "name": "Declan Rice or Gabriel Magalhaes",
+            "odds": 1.9
+          },
+          {
+            "externalId": "bc:7459707404",
+            "name": "Mohamed Belloumi or Declan Rice",
+            "odds": 1.95
+          },
+          {
+            "externalId": "bc:7459707402",
+            "name": "Oliver McBurnie or Gabriel Magalhaes",
+            "odds": 2.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 615,
+      "raw": {
+        "bookmakerMarketId": "3944",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bc:7392425957",
+            "name": "Bez goli",
+            "odds": 16.5
+          },
+          {
+            "externalId": "bc:7392425958",
+            "name": "Dokładnie 1",
+            "odds": 5.85
+          },
+          {
+            "externalId": "bc:7392425959",
+            "name": "Dokładnie 2",
+            "odds": 4.05
+          },
+          {
+            "externalId": "bc:7392425960",
+            "name": "Dokładnie 3",
+            "odds": 3.85
+          },
+          {
+            "externalId": "bc:7392425961",
+            "name": "Dokładnie 4",
+            "odds": 4.55
+          },
+          {
+            "externalId": "bc:7392425962",
+            "name": "Dokładnie 5",
+            "odds": 6.75
+          },
+          {
+            "externalId": "bc:7392425963",
+            "name": "Dokładnie 6 lub więcej",
+            "odds": 7.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 618,
+      "raw": {
+        "bookmakerMarketId": "2039",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bc:7392424501",
+            "name": "0",
+            "odds": 16.5
+          },
+          {
+            "externalId": "bc:7392424502",
+            "name": "1",
+            "odds": 5.85
+          },
+          {
+            "externalId": "bc:7392424505",
+            "name": "2",
+            "odds": 4.05
+          },
+          {
+            "externalId": "bc:7392424510",
+            "name": "3",
+            "odds": 3.85
+          },
+          {
+            "externalId": "bc:7392424513",
+            "name": "4",
+            "odds": 4.55
+          },
+          {
+            "externalId": "bc:7392424515",
+            "name": "5",
+            "odds": 6.75
+          },
+          {
+            "externalId": "bc:7392424517",
+            "name": "6+",
+            "odds": 7.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 791,
+      "raw": {
+        "bookmakerMarketId": "11754",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Obaj gracze strzelą łącznie przynajmniej 2 gole",
+        "selections": [
+          {
+            "externalId": "bc:7459204276",
+            "name": "V. Gyokeres & K. Havertz",
+            "odds": 2.15
+          },
+          {
+            "externalId": "bc:7459204237",
+            "name": "V. Gyokeres & C. Tzolis",
+            "odds": 2.65
+          },
+          {
+            "externalId": "bc:7459204328",
+            "name": "V. Gyokeres & N. Madueke",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bc:7459204272",
+            "name": "V. Gyokeres & E. Eze",
+            "odds": 2.8
+          },
+          {
+            "externalId": "bc:7459204225",
+            "name": "M. Merino & V. Gyokeres",
+            "odds": 2.8
+          },
+          {
+            "externalId": "bc:7459204238",
+            "name": "M. Ødegaard & V. Gyokeres",
+            "odds": 2.95
+          },
+          {
+            "externalId": "bc:7459204227",
+            "name": "C. Tzolis & K. Havertz",
+            "odds": 3
+          },
+          {
+            "externalId": "bc:7459204322",
+            "name": "K. Havertz & N. Madueke",
+            "odds": 3.05
+          },
+          {
+            "externalId": "bc:7459204298",
+            "name": "K. Havertz & E. Eze",
+            "odds": 3.15
+          },
+          {
+            "externalId": "bc:7459204263",
+            "name": "M. Merino & K. Havertz",
+            "odds": 3.25
+          },
+          {
+            "externalId": "bc:7459204341",
+            "name": "V. Gyokeres & B. Guimaraes",
+            "odds": 3.25
+          },
+          {
+            "externalId": "bc:7459204285",
+            "name": "M. Ødegaard & K. Havertz",
+            "odds": 3.35
+          },
+          {
+            "externalId": "bc:7459204260",
+            "name": "V. Gyokeres & D. Rice",
+            "odds": 3.7
+          },
+          {
+            "externalId": "bc:7459204214",
+            "name": "K. Havertz & B. Guimaraes",
+            "odds": 3.85
+          },
+          {
+            "externalId": "bc:7459204217",
+            "name": "O. McBurnie & V. Gyokeres",
+            "odds": 3.9
+          },
+          {
+            "externalId": "bc:7459204251",
+            "name": "V. Gyokeres & J. Gelhardt",
+            "odds": 3.9
+          },
+          {
+            "externalId": "bc:7459204231",
+            "name": "V. Gyokeres & Gabriel Mag",
+            "odds": 4.1
+          },
+          {
+            "externalId": "bc:7459204278",
+            "name": "V. Gyokeres & R. Calafiori",
+            "odds": 4.1
+          },
+          {
+            "externalId": "bc:7459204319",
+            "name": "V. Gyokeres & M. Belloumi",
+            "odds": 4.1
+          },
+          {
+            "externalId": "bc:7459204247",
+            "name": "V. Gyokeres & J. Timber",
+            "odds": 4.2
+          },
+          {
+            "externalId": "bc:7459204309",
+            "name": "C. Tzolis & N. Madueke",
+            "odds": 4.2
+          },
+          {
+            "externalId": "bc:7459204315",
+            "name": "V. Gyokeres & B. White",
+            "odds": 4.3
+          },
+          {
+            "externalId": "bc:7459204330",
+            "name": "C. Tzolis & E. Eze",
+            "odds": 4.3
+          },
+          {
+            "externalId": "bc:7459204219",
+            "name": "D. Rice & K. Havertz",
+            "odds": 4.4
+          },
+          {
+            "externalId": "bc:7459204240",
+            "name": "V. Gyokeres & E. Stroud",
+            "odds": 4.4
+          },
+          {
+            "externalId": "bc:7459204286",
+            "name": "M. Merino & C. Tzolis",
+            "odds": 4.4
+          },
+          {
+            "externalId": "bc:7459204235",
+            "name": "V. Gyokeres & E. Konsa",
+            "odds": 4.5
+          },
+          {
+            "externalId": "bc:7459204282",
+            "name": "V. Gyokeres & S. Thomas",
+            "odds": 4.5
+          },
+          {
+            "externalId": "bc:7459204323",
+            "name": "E. Eze & N. Madueke",
+            "odds": 4.5
+          },
+          {
+            "externalId": "bc:7459204331",
+            "name": "M. Merino & N. Madueke",
+            "odds": 4.6
+          },
+          {
+            "externalId": "bc:7459204232",
+            "name": "M. Ødegaard & C. Tzolis",
+            "odds": 4.7
+          },
+          {
+            "externalId": "bc:7459204265",
+            "name": "J. Gelhardt & K. Havertz",
+            "odds": 4.7
+          },
+          {
+            "externalId": "bc:7459204266",
+            "name": "O. McBurnie & K. Havertz",
+            "odds": 4.7
+          },
+          {
+            "externalId": "bc:7459204262",
+            "name": "M. Merino & E. Eze",
+            "odds": 4.75
+          },
+          {
+            "externalId": "bc:7459204226",
+            "name": "M. Ødegaard & N. Madueke",
+            "odds": 4.85
+          },
+          {
+            "externalId": "bc:7459204218",
+            "name": "K. Havertz & Gabriel Mag",
+            "odds": 4.9
+          },
+          {
+            "externalId": "bc:7459204279",
+            "name": "K. Havertz & R. Calafiori",
+            "odds": 4.9
+          },
+          {
+            "externalId": "bc:7459204327",
+            "name": "M. Belloumi & K. Havertz",
+            "odds": 4.9
+          },
+          {
+            "externalId": "bc:7459204243",
+            "name": "K. Havertz & J. Timber",
+            "odds": 5.1
+          },
+          {
+            "externalId": "bc:7459204249",
+            "name": "M. Ødegaard & E. Eze",
+            "odds": 5.1
+          },
+          {
+            "externalId": "bc:7459204290",
+            "name": "M. Ødegaard & M. Merino",
+            "odds": 5.1
+          },
+          {
+            "externalId": "bc:7459204215",
+            "name": "K. Havertz & B. White",
+            "odds": 5.3
+          },
+          {
+            "externalId": "bc:7459204213",
+            "name": "K. Havertz & S. Thomas",
+            "odds": 5.4
+          },
+          {
+            "externalId": "bc:7459204296",
+            "name": "E. Stroud & K. Havertz",
+            "odds": 5.4
+          },
+          {
+            "externalId": "bc:7459204299",
+            "name": "E. Konsa & K. Havertz",
+            "odds": 5.5
+          },
+          {
+            "externalId": "bc:7459204306",
+            "name": "C. Tzolis & B. Guimaraes",
+            "odds": 5.6
+          },
+          {
+            "externalId": "bc:7459204310",
+            "name": "B. Guimaraes & N. Madueke",
+            "odds": 5.9
+          },
+          {
+            "externalId": "bc:7459204257",
+            "name": "E. Eze & B. Guimaraes",
+            "odds": 6.25
+          },
+          {
+            "externalId": "bc:7459204311",
+            "name": "M. Merino & B. Guimaraes",
+            "odds": 6.25
+          },
+          {
+            "externalId": "bc:7459204303",
+            "name": "M. Ødegaard & B. Guimaraes",
+            "odds": 6.75
+          },
+          {
+            "externalId": "bc:7459204302",
+            "name": "C. Tzolis & D. Rice",
+            "odds": 7
+          },
+          {
+            "externalId": "bc:7459204334",
+            "name": "D. Rice & N. Madueke",
+            "odds": 7.25
+          },
+          {
+            "externalId": "bc:7459204252",
+            "name": "O. McBurnie & C. Tzolis",
+            "odds": 7.5
+          },
+          {
+            "externalId": "bc:7459204324",
+            "name": "J. Gelhardt & C. Tzolis",
+            "odds": 7.5
+          },
+          {
+            "externalId": "bc:7459204222",
+            "name": "D. Rice & E. Eze",
+            "odds": 7.75
+          },
+          {
+            "externalId": "bc:7459204254",
+            "name": "M. Merino & D. Rice",
+            "odds": 7.75
+          },
+          {
+            "externalId": "bc:7459204271",
+            "name": "J. Gelhardt & N. Madueke",
+            "odds": 8
+          },
+          {
+            "externalId": "bc:7459204293",
+            "name": "C. Tzolis & R. Calafiori",
+            "odds": 8
+          },
+          {
+            "externalId": "bc:7459204301",
+            "name": "C. Tzolis & M. Belloumi",
+            "odds": 8
+          },
+          {
+            "externalId": "bc:7459204320",
+            "name": "O. McBurnie & N. Madueke",
+            "odds": 8
+          },
+          {
+            "externalId": "bc:7459204337",
+            "name": "C. Tzolis & Gabriel Mag",
+            "odds": 8
+          },
+          {
+            "externalId": "bc:7459204228",
+            "name": "M. Ødegaard & D. Rice",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204230",
+            "name": "Gabriel Mag & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204236",
+            "name": "M. Belloumi & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204239",
+            "name": "O. McBurnie & E. Eze",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204248",
+            "name": "R. Calafiori & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204255",
+            "name": "C. Tzolis & J. Timber",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204281",
+            "name": "J. Gelhardt & E. Eze",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bc:7459204204",
+            "name": "M. Merino & J. Gelhardt",
+            "odds": 8.75
+          },
+          {
+            "externalId": "bc:7459204277",
+            "name": "O. McBurnie & M. Merino",
+            "odds": 8.75
+          },
+          {
+            "externalId": "bc:7459204289",
+            "name": "C. Tzolis & B. White",
+            "odds": 8.75
+          },
+          {
+            "externalId": "bc:7459204210",
+            "name": "E. Eze & R. Calafiori",
+            "odds": 9
+          },
+          {
+            "externalId": "bc:7459204233",
+            "name": "J. Timber & N. Madueke",
+            "odds": 9
+          },
+          {
+            "externalId": "bc:7459204253",
+            "name": "C. Tzolis & E. Stroud",
+            "odds": 9.25
+          },
+          {
+            "externalId": "bc:7459204259",
+            "name": "M. Belloumi & E. Eze",
+            "odds": 9.25
+          },
+          {
+            "externalId": "bc:7459204270",
+            "name": "E. Eze & Gabriel Mag",
+            "odds": 9.25
+          },
+          {
+            "externalId": "bc:7459204275",
+            "name": "B. White & N. Madueke",
+            "odds": 9.25
+          },
+          {
+            "externalId": "bc:7459204245",
+            "name": "M. Merino & M. Belloumi",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204246",
+            "name": "C. Tzolis & E. Konsa",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204291",
+            "name": "C. Tzolis & S. Thomas",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204300",
+            "name": "M. Merino & Gabriel Mag",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204333",
+            "name": "M. Ødegaard & J. Gelhardt",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204336",
+            "name": "M. Merino & R. Calafiori",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bc:7459204244",
+            "name": "J. Timber & E. Eze",
+            "odds": 9.75
+          },
+          {
+            "externalId": "bc:7459204292",
+            "name": "O. McBurnie & M. Ødegaard",
+            "odds": 9.75
+          },
+          {
+            "externalId": "bc:7459204242",
+            "name": "E. Stroud & N. Madueke",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204264",
+            "name": "B. White & E. Eze",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204294",
+            "name": "E. Konsa & N. Madueke",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204304",
+            "name": "M. Merino & J. Timber",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204307",
+            "name": "N. Madueke & S. Thomas",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204335",
+            "name": "M. Merino & B. White",
+            "odds": 10
+          },
+          {
+            "externalId": "bc:7459204224",
+            "name": "M. Ødegaard & R. Calafiori",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204332",
+            "name": "M. Ødegaard & Gabriel Mag",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204338",
+            "name": "M. Ødegaard & M. Belloumi",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204258",
+            "name": "E. Stroud & E. Eze",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204256",
+            "name": "E. Eze & S. Thomas",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204321",
+            "name": "E. Konsa & E. Eze",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204326",
+            "name": "M. Merino & E. Stroud",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204339",
+            "name": "M. Ødegaard & J. Timber",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204216",
+            "name": "M. Merino & E. Konsa",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204268",
+            "name": "M. Merino & S. Thomas",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204318",
+            "name": "D. Rice & B. Guimaraes",
+            "odds": 11
+          },
+          {
+            "externalId": "bc:7459204284",
+            "name": "M. Ødegaard & B. White",
+            "odds": 12
+          },
+          {
+            "externalId": "bc:7459204340",
+            "name": "M. Ødegaard & E. Stroud",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7459204297",
+            "name": "M. Ødegaard & E. Konsa",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7459204308",
+            "name": "M. Ødegaard & S. Thomas",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7459204205",
+            "name": "O. McBurnie & B. Guimaraes",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7459204261",
+            "name": "J. Gelhardt & B. Guimaraes",
+            "odds": 13
+          },
+          {
+            "externalId": "bc:7459204288",
+            "name": "B. Guimaraes & R. Calafiori",
+            "odds": 14
+          },
+          {
+            "externalId": "bc:7459204221",
+            "name": "Gabriel Mag & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "externalId": "bc:7459204220",
+            "name": "M. Belloumi & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "externalId": "bc:7459204283",
+            "name": "J. Timber & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "externalId": "bc:7459204305",
+            "name": "B. White & B. Guimaraes",
+            "odds": 17
+          },
+          {
+            "externalId": "bc:7459204234",
+            "name": "J. Gelhardt & D. Rice",
+            "odds": 19
+          },
+          {
+            "externalId": "bc:7459204269",
+            "name": "E. Stroud & B. Guimaraes",
+            "odds": 19
+          },
+          {
+            "externalId": "bc:7459204295",
+            "name": "B. Guimaraes & S. Thomas",
+            "odds": 19
+          },
+          {
+            "externalId": "bc:7459204312",
+            "name": "O. McBurnie & D. Rice",
+            "odds": 19
+          },
+          {
+            "externalId": "bc:7459204280",
+            "name": "E. Konsa & B. Guimaraes",
+            "odds": 19
+          },
+          {
+            "externalId": "bc:7459204207",
+            "name": "D. Rice & Gabriel Mag",
+            "odds": 21
+          },
+          {
+            "externalId": "bc:7459204250",
+            "name": "D. Rice & R. Calafiori",
+            "odds": 21
+          },
+          {
+            "externalId": "bc:7459204364",
+            "name": "M. Belloumi & D. Rice",
+            "odds": 21
+          },
+          {
+            "externalId": "bc:7459204206",
+            "name": "O. McBurnie & J. Gelhardt",
+            "odds": 23
+          },
+          {
+            "externalId": "bc:7459204208",
+            "name": "D. Rice & J. Timber",
+            "odds": 23
+          },
+          {
+            "externalId": "bc:7459204211",
+            "name": "D. Rice & B. White",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204241",
+            "name": "J. Gelhardt & M. Belloumi",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204325",
+            "name": "O. McBurnie & M. Belloumi",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204347",
+            "name": "O. McBurnie & R. Calafiori",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204352",
+            "name": "J. Gelhardt & Gabriel Mag",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204361",
+            "name": "O. McBurnie & Gabriel Mag",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204373",
+            "name": "J. Gelhardt & R. Calafiori",
+            "odds": 25
+          },
+          {
+            "externalId": "bc:7459204267",
+            "name": "Gabriel Mag & R. Calafiori",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204345",
+            "name": "M. Belloumi & R. Calafiori",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204344",
+            "name": "O. McBurnie & J. Timber",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204359",
+            "name": "E. Stroud & D. Rice",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204367",
+            "name": "J. Gelhardt & J. Timber",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204370",
+            "name": "M. Belloumi & Gabriel Mag",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204357",
+            "name": "E. Konsa & D. Rice",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204358",
+            "name": "D. Rice & S. Thomas",
+            "odds": 29
+          },
+          {
+            "externalId": "bc:7459204363",
+            "name": "J. Gelhardt & B. White",
+            "odds": 31
+          },
+          {
+            "externalId": "bc:7459204371",
+            "name": "O. McBurnie & B. White",
+            "odds": 31
+          },
+          {
+            "externalId": "bc:7459204313",
+            "name": "J. Timber & R. Calafiori",
+            "odds": 34
+          },
+          {
+            "externalId": "bc:7459204329",
+            "name": "J. Timber & Gabriel Mag",
+            "odds": 34
+          },
+          {
+            "externalId": "bc:7459204368",
+            "name": "M. Belloumi & J. Timber",
+            "odds": 34
+          },
+          {
+            "externalId": "bc:7459204212",
+            "name": "B. White & R. Calafiori",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204273",
+            "name": "O. McBurnie & E. Stroud",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204274",
+            "name": "J. Gelhardt & E. Stroud",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204317",
+            "name": "B. White & Gabriel Mag",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204372",
+            "name": "M. Belloumi & B. White",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204316",
+            "name": "O. McBurnie & S. Thomas",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204342",
+            "name": "O. McBurnie & E. Konsa",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204348",
+            "name": "J. Gelhardt & S. Thomas",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204360",
+            "name": "J. Gelhardt & E. Konsa",
+            "odds": 36
+          },
+          {
+            "externalId": "bc:7459204229",
+            "name": "B. White & J. Timber",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204314",
+            "name": "E. Stroud & M. Belloumi",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204351",
+            "name": "E. Stroud & Gabriel Mag",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204374",
+            "name": "E. Stroud & R. Calafiori",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204209",
+            "name": "E. Konsa & R. Calafiori",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204287",
+            "name": "E. Konsa & Gabriel Mag",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204349",
+            "name": "M. Belloumi & S. Thomas",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204355",
+            "name": "R. Calafiori & S. Thomas",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204365",
+            "name": "E. Konsa & M. Belloumi",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204369",
+            "name": "Gabriel Mag & S. Thomas",
+            "odds": 41
+          },
+          {
+            "externalId": "bc:7459204353",
+            "name": "E. Stroud & J. Timber",
+            "odds": 46
+          },
+          {
+            "externalId": "bc:7459204223",
+            "name": "E. Konsa & J. Timber",
+            "odds": 51
+          },
+          {
+            "externalId": "bc:7459204343",
+            "name": "J. Timber & S. Thomas",
+            "odds": 51
+          },
+          {
+            "externalId": "bc:7459204346",
+            "name": "E. Stroud & B. White",
+            "odds": 51
+          },
+          {
+            "externalId": "bc:7459204354",
+            "name": "E. Konsa & B. White",
+            "odds": 56
+          },
+          {
+            "externalId": "bc:7459204356",
+            "name": "B. White & S. Thomas",
+            "odds": 56
+          },
+          {
+            "externalId": "bc:7459204362",
+            "name": "E. Konsa & E. Stroud",
+            "odds": 67
+          },
+          {
+            "externalId": "bc:7459204366",
+            "name": "E. Stroud & S. Thomas",
+            "odds": 67
+          },
+          {
+            "externalId": "bc:7459204350",
+            "name": "E. Konsa & S. Thomas",
+            "odds": 71
+          }
+        ]
+      }
+    },
+    {
+      "index": 901,
+      "raw": {
+        "bookmakerMarketId": "3499",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli 2.5",
+        "selections": [
+          {
+            "externalId": "bc:7392415565",
+            "name": "Powyżej (2.5)",
+            "odds": 1.55
+          },
+          {
+            "externalId": "bc:7392415566",
+            "name": "Poniżej (2.5)",
+            "odds": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 947,
+      "raw": {
+        "bookmakerMarketId": "6568",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "1. Połowa - Liczba goli 1",
+        "selections": [
+          {
+            "externalId": "bc:7392430666",
+            "name": "Powyżej (1.0)",
+            "odds": 1.5
+          },
+          {
+            "externalId": "bc:7392430667",
+            "name": "Poniżej (1.0)",
+            "odds": 2.5
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "bc:31333515",
+  "matchIdSafe": "premier-league_arsenal_hull_city",
+  "sourceArchive": "premier-league_arsenal_hull_city__2026-11-07.json"
+}

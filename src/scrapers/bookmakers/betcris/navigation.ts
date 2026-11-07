@@ -25,7 +25,6 @@ import {
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import {
   BASE_URL,
-  LEAGUE_URLS,
   COMPETITION_IDS,
   REQUEST_TIMEOUT,
   WS_CONFIG,
@@ -38,225 +37,6 @@ import type {
   SwarmCaptureOutcome,
   SwarmCaptureTiming,
 } from "./types.js";
-
-/**
- * Navigate to a league page to trigger WebSocket connection
- *
- * @param page - Playwright page instance
- * @param league - League slug (e.g., "ekstraklasa")
- * @returns Whether navigation was successful
- */
-export async function navigateToLeaguePage(
-  page: Page,
-  league: string
-): Promise<boolean> {
-  const url = LEAGUE_URLS[league];
-  if (!url) {
-    console.error(`[Betcris/Navigation] Unknown league: ${league}`);
-    return false;
-  }
-
-  try {
-    console.log(`[Betcris/Navigation] Navigating to: ${url}`);
-    await page.goto(url, {
-      timeout: REQUEST_TIMEOUT,
-      waitUntil: "domcontentloaded",
-    });
-    return true;
-  } catch (error) {
-    console.error(`[Betcris/Navigation] Failed to navigate:`, error);
-    return false;
-  }
-}
-
-/**
- * Navigate to a match detail page
- *
- * @param page - Playwright page instance
- * @param eventUrl - Full URL to the match page
- * @returns Whether navigation was successful
- */
-export async function navigateToMatchPage(
-  page: Page,
-  eventUrl: string
-): Promise<boolean> {
-  try {
-    console.log(`[Betcris/Navigation] Navigating to match: ${eventUrl}`);
-    await page.goto(eventUrl, {
-      timeout: REQUEST_TIMEOUT,
-      waitUntil: "domcontentloaded",
-    });
-    return true;
-  } catch (error) {
-    console.error(`[Betcris/Navigation] Failed to navigate to match:`, error);
-    return false;
-  }
-}
-
-/**
- * Capture Swarm WebSocket data from the page
- *
- * This function sets up WebSocket interception and waits for relevant data.
- * It handles both league listing mode (filter by competition ID) and
- * single event mode (look for a specific game with its full market offer).
- *
- * IMPORTANT: BetConstruct/Swarm streams a game's offer across several frames -
- * an initial snapshot plus per-market-group subscription responses (All/Goals/
- * Halves/Corners/Bookings/Player-props ...). A single frame therefore only ever
- * contains a subset of the markets. We accumulate (union) every frame within the
- * wait window - keyed by market id - instead of resolving on the first frame that
- * happens to cross a market threshold. For single-event mode we resolve only once
- * the accumulated market count reaches the game's self-reported `markets_count`
- * (the completeness target/validator), or once growth plateaus / the window ends.
- *
- * @param page - Playwright page with active WebSocket connection
- * @param config - Capture configuration
- * @returns Promise resolving to the merged SwarmData or null on timeout
- */
-export function captureSwarmData(
-  page: Page,
-  config: CaptureConfig = {}
-): Promise<SwarmData | null> {
-  const { competitionId, singleEventMode = false, targetGameNumber } = config;
-
-  // Scope what is unioned into the accumulator to bound memory: in single-event
-  // mode keep only the target game, in league mode keep only the target
-  // competition. This is essential because the page (and its WebSocket) is reused
-  // across many matches during a full-offer scrape.
-  const mergeFilter: MergeFilter = {
-    competitionId: singleEventMode ? undefined : competitionId,
-    targetGameNumber: singleEventMode ? targetGameNumber : undefined,
-  };
-
-  return new Promise((resolve) => {
-    let resolved = false;
-    // Accumulator that unions markets/events across every relevant frame.
-    const merged: SwarmData = {};
-    let bestMarketCount = 0;
-    let lastGrowthTime = Date.now();
-
-    // Track attached listeners so they can be detached on resolve. The page is
-    // reused across matches, so leaving listeners attached leaks memory/CPU.
-    const wsCleanups: Array<() => void> = [];
-
-    const startTime = Date.now();
-    const checkInterval = setInterval(() => {
-      if (resolved) {
-        clearInterval(checkInterval);
-        return;
-      }
-      tick();
-    }, WS_CONFIG.POLL_INTERVAL);
-
-    const finish = () => {
-      if (resolved) return;
-      resolved = true;
-      clearInterval(checkInterval);
-      page.off("websocket", onWebSocket);
-      for (const cleanup of wsCleanups) cleanup();
-      resolve(merged.sport ? merged : null);
-    };
-
-    // Evaluate the accumulated data and decide whether to resolve.
-    const tick = () => {
-      if (resolved) return;
-      const elapsed = Date.now() - startTime;
-      if (elapsed < WS_CONFIG.MIN_WAIT_TIME) return;
-
-      if (bestMarketCount > 0) {
-        if (singleEventMode) {
-          // Plateau: no new markets unioned for a while -> treat as complete.
-          if (Date.now() - lastGrowthTime >= WS_CONFIG.PLATEAU_WAIT_TIME) {
-            finish();
-            return;
-          }
-        } else {
-          // League listing only needs the target competition's base markets.
-          const hasCompetition =
-            !competitionId || checkCompetitionExists(merged, competitionId);
-          if (hasCompetition) {
-            finish();
-            return;
-          }
-        }
-      }
-
-      const maxWait = singleEventMode
-        ? WS_CONFIG.MAX_WAIT_TIME_SINGLE_EVENT
-        : WS_CONFIG.MAX_WAIT_TIME;
-      if (elapsed >= maxWait) {
-        finish();
-      }
-    };
-
-    // Frame handler shared by every Swarm WebSocket on the page.
-    const onFrame = (frame: { payload: Buffer | string }) => {
-      if (resolved) return;
-
-      try {
-        const payload = frame.payload.toString();
-        // Skip non-JSON frames
-        if (!payload.startsWith("{")) return;
-
-        const msg = JSON.parse(payload);
-
-        // Look for game data responses (sport > region > competition > game structure)
-        if (msg.code === 0 && msg.data?.data?.sport) {
-          const data = msg.data.data as SwarmData;
-
-          // Union this frame into the accumulator (markets keyed by id), scoped
-          // to the relevant game/competition only.
-          mergeSwarmData(merged, data, mergeFilter);
-
-          const stats = analyzeSwarmData(merged, targetGameNumber);
-
-          // Track the metric that drives completeness for this mode.
-          const currentBest = singleEventMode
-            ? targetGameNumber
-              ? stats.targetMarketCount
-              : stats.maxGameMarketCount
-            : stats.maxGameMarketCount;
-
-          if (currentBest > bestMarketCount) {
-            bestMarketCount = currentBest;
-            lastGrowthTime = Date.now();
-          }
-
-          if (singleEventMode) {
-            // Resolve as soon as the accumulated markets reach the game's
-            // self-reported total (full offer captured).
-            const target = targetGameNumber ? stats.targetMarketsCount : 0;
-            if (target > 0 && currentBest >= target) {
-              finish();
-              return;
-            }
-          } else if (
-            stats.hasGamesWithMarkets &&
-            (!competitionId || checkCompetitionExists(merged, competitionId))
-          ) {
-            // League listing: resolve once the target competition is present.
-            finish();
-            return;
-          }
-        }
-      } catch {
-        // Not valid JSON or parsing error - ignore
-      }
-    };
-
-    // Attach the frame handler to every relevant Swarm WebSocket on the page.
-    const onWebSocket = (ws: PlaywrightWebSocket) => {
-      // Only intercept Swarm WebSocket connections
-      if (!ws.url().includes("swarm") && !ws.url().includes("trexname.com")) {
-        return;
-      }
-      ws.on("framereceived", onFrame);
-      wsCleanups.push(() => ws.off("framereceived", onFrame));
-    };
-
-    page.on("websocket", onWebSocket);
-  });
-}
 
 /** Failures where the page or its socket never delivered sport data. */
 const SITE_LEVEL_CAPTURE_FAILURES: ReadonlySet<SwarmCaptureFailure> = new Set<SwarmCaptureFailure>([
@@ -297,8 +77,12 @@ interface CaptureAttemptResult {
  * anchored at navigation/socket milestones, classified failures and a retry.
  *
  * Each attempt attaches the `websocket` listener, then starts `page.goto`
- * without awaiting it, and unions every Swarm sport frame (see captureSwarmData
- * for why frames are unioned). Completion:
+ * without awaiting it, and unions every Swarm sport frame. BetConstruct/Swarm
+ * streams a game's offer across several frames (an initial snapshot plus
+ * per-market-group subscription responses), so one frame only ever holds a
+ * subset of the markets: frames are unioned, keyed by market id, and the
+ * target game's self-reported `markets_count` is the completeness target.
+ * Completion:
  * - league: the target competition has at least one game with markets;
  * - single-event: the target game's markets_count is reached, or no growth for
  *   PLATEAU_WAIT_TIME, or MAX_WAIT_TIME_SINGLE_EVENT after the target first
@@ -405,8 +189,9 @@ function runCaptureAttempt(
     deadlineLateMs: null,
   };
 
-  // Same scoping as captureSwarmData: keep only the target game (single-event)
-  // or the target competition (league) to bound memory on a reused page.
+  // Scope what is unioned to bound memory, because the page (and its socket) is
+  // reused across many matches: keep only the target game (single-event) or the
+  // target competition (league).
   const mergeFilter: MergeFilter = {
     competitionId: singleEventMode ? undefined : competitionId,
     targetGameNumber: singleEventMode ? targetGameNumber : undefined,

@@ -164,8 +164,6 @@ export const SELECTION_CODES = {
 export const WS_CONFIG = {
   /** Minimum wait time before resolving with captured data (ms) */
   MIN_WAIT_TIME: 1000,
-  /** Maximum wait time for WebSocket data (ms) - league listing mode (legacy captureSwarmData only) */
-  MAX_WAIT_TIME: 12000,
   /**
    * Maximum wait time for single-event (match details) capture (ms), measured
    * from the first frame that contains the target game (firstUsefulFrameMs).

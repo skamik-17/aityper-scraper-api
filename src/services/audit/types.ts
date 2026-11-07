@@ -77,6 +77,8 @@ export interface PrepAuditOutput {
     rawDeduped: number;
     recognized: number;
     unrecognized: number;
+    /** Placeholder selection externalIds ("undefined") dropped before archiving; only when > 0. */
+    droppedPlaceholderExternalIds?: number;
   };
   matchContext: MatchContextRow[];
   markets: PrepMarketEntry[];

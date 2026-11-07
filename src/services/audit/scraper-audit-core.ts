@@ -22,6 +22,7 @@ import { getMarketByCode, type MarketCatalogEntry } from "../../data/market-cata
 import { groupMarketsByTypeWithParameters } from "../market-type-grouper.js";
 import { isSelectionOrphan, HANDICAP_CODES } from "./selection-checks.js";
 import { getRelatedCodes } from "./family-codes.js";
+import { dropPlaceholderExternalIds } from "./placeholder-external-id.js";
 import type {
   PrepAuditOutput,
   PrepMarketEntry,
@@ -248,7 +249,19 @@ export interface BuildPrepOptions {
 }
 
 export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
-  const { normalizer, ctx, rawMarkets, meta } = opts;
+  const { normalizer, ctx, meta } = opts;
+  // A placeholder id ("undefined" from String(undefined)) identifies nothing:
+  // drop it before normalizing and archiving, and report how many were dropped.
+  const { markets: rawMarkets, dropped: droppedExternalIds } = dropPlaceholderExternalIds(
+    opts.rawMarkets,
+  );
+  if (droppedExternalIds > 0) {
+    console.warn(
+      `[audit-core] ${normalizer.bookmaker}: dropped ${droppedExternalIds} placeholder selection externalId ` +
+        `value(s) (e.g. "undefined" from String(undefined)) before normalizing and archiving. ` +
+        `The scraper lost its id field; fix the parser.`,
+    );
+  }
 
   type Pass1 = {
     raw: RawAuditMarket;
@@ -425,6 +438,8 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
       rawDeduped: rawMarkets.length,
       recognized,
       unrecognized,
+      // Only when some were dropped, so other archives keep today's meta keys.
+      ...(droppedExternalIds > 0 ? { droppedPlaceholderExternalIds: droppedExternalIds } : {}),
     },
     matchContext,
     markets,

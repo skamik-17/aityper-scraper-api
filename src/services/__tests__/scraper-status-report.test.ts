@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { CONFIG } from "../../config/index.js";
 import { snapshotFromRun2 } from "../../__tests__/helpers/run-fixtures.js";
 import type { ScrapeStats } from "../../types/api.js";
-import { buildScraperHealthReport } from "../scraper-status-report.js";
+import { buildScraperHealthReport, formatStatusTable } from "../scraper-status-report.js";
 
 // 13 min after run 2 finished (evidence/observability/api-status-snapshot-2026-11-06.json).
 const NOW = new Date("2026-11-06T16:16:18.614Z");
@@ -91,5 +91,65 @@ describe("buildScraperHealthReport", () => {
     const r = buildScraperHealthReport("premier-league", snapshotFromRun2(), lastRun, lastAbort, NOW);
     expect(r.lastRun).toEqual(lastRun);
     expect(r.lastAbort).toEqual(lastAbort);
+  });
+});
+
+describe("formatStatusTable", () => {
+  const report = () => buildScraperHealthReport("premier-league", snapshotFromRun2(), null, null, NOW);
+
+  it("formats header plus 14 rows with truncated errors", () => {
+    const lines = formatStatusTable(buildScraperHealthReport("premier-league", snapshotFromRun2(), null, null, NOW)).split("\n");
+    expect(lines[0]).toMatch(/^BOOKMAKER\s+STATUS\s+LAST RUN\s+LAST SUCCESS\s+FAILS\s+ERROR$/);
+    expect(lines).toHaveLength(15);
+    expect(lines.find((l) => l.startsWith("betters"))).toMatch(/^betters\s+error\s+2026-11-06T16:00:00Z\s+-\s+1\s+No events found from API \| document HTTP 404/);
+  });
+
+  it("a successful row: second-precision Z timestamps, 0 fails, - for no error", () => {
+    const fortuna = formatStatusTable(report()).split("\n").find((l) => l.startsWith("fortuna"));
+    expect(fortuna).toMatch(/^fortuna\s+available\s+2026-11-06T16:00:00Z\s+2026-11-06T16:02:49Z\s+0\s+-$/);
+  });
+
+  it("cuts an error to 120 chars ending in an ellipsis", () => {
+    const r = report();
+    const long = "Batch insert failed (12 of 12 batches): " + "x".repeat(200);
+    r.bookmakers.find((b) => b.bookmaker === "sts")!.lastError = long;
+    const sts = formatStatusTable(r).split("\n").find((l) => l.startsWith("sts"))!;
+    const cell = sts.slice(sts.indexOf("Batch insert failed"));
+    expect(cell).toHaveLength(120);
+    expect(cell).toBe(long.slice(0, 119) + "…");
+  });
+
+  it("an error of exactly 120 chars is kept whole", () => {
+    const r = report();
+    const exact = "y".repeat(120);
+    r.bookmakers.find((b) => b.bookmaker === "sts")!.lastError = exact;
+    expect(formatStatusTable(r).split("\n").find((l) => l.startsWith("sts"))!.endsWith(" " + exact)).toBe(true);
+  });
+
+  it("keeps one line per bookmaker when an error spans lines", () => {
+    const r = report();
+    r.bookmakers.find((b) => b.bookmaker === "pzbuk")!.lastError = "No WebSocket data captured\n  at page.goto\r\n\tws closed";
+    const lines = formatStatusTable(r).split("\n");
+    expect(lines).toHaveLength(15);
+    expect(lines.find((l) => l.startsWith("pzbuk"))).toMatch(/No WebSocket data captured at page\.goto ws closed$/);
+  });
+
+  it("a blank error prints as -", () => {
+    const r = report();
+    r.bookmakers.find((b) => b.bookmaker === "sts")!.lastError = " \n ";
+    expect(formatStatusTable(r).split("\n").find((l) => l.startsWith("sts"))).toMatch(/\s0\s+-$/);
+  });
+
+  it("aligns every column under its header", () => {
+    const lines = formatStatusTable(report()).split("\n");
+    const header = lines[0];
+    const starts = ["STATUS", "LAST RUN", "LAST SUCCESS", "FAILS", "ERROR"].map((h) => header.indexOf(h));
+    for (const line of lines.slice(1)) {
+      for (const start of starts) {
+        // Each column starts after a two-space gutter.
+        expect(line.slice(start - 2, start)).toBe("  ");
+        expect(line[start]).not.toBe(" ");
+      }
+    }
   });
 });

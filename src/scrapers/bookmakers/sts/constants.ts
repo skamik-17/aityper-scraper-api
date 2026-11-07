@@ -253,6 +253,18 @@ export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
   809, // "2. połowa - wynik i liczba goli" (SECOND_HALF_RESULT_AND_TOTAL)
   812, // "Podwójna szansa i liczba goli" (DOUBLE_CHANCE_TOTAL)
   1012, // "Połowa/koniec i liczba goli" (HALFTIME_FULLTIME_AND_TOTAL)
+  // Cards/corners totals: every line is named the same ("Liczba kartek"),
+  // so without the suffix only one of the 3-5 lines per market survived
+  185, // "Liczba kartek" (CARDS_TOTAL)
+  206, // "1. połowa - liczba kartek" (HALF_TIME_CARDS_TOTAL)
+  228, // "Liczba rzutów rożnych" (CORNERS_TOTAL)
+  247, // "1. połowa - liczba rzutów rożnych" (HALF_TIME_CORNERS_TOTAL)
+  // Team cards/corners totals from the r=17 team-stats group (inert until
+  // parseAllMarkets reads that group)
+  188, // "1. drużyna - liczba kartek" (CARDS_TEAM, home)
+  191, // "2. drużyna - liczba kartek" (CARDS_TEAM, away)
+  231, // "1. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, home)
+  234, // "2. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, away)
 ]);
 
 /**

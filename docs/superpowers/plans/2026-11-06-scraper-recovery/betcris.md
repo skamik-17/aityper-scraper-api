@@ -797,8 +797,68 @@ Expected: FAIL. `norm(...)` returns `null` for `FoulsTotal`, `PlayerShots`, etc.
 Run: `npx vitest run src/scrapers/bookmakers/betcris src/services/normalization/__tests__/golden.test.ts -t betcris && npx tsx scripts/rebless-golden.ts --bookmaker betcris --dry && npx tsc --noEmit && npx tsc -p /tmp/tsconfig.betcris-tests.json`
 Expected: all pass (stat-ladders: 8 parser + 6 normalizer tests); rebless prints `{"changedTotal":0,"dry":true}`. Any non-zero count means existing entries changed: inspect them and stop before going further.
 
-- [ ] **Step 5: Live check** (one smoke; save the output as `smoke-task4.txt`).
-Expected: A1 holds. `otherShare ≤ 0.21`. `otherEntries ≤ B − 10 × R`, with B from `smoke-task2.txt` and R from this output via the A1 helper grep (today R = 10). `scrapedMarkets` is well above the Task 2 smoke's, because the ladders are now split (+340 entries per rich game such as 31321159).
+- [ ] **Step 5: Live check** (one read-only smoke, 21 page loads; save the output as `smoke-task4.txt`). Run it **before 2026-11-07T12:30Z**, the Leeds–Tottenham kick-off, so that 31333513 is still in the prematch listing. Its 11 player ladder types (and any team ladders it gains on match day) have never been parsed by the new code. The only offline ladder evidence is game 31321159, because `league-538-frames.json` holds no ladder market. The command is the Acceptance smoke (lines 168-181) without its `cd` into the main checkout. It runs from the betcris worktree through `heavy --live`, and it adds one `LADDER` line per game and one closing `LADDER_SUM` line. Copy this exact command, and its `SMOKE`, `LADDER` and `LADDER_SUM` output, into the Task 4 report:
+```bash
+cd /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/betcris && date -u +%FT%TZ > .scratch/smoke-task4-started.txt && /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live timeout 600 npx tsx -e "
+import { BetcrisPlaywrightScraper } from './src/scrapers/bookmakers/index.ts';
+import { browserPool } from './src/scrapers/base/browser-pool.ts';
+import { normalizeMarketsForBookmaker } from './src/services/normalization/index.ts';
+import { TEAM_TIER_LADDER_TYPES, PLAYER_TIER_LADDER_TYPES, PLAYER_TIER_LIST_TYPES } from './src/scrapers/bookmakers/betcris/constants.ts';
+import { parseTierLabel } from './src/scrapers/bookmakers/betcris/parser.ts';
+(async () => {
+  const t0 = Date.now();
+  const r = await new BetcrisPlaywrightScraper().scrapeFullOffer('premier-league');
+  const isLadder = (t) => TEAM_TIER_LADDER_TYPES.has(t) || PLAYER_TIER_LADDER_TYPES.has(t) || PLAYER_TIER_LIST_TYPES.has(t);
+  const sum = { games: 0, gamesWithLadders: 0, residual: 0, dupRungs: 0, zeroTier: 0, normCollisions: 0 };
+  let total = 0, other = 0, min = Infinity;
+  for (const m of r.matches) {
+    const n = normalizeMarketsForBookmaker(m.markets, 'betcris', m.homeTeam, m.awayTeam, 'premier-league');
+    total += n.length; other += n.filter((x) => x.normalizedType === 'OTHER').length; min = Math.min(min, m.markets.length);
+    const lad = m.markets.filter((x) => isLadder(x.bookmakerMarketId));
+    const types = new Set(lad.map((x) => x.bookmakerMarketId));
+    const bare = lad.filter((x) => x.paramValue === undefined);
+    const listAt = bare.findIndex((x) => PLAYER_TIER_LIST_TYPES.has(x.bookmakerMarketId) && x.selections.every((s) => parseTierLabel(s.name) === null));
+    const residual = bare.filter((x, i) => i !== listAt);
+    const hits = residual.map((x) => 'residual ' + x.bookmakerMarketId + ' ' + JSON.stringify(x.selections.map((s) => s.name + '@' + s.odds)));
+    const rungs = new Map();
+    for (const x of lad) for (const s of x.selections) { const k = x.bookmakerMarketId + '|' + x.paramValue + '|' + s.name; rungs.set(k, (rungs.get(k) ?? []).concat(s.odds)); }
+    let dupRungs = 0;
+    for (const [k, o] of rungs) if (o.length > 1) { dupRungs += o.length - 1; hits.push('dup ' + k + ' ' + JSON.stringify(o)); }
+    const zero = lad.filter((x) => x.paramValue === '-0.5' || x.selections.some((s) => parseTierLabel(s.name)?.tier === 0));
+    for (const x of zero) hits.push('zero ' + x.bookmakerMarketId + '|' + x.paramValue + ' ' + JSON.stringify(x.selections.map((s) => s.name)));
+    const keys = new Map();
+    for (const x of n) {
+      if (x.normalizedType === 'OTHER' || x.marketKey == null) continue;
+      for (const s of x.selections) {
+        const k = x.marketKey + '|' + (s.normalizedName && s.normalizedName !== 'UNKNOWN' ? s.normalizedName : s.name);
+        keys.set(k, (keys.get(k) ?? []).concat([[x.bookmakerMarketId, s.odds]]));
+      }
+    }
+    let normCollisions = 0;
+    for (const [k, g] of keys) if (g.length > 1 && g.some(([id]) => isLadder(id))) { normCollisions += g.length - 1; hits.push('collision ' + k + ' ' + JSON.stringify(g)); }
+    sum.games += 1; sum.gamesWithLadders += types.size > 0 ? 1 : 0;
+    sum.residual += residual.length; sum.dupRungs += dupRungs; sum.zeroTier += zero.length; sum.normCollisions += normCollisions;
+    console.log('LADDER ' + JSON.stringify({ gid: m.matchId, teams: m.homeTeam + ' - ' + m.awayTeam, ladderTypes: types.size, teamLadderTypes: [...types].filter((t) => TEAM_TIER_LADDER_TYPES.has(t)).length, ladderEntries: lad.length, residual: residual.length, dupRungs, zeroTier: zero.length, normCollisions, hits: hits.slice(0, 20) }));
+  }
+  console.log('SMOKE ' + JSON.stringify({ success: r.success, error: r.error ?? null, matches: r.matches.length, scrapedMarkets: total, minMarketsPerMatch: r.matches.length ? min : 0, otherEntries: other, otherShare: total ? +(other / total).toFixed(3) : null, durationMs: Date.now() - t0 }));
+  console.log('LADDER_SUM ' + JSON.stringify(sum));
+  await browserPool.closeAll();
+})();
+" 2>&1 | tee .scratch/smoke-task4-full.txt | grep -E '^(SMOKE|LADDER)|\[Betcris' > .scratch/smoke-task4.txt
+```
+The `SMOKE` line is the Acceptance one, byte for byte. The `LADDER` fields are computed per game on the parser output `m.markets`. A ladder id is any id in `TEAM_TIER_LADDER_TYPES`, `PLAYER_TIER_LADDER_TYPES` or `PLAYER_TIER_LIST_TYPES` (constants.ts:93, :116, :133).
+- `ladderTypes` / `teamLadderTypes`: the distinct ladder ids and team-ladder ids present. `ladderEntries` is the number of entries they produced.
+- `residual`: ladder entries without `paramValue`, minus the one woodwork list. The list is the `PLAYER_TIER_LIST_TYPES` entry whose selection names carry no `N+` tier.
+- `dupRungs`: extra occurrences of one `bookmakerMarketId|paramValue|selection.name`.
+- `zeroTier`: ladder entries with `paramValue` `-0.5`, or with a selection whose label has tier 0 (`0+`, `<player> 0+`).
+- `normCollisions`: extra occurrences of one `marketKey|code` among the normalized non-OTHER entries, counted only when one of them comes from a ladder id. `code` follows the repository's `selectionCollisionKey` (full-offer-repository.ts:190). `mergeMarketRecord` keeps the first-seen odds of such a pair and logs a misroute (full-offer-repository.ts:243-247). This also catches a ladder rung that meets an August-style market on the same line, or two raw players that canonicalize to one name.
+- `hits`: up to 20 strings that name each hit with its labels and prices.
+
+Expected:
+- A1 holds. `otherShare ≤ 0.21`. `otherEntries ≤ B − 10 × R`, with B from `smoke-task2.txt` and R from this output via the A1 helper grep (today R = 10). `scrapedMarkets` is well above the Task 2 smoke's, because the ladders are now split (+340 entries per rich game such as 31321159).
+- There is one `LADDER` line per scraped match, and `LADDER_SUM.games` equals the `SMOKE` `matches`.
+- `residual`, `dupRungs`, `zeroTier` and `normCollisions` are 0 in every game. Any non-zero value blocks merging Tasks 3+4 until the Task 4 report quotes each of its `hits` and justifies it. A duplicate at the same price is harmless. A duplicate at a different price means first-seen odds would be served: that is an integrity defect, not a note.
+- `31333513` has a `LADDER` line with `ladderTypes ≥ 11`. If the smoke could only run after kick-off, the report says so. The gate then rests on the remaining games with `ladderTypes > 0`, and `LADDER_SUM.gamesWithLadders ≥ 1` is required.
 
 - [ ] **Step 6: Commit** after `npx tsc --noEmit && npx vitest run` → `Test Files 68 passed (68) / Tests 1216 passed (1216)`.
 ```bash
@@ -960,8 +1020,8 @@ git commit -m "feat(normalization): log one unmapped-market summary per bookmake
 **Interfaces:**
 - Consumes: everything above, merged into the main checkout with the owner's go-ahead. The merge restarts the dev server, and its startup run (a full 14-bookmaker run) persists to the DB and counts toward A2.
 
-- [ ] **Step 1: A1.** Run the smoke command once and save the output as `smoke.txt`. Compute R with the A1 helper grep.
-Expected: `success:true`, `matches ≥ 18`, `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21`, `otherEntries ≤ B − 10 × R` (B from Task 2 Step 5), `durationMs ≤ 240000`.
+- [ ] **Step 1: A1.** Run the smoke command once and save the output as `smoke.txt`. Compute R with the A1 helper grep. Use the exact Task 4 Step 5 command, writing to `.scratch/smoke.txt` (and `.scratch/smoke-full.txt` for the `tee`) in place of the `smoke-task4` names. The Acceptance block's `cd` points at the main checkout, so copying it verbatim would test `master`.
+Expected: `success:true`, `matches ≥ 18`, `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21`, `otherEntries ≤ B − 10 × R` (B from Task 2 Step 5), `durationMs ≤ 240000`. The Task 4 Step 5 `LADDER` expectations hold again.
 
 - [ ] **Step 2: A2.** Watch 3 consecutive **full** runs: startup, scheduled, or a full admin scrape without a `bookmakers` filter (command in A2; owner-approved because it writes the DB). Never use a betcris-only scrape here.
 Run per run (works with today's aggregator line and with observability's `${bm} ${status}:` line):

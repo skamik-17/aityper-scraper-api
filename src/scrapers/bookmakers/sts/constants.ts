@@ -18,6 +18,11 @@ export const WS_URL_PATTERN = "/sbk/api/sbk";
 /**
  * League configuration with URLs and tournament filters
  * The tournamentId is used for fixture-specific WebSocket subscriptions
+ *
+ * strictTournamentId: when true, the listing keeps only fixtures under
+ * B.S.1.C[categoryId].T[tournamentId]. Both keys are required because
+ * tournament keys repeat across categories. The name filters still apply
+ * as a second guard.
  */
 export const LEAGUE_CONFIG: Record<
   string,
@@ -26,6 +31,8 @@ export const LEAGUE_CONFIG: Record<
     tournamentId: number;
     countryFilter: string;
     tournamentFilter: string;
+    strictTournamentId?: boolean;
+    categoryId?: number;
   }
 > = {
   ekstraklasa: {
@@ -39,6 +46,10 @@ export const LEAGUE_CONFIG: Record<
     tournamentId: 17,
     countryFilter: "angli",
     tournamentFilter: "premier league",
+    // The name filters alone also match Northern Premier League and
+    // Premier League 2 under category 249 ("Anglia Amatorzy").
+    strictTournamentId: true,
+    categoryId: 1,
   },
   laliga: {
     url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga/175",
@@ -242,7 +253,67 @@ export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
   809, // "2. połowa - wynik i liczba goli" (SECOND_HALF_RESULT_AND_TOTAL)
   812, // "Podwójna szansa i liczba goli" (DOUBLE_CHANCE_TOTAL)
   1012, // "Połowa/koniec i liczba goli" (HALFTIME_FULLTIME_AND_TOTAL)
+  // Cards/corners totals: every line is named the same ("Liczba kartek"),
+  // so without the suffix only one of the 3-5 lines per market survived
+  185, // "Liczba kartek" (CARDS_TOTAL)
+  206, // "1. połowa - liczba kartek" (HALF_TIME_CARDS_TOTAL)
+  228, // "Liczba rzutów rożnych" (CORNERS_TOTAL)
+  247, // "1. połowa - liczba rzutów rożnych" (HALF_TIME_CORNERS_TOTAL)
+  // Team cards/corners totals from the r=17 team-stats group, read via
+  // STS_EXTRA_GROUP_TYPES
+  188, // "1. drużyna - liczba kartek" (CARDS_TEAM, home)
+  191, // "2. drużyna - liczba kartek" (CARDS_TEAM, away)
+  231, // "1. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, home)
+  234, // "2. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, away)
 ]);
+
+/**
+ * Extra prematch market groups read besides the main "1m<stsId>" group.
+ * A fixture snapshot carries each group as its own P entry, tied to the
+ * fixture by `f` and typed by `r`; parseAllMarkets reads an entry when
+ * `entry.f === fixture.id` and its `r` is in this set.
+ * - 17: team stats (188/191 team cards O/U, 231/234 team corners O/U,
+ *   1287/2287 each team corners/cards N+, plus the excluded ids below)
+ * Group 12 ("(z dogrywką)" player props, 2406-2417) is not read: its
+ * semantics are unexplained and its ladders differ from the main group's.
+ */
+export const STS_EXTRA_GROUP_TYPES = new Set<number>([17]);
+
+/**
+ * Market IDs skipped in the extra groups (STS_EXTRA_GROUP_TYPES) only; the
+ * main group is parsed as before. The r=17 penalty-type markets are priced
+ * 30-60% longer than peers for the same event, so they stay out until the
+ * owner decides to map them (sts recovery plan, open question 2).
+ */
+export const STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS = new Set<number>([
+  1413, // "Rzut karny" (Tak 4.0 vs peers 3.0-3.1)
+  1899, // "Czerwona kartka i rzut karny" (15 vs peers 10-10.3)
+  2131, // "Czerwona kartka lub rzut karny" (3.1 vs peers 1.9)
+]);
+
+/**
+ * Per-player "yes" markets (2026-11 renumbering): one line per player,
+ * named "<Lastname Firstname> - <event>", whose single outcome 74 carries
+ * no name. That outcome is the "yes" price and is named "Tak".
+ */
+export const STS_PER_PLAYER_YES_MARKET_IDS = new Set<number>([
+  2012, // "<P> - otrzyma kartkę" (was the 1894 dropdown)
+  2153, // "<P> - otrzyma czerwoną kartkę" (was the 1896 dropdown; stays per player)
+  2435, // "\t <P> - strzeli gola" (was the 54 dropdown)
+  2436, // "<P> - gol lub asysta" (was the 1903 dropdown)
+]);
+
+/**
+ * Per-player "yes" markets folded back into the "Zawodnik - <event>"
+ * dropdown shape the normalizer knows from the old ids: every line of the
+ * id becomes one selection named after the player (the trimmed line name
+ * minus `suffix`), priced at the line's single "Tak" outcome.
+ */
+export const STS_PER_PLAYER_DROPDOWN_FOLDS: Record<number, { suffix: string; dropdownName: string }> = {
+  2012: { suffix: " - otrzyma kartkę", dropdownName: "Zawodnik - otrzyma kartkę" },
+  2435: { suffix: " - strzeli gola", dropdownName: "Zawodnik - strzeli gola" },
+  2436: { suffix: " - gol lub asysta", dropdownName: "Zawodnik - gol lub asysta" },
+};
 
 /**
  * Outcome IDs for 1X2 market

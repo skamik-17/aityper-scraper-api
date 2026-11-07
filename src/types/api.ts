@@ -4,6 +4,7 @@
 
 import type { PolishBookmaker } from "../config/index.js";
 import type { MatchOdds, BookmakerStatus } from "./database.js";
+import type { BookmakerHealthMeta } from "../services/bookmaker-status.js";
 
 // Generic API response wrapper
 export interface ApiSuccessResponse<T, M = Record<string, unknown>> {
@@ -52,6 +53,34 @@ export interface HealthCheckData {
   lastScrapeStats: Record<string, ScrapeStats> | null;
 }
 
+// GET /api/health/scrapers: one entry per configured bookmaker
+export interface ScraperHealthEntry {
+  bookmaker: PolishBookmaker;
+  status: BookmakerStatus;
+  lastStatus: string | null;
+  lastRunAt: string | null;
+  lastSuccessAt: string | null;
+  lastOddsAt: string | null;
+  consecutiveFailures: number;
+  failingSince: string | null;
+  lastError: string | null;
+  lastMatchesFound: number;
+  lastMarketsSaved: number;
+}
+
+export interface ScraperHealthReport {
+  league: string;
+  generatedAt: string;
+  /** odds_only: scraper_runs could not be read, so statuses come from odds freshness alone. */
+  source: "scraper_runs" | "odds_only";
+  /** This process's last run of the league (null in a separate CLI process). */
+  lastRun: ScrapeStats | null;
+  lastAbort: { league: string; reason: string; at: string } | null;
+  counts: Record<BookmakerStatus, number>;
+  /** CONFIG.BOOKMAKERS order */
+  bookmakers: ScraperHealthEntry[];
+}
+
 // Odds endpoint
 export interface OddsResponseData {
   matches: MatchOdds[];
@@ -64,6 +93,7 @@ export interface OddsResponseMeta {
   nextUpdate: string;
   scrapeIntervalMinutes: number;
   bookmakerStatus: Record<PolishBookmaker, BookmakerStatus>;
+  bookmakerHealth: Record<PolishBookmaker, BookmakerHealthMeta>;
 }
 
 // Match odds endpoint

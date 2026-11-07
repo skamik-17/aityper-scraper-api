@@ -4,8 +4,7 @@ import {
   getAggregatedOdds,
   getMatchOdds,
 } from "../repositories/odds-repository.js";
-import { getLastSuccessfulScrapeTime } from "../repositories/scraper-run-repository.js";
-import { getBookmakerStatusSnapshot } from "./bookmaker-status.js";
+import { getBookmakerStatusSnapshot, type BookmakerHealthMeta } from "./bookmaker-status.js";
 import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, MarketSelectionJson, ViewType, MarketCategory } from "../types/database.js";
 import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
@@ -15,16 +14,20 @@ export async function getAllLatestOdds(
   options: { onlyMarketKeys?: string[] } = {}
 ): Promise<{
   matches: MatchOdds[];
+  /** Finish time of this league's newest OK run. */
   lastUpdated: string | null;
   bookmakerStatus: Record<PolishBookmaker, BookmakerStatus>;
+  bookmakerHealth: Record<PolishBookmaker, BookmakerHealthMeta>;
 }> {
   const { onlyMarketKeys } = options;
   // Pruned inside get_matches_with_odds() itself (migration 10) - Postgres
   // never builds the JSON for a market this call doesn't want, instead of
   // building everything and having the loop below throw most of it away.
-  const aggregatedData = await getAggregatedOdds(leagueSlug, onlyMarketKeys);
-  const lastScrape = await getLastSuccessfulScrapeTime();
-  const bookmakerStatus = await getBookmakerStatusMap(leagueSlug);
+  // The snapshot never throws: it degrades to odds freshness or all-stale itself.
+  const [aggregatedData, snapshot] = await Promise.all([
+    getAggregatedOdds(leagueSlug, onlyMarketKeys),
+    getBookmakerStatusSnapshot(leagueSlug),
+  ]);
 
   const matches: MatchOdds[] = aggregatedData.map((row) => {
     const markets: MatchOdds["markets"] = {};
@@ -99,15 +102,11 @@ export async function getAllLatestOdds(
     return true;
   });
 
-  let lastUpdated: string | null = null;
-  if (lastScrape && !isNaN(lastScrape.getTime())) {
-    lastUpdated = lastScrape.toISOString();
-  }
-
   return {
     matches,
-    lastUpdated,
-    bookmakerStatus,
+    lastUpdated: snapshot.lastSuccessfulRunAt,
+    bookmakerStatus: snapshot.status,
+    bookmakerHealth: snapshot.health,
   };
 }
 
@@ -170,13 +169,6 @@ export async function getOddsForMatch(
   }
 
   return match;
-}
-
-async function getBookmakerStatusMap(
-  leagueSlug: string
-): Promise<Record<PolishBookmaker, BookmakerStatus>> {
-  // The snapshot never throws: it degrades to odds freshness or all-stale itself.
-  return (await getBookmakerStatusSnapshot(leagueSlug)).status;
 }
 
 export function getNextUpdateTime(): string {

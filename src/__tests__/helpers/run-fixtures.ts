@@ -5,9 +5,18 @@
  * ("Status today" and "What still works and must not break").
  * Later tasks append their own builders to this file.
  */
-import type { PolishBookmaker } from "../../config/index.js";
+import { CONFIG, type PolishBookmaker } from "../../config/index.js";
 import type { BookmakerRunOutcome } from "../../services/run-outcome.js";
-import type { BookmakerRunSummary } from "../../services/bookmaker-status.js";
+import {
+  deriveBookmakerStatus,
+  staleAfterMs,
+  summarizeBookmakerRuns,
+  type BookmakerHealthMeta,
+  type BookmakerRunSummary,
+  type BookmakerStatusSnapshot,
+} from "../../services/bookmaker-status.js";
+import { toScraperRunInsert } from "../../repositories/scraper-run-repository.js";
+import type { BookmakerStatus } from "../../types/database.js";
 
 export const RUN_ID = "440d2fc6-658b-46fe-b288-05261faa0caf";
 
@@ -54,5 +63,50 @@ export function summary(p: Partial<BookmakerRunSummary> & { bookmaker: PolishBoo
     lastMarketsSaved: 0,
     recoveredAfterFailures: 0,
     ...p,
+  };
+}
+
+/** Errors of the five bookmakers that failed run 2 (navigation-enriched where the recorder saw a cause). */
+export const RUN2_FAILED: Partial<Record<PolishBookmaker, string>> = {
+  betters: "No events found from API | document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485",
+  lebull: "No events found from API | document HTTP 404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485",
+  betcris: "No WebSocket data captured",
+  pzbuk: "No WebSocket data captured | websockets opened: wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl",
+  totalbet: "No events found from API | fetch HTTP 404 https://totalbet.pl/rest/market/categories/multi/7124/events",
+};
+
+/**
+ * The status snapshot right after run 2, built through the real row mapping,
+ * summary and status derivation: 9 bookmakers available, 5 in error.
+ */
+export function snapshotFromRun2(now: Date = new Date("2026-11-06T16:16:18.614Z")): BookmakerStatusSnapshot {
+  const outcomes = CONFIG.BOOKMAKERS.map((bookmaker) => {
+    const saved = RUN2_OK[bookmaker];
+    return saved !== undefined
+      ? outcome({ bookmaker, status: "success", marketsFound: saved, marketsSaved: saved })
+      : outcome({ bookmaker, status: "scrape_failed", matchesFound: 0, error: RUN2_FAILED[bookmaker] ?? null });
+  });
+  const summaries = summarizeBookmakerRuns(outcomes.map(toScraperRunInsert), CONFIG.BOOKMAKERS);
+
+  const status = {} as Record<PolishBookmaker, BookmakerStatus>;
+  const health = {} as Record<PolishBookmaker, BookmakerHealthMeta>;
+  for (const bm of CONFIG.BOOKMAKERS) {
+    const s = summaries.get(bm);
+    status[bm] = deriveBookmakerStatus(s, null, now, staleAfterMs(60));
+    health[bm] = {
+      status: status[bm],
+      lastSuccessAt: s?.lastSuccessAt ?? null,
+      failingSince: s?.failingSince ?? null,
+      consecutiveFailures: s?.consecutiveFailures ?? 0,
+    };
+  }
+
+  return {
+    source: "scraper_runs",
+    status,
+    health,
+    summaries,
+    lastOddsAt: new Map(),
+    lastSuccessfulRunAt: "2026-11-06T16:02:49.798Z",
   };
 }

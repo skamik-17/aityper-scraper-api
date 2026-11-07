@@ -1,0 +1,5116 @@
+{
+  "bookmaker": "pzbuk",
+  "entries": [
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE",
+        "marketKey": "DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Everton FC lub remis",
+            "odds": 1.19
+          },
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Everton FC lub Coventry City",
+            "odds": 1.26
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Coventry City",
+            "odds": 2.13
+          }
+        ]
+      },
+      "index": 0,
+      "marketCode": "DOUBLE_CHANCE",
+      "rawName": "Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DRAW_NO_BET",
+        "marketKey": "DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.26
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 3.53
+          }
+        ]
+      },
+      "index": 1,
+      "marketCode": "DRAW_NO_BET",
+      "rawName": "Remis bez zakładu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.66
+          },
+          {
+            "code": "DRAW",
+            "label": "Remis",
+            "odds": 3.92
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 4.91
+          }
+        ]
+      },
+      "index": 2,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "1x2"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (0:1)",
+            "label": "Everton FC (0:1)",
+            "odds": 2.7
+          },
+          {
+            "code": "remis (0:1)",
+            "label": "remis (0:1)",
+            "odds": 3.73
+          },
+          {
+            "code": "Coventry City (0:1)",
+            "label": "Coventry City (0:1)",
+            "odds": 2.15
+          },
+          {
+            "code": "Everton FC (1:0)",
+            "label": "Everton FC (1:0)",
+            "odds": 1.16
+          },
+          {
+            "code": "remis (1:0)",
+            "label": "remis (1:0)",
+            "odds": 6.38
+          },
+          {
+            "code": "Coventry City (1:0)",
+            "label": "Coventry City (1:0)",
+            "odds": 12.03
+          },
+          {
+            "code": "Everton FC (0:2)",
+            "label": "Everton FC (0:2)",
+            "odds": 5.5
+          },
+          {
+            "code": "remis (0:2)",
+            "label": "remis (0:2)",
+            "odds": 4.91
+          },
+          {
+            "code": "Coventry City (0:2)",
+            "label": "Coventry City (0:2)",
+            "odds": 1.4
+          },
+          {
+            "code": "Everton FC (2:0)",
+            "label": "Everton FC (2:0)",
+            "odds": 1.04
+          },
+          {
+            "code": "remis (2:0)",
+            "label": "remis (2:0)",
+            "odds": 11.54
+          },
+          {
+            "code": "Coventry City (2:0)",
+            "label": "Coventry City (2:0)",
+            "odds": 31.42
+          },
+          {
+            "code": "Everton FC (0:3)",
+            "label": "Everton FC (0:3)",
+            "odds": 12.27
+          },
+          {
+            "code": "remis (0:3)",
+            "label": "remis (0:3)",
+            "odds": 7.95
+          },
+          {
+            "code": "Coventry City (0:3)",
+            "label": "Coventry City (0:3)",
+            "odds": 1.12
+          }
+        ]
+      },
+      "index": 3,
+      "marketCode": "OTHER",
+      "rawName": "Handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 0.5",
+            "odds": 1.03
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 0.5",
+            "odds": 10.3
+          }
+        ]
+      },
+      "index": 4,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 1.5",
+            "odds": 1.24
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 1.5",
+            "odds": 3.83
+          }
+        ]
+      },
+      "index": 5,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 2.5",
+            "odds": 1.77
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 2.5",
+            "odds": 1.98
+          }
+        ]
+      },
+      "index": 6,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 3.5",
+            "odds": 2.9
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 3.5",
+            "odds": 1.37
+          }
+        ]
+      },
+      "index": 7,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 4.5",
+            "odds": 5.4
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 4.5",
+            "odds": 1.13
+          }
+        ]
+      },
+      "index": 8,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:5.5",
+        "matchedBy": "id",
+        "paramValue": "5.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Ponad 5.5",
+            "odds": 10.3
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej 5.5",
+            "odds": 1.03
+          }
+        ]
+      },
+      "index": 9,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC",
+            "label": "Everton FC",
+            "odds": 1.63
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 3.93
+          },
+          {
+            "code": "Coventry City",
+            "label": "Coventry City",
+            "odds": 4.52
+          }
+        ]
+      },
+      "index": 10,
+      "marketCode": "OTHER",
+      "rawName": "Early Payout"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_TEAM_TO_SCORE",
+        "marketKey": "FIRST_TEAM_TO_SCORE",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.5
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 12.77
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 2.75
+          }
+        ]
+      },
+      "index": 11,
+      "marketCode": "FIRST_TEAM_TO_SCORE",
+      "rawName": "1. gol"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_RESULT",
+        "marketKey": "HALF_TIME_RESULT",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 2.14
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 2.3
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 5.11
+          }
+        ]
+      },
+      "index": 12,
+      "marketCode": "HALF_TIME_RESULT",
+      "rawName": "1. Połowa - 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "BTTS",
+        "marketKey": "BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "Tak",
+            "odds": 1.76
+          },
+          {
+            "code": "NO",
+            "label": "Nie",
+            "odds": 1.92
+          }
+        ]
+      },
+      "index": 13,
+      "marketCode": "BTTS",
+      "rawName": "Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALFTIME_FULLTIME",
+        "marketKey": "HALFTIME_FULLTIME",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_HOME",
+            "label": "Everton FC/Everton FC",
+            "odds": 2.36
+          },
+          {
+            "code": "HOME_DRAW",
+            "label": "Everton FC/remis",
+            "odds": 15.74
+          },
+          {
+            "code": "HOME_AWAY",
+            "label": "Everton FC/Coventry City",
+            "odds": 49.18
+          },
+          {
+            "code": "DRAW_HOME",
+            "label": "remis/Everton FC",
+            "odds": 4.52
+          },
+          {
+            "code": "DRAW_DRAW",
+            "label": "remis/remis",
+            "odds": 5.71
+          },
+          {
+            "code": "DRAW_AWAY",
+            "label": "remis/Coventry City",
+            "odds": 10.33
+          },
+          {
+            "code": "AWAY_HOME",
+            "label": "Coventry City/Everton FC",
+            "odds": 24.59
+          },
+          {
+            "code": "AWAY_DRAW",
+            "label": "Coventry City/remis",
+            "odds": 16.72
+          },
+          {
+            "code": "AWAY_AWAY",
+            "label": "Coventry City/Coventry City",
+            "odds": 8.26
+          }
+        ]
+      },
+      "index": 14,
+      "marketCode": "HALFTIME_FULLTIME",
+      "rawName": "Połowa/Reg. czas gry"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (+0.5)",
+            "label": "Everton FC (+0.5)",
+            "odds": 1.14
+          },
+          {
+            "code": "Coventry City (-0.5)",
+            "label": "Coventry City (-0.5)",
+            "odds": 4.52
+          }
+        ]
+      },
+      "index": 15,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-1.5)",
+            "label": "Everton FC (-1.5)",
+            "odds": 5.11
+          },
+          {
+            "code": "Coventry City (+1.5)",
+            "label": "Coventry City (+1.5)",
+            "odds": 1.11
+          }
+        ]
+      },
+      "index": 16,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-0.5)",
+            "label": "Everton FC (-0.5)",
+            "odds": 2.09
+          },
+          {
+            "code": "Coventry City (+0.5)",
+            "label": "Coventry City (+0.5)",
+            "odds": 1.61
+          }
+        ]
+      },
+      "index": 17,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "name",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.32
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.04
+          }
+        ]
+      },
+      "index": 18,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.5",
+        "matchedBy": "name",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.45
+          }
+        ]
+      },
+      "index": 19,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:2.5",
+        "matchedBy": "name",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 5.69
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.09
+          }
+        ]
+      },
+      "index": 20,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Maitland-Niles, Ainsley",
+            "label": "Maitland-Niles, Ainsley",
+            "odds": 9.96
+          },
+          {
+            "code": "Dewsbury-Hall, Kiernan",
+            "label": "Dewsbury-Hall, Kiernan",
+            "odds": 3.44
+          },
+          {
+            "code": "O'Brien, Jake",
+            "label": "O'Brien, Jake",
+            "odds": 12.2
+          },
+          {
+            "code": "Thomas, Bobby",
+            "label": "Thomas, Bobby",
+            "odds": 14.94
+          },
+          {
+            "code": "George, Tyrique",
+            "label": "George, Tyrique",
+            "odds": 3.59
+          },
+          {
+            "code": "Branthwaite, Jarrad",
+            "label": "Branthwaite, Jarrad",
+            "odds": 10.21
+          },
+          {
+            "code": "Barry, Thierno",
+            "label": "Barry, Thierno",
+            "odds": 2.18
+          },
+          {
+            "code": "Mykolenko, Vitaliy",
+            "label": "Mykolenko, Vitaliy",
+            "odds": 16.94
+          },
+          {
+            "code": "Hamer, Gustavo",
+            "label": "Hamer, Gustavo",
+            "odds": 6.13
+          },
+          {
+            "code": "Grimes, Matt",
+            "label": "Grimes, Matt",
+            "odds": 10.46
+          },
+          {
+            "code": "Dibling, Tyler",
+            "label": "Dibling, Tyler",
+            "odds": 4.58
+          },
+          {
+            "code": "Cherif, Sidiki",
+            "label": "Cherif, Sidiki",
+            "odds": 3.89
+          },
+          {
+            "code": "Johnson, Brennan",
+            "label": "Johnson, Brennan",
+            "odds": 3.44
+          },
+          {
+            "code": "Armstrong, Harrison",
+            "label": "Armstrong, Harrison",
+            "odds": 7.97
+          },
+          {
+            "code": "Sakamoto, Tatsuhiro",
+            "label": "Sakamoto, Tatsuhiro",
+            "odds": 6.08
+          },
+          {
+            "code": "Mfuni, Stephen",
+            "label": "Mfuni, Stephen",
+            "odds": 15.94
+          },
+          {
+            "code": "Onyeka, Frank",
+            "label": "Onyeka, Frank",
+            "odds": 13.2
+          },
+          {
+            "code": "Rohl, Merlin",
+            "label": "Rohl, Merlin",
+            "odds": 5.88
+          },
+          {
+            "code": "Garner, James",
+            "label": "Garner, James",
+            "odds": 7.47
+          },
+          {
+            "code": "Hackney, Hayden",
+            "label": "Hackney, Hayden",
+            "odds": 5.78
+          },
+          {
+            "code": "Tchaouna, Loum",
+            "label": "Tchaouna, Loum",
+            "odds": 6.13
+          },
+          {
+            "code": "Keane, Michael",
+            "label": "Keane, Michael",
+            "odds": 9.66
+          },
+          {
+            "code": "Mason-Clark, Ephron",
+            "label": "Mason-Clark, Ephron",
+            "odds": 4.88
+          },
+          {
+            "code": "DaSilva, Jay",
+            "label": "DaSilva, Jay",
+            "odds": 21.92
+          },
+          {
+            "code": "Awoniyi, Taiwo",
+            "label": "Awoniyi, Taiwo",
+            "odds": 3.24
+          },
+          {
+            "code": "Tarkowski, James",
+            "label": "Tarkowski, James",
+            "odds": 10.21
+          },
+          {
+            "code": "Pinnock, Ethan",
+            "label": "Pinnock, Ethan",
+            "odds": 24.9
+          },
+          {
+            "code": "Van Ewijk, Milan",
+            "label": "Van Ewijk, Milan",
+            "odds": 26.9
+          },
+          {
+            "code": "Thomas-Asante, Brandon",
+            "label": "Thomas-Asante, Brandon",
+            "odds": 3.98
+          },
+          {
+            "code": "Gboho, Yann",
+            "label": "Gboho, Yann",
+            "odds": 5.28
+          },
+          {
+            "code": "Rudoni, Jack",
+            "label": "Rudoni, Jack",
+            "odds": 4.38
+          },
+          {
+            "code": "Torp, Victor",
+            "label": "Torp, Victor",
+            "odds": 7.87
+          },
+          {
+            "code": "Yirenkyi, Caleb",
+            "label": "Yirenkyi, Caleb",
+            "odds": 14.2
+          }
+        ]
+      },
+      "index": 21,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik (lub zmiennik) strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 22,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik z kartką (lub zmiennik)"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Maitland-Niles, Ainsley",
+            "label": "Maitland-Niles, Ainsley",
+            "odds": 4.19
+          },
+          {
+            "code": "Rudoni, Jack",
+            "label": "Rudoni, Jack",
+            "odds": 2.79
+          },
+          {
+            "code": "O'Brien, Jake",
+            "label": "O'Brien, Jake",
+            "odds": 5.69
+          },
+          {
+            "code": "Thomas, Bobby",
+            "label": "Thomas, Bobby",
+            "odds": 9.58
+          },
+          {
+            "code": "George, Tyrique",
+            "label": "George, Tyrique",
+            "odds": 2.21
+          },
+          {
+            "code": "Branthwaite, Jarrad",
+            "label": "Branthwaite, Jarrad",
+            "odds": 6.58
+          },
+          {
+            "code": "Barry, Thierno",
+            "label": "Barry, Thierno",
+            "odds": 1.85
+          },
+          {
+            "code": "Mykolenko, Vitaliy",
+            "label": "Mykolenko, Vitaliy",
+            "odds": 5.89
+          },
+          {
+            "code": "Hamer, Gustavo",
+            "label": "Hamer, Gustavo",
+            "odds": 3.19
+          },
+          {
+            "code": "Grimes, Matt",
+            "label": "Grimes, Matt",
+            "odds": 5.39
+          },
+          {
+            "code": "Cherif, Sidiki",
+            "label": "Cherif, Sidiki",
+            "odds": 2.89
+          },
+          {
+            "code": "Johnson, Brennan",
+            "label": "Johnson, Brennan",
+            "odds": 2.34
+          },
+          {
+            "code": "Armstrong, Harrison",
+            "label": "Armstrong, Harrison",
+            "odds": 4.09
+          },
+          {
+            "code": "Yirenkyi, Caleb",
+            "label": "Yirenkyi, Caleb",
+            "odds": 6.78
+          },
+          {
+            "code": "Dibling, Tyler",
+            "label": "Dibling, Tyler",
+            "odds": 2.64
+          },
+          {
+            "code": "DaSilva, Jay",
+            "label": "DaSilva, Jay",
+            "odds": 7.78
+          },
+          {
+            "code": "Sakamoto, Tatsuhiro",
+            "label": "Sakamoto, Tatsuhiro",
+            "odds": 3.79
+          },
+          {
+            "code": "Onyeka, Frank",
+            "label": "Onyeka, Frank",
+            "odds": 7.08
+          },
+          {
+            "code": "Rohl, Merlin",
+            "label": "Rohl, Merlin",
+            "odds": 3.29
+          },
+          {
+            "code": "Garner, James",
+            "label": "Garner, James",
+            "odds": 3.29
+          },
+          {
+            "code": "Hackney, Hayden",
+            "label": "Hackney, Hayden",
+            "odds": 2.94
+          },
+          {
+            "code": "Tchaouna, Loum",
+            "label": "Tchaouna, Loum",
+            "odds": 3.79
+          },
+          {
+            "code": "Mason-Clark, Ephron",
+            "label": "Mason-Clark, Ephron",
+            "odds": 3.09
+          },
+          {
+            "code": "Keane, Michael",
+            "label": "Keane, Michael",
+            "odds": 6.88
+          },
+          {
+            "code": "Torp, Victor",
+            "label": "Torp, Victor",
+            "odds": 4.09
+          },
+          {
+            "code": "Awoniyi, Taiwo",
+            "label": "Awoniyi, Taiwo",
+            "odds": 2.59
+          },
+          {
+            "code": "Tarkowski, James",
+            "label": "Tarkowski, James",
+            "odds": 6.88
+          },
+          {
+            "code": "Pinnock, Ethan",
+            "label": "Pinnock, Ethan",
+            "odds": 13.22
+          },
+          {
+            "code": "Van Ewijk, Milan",
+            "label": "Van Ewijk, Milan",
+            "odds": 7.88
+          },
+          {
+            "code": "Thomas-Asante, Brandon",
+            "label": "Thomas-Asante, Brandon",
+            "odds": 2.94
+          },
+          {
+            "code": "Gboho, Yann",
+            "label": "Gboho, Yann",
+            "odds": 3.29
+          },
+          {
+            "code": "Mfuni, Stephen",
+            "label": "Mfuni, Stephen",
+            "odds": 10.48
+          },
+          {
+            "code": "Dewsbury-Hall, Kiernan",
+            "label": "Dewsbury-Hall, Kiernan",
+            "odds": 2.16
+          }
+        ]
+      },
+      "index": 23,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik (lub zmiennik) strzeli gola lub zaliczy asystę"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_LAST",
+        "marketKey": "GOALSCORER_LAST",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Michael Keane",
+            "label": "Keane, Michael",
+            "odds": 11.19
+          },
+          {
+            "code": "Tatsuhiro Sakamoto",
+            "label": "Sakamoto, Tatsuhiro",
+            "odds": 10.94
+          },
+          {
+            "code": "Jack Rudoni",
+            "label": "Rudoni, Jack",
+            "odds": 8.36
+          },
+          {
+            "code": "Jarrad Branthwaite",
+            "label": "Branthwaite, Jarrad",
+            "odds": 11.69
+          },
+          {
+            "code": "Loum Tchaouna",
+            "label": "Tchaouna, Loum",
+            "odds": 10.45
+          },
+          {
+            "code": "Hayden Hackney",
+            "label": "Hackney, Hayden",
+            "odds": 9.85
+          },
+          {
+            "code": "Carlos Alcaraz",
+            "label": "Alcaraz, Carlos",
+            "odds": 8.26
+          },
+          {
+            "code": "Bobby Thomas",
+            "label": "Thomas, Bobby",
+            "odds": 14.43
+          },
+          {
+            "code": "Brennan Johnson",
+            "label": "Johnson, Brennan",
+            "odds": 6.47
+          },
+          {
+            "code": "Ellis Reco Simms",
+            "label": "Simms, Ellis Reco",
+            "odds": 7.16
+          },
+          {
+            "code": "Thierno Barry",
+            "label": "Barry, Thierno",
+            "odds": 4.18
+          },
+          {
+            "code": "Tyler Dibling",
+            "label": "Dibling, Tyler",
+            "odds": 7.86
+          },
+          {
+            "code": "Tyrique George",
+            "label": "George, Tyrique",
+            "odds": 6.67
+          },
+          {
+            "code": "Braiden Graham",
+            "label": "Graham, Braiden",
+            "odds": 5.27
+          },
+          {
+            "code": "Sidiki Cherif",
+            "label": "Cherif, Sidiki",
+            "odds": 8.06
+          },
+          {
+            "code": "Stephen Mfuni",
+            "label": "Mfuni, Stephen",
+            "odds": 14.92
+          },
+          {
+            "code": "Caleb Yirenkyi",
+            "label": "Yirenkyi, Caleb",
+            "odds": 13.18
+          },
+          {
+            "code": "Merlin Rohl",
+            "label": "Rohl, Merlin",
+            "odds": 9.45
+          },
+          {
+            "code": "Harrison Armstrong",
+            "label": "Armstrong, Harrison",
+            "odds": 10.45
+          },
+          {
+            "code": "Jake O'Brien",
+            "label": "O'Brien, Jake",
+            "odds": 12.93
+          },
+          {
+            "code": "Yann Gboho",
+            "label": "Gboho, Yann",
+            "odds": 8.46
+          },
+          {
+            "code": "Christian Norgaard",
+            "label": "Norgaard, Christian",
+            "odds": 10.94
+          },
+          {
+            "code": "James Tarkowski",
+            "label": "Tarkowski, James",
+            "odds": 11.44
+          },
+          {
+            "code": "Matt Grimes",
+            "label": "Grimes, Matt",
+            "odds": 14.43
+          },
+          {
+            "code": "Ainsley Maitland-Niles",
+            "label": "Maitland-Niles, Ainsley",
+            "odds": 12.44
+          },
+          {
+            "code": "Taiwo Awoniyi",
+            "label": "Awoniyi, Taiwo",
+            "odds": 6.96
+          },
+          {
+            "code": "Jay DaSilva",
+            "label": "DaSilva, Jay",
+            "odds": 16.91
+          },
+          {
+            "code": "Vitaliy Mykolenko",
+            "label": "Mykolenko, Vitaliy",
+            "odds": 14.43
+          },
+          {
+            "code": "Milan Van Ewijk",
+            "label": "Van Ewijk, Milan",
+            "odds": 16.91
+          },
+          {
+            "code": "Victor Torp",
+            "label": "Torp, Victor",
+            "odds": 10.45
+          },
+          {
+            "code": "Gustavo Hamer",
+            "label": "Hamer, Gustavo",
+            "odds": 10.45
+          },
+          {
+            "code": "Brandon Thomas-Asante",
+            "label": "Thomas-Asante, Brandon",
+            "odds": 8.16
+          },
+          {
+            "code": "Joel Latibeaudiere",
+            "label": "Latibeaudiere, Joel",
+            "odds": 17.91
+          },
+          {
+            "code": "Kiernan Dewsbury-Hall",
+            "label": "Dewsbury-Hall, Kiernan",
+            "odds": 6.27
+          },
+          {
+            "code": "Ethan Pinnock",
+            "label": "Pinnock, Ethan",
+            "odds": 15.92
+          },
+          {
+            "code": "Ephron Mason-Clark",
+            "label": "Mason-Clark, Ephron",
+            "odds": 8.86
+          },
+          {
+            "code": "James Garner",
+            "label": "Garner, James",
+            "odds": 9.95
+          },
+          {
+            "code": "Frank Onyeka",
+            "label": "Onyeka, Frank",
+            "odds": 14.43
+          }
+        ]
+      },
+      "index": 24,
+      "marketCode": "GOALSCORER_LAST",
+      "rawName": "Strzelec ostatniego gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_FIRST",
+        "marketKey": "GOALSCORER_FIRST",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Michael Keane",
+            "label": "Keane, Michael",
+            "odds": 11.19
+          },
+          {
+            "code": "Tatsuhiro Sakamoto",
+            "label": "Sakamoto, Tatsuhiro",
+            "odds": 10.94
+          },
+          {
+            "code": "Jack Rudoni",
+            "label": "Rudoni, Jack",
+            "odds": 8.36
+          },
+          {
+            "code": "Jarrad Branthwaite",
+            "label": "Branthwaite, Jarrad",
+            "odds": 11.69
+          },
+          {
+            "code": "Loum Tchaouna",
+            "label": "Tchaouna, Loum",
+            "odds": 10.45
+          },
+          {
+            "code": "Hayden Hackney",
+            "label": "Hackney, Hayden",
+            "odds": 9.85
+          },
+          {
+            "code": "Carlos Alcaraz",
+            "label": "Alcaraz, Carlos",
+            "odds": 8.26
+          },
+          {
+            "code": "Bobby Thomas",
+            "label": "Thomas, Bobby",
+            "odds": 14.43
+          },
+          {
+            "code": "Brennan Johnson",
+            "label": "Johnson, Brennan",
+            "odds": 6.47
+          },
+          {
+            "code": "Ellis Reco Simms",
+            "label": "Simms, Ellis Reco",
+            "odds": 7.16
+          },
+          {
+            "code": "Thierno Barry",
+            "label": "Barry, Thierno",
+            "odds": 4.18
+          },
+          {
+            "code": "Tyler Dibling",
+            "label": "Dibling, Tyler",
+            "odds": 7.86
+          },
+          {
+            "code": "Tyrique George",
+            "label": "George, Tyrique",
+            "odds": 6.67
+          },
+          {
+            "code": "Braiden Graham",
+            "label": "Graham, Braiden",
+            "odds": 5.27
+          },
+          {
+            "code": "Sidiki Cherif",
+            "label": "Cherif, Sidiki",
+            "odds": 8.06
+          },
+          {
+            "code": "Stephen Mfuni",
+            "label": "Mfuni, Stephen",
+            "odds": 14.92
+          },
+          {
+            "code": "Caleb Yirenkyi",
+            "label": "Yirenkyi, Caleb",
+            "odds": 13.18
+          },
+          {
+            "code": "Merlin Rohl",
+            "label": "Rohl, Merlin",
+            "odds": 9.45
+          },
+          {
+            "code": "Harrison Armstrong",
+            "label": "Armstrong, Harrison",
+            "odds": 10.45
+          },
+          {
+            "code": "Jake O'Brien",
+            "label": "O'Brien, Jake",
+            "odds": 12.93
+          },
+          {
+            "code": "Yann Gboho",
+            "label": "Gboho, Yann",
+            "odds": 8.46
+          },
+          {
+            "code": "Christian Norgaard",
+            "label": "Norgaard, Christian",
+            "odds": 10.94
+          },
+          {
+            "code": "James Tarkowski",
+            "label": "Tarkowski, James",
+            "odds": 11.44
+          },
+          {
+            "code": "Matt Grimes",
+            "label": "Grimes, Matt",
+            "odds": 14.43
+          },
+          {
+            "code": "Ainsley Maitland-Niles",
+            "label": "Maitland-Niles, Ainsley",
+            "odds": 12.44
+          },
+          {
+            "code": "Taiwo Awoniyi",
+            "label": "Awoniyi, Taiwo",
+            "odds": 6.96
+          },
+          {
+            "code": "Jay DaSilva",
+            "label": "DaSilva, Jay",
+            "odds": 16.91
+          },
+          {
+            "code": "Vitaliy Mykolenko",
+            "label": "Mykolenko, Vitaliy",
+            "odds": 14.43
+          },
+          {
+            "code": "Milan Van Ewijk",
+            "label": "Van Ewijk, Milan",
+            "odds": 16.91
+          },
+          {
+            "code": "Victor Torp",
+            "label": "Torp, Victor",
+            "odds": 10.45
+          },
+          {
+            "code": "Gustavo Hamer",
+            "label": "Hamer, Gustavo",
+            "odds": 10.45
+          },
+          {
+            "code": "Brandon Thomas-Asante",
+            "label": "Thomas-Asante, Brandon",
+            "odds": 8.16
+          },
+          {
+            "code": "Joel Latibeaudiere",
+            "label": "Latibeaudiere, Joel",
+            "odds": 17.91
+          },
+          {
+            "code": "Kiernan Dewsbury-Hall",
+            "label": "Dewsbury-Hall, Kiernan",
+            "odds": 6.27
+          },
+          {
+            "code": "Ethan Pinnock",
+            "label": "Pinnock, Ethan",
+            "odds": 15.92
+          },
+          {
+            "code": "Ephron Mason-Clark",
+            "label": "Mason-Clark, Ephron",
+            "odds": 8.86
+          },
+          {
+            "code": "James Garner",
+            "label": "Garner, James",
+            "odds": 9.95
+          },
+          {
+            "code": "Frank Onyeka",
+            "label": "Onyeka, Frank",
+            "odds": 14.43
+          }
+        ]
+      },
+      "index": 25,
+      "marketCode": "GOALSCORER_FIRST",
+      "rawName": "1. strzelec gola"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 26,
+      "marketCode": "OTHER",
+      "rawName": "strzałów 2+  zawodnika (lub zmiennika)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 27,
+      "marketCode": "OTHER",
+      "rawName": "+ 2 fauli zawodnika (lub zmiennika)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 28,
+      "marketCode": "OTHER",
+      "rawName": "Gracz 4+obrony"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 29,
+      "marketCode": "OTHER",
+      "rawName": "Gracz 2 +faule wywalczone"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 30,
+      "marketCode": "OTHER",
+      "rawName": "+ strzałów 1 celnych głową zawodnika"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 31,
+      "marketCode": "OTHER",
+      "rawName": "Gracz 1+ spalone"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 32,
+      "marketCode": "OTHER",
+      "rawName": "1+ strzałów celnych spoza pola karnego zawodnika"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 33,
+      "marketCode": "OTHER",
+      "rawName": "+ strzałów 1 celnych zawodnika (lub zmiennika)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 34,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik strzeli gola i zaliczy asystę"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 35,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik wyrzucony z boiska (lub zmiennik)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 36,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik 1 z asystą (Supersub)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 37,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik strzeli gola lewą nogą"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 38,
+      "marketCode": "OTHER",
+      "rawName": "Gracz strzeli głową"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 39,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik strzeli gola w pierwszej połowie"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 40,
+      "marketCode": "OTHER",
+      "rawName": "Gracz strzeli z rzutu wolnego"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 41,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik strzeli gola prawą nogą"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 42,
+      "marketCode": "OTHER",
+      "rawName": "Pierwszy zawodnik z kartką"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 43,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik strzeli gola spoza pola karnego"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 44,
+      "marketCode": "OTHER",
+      "rawName": "Zawodnik z żółtą kartką"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 45,
+      "marketCode": "OTHER",
+      "rawName": "Liczba goli gracza (z dogrywką)"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 46,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Podwójna szansa & oba zespoły strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORRECT_SCORE",
+        "marketKey": "HALF_TIME_CORRECT_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-0",
+            "label": "0:0",
+            "odds": 2.85
+          },
+          {
+            "code": "1-1",
+            "label": "1:1",
+            "odds": 7.68
+          },
+          {
+            "code": "2-2",
+            "label": "2:2",
+            "odds": 83.66
+          },
+          {
+            "code": "1-0",
+            "label": "1:0",
+            "odds": 3.4
+          },
+          {
+            "code": "2-0",
+            "label": "2:0",
+            "odds": 7.78
+          },
+          {
+            "code": "2-1",
+            "label": "2:1",
+            "odds": 17.72
+          },
+          {
+            "code": "0-1",
+            "label": "0:1",
+            "odds": 6.5
+          },
+          {
+            "code": "0-2",
+            "label": "0:2",
+            "odds": 29.53
+          },
+          {
+            "code": "1-2",
+            "label": "1:2",
+            "odds": 35.43
+          },
+          {
+            "code": "OTHER",
+            "label": "inny",
+            "odds": 12.3
+          }
+        ]
+      },
+      "index": 47,
+      "marketCode": "HALF_TIME_CORRECT_SCORE",
+      "rawName": "1. Połowa - Dokładny wynik"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_DOUBLE_CHANCE",
+        "marketKey": "HALF_TIME_DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Everton FC lub remis",
+            "odds": 1.15
+          },
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Everton FC lub Coventry City",
+            "odds": 1.49
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Coventry City",
+            "odds": 1.57
+          }
+        ]
+      },
+      "index": 48,
+      "marketCode": "HALF_TIME_DOUBLE_CHANCE",
+      "rawName": "1. Połowa - Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_DRAW_NO_BET",
+        "marketKey": "HALF_TIME_DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.32
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 2.99
+          }
+        ]
+      },
+      "index": 49,
+      "marketCode": "HALF_TIME_DRAW_NO_BET",
+      "rawName": "1. Połowa - Remis bez zakładu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_BTTS",
+        "marketKey": "HALF_TIME_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.22
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.17
+          }
+        ]
+      },
+      "index": 50,
+      "marketCode": "HALF_TIME_BTTS",
+      "rawName": "1. Połowa - Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 51,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_ODD_EVEN_GOALS",
+        "marketKey": "HALF_TIME_ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 2.05
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.75
+          }
+        ]
+      },
+      "index": 52,
+      "marketCode": "HALF_TIME_ODD_EVEN_GOALS",
+      "rawName": "1. Połowa - Parzyste/Nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_FIRST_GOAL",
+        "marketKey": "HALF_TIME_FIRST_GOAL",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.95
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 3.14
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 3.73
+          }
+        ]
+      },
+      "index": 53,
+      "marketCode": "HALF_TIME_FIRST_GOAL",
+      "rawName": "1. Połowa - 1. gol"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.63
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 2.06
+          }
+        ]
+      },
+      "index": 54,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Everton FC Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 4.03
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.18
+          }
+        ]
+      },
+      "index": 55,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Everton FC Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 2.55
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 1.41
+          }
+        ]
+      },
+      "index": 56,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Coventry City Suma"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 57,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Everton FC czyste konto"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 58,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Coventry City czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (1:0)",
+            "label": "Everton FC (1:0)",
+            "odds": 1.13
+          },
+          {
+            "code": "remis (1:0)",
+            "label": "remis (1:0)",
+            "odds": 5.21
+          },
+          {
+            "code": "Coventry City (1:0)",
+            "label": "Coventry City (1:0)",
+            "odds": 21.61
+          },
+          {
+            "code": "Everton FC (0:1)",
+            "label": "Everton FC (0:1)",
+            "odds": 5.7
+          },
+          {
+            "code": "remis (0:1)",
+            "label": "remis (0:1)",
+            "odds": 3.09
+          },
+          {
+            "code": "Coventry City (0:1)",
+            "label": "Coventry City (0:1)",
+            "odds": 1.6
+          },
+          {
+            "code": "Everton FC (0:2)",
+            "label": "Everton FC (0:2)",
+            "odds": 18.66
+          },
+          {
+            "code": "remis (0:2)",
+            "label": "remis (0:2)",
+            "odds": 6.38
+          },
+          {
+            "code": "Coventry City (0:2)",
+            "label": "Coventry City (0:2)",
+            "odds": 1.1
+          },
+          {
+            "code": "Everton FC (0:3)",
+            "label": "Everton FC (0:3)",
+            "odds": 44.2
+          },
+          {
+            "code": "remis (0:3)",
+            "label": "remis (0:3)",
+            "odds": 11.05
+          },
+          {
+            "code": "Coventry City (0:3)",
+            "label": "Coventry City (0:3)",
+            "odds": 1.01
+          }
+        ]
+      },
+      "index": 59,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 1.64
+          },
+          {
+            "code": "Coventry City",
+            "label": "Coventry City",
+            "odds": 2.03
+          }
+        ]
+      },
+      "index": 60,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC bez zakładu"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC",
+            "label": "Everton FC",
+            "odds": 1.32
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 2.95
+          }
+        ]
+      },
+      "index": 61,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City bez zakładu"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.93
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.84
+          }
+        ]
+      },
+      "index": 62,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Parzyste/Nieparzyste"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 2.19
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.66
+          }
+        ]
+      },
+      "index": 63,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City Parzyste/Nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.5
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 2.36
+          }
+        ]
+      },
+      "index": 64,
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+      "rawName": "Coventry City Liczba Goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 3.44
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.26
+          }
+        ]
+      },
+      "index": 65,
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+      "rawName": "Coventry City Liczba Goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.13
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 4.91
+          }
+        ]
+      },
+      "index": 66,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Liczba Goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 1.69
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 2.01
+          }
+        ]
+      },
+      "index": 67,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Liczba Goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 2.5",
+            "label": "ponad 2.5",
+            "odds": 3.09
+          },
+          {
+            "code": "poniżej 2.5",
+            "label": "poniżej 2.5",
+            "odds": 1.31
+          }
+        ]
+      },
+      "index": 68,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Liczba Goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 3.5",
+            "label": "ponad 3.5",
+            "odds": 6.28
+          },
+          {
+            "code": "poniżej 3.5",
+            "label": "poniżej 3.5",
+            "odds": 1.07
+          }
+        ]
+      },
+      "index": 69,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Liczba Goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1",
+            "odds": 3.64
+          },
+          {
+            "code": "2-3",
+            "label": "2-3",
+            "odds": 1.92
+          },
+          {
+            "code": "4-5",
+            "label": "4-5",
+            "odds": 3.44
+          },
+          {
+            "code": "6+",
+            "label": "6+",
+            "odds": 12.04
+          }
+        ]
+      },
+      "index": 70,
+      "marketCode": "OTHER",
+      "rawName": "Zakres liczby goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_WITH_MORE_GOALS",
+        "marketKey": "HALF_WITH_MORE_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1ST_HALF",
+            "label": "1. Połowa",
+            "odds": 2.95
+          },
+          {
+            "code": "2ND_HALF",
+            "label": "2. Połowa",
+            "odds": 2.05
+          },
+          {
+            "code": "DRAW",
+            "label": "równo",
+            "odds": 3.44
+          }
+        ]
+      },
+      "index": 71,
+      "marketCode": "HALF_WITH_MORE_GOALS",
+      "rawName": "Połowa z największą liczbą goli"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 72,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC zdobędzie gola w obu połowach"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 73,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City zdobędzie gola w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_GOAL_TIME",
+        "marketKey": "FIRST_GOAL_TIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-10",
+            "label": "1-10",
+            "odds": 4.03
+          },
+          {
+            "code": "11-20",
+            "label": "11-20",
+            "odds": 4.52
+          },
+          {
+            "code": "21-30",
+            "label": "21-30",
+            "odds": 5.71
+          },
+          {
+            "code": "31-40",
+            "label": "31-40",
+            "odds": 7.28
+          },
+          {
+            "code": "41-50",
+            "label": "41-50",
+            "odds": 7.97
+          },
+          {
+            "code": "51-60",
+            "label": "51-60",
+            "odds": 12.05
+          },
+          {
+            "code": "61-70",
+            "label": "61-70",
+            "odds": 16.72
+          },
+          {
+            "code": "71-80",
+            "label": "71-80",
+            "odds": 22.62
+          },
+          {
+            "code": "81-90",
+            "label": "81-90",
+            "odds": 21.64
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 12.3
+          }
+        ]
+      },
+      "index": 74,
+      "marketCode": "FIRST_GOAL_TIME",
+      "rawName": "Kiedy zostanie strzelony 1. gol (10 min interwał)"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_GOAL_TIME_ALT",
+        "marketKey": "FIRST_GOAL_TIME_ALT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1-15",
+            "label": "1-15",
+            "odds": 2.8
+          },
+          {
+            "code": "16-30",
+            "label": "16-30",
+            "odds": 3.59
+          },
+          {
+            "code": "31-45",
+            "label": "31-45",
+            "odds": 4.52
+          },
+          {
+            "code": "46-60",
+            "label": "46-60",
+            "odds": 7.87
+          },
+          {
+            "code": "61-75",
+            "label": "61-75",
+            "odds": 11.56
+          },
+          {
+            "code": "76-90",
+            "label": "76-90",
+            "odds": 14.75
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 12.05
+          }
+        ]
+      },
+      "index": 75,
+      "marketCode": "FIRST_GOAL_TIME_ALT",
+      "rawName": "Kiedy zostanie strzelony 1. gol (15 min interwał)"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 2.33
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 76,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+        "marketKey": "HOME_HALF_WITH_MOST_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1ST_HALF",
+            "label": "1. Połowa",
+            "odds": 3
+          },
+          {
+            "code": "2ND_HALF",
+            "label": "2. Połowa",
+            "odds": 2.33
+          },
+          {
+            "code": "DRAW",
+            "label": "równo",
+            "odds": 2.75
+          }
+        ]
+      },
+      "index": 77,
+      "marketCode": "HOME_HALF_WITH_MOST_GOALS",
+      "rawName": "Everton FC Połowa z największą liczbą goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+        "marketKey": "AWAY_HALF_WITH_MOST_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1ST_HALF",
+            "label": "1. Połowa",
+            "odds": 3.83
+          },
+          {
+            "code": "2ND_HALF",
+            "label": "2. Połowa",
+            "odds": 2.9
+          },
+          {
+            "code": "DRAW",
+            "label": "równo",
+            "odds": 1.92
+          }
+        ]
+      },
+      "index": 78,
+      "marketCode": "AWAY_HALF_WITH_MOST_GOALS",
+      "rawName": "Coventry City Połowa z największą liczbą goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.81
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.12
+          }
+        ]
+      },
+      "index": 79,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City czyste konto"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 80,
+      "marketCode": "OTHER",
+      "rawName": "Ostatni gol"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "Nieparzysty",
+            "odds": 1.92
+          },
+          {
+            "code": "EVEN",
+            "label": "Parzysty",
+            "odds": 1.85
+          }
+        ]
+      },
+      "index": 81,
+      "marketCode": "OTHER",
+      "rawName": "Nieparzyste/Parzyste"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 5.4
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 3.05
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.29
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 3.14
+          }
+        ]
+      },
+      "index": 82,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Dokładna liczba goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 2.35
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.43
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 4.91
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 11.54
+          }
+        ]
+      },
+      "index": 83,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:9.5",
+        "matchedBy": "id",
+        "paramValue": "9.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 9.5",
+            "odds": 1.82
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 9.5",
+            "odds": 1.79
+          }
+        ]
+      },
+      "index": 84,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORNERS_TOTAL",
+        "marketKey": "HALF_TIME_CORNERS_TOTAL:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 4.5",
+            "odds": 1.88
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 4.5",
+            "odds": 1.73
+          }
+        ]
+      },
+      "index": 85,
+      "marketCode": "HALF_TIME_CORNERS_TOTAL",
+      "rawName": "1. Połowa - Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_RANGE",
+        "marketKey": "CORNERS_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-8",
+            "label": "0-8",
+            "odds": 2.29
+          },
+          {
+            "code": "9-11",
+            "label": "9-11",
+            "odds": 2.65
+          },
+          {
+            "code": "12+",
+            "label": "12+",
+            "odds": 3.05
+          }
+        ]
+      },
+      "index": 86,
+      "marketCode": "CORNERS_RANGE",
+      "rawName": "Zakres liczby rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_RACE",
+        "marketKey": "CORNERS_RACE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.5
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 8.06
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 2.8
+          }
+        ]
+      },
+      "index": 87,
+      "marketCode": "CORNERS_RACE",
+      "rawName": "Rzut rożny 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORNERS_RACE",
+        "marketKey": "HALF_TIME_CORNERS_RACE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.72
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 5.01
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 2.8
+          }
+        ]
+      },
+      "index": 88,
+      "marketCode": "HALF_TIME_CORNERS_RACE",
+      "rawName": "1. Połowa - Rzut rożny 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_ODD_EVEN",
+        "marketKey": "CORNERS_ODD_EVEN",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.88
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.89
+          }
+        ]
+      },
+      "index": 89,
+      "marketCode": "CORNERS_ODD_EVEN",
+      "rawName": "Parzyste/Nieparzyste rzuty rożne"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORNERS_ODD_EVEN",
+        "marketKey": "HALF_TIME_CORNERS_ODD_EVEN",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.88
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.88
+          }
+        ]
+      },
+      "index": 90,
+      "marketCode": "HALF_TIME_CORNERS_ODD_EVEN",
+      "rawName": "1. Połowa - Parzyste/Nieparzyste rzuty rożne"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:11.5",
+        "matchedBy": "id",
+        "paramValue": "11.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 11.5",
+            "odds": 2.95
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 11.5",
+            "odds": 1.3
+          }
+        ]
+      },
+      "index": 91,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:10.5",
+        "matchedBy": "id",
+        "paramValue": "10.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 10.5",
+            "odds": 2.28
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 10.5",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 92,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:7.5",
+        "matchedBy": "id",
+        "paramValue": "7.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 7.5",
+            "odds": 1.28
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 7.5",
+            "odds": 3.04
+          }
+        ]
+      },
+      "index": 93,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_TOTAL",
+        "marketKey": "CORNERS_TOTAL:8.5",
+        "matchedBy": "id",
+        "paramValue": "8.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 8.5",
+            "odds": 1.49
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 8.5",
+            "odds": 2.28
+          }
+        ]
+      },
+      "index": 94,
+      "marketCode": "CORNERS_TOTAL",
+      "rawName": "Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORNERS_TOTAL",
+        "marketKey": "HALF_TIME_CORNERS_TOTAL:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 3.5",
+            "odds": 1.41
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 3.5",
+            "odds": 2.5
+          }
+        ]
+      },
+      "index": 95,
+      "marketCode": "HALF_TIME_CORNERS_TOTAL",
+      "rawName": "1. Połowa - Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORNERS_TOTAL",
+        "marketKey": "HALF_TIME_CORNERS_TOTAL:5.5",
+        "matchedBy": "id",
+        "paramValue": "5.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 5.5",
+            "odds": 2.65
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 5.5",
+            "odds": 1.36
+          }
+        ]
+      },
+      "index": 96,
+      "marketCode": "HALF_TIME_CORNERS_TOTAL",
+      "rawName": "1. Połowa - Suma rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_HANDICAP",
+        "marketKey": "CORNERS_HANDICAP:-1.5",
+        "matchedBy": "id",
+        "paramValue": "-1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC (-1.5)",
+            "odds": 1.83
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City (+1.5)",
+            "odds": 1.78
+          }
+        ]
+      },
+      "index": 97,
+      "marketCode": "CORNERS_HANDICAP",
+      "rawName": "Rzuty rożne Handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_HANDICAP",
+        "marketKey": "CORNERS_HANDICAP:-2.5",
+        "matchedBy": "id",
+        "paramValue": "-2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC (-2.5)",
+            "odds": 2.28
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City (+2.5)",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 98,
+      "marketCode": "CORNERS_HANDICAP",
+      "rawName": "Rzuty rożne Handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORNERS_HANDICAP",
+        "marketKey": "CORNERS_HANDICAP:-0.5",
+        "matchedBy": "id",
+        "paramValue": "-0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC (-0.5)",
+            "odds": 1.52
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City (+0.5)",
+            "odds": 2.2
+          }
+        ]
+      },
+      "index": 99,
+      "marketCode": "CORNERS_HANDICAP",
+      "rawName": "Rzuty rożne Handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (+0.5)",
+            "label": "Everton FC (+0.5)",
+            "odds": 1.33
+          },
+          {
+            "code": "Coventry City (-0.5)",
+            "label": "Coventry City (-0.5)",
+            "odds": 2.7
+          }
+        ]
+      },
+      "index": 100,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Rzuty rożne Handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-1.5)",
+            "label": "Everton FC (-1.5)",
+            "odds": 2.42
+          },
+          {
+            "code": "Coventry City (+1.5)",
+            "label": "Coventry City (+1.5)",
+            "odds": 1.41
+          }
+        ]
+      },
+      "index": 101,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Rzuty rożne Handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-0.5)",
+            "label": "Everton FC (-0.5)",
+            "odds": 1.71
+          },
+          {
+            "code": "Coventry City (+0.5)",
+            "label": "Coventry City (+0.5)",
+            "odds": 1.87
+          }
+        ]
+      },
+      "index": 102,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Rzuty rożne Handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 5.5",
+            "label": "ponad 5.5",
+            "odds": 1.9
+          },
+          {
+            "code": "poniżej 5.5",
+            "label": "poniżej 5.5",
+            "odds": 1.72
+          }
+        ]
+      },
+      "index": 103,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC Suma rzutów rożnych"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 104,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City Suma rzutów rożnych"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0:0",
+            "label": "0:0",
+            "odds": 11.33
+          },
+          {
+            "code": "1:0",
+            "label": "1:0",
+            "odds": 6.99
+          },
+          {
+            "code": "2:0",
+            "label": "2:0",
+            "odds": 7.49
+          },
+          {
+            "code": "3:0",
+            "label": "3:0",
+            "odds": 11.82
+          },
+          {
+            "code": "4:0",
+            "label": "4:0",
+            "odds": 25.61
+          },
+          {
+            "code": "0:1",
+            "label": "0:1",
+            "odds": 13.05
+          },
+          {
+            "code": "1:1",
+            "label": "1:1",
+            "odds": 6.8
+          },
+          {
+            "code": "2:1",
+            "label": "2:1",
+            "odds": 7.78
+          },
+          {
+            "code": "3:1",
+            "label": "3:1",
+            "odds": 12.31
+          },
+          {
+            "code": "4:1",
+            "label": "4:1",
+            "odds": 26.6
+          },
+          {
+            "code": "0:2",
+            "label": "0:2",
+            "odds": 26.6
+          },
+          {
+            "code": "1:2",
+            "label": "1:2",
+            "odds": 14.78
+          },
+          {
+            "code": "2:2",
+            "label": "2:2",
+            "odds": 14.78
+          },
+          {
+            "code": "3:2",
+            "label": "3:2",
+            "odds": 25.61
+          },
+          {
+            "code": "4:2",
+            "label": "4:2",
+            "odds": 54.18
+          },
+          {
+            "code": "0:3",
+            "label": "0:3",
+            "odds": 83.74
+          },
+          {
+            "code": "1:3",
+            "label": "1:3",
+            "odds": 44.33
+          },
+          {
+            "code": "2:3",
+            "label": "2:3",
+            "odds": 49.26
+          },
+          {
+            "code": "3:3",
+            "label": "3:3",
+            "odds": 73.89
+          },
+          {
+            "code": "4:3",
+            "label": "4:3",
+            "odds": 167.48
+          },
+          {
+            "code": "0:4",
+            "label": "0:4",
+            "odds": 197.04
+          },
+          {
+            "code": "1:4",
+            "label": "1:4",
+            "odds": 187.18
+          },
+          {
+            "code": "2:4",
+            "label": "2:4",
+            "odds": 197.04
+          },
+          {
+            "code": "3:4",
+            "label": "3:4",
+            "odds": 197.04
+          },
+          {
+            "code": "4:4",
+            "label": "4:4",
+            "odds": 197.04
+          },
+          {
+            "code": "inny",
+            "label": "inny",
+            "odds": 16.75
+          }
+        ]
+      },
+      "index": 105,
+      "marketCode": "OTHER",
+      "rawName": "Dokładny wynik"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MULTI_RESULT",
+        "marketKey": "MULTI_RESULT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "GROUP_1_0__2_0__3_0",
+            "label": "1:0, 2:0 lub 3:0",
+            "odds": 3.29
+          },
+          {
+            "code": "GROUP_0_1__0_2__0_3",
+            "label": "0:1, 0:2 lub 0:3",
+            "odds": 9.33
+          },
+          {
+            "code": "GROUP_4_0__5_0__6_0",
+            "label": "4:0, 5:0 lub 6:0",
+            "odds": 19.65
+          },
+          {
+            "code": "GROUP_0_4__0_5__0_6",
+            "label": "0:4, 0:5 lub 0:6",
+            "odds": 196.51
+          },
+          {
+            "code": "GROUP_2_1__3_1__4_1",
+            "label": "2:1, 3:1 lub 4:1",
+            "odds": 4.72
+          },
+          {
+            "code": "GROUP_1_2__1_3__1_4",
+            "label": "1:2, 1:3 lub 1:4",
+            "odds": 12.28
+          },
+          {
+            "code": "GROUP_3_2__4_2__4_3__5_1",
+            "label": "3:2, 4:2, 4:3 lub 5:1",
+            "odds": 14.74
+          },
+          {
+            "code": "GROUP_2_3__2_4__3_4__1_5",
+            "label": "2:3, 2:4, 3:4 lub 1:5",
+            "odds": 39.3
+          },
+          {
+            "code": "HOME_OTHER",
+            "label": "inne zwycięstwo gospodarzy",
+            "odds": 54.04
+          },
+          {
+            "code": "AWAY_OTHER",
+            "label": "inne zwycięstwo gości",
+            "odds": 196.51
+          },
+          {
+            "code": "X",
+            "label": "remis",
+            "odds": 3.73
+          }
+        ]
+      },
+      "index": 106,
+      "marketCode": "MULTI_RESULT",
+      "rawName": "Dokładny multi-wynik"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 4.5",
+            "label": "ponad 4.5",
+            "odds": 2.22
+          },
+          {
+            "code": "poniżej 4.5",
+            "label": "poniżej 4.5",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 107,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_HOME_EXACT_CARDS",
+        "marketKey": "HALF_TIME_HOME_EXACT_CARDS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.63
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.41
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 6.69
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 23.61
+          }
+        ]
+      },
+      "index": 108,
+      "marketCode": "HALF_TIME_HOME_EXACT_CARDS",
+      "rawName": "1. Połowa - Everton FC Dokładna liczba kartek"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1",
+            "odds": 2.46
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 2.9
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 3.89
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 4.62
+          }
+        ]
+      },
+      "index": 109,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City Dokładna liczba kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_AWAY_EXACT_CARDS",
+        "marketKey": "HALF_TIME_AWAY_EXACT_CARDS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.82
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.32
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 5.61
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 16.72
+          }
+        ]
+      },
+      "index": 110,
+      "marketCode": "HALF_TIME_AWAY_EXACT_CARDS",
+      "rawName": "1. Połowa - Coventry City Dokładna liczba kartek"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 111,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - 1. kartka"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CARDS_RACE",
+        "marketKey": "CARDS_RACE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 2.75
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 3.83
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 112,
+      "marketCode": "CARDS_RACE",
+      "rawName": "Kartki 1x2"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC",
+            "label": "Everton FC",
+            "odds": 3.24
+          },
+          {
+            "code": "remis",
+            "label": "remis",
+            "odds": 2.19
+          },
+          {
+            "code": "Coventry City",
+            "label": "Coventry City",
+            "odds": 2.6
+          }
+        ]
+      },
+      "index": 113,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Kartki 1x2"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 3.5",
+            "label": "ponad 3.5",
+            "odds": 1.55
+          },
+          {
+            "code": "poniżej 3.5",
+            "label": "poniżej 3.5",
+            "odds": 2.09
+          }
+        ]
+      },
+      "index": 114,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.1
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.55
+          }
+        ]
+      },
+      "index": 115,
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
+      "rawName": "1. Połowa - Suma kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_EXACT_CARDS",
+        "marketKey": "HOME_EXACT_CARDS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1",
+            "odds": 1.96
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 2.9
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 4.62
+          },
+          {
+            "code": "4+",
+            "label": "4+",
+            "odds": 6.79
+          }
+        ]
+      },
+      "index": 116,
+      "marketCode": "HOME_EXACT_CARDS",
+      "rawName": "Everton FC Dokładna liczba kartek"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 2.5",
+            "label": "ponad 2.5",
+            "odds": 1.21
+          },
+          {
+            "code": "poniżej 2.5",
+            "label": "poniżej 2.5",
+            "odds": 3.44
+          }
+        ]
+      },
+      "index": 117,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.14
+          }
+        ]
+      },
+      "index": 118,
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
+      "rawName": "1. Połowa - Suma kartek"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CARDS_TOTAL",
+        "marketKey": "HALF_TIME_CARDS_TOTAL:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 4.13
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.14
+          }
+        ]
+      },
+      "index": 119,
+      "marketCode": "HALF_TIME_CARDS_TOTAL",
+      "rawName": "1. Połowa - Suma kartek"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 120,
+      "marketCode": "OTHER",
+      "rawName": "Everton FC czerwona kartka"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 121,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Everton FC czerwona kartka"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 122,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City czerwona kartka"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 123,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - Coventry City czerwona kartka"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 124,
+      "marketCode": "OTHER",
+      "rawName": "Czerwona kartka"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 125,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - czerwona kartka"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (1:0)",
+            "label": "Everton FC (1:0)",
+            "odds": 1.17
+          },
+          {
+            "code": "remis (1:0)",
+            "label": "remis (1:0)",
+            "odds": 5.11
+          },
+          {
+            "code": "Coventry City (1:0)",
+            "label": "Coventry City (1:0)",
+            "odds": 15.71
+          },
+          {
+            "code": "Everton FC (0:1)",
+            "label": "Everton FC (0:1)",
+            "odds": 4.62
+          },
+          {
+            "code": "remis (0:1)",
+            "label": "remis (0:1)",
+            "odds": 3.19
+          },
+          {
+            "code": "Coventry City (0:1)",
+            "label": "Coventry City (0:1)",
+            "odds": 1.7
+          },
+          {
+            "code": "Everton FC (0:2)",
+            "label": "Everton FC (0:2)",
+            "odds": 12.77
+          },
+          {
+            "code": "remis (0:2)",
+            "label": "remis (0:2)",
+            "odds": 5.79
+          },
+          {
+            "code": "Coventry City (0:2)",
+            "label": "Coventry City (0:2)",
+            "odds": 1.15
+          },
+          {
+            "code": "Everton FC (0:3)",
+            "label": "Everton FC (0:3)",
+            "odds": 31.43
+          },
+          {
+            "code": "remis (0:3)",
+            "label": "remis (0:3)",
+            "odds": 10.31
+          },
+          {
+            "code": "Coventry City (0:3)",
+            "label": "Coventry City (0:3)",
+            "odds": 1.03
+          }
+        ]
+      },
+      "index": 126,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - handicap"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC/remis & tak",
+            "label": "Everton FC/remis & tak",
+            "odds": 3.77
+          },
+          {
+            "code": "Everton FC/remis & nie",
+            "label": "Everton FC/remis & nie",
+            "odds": 1.54
+          },
+          {
+            "code": "Everton FC/Coventry City & tak",
+            "label": "Everton FC/Coventry City & tak",
+            "odds": 6.25
+          },
+          {
+            "code": "Everton FC/Coventry City & nie",
+            "label": "Everton FC/Coventry City & nie",
+            "odds": 1.67
+          },
+          {
+            "code": "remis/Coventry City & tak",
+            "label": "remis/Coventry City & tak",
+            "odds": 4.76
+          },
+          {
+            "code": "remis/Coventry City & nie",
+            "label": "remis/Coventry City & nie",
+            "odds": 2.3
+          }
+        ]
+      },
+      "index": 127,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Podwójna szansa & oba zespoły strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_RESULT",
+        "marketKey": "SECOND_HALF_RESULT",
+        "matchedBy": "name",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.99
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 2.65
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 4.52
+          }
+        ]
+      },
+      "index": 128,
+      "marketCode": "SECOND_HALF_RESULT",
+      "rawName": "2. Połowa - 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:0.5",
+        "matchedBy": "name",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.2
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.93
+          }
+        ]
+      },
+      "index": 129,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:1.5",
+        "matchedBy": "name",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 1.98
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.71
+          }
+        ]
+      },
+      "index": 130,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:2.5",
+        "matchedBy": "name",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 4.12
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.18
+          }
+        ]
+      },
+      "index": 131,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. Połowa - Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (+0.5)",
+            "label": "Everton FC (+0.5)",
+            "odds": 1.17
+          },
+          {
+            "code": "Coventry City (-0.5)",
+            "label": "Coventry City (-0.5)",
+            "odds": 4.03
+          }
+        ]
+      },
+      "index": 132,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-1.5)",
+            "label": "Everton FC (-1.5)",
+            "odds": 4.22
+          },
+          {
+            "code": "Coventry City (+1.5)",
+            "label": "Coventry City (+1.5)",
+            "odds": 1.16
+          }
+        ]
+      },
+      "index": 133,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - handicap"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC (-0.5)",
+            "label": "Everton FC (-0.5)",
+            "odds": 1.95
+          },
+          {
+            "code": "Coventry City (+0.5)",
+            "label": "Coventry City (+0.5)",
+            "odds": 1.7
+          }
+        ]
+      },
+      "index": 134,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - handicap"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 135,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_ODD_EVEN_GOALS",
+        "marketKey": "SECOND_HALF_ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.97
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.81
+          }
+        ]
+      },
+      "index": 136,
+      "marketCode": "SECOND_HALF_ODD_EVEN_GOALS",
+      "rawName": "2. Połowa - Parzyste/Nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_DRAW_NO_BET",
+        "marketKey": "SECOND_HALF_DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.33
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 2.8
+          }
+        ]
+      },
+      "index": 137,
+      "marketCode": "SECOND_HALF_DRAW_NO_BET",
+      "rawName": "2. Połowa - Remis bez zakładu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_DOUBLE_CHANCE",
+        "marketKey": "SECOND_HALF_DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Everton FC lub remis",
+            "odds": 1.18
+          },
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Everton FC lub Coventry City",
+            "odds": 1.38
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Coventry City",
+            "odds": 1.64
+          }
+        ]
+      },
+      "index": 138,
+      "marketCode": "SECOND_HALF_DOUBLE_CHANCE",
+      "rawName": "2. Połowa - Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_EXACT_GOALS",
+        "marketKey": "SECOND_HALF_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 4.13
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.65
+          },
+          {
+            "code": "2+",
+            "label": "2+",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 139,
+      "marketCode": "SECOND_HALF_EXACT_GOALS",
+      "rawName": "2. Połowa - Dokładna liczba goli"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 1.46
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 2.39
+          }
+        ]
+      },
+      "index": 140,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Everton FC Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 3.14
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.28
+          }
+        ]
+      },
+      "index": 141,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Everton FC Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 0.5",
+            "label": "ponad 0.5",
+            "odds": 2.15
+          },
+          {
+            "code": "poniżej 0.5",
+            "label": "poniżej 0.5",
+            "odds": 1.57
+          }
+        ]
+      },
+      "index": 142,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Coventry City Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ponad 1.5",
+            "label": "ponad 1.5",
+            "odds": 6.48
+          },
+          {
+            "code": "poniżej 1.5",
+            "label": "poniżej 1.5",
+            "odds": 1.06
+          }
+        ]
+      },
+      "index": 143,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Coventry City Suma"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 144,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Everton FC czyste konto"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 145,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - Coventry City czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_CORRECT_SCORE",
+        "marketKey": "SECOND_HALF_CORRECT_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-0",
+            "label": "0:0",
+            "odds": 3.79
+          },
+          {
+            "code": "0-1",
+            "label": "0:1",
+            "odds": 6.69
+          },
+          {
+            "code": "0-2",
+            "label": "0:2",
+            "odds": 22.64
+          },
+          {
+            "code": "1-0",
+            "label": "1:0",
+            "odds": 3.79
+          },
+          {
+            "code": "1-1",
+            "label": "1:1",
+            "odds": 6.89
+          },
+          {
+            "code": "1-2",
+            "label": "1:2",
+            "odds": 24.61
+          },
+          {
+            "code": "2-0",
+            "label": "2:0",
+            "odds": 6.99
+          },
+          {
+            "code": "2-1",
+            "label": "2:1",
+            "odds": 13.78
+          },
+          {
+            "code": "2-2",
+            "label": "2:2",
+            "odds": 49.21
+          },
+          {
+            "code": "OTHER",
+            "label": "inny",
+            "odds": 7.68
+          }
+        ]
+      },
+      "index": 146,
+      "marketCode": "SECOND_HALF_CORRECT_SCORE",
+      "rawName": "2. Połowa - Dokładny wynik"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_FIRST_GOAL",
+        "marketKey": "SECOND_HALF_FIRST_GOAL",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Everton FC",
+            "odds": 1.8
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 4.22
+          },
+          {
+            "code": "AWAY",
+            "label": "Coventry City",
+            "odds": 3.24
+          }
+        ]
+      },
+      "index": 147,
+      "marketCode": "SECOND_HALF_FIRST_GOAL",
+      "rawName": "2. Połowa - 1. gol"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_BTTS",
+        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_YES",
+            "label": "Everton FC/remis & tak",
+            "odds": 2.04
+          },
+          {
+            "code": "1X_NO",
+            "label": "Everton FC/remis & nie",
+            "odds": 2.27
+          },
+          {
+            "code": "12_YES",
+            "label": "Everton FC/Coventry City & tak",
+            "odds": 2.45
+          },
+          {
+            "code": "12_NO",
+            "label": "Everton FC/Coventry City & nie",
+            "odds": 2.12
+          },
+          {
+            "code": "X2_YES",
+            "label": "remis/Coventry City & tak",
+            "odds": 3.17
+          },
+          {
+            "code": "X2_NO",
+            "label": "remis/Coventry City & nie",
+            "odds": 5.16
+          }
+        ]
+      },
+      "index": 148,
+      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "rawName": "Podwójna szansa & oba zespoły strzelą"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC & poniżej 1.5",
+            "label": "Everton FC & poniżej 1.5",
+            "odds": 3.64
+          },
+          {
+            "code": "Everton FC & ponad 1.5",
+            "label": "Everton FC & ponad 1.5",
+            "odds": 4.42
+          },
+          {
+            "code": "remis & poniżej 1.5",
+            "label": "remis & poniżej 1.5",
+            "odds": 3
+          },
+          {
+            "code": "remis & ponad 1.5",
+            "label": "remis & ponad 1.5",
+            "odds": 7.57
+          },
+          {
+            "code": "Coventry City & poniżej 1.5",
+            "label": "Coventry City & poniżej 1.5",
+            "odds": 6.98
+          },
+          {
+            "code": "Coventry City & ponad 1.5",
+            "label": "Coventry City & ponad 1.5",
+            "odds": 14.75
+          }
+        ]
+      },
+      "index": 149,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - 1x2 & Suma"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC & tak",
+            "label": "Everton FC & tak",
+            "odds": 13.52
+          },
+          {
+            "code": "Everton FC & nie",
+            "label": "Everton FC & nie",
+            "odds": 2.36
+          },
+          {
+            "code": "remis & tak",
+            "label": "remis & tak",
+            "odds": 7.47
+          },
+          {
+            "code": "remis & nie",
+            "label": "remis & nie",
+            "odds": 3
+          },
+          {
+            "code": "Coventry City & tak",
+            "label": "Coventry City & tak",
+            "odds": 30.47
+          },
+          {
+            "code": "Coventry City & nie",
+            "label": "Coventry City & nie",
+            "odds": 5.6
+          }
+        ]
+      },
+      "index": 150,
+      "marketCode": "OTHER",
+      "rawName": "1. Połowa - 1x2 & Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC/remis & tak",
+            "label": "Everton FC/remis & tak",
+            "odds": 4.56
+          },
+          {
+            "code": "Everton FC/remis & nie",
+            "label": "Everton FC/remis & nie",
+            "odds": 1.35
+          },
+          {
+            "code": "Everton FC/Coventry City & tak",
+            "label": "Everton FC/Coventry City & tak",
+            "odds": 5.16
+          },
+          {
+            "code": "Everton FC/Coventry City & nie",
+            "label": "Everton FC/Coventry City & nie",
+            "odds": 1.41
+          },
+          {
+            "code": "remis/Coventry City & tak",
+            "label": "remis/Coventry City & tak",
+            "odds": 7.74
+          },
+          {
+            "code": "remis/Coventry City & nie",
+            "label": "remis/Coventry City & nie",
+            "odds": 2.33
+          }
+        ]
+      },
+      "index": 151,
+      "marketCode": "OTHER",
+      "rawName": "Podwójna szansa (mecz) & 1. połowa oba zespoły strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER_YES",
+            "label": "ponad 2.5 & tak",
+            "odds": 2.13
+          },
+          {
+            "code": "UNDER_YES",
+            "label": "poniżej 2.5 & tak",
+            "odds": 7.37
+          },
+          {
+            "code": "OVER_NO",
+            "label": "ponad 2.5 & nie",
+            "odds": 6.98
+          },
+          {
+            "code": "UNDER_NO",
+            "label": "poniżej 2.5 & nie",
+            "odds": 2.43
+          }
+        ]
+      },
+      "index": 152,
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
+      "rawName": "Suma & Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 153,
+      "marketCode": "OTHER",
+      "rawName": "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Everton FC & poniżej 1.5",
+            "odds": 7.67
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Everton FC & ponad 1.5",
+            "odds": 1.93
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 1.5",
+            "odds": 12.78
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 1.5",
+            "odds": 4.91
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Coventry City & poniżej 1.5",
+            "odds": 14.74
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Coventry City & ponad 1.5",
+            "odds": 6.29
+          }
+        ]
+      },
+      "index": 154,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 & Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_BTTS",
+        "marketKey": "RESULT_AND_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_YES",
+            "label": "Everton FC & tak",
+            "odds": 3.39
+          },
+          {
+            "code": "HOME_NO",
+            "label": "Everton FC & nie",
+            "odds": 2.75
+          },
+          {
+            "code": "DRAW_YES",
+            "label": "remis & tak",
+            "odds": 4.91
+          },
+          {
+            "code": "DRAW_NO",
+            "label": "remis & nie",
+            "odds": 12.78
+          },
+          {
+            "code": "AWAY_YES",
+            "label": "Coventry City & tak",
+            "odds": 8.94
+          },
+          {
+            "code": "AWAY_NO",
+            "label": "Coventry City & nie",
+            "odds": 8.85
+          }
+        ]
+      },
+      "index": 155,
+      "marketCode": "RESULT_AND_BTTS",
+      "rawName": "1x2 & Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "BTTS_BY_HALF",
+        "marketKey": "BTTS_BY_HALF",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "NONE",
+            "label": "nie/nie",
+            "odds": 1.51
+          },
+          {
+            "code": "1ST_HALF",
+            "label": "tak/nie",
+            "odds": 5.6
+          },
+          {
+            "code": "BOTH",
+            "label": "tak/tak",
+            "odds": 15.72
+          },
+          {
+            "code": "2ND_HALF",
+            "label": "nie/tak",
+            "odds": 4.03
+          }
+        ]
+      },
+      "index": 156,
+      "marketCode": "BTTS_BY_HALF",
+      "rawName": "1./2.Połowa Oba zespoły zdobędą gola"
+    },
+    {
+      "blessed": false,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Everton FC & poniżej 1.5",
+            "label": "Everton FC & poniżej 1.5",
+            "odds": 3.89
+          },
+          {
+            "code": "Everton FC & ponad 1.5",
+            "label": "Everton FC & ponad 1.5",
+            "odds": 3.34
+          },
+          {
+            "code": "remis & poniżej 1.5",
+            "label": "remis & poniżej 1.5",
+            "odds": 3.89
+          },
+          {
+            "code": "remis & ponad 1.5",
+            "label": "remis & ponad 1.5",
+            "odds": 6.3
+          },
+          {
+            "code": "Coventry City & poniżej 1.5",
+            "label": "Coventry City & poniżej 1.5",
+            "odds": 6.89
+          },
+          {
+            "code": "Coventry City & ponad 1.5",
+            "label": "Coventry City & ponad 1.5",
+            "odds": 9.74
+          }
+        ]
+      },
+      "index": 157,
+      "marketCode": "OTHER",
+      "rawName": "2. Połowa - 1x2 & suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_RESULT_AND_BTTS",
+        "marketKey": "SECOND_HALF_RESULT_AND_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_YES",
+            "label": "Everton FC & tak",
+            "odds": 8.95
+          },
+          {
+            "code": "HOME_NO",
+            "label": "Everton FC & nie",
+            "odds": 2.27
+          },
+          {
+            "code": "DRAW_YES",
+            "label": "remis & tak",
+            "odds": 6.2
+          },
+          {
+            "code": "DRAW_NO",
+            "label": "remis & nie",
+            "odds": 3.84
+          },
+          {
+            "code": "AWAY_YES",
+            "label": "Coventry City & tak",
+            "odds": 19.67
+          },
+          {
+            "code": "AWAY_NO",
+            "label": "Coventry City & nie",
+            "odds": 5.11
+          }
+        ]
+      },
+      "index": 158,
+      "marketCode": "SECOND_HALF_RESULT_AND_BTTS",
+      "rawName": "2. Połowa - 1x2 & oba zespoły strzelą"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Everton FC & poniżej 2.5",
+            "odds": 4.13
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Everton FC & ponad 2.5",
+            "odds": 2.43
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 2.5",
+            "odds": 4.82
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 2.5",
+            "odds": 13.76
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Coventry City & poniżej 2.5",
+            "odds": 10.07
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Coventry City & ponad 2.5",
+            "odds": 7.96
+          }
+        ]
+      },
+      "index": 159,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 & Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Everton FC & poniżej 3.5",
+            "odds": 2.39
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Everton FC & ponad 3.5",
+            "odds": 4.23
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 3.5",
+            "odds": 4.82
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 3.5",
+            "odds": 13.76
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Coventry City & poniżej 3.5",
+            "odds": 5.9
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Coventry City & ponad 3.5",
+            "odds": 17.69
+          }
+        ]
+      },
+      "index": 160,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 & Suma"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_WIN_BOTH_HALVES",
+        "marketKey": "HOME_WIN_BOTH_HALVES",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.12
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.17
+          }
+        ]
+      },
+      "index": 161,
+      "marketCode": "HOME_WIN_BOTH_HALVES",
+      "rawName": "Everton FC wygra obie połowy"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_WIN_AT_LEAST_ONE_HALF",
+        "marketKey": "HOME_WIN_AT_LEAST_ONE_HALF",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 1.34
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 2.85
+          }
+        ]
+      },
+      "index": 162,
+      "marketCode": "HOME_WIN_AT_LEAST_ONE_HALF",
+      "rawName": "Everton FC wygra jakąkolwiek połowę"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 163,
+      "marketCode": "OTHER",
+      "rawName": "Coventry City wygra obie połowy"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
+        "marketKey": "AWAY_WIN_AT_LEAST_ONE_HALF",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 2.55
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.41
+          }
+        ]
+      },
+      "index": 164,
+      "marketCode": "AWAY_WIN_AT_LEAST_ONE_HALF",
+      "rawName": "Coventry City wygra jakąkolwiek połowę"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 165,
+      "marketCode": "OTHER",
+      "rawName": "Obie połowy ponad 1.5"
+    },
+    {
+      "blessed": false,
+      "expected": null,
+      "index": 166,
+      "marketCode": "OTHER",
+      "rawName": "Obie połowy poniżej 1.5"
+    }
+  ],
+  "matchIdSafe": "premier-league_everton_coventry_city"
+}

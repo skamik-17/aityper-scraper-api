@@ -1,0 +1,1209 @@
+{
+ "_note": "Trimmed etoto /rest/market/events/{id} payload captured 2026-11-06 ~16:22Z; only the games the plan needs (incl. whole-match totals 161/167/-30726 as side-less guards). Each game is an unmodified (deep-equal) object from the full capture, in capture order. Shape = data object of the API response.",
+ "_source": "https://api.etoto.pl/rest/market/events/6224065",
+ "eventId": 6224065,
+ "eventName": "Everton - Coventry",
+ "eventStart": 1793995200000,
+ "eventGames": [
+  {
+   "gameId": 503343035,
+   "gameName": "1. poł./mecz i dokładna suma goli",
+   "gameType": -30006,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    9
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 1344722963,
+     "outcomeName": "X/X i 0",
+     "outcomeOdds": 12.0,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722964,
+     "outcomeName": "1/1 i 1",
+     "outcomeOdds": 15.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722965,
+     "outcomeName": "X/1 i 1",
+     "outcomeOdds": 13.0,
+     "outcomePosition": 2,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722966,
+     "outcomeName": "X/2 i 1",
+     "outcomeOdds": 23.0,
+     "outcomePosition": 3,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722967,
+     "outcomeName": "2/2 i 1",
+     "outcomeOdds": 32.0,
+     "outcomePosition": 4,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722968,
+     "outcomeName": "1/1 i 2",
+     "outcomeOdds": 11.0,
+     "outcomePosition": 5,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722970,
+     "outcomeName": "1/X i 2",
+     "outcomeOdds": 25.0,
+     "outcomePosition": 6,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722971,
+     "outcomeName": "X/1 i 2",
+     "outcomeOdds": 23.0,
+     "outcomePosition": 7,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722974,
+     "outcomeName": "X/X i 2",
+     "outcomeOdds": 14.0,
+     "outcomePosition": 8,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722976,
+     "outcomeName": "X/2 i 2",
+     "outcomeOdds": 78.0,
+     "outcomePosition": 9,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722978,
+     "outcomeName": "2/X i 2",
+     "outcomeOdds": 28.0,
+     "outcomePosition": 10,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722979,
+     "outcomeName": "2/2 i 2",
+     "outcomeOdds": 43.0,
+     "outcomePosition": 11,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722980,
+     "outcomeName": "1/1 i 3",
+     "outcomeOdds": 7.5,
+     "outcomePosition": 12,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722981,
+     "outcomeName": "1/2 i 3",
+     "outcomeOdds": 85.0,
+     "outcomePosition": 13,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722982,
+     "outcomeName": "X/1 i 3",
+     "outcomeOdds": 15.0,
+     "outcomePosition": 14,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722983,
+     "outcomeName": "X/2 i 3",
+     "outcomeOdds": 35.0,
+     "outcomePosition": 15,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722984,
+     "outcomeName": "2/1 i 3",
+     "outcomeOdds": 50.0,
+     "outcomePosition": 16,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722985,
+     "outcomeName": "2/2 i 3",
+     "outcomeOdds": 25.0,
+     "outcomePosition": 17,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722986,
+     "outcomeName": "1/1 i 4",
+     "outcomeOdds": 11.0,
+     "outcomePosition": 18,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722987,
+     "outcomeName": "1/X i 4",
+     "outcomeOdds": 43.0,
+     "outcomePosition": 19,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722988,
+     "outcomeName": "1/2 i 4",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 20,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722990,
+     "outcomeName": "X/1 i 4",
+     "outcomeOdds": 38.0,
+     "outcomePosition": 21,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722991,
+     "outcomeName": "X/X i 4",
+     "outcomeOdds": 40.0,
+     "outcomePosition": 22,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722992,
+     "outcomeName": "X/2 i 4",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 23,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722994,
+     "outcomeName": "2/1 i 4",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 24,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722995,
+     "outcomeName": "2/X i 4",
+     "outcomeOdds": 48.0,
+     "outcomePosition": 25,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722996,
+     "outcomeName": "2/2 i 4",
+     "outcomeOdds": 60.0,
+     "outcomePosition": 26,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722997,
+     "outcomeName": "1/1 i 5+",
+     "outcomeOdds": 9.0,
+     "outcomePosition": 27,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722998,
+     "outcomeName": "1/X i 5+",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 28,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722999,
+     "outcomeName": "1/2 i 5+",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 29,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723000,
+     "outcomeName": "X/1 i 5+",
+     "outcomeOdds": 32.0,
+     "outcomePosition": 30,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723001,
+     "outcomeName": "X/X i 5+",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 31,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723002,
+     "outcomeName": "X/2 i 5+",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 32,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723003,
+     "outcomeName": "2/1 i 5+",
+     "outcomeOdds": 55.0,
+     "outcomePosition": 33,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723004,
+     "outcomeName": "2/X i 5+",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 34,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344723005,
+     "outcomeName": "2/2 i 5+",
+     "outcomeOdds": 48.0,
+     "outcomePosition": 35,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 503343022,
+   "gameName": "1. poł./mecz i suma goli 0.5 w 1. poł",
+   "gameType": -30005,
+   "gameCode": 0,
+   "argument": 0.5,
+   "combinationType": 1,
+   "marketTypes": [
+    9
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 1344722893,
+     "outcomeName": "1/1 i powyżej 0.5",
+     "outcomeOdds": 2.15,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722895,
+     "outcomeName": "1/X i powyżej 0.5",
+     "outcomeOdds": 14.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722899,
+     "outcomeName": "1/2 i powyżej 0.5",
+     "outcomeOdds": 43.0,
+     "outcomePosition": 2,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722901,
+     "outcomeName": "X/1 i powyżej 0.5",
+     "outcomeOdds": 13.0,
+     "outcomePosition": 3,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722902,
+     "outcomeName": "X/X i powyżej 0.5",
+     "outcomeOdds": 18.0,
+     "outcomePosition": 4,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722903,
+     "outcomeName": "X/2 i powyżej 0.5",
+     "outcomeOdds": 32.0,
+     "outcomePosition": 5,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722904,
+     "outcomeName": "2/1 i powyżej 0.5",
+     "outcomeOdds": 21.0,
+     "outcomePosition": 6,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722905,
+     "outcomeName": "2/X i powyżej 0.5",
+     "outcomeOdds": 15.0,
+     "outcomePosition": 7,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722906,
+     "outcomeName": "2/2 i powyżej 0.5",
+     "outcomeOdds": 7.25,
+     "outcomePosition": 8,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722907,
+     "outcomeName": "X/1 i poniżej 0.5",
+     "outcomeOdds": 5.5,
+     "outcomePosition": 9,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722908,
+     "outcomeName": "X/X i poniżej 0.5",
+     "outcomeOdds": 7.0,
+     "outcomePosition": 10,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722910,
+     "outcomeName": "X/2 i poniżej 0.5",
+     "outcomeOdds": 13.0,
+     "outcomePosition": 11,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 503343027,
+   "gameName": "1. poł./mecz i suma goli 1.5 w 1. poł",
+   "gameType": -30005,
+   "gameCode": 0,
+   "argument": 1.5,
+   "combinationType": 1,
+   "marketTypes": [
+    9
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 1344722912,
+     "outcomeName": "1/1 i powyżej 1.5",
+     "outcomeOdds": 4.1,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722913,
+     "outcomeName": "1/X i powyżej 1.5",
+     "outcomeOdds": 55.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722914,
+     "outcomeName": "1/2 i powyżej 1.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 2,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722915,
+     "outcomeName": "X/1 i powyżej 1.5",
+     "outcomeOdds": 14.0,
+     "outcomePosition": 3,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722916,
+     "outcomeName": "X/X i powyżej 1.5",
+     "outcomeOdds": 18.0,
+     "outcomePosition": 4,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722917,
+     "outcomeName": "X/2 i powyżej 1.5",
+     "outcomeOdds": 32.0,
+     "outcomePosition": 5,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722918,
+     "outcomeName": "2/1 i powyżej 1.5",
+     "outcomeOdds": 95.0,
+     "outcomePosition": 6,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722919,
+     "outcomeName": "2/X i powyżej 1.5",
+     "outcomeOdds": 60.0,
+     "outcomePosition": 7,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722920,
+     "outcomeName": "2/2 i powyżej 1.5",
+     "outcomeOdds": 19.0,
+     "outcomePosition": 8,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722921,
+     "outcomeName": "1/1 i poniżej 1.5",
+     "outcomeOdds": 4.0,
+     "outcomePosition": 9,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722922,
+     "outcomeName": "1/X i poniżej 1.5",
+     "outcomeOdds": 19.0,
+     "outcomePosition": 10,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722924,
+     "outcomeName": "1/2 i poniżej 1.5",
+     "outcomeOdds": 55.0,
+     "outcomePosition": 11,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722925,
+     "outcomeName": "X/1 i poniżej 1.5",
+     "outcomeOdds": 5.75,
+     "outcomePosition": 12,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722927,
+     "outcomeName": "X/X i poniżej 1.5",
+     "outcomeOdds": 7.25,
+     "outcomePosition": 13,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722929,
+     "outcomeName": "X/2 i poniżej 1.5",
+     "outcomeOdds": 13.0,
+     "outcomePosition": 14,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722931,
+     "outcomeName": "2/Everton i poniżej 1.5",
+     "outcomeOdds": 27.0,
+     "outcomePosition": 15,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722932,
+     "outcomeName": "2/X i poniżej 1.5",
+     "outcomeOdds": 20.0,
+     "outcomePosition": 16,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722933,
+     "outcomeName": "2/2 i poniżej 1.5",
+     "outcomeOdds": 12.0,
+     "outcomePosition": 17,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 503343031,
+   "gameName": "1. poł./mecz i suma goli 2.5 w 1. poł",
+   "gameType": -30005,
+   "gameCode": 0,
+   "argument": 2.5,
+   "combinationType": 1,
+   "marketTypes": [
+    9
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 1344722936,
+     "outcomeName": "1/1 i powyżej 2.5",
+     "outcomeOdds": 8.0,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722937,
+     "outcomeName": "1/X i powyżej 2.5",
+     "outcomeOdds": 85.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722938,
+     "outcomeName": "1/2 i powyżej 2.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 2,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722939,
+     "outcomeName": "X/1 i powyżej 2.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 3,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722940,
+     "outcomeName": "X/X i powyżej 2.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 4,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722941,
+     "outcomeName": "X/2 i powyżej 2.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 5,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722942,
+     "outcomeName": "2/1 i powyżej 2.5",
+     "outcomeOdds": 100.0,
+     "outcomePosition": 6,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722943,
+     "outcomeName": "2/X i powyżej 2.5",
+     "outcomeOdds": 90.0,
+     "outcomePosition": 7,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722944,
+     "outcomeName": "2/2 i powyżej 2.5",
+     "outcomeOdds": 38.0,
+     "outcomePosition": 8,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722945,
+     "outcomeName": "1/1 i poniżej 2.5",
+     "outcomeOdds": 2.75,
+     "outcomePosition": 9,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722949,
+     "outcomeName": "1/X i poniżej 2.5",
+     "outcomeOdds": 16.0,
+     "outcomePosition": 10,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722953,
+     "outcomeName": "1/2 i poniżej 2.5",
+     "outcomeOdds": 53.0,
+     "outcomePosition": 11,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722955,
+     "outcomeName": "X/1 i poniżej 2.5",
+     "outcomeOdds": 4.2,
+     "outcomePosition": 12,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722956,
+     "outcomeName": "X/X i poniżej 2.5",
+     "outcomeOdds": 5.5,
+     "outcomePosition": 13,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722957,
+     "outcomeName": "X/2 i poniżej 2.5",
+     "outcomeOdds": 9.5,
+     "outcomePosition": 14,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722958,
+     "outcomeName": "2/Everton i poniżej 2.5",
+     "outcomeOdds": 25.0,
+     "outcomePosition": 15,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722959,
+     "outcomeName": "2/X i poniżej 2.5",
+     "outcomeOdds": 18.0,
+     "outcomePosition": 16,
+     "status": 100
+    },
+    {
+     "outcomeId": 1344722960,
+     "outcomeName": "2/2 i poniżej 2.5",
+     "outcomeOdds": 9.0,
+     "outcomePosition": 17,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958015,
+   "gameName": "Everton suma 4.5 rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 0,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354555980,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 2.25,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354555981,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 1.57,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506333451,
+   "gameName": "Everton suma 5.5 rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 0,
+   "argument": 5.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1352921573,
+     "outcomeName": "Poniżej 5.5",
+     "outcomeOdds": 1.77,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1352921574,
+     "outcomeName": "Powyżej 5.5",
+     "outcomeOdds": 1.94,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958027,
+   "gameName": "Everton suma 6.5 rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 0,
+   "argument": 6.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556004,
+     "outcomeName": "Poniżej 6.5",
+     "outcomeOdds": 1.38,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556005,
+     "outcomeName": "Powyżej 6.5",
+     "outcomeOdds": 2.8,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958049,
+   "gameName": "Coventry suma 2.5 rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 0,
+   "argument": 2.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556047,
+     "outcomeName": "Poniżej 2.5",
+     "outcomeOdds": 3.35,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556048,
+     "outcomeName": "Powyżej 2.5",
+     "outcomeOdds": 1.28,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506551262,
+   "gameName": "Coventry suma 3.5 rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 0,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1353494150,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 2.09,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1353494151,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 1.66,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958061,
+   "gameName": "Coventry suma 4.5 rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 0,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556071,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 1.6,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556072,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 2.2,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 507006264,
+   "gameName": "Suma 23.5 fauli",
+   "gameType": 161,
+   "gameCode": 0,
+   "argument": 23.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354679234,
+     "outcomeName": "Poniżej 23.5",
+     "outcomeOdds": 1.8,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354679235,
+     "outcomeName": "Powyżej 23.5",
+     "outcomeOdds": 1.9,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 507006271,
+   "gameName": "Everton suma 11.5 fauli",
+   "gameType": 162,
+   "gameCode": 0,
+   "argument": 11.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354679251,
+     "outcomeName": "Poniżej 11.5",
+     "outcomeOdds": 1.83,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354679252,
+     "outcomeName": "Powyżej 11.5",
+     "outcomeOdds": 1.87,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958173,
+   "gameName": "Coventry suma 12.5 fauli",
+   "gameType": 163,
+   "gameCode": 0,
+   "argument": 12.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556313,
+     "outcomeName": "Poniżej 12.5",
+     "outcomeOdds": 1.65,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556314,
+     "outcomeName": "Powyżej 12.5",
+     "outcomeOdds": 2.1,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958222,
+   "gameName": "Suma 7.5 strzałów celnych",
+   "gameType": 167,
+   "gameCode": 0,
+   "argument": 7.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 1354556425,
+     "outcomeName": "Poniżej 7.5",
+     "outcomeOdds": 2.6,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556426,
+     "outcomeName": "Powyżej 7.5",
+     "outcomeOdds": 1.44,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958230,
+   "gameName": "Suma 8.5 strzałów celnych",
+   "gameType": 167,
+   "gameCode": 0,
+   "argument": 8.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 1354556449,
+     "outcomeName": "Poniżej 8.5",
+     "outcomeOdds": 1.95,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556450,
+     "outcomeName": "Powyżej 8.5",
+     "outcomeOdds": 1.75,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958244,
+   "gameName": "Suma 9.5 strzałów celnych",
+   "gameType": 167,
+   "gameCode": 0,
+   "argument": 9.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 1354556485,
+     "outcomeName": "Poniżej 9.5",
+     "outcomeOdds": 1.57,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556486,
+     "outcomeName": "Powyżej 9.5",
+     "outcomeOdds": 2.25,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958254,
+   "gameName": "Everton suma 4.5 strzałów celnych",
+   "gameType": 168,
+   "gameCode": 0,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556509,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 2.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556510,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 1.5,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958257,
+   "gameName": "Coventry suma 3.5 strzałów celnych",
+   "gameType": 169,
+   "gameCode": 0,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556519,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 1.65,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556520,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 2.1,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 506958264,
+   "gameName": "Suma 28.5 strzałów",
+   "gameType": -30726,
+   "gameCode": 0,
+   "argument": 28.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 1354556533,
+     "outcomeName": "Poniżej 28.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556534,
+     "outcomeName": "Powyżej 28.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958286,
+   "gameName": "Everton suma 17.5 strzałów",
+   "gameType": -30727,
+   "gameCode": 0,
+   "argument": 17.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556577,
+     "outcomeName": "Poniżej 17.5",
+     "outcomeOdds": 1.68,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556578,
+     "outcomeName": "Powyżej 17.5",
+     "outcomeOdds": 2.05,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958292,
+   "gameName": "Coventry suma 10.5 strzałów",
+   "gameType": -30728,
+   "gameCode": 0,
+   "argument": 10.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556589,
+     "outcomeName": "Poniżej 10.5",
+     "outcomeOdds": 2.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556590,
+     "outcomeName": "Powyżej 10.5",
+     "outcomeOdds": 1.5,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 506958307,
+   "gameName": "Suma 0.5 rzutów karnych",
+   "gameType": -30591,
+   "gameCode": 0,
+   "argument": 0.5,
+   "combinationType": 1,
+   "marketTypes": [
+    50
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 1354556621,
+     "outcomeName": "Poniżej 0.5",
+     "outcomeOdds": 1.25,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 1354556622,
+     "outcomeName": "Powyżej 0.5",
+     "outcomeOdds": 3.55,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  }
+ ]
+}

@@ -158,23 +158,35 @@ function getSelectionName(
 }
 
 /**
- * Fuksiarz's feed for game type 38 ("Half with more goals") applies its
- * outcome labels in template order (1st half / equal / 2nd half) while the
- * prices arrive in provider order (1st half / 2nd half / equal). The result
- * is that the "equal" label carries the 2nd-half price (~2.1) and the
- * "2nd half" label carries the draw price (~3.6) — inverted against every
+ * Fuksiarz's feed for game type 38 ("Half with more goals") sends its
+ * outcome labels in template order (1st half / equal / 2nd half). In
+ * 2026-08 the prices arrived in provider order (1st half / 2nd half /
+ * equal), so the "equal" label carried the 2nd-half price (~2.1) and the
+ * "2nd half" label carried the draw price (~3.6), inverted against every
  * other book quoting the same market id 38 (betfan 2.75/2.10/3.70, forbet
- * 2.65/2.02/3.55, etoto 2.80/2.11/3.80) and against goal math (the 2nd half
- * is always the favourite, an equal split the least likely outcome). Move
- * the two labels back onto the prices they belong to. Guarded on the
- * anomalous order so the fix turns into a no-op the day Fuksiarz repairs
- * the feed.
+ * 2.65/2.02/3.55, etoto 2.80/2.11/3.80). Move the two labels back onto the
+ * prices they belong to.
+ *
+ * The guard is on prices: an equal goal split is always the least likely
+ * outcome (the longest price) and the 2nd half the favourite, so correct
+ * data always has odds("equal") > odds("2nd half"). The label-order guard
+ * alone stopped being sufficient once Fuksiarz fixed the prices (2026-11)
+ * but kept the template label order: it then inverted correct data and
+ * published a fake 2nd-half best price on every match. The labels are
+ * swapped only when they are in template order AND the "equal" price is
+ * the shorter one; a missing or zero price leaves the outcomes untouched.
  */
 function repairHalfWithMoreGoalsLabels(outcomes: FuksiarzOutcome[]): FuksiarzOutcome[] {
   if (outcomes.length !== 3) return outcomes;
   const isDrawLike = (n?: string) => /^(r[oó]wno|remis|tyle samo)$/i.test((n || "").trim());
   const isSecondHalf = (n?: string) => /^2\.?\s*po[łl]owa$/i.test((n || "").trim());
   if (!isDrawLike(outcomes[1].outcomeName) || !isSecondHalf(outcomes[2].outcomeName)) {
+    return outcomes;
+  }
+  const drawPrice = outcomes[1].outcomeOdds;
+  const secondHalfPrice = outcomes[2].outcomeOdds;
+  // `!(x > 0)` also rejects undefined/NaN, since the feed type is not enforced at runtime
+  if (!(drawPrice > 0) || !(secondHalfPrice > 0) || drawPrice >= secondHalfPrice) {
     return outcomes;
   }
   return [

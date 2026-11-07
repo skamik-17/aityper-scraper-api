@@ -11,11 +11,17 @@
  * We intercept WebSocket frames to capture betting data.
  */
 
-import { monitorEventLoopDelay } from "node:perf_hooks";
-// The same function as the global in production. Fake timers patch only the
-// global, so under them this stays a real I/O turn that costs no fake time
-// (a faked zero-delay timer created inside a fired timer is due 1 ms later).
-import { setImmediate } from "node:timers";
+// The real clock and timers. In production they are the same as the globals.
+// Fake timers replace only the globals, so under them these stay real: the
+// deadline yield is a real I/O turn that costs no fake time (a faked zero-delay
+// timer created inside a fired timer is due 1 ms later), and the loop-gap
+// sampler measures real stalls without adding fake timers.
+import { monitorEventLoopDelay, performance } from "node:perf_hooks";
+import {
+  clearInterval as clearRealInterval,
+  setImmediate,
+  setInterval as setRealInterval,
+} from "node:timers";
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import {
   BASE_URL,
@@ -266,6 +272,19 @@ const SITE_LEVEL_CAPTURE_FAILURES: ReadonlySet<SwarmCaptureFailure> = new Set<Sw
  */
 const PAGE_TITLE_TIMEOUT_MS = 2000;
 
+/** A deadline that fires more than this after its due time means the event loop stalled (ms). */
+const STALL_LATE_MS = 100;
+
+/**
+ * How long a deadline that fired late (STALL_LATE_MS) waits, once, before it
+ * decides (ms). After a stall, frames that already reached Node need several
+ * loop turns before the page/socket listeners see them.
+ */
+const STALL_GRACE_MS = 1000;
+
+/** Resolution of the event-loop-delay histogram and period of the loop-gap sampler (ms). */
+const LOOP_SAMPLE_MS = 20;
+
 type Timer = ReturnType<typeof setTimeout>;
 
 interface CaptureAttemptResult {
@@ -290,6 +309,9 @@ interface CaptureAttemptResult {
  * - first socket opened and no useful frame within firstUsefulFrameTimeoutMs ->
  *   no_sport_frames / competition_missing / no_games_with_markets /
  *   target_game_missing.
+ * A deadline (or the single-event max wait) that fires more than STALL_LATE_MS
+ * late, because the event loop stalled, decides only after STALL_GRACE_MS, so
+ * frames queued during the stall are seen first.
  * A goto rejection alone is not fatal: the betcris.pl -> betsport.pl client
  * redirect supersedes the first document while the second one still opens the
  * socket.
@@ -346,8 +368,23 @@ function runCaptureAttempt(
     `[Betcris/Navigation] ${label}: ${url} (attempt ${attemptNo}/${timing.maxAttempts})`
   );
 
-  const loopDelay = monitorEventLoopDelay({ resolution: 20 });
+  // Node main-thread lag over the attempt. The histogram has two blind spots:
+  // it records nothing until its first tick (~LOOP_SAMPLE_MS after enable), and
+  // it records a stall since its last tick only at its next tick, which
+  // finish() does not wait for. The own gap sampler starts counting at enable,
+  // and finish() takes one last sample, so a stall at the start of the attempt
+  // or right before it ends is counted too.
+  const loopDelay = monitorEventLoopDelay({ resolution: LOOP_SAMPLE_MS });
   loopDelay.enable();
+  let loopTickAt = performance.now();
+  let loopGapMaxMs = 0;
+  const sampleLoopGap = () => {
+    const now = performance.now();
+    loopGapMaxMs = Math.max(loopGapMaxMs, now - loopTickAt);
+    loopTickAt = now;
+  };
+  const loopSampler = setRealInterval(sampleLoopGap, LOOP_SAMPLE_MS);
+  loopSampler.unref();
 
   const startedAt = Date.now();
   const elapsed = () => Date.now() - startedAt;
@@ -365,6 +402,7 @@ function runCaptureAttempt(
     pageTitle: null,
     finalUrl: null,
     eventLoopDelayMaxMs: null,
+    deadlineLateMs: null,
   };
 
   // Same scoping as captureSwarmData: keep only the target game (single-event)
@@ -382,15 +420,19 @@ function runCaptureAttempt(
   let firstUsefulTimer: Timer | undefined;
   let maxWaitTimer: Timer | undefined;
   let plateauPoll: ReturnType<typeof setInterval> | undefined;
+  const graceTimers: Timer[] = [];
   const socketCleanups: Array<() => void> = [];
 
   return new Promise<CaptureAttemptResult>((resolve) => {
     const finish = async (failure: SwarmCaptureFailure | null): Promise<void> => {
       if (done) return;
       done = true;
+      sampleLoopGap(); // the tail since the sampler's last tick
+      clearRealInterval(loopSampler);
       clearTimeout(wsOpenTimer);
       clearTimeout(firstUsefulTimer);
       clearTimeout(maxWaitTimer);
+      for (const timer of graceTimers) clearTimeout(timer);
       clearInterval(plateauPoll);
       page.off("websocket", onWebSocket);
       for (const cleanup of socketCleanups) cleanup();
@@ -401,7 +443,7 @@ function runCaptureAttempt(
       } catch {
         attempt.finalUrl = null;
       }
-      attempt.eventLoopDelayMaxMs = Math.round(loopDelay.max / 1e6);
+      attempt.eventLoopDelayMaxMs = Math.round(Math.max(loopDelay.max / 1e6, loopGapMaxMs));
       loopDelay.disable();
       if (failure) {
         attempt.pageTitle = await readPageTitle(page);
@@ -409,29 +451,50 @@ function runCaptureAttempt(
       resolve({ attempt, data: failure ? null : merged });
     };
 
-    // A deadline fired. After a long synchronous stretch Node runs expired timers
-    // before it polls for socket I/O, so frames that already arrived may still be
-    // queued: give them one setImmediate turn, then decide. A frame that completes
-    // the capture during that turn finishes it, so `done` is the completion re-check.
+    // Decide after one setImmediate turn, and only if the attempt is still open:
+    // a frame that completes the capture during the turn finishes it, so `done`
+    // is the completion re-check.
     const afterQueuedIo = (decide: () => void) => {
       setImmediate(() => {
         if (!done) decide();
       });
     };
 
-    const onWsOpenDeadline = () =>
-      afterQueuedIo(() => {
-        // A socket opened during the turn: its own deadline is already armed.
-        if (attempt.wsOpenMs !== null) return;
-        void finish(attempt.navError !== null ? "navigation_failed" : "no_swarm_socket");
-      });
+    // A deadline timer. On time, it decides after one setImmediate turn, which
+    // keeps its timing exact. That turn is not enough after a stall: Node runs
+    // expired timers before it polls for socket I/O, and a frame that reached
+    // Node's CDP pipe while the main thread was blocked needs two more
+    // setImmediate hops (Playwright's pipe transport, then its in-process
+    // connection) before `framereceived` fires. So a deadline that fires more
+    // than STALL_LATE_MS late decides only after STALL_GRACE_MS, once. Under
+    // fake timers a deadline is never late unless a test moves the clock.
+    const armDeadline = (name: string, delayMs: number, decide: () => void): Timer => {
+      const dueAt = Date.now() + delayMs;
+      return setTimeout(() => {
+        const lateMs = Date.now() - dueAt;
+        if (lateMs <= STALL_LATE_MS) {
+          afterQueuedIo(decide);
+          return;
+        }
+        attempt.deadlineLateMs = Math.max(attempt.deadlineLateMs ?? 0, lateMs);
+        console.log(
+          `[Betcris/Navigation] ${name} deadline fired ${lateMs} ms late (event loop stalled); deciding in ${STALL_GRACE_MS} ms`
+        );
+        graceTimers.push(setTimeout(() => afterQueuedIo(decide), STALL_GRACE_MS));
+      }, delayMs);
+    };
 
-    const onFirstUsefulDeadline = () =>
-      afterQueuedIo(() => {
-        // Single-event: the target appeared, its completion timers are running.
-        if (attempt.firstUsefulFrameMs !== null) return;
-        void finish(classifyMissingData());
-      });
+    const decideWsOpen = () => {
+      // A socket opened in the meantime: its own deadline is already armed.
+      if (attempt.wsOpenMs !== null) return;
+      void finish(attempt.navError !== null ? "navigation_failed" : "no_swarm_socket");
+    };
+
+    const decideFirstUseful = () => {
+      // Single-event: the target appeared, its completion timers are running.
+      if (attempt.firstUsefulFrameMs !== null) return;
+      void finish(classifyMissingData());
+    };
 
     const classifyMissingData = (): SwarmCaptureFailure => {
       if (attempt.sportFrames === 0) return "no_sport_frames";
@@ -446,9 +509,10 @@ function runCaptureAttempt(
       attempt.firstUsefulFrameMs = elapsed();
       lastGrowthAt = Date.now();
       clearTimeout(firstUsefulTimer);
-      maxWaitTimer = setTimeout(
-        () => afterQueuedIo(() => void finish(null)),
-        WS_CONFIG.MAX_WAIT_TIME_SINGLE_EVENT
+      maxWaitTimer = armDeadline(
+        "max-wait",
+        WS_CONFIG.MAX_WAIT_TIME_SINGLE_EVENT,
+        () => void finish(null)
       );
       // Plateau: no new markets unioned for a while -> treat the offer as complete.
       plateauPoll = setInterval(() => {
@@ -528,7 +592,11 @@ function runCaptureAttempt(
       if (attempt.wsOpenMs === null) {
         attempt.wsOpenMs = elapsed();
         clearTimeout(wsOpenTimer);
-        firstUsefulTimer = setTimeout(onFirstUsefulDeadline, timing.firstUsefulFrameTimeoutMs);
+        firstUsefulTimer = armDeadline(
+          "first-useful-frame",
+          timing.firstUsefulFrameTimeoutMs,
+          decideFirstUseful
+        );
       }
 
       // A closed socket is detached; the SPA may open a new one (reconnect),
@@ -552,7 +620,7 @@ function runCaptureAttempt(
           : String(error)
         : null;
       if (attempt.wsOpenMs === null) {
-        wsOpenTimer = setTimeout(onWsOpenDeadline, timing.wsOpenTimeoutMs);
+        wsOpenTimer = armDeadline("ws-open", timing.wsOpenTimeoutMs, decideWsOpen);
       }
     };
 

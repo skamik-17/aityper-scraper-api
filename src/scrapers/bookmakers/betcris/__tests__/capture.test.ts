@@ -177,6 +177,65 @@ describe("betcris captureSwarm", () => {
     expect(fake.gotoAt).toHaveLength(1);
   });
 
+  it("betcris capture: a deadline that fires late after a loop stall waits for frames queued meanwhile", async () => {
+    // The GameList frames land 500 ms after the first-useful deadline is due
+    // (socket at 766, deadline at 30766). Fake timers cannot queue socket I/O
+    // behind an expired timer, so the stall is a 2 s clock jump at 30000: every
+    // pending timer then fires 2 s late, as after a blocked main thread.
+    const events = [
+      ...league.filter((e) => e.t < 1908),
+      ...league.filter((e) => e.t >= 1908).map((e) => ({ ...e, t: e.t - 1908 + 31266 })),
+    ];
+    const timing = { maxAttempts: 1 };
+
+    const onTime = await settle(captureSwarm(createFakeSwarmPage(() => ({ events })).page, LEAGUE, { competitionId: 538 }, timing));
+    expect(onTime.failure).toBe("no_games_with_markets"); // on time: no grace, exact timing
+    expect(onTime.attempts[0].deadlineLateMs).toBeNull();
+
+    const pending = captureSwarm(createFakeSwarmPage(() => ({ events })).page, LEAGUE, { competitionId: 538 }, timing);
+    setTimeout(() => vi.setSystemTime(Date.now() + 2000), 30000);
+    const late = await settle(pending);
+    expect(late.failure).toBeNull();
+    expect(late.attempts[0]).toMatchObject({ deadlineLateMs: 2000, firstUsefulFrameMs: 33266 });
+    expect(console.log).toHaveBeenCalledWith(
+      "[Betcris/Navigation] first-useful-frame deadline fired 2000 ms late (event loop stalled); deciding in 1000 ms"
+    );
+  });
+
+  it("betcris capture: eventLoopDelayMaxMs counts a stall right after the attempt starts and right before it ends", async () => {
+    // Blocks the main thread like a long synchronous callback, whatever the clocks say.
+    const stall = (ms: number) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+
+    // Before the histogram's first tick: page.goto runs right after it is enabled.
+    const head = createFakeSwarmPage(() => ({ events: league }));
+    const headPage = head.page as unknown as { goto: (...args: unknown[]) => Promise<unknown> };
+    const goto = headPage.goto.bind(headPage);
+    headPage.goto = (...args) => {
+      stall(200);
+      return goto(...args);
+    };
+    const a = await settle(captureSwarm(head.page, LEAGUE, { competitionId: 538 }));
+
+    // Inside the frame that completes the capture, just before finish() reads the lag.
+    const tail = createFakeSwarmPage(() => ({ events: league }));
+    let stalled = false;
+    tail.page.on("websocket", (ws) =>
+      ws.on("framereceived", (frame) => {
+        if (!stalled && frame.payload.toString().includes("GameListSubscribeCmd")) {
+          stalled = true;
+          stall(200);
+        }
+      })
+    );
+    const b = await settle(captureSwarm(tail.page, LEAGUE, { competitionId: 538 }));
+
+    expect(a.failure).toBeNull();
+    expect(b.failure).toBeNull();
+    expect(stalled).toBe(true);
+    expect(a.attempts[0].eventLoopDelayMaxMs).toBeGreaterThanOrEqual(190);
+    expect(b.attempts[0].eventLoopDelayMaxMs).toBeGreaterThanOrEqual(190);
+  });
+
   const attempt = { attempt: 2, navMs: 700, navError: null, wsUrls: [], wsOpenMs: null, framesReceived: 0, nonJsonFrames: 0, sportFrames: 0,
     firstUsefulFrameMs: null, failure: "no_swarm_socket" as const, pageTitle: "Betcris", finalUrl: BETSPORT, eventLoopDelayMaxMs: 840 };
 

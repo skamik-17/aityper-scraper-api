@@ -188,8 +188,25 @@ export interface SwarmCaptureAttempt {
   pageTitle: string | null;
   /** page.url() at attempt end (www.betsport.pl after the client redirect); null on throw */
   finalUrl: string | null;
-  /** perf_hooks.monitorEventLoopDelay max over the attempt, rounded ms */
+  /**
+   * Longest Node main-thread stall during the attempt, rounded ms. It is the
+   * max of perf_hooks.monitorEventLoopDelay (resolution 20 ms) and an own
+   * 20 ms gap sampler. The sampler also covers the two stalls the histogram
+   * misses: one that begins before its first tick (~20 ms after the attempt
+   * started), and one since its last tick when the attempt ended (finish() runs
+   * straight from a frame or the plateau poll). The value is the longest gap between two
+   * 20 ms ticks, so ~20 means an idle loop, and N means a callback (or GC)
+   * blocked the thread for roughly N-20 to N ms. Browser-side slowness does not
+   * show here.
+   */
   eventLoopDelayMaxMs: number | null;
+  /**
+   * The largest lateness, in ms, of a deadline (ws-open, first-useful-frame or
+   * single-event max-wait) that fired more than 100 ms late because the event
+   * loop stalled. Such a deadline waits a 1000 ms grace before it decides.
+   * null (or absent) when every deadline fired on time.
+   */
+  deadlineLateMs?: number | null;
 }
 
 /**

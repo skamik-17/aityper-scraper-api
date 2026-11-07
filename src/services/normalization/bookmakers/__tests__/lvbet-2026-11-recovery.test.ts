@@ -102,3 +102,113 @@ describe("LVBet goal-or-assist markets", () => {
     expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["Christos Tzolis", 1.5], ["Viktor Gyokeres", 1.55], ["Kai Havertz", 1.57], ["Noni Madueke", 1.65]]);
   });
 });
+
+describe("LVBet goal-family products out of the TOTAL_GOALS catch-all", () => {
+  it("routes 'Rezultat lub ilość bramek (2.5)' to RESULT_OR_TOTAL:2.5", () => {
+    const raw = parseAllMarkets(evidence, teams).find((m) => m.name.startsWith("Rezultat lub ilość bramek (2.5)"))!;
+    const out = lvbetNormalizer.normalizeMarket(raw, ctx)!;
+    expect(out.marketKey).toBe("RESULT_OR_TOTAL:2.5");
+    expect(Object.fromEntries(out.selections.map((s) => [s.code, s.odds]))).toEqual({
+      HOME_OVER: 1.09, HOME_UNDER: 1.03, DRAW_OVER: 1.3, DRAW_UNDER: 2.17, AWAY_OVER: 1.42, AWAY_UNDER: 2.15,
+    });
+  });
+
+  it("leaves exactly one OVER/UNDER market on TOTAL_GOALS:2.5", () => {
+    const outs = parseAllMarkets(evidence, teams).map((m) => lvbetNormalizer.normalizeMarket(m, ctx)).filter((o) => o?.marketKey === "TOTAL_GOALS:2.5");
+    expect(outs).toHaveLength(1);
+    expect(outs[0]!.selections.map((s) => [s.code, s.odds])).toEqual([["OVER", 1.55], ["UNDER", 2.5]]);
+  });
+
+  it("drops a RESULT_OR_TOTAL leg whose side or line does not match the market", () => {
+    const out = lvbetNormalizer.normalizeMarket(
+      {
+        name: "Rezultat lub ilość bramek (2.5) 2.5",
+        selections: [
+          { name: "Arsenal lub powyżej (2.5)", odds: 1.09 },
+          { name: "Chelsea lub powyżej (2.5)", odds: 1.5 },
+          { name: "Arsenal lub remis lub powyżej (2.5)", odds: 1.01 },
+          { name: "Hull City lub poniżej (3.5)", odds: 2.6 },
+          { name: "Remis lub poniżej (2.5)", odds: 2.17 },
+        ],
+      },
+      ctx
+    )!;
+    expect(out.marketKey).toBe("RESULT_OR_TOTAL:2.5");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["HOME_OVER", 1.09], ["DRAW_UNDER", 2.17]]);
+  });
+
+  it.each([
+    ["Obaj gracze strzelą łącznie przynajmniej 2 gole", "TWO_PLAYERS_COMBINED_GOALS:1.5", ["K. Havertz & V. Gyokeres", 2.12]],
+    ["Obaj gracze strzelą łącznie przynajmniej 3 gole", "TWO_PLAYERS_COMBINED_GOALS:2.5", ["K. Havertz & V. Gyokeres", 5.5]],
+  ])("routes '%s' to %s with canonical pairs", (name, key, first) => {
+    const out = lvbetNormalizer.normalizeMarket(parseAllMarkets(evidence, teams).find((m) => m.name === name)!, ctx)!;
+    expect(out.marketKey).toBe(key);
+    expect([out.selections[0].code, out.selections[0].odds]).toEqual(first);
+  });
+
+  it("maps the digit variant of 'Dokładna liczba goli' to EXACT_GOALS and leaves the 'Bez goli' twin as OTHER", () => {
+    const [a, b] = parseAllMarkets(evidence, teams).filter((m) => m.name === "Dokładna liczba goli").map((m) => lvbetNormalizer.normalizeMarket(m, ctx));
+    const exact = [a, b].find((o) => o?.marketCode === "EXACT_GOALS")!;
+    expect(exact.selections.map((s) => [s.code, s.odds])).toEqual([["0", 14], ["1", 5.85], ["2", 4.05], ["3", 3.85], ["4", 4.55], ["5", 6.75], ["6+", 7.25]]);
+    expect([a, b].filter((o) => o === null || o.marketCode === "OTHER")).toHaveLength(1);
+  });
+
+  it("routes 'Dokładnie 1 gol w meczu' to OTHER now that the full ladder maps", () => {
+    expect(lvbetNormalizer.normalizeMarket(parseAllMarkets(evidence, teams).find((m) => m.name === "Dokładnie 1 gol w meczu")!, ctx)).toBeNull();
+    const outs = parseAllMarkets(evidence, teams).map((m) => lvbetNormalizer.normalizeMarket(m, ctx)).filter((o) => o?.marketKey === "EXACT_GOALS");
+    expect(outs).toHaveLength(1);
+  });
+
+  it("leaves exactly one OVER/UNDER market on HALF_TIME_TOTAL_GOALS:1.0 and :2.0", () => {
+    const outs = parseAllMarkets(evidence, teams).map((m) => lvbetNormalizer.normalizeMarket(m, ctx));
+    const at = (key: string) => outs.filter((o) => o?.marketKey === key).map((o) => o!.selections.map((s) => [s.code, s.odds]));
+    expect(at("HALF_TIME_TOTAL_GOALS:1.0")).toEqual([[["OVER", 1.47], ["UNDER", 2.55]]]);
+    expect(at("HALF_TIME_TOTAL_GOALS:2.0")).toEqual([[["OVER", 3.7], ["UNDER", 1.25]]]);
+  });
+
+  it("only the exact variant of each same-named exact-goals pair maps", () => {
+    const pick = (name: string) => parseAllMarkets(evidence, teams).filter((m) => m.name === name)
+      .map((m) => lvbetNormalizer.normalizeMarket(m, ctx)).filter((o) => o !== null)
+      .map((o) => [o!.marketKey, o!.selections.map((s) => [s.code, s.odds])]);
+    expect(pick("Arsenal - Dokładna liczba goli")).toEqual([["HOME_EXACT_GOALS", [["0", 7.25], ["1", 4.75], ["2", 3.4], ["3", 3.8], ["4+", 3.1]]]]);
+    expect(pick("1. Połowa - Arsenal dokładna liczba goli")).toEqual([["HALF_TIME_HOME_EXACT_GOALS", [["0", 2.95], ["1", 2.5], ["2+", 2.45]]]]);
+  });
+});
+
+/**
+ * The World Cup France vs Morocco golden carries these goal-family entries
+ * unblessed (owner decision: unblessed entries stay unblessed), so the golden
+ * test does not assert them. Pin their new routing here instead, straight from
+ * the committed raw fixture. Its selection labels use the Polish team names
+ * ("Francja"/"Maroko") against the canonical English ctx.
+ */
+describe("LVBet goal-family routing on the World Cup France vs Morocco fixture", () => {
+  const wc = JSON.parse(
+    readFileSync(new URL("../../__fixtures__/lvbet/world-cup-2026_france_morocco.json", import.meta.url), "utf8")
+  ) as { ctx: NormalizationContext; entries: { index: number; raw: { name: string; selections: { name: string; odds: number }[] } }[] };
+  const normEntry = (index: number) => {
+    const raw = wc.entries.find((e) => e.index === index)!.raw;
+    return lvbetNormalizer.normalizeMarket({ name: raw.name, selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })) }, wc.ctx);
+  };
+
+  it.each([
+    [775, "RESULT_OR_TOTAL:2.5", [["HOME_OVER", 1.25], ["HOME_UNDER", 1.08], ["DRAW_OVER", 1.35], ["DRAW_UNDER", 1.5], ["AWAY_OVER", 1.6], ["AWAY_UNDER", 1.47]]],
+    [834, "RESULT_OR_TOTAL:3.5", [["HOME_OVER", 1.33], ["HOME_UNDER", 1.04], ["DRAW_OVER", 1.85], ["DRAW_UNDER", 1.16], ["AWAY_OVER", 2.2], ["AWAY_UNDER", 1.2]]],
+    [839, "RESULT_OR_TOTAL:4.5", [["HOME_OVER", 1.4], ["DRAW_OVER", 2.25], ["DRAW_UNDER", 1.07], ["AWAY_OVER", 3.1], ["AWAY_UNDER", 1.07]]],
+  ])("#%i maps to %s with every leg on a resolved side", (index, key, legs) => {
+    const out = normEntry(index)!;
+    expect(out.marketKey).toBe(key);
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual(legs);
+  });
+
+  it("#230 'Dokładna liczba goli' maps to EXACT_GOALS", () => {
+    const out = normEntry(230)!;
+    expect(out.marketKey).toBe("EXACT_GOALS");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["0", 6.5], ["1", 3.55], ["2", 2.95], ["3", 3.35], ["4", 4.8], ["5", 8.25], ["6+", 12]]);
+  });
+
+  it("#816 '1. połowa - Liczba goli (3-drogowo) 1' and #257 'Dokładnie 1 gol w meczu' normalize to null", () => {
+    expect(normEntry(816)).toBeNull();
+    expect(normEntry(257)).toBeNull();
+  });
+});

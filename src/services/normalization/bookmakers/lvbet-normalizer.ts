@@ -95,6 +95,24 @@ const LVBET_MARKET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarke
   // spurious UNKNOWN selection and understating the true 2-way probability.
   { pattern: /^liczba goli 3-drogowo\b/, code: "TOTAL_GOALS_3WAY" },
   { pattern: /^wynik i liczba bramek w meczu\b/, code: "RESULT_AND_TOTAL" },
+  // Three more goal-family products the catch-all below used to swallow
+  // (LVBet recovery 2026-11, Arsenal vs Hull City):
+  // - "Rezultat lub ilość bramek (X)" prices six "<team|Remis> lub
+  //   powyżej/poniżej (X)" OR-legs (RESULT_OR_TOTAL, as etoto/forbet/fortuna/
+  //   superbet quote it). On TOTAL_GOALS:X its six UNKNOWN legs merged into
+  //   the real 2-way line, and the grouper's 3-way guard then dropped LVBet
+  //   from the O/U 2.5/3.5/4.5 comparison altogether.
+  // - "Obaj gracze strzelą łącznie przynajmniej N gole" prices player pairs
+  //   ("V. Gyokeres & K. Havertz") on the pair's combined goals, over the
+  //   N - 0.5 line (TWO_PLAYERS_COMBINED_GOALS, see extractParamValue).
+  // - "Dokładna liczba goli" (match level) is the exact-goals ladder. LVBet
+  //   publishes two same-named markets: the digit variant ("0".."5", "6+")
+  //   maps; its "Bez goli"/"Dokładnie N" twin carries the same prices, none
+  //   of its labels is an EXACT_GOALS code, so every selection is dropped
+  //   and normalizeMarket returns null for it.
+  { pattern: /^rezultat lub ilosc bramek \(/, code: "RESULT_OR_TOTAL" },
+  { pattern: /^obaj gracze strzela łacznie przynajmniej \d+ gol/, code: "TWO_PLAYERS_COMBINED_GOALS" },
+  { pattern: /^dokładna liczba goli$/, code: "EXACT_GOALS" },
   { pattern: /suma goli|liczba goli|dokładna liczba goli|gole|bramek/, code: "TOTAL_GOALS" },
 ];
 
@@ -134,6 +152,14 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // unanchored single-player PLAYER_GOAL_OR_ASSIST pattern further down
   // would otherwise swallow it and publish each pair as a fake "player".
   { pattern: /zawodnik strzeli gola lub zanotuje asyste - podwojna szansa/, code: "TWO_PLAYERS_GOAL_OR_ASSIST" },
+  // "1. połowa - Liczba goli (3-drogowo) N" (Powyżej/Dokładnie/Poniżej at
+  // whole lines 1 and 2) is a 3-way half-time total. The generic half-time
+  // heuristic in resolveMarketCode would put it on the 2-way
+  // HALF_TIME_TOTAL_GOALS:N, where it merged with the real 2-way line and its
+  // UNKNOWN "Dokładnie" leg made the grouper drop LVBet's whole entry.
+  // HALF_TIME_TOTAL_GOALS_3WAY has no line parameter, so it cannot hold both
+  // lines; exclude it (betcris excludes the same shape).
+  { pattern: /^1\. połowa - liczba goli \(3-drogowo\)/, code: "OTHER" },
 
   // --- Time-period stats (must precede generic corner/throw-in families) ---
   // A prior special case routed ONLY the "…Rzuty rożne 0.5" line to the
@@ -515,17 +541,14 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   { pattern: /czas zdobycia pierwszego gola/, code: "FIRST_GOAL_TIME" },
   { pattern: /1\. gol - czas/, code: "FIRST_GOAL_TIME_ALT" },
   { pattern: /bedzie wynik w trakcie meczu/, code: "SCORE_DURING_MATCH" },
-  // "Dokładnie 1 gol w meczu" (Tak/Nie) quotes the identical real-world bet
-  // as EXACT_GOALS' "1" selection — round 9 /audit-match (Arsenal vs
-  // Coventry City) found it duplicated as its own EXACT_GOALS_YN card
-  // instead of pooling into EXACT_GOALS. Route to EXACT_GOALS directly; the
-  // selection remap (Tak -> "1", Nie dropped) lives in normalizeMarket's
-  // isExactOneGoalYesNo special-case below.
-  { pattern: /dokładnie 1 gol w meczu/, code: "EXACT_GOALS" },
-  // Other exact counts ("Dokładnie 3 gole w meczu") are not over/under bets
-  // and have no dedicated remap here (out of this fix's audited scope) —
+  // "Dokładnie N gol(e) w meczu" (Tak/Nie) are not over/under bets —
   // exclude them instead of letting the generic goals patterns drop them
-  // into TOTAL_GOALS.
+  // into TOTAL_GOALS. This includes N = 1: it used to be recoded onto
+  // EXACT_GOALS' "1" selection, but now that the full "Dokładna liczba goli"
+  // ladder maps to EXACT_GOALS, two raw markets would land on the same "1"
+  // (the repository keeps the first-seen price, payload order differs
+  // between offers, and the prices differ: World Cup France vs Morocco has
+  // Tak 4.05 against ladder "1" 3.55).
   { pattern: /dokładnie \d+ gol\w* w meczu/, code: "OTHER" },
 
   // --- Win / result variants ---
@@ -1488,6 +1511,27 @@ function normalizeSelectionForMarket(
       return `${side}_${overUnder}` as NormalizedSelection;
     }
 
+    // "Rezultat lub ilość bramek (X)" quotes six OR-legs, "<team|Remis> lub
+    // powyżej/poniżej (X)" ("Arsenal lub powyżej (2.5)" wins on an Arsenal
+    // win OR 3+ goals), which is RESULT_OR_TOTAL's HOME/DRAW/AWAY x
+    // OVER/UNDER vocabulary. The side goes through normalize1x2Selection so
+    // localized team names resolve too ("Francja" for France). A leg whose
+    // side does not resolve to this match, or whose own line differs from
+    // the market's, is dropped instead of being published under a guessed
+    // code. A compound side ("Arsenal lub remis lub powyżej") is dropped as
+    // well: normalize1x2Selection matches on substrings and would read it as
+    // a plain HOME leg.
+    case "RESULT_OR_TOTAL": {
+      const m = trimmed.match(/^(.+?)\s+lub\s+(powy[żz]ej|poni[żz]ej)\s*(?:\((\d+(?:[.,]\d+)?)\))?$/i);
+      if (!m || /\slub\s/i.test(m[1])) return null;
+      const side = normalize1x2Selection(m[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if (side !== "HOME" && side !== "DRAW" && side !== "AWAY") return null;
+      const legLine = m[3] ? parseFloat(m[3].replace(",", ".")) : undefined;
+      const marketLine = rawMarketName ? parseDecimalLine(rawMarketName) : undefined;
+      if (legLine !== undefined && (marketLine === undefined || legLine !== parseFloat(marketLine))) return null;
+      return `${side}_${/^powy/i.test(m[2]) ? "OVER" : "UNDER"}` as NormalizedSelection;
+    }
+
     // LVBet quotes a 5-tier corner-range scale ("5 lub mniej", "6 - 8",
     // "9 - 11", "12 - 14", "15 lub więcej") with no direct catalog match —
     // collapse it onto the catalog's coarse 3-bucket scale (0-8/9-11/12+),
@@ -2023,6 +2067,7 @@ function normalizeSelectionForMarket(
     case "ANY_PLAYER_FIRST_GOAL":
     case "PLAYER_ASSIST_PAIRS":
     case "TWO_PLAYERS_GOAL_OR_ASSIST":
+    case "TWO_PLAYERS_COMBINED_GOALS":
       return canonicalizePlayerComboSelection(trimmed) as NormalizedSelection;
 
     default: {
@@ -2175,6 +2220,15 @@ function extractParamValue(
   }
   if (marketCode === "SECOND_HALF_TOTAL_GOALS" && /gol w 2\. połowie/.test(normalizedMarketName)) {
     return "0.5";
+  }
+
+  // "Obaj gracze strzelą łącznie przynajmniej N gole" (the pair scores N or
+  // more goals together) is the over side of the N - 0.5 line that
+  // TWO_PLAYERS_COMBINED_GOALS is keyed on. The name carries only the
+  // integer N, which the decimal parsing below cannot read.
+  if (marketCode === "TWO_PLAYERS_COMBINED_GOALS") {
+    const atLeast = normalizedMarketName.match(/przynajmniej (\d+) gol/);
+    if (atLeast) return String(Number(atLeast[1]) - 0.5);
   }
 
   const selectionNames = raw.selections.map((s) => s.name);
@@ -2508,30 +2562,15 @@ export const lvbetNormalizer: BookmakerMarketNormalizer = {
 
     const paramValue = extractParamValue(marketCode, raw, ctx);
 
-    // "Dokładnie 1 gol w meczu" (Tak/Nie) is EXACT_GOALS' "1" selection in
-    // disguise (round 9 /audit-match, Arsenal vs Coventry City: it used to
-    // render its own duplicate EXACT_GOALS_YN card). The generic EXACT_GOALS
-    // case below rejects non-numeric labels outright (it expects "0"/"1"/
-    // "4+" ladder text), so this raw market needs its own selection mapping
-    // rather than falling through the shared per-code case: recode the YES
-    // leg onto the shared "1" code so it pools with the main "Suma goli"
-    // ladder, and drop the NO leg ("not exactly 1 goal") — it has no
-    // matching EXACT_GOALS selection.
-    const isExactOneGoalYesNo = marketCode === "EXACT_GOALS" && /dokładnie 1 gol w meczu/i.test(raw.name);
-
     // Selections that resolve to null have no catalog counterpart (grouped
     // bands, catch-all buckets, ...) and are dropped so they never leak raw
     // labels or orphan codes into the cross-bookmaker aggregation.
     const siblingSelectionNames = raw.selections.map((s) => s.name);
-    let selections = isExactOneGoalYesNo
-      ? raw.selections
-          .filter((sel) => /^(tak|yes)\b/i.test(sel.name.trim()))
-          .map((sel) => ({ code: "1" as NormalizedSelection, label: sel.name, odds: sel.odds }))
-      : raw.selections.flatMap((sel) => {
-          const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
-          if (code === null) return [];
-          return [{ code, label: sel.name, odds: sel.odds }];
-        });
+    let selections = raw.selections.flatMap((sel) => {
+      const code = normalizeSelectionForMarket(sel.name, marketCode, ctx, raw.name, siblingSelectionNames);
+      if (code === null) return [];
+      return [{ code, label: sel.name, odds: sel.odds }];
+    });
 
     // Every ladder tier must land on a literal "N+" catalog tier. A tier past
     // the catalog ladder would otherwise fall back to the line-less OVER code

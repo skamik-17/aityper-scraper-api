@@ -11820,21 +11820,7 @@
     },
     {
       "blessed": true,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "EXACT_GOALS",
-        "marketKey": "EXACT_GOALS",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "1",
-            "label": "Tak",
-            "odds": 4.05
-          }
-        ]
-      },
+      "expected": null,
       "index": 257,
       "marketCode": "EXACT_GOALS",
       "rawName": "Dokładnie 1 gol w meczu"

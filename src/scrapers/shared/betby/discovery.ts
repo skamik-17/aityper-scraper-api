@@ -5,9 +5,10 @@
  *   the renderer script embeds the `https://api-h-….sptpub.com` API origin.
  *   `bootstrap.sb_host` is stale for betters and is ignored.
  * - lebull (sbteam proxy): `share/bootstrap` -> `sb_host`; `${sb_host}assets/public/config.json`
- *   -> `betbyApiUrl` + `betbyBrandId`.
+ *   -> `betbyApiUrl` + `betbyBrandId`. `sb_host` is also the host of the lebull deep links,
+ *   so it is returned as `sbHost` for the drift check.
  */
-import type { BetbyBrandConfig, BetbyEndpoints, FetchText } from "./types.js";
+import type { BetbyBrandConfig, BetbyDiscoveredEndpoints, BetbyEndpoints, FetchText } from "./types.js";
 
 export const BETTERS_BOOTSTRAP_URL = "https://www.betters.pl/share/bootstrap";
 export const LEBULL_BOOTSTRAP_URL = "https://www.lebull.pl/share/bootstrap";
@@ -88,9 +89,10 @@ export async function discoverBettersEndpoints(fetchText: FetchText): Promise<Be
   return { prematchBase: `${origin}/api/v4`, descriptionsBase: `${origin}/api/v3`, brandId };
 }
 
-export async function discoverLebullEndpoints(fetchText: FetchText): Promise<BetbyEndpoints> {
+export async function discoverLebullEndpoints(fetchText: FetchText): Promise<BetbyDiscoveredEndpoints> {
   const { sbHost } = parseLebullBootstrap(JSON.parse(await fetchText(LEBULL_BOOTSTRAP_URL)));
-  return parseLebullSbConfig(JSON.parse(await fetchText(`${sbHost}assets/public/config.json`)));
+  const endpoints = parseLebullSbConfig(JSON.parse(await fetchText(`${sbHost}assets/public/config.json`)));
+  return { ...endpoints, sbHost };
 }
 
 /**
@@ -108,6 +110,8 @@ function describeEndpoints(e: BetbyEndpoints, show: { descriptions: boolean; bra
  * Discover the brand's endpoints; on any failure use the pinned ones and warn.
  * When discovery succeeds but differs from the pinned endpoints, the discovered
  * ones win and one `endpoint drift` line is logged so the pin can be updated.
+ * The same line also reports a discovered `sbHost` that no longer matches the
+ * brand's fixed `deepLinkHost` (odds still flow, but the deep links would break).
  */
 export async function resolveEndpoints(
   brand: BetbyBrandConfig,
@@ -117,7 +121,7 @@ export async function resolveEndpoints(
   const tag = `[Betby/${brand.logTag}]`;
   const pinned = brand.pinned;
 
-  let discovered: BetbyEndpoints;
+  let discovered: BetbyDiscoveredEndpoints;
   try {
     discovered = await brand.discover(fetchText);
   } catch (err) {
@@ -125,12 +129,25 @@ export async function resolveEndpoints(
     return { endpoints: pinned, source: "pinned" };
   }
 
-  const show = {
-    descriptions: discovered.descriptionsBase !== pinned.descriptionsBase && discovered.prematchBase === pinned.prematchBase,
-    brand: discovered.brandId !== pinned.brandId,
+  // Only the API endpoints leave this function; sbHost is used for the drift check alone.
+  const endpoints: BetbyEndpoints = {
+    prematchBase: discovered.prematchBase,
+    descriptionsBase: discovered.descriptionsBase,
+    brandId: discovered.brandId,
   };
-  if (discovered.prematchBase !== pinned.prematchBase || show.descriptions || show.brand) {
-    warn(`${tag} endpoint drift: discovered ${describeEndpoints(discovered, show)} != pinned ${describeEndpoints(pinned, show)}`);
+
+  const drift: string[] = [];
+  const show = {
+    descriptions: endpoints.descriptionsBase !== pinned.descriptionsBase && endpoints.prematchBase === pinned.prematchBase,
+    brand: endpoints.brandId !== pinned.brandId,
+  };
+  if (endpoints.prematchBase !== pinned.prematchBase || show.descriptions || show.brand) {
+    drift.push(`discovered ${describeEndpoints(endpoints, show)} != pinned ${describeEndpoints(pinned, show)}`);
   }
-  return { endpoints: discovered, source: "discovered" };
+  const { sbHost } = discovered;
+  if (brand.deepLinkHost !== undefined && sbHost !== undefined && sbHost !== brand.deepLinkHost) {
+    drift.push(`sb_host ${sbHost} != deep-link host ${brand.deepLinkHost}`);
+  }
+  if (drift.length > 0) warn(`${tag} endpoint drift: ${drift.join("; ")}`);
+  return { endpoints, source: "discovered" };
 }

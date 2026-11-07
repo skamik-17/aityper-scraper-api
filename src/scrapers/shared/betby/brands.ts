@@ -5,6 +5,9 @@
 import { discoverBettersEndpoints, discoverLebullEndpoints } from "./discovery.js";
 import type { BetbyBookmaker, BetbyBrandConfig } from "./types.js";
 
+/** lebull's sportsbook host (`bootstrap.sb_host` on 2026-11-06); its event pages are served from it. */
+const LEBULL_DEEP_LINK_HOST = "https://lebull-pl-bb.boxwebcdn.work/";
+
 export const BETBY_BRANDS: Record<BetbyBookmaker, BetbyBrandConfig> = {
   betters: {
     bookmaker: "betters",
@@ -30,6 +33,7 @@ export const BETBY_BRANDS: Record<BetbyBookmaker, BetbyBrandConfig> = {
     discover: discoverLebullEndpoints,
     // Route /event/:sportId/:countryId/:leagueId/:eventId of the lebull sportsbook (sb_host); sport 1 = soccer.
     buildEventUrl: (ref) =>
-      `https://lebull-pl-bb.boxwebcdn.work/event/1/${ref.categoryId}/${ref.tournamentId}/${ref.eventId}`,
+      `${LEBULL_DEEP_LINK_HOST}event/1/${ref.categoryId}/${ref.tournamentId}/${ref.eventId}`,
+    deepLinkHost: LEBULL_DEEP_LINK_HOST,
   },
 };

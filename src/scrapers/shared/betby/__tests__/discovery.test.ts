@@ -92,6 +92,37 @@ describe("Betby endpoint discovery", () => {
     );
   });
 
+  it("resolveEndpoints logs drift once when the lebull sb_host moves away from the deep-link host", async () => {
+    const warn = vi.fn();
+    const bootstrap = loadText("lebull", "bootstrap.json")
+      .replace("https://lebull-pl-bb.boxwebcdn.work/", "https://lebull-pl-v2.boxwebcdn.work/");
+    const f = createEvidenceFetch("lebull", { overrides: { "share/bootstrap": bootstrap } });
+    const r = await resolveEndpoints(BETBY_BRANDS.lebull, f, warn);
+    // Odds keep flowing from the unchanged proxy; only the deep links would point at a dead host.
+    expect(r).toEqual({ endpoints: BETBY_BRANDS.lebull.pinned, source: "discovered" });
+    expect(f.calls).toContain("https://lebull-pl-v2.boxwebcdn.work/assets/public/config.json");
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toBe(
+      "[Betby/LeBull] endpoint drift: sb_host https://lebull-pl-v2.boxwebcdn.work/ != deep-link host https://lebull-pl-bb.boxwebcdn.work/",
+    );
+  });
+
+  it("resolveEndpoints reports endpoint and sb_host drift together on one line", async () => {
+    const warn = vi.fn();
+    const bootstrap = loadText("lebull", "bootstrap.json")
+      .replace("https://lebull-pl-bb.boxwebcdn.work/", "https://lebull-pl-v2.boxwebcdn.work/");
+    const config = loadText("lebull", "sb-config.json").replace("2694137186776920067", "2694137186776920099");
+    const f = createEvidenceFetch("lebull", { overrides: { "share/bootstrap": bootstrap, "assets/public/config.json": config } });
+    const r = await resolveEndpoints(BETBY_BRANDS.lebull, f, warn);
+    expect(r).toEqual({ endpoints: { ...BETBY_BRANDS.lebull.pinned, brandId: "2694137186776920099" }, source: "discovered" });
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toBe(
+      "[Betby/LeBull] endpoint drift: discovered https://betting-betby-secundus.prod.sbteam.xyz/v5 (brand 2694137186776920099)"
+        + " != pinned https://betting-betby-secundus.prod.sbteam.xyz/v5 (brand 2694137186776920067)"
+        + "; sb_host https://lebull-pl-v2.boxwebcdn.work/ != deep-link host https://lebull-pl-bb.boxwebcdn.work/",
+    );
+  });
+
   it("resolveEndpoints falls back to pinned endpoints when the lebull config lacks betbyApiUrl", async () => {
     const warn = vi.fn();
     const f = createEvidenceFetch("lebull", { overrides: { "assets/public/config.json": JSON.stringify({ betbyBrandId: "2694137186776920067" }) } });
@@ -107,6 +138,15 @@ describe("Betby endpoint discovery", () => {
       tournamentId: "1669818860469096448", tournamentSlug: "premier-league", eventSlug: "leeds-united-tottenham-hotspur" } as BetbyEventRef;
     expect(BETBY_BRANDS.betters.buildEventUrl(ref)).toBe("https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league/leeds-united-tottenham-hotspur-2725816334213586962");
     expect(BETBY_BRANDS.lebull.buildEventUrl(ref)).toBe("https://lebull-pl-bb.boxwebcdn.work/event/1/1669818860410376192/1669818860469096448/2725816334213586962");
+  });
+
+  it("the lebull deep-link host is the host its event URLs are built on; betters has none to check", () => {
+    const ref = { eventId: "2725816334213586962", categoryId: "1669818860410376192",
+      tournamentId: "1669818860469096448" } as BetbyEventRef;
+    expect(BETBY_BRANDS.lebull.deepLinkHost).toBe("https://lebull-pl-bb.boxwebcdn.work/");
+    expect(BETBY_BRANDS.lebull.buildEventUrl(ref).startsWith(BETBY_BRANDS.lebull.deepLinkHost!)).toBe(true);
+    // betters' bootstrap sb_host is stale and ignored; its deep links go to www.betters.pl.
+    expect(BETBY_BRANDS.betters.deepLinkHost).toBeUndefined();
   });
 });
 

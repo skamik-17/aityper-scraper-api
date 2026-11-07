@@ -19,6 +19,12 @@ export interface BetbyEndpoints {
   brandId: string;
 }
 
+/** What a brand's discovery yields: its endpoints plus, for lebull, the live sportsbook host. */
+export interface BetbyDiscoveredEndpoints extends BetbyEndpoints {
+  /** lebull `bootstrap.sb_host` with a trailing `/`: the host its event pages are served from. */
+  sbHost?: string;
+}
+
 /** One quotable outcome: `k` is the decimal odds string, a truthy `b` marks it blocked. */
 export interface BetbyOutcome {
   k: string;
@@ -100,7 +106,14 @@ export interface BetbyBrandConfig {
   logTag: "Betters" | "LeBull";
   /** Endpoints verified on 2026-11-06; used whenever discovery fails. */
   pinned: BetbyEndpoints;
-  discover: (fetchText: FetchText) => Promise<BetbyEndpoints>;
+  /** resolveEndpoints returns only the BetbyEndpoints part; `sbHost` feeds the deep-link drift check. */
+  discover: (fetchText: FetchText) => Promise<BetbyDiscoveredEndpoints>;
   /** User-facing deep link to the event page. */
   buildEventUrl: (ref: BetbyEventRef) => string;
+  /**
+   * Fixed host (with trailing `/`) that buildEventUrl links to, for a brand whose discovery
+   * reports `sbHost`. resolveEndpoints logs `endpoint drift` when the two differ, because odds
+   * keep flowing from the API while every deep link would point at the old host.
+   */
+  deepLinkHost?: string;
 }

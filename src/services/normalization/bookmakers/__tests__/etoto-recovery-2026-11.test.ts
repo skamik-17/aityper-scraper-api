@@ -125,6 +125,16 @@ describe("etoto recovery 2026-11", () => {
     expect(out?.marketCode).toBe("OTHER");
   });
 
+  it("etoto -30591 reused for a non-penalty 0.5 total stays OTHER, never PENALTY_AWARDED", () => {
+    // Negative gameType ids do not keep one meaning on this platform: fuksiarz
+    // (same /rest/market/events API) sends -30591 as "Zmiana w 1. połowie".
+    // A 0.5 line alone must not publish the Over price as "penalty awarded".
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30591", name: "Suma 0.5 goli w 1. połowie",
+      selections: [{ name: "Poniżej 0.5", odds: 2.9 }, { name: "Powyżej 0.5", odds: 1.4 }] }, ctxEC);
+    expect(out?.marketCode).toBe("OTHER");
+    expect(out?.selections.some((s) => s.code === "YES")).toBe(false);
+  });
+
   it("etoto 'Rzut karny' (id 15) still maps Tak/Nie", () => {
     const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "15", name: "Rzut karny",
       selections: [{ name: "Tak", odds: 3.2 }, { name: "Nie", odds: 1.3 }] }, ctxEC)!;

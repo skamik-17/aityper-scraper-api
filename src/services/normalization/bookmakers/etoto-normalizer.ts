@@ -157,8 +157,9 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-338]: "WINNING_MARGIN", // "Margines zwycięstwa"
   [15]: "PENALTY_AWARDED", // "Rzut karny"
   // "Suma 0.5 rzutów karnych" (Poniżej/Powyżej 0.5): over 0.5 penalties is
-  // "a penalty is awarded". Only the 0.5 line qualifies; normalizeMarket
-  // keeps any other line as OTHER (see isPenaltyTotalZeroFiveLine).
+  // "a penalty is awarded". Only the 0.5 line of a name that says penalty
+  // kicks qualifies; normalizeMarket keeps anything else as OTHER (see
+  // isPenaltyTotalZeroFiveLine).
   [-30591]: "PENALTY_AWARDED",
 
   // --- Goalscorers / player props ---
@@ -1164,11 +1165,23 @@ function parseSumIntegerLine(text: string): string | undefined {
 }
 
 /**
+ * Penalty-kick wording ("rzut karny", "rzuty karne", "rzutów karnych").
+ * Uses \p{L}, not \w: JS \w is ASCII-only, so "rzut\w*" stops before the "ó"
+ * of "rzutów" and would never match the real "Suma 0.5 rzutów karnych".
+ */
+const PENALTY_KICK_WORDING = /rzut\p{L}*\s+karn/iu;
+
+/**
  * Id -30591 is a penalty total ("Suma X rzutów karnych"). Only its 0.5 line
  * ("Powyżej 0.5" = at least one penalty) is the PENALTY_AWARDED proposition.
+ * The name must also say penalty kicks: negative gameType ids do not keep one
+ * meaning on this platform (fuksiarz, on the same API, sends -30591 as
+ * "Zmiana w 1. połowie"), so an id plus a 0.5 line alone could publish another
+ * market's Over price as "penalty awarded".
  * Fails closed: a missing or unparseable line does not count as 0.5.
  */
 function isPenaltyTotalZeroFiveLine(raw: RawBookmakerMarket): boolean {
+  if (!PENALTY_KICK_WORDING.test(raw.name)) return false;
   const line =
     parseDecimalLine(raw.name) ??
     parseOverUnderLine(raw.selections.map((s: { name: string }) => s.name));
@@ -1251,8 +1264,9 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
     }
 
     // A -30591 penalty total at any line other than 0.5 is not "a penalty is
-    // awarded" (over 1.5 means two or more). Keep it OTHER, not null, so the
-    // "Unmapped market" warn below still flags the new line.
+    // awarded" (over 1.5 means two or more), and neither is a -30591 whose
+    // name lacks the penalty wording. Keep both OTHER, not null, so the
+    // "Unmapped market" warn below still flags them.
     if (marketId === -30591 && !isPenaltyTotalZeroFiveLine(raw)) {
       marketCode = "OTHER";
     }

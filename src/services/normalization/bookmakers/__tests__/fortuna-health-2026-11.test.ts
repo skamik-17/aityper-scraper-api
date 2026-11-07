@@ -359,10 +359,9 @@ describe("Task 2 review: team labels and name shapes outside the Premier League"
   });
 });
 
-describe("Task 3: five new market types", () => {
+describe("Task 3: new market types (00-bt and 00-bu held back)", () => {
   it.each([
     ["00-9a", "Mecz: rzut karny", "PENALTY_AWARDED", ["NO@1.29", "YES@3.35"]],
-    ["00-bt", "Mecz: rzut karny i czerwona kartka", "RED_CARD_AND_PENALTY", ["NO@1.01", "YES@12"]],
     ["00-bv", "Mecz: gol samobójczy", "OWN_GOAL", ["NO@1.05", "YES@8"]],
     ["00-k7", "Mecz: gol zdobyty strzałem głową", "HEADER_GOAL", ["NO@1.45", "YES@2.6"]],
   ])("arsenalHull %s %s -> %s", (id, _name, key, expected) => {
@@ -375,11 +374,19 @@ describe("Task 3: five new market types", () => {
     expect(outs.map((o) => o?.marketKey).sort()).toEqual(["ASSISTS_TOTAL:1.5", "ASSISTS_TOTAL:2.5"]);
     expect(outs.map(legs)).toEqual(expect.arrayContaining([["OVER@2.3", "UNDER@1.56"], ["OVER@1.18", "UNDER@4.4"]]));
   });
-  it("arsenalHull 00-bu stays unmapped (open question 1)", () => {
+  it.each([
+    // settlement differs from the peers' PENALTY_OR_RED_CARD (open question 1)
+    ["00-bu", "Mecz: rzut karny lub czerwona kartka"],
+    // settlement unverified; YES 12 sits 15-29% above every peer (review of Task 3)
+    ["00-bt", "Mecz: rzut karny i czerwona kartka"],
+  ])("arsenalHull %s '%s' stays unmapped", (id, name) => {
+    const { raw, ctx } = live("arsenalHull", id);
+    expect(raw.name.startsWith(name)).toBe(true);
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     try {
-      expect(run(live("arsenalHull", "00-bu").raw, ctxOf("arsenalHull"))).toBeNull();
+      expect(run(raw, ctx)).toBeNull();
       expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] Unknown market"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining(`(id: ufo:mtyp:${id})`));
     } finally {
       warn.mockRestore();
     }

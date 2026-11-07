@@ -213,7 +213,11 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-9b": "VAR_REVIEW",
   "ufo:mtyp:00-r7": "PENALTY_IN_BOTH_HALVES",
   "ufo:mtyp:00-9a": "PENALTY_AWARDED", // "Mecz: rzut karny"
-  "ufo:mtyp:00-bt": "RED_CARD_AND_PENALTY", // "Mecz: rzut karny i czerwona kartka"
+  // NOTE: 00-bt "Mecz: rzut karny i czerwona kartka" is held back from
+  // RED_CARD_AND_PENALTY, like 00-bu from PENALTY_OR_RED_CARD. Its settlement
+  // rules could not be verified, and its YES (a flat 12 on most PL matches,
+  // live 2026-11-07) sits 15-29% above every peer, so it would take best odds
+  // on every match. Map it only once the owner confirms how Fortuna settles it.
   "ufo:mtyp:00-bv": "OWN_GOAL", // "Mecz: gol samobójczy"
   "ufo:mtyp:00-k7": "HEADER_GOAL", // "Mecz: gol zdobyty strzałem głową"
   "ufo:mtyp:00-k6": "ASSISTS_TOTAL", // "Mecz: liczba asyst w meczu"

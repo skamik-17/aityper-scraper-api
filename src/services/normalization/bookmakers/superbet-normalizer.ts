@@ -150,6 +150,11 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   201804: "OTHER", // team variant of the above
   201805: "OTHER", // team variant of the above
   558: "HALF_TIME_HOME_EXACT_GOALS", // "1.połowa - {home} - dokładna liczba goli"
+  541: "EXACT_GOALS", // "Dokładna liczba goli"
+  540: "HOME_EXACT_GOALS", // "{home} - dokładna liczba goli"
+  545: "AWAY_EXACT_GOALS", // "{away} - dokładna liczba goli"
+  568: "HALF_TIME_EXACT_GOALS", // "1.połowa - dokładna liczba goli"
+  569: "HALF_TIME_AWAY_EXACT_GOALS", // "1.połowa - {away} - dokładna liczba goli"
 
   // ===== First/last goal =====
   538: "FIRST_TEAM_TO_SCORE", // "1. gol"
@@ -227,6 +232,14 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // matching "Obie drużyny strzelą gola" inside the joined leg text) and to
   // silence the per-entry "[superbet] Unmapped market" warning spam.
   231194: "OTHER", // bet-builder / same-game-multi combos - no peer counterpart, never comparable
+  // Team yes/no specials. Mapped by id so they never reach the name patterns,
+  // where a team name like "Bournemouth" used to land them in TOTAL_GOALS.
+  232507: "OTHER", // "{home} strzeli co najmniej 2 gole z rzędu" - no catalog counterpart
+  232508: "OTHER", // "{away} strzeli co najmniej 2 gole z rzędu" - no catalog counterpart
+  232513: "OTHER", // "{home} wygra wcześniej przegrywając" - no catalog counterpart
+  232514: "OTHER", // "{away} wygra wcześniej przegrywając" - no catalog counterpart
+  232515: "OTHER", // "{home} będzie prowadzić w dowolnym momencie" - no catalog counterpart
+  232516: "OTHER", // "{away} będzie prowadzić w dowolnym momencie" - no catalog counterpart
 
   // ===== Corners =====
   704: "CORNERS_TOTAL", // "Liczba rzutów rożnych"
@@ -425,6 +438,18 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   236224: "PLAYER_OFFSIDES", // "Zawodnik - liczba spalonych"
   238465: "PLAYER_HEADER_SHOTS_ON_TARGET", // "Zawodnik - liczba celnych strzałów głową"
   238481: "OTHER", // "Zawodnik - liczba strzałów głową" - no catalog counterpart
+  236216: "PLAYER_FOULS", // "Zawodnik - liczba popełnionych fauli"
+  238449: "PLAYER_FOULS_WON", // "Zawodnik - liczba fauli na zawodniku"
+  236220: "PLAYER_SHOTS_ON_TARGET", // "Zawodnik - liczba celnych strzałów"
+  236222: "PLAYER_TACKLES", // "Zawodnik - liczba odbiorów"
+  238485: "PLAYER_SHOTS_OUTSIDE_BOX", // "Zawodnik - liczba strzałów spoza pola karnego"
+  238469: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX", // "Zawodnik - liczba celnych strzałów spoza pola karnego"
+  239621: "PLAYER_ASSISTS", // "Zawodnik - liczba asyst"
+  238453: "OTHER", // "Zawodnik - liczba odbiorów na zawodniku" - no catalog counterpart
+  238477: "OTHER", // "Zawodnik - liczba strzałów prawą nogą" - no catalog counterpart
+  238473: "OTHER", // "Zawodnik - liczba strzałów lewą nogą" - no catalog counterpart
+  238461: "OTHER", // "Zawodnik - liczba celnych strzałów prawą nogą" - no catalog counterpart
+  238457: "OTHER", // "Zawodnik - liczba celnych strzałów lewą nogą" - no catalog counterpart
   233484: "TWO_PLAYERS_ANYTIME", // "Którykolwiek z zawodników strzeli gola"
   233485: "BOTH_PLAYERS_ANYTIME", // "Obaj zawodnicy strzelą gola"
 };
@@ -568,7 +593,9 @@ const SUPERBET_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarketTyp
   { pattern: /podwojna szansa|double chance/, code: "DOUBLE_CHANCE" },
   { pattern: /remis\s*=\s*zwrot|draw no bet|zaklad bez remisu/, code: "DRAW_NO_BET" },
   { pattern: /obie.*strzela|btts|gg\/?ng/, code: "BTTS" },
-  { pattern: /liczba goli|suma goli|over\/?under|o\/?u/, code: "TOTAL_GOALS" },
+  // "o/u" must be a whole token: a bare `o\/?u` matched the letters "ou"
+  // inside team/player names (Bournemouth, Toulouse, Tchaouna).
+  { pattern: /liczba goli|suma goli|over\/?under|\bo\/u\b/, code: "TOTAL_GOALS" },
   { pattern: /handicap azjatycki|asian handicap|^handicap$/, code: "ASIAN_HANDICAP" },
   { pattern: /handicap europejski|european handicap/, code: "EUROPEAN_HANDICAP" },
   { pattern: /parzyste\/?nieparzyste|nieparzysta\/?parzysta|odd\/?even/, code: "ODD_EVEN_GOALS" },
@@ -713,6 +740,11 @@ const PLAYER_STAT_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_PASSES",
   "PLAYER_ASSISTS",
   "PLAYER_OFFSIDES",
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_TACKLES",
+  "PLAYER_SHOTS_OUTSIDE_BOX",
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
 ]);
 
 const PARAMETERIZED_MARKETS = new Set<NormalizedMarketType>([
@@ -1401,7 +1433,9 @@ function normalizeSelectionForMarket(
     case "PLAYER_OF_THE_MATCH": {
       if (isNoneSelection(lower)) return "NONE" as NormalizedSelection;
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
-      // Per-player stat lines arrive as "Lastname, Firstname - powyżej N.5".
+      // Per-player stat lines arrive as "Firstname Lastname - powyżej N.5".
+      // Superbet switched to `First Last` between 2026-08-19 and 2026-11-06;
+      // `Last, First` ("Lastname, Firstname - powyżej N.5") is still accepted.
       // Over 0.5 is the base "records at least one" bet peers quote under the
       // bare player name; higher lines keep an explicit "N+" suffix so a 3+
       // price is never merged into the 1+ comparison column.
@@ -1411,7 +1445,9 @@ function normalizeSelectionForMarket(
         const atLeast = Math.floor(parseFloat(withLine[2].replace(",", "."))) + 1;
         return (atLeast <= 1 ? player : `${player} ${atLeast}+`) as NormalizedSelection;
       }
-      // Superbet quotes players as "Lastname, Firstname"; canonicalize to
+      // Superbet quotes players as "Firstname Lastname"; that word order is
+      // kept. Superbet switched to `First Last` between 2026-08-19 and
+      // 2026-11-06; `Last, First` is still accepted and inverted to
       // "Firstname Lastname" so selections line up across bookmakers.
       return canonicalizeSuperbetPlayerName(cleaned) as NormalizedSelection;
     }
@@ -1425,7 +1461,12 @@ function normalizeSelectionForMarket(
     case "PLAYER_HEADER_SHOTS_ON_TARGET":
     case "PLAYER_PASSES":
     case "PLAYER_ASSISTS":
-    case "PLAYER_OFFSIDES": {
+    case "PLAYER_OFFSIDES":
+    case "PLAYER_FOULS":
+    case "PLAYER_FOULS_WON":
+    case "PLAYER_TACKLES":
+    case "PLAYER_SHOTS_OUTSIDE_BOX":
+    case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX": {
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
       const withLine = cleaned.match(/-\s*powy[żz]ej\s+(\d+(?:[.,]\d+)?)\s*$/iu);
       if (withLine) {

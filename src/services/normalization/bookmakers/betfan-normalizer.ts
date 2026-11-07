@@ -68,6 +68,7 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-200070": "FOUL_RACE",
   "-30243": "FOULS_TOTAL",
   "162": "TEAM_TOTAL_FOULS",
+  "163": "TEAM_TOTAL_FOULS",
   "-30244": "OFFSIDES_TOTAL",
   "-200165": "HOME_TEAM_TOTAL_OFFSIDES",
   "-200166": "HOME_TEAM_TOTAL_OFFSIDES",
@@ -527,6 +528,12 @@ const TEAM_SCOPED_CODE_MAP: Partial<
     home: "HOME_TEAM_TOTAL_OFFSIDES",
     away: "AWAY_TEAM_TOTAL_OFFSIDES",
   },
+  // Team-scoped OPTA fouls ("<team> - liczba fauli (OPTA)", ids 162/163 and
+  // the FOULS_TOTAL + team-name refine): the side lives in the market code
+  // (decision D1, the same key as forbet/fortuna/superbet), so these codes
+  // stay out of TEAM_LINE_PARAM_MARKETS. An unresolvable team name keeps
+  // the side-less TEAM_TOTAL_FOULS rather than guessing HOME.
+  TEAM_TOTAL_FOULS: { home: "HOME_TEAM_TOTAL_FOULS", away: "AWAY_TEAM_TOTAL_FOULS" },
   // Per-team 1st-half exact corners arrive under home/away ids whose side is
   // only reliable from the team name in the market title.
   HALF_TIME_HOME_EXACT_CORNERS: {
@@ -973,6 +980,8 @@ function normalizeSelectionForMarket(
     case "TEAM_TOTAL_SHOTS_ON_TARGET":
     case "FOULS_TOTAL":
     case "TEAM_TOTAL_FOULS":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES": {
@@ -1394,11 +1403,19 @@ function extractParamValue(
 /**
  * Team-scoped stat lines whose catalog vocabulary carries the side in the
  * PARAMETER ("HOME:6.5"/"AWAY:6.5") rather than in a dedicated HOME_/AWAY_
- * marketCode (mirrors fortuna's convention for the same catalog codes).
- * Without the side folded into the param, both teams' lines collide on the
- * same (marketCode, param) key and only one team's odds survive.
+ * marketCode: corners, cards, shots and shots on target (mirrors fortuna's
+ * convention for the same catalog codes; forbet, fuksiarz and superbet key
+ * TEAM_TOTAL_SHOTS(_ON_TARGET) the same way). Without the side folded into
+ * the param, both teams' lines collide on the same (marketCode, param) key
+ * and only one team's odds survive, and the side-less key never pools with
+ * the peers' rows.
  */
-const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>(["CORNERS_TEAM", "CARDS_TEAM"]);
+const TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "CORNERS_TEAM",
+  "CARDS_TEAM",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+]);
 
 export const betfanNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betfan",

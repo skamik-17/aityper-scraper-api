@@ -14,6 +14,10 @@
  *
  * Only entries with `blessed: true` are refreshed (those are the ones
  * golden.test.ts asserts); pass --include-unblessed to refresh the rest too.
+ *
+ * It recomputes from the committed fixture raw only, so `--dry` shows
+ * normalizer drift, never raw-side changes from a re-harvest. Review a
+ * re-harvest with its own diff (see the harvest-fixtures.ts header).
  */
 
 import { readFileSync, writeFileSync, readdirSync, statSync, existsSync } from "node:fs";
@@ -35,7 +39,7 @@ interface FixtureRawMarket {
   name: string;
   groupName?: string;
   paramValue?: string;
-  selections: { name: string; odds: number }[];
+  selections: { name: string; odds: number; externalId?: string }[];
 }
 interface FixtureFile {
   ctx: NormalizationContext;
@@ -60,7 +64,11 @@ function toRawBookmakerMarket(raw: FixtureRawMarket): RawBookmakerMarket {
     name: raw.name,
     groupName: raw.groupName || undefined,
     paramValue: raw.paramValue || undefined,
-    selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: raw.selections.map((s) => ({
+      name: s.name,
+      odds: s.odds,
+      ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+    })),
   };
 }
 

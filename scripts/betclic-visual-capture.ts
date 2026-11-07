@@ -23,6 +23,7 @@ import {
   type BetclicGroupCapture,
   type FrontSectionCapture,
 } from "../src/services/audit/visual-types.js";
+import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 
@@ -270,7 +271,7 @@ async function main() {
   const url = getArg("--url") ?? buildEventUrl(matchId, league, home, away);
   const frontUrl = getArg("--front-url") ?? "http://localhost:3000";
   const backendUrl = getArg("--backend-url") ?? "http://localhost:3001";
-  const prepPath = getArg("--prep") ?? resolve(process.cwd(), `../docs/betclic-audit/.tmp/${matchId}.json`);
+  const prepPath = getArg("--prep") ?? defaultPrepAuditOutPath("betclic", matchId);
   const date = new Date().toISOString().slice(0, 10);
   const outDir = getArg("--out") ?? resolve(process.cwd(), `../docs/betclic-audit/screenshots/${date}__${matchId}`);
   mkdirSync(outDir, { recursive: true });

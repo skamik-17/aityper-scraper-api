@@ -133,6 +133,7 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "roznica goli": "WINNING_MARGIN",
   "rzuty rozne - przedzialy": "CORNERS_RANGE",
   "spalone 1x2 (opta)": "OFFSIDES_1X2",
+  "spalone 1x2 (opta) (z dogrywka)": "OFFSIDES_1X2",
   "strzaly celne - 1x2 (opta)": "MOST_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu (opta)": "TOTAL_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu  (opta)": "TOTAL_SHOTS_ON_TARGET",
@@ -142,6 +143,9 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "liczba strzalow w meczu (opta)": "TOTAL_SHOTS",
   "suma faulu w meczu (opta)": "FOULS_TOTAL",
   "suma spalonych w meczu (opta)": "OFFSIDES_TOTAL",
+  "liczba spalonych w meczu (opta)": "OFFSIDES_TOTAL",
+  "liczba fauli w meczu (opta) (z dogrywka)": "FOULS_TOTAL",
+  "pierwsza druzyna, ktora zostanie zlapana na pozycji spalonej w meczu": "FIRST_OFFSIDE",
   "ostatni rozny": "LAST_CORNER",
   "rzuty rozne": "CORNERS_TOTAL",
   "wiecej kartek": "CARDS_RACE",
@@ -708,8 +712,8 @@ function resolveTeamOffsidesMarket(
   const home = normalizeName(ctx.homeTeam);
   const away = normalizeName(ctx.awayTeam);
 
-  // Pattern: "suma spalonych w meczu - {teamName} (opta)"
-  const match = normalizedName.match(/^suma spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
+  // Pattern: "(suma|liczba) spalonych w meczu - {teamName} (opta)"
+  const match = normalizedName.match(/^(?:suma|liczba) spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
   if (!match) return null;
 
   const teamPart = match[1].trim();
@@ -717,8 +721,40 @@ function resolveTeamOffsidesMarket(
   const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
   const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
   if (isHome) return { code: "HOME_TEAM_TOTAL_OFFSIDES", teamSide: "HOME" };
   if (isAway) return { code: "AWAY_TEAM_TOTAL_OFFSIDES", teamSide: "AWAY" };
+
+  return null;
+}
+
+interface TeamFoulsResult {
+  code: "HOME_TEAM_TOTAL_FOULS" | "AWAY_TEAM_TOTAL_FOULS";
+  teamSide: "HOME" | "AWAY";
+}
+
+function resolveTeamFoulsMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamFoulsResult | null {
+  // Pattern: "liczba fauli (opta) - {teamName} (z dogrywka)"
+  const match = normalizedName.match(/^liczba fauli\s*\(opta\)\s*-\s*(.+?)(?:\s*\(z dogrywka\))?$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
+  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
+
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
+  if (isHome) return { code: "HOME_TEAM_TOTAL_FOULS", teamSide: "HOME" };
+  if (isAway) return { code: "AWAY_TEAM_TOTAL_FOULS", teamSide: "AWAY" };
 
   return null;
 }
@@ -884,6 +920,11 @@ function resolveMarketCode(
   const teamOffsides = resolveTeamOffsidesMarket(normalizedName, ctx);
   if (teamOffsides) {
     return { marketCode: teamOffsides.code, matchedBy: "pattern", teamSide: teamOffsides.teamSide };
+  }
+
+  const teamFouls = resolveTeamFoulsMarket(normalizedName, ctx);
+  if (teamFouls) {
+    return { marketCode: teamFouls.code, matchedBy: "pattern", teamSide: teamFouls.teamSide };
   }
 
   const winAtLeastOneHalf = resolveWinAtLeastOneHalfMarket(normalizedName, ctx);
@@ -1596,7 +1637,15 @@ function normalizePenaltyGoalSelection(
 ): NormalizedSelection {
   const normalized = normalizeName(selectionName);
 
-  if (normalized.includes("ktorykolwiek") || normalized.includes("zawodnik") || normalized.includes("any")) {
+  // "Którykolwiek zawodnik strzeli rzut karny" (WC label) and "Którakolwiek
+  // drużyna strzeli gola z rzutu karnego" (current Betclic label) are the same
+  // either-team leg.
+  if (
+    normalized.includes("ktorykolwiek") ||
+    normalized.includes("ktorakolwiek") ||
+    normalized.includes("zawodnik") ||
+    normalized.includes("any")
+  ) {
     return "ANY";
   }
 
@@ -1918,6 +1967,7 @@ function normalizeSelectionForMarket(
     case "FIRST_HALF_FIRST_CARD":
     case "FIRST_SHOT":
     case "FIRST_SHOT_ON_TARGET":
+    case "FIRST_OFFSIDE":
       return normalizeFirstCardSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
      case "FIRST_CORNER":
@@ -1977,6 +2027,8 @@ function normalizeSelectionForMarket(
     case "AWAY_POSSESSION":
     case "TOTAL_SHOTS_ON_TARGET":
     case "FOULS_TOTAL":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":

@@ -392,3 +392,72 @@ describe("Task 3: new market types (00-bt and 00-bu held back)", () => {
     }
   });
 });
+
+describe("Task 4: seventeen pre-existing ids with catalog codes", () => {
+  it.each([
+    ["arsenalHull", "00-2n", "HALF_TIME_BTTS", ["NO@1.12", "YES@5.4"]],
+    ["arsenalHull", "00-1h", "HOME_WIN_TO_NIL", ["YES@1.65", "NO@2.02"]],
+    ["arsenalHull", "00-1i", "AWAY_WIN_TO_NIL", ["YES@9.4", "NO@1.01"]],
+    ["arsenalHull", "00-1o", "HOME_WIN_BOTH_HALVES", ["YES@2.18", "NO@1.61"]],
+    ["forestCity", "00-1p", "AWAY_WIN_BOTH_HALVES", ["YES@4.2", "NO@1.18"]],
+    ["arsenalHull", "00-2b", "HOME_SCORE_BOTH_HALVES", ["NO@1.99", "YES@1.73"]],
+    ["arsenalHull", "00-2c", "AWAY_SCORE_BOTH_HALVES", ["YES@9.6", "NO@1.02"]],
+    ["arsenalHull", "00-1r", "HOME_WIN_AT_LEAST_ONE_HALF", ["YES@1.09", "NO@6"]],
+    ["arsenalHull", "00-1s", "AWAY_WIN_AT_LEAST_ONE_HALF", ["NO@1.12", "YES@5.4"]],
+    ["arsenalHull", "00-07", "RED_CARD_TEAM:HOME", ["NO@1.02", "YES@11"]],
+    ["arsenalHull", "00-08", "RED_CARD_TEAM:AWAY", ["NO@1.06", "YES@8.2"]],
+    ["arsenalHull", "00-0c", "HALF_TIME_RED_CARD_TEAM:HOME", ["NO@1.01", "YES@12"]],
+    ["arsenalHull", "00-0d", "HALF_TIME_RED_CARD_TEAM:AWAY", ["YES@12", "NO@1.01"]],
+    ["arsenalHull", "00-0a", "HALF_TIME_RED_CARD", ["NO@1.01", "YES@11"]],
+    ["forestCity", "00-0f", "FIRST_CORNER", ["HOME@2.21", "AWAY@1.59"]],
+    ["arsenalHull", "00-19", "ODD_EVEN_GOALS", ["EVEN@1.91", "ODD@1.9"]],
+    ["arsenalHull", "00-09", "WINNING_MARGIN",
+      ["AWAY_BY_3PLUS@100", "DRAW@7", "HOME_BY_2@3.7", "HOME_BY_3PLUS@2.24", "AWAY_BY_1@20", "AWAY_BY_2@90", "HOME_BY_1@4"]],
+  ])("%s %s -> %s", (group, id, key, expected) => {
+    const out = run(live(group, id).raw, ctxOf(group));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual(expected);
+  });
+  it("FIRST_CORNER drops 'Nikt' before team matching (the fuzzy matcher resolves 'Nikt' to Leeds United)", () => {
+    // Verbatim from the 2026-11-07 PL capture (Leeds United vs Tottenham Hotspur); this id is not in the fixture.
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-0f", name: "Mecz:\u00a01.rzut rożny",
+      selections: [{ name: "Leeds", odds: 1.89 }, { name: "Nikt", odds: 100 }, { name: "Tottenham", odds: 1.82 }] }, ctxOf("leedsTottenham"));
+    expect(out?.marketKey).toBe("FIRST_CORNER");
+    expect(legs(out)).toEqual(["HOME@1.89", "AWAY@1.82"]);
+  });
+  it("a pair id follows the team named in its label (00-1h quoting Hull -> AWAY_WIN_TO_NIL)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-1h", name: "Mecz: Hull - wygra do zera",
+      selections: [{ name: "Tak", odds: 9.2 }, { name: "Nie", odds: 1.01 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("AWAY_WIN_TO_NIL");
+    expect(legs(out)).toEqual(["YES@9.2", "NO@1.01"]);
+  });
+  it("a red-card team id follows the team named in its label (00-07 quoting Hull -> RED_CARD_TEAM:AWAY)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-07", name: "Mecz: Hull - Czerwona Kartka (bez CK dla trenera i sztabu)",
+      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("RED_CARD_TEAM:AWAY");
+    expect(legs(out)).toEqual(["NO@1.06", "YES@8.2"]);
+  });
+  it("a placeholder name is never team-matched: the red-card team side comes from the id (00-08 -> AWAY)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-08", name: "Rynek ufo:mtyp:00-08",
+      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("RED_CARD_TEAM:AWAY");
+    expect(legs(out)).toEqual(["NO@1.06", "YES@8.2"]);
+  });
+  it("WINNING_MARGIN drops a leg it cannot resolve instead of emitting UNKNOWN", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-09", name: "Mecz: wynik/różnica zwycięstwa",
+      selections: [{ name: "Arsenal/o 1 gol", odds: 4 }, { name: "Remis", odds: 7 }, { name: "Inny wynik", odds: 50 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("WINNING_MARGIN");
+    expect(legs(out)).toEqual(["HOME_BY_1@4", "DRAW@7"]);
+  });
+  it("WINNING_MARGIN with an 'o 4 gole' leg is dropped: 'o 3 gole' would then mean exactly 3, not 3+", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const out = run({ bookmakerMarketId: "ufo:mtyp:00-09", name: "Mecz: wynik/różnica zwycięstwa",
+        selections: [{ name: "Arsenal/o 1 gol", odds: 4 }, { name: "Arsenal/o 3 gole", odds: 4.6 }, { name: "Arsenal/o 4 gole", odds: 5.5 }, { name: "Remis", odds: 7 }] }, ctxOf("arsenalHull")); // synthetic
+      expect(out).toBeNull();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] WINNING_MARGIN"));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});

@@ -1,0 +1,750 @@
+# Totalbet phase-1 live acceptance (totalbet.md Task 6), 2026-11-07, 01:18-01:26 UTC
+# Code: branch recovery/totalbet @ cdbb97b (Tasks 1-5), worktree /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/totalbet
+# Every live command ran from that worktree through /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live, one at a time.
+# Nothing was deployed, no server or scheduler ran, nothing was written to the DB.
+# Outputs are verbatim stdout+stderr, including the runner's "[heavy] waiting for the live lock" line.
+
+## Verdicts
+
+CHECK A1 success=True errorKey=False listed=19 matches=19 need=18 pass=True
+CHECK A2 lines=57 (3 runs x 19) minRatio=1.000 below95=0 bannedLines=0 pass=True
+CHECK A3 matches=19 minMapped=77 maxMapped=82 maxUnknown=0 keysEqualMapped=True pass=True
+CHECK A7 acceptanceExit=['0'] discoveryExit=['0'] browserPoolLines=0 discoveryNoMatch=0 pass=True
+CHECK A8 durationMs=11073 pass=True
+A4  DEFERRED (needs the deployed backend). Pre-deploy proxy below: 1X2-CHECK matchesWith=19 need=18 maxDevPct=5.6 ok=True
+A5  DEFERRED (needs the deployed backend). Pre-deploy proxy below: all 19 matches over=0 unknown=0, max 14.5 % (threshold 15)
+A6  DEFERRED (needs the owner's merge/deploy and a persisted scrape). Commands and expected values at the end.
+
+## Step 1a: acceptance smoke (A1, A2, A7, A8)
+
+$ cd /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/totalbet && /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live timeout 120 npx tsx -e 'import { totalbetScraper } from "./src/scrapers/bookmakers/totalbet/index.ts"; import { fetchLeagueEvents } from "./src/scrapers/bookmakers/totalbet/api-client.ts"; import { getBookmakerLeagueId } from "./src/config/leagues.ts"; (async () => { const listed = (await fetchLeagueEvents(String(getBookmakerLeagueId("premier-league", "totalbet")))).events.length; const t0 = Date.now(); const r = await totalbetScraper.scrapeFullOffer("premier-league"); console.log("SMOKE " + JSON.stringify({ success: r.success, error: r.error, listed, matches: r.matches.length, markets: r.matches.reduce((s, m) => s + m.markets.length, 0), durationMs: Date.now() - t0 })); })();'; echo "exit=$?"
+# started 2026-11-07T01:18:08Z
+[heavy] waiting for the live lock
+[Totalbet/FullOffer] Found 19 prematch events for premier-league
+[Totalbet/FullOffer] Leeds United vs Tottenham Hotspur: 450 markets (market_count 450)
+[Totalbet/FullOffer] Arsenal vs Hull City: 451 markets (market_count 451)
+[Totalbet/FullOffer] Fulham vs Newcastle United: 455 markets (market_count 455)
+[Totalbet/FullOffer] Nottingham Forest vs Manchester City: 444 markets (market_count 444)
+[Totalbet/FullOffer] Brighton and Hove Albion vs Brentford: 393 markets (market_count 393)
+[Totalbet/FullOffer] Crystal Palace vs Liverpool: 385 markets (market_count 385)
+[Totalbet/FullOffer] Sunderland vs Chelsea: 392 markets (market_count 392)
+[Totalbet/FullOffer] Ipswich Town vs AFC Bournemouth: 356 markets (market_count 356)
+[Totalbet/FullOffer] Manchester United vs Aston Villa: 404 markets (market_count 404)
+[Totalbet/FullOffer] Manchester City vs Fulham: 160 markets (market_count 160)
+[Totalbet/FullOffer] AFC Bournemouth vs Nottingham Forest: 159 markets (market_count 159)
+[Totalbet/FullOffer] Aston Villa vs Sunderland: 162 markets (market_count 162)
+[Totalbet/FullOffer] Chelsea vs Leeds United: 162 markets (market_count 162)
+[Totalbet/FullOffer] Coventry City vs Crystal Palace: 161 markets (market_count 161)
+[Totalbet/FullOffer] Tottenham Hotspur vs Ipswich Town: 160 markets (market_count 160)
+[Totalbet/FullOffer] Newcastle United vs Arsenal: 161 markets (market_count 161)
+[Totalbet/FullOffer] Hull City vs Brighton and Hove Albion: 161 markets (market_count 161)
+[Totalbet/FullOffer] Liverpool vs Manchester United: 161 markets (market_count 161)
+[Totalbet/FullOffer] Brentford vs Everton: 160 markets (market_count 160)
+[Totalbet/FullOffer] Completed: 19 matches, 5337 total markets
+SMOKE {"success":true,"listed":19,"matches":19,"markets":5337,"durationMs":11073}
+exit=0
+# finished 2026-11-07T01:18:21Z
+
+## Step 1b: normalizing smoke (A3)
+
+$ cd /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/totalbet && /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live timeout 180 npx tsx -e 'import { totalbetScraper } from "./src/scrapers/bookmakers/totalbet/index.ts"; import { totalbetNormalizer } from "./src/services/normalization/bookmakers/totalbet-normalizer.ts"; (async () => { const r = await totalbetScraper.scrapeFullOffer("premier-league"); for (const m of r.matches) { const ctx = { homeTeam: m.homeTeam, awayTeam: m.awayTeam, league: "premier-league", leagueName: "premier-league" }; const out = m.markets.map((k) => totalbetNormalizer.normalizeMarket({ bookmakerMarketId: k.bookmakerMarketId, name: k.name, paramValue: k.paramValue, selections: k.selections }, ctx)).filter((o) => o && o.marketCode !== "OTHER"); const unknown = out.reduce((s, o) => s + o!.selections.filter((x) => x.code === "UNKNOWN").length, 0); console.log("MATCH " + JSON.stringify({ h: m.homeTeam, a: m.awayTeam, raw: m.markets.length, mapped: out.length, keys: new Set(out.map((o) => o!.marketKey)).size, unknown })); } console.log("SMOKE " + JSON.stringify({ success: r.success, error: r.error, matches: r.matches.length })); process.exit(0); })();'; echo "exit=$?"
+# started 2026-11-07T01:18:30Z
+[heavy] waiting for the live lock
+[Totalbet/FullOffer] Found 19 prematch events for premier-league
+[Totalbet/FullOffer] Leeds United vs Tottenham Hotspur: 450 markets (market_count 450)
+[Totalbet/FullOffer] Arsenal vs Hull City: 451 markets (market_count 451)
+[Totalbet/FullOffer] Fulham vs Newcastle United: 455 markets (market_count 455)
+[Totalbet/FullOffer] Nottingham Forest vs Manchester City: 444 markets (market_count 444)
+[Totalbet/FullOffer] Brighton and Hove Albion vs Brentford: 393 markets (market_count 393)
+[Totalbet/FullOffer] Crystal Palace vs Liverpool: 385 markets (market_count 385)
+[Totalbet/FullOffer] Sunderland vs Chelsea: 392 markets (market_count 392)
+[Totalbet/FullOffer] Ipswich Town vs AFC Bournemouth: 356 markets (market_count 356)
+[Totalbet/FullOffer] Manchester United vs Aston Villa: 404 markets (market_count 404)
+[Totalbet/FullOffer] Manchester City vs Fulham: 160 markets (market_count 160)
+[Totalbet/FullOffer] AFC Bournemouth vs Nottingham Forest: 159 markets (market_count 159)
+[Totalbet/FullOffer] Aston Villa vs Sunderland: 162 markets (market_count 162)
+[Totalbet/FullOffer] Chelsea vs Leeds United: 162 markets (market_count 162)
+[Totalbet/FullOffer] Coventry City vs Crystal Palace: 161 markets (market_count 161)
+[Totalbet/FullOffer] Tottenham Hotspur vs Ipswich Town: 160 markets (market_count 160)
+[Totalbet/FullOffer] Newcastle United vs Arsenal: 161 markets (market_count 161)
+[Totalbet/FullOffer] Hull City vs Brighton and Hove Albion: 161 markets (market_count 161)
+[Totalbet/FullOffer] Liverpool vs Manchester United: 161 markets (market_count 161)
+[Totalbet/FullOffer] Brentford vs Everton: 160 markets (market_count 160)
+[Totalbet/FullOffer] Completed: 19 matches, 5337 total markets
+MATCH {"h":"Leeds United","a":"Tottenham Hotspur","raw":450,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Arsenal","a":"Hull City","raw":451,"mapped":77,"keys":77,"unknown":0}
+MATCH {"h":"Fulham","a":"Newcastle United","raw":455,"mapped":80,"keys":80,"unknown":0}
+MATCH {"h":"Nottingham Forest","a":"Manchester City","raw":444,"mapped":82,"keys":82,"unknown":0}
+MATCH {"h":"Brighton and Hove Albion","a":"Brentford","raw":393,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Crystal Palace","a":"Liverpool","raw":385,"mapped":82,"keys":82,"unknown":0}
+MATCH {"h":"Sunderland","a":"Chelsea","raw":392,"mapped":80,"keys":80,"unknown":0}
+MATCH {"h":"Ipswich Town","a":"AFC Bournemouth","raw":356,"mapped":80,"keys":80,"unknown":0}
+MATCH {"h":"Manchester United","a":"Aston Villa","raw":404,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Manchester City","a":"Fulham","raw":160,"mapped":80,"keys":80,"unknown":0}
+MATCH {"h":"AFC Bournemouth","a":"Nottingham Forest","raw":159,"mapped":79,"keys":79,"unknown":0}
+MATCH {"h":"Aston Villa","a":"Sunderland","raw":162,"mapped":82,"keys":82,"unknown":0}
+MATCH {"h":"Chelsea","a":"Leeds United","raw":162,"mapped":82,"keys":82,"unknown":0}
+MATCH {"h":"Coventry City","a":"Crystal Palace","raw":161,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Tottenham Hotspur","a":"Ipswich Town","raw":160,"mapped":80,"keys":80,"unknown":0}
+MATCH {"h":"Newcastle United","a":"Arsenal","raw":161,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Hull City","a":"Brighton and Hove Albion","raw":161,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Liverpool","a":"Manchester United","raw":161,"mapped":81,"keys":81,"unknown":0}
+MATCH {"h":"Brentford","a":"Everton","raw":160,"mapped":80,"keys":80,"unknown":0}
+SMOKE {"success":true,"matches":19}
+exit=0
+# finished 2026-11-07T01:18:40Z
+
+## Step 2: discovery tool (A7: exits 0 by itself, with no process.exit on success)
+
+$ cd /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/totalbet && /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live bash -c 'U=$(curl -s "https://totalbet.pl/dealer/bdata/v1/bet/events?page=1&per_page=100&category_uuid=8793bb6a-4684-44ba-b92e-4d896e6cbfbf&category_type=sport&type=standard" | python3 -I -c "import json,sys; print([e for e in json.load(sys.stdin)[\"data\"][\"events\"] if e[\"type\"] == \"prematch\" and e[\"status\"] == \"active\"][0][\"uuid\"])") && echo "U=$U" && timeout 180 npx tsx scripts/totalbet-market-discovery.ts --url "https://totalbet.pl/event-details/$U" --league premier-league; echo "exit=$?"'
+# started 2026-11-07T01:18:54Z
+[heavy] waiting for the live lock
+U=0e45932b-1433-4cf5-b658-5c308b7c2b60
+[Totalbet/FullOffer] Found 19 prematch events for premier-league
+[Totalbet/FullOffer] Leeds United vs Tottenham Hotspur: 450 markets (market_count 450)
+[Totalbet/FullOffer] Arsenal vs Hull City: 451 markets (market_count 451)
+[Totalbet/FullOffer] Fulham vs Newcastle United: 455 markets (market_count 455)
+[Totalbet/FullOffer] Nottingham Forest vs Manchester City: 444 markets (market_count 444)
+[Totalbet/FullOffer] Brighton and Hove Albion vs Brentford: 393 markets (market_count 393)
+[Totalbet/FullOffer] Crystal Palace vs Liverpool: 385 markets (market_count 385)
+[Totalbet/FullOffer] Sunderland vs Chelsea: 392 markets (market_count 392)
+[Totalbet/FullOffer] Ipswich Town vs AFC Bournemouth: 356 markets (market_count 356)
+[Totalbet/FullOffer] Manchester United vs Aston Villa: 404 markets (market_count 404)
+[Totalbet/FullOffer] Manchester City vs Fulham: 160 markets (market_count 160)
+[Totalbet/FullOffer] AFC Bournemouth vs Nottingham Forest: 159 markets (market_count 159)
+[Totalbet/FullOffer] Aston Villa vs Sunderland: 162 markets (market_count 162)
+[Totalbet/FullOffer] Chelsea vs Leeds United: 162 markets (market_count 162)
+[Totalbet/FullOffer] Coventry City vs Crystal Palace: 161 markets (market_count 161)
+[Totalbet/FullOffer] Tottenham Hotspur vs Ipswich Town: 160 markets (market_count 160)
+[Totalbet/FullOffer] Newcastle United vs Arsenal: 161 markets (market_count 161)
+[Totalbet/FullOffer] Hull City vs Brighton and Hove Albion: 161 markets (market_count 161)
+[Totalbet/FullOffer] Liverpool vs Manchester United: 161 markets (market_count 161)
+[Totalbet/FullOffer] Brentford vs Everton: 160 markets (market_count 160)
+[Totalbet/FullOffer] Completed: 19 matches, 5337 total markets
+====================================================================================================
+🔍 TOTALBET MARKET DISCOVERY
+🏆 MATCH: Leeds United vs Tottenham Hotspur (premier-league)
+====================================================================================================
+
+====================================================================================================
+📊 SUMMARY
+====================================================================================================
+Total markets: 450
+✅ Mapped: 81
+❌ Unmapped/OTHER: 369
+⚠️  With issues: 369
+Wynik meczu                              → MATCH_WINNER              TRIPLE_BUTTONS     
+Podwójna szansa - Cały mecz              → DOUBLE_CHANCE             TRIPLE_BUTTONS     
+Podwójna szansa - 1. Połowa              → HALF_TIME_DOUBLE_CHANCE   TRIPLE_BUTTONS     
+Podwójna szansa - 2. Połowa              → SECOND_HALF_DOUBLE_CHANCE TRIPLE_BUTTONS     
+Obie drużyny strzelą gola - Cały mecz    → BTTS                      BINARY_BUTTONS     
+Obie drużyny strzelą gola - 1. Połowa    → HALF_TIME_BTTS            BINARY_BUTTONS     
+Obie drużyny strzelą gola - 2. Połowa    → SECOND_HALF_BTTS          BINARY_BUTTONS     
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Total (suma)                             → TOTAL_GOALS               PARAMETER_SLIDER   
+Strzeli gola - Leeds                     → HOME_TEAM_TO_SCORE        BINARY_BUTTONS     
+Strzeli gola - Tottenham                 → AWAY_TEAM_TO_SCORE        BINARY_BUTTONS     
+Leeds - Total (suma)                     → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Leeds - Total (suma)                     → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Leeds - Total (suma)                     → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Leeds - Total (suma)                     → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Leeds - Total (suma)                     → HOME_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Tottenham - Total (suma)                 → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Tottenham - Total (suma)                 → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Tottenham - Total (suma)                 → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Tottenham - Total (suma)                 → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Tottenham - Total (suma)                 → AWAY_TEAM_TOTAL_GOALS     PARAMETER_SLIDER   
+Handicap                                 → ASIAN_HANDICAP            HANDICAP_SELECTOR  
+Handicap                                 → ASIAN_HANDICAP            HANDICAP_SELECTOR  
+Handicap                                 → ASIAN_HANDICAP            HANDICAP_SELECTOR  
+Handicap                                 → ASIAN_HANDICAP            HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Handicap                                 → EUROPEAN_HANDICAP         HANDICAP_SELECTOR  
+Remis = zwrot - Cały mecz                → DRAW_NO_BET               BINARY_BUTTONS     
+Remis = zwrot - 1. Połowa                → HALF_TIME_DRAW_NO_BET     BINARY_BUTTONS     
+Remis = zwrot - 2. Połowa                → SECOND_HALF_DRAW_NO_BET   BINARY_BUTTONS     
+Wynik połowy - 1. Połowa                 → HALF_TIME_RESULT          TRIPLE_BUTTONS     
+Wynik połowy - 2. Połowa                 → SECOND_HALF_RESULT        TRIPLE_BUTTONS     
+1. połowa - Total (suma)                 → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1. połowa - Total (suma)                 → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1. połowa - Total (suma)                 → HALF_TIME_TOTAL_GOALS     PARAMETER_SLIDER   
+1. połowa - Strzeli gola - Leeds         → HALF_TIME_HOME_TO_SCORE   BINARY_BUTTONS     
+1. połowa - Strzeli gola - Tottenham     → HALF_TIME_AWAY_TO_SCORE   BINARY_BUTTONS     
+1. połowa - Leeds - Total (suma)         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. połowa - Leeds - Total (suma)         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. połowa - Leeds - Total (suma)         → HALF_TIME_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. połowa - Tottenham - Total (suma)     → HALF_TIME_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. połowa - Tottenham - Total (suma)     → HALF_TIME_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. połowa - Tottenham - Total (suma)     → HALF_TIME_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+1. Połowa - handicap                     → FIRST_HALF_ASIAN_HANDICAP HANDICAP_SELECTOR  
+1. Połowa - handicap                     → FIRST_HALF_ASIAN_HANDICAP HANDICAP_SELECTOR  
+1. Połowa - Handicap                     → FIRST_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+1. Połowa - Handicap                     → FIRST_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+1. Połowa - Handicap                     → FIRST_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+1. Połowa - Handicap                     → FIRST_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+2. połowa - Total (suma)                 → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2. połowa - Total (suma)                 → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2. połowa - Total (suma)                 → SECOND_HALF_TOTAL_GOALS   PARAMETER_SLIDER   
+2. połowa - Strzeli gola - Leeds         → SECOND_HALF_HOME_TO_SCORE BINARY_BUTTONS     
+2. połowa - Strzeli gola - Tottenham     → SECOND_HALF_AWAY_TO_SCORE BINARY_BUTTONS     
+2. połowa - Leeds - Total (suma)         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. połowa - Leeds - Total (suma)         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. połowa - Leeds - Total (suma)         → SECOND_HALF_HOME_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. połowa - Tottenham - Total (suma)     → SECOND_HALF_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. połowa - Tottenham - Total (suma)     → SECOND_HALF_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. połowa - Tottenham - Total (suma)     → SECOND_HALF_AWAY_TEAM_TOTAL_GOALS PARAMETER_SLIDER   
+2. Połowa - Handicap                     → SECOND_HALF_ASIAN_HANDICAP HANDICAP_SELECTOR  
+2. Połowa - Handicap                     → SECOND_HALF_ASIAN_HANDICAP HANDICAP_SELECTOR  
+2. połowa - Handicap                     → SECOND_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+2. połowa - Handicap                     → SECOND_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+2. połowa - Handicap                     → SECOND_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+2. połowa - Handicap                     → SECOND_HALF_EUROPEAN_HANDICAP HANDICAP_SELECTOR  
+Dokładny wynik                           → CORRECT_SCORE             SCORE_GRID         
+1. Połowa - Dokładny wynik               → HALF_TIME_CORRECT_SCORE   SCORE_GRID         
+2. Połowa - Dokładny wynik               → SECOND_HALF_CORRECT_SCORE SCORE_GRID         
+Parzyste/Nieparzyste - Cały mecz         → ODD_EVEN_GOALS            BINARY_BUTTONS     
+Parzyste/Nieparzyste - 1. Połowa         → HALF_TIME_ODD_EVEN_GOALS  BINARY_BUTTONS     
+Parzyste/Nieparzyste - 2. Połowa         → SECOND_HALF_ODD_EVEN_GOALS BINARY_BUTTONS     
+
+❌ UNMAPPED MARKETS:
+   🚀 TOTALprzewaga: Drużyna wygra lub będzie prowadziła różnicą dwóch goli w meczu [Leeds, Tottenham]
+   Wynik dowolnej połowy meczu              [Leeds, remis, Tottenham]
+   Dwie szanse (1. połowa lub mecz)         [Leeds, remis, Tottenham]
+   Który zespół zdobędzie gola              [żaden, tylko Leeds, tylko Tottenham]
+   Suma rzutów rożnych                      [poniżej 7.5, powyżej 7.5]
+   Suma rzutów rożnych                      [poniżej 8.5, powyżej 8.5]
+   Suma rzutów rożnych                      [poniżej 9.5, powyżej 9.5]
+   Suma rzutów rożnych                      [poniżej 10.5, powyżej 10.5]
+   Suma rzutów rożnych                      [poniżej 11.5, powyżej 11.5]
+   Suma kartek                              [poniżej 2.5, powyżej 2.5]
+   Suma kartek                              [poniżej 3.5, powyżej 3.5]
+   Suma kartek                              [poniżej 4.5, powyżej 4.5]
+   Suma kartek                              [poniżej 5.5, powyżej 5.5]
+   Suma kartek                              [poniżej 6.5, powyżej 6.5]
+   🔄 TOTALzmiana: Zawodnik strzeli gola    [Calvert-Lewin, Dominic, Solanke, Dominic, Nmecha, Lukas]
+   Zawodnik strzeli gola                    [Calvert-Lewin, Dominic, Nmecha, Lukas, Solanke, Dominic]
+   Obie drużyny strzelą w przynajmniej jednej połowie meczu [tak, nie]
+   Wynik + obie drużyny strzelą gola - Cały mecz [Leeds + tak, Leeds + nie, remis + tak]
+   Wynik + obie drużyny strzelą gola - 2. Połowa [Leeds + tak, Leeds + nie, remis + tak]
+   Wynik + obie drużyny strzelą gola - 1. Połowa [Leeds + tak, Leeds + nie, remis + tak]
+   Gol w obu połowach                       [tak, nie]
+   Czy w meczu będzie "łamak"?              [tak]
+   Obie połowy powyżej 1.5                  [tak, nie]
+   Obie połowy poniżej 1.5                  [tak, nie]
+   Dokładna liczba goli                     [0, 1, 2]
+   Suma goli (przedziały)                   [0-1, 2-3, 4-5]
+   Leeds – dokładna liczba goli             [0, 1, 2]
+   Tottenham - dokładna liczba goli         [0, 1, 2]
+   Wygra do zera - Leeds                    [tak, nie]
+   Wygra do zera - Tottenham                [tak, nie]
+   Wygra obie połowy - Leeds                [tak, nie]
+   Wygra obie połowy - Tottenham            [tak, nie]
+   Wygra jakąkolwiek połowę - Leeds         [tak, nie]
+   Wygra jakąkolwiek połowę - Tottenham     [tak, nie]
+   Zdobędzie gola w obu połowach - Leeds    [tak, nie]
+   Zdobędzie gola w obu połowach - Tottenham [tak, nie]
+   Połowa z większą liczbą goli - Leeds     [1. połowa, 2. połowa, równo]
+   Połowa z większą liczbą goli - Tottenham [1. połowa, 2. połowa, równo]
+   Wygra spotkanie - Tottenham              [tak, nie]
+   Wygra spotkanie - Leeds                  [tak, nie]
+   Wynik + Total (suma)                     [Leeds + poniżej 1.5, Leeds + powyżej 1.5, remis + poniżej 1.5]
+   Wynik + Total (suma)                     [Leeds + poniżej 2.5, Leeds + powyżej 2.5, remis + poniżej 2.5]
+   Wynik + Total (suma)                     [Leeds + poniżej 3.5, Leeds + powyżej 3.5, remis + poniżej 3.5]
+   Wynik + Total (suma)                     [Leeds + poniżej 4.5, Leeds + powyżej 4.5, remis + poniżej 4.5]
+   Strzeli 1 gola - Cały mecz               [Leeds, nikt, Tottenham]
+   Strzeli 1 gola - 1. Połowa               [Leeds, nikt, Tottenham]
+   Strzeli 1 gola - 2. Połowa               [Leeds, nikt, Tottenham]
+   1. połowa - Dokładna liczba goli         [0, 1, 2]
+   Połowa - Wynik + suma goli - 1. Połowa   [Leeds + poniżej 1.5, Leeds + powyżej 1.5, remis + poniżej 1.5]
+   Połowa - Wynik + suma goli - 2. Połowa   [Leeds + poniżej 1.5, Leeds + powyżej 1.5, remis + poniżej 1.5]
+   2. połowa - Dokładna liczba goli         [0, 1, 2+]
+   Suma goli + obie drużyny strzelą         [poniżej 2.5 + nie, powyżej 2.5 + nie, poniżej 2.5 + tak]
+   Podwójna szansa + suma goli              [Leeds/remis + poniżej 1.5, Leeds/Tottenham + poniżej 1.5, remis/Tottenham + poniżej 1.5]
+   Podwójna szansa + suma goli              [Leeds/remis + poniżej 2.5, Leeds/Tottenham + poniżej 2.5, remis/Tottenham + poniżej 2.5]
+   Podwójna szansa + suma goli              [Leeds/remis + poniżej 3.5, Leeds/Tottenham + poniżej 3.5, remis/Tottenham + poniżej 3.5]
+   Podwójna szansa + suma goli              [Leeds/remis + poniżej 4.5, Leeds/Tottenham + poniżej 4.5, remis/Tottenham + poniżej 4.5]
+   Podwójna szansa + obie drużyny strzelą - Cały mecz [Leeds/remis + tak, Leeds/remis + nie, Leeds/Tottenham + tak]
+   Podwójna szansa + obie drużyny strzelą - 1. Połowa [Leeds/remis + tak, Leeds/remis + nie, Leeds/Tottenham + tak]
+   Podwójna szansa + obie drużyny strzelą - 2. Połowa [Leeds/remis + tak, Leeds/remis + nie, Leeds/Tottenham + tak]
+   Podwójna szansa (mecz) + obie drużyny strzelą (1. połowa) [Leeds/remis + tak, Leeds/remis + nie, Leeds/Tottenham + tak]
+   Podwójna szansa (mecz) + obie drużyny strzelą (2. połowa) [Leeds/remis + tak, Leeds/remis + nie, Leeds/Tottenham + tak]
+   Strzeli 1. gola + wynik meczu            [Tottenham Gol + Tottenham, Leeds Gol + Leeds, Leeds Gol + remis]
+   Rzuty rożne - Kto więcej - Cały mecz     [Leeds, remis, Tottenham]
+   Rzuty rożne - Kto więcej - 1. Połowa     [Leeds, remis, Tottenham]
+   Leeds - suma rzutów rożnych              [poniżej 3.5, powyżej 3.5]
+   Leeds - suma rzutów rożnych              [poniżej 4.5, powyżej 4.5]
+   Leeds - suma rzutów rożnych              [poniżej 5.5, powyżej 5.5]
+   Tottenham - suma rzutów rożnych          [poniżej 3.5, powyżej 3.5]
+   Tottenham - suma rzutów rożnych          [poniżej 4.5, powyżej 4.5]
+   Tottenham - suma rzutów rożnych          [poniżej 5.5, powyżej 5.5]
+   Rzuty rożne - Handicap                   [Leeds (-0.5), Tottenham (+0.5)]
+   Rzuty rożne - Handicap                   [Leeds (+0.5), Tottenham (-0.5)]
+   Rzuty rożne - Handicap                   [Leeds (+1.5), Tottenham (-1.5)]
+   Suma rzutów rożnych (przedziały)         [0-8, 9-11, 12+]
+   Drużyna - Suma rzutów rożnych (przedziały) - Leeds [0-2, 3-4, 5-6]
+   Drużyna - Suma rzutów rożnych (przedziały) - Tottenham [0-2, 3-4, 5-6]
+   Każda drużyna powyżej 2.5 rożnych        [tak]
+   1. połowa - Suma rzutów rożnych          [poniżej 3.5, powyżej 3.5]
+   1. połowa - Suma rzutów rożnych          [poniżej 4.5, powyżej 4.5]
+   1. połowa - Suma rzutów rożnych          [poniżej 5.5, powyżej 5.5]
+   1. połowa - Leeds - suma rzutów rożnych  [poniżej 1.5, powyżej 1.5]
+   1. połowa - Leeds - suma rzutów rożnych  [poniżej 2.5, powyżej 2.5]
+   1. połowa - Tottenham - suma rzutów rożnych [poniżej 1.5, powyżej 1.5]
+   1. połowa - Tottenham - suma rzutów rożnych [poniżej 2.5, powyżej 2.5]
+   1. połowa - Rzuty rożne handicap         [Leeds (-0.5), Tottenham (+0.5)]
+   1. połowa - Rzuty rożne handicap         [Leeds (+0.5), Tottenham (-0.5)]
+   1. połowa - Rzuty rożne handicap         [Leeds (+1.5), Tottenham (-1.5)]
+   1. połowa - Suma rzutów rożnych (przedziały) [0-4, 5-6, 7+]
+   1. połowa - Drużyna - dokładna liczba rzutów rożnych - Leeds [0-1, 2, 3]
+   1. połowa - Drużyna - dokładna liczba rzutów rożnych - Tottenham [0-1, 2, 3]
+   1 rzut rożny - Cały mecz                 [Leeds, nikt, Tottenham]
+   1 rzut rożny - 1. Połowa                 [Leeds, nikt, Tottenham]
+   Ostatni rzut rożny - Cały mecz           [Leeds, żadna, Tottenham]
+   Ostatni rzut rożny - 1. Połowa           [Leeds, żadna, Tottenham]
+   Suma rzutów rożnych parzysta/nieparzysta - Cały mecz [nieparzysta, parzysta]
+   Suma rzutów rożnych parzysta/nieparzysta - 1. Połowa [nieparzysta, parzysta]
+   Kartki - Kto więcej - Cały mecz          [Leeds, remis, Tottenham]
+   Kartki - Kto więcej - 1. Połowa          [Leeds, remis, Tottenham]
+   Leeds - suma kartek                      [poniżej 1.5, powyżej 1.5]
+   Leeds - suma kartek                      [poniżej 2.5, powyżej 2.5]
+   Tottenham - suma kartek                  [poniżej 1.5, powyżej 1.5]
+   Tottenham - suma kartek                  [poniżej 2.5, powyżej 2.5]
+   Rzut karny                               [tak, nie]
+   Czerwona kartka - Cały mecz              [tak, nie]
+   Czerwona kartka - 1. Połowa              [tak, nie]
+   Czy będzie karny lub czerwona kartka     [tak, nie]
+   Rzut karny i czerwona kartka             [tak]
+   Zawodnik strzeli 1. gola                 [Calvert-Lewin, Dominic, Nmecha, Lukas, Solanke, Dominic]
+   Leeds - pierwszy strzelec gola           [Calvert-Lewin, Dominic, Nmecha, Lukas, Okafor, Noah]
+   Tottenham - pierwszy strzelec gola       [Solanke, Dominic, Marmoush, Omar, Tel, Mathys]
+   Zawodnik strzeli ostatniego gola         [Calvert-Lewin, Dominic, Nmecha, Lukas, Solanke, Dominic]
+   🔄 TOTALzmiana: Zawodnik otrzyma kartkę  [Bentancur, Rodrigo, Gallagher, Conor, Fernandes, Mateus]
+   Zawodnik otrzyma pierwszą kartkę w meczu [Gallagher, Conor, Fernandes, Mateus, Ampadu, Ethan]
+   Zawodnik otrzyma żółtą kartkę            [Bentancur, Rodrigo, Fernandes, Mateus, Gallagher, Conor]
+   🔄 TOTALzmiana: Otrzyma czerwoną kartkę  [Gallagher, Conor, Kulusekvski, Dejan, Fernandes, Mateus]
+   Każda drużyna powyżej 1 kartki           [tak, nie]
+   Dokładna liczba kartek                   [0-3, 4, 5]
+   Drużyna - czerwona kartka - Leeds        [tak, nie]
+   Drużyna - czerwona kartka - Tottenham    [tak, nie]
+   Drużyna - dokładna liczba kartek - Leeds [0-1, 2, 3]
+   Drużyna - dokładna liczba kartek - Tottenham [0-1, 2, 3]
+   Otrzyma 1 kartkę - Cały mecz             [Leeds, nikt, Tottenham]
+   Otrzyma 1 kartkę - 1. Połowa             [Leeds, nikt, Tottenham]
+   1. Połowa - Suma kartek                  [poniżej 0.5, powyżej 0.5]
+   1. Połowa - Suma kartek                  [poniżej 1.5, powyżej 1.5]
+   1. Połowa - Suma kartek                  [poniżej 2.5, powyżej 2.5]
+   1. Połowa - Suma kartek                  [poniżej 3.5, powyżej 3.5]
+   1. Połowa - Dokładna liczba kartek       [0, 1, 2]
+   1. połowa - Drużyna - czerwona kartka - Leeds [tak, nie]
+   1. połowa - Drużyna - czerwona kartka - Tottenham [tak, nie]
+   1. połowa - Drużyna - dokładna liczba kartek - Leeds [0, 1, 2]
+   1. połowa - Drużyna - dokładna liczba kartek - Tottenham [0, 1, 2]
+   Liczba celnych strzałów w meczu 7+       [tak]
+   Liczba celnych strzałów w meczu 8+       [tak]
+   Liczba celnych strzałów w meczu 9+       [tak]
+   Liczba celnych strzałów w meczu 10+      [tak]
+   Liczba celnych strzałów w meczu 11+      [tak]
+   Leeds liczba celnych strzałów 3+         [tak]
+   Leeds liczba celnych strzałów 4+         [tak]
+   Leeds liczba celnych strzałów 5+         [tak]
+   Leeds liczba celnych strzałów 6+         [tak]
+   Leeds liczba celnych strzałów 7+         [tak]
+   Tottenham liczba celnych strzałów 3+     [tak]
+   Tottenham liczba celnych strzałów 4+     [tak]
+   Tottenham liczba celnych strzałów 5+     [tak]
+   Tottenham liczba celnych strzałów 6+     [tak]
+   Tottenham liczba celnych strzałów 7+     [tak]
+   Liczba strzałów w meczu 25+              [tak]
+   Liczba strzałów w meczu 26+              [tak]
+   Liczba strzałów w meczu 27+              [tak]
+   Liczba strzałów w meczu 28+              [tak]
+   Liczba strzałów w meczu 29+              [tak]
+   Leeds liczba strzałów 11+                [tak]
+   Leeds liczba strzałów 12+                [tak]
+   Leeds liczba strzałów 13+                [tak]
+   Leeds liczba strzałów 14+                [tak]
+   Leeds liczba strzałów 15+                [tak]
+   Tottenham liczba strzałów 12+            [tak]
+   Tottenham liczba strzałów 13+            [tak]
+   Tottenham liczba strzałów 14+            [tak]
+   Tottenham liczba strzałów 15+            [tak]
+   Tottenham liczba strzałów 16+            [tak]
+   10 minut - Wynik od 1 do 10 min          [Leeds, remis, Tottenham]
+   Ostatni gol                              [Leeds, żaden, Tottenham]
+   Połowa z największą liczbą goli/punktów  [1. połowa, 2. połowa, równo]
+   Kiedy zostanie strzelony 1. gol (10 minut) [1-10, 11-20, 21-30]
+   Kiedy zostanie strzelony 1. gol (15 minut) [1-15, 16-30, 31-45]
+   🔄 TOTALzmiana: Zawodnik strzeli gola lub zaliczy asystę [Calvert-Lewin, Dominic, Solanke, Dominic, Nmecha, Lukas]
+   Zawodnik strzeli gola i zaliczy asystę   [Tel, Mathys, Kudus, Mohammed, Wilson, Harry]
+   Zawodnik strzeli gola w 1. połowie       [Calvert-Lewin, Dominic, Solanke, Dominic, Nmecha, Lukas]
+   Zawodnik strzeli gola głową              [Calvert-Lewin, Dominic, Solanke, Dominic, Nmecha, Lukas]
+   Zawodnik strzeli gola prawą nogą         [Marmoush, Omar, Calvert-Lewin, Dominic, Nmecha, Lukas]
+   Zawodnik strzeli gola lewą nogą          [Wilson, Harry, Kulusekvski, Dejan, Kudus, Mohammed]
+   Strzelec gola spoza pola karnego         [Maddison, James, Stach, Anton, Marmoush, Omar]
+   Zawodnik strzeli gola z rzutu wolnego    [Stach, Anton, Maddison, James, Robertson, Andy]
+   🔄 TOTALzmiana: Liczba asyst zawodnika 1+ [Kudus, Mohammed, Tel, Mathys, Maddison, James]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Solanke, Dominic 1+, Solanke, Dominic 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Aaronson, Brenden 1+, Aaronson, Brenden 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [van de Ven, Micky 1+, van de Ven, Micky 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Kulusekvski, Dejan 1+, Kulusekvski, Dejan 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Porro, Pedro 1+, Porro, Pedro 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [James, Daniel 1+, James, Daniel 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Davies, Ben 1+, Davies, Ben 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Gray, Archie 1+, Gray, Archie 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Ampadu, Ethan 1+, Ampadu, Ethan 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Bijol, Jaka 1+, Bijol, Jaka 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Stach, Anton 1+, Stach, Anton 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Nmecha, Lukas 1+, Nmecha, Lukas 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Bogle, Jayden 1+, Bogle, Jayden 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Kudus, Mohammed 1+, Kudus, Mohammed 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Longstaff, Sean 1+, Longstaff, Sean 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Gudmundsson, Gabriel 1+, Gudmundsson, Gabriel 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Tanaka, Ao 1+, Tanaka, Ao 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Tel, Mathys 1+, Tel, Mathys 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Gallagher, Conor 1+, Gallagher, Conor 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Muharemovic, Tarik 1+, Muharemovic, Tarik 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Okafor, Noah 1+, Okafor, Noah 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Senesi, Marcos 1+, Senesi, Marcos 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Calvert-Lewin, Dominic 1+, Calvert-Lewin, Dominic 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Wilson, Harry 1+, Wilson, Harry 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [van Hecke, Jan-Paul 1+, van Hecke, Jan-Paul 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Justin, James 1+, Justin, James 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Tonali, Sandro 1+, Tonali, Sandro 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Fernandes, Mateus 1+, Fernandes, Mateus 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Robertson, Andy 1+, Robertson, Andy 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Elvedi, Nico 1+, Elvedi, Nico 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Bard, Melvin 1+, Bard, Melvin 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Marmoush, Omar 1+, Marmoush, Omar 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Maddison, James 1+, Maddison, James 2+]
+   Zawodnik - suma asyst (wł. z ew. dogrywką) [Udogie, Destiny 1+, Udogie, Destiny 2+]
+   🔄 TOTALzmiana: Liczba celnych strzałów zawodnika 1+ [Calvert-Lewin, Dominic, Nmecha, Lukas, Marmoush, Omar]
+   🔄 TOTALzmiana: Liczba celnych strzałów zawodnika 2+ [Calvert-Lewin, Dominic, Nmecha, Lukas, Marmoush, Omar]
+   🔄 TOTALzmiana: Liczba celnych strzałów zawodnika 3+ [Calvert-Lewin, Dominic, Nmecha, Lukas, Marmoush, Omar]
+   🔄 TOTALzmiana: Liczba strzałów zawodnika 1+ [Calvert-Lewin, Dominic, Nmecha, Lukas, Marmoush, Omar]
+   🔄 TOTALzmiana: Liczba strzałów zawodnika 2+ [Calvert-Lewin, Dominic, Marmoush, Omar, Nmecha, Lukas]
+   🔄 TOTALzmiana: Liczba strzałów zawodnika 3+ [Calvert-Lewin, Dominic, Marmoush, Omar, Nmecha, Lukas]
+   Liczba celnych strzałów głową zawodnika: 1+ [Calvert-Lewin, Dominic, Solanke, Dominic, Nmecha, Lukas]
+   Zawodnik: 1 + celnych strzałów prawą nogą [Robertson, Andy, Elvedi, Nico, Adarabioyo, Tosin]
+   Zawodnik: 1 + celnych strzałów lewą nogą [Robertson, Andy, Elvedi, Nico, Adarabioyo, Tosin]
+   Liczba strzałów celnych zawodnika spoza pola karnego: 1+ [Maddison, James, Wilson, Harry, Stach, Anton]
+   🔄 TOTALzmiana: Liczba fauli zawodnika 1+ [Kulusekvski, Dejan, Gallagher, Conor, Fernandes, Mateus]
+   🔄 TOTALzmiana: Liczba fauli zawodnika 2+ [Kulusekvski, Dejan, Gallagher, Conor, Fernandes, Mateus]
+   🔄 TOTALzmiana: Liczba fauli zawodnika 3+ [Kulusekvski, Dejan, Gallagher, Conor, Fernandes, Mateus]
+   Liczba fauli na zawodniku: 1+            [Maddison, James, Aaronson, Brenden, Gudmundsson, Gabriel]
+   Liczba fauli na zawodniku: 2+            [Maddison, James, Aaronson, Brenden, Gudmundsson, Gabriel]
+   Liczba fauli na zawodniku: 3+            [Maddison, James, Aaronson, Brenden, Gudmundsson, Gabriel]
+   Liczba spalonych zawodnika: 1+           [Robertson, Andy, Elvedi, Nico, Adarabioyo, Tosin]
+   Liczba obron bramkarza: 2+               [Dúbravka, Martin, Trafford, James, Zetterer, Michael]
+   Liczba obron bramkarza: 3+               [Trafford, James, Dúbravka, Martin, Zetterer, Michael]
+   Liczba obron bramkarza: 4+               [Trafford, James, Dúbravka, Martin, Zetterer, Michael]
+   Którykolwiek z zawodników odda powyżej 2.5 celnych strzałów [Tak]
+   Którykolwiek z zawodników odda powyżej 3.5 celnych strzałów [Tak]
+   Którykolwiek z zawodników odda powyżej 4.5 strzałów [Tak]
+   Którykolwiek z zawodników odda powyżej 5.5 strzałów [Tak]
+   Którykolwiek z zawodników odda powyżej 6.5 strzałów [Tak]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Aaronson, Brenden 1+, Aaronson, Brenden 2+, Aaronson, Brenden 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Kulusekvski, Dejan 1+, Kulusekvski, Dejan 2+, Kulusekvski, Dejan 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [James, Daniel 1+, James, Daniel 2+, James, Daniel 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [van de Ven, Micky 1+, van de Ven, Micky 2+, van de Ven, Micky 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Porro, Pedro 1+, Porro, Pedro 2+, Porro, Pedro 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Solanke, Dominic 1+, Solanke, Dominic 2+, Solanke, Dominic 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Ampadu, Ethan 1+, Ampadu, Ethan 2+, Ampadu, Ethan 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Davies, Ben 1+, Davies, Ben 2+, Davies, Ben 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Gray, Archie 1+, Gray, Archie 2+, Gray, Archie 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Longstaff, Sean 1+, Longstaff, Sean 2+, Longstaff, Sean 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Bijol, Jaka 1+, Bijol, Jaka 2+, Bijol, Jaka 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Stach, Anton 1+, Stach, Anton 2+, Stach, Anton 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Gudmundsson, Gabriel 1+, Gudmundsson, Gabriel 2+, Gudmundsson, Gabriel 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Bogle, Jayden 1+, Bogle, Jayden 2+, Bogle, Jayden 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Tel, Mathys 1+, Tel, Mathys 2+, Tel, Mathys 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Nmecha, Lukas 1+, Nmecha, Lukas 2+, Nmecha, Lukas 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Kudus, Mohammed 1+, Kudus, Mohammed 2+, Kudus, Mohammed 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Tanaka, Ao 1+, Tanaka, Ao 2+, Tanaka, Ao 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [van Hecke, Jan-Paul 1+, van Hecke, Jan-Paul 2+, van Hecke, Jan-Paul 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Okafor, Noah 1+, Okafor, Noah 2+, Okafor, Noah 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Gallagher, Conor 1+, Gallagher, Conor 2+, Gallagher, Conor 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Robertson, Andy 1+, Robertson, Andy 2+, Robertson, Andy 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Wilson, Harry 1+, Wilson, Harry 2+, Wilson, Harry 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Muharemovic, Tarik 1+, Muharemovic, Tarik 2+, Muharemovic, Tarik 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Senesi, Marcos 1+, Senesi, Marcos 2+, Senesi, Marcos 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Tonali, Sandro 1+, Tonali, Sandro 2+, Tonali, Sandro 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Justin, James 1+, Justin, James 2+, Justin, James 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Fernandes, Mateus 1+, Fernandes, Mateus 2+, Fernandes, Mateus 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Elvedi, Nico 1+, Elvedi, Nico 2+, Elvedi, Nico 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Calvert-Lewin, Dominic 1+, Calvert-Lewin, Dominic 2+, Calvert-Lewin, Dominic 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Bard, Melvin 1+, Bard, Melvin 2+, Bard, Melvin 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Marmoush, Omar 1+, Marmoush, Omar 2+, Marmoush, Omar 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Maddison, James 1+, Maddison, James 2+, Maddison, James 3+]
+   Zawodnik - liczba strzelonych goli (wł. z ew. dogrywką) [Udogie, Destiny 1+, Udogie, Destiny 2+, Udogie, Destiny 3+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Gudmundsson, Gabriel 2+, Gudmundsson, Gabriel 3+, Gudmundsson, Gabriel 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Tel, Mathys 2+, Tel, Mathys 3+, Tel, Mathys 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [James, Daniel 2+, James, Daniel 3+, James, Daniel 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Davies, Ben 2+, Davies, Ben 3+, Davies, Ben 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Kulusekvski, Dejan 2+, Kulusekvski, Dejan 3+, Kulusekvski, Dejan 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Bogle, Jayden 2+, Bogle, Jayden 3+, Bogle, Jayden 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Stach, Anton 2+, Stach, Anton 3+, Stach, Anton 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Kudus, Mohammed 2+, Kudus, Mohammed 3+, Kudus, Mohammed 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Gray, Archie 2+, Gray, Archie 3+, Gray, Archie 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Solanke, Dominic 2+, Solanke, Dominic 3+, Solanke, Dominic 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Gallagher, Conor 2+, Gallagher, Conor 3+, Gallagher, Conor 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Senesi, Marcos 2+, Senesi, Marcos 3+, Senesi, Marcos 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Justin, James 3+, Justin, James 4+, Justin, James 5+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Aaronson, Brenden 2+, Aaronson, Brenden 3+, Aaronson, Brenden 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [van Hecke, Jan-Paul 2+, van Hecke, Jan-Paul 3+, van Hecke, Jan-Paul 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Longstaff, Sean 2+, Longstaff, Sean 3+, Longstaff, Sean 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Ampadu, Ethan 2+, Ampadu, Ethan 3+, Ampadu, Ethan 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Muharemovic, Tarik 2+, Muharemovic, Tarik 3+, Muharemovic, Tarik 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Nmecha, Lukas 2+, Nmecha, Lukas 3+, Nmecha, Lukas 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Bijol, Jaka 2+, Bijol, Jaka 3+, Bijol, Jaka 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Bard, Melvin 2+, Bard, Melvin 3+, Bard, Melvin 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Wilson, Harry 2+, Wilson, Harry 3+, Wilson, Harry 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Okafor, Noah 2+, Okafor, Noah 3+, Okafor, Noah 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Tonali, Sandro 2+, Tonali, Sandro 3+, Tonali, Sandro 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Elvedi, Nico 2+, Elvedi, Nico 3+, Elvedi, Nico 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Tanaka, Ao 2+, Tanaka, Ao 3+, Tanaka, Ao 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Porro, Pedro 2+, Porro, Pedro 3+, Porro, Pedro 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Marmoush, Omar 2+, Marmoush, Omar 3+, Marmoush, Omar 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Fernandes, Mateus 2+, Fernandes, Mateus 3+, Fernandes, Mateus 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Robertson, Andy 2+, Robertson, Andy 3+, Robertson, Andy 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Calvert-Lewin, Dominic 2+, Calvert-Lewin, Dominic 3+, Calvert-Lewin, Dominic 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [van de Ven, Micky 2+, van de Ven, Micky 3+, van de Ven, Micky 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Maddison, James 2+, Maddison, James 3+, Maddison, James 4+]
+   Zawodnik - liczba udanych odbiorów piłki (tackles) (wł. z ew. dogrywką) [Udogie, Destiny 2+, Udogie, Destiny 3+, Udogie, Destiny 4+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Solanke, Dominic 22+, Solanke, Dominic 26+, Solanke, Dominic 30+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [van Hecke, Jan-Paul 92+, van Hecke, Jan-Paul 96+, van Hecke, Jan-Paul 100+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Okafor, Noah 26+, Okafor, Noah 30+, Okafor, Noah 34+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Bogle, Jayden 35+, Bogle, Jayden 39+, Bogle, Jayden 43+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Bard, Melvin 34+, Bard, Melvin 38+, Bard, Melvin 42+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Gudmundsson, Gabriel 33+, Gudmundsson, Gabriel 37+, Gudmundsson, Gabriel 41+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [James, Daniel 23+, James, Daniel 27+, James, Daniel 31+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Nmecha, Lukas 15+, Nmecha, Lukas 19+, Nmecha, Lukas 23+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Muharemovic, Tarik 63+, Muharemovic, Tarik 67+, Muharemovic, Tarik 71+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Bijol, Jaka 51+, Bijol, Jaka 55+, Bijol, Jaka 59+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Stach, Anton 38+, Stach, Anton 42+, Stach, Anton 46+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Porro, Pedro 54+, Porro, Pedro 58+, Porro, Pedro 62+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Gray, Archie 55+, Gray, Archie 59+, Gray, Archie 63+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Wilson, Harry 28+, Wilson, Harry 32+, Wilson, Harry 36+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Tanaka, Ao 47+, Tanaka, Ao 51+, Tanaka, Ao 55+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Senesi, Marcos 78+, Senesi, Marcos 82+, Senesi, Marcos 86+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Aaronson, Brenden 33+, Aaronson, Brenden 37+, Aaronson, Brenden 41+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Kudus, Mohammed 35+, Kudus, Mohammed 39+, Kudus, Mohammed 43+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Tonali, Sandro 65+, Tonali, Sandro 69+, Tonali, Sandro 73+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Robertson, Andy 60+, Robertson, Andy 64+, Robertson, Andy 68+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Longstaff, Sean 39+, Longstaff, Sean 43+, Longstaff, Sean 47+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Gallagher, Conor 54+, Gallagher, Conor 58+, Gallagher, Conor 62+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Fernandes, Mateus 74+, Fernandes, Mateus 78+, Fernandes, Mateus 82+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Tel, Mathys 30+, Tel, Mathys 34+, Tel, Mathys 38+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Davies, Ben 67+, Davies, Ben 71+, Davies, Ben 75+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Marmoush, Omar 22+, Marmoush, Omar 26+, Marmoush, Omar 30+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Ampadu, Ethan 53+, Ampadu, Ethan 57+, Ampadu, Ethan 61+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Kulusekvski, Dejan 48+, Kulusekvski, Dejan 52+, Kulusekvski, Dejan 56+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Justin, James 44+, Justin, James 48+, Justin, James 52+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Calvert-Lewin, Dominic 15+, Calvert-Lewin, Dominic 19+, Calvert-Lewin, Dominic 23+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Maddison, James 65+, Maddison, James 69+, Maddison, James 73+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [van de Ven, Micky 76+, van de Ven, Micky 80+, van de Ven, Micky 84+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Elvedi, Nico 53+, Elvedi, Nico 57+, Elvedi, Nico 61+]
+   Zawodnik - liczba podań (wł. z ew. dogrywką) [Udogie, Destiny 48+, Udogie, Destiny 52+, Udogie, Destiny 56+]
+   Padnie gol samobójczy                    [tak, nie]
+   1. połowa/wynik końcowy                  [Leeds/Leeds, Leeds/remis, Leeds/Tottenham]
+   Strzał w słupek lub poprzeczkę           [tak, nie]
+   1. połowa/wynik końcowy + suma goli      [Leeds/Leeds + poniżej 1.5, remis/Leeds + poniżej 1.5, remis/remis + poniżej 1.5]
+   1. połowa/wynik końcowy + suma goli      [Leeds/Leeds + poniżej 2.5, Leeds/remis + poniżej 2.5, remis/Leeds + poniżej 2.5]
+   1. połowa/wynik końcowy + suma goli      [Leeds/Leeds + poniżej 3.5, Leeds/remis + poniżej 3.5, Leeds/Tottenham + poniżej 3.5]
+   1. połowa/wynik końcowy + suma goli      [Leeds/Leeds + poniżej 4.5, Leeds/remis + poniżej 4.5, Leeds/Tottenham + poniżej 4.5]
+   1. połowa/wynik końcowy + 1. połowa suma goli [remis/Leeds + poniżej 0.5, remis/remis + poniżej 0.5, remis/Tottenham + poniżej 0.5]
+   1. połowa/wynik końcowy + 1. połowa suma goli [Leeds/Leeds + poniżej 1.5, Leeds/remis + poniżej 1.5, Leeds/Tottenham + poniżej 1.5]
+   1. połowa/wynik końcowy + 1. połowa suma goli [Leeds/Leeds + poniżej 2.5, Leeds/remis + poniżej 2.5, Leeds/Tottenham + poniżej 2.5]
+   1. połowa/wynik końcowy + dokładna liczba goli [remis/remis + 0, Leeds/Leeds + 1, remis/Leeds + 1]
+   1. połowa/wynik końcowy - dokładny wynik [0:0 0:0, 0:0 0:1, 0:0 0:2]
+   Zwycięstwo Leeds = zwrot                 [remis, Tottenham]
+   Zwycięstwo Tottenham = zwrot             [Leeds, remis]
+   Rozmiar zwycięstwa                       [Leeds United 1, Leeds United 2, Leeds United 3+]
+   Którakolwiek z drużyn wygra              [tak, nie]
+   1./2.połowa - Obie drużyny strzelą gola  [nie/nie, tak/nie, tak/tak]
+   Wynik meczu lub obie drużyny strzelą - Leeds [tak, nie]
+   Wynik meczu lub obie drużyny strzelą - Remis [tak, nie]
+   Wynik meczu lub obie drużyny strzelą - Tottenham [tak, nie]
+   Wynik meczu lub którakolwiek czyste konto - Leeds [tak, nie]
+   Wynik meczu lub którakolwiek czyste konto - Remis [tak, nie]
+   Wynik meczu lub którakolwiek czyste konto - Tottenham [tak, nie]
+   Wynik meczu lub powyżej 2.5 - Leeds      [tak, nie]
+   Wynik meczu lub powyżej 2.5 - Remis      [tak, nie]
+   Wynik meczu lub powyżej 2.5 - Tottenham  [tak, nie]
+   Wynik meczu lub poniżej 2.5 - Leeds      [tak, nie]
+   Wynik meczu lub poniżej 2.5 - Remis      [tak, nie]
+   Wynik meczu lub poniżej 2.5 - Tottenham  [tak, nie]
+   Multi-wyniki                             [1:0, 2:0 lub 3:0, 0:1, 0:2 lub 0:3, 4:0, 5:0 lub 6:0]
+   Suma goli parzysta/nieparzysta - Leeds   [nieparzysta, parzysta]
+   Suma goli parzysta/nieparzysta - Tottenham [nieparzysta, parzysta]
+exit=0
+# finished 2026-11-07T01:19:03Z
+
+## Supplementary pre-deploy proxy for A4 and A5 (NOT the acceptance checks; those stay DEFERRED)
+
+# Method: one more live scrape of the worktree code (01:21Z), passed through the exact
+# production normalization step (normalizeMarketsForBookmaker, as scrape-helpers.ts runs it
+# before saving), non-OTHER markets kept. Peer data: read-only GETs to the live backend on :3001
+# (master, no totalbet rows): /api/odds?league=premier-league (01:19Z) and
+# /api/matches/<home>/<away>/normalized-markets?league=premier-league for all 19 matches (01:22Z).
+# Our markets were injected into those responses, with lines folded like market-type-grouper.ts
+# canonicalizeParamValue ("+0.5" -> "0.5"), as the normalized-markets API does for every bookmaker.
+# Then the plan's own checks ran unchanged: the A4 1X2-CHECK snippet (N_LIST=19) and
+# peer-deviation.py with the 39 phase-1 codes and --threshold 15. That covers all 19 matches, not just 3.
+# Proxy helpers were scratch-only (worktree .scratch/, not committed).
+# Proxy scrape:
+# started 2026-11-07T01:21:05Z
+PROXY {"success":true,"matches":19,"mappedMarkets":1531,"out":".scratch/t6-peer/totalbet-normalized.json"}
+exit=0
+# finished 2026-11-07T01:21:14Z
+# A4 proxy:
+INJECT odds: totalbet MATCH_WINNER injected into 19/19 backend matches
+1X2-CHECK bookmaker=totalbet matchesWith=19 future=19 listed=19 need=18 maxDevPct=5.6 ok=True
+exit=0
+# A5 proxy (INJECT: our phase-1 keys and how many found a peer market at the same line):
+# started 2026-11-07T01:23:55Z (REUSE=1: peer snapshots fetched 01:22Z, totalbet scrape 01:21Z)
+INJECT Leeds United vs Tottenham Hotspur: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=141 maxDevPct=9.2 worst=('SECOND_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 3.7, 4.074999999999999) over=0
+exit=0
+INJECT Arsenal vs Hull City: ourKeys=77 withPeerLine=77 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=77 selections=217 unknown=0 compared=140 maxDevPct=11.1 worst=('CORRECT_SCORE', '2-0', 4.8, 5.4) over=0
+exit=0
+INJECT Fulham vs Newcastle United: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=141 maxDevPct=10.3 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.1, 4.57) over=0
+exit=0
+INJECT Nottingham Forest vs Manchester City: ourKeys=82 withPeerLine=82 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=82 selections=227 unknown=0 compared=144 maxDevPct=10.8 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.55, 5.1) over=0
+exit=0
+INJECT Brighton and Hove Albion vs Brentford: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=144 maxDevPct=11.0 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.25, 4.775) over=0
+exit=0
+INJECT Crystal Palace vs Liverpool: ourKeys=82 withPeerLine=82 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=82 selections=227 unknown=0 compared=148 maxDevPct=13.4 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.85, 5.6) over=0
+exit=0
+INJECT Sunderland vs Chelsea: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=139 maxDevPct=11.6 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.2, 4.75) over=0
+exit=0
+INJECT Ipswich Town vs AFC Bournemouth: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=141 maxDevPct=11.0 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.25, 4.775) over=0
+exit=0
+INJECT Manchester United vs Aston Villa: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=143 maxDevPct=9.2 worst=('SECOND_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 3.95, 4.35) over=0
+exit=0
+INJECT Manchester City vs Fulham: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=140 maxDevPct=11.1 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-2', 'DRAW', 4.8, 5.4) over=0
+exit=0
+INJECT AFC Bournemouth vs Nottingham Forest: ourKeys=79 withPeerLine=79 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=79 selections=221 unknown=0 compared=137 maxDevPct=9.8 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.15, 4.6) over=0
+exit=0
+INJECT Aston Villa vs Sunderland: ourKeys=82 withPeerLine=82 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=82 selections=227 unknown=0 compared=145 maxDevPct=11.7 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.55, 5.15) over=0
+exit=0
+INJECT Chelsea vs Leeds United: ourKeys=82 withPeerLine=82 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=82 selections=227 unknown=0 compared=143 maxDevPct=11.0 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.45, 5.0) over=0
+exit=0
+INJECT Coventry City vs Crystal Palace: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=142 maxDevPct=9.0 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 3.8, 4.175000000000001) over=0
+exit=0
+INJECT Tottenham Hotspur vs Ipswich Town: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=142 maxDevPct=14.5 worst=('SECOND_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 5, 5.85) over=0
+exit=0
+INJECT Newcastle United vs Arsenal: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=144 maxDevPct=13.4 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.85, 5.6) over=0
+exit=0
+INJECT Hull City vs Brighton and Hove Albion: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=146 maxDevPct=13.9 worst=('FIRST_HALF_EUROPEAN_HANDICAP:-1', 'DRAW', 4.95, 5.75) over=0
+exit=0
+INJECT Liverpool vs Manchester United: ourKeys=81 withPeerLine=81 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=81 selections=225 unknown=0 compared=142 maxDevPct=10.3 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.35, 4.85) over=0
+exit=0
+INJECT Brentford vs Everton: ourKeys=80 withPeerLine=80 noPeerLine=0 []
+PEER-CHECK bookmaker=totalbet marketKeys=80 selections=223 unknown=0 compared=140 maxDevPct=9.8 worst=('FIRST_HALF_EUROPEAN_HANDICAP:1', 'DRAW', 4.35, 4.824999999999999) over=0
+exit=0
+A5-PROXY-ALL exit=0
+# finished 2026-11-07T01:24:23Z
+# Orientation sensitivity on the same 19 injected files: deviation from the peer median under the
+# as-mapped pairing (H0) and under three deliberately wrong pairings (our odds <= 5.0, >= 3 peers).
+ORIENT H0 as mapped          n= 2702 medianDev=   0.8% p95=   5.2% max=  14.5%
+ORIENT H1 line sign flipped  n=  602 medianDev=  78.0% p95= 221.4% max= 375.2%
+ORIENT H2 HOME/AWAY swapped  n=  826 medianDev=  75.0% p95= 209.9% max= 350.5%
+ORIENT H3 team code swapped  n=  807 medianDev=  24.8% p95=  73.6% max= 219.6%
+
+## Supplementary list-only probe of every league configured for totalbet (one list call each, no details)
+# The scheduler scrapes only CONFIG.ENABLED_LEAGUES = ["premier-league"], so the world-cup error never fires at runtime.
+# started 2026-11-07T01:25:41Z
+[heavy] waiting for the live lock
+LIST ekstraklasa (ae7d4621-313d-4df6-b3be-046b76a32938): listed=7
+LIST premier-league (8793bb6a-4684-44ba-b92e-4d896e6cbfbf): listed=19
+LIST laliga (cfb6428c-c437-4923-a370-562871d06316): listed=19
+LIST serie-a (0253b9f3-ab3b-4d19-ab4e-87aa8c3adb8e): listed=19
+LIST ligue-1 (f64248fd-8f4a-499f-8092-3408cecf2565): listed=17
+LIST world-cup-2026 (298d1945-aed7-4b43-ba39-3dbc23a59cd0): listed=0 error=No prematch events for category 298d1945-aed7-4b43-ba39-3dbc23a59cd0 (items_count=0, event_types=[{"count":1,"type":"outright"}])
+exit=0
+# finished 2026-11-07T01:25:46Z
+
+## DEFERRED: Steps 3-4 (A6, A4, A5). They need the owner's merge, a restarted dev server and a persisted scrape.
+# Not run here (EXECUTION rules 3-4: never touch the main checkout, start the server or write the DB).
+# The plan's branch fix/totalbet-uuid-platform is recovery/totalbet here, reaching master through
+# recovery/integration only when the owner asks for that merge (EXECUTION decision 1).
+
+# Step 3 (owner): record T0, then merge into the checkout the dev server runs.
+date -u +%FT%TZ > /tmp/totalbet-deploy-t0.txt && git -C /home/skamik/Documents/repositories/personal/aityper-scraper-api merge recovery/integration
+# (or `... merge recovery/totalbet` for a totalbet-only deploy)
+# The server restarts and runs an initial scrape. Then read the dev server's stdout log, wherever `npm run dev` writes it:
+sed 's/\x1b\[[0-9;]*m//g' <backend.log> | grep -E "Totalbet/FullOffer\] Found|totalbet completed|Totalbet/Navigation|Detail fetch failed|phase-1 keys missing" | tail -6
+# Expected (A6), for the run after T0:
+#   [Totalbet/FullOffer] Found N prematch events for premier-league        (N = N_list; 19 at 01:18Z today)
+#   [Aggregator/FullOffer] totalbet completed: M matches, S markets saved   with M >= ceil(0.9*N) and S > 0
+#   no [Totalbet/Navigation], "Detail fetch failed" or "phase-1 keys missing" line
+
+# Step 4a (A6 freshness), one command:
+curl -s "http://localhost:3001/api/odds?league=premier-league" | python3 -I -c '
+import json, sys
+from datetime import datetime, timedelta
+bm, t0 = sys.argv[1], datetime.fromisoformat(open(sys.argv[2]).read().strip().replace("Z", "+00:00"))
+ts = [datetime.fromisoformat(v["scrapedAt"]) for m in json.load(sys.stdin)["data"]["matches"] for b, v in m["markets"].get("MATCH_WINNER", {}).get("bookmakerOdds", {}).items() if b == bm]
+newest = max(ts) if ts else None
+ok = newest is not None and t0 <= newest <= t0 + timedelta(minutes=10)
+print(f"FRESHNESS bookmaker={bm} rows={len(ts)} newest={newest.isoformat() if newest else None} t0={t0.isoformat()} ok={ok}")
+sys.exit(0 if ok else 1)
+' totalbet /tmp/totalbet-deploy-t0.txt; echo "exit=$?"
+# Expected: FRESHNESS bookmaker=totalbet ... ok=True, exit=0   (today, before deploy: no totalbet rows in /api/odds, as on master)
+
+# Step 4b (A4), one command:
+NL=$(curl -s "https://totalbet.pl/dealer/bdata/v1/bet/events?page=1&per_page=100&category_uuid=8793bb6a-4684-44ba-b92e-4d896e6cbfbf&category_type=sport&type=standard" | python3 -I -c 'import json,sys; print(sum(1 for e in json.load(sys.stdin)["data"]["events"] if e["type"] == "prematch" and e["status"] == "active"))') && curl -s "http://localhost:3001/api/odds?league=premier-league" | python3 -I -c '
+import json, sys, math, statistics as st
+from datetime import datetime, timezone
+BM, N_LIST = sys.argv[1], int(sys.argv[2])
+now = datetime.now(timezone.utc)
+ms = [m for m in json.load(sys.stdin)["data"]["matches"] if datetime.fromisoformat(m["startTime"]) > now]
+n = 0; worst = 0.0
+for m in ms:
+    bo = m["markets"].get("MATCH_WINNER", {}).get("bookmakerOdds", {})
+    if BM not in bo: continue
+    n += 1
+    for s in bo[BM]["selections"]:
+        peers = [p["odds"] for b, v in bo.items() if b != BM for p in v["selections"] if p.get("normalizedName") == s["normalizedName"]]
+        if peers: worst = max(worst, abs(s["odds"] - st.median(peers)) / st.median(peers) * 100)
+need = math.ceil(0.9 * min(len(ms), N_LIST))
+ok = n >= need and worst <= 10
+print(f"1X2-CHECK bookmaker={BM} matchesWith={n} future={len(ms)} listed={N_LIST} need={need} maxDevPct={worst:.1f} ok={ok}")
+sys.exit(0 if ok else 1)
+' totalbet "$NL"; echo "exit=$?"
+# Expected: 1X2-CHECK ... ok=True, exit=0   (pre-deploy proxy today: matchesWith=19 future=19 listed=19 need=18 maxDevPct=5.6)
+
+# Step 4c (A5), one command:
+P1=MATCH_WINNER,DOUBLE_CHANCE,HALF_TIME_DOUBLE_CHANCE,SECOND_HALF_DOUBLE_CHANCE,BTTS,HALF_TIME_BTTS,SECOND_HALF_BTTS,DRAW_NO_BET,HALF_TIME_DRAW_NO_BET,SECOND_HALF_DRAW_NO_BET,HALF_TIME_RESULT,SECOND_HALF_RESULT,ODD_EVEN_GOALS,HALF_TIME_ODD_EVEN_GOALS,SECOND_HALF_ODD_EVEN_GOALS,TOTAL_GOALS,HALF_TIME_TOTAL_GOALS,SECOND_HALF_TOTAL_GOALS,HOME_TEAM_TOTAL_GOALS,AWAY_TEAM_TOTAL_GOALS,HALF_TIME_HOME_TEAM_TOTAL_GOALS,HALF_TIME_AWAY_TEAM_TOTAL_GOALS,SECOND_HALF_HOME_TEAM_TOTAL_GOALS,SECOND_HALF_AWAY_TEAM_TOTAL_GOALS,HOME_TEAM_TO_SCORE,AWAY_TEAM_TO_SCORE,HALF_TIME_HOME_TO_SCORE,HALF_TIME_AWAY_TO_SCORE,SECOND_HALF_HOME_TO_SCORE,SECOND_HALF_AWAY_TO_SCORE,ASIAN_HANDICAP,FIRST_HALF_ASIAN_HANDICAP,SECOND_HALF_ASIAN_HANDICAP,EUROPEAN_HANDICAP,FIRST_HALF_EUROPEAN_HANDICAP,SECOND_HALF_EUROPEAN_HANDICAP,CORRECT_SCORE,HALF_TIME_CORRECT_SCORE,SECOND_HALF_CORRECT_SCORE
+for pair in "Leeds%20United/Tottenham%20Hotspur" "Crystal%20Palace/Liverpool" "Manchester%20United/Aston%20Villa"; do curl -s "http://localhost:3001/api/matches/$pair/normalized-markets?league=premier-league" > /tmp/nm.json; python3 -I /home/skamik/Documents/repositories/personal/aityper-scraper-api/docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/totalbet/peer-deviation.py /tmp/nm.json totalbet --codes $P1 --threshold 15; echo "exit=$?"; done
+# Expected per pair: PEER-CHECK bookmaker=totalbet ... unknown=0 ... over=0, exit=0
+#   (pre-deploy proxy today: Leeds-Tottenham maxDevPct=9.2, Crystal Palace-Liverpool 13.4, Manchester United-Aston Villa 9.2)
+# Kick-offs: Leeds-Tottenham 2026-11-07 12:30Z, Crystal Palace-Liverpool 2026-11-08 14:00Z, Manchester United-Aston Villa
+# 2026-11-08 16:30Z. For a pair already played, use the next upcoming fixtures from /api/odds, e.g.
+# "Chelsea/Leeds%20United", "Aston%20Villa/Sunderland", "Tottenham%20Hotspur/Ipswich%20Town" (2026-11-21).

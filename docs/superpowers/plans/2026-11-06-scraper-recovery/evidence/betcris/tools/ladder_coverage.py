@@ -1,7 +1,11 @@
 # Usage: python3 -I ladder_coverage.py <direct-swarm game.json> <normalized-markets.json>
 # For every stats-family "N+" ladder type the raw Swarm game carries, checks that the betcris
 # rows in /normalized-markets cover it: team ladders need every rung as a param (exact),
-# player ladders need >= 95% of the players that have at least one catalog-declared tier.
+# player ladders need >= 95% of the players that have at least one catalog-declared tier,
+# the woodwork list needs >= 95% of its players. The grouper splits the betcris name list
+# into one param per player (market-type-grouper.ts splitBundledPlayerSelections), so the
+# woodwork count is the number of betcris per-player params, plus the selections of a list
+# left whole under the empty param.
 # Types the raw game lacks are reported as "absent" and skipped. Exit code 1 on any FAIL.
 import json, re, sys
 
@@ -9,7 +13,8 @@ TEAM = {  # Swarm type -> (catalog code, param prefix)
     "FoulsTotal": ("FOULS_TOTAL", ""), "FoulsTeam1Total": ("HOME_TEAM_TOTAL_FOULS", ""),
     "FoulsTeam2Total": ("AWAY_TEAM_TOTAL_FOULS", ""), "OffsidesTotal": ("OFFSIDES_TOTAL", ""),
     "OffsidesTeam1Total": ("HOME_TEAM_TOTAL_OFFSIDES", ""), "OffsidesTeam2Total": ("AWAY_TEAM_TOTAL_OFFSIDES", ""),
-    "ShotsTeam1Total": ("TEAM_TOTAL_SHOTS", "HOME:"), "ShotsonTargetTotal": ("TOTAL_SHOTS_ON_TARGET", ""),
+    "ShotsTeam1Total": ("TEAM_TOTAL_SHOTS", "HOME:"), "ShotsTeam2Total": ("TEAM_TOTAL_SHOTS", "AWAY:"),
+    "ShotsonTargetTotal": ("TOTAL_SHOTS_ON_TARGET", ""),
     "ShotsonTargetTeam1Total": ("TEAM_TOTAL_SHOTS_ON_TARGET", "HOME:"),
     "ShotsonTargetTeam2Total": ("TEAM_TOTAL_SHOTS_ON_TARGET", "AWAY:"),
     "ShotsonTarget1stHalfTotal": ("HALF_TIME_TOTAL_SHOTS_ON_TARGET", ""), "ThrowInsTotal": ("THROW_INS_TOTAL", ""),
@@ -59,7 +64,7 @@ for t in list(TEAM) + list(PLAYER) + ["PlayerShotsAgainstWoodwork"]:
         print(f"{'PASS' if ok else 'FAIL'} {t} -> {code}: players with a catalog tier {len(want)}, betcris params {got}")
     else:
         want = {x.group(1) for x, _ in tiers if x and x.group(1) and x.group(2) == "1"}
-        got = len(params.get("PLAYER_HIT_WOODWORK", {}).get("", []))
+        ww = params.get("PLAYER_HIT_WOODWORK", {}); got = len(ww.get("", [])) + sum(1 for k in ww if k)
         ok = got >= 0.95 * len(want)
         print(f"{'PASS' if ok else 'FAIL'} {t} -> PLAYER_HIT_WOODWORK: players {len(want)}, betcris selections {got}")
     fails += 0 if ok else 1

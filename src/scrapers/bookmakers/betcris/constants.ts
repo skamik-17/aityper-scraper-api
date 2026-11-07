@@ -98,6 +98,8 @@ export const TEAM_TIER_LADDER_TYPES: ReadonlySet<string> = new Set([
   "OffsidesTeam1Total",
   "OffsidesTeam2Total",
   "ShotsTeam1Total",
+  // Away counterpart; first seen on a match-day offer (31333513, 2026-11-07).
+  "ShotsTeam2Total",
   "ShotsonTargetTotal",
   "ShotsonTargetTeam1Total",
   "ShotsonTargetTeam2Total",

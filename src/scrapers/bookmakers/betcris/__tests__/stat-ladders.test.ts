@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { parseAllMarkets, parseTierLabel } from "../parser.js";
 import type { SwarmGame } from "../types.js";
 import { loadFixture } from "./helpers/fake-swarm-page.js";
+import { TEAM_TIER_LADDER_TYPES, PLAYER_TIER_LADDER_TYPES, PLAYER_TIER_LIST_TYPES } from "../constants.js";
 import { betcrisNormalizer } from "../../../../services/normalization/bookmakers/betcris-normalizer.js";
 import type { NormalizedMarketOutput, RawBookmakerMarket } from "../../../../services/normalization/types.js";
 
@@ -10,6 +11,10 @@ import type { NormalizedMarketOutput, RawBookmakerMarket } from "../../../../ser
 const game = loadFixture<{ game: SwarmGame }>("match-31321159-stat-ladders.json").game;
 const out = parseAllMarkets(game);
 const byType = (t: string) => out.filter((m) => m.bookmakerMarketId === t);
+// Leeds - Tottenham (31333513) on match day, trimmed to its two team shot
+// ladders. ShotsTeam2Total appeared only once the match-day offer opened.
+const matchDay = loadFixture<{ game: SwarmGame }>("match-31333513-shots-team-ladders.json").game;
+const matchDayOut = parseAllMarkets(matchDay);
 
 describe("betcris parser: tier ladders", () => {
   it("betcris parser: parseTierLabel reads team and player tiers", () => {
@@ -24,6 +29,17 @@ describe("betcris parser: tier ladders", () => {
       .toEqual([["21.5", "Powyżej", 1.46], ["22.5", "Powyżej", 1.64], ["23.5", "Powyżej", 1.9], ["24.5", "Powyżej", 2.24], ["25.5", "Powyżej", 2.7]]);
     expect(byType("ShotsTeam1Total").map((m) => m.paramValue)).toEqual(["14.5", "15.5", "16.5", "17.5", "18.5", "19.5", "20.5"]);
     expect(byType("ThrowInsTotal").map((m) => [m.paramValue, m.selections[0].odds])).toEqual([["39.5", 1.76], ["40.5", 1.94], ["41.5", 2.15]]);
+  });
+
+  it("betcris parser: splits the match-day ShotsTeam2Total 12+..18+ into OVER rungs 11.5..17.5", () => {
+    const away = matchDayOut.filter((m) => m.bookmakerMarketId === "ShotsTeam2Total");
+    expect(away.map((m) => [m.paramValue, m.selections.map((s) => s.name), m.selections[0].odds]))
+      .toEqual([["11.5", ["Powyżej"], 1.38], ["12.5", ["Powyżej"], 1.56], ["13.5", ["Powyżej"], 1.79], ["14.5", ["Powyżej"], 2.11],
+        ["15.5", ["Powyżej"], 2.55], ["16.5", ["Powyżej"], 3.15], ["17.5", ["Powyżej"], 3.95]]);
+    expect(away[0].name).toBe("Strzały. Team 2. Suma.");
+    // 7 home + 7 away rungs, and no residual entry without a line
+    expect(matchDayOut).toHaveLength(14);
+    expect(matchDayOut.filter((m) => m.paramValue === undefined)).toEqual([]);
   });
 
   it("betcris parser: splits PlayerShots into one entry per player with N+ selections", () => {
@@ -103,6 +119,39 @@ describe("betcris normalizer: tier ladders", () => {
     const { debug: _a, ...fresh } = norm(rung)!;
     const { debug: _b, ...old } = norm({ ...rung, bookmakerMarketId: "FoulsOver/Under" })!;
     expect(fresh).toEqual(old);
+  });
+
+  it("betcris normalizer: match-day ShotsTeam2Total lands on TEAM_TOTAL_SHOTS with the AWAY scope", () => {
+    const normLT = (m: RawBookmakerMarket) =>
+      betcrisNormalizer.normalizeMarket(m, { homeTeam: "Leeds", awayTeam: "Tottenham", league: "premier-league", leagueName: "premier-league" });
+    const rung = (type: string, line: string) => {
+      const m = matchDayOut.find((x) => x.bookmakerMarketId === type && x.paramValue === line);
+      if (!m) throw new Error(`no parser entry ${type} ${line}`);
+      return m;
+    };
+    expect(view(normLT(rung("ShotsTeam2Total", "11.5")))).toEqual({ key: "TEAM_TOTAL_SHOTS:AWAY:11.5", sel: [["OVER", 1.38]] });
+    expect(view(normLT(rung("ShotsTeam2Total", "17.5")))).toEqual({ key: "TEAM_TOTAL_SHOTS:AWAY:17.5", sel: [["OVER", 3.95]] });
+    // Same line, other side: the home ladder keeps its own HOME-scoped key and price.
+    expect(view(normLT(rung("ShotsTeam1Total", "11.5")))).toEqual({ key: "TEAM_TOTAL_SHOTS:HOME:11.5", sel: [["OVER", 1.47]] });
+    // Byte-identical to the August "Shots:Team2Total" path on the same rung.
+    const { debug: _a, ...fresh } = normLT(rung("ShotsTeam2Total", "11.5"))!;
+    const { debug: _b, ...old } = normLT({ ...rung("ShotsTeam2Total", "11.5"), bookmakerMarketId: "Shots:Team2Total" })!;
+    expect(fresh).toEqual(old);
+    // A residual (no line) must not publish as a lineless TEAM_TOTAL_SHOTS row.
+    const { paramValue: _p, ...lineless } = rung("ShotsTeam2Total", "11.5");
+    expect(normLT({ ...lineless, selections: [{ name: "12+", odds: 1.38 }] })).toBeNull();
+  });
+
+  it("betcris normalizer: every id the parser splits as a ladder has a catalog code", () => {
+    const shaped = (id: string): RawBookmakerMarket =>
+      TEAM_TIER_LADDER_TYPES.has(id)
+        ? { bookmakerMarketId: id, name: id, paramValue: "1.5", selections: [{ name: "Powyżej", odds: 2 }] }
+        : PLAYER_TIER_LADDER_TYPES.has(id)
+          ? { bookmakerMarketId: id, name: id, paramValue: "Jan Kowalski", selections: [{ name: "1+", odds: 2 }] }
+          : { bookmakerMarketId: id, name: id, selections: [{ name: "Jan Kowalski", odds: 2 }] };
+    const ids = [...TEAM_TIER_LADDER_TYPES, ...PLAYER_TIER_LADDER_TYPES, ...PLAYER_TIER_LIST_TYPES];
+    expect(ids).toHaveLength(26); // 15 team + 10 player + 1 list
+    expect(ids.filter((id) => norm(shaped(id)) === null)).toEqual([]);
   });
 
   it("betcris normalizer: player ladders key by canonical player and keep N+ tiers", () => {

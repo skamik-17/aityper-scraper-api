@@ -42,6 +42,9 @@ const BETCRIS_TEAM_TIER_LADDER_ID_TO_CODE: Record<string, NormalizedMarketType> 
   "OffsidesTeam2Total": "AWAY_TEAM_TOTAL_OFFSIDES",
   // Side comes from the id ("Team1"/"Team2") as a HOME:/AWAY: param scope.
   "ShotsTeam1Total": "TEAM_TOTAL_SHOTS",
+  // Successor of the August "Shots:Team2Total"; the parser splits it too
+  // (TEAM_TIER_LADDER_TYPES), so add or remove the two entries together.
+  "ShotsTeam2Total": "TEAM_TOTAL_SHOTS",
   "ShotsonTargetTotal": "TOTAL_SHOTS_ON_TARGET",
   "ShotsonTargetTeam1Total": "TEAM_TOTAL_SHOTS_ON_TARGET",
   "ShotsonTargetTeam2Total": "TEAM_TOTAL_SHOTS_ON_TARGET",

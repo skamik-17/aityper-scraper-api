@@ -226,3 +226,47 @@ describe("reconcilePlayerNameVariants - stranded abbreviated rows (2026-11)", ()
     expect(alias.size).toBe(0);
   });
 });
+
+describe("reconcilePlayerNameVariants - hyphen spellings merged in step 1 (2026-11 review)", () => {
+  it("folds an initial that fits only the hyphenated spelling the spaced one absorbed", () => {
+    // Ars-Hul PLAYER_ASSISTS: the spaced spelling wins step 1 on token count,
+    // and "J. Hjerto-Dahl" fits only the hyphenated spelling it absorbed.
+    const alias = reconcilePlayerNameVariants(names([
+      ["J. Hjerto-Dahl", ["fuksiarz"]], ["Jens Hjerto-Dahl", ["betfan"]], ["Jens Hjerto Dahl", ["fortuna"]],
+    ]));
+    expect(alias.get("Jens Hjerto-Dahl")).toBe("Jens Hjerto Dahl");
+    expect(alias.get("J. Hjerto-Dahl")).toBe("Jens Hjerto Dahl");
+    expect(alias.has("Jens Hjerto Dahl")).toBe(false);
+  });
+  it("folds a spaced initial spelling into a hyphenated step-1 winner", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["J. Hjerto Dahl", ["fuksiarz"]], ["Jens Hjerto-Dahl", ["betfan", "sts"]], ["Jens Hjerto Dahl", ["fortuna"]],
+    ]));
+    expect(alias.get("Jens Hjerto Dahl")).toBe("Jens Hjerto-Dahl");
+    expect(alias.get("J. Hjerto Dahl")).toBe("Jens Hjerto-Dahl");
+  });
+  it("puts the three Hjerto-Dahl spellings in one grouped row", () => {
+    const mk = (paramValue: string, odds: number): ScrapedMarket => ({
+      name: "Asysta", type: "PLAYER_ASSISTS", normalizedType: "PLAYER_ASSISTS",
+      marketKey: `PLAYER_ASSISTS:${paramValue}`, paramValue,
+      selections: [{ name: "1+", normalizedName: "1+", odds }],
+    }) as ScrapedMarket;
+    const out = groupMarketsByTypeWithParameters([
+      { market: mk("J. Hjerto-Dahl", 11), bookmaker: "fuksiarz" },
+      { market: mk("Jens Hjerto-Dahl", 12.5), bookmaker: "betfan" },
+      { market: mk("Jens Hjerto Dahl", 10), bookmaker: "fortuna" },
+    ]);
+    const market = out.find((m) => m.type === "PLAYER_ASSISTS")!;
+    expect(market.parameters.map((p) => p.value)).toEqual(["Jens Hjerto Dahl"]);
+    expect(market.parameters[0].bookmakers.map((b) => b.bookmaker).sort()).toEqual(["betfan", "fortuna", "fuksiarz"]);
+  });
+  it("does not match an initial through a reversed-order step-1 spelling (guard)", () => {
+    // STS sends "Surname Firstname". Its reversed tokens [justin, james] would
+    // let a different player's "J. James" fit "James Justin" by surname.
+    const alias = reconcilePlayerNameVariants(names([
+      ["J. James", ["fuksiarz"]], ["James Justin", ["betfan"]], ["Justin James", ["sts"]],
+    ]));
+    expect(alias.get("Justin James")).toBe("James Justin");
+    expect(alias.has("J. James")).toBe(false);
+  });
+});

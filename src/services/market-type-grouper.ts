@@ -248,6 +248,9 @@ export function isNonPersonParam(name: string): boolean {
 /** Lowercased whitespace tokens of a player label; a hyphen keeps joining surname parts. */
 const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).filter(Boolean);
 
+/** Lowercased words of a player label, in order, with hyphens read as spaces. */
+const spellingWords = (name: string): string[] => name.toLowerCase().split(/[\s-]+/).filter(Boolean);
+
 /**
  * Key for the exact-spelling step only: case-, order- and hyphen-insensitive,
  * so "Jan-Paul van Hecke", "Jan Paul Van Hecke" and "Jan Paul van Hecke"
@@ -255,7 +258,7 @@ const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).fil
  * splitting on hyphens would make "D. Lewin" fit "Dominic Calvert-Lewin".
  */
 function spellingKey(name: string): string {
-  return name.toLowerCase().split(/[\s-]+/).filter(Boolean).sort().join(" ");
+  return spellingWords(name).sort().join(" ");
 }
 
 /**
@@ -376,11 +379,19 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
   //    abbreviated member whose spelled-out candidates all fit each other (see
   //    below).
   const canonicalNames = names.filter((n) => !alias.has(n));
-  const tokenCache = new Map(canonicalNames.map((n) => [n, tokensOf(n)]));
-  // Same answer as playerNamesCompatible here: step 1 already merged every
-  // pair of names with an equal spellingKey, so only describeSamePlayer is left.
+  // A canonical name is compared through every step-1 spelling that has the
+  // same words in the same order (only case and hyphens differ), so the
+  // step-1 winner's hyphenation does not decide which abbreviations fit:
+  // "J. Hjerto-Dahl" fits "Jens Hjerto-Dahl", which step 1 folded into
+  // "Jens Hjerto Dahl". Reordered spellings are NOT added: STS's
+  // "Justin James" for "James Justin" would let a different player's
+  // "J. James" fit by surname.
+  const variantTokens = new Map(canonicalNames.map((n) => [n, [tokensOf(n)]]));
+  for (const [from, to] of alias) {
+    if (spellingWords(from).join(" ") === spellingWords(to).join(" ")) variantTokens.get(to)!.push(tokensOf(from));
+  }
   const compatible = (a: string, b: string): boolean =>
-    describeSamePlayer(tokenCache.get(a)!, tokenCache.get(b)!);
+    variantTokens.get(a)!.some((ta) => variantTokens.get(b)!.some((tb) => describeSamePlayer(ta, tb)));
 
   const clusterOf = new Map<string, string[]>();
   const visited = new Set<string>();

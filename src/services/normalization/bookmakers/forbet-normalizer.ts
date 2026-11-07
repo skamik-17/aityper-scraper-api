@@ -102,9 +102,11 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-8037": "RESULT_OR_TOTAL", // "remis w meczu lub powyżej 2.5 goli"
   "-8038": "RESULT_OR_TOTAL", // "remis w meczu lub poniżej 2.5 goli"
   // The rest of the "Wydarzy się min. jedno z" alternative bets, on the same
-  // shared-platform ids etoto maps. RESULT_OR_BTTS folds the result side
-  // into the selection code (resolveResultOrBttsSide, from raw.name). The
-  // clean-sheet bet takes the side as its team param (detectTeamSide).
+  // shared-platform ids etoto maps. RESULT_OR_BTTS publishes only the tak
+  // leg, with the result side folded into the selection code
+  // (resolveResultOrBttsSide, from raw.name; the nie leg is dropped in
+  // normalizeMarket). The clean-sheet bet takes the side as its team param
+  // (detectTeamSide).
   "-8041": "RESULT_OR_BTTS", // "<home> wygra lub obie drużyny strzelą gola"
   "-8042": "RESULT_OR_BTTS", // "remis w meczu lub obie drużyny strzelą gola"
   "-8043": "RESULT_OR_BTTS", // "<away> wygra lub obie drużyny strzelą gola"
@@ -307,9 +309,6 @@ const OVERRIDE_EXEMPT_MARKETS = new Set<NormalizedMarketType>([
   "HALF_TIME_AWAY_TO_SCORE",
   "SECOND_HALF_HOME_TO_SCORE",
   "SECOND_HALF_AWAY_TO_SCORE",
-  // Tak/Nie must reach the RESULT_OR_BTTS case, which folds the result side
-  // into the code (HOME_OR_BTTS_YES, ...); the override would emit bare YES/NO.
-  "RESULT_OR_BTTS",
 ]);
 
 /**
@@ -527,9 +526,9 @@ function resolveResultOrTotalCombo(
  * Resolves the result leg of a raw "win-or-BTTS" alternative bet ("Wydarzy
  * się min. jedno z: <team> wygra lub obie drużyny strzelą gola" / "... remis
  * w meczu lub obie drużyny strzelą gola", ids -8041/-8042/-8043) to the side
- * the pooled RESULT_OR_BTTS selection code carries (HOME_OR_BTTS_YES, ...,
- * the same vocabulary etoto uses). Returns null for anything else, including
- * a team leg that does not resolve to HOME/AWAY.
+ * the pooled RESULT_OR_BTTS selection code carries (HOME_OR_BTTS_YES,
+ * AWAY_OR_BTTS_YES, DRAW_OR_BTTS_YES). Returns null for anything else,
+ * including a team leg that does not resolve to HOME/AWAY.
  */
 function resolveResultOrBttsSide(
   rawName: string,
@@ -1090,18 +1089,6 @@ function normalizeSelectionForMarket(
     case "HOME_TEAM_TO_SCORE":
     case "AWAY_TEAM_TO_SCORE":
       return normalizeYesNoSelection(trimmed);
-
-    // forBET quotes each "<team>|remis ... lub obie drużyny strzelą gola" leg
-    // as its own Tak/Nie market, and all three pool into one RESULT_OR_BTTS
-    // row, so the result side (from the raw market name) goes into the code.
-    // An unresolved side or label stays UNKNOWN, and normalizeMarket then
-    // drops the market rather than guess a side.
-    case "RESULT_OR_BTTS": {
-      const yesNo = normalizeYesNoSelection(trimmed);
-      const side = rawMarketName ? resolveResultOrBttsSide(rawMarketName, ctx) : null;
-      if (yesNo === "UNKNOWN" || !side) return "UNKNOWN";
-      return `${side}_OR_BTTS_${yesNo}` as NormalizedSelection;
-    }
 
     case "ASIAN_HANDICAP":
     case "EUROPEAN_HANDICAP":
@@ -1777,6 +1764,47 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       };
     }
 
+    // forBET quotes each "<team>|remis w meczu lub obie drużyny strzelą gola"
+    // leg (-8041/-8042/-8043) as its own Tak/Nie market, and all three pool
+    // into one RESULT_OR_BTTS row, so the result side (from raw.name) goes
+    // into the code. Only "tak" ("<X> or BTTS") is published, as
+    // <SIDE>_OR_BTTS_YES. forBET's "nie" is NOT(<X> or BTTS), i.e. neither
+    // happens, but the catalog <SIDE>_OR_BTTS_NO means "<X> or BTTS-No"
+    // (lebull's "<X> lub Przynajmniej jedna drużyna nie strzeli"), a different
+    // and much shorter-priced bet. Like the RESULT_OR_TOTAL "nie" above, it
+    // has no counterpart in that vocabulary and is dropped. An unresolved
+    // side, an unrecognised label or a missing/duplicated tak leg drops the
+    // whole market rather than guess.
+    if (marketCode === "RESULT_OR_BTTS") {
+      const side = resolveResultOrBttsSide(raw.name, ctx);
+      const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
+      const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
+      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+        console.warn(
+          `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak leg for "${raw.name}"`
+        );
+        return null;
+      }
+      const yesSelection = yesSelections[0];
+      return {
+        marketCode,
+        paramValue: undefined,
+        marketKey: buildMarketKey(marketCode),
+        selections: [
+          {
+            code: `${side}_OR_BTTS_YES` as NormalizedSelection,
+            label: yesSelection.name,
+            odds: yesSelection.odds,
+          },
+        ],
+        debug: {
+          rawName: raw.name,
+          rawId: gameTypeId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
+
     // TurboPrzewaga (-31170, the only forbet id routed here) quotes three
     // legs: <home> / remis / <away>. The catalog WIN_OR_WIN_BY_2 is 2-way
     // HOME/AWAY, and forbet prices "remis" like the plain 1X2 draw that
@@ -1867,17 +1895,6 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
         odds: sel.odds,
       }))
     );
-
-    // RESULT_OR_BTTS carries the result side in each selection code. An
-    // UNKNOWN leg means the side or the tak/nie label did not resolve; tak and
-    // nie would then merge into one side-less row at a made-up price, so the
-    // market is dropped instead.
-    if (marketCode === "RESULT_OR_BTTS" && selections.some((sel) => sel.code === "UNKNOWN")) {
-      console.warn(
-        `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak/nie leg for "${raw.name}"`
-      );
-      return null;
-    }
 
     return {
       marketCode,

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
 import { lvbetNormalizer, LVBET_PLAYER_LADDER_PATTERNS } from "../lvbet-normalizer.js";
+import { betclicNormalizer } from "../betclic-normalizer.js";
 import { parseAllMarkets, PLAYER_STAT_LADDER_NAMES } from "../../../../scrapers/bookmakers/lvbet/parser.js";
 import type { NormalizationContext } from "../../types.js";
 import type { LVBetMarket } from "../../../../scrapers/bookmakers/lvbet/types.js";
@@ -144,6 +145,23 @@ describe("LVBet goal-family products out of the TOTAL_GOALS catch-all", () => {
     const out = lvbetNormalizer.normalizeMarket(parseAllMarkets(evidence, teams).find((m) => m.name === name)!, ctx)!;
     expect(out.marketKey).toBe(key);
     expect([out.selections[0].code, out.selections[0].odds]).toEqual(first);
+  });
+
+  // LVBet's pair labels carry betclic's feed truncation of "Gabriel
+  // Magalhães" ("V. Gyokeres & Gabriel Mag"). TWO_PLAYERS_COMBINED_GOALS is
+  // a decimal-param market, so the grouper never reconciles player-name
+  // variants on it: the pair code must equal betclic's at the source.
+  it.each([
+    ["Obaj gracze strzelą łącznie przynajmniej 2 gole", "V. Gyokeres & Gabriel Mag", "2 graczy strzeli pow. 1,5 gola", "Gabriel Mag & V. Gyokeres", "TWO_PLAYERS_COMBINED_GOALS:1.5", "G. Magalhaes & V. Gyokeres"],
+    ["Obaj gracze strzelą łącznie przynajmniej 3 gole", "C. Tzolis & Gabriel Mag", "2 graczy strzeli pow. 2,5 gola", "C. Tzolis & Gabriel Mag", "TWO_PLAYERS_COMBINED_GOALS:2.5", "C. Tzolis & G. Magalhaes"],
+    ["Obaj gracze strzelą łącznie przynajmniej 4 gole", "Gabriel Mag & N. Madueke", "2 graczy strzeli pow. 3,5 gola", "N. Madueke & Gabriel Mag", "TWO_PLAYERS_COMBINED_GOALS:3.5", "G. Magalhaes & N. Madueke"],
+  ])("'%s' / '%s' gives betclic's pair code", (lvName, lvPair, bcName, bcPair, key, code) => {
+    const lv = lvbetNormalizer.normalizeMarket({ name: lvName, selections: [{ name: lvPair, odds: 3.1 }] }, ctx)!;
+    const bc = betclicNormalizer.normalizeMarket({ name: bcName, selections: [{ name: bcPair, odds: 3.2 }] }, { ...ctx, bookmaker: "betclic" } as NormalizationContext)!;
+    expect(lv.marketKey).toBe(key);
+    expect(bc.marketKey).toBe(key);
+    expect(lv.selections.map((s) => [s.code, s.odds])).toEqual([[code, 3.1]]);
+    expect(bc.selections.map((s) => s.code)).toEqual([code]);
   });
 
   it("maps the digit variant of 'Dokładna liczba goli' to EXACT_GOALS and leaves the 'Bez goli' twin as OTHER", () => {

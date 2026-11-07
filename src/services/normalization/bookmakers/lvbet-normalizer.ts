@@ -2067,8 +2067,18 @@ function normalizeSelectionForMarket(
     case "ANY_PLAYER_FIRST_GOAL":
     case "PLAYER_ASSIST_PAIRS":
     case "TWO_PLAYERS_GOAL_OR_ASSIST":
-    case "TWO_PLAYERS_COMBINED_GOALS":
       return canonicalizePlayerComboSelection(trimmed) as NormalizedSelection;
+
+    // "Obaj gracze strzelą łącznie przynajmniej N gole" pairs come
+    // pre-abbreviated with betclic's feed truncation of "Gabriel Magalhães"
+    // ("V. Gyokeres & Gabriel Mag"). Apply betclic's repair
+    // (canonicalizeBetclicPlayerName) first: this is a decimal-param market,
+    // so the grouper never reconciles player-name variants here, and a bare
+    // "G. Mag" code would never pool with betclic's "G. Magalhaes".
+    case "TWO_PLAYERS_COMBINED_GOALS":
+      return canonicalizePlayerComboSelection(
+        trimmed.replace(/\bGabriel Mag\b/gu, "Gabriel Magalhaes"),
+      ) as NormalizedSelection;
 
     default: {
       // Generic fallback: LVBet exposes many YES/NO prop markets ("Tak"/"Nie")

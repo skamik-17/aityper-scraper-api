@@ -141,3 +141,78 @@ describe("Task 1: corners races never feed a 1X2 code", () => {
     }
   });
 });
+
+describe("Task 2: every player market carries its player", () => {
+  // The 19 Forest–City rows that sit in 'base' today (00-76 red card and the unmapped 00-he/lj/ok/og/ev excluded).
+  const MURILLO = ["00-hm", "00-la", "00-lg", "00-ld", "00-lf", "00-o6", "00-oi", "00-pn", "00-lk", "00-on",
+                   "00-ne", "00-oe", "00-oy", "00-ow", "00-oz", "00-ng", "00-ln", "00-ox", "00-hh"];
+  it.each(MURILLO)("forestCity single-name player row %s keys <code>:Murillo", (id) => {
+    const out = run(live("forestCity", id, "Murillo").raw, ctxOf("forestCity"));
+    expect(out?.paramValue).toBe("Murillo");
+    expect(out?.marketKey).toBe(`${out?.marketCode}:Murillo`);
+  });
+  it.each([
+    ["00-lf", "PLAYER_SHOTS:Murillo", ["1+@1.7", "2+@4.25"]],
+    ["00-ne", "GOALSCORER_FIRST:Murillo", ["PLAYER@30"]],
+    ["00-ox", "PLAYER_HEADER_GOAL:Murillo", ["PLAYER_NAME@30"]],
+    ["00-hm", "PLAYER_GOAL_OR_ASSIST:Murillo", ["PLAYER@8.5"]],
+  ])("forestCity Murillo %s -> %s with peer-shaped selections", (id, key, expected) => {
+    const out = run(live("forestCity", id, "Murillo").raw, ctxOf("forestCity"));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual(expected);
+  });
+  it.each([
+    ["manUtdVilla", "00-ne", "Tielemans", "GOALSCORER_FIRST:Youri Tielemans", "PLAYER@12"],
+    ["manUtdVilla", "00-nf", "McGinn", "GOALSCORER_FIRST:John McGinn", "PLAYER@9"],
+    ["manUtdVilla", "00-nf", "Hemmings", "GOALSCORER_FIRST:George Lawrence Hemmings", "PLAYER@11"],
+    ["forestCity", "00-nf", "Dias", "GOALSCORER_FIRST:Ruben Dias", "PLAYER@40"],
+    ["evertonCoventry", "00-nf", "Thomas", "GOALSCORER_FIRST:Bobby Thomas", "PLAYER@30"],
+    ["palaceLiverpool", "00-ne", "Nketiah", "GOALSCORER_FIRST:Eddie Nketiah", "PLAYER@5"],
+  ])("%s %s %s: the team prefix never leaks into the player", (group, id, needle, key, leg) => {
+    const out = run(live(group, id, needle).raw, ctxOf(group));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual([leg]);
+  });
+  it("a mononym behind a dotted prefix keeps its name (Man.City Rodri)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-nf", name: "Man.City Rodri strzeli pierwszego gola w meczu (OPTA)",
+      selections: [{ name: "Tak", odds: 21 }] }, ctxOf("forestCity")); // synthetic: live prefix + live mononym shape
+    expect(out?.marketKey).toBe("GOALSCORER_FIRST:Rodri");
+    expect(legs(out)).toEqual(["PLAYER@21"]);
+  });
+  it.each([
+    ["arsenalHull", "00-nf", "Herrington", "GOALSCORER_FIRST:Lucas Herrington"],
+    ["forestCity", "00-lf", "Diomande", "PLAYER_SHOTS:Ousmane Diomande"],
+    ["forestCity", "00-ne", "Diomande", "GOALSCORER_FIRST:Ousmane Diomande"],
+    ["leedsTottenham", "00-nf", "Van de Ven", "GOALSCORER_FIRST:Micky Ven"],
+    ["leedsTottenham", "00-nh", "Van de Ven", "GOALSCORER_LAST:Micky Ven"],
+    ["brightonBrentford", "00-ne", "Loureiro", "GOALSCORER_FIRST:Joao Pedro Costa"],
+  ])("%s %s %s keeps today's key %s", (group, id, needle, key) => {
+    expect(run(live(group, id, needle).raw, ctxOf(group))?.marketKey).toBe(key);
+  });
+  it.each([
+    // synthetic: the docstring shapes of extractFortunaPlayerName (WC and Ekstraklasa payloads)
+    [{ homeTeam: "France", awayTeam: "Morocco", league: "world-cup-2026" }, "00-nf", "Maroko Diop, Issa strzeli pierwszego gola w meczu (OPTA)", "Tak", "GOALSCORER_FIRST:Issa Diop"],
+    [{ homeTeam: "Cape Verde", awayTeam: "Spain", league: "world-cup-2026" }, "00-ne", "W.Ziel.Przyl. Cabral, Jovane strzeli pierwszego gola w meczu (OPTA)", "Tak", "GOALSCORER_FIRST:Jovane Cabral"],
+    [{ homeTeam: "Nottingham Forest", awayTeam: "Manchester City", league: "premier-league" }, "00-pn", "Youssef Belammari liczba spalonych w 1.połowie (OPTA)", "1+", "PLAYER_OFFSIDES_1H:Youssef Belammari"],
+  ])("today's shape %#: %s keeps its key", (ctx, id, name, sel, key) => {
+    expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections: [{ name: sel, odds: 3 }] }, ctx)?.marketKey).toBe(key);
+  });
+  it("a team name where the player should be yields no row", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const out = run({ bookmakerMarketId: "ufo:mtyp:00-lf", name: "Nottingham - liczba strzałów (OPTA)",
+        selections: [{ name: "1+", odds: 1.1 }] }, ctxOf("forestCity")); // synthetic
+      expect(out).toBeNull();
+      expect(warn.mock.calls.flat().join(" ")).toContain("Player market without extractable player");
+    } finally {
+      warn.mockRestore();
+    }
+  });
+  it("PLAYER_RED_CARD rows keep today's shape (no param, player in the selection)", () => {
+    expect(legs(run(live("forestCity", "00-76").raw, ctxOf("forestCity")))).toEqual(["Murillo wyrzucony z boiska@29"]);
+    const wc = run({ bookmakerMarketId: "ufo:mtyp:00-76", name: "Dayot Upamecano wyrzucony z boiska",
+      selections: [{ name: "Dayot Upamecano wyrzucony z boiska", odds: 29 }] }, { homeTeam: "France", awayTeam: "Morocco", league: "world-cup-2026" }); // WC entry 1728
+    expect(wc?.marketKey).toBe("PLAYER_RED_CARD");
+    expect(legs(wc)).toEqual(["Dayot Upamecano wyrzucony z boiska@29"]);
+  });
+});

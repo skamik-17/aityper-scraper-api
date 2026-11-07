@@ -394,15 +394,53 @@ function canonicalizeFortunaPlayerName(raw: string): string {
 }
 
 /**
- * Strips a leading team-name token that OPTA occasionally prefixes directly
- * onto the player name with no punctuation ("Maroko Diop, Issa strzeli
- * pierwszego gola w meczu (OPTA)"), which would otherwise leak into the
- * extracted surname ("Issa Maroko Diop"). Abbreviated team prefixes
- * ("W.Ziel.Przyl. Cabral, Jovane") already fail to match below because of
- * their embedded periods and need no special handling here.
+ * True when every token of `prefix` (split on whitespace and dots, folded
+ * like market names) has at least 3 characters and is a prefix of some
+ * folded token of `teamName`: "Coventry City" holds for "Coventry City",
+ * "Aston Villa George" does not hold for "Aston Villa". normalize1x2Selection
+ * matches fuzzily ("Aston Villa George", "Hull Lucas" and "Nottingham
+ * Murillo" all resolve to a side), so a multi-token prefix is only stripped
+ * when this also holds.
+ */
+function isStrictFortunaTeamPrefix(prefix: string, teamName: string): boolean {
+  const teamTokens = normalizeMarketName(teamName).split(/[\s.]+/).filter(Boolean);
+  const parts = normalizeMarketName(prefix).split(/[\s.]+/).filter(Boolean);
+  return (
+    parts.length > 0 &&
+    parts.every((p) => p.length >= 3 && teamTokens.some((t) => t.startsWith(p)))
+  );
+}
+
+/**
+ * Strips the team-name prefix that OPTA occasionally puts directly in front
+ * of the player name with no punctuation, which would otherwise leak into
+ * the extracted name:
+ * - single token: "Maroko Diop, Issa strzeli pierwszego gola w meczu (OPTA)"
+ *   ("Issa Maroko Diop" otherwise)
+ * - dotted token: "Man.City Dias, Ruben strzeli ..." ("Ruben City Dias"),
+ *   "W.Ziel.Przyl. Cabral, Jovane strzeli ..."
+ * - multi-word: "Aston Villa McGinn, John strzeli ..." ("John Villa McGinn"),
+ *   "Coventry City Thomas, Bobby strzeli ..."
+ * A 3- or 2-token prefix is stripped only when it resolves to a side AND is a
+ * strict token-prefix of that side's team name (isStrictFortunaTeamPrefix),
+ * so "Hull Lucas Herrington" keeps "Lucas Herrington" even though "Hull
+ * Lucas" fuzzy-resolves to the away side. Otherwise a single leading token
+ * (dots allowed) is stripped when it resolves to a side.
  */
 function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): string {
-  const leadingWord = name.match(/^([\p{Lu}][\p{L}'-]*)\s+/u)?.[1];
+  const tokens = name.split(/\s+/);
+  for (const n of [3, 2]) {
+    if (tokens.length <= n) continue;
+    const prefix = tokens.slice(0, n).join(" ");
+    const side = normalize1x2Selection(prefix, ctx.homeTeam, ctx.awayTeam, ctx.league);
+    if (
+      (side === "HOME" || side === "AWAY") &&
+      isStrictFortunaTeamPrefix(prefix, side === "HOME" ? ctx.homeTeam : ctx.awayTeam)
+    ) {
+      return tokens.slice(n).join(" ");
+    }
+  }
+  const leadingWord = name.match(/^([\p{Lu}][\p{L}'.-]*)\s+/u)?.[1];
   if (!leadingWord) return name;
   const side = normalize1x2Selection(leadingWord, ctx.homeTeam, ctx.awayTeam, ctx.league);
   return side === "HOME" || side === "AWAY" ? name.slice(leadingWord.length).trim() : name;
@@ -419,6 +457,9 @@ function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): 
  *   Lastname" order with no comma at all ("Youssef Belammari liczba
  *   spalonych w 1.połowie (OPTA)", "Ayoube Amaimouni Echghouyab - liczba
  *   fauli (OPTA)") — already in natural order, so no swap is needed.
+ * - single-name fallback: mononyms ("Murillo - liczba strzałów (OPTA)",
+ *   "Nottingham Murillo strzeli pierwszego gola w meczu (OPTA)" once the
+ *   team prefix is stripped).
  */
 function extractFortunaPlayerName(
   rawName: string,
@@ -448,6 +489,18 @@ function extractFortunaPlayerName(
     /^([\p{Lu}][\p{L}'’.-]*(?:\s+[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
   );
   if (noCommaMatch) return canonicalizeFortunaPlayerName(noCommaMatch[1].trim());
+
+  // Single-name fallback: a mononym is one capitalized token before the same
+  // separator/keyword ("Murillo - liczba strzałów (OPTA)", "Rodri strzeli
+  // ..."). A token that resolves to a team ("Nottingham - liczba strzałów")
+  // or a generic word (Mecz, SuperSub, Zawodnik) is not a player.
+  const singleMatch = name.match(
+    /^([\p{Lu}][\p{L}'’.-]+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
+  );
+  if (singleMatch && !/^(?:mecz|supersub|zawodnik)$/iu.test(singleMatch[1])) {
+    const side = normalize1x2Selection(singleMatch[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+    if (side !== "HOME" && side !== "AWAY") return canonicalizeFortunaPlayerName(singleMatch[1]);
+  }
 
   return undefined;
 }
@@ -1491,6 +1544,16 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
         parlayPlayerParam =
           canonicalizeFortunaPlayerName(parlay[1].trim()) + (parlay[2] ? ` ${parlay[2]}` : "");
       }
+    }
+
+    // A player market whose name yields no player ("Nottingham - liczba
+    // strzałów (OPTA)") would otherwise land under the bare key, leaking the
+    // raw label into the peers' "base" bundle and colliding with other such
+    // rows. Drop it instead. PLAYER_RED_CARD is exempt: it keeps the bare key
+    // with the player in the selection ("Murillo wyrzucony z boiska").
+    if (isPlayerMarket && !playerName && !parlayPlayerParam && marketCode !== "PLAYER_RED_CARD") {
+      console.warn(`[fortuna] Player market without extractable player: "${raw.name}" (id: ${marketId ?? "none"})`);
+      return null;
     }
 
     // Player markets (both stat-line AND dropdown shape, e.g. GOALSCORER_*)

@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,7 +12,9 @@ import type { STSWebSocketData } from "../types.js";
  * cards/corners O/U line arrives under the same line name, so without a line
  * suffix the name-based dedup kept only one line per market. The team
  * cards/corners lines live in the snapshot's extra r=17 P entry, not in
- * P["1m<stsId>"].
+ * P["1m<stsId>"]. The anytime scorer, card and goal-or-assist offers arrive
+ * as per-player lines (2435/2012/2436, one nameless outcome 74 each) that
+ * fold back into one "Zawodnik - <event>" dropdown per id.
  */
 const fx = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), "fixtures", f), "utf8");
 const fixture = parseFixtures(parseWebSocketJson(fx("i_pl.trimmed.txt"))!, "premier-league").find((f) => f.id === "f2921898")!;
@@ -20,6 +22,8 @@ const markets = parseAllMarkets(fixture, parseWebSocketJson(fx("f_f2921898_pl.ar
 const byId = (id: string) => markets.filter((m) => m.bookmakerMarketId === id);
 
 describe("STS parseAllMarkets on the 2026-11 Arsenal vs Hull City snapshot", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   it("keeps every cards/corners total line", () => {
     expect(byId("185")).toHaveLength(5);
     expect(byId("185").map((m) => m.name)).toContain("Liczba kartek 2.5");
@@ -136,6 +140,72 @@ describe("STS parseAllMarkets on the 2026-11 Arsenal vs Hull City snapshot", () 
       "234 CORNERS_TEAM:AWAY:2.5 +2.5=OVER@1.75 -2.5=UNDER@1.9",
       "234 CORNERS_TEAM:AWAY:3.5 +3.5=OVER@2.7 -3.5=UNDER@1.42",
     ]);
+  });
+  it("folds id 2435 into one 'Zawodnik - strzeli gola' dropdown with 38 players", () => {
+    expect(byId("2435")).toHaveLength(1);
+    expect(byId("2435")[0].name).toBe("Zawodnik - strzeli gola");
+    expect(byId("2435")[0].selections).toHaveLength(38);
+    expect(byId("2435")[0].selections).toContainEqual(expect.objectContaining({ name: "Crooks Matt", odds: 10 }));
+  });
+  it("folds 2012 and 2436 the same way", () => {
+    expect(byId("2012")[0]).toMatchObject({ name: "Zawodnik - otrzyma kartkę" });
+    expect(byId("2012")[0].selections).toHaveLength(41);
+    expect(byId("2012")[0].selections).toContainEqual(expect.objectContaining({ name: "Crooks Matt", odds: 2.5 }));
+    expect(byId("2012")[0].selections).toContainEqual(expect.objectContaining({ name: "Jack Butland" }));
+    expect(byId("2436")[0].selections).toContainEqual(expect.objectContaining({ name: "Crooks Matt", odds: 6.5 }));
+  });
+  it("keeps 2153 per player with a 'Tak' selection", () => {
+    // 2153 is in PLAYER_STAT_MARKET_IDS, so the parser names it "<line>|<player>"
+    expect(byId("2153")).toHaveLength(41);
+    expect(byId("2153").find((m) => m.name === "Crooks Matt - otrzyma czerwoną kartkę|Crooks Matt")!.selections)
+      .toEqual([expect.objectContaining({ name: "Tak", odds: 20 })]);
+  });
+  it("fold keeps one selection per line even when names repeat", () => {
+    const snap = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"))!;
+    const lines = Object.values(snap.P!["1m72221372"].m!["2435"].l!);
+    lines[0].n = "\t Silva Joao - strzeli gola"; lines[1].n = "\t Silva Joao - strzeli gola";
+    const folded = parseAllMarkets(fixture, snap, null).find((m) => m.bookmakerMarketId === "2435")!;
+    expect(folded.selections.filter((s) => s.name === "Silva Joao")).toHaveLength(2);
+    expect(folded.selections).toHaveLength(38);
+  });
+  it("folds the real snapshot without dropping a line", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    parseAllMarkets(fixture, parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt")), null);
+    expect(warn).not.toHaveBeenCalled();
+  });
+  it("drops, never emits per line, a per-player line that is not one 'Tak' price under the known suffix", () => {
+    // Each mutated line would publish a wrong price if folded: under an
+    // unknown event suffix, as one of two prices, or as a "no" price
+    const snap = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"))!;
+    const lines = snap.P!["1m72221372"].m!["2435"].l!;
+    lines["1009526542"].n = "\t Crooks Matt - strzeli 2 gole";
+    lines["1012795334"].o = { "74": { O: 3 }, "75": { O: 1.3, n: "Nie" } };
+    lines["1020079427"].o = { "27": { O: 1.4 } }; // global outcome 27 = "Nie"
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const parsed = parseAllMarkets(fixture, snap, null).filter((m) => m.bookmakerMarketId === "2435");
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].selections).toHaveLength(35);
+    for (const player of ["Crooks Matt", "Madueke Noni", "Gyokeres Viktor"]) {
+      expect(parsed[0].selections.map((s) => s.name)).not.toContain(player);
+    }
+    expect(parsed[0].selections.every((s) => !["Tak", "Nie"].includes(s.name))).toBe(true);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain("market 2435");
+    expect(warn.mock.calls[0][0]).toContain("3 of 38 lines");
+  });
+  it("normalizes the folded dropdowns to the player codes at the line prices", () => {
+    const n = normalizeMarketsForBookmaker(markets, "sts", "Arsenal", "Hull City", "premier-league");
+    const folded = (id: string) => n.filter((m) => m.bookmakerMarketId === id);
+    for (const [id, code, count, crooks] of [
+      ["2435", "GOALSCORER_ANYTIME", 38, 10],
+      ["2012", "PLAYER_CARDS", 41, 2.5],
+      ["2436", "PLAYER_GOAL_OR_ASSIST", 38, 6.5],
+    ] as const) {
+      expect(folded(id).map((m) => [m.normalizedType, m.marketKey]), id).toEqual([[code, code]]);
+      expect(folded(id)[0].selections, id).toHaveLength(count);
+      expect(folded(id)[0].selections, id).toContainEqual(expect.objectContaining({ normalizedName: "Matt Crooks", odds: crooks }));
+    }
+    expect(folded("2435")[0].selections).toContainEqual(expect.objectContaining({ normalizedName: "Noni Madueke", odds: 3 }));
   });
 });
 

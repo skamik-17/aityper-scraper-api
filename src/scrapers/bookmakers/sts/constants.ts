@@ -292,6 +292,30 @@ export const STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS = new Set<number>([
 ]);
 
 /**
+ * Per-player "yes" markets (2026-11 renumbering): one line per player,
+ * named "<Lastname Firstname> - <event>", whose single outcome 74 carries
+ * no name. That outcome is the "yes" price and is named "Tak".
+ */
+export const STS_PER_PLAYER_YES_MARKET_IDS = new Set<number>([
+  2012, // "<P> - otrzyma kartkę" (was the 1894 dropdown)
+  2153, // "<P> - otrzyma czerwoną kartkę" (was the 1896 dropdown; stays per player)
+  2435, // "\t <P> - strzeli gola" (was the 54 dropdown)
+  2436, // "<P> - gol lub asysta" (was the 1903 dropdown)
+]);
+
+/**
+ * Per-player "yes" markets folded back into the "Zawodnik - <event>"
+ * dropdown shape the normalizer knows from the old ids: every line of the
+ * id becomes one selection named after the player (the trimmed line name
+ * minus `suffix`), priced at the line's single "Tak" outcome.
+ */
+export const STS_PER_PLAYER_DROPDOWN_FOLDS: Record<number, { suffix: string; dropdownName: string }> = {
+  2012: { suffix: " - otrzyma kartkę", dropdownName: "Zawodnik - otrzyma kartkę" },
+  2435: { suffix: " - strzeli gola", dropdownName: "Zawodnik - strzeli gola" },
+  2436: { suffix: " - gol lub asysta", dropdownName: "Zawodnik - gol lub asysta" },
+};
+
+/**
  * Outcome IDs for 1X2 market
  */
 export const OUTCOME_1X2 = {

@@ -28,6 +28,8 @@ import {
   OVER_UNDER_LINE_MARKET_IDS,
   STS_EXTRA_GROUP_TYPES,
   STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS,
+  STS_PER_PLAYER_YES_MARKET_IDS,
+  STS_PER_PLAYER_DROPDOWN_FOLDS,
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
@@ -356,6 +358,47 @@ function collectFixtureMarkets(source: STSWebSocketData, fixture: STSFixture): [
 }
 
 /**
+ * Selections of one STS_PER_PLAYER_DROPDOWN_FOLDS market: one per line, never
+ * merged by name (two players can share a display name), named after the
+ * player and priced at the line's "Tak" outcome. A line folds only as
+ * "<player><suffix>" with exactly one priced "Tak" selection. Any other line
+ * would publish a wrong price under that player, so it is dropped with a
+ * warning and never emitted on its own.
+ */
+function foldPerPlayerLines(
+  marketId: number,
+  market: STSMarket,
+  fold: { suffix: string; dropdownName: string },
+  fixture: STSFixture
+): MarketSelection[] {
+  const lines = Object.values(market.l || {}) as STSMarketLine[];
+  const selections: MarketSelection[] = [];
+  const dropped: string[] = [];
+
+  for (const line of lines) {
+    const lineName = (line.n || "").trim();
+    const player = lineName.endsWith(fold.suffix) ? lineName.slice(0, -fold.suffix.length).trim() : "";
+    const lineSelections = parseLineSelections(marketId, line, fixture);
+    if (player && lineSelections.length === 1 && lineSelections[0].name === "Tak") {
+      selections.push({ ...lineSelections[0], name: player });
+    } else {
+      const prices = lineSelections.map((s) => `${s.name}@${s.odds}`).join(", ") || "no price";
+      dropped.push(`"${lineName}" (${prices})`);
+    }
+  }
+
+  if (dropped.length > 0) {
+    console.warn(
+      `[STS] ${fixture.home} vs ${fixture.away}: dropped ${dropped.length} of ${lines.length} lines of market ${marketId} ` +
+        `that do not fold into "${fold.dropdownName}" (expected "<player>${fold.suffix}" with one "Tak" price): ` +
+        dropped.slice(0, 3).join("; ")
+    );
+  }
+
+  return selections;
+}
+
+/**
  * Parse all markets from fixture WebSocket data into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -376,8 +419,27 @@ export function parseAllMarkets(
       const groupName = MARKET_GROUPS[marketId] || "Inne";
       const marketType = MARKET_TYPES[marketId] ?? marketId; // Use ID as fallback for unmapped markets
 
+      // Per-player "yes" lines become one dropdown market, built before the
+      // name-based dedup below
+      const fold = STS_PER_PLAYER_DROPDOWN_FOLDS[marketId];
+      if (fold) {
+        const selections = foldPerPlayerLines(marketId, market, fold, fixture);
+        if (selections.length > 0) {
+          markets.push({
+            name: fold.dropdownName,
+            bookmakerMarketId: marketIdStr,
+            groupName,
+            type: marketType,
+            selections,
+          });
+        }
+        continue;
+      }
+
       for (const [, line] of Object.entries(market.l || {}) as [string, STSMarketLine][]) {
-        const rawName = line.n && line.n.trim().length > 0 ? line.n : `[STS ID: ${marketId}]`;
+        // STS pads some line names ("\t <P> - strzeli gola")
+        const lineName = (line.n || "").trim();
+        const rawName = lineName.length > 0 ? lineName : `[STS ID: ${marketId}]`;
         const selections = parseLineSelections(marketId, line, fixture);
 
         if (selections.length > 0) {
@@ -401,7 +463,7 @@ export function parseAllMarkets(
               finalName = `${rawName} ${handicapValue}`;
             }
           } else if (PLAYER_STAT_MARKET_IDS.has(marketId)) {
-            let playerName = extractPlayerNameFromLineName(line.n || "");
+            let playerName = extractPlayerNameFromLineName(lineName);
             if (!playerName || playerName === "Zawodnik") {
               playerName = extractPlayerNameFromOutcome(selections[0]?.name || "");
             }
@@ -448,6 +510,9 @@ export function parseAllMarkets(
  */
 const CARDS_EXACT_RANGE_MARKET_ID = 192;
 const CARDS_EXACT_RANGE_PLACEHOLDER_OUTCOME_IDS = new Set([218, 219, 220, 221, 222]);
+
+/** The nameless outcome of the STS_PER_PLAYER_YES_MARKET_IDS lines. */
+const PER_PLAYER_YES_OUTCOME_ID = 74;
 
 /**
  * Parse selections from a market line
@@ -498,6 +563,12 @@ function getSelectionName(
 ): string | null {
   if (outcome.n && outcome.n.length > 1) {
     return outcome.n;
+  }
+
+  // The single nameless outcome of a per-player line is its "yes" price.
+  // Outcome 74 has no global name, so elsewhere it stays unresolved.
+  if (outcomeId === PER_PLAYER_YES_OUTCOME_ID && !outcome.n && STS_PER_PLAYER_YES_MARKET_IDS.has(marketId)) {
+    return "Tak";
   }
 
   switch (marketId) {

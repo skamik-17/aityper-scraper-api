@@ -12,8 +12,11 @@ CHECK A3 matches=19 minMapped=77 maxMapped=82 maxUnknown=0 keysEqualMapped=True 
 CHECK A7 acceptanceExit=['0'] discoveryExit=['0'] browserPoolLines=0 discoveryNoMatch=0 pass=True
 CHECK A8 durationMs=11073 pass=True
 A4  DEFERRED (needs the deployed backend). Pre-deploy proxy below: 1X2-CHECK matchesWith=19 need=18 maxDevPct=5.6 ok=True
-A5  DEFERRED (needs the deployed backend). Pre-deploy proxy below: all 19 matches over=0 unknown=0, max 14.5 % (threshold 15)
+A5  DEFERRED (needs the deployed backend). Pre-deploy proxy below: all 19 matches over=0 unknown=0, max 14.5 % (threshold 15).
+    Fallback pairs ranked by headroom, and a pre-recorded reading of over>0, are at the end.
 A6  DEFERRED (needs the owner's merge/deploy and a persisted scrape). Commands and expected values at the end.
+    Step 3 moves the main checkout's untracked recovery docs aside before the merge, which would abort otherwise.
+    It writes T0/L0 just before the merge, and its log check reads only the lines after L0.
 
 ## Step 1a: acceptance smoke (A1, A2, A7, A8)
 
@@ -695,15 +698,75 @@ exit=0
 # The plan's branch fix/totalbet-uuid-platform is recovery/totalbet here, reaching master through
 # recovery/integration only when the owner asks for that merge (EXECUTION decision 1).
 
-# Step 3 (owner): record T0, then merge into the checkout the dev server runs.
-date -u +%FT%TZ > /tmp/totalbet-deploy-t0.txt && git -C /home/skamik/Documents/repositories/personal/aityper-scraper-api merge recovery/integration
-# (or `... merge recovery/totalbet` for a totalbet-only deploy)
-# The server restarts and runs an initial scrape. Then read the dev server's stdout log, wherever `npm run dev` writes it:
-sed 's/\x1b\[[0-9;]*m//g' <backend.log> | grep -E "Totalbet/FullOffer\] Found|totalbet completed|Totalbet/Navigation|Detail fetch failed|phase-1 keys missing" | tail -6
-# Expected (A6), for the run after T0:
+# Step 3 (owner): four one-line commands, run in order (3a, 3b, 3a again, 3c, then 3d once totalbet has run).
+# Facts behind them, measured read-only on 2026-11-07 (amended in fix round 1 of the Task 6 review):
+#   - The main checkout (master @ 377b47e, `git ls-files docs/superpowers` = 0) holds 264 untracked files under
+#     docs/superpowers/plans/2026-11-06-scraper-recovery/. recovery/totalbet tracks 266 files there: the same 264,
+#     byte-identical, plus EXECUTION.md and this file. git refuses a merge over untracked files even when their bytes
+#     are identical ("untracked working tree files would be overwritten by merge ... Aborting"; exit 1 for a
+#     fast-forward, exit 2 for a non-ff merge; reproduced with git 2.43.0 in a scratch repo). So Step 3b moves that
+#     directory outside the repo first. The moved copy equals the docs commit 5c990cb byte for byte (264/264), and
+#     both target branches contain 5c990cb, so nothing is lost. (Against recovery/integration @ 2e42083, 4 of the 264
+#     differ because integration carries later edits: README.md, etoto.md, evidence/betclic/check-log-vs-smoke.py,
+#     evidence/superbet/tools/exact_goals_check.py. The merge brings in integration's versions.)
+#   - docs/superpowers/plans/2026-11-07-scraper-performance/ (342 untracked files) is tracked by no recovery branch and
+#     stays where it is. The owner's other local changes (M src/routes/index.ts, the untracked promotions files,
+#     proj-game.json, proj-listing.json) are touched by none of recovery/totalbet, recovery/integration and
+#     recovery/observability, so they do not block the merge.
+#   - recovery/integration @ 2e42083 does not yet contain the totalbet commits (be74121, cdbb97b, f24952a are not its
+#     ancestors). Either merge recovery/totalbet into recovery/integration first and keep TARGET=recovery/integration,
+#     or set TARGET=recovery/totalbet for a totalbet-only deploy (a fast-forward of master today). 3a and 3c enforce it.
+#   - LOG is the dev server's stdout+stderr: fd 1/2 of `tsx watch src/index.ts` (pids 1996018/1996019, started
+#     2026-11-06 20:04 local time). tsx watch restarts keep this fd. The plan's 3627e2c8 backend.log stopped being
+#     written at 2026-11-06 20:00 local time. If the server was restarted by hand since, find the new path with
+#     `ls -l /proc/$(pgrep -f "tsx watch src/index.ts" | head -1)/fd/1`.
+#   - The log has no timestamps and still holds legacy totalbet lines. The last legacy run is at lines 433838-433883:
+#     `[Totalbet/Navigation] ... API error: HTTP 404`, then `totalbet completed: success=false, 0 matches`. So 3c
+#     records the line count L0 next to T0, and 3d reads only the lines after L0.
+
+# Step 3a (read-only precheck). Set TARGET as above. Rerun after 3b; go on to 3c only when it prints ok=True.
+M=/home/skamik/Documents/repositories/personal/aityper-scraper-api; TARGET=recovery/integration; H=$(git -C $M merge-base --is-ancestor recovery/totalbet $TARGET && echo True || echo False); C=$(comm -12 <(git -C $M ls-files --others --exclude-standard | sort) <(git -C $M diff --name-only --diff-filter=A HEAD $TARGET | sort) | wc -l); echo "PRECHECK target=$TARGET hasTotalbet=$H untrackedCollisions=$C ok=$([ $H = True ] && [ $C -eq 0 ] && echo True || echo False)"
+# Measured on the main checkout on 2026-11-07, before 3b, for both targets:
+PRECHECK target=recovery/integration hasTotalbet=False untrackedCollisions=264 ok=False
+PRECHECK target=recovery/totalbet hasTotalbet=True untrackedCollisions=264 ok=False
+# Expected after 3b: untrackedCollisions=0 and ok=True. For recovery/integration, hasTotalbet=True also needs recovery/totalbet merged into it.
+
+# Step 3b (pre-step): move the untracked recovery docs outside the repo. tsx watch does not watch docs/, so this does not restart the server.
+M=/home/skamik/Documents/repositories/personal/aityper-scraper-api; ASIDE=/home/skamik/Documents/repositories/personal/aityper-scraper-api-untracked-recovery-docs; [ ! -e "$ASIDE" ] && mkdir -p "$ASIDE" && mv "$M/docs/superpowers/plans/2026-11-06-scraper-recovery" "$ASIDE/" && echo "MOVED-ASIDE files=$(find "$ASIDE" -type f | wc -l) to $ASIDE"
+# Expected: MOVED-ASIDE files=264 to /home/skamik/Documents/repositories/personal/aityper-scraper-api-untracked-recovery-docs
+
+# Step 3c (deploy). The guard re-checks 3a. T0 and L0 are written only after it passes, immediately before the merge.
+# The leading rm means a refused guard leaves no T0 file, so Step 4a fails loudly instead of reading a stale T0.
+# After any failure, fix the cause and rerun the whole line; it rewrites T0 and L0.
+M=/home/skamik/Documents/repositories/personal/aityper-scraper-api; LOG=/tmp/claude-1000/-home-skamik-Documents-repositories-personal-aityper/afcccab1-08a2-4a24-8c65-ec669dc200bd/scratchpad/backend.log; TARGET=recovery/integration; rm -f /tmp/totalbet-deploy-t0.txt /tmp/totalbet-deploy-l0.txt; git -C $M merge-base --is-ancestor recovery/totalbet $TARGET && [ "$(comm -12 <(git -C $M ls-files --others --exclude-standard | sort) <(git -C $M diff --name-only --diff-filter=A HEAD $TARGET | sort) | wc -l)" -eq 0 ] && wc -l < "$LOG" > /tmp/totalbet-deploy-l0.txt && date -u +%FT%TZ > /tmp/totalbet-deploy-t0.txt && git -C $M merge $TARGET; echo "exit=$?"
+# Expected: git's merge output, then exit=0. exit=1 with no /tmp/totalbet-deploy-t0.txt means the guard refused (rerun 3a).
+# Rehearsed 2026-11-07 on scratch clones (.scratch/t6fix1/sim and sim2, not the main checkout). Each clone was at
+# master @ 377b47e, with the main checkout's untracked docs/superpowers, its M src/routes/index.ts and its untracked
+# promotions and proj-*.json files copied in, and TARGET=recovery/totalbet. sim2 ran the 3a, 3b, 3c and 3d lines above
+# verbatim; only the paths of M, ASIDE, LOG and the /tmp files were substituted. Before 3b, the guard refused (exit=1, no T0).
+# After 3b, PRECHECK printed untrackedCollisions=0 ok=True, and the merge fast-forwarded master to recovery/totalbet (exit=0).
+# The local changes stayed, and the merged directory equals the moved copy plus EXECUTION.md and this file. On a log with
+# legacy lines before L0, 3d printed only the two post-L0 lines.
+
+# Step 3d (A6 log). The server restarts and runs an initial scrape. Once totalbet has finished, read only the lines after L0:
+LOG=/tmp/claude-1000/-home-skamik-Documents-repositories-personal-aityper/afcccab1-08a2-4a24-8c65-ec669dc200bd/scratchpad/backend.log; tail -n +$(( $(cat /tmp/totalbet-deploy-l0.txt) + 1 )) "$LOG" | sed 's/\x1b\[[0-9;]*m//g' | grep -E "Totalbet/FullOffer\] (Found|[a-z0-9-]+ failed:)|totalbet (completed|success|partial|empty|scrape_failed|persist_failed|failed):|totalbet (scraper|save) threw:|Totalbet/Navigation|Detail fetch failed|phase-1 keys missing"
+# Which completion line applies: `git -C /home/skamik/Documents/repositories/personal/aityper-scraper-api merge-base --is-ancestor recovery/observability HEAD && echo observability || echo legacy`.
+# recovery/totalbet and recovery/integration @ 2e42083 log the legacy line (src/scrapers/aggregator.ts:262-264).
+# recovery/observability replaces it with `${bm} ${status}: ...` (its src/scrapers/aggregator.ts:244). Its status is one of
+# success|partial|empty|scrape_failed|persist_failed (its src/services/run-outcome.ts:16).
+# Expected (A6), for the first totalbet run after L0. Later scheduler runs repeat the same two lines.
 #   [Totalbet/FullOffer] Found N prematch events for premier-league        (N = N_list; 19 at 01:18Z today)
-#   [Aggregator/FullOffer] totalbet completed: M matches, S markets saved   with M >= ceil(0.9*N) and S > 0
-#   no [Totalbet/Navigation], "Detail fetch failed" or "phase-1 keys missing" line
+#   then, legacy:       [Aggregator/FullOffer] totalbet completed: M matches, S markets saved
+#                       with M >= ceil(0.9*N) and S > 0
+#   or, observability:  [Aggregator/FullOffer] totalbet success: M matches, F markets found, S saved
+#                       with status exactly `success` (not `partial`), M >= ceil(0.9*N) and S > 0
+#   FAIL on any of these lines:
+#     - `totalbet completed: success=false, ...`
+#     - `totalbet partial|empty|scrape_failed|persist_failed: ...` (observability appends ` - <error>`)
+#     - `totalbet failed:`, `totalbet scraper threw:` or `totalbet save threw:`
+#     - `[Totalbet/FullOffer] premier-league failed: ...`
+#     - any [Totalbet/Navigation], "Detail fetch failed" or "phase-1 keys missing" line
+#   It is also a FAIL if no completion line appears at all.
 
 # Step 4a (A6 freshness), one command:
 curl -s "http://localhost:3001/api/odds?league=premier-league" | python3 -I -c '
@@ -745,6 +808,49 @@ P1=MATCH_WINNER,DOUBLE_CHANCE,HALF_TIME_DOUBLE_CHANCE,SECOND_HALF_DOUBLE_CHANCE,
 for pair in "Leeds%20United/Tottenham%20Hotspur" "Crystal%20Palace/Liverpool" "Manchester%20United/Aston%20Villa"; do curl -s "http://localhost:3001/api/matches/$pair/normalized-markets?league=premier-league" > /tmp/nm.json; python3 -I /home/skamik/Documents/repositories/personal/aityper-scraper-api/docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/totalbet/peer-deviation.py /tmp/nm.json totalbet --codes $P1 --threshold 15; echo "exit=$?"; done
 # Expected per pair: PEER-CHECK bookmaker=totalbet ... unknown=0 ... over=0, exit=0
 #   (pre-deploy proxy today: Leeds-Tottenham maxDevPct=9.2, Crystal Palace-Liverpool 13.4, Manchester United-Aston Villa 9.2)
+#   Crystal Palace-Liverpool has only 1.6 pp of headroom (worst FIRST_HALF_EUROPEAN_HANDICAP:-1 DRAW 4.85 vs median 5.6).
 # Kick-offs: Leeds-Tottenham 2026-11-07 12:30Z, Crystal Palace-Liverpool 2026-11-08 14:00Z, Manchester United-Aston Villa
-# 2026-11-08 16:30Z. For a pair already played, use the next upcoming fixtures from /api/odds, e.g.
-# "Chelsea/Leeds%20United", "Aston%20Villa/Sunderland", "Tottenham%20Hotspur/Ipswich%20Town" (2026-11-21).
+# 2026-11-08 16:30Z. For a pair already played, use the next upcoming fixtures from /api/odds. Prefer the most headroom
+# in today's proxy:
+#   "Coventry%20City/Crystal%20Palace"          9.0, 2026-11-21 15:00Z
+#   "AFC%20Bournemouth/Nottingham%20Forest"     9.8, 2026-11-21 15:00Z
+#   "Brentford/Everton"                         9.8, 2026-11-23 20:00Z
+#   "Chelsea/Leeds%20United"                   11.0, 2026-11-21 15:00Z
+#   "Aston%20Villa/Sunderland"                 11.7, 2026-11-21 15:00Z
+# Do not use "Tottenham%20Hotspur/Ipswich%20Town" (14.5). That is 0.5 pp under the threshold and exactly at the 5.0 odds cutoff
+# (SECOND_HALF_EUROPEAN_HANDICAP:1 DRAW 5.00 vs median 5.85). One tick down, 4.95 against the same peers is 15.4 %, so over=1.
+
+# Pre-recorded reading of an A5 over>0. It is written before the deploy so the threshold is never moved after the fact.
+# The run still counts as A5 FAIL as printed (exit=1); this only says which kind of failure it is.
+# Totalbet prices the half-time and second-half European-handicap DRAW below the peers as a rule. Signed deviation from the
+# peer median on the same 19 injected files (.scratch/t6-peer, our odds <= 5.0, >= 3 peer prices; scratch script
+# .scratch/t6fix1/eh-margin.py, not committed):
+EH-SIGNED EUROPEAN_HANDICAP                AWAY  n= 65 median=  -0.9% min=  -3.8% max=  1.1%
+EH-SIGNED EUROPEAN_HANDICAP                DRAW  n= 29 median=   0.0% min=  -2.2% max=  3.1%
+EH-SIGNED EUROPEAN_HANDICAP                HOME  n= 65 median=  -1.0% min=  -2.9% max=  0.0%
+EH-SIGNED FIRST_HALF_EUROPEAN_HANDICAP     AWAY  n= 40 median=  -2.6% min=  -5.2% max= -0.9%
+EH-SIGNED FIRST_HALF_EUROPEAN_HANDICAP     DRAW  n= 37 median=  -7.9% min= -13.9% max= -4.6%
+EH-SIGNED FIRST_HALF_EUROPEAN_HANDICAP     HOME  n= 42 median=  -2.3% min=  -6.1% max=  0.0%
+EH-SIGNED SECOND_HALF_EUROPEAN_HANDICAP    AWAY  n= 43 median=  -2.6% min=  -7.4% max=  0.0%
+EH-SIGNED SECOND_HALF_EUROPEAN_HANDICAP    DRAW  n= 42 median=  -7.9% min= -14.5% max= -3.2%
+EH-SIGNED SECOND_HALF_EUROPEAN_HANDICAP    HOME  n= 46 median=  -2.4% min=  -5.9% max=  0.0%
+EH-SIGNED all n=409 max=3.1%
+EH-OVERROUND totalbet median=1.146 n=285  peers median=1.093 n=1985
+# No European-handicap selection is above the peer median by more than +3.1 %. Totalbet's 3-way EH overround is 1.146,
+# against 1.093 for the peers. That is a wider margin, priced against the bettor, so it cannot create a false +EV.
+# A cheaper DRAW is not a swap or a wrong line either: see ORIENT above (H0 median 0.8 % vs 24.8-78.0 % under the wrong pairings).
+# For a pair with over>0, classify its OVER rows (same P1 as above; one command; exit 0 = margin only, exit 1 = anything else):
+curl -s "http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league" > /tmp/nm.json; python3 -I /home/skamik/Documents/repositories/personal/aityper-scraper-api/docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/totalbet/peer-deviation.py /tmp/nm.json totalbet --codes $P1 --threshold 15 | python3 -I -c '
+import ast, sys
+rows = [ast.literal_eval(l.split("OVER", 1)[1].strip()) for l in sys.stdin if l.lstrip().startswith("OVER")]
+other = [r for r in rows if not (r[1].split(":")[0] in ("FIRST_HALF_EUROPEAN_HANDICAP", "SECOND_HALF_EUROPEAN_HANDICAP") and r[2] == "DRAW" and r[3] < r[4])]
+print(f"OVER-CLASS rows={len(rows)} halfTimeOr2hEhDrawBelowMedian={len(rows) - len(other)} other={len(other)} {other}")
+sys.exit(1 if other else 0)
+'; echo "exit=$?"
+#   exit=0, margin only: every OVER row is a FIRST_HALF_/SECOND_HALF_EUROPEAN_HANDICAP DRAW priced below the peer median.
+#     Record A5 as FAIL (margin) with the OVER rows and the ORIENT table, for the owner to judge. This is not an integrity bug.
+#   exit=1, anything else: another code or selection, or a price above the median. Treat it as a possible integrity failure:
+#     A5 FAIL, and investigate the mapping before totalbet stays enabled. unknown>0 is always an integrity failure.
+# Rehearsed offline on the proxy files at lower thresholds, as an exercise only:
+#   Tottenham-Ipswich @12 -> OVER-CLASS rows=1 halfTimeOr2hEhDrawBelowMedian=1 other=0 [], exit=0
+#   Crystal Palace-Liverpool @6 -> rows=7, 3 half EH DRAW, other=4 (SECOND_HALF_ASIAN_HANDICAP:-0.5 HOME, ...), exit=1

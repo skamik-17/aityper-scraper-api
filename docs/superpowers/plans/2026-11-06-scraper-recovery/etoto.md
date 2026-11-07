@@ -67,13 +67,14 @@ The latent collision is already frozen in the golden fixture (`src/services/norm
 - **Team-fouls code choice (decision D1):** `HOME_/AWAY_TEAM_TOTAL_FOULS` (forbet, fortuna, superbet) or `TEAM_TOTAL_FOULS` with a `HOME:`/`AWAY:` param (would need forbet, fortuna and superbet changes). This plan takes the first option. The betfan plan (`betfan.md`) makes the same choice, and the two must stay consistent. fuksiarz also emits side-less `TEAM_TOTAL_FOULS`; that is out of scope here and listed under open questions.
 - The catalog's `AWAY_TEAM_TOTAL_FOULS` has viewType `PARAMETER_SLIDER` while `HOME_TEAM_TOTAL_FOULS` is `STAT_RANGE` (`market-catalog.ts:7202-7231`). This is a display inconsistency outside this plan.
 - etoto could later publish "Suma 1.5 rzutów karnych" under id -30591. Only the 0.5 line equals PENALTY_AWARDED, and it is guarded in Task 3.
+- etoto could reuse id -30591 for another market. Negative gameType ids do not keep one meaning on this platform: fuksiarz, on the same `/rest/market/events` API, sends -30591 as "Zmiana w 1. połowie" (`src/services/normalization/__fixtures__/fuksiarz/world-cup-2026_france_morocco.json:3087`, mapped to `HALF_TIME_LEAD_CHANGE` at `fuksiarz-normalizer.ts:80`). Task 3 therefore also requires the penalty-kick wording in the name, so another O/U 0.5 market under -30591 stays `OTHER` and never publishes its Over price as PENALTY_AWARDED YES.
 - **etoto could send both id 15 and id -30591 for one match.** forbet and betfan still do id 15 on the same platform (see above). After Task 3 both normalize to marketKey `PENALTY_AWARDED`, so `mergeMarketRecord` (`full-offer-repository.ts:197-248`) keeps the first one seen and logs `marketKey collision with overlapping selection code … for etoto PENALTY_AWARDED … keeping first-seen odds` (`:243-247`). This is acceptable because both are the same proposition. Task 3 pins that both raws produce the same key and the same YES/NO code set, so whichever one wins is correct. The monitor below excludes this one key.
 - After the fix, the next scrape writes new keys (`…:HOME:17.5`). `pruneStaleOddsRows` (`full-offer-repository.ts:267`) deletes the old side-less rows for the match/bookmaker, so no DB cleanup is needed.
 - Live verification is time-boxed by the matchday-only window (see Root cause). When no etoto event carries the ids, the live team-stat and penalty criteria are "not yet verifiable", and the capture-based unit tests decide.
 
 ### Open questions for the owner
 1. Confirm D1 (side-specific fouls codes) for etoto and betfan. Should fuksiarz's `TEAM_TOTAL_FOULS` get the same treatment in its own plan?
-2. Should the two HT/FT + total-goals combos (ids -30005/-30006, 80 skips per run) get catalog codes, or stay skipped?
+2. Should the two HT/FT + total-goals combos (ids -30005/-30006, 4 skips per fixture, so 80 per run for the 20 fixtures of 2026-11-06) get catalog codes, or stay skipped?
 3. **Follow-up outside this repo:** `aityper/docs/audit-ledger/coverage.json` lists etoto `TEAM_TOTAL_FOULS` (etoto block `:5419-6572`, entry at `:6500`) and has no etoto `HOME_TEAM_TOTAL_FOULS` / `AWAY_TEAM_TOTAL_FOULS`. After Task 2, a health check against that baseline would report a false "missing TEAM_TOTAL_FOULS". Should the ledger be updated (drop `TEAM_TOTAL_FOULS`, add `HOME_/AWAY_TEAM_TOTAL_FOULS` with `OVER`/`UNDER`) when Task 2 lands? This plan does not touch the frontend repo.
 
 ### Acceptance criteria (live, after the next scrape)
@@ -84,6 +85,14 @@ All commands are read-only. `E=/home/skamik/Documents/repositories/personal/aity
 curl -s --compressed https://api.etoto.pl/rest/market/events/<eventId> | python3 -I -c "import json,sys;g={x['gameType'] for x in json.load(sys.stdin)['data']['eventGames']};print(sorted(g&{162,163,168,169,-30727,-30728,-30591}))"
 ```
 Proven on 2026-11-06 17:03Z: event 6224065 → `[-30728, -30727, -30591, 162, 163, 168, 169]`; 6224070 and 6224078 → `[]`. The next window is Sat 2026-11-07, Leeds v Tottenham (event 6224070, KO 12:30Z). Poll from about 09:00Z; the exact onset is unknown. If no event prints a non-empty list, the team-stat and penalty criteria are **not yet verifiable**, and the capture-based unit tests in Tasks 1–3 decide. An empty list is not a pass.
+
+**Which backend runs the fix.** `acceptance_check.py` reads `BASE = http://localhost:3001`, which is the main checkout's `tsx watch` on `master`. Tasks 1–3 live on `recovery/etoto` only; `master` stays untouched until the owner asks for a merge (EXECUTION.md Group A1), and merging into `recovery/integration` does not change what :3001 runs. A scrape on that backend runs the unfixed normalizer and prints `penalty_awarded_etoto 0 []` and `unmapped 1` even when the pre-check lists -30591: that is a false fail, not a verdict on Task 3. So run the API, log and collision checks only when both hold:
+1. `master` contains the fix: in the main checkout `grep -c PENALTY_KICK_WORDING src/services/normalization/bookmakers/etoto-normalizer.ts` prints ≥ 1. That symbol comes from the last Task 3 review fix, so it also proves Tasks 1–3 are in. The grep also works after a squash merge, where `git merge-base --is-ancestor` would say no.
+2. The live backend has logged a completed `[Aggregator/FullOffer] etoto completed: …` run whose `[eToto/FullOffer] Found` line comes after the merge.
+
+Then re-run the pre-check for the next matchday event. After Leeds v Tottenham that is Sat 2026-11-07 15:00Z (6224074 Fulham v Newcastle, 6224078 Arsenal v Hull City) or 17:30Z (6224083 Nottingham v Manchester City), or Sun 2026-11-08 14:00Z (6224081, 6224084, 6224085, 6224086) or 16:30Z (6224088), kick-offs per `$E/etoto-league-206-events.json`.
+
+Status 2026-11-07 00:10Z: **not yet verifiable.** `master` does not contain Tasks 1–3 (`git merge-base --is-ancestor cdef392 master` exits 1 in the main checkout), and the 2026-11-06 23:57Z pre-check of 6224070 printed `[]`. Until both gates above hold, the capture-based unit tests in Tasks 1–3 decide.
 
 **One command for the API criteria** (about 20 local GETs, about 8 s): `python3 -I $E/acceptance_check.py`. Current-code output (17:00Z scrape): `$E/acceptance-check-current-code-2026-11-06.txt`.
 
@@ -108,11 +117,12 @@ Raw volume and OTHER share from the backend log of the last **completed** run, i
 L=<clean log>; S=$(grep -n '\[eToto/FullOffer\] Found' $L | tail -1 | cut -d: -f1); tail -n +$S $L | python3 -I -c "
 import sys,re
 t=sys.stdin.read()
-raw=sum(int(x) for x in re.findall(r'\[eToto/FullOffer\] .+?: (\d+) markets',t))
+per_match=[int(x) for x in re.findall(r'\[eToto/FullOffer\] .+?: (\d+) markets',t)]
+raw=sum(per_match); fx=len(per_match)
 un=len(re.findall(r'\[etoto\] Unmapped market',t)); sk=len(re.findall(r'\[etoto\] Skipping unsupported',t))
-print('etoto_raw',raw,'unmapped',un,'skipped',sk,'unclaimed_pct',round(100*(un+sk)/raw,2))"
+print('etoto_raw',raw,'fixtures',fx,'unmapped',un,'skipped',sk,'skipped_expected',4*fx,'unclaimed_pct',round(100*(un+sk)/raw,2))"
 ```
-Today: runs 1–2 print `etoto_raw 6693 unmapped 1 skipped 80 unclaimed_pct 1.21`, and run 3 prints `etoto_raw 6709 unmapped 1 skipped 80 unclaimed_pct 1.21`. Expected after Task 3: `unmapped 0`, `unclaimed_pct` ≤ 2.
+Today (2026-11-06, printed before this one-liner gained `fixtures` and `skipped_expected`): runs 1–2 print `etoto_raw 6693 unmapped 1 skipped 80 unclaimed_pct 1.21`, and run 3 prints `etoto_raw 6709 unmapped 1 skipped 80 unclaimed_pct 1.21`. That is 4 skips × 20 fixtures: every fixture carries exactly 3× -30005 (0.5/1.5/2.5) and 1× -30006, and run 2 logged each of those 4 names 20 times (`$E/backend-log-run2-warnings.txt`). Expected after Task 3: `unmapped 0`, `skipped` == `skipped_expected` (4 × valid fixtures), `unclaimed_pct` ≤ 2. `fixtures` counts that run's `[eToto/FullOffer] <match>: <n> markets` lines. It must equal the `valid` count of the `isValidEvent` command above, taken at the time of the run. It falls as matches kick off: 19 on 2026-11-07, after Everton v Coventry was played, so `skipped 76`. Never compare against a fixed 80.
 
 **Single-bookmaker live smoke test.** The command shape was proven on the current code: it printed the four side-less keys at log lines 5029/5082/5188/5241 (excerpt in `$E/smoke-discovery-current-code-2026-11-06.txt`). The process does not exit after the summary, so wrap it in `timeout`. Run it only after the pre-check is non-empty for `<eventId>`:
 ```bash
@@ -310,7 +320,7 @@ git commit -m "fix(etoto): route team fouls to HOME_/AWAY_TEAM_TOTAL_FOULS like 
 ### Task 3: Map "Suma 0.5 rzutów karnych" (id -30591) to PENALTY_AWARDED
 
 **Files:**
-- Modify: `etoto-normalizer.ts`. Add the id map entry `[-30591]: "PENALTY_AWARDED"` next to `[15]` (`:158`). In `normalizeMarket`, when `marketId === -30591` and the raw line is not `0.5`, return the market as `OTHER`, which keeps today's behaviour for other lines. Pull `PENALTY_AWARDED` (`case` at `:771`) out of the shared Tak/Nie fall-through group (`:746-785`, which ends in `return normalizeYesNoSelection(trimmed)` at `:785`) into its own case. That case maps `normalizeOverUnderSelection` OVER → `YES` and UNDER → `NO`, then falls back to `normalizeYesNoSelection`.
+- Modify: `etoto-normalizer.ts`. Add the id map entry `[-30591]: "PENALTY_AWARDED"` next to `[15]` (`:158`). In `normalizeMarket`, when `marketId === -30591` and the raw line is not `0.5`, or the name lacks the penalty-kick wording (`/rzut\p{L}*\s+karn/iu`; JS `\w` is ASCII-only and would miss the "ó" of "rzutów"), return the market as `OTHER`, which keeps today's behaviour for other lines and other markets reusing the id. Review fix round 1 added a fifth test for that case (-30591 "Suma 0.5 goli w 1. połowie", Poniżej/Powyżej 0.5 → `OTHER`), so the file has 11 tests after Task 3. Pull `PENALTY_AWARDED` (`case` at `:771`) out of the shared Tak/Nie fall-through group (`:746-785`, which ends in `return normalizeYesNoSelection(trimmed)` at `:785`) into its own case. That case maps `normalizeOverUnderSelection` OVER → `YES` and UNDER → `NO`, then falls back to `normalizeYesNoSelection`.
 - Test: `src/services/normalization/bookmakers/__tests__/etoto-recovery-2026-11.test.ts`
 
 **Interfaces:**
@@ -364,10 +374,10 @@ git commit -m "fix(etoto): map penalty total 0.5 (id -30591) to PENALTY_AWARDED"
 
 ## What to monitor
 - New `[etoto] Unmapped market` ids. The baseline is 1 (-30591) on 2026-11-06, and it should be 0 after Task 3.
-- The skip counter for -30005/-30006: 80 per run for 20 matches. A change means etoto renamed those markets.
+- The skip counter for -30005/-30006: `skipped` == 4 × valid fixtures (`skipped_expected` in the raw-volume one-liner, where `fixtures` must equal the `isValidEvent` `valid` count at the time of the run). That was 80 for the 20 fixtures of 2026-11-06 and is 76 for 19 on 2026-11-07, and it falls as matches kick off. Only a mismatch against 4 × valid fixtures means etoto renamed or changed those markets.
 - Whether the number of valid etoto league events (the `isValidEvent` command in Acceptance criteria) still equals the fixture count (22 − 2 = 20 on 2026-11-06).
 - Collision warnings for etoto other than `PENALTY_AWARDED`: `grep 'marketKey collision' <clean log> | grep ' for etoto ' | grep -vc ' for etoto PENALTY_AWARDED '`. This is 0 today, and the target is 0. A `PENALTY_AWARDED` collision means etoto sent both id 15 and id -30591 (accepted, see Risks).
-- `[etoto] Unmapped market … (id: -30591)` reappearing after Task 3 means etoto published a line other than 0.5.
+- `[etoto] Unmapped market … (id: -30591)` reappearing after Task 3 means etoto published a penalty line other than 0.5, or reused -30591 for a market whose name lacks the penalty-kick wording. The quoted name says which one.
 
 ## Self-review
 - Spec coverage: the side axis is covered by Task 1 (shots) and Task 2 (fouls), and the penalty market under id -30591 by Task 3. The deliberate skips and the 22→20 event filter are documented as no-change.

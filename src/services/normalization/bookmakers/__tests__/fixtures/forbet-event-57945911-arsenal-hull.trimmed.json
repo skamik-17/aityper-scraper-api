@@ -1,0 +1,460 @@
+{
+ "_note": "Trimmed forbet /rest/market/events/{id} payload captured 2026-11-06 ~16:20Z; only the games the plan needs. Shape = data object of the API response.",
+ "_source": "https://www.iforbet.pl/rest/market/events/57945911",
+ "eventId": 57945911,
+ "eventName": "Arsenal FC - Hull City",
+ "eventStart": 1794063600000,
+ "category3Name": "Premier League",
+ "eventGames": [
+  {
+   "gameId": 638783087,
+   "gameName": "1X2",
+   "gameType": 1,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    1
+   ],
+   "gameLayout": 1,
+   "eventLayout": 1,
+   "outcomes": [
+    {
+     "outcomeId": 422374697,
+     "outcomeName": "Arsenal FC",
+     "outcomeOdds": 1.17,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422374698,
+     "outcomeName": "remis",
+     "outcomeOdds": 7.2,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422374699,
+     "outcomeName": "Hull City",
+     "outcomeOdds": 16.0,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788078,
+   "gameName": "TurboPrzewaga - 2 gole przewagi lub wygrana",
+   "gameType": -31170,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    1
+   ],
+   "gameLayout": 1,
+   "eventLayout": 1,
+   "outcomes": [
+    {
+     "outcomeId": 422391932,
+     "outcomeName": "Arsenal FC",
+     "outcomeOdds": 1.16,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391933,
+     "outcomeName": "remis",
+     "outcomeOdds": 7.2,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391934,
+     "outcomeName": "Hull City",
+     "outcomeOdds": 14.0,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788158,
+   "gameName": "Handicap 1:0",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": -1.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422392153,
+     "outcomeName": "Arsenal FC (1:0)",
+     "outcomeOdds": 1.02,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392154,
+     "outcomeName": "X (1:0)",
+     "outcomeOdds": 11.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392155,
+     "outcomeName": "Hull City (1:0)",
+     "outcomeOdds": 40.0,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638788157,
+   "gameName": "Handicap 0:1",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 1.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422392150,
+     "outcomeName": "Arsenal FC (0:1)",
+     "outcomeOdds": 1.52,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392151,
+     "outcomeName": "X (0:1)",
+     "outcomeOdds": 4.2,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392152,
+     "outcomeName": "Hull City (0:1)",
+     "outcomeOdds": 5.2,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638788159,
+   "gameName": "Handicap 0:2",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 2.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422392156,
+     "outcomeName": "Arsenal FC (0:2)",
+     "outcomeOdds": 2.34,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392157,
+     "outcomeName": "X (0:2)",
+     "outcomeOdds": 3.95,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392158,
+     "outcomeName": "Hull City (0:2)",
+     "outcomeOdds": 2.44,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638788160,
+   "gameName": "Handicap 0:3",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 3.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422392159,
+     "outcomeName": "Arsenal FC (0:3)",
+     "outcomeOdds": 4.2,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392160,
+     "outcomeName": "X (0:3)",
+     "outcomeOdds": 4.8,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392161,
+     "outcomeName": "Hull City (0:3)",
+     "outcomeOdds": 1.55,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638788161,
+   "gameName": "Handicap 0:4",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 4.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422392162,
+     "outcomeName": "Arsenal FC (0:4)",
+     "outcomeOdds": 8.2,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392163,
+     "outcomeName": "X (0:4)",
+     "outcomeOdds": 7.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422392164,
+     "outcomeName": "Hull City (0:4)",
+     "outcomeOdds": 1.21,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638788082,
+   "gameName": "Wydarzy się min. jedno z: Arsenal FC wygra lub obie drużyny strzelą gola",
+   "gameType": -8041,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391941,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.04,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391942,
+     "outcomeName": "nie",
+     "outcomeOdds": 7.4,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788088,
+   "gameName": "Wydarzy się min. jedno z: Arsenal FC wygra lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8044,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391955,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.07,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391956,
+     "outcomeName": "nie",
+     "outcomeOdds": 6.2,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788086,
+   "gameName": "Wydarzy się min. jedno z: Hull City wygra lub obie drużyny strzelą gola",
+   "gameType": -8043,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391949,
+     "outcomeName": "tak",
+     "outcomeOdds": 2.15,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391950,
+     "outcomeName": "nie",
+     "outcomeOdds": 1.57,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788092,
+   "gameName": "Wydarzy się min. jedno z: Hull City wygra lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8046,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391965,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.45,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391966,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.43,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788084,
+   "gameName": "Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola",
+   "gameType": -8042,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391945,
+     "outcomeName": "tak",
+     "outcomeOdds": 2.1,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391946,
+     "outcomeName": "nie",
+     "outcomeOdds": 1.6,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638788090,
+   "gameName": "Wydarzy się min. jedno z: remis w meczu lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8045,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422391960,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.35,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422391961,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.8,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  }
+ ]
+}

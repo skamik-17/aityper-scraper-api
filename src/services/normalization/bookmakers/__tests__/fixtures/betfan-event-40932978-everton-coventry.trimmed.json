@@ -1,0 +1,951 @@
+{
+ "_note": "Trimmed betfan /api/v1/market/events/{id} payload captured 2026-11-06 ~16:22Z; only the games the plan needs. Shape = data.event of the API response.",
+ "_source": "https://betfan.pl/api/v1/market/events/40932978",
+ "eventId": 40932978,
+ "eventName": "Everton - Coventry City",
+ "eventStart": 1793995200000,
+ "games": [
+  {
+   "gameId": 1437328682,
+   "gameName": "Liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": -30242,
+   "gameCode": 176637,
+   "argument": 7.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828604055,
+     "outcomeName": "Poniżej 7.5",
+     "outcomeOdds": 2.6,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828604056,
+     "outcomeName": "Powyżej 7.5",
+     "outcomeOdds": 1.43,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328688,
+   "gameName": "Liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": -30242,
+   "gameCode": 176640,
+   "argument": 8.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828604071,
+     "outcomeName": "Poniżej 8.5",
+     "outcomeOdds": 1.95,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828604072,
+     "outcomeName": "Powyżej 8.5",
+     "outcomeOdds": 1.75,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328702,
+   "gameName": "Liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": -30242,
+   "gameCode": 176645,
+   "argument": 9.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828605465,
+     "outcomeName": "Poniżej 9.5",
+     "outcomeOdds": 1.6,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828605468,
+     "outcomeName": "Powyżej 9.5",
+     "outcomeOdds": 2.2,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328727,
+   "gameName": "Everton - liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": 168,
+   "gameCode": 176651,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828605979,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 2.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828605981,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 1.5,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328851,
+   "gameName": "Everton - liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": 168,
+   "gameCode": 176781,
+   "argument": 5.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606468,
+     "outcomeName": "Poniżej 5.5",
+     "outcomeOdds": 1.72,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606469,
+     "outcomeName": "Powyżej 5.5",
+     "outcomeOdds": 2,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328915,
+   "gameName": "Coventry City - liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": 169,
+   "gameCode": 176800,
+   "argument": 2.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606656,
+     "outcomeName": "Poniżej 2.5",
+     "outcomeOdds": 2.55,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606657,
+     "outcomeName": "Powyżej 2.5",
+     "outcomeOdds": 1.45,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328913,
+   "gameName": "Coventry City - liczba celnych strzałów na bramkę (OPTA)",
+   "gameType": 169,
+   "gameCode": 176799,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606652,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 1.68,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606653,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 2.05,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328968,
+   "gameName": "Liczba strzałów (OPTA)",
+   "gameType": -200194,
+   "gameCode": 176843,
+   "argument": 28.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606847,
+     "outcomeName": "Poniżej 28.5",
+     "outcomeOdds": 1.9,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606848,
+     "outcomeName": "Powyżej 28.5",
+     "outcomeOdds": 1.8,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1437328991,
+   "gameName": "Everton - liczba strzałów (OPTA)",
+   "gameType": -200054,
+   "gameCode": 176860,
+   "argument": 16.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606887,
+     "outcomeName": "Poniżej 16.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606888,
+     "outcomeName": "Powyżej 16.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437328998,
+   "gameName": "Coventry City - liczba strzałów (OPTA)",
+   "gameType": -200055,
+   "gameCode": 177028,
+   "argument": 11.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 828606900,
+     "outcomeName": "Poniżej 11.5",
+     "outcomeOdds": 1.95,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828606901,
+     "outcomeName": "Powyżej 11.5",
+     "outcomeOdds": 1.75,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1437329420,
+   "gameName": "Liczba fauli (OPTA)",
+   "gameType": -30243,
+   "gameCode": 177246,
+   "argument": 22.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828608377,
+     "outcomeName": "Poniżej 22.5",
+     "outcomeOdds": 1.95,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828608378,
+     "outcomeName": "Powyżej 22.5",
+     "outcomeOdds": 1.72,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1437329485,
+   "gameName": "Everton - liczba fauli (OPTA)",
+   "gameType": 162,
+   "gameCode": 177327,
+   "argument": 10.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 7,
+   "outcomes": [
+    {
+     "outcomeId": 828610329,
+     "outcomeName": "Poniżej 10.5",
+     "outcomeOdds": 2,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828610330,
+     "outcomeName": "Powyżej 10.5",
+     "outcomeOdds": 1.7,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437534639,
+   "gameName": "Coventry City - liczba fauli (OPTA)",
+   "gameType": 163,
+   "gameCode": 313567,
+   "argument": 12.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 829600311,
+     "outcomeName": "Poniżej 12.5",
+     "outcomeOdds": 1.83,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 829600314,
+     "outcomeName": "Powyżej 12.5",
+     "outcomeOdds": 1.83,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437329890,
+   "gameName": "Liczba spalonych (OPTA)",
+   "gameType": -30244,
+   "gameCode": 177756,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828611599,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828611600,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 1.85,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1437329929,
+   "gameName": "Everton - Liczba spalonych (OPTA)",
+   "gameType": -200165,
+   "gameCode": 177773,
+   "argument": 2.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 7,
+   "outcomes": [
+    {
+     "outcomeId": 828612154,
+     "outcomeName": "Poniżej 2.5",
+     "outcomeOdds": 1.72,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828612155,
+     "outcomeName": "Powyżej 2.5",
+     "outcomeOdds": 2,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1437329940,
+   "gameName": "Coventry City - Liczba spalonych (OPTA)",
+   "gameType": -200166,
+   "gameCode": 177774,
+   "argument": 1.5,
+   "combinationType": 1,
+   "marketTypes": [
+    11
+   ],
+   "gameLayout": 2,
+   "eventLayout": 6,
+   "outcomes": [
+    {
+     "outcomeId": 828612184,
+     "outcomeName": "Poniżej 1.5",
+     "outcomeOdds": 1.43,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 828612185,
+     "outcomeName": "Powyżej 1.5",
+     "outcomeOdds": 2.55,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436671058,
+   "gameName": "Każda drużyna powyżej 1.5 rzutów rożnych w każdej połowie",
+   "gameType": -200038,
+   "gameCode": 245063,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    40
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 825380290,
+     "outcomeName": "Tak",
+     "outcomeOdds": 4.65,
+     "outcomePosition": 0,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436671129,
+   "gameName": "Everton powyżej 1.5 rzutów rożnych w każdej połowie",
+   "gameType": -200039,
+   "gameCode": 245064,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    40
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 825380538,
+     "outcomeName": "Tak",
+     "outcomeOdds": 1.65,
+     "outcomePosition": 0,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436671188,
+   "gameName": "Coventry City powyżej 1.5 rzutów rożnych w każdej połowie",
+   "gameType": -200040,
+   "gameCode": 245067,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    40
+   ],
+   "gameLayout": 8,
+   "eventLayout": 13,
+   "outcomes": [
+    {
+     "outcomeId": 825380731,
+     "outcomeName": "Tak",
+     "outcomeOdds": 2.7,
+     "outcomePosition": 0,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "combinationTypes": [
+    1
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1436666160,
+   "gameName": "Everton - liczba rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 243332,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825359875,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 3.3,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825359876,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 1.28,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 1
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 1
+  },
+  {
+   "gameId": 1436666163,
+   "gameName": "Everton - liczba rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 243334,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825359881,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 2.25,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825359882,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 1.57,
+     "outcomePosition": 1,
+     "status": 100,
+     "betCount": 2
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 2
+  },
+  {
+   "gameId": 1435181625,
+   "gameName": "Everton - liczba rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 299766,
+   "argument": 5.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 818241029,
+     "outcomeName": "Poniżej 5.5",
+     "outcomeOdds": 1.77,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 818241030,
+     "outcomeName": "Powyżej 5.5",
+     "outcomeOdds": 1.95,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666199,
+   "gameName": "Everton - liczba rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 243645,
+   "argument": 6.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825359942,
+     "outcomeName": "Poniżej 6.5",
+     "outcomeOdds": 1.39,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825359943,
+     "outcomeName": "Powyżej 6.5",
+     "outcomeOdds": 2.75,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666209,
+   "gameName": "Everton - liczba rzutów rożnych",
+   "gameType": 115,
+   "gameCode": 243650,
+   "argument": 7.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825359960,
+     "outcomeName": "Poniżej 7.5",
+     "outcomeOdds": 1.22,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825359961,
+     "outcomeName": "Powyżej 7.5",
+     "outcomeOdds": 3.8,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666531,
+   "gameName": "Coventry City - liczba rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 243666,
+   "argument": 2.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825361062,
+     "outcomeName": "Poniżej 2.5",
+     "outcomeOdds": 3.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825361063,
+     "outcomeName": "Powyżej 2.5",
+     "outcomeOdds": 1.27,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1435948352,
+   "gameName": "Coventry City - liczba rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 289935,
+   "argument": 3.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 821910689,
+     "outcomeName": "Poniżej 3.5",
+     "outcomeOdds": 2.1,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 821910690,
+     "outcomeName": "Powyżej 3.5",
+     "outcomeOdds": 1.65,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666578,
+   "gameName": "Coventry City - liczba rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 243871,
+   "argument": 4.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825361665,
+     "outcomeName": "Poniżej 4.5",
+     "outcomeOdds": 1.6,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825361667,
+     "outcomeName": "Powyżej 4.5",
+     "outcomeOdds": 2.2,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666581,
+   "gameName": "Coventry City - liczba rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 243873,
+   "argument": 5.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825361673,
+     "outcomeName": "Poniżej 5.5",
+     "outcomeOdds": 1.32,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825361674,
+     "outcomeName": "Powyżej 5.5",
+     "outcomeOdds": 3.1,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  },
+  {
+   "gameId": 1436666616,
+   "gameName": "Coventry City - liczba rzutów rożnych",
+   "gameType": 116,
+   "gameCode": 243893,
+   "argument": 6.5,
+   "combinationType": 1,
+   "marketTypes": [
+    2
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 825361748,
+     "outcomeName": "Poniżej 6.5",
+     "outcomeOdds": 1.15,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 825361749,
+     "outcomeName": "Powyżej 6.5",
+     "outcomeOdds": 4.75,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "isCashoutAvailable": true,
+   "totalBets": 0
+  }
+ ]
+}

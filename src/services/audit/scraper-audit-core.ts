@@ -22,6 +22,7 @@ import { getMarketByCode, type MarketCatalogEntry } from "../../data/market-cata
 import { groupMarketsByTypeWithParameters } from "../market-type-grouper.js";
 import { isSelectionOrphan, HANDICAP_CODES } from "./selection-checks.js";
 import { getRelatedCodes } from "./family-codes.js";
+import { dropPlaceholderExternalIds } from "./placeholder-external-id.js";
 import type {
   PrepAuditOutput,
   PrepMarketEntry,
@@ -55,7 +56,27 @@ export interface RawAuditMarket {
   groupName?: string;
   bookmakerMarketId?: string;
   paramValue?: string;
-  selections: { name: string; odds: number }[];
+  selections: RawAuditSelection[];
+}
+
+/** A raw selection; `externalId` is the bookmaker's own outcome id when the scraper has one. */
+export interface RawAuditSelection {
+  name: string;
+  odds: number;
+  externalId?: string;
+}
+
+/**
+ * Copy a raw selection for the normalizer or the archive. `externalId` is kept
+ * only when set (id-keyed normalizers map by it), so selections without one
+ * serialize exactly as before.
+ */
+function copyRawSelection(s: RawAuditSelection): RawAuditSelection {
+  return {
+    name: s.name,
+    odds: s.odds,
+    ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -172,7 +193,7 @@ export function scrapedMarketsToRaw(markets: ScrapedMarket[]): RawAuditMarket[] 
     groupName: m.groupName,
     bookmakerMarketId: m.bookmakerMarketId ? String(m.bookmakerMarketId) : undefined,
     paramValue: m.paramValue,
-    selections: m.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: m.selections.map(copyRawSelection),
   }));
 }
 
@@ -228,7 +249,19 @@ export interface BuildPrepOptions {
 }
 
 export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
-  const { normalizer, ctx, rawMarkets, meta } = opts;
+  const { normalizer, ctx, meta } = opts;
+  // A placeholder id ("undefined" from String(undefined)) identifies nothing:
+  // drop it before normalizing and archiving, and report how many were dropped.
+  const { markets: rawMarkets, dropped: droppedExternalIds } = dropPlaceholderExternalIds(
+    opts.rawMarkets,
+  );
+  if (droppedExternalIds > 0) {
+    console.warn(
+      `[audit-core] ${normalizer.bookmaker}: dropped ${droppedExternalIds} placeholder selection externalId ` +
+        `value(s) (e.g. "undefined" from String(undefined)) before normalizing and archiving. ` +
+        `The scraper lost its id field; fix the parser.`,
+    );
+  }
 
   type Pass1 = {
     raw: RawAuditMarket;
@@ -240,7 +273,7 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
       name: raw.name,
       groupName: raw.groupName,
       paramValue: raw.paramValue,
-      selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+      selections: raw.selections.map(copyRawSelection),
     };
     return { raw, normalized: normalizer.normalizeMarket(forNorm, ctx) };
   });
@@ -372,7 +405,9 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
         groupName: raw.groupName ?? "",
         groupId: "",
         bookmakerMarketId: String(raw.bookmakerMarketId ?? ""),
-        selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+        // Only when set, so archives of markets without one stay byte-identical.
+        ...(raw.paramValue !== undefined ? { paramValue: raw.paramValue } : {}),
+        selections: raw.selections.map(copyRawSelection),
       },
       normalized: {
         marketCode: normalized?.marketCode ?? "OTHER",
@@ -403,6 +438,8 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
       rawDeduped: rawMarkets.length,
       recognized,
       unrecognized,
+      // Only when some were dropped, so other archives keep today's meta keys.
+      ...(droppedExternalIds > 0 ? { droppedPlaceholderExternalIds: droppedExternalIds } : {}),
     },
     matchContext,
     markets,
@@ -453,7 +490,7 @@ function analyzeMarket(
       bookmakerMarketId: raw.bookmakerMarketId,
       groupName: raw.groupName,
       paramValue: raw.paramValue,
-      selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+      selections: raw.selections.map(copyRawSelection),
     },
     ctx,
   );

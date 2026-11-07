@@ -5,9 +5,9 @@
  * Converts a `<bm>-prep-audit` raw-archive file (verbatim PrepAuditOutput with
  * `markets[].{raw,normalized}`) into a pair of committed fixture files:
  *
- *   backend/src/services/normalization/__fixtures__/<bm>/<matchIdSafe>.json
+ *   src/services/normalization/__fixtures__/<bm>/<matchIdSafe>.json
  *     raw inputs + minimal normalization ctx (frozen scrape snapshot)
- *   backend/src/services/normalization/__fixtures__/<bm>/<matchIdSafe>.expected.json
+ *   src/services/normalization/__fixtures__/<bm>/<matchIdSafe>.expected.json
  *     CURRENT normalizer outputs per entry, each carrying `blessed: boolean`
  *
  * Blessing policy (SPEC §6): `blessed = false` when the ledger registry has an
@@ -15,10 +15,14 @@
  * this bookmaker (lowercase; comma-joined lists are split) AND whose
  * fingerprint.marketRef contains the entry's normalized marketCode; else true.
  *
- * Usage (cwd may be backend/ or the repo root; paths may be relative or absolute):
+ * Usage (any cwd; relative paths resolve against the cwd):
  *   npx tsx scripts/harvest-fixtures.ts --archive <raw-archive file>
- *     [--out-dir <fixtures root>]        default: backend/src/services/normalization/__fixtures__
- *     [--registry <path>]                default: docs/audit-ledger/registry.json
+ *     --registry <path>                  required: the audit-ledger registry.json, which lives
+ *                                        in the frontend repo (aityper/docs/audit-ledger/). It
+ *                                        must exist: a missing file would load as an empty
+ *                                        ledger and bless every entry.
+ *     [--out-dir <fixtures root>]        default: src/services/normalization/__fixtures__ of
+ *                                        the checkout this script lives in
  *     [--bookmaker <bm>]                 default: archive's parent directory name
  *     [--bless-all]                      force blessed=true on every harvested entry
  *     [--bless "<rawName>"]              refresh expected + force blessed=true for that raw market only
@@ -32,6 +36,16 @@
  *
  * Output is deterministic: recursively sorted object keys, 2-space indent,
  * trailing newline. No timestamps are written.
+ *
+ * Reviewing a harvest: the fixture raw is the archive raw copied verbatim and
+ * the expected file comes from the same normalizer in the same run, so
+ * `rebless-golden.ts --dry` reports 0 changes for a freshly harvested pair by
+ * construction. It cannot show what a newer archive changed (for example raw
+ * `paramValue` / selection `externalId`, which `buildPrepAuditOutput` archives
+ * carry when the scraper set them and older archives lack). When re-harvesting
+ * an existing pair, inspect `git diff -- <out-dir>/<bm>/` before committing, or
+ * harvest into a scratch `--out-dir` and diff that against the committed pair.
+ * Gate new pairs on spot checks of the frozen keys and prices.
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
@@ -52,6 +66,8 @@ import type {
 interface ArchiveSelection {
   name: string;
   odds: number;
+  /** Archived only when the scraper set one (id-keyed normalizers map by it). */
+  externalId?: string;
 }
 
 /** Raw market block exactly as archived by the prep-audit scripts. */
@@ -60,7 +76,7 @@ interface ArchiveRawMarket {
   groupName?: string;
   groupId?: string;
   bookmakerMarketId?: string | number;
-  /** Not archived today (prep drops it); kept for forward compatibility. */
+  /** Archived only when the scraper set one. */
   paramValue?: string | null;
   selections: ArchiveSelection[];
 }
@@ -136,7 +152,11 @@ function toRawBookmakerMarket(raw: ArchiveRawMarket): RawBookmakerMarket {
     name: raw.name,
     groupName: raw.groupName || undefined,
     paramValue: raw.paramValue || undefined,
-    selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: raw.selections.map((s) => ({
+      name: s.name,
+      odds: s.odds,
+      ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+    })),
   };
 }
 
@@ -189,8 +209,8 @@ function writeDeterministicJson(path: string, value: unknown): void {
 // ---------------------------------------------------------------------------
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
-/** This script lives at <repoRoot>/backend/scripts/. */
-const REPO_ROOT = resolve(SCRIPT_DIR, "..", "..");
+/** This script lives at <repoRoot>/scripts/ (the pre-split layout was <repoRoot>/backend/scripts/). */
+const REPO_ROOT = resolve(SCRIPT_DIR, "..");
 
 function resolveFromCwd(path: string): string {
   return isAbsolute(path) ? path : resolve(process.cwd(), path);
@@ -213,7 +233,7 @@ interface Args {
 function usage(): never {
   console.error(
     'Usage: npx tsx scripts/harvest-fixtures.ts --archive <raw-archive file> ' +
-      '[--out-dir <fixtures root>] [--registry <path>] [--bookmaker <bm>] ' +
+      '--registry <ledger registry.json> [--out-dir <fixtures root>] [--bookmaker <bm>] ' +
       '[--bless-all] [--bless "<rawName>"]... [--only "<rawName>"]...',
   );
   process.exit(1);
@@ -221,8 +241,10 @@ function usage(): never {
 
 function parseArgs(argv: string[]): Args {
   let archive: string | undefined;
-  let outDir = join(REPO_ROOT, "backend", "src", "services", "normalization", "__fixtures__");
-  let registry = join(REPO_ROOT, "docs", "audit-ledger", "registry.json");
+  let outDir = join(REPO_ROOT, "src", "services", "normalization", "__fixtures__");
+  // No default: the ledger lives in the frontend repo, and loadRegistry() reads a
+  // missing file as an empty ledger, which would bless every harvested entry.
+  let registry: string | undefined;
   let bookmaker: string | undefined;
   let blessAll = false;
   const bless: string[] = [];
@@ -263,6 +285,14 @@ function parseArgs(argv: string[]): Args {
     }
   }
   if (!archive) usage();
+  if (!registry) {
+    console.error("--registry is required (e.g. <aityper>/docs/audit-ledger/registry.json).");
+    usage();
+  }
+  if (!existsSync(registry)) {
+    console.error(`Ledger registry not found: ${registry}`);
+    process.exit(1);
+  }
   return { archive, outDir, registry, bookmaker, blessAll, bless, only };
 }
 

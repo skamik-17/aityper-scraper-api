@@ -156,6 +156,11 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // --- Misc match props ---
   [-338]: "WINNING_MARGIN", // "Margines zwycięstwa"
   [15]: "PENALTY_AWARDED", // "Rzut karny"
+  // "Suma 0.5 rzutów karnych" (Poniżej/Powyżej 0.5): over 0.5 penalties is
+  // "a penalty is awarded". Only the 0.5 line of a name that says penalty
+  // kicks qualifies; normalizeMarket keeps anything else as OTHER (see
+  // isPenaltyTotalZeroFiveLine).
+  [-30591]: "PENALTY_AWARDED",
 
   // --- Goalscorers / player props ---
   [12]: "GOALSCORER_ANYTIME", // "Strzelec gola (musi wziąć udział w meczu)"
@@ -262,8 +267,13 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
 
   // --- Other stats ---
   [161]: "FOULS_TOTAL", // "Suma X fauli"
-  [162]: "TEAM_TOTAL_FOULS", // "<home> suma X fauli"
-  [163]: "TEAM_TOTAL_FOULS", // "<away> suma X fauli"
+  // Team fouls carry the side in the code itself (HOME_/AWAY_TEAM_TOTAL_FOULS,
+  // the forbet/fortuna/superbet convention), so the key keeps the bare line
+  // (e.g. "HOME_TEAM_TOTAL_FOULS:11.5"). That is why 162/163 are deliberately
+  // absent from ETOTO_MARKET_ID_TEAM_SIDE and ETOTO_TEAM_LINE_PARAM_MARKETS:
+  // a second side prefix would give "HOME_TEAM_TOTAL_FOULS:HOME:11.5".
+  [162]: "HOME_TEAM_TOTAL_FOULS", // "<home> suma X fauli"
+  [163]: "AWAY_TEAM_TOTAL_FOULS", // "<away> suma X fauli"
   [167]: "TOTAL_SHOTS_ON_TARGET", // "Suma X strzałów celnych"
   [168]: "TEAM_TOTAL_SHOTS_ON_TARGET", // "<home> suma X strzałów celnych"
   [169]: "TEAM_TOTAL_SHOTS_ON_TARGET", // "<away> suma X strzałów celnych"
@@ -328,6 +338,18 @@ const ETOTO_MARKET_ID_TEAM_SIDE: Record<number, "HOME" | "AWAY"> = {
   // teams and collided (team identity unresolved).
   [-248]: "HOME", // "1. połowa - <home> czerwona kartka"
   [-249]: "AWAY", // "1. połowa - <away> czerwona kartka"
+  // Recovery 2026-11 (Everton v Coventry capture): like CORNERS_TEAM above,
+  // the team shot catalog codes take plain OVER/UNDER selections, so the side
+  // has to live in the marketKey/paramValue (see ETOTO_TEAM_LINE_PARAM_MARKETS).
+  // Without these, both teams' lines landed on a side-less key such as
+  // "TEAM_TOTAL_SHOTS_ON_TARGET:4.5": they never merged with peers (which key
+  // on TEAM_TOTAL_SHOTS_ON_TARGET:HOME:4.5) and collided whenever both teams
+  // were quoted on the same line. The raw names and peer prices confirm the
+  // home team on 168/-30727 and the away team on 169/-30728.
+  [168]: "HOME", // "<home> suma X strzałów celnych"
+  [169]: "AWAY", // "<away> suma X strzałów celnych"
+  [-30727]: "HOME", // "<home> suma X strzałów"
+  [-30728]: "AWAY", // "<away> suma X strzałów"
 };
 
 /**
@@ -342,6 +364,18 @@ const ETOTO_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_WIN_MATCH",
   "TEAM_WIN_OR_CLEAN_SHEET",
   "CORNERS_TEAM_RANGE",
+]);
+
+/**
+ * Team-scoped line markets whose catalog selections are plain OVER/UNDER with
+ * no side prefix. The team side is combined with the numeric line in the
+ * paramValue (e.g. "HOME:4.5"), so the home and away variants stay on distinct
+ * marketKeys and use the same side-in-parameter convention as the peers.
+ */
+const ETOTO_TEAM_LINE_PARAM_MARKETS = new Set<NormalizedMarketType>([
+  "CORNERS_TEAM",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
 ]);
 
 /**
@@ -711,6 +745,8 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_CARDS_TOTAL":
     case "FOULS_TOTAL":
     case "TEAM_TOTAL_FOULS":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
     case "TOTAL_SHOTS_ON_TARGET":
     case "TEAM_TOTAL_SHOTS_ON_TARGET":
     case "TOTAL_SHOTS":
@@ -743,6 +779,16 @@ function normalizeSelectionForMarket(
       return `${side}_OR_BTTS_${yesNoBtts}` as NormalizedSelection;
     }
 
+    // Id -30591 quotes the penalty market as a 0.5 total ("Poniżej/Powyżej
+    // 0.5"); normalizeMarket lets only that line through, where over = at
+    // least one penalty = YES. Id 15 "Rzut karny" stays plain Tak/Nie.
+    case "PENALTY_AWARDED": {
+      const overUnder = normalizeOverUnderSelection(trimmed);
+      if (overUnder === "OVER") return "YES";
+      if (overUnder === "UNDER") return "NO";
+      return normalizeYesNoSelection(trimmed);
+    }
+
     case "BTTS":
     case "HALF_TIME_BTTS":
     case "SECOND_HALF_BTTS":
@@ -768,7 +814,6 @@ function normalizeSelectionForMarket(
     case "HALF_TIME_AWAY_TO_SCORE":
     case "SECOND_HALF_HOME_TO_SCORE":
     case "SECOND_HALF_AWAY_TO_SCORE":
-    case "PENALTY_AWARDED":
     case "RED_CARD":
     case "RED_CARD_TEAM":
     case "HALF_TIME_RED_CARD":
@@ -1120,6 +1165,30 @@ function parseSumIntegerLine(text: string): string | undefined {
 }
 
 /**
+ * Penalty-kick wording ("rzut karny", "rzuty karne", "rzutów karnych").
+ * Uses \p{L}, not \w: JS \w is ASCII-only, so "rzut\w*" stops before the "ó"
+ * of "rzutów" and would never match the real "Suma 0.5 rzutów karnych".
+ */
+const PENALTY_KICK_WORDING = /rzut\p{L}*\s+karn/iu;
+
+/**
+ * Id -30591 is a penalty total ("Suma X rzutów karnych"). Only its 0.5 line
+ * ("Powyżej 0.5" = at least one penalty) is the PENALTY_AWARDED proposition.
+ * The name must also say penalty kicks: negative gameType ids do not keep one
+ * meaning on this platform (fuksiarz, on the same API, sends -30591 as
+ * "Zmiana w 1. połowie"), so an id plus a 0.5 line alone could publish another
+ * market's Over price as "penalty awarded".
+ * Fails closed: a missing or unparseable line does not count as 0.5.
+ */
+function isPenaltyTotalZeroFiveLine(raw: RawBookmakerMarket): boolean {
+  if (!PENALTY_KICK_WORDING.test(raw.name)) return false;
+  const line =
+    parseDecimalLine(raw.name) ??
+    parseOverUnderLine(raw.selections.map((s: { name: string }) => s.name));
+  return line !== undefined && Number(line) === 0.5;
+}
+
+/**
  * Extract the player name from "Lastname, Firstname N+" style selections.
  * All selections of a per-player eToto market reference the same player.
  */
@@ -1194,6 +1263,14 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       marketCode = ETOTO_MARKET_ID_TO_CODE[marketId] ?? null;
     }
 
+    // A -30591 penalty total at any line other than 0.5 is not "a penalty is
+    // awarded" (over 1.5 means two or more), and neither is a -30591 whose
+    // name lacks the penalty wording. Keep both OTHER, not null, so the
+    // "Unmapped market" warn below still flags them.
+    if (marketId === -30591 && !isPenaltyTotalZeroFiveLine(raw)) {
+      marketCode = "OTHER";
+    }
+
     if (!marketCode) {
       const resolved = resolveMarketCodeFromName(raw.name, ctx);
       marketCode = resolved.marketCode;
@@ -1230,13 +1307,15 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       paramValue = teamSide;
     } else {
       paramValue = extractParamValue(marketCode, raw);
-      // CORNERS_TEAM's catalog selections are plain OVER/UNDER with no side
-      // prefix, so the home (id 115) and away (id 116) variants must combine
-      // teamSide with the numeric line to stay on distinct marketKeys
-      // (e.g. CORNERS_TEAM:HOME:5.5 vs CORNERS_TEAM:AWAY:5.5); otherwise they
-      // collide on a single "CORNERS_TEAM:5.5" key and mix the two teams'
-      // prices into one row (see betclic-normalizer.ts for the same pattern).
-      if (marketCode === "CORNERS_TEAM" && teamSide) {
+      // CORNERS_TEAM, TEAM_TOTAL_SHOTS and TEAM_TOTAL_SHOTS_ON_TARGET have
+      // catalog selections that are plain OVER/UNDER with no side prefix, so
+      // the home (ids 115/168/-30727) and away (ids 116/169/-30728) variants
+      // must combine teamSide with the numeric line to stay on distinct
+      // marketKeys (e.g. CORNERS_TEAM:HOME:5.5 vs CORNERS_TEAM:AWAY:5.5);
+      // otherwise they collide on a single side-less key such as
+      // "CORNERS_TEAM:5.5", mix the two teams' prices into one row and never
+      // merge with peers (see betclic-normalizer.ts for the same pattern).
+      if (ETOTO_TEAM_LINE_PARAM_MARKETS.has(marketCode) && teamSide) {
         paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;
       }
     }

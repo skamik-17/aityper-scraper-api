@@ -39,7 +39,7 @@ interface FixtureRawMarket {
   groupId?: string;
   bookmakerMarketId?: string | number;
   paramValue?: string | null;
-  selections: { name: string; odds: number }[];
+  selections: { name: string; odds: number; externalId?: string }[];
 }
 
 interface FixtureFile {
@@ -89,7 +89,11 @@ function toRawBookmakerMarket(raw: FixtureRawMarket): RawBookmakerMarket {
     name: raw.name,
     groupName: raw.groupName || undefined,
     paramValue: raw.paramValue || undefined,
-    selections: raw.selections.map((s) => ({ name: s.name, odds: s.odds })),
+    selections: raw.selections.map((s) => ({
+      name: s.name,
+      odds: s.odds,
+      ...(s.externalId !== undefined ? { externalId: s.externalId } : {}),
+    })),
   };
 }
 

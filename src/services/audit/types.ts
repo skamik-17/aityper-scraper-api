@@ -49,7 +49,10 @@ export interface PrepMarketEntry {
     groupName: string;
     groupId: string;
     bookmakerMarketId: string;
-    selections: { name: string; odds: number }[];
+    /** Present only when the scraper set one (pre-extracted line / specifier). */
+    paramValue?: string;
+    /** `externalId` is present only when the scraper set one. */
+    selections: { name: string; odds: number; externalId?: string }[];
   };
   normalized: {
     marketCode: string;
@@ -74,6 +77,8 @@ export interface PrepAuditOutput {
     rawDeduped: number;
     recognized: number;
     unrecognized: number;
+    /** Placeholder selection externalIds ("undefined") dropped before archiving; only when > 0. */
+    droppedPlaceholderExternalIds?: number;
   };
   matchContext: MatchContextRow[];
   markets: PrepMarketEntry[];

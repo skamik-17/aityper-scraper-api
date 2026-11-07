@@ -144,3 +144,28 @@ describe("pzbuk legacy helpers on numeric wire ids", () => {
     expect(hasValid1X2Odds(ls)).toBe(true);
   });
 });
+
+describe("pzbuk id labels", () => {
+  it("labels blank-named id 126 as Kartki 1x2", () => {
+    const data: PZBukInitialState = {
+      events: [],
+      markets: [{ id: "m", name: "", eventId: "e", isSuspended: false, marketType: { id: "126", name: "" } }],
+      selections: [
+        {
+          id: "s",
+          name: "Everton FC",
+          trueOdds: 2,
+          marketId: "m",
+          marketTypeId: "126",
+          eventId: "e",
+          outcomeType: "",
+          status: "Active",
+          order: 0,
+        },
+      ],
+    };
+    const markets = parseAllMarkets(data, "e");
+    expect(markets).toHaveLength(1);
+    expect(markets[0].name).toBe("Kartki 1x2");
+  });
+});

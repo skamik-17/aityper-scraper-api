@@ -28,7 +28,8 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "3": "EUROPEAN_HANDICAP",
   "4": "HALFTIME_FULLTIME",
   "5": "ASIAN_HANDICAP",
-  "8": "CORRECT_SCORE",
+  // "1. gol" ({SpecialIntValue1}. goal; "1. gol" is routed by name), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "8": "OTHER",
   "10": "DOUBLE_CHANCE",
   "11": "DRAW_NO_BET",
   // Audit: id 12 delivered match-level selections ("remis", team name),
@@ -78,11 +79,13 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // pair stays consistent — re-verify it the first time a fixture carries it.
   "19": "AWAY_TEAM_TOTAL_GOALS",
   "20": "HOME_TEAM_TOTAL_GOALS",
-  "21": "ODD_EVEN_GOALS",
+  // "Everton FC Dokładna liczba goli" ({Competitors[0]} exact goals), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "21": "OTHER",
   // Audit: id 22 delivered goals-count selections ("0"/"1"/"2"/"3+"),
   // not a 2nd-half 1X2 — real identity unknown, park in OTHER.
   "22": "OTHER",
-  "23": "SECOND_HALF_TOTAL_GOALS",
+  // "Zakres liczby goli" (Goal range), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "23": "OTHER",
   // Audit: id 24 delivered "Nieparzysty"/"Parzysty" (an odd/even variant),
   // not win-to-nil. Ids 25/26/31 were equally unverified guesses mapped to
   // the same binary code — park all of them in OTHER; only id 28 is the
@@ -115,8 +118,10 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Audit r2 (both matches): id 35 selections are "<team|remis> & <ponad|
   // poniżej> 4.5" — a Match Result + Total Goals combo, not goal ranges.
   "35": "RESULT_AND_TOTAL",
-  "36": "EXACT_GOALS",
-  "37": "HOME_EXACT_GOALS",
+  // "1. strzelec gola" ({SpecialIntValue1}. goalscorer; routed by name), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "36": "OTHER",
+  // "Strzelec ostatniego gola" (Last goalscorer), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "37": "GOALSCORER_LAST",
   "38": "AWAY_EXACT_GOALS",
   "39": "RESULT_AND_BTTS",
   // Audit r3: id 40 surfaced in RESULT_AND_TOTAL at bogus param "0" with a
@@ -161,6 +166,19 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // "1. Połowa - 1x2" — the first-half result, not the match winner.
   "55": "HALF_TIME_RESULT",
   "57": "HALF_TIME_FIRST_GOAL",
+  // "1. Połowa - Podwójna szansa" (1st half - double chance), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "58": "HALF_TIME_DOUBLE_CHANCE",
+  // "1. Połowa - Remis bez zakładu" (1st half - draw no bet), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "59": "HALF_TIME_DRAW_NO_BET",
+  // "1. Połowa - handicap" (1st half - handicap {SpecialStringValue1}),
+  // evidence/pzbuk/market-type-ids-2026-11-06.json. One raw market packs every 3-way line
+  // ("(1:0)", "(0:1)", ...) at param 0, so FIRST_HALF_EUROPEAN_HANDICAP would
+  // merge different lines into one key.
+  "60": "OTHER",
+  // "1. Połowa - handicap" (1st half - handicap, 2-way +/-0.5/1.5 lines),
+  // evidence/pzbuk/market-type-ids-2026-11-06.json. Not yet verified as
+  // FIRST_HALF_ASIAN_HANDICAP (coverage follow-up).
+  "61": "OTHER",
   "62": "HALF_TIME_TOTAL_GOALS",
   // Audit /audit-match (Arsenal vs Coventry City): the bookmaker also serves a
   // NAMED "1. Połowa - Suma" market (0.5 -> ponad 1.23 / poniżej 3.63) that
@@ -198,6 +216,8 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // is a mismatched duplicate feeding corrupted odds into the same bucket —
   // park id 73 in OTHER; id 35 remains the trusted RESULT_AND_TOTAL source.
   "73": "OTHER",
+  // "1. Połowa - Dokładny wynik" (1st half - correct score), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "75": "HALF_TIME_CORRECT_SCORE",
   // Audit r2 (both matches): id 76 produced 1X2-shaped odds wildly
   // inconsistent with all peers (Argentina: DRAW 3.39 vs peers 7.6-8.75;
   // Switzerland: DRAW/AWAY values transposed vs peer ranges) — not a
@@ -207,17 +227,23 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // first-goal market (betfan's confirmed 2nd-half values are near-identical),
   // not the full-match first-team-to-score market.
   "77": "SECOND_HALF_FIRST_GOAL",
-  "78": "DOUBLE_CHANCE",
-  "79": "DRAW_NO_BET",
+  // "2. Połowa - Podwójna szansa" (2nd half - double chance), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "78": "SECOND_HALF_DOUBLE_CHANCE",
+  // "2. Połowa - Remis bez zakładu" (2nd half - draw no bet), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "79": "SECOND_HALF_DRAW_NO_BET",
+  // "2. Połowa - handicap" (2nd half - handicap {SpecialStringValue1}),
+  // evidence/pzbuk/market-type-ids-2026-11-06.json. Packs every 3-way line at param 0, as id 60.
+  "80": "OTHER",
   // Audit r2: ids 81/155/166 landed in ASIAN_HANDICAP with UNKNOWN
   // selections (id 155 even carried match-resolution selections) — the
   // handicap guess is wrong; park all three in OTHER. Genuine
   // resolution-method entries are re-routed by detectMarketBySelections.
   "81": "OTHER",
-  // Audit r2 (both matches): ids 82/83/84/129/141/142/157/167 were one
-  // guess-wave mapped to TOTAL_GOALS, but their O/U odds do not match the
-  // param they surface under (e.g. "0.5" rows shaped like 2.5/3.5 lines) —
-  // the id->line pairing is untrustworthy, park the family in OTHER.
+  // Audit r2 (both matches): ids 82/83/84/129/141/157 were one guess-wave
+  // mapped to TOTAL_GOALS, but their O/U odds do not match the param they
+  // surface under (e.g. "0.5" rows shaped like 2.5/3.5 lines) — the id->line
+  // pairing is untrustworthy, park the family in OTHER. Ids 142 and 167 of the
+  // same wave were later identified by their real API names (see below).
   "82": "OTHER",
   "83": "OTHER",
   "84": "OTHER",
@@ -243,7 +269,8 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "90": "SECOND_HALF_CORRECT_SCORE",
   "91": "FIRST_GOAL_TIME_ALT",
   "92": "FIRST_GOAL_TIME",
-  "126": "MATCH_WINNER",
+  // "Kartki 1x2" (Booking 1x2), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "126": "CARDS_RACE",
   // Audit r3: id 127 odds (HOME 1.89 / AWAY 1.85 / NONE 17.68) contradict the
   // full-match first-team-to-score shape (peers: clear HOME/AWAY split, NONE
   // ~8) — identity unverified, park in OTHER; the "1. gol" name override
@@ -279,8 +306,14 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // untrustworthy pattern as ids 76/163; park in OTHER (id 1 is the real 1X2).
   "139": "OTHER",
   "141": "OTHER",
-  "142": "OTHER",
-  "147": "HALF_TIME_HOME_EXACT_CARDS",
+  // "1. Połowa - Suma kartek" (1st half - total bookings), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "142": "HALF_TIME_CARDS_TOTAL",
+  // "1. Połowa - Everton FC Dokładna liczba kartek" (1st half - {Competitors[0]}
+  // exact bookings), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "146": "HALF_TIME_HOME_EXACT_CARDS",
+  // "1. Połowa - Coventry City Dokładna liczba kartek" (1st half -
+  // {Competitors[1]} exact bookings), evidence/pzbuk/market-type-ids-2026-11-06.json
+  "147": "HALF_TIME_AWAY_EXACT_CARDS",
   // Audit /audit-match (premier-league Arsenal vs Coventry City, 2026-08-19):
   // ground truth from the bookmaker page shows the real 1X2 market (id 1,
   // API name "1x2") at 1.16 / 6.77 / 14.48, in line with all 11 peers, while
@@ -333,14 +366,12 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // /podw[óo]jna szansa/ pattern (this file) would otherwise re-route id 498
   // to DOUBLE_CHANCE via its real API name and reopen the same collision.
   "498": "OTHER",
-  // Audit r4 (France vs Morocco + 3 other fixtures cross-checked in the same
-  // run): id 501 selections are consistently "<team|remis> & <tak|nie>" (the
-  // same 6-outcome Result+BTTS shape as id 33) with internally consistent
-  // implied probabilities (~120-125% overround) in every fixture checked —
-  // confirms this is a genuine full-match RESULT_AND_BTTS source. Round r3's
-  // "wildly inconsistent" odds were observed on a different fixture and are
-  // more likely a one-off stale price than a different market identity.
-  "501": "RESULT_AND_BTTS",
+  // "2. Połowa - 1x2 & oba zespoły strzelą" (2nd half - 1x2 & both teams to
+  // score), evidence/pzbuk/market-type-ids-2026-11-06.json. The real name
+  // supersedes audit r4's full-match RESULT_AND_BTTS reading: the 6-outcome
+  // shape equals id 33's, but HOME_YES is 8.95 vs id 33's 3.39. Id 33 stays
+  // the full-match source.
+  "501": "SECOND_HALF_RESULT_AND_BTTS",
   // Audit r12 (Arsenal vs Coventry City): supersedes the r3 "flip the O/U
   // suffix" fix below (kept, now dead, as a record of what was tried).
   // Cross-line monotonicity is a stronger test than comparing against peers:
@@ -435,6 +466,13 @@ const PZBUK_NAME_OVERRIDES: Array<{
   pattern: RegExp;
   code: NormalizedMarketType;
 }> = [
+  // Ordinal gate, checked first. The {SpecialIntValue1} templates (ids 8, 36,
+  // 57, 77, 91, 92, 140: "N. gol", "N. strzelec gola", "N. kartka") read "1."
+  // before kick-off and "2." etc. once a live event has had its first goal or
+  // booking, which is a different bet. Park any ordinal >= 2 in OTHER so it
+  // never lands in a first-goal/first-scorer code. "2. Połowa - ..." is not
+  // caught: "Połowa" follows that ordinal.
+  { pattern: /(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i, code: "OTHER" },
   // "W jaki sposób rozstrzygnie się mecz?" (regular time / extra time /
   // penalties) — catalog code added in round 1; must not land in
   // ASIAN_HANDICAP
@@ -444,6 +482,9 @@ const PZBUK_NAME_OVERRIDES: Array<{
   { pattern: /zakwalifikowanie|awans do/i, code: "TEAM_TO_QUALIFY" },
   // "1. gol" = which team scores the first goal (not a correct-score market)
   { pattern: /^1\.\s*gol$/i, code: "FIRST_TEAM_TO_SCORE" },
+  // "1. strzelec gola" (id 36, "{SpecialIntValue1}. goalscorer") = first
+  // goalscorer; the ordinal gate above keeps "2. strzelec gola" out.
+  { pattern: /^1\.\s*strzelec gola$/i, code: "GOALSCORER_FIRST" },
   // Audit r3: "Połowa/Reg. czas gry" (half-time/full-time result) surfaced
   // under a numeric id mapped to DOUBLE_CHANCE_TOTAL at bogus param "0" —
   // route it to the HT/FT catalog market by name.
@@ -455,8 +496,10 @@ const PZBUK_NAME_OVERRIDES: Array<{
   // of the id map.
   { pattern: /^1\.?\s*po[łl]owa\s*[-–]\s*1x2$/i, code: "HALF_TIME_RESULT" },
   { pattern: /^2\.?\s*po[łl]owa\s*[-–]\s*1x2$/i, code: "SECOND_HALF_RESULT" },
-  { pattern: /^1\.?\s*po[łl]owa\s*[-–]\s*suma/i, code: "HALF_TIME_TOTAL_GOALS" },
-  { pattern: /^2\.?\s*po[łl]owa\s*[-–]\s*suma/i, code: "SECOND_HALF_TOTAL_GOALS" },
+  // Anchored at "suma" + end: "1. Połowa - Suma kartek" (id 142) and
+  // "1. Połowa - Suma rzutów rożnych" (id 167) are card/corner totals.
+  { pattern: /^1\.?\s*po[łl]owa\s*[-–]\s*suma\s*$/i, code: "HALF_TIME_TOTAL_GOALS" },
+  { pattern: /^2\.?\s*po[łl]owa\s*[-–]\s*suma\s*$/i, code: "SECOND_HALF_TOTAL_GOALS" },
   { pattern: /obie.*strzel[aą].*[-–]\s*1\.?\s*po[łl]owa/i, code: "HALF_TIME_BTTS" },
   { pattern: /obie.*strzel[aą].*[-–]\s*2\.?\s*po[łl]owa/i, code: "SECOND_HALF_BTTS" },
 ];
@@ -596,7 +639,8 @@ function normalizeSelectionForMarket(
     }
 
     case "DOUBLE_CHANCE":
-    case "HALF_TIME_DOUBLE_CHANCE": {
+    case "HALF_TIME_DOUBLE_CHANCE":
+    case "SECOND_HALF_DOUBLE_CHANCE": {
       const dc = normalizeDoubleChanceSelection(trimmed);
       if (dc !== "UNKNOWN") return dc;
       // PZBuk renders double chance with team names, e.g. "Argentina lub
@@ -653,6 +697,8 @@ function normalizeSelectionForMarket(
     // Audit /audit-match (Arsenal vs Coventry City): id 167, newly routed to
     // HALF_TIME_CORNERS_TOTAL, uses the same "ponad/poniżej" vocabulary.
     case "HALF_TIME_CORNERS_TOTAL":
+    // Id 142 ("1. Połowa - Suma kartek"), same "ponad/poniżej" vocabulary.
+    case "HALF_TIME_CARDS_TOTAL":
       return normalizeOverUnderSelection(trimmed);
 
     case "GOAL_RANGE":
@@ -671,6 +717,7 @@ function normalizeSelectionForMarket(
     // instead of the 1X2 default that produced UNKNOWN/HOME/AWAY orphans.
     case "CORNERS_RANGE":
     case "HALF_TIME_HOME_EXACT_CARDS":
+    case "HALF_TIME_AWAY_EXACT_CARDS":
     // Audit r4: id 133 re-routed from GOAL_RANGE to HOME_EXACT_CARDS (see
     // PZBUK_MARKET_ID_TO_CODE) uses the identical "0-1"/"2"/"3"/"4+"
     // bucket vocabulary as the other range/exact-count markets above.
@@ -814,6 +861,7 @@ function normalizeSelectionForMarket(
     case "DOUBLE_CHANCE_TOTAL":
     case "TOTAL_GOALS_AND_BTTS":
     case "HALF_TIME_RESULT_AND_BTTS":
+    case "SECOND_HALF_RESULT_AND_BTTS":
     case "HALF_TIME_RESULT_AND_TOTAL":
     case "HALF_TIME_DOUBLE_CHANCE_BTTS":
     case "SECOND_HALF_DOUBLE_CHANCE_BTTS":
@@ -954,6 +1002,8 @@ function extractParamValue(
     // parser already forwards the per-line paramValue (e.g. "4.5"), same as
     // the sibling full-match CORNERS_TOTAL market already in this list.
     "HALF_TIME_CORNERS_TOTAL",
+    // Id 142 ("1. Połowa - Suma kartek"): one market per vendor line.
+    "HALF_TIME_CARDS_TOTAL",
   ];
 
   if (!parameterizedMarkets.includes(marketCode)) return undefined;
@@ -1068,10 +1118,15 @@ function matchMarketByName(name: string): NormalizedMarketType | null {
   // half market into a full-match code.
   if (/^1\.?\s*po[łl]owa\s*[-–]\s*1x2$/i.test(lower)) return "HALF_TIME_RESULT";
   if (/^2\.?\s*po[łl]owa\s*[-–]\s*1x2$/i.test(lower)) return "SECOND_HALF_RESULT";
-  if (/^1\.?\s*po[łl]owa\s*[-–]\s*suma/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
-  if (/^2\.?\s*po[łl]owa\s*[-–]\s*suma/i.test(lower)) return "SECOND_HALF_TOTAL_GOALS";
+  if (/^1\.?\s*po[łl]owa\s*[-–]\s*suma\s*$/i.test(lower)) return "HALF_TIME_TOTAL_GOALS";
+  if (/^2\.?\s*po[łl]owa\s*[-–]\s*suma\s*$/i.test(lower)) return "SECOND_HALF_TOTAL_GOALS";
   if (/obie.*strzel[aą].*1\.?\s*po[łl]ow/i.test(lower)) return "HALF_TIME_BTTS";
   if (/obie.*strzel[aą].*2\.?\s*po[łl]ow/i.test(lower)) return "SECOND_HALF_BTTS";
+
+  // Scope guard: any other half-scoped ("1./2. Połowa - ...") or card/corner
+  // name must not reach the full-match patterns below. Unmapped, it is
+  // dropped as unknown instead of priced against a full-match market.
+  if (/^[12]\.?\s*po[łl]owa\b/.test(lower) || /kartk|ro[żz]n/.test(lower)) return null;
 
   if (/^(wynik meczu|1x2|match result)$/i.test(lower)) return "MATCH_WINNER";
   if (/^suma goli$/i.test(lower)) return "TOTAL_GOALS";

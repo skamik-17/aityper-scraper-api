@@ -223,15 +223,19 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "57": "Pierwszy gol 1. połowy",
   "69": "Obie drużyny strzelą - 1. połowa",
   "77": "Pierwszy gol 2. połowy",
-  "78": "Podwójna szansa",
-  "79": "Zakład bez remisu",
-  // Audit r4 (France vs Morocco): ids 126/498/501 were still surfacing the
-  // generic "Rynek <id>" placeholder even though their catalog identity is
-  // already confirmed (126 -> MATCH_WINNER, 501 -> RESULT_AND_BTTS, see
-  // pzbuk-normalizer.ts) — give them real labels so future audits can
-  // sanity-check the label against the odds shape.
+  // Ids 78/79/126/146/147/501: the real API names captured on 2026-11-06
+  // (evidence/pzbuk/market-type-ids-2026-11-06.json) replace the earlier
+  // guessed labels, which named full-match markets (78 "Podwójna szansa", 79
+  // "Zakład bez remisu", 126 "Wynik meczu", 501 "Wynik meczu i obie drużyny
+  // strzelą") and put id 147 on the wrong team. See pzbuk-normalizer.ts.
+  "78": "2. Połowa - Podwójna szansa",
+  "79": "2. Połowa - Remis bez zakładu",
+  "126": "Kartki 1x2",
+  "146": "Dokładna liczba kartek - gospodarze - 1. połowa",
+  "147": "Dokładna liczba kartek - goście - 1. połowa",
+  "501": "2. Połowa - 1x2 & oba zespoły strzelą",
   // Audit /audit-match (premier-league Arsenal vs Coventry City,
-  // 2026-08-19): the "498 -> DOUBLE_CHANCE_BTTS" identity above was WRONG —
+  // 2026-08-19): an earlier "498 -> DOUBLE_CHANCE_BTTS" identity was WRONG —
   // id 498 already carries this exact label as its own API name (not a
   // placeholder, so this table never even applied to it), and that
   // misleading label is what made earlier audit rounds "confirm" the wrong
@@ -241,8 +245,6 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   // reported rawMarketName matches what the market actually is. Id 498 is
   // left unlabeled here (falls back to its own real, if misleading, API
   // name) until its true identity is established.
-  "126": "Wynik meczu",
-  "501": "Wynik meczu i obie drużyny strzelą",
   "504": "Podwójna szansa i obie drużyny strzelą",
   "85": "Dokładna liczba goli - 2. połowa",
   "86": "Parzysta/nieparzysta liczba goli",
@@ -250,7 +252,6 @@ const PZBUK_ID_LABELS: Record<string, string> = {
   "91": "Czas pierwszego gola (15 min)",
   "92": "Czas pierwszego gola (10 min)",
   "128": "Suma strzałów",
-  "147": "Dokładna liczba kartek - gospodarze - 1. połowa",
   "156": "Rzuty rożne",
   "159": "Przedział rzutów rożnych",
   // Audit /audit-match (premier-league Arsenal vs Coventry City,

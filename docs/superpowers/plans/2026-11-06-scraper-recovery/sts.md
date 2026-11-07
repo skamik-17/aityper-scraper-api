@@ -131,7 +131,7 @@ cd "$WT" && node_modules/.bin/tsx docs/superpowers/plans/2026-11-06-scraper-reco
 
 This command shape was proven on the current code from the live checkout: exit 0, ~130 s, no DB writes, output in `evidence/sts/smoke-current-sts.txt`. It prints one `SMOKE_RESULT {json}` line. Let N = the `Found N fixtures` value and F = the number of `perMatch` entries with `raw >= 400`. Pass when:
 
-1. `success: true`, `N <= 20` (today 36) and `N - matches <= 1`. The only allowed gap is one `No fixture snapshot ... skipping`; the smoke swallows `console.warn`, so the gap is computed. The exact "only tournament 17 in category 1" rule is asserted offline (Task 2).
+1. `success: true`, a `Found N fixtures` line with `1 <= N <= 20` (today 36), and `N - matches <= 1`. The only allowed gap is one `No fixture snapshot ... skipping`; the smoke swallows `console.warn`, so the gap is computed. The exact "only tournament 17 in category 1" rule is asserted offline (Task 2). This criterion, run at the final head, is also the live check that STS still keys the Premier League as `B.S.1.C["1"].T["17"]`: after a renumbering the strict listing is empty, `sts/index.ts` returns `success: false` with `error: "No fixtures found for league"` *before* its `Found` log, and the smoke exits 1 with no `Found` line. The offline frame cannot prove the live keys, and neither can a master-code log (it still filters by name).
 2. If F >= 1: every `perMatch` entry with `raw >= 400` has `normalized >= 480` (today 332-350) and `other <= 3` (today 99-117), and `otherMarketShare <= 0.01` (today 0.1776). If F == 0, the calendar has no full offer listed (see Risks): criteria 2, 3 and 5 are not checkable live. Record that and re-run once a listed round is within ~2 days of kick-off.
 3. If F >= 1: `requiredCodeMatchCounts[c] >= F` for every listed code (today F = 10 and every count is 0).
 
@@ -147,6 +147,8 @@ python3 -I /home/skamik/Documents/repositories/personal/aityper-scraper-api/docs
    - zero `Skipping ... whitelist` / `Youth team match` lines;
    - `Found N <= 20` and `Completed == N - noSnapshot`;
    - no match that had raw >= 400 in the previous run dropping below 400.
+
+   It also fails closed on STS runs that never reach a `Found` line, which would otherwise be invisible to it (an empty strict listing returns before that log): every `[Aggregator/FullOffer] sts completed: success=...` line (a result with no saved matches), every `[Aggregator/FullOffer] sts failed:` line and every `[STS] Strict id filter for premier-league ... matched 0 fixtures` warning after `S` is a problem. The warning lists the name-filter candidates (`C<cat>/T<tournament> "<category>" / "<tournament>" (<n> fixtures)`), so a renumbering names its new keys, while an empty calendar shows only the aggregator line. The aggregator lines carry no league; the script attributes them to `premier-league`, the only enabled league (`src/config/index.ts` `ENABLED_LEAGUES`). Run the copy committed on the branch (`docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/sts/sts-run-check.py` in `$WT`, or in `$REPO` after the merge): an older untracked copy lacks these checks.
 
    The command shape was proven on today's log with `S=0`: exit 1, listing exactly the run-2/run-3 1-market matches, 16 non-PL skips per run and `found: 36`. A bare `grep` on the log would also match the 7 pre-fix lines, because the log is appended across restarts.
 
@@ -728,7 +730,7 @@ git commit -m "test(sts): offline replay gate and Arsenal vs Hull City golden pa
 
 **Files:** none (verification only; `$EVID` receives the smoke log).
 
-- [ ] **Step 1: Dry-run smoke in the worktree** - run Acceptance B; expect criteria 1-3, or record `F == 0` per criterion 2. The log is saved as `$EVID/smoke-after-fix-sts.log`.
+- [ ] **Step 1: Dry-run smoke in the worktree** - run Acceptance B at the final head; expect criteria 1-3, or record `F == 0` per criterion 2. Criterion 1 (`success: true` and a `Found N` line with N >= 1) is the explicit check that the live Premier League is still category 1 / tournament 17; record N. The log is saved as `$EVID/smoke-after-fix-sts.log`.
 - [ ] **Step 2: Switch the live checkout (owner approval)**:
   1. Re-clean the log to `$LOG` and record `S=$(wc -l < "$LOG")`.
   2. Run `git -C "$REPO" merge --ff-only fix/sts-recovery-2026-11`. If it refuses because `master` moved, rebase the branch in `$WT` onto `master`, re-run Task 7 Step 7, then merge.
@@ -741,4 +743,5 @@ git commit -m "test(sts): offline replay gate and Arsenal vs Hull City golden pa
 
 - `[sts] Unknown market` id histogram per run: any new id with >= 20 lines means another renumbering.
 - `No fixture snapshot ... skipping` count per run (expected 0-1).
+- A run with no `[STS/FullOffer] Found N fixtures for premier-league` line but an `[Aggregator/FullOffer] sts completed: success=false, 0 matches` line: the strict PL listing came back empty. `[STS] Strict id filter for premier-league (C1/T17) matched 0 fixtures; name-filter candidates: ...` names where the league went (an STS id renumbering: update `categoryId`/`tournamentId` in `sts/constants.ts` after checking the frame). Without that warning, the calendar is empty or the name filters no longer match. `sts-run-check.py` reports both as problems.
 - STS per-match normalized counts vs the previous run (a drop > 20% for a full-offer match is a regression).

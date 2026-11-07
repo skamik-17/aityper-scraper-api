@@ -1,15 +1,25 @@
 """Per-run STS checks on an ANSI-stripped service log, from a given line onward (read-only).
 Usage: python3 -I sts-run-check.py <cleaned-log> <start-line>
 <start-line> = `wc -l < <cleaned-log>` recorded just before the live checkout switched to the fix.
-Prints one RUN_CHECK JSON line; exit 0 when every completed STS run after <start-line> passes."""
+Prints one RUN_CHECK JSON line; exit 0 when every completed STS run after <start-line> passes.
+Fails closed on runs that never print a Found line: any STS full-offer result without saved
+matches (`[Aggregator/FullOffer] sts completed: success=...`, e.g. an empty strict listing after
+an id renumbering), any thrown STS scrape (`sts failed:`) and any strict-id miss warning from
+the parser is a problem. Those aggregator lines carry no league; they are attributed to the
+Premier League, the only enabled league (src/config/index.ts ENABLED_LEAGUES), so an STS
+failure in a manually triggered other league also fails the check."""
 import json, re, sys
 log, start = sys.argv[1], int(sys.argv[2])
-runs, cur = [], None
+runs, cur, problems = [], None, []
 for no, line in enumerate(open(log, encoding="utf-8", errors="replace"), 1):
     if no <= start:
         continue
     line = line.rstrip("\n")
-    if m := re.match(r"^\[STS/FullOffer\] Found (\d+) fixtures for premier-league$", line):
+    if m := re.match(r"^\[Aggregator/FullOffer\] sts (completed: success=.*|failed:.*)$", line):
+        problems.append({"line": no, "stsFailed": m[1][:200]})
+    elif re.match(r"^\[STS\] Strict id filter for premier-league .*matched 0 fixtures", line):
+        problems.append({"line": no, "strictIdMiss": line[:500]})
+    elif m := re.match(r"^\[STS/FullOffer\] Found (\d+) fixtures for premier-league$", line):
         cur = {"line": no, "found": int(m[1]), "counts": {}, "noSnapshot": 0, "nonPlSkips": 0, "completed": None}
         runs.append(cur)
     elif cur is None:
@@ -23,7 +33,6 @@ for no, line in enumerate(open(log, encoding="utf-8", errors="replace"), 1):
     elif m := re.match(r"^\[STS/FullOffer\] (.+): (\d+) markets$", line):
         cur["counts"][m[1]] = int(m[2])
 done = [r for r in runs if r["completed"] is not None]
-problems = []
 for i, r in enumerate(done):
     tiny = [k for k, v in r["counts"].items() if v < 100]
     if tiny: problems.append({"run": r["line"], "under100": tiny})

@@ -29,6 +29,7 @@ import {
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
+  STSCategory,
   STSFixture,
   STSOdds,
   STSWebSocketData,
@@ -62,6 +63,95 @@ export function parseWebSocketJson(rawData: string): STSWebSocketData | null {
   }
 }
 
+type LeagueFilterConfig = (typeof LEAGUE_CONFIG)[string];
+
+/**
+ * Name filter for one tournament: the configured substring plus the
+ * per-league exclusions. `tournamentName` must already be lowercased.
+ * Strict leagues apply it as a second guard after the id match.
+ */
+function tournamentPassesNameFilters(
+  league: string,
+  config: LeagueFilterConfig,
+  tournamentName: string
+): boolean {
+  if (!tournamentName.includes(config.tournamentFilter)) return false;
+
+  // Exclude Segunda Division for La Liga
+  if (
+    league === "laliga" &&
+    (tournamentName.includes("2") || tournamentName.includes("hypermotion"))
+  ) {
+    return false;
+  }
+
+  // Exclude U21, U23, Cup, and non-Premier League tournaments for Premier League
+  if (league === "premier-league") {
+    // Skip U21/U23 matches
+    if (
+      tournamentName.includes("u21") ||
+      tournamentName.includes("u23") ||
+      tournamentName.includes("under 21") ||
+      tournamentName.includes("under 23")
+    ) {
+      return false;
+    }
+    // Skip Cup competitions
+    if (
+      tournamentName.includes("cup") ||
+      tournamentName.includes("puchar") ||
+      tournamentName.includes("trophy")
+    ) {
+      return false;
+    }
+    // Skip lower leagues (League 1, Championship, etc.)
+    if (
+      tournamentName.includes("league 1") ||
+      tournamentName.includes("championship") ||
+      tournamentName.includes("ligue 2") ||
+      tournamentName.includes("second") ||
+      tournamentName.includes("third")
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Diagnostic for a strict league whose listing came back empty. It names
+ * every other category/tournament that the name filters alone would have
+ * accepted, so an STS id renumbering (the league moved to new keys) can be
+ * told apart from an empty calendar. It runs only on an empty result:
+ * category 249 always holds name-filter matches for the Premier League
+ * (Northern Premier League, Premier League 2), so warning on every run
+ * would be noise.
+ */
+function warnStrictIdMiss(
+  categories: Record<string, STSCategory>,
+  league: string,
+  config: LeagueFilterConfig
+): void {
+  const candidates: string[] = [];
+  for (const [catKey, cat] of Object.entries(categories)) {
+    if (!(cat.n || "").toLowerCase().includes(config.countryFilter)) continue;
+    for (const [tournKey, tourn] of Object.entries(cat.T || {})) {
+      // The configured pair itself is no renumbering: it was present but
+      // yielded no usable fixture (missing names, self-fixtures).
+      if (catKey === String(config.categoryId) && tournKey === String(config.tournamentId)) continue;
+      if (!tournamentPassesNameFilters(league, config, (tourn.n || "").toLowerCase())) continue;
+      const fixtureCount = Object.keys(tourn.FX || {}).length;
+      candidates.push(`C${catKey}/T${tournKey} "${cat.n || ""}" / "${tourn.n || ""}" (${fixtureCount} fixtures)`);
+    }
+  }
+  if (candidates.length === 0) return;
+  console.warn(
+    `[STS] Strict id filter for ${league} (C${config.categoryId}/T${config.tournamentId}) matched 0 fixtures; ` +
+      `name-filter candidates: ${candidates.join(", ")}`
+  );
+}
+
 /**
  * Extract fixtures from STS WebSocket data for a specific league
  * Path: B.S.1.C.{catId}.T.{tournId}.FX.{fixId}
@@ -89,47 +179,7 @@ export function parseFixtures(
         // Iterate through tournaments
         for (const [tournKey, tourn] of Object.entries(cat.T || {})) {
           if (config.strictTournamentId && tournKey !== String(config.tournamentId)) continue;
-          const tournamentName = (tourn.n || "").toLowerCase();
-          if (!tournamentName.includes(config.tournamentFilter)) continue;
-
-          // Exclude Segunda Division for La Liga
-          if (
-            league === "laliga" &&
-            (tournamentName.includes("2") || tournamentName.includes("hypermotion"))
-          ) {
-            continue;
-          }
-
-          // Exclude U21, U23, Cup, and non-Premier League tournaments for Premier League
-          if (league === "premier-league") {
-            // Skip U21/U23 matches
-            if (
-              tournamentName.includes("u21") ||
-              tournamentName.includes("u23") ||
-              tournamentName.includes("under 21") ||
-              tournamentName.includes("under 23")
-            ) {
-              continue;
-            }
-            // Skip Cup competitions
-            if (
-              tournamentName.includes("cup") ||
-              tournamentName.includes("puchar") ||
-              tournamentName.includes("trophy")
-            ) {
-              continue;
-            }
-            // Skip lower leagues (League 1, Championship, etc.)
-            if (
-              tournamentName.includes("league 1") ||
-              tournamentName.includes("championship") ||
-              tournamentName.includes("ligue 2") ||
-              tournamentName.includes("second") ||
-              tournamentName.includes("third")
-            ) {
-              continue;
-            }
-          }
+          if (!tournamentPassesNameFilters(league, config, (tourn.n || "").toLowerCase())) continue;
 
       // Extract fixtures
       for (const [fixId, fix] of Object.entries(tourn.FX || {})) {
@@ -163,6 +213,10 @@ export function parseFixtures(
         });
       }
     }
+  }
+
+  if (config.strictTournamentId && fixtures.length === 0) {
+    warnStrictIdMiss(football.C, league, config);
   }
 
   return fixtures;

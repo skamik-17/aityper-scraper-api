@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -33,5 +33,53 @@ describe("STS parseFixtures strict category + tournament filter", () => {
   it("only premier-league opts into strict category + tournament ids", () => {
     expect(LEAGUE_CONFIG["premier-league"]).toMatchObject({ strictTournamentId: true, categoryId: 1, tournamentId: 17 });
     expect(LEAGUE_CONFIG.ekstraklasa.strictTournamentId).toBeUndefined();
+  });
+});
+
+/**
+ * A renumbering (the Premier League moving to new category/tournament keys)
+ * makes the strict listing empty, and index.ts then returns success:false
+ * before its "Found N fixtures" log. The warning names the name-filter
+ * candidates, so the service log shows where the league went.
+ */
+describe("STS parseFixtures strict-id miss diagnostic", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("names the moved tournament and the other name-filter candidates when strict ids match nothing", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const data = ipl();
+    const C = data.B!.S!["1"].C!;
+    C["249"].T!["17"] = C["1"].T!["17"];
+    delete C["1"].T!["17"];
+    expect(parseFixtures(data, "premier-league")).toHaveLength(0);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toBe(
+      '[STS] Strict id filter for premier-league (C1/T17) matched 0 fixtures; name-filter candidates: ' +
+        'C249/T17 "Anglia Amatorzy" / "Premier League" (21 fixtures), ' +
+        'C249/T1000 "Anglia Amatorzy" / "Northern Premier League - Premier Division" (10 fixtures), ' +
+        'C249/T1009 "Anglia Amatorzy" / "Premier League 2" (6 fixtures)'
+    );
+  });
+
+  it("stays silent on a normal listing even though category 249 matches the name filters", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(parseFixtures(ipl(), "premier-league")).toHaveLength(20);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("stays silent on an empty listing when nothing else matches the name filters", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const data = ipl();
+    const C = data.B!.S!["1"].C!;
+    delete C["1"].T!["17"];
+    delete C["249"];
+    expect(parseFixtures(data, "premier-league")).toHaveLength(0);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("never warns for a non-strict league", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(parseFixtures(ipl(), "ekstraklasa")).toHaveLength(0);
+    expect(warn).not.toHaveBeenCalled();
   });
 });

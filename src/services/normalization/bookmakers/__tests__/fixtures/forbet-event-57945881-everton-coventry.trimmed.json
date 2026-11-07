@@ -1,0 +1,460 @@
+{
+ "_note": "Trimmed forbet /rest/market/events/{id} payload captured 2026-11-06 ~16:20Z; only the games the plan needs. Shape = data object of the API response.",
+ "_source": "https://www.iforbet.pl/rest/market/events/57945881",
+ "eventId": 57945881,
+ "eventName": "Everton - Coventry",
+ "eventStart": 1793995200000,
+ "category3Name": "Premier League",
+ "eventGames": [
+  {
+   "gameId": 638775040,
+   "gameName": "1X2",
+   "gameType": 1,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    1
+   ],
+   "gameLayout": 1,
+   "eventLayout": 1,
+   "outcomes": [
+    {
+     "outcomeId": 422347553,
+     "outcomeName": "Everton",
+     "outcomeOdds": 1.66,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422347554,
+     "outcomeName": "remis",
+     "outcomeOdds": 3.95,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422347555,
+     "outcomeName": "Coventry",
+     "outcomeOdds": 4.9,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825138,
+   "gameName": "TurboPrzewaga - 2 gole przewagi lub wygrana",
+   "gameType": -31170,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    1
+   ],
+   "gameLayout": 1,
+   "eventLayout": 1,
+   "outcomes": [
+    {
+     "outcomeId": 422537555,
+     "outcomeName": "Everton",
+     "outcomeOdds": 1.63,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537556,
+     "outcomeName": "remis",
+     "outcomeOdds": 3.9,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537557,
+     "outcomeName": "Coventry",
+     "outcomeOdds": 4.5,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825222,
+   "gameName": "Handicap 2:0",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": -2.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422537795,
+     "outcomeName": "Everton (2:0)",
+     "outcomeOdds": 1.03,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537796,
+     "outcomeName": "X (2:0)",
+     "outcomeOdds": 11.0,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537797,
+     "outcomeName": "Coventry (2:0)",
+     "outcomeOdds": 30.0,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638825220,
+   "gameName": "Handicap 1:0",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": -1.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422537789,
+     "outcomeName": "Everton (1:0)",
+     "outcomeOdds": 1.18,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537790,
+     "outcomeName": "X (1:0)",
+     "outcomeOdds": 6.4,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537791,
+     "outcomeName": "Coventry (1:0)",
+     "outcomeOdds": 12.0,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638825219,
+   "gameName": "Handicap 0:1",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 1.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422537785,
+     "outcomeName": "Everton (0:1)",
+     "outcomeOdds": 2.7,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537786,
+     "outcomeName": "X (0:1)",
+     "outcomeOdds": 3.75,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537787,
+     "outcomeName": "Coventry (0:1)",
+     "outcomeOdds": 2.19,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638825221,
+   "gameName": "Handicap 0:2",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 2.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422537792,
+     "outcomeName": "Everton (0:2)",
+     "outcomeOdds": 5.4,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537793,
+     "outcomeName": "X (0:2)",
+     "outcomeOdds": 4.9,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537794,
+     "outcomeName": "Coventry (0:2)",
+     "outcomeOdds": 1.43,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638825223,
+   "gameName": "Handicap 0:3",
+   "gameType": -6048,
+   "gameCode": 0,
+   "argument": 3.0,
+   "combinationType": 1,
+   "marketTypes": [
+    17
+   ],
+   "gameLayout": 0,
+   "eventLayout": 0,
+   "outcomes": [
+    {
+     "outcomeId": 422537798,
+     "outcomeName": "Everton (0:3)",
+     "outcomeOdds": 12.0,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537799,
+     "outcomeName": "X (0:3)",
+     "outcomeOdds": 7.8,
+     "outcomePosition": 1,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537800,
+     "outcomeName": "Coventry (0:3)",
+     "outcomeOdds": 1.14,
+     "outcomePosition": 2,
+     "status": 100
+    }
+   ]
+  },
+  {
+   "gameId": 638825142,
+   "gameName": "Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola",
+   "gameType": -8041,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537564,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.13,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537565,
+     "outcomeName": "nie",
+     "outcomeOdds": 4.7,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825148,
+   "gameName": "Wydarzy się min. jedno z: Everton wygra lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8044,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537578,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.28,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537579,
+     "outcomeName": "nie",
+     "outcomeOdds": 3.15,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825146,
+   "gameName": "Wydarzy się min. jedno z: Coventry wygra lub obie drużyny strzelą gola",
+   "gameType": -8043,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537572,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.5,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537573,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.31,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825152,
+   "gameName": "Wydarzy się min. jedno z: Coventry wygra lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8046,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537588,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.62,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537589,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.08,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825144,
+   "gameName": "Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola",
+   "gameType": -8042,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537568,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.57,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537569,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.16,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  },
+  {
+   "gameId": 638825150,
+   "gameName": "Wydarzy się min. jedno z: remis w meczu lub którakolwiek drużyna zachowa czyste konto",
+   "gameType": -8045,
+   "gameCode": 0,
+   "argument": null,
+   "combinationType": 1,
+   "marketTypes": [
+    18
+   ],
+   "gameLayout": 2,
+   "eventLayout": 5,
+   "outcomes": [
+    {
+     "outcomeId": 422537583,
+     "outcomeName": "tak",
+     "outcomeOdds": 1.44,
+     "outcomePosition": 0,
+     "status": 100
+    },
+    {
+     "outcomeId": 422537584,
+     "outcomeName": "nie",
+     "outcomeOdds": 2.47,
+     "outcomePosition": 1,
+     "status": 100
+    }
+   ],
+   "combinationTypes": [
+    1
+   ]
+  }
+ ]
+}

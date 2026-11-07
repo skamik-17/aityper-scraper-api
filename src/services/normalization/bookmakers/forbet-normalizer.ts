@@ -45,7 +45,9 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2: "CORRECT_SCORE",
   3: "HALF_TIME_RESULT",
   // Audited mappings keyed by raw bookmakerMarketId
-  "-31170": "EUROPEAN_HANDICAP",
+  // TurboPrzewaga: win or 2-goal lead at any point, 2-way on the catalog; the
+  // remis leg is the plain 1X2 draw already on MATCH_WINNER (dropped below).
+  "-31170": "WIN_OR_WIN_BY_2",
   "-8132": "HT_OR_FT_RESULT",
   "-2982": "HOME_TEAM_TO_SCORE",
   "-2983": "HOME_TEAM_TO_SCORE",
@@ -99,6 +101,18 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-8040": "RESULT_OR_TOTAL", // "<away> wygra lub poniżej 2.5 goli"
   "-8037": "RESULT_OR_TOTAL", // "remis w meczu lub powyżej 2.5 goli"
   "-8038": "RESULT_OR_TOTAL", // "remis w meczu lub poniżej 2.5 goli"
+  // The rest of the "Wydarzy się min. jedno z" alternative bets, on the same
+  // shared-platform ids etoto maps. RESULT_OR_BTTS publishes only the tak
+  // leg, with the result side folded into the selection code
+  // (resolveResultOrBttsSide, from raw.name; the nie leg is dropped in
+  // normalizeMarket). The clean-sheet bet takes the side as its team param
+  // (detectTeamSide).
+  "-8041": "RESULT_OR_BTTS", // "<home> wygra lub obie drużyny strzelą gola"
+  "-8042": "RESULT_OR_BTTS", // "remis w meczu lub obie drużyny strzelą gola"
+  "-8043": "RESULT_OR_BTTS", // "<away> wygra lub obie drużyny strzelą gola"
+  "-8044": "TEAM_WIN_OR_CLEAN_SHEET", // "<home> wygra lub którakolwiek drużyna zachowa czyste konto"
+  "-8046": "TEAM_WIN_OR_CLEAN_SHEET", // "<away> wygra lub którakolwiek drużyna zachowa czyste konto"
+  "-8045": "DRAW_OR_CLEAN_SHEET", // "remis w meczu lub którakolwiek drużyna zachowa czyste konto"
   "-30234": "HALF_TIME_SUBSTITUTION",
   38: "HALF_WITH_MORE_GOALS",
   // -239/-240 are forBET's per-team "<Team> - połowa z większą liczbą goli"
@@ -298,6 +312,12 @@ const OVERRIDE_EXEMPT_MARKETS = new Set<NormalizedMarketType>([
 ]);
 
 /**
+ * The "Wydarzy się min. jedno z: " wrapper forBET puts on its alternative
+ * bets ("wins if either leg happens"), as it reads after normalizeForbetName.
+ */
+const ALTERNATIVE_BET_PREFIX = /^wydarzy sie min\.?\s*jedno z:\s*/;
+
+/**
  * Normalizes a forBET market/selection name for pattern matching:
  * lowercase, diacritics stripped (incl. ł→l which NFD does not decompose),
  * en/em dashes unified to "-", whitespace collapsed.
@@ -336,7 +356,9 @@ function detectTeamSide(
   rawName: string,
   ctx: NormalizationContext
 ): "HOME" | "AWAY" | null {
-  let name = normalizeForbetName(rawName);
+  // Strip the alternative-bet wrapper first: its colon would otherwise cut
+  // the name down to "wydarzy sie min. jedno z" below and lose the team.
+  let name = normalizeForbetName(rawName).replace(ALTERNATIVE_BET_PREFIX, "");
   // Strip a leading half prefix ("1. połowa - ", "2. połowa - ")
   name = name.replace(/^[12]\.?\s*polowa\s*-\s*/, "");
   const candidate = name
@@ -365,10 +387,12 @@ function detectTeamSide(
 const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   "TEAM_WIN_MATCH",
   // WIN_OR_BTTS retired (cluster #12: "Result or BTTS" fragmentation) - it
-  // was never actually reachable here (no id map entry, no name-pattern
-  // route ever resolved forBET's "Wydarzy się min. jedno z: <team> wygra
-  // lub obie drużyny strzelą gola" to it; that raw market is deliberately
-  // kept as OTHER, see resolveForbetSpecialMarket).
+  // was never actually reachable here. forBET's "Wydarzy się min. jedno z:
+  // <team> wygra lub obie drużyny strzelą gola" (-8041/-8043) now maps to
+  // RESULT_OR_BTTS, with the side in the selection code, not in a param.
+  // "... <team> wygra lub którakolwiek drużyna zachowa czyste konto"
+  // (-8044/-8046) lands here; detectTeamSide strips the alternative-bet
+  // wrapper to find the team, and normalizeMarket drops it if that fails.
   "TEAM_WIN_OR_CLEAN_SHEET",
   // CORNERS_TEAM_RANGE is parameterized by team (param HOME/AWAY, catalog
   // validParameters) rather than split into separate HOME_/AWAY_ codes.
@@ -479,10 +503,7 @@ function resolveResultOrTotalCombo(
   // multi-word context name ("Coventry City") neither substring-inclusion
   // direction matched with the prefix still attached, so every AWAY leg
   // silently failed team resolution and the whole entry got dropped.
-  const name = normalizeForbetName(rawName).replace(
-    /^wydarzy sie min\.?\s*jedno z:\s*/,
-    ""
-  );
+  const name = normalizeForbetName(rawName).replace(ALTERNATIVE_BET_PREFIX, "");
 
   const teamMatch = name.match(/^(.+?)\s+wygra\s+lub\s+(powyzej|ponizej)\b/);
   if (teamMatch) {
@@ -501,6 +522,28 @@ function resolveResultOrTotalCombo(
   return null;
 }
 
+/**
+ * Resolves the result leg of a raw "win-or-BTTS" alternative bet ("Wydarzy
+ * się min. jedno z: <team> wygra lub obie drużyny strzelą gola" / "... remis
+ * w meczu lub obie drużyny strzelą gola", ids -8041/-8042/-8043) to the side
+ * the pooled RESULT_OR_BTTS selection code carries (HOME_OR_BTTS_YES,
+ * AWAY_OR_BTTS_YES, DRAW_OR_BTTS_YES). Returns null for anything else,
+ * including a team leg that does not resolve to HOME/AWAY.
+ */
+function resolveResultOrBttsSide(
+  rawName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | "DRAW" | null {
+  const name = normalizeForbetName(rawName).replace(ALTERNATIVE_BET_PREFIX, "");
+
+  const teamMatch = name.match(/^(.+?)\s+wygra\s+lub\s+obie\b/);
+  if (teamMatch) return resolveTeamSide(teamMatch[1], ctx);
+
+  if (/^remis w meczu lub\s+obie\b/.test(name)) return "DRAW";
+
+  return null;
+}
+
 function resolveForbetSpecialMarket(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
@@ -513,9 +556,11 @@ function resolveForbetSpecialMarket(
   // showed "…: remis w meczu lub obie drużyny strzelą gola" (2.09 / 1.61)
   // matching the generic /obie.*strzelą/ pattern and taking over BTTS, which
   // pushed forBET's real "Obie drużyny strzelą gola" market out of the offer.
-  // Only variants with a dedicated catalog code (e.g. the six win-or-goals
-  // ids -8035/-8036/-8037/-8038/-8039/-8040 → RESULT_OR_TOTAL) keep one; the
-  // rest must stay out of the canonical markets they name.
+  // Only variants with a dedicated catalog code keep one: the six win-or-goals
+  // ids -8035..-8040 → RESULT_OR_TOTAL, the win/draw-or-BTTS ids -8041..-8043
+  // → RESULT_OR_BTTS, and the clean-sheet ids -8044/-8046 →
+  // TEAM_WIN_OR_CLEAN_SHEET and -8045 → DRAW_OR_CLEAN_SHEET. The rest must
+  // stay out of the canonical markets they name.
   if (/^wydarzy sie min\.? jedno z/.test(name)) {
     return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
   }
@@ -1567,6 +1612,11 @@ function extractParamValue(
         return parseHandicapLine(teamLine[2]);
       }
     }
+    // A European handicap line comes only from a score line (handled above)
+    // or a signed selection line. A stray digit in the name is not a line:
+    // "TurboPrzewaga - 2 gole przewagi lub wygrana" once became
+    // EUROPEAN_HANDICAP:+2 that way and displaced the real "Handicap 2:0".
+    if (marketCode === "EUROPEAN_HANDICAP") return undefined;
     const stripped = raw.name.replace(/^[12]\.?\s*po[lł]owa\s*[-–]?\s*/i, "");
     const handicapMatch = stripped.match(/([+-]?\d+(?:[.,]\d+)?)/);
     if (handicapMatch) return parseHandicapLine(handicapMatch[1]);
@@ -1714,6 +1764,84 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       };
     }
 
+    // forBET quotes each "<team>|remis w meczu lub obie drużyny strzelą gola"
+    // leg (-8041/-8042/-8043) as its own Tak/Nie market, and all three pool
+    // into one RESULT_OR_BTTS row, so the result side (from raw.name) goes
+    // into the code. Only "tak" ("<X> or BTTS") is published, as
+    // <SIDE>_OR_BTTS_YES. forBET's "nie" is NOT(<X> or BTTS), i.e. neither
+    // happens, but the catalog <SIDE>_OR_BTTS_NO means "<X> or BTTS-No"
+    // (lebull's "<X> lub Przynajmniej jedna drużyna nie strzeli"), a different
+    // and much shorter-priced bet. Like the RESULT_OR_TOTAL "nie" above, it
+    // has no counterpart in that vocabulary and is dropped. An unresolved
+    // side, an unrecognised label or a missing/duplicated tak leg drops the
+    // whole market rather than guess.
+    if (marketCode === "RESULT_OR_BTTS") {
+      const side = resolveResultOrBttsSide(raw.name, ctx);
+      const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
+      const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
+      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+        console.warn(
+          `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak leg for "${raw.name}"`
+        );
+        return null;
+      }
+      const yesSelection = yesSelections[0];
+      return {
+        marketCode,
+        paramValue: undefined,
+        marketKey: buildMarketKey(marketCode),
+        selections: [
+          {
+            code: `${side}_OR_BTTS_YES` as NormalizedSelection,
+            label: yesSelection.name,
+            odds: yesSelection.odds,
+          },
+        ],
+        debug: {
+          rawName: raw.name,
+          rawId: gameTypeId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
+
+    // TurboPrzewaga (-31170, the only forbet id routed here) quotes three
+    // legs: <home> / remis / <away>. The catalog WIN_OR_WIN_BY_2 is 2-way
+    // HOME/AWAY, and forbet prices "remis" like the plain 1X2 draw that
+    // MATCH_WINNER already carries, so that leg is dropped. The team legs
+    // must resolve to exactly one HOME and one AWAY. Anything else (an
+    // unresolvable team name, both legs on one side, an extra selection)
+    // drops the market rather than guessing a side, and the legs never go
+    // through mergeDuplicateSelectionCodes, which would fabricate a price.
+    if (marketCode === "WIN_OR_WIN_BY_2") {
+      const teamLegs = raw.selections
+        .map((sel) => ({
+          code: normalizeSelectionForMarket(sel.name, "WIN_OR_WIN_BY_2", ctx, raw.name),
+          label: sel.name,
+          odds: sel.odds,
+        }))
+        .filter((sel) => sel.code !== "DRAW");
+      const home = teamLegs.filter((sel) => sel.code === "HOME");
+      const away = teamLegs.filter((sel) => sel.code === "AWAY");
+      if (teamLegs.length !== 2 || home.length !== 1 || away.length !== 1) {
+        console.warn(
+          `[forbet] WIN_OR_WIN_BY_2: could not resolve one HOME and one AWAY leg for "${raw.name}"`
+        );
+        return null;
+      }
+      return {
+        marketCode,
+        paramValue: undefined,
+        marketKey: buildMarketKey(marketCode),
+        selections: [home[0], away[0]],
+        debug: {
+          rawName: raw.name,
+          rawId: gameTypeId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
+
     let paramValue = extractParamValue(marketCode, raw, ctx);
 
     // audit cluster #24: "over 0.5" both-halves goals IS the plain "goal in
@@ -1725,6 +1853,16 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       marketCode = collapsed.marketCode as NormalizedMarketType;
       paramValue = collapsed.paramValue;
     }
+
+    // The team side IS this bet: without it both teams' prices land on the
+    // bare key, where they collide and one side is dropped or unlabelled.
+    if (marketCode === "TEAM_WIN_OR_CLEAN_SHEET" && paramValue === undefined) {
+      console.warn(
+        `[forbet] TEAM_WIN_OR_CLEAN_SHEET: could not resolve the team side for "${raw.name}"`
+      );
+      return null;
+    }
+
     const marketKey = buildMarketKey(marketCode, paramValue);
 
     // audit-loop cluster #1 (PLAYER_GOALS duplicates the anytime scorer

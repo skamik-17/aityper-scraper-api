@@ -1,6 +1,5 @@
 import type { PolishBookmaker } from "../config/index.js";
 import { runAllScrapers, runAllFullOfferScrapers, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
-import { insertScraperRuns } from "../repositories/scraper-run-repository.js";
 import { scraperHealth } from "./scraper-health.js";
 import { isOkRunStatus } from "./run-outcome.js";
 

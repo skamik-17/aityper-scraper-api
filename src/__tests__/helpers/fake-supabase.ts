@@ -17,6 +17,8 @@ export interface RecordedQuery {
 export interface FakeResponse {
   data?: unknown;
   error?: unknown;
+  /** Row count, as supabase-js returns it for `{ count: "exact" }` queries. */
+  count?: number | null;
 }
 
 // `lt` is not part of a plain read/write chain, but pruneStaleOddsRows()

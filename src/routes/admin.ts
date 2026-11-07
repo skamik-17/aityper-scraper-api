@@ -19,6 +19,7 @@ import { CONFIG, type PolishBookmaker } from "../config/index.js";
 import { runScrapeAndPersist } from "../services/scraper-service.js";
 import { getRunsSummary } from "../repositories/scraper-run-repository.js";
 import { scraperHealth } from "../services/scraper-health.js";
+import { isOkRunStatus } from "../services/run-outcome.js";
 
 const router = Router();
 
@@ -88,8 +89,9 @@ router.get("/runs", asyncHandler(async (req, res) => {
   const { runs, total } = await getRunsSummary(limit, offset);
 
   const formattedRuns: ScraperRunInfo[] = runs.map((run) => {
-    const successCount = run.results.filter((r) => r.status === "success").length;
-    const errorCount = run.results.filter((r) => r.status !== "success").length;
+    // partial saved markets too, so it counts as OK
+    const successCount = run.results.filter((r) => isOkRunStatus(r.status)).length;
+    const errorCount = run.results.length - successCount;
     const totalMatchesFound = run.results.reduce(
       (sum, r) => sum + r.matchesFound,
       0
@@ -97,7 +99,7 @@ router.get("/runs", asyncHandler(async (req, res) => {
 
     const typedResults: ScraperRunResult[] = run.results.map((r) => ({
       bookmaker: r.bookmaker,
-      status: r.status === "success" ? "success" as const : "error" as const,
+      status: isOkRunStatus(r.status) ? "success" as const : "error" as const,
       matchesFound: r.matchesFound,
       marketsSaved: r.marketsSaved,
       durationMs: r.durationMs,

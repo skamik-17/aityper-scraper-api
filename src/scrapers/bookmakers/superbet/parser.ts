@@ -464,7 +464,9 @@ export function parseAllMarkets(
       .map((sel) => ({
         name: getSelectionName(sel.code, sel.name, marketId, parsedTeams),
         odds: sel.price || 0,
-        externalId: String(sel.id),
+        // The uuid is the real per-selection id; outcomeId is shared across
+        // lines and players, so it is deliberately not a fallback.
+        externalId: sel.uuid ?? (sel.id != null ? String(sel.id) : undefined),
         status: sel.status === "active" ? "active" as const : undefined,
       }))
       .filter((sel) => sel.odds > 0);

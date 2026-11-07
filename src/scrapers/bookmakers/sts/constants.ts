@@ -18,6 +18,11 @@ export const WS_URL_PATTERN = "/sbk/api/sbk";
 /**
  * League configuration with URLs and tournament filters
  * The tournamentId is used for fixture-specific WebSocket subscriptions
+ *
+ * strictTournamentId: when true, the listing keeps only fixtures under
+ * B.S.1.C[categoryId].T[tournamentId]. Both keys are required because
+ * tournament keys repeat across categories. The name filters still apply
+ * as a second guard.
  */
 export const LEAGUE_CONFIG: Record<
   string,
@@ -26,6 +31,8 @@ export const LEAGUE_CONFIG: Record<
     tournamentId: number;
     countryFilter: string;
     tournamentFilter: string;
+    strictTournamentId?: boolean;
+    categoryId?: number;
   }
 > = {
   ekstraklasa: {
@@ -39,6 +46,10 @@ export const LEAGUE_CONFIG: Record<
     tournamentId: 17,
     countryFilter: "angli",
     tournamentFilter: "premier league",
+    // The name filters alone also match Northern Premier League and
+    // Premier League 2 under category 249 ("Anglia Amatorzy").
+    strictTournamentId: true,
+    categoryId: 1,
   },
   laliga: {
     url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/hiszpania/laliga/175",

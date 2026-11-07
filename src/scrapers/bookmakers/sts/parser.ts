@@ -78,12 +78,17 @@ export function parseFixtures(
   if (!football?.C) return fixtures;
 
       // Iterate through categories (countries)
-      for (const [, cat] of Object.entries(football.C)) {
+      for (const [catKey, cat] of Object.entries(football.C)) {
+        // Strict leagues are matched by ids first: tournament keys repeat
+        // across categories, so both the category and the tournament key
+        // must match. The name filters below remain a second guard.
+        if (config.strictTournamentId && catKey !== String(config.categoryId)) continue;
         const countryName = (cat.n || "").toLowerCase();
         if (!countryName.includes(config.countryFilter)) continue;
 
         // Iterate through tournaments
-        for (const [, tourn] of Object.entries(cat.T || {})) {
+        for (const [tournKey, tourn] of Object.entries(cat.T || {})) {
+          if (config.strictTournamentId && tournKey !== String(config.tournamentId)) continue;
           const tournamentName = (tourn.n || "").toLowerCase();
           if (!tournamentName.includes(config.tournamentFilter)) continue;
 

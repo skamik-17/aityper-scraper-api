@@ -694,6 +694,10 @@ function resolveTeamTacklesMarket(
   const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
   const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
   if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
   if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
 
@@ -2566,6 +2570,7 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       "CORNERS_TEAM",
       "TEAM_TOTAL_SHOTS",
       "TEAM_TOTAL_SHOTS_ON_TARGET",
+      "TEAM_TOTAL_TACKLES",
     ]);
     if (teamSide && TEAM_SUFFIX_MARKETS_WITH_LINE.has(marketCode)) {
       paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;

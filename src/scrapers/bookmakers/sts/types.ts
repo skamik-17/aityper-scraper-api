@@ -145,10 +145,18 @@ export interface STSWebSocketData {
     /** Sports keyed by sport ID ("1" = football) */
     S?: Record<string, STSSport>;
   };
-  /** Prematch data keyed by assoc key (e.g., "1m123456") */
+  /**
+   * Prematch market groups. The main group is keyed "1m<stsId>"; a fixture
+   * snapshot also carries extra groups under opaque keys (e.g. "17m<hash>"),
+   * tied to their fixture by `f` and typed by `r`.
+   */
   P?: Record<
     string,
     {
+      /** Fixture ID this group belongs to (e.g. "f2921898") */
+      f?: string;
+      /** Group type: 1 = main offer, 12 = "(z dogrywką)" player props, 17 = team stats */
+      r?: number;
       /** Markets keyed by market ID */
       m?: Record<string, STSMarket>;
     }

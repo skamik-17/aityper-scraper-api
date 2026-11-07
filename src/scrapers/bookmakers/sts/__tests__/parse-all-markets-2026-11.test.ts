@@ -9,7 +9,9 @@ import { normalizeMarketsForBookmaker } from "../../../../services/normalization
  * parseAllMarkets regression coverage for the 2026-11 STS offer, on the real
  * Arsenal vs Hull City fixture snapshot (f2921898, stsId 72221372). Each
  * cards/corners O/U line arrives under the same line name, so without a line
- * suffix the name-based dedup kept only one line per market.
+ * suffix the name-based dedup kept only one line per market. The team
+ * cards/corners lines live in the snapshot's extra r=17 P entry, not in
+ * P["1m<stsId>"].
  */
 const fx = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), "fixtures", f), "utf8");
 const fixture = parseFixtures(parseWebSocketJson(fx("i_pl.trimmed.txt"))!, "premier-league").find((f) => f.id === "f2921898")!;
@@ -35,6 +37,47 @@ describe("STS parseAllMarkets on the 2026-11 Arsenal vs Hull City snapshot", () 
     expect(byId("185").find((m) => m.name === "Liczba kartek 2.5")!.selections).toEqual([
       expect.objectContaining({ name: "+2.5", odds: 1.6 }),
       expect.objectContaining({ name: "-2.5", odds: 2.2 }),
+    ]);
+  });
+  it("reads the r=17 team-stats group, one market per line", () => {
+    expect(byId("231").map((m) => m.name).sort()).toEqual([
+      "1. drużyna - liczba rzutów rożnych 6.5", "1. drużyna - liczba rzutów rożnych 7.5", "1. drużyna - liczba rzutów rożnych 8.5"]);
+    expect(byId("188")).toHaveLength(2);
+    expect(byId("191")).toHaveLength(3);
+    expect(byId("234")).toHaveLength(3);
+    expect(byId("1287")).toHaveLength(3);
+    expect(byId("1287").find((m) => m.name.includes("4 lub więcej"))!.selections).toEqual([expect.objectContaining({ name: "Tak", odds: 2.9 })]);
+    expect(byId("2287")).toHaveLength(2);
+  });
+  it("skips the r=17 penalty-type markets (open question 2)", () => {
+    for (const id of ["1413", "1899", "2131"]) expect(byId(id)).toHaveLength(0);
+  });
+  it("does not read the r=12 '(z dogrywką)' group", () => {
+    expect(byId("2414")).toHaveLength(0);
+  });
+  it("reads the r=17 group only next to the fixture's main group", () => {
+    // A source without P["1m<stsId>"] yielded no markets before the r=17 group
+    // was read; it must not turn into a team-stats-only partial write now
+    const snapshot = parseWebSocketJson(fx("f_f2921898_pl.arsenal-hull.snapshot.txt"))!;
+    delete snapshot.P![`1m${fixture.stsId}`];
+    expect(parseAllMarkets(fixture, snapshot, null)).toEqual([]);
+  });
+  it("normalizes the r=17 team cards/corners lines, side from the market name", () => {
+    const n = normalizeMarketsForBookmaker(markets, "sts", "Arsenal", "Hull City", "premier-league");
+    expect(n.filter((m) => m.normalizedType === "CARDS_TEAM" || m.normalizedType === "CORNERS_TEAM")
+      .map((m) => `${m.bookmakerMarketId} ${m.marketKey} ${m.selections.map((s) => `${s.name}=${s.normalizedName}@${s.odds}`).join(" ")}`)
+      .sort()).toEqual([
+      "188 CARDS_TEAM:0.5 +0.5=HOME_OVER@1.5 -0.5=HOME_UNDER@2.35",
+      "188 CARDS_TEAM:1.5 +1.5=HOME_OVER@3.4 -1.5=HOME_UNDER@1.28",
+      "191 CARDS_TEAM:0.5 +0.5=AWAY_OVER@1.1 -0.5=AWAY_UNDER@6.2",
+      "191 CARDS_TEAM:1.5 +1.5=AWAY_OVER@1.55 -1.5=AWAY_UNDER@2.35",
+      "191 CARDS_TEAM:2.5 +2.5=AWAY_OVER@2.55 -2.5=AWAY_UNDER@1.45",
+      "231 CORNERS_TEAM:HOME:6.5 +6.5=OVER@1.6 -6.5=UNDER@2.2",
+      "231 CORNERS_TEAM:HOME:7.5 +7.5=OVER@2 -7.5=UNDER@1.7",
+      "231 CORNERS_TEAM:HOME:8.5 +8.5=OVER@2.7 -8.5=UNDER@1.4",
+      "234 CORNERS_TEAM:AWAY:1.5 +1.5=OVER@1.27 -1.5=UNDER@3.5",
+      "234 CORNERS_TEAM:AWAY:2.5 +2.5=OVER@1.75 -2.5=UNDER@1.9",
+      "234 CORNERS_TEAM:AWAY:3.5 +3.5=OVER@2.7 -3.5=UNDER@1.42",
     ]);
   });
 });

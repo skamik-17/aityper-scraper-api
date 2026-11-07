@@ -26,6 +26,8 @@ import {
   ASIAN_HANDICAP_IDS,
   ASIAN_TOTAL_MARKET_IDS,
   OVER_UNDER_LINE_MARKET_IDS,
+  STS_EXTRA_GROUP_TYPES,
+  STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS,
 } from "./constants.js";
 import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
@@ -332,6 +334,28 @@ export function parseLeagueData(
 }
 
 /**
+ * Markets of one source that belong to the fixture: the main group
+ * P["1m<stsId>"], then each extra group of the fixture (`f` = fixture id,
+ * `r` in STS_EXTRA_GROUP_TYPES) without STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS.
+ * Extra groups are read only next to the main group: a source without the
+ * fixture's main offer yields nothing, so it never becomes a partial write.
+ */
+function collectFixtureMarkets(source: STSWebSocketData, fixture: STSFixture): [string, STSMarket][] {
+  const mainGroup = source.P?.[`1m${fixture.stsId}`]?.m;
+  if (!mainGroup) return [];
+
+  const entries = Object.entries(mainGroup) as [string, STSMarket][];
+  for (const group of Object.values(source.P ?? {})) {
+    if (group.f !== fixture.id || group.r === undefined || !STS_EXTRA_GROUP_TYPES.has(group.r)) continue;
+    for (const [marketIdStr, market] of Object.entries(group.m ?? {}) as [string, STSMarket][]) {
+      if (STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS.has(parseInt(marketIdStr, 10))) continue;
+      entries.push([marketIdStr, market]);
+    }
+  }
+  return entries;
+}
+
+/**
  * Parse all markets from fixture WebSocket data into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -346,13 +370,8 @@ export function parseAllMarkets(
   const sources = [fixtureJson, initialJson].filter(Boolean) as STSWebSocketData[];
 
   for (const source of sources) {
-    const assocKey = `1m${fixture.stsId}`;
-    const marketData = source.P?.[assocKey]?.m;
-
-    if (!marketData) continue;
-
-    // Process each market
-    for (const [marketIdStr, market] of Object.entries(marketData) as [string, STSMarket][]) {
+    // Process each market of the fixture's main and extra groups
+    for (const [marketIdStr, market] of collectFixtureMarkets(source, fixture)) {
       const marketId = parseInt(marketIdStr, 10);
       const groupName = MARKET_GROUPS[marketId] || "Inne";
       const marketType = MARKET_TYPES[marketId] ?? marketId; // Use ID as fallback for unmapped markets

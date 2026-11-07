@@ -259,12 +259,36 @@ export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
   206, // "1. połowa - liczba kartek" (HALF_TIME_CARDS_TOTAL)
   228, // "Liczba rzutów rożnych" (CORNERS_TOTAL)
   247, // "1. połowa - liczba rzutów rożnych" (HALF_TIME_CORNERS_TOTAL)
-  // Team cards/corners totals from the r=17 team-stats group (inert until
-  // parseAllMarkets reads that group)
+  // Team cards/corners totals from the r=17 team-stats group, read via
+  // STS_EXTRA_GROUP_TYPES
   188, // "1. drużyna - liczba kartek" (CARDS_TEAM, home)
   191, // "2. drużyna - liczba kartek" (CARDS_TEAM, away)
   231, // "1. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, home)
   234, // "2. drużyna - liczba rzutów rożnych" (CORNERS_TEAM, away)
+]);
+
+/**
+ * Extra prematch market groups read besides the main "1m<stsId>" group.
+ * A fixture snapshot carries each group as its own P entry, tied to the
+ * fixture by `f` and typed by `r`; parseAllMarkets reads an entry when
+ * `entry.f === fixture.id` and its `r` is in this set.
+ * - 17: team stats (188/191 team cards O/U, 231/234 team corners O/U,
+ *   1287/2287 each team corners/cards N+, plus the excluded ids below)
+ * Group 12 ("(z dogrywką)" player props, 2406-2417) is not read: its
+ * semantics are unexplained and its ladders differ from the main group's.
+ */
+export const STS_EXTRA_GROUP_TYPES = new Set<number>([17]);
+
+/**
+ * Market IDs skipped in the extra groups (STS_EXTRA_GROUP_TYPES) only; the
+ * main group is parsed as before. The r=17 penalty-type markets are priced
+ * 30-60% longer than peers for the same event, so they stay out until the
+ * owner decides to map them (sts recovery plan, open question 2).
+ */
+export const STS_EXTRA_GROUP_EXCLUDED_MARKET_IDS = new Set<number>([
+  1413, // "Rzut karny" (Tak 4.0 vs peers 3.0-3.1)
+  1899, // "Czerwona kartka i rzut karny" (15 vs peers 10-10.3)
+  2131, // "Czerwona kartka lub rzut karny" (3.1 vs peers 1.9)
 ]);
 
 /**

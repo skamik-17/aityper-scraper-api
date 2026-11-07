@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { describe, it, expect, vi } from "vitest";
 import { fortunaNormalizer } from "../fortuna-normalizer.js";
+import { getCanonicalTeamName } from "../../../../utils/team-matcher.js";
 import type {
   NormalizationContext,
   NormalizedMarketOutput,
@@ -214,5 +215,146 @@ describe("Task 2: every player market carries its player", () => {
       selections: [{ name: "Dayot Upamecano wyrzucony z boiska", odds: 29 }] }, { homeTeam: "France", awayTeam: "Morocco", league: "world-cup-2026" }); // WC entry 1728
     expect(wc?.marketKey).toBe("PLAYER_RED_CARD");
     expect(legs(wc)).toEqual(["Dayot Upamecano wyrzucony z boiska@29"]);
+  });
+});
+
+// Verbatim Fortuna parser output (NBSP kept) from read-only laliga, serie-a
+// and ligue-1 captures of 2026-11-07, for the review of Task 2: team labels
+// that are not token prefixes of the canonical name, and name shapes the
+// null guard used to drop. See the fixture's "source" field.
+interface LeagueGroup extends FixtureGroup {
+  matchId: string;
+  labels: [string, string];
+}
+
+const LEAGUE_FIXTURE: Record<string, unknown> = JSON.parse(
+  readFileSync(new URL("./fixtures/fortuna-health-2026-11-leagues.inputs.json", import.meta.url), "utf8")
+);
+
+function leagueGroup(group: string): LeagueGroup {
+  const g = LEAGUE_FIXTURE[group] as LeagueGroup | undefined;
+  if (!g || typeof g !== "object" || !Array.isArray(g.markets)) {
+    throw new Error(`league fixture has no group "${group}"`);
+  }
+  return g;
+}
+
+function leagueLive(group: string, id: string, nameIncludes: string): RawBookmakerMarket {
+  const hits = leagueGroup(group).markets.filter(
+    (m) => m.bookmakerMarketId === `ufo:mtyp:${id}` && m.name.includes(nameIncludes)
+  );
+  if (hits.length !== 1) {
+    throw new Error(`${group} ${id} "${nameIncludes}": expected 1 market, found ${hits.length}`);
+  }
+  return hits[0];
+}
+
+function runLeague(group: string, id: string, nameIncludes: string): NormalizedMarketOutput | null {
+  return run(leagueLive(group, id, nameIncludes), leagueGroup(group).ctx);
+}
+
+describe("Task 2 review: team labels and name shapes outside the Premier League", () => {
+  const GROUPS = [
+    "atlBarcelona", "espanyolCoruna", "valenciaRealMadrid", "romaSassuolo", "genoaMilan",
+    "monzaAtalanta", "leMansMonaco", "leHavreLorient", "angersNice", "auxerreParisFC",
+  ];
+  it.each(GROUPS)("%s: the fixture context is what the scraper derives from Fortuna's labels", (group) => {
+    const { labels, ctx } = leagueGroup(group);
+    expect([getCanonicalTeamName(labels[0], ctx.league), getCanonicalTeamName(labels[1], ctx.league)])
+      .toEqual([ctx.homeTeam, ctx.awayTeam]);
+  });
+
+  it.each([
+    // exact alias ("Atl. Madryt" -> Atletico Madrid; "Madryt" is no prefix of "Madrid")
+    ["atlBarcelona", "00-ne", "Lookman", "GOALSCORER_FIRST:Ademola Lookman", "PLAYER@5"],
+    ["atlBarcelona", "00-ne", "Koke", "GOALSCORER_FIRST:Koke", "PLAYER@25"],
+    ["atlBarcelona", "00-ne", "Le Normand", "GOALSCORER_FIRST:Robin Le Normand", "PLAYER@35"],
+    ["romaSassuolo", "00-ne", "Soule", "GOALSCORER_FIRST:Matias Soule", "PLAYER@5"],
+    ["romaSassuolo", "00-ne", "Lulli", "GOALSCORER_FIRST:Emanuele Lulli", "PLAYER@16"],
+    // short token equal to a whole team token ("A", "AC", "Le", "FC")
+    ["espanyolCoruna", "00-nf", "Jensen", "GOALSCORER_FIRST:Jonathan Asp Jensen", "PLAYER@6"],
+    ["espanyolCoruna", "00-nf", "Villares", "GOALSCORER_FIRST:Diego Villares Yanez", "PLAYER@15"],
+    ["espanyolCoruna", "00-nf", "Angelino", "GOALSCORER_FIRST:Angelino", "PLAYER@30"],
+    ["genoaMilan", "00-nf", "Modric", "GOALSCORER_FIRST:Luka Modric", "PLAYER@15"],
+    ["leMansMonaco", "00-ne", "Vercruysse", "GOALSCORER_FIRST:Jean Vercruysse", "PLAYER@14"],
+    ["leHavreLorient", "00-ne", "Nakamura", "GOALSCORER_FIRST:Sota Nakamura", "PLAYER@7"],
+    ["auxerreParisFC", "00-nf", "Lees Melou", "GOALSCORER_FIRST:Pierre Lees Melou", "PLAYER@14"],
+    // dotted abbreviation of any length ("Real M." for Real Madrid), mononym behind it
+    ["valenciaRealMadrid", "00-nf", "Endrick", "GOALSCORER_FIRST:Endrick", "PLAYER@5"],
+  ])("%s %s %s: the team label never leaks into the player (%s)", (group, id, needle, key, leg) => {
+    const out = runLeague(group, id, needle);
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual([leg]);
+  });
+
+  it("the Real M. mononym lands on the same key as his own dash-form markets", () => {
+    expect(runLeague("valenciaRealMadrid", "00-lg", "Endrick")?.marketKey).toBe("PLAYER_FOULS:Endrick");
+  });
+
+  it("a comma name behind a dotted label keeps today's key (Real M. Alexander-Arnold)", () => {
+    expect(runLeague("valenciaRealMadrid", "00-nf", "Alexander-Arnold")?.marketKey)
+      .toBe("GOALSCORER_FIRST:Trent Alexander-Arnold");
+  });
+
+  it.each([
+    ["00-lf", "- liczba strzałów", "PLAYER_SHOTS:Aaron Ndive Mayol de la Cueva", ["2+@6", "1+@2"]],
+    ["00-pn", "liczba spalonych", "PLAYER_OFFSIDES_1H:Aaron Ndive Mayol de la Cueva", ["1+@13"]],
+    ["00-la", "asystuje", "PLAYER_ASSISTS:Aaron Ndive Mayol de la Cueva", ["1+@10"]],
+    ["00-ne", "Valencia", "GOALSCORER_FIRST:Aaron Ndive Mayol de la Cueva", ["PLAYER@20"]],
+  ])("lowercase particles in a no-comma name: valenciaRealMadrid %s (%s) -> %s", (id, needle, key, expected) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const out = runLeague("valenciaRealMadrid", id, needle);
+      expect(out?.marketKey).toBe(key);
+      expect(legs(out)).toEqual(expected);
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it.each([
+    // "Van" fuzzy-resolves to Angers; only an exact alias or a strict prefix may strip a token
+    ["00-oe", "Van den Boomen", "PLAYER_SHOTS_IN_BOX:Branco Van den Boomen", ["2+@5", "1+@1.82"]],
+    ["00-pn", "Van den Boomen", "PLAYER_OFFSIDES_1H:Branco Van den Boomen", ["1+@15"]],
+    ["00-lf", "Van den Boomen", "PLAYER_SHOTS:Branco Van den Boomen", ["1+@1.24", "2+@2.2", "3+@4.75"]],
+    // backtick apostrophe in the count form
+    ["00-oe", "N`Goumou", "PLAYER_SHOTS_IN_BOX:Nathan N'Goumou", ["1+@1.42", "2+@3"]],
+    ["00-pn", "N`Goumou", "PLAYER_OFFSIDES_1H:Nathan N'Goumou", ["1+@3.8"]],
+    ["00-lf", "N`Goumou", "PLAYER_SHOTS:Nathan N'Goumou", ["2+@2.2", "3+@4.5", "1+@1.24"]],
+    ["00-nf", "N`Goumou", "GOALSCORER_FIRST:Nathan N'Goumou", ["PLAYER@6.5"]],
+  ])("angersNice %s %s -> %s", (id, needle, key, expected) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const out = runLeague("angersNice", id, needle);
+      expect(out?.marketKey).toBe(key);
+      expect(legs(out)).toEqual(expected);
+      expect(warn).not.toHaveBeenCalled();
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("a particle surname in the verb form keeps today's key (verbMatch stays unanchored, D4)", () => {
+    expect(runLeague("angersNice", "00-ox", "Van den Boomen")?.marketKey).toBe("PLAYER_HEADER_GOAL:Branco Boomen");
+  });
+
+  it.each([
+    ["atlBarcelona", "00-70", "Pablo Barrios", "PLAYER_GOAL_AND_RESULT:Pablo Barrios", "HOME@10"],
+    ["monzaAtalanta", "00-70", "Krstovic", "PLAYER_GOAL_AND_RESULT:Nikola Krstovic", "AWAY@3.3"],
+  ])("%s parlay %s %s resolves its winning side", (group, id, needle, key, leg) => {
+    const out = runLeague(group, id, needle);
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual([leg]);
+  });
+
+  it.each([
+    // synthetic: a lone short token or a lone initial has no anchor and is never a team label
+    [{ homeTeam: "Le Havre", awayTeam: "Lorient", league: "ligue-1" }, "00-lf", "Le Fée, Enzo - liczba strzałów (OPTA)", "PLAYER_SHOTS:Enzo Le Fee"],
+    [{ homeTeam: "Valencia", awayTeam: "Real Madrid", league: "laliga" }, "00-lf", "M. Endrick - liczba strzałów (OPTA)", "PLAYER_SHOTS:M. Endrick"],
+    // synthetic: a first name that is a whole token of the team name survives a 2-token label
+    [{ homeTeam: "Genoa", awayTeam: "AC Milan", league: "serie-a" }, "00-nf", "AC Milan Milan Badelj strzeli pierwszego gola w meczu (OPTA)", "GOALSCORER_FIRST:Milan Badelj"],
+  ])("guard %#: %s keeps its player", (ctx, id, name, key) => {
+    expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections: [{ name: "1+", odds: 3 }] }, ctx)?.marketKey).toBe(key);
   });
 });

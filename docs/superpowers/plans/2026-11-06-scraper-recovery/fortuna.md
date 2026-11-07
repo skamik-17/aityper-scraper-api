@@ -169,7 +169,7 @@ Observations for other owners (not fixed here):
 
 ### Risks and unknowns
 
-- Some team labels are not token-prefixes of the canonical name (e.g. `Wolves`, `Sheffield Utd`). They are not stripped as 2-3 token prefixes and fall back to the single-token rule, which is today's output. The leak check in acceptance criterion 3 catches any new case.
+- Some team labels are not token-prefixes of the canonical name (e.g. `Wolves`, `Sheffield Utd`, `Atl. Madryt`, `AS Roma`). They are stripped only through an exact alias of the league (Task 2 amendment); a label with no alias and no token prefix is not stripped and leaks into the player name. The label-based detectors of criterion 3 and `replay-player-keys.mts` (`labelLeak`, `sharedTeamToken`) catch such a case without depending on canonical names.
 - The null guard turns a player-coded market without an extractable player into OTHER and logs `[fortuna] Player market without extractable player` (`PLAYER_RED_CARD` is exempt). It fires 0 times on the capture. A new name shape will therefore show up as warnings rather than as a polluted `base` row.
 - The pair ids are positional. A label that names the other team flips the code (Task 4), so a reshuffled id cannot price the wrong team.
 - `00-9a` YES 3.35 is 8% above its 3 peers, and `RED_CARD_TEAM` YES is +10% (odds 8-11). These look like plausible bookmaker margins but are worth watching.
@@ -215,18 +215,20 @@ Pass when:
      - `FIRST_CORNER`: ≥ 8 (prototype: 9).
      - `SECOND_HALF_CORNERS_RACE`: 0, because Fortuna does not offer it today.
 2. **Fresh live smoke** after the fix: exit 0, `matches` 20, and the same code thresholds.
-3. **API after the next scheduled run.** `python3 -I $E/api-checks.py` prints a `SUMMARY` with:
+3. **API after the next scheduled run.** Only possible once the owner has merged this work into `master`: the :3001 backend runs the main checkout, and worktrees cannot write to the DB (EXECUTION.md, decision 1 and Workspace layout). Before that, Task 7 Step 2 is the offline equivalent. `python3 -I $E/api-checks.py` prints a `SUMMARY` with:
+   - `verdict` `CHECKED` and `full` ≥ 1. With `full` 0 every count below is 0 without anything having been checked: record criteria 3-4 as NOT RUN, never PASS.
    - `full` 10 (or however many full-offer matches are listed)
    - `htBad` 0 (today 2)
    - `htcMissing` 0 (today 10)
    - `leak` 0 (today 42)
-   - `base` 0 (today 96)
+   - `labelLeak` 0 and `sharedTeamToken` 0. These read Fortuna's own team labels from its raw names, so they also see labels that are no token of the canonical name (`Atl. Madryt`, `A Coruňa`, `Le Havre`).
+   - `base` 0 (today 96), and `baseCodes` exactly `["CORRECT_SCORE", "HALFTIME_FULLTIME", "HALF_TIME_CORRECT_SCORE", "SECOND_HALF_CORRECT_SCORE"]`
    - `newLegsUnder5.over10Pct` 0 (prototype: 42 legs, max 8.3%)
    - `oneXTwo.maxDevPct` ≤ 10
 
    Every match's `ht:` line shows raw `'1.połowa'` and `ok=True`.
-4. **Pooling.** In the same output, the Forest–City `pool:` line lists fortuna on the `'Murillo'` row next to betfan, etoto, forbet and superbet. Today fortuna is not on that row; its Murillo rows are in `base`. Also, `GET /api/matches/Nottingham%20Forest/Manchester%20City/normalized-markets?league=premier-league` has a `GOALSCORER_FIRST` parameter `Murillo` with a fortuna selection of type `PLAYER`.
-5. **Log of that run**, with `L` = the ANSI-stripped backend log from the run's `[Scheduler] Starting scheduled scrape` line onwards:
+4. **Pooling.** In the same output, the Forest–City `pool:` line lists fortuna on the `'Murillo'` row next to betfan, etoto, forbet and superbet (`SUMMARY.mononym.fortunaOnRow` true). Today fortuna is not on that row; its Murillo rows are in `base`. Also, `GET /api/matches/Nottingham%20Forest/Manchester%20City/normalized-markets?league=premier-league` has a `GOALSCORER_FIRST` parameter `Murillo` with a fortuna selection of type `PLAYER` (the `mononym:` line of the same output). Forest–City kicks off 2026-11-07T17:30Z; Task 7 Step 3 says which mononym to use after that. If the pool line says `ABSENT`, criterion 4 is NOT RUN.
+5. **Log of that run**, with `L` = the ANSI-stripped backend log from the run's `[Scheduler] Starting scheduled scrape` line onwards. The scheduler scrapes only `CONFIG.ENABLED_LEAGUES`, which is `['premier-league']` (`src/config/index.ts:47-49`), so these greps never cover another league; Task 7 Step 2b covers them:
    - `grep -c 'marketKey collision with overlapping selection code .* for fortuna ' $L` → 0. Run 3 had 29: 10 `HALF_TIME_RESULT` plus 19 player keys.
    - `grep -c '\[fortuna\] Player market without extractable player' $L` → 0.
 6. `npx tsc --noEmit` exits 0, `npx vitest run` is green, and golden `-t fortuna` reports `failures=0`. `golden-drift.mts --since <Task 0 baseline>` prints `{"blessed":[],"unblessed":[<the 26 indices listed under Impact>],"gone":[]}`, plus 1790 if Task 6 was done.
@@ -409,6 +411,11 @@ git commit -m "fix(fortuna): keep corners races out of 1X2 codes"
 - `stripFortunaLeadingTeamToken(name, ctx)` keeps its signature. For n = 3, then n = 2, it strips the first n whitespace-separated tokens when `normalize1x2Selection(prefix, …)` is HOME/AWAY and `isStrictFortunaTeamPrefix(prefix, side === "HOME" ? ctx.homeTeam : ctx.awayTeam)` holds. Otherwise it applies today's single-token rule, with the token regex widened to `/^([\p{Lu}][\p{L}'.-]*)\s+/u`.
 - `extractFortunaPlayerName`: after the no-comma fallback, a single capitalised token followed by ` - `, `liczba ` or a verb is the player: `/^([\p{Lu}][\p{L}'’.-]+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u`. The exceptions are a token that resolves to HOME/AWAY and the tokens `Mecz`, `SuperSub` and `Zawodnik`. The result is canonicalized through `canonicalizeFortunaPlayerName`.
 - `normalizeMarket`: when `isPlayerMarket && !playerName && !parlayPlayerParam && marketCode !== "PLAYER_RED_CARD"`, call ``console.warn(`[fortuna] Player market without extractable player: "${raw.name}" (id: ${marketId ?? "none"})`)`` and `return null`. Acceptance criterion 5 and the smoke's `--warn-pattern` count this exact text.
+- **Amended by the Task 2 review (fix round 1), from live laliga/serie-a/ligue-1 captures of 2026-11-07:**
+  - `isStrictFortunaTeamPrefix(prefix, teamName, league?)` also holds when `prefix` resolves to `teamName` through an exact alias (`matchTeamByExactAlias` in `src/utils/team-matcher.ts`: raw or normalized alias key, never the substring or fuzzy tiers), e.g. `AS Roma`, `Atl. Madryt`. Otherwise the prefix's segments (whitespace tokens, split after each dot) must match distinct team tokens in order, at least one segment must be an anchor (≥ 3 characters, prefix of the token), and the others may be a dotted abbreviation of any length (`Real M.`) or a short token equal to the whole team token (`AC`, `Le`, `FC`, `A`).
+  - The single-token rule uses the same check (no fuzzy-only strip), so `Van den Boomen, Branco` keeps `Van`.
+  - The no-comma fallback allows the lowercase particles `de del della di da dos du la le van von den der` between capitalized words, and backtick, acute and left-quote apostrophes are read as `'` before matching (`N`Goumou`).
+  - Fortuna aliases: `Atl. Madryt` and `Atl.Madrid` → Atletico Madrid (the fuzzy tier sent both to Real Madrid), `FC Sevilla` → Sevilla, `A.Bergamo` → Atalanta.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -747,9 +754,40 @@ python3 -I -c "import json;b,a=[json.loads(open(f).read().split(' ',1)[1]) for f
 ```
 
 Expected: `True 0 <≤ 0.305> {…}`, with the code counts of acceptance criterion 1. If Task 6 was done, compare against `x['idRaw']+1` instead (criterion 1).
-- [ ] **Step 2: Fresh live smoke** (the Task 0 command without `--dump`, same flags) → criterion 2. Save both `SMOKE_RESULT` lines to `$E/smoke-after-fix-fortuna.txt`.
-- [ ] **Step 3: After the next scheduled run.** The dev server restarted itself on the `src/` edits. Run `python3 -I $E/api-checks.py > $E/api-checks-after-fix.txt` → criteria 3 and 4. Then run the `GOALSCORER_FIRST` `Murillo` check of criterion 4.
-- [ ] **Step 4: Log greps** of that run → criterion 5.
+- [ ] **Step 2: Fresh live smoke, then the offline replay** (pre-merge equivalent of Steps 3-4). Run the Task 0 command with `--dump .scratch/fortuna-capture-after.json` instead of `/tmp/fortuna-capture.json` (under `heavy --live`), same flags → criterion 2. Save both `SMOKE_RESULT` lines to `$E/smoke-after-fix-fortuna.txt`. Then replay the dump through the normalizer and the repository's own `mergeMarketRecord` (no network, no DB):
+
+```bash
+node_modules/.bin/tsx $E/replay-player-keys.mts .scratch/fortuna-capture-after.json premier-league --mononym Murillo
+```
+
+Expected `RESULT`: `full` ≥ 1, `bare` 0, `leak` 0, `labelLeak` 0, `sharedTeamToken` 0, `collisions` 0, `warnNoPlayer` 0, `mononym.rows` with `PLAYER_SHOTS:Murillo` and `GOALSCORER_FIRST:Murillo` `["PLAYER@…"]`, and `verdict` `CHECKED`. `sharedNameToken` lines are shared given names (`James`, `Lucas`); read them, they are not failures. `verdict` `NOT RUN` (no full-offer match) or `PARTIAL` (mononym absent) is recorded as such, never as PASS. If Murillo's match has started, rerun with `--mononym` set to a name from the `mononyms:` lines of a full-offer match.
+
+- [ ] **Step 2b: Leagues outside the Premier League.** The scheduled run never scrapes them (criterion 5), so run each one explicitly, one at a time under `heavy --live` (La Liga's slug is `laliga`):
+
+```bash
+for L in laliga serie-a ligue-1 ekstraklasa; do
+  node_modules/.bin/tsx $E/smoke-full-offer.mts fortuna $L --dump .scratch/fortuna-$L-after.json --warn-pattern 'without extractable player' | grep '^SMOKE_RESULT'
+  node_modules/.bin/tsx $E/replay-player-keys.mts .scratch/fortuna-$L-after.json $L --mononym <a name from its mononyms: lines>
+done
+```
+
+Expected per league: `warnPatternCount` 0, and the same `RESULT` values as Step 2. Measured on the 2026-11-07 00:40Z captures with the Task 2 review fixes, contexts re-derived from Fortuna's labels by the fixed team matcher: 0 warnings, 0 leaks, 0 shared team tokens and 0 collisions in all three leagues (fortuna Task 2 report, fix round 1). Ekstraklasa answered `No fixtures found from API` for `ufo:tour:00-0b9` (`src/scrapers/bookmakers/fortuna/constants.ts:47`) on that date: record NOT RUN if it still does.
+
+- [ ] **Step 3: After the owner's merge into `master` and the next scheduled run.** Before the merge no scheduled scrape runs this code (criterion 3), so Steps 3-4 stay open until then. The dev server restarted itself on the `src/` edits. Then:
+  1. `python3 -I $E/api-checks.py --mononym Murillo > $E/api-checks-after-fix.txt` → criterion 3: `SUMMARY.verdict` `CHECKED`, `full` ≥ 1, and the counts of criterion 3. With `full` 0, record checks 1-3 as NOT RUN.
+  2. Pooling → criterion 4: the `pool:` line of the mononym's match lists fortuna on the mononym row (`SUMMARY.mononym.fortunaOnRow` true).
+  3. `GOALSCORER_FIRST` → criterion 4: the `mononym:` line of that match shows `'fortuna': ['PLAYER']`.
+  4. The log greps of Step 4 → criterion 5.
+
+  Lifetime of the named matches: Fulham–Newcastle (Kevin) kicks off 2026-11-07T15:00Z and Forest–City (Murillo) at 17:30Z. Brighton–Brentford (Chema), Ipswich–Bournemouth (Rayan, Evanilson), Sunderland–Chelsea (Estevao) and Palace–Liverpool (Alisson) kick off 2026-11-08T14:00Z, Man Utd–Villa (Amad) at 16:30Z. After that the listed PL fixtures carry about 109 raw markets and no OPTA player markets until the next round opens. If the merge lands after 2026-11-08T16:30Z, run checks 2-3 with `--mononym` set to a name from the `fortuna mononyms:` lists of a full-offer match listed at that time; if none is listed, record checks 1-3 as NOT RUN.
+
+  `baseCodes` of one match by hand (expected: the four codes of criterion 3):
+
+```bash
+curl -s 'http://localhost:3001/api/matches/Nottingham%20Forest/Manchester%20City/normalized-markets?league=premier-league' | python3 -I -c "import json,sys; d=json.load(sys.stdin)['data']; print(sorted({mk['type'] for c in d['categories'] for mk in c['markets'] for p in mk['parameters'] if p['value']=='base' for b in p['bookmakers'] if b['bookmaker']=='fortuna'}))"
+```
+
+- [ ] **Step 4: Log greps** of that run → criterion 5 (Premier League only, see criterion 5).
 - [ ] **Step 5:** `npx tsc --noEmit && npx vitest run`, golden `-t fortuna`, and `golden-drift.mts --since /tmp/fortuna-golden-before.txt` → criterion 6.
 
 ## What to monitor

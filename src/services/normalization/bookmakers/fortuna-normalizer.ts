@@ -25,6 +25,7 @@ import {
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { MARKET_TYPE_IDS } from "../../../scrapers/bookmakers/fortuna/constants.js";
+import { matchTeamByExactAlias } from "../../../utils/team-matcher.js";
 
 // Round-3 audit: id identities re-verified against the live markets API
 // (fixture "Norwegia - Anglia", 2026-07-08). Many ids previously guessed from
@@ -394,20 +395,58 @@ function canonicalizeFortunaPlayerName(raw: string): string {
 }
 
 /**
- * True when every token of `prefix` (split on whitespace and dots, folded
- * like market names) has at least 3 characters and is a prefix of some
- * folded token of `teamName`: "Coventry City" holds for "Coventry City",
- * "Aston Villa George" does not hold for "Aston Villa". normalize1x2Selection
- * matches fuzzily ("Aston Villa George", "Hull Lucas" and "Nottingham
- * Murillo" all resolve to a side), so a multi-token prefix is only stripped
- * when this also holds.
+ * True when `prefix` is a team label of `teamName`, without any substring or
+ * fuzzy matching. normalize1x2Selection matches fuzzily ("Aston Villa
+ * George", "Hull Lucas" and "Nottingham Murillo" all resolve to a side, and
+ * "Van" resolves to Angers in Ligue 1), so a leading token run is only
+ * stripped when this also holds. It holds when either:
+ * - `prefix` resolves to `teamName` through an explicit alias of `league`
+ *   (matchTeamByExactAlias: "AS Roma" -> Roma, "Atl. Madryt" -> Atletico
+ *   Madrid, "Maroko" -> Morocco), or
+ * - the segments of `prefix` (whitespace tokens, further split after each
+ *   dot, folded like market names) match distinct folded tokens of
+ *   `teamName` in order, and at least one segment is an anchor. A segment
+ *   matches a team token when it is an anchor (3+ characters and a prefix of
+ *   the token: "Coventry City", "Man.City"), a dotted abbreviation of any
+ *   length that prefixes the token ("Real M." for Real Madrid), or a short
+ *   token equal to the whole token ("AC Milan", "Le Havre", "A Coruňa").
+ * "Aston Villa George" fails for "Aston Villa", "AC Milan Milan" fails for
+ * "AC Milan" (each team token is used once, so a first name equal to a team
+ * token survives), and a lone "Le", "A" or "M." fails everywhere because it
+ * has no anchor.
  */
-function isStrictFortunaTeamPrefix(prefix: string, teamName: string): boolean {
+function isStrictFortunaTeamPrefix(prefix: string, teamName: string, league?: string): boolean {
+  if (league && matchTeamByExactAlias(prefix, league)?.name === teamName) return true;
   const teamTokens = normalizeMarketName(teamName).split(/[\s.]+/).filter(Boolean);
-  const parts = normalizeMarketName(prefix).split(/[\s.]+/).filter(Boolean);
-  return (
-    parts.length > 0 &&
-    parts.every((p) => p.length >= 3 && teamTokens.some((t) => t.startsWith(p)))
+  const segments = normalizeMarketName(prefix)
+    .split(" ")
+    .flatMap((token) => token.match(/[^.]+\.?/g) ?? []);
+  let anchored = false;
+  let next = 0;
+  for (const segment of segments) {
+    const dotted = segment.endsWith(".");
+    const body = dotted ? segment.slice(0, -1) : segment;
+    const anchor = body.length >= 3;
+    const at = teamTokens.findIndex(
+      (t, i) => i >= next && (t === body || ((anchor || dotted) && t.startsWith(body)))
+    );
+    if (at < 0) return false;
+    if (anchor) anchored = true;
+    next = at + 1;
+  }
+  return anchored;
+}
+
+/**
+ * True when `prefix` is a team label of either side: normalize1x2Selection
+ * resolves it to a side and isStrictFortunaTeamPrefix holds for one of the
+ * two teams. Either team is accepted because only the strip depends on it.
+ */
+function isFortunaTeamLabel(prefix: string, ctx: NormalizationContext): boolean {
+  const side = normalize1x2Selection(prefix, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  if (side !== "HOME" && side !== "AWAY") return false;
+  return [ctx.homeTeam, ctx.awayTeam].some(
+    (team) => !!team && isStrictFortunaTeamPrefix(prefix, team, ctx.league)
   );
 }
 
@@ -420,30 +459,23 @@ function isStrictFortunaTeamPrefix(prefix: string, teamName: string): boolean {
  * - dotted token: "Man.City Dias, Ruben strzeli ..." ("Ruben City Dias"),
  *   "W.Ziel.Przyl. Cabral, Jovane strzeli ..."
  * - multi-word: "Aston Villa McGinn, John strzeli ..." ("John Villa McGinn"),
- *   "Coventry City Thomas, Bobby strzeli ..."
- * A 3- or 2-token prefix is stripped only when it resolves to a side AND is a
- * strict token-prefix of that side's team name (isStrictFortunaTeamPrefix),
- * so "Hull Lucas Herrington" keeps "Lucas Herrington" even though "Hull
- * Lucas" fuzzy-resolves to the away side. Otherwise a single leading token
- * (dots allowed) is stripped when it resolves to a side.
+ *   "Coventry City Thomas, Bobby strzeli ...", "AC Milan Modric, Luka ...",
+ *   "Le Havre Sota Nakamura - ...", "Real M. Endrick strzeli ..."
+ * The first 3, then 2, then 1 token(s) are stripped only when they form a
+ * team label (isFortunaTeamLabel), so "Hull Lucas Herrington" keeps "Lucas
+ * Herrington" even though "Hull Lucas" fuzzy-resolves to the away side, and
+ * "Van den Boomen, Branco" keeps "Van" even though "Van" fuzzy-resolves to
+ * Angers.
  */
 function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): string {
   const tokens = name.split(/\s+/);
   for (const n of [3, 2]) {
     if (tokens.length <= n) continue;
-    const prefix = tokens.slice(0, n).join(" ");
-    const side = normalize1x2Selection(prefix, ctx.homeTeam, ctx.awayTeam, ctx.league);
-    if (
-      (side === "HOME" || side === "AWAY") &&
-      isStrictFortunaTeamPrefix(prefix, side === "HOME" ? ctx.homeTeam : ctx.awayTeam)
-    ) {
-      return tokens.slice(n).join(" ");
-    }
+    if (isFortunaTeamLabel(tokens.slice(0, n).join(" "), ctx)) return tokens.slice(n).join(" ");
   }
   const leadingWord = name.match(/^([\p{Lu}][\p{L}'.-]*)\s+/u)?.[1];
   if (!leadingWord) return name;
-  const side = normalize1x2Selection(leadingWord, ctx.homeTeam, ctx.awayTeam, ctx.league);
-  return side === "HOME" || side === "AWAY" ? name.slice(leadingWord.length).trim() : name;
+  return isFortunaTeamLabel(leadingWord, ctx) ? name.slice(leadingWord.length).trim() : name;
 }
 
 /**
@@ -457,15 +489,23 @@ function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): 
  *   Lastname" order with no comma at all ("Youssef Belammari liczba
  *   spalonych w 1.połowie (OPTA)", "Ayoube Amaimouni Echghouyab - liczba
  *   fauli (OPTA)") — already in natural order, so no swap is needed.
+ *   Lowercase particles may sit between the capitalized words ("Aaron Ndive
+ *   Mayol de la Cueva - liczba strzałów (OPTA)").
  * - single-name fallback: mononyms ("Murillo - liczba strzałów (OPTA)",
  *   "Nottingham Murillo strzeli pierwszego gola w meczu (OPTA)" once the
  *   team prefix is stripped).
+ * Backtick, acute and left-quote apostrophes ("N`Goumou, Nathan liczba
+ * ...") are read as a plain apostrophe first, as canonicalizePlayerName
+ * does, so every form of the name reaches the same key.
  */
 function extractFortunaPlayerName(
   rawName: string,
   ctx: NormalizationContext
 ): string | undefined {
-  const name = stripFortunaLeadingTeamToken(stripFortunaScope(rawName), ctx);
+  const name = stripFortunaLeadingTeamToken(
+    stripFortunaScope(rawName).replace(/[`´‘]/gu, "'"),
+    ctx
+  );
 
   // The name portion may itself contain a hyphenated given/surname ("Mateta,
   // Jean-Philippe - ..."), so it must allow hyphens; only the literal " - "
@@ -485,8 +525,10 @@ function extractFortunaPlayerName(
 
   // No-comma fallback: capture the leading run of 2+ capitalized words
   // immediately preceding the dash separator or a known count/verb keyword.
+  // Lowercase particles may sit between two capitalized words ("Mayol de la
+  // Cueva"), never at either end.
   const noCommaMatch = name.match(
-    /^([\p{Lu}][\p{L}'’.-]*(?:\s+[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
+    /^([\p{Lu}][\p{L}'’.-]*(?:\s+(?:(?:de|del|della|di|da|dos|du|la|le|van|von|den|der)\s+)*[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
   );
   if (noCommaMatch) return canonicalizeFortunaPlayerName(noCommaMatch[1].trim());
 

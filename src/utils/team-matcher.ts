@@ -167,6 +167,11 @@ const LALIGA_ALIASES: Record<string, string> = {
   "Atlético Madrid": "Atletico Madrid",
   "Atletico Madryt": "Atletico Madrid",
   "Atl Madrid": "Atletico Madrid",
+  // Fortuna's fixture label and its parlay label ("Atl.Madrid wygra , ...").
+  // Without them the fuzzy tier resolves both to Real Madrid, so Atletico's
+  // fixtures were saved as Real Madrid's.
+  "Atl. Madryt": "Atletico Madrid",
+  "Atl.Madrid": "Atletico Madrid",
 
   // Athletic Bilbao
   Athletic: "Athletic Bilbao",
@@ -215,6 +220,7 @@ const LALIGA_ALIASES: Record<string, string> = {
 
   // Sevilla
   "Sevilla FC": "Sevilla",
+  "FC Sevilla": "Sevilla", // Fortuna's label
 
   // Valencia
   "Valencia CF": "Valencia",
@@ -280,6 +286,7 @@ const SERIE_A_ALIASES: Record<string, string> = {
   "Atalanta BC": "Atalanta",
   "Atalanta Bergamo": "Atalanta",
   "Atalanta B.C.": "Atalanta",
+  "A.Bergamo": "Atalanta", // Fortuna's label
 
   // Fiorentina
   "ACF Fiorentina": "Fiorentina",
@@ -698,6 +705,30 @@ export function matchToCanonical(
     );
   }
   return null;
+}
+
+/**
+ * Resolves a team label only through the explicit alias table of `league`,
+ * by raw key or by normalized key (tiers 1 and 1b of matchToCanonical), and
+ * never through the substring or fuzzy tiers. Use it where a false positive
+ * costs more than a miss, e.g. deciding that a token run in front of a player
+ * name is a team label ("AS Roma", "Atl. Madryt", "W.Ziel.Przyl.").
+ *
+ * @param scrapedName - Team label from a bookmaker
+ * @param league - League slug (e.g., "laliga", "serie-a")
+ */
+export function matchTeamByExactAlias(
+  scrapedName: string,
+  league: string
+): CanonicalTeam | null {
+  const aliases = LEAGUE_ALIASES[league];
+  if (!aliases) return null;
+  const canonical =
+    aliases[scrapedName] ??
+    aliases[scrapedName.trim()] ??
+    getNormalizedAliases(league)[normalize(scrapedName)];
+  if (!canonical) return null;
+  return getTeamsForLeague(league).find((t) => t.name === canonical) ?? null;
 }
 
 /**

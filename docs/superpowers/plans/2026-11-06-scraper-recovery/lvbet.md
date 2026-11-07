@@ -215,14 +215,17 @@ SMOKE=$(mktemp -d)
 timeout 300 npx tsx scripts/lvbet-market-discovery.ts --url "<lvbet eventUrl of a match with ladders>" --league premier-league > $SMOKE/run.log 2>&1; echo "exit=$?"
 sed 's/\x1b\[[0-9;]*m//g' $SMOKE/run.log | sed -n '/SUMMARY/,$p' > $SMOKE/summary.txt
 grep -cE '^Strzały +→ PLAYER_SHOTS ' $SMOKE/summary.txt
-grep -E '^ *(Rezultat lub|Obaj gracze|1\. połowa - Liczba goli \(3|Zawodnik strzeli gola lub zanotuje asystę - P|Strzały)' $SMOKE/summary.txt
+grep -E '^ *(Rezultat lub|Obaj gracze|1\. połowa - Liczba goli \(3|Strzały)' $SMOKE/summary.txt
+grep -cE '→ TWO_PLAYERS_GOAL_OR_ASSIST ' $SMOKE/summary.txt
+grep -cE '→ PLAYER_GOAL_OR_ASSIST ' $SMOKE/summary.txt
 ```
 - Get the `eventUrl` from `GET http://localhost:3001/api/odds?league=premier-league` (`markets.MATCH_WINNER.bookmakerOdds.lvbet.eventUrl`). Today's example: `https://lvbet.pl/pl/zaklady-bukmacherskie/pilka-nozna/premier-league/arsenalvshullcity/--/1/35148/37685/bc:31333515/`.
-- Today, the 11 `Strzały…` markets are all under `❌ UNMAPPED MARKETS:`, and the `Strzały` count is 0.
+- The goal-or-assist markets are checked **by code, not by name**. In the mapped list, `printSummary` cuts every market name to 39 characters (`scraper-audit-core.ts:652`, `a.name.substring(0, 39)`). So the pair market `Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa` and the single-player `Zawodnik strzeli gola lub zanotuje asystę` both print as `Zawodnik strzeli gola lub zanotuje asys  → <code>`, and a name grep for `… - P` prints nothing even when the pair maps correctly. Only the UNMAPPED list prints full names. To see the full name of a mapped market, run the `--market "Podwójna szansa"` shape instead. It prints `📦 MARKET: <full name>` followed by `✅ NORMALIZED: <code>` for each matching market, but it is a second league scrape.
+- Today, the 11 `Strzały…` markets are all under `❌ UNMAPPED MARKETS:`, and the `Strzały` count is 0. The two goal-or-assist counts are `0` (`TWO_PLAYERS_GOAL_OR_ASSIST`) and `2` (`PLAYER_GOAL_OR_ASSIST`), because the pair is misrouted into the single-player code (root cause D; the pre-Task-2 golden `#22` and `#190` are both `PLAYER_GOAL_OR_ASSIST`).
 - After Tasks 2–3:
   - the count equals the number of players in the `Strzały` ladder (Ars–Hul: 38);
   - `Rezultat lub ilość bramek (X)` lines map to `RESULT_OR_TOTAL`, and `Obaj gracze …` lines to `TWO_PLAYERS_COMBINED_GOALS`;
-  - the goal-or-assist `- Podwójna szansa` market maps to `TWO_PLAYERS_GOAL_OR_ASSIST`;
+  - the goal-or-assist `- Podwójna szansa` market maps to `TWO_PLAYERS_GOAL_OR_ASSIST`: `grep -cE '→ TWO_PLAYERS_GOAL_OR_ASSIST '` prints `1`, and `grep -cE '→ PLAYER_GOAL_OR_ASSIST '` prints `1` (the single-player market only). Both are for a match whose offer carries both markets, as Ars–Hul does. An offline rebuild of the SUMMARY from `evidence/lvbet/markets-search-arsenal-hull-full-2026-11-06.json` with the Task 2 parser and normalizer gives `1` and `1`;
   - `1. połowa - Liczba goli (3-drogowo)` and the 7 unsplit `Strzały …` siblings appear only under UNMAPPED.
 
 ## Global Constraints
@@ -755,6 +758,7 @@ The archive lives in the aityper repo, where the WC archives are tracked. With t
 - [ ] **Step 5: Live acceptance** (after the owner deploys or restarts and one scheduled run completes)
 
 - Run the smoke test once, as specified in the Observations section. Expected results are listed there.
+  - Check the goal-or-assist pair **by code**: `grep -cE '→ TWO_PLAYERS_GOAL_OR_ASSIST ' $SMOKE/summary.txt` prints `1`, and `grep -cE '→ PLAYER_GOAL_OR_ASSIST ' $SMOKE/summary.txt` prints `1`. The SUMMARY cuts mapped names to 39 characters (`scraper-audit-core.ts:652`), so the pair row reads `Zawodnik strzeli gola lub zanotuje asys`, the same as the single-player row. A name grep for `… - Podwójna szansa` therefore printing nothing is **not** a FAIL. `0` and `2` means the pair is still misrouted (FAIL). A `0` for the pair code together with a full-name pair row under UNMAPPED is also a FAIL. If the pair market's full name is needed, run the `--market "Podwójna szansa"` shape (a second league scrape).
 - Then fetch the dumps and run the checks of the Live acceptance block (all commands are spelled out there):
   - L1 and L5: `grep -E '^\[LVBet/FullOffer\]'` and `grep -c 'for lvbet <KEY> '` in the cleaned log;
   - L2: two `market_comparison` dumps, each taken after a run that logged `[FullOfferRepo] Pruned N stale row(s) for lvbet/<matchId>` with no `Batch insert error`. In the report, record `db_stats.py`'s single `scrapedAt` bucket and `UNK%`, and the literal `externalId == "undefined"` count (gate: 0). Report `extIdMissing` for information only: filtered or merged selections legitimately carry no `externalId`;

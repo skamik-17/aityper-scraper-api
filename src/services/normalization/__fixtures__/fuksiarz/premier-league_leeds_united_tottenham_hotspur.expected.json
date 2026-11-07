@@ -1,0 +1,405 @@
+{
+  "bookmaker": "fuksiarz",
+  "entries": [
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Leeds powyżej 1,5 rzutu rożnego w każdej połowie",
+            "label": "Leeds powyżej 1,5 rzutu rożnego w każdej połowie",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 13,
+      "marketCode": "OTHER",
+      "rawName": "Zakłady specjalne #4.1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:E. Ampadu",
+        "matchedBy": "id",
+        "paramValue": "E. Ampadu",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "E. Ampadu",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 238,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:J. Bahoya",
+        "matchedBy": "id",
+        "paramValue": "J. Bahoya",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "J. Bahoya",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 239,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:M. Bard",
+        "matchedBy": "id",
+        "paramValue": "M. Bard",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "M. Bard",
+            "odds": 16
+          }
+        ]
+      },
+      "index": 240,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:J. Bijol",
+        "matchedBy": "id",
+        "paramValue": "J. Bijol",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "J. Bijol",
+            "odds": 5.3
+          }
+        ]
+      },
+      "index": 241,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:D. Calvert-Lewin",
+        "matchedBy": "id",
+        "paramValue": "D. Calvert-Lewin",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "D. Calvert-Lewin",
+            "odds": 2.1
+          }
+        ]
+      },
+      "index": 242,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:N. Elvedi",
+        "matchedBy": "id",
+        "paramValue": "N. Elvedi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "N. Elvedi",
+            "odds": 9.8
+          }
+        ]
+      },
+      "index": 243,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:D. James",
+        "matchedBy": "id",
+        "paramValue": "D. James",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "D. James",
+            "odds": 20
+          }
+        ]
+      },
+      "index": 244,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:J. Justin",
+        "matchedBy": "id",
+        "paramValue": "J. Justin",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "J. Justin",
+            "odds": 9.1
+          }
+        ]
+      },
+      "index": 245,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:S. Longstaff",
+        "matchedBy": "id",
+        "paramValue": "S. Longstaff",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "S. Longstaff",
+            "odds": 16
+          }
+        ]
+      },
+      "index": 246,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:T. Muharemovic",
+        "matchedBy": "id",
+        "paramValue": "T. Muharemovic",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "T. Muharemovic",
+            "odds": 4.9
+          }
+        ]
+      },
+      "index": 247,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:L. Nmecha",
+        "matchedBy": "id",
+        "paramValue": "L. Nmecha",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "L. Nmecha",
+            "odds": 3.95
+          }
+        ]
+      },
+      "index": 248,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:N. Okafor",
+        "matchedBy": "id",
+        "paramValue": "N. Okafor",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "N. Okafor",
+            "odds": 5
+          }
+        ]
+      },
+      "index": 249,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:A. Stach",
+        "matchedBy": "id",
+        "paramValue": "A. Stach",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "A. Stach",
+            "odds": 7.3
+          }
+        ]
+      },
+      "index": 250,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:A. Tanaka",
+        "matchedBy": "id",
+        "paramValue": "A. Tanaka",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "A. Tanaka",
+            "odds": 5.7
+          }
+        ]
+      },
+      "index": 251,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:H. Wilson",
+        "matchedBy": "id",
+        "paramValue": "H. Wilson",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "H. Wilson",
+            "odds": 9.2
+          }
+        ]
+      },
+      "index": 252,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 1 celny strzał głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:D. Calvert-Lewin",
+        "matchedBy": "id",
+        "paramValue": "D. Calvert-Lewin",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "D. Calvert-Lewin",
+            "odds": 7.3
+          }
+        ]
+      },
+      "index": 253,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 2 celne strzały głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+        "marketKey": "PLAYER_HEADER_SHOTS_ON_TARGET:L. Nmecha",
+        "matchedBy": "id",
+        "paramValue": "L. Nmecha",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "L. Nmecha",
+            "odds": 25
+          }
+        ]
+      },
+      "index": 254,
+      "marketCode": "PLAYER_HEADER_SHOTS_ON_TARGET",
+      "rawName": "Odda co najmniej 2 celne strzały głową"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EACH_TEAM_TOTAL_CORNERS_OVER",
+        "marketKey": "EACH_TEAM_TOTAL_CORNERS_OVER:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "powyżej 2.5",
+            "odds": 1.4
+          }
+        ]
+      },
+      "index": 440,
+      "marketCode": "EACH_TEAM_TOTAL_CORNERS_OVER",
+      "rawName": "Każda drużyna powyżej 2.5 rzutu rożnego"
+    }
+  ],
+  "matchIdSafe": "premier-league_leeds_united_tottenham_hotspur"
+}

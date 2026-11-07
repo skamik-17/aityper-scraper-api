@@ -345,17 +345,24 @@ const PLAYER_LIST_MARKET_IDS = new Set<number>([
  * Per-player STAT-LINE markets (PLAYER_SHOTS, PLAYER_OFFSIDES,
  * PLAYER_HEADER_SHOTS_ON_TARGET): unlike PLAYER_LIST_MARKET_IDS above, the
  * normalizer keys these by the PLAYER as the market parameter and reduces
- * every selection to just the threshold outcome ("1+"/"2+"). Superbet tags
- * every player's row with the THRESHOLD as `specialBetValue` (e.g. "0.5",
- * "2.5"), not a per-player id, so grouping by marketId+specialBetValue like
- * the generic O/U markets bundles every player who happens to share that
- * threshold into one raw group - the normalizer then reads only the first
- * bundled row's player name as the group's single param and mixes every
- * other player's price under that one player's column (confirmed:
- * PLAYER_OFFSIDES mixed Sbai's and Mbappe's higher-threshold rows in under
- * whichever player's row the API happened to list first). Group these by
- * the player identity embedded in the selection name instead, so one raw
- * group always corresponds to exactly one player.
+ * every selection to just the threshold outcome ("1+"/"2+"), so one raw
+ * group must hold exactly one player's whole ladder. Grouping by
+ * marketId+specialBetValue like the generic O/U markets breaks that in both
+ * formats Superbet has used:
+ * - Today (2026-11-06 capture) `specialBetValue` is
+ *   `sr:player:<id>-<Name>-<line>` (e.g. "sr:player:100578-John Egan-0.5"),
+ *   one value per player-line row, so that key would split every player's
+ *   ladder into one single-selection raw market per line.
+ * - Earlier (2026-08-19 capture) it was the bare THRESHOLD ("0.5", "2.5"),
+ *   shared by every player, so that key bundled every player who happened to
+ *   share a threshold into one raw group - the normalizer then read only the
+ *   first bundled row's player name as the group's single param and mixed
+ *   every other player's price under that one player's column (confirmed:
+ *   PLAYER_OFFSIDES mixed Sbai's and Mbappe's higher-threshold rows in under
+ *   whichever player's row the API happened to list first).
+ * Group these by the player identity embedded in the selection name instead
+ * ("John Egan - powyżej 0.5", or the older "Sbai, Amine - powyżej 2.5"), so
+ * one raw group always corresponds to exactly one player.
  */
 const PLAYER_STAT_LINE_MARKET_IDS = new Set<number>([
   236218, // PLAYER_SHOTS: "Zawodnik - liczba strzałów"

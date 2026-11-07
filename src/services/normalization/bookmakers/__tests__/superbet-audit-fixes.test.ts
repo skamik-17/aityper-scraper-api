@@ -238,3 +238,78 @@ describe("superbet: exact-goals family maps by id", () => {
     expect(out.selections.map((s) => s.odds)).toEqual(sels.map(([, odds]) => odds));
   });
 });
+
+// Characterization: pin today's (2026-11-06) player formats. Superbet now
+// quotes players as "First Last" (no comma) and tags stat lines with
+// specialBetValue "sr:player:<id>-<Name>-<line>". Raw values from
+// parsed-ars-hul-2026-11-06.json (event 14438716).
+describe("superbet: today's First-Last player formats", () => {
+  it("236218 First-Last stat line keys the player", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "236218",
+        name: "Zawodnik - liczba strzałów",
+        selections: [
+          { name: "John Egan - powyżej 0.5", odds: 2.12 },
+          { name: "John Egan - powyżej 1.5", odds: 6 },
+          { name: "John Egan - powyżej 2.5", odds: 17 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("PLAYER_SHOTS");
+    expect(out.marketKey).toBe("PLAYER_SHOTS:John Egan");
+    expect(out.paramValue).toBe("John Egan");
+    expect(out.selections.map((s) => s.code)).toEqual(["1+", "2+", "3+"]);
+    expect(out.selections.map((s) => s.odds)).toEqual([2.12, 6, 17]);
+  });
+
+  it("236226 First-Last goalscorer stays verbatim", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "236226",
+        name: "Zawodnik - strzeli gola",
+        selections: [
+          { name: "Viktor Gyokeres", odds: 1.78 },
+          { name: "Kai Havertz", odds: 2 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("GOALSCORER_ANYTIME");
+    expect(out.selections.map((s) => s.code)).toEqual(["Viktor Gyokeres", "Kai Havertz"]);
+    expect(out.selections.map((s) => s.odds)).toEqual([1.78, 2]);
+  });
+
+  it("233484 First-Last pair becomes combo form", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "233484",
+        name: "Którykolwiek z zawodników strzeli gola",
+        selections: [{ name: "Christos Tzolis lub Kai Havertz", odds: 1.45 }],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("TWO_PLAYERS_ANYTIME");
+    expect(out.selections.map((s) => s.code)).toEqual(["C. Tzolis & K. Havertz"]);
+    expect(out.selections[0].odds).toBe(1.45);
+  });
+
+  it("547 Mecz maps the 1X2 sides", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "547",
+        name: "Mecz",
+        selections: [
+          { name: "Arsenal", odds: 1.17 },
+          { name: "Remis", odds: 7.5 },
+          { name: "Hull City", odds: 14 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("MATCH_WINNER");
+    expect(out.selections.map((s) => s.code)).toEqual(["HOME", "DRAW", "AWAY"]);
+    expect(out.selections.map((s) => s.odds)).toEqual([1.17, 7.5, 14]);
+  });
+});

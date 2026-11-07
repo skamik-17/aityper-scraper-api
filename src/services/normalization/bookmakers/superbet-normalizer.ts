@@ -1416,7 +1416,9 @@ function normalizeSelectionForMarket(
     case "PLAYER_OF_THE_MATCH": {
       if (isNoneSelection(lower)) return "NONE" as NormalizedSelection;
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
-      // Per-player stat lines arrive as "Lastname, Firstname - powyżej N.5".
+      // Per-player stat lines arrive as "Firstname Lastname - powyżej N.5".
+      // Superbet switched to `First Last` between 2026-08-19 and 2026-11-06;
+      // `Last, First` ("Lastname, Firstname - powyżej N.5") is still accepted.
       // Over 0.5 is the base "records at least one" bet peers quote under the
       // bare player name; higher lines keep an explicit "N+" suffix so a 3+
       // price is never merged into the 1+ comparison column.
@@ -1426,7 +1428,9 @@ function normalizeSelectionForMarket(
         const atLeast = Math.floor(parseFloat(withLine[2].replace(",", "."))) + 1;
         return (atLeast <= 1 ? player : `${player} ${atLeast}+`) as NormalizedSelection;
       }
-      // Superbet quotes players as "Lastname, Firstname"; canonicalize to
+      // Superbet quotes players as "Firstname Lastname"; that word order is
+      // kept. Superbet switched to `First Last` between 2026-08-19 and
+      // 2026-11-06; `Last, First` is still accepted and inverted to
       // "Firstname Lastname" so selections line up across bookmakers.
       return canonicalizeSuperbetPlayerName(cleaned) as NormalizedSelection;
     }

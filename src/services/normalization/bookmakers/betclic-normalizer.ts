@@ -2499,6 +2499,18 @@ function mergeHalfTimeExactCardsTail(
   return merged;
 }
 
+/**
+ * True when a 3-way market resolved to exactly one HOME, one DRAW and one
+ * AWAY leg. normalizeBetclic1x2Selection tests HOME first through
+ * isTeamInSelection, which accepts a single shared word, so in derbies such
+ * as Newcastle United v Manchester United both team legs come out HOME in
+ * either leg order. Such a set cannot be priced per side.
+ */
+function isDistinctHomeDrawAway(selections: { code: NormalizedSelection }[]): boolean {
+  const codes = new Set(selections.map((s) => s.code));
+  return selections.length === 3 && codes.size === 3 && codes.has("HOME") && codes.has("DRAW") && codes.has("AWAY");
+}
+
 export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
@@ -2582,6 +2594,30 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // Odds integrity: an offsides 1X2 offer whose legs do not resolve to one
+    // HOME, one DRAW and one AWAY (derby names sharing a word) falls back to
+    // OTHER. Publishing it would show the away price on the HOME side, or
+    // store a second HOME row carrying the away price.
+    if (marketCode === "OFFSIDES_1X2" && !isDistinctHomeDrawAway(selections)) {
+      return {
+        marketCode: "OTHER",
+        paramValue: undefined,
+        parameters: undefined,
+        marketKey: buildMarketKey("OTHER", undefined),
+        customLabel: undefined,
+        selections: mergedRawSelections.map((sel) => ({
+          code: normalizeSelectionForMarket(sel.name, "OTHER", ctx, raw.name),
+          label: sel.name,
+          odds: sel.odds,
+        })),
+        debug: {
+          rawName: raw.name,
+          rawId: raw.bookmakerMarketId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
 
     let customLabel: string | undefined;
     if (marketCode === "RED_CARD_TEAM" && teamName) {

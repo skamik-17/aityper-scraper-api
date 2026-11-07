@@ -10,8 +10,8 @@ const ROWS: Row[] = [
   // WC label regression guard (golden #139)
   ["Gol z rzutu karnego", [["Którykolwiek zawodnik strzeli rzut karny", 3.4]], "PENALTY_GOAL", "PENALTY_GOAL", ["ANY"]],
   ["Liczba spalonych w meczu (OPTA)", [["Powyżej 3,5", 1.7], ["Poniżej 3,5", 1.78]], "OFFSIDES_TOTAL", "OFFSIDES_TOTAL:3.5", ["OVER", "UNDER"]],
-  ["Liczba spalonych w meczu - Arsenal (OPTA)", [["Powyżej 2,5", 1.85], ["Poniżej 2,5", 1.62]], "HOME_TEAM_TOTAL_OFFSIDES", "HOME_TEAM_TOTAL_OFFSIDES:2.5", ["OVER", "UNDER"]],
-  ["Liczba spalonych w meczu - Hull (OPTA)", [["Powyżej 0,5", 1.32], ["Poniżej 0,5", 2.55]], "AWAY_TEAM_TOTAL_OFFSIDES", "AWAY_TEAM_TOTAL_OFFSIDES:0.5", ["OVER", "UNDER"]],
+  ["Liczba spalonych w meczu -\u00a0Arsenal (OPTA)", [["Powyżej 2,5", 1.85], ["Poniżej 2,5", 1.62]], "HOME_TEAM_TOTAL_OFFSIDES", "HOME_TEAM_TOTAL_OFFSIDES:2.5", ["OVER", "UNDER"]],
+  ["Liczba spalonych w meczu -\u00a0Hull (OPTA)", [["Powyżej 0,5", 1.32], ["Poniżej 0,5", 2.55]], "AWAY_TEAM_TOTAL_OFFSIDES", "AWAY_TEAM_TOTAL_OFFSIDES:0.5", ["OVER", "UNDER"]],
   ["Spalone 1X2 (OPTA) (z dogrywką)", [["Arsenal", 1.32], ["Remis ", 5], ["Hull", 5]], "OFFSIDES_1X2", "OFFSIDES_1X2", ["HOME", "DRAW", "AWAY"]],
   ["Liczba fauli w meczu (OPTA) (z dogrywką)", [["Powyżej 21,5", 1.75], ["Poniżej 21,5", 1.75]], "FOULS_TOTAL", "FOULS_TOTAL:21.5", ["OVER", "UNDER"]],
   ["Liczba fauli (OPTA) - Arsenal (z dogrywką)", [["Powyżej 8,5", 1.7], ["Poniżej 8,5", 1.78]], "HOME_TEAM_TOTAL_FOULS", "HOME_TEAM_TOTAL_FOULS:8.5", ["OVER", "UNDER"]],
@@ -45,7 +45,7 @@ describe("betclic OPTA offsides/fouls and penalty ANY", () => {
     expect(fouls?.marketCode).toBe("OTHER");
     expect(fouls?.marketKey).toBe("OTHER");
 
-    const offsides = betclicNormalizer.normalizeMarket({ name: "Liczba spalonych w meczu - Manchester United (OPTA)", selections: ou("1,5") }, derby);
+    const offsides = betclicNormalizer.normalizeMarket({ name: "Liczba spalonych w meczu -\u00a0Manchester United (OPTA)", selections: ou("1,5") }, derby);
     expect(offsides?.marketCode).toBe("OTHER");
     expect(offsides?.marketKey).toBe("OTHER");
 
@@ -54,9 +54,43 @@ describe("betclic OPTA offsides/fouls and penalty ANY", () => {
     expect(homeFouls?.marketKey).toBe("HOME_TEAM_TOTAL_FOULS:10.5");
     expect(homeFouls?.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
 
-    const homeOffsides = betclicNormalizer.normalizeMarket({ name: "Liczba spalonych w meczu - Newcastle (OPTA)", selections: ou("1,5") }, derby);
+    const homeOffsides = betclicNormalizer.normalizeMarket({ name: "Liczba spalonych w meczu -\u00a0Newcastle (OPTA)", selections: ou("1,5") }, derby);
     expect(homeOffsides?.marketCode).toBe("HOME_TEAM_TOTAL_OFFSIDES");
     expect(homeOffsides?.marketKey).toBe("HOME_TEAM_TOTAL_OFFSIDES:1.5");
     expect(homeOffsides?.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
+  });
+
+  // Derby guard for the 3-way offsides market: the shared 1X2 leg matcher
+  // accepts one shared word, so in these derbies both team legs come out HOME
+  // in either leg order. The market must stay OTHER rather than publish the
+  // away price on the HOME side (or a second HOME row carrying it).
+  type DerbyRow = [home: string, away: string, legs: [string, number][]];
+  const DERBY_ROWS: DerbyRow[] = [
+    ["Newcastle United", "Manchester United", [["Manchester United", 2], ["Remis", 3], ["Newcastle", 4]]],
+    ["Newcastle United", "Manchester United", [["Newcastle", 2], ["Remis", 3], ["Manchester United", 4]]],
+    ["Newcastle United", "Manchester United", [["Manchester United", 2], ["Newcastle", 3], ["Remis", 4]]],
+    ["Manchester United", "Manchester City", [["Manchester United", 2], ["Remis", 3], ["Manchester City", 4]]],
+  ];
+  it.each(DERBY_ROWS)("keeps Spalone 1X2 OTHER in derby #%#: %s v %s", (homeTeam, awayTeam, legs) => {
+    const derby = { homeTeam, awayTeam, league: "premier-league" };
+    for (const name of ["Spalone 1X2 (OPTA) (z dogrywką)", "Spalone 1X2 (OPTA)"]) {
+      const out = betclicNormalizer.normalizeMarket({ name, selections: legs.map(([n, odds]) => ({ name: n, odds })) }, derby);
+      expect(out?.marketCode).toBe("OTHER");
+      expect(out?.marketKey).toBe("OTHER");
+      expect(out?.selections.map((s) => s.code)).toEqual(legs.map(([n]) => n));
+      expect(out?.selections.map((s) => s.odds)).toEqual(legs.map(([, odds]) => odds));
+    }
+  });
+
+  // Leg order is not fixed on Betclic (the evidence lists "Odbiory 1X2" away
+  // first), so an unambiguous away-first offer must still publish.
+  it("still codes an away-first Spalone 1X2 offer when the sides are distinct", () => {
+    const out = betclicNormalizer.normalizeMarket(
+      { name: "Spalone 1X2 (OPTA) (z dogrywką)", selections: [{ name: "Hull", odds: 5 }, { name: "Arsenal", odds: 1.32 }, { name: "Remis ", odds: 5 }] },
+      ctx,
+    );
+    expect(out?.marketCode).toBe("OFFSIDES_1X2");
+    expect(out?.marketKey).toBe("OFFSIDES_1X2");
+    expect(out?.selections.map((s) => [s.code, s.odds])).toEqual([["AWAY", 5], ["HOME", 1.32], ["DRAW", 5]]);
   });
 });

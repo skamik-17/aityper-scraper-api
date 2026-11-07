@@ -71,6 +71,23 @@ describe("summarizeBookmakerRuns / deriveBookmakerStatus", () => {
     expect(deriveBookmakerStatus(undefined, null, NOW, STALE)).toBe("stale");
   });
 
+  it("with run history, the newer of the last OK run and the newest odds decides freshness", () => {
+    const oldOk = summarizeBookmakerRuns(
+      [row("fortuna", "success", "2026-11-06T13:00:00+00:00", { finished_at: "2026-11-06T13:02:00+00:00" })],
+      ["fortuna"],
+    ).get("fortuna")!;
+    const freshOk = summarizeBookmakerRuns(
+      [row("sts", "success", "2026-11-06T16:00:00.35+00:00", { finished_at: "2026-11-06T16:02:49.048+00:00" })],
+      ["sts"],
+    ).get("sts")!;
+    // OK run older than staleAfter, odds written in run 2: the odds keep it available.
+    expect(deriveBookmakerStatus(oldOk, new Date("2026-11-06T16:00:45.385Z"), NOW, STALE)).toBe("available");
+    // Recent OK run, only August odds left: the run keeps it available.
+    expect(deriveBookmakerStatus(freshOk, new Date("2026-08-22T08:00:07.846Z"), NOW, STALE)).toBe("available");
+    // Both older than staleAfter.
+    expect(deriveBookmakerStatus(oldOk, new Date("2026-08-22T08:00:07.846Z"), NOW, STALE)).toBe("stale");
+  });
+
   it("offset-less timestamps are UTC (defensive, Review Focus 3)", () =>
     expect(summarizeBookmakerRuns([row("sts", "success", "2026-11-06T16:00:00.35")], ["sts"]).get("sts")!.lastSuccessAt).toBe(
       "2026-11-06T16:00:00.350Z",
@@ -223,5 +240,16 @@ describe("getBookmakerStatusSnapshot", () => {
     expect(snap).toMatchObject({ source: "odds_only", lastSuccessfulRunAt: null });
     expect(Object.keys(snap.health)).toHaveLength(CONFIG.BOOKMAKERS.length);
     expect(Object.values(snap.status).every((s) => s === "stale")).toBe(true);
+  });
+
+  it("never throws on rows or a last-success time it cannot parse", async () => {
+    repo.getRecentRunRows.mockResolvedValue([row("sts", "success", "not-a-timestamp")]);
+    repo.getLastSuccessfulScrapeTime.mockResolvedValue(new Date(NaN));
+    const snap = await getBookmakerStatusSnapshot("premier-league", NOW);
+    expect(snap).toMatchObject({ source: "odds_only", lastSuccessfulRunAt: null });
+    expect(snap.summaries.size).toBe(0);
+    // Odds freshness still applies.
+    expect(snap.status).toMatchObject({ fortuna: "available", betcris: "available", sts: "stale", lebull: "stale" });
+    expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining("scraper_runs rows unusable for premier-league"));
   });
 });

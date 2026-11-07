@@ -159,6 +159,18 @@ describe("buildRunAlerts", () => {
     ).toEqual([]);
   });
 
+  it("resolved also fires after an outage longer than the threshold (>= threshold, not only exactly at it)", () => {
+    const outcomes = run2.map((o) => (o.bookmaker === "betcris" ? outcome({ bookmaker: "betcris", status: "success", marketsSaved: 9753 }) : o));
+    expect(
+      buildRunAlerts({
+        league: "premier-league",
+        outcomes,
+        summaries: summaries(summary({ bookmaker: "betcris", recoveredAfterFailures: 7 })),
+        threshold: 3,
+      }),
+    ).toEqual(["[ALERT-RESOLVED] betcris (premier-league) ok again after 7 failed runs"]);
+  });
+
   it("alerts only for bookmakers that ran in this run, so a single-bookmaker run does not repeat others' alerts", () => {
     const lines = buildRunAlerts({
       league: "premier-league",
@@ -177,21 +189,31 @@ describe("buildRunAlerts", () => {
     expect(buildRunAlerts({ league: "premier-league", outcomes: clean, summaries: new Map(), threshold: 3 })).toEqual([]);
     expect(buildRunAlerts({ league: "premier-league", outcomes: [], summaries: new Map(), threshold: 3 })).toEqual([]);
   });
+
+  it("a threshold of 0 never alerts a healthy bookmaker (no streak or resolved line for 0 failures)", () => {
+    const clean = run2.filter((o) => o.status === "success");
+    const healthy = summaries(...clean.map((o) => summary({ bookmaker: o.bookmaker })));
+    expect(buildRunAlerts({ league: "premier-league", outcomes: clean, summaries: healthy, threshold: 0 })).toEqual([]);
+  });
 });
 
 describe("emitAlerts", () => {
   let errorSpy: ReturnType<typeof vi.spyOn>;
   let warnSpy: ReturnType<typeof vi.spyOn>;
+  let timeoutSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    // Pass-through spy: the real AbortSignal.timeout still runs.
+    timeoutSpy = vi.spyOn(AbortSignal, "timeout");
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
     errorSpy.mockRestore();
     warnSpy.mockRestore();
+    timeoutSpy.mockRestore();
   });
 
   it("webhook only when configured; failures never throw", async () => {
@@ -220,6 +242,9 @@ describe("emitAlerts", () => {
       body: JSON.stringify({ text: "[ALERT] a\n[ALERT-RESOLVED] b" }),
     });
     expect(init.signal).toBeInstanceOf(AbortSignal);
+    // A slow webhook must not hold up the run for longer than 5 s.
+    expect(timeoutSpy).toHaveBeenCalledWith(5000);
+    expect(init.signal).toBe(timeoutSpy.mock.results[0]?.value);
     expect(warnSpy).not.toHaveBeenCalled();
   });
 

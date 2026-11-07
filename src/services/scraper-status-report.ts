@@ -1,6 +1,7 @@
 /**
  * Per-bookmaker scraper health report of one league, served by
- * GET /api/health/scrapers and printed (as a table) by scripts/scraper-status.ts.
+ * GET /api/health/scrapers and printed (as a table) by scripts/scraper-status.ts,
+ * whose exit code statusExitCode() decides.
  * Built from the same snapshot as the API's bookmakerStatus, so the two agree.
  */
 import { CONFIG } from "../config/index.js";
@@ -82,4 +83,30 @@ export function formatStatusTable(r: ScraperHealthReport): string {
   return table
     .map((cells) => cells.map((cell, col) => (col === cells.length - 1 ? cell : cell.padEnd(widths[col]))).join(GUTTER))
     .join("\n");
+}
+
+export interface StatusExit {
+  /** 0 healthy, 1 a bookmaker at or above the threshold, 2 status unknown. */
+  code: 0 | 1 | 2;
+  /** The stderr line that explains a non-zero code; null for 0. */
+  message: string | null;
+}
+
+/**
+ * Exit code of scripts/scraper-status.ts for a report.
+ *
+ * Failure counts come only from the run history. Without it (source
+ * `odds_only`: the scraper_runs read was rejected or a row was unreadable)
+ * every count is 0, so 0 would be a false green: the status is unknown.
+ */
+export function statusExitCode(r: ScraperHealthReport, threshold: number): StatusExit {
+  if (r.source !== "scraper_runs") {
+    return { code: 2, message: `run history unavailable (source=${r.source})` };
+  }
+
+  const failing = r.bookmakers.filter((b) => b.consecutiveFailures >= threshold);
+  if (failing.length === 0) return { code: 0, message: null };
+
+  const list = failing.map((b) => `${b.bookmaker} (${b.consecutiveFailures})`).join(", ");
+  return { code: 1, message: `${failing.length} bookmaker(s) failed ${threshold}+ runs in a row: ${list}` };
 }

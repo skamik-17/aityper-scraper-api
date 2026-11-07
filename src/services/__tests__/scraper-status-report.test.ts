@@ -1,8 +1,25 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CONFIG } from "../../config/index.js";
 import { snapshotFromRun2 } from "../../__tests__/helpers/run-fixtures.js";
 import type { ScrapeStats } from "../../types/api.js";
-import { buildScraperHealthReport, formatStatusTable } from "../scraper-status-report.js";
+import { getBookmakerStatusSnapshot } from "../bookmaker-status.js";
+import { buildScraperHealthReport, formatStatusTable, statusExitCode } from "../scraper-status-report.js";
+
+// Only the snapshot's three DB reads are stubbed; the run fixtures keep the real toScraperRunInsert.
+const repo = vi.hoisted(() => ({
+  getRecentRunRows: vi.fn(),
+  getLastSuccessfulScrapeTime: vi.fn(),
+  getOddsFreshnessByBookmaker: vi.fn(),
+}));
+vi.mock("../../repositories/scraper-run-repository.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../repositories/scraper-run-repository.js")>()),
+  getRecentRunRows: repo.getRecentRunRows,
+  getLastSuccessfulScrapeTime: repo.getLastSuccessfulScrapeTime,
+}));
+vi.mock("../../repositories/odds-repository.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../repositories/odds-repository.js")>()),
+  getOddsFreshnessByBookmaker: repo.getOddsFreshnessByBookmaker,
+}));
 
 // 13 min after run 2 finished (evidence/observability/api-status-snapshot-2026-11-06.json).
 const NOW = new Date("2026-11-06T16:16:18.614Z");
@@ -151,5 +168,88 @@ describe("formatStatusTable", () => {
         expect(line[start]).not.toBe(" ");
       }
     }
+  });
+});
+
+describe("statusExitCode", () => {
+  const report = () => buildScraperHealthReport("premier-league", snapshotFromRun2(), null, null, NOW);
+
+  it("is 0 when the run history was read and no bookmaker reaches the threshold", () => {
+    // Run 2: five bookmakers failed once each.
+    expect(statusExitCode(report(), 3)).toEqual({ code: 0, message: null });
+  });
+
+  it("is 1 and lists, in CONFIG.BOOKMAKERS order, every bookmaker at or above the threshold", () => {
+    expect(statusExitCode(report(), 1)).toEqual({
+      code: 1,
+      message: "5 bookmaker(s) failed 1+ runs in a row: betters (1), lebull (1), betcris (1), pzbuk (1), totalbet (1)",
+    });
+  });
+
+  it("the threshold is inclusive", () => {
+    const r = report();
+    r.bookmakers.find((b) => b.bookmaker === "pzbuk")!.consecutiveFailures = 3;
+    expect(statusExitCode(r, 3)).toEqual({ code: 1, message: "1 bookmaker(s) failed 3+ runs in a row: pzbuk (3)" });
+    r.bookmakers.find((b) => b.bookmaker === "pzbuk")!.consecutiveFailures = 2;
+    expect(statusExitCode(r, 3).code).toBe(0);
+  });
+
+  it("is 2, never 0 or 1, for a report without run history (source odds_only)", () => {
+    const snap = snapshotFromRun2();
+    snap.source = "odds_only";
+    snap.summaries.clear();
+    const r = buildScraperHealthReport("premier-league", snap, null, null, NOW);
+    for (const threshold of [1, 3]) {
+      expect(statusExitCode(r, threshold)).toEqual({ code: 2, message: "run history unavailable (source=odds_only)" });
+    }
+  });
+
+  describe("on the snapshot's odds_only fallback", () => {
+    let warnSpy: ReturnType<typeof vi.spyOn>;
+
+    beforeEach(() => {
+      vi.clearAllMocks();
+      warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      repo.getOddsFreshnessByBookmaker.mockResolvedValue(new Map([["fortuna", new Date("2026-11-06T16:00:45.385Z")]]));
+      repo.getLastSuccessfulScrapeTime.mockResolvedValue(new Date("2026-11-06T16:02:49.798Z"));
+    });
+
+    afterEach(() => {
+      warnSpy.mockRestore();
+    });
+
+    async function reportFor(): Promise<ReturnType<typeof buildScraperHealthReport>> {
+      return buildScraperHealthReport("premier-league", await getBookmakerStatusSnapshot("premier-league", NOW), null, null, NOW);
+    }
+
+    it("a rejected scraper_runs read exits 2, although its table shows 0 fails everywhere", async () => {
+      repo.getRecentRunRows.mockRejectedValue(new Error("scraper_runs read failed: canceling statement due to statement timeout"));
+      const r = await reportFor();
+      expect(r.source).toBe("odds_only");
+      // The false green this guards against: every row reads FAILS 0.
+      expect(r.bookmakers.every((b) => b.consecutiveFailures === 0)).toBe(true);
+      expect(statusExitCode(r, 3)).toEqual({ code: 2, message: "run history unavailable (source=odds_only)" });
+    });
+
+    it("a scraper_runs row the summary cannot read exits 2", async () => {
+      repo.getRecentRunRows.mockResolvedValue([
+        { bookmaker: "betters", status: "scrape_failed", started_at: "not a timestamp", finished_at: null, run_id: null,
+          error_message: "No events found from API", matches_found: 0, markets_saved: 0 },
+      ]);
+      const r = await reportFor();
+      expect(r.source).toBe("odds_only");
+      expect(statusExitCode(r, 3)).toEqual({ code: 2, message: "run history unavailable (source=odds_only)" });
+    });
+
+    it("a readable run history is judged on its failures", async () => {
+      repo.getRecentRunRows.mockResolvedValue([
+        { bookmaker: "betters", status: "scrape_failed", started_at: "2026-11-06T16:00:00.35+00:00", finished_at: null, run_id: null,
+          error_message: "No events found from API", matches_found: 0, markets_saved: 0 },
+      ]);
+      const r = await reportFor();
+      expect(r.source).toBe("scraper_runs");
+      expect(statusExitCode(r, 3)).toEqual({ code: 0, message: null });
+      expect(statusExitCode(r, 1)).toEqual({ code: 1, message: "1 bookmaker(s) failed 1+ runs in a row: betters (1)" });
+    });
   });
 });

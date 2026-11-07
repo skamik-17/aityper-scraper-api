@@ -6,16 +6,17 @@
  * Usage:
  *   npx tsx scripts/scraper-status.ts [--league premier-league] [--json] [--threshold N]
  *
- * Prints a table (header plus one row per bookmaker) or, with --json, the
- * ScraperHealthReport. Exit codes:
- *   0  no bookmaker at or above the failure threshold
+ * Prints a table (header plus one row per bookmaker, then `source=<source>`
+ * on stderr) or, with --json, the ScraperHealthReport. Exit codes
+ * (statusExitCode):
+ *   0  run history read, no bookmaker at or above the failure threshold
  *   1  a bookmaker failed >= threshold runs in a row (default ALERT_CONSECUTIVE_FAILURES)
- *   2  database unreachable, or a usage error
+ *   2  database unreachable, run history unavailable (source=odds_only), or a usage error
  */
 import { CONFIG } from "../src/config/index.js";
 import { probeDatabase } from "../src/config/database.js";
 import { getBookmakerStatusSnapshot } from "../src/services/bookmaker-status.js";
-import { buildScraperHealthReport, formatStatusTable } from "../src/services/scraper-status-report.js";
+import { buildScraperHealthReport, formatStatusTable, statusExitCode } from "../src/services/scraper-status-report.js";
 
 const USAGE = "Usage: scraper-status.ts [--league <slug>] [--json] [--threshold N]";
 const LEAGUE_SLUG = /^[a-z0-9-]+$/;
@@ -64,15 +65,17 @@ async function main(): Promise<number> {
   const snap = await getBookmakerStatusSnapshot(args.league);
   // The last run and the last abort live in the server process's memory; this process has neither.
   const report = buildScraperHealthReport(args.league, snap, null, null, new Date());
-  console.log(args.json ? JSON.stringify(report, null, 2) : formatStatusTable(report));
-
-  const failing = report.bookmakers.filter((b) => b.consecutiveFailures >= args.threshold);
-  if (failing.length > 0) {
-    const list = failing.map((b) => `${b.bookmaker} (${b.consecutiveFailures})`).join(", ");
-    console.error(`${failing.length} bookmaker(s) failed ${args.threshold}+ runs in a row: ${list}`);
-    return 1;
+  if (args.json) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    console.log(formatStatusTable(report));
+    // The table has no source column; on stderr, so stdout stays one header plus one row per bookmaker.
+    console.error(`source=${report.source}`);
   }
-  return 0;
+
+  const exit = statusExitCode(report, args.threshold);
+  if (exit.message) console.error(exit.message);
+  return exit.code;
 }
 
 main().then(

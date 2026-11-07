@@ -11,8 +11,8 @@ import type {
 } from "../types/api.js";
 import { asyncHandler } from "../middleware/error-handler.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
-import { getBookmakerStatus } from "../repositories/odds-repository.js";
 import { getAverageScrapeDurations } from "../repositories/scraper-run-repository.js";
+import { getBookmakerStatusSnapshot } from "../services/bookmaker-status.js";
 
 const router = Router();
 
@@ -57,30 +57,21 @@ const HAS_NO_TAX_PROMO: Record<PolishBookmaker, boolean> = {
  * Get status of all bookmakers
  */
 router.get("/", asyncHandler(async (_req, res) => {
-  const statusMap = await getBookmakerStatus();
+  // The scraped league, not the old `ekstraklasa` default that nothing scrapes.
+  const snap = await getBookmakerStatusSnapshot(CONFIG.ENABLED_LEAGUES[0]);
   const avgDurations = await getAverageScrapeDurations();
-
-  const now = new Date();
-  const staleThreshold = 60 * 60 * 1000; // 1 hour
 
   const bookmakers: BookmakerInfo[] = [];
   let availableCount = 0;
   let errorCount = 0;
 
   for (const bookmaker of CONFIG.BOOKMAKERS) {
-    const bmStatus = statusMap.get(bookmaker);
     const avgDuration = avgDurations.get(bookmaker);
 
-    let status: "available" | "error" | "stale" = "stale";
-    let lastSuccessfulScrape: string | null = null;
-    let matchesFound = 0;
-
-    if (bmStatus) {
-      const age = now.getTime() - bmStatus.lastScrape.getTime();
-      status = age > staleThreshold ? "stale" : "available";
-      lastSuccessfulScrape = bmStatus.lastScrape.toISOString();
-      matchesFound = bmStatus.matchCount;
-    }
+    const status = snap.status[bookmaker];
+    const lastSuccessfulScrape = snap.lastOddsAt.get(bookmaker)?.toISOString() ?? null;
+    // Interim: filled from the run summary by the API-surfaces change.
+    const matchesFound = 0;
 
     if (status === "available") {
       availableCount++;

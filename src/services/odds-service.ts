@@ -3,9 +3,9 @@ import { CONFIG } from "../config/index.js";
 import {
   getAggregatedOdds,
   getMatchOdds,
-  getBookmakerStatus,
 } from "../repositories/odds-repository.js";
 import { getLastSuccessfulScrapeTime } from "../repositories/scraper-run-repository.js";
+import { getBookmakerStatusSnapshot } from "./bookmaker-status.js";
 import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, MarketSelectionJson, ViewType, MarketCategory } from "../types/database.js";
 import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
@@ -175,32 +175,8 @@ export async function getOddsForMatch(
 async function getBookmakerStatusMap(
   leagueSlug: string
 ): Promise<Record<PolishBookmaker, BookmakerStatus>> {
-  const status: Record<PolishBookmaker, BookmakerStatus> = {} as Record<
-    PolishBookmaker,
-    BookmakerStatus
-  >;
-  const now = new Date();
-  const staleThreshold = 60 * 60 * 1000;
-
-  try {
-    const statusMap = await getBookmakerStatus(leagueSlug);
-
-    for (const bookmaker of CONFIG.BOOKMAKERS) {
-      const bmStatus = statusMap.get(bookmaker);
-      if (!bmStatus) {
-        status[bookmaker] = "stale";
-      } else {
-        const age = now.getTime() - bmStatus.lastScrape.getTime();
-        status[bookmaker] = age > staleThreshold ? "stale" : "available";
-      }
-    }
-  } catch {
-    for (const bookmaker of CONFIG.BOOKMAKERS) {
-      status[bookmaker] = "stale";
-    }
-  }
-
-  return status;
+  // The snapshot never throws: it degrades to odds freshness or all-stale itself.
+  return (await getBookmakerStatusSnapshot(leagueSlug)).status;
 }
 
 export function getNextUpdateTime(): string {

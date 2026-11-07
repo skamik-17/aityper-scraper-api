@@ -23,7 +23,8 @@ export interface MarketSelectionJson {
 // SERVICE LAYER TYPES (Not directly in DB schema but used in repositories/services)
 // ============================================================================
 
-export type BookmakerStatus = "stale" | "available";
+// "error": the bookmaker's latest run failed. Same union as the frontend's BookmakerStatus.
+export type BookmakerStatus = "available" | "stale" | "error";
 
 export interface MatchOdds {
   matchId: string;

@@ -7,6 +7,7 @@
  */
 import type { PolishBookmaker } from "../../config/index.js";
 import type { BookmakerRunOutcome } from "../../services/run-outcome.js";
+import type { BookmakerRunSummary } from "../../services/bookmaker-status.js";
 
 export const RUN_ID = "440d2fc6-658b-46fe-b288-05261faa0caf";
 
@@ -36,6 +37,22 @@ export function outcome(p: Partial<BookmakerRunOutcome> = {}): BookmakerRunOutco
     startedAt: new Date("2026-11-06T16:00:00.350Z"),
     finishedAt: new Date("2026-11-06T16:02:49.798Z"),
     durationMs: 169448,
+    ...p,
+  };
+}
+
+/** A run summary of a bookmaker whose newest run (run 2) succeeded, unless overridden. */
+export function summary(p: Partial<BookmakerRunSummary> & { bookmaker: PolishBookmaker }): BookmakerRunSummary {
+  return {
+    lastStatus: "success",
+    lastRunAt: "2026-11-06T16:00:00.350Z",
+    lastSuccessAt: "2026-11-06T16:00:00.350Z",
+    consecutiveFailures: 0,
+    failingSince: null,
+    lastError: null,
+    lastMatchesFound: 20,
+    lastMarketsSaved: 0,
+    recoveredAfterFailures: 0,
     ...p,
   };
 }

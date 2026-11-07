@@ -4,24 +4,25 @@
  * Handles all Playwright interactions for the PZBuk scraper.
  * Responsible for:
  * - Navigating to league/event pages
- * - Capturing WebSocket/RSocket data
+ * - Capturing the sportsbook WebSocket stream
  * - Expanding market sections to load all available markets
  *
- * NOTE: PZBuk uses WebSocket with RSocket protocol for real-time data.
- * We intercept WebSocket frames to capture INITIAL_STATE messages
- * containing all events, markets, and selections.
+ * NOTE: PZBuk streams its offer over a WebSocket that speaks UTF-8 JSON
+ * envelopes (`sportsbook-api/ws`). Frame decoding, chunk reassembly and the
+ * per-event market union live in the pure `ws-protocol.ts`; this module only
+ * wires them to Playwright and records what each capture saw.
  *
- * For a single event PZBuk streams the complete offer as a short burst of
- * INITIAL_STATE messages right after navigation. We capture the full offer by:
+ * For a single event the page opens one stream per market group. We capture
+ * the full offer by:
  * 1. Dismissing the cookie consent popup
- * 2. Accumulating selections from every message (de-duplicated by id)
- * 3. Firing one light expansion trigger (expand every group header + click
- *    every "Pokaż więcej") to surface any genuinely lazy-loaded group
+ * 2. Merging every single-event INITIAL_STATE of the expected event
+ * 3. Firing one light expansion trigger (expand every group header that is not
+ *    already subscribed + click every "Pokaż więcej") so each group subscribes
  * 4. Resolving once the stream goes quiet (stream-silence stabilization)
  */
 
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
-import type { PZBukInitialState, PZBukSelection } from "./types.js";
+import type { PZBukInitialState } from "./types.js";
 import {
   LEAGUE_URLS,
   WEBSOCKET_URL_PATTERN,
@@ -32,6 +33,16 @@ import {
   MIN_CAPTURE_MS,
   STREAM_SILENCE_MS,
 } from "./constants.js";
+import {
+  decodeFrame,
+  initialStatesOf,
+  subscribedGroupIds,
+  FrameAssembler,
+  SingleEventAccumulator,
+  emptyDiagnostics,
+  isEmptyListing,
+  type CaptureDiagnostics,
+} from "./ws-protocol.js";
 
 /**
  * Dismiss the OneTrust cookie consent popup if present
@@ -110,18 +121,20 @@ async function clickAllShowMore(
  * groups that no longer exist), we enumerate every group header in the DOM
  * and click each one.
  *
- * Note: captured selections are accumulated across messages and never
- * discarded, so even if a click toggles an already-expanded group closed, the
- * subscription has already fired and its data has been captured. Clicking an
- * even number of times therefore never loses data.
- *
- * Returns the number of headers clicked.
+ * A click on an open group collapses it and sends `CLOSE` for its stream,
+ * which cancels the group if it has not answered yet (the default-open
+ * "Popularne" group under load). The headers carry no `aria-expanded`, so
+ * `skipHeader` decides from the header text: a header whose group is already
+ * subscribed or answered is not clicked. If the text cannot be read, the
+ * header is clicked as before.
  */
 async function expandAllMarketGroups(
   page: Page,
-  shouldStop: () => boolean = () => false
-): Promise<number> {
-  let clicks = 0;
+  shouldStop: () => boolean = () => false,
+  skipHeader?: (headerText: string) => boolean
+): Promise<{ clicked: number; skipped: number }> {
+  let clicked = 0;
+  let skipped = 0;
   try {
     const headers = page.locator('[class*="content-box__HeaderContainer"]');
     const count = await headers.count().catch(() => 0);
@@ -131,8 +144,15 @@ async function expandAllMarketGroups(
       try {
         const header = headers.nth(i);
         if (await header.isVisible({ timeout: 300 }).catch(() => false)) {
+          if (skipHeader) {
+            const text = await header.innerText({ timeout: 300 }).catch(() => null);
+            if (text !== null && skipHeader(text)) {
+              skipped++;
+              continue;
+            }
+          }
           await header.click({ timeout: 3000 }).catch(() => {});
-          clicks++;
+          clicked++;
           // Small delay to allow lazy WebSocket subscription to respond
           await page.waitForTimeout(60);
         }
@@ -143,7 +163,7 @@ async function expandAllMarketGroups(
   } catch {
     // No headers found - nothing to expand
   }
-  return clicks;
+  return { clicked, skipped };
 }
 
 /**
@@ -200,144 +220,173 @@ export async function navigateToEventPage(
   }
 }
 
+/** What one capture produced: the snapshot (null if none) and what it saw on the wire. */
+export interface CaptureResult {
+  state: PZBukInitialState | null;
+  diagnostics: CaptureDiagnostics;
+}
+
+function frameText(payload: string | Buffer): string {
+  return Buffer.isBuffer(payload) ? payload.toString("utf8") : String(payload);
+}
+
 /**
- * Capture WebSocket data from PZBuk's RSocket stream
+ * Capture PZBuk's sportsbook WebSocket stream.
  *
- * Sets up WebSocket interception and waits for INITIAL_STATE messages
- * containing event, market, and selection data.
+ * Listens for sockets whose URL contains `WEBSOCKET_URL_PATTERN`, reassembles
+ * chunked frames, decodes the JSON envelopes and records every step in
+ * `diagnostics`, so a failed capture can name its cause
+ * (`describeCaptureFailure`). Delta messages are ignored: the result is the
+ * INITIAL_STATE snapshot.
  *
- * For single event (match details) mode, this function:
- * 1. Accumulates selections from multiple WebSocket messages
- * 2. Dismisses cookie consent popup
- * 3. Fires one expansion trigger (all group headers + all "Pokaż więcej")
- * 4. Waits for stream-silence stabilization before returning
+ * League mode resolves on the first INITIAL_STATE with at least one event and
+ * one selection, with `state: null` once the socket has answered an empty
+ * listing (after `WS_MIN_WAIT`), or with `state: null` at `WS_MAX_WAIT`.
  *
- * @param page - Playwright page with WebSocket listeners
- * @param singleEvent - If true, wait for single event with many selections (match details mode)
- * @returns Promise with captured state or null on timeout
+ * Single-event mode (match details) merges the single-event INITIAL_STATE
+ * payloads of `expectedEventId` (any event when omitted) across the page's
+ * market-group streams:
+ * 1. Dismisses the cookie consent popup
+ * 2. Fires one expansion trigger (group headers that are not yet subscribed +
+ *    all "Pokaż więcej")
+ * 3. Resolves once the stream has been quiet for `STREAM_SILENCE_MS` after
+ *    `MIN_CAPTURE_MS`, or at `WS_MAX_WAIT`
+ *
+ * Both modes always resolve by `WS_MAX_WAIT` and detach their listeners.
+ *
+ * @param page - Playwright page, before navigation
+ * @param singleEvent - If true, capture one event's full offer (match details mode)
+ * @param expectedEventId - Single-event mode only: reject payloads of any other event
  */
 export async function captureWebSocketData(
   page: Page,
-  singleEvent = false
-): Promise<PZBukInitialState | null> {
+  singleEvent = false,
+  expectedEventId?: number | string
+): Promise<CaptureResult> {
   return new Promise((resolve) => {
     let resolved = false;
-    let bestState: PZBukInitialState | null = null;
-    let lastUpdateTime = Date.now();
+    const diagnostics = emptyDiagnostics();
+    const accumulator = new SingleEventAccumulator(expectedEventId);
+    // Market-group ids requested by SUBSCRIBE frames this page sent.
+    const subscribed = new Set<number>();
+    const startTime = Date.now();
+    // Last time a single-event payload was merged (stream-silence timer).
+    let lastUpdateTime = startTime;
+    let leagueInterval: ReturnType<typeof setInterval> | undefined;
 
-    // For single event mode, accumulate selections across messages
-    const accumulatedSelections = new Map<string, PZBukSelection>();
-    let eventData: PZBukInitialState["events"] | null = null;
-    let marketData: PZBukInitialState["markets"] | null = null;
+    const socketListeners: Array<{
+      ws: PlaywrightWebSocket;
+      onSent: (frame: { payload: string | Buffer }) => void;
+      onReceived: (frame: { payload: string | Buffer }) => void;
+    }> = [];
 
-    // Set up WebSocket listener
+    const finish = (state: PZBukInitialState | null) => {
+      if (resolved) return;
+      resolved = true;
+      if (leagueInterval !== undefined) clearInterval(leagueInterval);
+      // Detach every listener so a later capture on the same page is not
+      // processed by this (now stale) closure.
+      page.off("websocket", wsHandler);
+      for (const { ws, onSent, onReceived } of socketListeners) {
+        ws.off("framesent", onSent);
+        ws.off("framereceived", onReceived);
+      }
+      resolve({ state, diagnostics });
+    };
+
+    const handleInitialState = (state: PZBukInitialState) => {
+      diagnostics.initialStates++;
+      diagnostics.maxEvents = Math.max(diagnostics.maxEvents, state.events.length);
+      if (singleEvent) {
+        if (accumulator.add(state)) lastUpdateTime = Date.now();
+      } else if (state.events.length >= 1 && state.selections.length > 0) {
+        finish(state);
+      }
+    };
+
     const wsHandler = (ws: PlaywrightWebSocket) => {
+      const url = ws.url();
+      diagnostics.socketUrls.push(url);
       // Only listen to the sportsbook API WebSocket
-      if (!ws.url().includes(WEBSOCKET_URL_PATTERN)) return;
+      if (!url.includes(WEBSOCKET_URL_PATTERN)) return;
+      diagnostics.matchedSockets++;
 
-      ws.on("framereceived", (frame) => {
+      const assembler = new FrameAssembler();
+      const onSent = (frame: { payload: string | Buffer }) => {
         if (resolved) return;
-
-        try {
-          const payload = frame.payload.toString();
-          // RSocket frames have binary header, find JSON array start
-          const jsonStart = payload.indexOf("[{");
-          if (jsonStart === -1) return;
-
-          const jsonStr = payload.slice(jsonStart);
-          const data = JSON.parse(jsonStr);
-
-          // Look for INITIAL_STATE message with events and selections
-          if (Array.isArray(data) && data[0]?.type === "INITIAL_STATE") {
-            const state = data[0].payload as PZBukInitialState;
-
-            if (state?.events?.length > 0) {
-              // Track when we last received data
-              lastUpdateTime = Date.now();
-
-              if (singleEvent) {
-                // For match details: accumulate selections from single-event messages
-                if (state.events.length === 1) {
-                  // Store event and market data
-                  if (!eventData) {
-                    eventData = state.events;
-                  }
-                  if (state.markets?.length > 0 && (!marketData || state.markets.length > marketData.length)) {
-                    marketData = state.markets;
-                  }
-
-                  // Accumulate selections by ID to avoid duplicates
-                  if (state.selections?.length > 0) {
-                    for (const sel of state.selections) {
-                      if (sel.status === "Active") {
-                        accumulatedSelections.set(sel.id, sel);
-                      }
-                    }
-
-                    console.log(
-                      `[PZBuk/WS] Received ${state.selections.length} selections, total accumulated: ${accumulatedSelections.size}`
-                    );
-
-                    // Update bestState with accumulated data
-                    bestState = {
-                      events: eventData,
-                      markets: marketData || [],
-                      selections: Array.from(accumulatedSelections.values()),
-                    };
-                  }
-                }
-              } else {
-                // For league listing: want multiple events
-                if (state.events.length > 1 && state.selections?.length > 0) {
-                  bestState = state;
-                  resolved = true;
-                  resolve(state);
-                }
-              }
-            }
-          }
-        } catch {
-          // Not valid JSON or parsing error - ignore
+        for (const id of subscribedGroupIds(frameText(frame.payload))) subscribed.add(id);
+      };
+      const onReceived = (frame: { payload: string | Buffer }) => {
+        if (resolved) return;
+        diagnostics.framesReceived++;
+        const text = assembler.push(frame.payload);
+        if (text === null) {
+          diagnostics.chunkedFrames++;
+          return;
         }
-      });
+        diagnostics.maxFrameBytes = Math.max(diagnostics.maxFrameBytes, Buffer.byteLength(text, "utf8"));
+
+        const decoded = decodeFrame(text);
+        switch (decoded.kind) {
+          case "setup":
+            assembler.setChunkSize(decoded.chunkSize);
+            break;
+          case "invalid":
+            diagnostics.invalidFrames++;
+            diagnostics.lastInvalidError = decoded.error;
+            break;
+          case "control":
+            diagnostics.lastControl = { type: decoded.type, message: decoded.message };
+            break;
+          case "data":
+            for (const state of initialStatesOf(decoded)) {
+              if (resolved) break;
+              handleInitialState(state);
+            }
+            break;
+        }
+      };
+      ws.on("framesent", onSent);
+      ws.on("framereceived", onReceived);
+      socketListeners.push({ ws, onSent, onReceived });
     };
     page.on("websocket", wsHandler);
-
-    const startTime = Date.now();
 
     if (singleEvent) {
       // Match-details mode.
       //
-      // PZBuk streams the complete offer for an event over a short burst of
-      // INITIAL_STATE messages right after navigation. We capture the whole
-      // offer by waiting until that burst goes quiet (stream-silence based),
-      // which is reliable for the first event AND for subsequent events whose
-      // burst can arrive more slowly.
+      // The event page answers each market-group stream with one INITIAL_STATE
+      // burst. We merge them until the stream goes quiet (stream-silence
+      // based), which is reliable for the first event AND for subsequent
+      // events whose burst can arrive more slowly.
       //
       // We additionally fire a single, light "expansion" trigger (expand every
-      // group header + click every "Pokaż więcej") to surface any group that
-      // genuinely lazy-loads. Captured selections are accumulated and never
+      // group header that is not yet subscribed + click every "Pokaż więcej")
+      // so each collapsed group subscribes. Merged selections are never
       // discarded, so this can only add data. We deliberately avoid repeated
       // heavy clicking, which was observed to disrupt the stream for the next
       // event navigated on the same page.
+      const complete = () => {
+        if (resolved) return;
+        const stats = accumulator.stats();
+        diagnostics.groups = { declared: stats.marketGroupsDeclared, seen: stats.marketGroupsSeen };
+        console.log(`[PZBuk/WS] Single-event capture complete with ${stats.selections} selections`);
+        finish(accumulator.snapshot());
+      };
+
+      // Allows the expansion helpers to bail out promptly once we resolve.
+      const shouldStop = () => resolved;
+
+      // A header is skipped when its group is already subscribed or answered:
+      // clicking an open group would CLOSE its stream.
+      const skipHeader = (headerText: string) => {
+        const id = accumulator.groupIdForHeader(headerText);
+        return id !== null && (subscribed.has(id) || accumulator.stats().marketGroupsSeen.includes(id));
+      };
+
       void (async () => {
-        const finish = () => {
-          if (resolved) return;
-          resolved = true;
-          // Detach the websocket listener so a later capture on the same page
-          // is not processed by this (now stale) closure.
-          page.off("websocket", wsHandler);
-          console.log(
-            `[PZBuk/WS] Single-event capture complete with ${accumulatedSelections.size} selections`
-          );
-          resolve(bestState);
-        };
-
-        // Allows the expansion helpers to bail out promptly once we resolve.
-        const shouldStop = () => resolved;
-
         // Hard safety cap independent of the loop below.
-        const hardCap = setTimeout(finish, WS_MAX_WAIT);
+        const hardCap = setTimeout(complete, WS_MAX_WAIT);
 
         try {
           // Let the initial event feed begin, then clear the cookie banner.
@@ -359,15 +408,15 @@ export async function captureWebSocketData(
             // settled a little, to surface any lazy-loaded groups.
             if (!expansionTriggered && elapsed >= 3000) {
               expansionTriggered = true;
-              const expanded = await expandAllMarketGroups(page, shouldStop).catch(
-                () => 0
+              const expanded = await expandAllMarketGroups(page, shouldStop, skipHeader).catch(
+                () => ({ clicked: 0, skipped: 0 })
               );
               const shown = await clickAllShowMore(page, shouldStop).catch(
                 () => 0
               );
-              if (expanded > 0 || shown > 0) {
+              if (expanded.clicked > 0 || expanded.skipped > 0 || shown > 0) {
                 console.log(
-                  `[PZBuk/WS] Expansion trigger: expanded ${expanded} headers, clicked ${shown} "Pokaż więcej"`
+                  `[PZBuk/WS] Expansion trigger: expanded ${expanded.clicked} headers (skipped ${expanded.skipped} already subscribed), clicked ${shown} "Pokaż więcej"`
                 );
               }
               continue;
@@ -376,7 +425,7 @@ export async function captureWebSocketData(
             // Resolve once the burst has gone quiet, but never before the
             // minimum capture window (subsequent events can stream slowly).
             if (
-              accumulatedSelections.size > 0 &&
+              accumulator.stats().selections > 0 &&
               elapsed >= MIN_CAPTURE_MS &&
               silence >= STREAM_SILENCE_MS
             ) {
@@ -389,41 +438,30 @@ export async function captureWebSocketData(
           // Best-effort - resolve with whatever we captured.
         } finally {
           clearTimeout(hardCap);
-          finish();
+          complete();
         }
       })();
       return;
     }
 
-    // League-listing mode: poll until we have a multi-event snapshot.
-    const checkInterval = setInterval(() => {
-      if (resolved) {
-        clearInterval(checkInterval);
-        return;
-      }
+    // League-listing mode: the frame handler resolves on the first usable
+    // snapshot; this poll ends an empty listing early and caps the wait.
+    leagueInterval = setInterval(() => {
+      if (resolved) return;
 
       const elapsed = Date.now() - startTime;
 
-      if (
-        elapsed >= WS_MIN_WAIT &&
-        bestState &&
-        bestState.events?.length > 0 &&
-        bestState.selections?.length > 0
-      ) {
-        resolved = true;
-        clearInterval(checkInterval);
-        resolve(bestState);
+      if (elapsed >= WS_MIN_WAIT && isEmptyListing(diagnostics)) {
+        finish(null);
         return;
       }
 
       // Maximum timeout
       if (elapsed >= WS_MAX_WAIT) {
         console.log(
-          `[PZBuk/WS] Max wait reached with ${bestState?.selections?.length || 0} selections`
+          `[PZBuk/WS] Max wait reached without a listing snapshot (frames: ${diagnostics.framesReceived}, INITIAL_STATE: ${diagnostics.initialStates})`
         );
-        resolved = true;
-        clearInterval(checkInterval);
-        resolve(bestState);
+        finish(null);
       }
     }, WS_POLL_INTERVAL);
   });

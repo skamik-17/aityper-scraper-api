@@ -253,12 +253,6 @@ export const OUTCOME_TYPES = {
 export const WEBSOCKET_URL_PATTERN = "sportsbook-api/ws";
 
 /**
- * Maximum timeout for WebSocket data capture (milliseconds)
- * Increased to 30s to allow for sequential processing of all markets
- */
-export const WS_CAPTURE_TIMEOUT = 30000;
-
-/**
  * Polling interval for checking WebSocket data availability
  */
 export const WS_POLL_INTERVAL = 300;

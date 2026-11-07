@@ -358,6 +358,54 @@ describe("enrichFullOfferFailure", () => {
   });
 });
 
+// The live fixture comes from short prototype windows: pzbuk was watched for 6 s,
+// and totalbet fetched right after load. The scrapers keep the page longer:
+// pzbuk waits up to WS_CAPTURE_TIMEOUT (30 s), and totalbet waits 500 ms before
+// its fetch. These synthetic variations pin what the recorder then reports, so
+// the deferred live smoke and A4 checks are substring checks, never exact values.
+describe("live-window variations the A2/A4 checks must tolerate (synthetic)", () => {
+  const PZBUK_SPORTSBOOK_WS = "wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl";
+  const PZBUK_A4 = `websockets opened: ${PZBUK_SPORTSBOOK_WS}`;
+  const TOTALBET_A4 = "fetch HTTP 404 https://totalbet.pl/rest/market/categories/multi/7124/events";
+  const failure = (bookmaker: "pzbuk" | "totalbet", error: string, d: NavigationDiagnostics): string | undefined =>
+    enrichFullOfferFailure({ success: false, bookmaker, league: "premier-league", matches: [], error }, d).error;
+
+  it("pzbuk: an own-site 4xx comes before the websocket line, and the A4 substring still holds", () => {
+    const error = failure("pzbuk", "No WebSocket data captured", {
+      ...fx.pzbuk,
+      failedRequests: [{ url: "https://www.pzbuk.pl/api/session", status: 401, resourceType: "xhr" }],
+    });
+    expect(error).toBe(`No WebSocket data captured | xhr HTTP 401 https://www.pzbuk.pl/api/session; ${PZBUK_A4}`);
+    expect(error).toContain(PZBUK_A4);
+  });
+
+  it("pzbuk: a websocket opened earlier is listed first, in arrival order, so the A4 substring fails", () => {
+    const error = failure("pzbuk", "No WebSocket data captured", {
+      ...fx.pzbuk,
+      websockets: ["wss://www.pzbuk.pl/ws/notifications", PZBUK_SPORTSBOOK_WS],
+    });
+    expect(error).toBe(
+      `No WebSocket data captured | websockets opened: wss://www.pzbuk.pl/ws/notifications, ${PZBUK_SPORTSBOOK_WS}`,
+    );
+    expect(error).not.toContain(PZBUK_A4);
+    expect(error).toContain(PZBUK_SPORTSBOOK_WS);
+  });
+
+  it("totalbet: 3 own-site 4xx before the events 404 push it out of the 3 listed requests", () => {
+    const early = [
+      { url: "https://totalbet.pl/rest/a", status: 404, resourceType: "fetch" },
+      { url: "https://totalbet.pl/rest/b", status: 401, resourceType: "xhr" },
+      { url: "https://totalbet.pl/rest/c", status: 403, resourceType: "xhr" },
+    ];
+    const withEarly = (n: number): NavigationDiagnostics => ({
+      ...fx.totalbet,
+      failedRequests: [...early.slice(0, n), ...fx.totalbet.failedRequests],
+    });
+    expect(failure("totalbet", "No events found from API", withEarly(2))).toContain(TOTALBET_A4);
+    expect(failure("totalbet", "No events found from API", withEarly(3))).not.toContain(TOTALBET_A4);
+  });
+});
+
 describe("attachNavigationRecorder", () => {
   let page: FakePage;
   let rec: NavigationRecorder;

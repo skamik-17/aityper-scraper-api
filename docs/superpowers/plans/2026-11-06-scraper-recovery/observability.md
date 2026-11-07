@@ -52,7 +52,7 @@ Upstream diagnosis of the five broken bookmakers (betters/lebull → Betby, pzbu
 **(d) `page.goto` HTTP status and host are never checked.**
 - `playwright-base.ts:189-206` `navigateWithRetry` discards the `Response`.
 - 15 direct `page.goto` calls in 11 `navigation.ts` files do the same: lvbet:30, forbet:31, superbet:45/63, sts:161/219, pzbuk:168/192, betfan:31, betcris:43/67, etoto:36, fuksiarz:31, totalbet:35, fortuna:36.
-- 13/14 scrapers go through `PlaywrightScraper.executeFullOfferScrape` (`playwright-base.ts:347-366`). Betclic is API-only (`betclic/index.ts:233`), so that method is the one shared place for a fix.
+- 13/14 scrapers go through `PlaywrightScraper.executeFullOfferScrape` (`playwright-base.ts:347-366`). Betclic is API-only (`betclic/index.ts:233`), so that method is the one shared place for a fix. The count is for `377b47e`: the totalbet plan (`totalbet.md:253`) and the Betby plan (`betby-betters-lebull.md:9`, its Task 6 `scrapeFullOffer`) take totalbet, betters and lebull off this path, so once both are merged the recorder covers 10 of 14. pzbuk stays on it. Task 11 therefore starts by listing which of those fixes are in the tree under test.
 - A live prototype of the recorder (`recorder-proto.mts` → `navigation-recorder-live-2026-11-06.json`) captures each cause directly:
 
 | Target | What the recorder sees |
@@ -208,14 +208,14 @@ All checks are run from the repo root (`/home/skamik/Documents/repositories/pers
 - **A2, single-bookmaker live smoke** (dry, no DB): `npx tsx scripts/smoke-bookmaker.ts --bookmaker forbet --league premier-league`.
   - Exit 0.
   - `SMOKE_RESULT` with `matches >= 18`, `minMarketsPerMatch >= 100`, `unknownSelectionShare <= 0.06` (today 20 / 148 / 0.0376).
-  - The same command with `--bookmaker betters` (until the Betby plan lands): exit 1, with `error` containing `document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485`.
+  - The same command with `--bookmaker betters` (until the Betby plan lands): exit 1, with `error` containing `document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485`. Once the Betby plan is in the tree, betters is browserless and no longer passes the recorder, so this row stops applying (Task 11, "Merge state first"). Task 9 runs the same dry smoke for lebull, totalbet and pzbuk from the observability worktree, where none of those fixes is merged.
   - The command shape is proven on current code: `smoke-current-betters.txt` and `smoke-normalize-forbet.txt` import the same modules (`getScraper`, `closeAllBrowsers`, `normalizeMarketsForBookmaker`).
 - **A3, per-run line.** After the next scheduled run, `grep -c '^\[ScrapeRun\] premier-league'` on the clean log increases by exactly 1 per **non-aborted** run. An aborted run adds no `[ScrapeRun]` line and exactly one `[ALERT] scrape run ABORTED` line.
   - Take the full run id from the preceding `[Aggregator/FullOffer] Starting run <uuid> for premier-league` line. `[ScrapeRun]` shows only 8 characters.
   - `ok=N/14` equals the number of `scraper_runs` rows of that `run_id` with status in (success, partial).
   - `saved=` equals Σ `markets_saved` of those rows.
 - **A4, summary endpoint.** `curl -s 'http://localhost:3001/api/health/scrapers?league=premier-league'` with **no** Authorization header returns HTTP 200 and 14 entries.
-  - While the per-bookmaker fixes are unmerged, `lastError` contains:
+  - While the per-bookmaker fixes are unmerged, `lastError` contains the strings below. Task 11 first lists which fixes are in the tree; a row applies only while its fix is not. Each row is a substring check, never an exact value: the live pzbuk and totalbet errors can carry extra issue lines that the short prototype windows did not record (Task 9 notes).
 
 | Bookmaker | `lastError` contains |
 |---|---|
@@ -1367,10 +1367,20 @@ Then run the offline and live checks (one bookmaker at a time):
 | `npx tsx scripts/smoke-bookmaker.ts --bookmaker nosuchbm` | exit 2; `Unknown bookmaker: nosuchbm` |
 | `npx tsx scripts/smoke-bookmaker.ts --bookmaker forbet` | exit 0; `"status":"scraped"`, `matches` ≥ 18 (today 20), `minMarketsPerMatch` ≥ 100, `unknownSelectionShare` ≤ 0.06 (today 0.0376) |
 | `npx tsx scripts/smoke-bookmaker.ts --bookmaker betters` | exit 1; error contains `document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485` |
+| `npx tsx scripts/smoke-bookmaker.ts --bookmaker lebull` | exit 1; error contains `document HTTP 404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485`. This is the live check of lebull's recorder path: A4 may run only after the Betby merge, and lebull then no longer passes the recorder (Task 11). |
+| `npx tsx scripts/smoke-bookmaker.ts --bookmaker totalbet` | exit 1; error contains `fetch HTTP 404 https://totalbet.pl/rest/market/categories/multi/7124/events`. Record the full `error` (note below). |
+| `npx tsx scripts/smoke-bookmaker.ts --bookmaker pzbuk` | exit 1; error starts with `No WebSocket data captured \| ` and contains `websockets opened: wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl`. No exact value is expected. Record the full `error` (note below). |
 | `SUPABASE_URL=http://127.0.0.1:59999 SUPABASE_SERVICE_KEY=dummy npx tsx scripts/smoke-bookmaker.ts --bookmaker forbet --persist` | exit 3; the ABORTED alert line |
 | `npx tsx scripts/scraper-status.ts --league premier-league` | 15 lines |
 | `npx tsx scripts/scraper-status.ts --league premier-league --json \| python3 -I -m json.tool > /dev/null; echo "${PIPESTATUS[1]}"` | `0` (valid JSON). The JSON is a `ScraperHealthReport` with 14 `bookmakers`. |
 | `SUPABASE_URL=http://127.0.0.1:59999 npx tsx scripts/scraper-status.ts` | exit 2 |
+
+The betters, lebull, totalbet and pzbuk rows hold only while the matching fix is not in the tree. None is in this plan's worktree, so run them there. Record each `SMOKE_RESULT.error` verbatim in the task report, because the live text can differ from the 2026-11-06 fixture:
+- **pzbuk.** The fixture came from a 6 s window (`evidence/observability/recorder-proto.mts:29`). The scraper keeps the page open for up to `WS_CAPTURE_TIMEOUT` = 30 s (`pzbuk/constants.ts:255`, `pzbuk/index.ts:334-336`), and two things in that window change the text:
+  - (a) An own-site `www.pzbuk.pl` fetch/xhr ≥ 400 adds a rule-4 line before the websocket line, because 401/403 are dropped only for other sites (`navigation-diagnostics.ts:224-228`; rule 6 follows at `:232`). The substring check above still passes.
+  - (b) A websocket that opened before the sportsbook one is listed first, in arrival order (`navigation-diagnostics.ts:132-135`). The line then starts `websockets opened: <other socket>, …`, so the substring check fails although the sportsbook URL is still listed. Report that as a substring mismatch, with the recorded line.
+- **totalbet.** The scraper waits 500 ms before its fetch (`totalbet/index.ts:251`), while the prototype fetched at once, and the error lists only 3 failed requests (`navigation-diagnostics.ts:22`, `:226`). If 3 or more own-site 4xx calls arrive first, the events 404 drops out of the error. Record that case as well.
+- Do not reorder, filter or re-cap the recorder to make a string match. The Task 2 tests "live-window variations the A2/A4 checks must tolerate (synthetic)" pin all three cases.
 
 - [ ] **Step 5: Commit**
 
@@ -1441,7 +1451,17 @@ git commit -m "chore(dev): dev:stack script that checks Supabase before starting
 
 Done with the operator, after the dev server has picked up Tasks 1–10 and migration 11 is applied.
 
-- [ ] Run A1, A2 and A7–A9 as written in the Acceptance criteria and record each output. A2 smoke-tests only forbet. A10 below is the per-bookmaker regression check for the other 8 savers, which share the Task 2 base path.
+- [ ] **Merge state first.** This task may run on an integration tree where some bookmaker fixes have already landed. Before any A2 or A4 check, list which of them are in the tree under test, and put the output in the evidence file:
+  ```bash
+  for b in recovery/totalbet recovery/betby recovery/pzbuk; do git merge-base --is-ancestor "$b" HEAD && echo "$b: ancestor of HEAD" || echo "$b: not an ancestor"; done
+  grep -L executeFullOfferScrape src/scrapers/bookmakers/{betters,lebull,totalbet,pzbuk}/index.ts   # listed = no longer passes the recorder (totalbet.md Task 4, betby Task 6)
+  grep -l describeCaptureFailure src/scrapers/bookmakers/pzbuk/index.ts                            # listed = pzbuk.md Task 5 is wired
+  ```
+  - The two `grep` lines decide, and ancestry is only context. It says "not an ancestor" after a squash merge or when a branch gained commits after its merge, and "ancestor of HEAD" for a branch with no commits of its own. In the observability worktree on 2026-11-07, the loop printed "not an ancestor" three times and both `grep` lines printed nothing, so every A2/A4 recorder row applies there.
+  - For each fix that is in the tree (totalbet; betters and lebull; pzbuk), expect `status: "available"` with `consecutiveFailures: 0`. If it failed anyway, expect that plan's own error text (totalbet.md Tasks 1 and 4, betby-betters-lebull.md Task 6, pzbuk.md Task 5), not the recorder substrings of A2/A4. pzbuk still passes the recorder, so its own text can be followed by ` | ` and recorder lines.
+  - Keep the A2/A4 recorder substrings only for the fixes that are not in the tree.
+  - Once the Betby fix is in, A4 no longer tests the recorder against a live 404 for betters or lebull. The live evidence for that path is then the Task 9 betters and lebull dry smokes from the observability worktree. Cite them in the evidence file.
+- [ ] Run A1, A2 and A7–A9 as written in the Acceptance criteria and record each output. A2 smoke-tests only forbet among the savers; its betters row follows "Merge state first". A10 below is the per-bookmaker regression check for the other 8 savers, which share the Task 2 base path.
 - [ ] Wait for the next scheduled run (top of the hour) or trigger one with `curl -s -X POST -H 'Authorization: Bearer dev-api-key' -H 'Content-Type: application/json' -d '{"league":"premier-league"}' http://localhost:3001/api/admin/scrape`, then:
   - [ ] A3:
     - Run `sed 's/\x1b\[[0-9;]*m//g' <log> > <clean>`.
@@ -1451,7 +1471,7 @@ Done with the operator, after the dev server has picked up Tasks 1–10 and migr
   - [ ] A10, using the same query: every one of the 9 savers has `markets_saved` ≥ 0.75 × its run-2 count.
     - Floors: fortuna ≥ 9673, superbet ≥ 10015, lvbet ≥ 7071, fuksiarz ≥ 4667, betfan ≥ 4200, forbet ≥ 4402, etoto ≥ 4915, sts ≥ 3848, betclic ≥ 2363.
     - The 0.75 floor absorbs the observed run-to-run noise (STS −15% between run 1 and run 2). A miss names the bookmaker whose shared-base path (Task 2) or batch accounting (Task 1) needs a look before sign-off.
-  - [ ] A4: `curl -s 'http://localhost:3001/api/health/scrapers?league=premier-league' | python3 -I -m json.tool`. Check the four `lastError` substrings and that every saver is `available`.
+  - [ ] A4: `curl -s 'http://localhost:3001/api/health/scrapers?league=premier-league' | python3 -I -m json.tool`. Check the `lastError` substrings that still apply after "Merge state first", as substrings and never as exact values, and check that every saver is `available`. For a pzbuk or totalbet mismatch, compare the recorded line with the cases in the Task 9 note before calling it a recorder defect.
   - [ ] A5: `curl -s 'http://localhost:3001/api/odds?league=premier-league' | python3 -I -c "import json,sys,collections;m=json.load(sys.stdin)['meta'];print(collections.Counter(m['bookmakerStatus'].values()), m['lastUpdated'], len(m['bookmakerHealth']))"`. Expect `available >= 9`, a non-null `lastUpdated`, and `14`.
   - [ ] A5b (the frontend's path): `curl -s -X POST -H 'Content-Type: application/json' -d '{"leagues":["premier-league"]}' http://localhost:3001/api/odds/batch | python3 -I -c "import json,sys,collections;m=json.load(sys.stdin)['meta'];s=m['bookmakerStatus'];print(collections.Counter(s.values()), all(isinstance(v,str) for v in s.values()), m['lastUpdated'], len(m['bookmakerHealth']))"`. Expect `available >= 9`, `True`, a non-null `lastUpdated`, and `14`.
   - [ ] A6: `curl -s http://localhost:3001/api/bookmakers | python3 -I -c "import json,sys;print(json.load(sys.stdin)['meta'])"`. Expect `availableCount >= 9`.
@@ -1468,7 +1488,7 @@ Done with the operator, after the dev server has picked up Tasks 1–10 and migr
 | (a) | Tasks 1 and 3 |
 | (b) | Task 7 (scrape preflight, and the initial TSDB sync waiting for the DB), plus Task 1 for persist_failed |
 | (c) | Tasks 1, 2, 3, and 7 (`ScrapeStats.failed`). Betclic's API-only failure text is a listed follow-up. |
-| (d) | Task 2, at the single shared place `executeFullOfferScrape`, including navigations that never got a response. Betclic is API-only and noted as such. |
+| (d) | Task 2, at the single shared place `executeFullOfferScrape`, including navigations that never got a response. Betclic is API-only and noted as such. That covers 13 of 14 at `377b47e`, and 10 of 14 once the totalbet and Betby plans have merged. After that, totalbet, betters and lebull report their own errors (Task 11, "Merge state first"). |
 | (e) | Task 4 (insert, `+00:00`-safe timestamps, `/api/admin/runs` grouping and `partial`), plus wiring in Task 7 |
 | (f) | Task 5, plus surfaces in Task 8, including the newly found 1000-row cap, the `ekstraklasa` default and the batch-merge bug (route-tested on the frontend's `POST /api/odds/batch` path) |
 | (g) | Task 8 (endpoint) and Task 9 (CLI) |

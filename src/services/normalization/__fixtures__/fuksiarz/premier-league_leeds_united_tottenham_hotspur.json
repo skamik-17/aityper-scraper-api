@@ -1,0 +1,318 @@
+{
+  "bookmaker": "fuksiarz",
+  "ctx": {
+    "awayTeam": "Tottenham Hotspur",
+    "homeTeam": "Leeds United",
+    "league": "premier-league",
+    "leagueName": "premier-league"
+  },
+  "entries": [
+    {
+      "index": 13,
+      "raw": {
+        "bookmakerMarketId": "-30061",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zakłady specjalne #4.1",
+        "selections": [
+          {
+            "externalId": "776261922",
+            "name": "Leeds powyżej 1,5 rzutu rożnego w każdej połowie",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 238,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841855",
+            "name": "E. Ampadu",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 239,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841856",
+            "name": "J. Bahoya",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 240,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841857",
+            "name": "M. Bard",
+            "odds": 16
+          }
+        ]
+      }
+    },
+    {
+      "index": 241,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841858",
+            "name": "J. Bijol",
+            "odds": 5.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 242,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841859",
+            "name": "D. Calvert-Lewin",
+            "odds": 2.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 243,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841860",
+            "name": "N. Elvedi",
+            "odds": 9.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 244,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841861",
+            "name": "D. James",
+            "odds": 20
+          }
+        ]
+      }
+    },
+    {
+      "index": 245,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841862",
+            "name": "J. Justin",
+            "odds": 9.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 246,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841863",
+            "name": "S. Longstaff",
+            "odds": 16
+          }
+        ]
+      }
+    },
+    {
+      "index": 247,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841864",
+            "name": "T. Muharemovic",
+            "odds": 4.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 248,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841865",
+            "name": "L. Nmecha",
+            "odds": 3.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 249,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841866",
+            "name": "N. Okafor",
+            "odds": 5
+          }
+        ]
+      }
+    },
+    {
+      "index": 250,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841867",
+            "name": "A. Stach",
+            "odds": 7.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 251,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841868",
+            "name": "A. Tanaka",
+            "odds": 5.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 252,
+      "raw": {
+        "bookmakerMarketId": "-4895",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 1 celny strzał głową",
+        "selections": [
+          {
+            "externalId": "776841869",
+            "name": "H. Wilson",
+            "odds": 9.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 253,
+      "raw": {
+        "bookmakerMarketId": "-4896",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały głową",
+        "selections": [
+          {
+            "externalId": "776841870",
+            "name": "D. Calvert-Lewin",
+            "odds": 7.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 254,
+      "raw": {
+        "bookmakerMarketId": "-4896",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Odda co najmniej 2 celne strzały głową",
+        "selections": [
+          {
+            "externalId": "776841871",
+            "name": "L. Nmecha",
+            "odds": 25
+          }
+        ]
+      }
+    },
+    {
+      "index": 440,
+      "raw": {
+        "bookmakerMarketId": "-30640",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Każda drużyna powyżej 2.5 rzutu rożnego",
+        "selections": [
+          {
+            "externalId": "776261297",
+            "name": "powyżej 2.5",
+            "odds": 1.4
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "23464740",
+  "matchIdSafe": "premier-league_leeds_united_tottenham_hotspur",
+  "sourceArchive": "premier-league_leeds_united_tottenham_hotspur__2026-11-07.json"
+}

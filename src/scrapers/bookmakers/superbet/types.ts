@@ -9,8 +9,17 @@
  * Individual betting selection from Superbet API
  */
 export interface SuperbetOddsSelection {
-  /** Internal selection ID */
-  id: number;
+  /** Legacy numeric selection ID; the current API no longer sends it */
+  id?: number;
+  /** Per-selection identifier (distinct for every line and player) */
+  uuid?: string;
+  /** Identifier of the market instance (one line or player) this selection belongs to */
+  marketUuid?: string;
+  /**
+   * Outcome-type id, shared across lines and players, NOT unique.
+   * Never use it as a selection identifier.
+   */
+  outcomeId?: number;
   /** Market ID this selection belongs to */
   marketId: number;
   /** Human-readable market label provided by the API (e.g., "Liczba goli") */

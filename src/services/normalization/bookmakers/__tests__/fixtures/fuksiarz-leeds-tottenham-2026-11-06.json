@@ -1,0 +1,286 @@
+{
+ "code": 200,
+ "data": {
+  "eventId": 23464740,
+  "eventName": "Leeds - Tottenham",
+  "eventStart": 1794054600000,
+  "eventGames": [
+   {
+    "gameId": 945737658,
+    "gameName": "Zakłady specjalne #4.1",
+    "gameType": -30061,
+    "gameCode": 0,
+    "argument": null,
+    "marketTypes": [
+     23,
+     60
+    ],
+    "gameLayout": 8,
+    "eventLayout": 13,
+    "outcomes": [
+     {
+      "outcomeId": 776261922,
+      "outcomeName": "Leeds powyżej 1,5 rzutu rożnego w każdej połowie",
+      "outcomeOdds": 1.95,
+      "outcomePosition": 0,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     2
+    ]
+   },
+   {
+    "gameId": 945921411,
+    "gameName": "Odda co najmniej 1 celny strzał głową",
+    "gameType": -4895,
+    "gameCode": 0,
+    "argument": null,
+    "marketTypes": [
+     61
+    ],
+    "gameLayout": 9,
+    "eventLayout": 14,
+    "outcomes": [
+     {
+      "outcomeId": 776841855,
+      "outcomeName": "E. Ampadu",
+      "outcomeOdds": 11.0,
+      "outcomePosition": 0,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841856,
+      "outcomeName": "J. Bahoya",
+      "outcomeOdds": 13.0,
+      "outcomePosition": 1,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841857,
+      "outcomeName": "M. Bard",
+      "outcomeOdds": 16.0,
+      "outcomePosition": 2,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841858,
+      "outcomeName": "J. Bijol",
+      "outcomeOdds": 5.3,
+      "outcomePosition": 3,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841859,
+      "outcomeName": "D. Calvert-Lewin",
+      "outcomeOdds": 2.11,
+      "outcomePosition": 4,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841860,
+      "outcomeName": "N. Elvedi",
+      "outcomeOdds": 9.9,
+      "outcomePosition": 5,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841861,
+      "outcomeName": "D. James",
+      "outcomeOdds": 20.0,
+      "outcomePosition": 6,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841862,
+      "outcomeName": "J. Justin",
+      "outcomeOdds": 9.4,
+      "outcomePosition": 7,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841863,
+      "outcomeName": "S. Longstaff",
+      "outcomeOdds": 16.0,
+      "outcomePosition": 8,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841864,
+      "outcomeName": "T. Muharemovic",
+      "outcomeOdds": 4.9,
+      "outcomePosition": 9,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841865,
+      "outcomeName": "L. Nmecha",
+      "outcomeOdds": 4.0,
+      "outcomePosition": 10,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841866,
+      "outcomeName": "N. Okafor",
+      "outcomeOdds": 5.0,
+      "outcomePosition": 11,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841867,
+      "outcomeName": "A. Stach",
+      "outcomeOdds": 7.3,
+      "outcomePosition": 12,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841868,
+      "outcomeName": "A. Tanaka",
+      "outcomeOdds": 6.2,
+      "outcomePosition": 13,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841869,
+      "outcomeName": "H. Wilson",
+      "outcomeOdds": 9.4,
+      "outcomePosition": 14,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     1,
+     2
+    ]
+   },
+   {
+    "gameId": 945921412,
+    "gameName": "Odda co najmniej 2 celne strzały głową",
+    "gameType": -4896,
+    "gameCode": 0,
+    "argument": null,
+    "marketTypes": [
+     61
+    ],
+    "gameLayout": 9,
+    "eventLayout": 14,
+    "outcomes": [
+     {
+      "outcomeId": 776841870,
+      "outcomeName": "D. Calvert-Lewin",
+      "outcomeOdds": 7.3,
+      "outcomePosition": 0,
+      "status": 100
+     },
+     {
+      "outcomeId": 776841871,
+      "outcomeName": "L. Nmecha",
+      "outcomeOdds": 26.0,
+      "outcomePosition": 1,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     1,
+     2
+    ]
+   },
+   {
+    "gameId": 945737465,
+    "gameName": "Każda drużyna powyżej 1.5 rzutu rożnego",
+    "gameType": -30640,
+    "gameCode": 0,
+    "argument": 1.5,
+    "marketTypes": [
+     23
+    ],
+    "gameLayout": 2,
+    "eventLayout": 5,
+    "outcomes": [
+     {
+      "outcomeId": 776261273,
+      "outcomeName": "powyżej 1.5",
+      "outcomeOdds": 1.1,
+      "outcomePosition": 0,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     2
+    ]
+   },
+   {
+    "gameId": 945737477,
+    "gameName": "Każda drużyna powyżej 2.5 rzutu rożnego",
+    "gameType": -30640,
+    "gameCode": 0,
+    "argument": 2.5,
+    "marketTypes": [
+     23
+    ],
+    "gameLayout": 2,
+    "eventLayout": 5,
+    "outcomes": [
+     {
+      "outcomeId": 776261297,
+      "outcomeName": "powyżej 2.5",
+      "outcomeOdds": 1.4,
+      "outcomePosition": 0,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     2
+    ]
+   },
+   {
+    "gameId": 945737479,
+    "gameName": "Każda drużyna powyżej 3.5 rzutu rożnego",
+    "gameType": -30640,
+    "gameCode": 0,
+    "argument": 3.5,
+    "marketTypes": [
+     23
+    ],
+    "gameLayout": 2,
+    "eventLayout": 5,
+    "outcomes": [
+     {
+      "outcomeId": 776261300,
+      "outcomeName": "powyżej 3.5",
+      "outcomeOdds": 2.0,
+      "outcomePosition": 0,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     2
+    ]
+   },
+   {
+    "gameId": 945737481,
+    "gameName": "Każda drużyna powyżej 4.5 rzutu rożnego",
+    "gameType": -30640,
+    "gameCode": 0,
+    "argument": 4.5,
+    "marketTypes": [
+     23
+    ],
+    "gameLayout": 2,
+    "eventLayout": 5,
+    "outcomes": [
+     {
+      "outcomeId": 776261303,
+      "outcomeName": "powyżej 4.5",
+      "outcomeOdds": 3.1,
+      "outcomePosition": 0,
+      "status": 100
+     }
+    ],
+    "combinationTypes": [
+     2
+    ]
+   }
+  ]
+ }
+}

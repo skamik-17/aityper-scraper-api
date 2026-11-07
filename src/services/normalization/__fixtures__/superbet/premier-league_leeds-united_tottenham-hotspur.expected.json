@@ -1,0 +1,2446 @@
+{
+  "bookmaker": "superbet",
+  "entries": [
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 2.75
+          },
+          {
+            "code": "DRAW",
+            "label": "Remis",
+            "odds": 3.3
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham",
+            "odds": 2.57
+          }
+        ]
+      },
+      "index": 0,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "Mecz"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 9.6
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 0.5",
+            "odds": 1.05
+          }
+        ]
+      },
+      "index": 578,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 3.55
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 1.5",
+            "odds": 1.29
+          }
+        ]
+      },
+      "index": 579,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.87
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 2.5",
+            "odds": 1.92
+          }
+        ]
+      },
+      "index": 580,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 3.5",
+            "odds": 1.33
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 3.5",
+            "odds": 3.25
+          }
+        ]
+      },
+      "index": 581,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 4.5",
+            "odds": 1.11
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 4.5",
+            "odds": 6.4
+          }
+        ]
+      },
+      "index": 582,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:5.5",
+        "matchedBy": "id",
+        "paramValue": "5.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 5.5",
+            "odds": 1.03
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 5.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 583,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:6.5",
+        "matchedBy": "id",
+        "paramValue": "6.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "UNDER",
+            "label": "poniżej 6.5",
+            "odds": 1.007
+          },
+          {
+            "code": "OVER",
+            "label": "powyżej 6.5",
+            "odds": 28
+          }
+        ]
+      },
+      "index": 584,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOALSCORER_ANYTIME",
+        "marketKey": "GOALSCORER_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Dominic Calvert-Lewin",
+            "label": "Dominic Calvert-Lewin",
+            "odds": 2.65
+          },
+          {
+            "code": "Lukas Nmecha",
+            "label": "Lukas Nmecha",
+            "odds": 3.05
+          },
+          {
+            "code": "Dominic Solanke",
+            "label": "Dominic Solanke",
+            "odds": 3.25
+          },
+          {
+            "code": "Omar Marmoush",
+            "label": "Omar Marmoush",
+            "odds": 3.45
+          },
+          {
+            "code": "Noah Okafor",
+            "label": "Noah Okafor",
+            "odds": 3.6
+          },
+          {
+            "code": "Harry Wilson",
+            "label": "Harry Wilson",
+            "odds": 3.75
+          },
+          {
+            "code": "Daniel James",
+            "label": "Daniel James",
+            "odds": 4
+          },
+          {
+            "code": "Mathys Tel",
+            "label": "Mathys Tel",
+            "odds": 4.15
+          },
+          {
+            "code": "Dejan Kulusekvski",
+            "label": "Dejan Kulusekvski",
+            "odds": 4.2
+          },
+          {
+            "code": "Jean Matteo Bahoya",
+            "label": "Jean Matteo Bahoya",
+            "odds": 4.3
+          },
+          {
+            "code": "Mohammed Kudus",
+            "label": "Mohammed Kudus",
+            "odds": 4.4
+          },
+          {
+            "code": "James Maddison",
+            "label": "James Maddison",
+            "odds": 4.4
+          },
+          {
+            "code": "Brenden Aaronson",
+            "label": "Brenden Aaronson",
+            "odds": 4.65
+          },
+          {
+            "code": "Conor Gallagher",
+            "label": "Conor Gallagher",
+            "odds": 5.35
+          },
+          {
+            "code": "Sean Longstaff",
+            "label": "Sean Longstaff",
+            "odds": 5.4
+          },
+          {
+            "code": "Anton Stach",
+            "label": "Anton Stach",
+            "odds": 5.55
+          },
+          {
+            "code": "Ao Tanaka",
+            "label": "Ao Tanaka",
+            "odds": 5.65
+          },
+          {
+            "code": "Mateus Fernandes",
+            "label": "Mateus Fernandes",
+            "odds": 6
+          },
+          {
+            "code": "Melvin Bard",
+            "label": "Melvin Bard",
+            "odds": 7.2
+          },
+          {
+            "code": "Sandro Tonali",
+            "label": "Sandro Tonali",
+            "odds": 7.2
+          },
+          {
+            "code": "Jayden Bogle",
+            "label": "Jayden Bogle",
+            "odds": 7.8
+          },
+          {
+            "code": "Archie Gray",
+            "label": "Archie Gray",
+            "odds": 7.8
+          },
+          {
+            "code": "Pedro Porro",
+            "label": "Pedro Porro",
+            "odds": 8.2
+          },
+          {
+            "code": "James Justin",
+            "label": "James Justin",
+            "odds": 8.6
+          },
+          {
+            "code": "Micky van de Ven",
+            "label": "Micky van de Ven",
+            "odds": 8.9
+          },
+          {
+            "code": "Marcos Senesi",
+            "label": "Marcos Senesi",
+            "odds": 9
+          },
+          {
+            "code": "Ben Davies",
+            "label": "Ben Davies",
+            "odds": 9.2
+          },
+          {
+            "code": "Jaka Bijol",
+            "label": "Jaka Bijol",
+            "odds": 9.3
+          },
+          {
+            "code": "Gabriel Gudmundsson",
+            "label": "Gabriel Gudmundsson",
+            "odds": 9.4
+          },
+          {
+            "code": "Ilia Gruev",
+            "label": "Ilia Gruev",
+            "odds": 9.7
+          },
+          {
+            "code": "Jan-Paul van Hecke",
+            "label": "Jan-Paul van Hecke",
+            "odds": 9.7
+          },
+          {
+            "code": "Andy Robertson",
+            "label": "Andy Robertson",
+            "odds": 9.8
+          },
+          {
+            "code": "Destiny Udogie",
+            "label": "Destiny Udogie",
+            "odds": 9.8
+          },
+          {
+            "code": "Nico Elvedi",
+            "label": "Nico Elvedi",
+            "odds": 10
+          },
+          {
+            "code": "Ethan Ampadu",
+            "label": "Ethan Ampadu",
+            "odds": 11
+          },
+          {
+            "code": "Tarik Muharemovic",
+            "label": "Tarik Muharemovic",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 687,
+      "marketCode": "GOALSCORER_ANYTIME",
+      "rawName": "Zawodnik - strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Anton Stach",
+        "matchedBy": "id",
+        "paramValue": "Anton Stach",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Anton Stach - powyżej 0.5",
+            "odds": 1.06
+          },
+          {
+            "code": "2+",
+            "label": "Anton Stach - powyżej 1.5",
+            "odds": 1.43
+          },
+          {
+            "code": "3+",
+            "label": "Anton Stach - powyżej 2.5",
+            "odds": 2.27
+          },
+          {
+            "code": "4+",
+            "label": "Anton Stach - powyżej 3.5",
+            "odds": 4
+          },
+          {
+            "code": "5+",
+            "label": "Anton Stach - powyżej 4.5",
+            "odds": 6.9
+          },
+          {
+            "code": "6+",
+            "label": "Anton Stach - powyżej 5.5",
+            "odds": 13
+          },
+          {
+            "code": "7+",
+            "label": "Anton Stach - powyżej 6.5",
+            "odds": 27
+          }
+        ]
+      },
+      "index": 803,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Noah Okafor",
+        "matchedBy": "id",
+        "paramValue": "Noah Okafor",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Noah Okafor - powyżej 0.5",
+            "odds": 1.07
+          },
+          {
+            "code": "2+",
+            "label": "Noah Okafor - powyżej 1.5",
+            "odds": 1.48
+          },
+          {
+            "code": "3+",
+            "label": "Noah Okafor - powyżej 2.5",
+            "odds": 2.4
+          },
+          {
+            "code": "4+",
+            "label": "Noah Okafor - powyżej 3.5",
+            "odds": 4.25
+          },
+          {
+            "code": "5+",
+            "label": "Noah Okafor - powyżej 4.5",
+            "odds": 7.5
+          },
+          {
+            "code": "6+",
+            "label": "Noah Okafor - powyżej 5.5",
+            "odds": 14
+          },
+          {
+            "code": "7+",
+            "label": "Noah Okafor - powyżej 6.5",
+            "odds": 30
+          }
+        ]
+      },
+      "index": 804,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ilia Gruev",
+        "matchedBy": "id",
+        "paramValue": "Ilia Gruev",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Ilia Gruev - powyżej 0.5",
+            "odds": 1.56
+          },
+          {
+            "code": "2+",
+            "label": "Ilia Gruev - powyżej 1.5",
+            "odds": 3.5
+          },
+          {
+            "code": "3+",
+            "label": "Ilia Gruev - powyżej 2.5",
+            "odds": 8.3
+          },
+          {
+            "code": "4+",
+            "label": "Ilia Gruev - powyżej 3.5",
+            "odds": 22
+          }
+        ]
+      },
+      "index": 805,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Dejan Kulusekvski",
+        "matchedBy": "id",
+        "paramValue": "Dejan Kulusekvski",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Dejan Kulusekvski - powyżej 0.5",
+            "odds": 1.07
+          },
+          {
+            "code": "2+",
+            "label": "Dejan Kulusekvski - powyżej 1.5",
+            "odds": 1.46
+          },
+          {
+            "code": "3+",
+            "label": "Dejan Kulusekvski - powyżej 2.5",
+            "odds": 2.35
+          },
+          {
+            "code": "4+",
+            "label": "Dejan Kulusekvski - powyżej 3.5",
+            "odds": 4.1
+          },
+          {
+            "code": "5+",
+            "label": "Dejan Kulusekvski - powyżej 4.5",
+            "odds": 7.1
+          },
+          {
+            "code": "6+",
+            "label": "Dejan Kulusekvski - powyżej 5.5",
+            "odds": 14
+          },
+          {
+            "code": "7+",
+            "label": "Dejan Kulusekvski - powyżej 6.5",
+            "odds": 28
+          }
+        ]
+      },
+      "index": 806,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Sean Longstaff",
+        "matchedBy": "id",
+        "paramValue": "Sean Longstaff",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Sean Longstaff - powyżej 0.5",
+            "odds": 1.21
+          },
+          {
+            "code": "2+",
+            "label": "Sean Longstaff - powyżej 1.5",
+            "odds": 2
+          },
+          {
+            "code": "3+",
+            "label": "Sean Longstaff - powyżej 2.5",
+            "odds": 3.9
+          },
+          {
+            "code": "4+",
+            "label": "Sean Longstaff - powyżej 3.5",
+            "odds": 7.6
+          },
+          {
+            "code": "5+",
+            "label": "Sean Longstaff - powyżej 4.5",
+            "odds": 16
+          },
+          {
+            "code": "6+",
+            "label": "Sean Longstaff - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 807,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Omar Marmoush",
+        "matchedBy": "id",
+        "paramValue": "Omar Marmoush",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Omar Marmoush - powyżej 0.5",
+            "odds": 1.04
+          },
+          {
+            "code": "2+",
+            "label": "Omar Marmoush - powyżej 1.5",
+            "odds": 1.33
+          },
+          {
+            "code": "3+",
+            "label": "Omar Marmoush - powyżej 2.5",
+            "odds": 2
+          },
+          {
+            "code": "4+",
+            "label": "Omar Marmoush - powyżej 3.5",
+            "odds": 3.3
+          },
+          {
+            "code": "5+",
+            "label": "Omar Marmoush - powyżej 4.5",
+            "odds": 5.65
+          },
+          {
+            "code": "6+",
+            "label": "Omar Marmoush - powyżej 5.5",
+            "odds": 10
+          },
+          {
+            "code": "7+",
+            "label": "Omar Marmoush - powyżej 6.5",
+            "odds": 19
+          },
+          {
+            "code": "8+",
+            "label": "Omar Marmoush - powyżej 7.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 808,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jaka Bijol",
+        "matchedBy": "id",
+        "paramValue": "Jaka Bijol",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Jaka Bijol - powyżej 0.5",
+            "odds": 1.58
+          },
+          {
+            "code": "2+",
+            "label": "Jaka Bijol - powyżej 1.5",
+            "odds": 3.65
+          },
+          {
+            "code": "3+",
+            "label": "Jaka Bijol - powyżej 2.5",
+            "odds": 8.8
+          },
+          {
+            "code": "4+",
+            "label": "Jaka Bijol - powyżej 3.5",
+            "odds": 24
+          }
+        ]
+      },
+      "index": 809,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Sandro Tonali",
+        "matchedBy": "id",
+        "paramValue": "Sandro Tonali",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Sandro Tonali - powyżej 0.5",
+            "odds": 1.31
+          },
+          {
+            "code": "2+",
+            "label": "Sandro Tonali - powyżej 1.5",
+            "odds": 2.45
+          },
+          {
+            "code": "3+",
+            "label": "Sandro Tonali - powyżej 2.5",
+            "odds": 5.15
+          },
+          {
+            "code": "4+",
+            "label": "Sandro Tonali - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "code": "5+",
+            "label": "Sandro Tonali - powyżej 4.5",
+            "odds": 27
+          }
+        ]
+      },
+      "index": 810,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Conor Gallagher",
+        "matchedBy": "id",
+        "paramValue": "Conor Gallagher",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Conor Gallagher - powyżej 0.5",
+            "odds": 1.13
+          },
+          {
+            "code": "2+",
+            "label": "Conor Gallagher - powyżej 1.5",
+            "odds": 1.68
+          },
+          {
+            "code": "3+",
+            "label": "Conor Gallagher - powyżej 2.5",
+            "odds": 2.95
+          },
+          {
+            "code": "4+",
+            "label": "Conor Gallagher - powyżej 3.5",
+            "odds": 5.55
+          },
+          {
+            "code": "5+",
+            "label": "Conor Gallagher - powyżej 4.5",
+            "odds": 11
+          },
+          {
+            "code": "6+",
+            "label": "Conor Gallagher - powyżej 5.5",
+            "odds": 22
+          }
+        ]
+      },
+      "index": 811,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mohammed Kudus",
+        "matchedBy": "id",
+        "paramValue": "Mohammed Kudus",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Mohammed Kudus - powyżej 0.5",
+            "odds": 1.04
+          },
+          {
+            "code": "2+",
+            "label": "Mohammed Kudus - powyżej 1.5",
+            "odds": 1.37
+          },
+          {
+            "code": "3+",
+            "label": "Mohammed Kudus - powyżej 2.5",
+            "odds": 2.07
+          },
+          {
+            "code": "4+",
+            "label": "Mohammed Kudus - powyżej 3.5",
+            "odds": 3.5
+          },
+          {
+            "code": "5+",
+            "label": "Mohammed Kudus - powyżej 4.5",
+            "odds": 6.1
+          },
+          {
+            "code": "6+",
+            "label": "Mohammed Kudus - powyżej 5.5",
+            "odds": 11
+          },
+          {
+            "code": "7+",
+            "label": "Mohammed Kudus - powyżej 6.5",
+            "odds": 21
+          },
+          {
+            "code": "8+",
+            "label": "Mohammed Kudus - powyżej 7.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 812,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Melvin Bard",
+        "matchedBy": "id",
+        "paramValue": "Melvin Bard",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Melvin Bard - powyżej 0.5",
+            "odds": 1.31
+          },
+          {
+            "code": "2+",
+            "label": "Melvin Bard - powyżej 1.5",
+            "odds": 2.42
+          },
+          {
+            "code": "3+",
+            "label": "Melvin Bard - powyżej 2.5",
+            "odds": 5.1
+          },
+          {
+            "code": "4+",
+            "label": "Melvin Bard - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "code": "5+",
+            "label": "Melvin Bard - powyżej 4.5",
+            "odds": 27
+          }
+        ]
+      },
+      "index": 813,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Pedro Porro",
+        "matchedBy": "id",
+        "paramValue": "Pedro Porro",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Pedro Porro - powyżej 0.5",
+            "odds": 1.3
+          },
+          {
+            "code": "2+",
+            "label": "Pedro Porro - powyżej 1.5",
+            "odds": 2.37
+          },
+          {
+            "code": "3+",
+            "label": "Pedro Porro - powyżej 2.5",
+            "odds": 4.9
+          },
+          {
+            "code": "4+",
+            "label": "Pedro Porro - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "code": "5+",
+            "label": "Pedro Porro - powyżej 4.5",
+            "odds": 25
+          }
+        ]
+      },
+      "index": 814,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Brenden Aaronson",
+        "matchedBy": "id",
+        "paramValue": "Brenden Aaronson",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Brenden Aaronson - powyżej 0.5",
+            "odds": 1.08
+          },
+          {
+            "code": "2+",
+            "label": "Brenden Aaronson - powyżej 1.5",
+            "odds": 1.5
+          },
+          {
+            "code": "3+",
+            "label": "Brenden Aaronson - powyżej 2.5",
+            "odds": 2.47
+          },
+          {
+            "code": "4+",
+            "label": "Brenden Aaronson - powyżej 3.5",
+            "odds": 4.4
+          },
+          {
+            "code": "5+",
+            "label": "Brenden Aaronson - powyżej 4.5",
+            "odds": 7.8
+          },
+          {
+            "code": "6+",
+            "label": "Brenden Aaronson - powyżej 5.5",
+            "odds": 15
+          },
+          {
+            "code": "7+",
+            "label": "Brenden Aaronson - powyżej 6.5",
+            "odds": 32
+          }
+        ]
+      },
+      "index": 815,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jayden Bogle",
+        "matchedBy": "id",
+        "paramValue": "Jayden Bogle",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Jayden Bogle - powyżej 0.5",
+            "odds": 1.32
+          },
+          {
+            "code": "2+",
+            "label": "Jayden Bogle - powyżej 1.5",
+            "odds": 2.47
+          },
+          {
+            "code": "3+",
+            "label": "Jayden Bogle - powyżej 2.5",
+            "odds": 5.2
+          },
+          {
+            "code": "4+",
+            "label": "Jayden Bogle - powyżej 3.5",
+            "odds": 12
+          },
+          {
+            "code": "5+",
+            "label": "Jayden Bogle - powyżej 4.5",
+            "odds": 28
+          }
+        ]
+      },
+      "index": 816,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jan-Paul van Hecke",
+        "matchedBy": "id",
+        "paramValue": "Jan-Paul van Hecke",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Jan-Paul van Hecke - powyżej 0.5",
+            "odds": 1.78
+          },
+          {
+            "code": "2+",
+            "label": "Jan-Paul van Hecke - powyżej 1.5",
+            "odds": 4.55
+          },
+          {
+            "code": "3+",
+            "label": "Jan-Paul van Hecke - powyżej 2.5",
+            "odds": 12
+          },
+          {
+            "code": "4+",
+            "label": "Jan-Paul van Hecke - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 817,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Destiny Udogie",
+        "matchedBy": "id",
+        "paramValue": "Destiny Udogie",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Destiny Udogie - powyżej 0.5",
+            "odds": 1.69
+          },
+          {
+            "code": "2+",
+            "label": "Destiny Udogie - powyżej 1.5",
+            "odds": 4.1
+          },
+          {
+            "code": "3+",
+            "label": "Destiny Udogie - powyżej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Destiny Udogie - powyżej 3.5",
+            "odds": 30
+          }
+        ]
+      },
+      "index": 818,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Micky van de Ven",
+        "matchedBy": "id",
+        "paramValue": "Micky van de Ven",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Micky van de Ven - powyżej 0.5",
+            "odds": 2.02
+          },
+          {
+            "code": "2+",
+            "label": "Micky van de Ven - powyżej 1.5",
+            "odds": 5.7
+          },
+          {
+            "code": "3+",
+            "label": "Micky van de Ven - powyżej 2.5",
+            "odds": 17
+          }
+        ]
+      },
+      "index": 819,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mathys Tel",
+        "matchedBy": "id",
+        "paramValue": "Mathys Tel",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Mathys Tel - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "code": "2+",
+            "label": "Mathys Tel - powyżej 1.5",
+            "odds": 1.39
+          },
+          {
+            "code": "3+",
+            "label": "Mathys Tel - powyżej 2.5",
+            "odds": 2.15
+          },
+          {
+            "code": "4+",
+            "label": "Mathys Tel - powyżej 3.5",
+            "odds": 3.65
+          },
+          {
+            "code": "5+",
+            "label": "Mathys Tel - powyżej 4.5",
+            "odds": 6.3
+          },
+          {
+            "code": "6+",
+            "label": "Mathys Tel - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "code": "7+",
+            "label": "Mathys Tel - powyżej 6.5",
+            "odds": 23
+          }
+        ]
+      },
+      "index": 820,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Tarik Muharemovic",
+        "matchedBy": "id",
+        "paramValue": "Tarik Muharemovic",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Tarik Muharemovic - powyżej 0.5",
+            "odds": 1.66
+          },
+          {
+            "code": "2+",
+            "label": "Tarik Muharemovic - powyżej 1.5",
+            "odds": 4
+          },
+          {
+            "code": "3+",
+            "label": "Tarik Muharemovic - powyżej 2.5",
+            "odds": 10
+          },
+          {
+            "code": "4+",
+            "label": "Tarik Muharemovic - powyżej 3.5",
+            "odds": 28
+          }
+        ]
+      },
+      "index": 821,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mateus Fernandes",
+        "matchedBy": "id",
+        "paramValue": "Mateus Fernandes",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Mateus Fernandes - powyżej 0.5",
+            "odds": 1.26
+          },
+          {
+            "code": "2+",
+            "label": "Mateus Fernandes - powyżej 1.5",
+            "odds": 2.2
+          },
+          {
+            "code": "3+",
+            "label": "Mateus Fernandes - powyżej 2.5",
+            "odds": 4.45
+          },
+          {
+            "code": "4+",
+            "label": "Mateus Fernandes - powyżej 3.5",
+            "odds": 9.3
+          },
+          {
+            "code": "5+",
+            "label": "Mateus Fernandes - powyżej 4.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 822,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Archie Gray",
+        "matchedBy": "id",
+        "paramValue": "Archie Gray",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Archie Gray - powyżej 0.5",
+            "odds": 1.61
+          },
+          {
+            "code": "2+",
+            "label": "Archie Gray - powyżej 1.5",
+            "odds": 3.75
+          },
+          {
+            "code": "3+",
+            "label": "Archie Gray - powyżej 2.5",
+            "odds": 9.2
+          },
+          {
+            "code": "4+",
+            "label": "Archie Gray - powyżej 3.5",
+            "odds": 25
+          }
+        ]
+      },
+      "index": 823,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Lucas Bergvall",
+        "matchedBy": "id",
+        "paramValue": "Lucas Bergvall",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Lucas Bergvall - powyżej 0.5",
+            "odds": 1.22
+          },
+          {
+            "code": "2+",
+            "label": "Lucas Bergvall - powyżej 1.5",
+            "odds": 2.05
+          },
+          {
+            "code": "3+",
+            "label": "Lucas Bergvall - powyżej 2.5",
+            "odds": 4
+          },
+          {
+            "code": "4+",
+            "label": "Lucas Bergvall - powyżej 3.5",
+            "odds": 7.9
+          },
+          {
+            "code": "5+",
+            "label": "Lucas Bergvall - powyżej 4.5",
+            "odds": 17
+          },
+          {
+            "code": "6+",
+            "label": "Lucas Bergvall - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 824,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jean Matteo Bahoya",
+        "matchedBy": "id",
+        "paramValue": "Jean Matteo Bahoya",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Jean Matteo Bahoya - powyżej 0.5",
+            "odds": 1.17
+          },
+          {
+            "code": "2+",
+            "label": "Jean Matteo Bahoya - powyżej 1.5",
+            "odds": 1.87
+          },
+          {
+            "code": "3+",
+            "label": "Jean Matteo Bahoya - powyżej 2.5",
+            "odds": 3.5
+          },
+          {
+            "code": "4+",
+            "label": "Jean Matteo Bahoya - powyżej 3.5",
+            "odds": 6.7
+          },
+          {
+            "code": "5+",
+            "label": "Jean Matteo Bahoya - powyżej 4.5",
+            "odds": 14
+          },
+          {
+            "code": "6+",
+            "label": "Jean Matteo Bahoya - powyżej 5.5",
+            "odds": 32
+          }
+        ]
+      },
+      "index": 825,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Andy Robertson",
+        "matchedBy": "id",
+        "paramValue": "Andy Robertson",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Andy Robertson - powyżej 0.5",
+            "odds": 1.59
+          },
+          {
+            "code": "2+",
+            "label": "Andy Robertson - powyżej 1.5",
+            "odds": 3.65
+          },
+          {
+            "code": "3+",
+            "label": "Andy Robertson - powyżej 2.5",
+            "odds": 8.8
+          },
+          {
+            "code": "4+",
+            "label": "Andy Robertson - powyżej 3.5",
+            "odds": 24
+          }
+        ]
+      },
+      "index": 826,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Nico Elvedi",
+        "matchedBy": "id",
+        "paramValue": "Nico Elvedi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Nico Elvedi - powyżej 0.5",
+            "odds": 1.82
+          },
+          {
+            "code": "2+",
+            "label": "Nico Elvedi - powyżej 1.5",
+            "odds": 4.75
+          },
+          {
+            "code": "3+",
+            "label": "Nico Elvedi - powyżej 2.5",
+            "odds": 13
+          },
+          {
+            "code": "4+",
+            "label": "Nico Elvedi - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 827,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Tosin Adarabioyo",
+        "matchedBy": "id",
+        "paramValue": "Tosin Adarabioyo",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Tosin Adarabioyo - powyżej 0.5",
+            "odds": 1.47
+          },
+          {
+            "code": "2+",
+            "label": "Tosin Adarabioyo - powyżej 1.5",
+            "odds": 3.1
+          },
+          {
+            "code": "3+",
+            "label": "Tosin Adarabioyo - powyżej 2.5",
+            "odds": 6.9
+          },
+          {
+            "code": "4+",
+            "label": "Tosin Adarabioyo - powyżej 3.5",
+            "odds": 17
+          }
+        ]
+      },
+      "index": 828,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Daniel James",
+        "matchedBy": "id",
+        "paramValue": "Daniel James",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Daniel James - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "code": "2+",
+            "label": "Daniel James - powyżej 1.5",
+            "odds": 1.37
+          },
+          {
+            "code": "3+",
+            "label": "Daniel James - powyżej 2.5",
+            "odds": 2.1
+          },
+          {
+            "code": "4+",
+            "label": "Daniel James - powyżej 3.5",
+            "odds": 3.6
+          },
+          {
+            "code": "5+",
+            "label": "Daniel James - powyżej 4.5",
+            "odds": 6.2
+          },
+          {
+            "code": "6+",
+            "label": "Daniel James - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "code": "7+",
+            "label": "Daniel James - powyżej 6.5",
+            "odds": 22
+          }
+        ]
+      },
+      "index": 829,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Harry Wilson",
+        "matchedBy": "id",
+        "paramValue": "Harry Wilson",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Harry Wilson - powyżej 0.5",
+            "odds": 1.03
+          },
+          {
+            "code": "2+",
+            "label": "Harry Wilson - powyżej 1.5",
+            "odds": 1.3
+          },
+          {
+            "code": "3+",
+            "label": "Harry Wilson - powyżej 2.5",
+            "odds": 1.9
+          },
+          {
+            "code": "4+",
+            "label": "Harry Wilson - powyżej 3.5",
+            "odds": 3.1
+          },
+          {
+            "code": "5+",
+            "label": "Harry Wilson - powyżej 4.5",
+            "odds": 5.35
+          },
+          {
+            "code": "6+",
+            "label": "Harry Wilson - powyżej 5.5",
+            "odds": 9.3
+          },
+          {
+            "code": "7+",
+            "label": "Harry Wilson - powyżej 6.5",
+            "odds": 17
+          },
+          {
+            "code": "8+",
+            "label": "Harry Wilson - powyżej 7.5",
+            "odds": 34
+          }
+        ]
+      },
+      "index": 830,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:James Maddison",
+        "matchedBy": "id",
+        "paramValue": "James Maddison",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "James Maddison - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "code": "2+",
+            "label": "James Maddison - powyżej 1.5",
+            "odds": 1.39
+          },
+          {
+            "code": "3+",
+            "label": "James Maddison - powyżej 2.5",
+            "odds": 2.15
+          },
+          {
+            "code": "4+",
+            "label": "James Maddison - powyżej 3.5",
+            "odds": 3.65
+          },
+          {
+            "code": "5+",
+            "label": "James Maddison - powyżej 4.5",
+            "odds": 6.3
+          },
+          {
+            "code": "6+",
+            "label": "James Maddison - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "code": "7+",
+            "label": "James Maddison - powyżej 6.5",
+            "odds": 23
+          }
+        ]
+      },
+      "index": 831,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Dominic Solanke",
+        "matchedBy": "id",
+        "paramValue": "Dominic Solanke",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Dominic Solanke - powyżej 0.5",
+            "odds": 1.03
+          },
+          {
+            "code": "2+",
+            "label": "Dominic Solanke - powyżej 1.5",
+            "odds": 1.28
+          },
+          {
+            "code": "3+",
+            "label": "Dominic Solanke - powyżej 2.5",
+            "odds": 1.85
+          },
+          {
+            "code": "4+",
+            "label": "Dominic Solanke - powyżej 3.5",
+            "odds": 3
+          },
+          {
+            "code": "5+",
+            "label": "Dominic Solanke - powyżej 4.5",
+            "odds": 5
+          },
+          {
+            "code": "6+",
+            "label": "Dominic Solanke - powyżej 5.5",
+            "odds": 8.6
+          },
+          {
+            "code": "7+",
+            "label": "Dominic Solanke - powyżej 6.5",
+            "odds": 16
+          },
+          {
+            "code": "8+",
+            "label": "Dominic Solanke - powyżej 7.5",
+            "odds": 31
+          }
+        ]
+      },
+      "index": 832,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Dominic Calvert-Lewin",
+        "matchedBy": "id",
+        "paramValue": "Dominic Calvert-Lewin",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Dominic Calvert-Lewin - powyżej 0.5",
+            "odds": 1.02
+          },
+          {
+            "code": "2+",
+            "label": "Dominic Calvert-Lewin - powyżej 1.5",
+            "odds": 1.25
+          },
+          {
+            "code": "3+",
+            "label": "Dominic Calvert-Lewin - powyżej 2.5",
+            "odds": 1.78
+          },
+          {
+            "code": "4+",
+            "label": "Dominic Calvert-Lewin - powyżej 3.5",
+            "odds": 2.82
+          },
+          {
+            "code": "5+",
+            "label": "Dominic Calvert-Lewin - powyżej 4.5",
+            "odds": 4.75
+          },
+          {
+            "code": "6+",
+            "label": "Dominic Calvert-Lewin - powyżej 5.5",
+            "odds": 7.9
+          },
+          {
+            "code": "7+",
+            "label": "Dominic Calvert-Lewin - powyżej 6.5",
+            "odds": 14
+          },
+          {
+            "code": "8+",
+            "label": "Dominic Calvert-Lewin - powyżej 7.5",
+            "odds": 27
+          }
+        ]
+      },
+      "index": 833,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Lukas Nmecha",
+        "matchedBy": "id",
+        "paramValue": "Lukas Nmecha",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Lukas Nmecha - powyżej 0.5",
+            "odds": 1.02
+          },
+          {
+            "code": "2+",
+            "label": "Lukas Nmecha - powyżej 1.5",
+            "odds": 1.26
+          },
+          {
+            "code": "3+",
+            "label": "Lukas Nmecha - powyżej 2.5",
+            "odds": 1.8
+          },
+          {
+            "code": "4+",
+            "label": "Lukas Nmecha - powyżej 3.5",
+            "odds": 2.87
+          },
+          {
+            "code": "5+",
+            "label": "Lukas Nmecha - powyżej 4.5",
+            "odds": 4.8
+          },
+          {
+            "code": "6+",
+            "label": "Lukas Nmecha - powyżej 5.5",
+            "odds": 8.1
+          },
+          {
+            "code": "7+",
+            "label": "Lukas Nmecha - powyżej 6.5",
+            "odds": 15
+          },
+          {
+            "code": "8+",
+            "label": "Lukas Nmecha - powyżej 7.5",
+            "odds": 28
+          }
+        ]
+      },
+      "index": 834,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ao Tanaka",
+        "matchedBy": "id",
+        "paramValue": "Ao Tanaka",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Ao Tanaka - powyżej 0.5",
+            "odds": 1.22
+          },
+          {
+            "code": "2+",
+            "label": "Ao Tanaka - powyżej 1.5",
+            "odds": 2.07
+          },
+          {
+            "code": "3+",
+            "label": "Ao Tanaka - powyżej 2.5",
+            "odds": 4.1
+          },
+          {
+            "code": "4+",
+            "label": "Ao Tanaka - powyżej 3.5",
+            "odds": 8.1
+          },
+          {
+            "code": "5+",
+            "label": "Ao Tanaka - powyżej 4.5",
+            "odds": 17
+          },
+          {
+            "code": "6+",
+            "label": "Ao Tanaka - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 835,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:James Justin",
+        "matchedBy": "id",
+        "paramValue": "James Justin",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "James Justin - powyżej 0.5",
+            "odds": 1.41
+          },
+          {
+            "code": "2+",
+            "label": "James Justin - powyżej 1.5",
+            "odds": 2.85
+          },
+          {
+            "code": "3+",
+            "label": "James Justin - powyżej 2.5",
+            "odds": 6.3
+          },
+          {
+            "code": "4+",
+            "label": "James Justin - powyżej 3.5",
+            "odds": 15
+          },
+          {
+            "code": "5+",
+            "label": "James Justin - powyżej 4.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 836,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ben Davies",
+        "matchedBy": "id",
+        "paramValue": "Ben Davies",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Ben Davies - powyżej 0.5",
+            "odds": 1.51
+          },
+          {
+            "code": "2+",
+            "label": "Ben Davies - powyżej 1.5",
+            "odds": 3.3
+          },
+          {
+            "code": "3+",
+            "label": "Ben Davies - powyżej 2.5",
+            "odds": 7.5
+          },
+          {
+            "code": "4+",
+            "label": "Ben Davies - powyżej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 837,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Joe Rodon",
+        "matchedBy": "id",
+        "paramValue": "Joe Rodon",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Joe Rodon - powyżej 0.5",
+            "odds": 1.76
+          },
+          {
+            "code": "2+",
+            "label": "Joe Rodon - powyżej 1.5",
+            "odds": 4.45
+          },
+          {
+            "code": "3+",
+            "label": "Joe Rodon - powyżej 2.5",
+            "odds": 12
+          },
+          {
+            "code": "4+",
+            "label": "Joe Rodon - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      },
+      "index": 838,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Marcos Senesi",
+        "matchedBy": "id",
+        "paramValue": "Marcos Senesi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Marcos Senesi - powyżej 0.5",
+            "odds": 1.63
+          },
+          {
+            "code": "2+",
+            "label": "Marcos Senesi - powyżej 1.5",
+            "odds": 3.85
+          },
+          {
+            "code": "3+",
+            "label": "Marcos Senesi - powyżej 2.5",
+            "odds": 9.5
+          },
+          {
+            "code": "4+",
+            "label": "Marcos Senesi - powyżej 3.5",
+            "odds": 26
+          }
+        ]
+      },
+      "index": 839,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Gabriel Gudmundsson",
+        "matchedBy": "id",
+        "paramValue": "Gabriel Gudmundsson",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Gabriel Gudmundsson - powyżej 0.5",
+            "odds": 1.37
+          },
+          {
+            "code": "2+",
+            "label": "Gabriel Gudmundsson - powyżej 1.5",
+            "odds": 2.7
+          },
+          {
+            "code": "3+",
+            "label": "Gabriel Gudmundsson - powyżej 2.5",
+            "odds": 5.85
+          },
+          {
+            "code": "4+",
+            "label": "Gabriel Gudmundsson - powyżej 3.5",
+            "odds": 14
+          },
+          {
+            "code": "5+",
+            "label": "Gabriel Gudmundsson - powyżej 4.5",
+            "odds": 34
+          }
+        ]
+      },
+      "index": 840,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ethan Ampadu",
+        "matchedBy": "id",
+        "paramValue": "Ethan Ampadu",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Ethan Ampadu - powyżej 0.5",
+            "odds": 1.66
+          },
+          {
+            "code": "2+",
+            "label": "Ethan Ampadu - powyżej 1.5",
+            "odds": 4
+          },
+          {
+            "code": "3+",
+            "label": "Ethan Ampadu - powyżej 2.5",
+            "odds": 10
+          },
+          {
+            "code": "4+",
+            "label": "Ethan Ampadu - powyżej 3.5",
+            "odds": 29
+          }
+        ]
+      },
+      "index": 841,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Zawodnik - liczba strzałów"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 9.6
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 4.8
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.55
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 4.15
+          },
+          {
+            "code": "4",
+            "label": "4",
+            "odds": 5.65
+          },
+          {
+            "code": "5",
+            "label": "5",
+            "odds": 9.7
+          },
+          {
+            "code": "6+",
+            "label": "6+",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 881,
+      "marketCode": "EXACT_GOALS",
+      "rawName": "Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_EXACT_GOALS",
+        "marketKey": "HOME_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 3.25
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.52
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.7
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 5.55
+          }
+        ]
+      },
+      "index": 882,
+      "marketCode": "HOME_EXACT_GOALS",
+      "rawName": "Leeds United - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_EXACT_GOALS",
+        "marketKey": "AWAY_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 3.4
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.55
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.65
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 5.25
+          }
+        ]
+      },
+      "index": 883,
+      "marketCode": "AWAY_EXACT_GOALS",
+      "rawName": "Tottenham - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_EXACT_GOALS",
+        "marketKey": "HALF_TIME_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 2.9
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.55
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 4.1
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 6.8
+          }
+        ]
+      },
+      "index": 1007,
+      "marketCode": "HALF_TIME_EXACT_GOALS",
+      "rawName": "1.połowa - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_HOME_EXACT_GOALS",
+        "marketKey": "HALF_TIME_HOME_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.64
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.75
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 7.5
+          },
+          {
+            "code": "3",
+            "label": "3+",
+            "odds": 22
+          }
+        ]
+      },
+      "index": 1008,
+      "marketCode": "HALF_TIME_HOME_EXACT_GOALS",
+      "rawName": "1.połowa - Leeds United - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_AWAY_EXACT_GOALS",
+        "marketKey": "HALF_TIME_AWAY_EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 1.68
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 2.7
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 7.1
+          },
+          {
+            "code": "3+",
+            "label": "3+",
+            "odds": 20
+          }
+        ]
+      },
+      "index": 1009,
+      "marketCode": "HALF_TIME_AWAY_EXACT_GOALS",
+      "rawName": "1.połowa - Tottenham - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TWO_PLAYERS_ANYTIME",
+        "marketKey": "TWO_PLAYERS_ANYTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "D. Solanke & L. Nmecha",
+            "label": "Dominic Solanke lub Lukas Nmecha",
+            "odds": 1.88
+          },
+          {
+            "code": "H. Wilson & L. Nmecha",
+            "label": "Harry Wilson lub Lukas Nmecha",
+            "odds": 2
+          },
+          {
+            "code": "D. Solanke & H. Wilson",
+            "label": "Harry Wilson lub Dominic Solanke",
+            "odds": 2.05
+          },
+          {
+            "code": "D. James & L. Nmecha",
+            "label": "Daniel James lub Lukas Nmecha",
+            "odds": 2.07
+          },
+          {
+            "code": "L. Nmecha & M. Tel",
+            "label": "Mathys Tel lub Lukas Nmecha",
+            "odds": 2.1
+          },
+          {
+            "code": "D. James & D. Solanke",
+            "label": "Daniel James lub Dominic Solanke",
+            "odds": 2.12
+          },
+          {
+            "code": "L. Nmecha & M. Kudus",
+            "label": "Mohammed Kudus lub Lukas Nmecha",
+            "odds": 2.12
+          },
+          {
+            "code": "D. Solanke & M. Tel",
+            "label": "Mathys Tel lub Dominic Solanke",
+            "odds": 2.12
+          },
+          {
+            "code": "D. Solanke & M. Kudus",
+            "label": "Mohammed Kudus lub Dominic Solanke",
+            "odds": 2.17
+          },
+          {
+            "code": "D. James & H. Wilson",
+            "label": "Daniel James lub Harry Wilson",
+            "odds": 2.3
+          },
+          {
+            "code": "H. Wilson & M. Tel",
+            "label": "Mathys Tel lub Harry Wilson",
+            "odds": 2.35
+          },
+          {
+            "code": "H. Wilson & M. Kudus",
+            "label": "Mohammed Kudus lub Harry Wilson",
+            "odds": 2.4
+          },
+          {
+            "code": "D. James & M. Tel",
+            "label": "Mathys Tel lub Daniel James",
+            "odds": 2.42
+          },
+          {
+            "code": "D. James & M. Kudus",
+            "label": "Mohammed Kudus lub Daniel James",
+            "odds": 2.5
+          },
+          {
+            "code": "M. Kudus & M. Tel",
+            "label": "Mohammed Kudus lub Mathys Tel",
+            "odds": 2.55
+          }
+        ]
+      },
+      "index": 2462,
+      "marketCode": "TWO_PLAYERS_ANYTIME",
+      "rawName": "Którykolwiek z zawodników strzeli gola"
+    }
+  ],
+  "matchIdSafe": "premier-league_leeds-united_tottenham-hotspur"
+}

@@ -209,6 +209,107 @@ function isPlaceholderMarketName(name: string | undefined): boolean {
 }
 
 /**
+ * How abbreviated a player label is, ranked for the reconcile tie-break:
+ *
+ *   0  no initial at all          ("Oscar Zambrano")
+ *   1  the first name is initial  ("O. Zambrano", "M Grimes")
+ *   2  a later token is initial   (STS's "Zambrano O.", "Borges Rodrigues R.")
+ *
+ * A token counts as an initial only when it is a single UPPERCASE letter with
+ * an optional dot. Lowercase letters never count: Fortuna's red-card params
+ * are sentences ("Mohamed Bachir Belloumi wyrzucony z boiska") whose Polish
+ * "z" is a word, not an initial. The raw name is split as is (no lowercasing),
+ * because the case is what separates the two.
+ */
+export function abbreviationRank(name: string): 0 | 1 | 2 {
+  const tokens = name.split(/\s+/).filter(Boolean);
+  const isInitial = (token: string): boolean => /^\p{Lu}\.?$/u.test(token);
+  if (tokens.length > 0 && isInitial(tokens[0])) return 1;
+  if (tokens.slice(1).some(isInitial)) return 2;
+  return 0;
+}
+
+/** True when any token of the player label is a bare initial ("O. Zambrano", "Zambrano O."). */
+export function isAbbreviatedPlayerName(name: string): boolean {
+  return abbreviationRank(name) > 0;
+}
+
+/**
+ * A player param that names no single person: a multi-player combo (LVBet's
+ * "Dominic Solanke or Dominic Calvert-Lewin", "A i B", "A & B") or a count.
+ * Such params are never aliased and never bridge a cluster. Long or
+ * "wyrzucony z boiska" params are deliberately NOT matched: Fortuna's
+ * red-card sentences must keep folding into the player they name.
+ */
+export function isNonPersonParam(name: string): boolean {
+  return /\s(or|i|lub|and)\s|&|\d/i.test(name);
+}
+
+/** Lowercased whitespace tokens of a player label; a hyphen keeps joining surname parts. */
+const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).filter(Boolean);
+
+/** Lowercased words of a player label, in order, with hyphens read as spaces. */
+const spellingWords = (name: string): string[] => name.toLowerCase().split(/[\s-]+/).filter(Boolean);
+
+/**
+ * Key for the exact-spelling step only: case-, order- and hyphen-insensitive,
+ * so "Jan-Paul van Hecke", "Jan Paul Van Hecke" and "Jan Paul van Hecke"
+ * share one key. Never used for the fuzzy rule (describeSamePlayer), where
+ * splitting on hyphens would make "D. Lewin" fit "Dominic Calvert-Lewin".
+ */
+function spellingKey(name: string): string {
+  return spellingWords(name).sort().join(" ");
+}
+
+/**
+ * Two spellings describe the same player when the surname matches, the first
+ * names match (or one is the other's initial) and every remaining token of
+ * the shorter spelling also appears, in order, in the longer one. That single
+ * rule covers all the shapes the audit found: "M Grimes" / "Matt Grimes",
+ * "Victor Torp" / "Victor Torp Overgaard", "Caleb Yirenkyi" /
+ * "Caleb Marfo Yirenkyi" and the combination "C Marfo Yirenkyi" /
+ * "Caleb Yirenkyi".
+ */
+const sameFirstName = (a: string, b: string): boolean => {
+  if (a === b) return true;
+  const aInitial = a.replace(".", "");
+  const bInitial = b.replace(".", "");
+  if (aInitial.length === 1) return b.startsWith(aInitial);
+  if (bInitial.length === 1) return a.startsWith(bInitial);
+  return false;
+};
+const isSubsequence = (shorter: string[], longer: string[]): boolean => {
+  let i = 0;
+  for (const token of longer) if (i < shorter.length && token === shorter[i]) i++;
+  return i === shorter.length;
+};
+const describeSamePlayer = (a: string[], b: string[]): boolean => {
+  if (a.length < 2 || b.length < 2) return false;
+  if (!sameFirstName(a[0], b[0])) return false;
+  const [shorter, longer] = a.length <= b.length ? [a, b] : [b, a];
+  // A dropped trailing surname ("Victor Torp" / "Victor Torp Overgaard").
+  if (
+    longer.length > shorter.length &&
+    shorter.slice(1).join(" ") === longer.slice(1, shorter.length).join(" ")
+  ) {
+    return true;
+  }
+  // Same surname with an optional middle name dropped in one spelling.
+  if (a[a.length - 1] !== b[b.length - 1]) return false;
+  return isSubsequence(shorter.slice(1, -1), longer.slice(1, -1));
+};
+
+/**
+ * True when two player labels may name the same footballer: the same
+ * spelling up to case, order and hyphens, or the fuzzy describeSamePlayer
+ * rule on whitespace tokens (so "D. Lewin" stays apart from
+ * "Dominic Calvert-Lewin").
+ */
+export function playerNamesCompatible(a: string, b: string): boolean {
+  return spellingKey(a) === spellingKey(b) || describeSamePlayer(tokensOf(a), tokensOf(b));
+}
+
+/**
  * Reconciles the player-name variants a single market collects from different
  * bookmakers. Even after canonicalizePlayerName (order + accents), the same
  * footballer still arrives in shapes that cannot be normalized in isolation —
@@ -222,18 +323,29 @@ function isPlaceholderMarketName(name: string | undefined): boolean {
  * splitting one player's odds across two entries and hiding best-odds
  * (/audit-match, Arsenal vs Coventry City). A variant is folded into another
  * name only when the target is UNAMBIGUOUS; ties and multi-candidate matches
- * are left alone. The surviving spelling is the one more bookmakers use, so
- * the majority form wins and the result is deterministic.
+ * are left alone. The surviving spelling is the most spelled-out one (see
+ * abbreviationRank): a full first name beats a leading initial, which beats a
+ * trailing one, however many bookmakers use the abbreviation. Only among
+ * equally spelled-out names does the majority form win; the result is
+ * deterministic either way.
  */
 export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<string>>): Map<string, string> {
   const alias = new Map<string, string>();
-  const names = [...bookmakersByName.keys()].filter((n) => n !== "base");
+  // Combos and counts keep their own row: folding "Jayden Bogle or Mohammed
+  // Kudus" into "Jayden Bogle" would show a combo price as the player's.
+  const names = [...bookmakersByName.keys()].filter((n) => n !== "base" && !isNonPersonParam(n));
   if (names.length < 2) return alias;
 
-  const tokensOf = (name: string): string[] => name.toLowerCase().split(/\s+/).filter(Boolean);
   const weight = (name: string): number => bookmakersByName.get(name)?.size ?? 0;
-  /** More bookmakers wins; ties break on the longer, then lexicographically smaller name. */
+  /**
+   * The less abbreviated name wins (abbreviationRank); among equally spelled-out
+   * names more bookmakers wins, then the longer, then the lexicographically
+   * smaller name.
+   */
   const preferred = (a: string, b: string): string => {
+    const ra = abbreviationRank(a);
+    const rb = abbreviationRank(b);
+    if (ra !== rb) return ra < rb ? a : b;
     if (weight(a) !== weight(b)) return weight(a) > weight(b) ? a : b;
     const ta = tokensOf(a).length;
     const tb = tokensOf(b).length;
@@ -241,14 +353,15 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
     return a.localeCompare(b) <= 0 ? a : b;
   };
 
-  const byTokens = new Map<string, string[]>();
+  const bySpelling = new Map<string, string[]>();
   for (const name of names) {
-    const key = [...tokensOf(name)].sort().join(" ");
-    (byTokens.get(key) ?? byTokens.set(key, []).get(key)!).push(name);
+    const key = spellingKey(name);
+    (bySpelling.get(key) ?? bySpelling.set(key, []).get(key)!).push(name);
   }
 
-  // 1. Same tokens in a different order ("Amenda Aurele" vs "Aurele Amenda").
-  for (const variants of byTokens.values()) {
+  // 1. The same spelling up to order, case and hyphens ("Amenda Aurele" vs
+  //    "Aurele Amenda", "Jan-Paul van Hecke" vs "Jan Paul van Hecke").
+  for (const variants of bySpelling.values()) {
     if (variants.length < 2) continue;
     const winner = variants.reduce(preferred);
     for (const v of variants) if (v !== winner) alias.set(v, winner);
@@ -256,55 +369,29 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
 
   const resolve = (name: string): string => alias.get(name) ?? name;
 
-  /**
-   * Two spellings describe the same player when the surname matches, the first
-   * names match (or one is the other's initial) and every remaining token of
-   * the shorter spelling also appears, in order, in the longer one. That single
-   * rule covers all the shapes the audit found: "M Grimes" / "Matt Grimes",
-   * "Victor Torp" / "Victor Torp Overgaard", "Caleb Yirenkyi" /
-   * "Caleb Marfo Yirenkyi" and the combination "C Marfo Yirenkyi" /
-   * "Caleb Yirenkyi".
-   */
-  const sameFirstName = (a: string, b: string): boolean => {
-    if (a === b) return true;
-    const aInitial = a.replace(".", "");
-    const bInitial = b.replace(".", "");
-    if (aInitial.length === 1) return b.startsWith(aInitial);
-    if (bInitial.length === 1) return a.startsWith(bInitial);
-    return false;
-  };
-  const isSubsequence = (shorter: string[], longer: string[]): boolean => {
-    let i = 0;
-    for (const token of longer) if (i < shorter.length && token === shorter[i]) i++;
-    return i === shorter.length;
-  };
-  const describeSamePlayer = (a: string[], b: string[]): boolean => {
-    if (a.length < 2 || b.length < 2) return false;
-    if (!sameFirstName(a[0], b[0])) return false;
-    const [shorter, longer] = a.length <= b.length ? [a, b] : [b, a];
-    // A dropped trailing surname ("Victor Torp" / "Victor Torp Overgaard").
-    if (
-      longer.length > shorter.length &&
-      shorter.slice(1).join(" ") === longer.slice(1, shorter.length).join(" ")
-    ) {
-      return true;
-    }
-    // Same surname with an optional middle name dropped in one spelling.
-    if (a[a.length - 1] !== b[b.length - 1]) return false;
-    return isSubsequence(shorter.slice(1, -1), longer.slice(1, -1));
-  };
-
   // 2. Abbreviated first names, dropped middle names and dropped second
   //    surnames. Variants are clustered and a cluster is folded only when it
   //    is a CLIQUE — every member compatible with every other. That merges
   //    "V Torp" / "Victor Torp" / "Victor Torp Overgaard" in one go while
   //    refusing to bridge two different players through a shared abbreviation
   //    ("J Silva" fits both "Joao Silva" and "Jorge Silva", which do not fit
-  //    each other, so nothing is merged).
+  //    each other, so nothing is merged). A non-clique cluster still folds an
+  //    abbreviated member whose spelled-out candidates all fit each other (see
+  //    below).
   const canonicalNames = names.filter((n) => !alias.has(n));
-  const tokenCache = new Map(canonicalNames.map((n) => [n, tokensOf(n)]));
+  // A canonical name is compared through every step-1 spelling that has the
+  // same words in the same order (only case and hyphens differ), so the
+  // step-1 winner's hyphenation does not decide which abbreviations fit:
+  // "J. Hjerto-Dahl" fits "Jens Hjerto-Dahl", which step 1 folded into
+  // "Jens Hjerto Dahl". Reordered spellings are NOT added: STS's
+  // "Justin James" for "James Justin" would let a different player's
+  // "J. James" fit by surname.
+  const variantTokens = new Map(canonicalNames.map((n) => [n, [tokensOf(n)]]));
+  for (const [from, to] of alias) {
+    if (spellingWords(from).join(" ") === spellingWords(to).join(" ")) variantTokens.get(to)!.push(tokensOf(from));
+  }
   const compatible = (a: string, b: string): boolean =>
-    describeSamePlayer(tokenCache.get(a)!, tokenCache.get(b)!);
+    variantTokens.get(a)!.some((ta) => variantTokens.get(b)!.some((tb) => describeSamePlayer(ta, tb)));
 
   const clusterOf = new Map<string, string[]>();
   const visited = new Set<string>();
@@ -325,14 +412,30 @@ export function reconcilePlayerNameVariants(bookmakersByName: Map<string, Set<st
     if (cluster.length > 1) clusterOf.set(name, cluster);
   }
 
+  const allCompatible = (group: string[]): boolean =>
+    group.every((a) => group.every((b) => a === b || compatible(a, b)));
+
   for (const cluster of clusterOf.values()) {
-    const isClique = cluster.every((a) =>
-      cluster.every((b) => a === b || compatible(a, b)),
-    );
-    if (!isClique) continue;
-    const winner = cluster.reduce(preferred);
+    if (allCompatible(cluster)) {
+      const winner = cluster.reduce(preferred);
+      for (const member of cluster) {
+        if (member !== winner && !alias.has(member)) alias.set(member, winner);
+      }
+      continue;
+    }
+    // Not a clique: a third spelling (Fortuna's "... wyrzucony z boiska", a
+    // nickname) can fit the full name but not the initial. An abbreviated
+    // member still folds when every spelled-out member it fits describes the
+    // same player; spelled-out members are left as they are. "J Silva" with
+    // "Joao Silva" and "Jorge Silva" has two candidates that do not fit each
+    // other, so it stays apart.
     for (const member of cluster) {
-      if (member !== winner && !alias.has(member)) alias.set(member, winner);
+      if (!isAbbreviatedPlayerName(member) || alias.has(member)) continue;
+      const candidates = cluster.filter(
+        (other) => other !== member && !isAbbreviatedPlayerName(other) && compatible(member, other),
+      );
+      if (candidates.length === 0 || !allCompatible(candidates)) continue;
+      alias.set(member, candidates.reduce(preferred));
     }
   }
 

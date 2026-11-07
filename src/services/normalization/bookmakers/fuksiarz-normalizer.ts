@@ -77,6 +77,13 @@ const FUKSIARZ_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-30521": "PLAYER_SHOTS",
   "-4893": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
   "-4894": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  // "Odda co najmniej 1/2 celny strzał głową": per-player header shots on
+  // target ladder (parser splits it into one raw market per player).
+  "-4895": "PLAYER_HEADER_SHOTS_ON_TARGET",
+  "-4896": "PLAYER_HEADER_SHOTS_ON_TARGET",
+  // "Każda drużyna powyżej X rzutu rożnego": each team over X corners, one
+  // "powyżej X" selection per line.
+  "-30640": "EACH_TEAM_TOTAL_CORNERS_OVER",
   "-30591": "HALF_TIME_LEAD_CHANGE",
   "-152": "SUBSTITUTIONS_TOTAL",
   "-227": "EXACT_GOALS",
@@ -260,6 +267,7 @@ const PLAYER_LINE_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_SHOTS",
   "PLAYER_SHOTS_ON_TARGET",
   "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  "PLAYER_HEADER_SHOTS_ON_TARGET",
   "PLAYER_FOULS",
   "PLAYER_FOULS_WON",
 ]);
@@ -1389,6 +1397,7 @@ function normalizeSelectionForMarket(
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
     case "EACH_TEAM_OFFSIDES":
+    case "EACH_TEAM_TOTAL_CORNERS_OVER":
     case "HOME_POSSESSION":
     case "AWAY_POSSESSION": {
       const ou = normalizeOverUnderSelection(trimmed);

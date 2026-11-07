@@ -36,21 +36,16 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "EUROPEAN_HANDICAP",
-        "marketKey": "EUROPEAN_HANDICAP:+2",
+        "marketCode": "WIN_OR_WIN_BY_2",
+        "marketKey": "WIN_OR_WIN_BY_2",
         "matchedBy": "id",
-        "paramValue": "+2",
+        "paramValue": null,
         "parameters": null,
         "selections": [
           {
             "code": "HOME",
             "label": "Francja",
             "odds": 1.57
-          },
-          {
-            "code": "DRAW",
-            "label": "remis",
-            "odds": 3.9
           },
           {
             "code": "AWAY",
@@ -60,7 +55,7 @@
         ]
       },
       "index": 1,
-      "marketCode": "EUROPEAN_HANDICAP",
+      "marketCode": "WIN_OR_WIN_BY_2",
       "rawName": "TurboPrzewaga - 2 gole przewagi lub wygrana"
     },
     {
@@ -4162,26 +4157,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "HOME_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.14
-          },
-          {
-            "code": "NO",
-            "label": "nie",
-            "odds": 4.4
           }
         ]
       },
       "index": 117,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: Francja wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4209,26 +4199,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "AWAY_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.67
-          },
-          {
-            "code": "NO",
-            "label": "nie",
-            "odds": 1.99
           }
         ]
       },
       "index": 121,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: Maroko wygra lub obie drużyny strzelą gola"
     },
     {
@@ -4270,26 +4255,21 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "OTHER",
-        "marketKey": "OTHER",
+        "marketCode": "RESULT_OR_BTTS",
+        "marketKey": "RESULT_OR_BTTS",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "YES",
+            "code": "DRAW_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.7
-          },
-          {
-            "code": "NO",
-            "label": "nie",
-            "odds": 1.96
           }
         ]
       },
       "index": 125,
-      "marketCode": "OTHER",
+      "marketCode": "RESULT_OR_BTTS",
       "rawName": "Wydarzy się min. jedno z: remis w meczu lub obie drużyny strzelą gola"
     },
     {

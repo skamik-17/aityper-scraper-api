@@ -35,12 +35,13 @@ import type {
   MatchContextRow,
   CatalogEntrySnapshot,
 } from "../src/services/sts-audit/types.js";
+import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";
 import type {
   NormalizationContext,
   RawBookmakerMarket,
 } from "../src/services/normalization/types.js";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { dirname } from "node:path";
 
 interface Args {
   url: string;
@@ -269,7 +270,7 @@ async function main() {
       });
     });
 
-    const outPath = args.out ?? resolve(process.cwd(), `../docs/sts-audit/.tmp/${fixtureId}.json`);
+    const outPath = args.out ?? defaultPrepAuditOutPath("sts", fixtureId);
     const output: PrepAuditOutput = {
       meta: {
         matchId: fixtureId,

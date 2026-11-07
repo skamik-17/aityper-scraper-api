@@ -19,9 +19,11 @@
  *   A3  >= 40 non-OTHER normalized markets on every match
  *   A4  <= 2% UNKNOWN among the selections of non-OTHER markets, every match
  *   A5  0 non-OTHER marketKey collisions with overlapping selection codes
- *   A6  every PZBuk MATCH_WINNER selection within 8% of the peer median
- *       (a match without a peer row or without peers reports null and does
- *       not fail)
+ *   A6  every PZBuk MATCH_WINNER selection within 8% of the peer median, or
+ *       within 1 percentage point of its implied probability (long shots
+ *       spread more than 8% between bookmakers; a swap or a leaked market
+ *       is far outside both). A match without a peer row or without peers
+ *       reports null and does not fail.
  *   A12 gatedNonOther = 0: no ordinal ("2. gol") or unrendered template
  *       ("{SpecialIntValue1}. gol") market outside OTHER
  * Reported only: the transport counters invalidFrames / chunkedFrames /
@@ -49,6 +51,11 @@ const MAX_UNKNOWN_SHARE = 0.02;
 const MAX_COLLISIONS = 0;
 /** A6: PZBuk MATCH_WINNER against the peer median, every selection. */
 const MAX_1X2_DEVIATION = 0.08;
+/**
+ * A6, long shots: an implied-probability gap this small to the peer median
+ * passes whatever the relative odds gap (selectionDeviation).
+ */
+const MAX_1X2_PROBABILITY_GAP = 0.01;
 
 /** The Task 4 ordinal gate (PZBUK_NAME_OVERRIDES in pzbuk-normalizer.ts). */
 const ORDINAL_NAME = /(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i;
@@ -188,17 +195,23 @@ export function median(values: number[]): number | null {
   return sorted.length % 2 === 1 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
+/** One PZBuk MATCH_WINNER selection next to the median of the same code across the peers. */
+export interface X12Quote {
+  code: string;
+  odds: number;
+  median: number;
+}
+
 /**
- * Largest relative gap between a PZBuk MATCH_WINNER selection and the median
- * of the same selection across the other bookmakers of the peer row. Every
- * PZBuk MATCH_WINNER market is compared, so a second, leaked one counts too.
- * Null when nothing could be compared.
+ * Every PZBuk MATCH_WINNER selection that has peer quotes for its code, with
+ * the median of the other bookmakers of the peer row. Every PZBuk
+ * MATCH_WINNER market is compared, so a second, leaked one counts too.
  */
-export function matchWinnerDeviation(normalized: ScrapedMarket[], peer: PeerRow): number | null {
+export function matchWinnerQuotes(normalized: ScrapedMarket[], peer: PeerRow): X12Quote[] {
   const others = Object.entries(peer.markets?.MATCH_WINNER?.bookmakerOdds ?? {})
     .filter(([bookmaker]) => bookmaker !== BOOKMAKER)
     .flatMap(([, quote]) => quote?.selections ?? []);
-  let max: number | null = null;
+  const quotes: X12Quote[] = [];
   for (const m of normalized) {
     if (m.normalizedType !== "MATCH_WINNER") continue;
     for (const s of m.selections) {
@@ -208,13 +221,29 @@ export function matchWinnerDeviation(normalized: ScrapedMarket[], peer: PeerRow)
           .map((p) => p.odds)
           .filter((odds): odds is number => typeof odds === "number" && Number.isFinite(odds) && odds > 1),
       );
-      if (reference === null) continue;
-      const deviation = Math.abs(s.odds / reference - 1);
-      max = max === null ? deviation : Math.max(max, deviation);
+      if (reference !== null) quotes.push({ code: String(s.normalizedName), odds: s.odds, median: reference });
     }
   }
-  return max;
+  return quotes;
 }
+
+/**
+ * A6 deviation of one selection: the relative odds gap, or the
+ * implied-probability gap rescaled so that MAX_1X2_PROBABILITY_GAP equals
+ * MAX_1X2_DEVIATION, whichever is smaller. It exceeds MAX_1X2_DEVIATION only
+ * when both gaps exceed their limits. The probability gap equals the relative
+ * gap divided by the PZBuk price, so for prices up to 8 (MAX_1X2_DEVIATION /
+ * MAX_1X2_PROBABILITY_GAP) this is the plain relative check.
+ */
+export function selectionDeviation(odds: number, reference: number): number {
+  const relative = Math.abs(odds / reference - 1);
+  const probabilityGap = Math.abs(1 / odds - 1 / reference);
+  return Math.min(relative, probabilityGap * (MAX_1X2_DEVIATION / MAX_1X2_PROBABILITY_GAP));
+}
+
+/** Largest selectionDeviation over the quotes; null when nothing could be compared. */
+const maxDeviation = (quotes: X12Quote[]): number | null =>
+  quotes.length > 0 ? Math.max(...quotes.map((q) => selectionDeviation(q.odds, q.median))) : null;
 
 export interface MatchReport extends MarketCounts {
   homeTeam: string;
@@ -222,6 +251,8 @@ export interface MatchReport extends MarketCounts {
   parsed: number;
   peerMatched: boolean;
   x12Deviation: number | null;
+  /** The compared selections, so x12Deviation can be checked by hand. */
+  x12Quotes: X12Quote[];
 }
 
 export function evaluateMatch(
@@ -230,13 +261,15 @@ export function evaluateMatch(
   peers: Map<string, PeerRow> | null,
 ): MatchReport {
   const peer = peers?.get(peerKey(match.homeTeam, match.awayTeam));
+  const x12Quotes = peer ? matchWinnerQuotes(normalized, peer) : [];
   return {
     homeTeam: match.homeTeam,
     awayTeam: match.awayTeam,
     parsed: match.markets.length,
     ...countMarkets(normalized),
     peerMatched: peer !== undefined,
-    x12Deviation: peer ? matchWinnerDeviation(normalized, peer) : null,
+    x12Deviation: maxDeviation(x12Quotes),
+    x12Quotes,
   };
 }
 

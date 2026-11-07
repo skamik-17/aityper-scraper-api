@@ -73,6 +73,7 @@ describe("pzbuk smoke: per-match counts", () => {
       gated: [],
       peerMatched: false,
       x12Deviation: null,
+      x12Quotes: [],
     });
   });
 
@@ -147,6 +148,45 @@ describe("pzbuk smoke: MATCH_WINNER against peers (A6)", () => {
     expect(report.x12Deviation).toBeCloseTo(4.91 / 1.66 - 1, 10);
   });
 
+  it("catches a leak of id 126 (Kartki 1x2) into MATCH_WINNER", () => {
+    const leaked = [market("Kartki 1x2", "MATCH_WINNER", "MATCH_WINNER", [["Everton FC", "HOME", 2.75], ["remis", "DRAW", 3.83], ["Coventry City", "AWAY", 1.95]])];
+    const peers = new Map([[peerKey("Everton", "Coventry City"), peerRow("Everton", "Coventry City", { sts: x12(1.66, 3.92, 4.91) })]]);
+    const report = evaluateMatch({ ...fixtureMatch(), markets: [] }, leaked, peers);
+    // +66% on HOME, as the plan's A6 row predicts
+    expect(report.x12Deviation).toBeCloseTo(2.75 / 1.66 - 1, 10);
+  });
+
+  // Live 2026-11-07 Arsenal v Hull City: pzbuk 1.15/7.36/16.68 against the 10 peers of
+  // .scratch/t7/peers-after.json (medians 1.17/7.25/15.375; AWAY peers range 14-18).
+  const ARSENAL_HULL_PEERS = {
+    sts: x12(1.17, 7.9, 17), etoto: x12(1.17, 7, 15), lvbet: x12(1.18, 7.5, 15), betfan: x12(1.17, 7, 15.5),
+    forbet: x12(1.17, 7.2, 15), betclic: x12(1.16, 7, 15.25), betcris: x12(1.15, 8, 17), fortuna: x12(1.17, 7.1, 15.5),
+    fuksiarz: x12(1.17, 7.4, 18), superbet: x12(1.18, 7.3, 14),
+  };
+  const arsenalHull = (away: number) => {
+    const normalized = [market("1x2", "MATCH_WINNER", "MATCH_WINNER", [["Arsenal FC", "HOME", 1.15], ["Remis", "DRAW", 7.36], ["Hull City", "AWAY", away]])];
+    const peers = new Map([[peerKey("Arsenal", "Hull City"), peerRow("Arsenal", "Hull City", ARSENAL_HULL_PEERS)]]);
+    return evaluateMatch({ ...fixtureMatch(), homeTeam: "Arsenal", awayTeam: "Hull City", markets: [] }, normalized, peers);
+  };
+
+  it("accepts a long shot within 1 pp of the peer median's implied probability", () => {
+    const report = arsenalHull(16.68);
+    expect(report.x12Quotes).toEqual([
+      { code: "HOME", odds: 1.15, median: 1.17 },
+      { code: "DRAW", odds: 7.36, median: 7.25 },
+      { code: "AWAY", odds: 16.68, median: 15.375 },
+    ]);
+    // AWAY is 8.49% off in odds but only 0.51 pp off in implied probability; 1 pp counts as 8%.
+    expect(report.x12Deviation).toBeCloseTo(8 * (1 / 15.375 - 1 / 16.68), 10);
+    expect(report.x12Deviation!).toBeLessThan(0.08);
+  });
+
+  it("still flags a long shot more than 8% and more than 1 pp from the peer median", () => {
+    // 12 vs 15.375: 22% off in odds and 1.8 pp off in implied probability
+    expect(arsenalHull(12).x12Deviation).toBeCloseTo(8 * (1 / 12 - 1 / 15.375), 10);
+    expect(arsenalHull(12).x12Deviation!).toBeGreaterThan(0.08);
+  });
+
   it("joins on exact canonical names and yields null without a row or without peers", () => {
     const m = fixtureMatch();
     const normalized = normalizeQuietly(m, "premier-league");
@@ -187,6 +227,7 @@ describe("pzbuk smoke: SMOKE line and verdict", () => {
     gated: [],
     peerMatched: true,
     x12Deviation: 0.08,
+    x12Quotes: [],
   });
   const reports = (n = 18) => Array.from({ length: n }, (_, i) => ok(i));
 

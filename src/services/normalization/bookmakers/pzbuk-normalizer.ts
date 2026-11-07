@@ -20,7 +20,7 @@ import {
   canonicalizePlayerName,
   normalizeMultiResultSelection,
 } from "../helpers/index.js";
-import { isValidMarketCode } from "../../../data/market-catalog.js";
+import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 
 const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "1": "MATCH_WINNER",
@@ -575,6 +575,24 @@ const PZBUK_SELECTION_OVERRIDES: Record<string, NormalizedSelection> = {
   "no": "NO",
 };
 
+/**
+ * Composite "<side> & <outcome>" markets. Their selection codes are built by
+ * parseCombinationSelection, and normalizeMarket drops any of them whose
+ * codes fall outside the catalog vocabulary or repeat.
+ */
+const COMBO_SELECTION_CODES = new Set<NormalizedMarketType>([
+  "RESULT_AND_BTTS",
+  "RESULT_AND_TOTAL",
+  "DOUBLE_CHANCE_BTTS",
+  "DOUBLE_CHANCE_TOTAL",
+  "TOTAL_GOALS_AND_BTTS",
+  "HALF_TIME_RESULT_AND_BTTS",
+  "SECOND_HALF_RESULT_AND_BTTS",
+  "HALF_TIME_RESULT_AND_TOTAL",
+  "HALF_TIME_DOUBLE_CHANCE_BTTS",
+  "SECOND_HALF_DOUBLE_CHANCE_BTTS",
+]);
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -588,6 +606,10 @@ function normalizeSelectionForMarket(
   if (/^1\s*\([+-]/.test(trimmed)) return "HOME";
   if (/^2\s*\([+-]/.test(trimmed)) return "AWAY";
   if (/^x\s*\(/i.test(trimmed)) return "DRAW";
+
+  if (COMBO_SELECTION_CODES.has(marketCode)) {
+    return parseCombinationSelection(trimmed, ctx);
+  }
 
   switch (marketCode) {
     case "MATCH_WINNER":
@@ -862,18 +884,6 @@ function normalizeSelectionForMarket(
         trimmed.replace(/^\d+\.\s*/, "")
       ) as NormalizedSelection;
 
-    case "RESULT_AND_BTTS":
-    case "RESULT_AND_TOTAL":
-    case "DOUBLE_CHANCE_BTTS":
-    case "DOUBLE_CHANCE_TOTAL":
-    case "TOTAL_GOALS_AND_BTTS":
-    case "HALF_TIME_RESULT_AND_BTTS":
-    case "SECOND_HALF_RESULT_AND_BTTS":
-    case "HALF_TIME_RESULT_AND_TOTAL":
-    case "HALF_TIME_DOUBLE_CHANCE_BTTS":
-    case "SECOND_HALF_DOUBLE_CHANCE_BTTS":
-      return parseCombinationSelection(trimmed, ctx);
-
     case "OTHER": {
       // Keep OTHER selections distinguishable: normalize the common binary
       // vocabularies, otherwise keep the raw label as the selection code so
@@ -899,11 +909,13 @@ function parseCombinationSelection(
   // PZBuk renders result-combo selections as "<team|remis> & <tak|nie>" or
   // "<team|remis> & <ponad|poniżej> X.Y" — split on "&" and resolve the
   // result side against the context teams so e.g. "Argentina & tak" becomes
-  // HOME_YES instead of collapsing into a bare HOME.
-  const comboParts = selName.split(/\s*&\s*/);
-  if (comboParts.length === 2) {
-    const firstRaw = comboParts[0].trim();
-    const secondLower = comboParts[1].toLowerCase().trim();
+  // HOME_YES instead of collapsing into a bare HOME. Split on the LAST "&":
+  // the side leg may contain one itself ("Brighton & Hove Albion & tak",
+  // "Brighton & Hove Albion/remis & tak"), the outcome leg never does.
+  const comboParts = selName.match(/^(.*\S)\s*&\s*([^&]+)$/);
+  if (comboParts) {
+    const firstRaw = comboParts[1].trim();
+    const secondLower = comboParts[2].toLowerCase().trim();
     let suffix: string | null = null;
     if (/^(tak|yes)\b/.test(secondLower)) suffix = "YES";
     else if (/^(nie|no)\b/.test(secondLower)) suffix = "NO";
@@ -948,6 +960,12 @@ function parseCombinationSelection(
       }
     }
   }
+
+  // An "&" label is a "<side> & <outcome>" pair that the structured parse
+  // above could not resolve. The loose patterns below match "remis", "x",
+  // "1" or "2" anywhere in the label, team names included (they read
+  // "Brighton & Hove Albion/remis & tak" as DRAW_YES), so do not guess.
+  if (selName.includes("&")) return "UNKNOWN";
 
   if (/1.*tak|home.*yes/i.test(lower)) return "HOME_YES" as NormalizedSelection;
   if (/1.*nie|home.*no/i.test(lower)) return "HOME_NO" as NormalizedSelection;
@@ -1101,6 +1119,29 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
       selections.every((s) => s.code === "UNKNOWN")
     ) {
       return null;
+    }
+
+    // Fail closed on composite markets. A code outside the catalog vocabulary,
+    // or one code on two selections, means a label was misread (2026-11-07:
+    // "Brighton & Hove Albion & tak" read as HOME). Storage keeps selection
+    // codes verbatim and the grouper's COMBINATION path publishes them
+    // unfiltered, so drop the market rather than publish a mislabelled price.
+    if (COMBO_SELECTION_CODES.has(marketCode)) {
+      const vocabulary = new Set(getMarketMetadata(marketCode)?.selections ?? []);
+      const seen = new Set<string>();
+      const misread = selections.filter((s) => {
+        const code = String(s.code);
+        const bad = !vocabulary.has(code) || seen.has(code);
+        seen.add(code);
+        return bad;
+      });
+      if (misread.length > 0) {
+        console.warn(
+          `[pzbuk] Dropping ${marketCode} "${raw.name}" (id: ${raw.bookmakerMarketId ?? "none"}): ` +
+            `unrecognized selections ${misread.map((s) => `"${s.label}" -> ${s.code}`).join(", ")}`
+        );
+        return null;
+      }
     }
 
     return {

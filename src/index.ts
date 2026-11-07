@@ -12,7 +12,6 @@ import routes from "./routes/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
 import { startScheduler, startTsdbSyncJobs, stopScheduler } from "./services/scheduler-service.js";
 import { ensureMarketTypesSynced } from "./services/market-types-sync.js";
-import { MARKET_CATALOG } from "./data/market-catalog.js";
 
 // Validate configuration
 try {
@@ -91,10 +90,9 @@ async function start() {
 
     // Align market_types table with the in-code MARKET_CATALOG so scraper
     // inserts don't hit FK violations on newly-added market types.
-    // A failure is retried by the next scrape run (ensureMarketTypesSynced).
-    if (await ensureMarketTypesSynced()) {
-      console.log(`[Server] Synced market_types: ${MARKET_CATALOG.length} entries`);
-    } else {
+    // Success logs "[marketTypesSync] Synced market_types: N entries" itself;
+    // a failure is retried by the next scrape run (ensureMarketTypesSynced).
+    if (!(await ensureMarketTypesSynced())) {
       console.error("[Server] market_types sync failed - the next scrape run retries it");
     }
   }

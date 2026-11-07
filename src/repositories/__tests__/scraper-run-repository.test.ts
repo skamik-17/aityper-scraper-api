@@ -204,7 +204,33 @@ describe("getRunsSummary", () => {
     expect(runs[0].startedAt.toISOString()).toBe("2026-11-06T16:00:00.350Z");
     expect(runs[0].finishedAt!.toISOString()).toBe("2026-11-06T16:02:49.048Z");
     expect(runs[0].results).toHaveLength(2);
-    expect(fake.queries[0].calls[0][1]).toContain("run_id");
+  });
+
+  it("answers before migration 11 is applied instead of failing /api/admin/runs (select names no new column)", async () => {
+    // A schema without run_id: PostgREST rejects a select that names the column
+    // (42703), and `select *` returns rows that have no run_id key at all.
+    useFake((q) => {
+      const columns = String(q.calls.find(([method]) => method === "select")?.[1] ?? "");
+      if (columns.includes("run_id")) {
+        return { error: { code: "42703", details: null, hint: null, message: "column scraper_runs.run_id does not exist" } };
+      }
+      return {
+        data: [
+          {
+            id: 1, league_slug: "premier-league", bookmaker: "sts", status: "success",
+            matches_found: 20, markets_saved: 5130, error_message: null,
+            started_at: "2026-11-06T16:00:00.35+00:00", finished_at: "2026-11-06T16:02:49.048+00:00", duration_ms: 168698,
+          },
+        ],
+      };
+    });
+    const { runs, total } = await getRunsSummary(20, 0);
+    expect(total).toBe(1);
+    expect(runs[0].batchId).toBe("2026-11-06T16:00:00.000Z-premier-league");
+    expect(runs[0].results).toEqual([
+      { bookmaker: "sts", status: "success", matchesFound: 20, marketsSaved: 5130, durationMs: 168698, error: undefined },
+    ]);
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 
   it("falls back to the minute bucket for rows written before migration 11 (no run_id)", async () => {

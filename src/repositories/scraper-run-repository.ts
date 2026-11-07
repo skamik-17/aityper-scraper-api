@@ -244,9 +244,12 @@ export async function getRecentRuns(
 export async function getRunsSummary(limit: number = 20, offset: number = 0) {
   const supabase = getSupabase();
 
+  // `*`, not a column list: naming run_id makes PostgREST reject the whole
+  // query (42703) on a DB without migration 11, while `*` just returns rows
+  // without the key, which the minute-bucket fallback below groups.
   const { data, error } = await supabase
     .from("scraper_runs")
-    .select("id, run_id, league_slug, bookmaker, status, matches_found, markets_saved, error_message, started_at, finished_at, duration_ms")
+    .select("*")
     .order("started_at", { ascending: false })
     .range(offset, offset + limit - 1);
 

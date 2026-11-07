@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import { readFileSync } from "node:fs";
 import { pzbukNormalizer } from "../pzbuk-normalizer.js";
 const ctx = { homeTeam: "Everton", awayTeam: "Coventry City", league: "premier-league" };
 type Row = [id: string, name: string, param: string, sels: [string, number][], code: string, sel?: [string, number]];
@@ -69,5 +70,36 @@ describe("pzbuk routing by real API names (2026-11-06 capture)", () => {
     expect(out?.marketCode ?? "OTHER").toBe(code);
     if (sel) expect(out!.selections.find((s) => String(s.code) === sel[0])?.odds).toBe(sel[1]);
     if (code.endsWith("_TOTAL") || code.endsWith("TOTAL_GOALS")) expect(out!.paramValue).toBe(param);
+  });
+});
+
+const fx = JSON.parse(readFileSync(new URL("../../__fixtures__/pzbuk/premier-league_everton_coventry_city.json", import.meta.url), "utf8"));
+// Mirrors toRawBookmakerMarket in __tests__/golden.test.ts (not exported): empty archive strings become undefined.
+// Unmapped markets (player props etc.) log "[pzbuk] Unknown market" by design; muted to keep output clean.
+const outs = () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  try {
+    return fx.entries.map(({ raw }: any) => ({ raw, out: pzbukNormalizer.normalizeMarket({
+      bookmakerMarketId: raw.bookmakerMarketId ? String(raw.bookmakerMarketId) : undefined, name: raw.name,
+      groupName: raw.groupName || undefined, paramValue: raw.paramValue || undefined, selections: raw.selections }, fx.ctx) }));
+  } finally {
+    warn.mockRestore();
+  }
+};
+describe("pzbuk real-names fixture invariants", () => {
+  it("has 167 entries from the 2026-11-06 capture", () => expect(fx.entries).toHaveLength(167));
+  it("has no non-OTHER marketKey collision with overlapping selection codes", () => {
+    const seen = new Map<string, Set<string>>(); const collisions: string[] = [];
+    for (const { raw, out } of outs()) {
+      if (!out || out.marketCode === "OTHER") continue;
+      const codes = seen.get(out.marketKey) ?? new Set<string>();
+      for (const s of out.selections) { if (codes.has(String(s.code))) collisions.push(`${out.marketKey}:${s.code} <- ${raw.name}`); codes.add(String(s.code)); }
+      seen.set(out.marketKey, codes);
+    }
+    expect(collisions).toEqual([]);
+  });
+  it("takes MATCH_WINNER only from id 1", () => {
+    const mw = outs().filter(({ out }: any) => out?.marketCode === "MATCH_WINNER");
+    expect(mw.map(({ raw, out }: any) => [raw.bookmakerMarketId, out.selections.map((s: any) => s.odds)])).toEqual([["1", [1.66, 3.92, 4.91]]]);
   });
 });

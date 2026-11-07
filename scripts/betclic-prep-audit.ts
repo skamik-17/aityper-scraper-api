@@ -28,12 +28,13 @@ import type {
   MatchContextRow,
   CatalogEntrySnapshot,
 } from "../src/services/audit/types.js";
+import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";
 import type {
   NormalizationContext,
   RawBookmakerMarket,
 } from "../src/services/normalization/types.js";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { dirname } from "node:path";
 
 // Inlined protobuf utilities (duplicated from betclic-market-discovery.ts; small refactor target).
 
@@ -182,7 +183,7 @@ function parseArgs(): Omit<Args, "home" | "away"> & { home?: string; away?: stri
   const league = get("--league") ?? "unknown";
   const out =
     get("--out") ??
-    resolve(process.cwd(), `../docs/betclic-audit/.tmp/${matchId ?? "unknown"}.json`);
+    defaultPrepAuditOutPath("betclic", matchId ?? "unknown");
   if (!matchId) {
     console.error("Usage: --match <id> [--home <team>] [--away <team>] [--league <slug>] [--out <path>]");
     process.exit(1);

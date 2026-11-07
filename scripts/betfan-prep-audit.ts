@@ -17,8 +17,9 @@
 import { betfanScraper } from "../src/scrapers/bookmakers/betfan/index.js";
 import { betfanNormalizer } from "../src/services/normalization/bookmakers/betfan-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
+import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { dirname } from "node:path";
 
 interface Args {
   url: string;
@@ -68,7 +69,7 @@ async function main() {
   }
 
   const out =
-    args.out ?? resolve(process.cwd(), `../docs/betfan-audit/.tmp/${result.matchId}.json`);
+    args.out ?? defaultPrepAuditOutPath("betfan", result.matchId);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(result.output, null, 2), "utf8");
 

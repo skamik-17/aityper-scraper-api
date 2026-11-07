@@ -17,8 +17,9 @@
 import { superbetScraper } from "../src/scrapers/bookmakers/superbet/index.js";
 import { superbetNormalizer } from "../src/services/normalization/bookmakers/superbet-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
+import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";
 import { writeFileSync, mkdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { dirname } from "node:path";
 
 interface Args {
   url: string;
@@ -68,7 +69,7 @@ async function main() {
   }
 
   const out =
-    args.out ?? resolve(process.cwd(), `../docs/superbet-audit/.tmp/${result.matchId}.json`);
+    args.out ?? defaultPrepAuditOutPath("superbet", result.matchId);
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, JSON.stringify(result.output, null, 2), "utf8");
 

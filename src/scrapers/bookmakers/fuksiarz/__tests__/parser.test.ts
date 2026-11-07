@@ -121,4 +121,23 @@ describe("parseAllMarkets - HALF_WITH_MORE_GOALS label repair", () => {
     expect(bySelectionName.get("2. połowa")).toBe(2.09);
     expect(bySelectionName.get("równo")).toBe(3.6);
   });
+
+  it("keeps correctly priced template-order labels untouched", () => {
+    // 2026-11: Fuksiarz fixed the prices but kept the template label order,
+    // so a label-only guard would invert correct data (live 20/20 PL matches).
+    const event = buildEvent([
+      { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
+      { outcomeId: 2, outcomeName: "równo", outcomeOdds: 3.65, outcomePosition: 1 },
+      { outcomeId: 3, outcomeName: "2. połowa", outcomeOdds: 2.1, outcomePosition: 2 },
+    ]);
+
+    const markets = parseAllMarkets(event);
+    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
+    expect(market).toBeDefined();
+
+    const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
+    expect(bySelectionName.get("równo")).toBe(3.65);
+    expect(bySelectionName.get("2. połowa")).toBe(2.1);
+    expect(bySelectionName.get("1. połowa")).toBe(2.9);
+  });
 });

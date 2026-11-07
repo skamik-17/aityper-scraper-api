@@ -232,8 +232,13 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "ufo:mtyp:00-2c": "AWAY_SCORE_BOTH_HALVES",
   "ufo:mtyp:00-1r": "HOME_WIN_AT_LEAST_ONE_HALF", // "Mecz: <team1> - wygra przynajmniej jedną połowę"
   "ufo:mtyp:00-1s": "AWAY_WIN_AT_LEAST_ONE_HALF",
-  "ufo:mtyp:00-07": "RED_CARD_TEAM", // "Mecz: <team1> - Czerwona Kartka (bez CK dla trenera i sztabu)"
-  "ufo:mtyp:00-08": "RED_CARD_TEAM",
+  // NOTE: 00-07/00-08 "Mecz: <team> - Czerwona Kartka (bez CK dla trenera i
+  // sztabu)" are held back from RED_CARD_TEAM, like 00-bt above. No owner
+  // decision covers that settlement (cards to coaches and staff excluded),
+  // and their YES (odds 7-11, live 2026-11-07) sits 5-18% above the peer
+  // median on every PL full-offer match and above every peer on 10 of 18
+  // rows, so it would often take best odds. Map them only once the owner
+  // confirms; the id sides and the red-card team param below stay in place.
   "ufo:mtyp:00-0c": "HALF_TIME_RED_CARD_TEAM", // "1.połowa: <team1> - Czerwona Kartka (...)"
   "ufo:mtyp:00-0d": "HALF_TIME_RED_CARD_TEAM",
   "ufo:mtyp:00-0a": "HALF_TIME_RED_CARD", // "1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)"
@@ -637,7 +642,7 @@ const FORTUNA_TEAM_SCOPED_ID_SIDE: Record<string, "HOME" | "AWAY"> = {
   "ufo:mtyp:00-7c": "HOME",
   "ufo:mtyp:00-7d": "AWAY",
   "ufo:mtyp:00-7e": "AWAY",
-  "ufo:mtyp:00-07": "HOME", // team red card
+  "ufo:mtyp:00-07": "HOME", // team red card (held back from RED_CARD_TEAM, see the id map)
   "ufo:mtyp:00-08": "AWAY",
   "ufo:mtyp:00-0c": "HOME", // 1st-half team red card
   "ufo:mtyp:00-0d": "AWAY",
@@ -1713,9 +1718,10 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       paramValue = teamWinMatchSide;
     }
 
-    // Team red cards (00-07/00-08, 1st half 00-0c/00-0d) carry the side as
-    // the parameter: the team named in the label first, else the id's
-    // positional side. Without a side both teams would share one key — drop.
+    // Team red cards (1st half 00-0c/00-0d; the full-match 00-07/00-08 are
+    // held back, see the id map) carry the side as the parameter: the team
+    // named in the label first, else the id's positional side. Without a
+    // side both teams would share one key — drop.
     if (marketCode === "RED_CARD_TEAM" || marketCode === "HALF_TIME_RED_CARD_TEAM") {
       const redCardSide =
         resolveFortunaPrefixTeamSide(raw.name, ctx) ??

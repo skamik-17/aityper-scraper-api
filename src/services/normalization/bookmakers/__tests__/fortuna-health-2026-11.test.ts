@@ -393,7 +393,18 @@ describe("Task 3: new market types (00-bt and 00-bu held back)", () => {
   });
 });
 
-describe("Task 4: seventeen pre-existing ids with catalog codes", () => {
+describe("Task 4: pre-existing ids with catalog codes (00-07 and 00-08 held back)", () => {
+  // A held-back id falls through to the name lookup, finds nothing and is logged as unknown.
+  function expectUnknownMarket(raw: RawBookmakerMarket, ctx: NormalizationContext, id: string): void {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(run(raw, ctx)).toBeNull();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] Unknown market"));
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining(`(id: ufo:mtyp:${id})`));
+    } finally {
+      warn.mockRestore();
+    }
+  }
   it.each([
     ["arsenalHull", "00-2n", "HALF_TIME_BTTS", ["NO@1.12", "YES@5.4"]],
     ["arsenalHull", "00-1h", "HOME_WIN_TO_NIL", ["YES@1.65", "NO@2.02"]],
@@ -404,8 +415,6 @@ describe("Task 4: seventeen pre-existing ids with catalog codes", () => {
     ["arsenalHull", "00-2c", "AWAY_SCORE_BOTH_HALVES", ["YES@9.6", "NO@1.02"]],
     ["arsenalHull", "00-1r", "HOME_WIN_AT_LEAST_ONE_HALF", ["YES@1.09", "NO@6"]],
     ["arsenalHull", "00-1s", "AWAY_WIN_AT_LEAST_ONE_HALF", ["NO@1.12", "YES@5.4"]],
-    ["arsenalHull", "00-07", "RED_CARD_TEAM:HOME", ["NO@1.02", "YES@11"]],
-    ["arsenalHull", "00-08", "RED_CARD_TEAM:AWAY", ["NO@1.06", "YES@8.2"]],
     ["arsenalHull", "00-0c", "HALF_TIME_RED_CARD_TEAM:HOME", ["NO@1.01", "YES@12"]],
     ["arsenalHull", "00-0d", "HALF_TIME_RED_CARD_TEAM:AWAY", ["YES@12", "NO@1.01"]],
     ["arsenalHull", "00-0a", "HALF_TIME_RED_CARD", ["NO@1.01", "YES@11"]],
@@ -426,22 +435,41 @@ describe("Task 4: seventeen pre-existing ids with catalog codes", () => {
     expect(legs(out)).toEqual(["HOME@1.89", "AWAY@1.82"]);
   });
   it("a pair id follows the team named in its label (00-1h quoting Hull -> AWAY_WIN_TO_NIL)", () => {
-    const out = run({ bookmakerMarketId: "ufo:mtyp:00-1h", name: "Mecz: Hull - wygra do zera",
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-1h", name: "Mecz:\u00a0Hull\u00a0- wygra do zera",
       selections: [{ name: "Tak", odds: 9.2 }, { name: "Nie", odds: 1.01 }] }, ctxOf("arsenalHull")); // synthetic
     expect(out?.marketKey).toBe("AWAY_WIN_TO_NIL");
     expect(legs(out)).toEqual(["YES@9.2", "NO@1.01"]);
   });
-  it("a red-card team id follows the team named in its label (00-07 quoting Hull -> RED_CARD_TEAM:AWAY)", () => {
-    const out = run({ bookmakerMarketId: "ufo:mtyp:00-07", name: "Mecz: Hull - Czerwona Kartka (bez CK dla trenera i sztabu)",
-      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull")); // synthetic
-    expect(out?.marketKey).toBe("RED_CARD_TEAM:AWAY");
-    expect(legs(out)).toEqual(["NO@1.06", "YES@8.2"]);
+  it.each([
+    // RED_CARD_TEAM is held back (review of Task 4): no owner decision covers the
+    // "(bez CK dla trenera i sztabu)" settlement, and YES sits 5-18% above the peer
+    // median on every PL full-offer match of 2026-11-07.
+    ["00-07", "Mecz:\u00a0Arsenal\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)"],
+    ["00-08", "Mecz:\u00a0Hull\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)"],
+  ])("arsenalHull %s (team red card) stays unmapped", (id, name) => {
+    const { raw, ctx } = live("arsenalHull", id);
+    expect(raw.name).toBe(name);
+    expectUnknownMarket(raw, ctx, id);
   });
-  it("a placeholder name is never team-matched: the red-card team side comes from the id (00-08 -> AWAY)", () => {
-    const out = run({ bookmakerMarketId: "ufo:mtyp:00-08", name: "Rynek ufo:mtyp:00-08",
-      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull")); // synthetic
-    expect(out?.marketKey).toBe("RED_CARD_TEAM:AWAY");
-    expect(legs(out)).toEqual(["NO@1.06", "YES@8.2"]);
+  it("a red-card team id quoting the other team stays unmapped too (00-07 quoting Hull)", () => {
+    expectUnknownMarket({ bookmakerMarketId: "ufo:mtyp:00-07", name: "Mecz:\u00a0Hull\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)",
+      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull"), "00-07"); // synthetic
+  });
+  it("a placeholder red-card team name stays unmapped too (00-08)", () => {
+    expectUnknownMarket({ bookmakerMarketId: "ufo:mtyp:00-08", name: "Rynek ufo:mtyp:00-08",
+      selections: [{ name: "Nie", odds: 1.06 }, { name: "Tak", odds: 8.2 }] }, ctxOf("arsenalHull"), "00-08"); // synthetic
+  });
+  it("a half-time red-card team id follows the team named in its label (00-0c quoting Hull -> HALF_TIME_RED_CARD_TEAM:AWAY)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-0c", name: "1.połowa: Hull\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)",
+      selections: [{ name: "Nie", odds: 1.01 }, { name: "Tak", odds: 12 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("HALF_TIME_RED_CARD_TEAM:AWAY");
+    expect(legs(out)).toEqual(["NO@1.01", "YES@12"]);
+  });
+  it("a placeholder name is never team-matched: the half-time red-card team side comes from the id (00-0d -> AWAY)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-0d", name: "Rynek ufo:mtyp:00-0d",
+      selections: [{ name: "Tak", odds: 12 }, { name: "Nie", odds: 1.01 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("HALF_TIME_RED_CARD_TEAM:AWAY");
+    expect(legs(out)).toEqual(["YES@12", "NO@1.01"]);
   });
   it("WINNING_MARGIN drops a leg it cannot resolve instead of emitting UNKNOWN", () => {
     const out = run({ bookmakerMarketId: "ufo:mtyp:00-09", name: "Mecz: wynik/różnica zwycięstwa",

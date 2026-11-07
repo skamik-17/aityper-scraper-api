@@ -12,6 +12,7 @@ import {
 } from "../ws-protocol.js";
 import { WEBSOCKET_URL_PATTERN } from "../constants.js";
 import { parseAllMarkets, parseTeamNames } from "../parser.js";
+import type { PZBukInitialState } from "../types.js";
 
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8"));
 const league = load("ws-league-frames.json");
@@ -62,6 +63,17 @@ describe("pzbuk ws transport", () => {
   it("reports truncated JSON as invalid instead of throwing", () => {
     expect(decodeFrame(league.frames[2].text.slice(0, 1000)).kind).toBe("invalid");
     expect(decodeFrame("garbage").kind).toBe("invalid");
+  });
+  it("rejects a whole frame whose INITIAL_STATE has a non-object entry (fail closed)", () => {
+    const data = (state: string) => `{"type":"DATA","streamId":5,"payload":[{"type":"INITIAL_STATE","payload":${state}}]}`;
+    expect(decodeFrame(data('{"events":[null],"markets":[],"selections":[]}')))
+      .toEqual({ kind: "invalid", error: "INITIAL_STATE events[0] is not an object" });
+    expect(decodeFrame(data('{"events":[{"id":1}],"markets":[{"id":"m1"},7],"selections":[null]}')))
+      .toEqual({ kind: "invalid", error: "INITIAL_STATE markets[1] is not an object" });
+    expect(decodeFrame('[{"type":"INITIAL_STATE","payload":{"events":[{"id":1}],"markets":[],"selections":[[]]}}]'))
+      .toEqual({ kind: "invalid", error: "INITIAL_STATE selections[0] is not an object" });
+    // Delta messages are not snapshots and pass through unchecked, as before.
+    expect(decodeFrame('{"type":"DATA","streamId":1,"payload":[{"type":"SELECTION_DELTA","payload":[null]}]}').kind).toBe("data");
   });
 });
 
@@ -136,6 +148,15 @@ describe("pzbuk SingleEventAccumulator", () => {
     acc.add({ events: [ev], markets: [], selections: [{ ...sel, status: "Suspended" }] });
     expect(acc.stats().selections).toBe(0);
     expect(acc.snapshot()).toBeNull();
+  });
+  it("rejects a payload with a non-object entry without throwing or merging any of it", () => {
+    const acc = new SingleEventAccumulator(1);
+    const malformed = { events: [{ id: 1 }], markets: [null], selections: [null] } as unknown as PZBukInitialState;
+    expect(() => acc.add(malformed)).not.toThrow();
+    expect(acc.add(malformed)).toBe(false);
+    expect(acc.add({ events: [null], markets: [], selections: [] } as unknown as PZBukInitialState)).toBe(false);
+    expect(acc.snapshot()).toBeNull();
+    expect(acc.stats()).toEqual({ selections: 0, markets: 0, marketGroupsDeclared: [], marketGroupsSeen: [] });
   });
   it("maps header texts to market-group ids", () => {
     const acc = new SingleEventAccumulator(4408475);

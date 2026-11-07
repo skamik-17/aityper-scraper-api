@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import type { Page } from "playwright";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { captureWebSocketData } from "../navigation.js";
-import { describeCaptureFailure, isEmptyListing } from "../ws-protocol.js";
+import { describeCaptureFailure, isEmptyListing, SingleEventAccumulator } from "../ws-protocol.js";
 
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8"));
 const league = load("ws-league-frames.json");
@@ -15,7 +15,10 @@ const recv = (ws: EventEmitter, text: string) => ws.emit("framereceived", { payl
 
 describe("pzbuk captureWebSocketData", () => {
   beforeEach(() => vi.useFakeTimers());
-  afterEach(() => vi.useRealTimers());
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
 
   it("captures the league snapshot from the new socket and detaches", async () => {
     const page = fakePage();
@@ -105,5 +108,60 @@ describe("pzbuk captureWebSocketData", () => {
     recv(ws, '{"type":"ERROR","streamId":1,"message":"Unknown route"}'); // synthetic shape
     await vi.advanceTimersByTimeAsync(25_500);
     expect(describeCaptureFailure((await p).diagnostics)).toBe("socket matched but no INITIAL_STATE decoded (frames: 1, invalid: 0, last control: ERROR Unknown route)");
+  });
+
+  // Playwright runs frame listeners outside any promise chain, so a throw in one
+  // is an uncaughtException that ends the whole service. The fake socket's emit()
+  // rethrows it synchronously instead, which is what `not.toThrow()` checks.
+  const group1Frame = () => event.frames.find((f: any) => f.dir === "recv" && f.text.startsWith('{"type":"DATA","streamId":5,')).text;
+  it.each([
+    ['{"events":[null],"markets":[],"selections":[]}', "events[0]"],
+    ['{"events":[{"id":4408475}],"markets":[null],"selections":[null]}', "markets[0]"],
+  ])("drops a single-event INITIAL_STATE with a non-object entry and keeps capturing: %s", async (payload, entry) => {
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const ws = fakeSocket(event.socketUrl); page.emit("websocket", ws);
+    expect(() => recv(ws, `{"type":"DATA","streamId":5,"payload":[{"type":"INITIAL_STATE","payload":${payload}}]}`)).not.toThrow();
+    recv(ws, group1Frame());
+    await vi.advanceTimersByTimeAsync(26_000);
+    const r = await p;
+    expect([r.state?.markets.length, r.state?.selections.length]).toEqual([28, 169]);
+    expect(r.diagnostics).toMatchObject({ framesReceived: 2, invalidFrames: 1, lastInvalidError: `INITIAL_STATE ${entry} is not an object`, initialStates: 1 });
+  });
+  it("reports a dropped single-event frame as the capture failure", async () => {
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const ws = fakeSocket(event.socketUrl); page.emit("websocket", ws);
+    recv(ws, '{"type":"DATA","streamId":5,"payload":[{"type":"INITIAL_STATE","payload":{"events":[null],"markets":[],"selections":[]}}]}');
+    await vi.advanceTimersByTimeAsync(26_000);
+    const r = await p;
+    expect(r.state).toBeNull();
+    expect(describeCaptureFailure(r.diagnostics)).toBe("socket matched but no INITIAL_STATE decoded (frames: 1, invalid: 1, last error: INITIAL_STATE events[0] is not an object)");
+  });
+  it("rejects a listing INITIAL_STATE with a non-object entry instead of resolving with it", async () => {
+    const env = JSON.parse(league.frames[2].text);
+    env.payload[0].payload.selections.push(null);
+    const page = fakePage();
+    const p = captureWebSocketData(page, false);
+    const ws = fakeSocket(league.socketUrl); page.emit("websocket", ws);
+    expect(() => recv(ws, JSON.stringify(env))).not.toThrow();
+    await vi.advanceTimersByTimeAsync(25_500);
+    const r = await p;
+    expect(r.state).toBeNull();
+    expect(describeCaptureFailure(r.diagnostics)).toBe("socket matched but no INITIAL_STATE decoded (frames: 1, invalid: 1, last error: INITIAL_STATE selections[18] is not an object)");
+  });
+  it("contains an unexpected throw in the frame handler, counts the frame invalid and keeps capturing", async () => {
+    vi.spyOn(SingleEventAccumulator.prototype, "add").mockImplementationOnce(() => {
+      throw new TypeError("Cannot read properties of null (reading 'status')");
+    });
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const ws = fakeSocket(event.socketUrl); page.emit("websocket", ws);
+    expect(() => recv(ws, group1Frame())).not.toThrow();
+    recv(ws, group1Frame()); // the next frame is still processed
+    await vi.advanceTimersByTimeAsync(26_000);
+    const r = await p;
+    expect([r.state?.markets.length, r.state?.selections.length]).toEqual([28, 169]);
+    expect(r.diagnostics).toMatchObject({ framesReceived: 2, invalidFrames: 1, lastInvalidError: "Cannot read properties of null (reading 'status')" });
   });
 });

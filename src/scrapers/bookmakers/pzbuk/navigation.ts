@@ -35,6 +35,7 @@ import {
 } from "./constants.js";
 import {
   decodeFrame,
+  errorMessage,
   initialStatesOf,
   subscribedGroupIds,
   FrameAssembler,
@@ -318,32 +319,40 @@ export async function captureWebSocketData(
       };
       const onReceived = (frame: { payload: string | Buffer }) => {
         if (resolved) return;
-        diagnostics.framesReceived++;
-        const text = assembler.push(frame.payload);
-        if (text === null) {
-          diagnostics.chunkedFrames++;
-          return;
-        }
-        diagnostics.maxFrameBytes = Math.max(diagnostics.maxFrameBytes, Buffer.byteLength(text, "utf8"));
+        // Playwright calls this listener outside any promise chain, so a throw
+        // here would be an uncaughtException that ends the whole service.
+        // Drop the frame instead and keep its cause in the diagnostics.
+        try {
+          diagnostics.framesReceived++;
+          const text = assembler.push(frame.payload);
+          if (text === null) {
+            diagnostics.chunkedFrames++;
+            return;
+          }
+          diagnostics.maxFrameBytes = Math.max(diagnostics.maxFrameBytes, Buffer.byteLength(text, "utf8"));
 
-        const decoded = decodeFrame(text);
-        switch (decoded.kind) {
-          case "setup":
-            assembler.setChunkSize(decoded.chunkSize);
-            break;
-          case "invalid":
-            diagnostics.invalidFrames++;
-            diagnostics.lastInvalidError = decoded.error;
-            break;
-          case "control":
-            diagnostics.lastControl = { type: decoded.type, message: decoded.message };
-            break;
-          case "data":
-            for (const state of initialStatesOf(decoded)) {
-              if (resolved) break;
-              handleInitialState(state);
-            }
-            break;
+          const decoded = decodeFrame(text);
+          switch (decoded.kind) {
+            case "setup":
+              assembler.setChunkSize(decoded.chunkSize);
+              break;
+            case "invalid":
+              diagnostics.invalidFrames++;
+              diagnostics.lastInvalidError = decoded.error;
+              break;
+            case "control":
+              diagnostics.lastControl = { type: decoded.type, message: decoded.message };
+              break;
+            case "data":
+              for (const state of initialStatesOf(decoded)) {
+                if (resolved) break;
+                handleInitialState(state);
+              }
+              break;
+          }
+        } catch (error) {
+          diagnostics.invalidFrames++;
+          diagnostics.lastInvalidError = errorMessage(error);
         }
       };
       ws.on("framesent", onSent);

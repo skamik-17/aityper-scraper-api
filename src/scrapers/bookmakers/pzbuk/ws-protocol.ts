@@ -40,7 +40,7 @@ function isRecord(value: unknown): value is JsonRecord {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function errorMessage(error: unknown): string {
+export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
@@ -69,21 +69,49 @@ function decodeEnvelope(frame: unknown): DecodedFrame {
   return { kind: "control", type: frame.type, message: typeof frame.message === "string" ? frame.message : null };
 }
 
+function decodeText(trimmed: string): DecodedFrame {
+  if (trimmed.startsWith("{")) return decodeEnvelope(JSON.parse(trimmed));
+  if (trimmed.startsWith("[")) {
+    return { kind: "data", streamId: null, messages: toMessages(JSON.parse(trimmed)) };
+  }
+  // Legacy RSocket frame: binary header, then the JSON message array.
+  const start = trimmed.indexOf("[{");
+  if (start === -1) return { kind: "invalid", error: "not JSON" };
+  return { kind: "data", streamId: null, messages: toMessages(JSON.parse(trimmed.slice(start))) };
+}
+
+const STATE_ARRAYS = ["events", "markets", "selections"] as const;
+
+/** `<array>[<index>]` of the first INITIAL_STATE entry that is not an object, or null. */
+function firstNonObjectEntry(state: PZBukInitialState): string | null {
+  for (const key of STATE_ARRAYS) {
+    const index = (state[key] as unknown[]).findIndex((entry) => !isRecord(entry));
+    if (index !== -1) return `${key}[${index}]`;
+  }
+  return null;
+}
+
+/**
+ * A DATA frame whose INITIAL_STATE has a non-object entry is invalid as a
+ * whole (fail closed): the frame is dropped instead of being merged partially
+ * or dereferenced, and the error names the entry.
+ */
+function rejectMalformedStates(frame: DecodedFrame): DecodedFrame {
+  for (const state of initialStatesOf(frame)) {
+    const entry = firstNonObjectEntry(state);
+    if (entry !== null) return { kind: "invalid", error: `INITIAL_STATE ${entry} is not an object` };
+  }
+  return frame;
+}
+
 /**
  * Decodes one complete (already reassembled) frame text. Never throws:
- * undecodable input yields `{ kind: "invalid", error }`.
+ * undecodable input, and a DATA frame with a malformed INITIAL_STATE entry,
+ * yield `{ kind: "invalid", error }`.
  */
 export function decodeFrame(text: string): DecodedFrame {
-  const trimmed = text.trimStart();
   try {
-    if (trimmed.startsWith("{")) return decodeEnvelope(JSON.parse(trimmed));
-    if (trimmed.startsWith("[")) {
-      return { kind: "data", streamId: null, messages: toMessages(JSON.parse(trimmed)) };
-    }
-    // Legacy RSocket frame: binary header, then the JSON message array.
-    const start = trimmed.indexOf("[{");
-    if (start === -1) return { kind: "invalid", error: "not JSON" };
-    return { kind: "data", streamId: null, messages: toMessages(JSON.parse(trimmed.slice(start))) };
+    return rejectMalformedStates(decodeText(text.trimStart()));
   } catch (error) {
     return { kind: "invalid", error: errorMessage(error) };
   }
@@ -186,9 +214,13 @@ export class SingleEventAccumulator {
   /** When set, single-event payloads for any other event are rejected. */
   constructor(private readonly expectedEventId?: number | string) {}
 
-  /** Returns true only for a merged single-event payload. */
+  /**
+   * Returns true only for a merged single-event payload. A payload with a
+   * non-object entry is rejected whole, never merged partially, so its group
+   * stays unseen and shows up as "never answered".
+   */
   add(state: PZBukInitialState): boolean {
-    if (state.events.length !== 1) return false;
+    if (state.events.length !== 1 || firstNonObjectEntry(state) !== null) return false;
     const [event] = state.events;
     if (this.expectedEventId !== undefined && String(event.id) !== String(this.expectedEventId)) return false;
     this.event ??= event;

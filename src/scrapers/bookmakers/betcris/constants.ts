@@ -86,6 +86,55 @@ export const SWARM_MARKET_TYPES = {
 } as const;
 
 /**
+ * Renamed (2026-11) Swarm stats markets that quote a whole team/match "N+"
+ * ladder in one market object (events "22+", "23+", ...). The parser splits
+ * them into one entry per rung, reading "N+" as Over (N - 0.5).
+ */
+export const TEAM_TIER_LADDER_TYPES: ReadonlySet<string> = new Set([
+  "FoulsTotal",
+  "FoulsTeam1Total",
+  "FoulsTeam2Total",
+  "OffsidesTotal",
+  "OffsidesTeam1Total",
+  "OffsidesTeam2Total",
+  "ShotsTeam1Total",
+  "ShotsonTargetTotal",
+  "ShotsonTargetTeam1Total",
+  "ShotsonTargetTeam2Total",
+  "ShotsonTarget1stHalfTotal",
+  "ThrowInsTotal",
+  "ThrowInsTeam1Total",
+  "ThrowInsTeam2Total",
+]);
+
+/**
+ * Renamed (2026-11) Swarm player-prop markets that bundle every player's
+ * "<player> N+" ladder into one market object. The parser splits them into
+ * one entry per player carrying that player's "N+" tiers.
+ */
+export const PLAYER_TIER_LADDER_TYPES: ReadonlySet<string> = new Set([
+  "PlayerShots",
+  "PlayerShotsonTarget",
+  "PlayerFouls",
+  "PlayerFoulsWon",
+  "PlayerOffsides",
+  "PlayerSaves",
+  "PlayerAssists",
+  "PlayerTackles",
+  "PlayerShotsonTargetOutsidetheBox",
+  "PlayerHeadedShotsonTarget",
+]);
+
+/**
+ * Renamed (2026-11) Swarm one-price player markets quoted as "<player> 1+".
+ * The parser keeps them as one player-name list built from the "1+" events
+ * only.
+ */
+export const PLAYER_TIER_LIST_TYPES: ReadonlySet<string> = new Set([
+  "PlayerShotsAgainstWoodwork",
+]);
+
+/**
  * Market group names for UI organization
  * Maps Swarm market types to human-readable group names in Polish
  */

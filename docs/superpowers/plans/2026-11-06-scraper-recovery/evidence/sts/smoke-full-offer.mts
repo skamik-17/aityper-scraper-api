@@ -2,6 +2,8 @@
 // Usage (from the repo root):
 //   node_modules/.bin/tsx docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/<bm>/smoke-full-offer.mts <bookmaker> [league] [CODE1,CODE2,...]
 // Prints one SMOKE_RESULT JSON line; exit 0 when the scrape succeeded with >= 1 match.
+// SMOKE_RESULT.warnings counts every swallowed console.warn; foldDropWarnings and
+// foldDropSamples (first 3 texts) cover only the STS "do not fold into" warn.
 const REPO = new URL("../../../../../../", import.meta.url).pathname;
 const { getScraper, closeAllBrowsers } = await import(`${REPO}src/scrapers/aggregator.ts`);
 const { normalizeMarketsForBookmaker } = await import(`${REPO}src/services/normalization/index.ts`);
@@ -41,9 +43,24 @@ if (bookmaker === "sts") {
     teamStatsError = String(error);
   }
 }
+// Every console.warn of the scrape and the normalization is swallowed and
+// counted (the Task 1 smoke saw ~1900). The STS per-player fold-drop warn
+// (parser.ts foldPerPlayerLines: "... that do not fold into ...") is counted
+// on its own and its first texts are kept: a partial drop still leaves
+// GOALSCORER_ANYTIME / PLAYER_CARDS / PLAYER_GOAL_OR_ASSIST present, so the
+// code counts cannot see it.
 const realWarn = console.warn;
 let warnCount = 0;
-console.warn = () => { warnCount++; };
+let foldDropWarnings = 0;
+const foldDropSamples: string[] = [];
+console.warn = (...args: unknown[]) => {
+  warnCount++;
+  const text = String(args[0] ?? "");
+  if (/do not fold into/.test(text)) {
+    foldDropWarnings++;
+    if (foldDropSamples.length < 3) foldDropSamples.push(text);
+  }
+};
 try { r = await scraper.scrapeFullOffer(league); } finally { await closeAllBrowsers(); }
 const perMatch: Array<{ match: string; id: string; raw: number; normalized: number; other: number; teamStats: boolean | null; codes: string[] }> = [];
 const codeHits: Record<string, number> = Object.fromEntries(requiredCodes.map((c) => [c, 0]));
@@ -76,7 +93,7 @@ const out = {
     ? Object.fromEntries(requiredCodes.map((c) => [c, fullOfferTeamStats.filter((p) => p.codes.includes(c)).length]))
     : null,
   teamStatsError,
-  warnings: warnCount, perMatch, error: r.error ?? null, durationMs: Date.now() - t0,
+  warnings: warnCount, foldDropWarnings, foldDropSamples, perMatch, error: r.error ?? null, durationMs: Date.now() - t0,
 };
 console.log("SMOKE_RESULT " + JSON.stringify(out));
 process.exit(r.success && perMatch.length > 0 ? 0 : 1);

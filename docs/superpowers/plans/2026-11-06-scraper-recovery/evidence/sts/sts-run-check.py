@@ -7,7 +7,10 @@ matches (`[Aggregator/FullOffer] sts completed: success=...`, e.g. an empty stri
 an id renumbering), any thrown STS scrape (`sts failed:`) and any strict-id miss warning from
 the parser is a problem. Those aggregator lines carry no league; they are attributed to the
 Premier League, the only enabled league (src/config/index.ts ENABLED_LEAGUES), so an STS
-failure in a manually triggered other league also fails the check."""
+failure in a manually triggered other league also fails the check.
+Every parser fold-drop warning (`[STS] <H> vs <A>: dropped N of M lines of market <id> that
+do not fold into "<dropdown>" ...`, Task 6) after <start-line> is a problem too: a partial
+drop leaves the folded code present with fewer players, so no per-run count shows it."""
 import json, re, sys
 log, start = sys.argv[1], int(sys.argv[2])
 runs, cur, problems = [], None, []
@@ -19,6 +22,8 @@ for no, line in enumerate(open(log, encoding="utf-8", errors="replace"), 1):
         problems.append({"line": no, "stsFailed": m[1][:200]})
     elif re.match(r"^\[STS\] Strict id filter for premier-league .*matched 0 fixtures", line):
         problems.append({"line": no, "strictIdMiss": line[:500]})
+    elif 'do not fold into' in line:
+        problems.append({"line": no, "foldDrop": line[:300]})
     elif m := re.match(r"^\[STS/FullOffer\] Found (\d+) fixtures for premier-league$", line):
         cur = {"line": no, "found": int(m[1]), "counts": {}, "noSnapshot": 0, "nonPlSkips": 0, "completed": None}
         runs.append(cur)

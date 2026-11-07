@@ -1,6 +1,7 @@
 import type { PolishBookmaker } from "../config/index.js";
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { normalizeMarketsForBookmaker } from "./normalization/index.js";
+import { formatUnmappedSummary, summarizeUnmappedMarkets } from "./normalization/unmapped-summary.js";
 import { saveFullOfferMarkets, saveBatchFullOfferMarkets } from "../repositories/full-offer-repository.js";
 
 export interface NormalizeAndSaveResult {
@@ -46,6 +47,13 @@ export async function normalizeAndSaveMatches(
       console.error(`[ScrapeHelpers] ${errorMsg}`);
       result.errors.push(errorMsg);
     }
+  }
+
+  // One roll-up line per call (the aggregator calls this once per bookmaker
+  // per run), so renamed raw ids stand out from the per-market OTHER warnings.
+  const unmapped = summarizeUnmappedMarkets(normalizedMatches.flatMap((match) => match.markets));
+  if (unmapped.otherMarkets > 0) {
+    console.warn(formatUnmappedSummary(bookmaker, unmapped));
   }
 
   if (options.useBatchInsert && normalizedMatches.length > 0) {

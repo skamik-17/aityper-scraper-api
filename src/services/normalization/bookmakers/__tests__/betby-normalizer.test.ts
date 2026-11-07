@@ -1,13 +1,14 @@
-// Betby (betters + lebull) id-based UOF normalizer. Evidence: the Leeds United - Tottenham
-// Hotspur event captured on both brands on 2026-11-06, shared with the Betby scraper tests
+// Betby (betters + lebull) id-based UOF normalizer. Evidence: the events captured on 2026-11-06
+// (Leeds United - Tottenham Hotspur on both brands; Arsenal - Hull, Man Utd - Aston Villa and
+// the thin far-future Liverpool - Man Utd on betters), shared with the Betby scraper tests
 // under src/scrapers/shared/betby/__tests__/fixtures/.
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } from "vitest";
 import { isValidMarketCode } from "../../../../data/market-catalog.js";
-import { loadJson } from "../../../../scrapers/shared/betby/__tests__/fixtures.js";
+import { loadJson, snapshotFrom } from "../../../../scrapers/shared/betby/__tests__/fixtures.js";
 import { buildScrapedMarkets } from "../../../../scrapers/shared/betby/parser.js";
 import type { BetbyBookmaker, BetbyEvent, BetbyMarketDescriptions } from "../../../../scrapers/shared/betby/types.js";
 import type { NormalizationContext, NormalizedMarketOutput } from "../../types.js";
-import { BETBY_MARKET_RULES } from "../betby-market-rules.js";
+import { BETBY_MARKET_RULES, betbyRuleFor, findSpecifierKeyMismatches } from "../betby-market-rules.js";
 import { createBetbyNormalizer } from "../betby-normalizer.js";
 import { bettersNormalizer } from "../betters-normalizer.js";
 import { lebullNormalizer } from "../lebull-normalizer.js";
@@ -15,8 +16,9 @@ import { lebullNormalizer } from "../lebull-normalizer.js";
 const LEEDS_ID = "2725816334213586962";
 const descriptionsOf = (bm: BetbyBookmaker) =>
   loadJson<{ markets: BetbyMarketDescriptions }>(bm, "descriptions-markets.trimmed.json").markets;
-const leedsOf = (bm: BetbyBookmaker) =>
-  loadJson<{ events: Record<string, BetbyEvent> }>(bm, `event-${LEEDS_ID}.json`).events[LEEDS_ID];
+const eventOf = (bm: BetbyBookmaker, id: string) =>
+  loadJson<{ events: Record<string, BetbyEvent> }>(bm, `event-${id}.json`).events[id];
+const leedsOf = (bm: BetbyBookmaker) => eventOf(bm, LEEDS_ID);
 
 const D = descriptionsOf("betters");
 const leeds = leedsOf("betters");
@@ -27,6 +29,23 @@ const ctx: NormalizationContext = { homeTeam: "Leeds United", awayTeam: "Tottenh
 const sel = (id: string, name: string, odds: number) => ({ name, odds, externalId: id });
 
 describe("betby normalizer", () => {
+  // The normalizer logs one skip only (a phase-1 market whose specifier key set is not its
+  // rule's). A test that expects it reads it with takeWarnings(); any other warning fails.
+  let warn: MockInstance<typeof console.warn>;
+  const takeWarnings = (): string[] => {
+    const messages = warn.mock.calls.map((c) => String(c[0]));
+    warn.mockClear();
+    return messages;
+  };
+  beforeEach(() => {
+    warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    const left = warn.mock.calls.map((c) => String(c[0]));
+    warn.mockRestore();
+    expect(left, "console.warn calls the test did not expect").toEqual([]);
+  });
+
   it("maps MATCH_WINNER by outcome id, with string or numeric market id", () => {
     for (const id of ["1", 1]) {
       const out = n.normalizeMarket({ bookmakerMarketId: id, name: "1x2", selections: [sel("1", "Leeds United", 2.74), sel("2", "remis", 3.3), sel("3", "Tottenham Hotspur", 2.54)] }, ctx)!;
@@ -90,6 +109,10 @@ describe("betby normalizer", () => {
       expect(norm(id, "hcp=1:0", EH)!.marketKey).toMatch(/EUROPEAN_HANDICAP:\+1$/); // control
       for (const bad of ["x:0", "0:x", "1", "1:", ":1", "", "1:1", "-1:0", "1.5:0"]) expect(norm(id, `hcp=${bad}`, EH), `${id} hcp=${bad}`).toBeNull();
     }
+    // A bad line is skipped quietly; a line market with no specifier at all changed shape.
+    expect(takeWarnings()).toEqual(
+      LINE_RULES.map(([id, key]) => `[betters] Skipped market ${id}[]: specifier keys {} are not the rule's {${key}}`),
+    );
   });
 
   it("correct score names -> h-a codes and inny -> OTHER", () => {
@@ -211,6 +234,13 @@ describe("betby normalizer", () => {
     expect(norm("1", "from=0:00|to=15:00", [sel("1", "Leeds United", 2), sel("2", "remis", 3), sel("3", "Tottenham Hotspur", 4)])).toBeNull();
     expect(norm("8", "goalnr=1|type=general", [sel("6", "Leeds United", 2), sel("7", "żaden", 9), sel("8", "Tottenham Hotspur", 2)])).toBeNull();
     expect(norm("25", "variant=sr:goal_range:7+|total=2.5", [sel("sr:goal_range:7+:1342", "0-1 goli", 3)])).toBeNull();
+    expect(takeWarnings()).toEqual([
+      "[betters] Skipped market 18[from=0:00|to=15:00|total=0.5]: specifier keys {from,to,total} are not the rule's {total}",
+      "[betters] Skipped market 18[total=2.5|from=0:00]: specifier keys {total,from} are not the rule's {total}",
+      "[betters] Skipped market 1[from=0:00|to=15:00]: specifier keys {from,to} are not the rule's {}",
+      "[betters] Skipped market 8[goalnr=1|type=general]: specifier keys {goalnr,type} are not the rule's {goalnr}",
+      "[betters] Skipped market 25[variant=sr:goal_range:7+|total=2.5]: specifier keys {variant,total} are not the rule's {variant}",
+    ]);
   });
 
   it("goal range maps only the sr:goal_range:7+ variant, by outcome id", () => {
@@ -221,6 +251,7 @@ describe("betby normalizer", () => {
     expect(g("sr:point_range:6+", "sr:point_range:6+:1121", "0-1 goli")).toBeNull();
     expect(g("sr:goal_range:7+", "sr:goal_range:7+:9999", "0-1 goli")).toBeNull();
     expect(n.normalizeMarket({ bookmakerMarketId: "25", name: "Przedział goli", selections: [sel("sr:goal_range:7+:1342", "0-1 goli", 3)] }, ctx)).toBeNull();
+    expect(takeWarnings()).toEqual(["[betters] Skipped market 25[]: specifier keys {} are not the rule's {variant}"]);
   });
 
   it("ids that name Object.prototype members or are missing are unknown", () => {
@@ -230,5 +261,97 @@ describe("betby normalizer", () => {
     }
     expect(n.normalizeMarket({ name: "1x2", selections: [sel("1", "Leeds United", 2)] }, ctx)).toBeNull();
     expect(n.normalizeMarket({ bookmakerMarketId: "1", name: "1x2", selections: [{ name: "Leeds United", odds: 2 }] }, ctx)).toBeNull();
+  });
+
+  // The exact-key rule skips a market silently when the feed adds or drops a specifier key, and
+  // a match can lose a whole family (the nine TOTAL_GOALS lines of 18) yet still clear the
+  // smoke's market-count floor. These tests pin the keys, the detector the smoke gate uses, and
+  // the per-event counts of the 2026-11-06 baseline (evidence/betters/phase1-counts-pl-2026-11-06.txt).
+
+  it("every rule names the specifier keys its market defines", () => {
+    const KEYS: Record<string, string[]> = { "8": ["goalnr"], "25": ["variant"] };
+    for (const id of ["1", "10", "11", "29", "75", "95", "60", "83", "63", "85", "64", "26", "45", "81", "47", "35", "546", "560", "561", "13670", "52", "50063"]) KEYS[id] = [];
+    for (const id of ["18", "68", "90", "19", "20", "37", "36", "547"]) KEYS[id] = ["total"];
+    for (const id of ["16", "66", "14", "65"]) KEYS[id] = ["hcp"];
+    expect(Object.fromEntries(Object.entries(BETBY_MARKET_RULES).map(([id, r]) => [id, [...r.keys]]))).toEqual(KEYS);
+    // resolve guards its own keys too, whoever calls it.
+    const VALID: Record<string, Record<string, string>> = { "8": { goalnr: "1" }, "25": { variant: "sr:goal_range:7+" }, "14": { hcp: "1:0" }, "65": { hcp: "1:0" } };
+    for (const [id, r] of Object.entries(BETBY_MARKET_RULES)) {
+      expect(Object.isFrozen(r.keys), id).toBe(true);
+      const valid = VALID[id] ?? Object.fromEntries(r.keys.map((k) => [k, k === "hcp" ? "-1.5" : "2.5"]));
+      expect(r.resolve(valid), `${id} control`).not.toBeNull();
+      expect(r.resolve({ ...valid, from: "0:00" }), `${id} extra key`).toBeNull();
+      if (r.keys.length > 0) expect(r.resolve({}), `${id} no keys`).toBeNull();
+    }
+    expect(betbyRuleFor(18)).toBe(BETBY_MARKET_RULES["18"]);
+    for (const id of [undefined, "50031", "constructor", "__proto__"]) expect(betbyRuleFor(id), String(id)).toBeNull();
+  });
+
+  it("findSpecifierKeyMismatches reports a phase-1 pair with another key set, and only that", () => {
+    const changed = [
+      { bookmakerMarketId: "18", paramValue: "total=2.5|type=x" },
+      { bookmakerMarketId: 1, paramValue: "from=0:00|to=15:00" },
+      { bookmakerMarketId: "18" },
+      { bookmakerMarketId: 16, paramValue: "hcp=-1.5|from=0:00" },
+    ];
+    const designed = [
+      { bookmakerMarketId: "18", paramValue: "total=2.5" },
+      { bookmakerMarketId: "19", paramValue: "total=1" }, // integer team-total line
+      { bookmakerMarketId: "8", paramValue: "goalnr=2" }, // second goal
+      { bookmakerMarketId: "25", paramValue: "variant=bb:goal_range:11+" }, // another variant
+      { bookmakerMarketId: "50031", paramValue: "x=1" }, // no rule
+      { bookmakerMarketId: "constructor", paramValue: "x=1" },
+      { paramValue: "total=2.5" },
+    ];
+    const expected = ["18[total=2.5|type=x]", "1[from=0:00|to=15:00]", "18[]", "16[hcp=-1.5|from=0:00]"];
+    expect(findSpecifierKeyMismatches([...changed, ...designed])).toEqual(expected);
+    expect(findSpecifierKeyMismatches(designed)).toEqual([]);
+    // The normalizer skips exactly the reported pairs with a warning that names the same pair.
+    const OU = [sel("12", "ponad", 1.9), sel("13", "poniżej", 1.9), sel("1", "Leeds United", 2), sel("1714", "Leeds United", 2), sel("6", "Leeds United", 2)];
+    for (const m of changed) expect(n.normalizeMarket({ ...m, name: "x", selections: OU }, ctx)).toBeNull();
+    expect(takeWarnings().map((w) => w.split(" ")[3].replace(/:$/, ""))).toEqual(expected);
+    for (const m of designed.slice(1)) expect(n.normalizeMarket({ ...m, name: "x", selections: OU }, ctx)).toBeNull();
+  });
+
+  it("evidence events: baseline counts, no key mismatch, only integer team-total lines skipped", () => {
+    const EVIDENCE: [BetbyBookmaker, string, number][] = [
+      ["betters", "2725816334213586962", 68], // Leeds United - Tottenham Hotspur, 7 Nov
+      ["betters", "2725816334213586981", 71], // Arsenal FC - Hull City, 7 Nov
+      ["betters", "2726177353700085769", 66], // Manchester United FC - Aston Villa FC, 8 Nov
+      ["betters", "2725446939305979931", 34], // Liverpool FC - Manchester United FC, 22 Nov: thin far-future payload
+      ["lebull", "2725816334213586962", 68],
+    ];
+    for (const [bm, id, count] of EVIDENCE) {
+      const ev = eventOf(bm, id);
+      const [home, away] = ev.desc.competitors.map((c) => c.name.trim());
+      const norm = bm === "betters" ? bettersNormalizer : lebullNormalizer;
+      const markets = buildScrapedMarkets(ev.markets, descriptionsOf(bm), [home, away]);
+      const outs = markets.map((m) => [m, norm.normalizeMarket(m, { homeTeam: home, awayTeam: away, league: "premier-league" })] as const);
+      const kept = outs.flatMap(([, o]) => (o === null ? [] : [o]));
+      expect(kept, `${bm} ${id}`).toHaveLength(count);
+      expect(new Set(kept.map((o) => o.marketKey)).size, `${bm} ${id}`).toBe(count);
+      expect(findSpecifierKeyMismatches(markets), `${bm} ${id}`).toEqual([]);
+      // HOME_/AWAY_TEAM_TOTAL_GOALS have no push settlement, so 19/20 keep half lines only.
+      const skipped = outs.filter(([m, o]) => o === null && betbyRuleFor(m.bookmakerMarketId) !== null).map(([m]) => m);
+      expect(skipped.length, `${bm} ${id}`).toBeGreaterThan(0);
+      expect(
+        skipped.filter((m) => !(["19", "20"].includes(m.bookmakerMarketId ?? "") && /^total=\d+$/.test(m.paramValue ?? ""))),
+        `${bm} ${id}`,
+      ).toEqual([]);
+    }
+  });
+
+  it("listing markets of every snapshot event carry the keys their rules define", () => {
+    for (const bm of ["betters", "lebull"] as const) {
+      const events = Object.values(snapshotFrom(bm).events);
+      const markets = events.flatMap((ev) => {
+        const [home, away] = ev.desc.competitors.map((c) => c.name.trim());
+        return buildScrapedMarkets(ev.markets, descriptionsOf(bm), [home, away]);
+      });
+      const phase1 = markets.filter((m) => betbyRuleFor(m.bookmakerMarketId) !== null);
+      expect(new Set(phase1.map((m) => m.bookmakerMarketId)), bm).toEqual(new Set(["1", "10", "16", "18"]));
+      expect(phase1.length, bm).toBeGreaterThan(events.length * 3);
+      expect(findSpecifierKeyMismatches(markets), bm).toEqual([]);
+    }
   });
 });

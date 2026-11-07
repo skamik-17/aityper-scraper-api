@@ -5,7 +5,9 @@
  * outcome id. `BETBY_MARKET_RULES` maps those ids; labels are kept for display only.
  *
  * Markets without a rule, with a line the rule rejects, or with no mapped outcome return
- * null, which the facade stores as a hidden OTHER row.
+ * null, which the facade stores as a hidden OTHER row. One of those skips is logged: a
+ * phase-1 market whose specifier key set is not its rule's. No evidence event has one, so it
+ * means the feed changed shape, and it can hide a whole family of lines.
  */
 import { getMarketMetadata } from "../../../data/market-catalog.js";
 import { parseSpecifiers } from "../../../scrapers/shared/betby/specifiers.js";
@@ -17,7 +19,7 @@ import type {
   NormalizedSelection,
   RawBookmakerMarket,
 } from "../types.js";
-import { BETBY_MARKET_RULES } from "./betby-market-rules.js";
+import { betbyRuleFor, hasRuleKeys, marketPairLabel } from "./betby-market-rules.js";
 
 export function createBetbyNormalizer(bookmaker: BetbyBookmaker): BookmakerMarketNormalizer {
   return {
@@ -25,13 +27,19 @@ export function createBetbyNormalizer(bookmaker: BetbyBookmaker): BookmakerMarke
 
     // Sides come from UOF outcome ids, so the context's team names are not needed.
     normalizeMarket(raw: RawBookmakerMarket): NormalizedMarketOutput | null {
-      if (raw.bookmakerMarketId === undefined) return null;
       // The facade turns an all-digit id into a number; the table is keyed by string.
-      const marketId = String(raw.bookmakerMarketId);
-      if (!Object.hasOwn(BETBY_MARKET_RULES, marketId)) return null;
-      const rule = BETBY_MARKET_RULES[marketId];
+      const rule = betbyRuleFor(raw.bookmakerMarketId);
+      if (rule === null) return null;
 
-      const resolved = rule.resolve(parseSpecifiers(raw.paramValue ?? ""));
+      const specs = parseSpecifiers(raw.paramValue ?? "");
+      if (!hasRuleKeys(rule, specs)) {
+        console.warn(
+          `[${bookmaker}] Skipped market ${marketPairLabel(String(raw.bookmakerMarketId), raw.paramValue)}: ` +
+            `specifier keys {${Object.keys(specs).join(",")}} are not the rule's {${rule.keys.join(",")}}`,
+        );
+        return null;
+      }
+      const resolved = rule.resolve(specs);
       if (resolved === null) return null;
 
       // An empty vocabulary (correct score) accepts every code the rule produces.

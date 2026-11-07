@@ -10,7 +10,9 @@
  * Lines come from the shared specifier readers (`readLine`, `readTotalLine`,
  * `readEuropeanHandicap`), never from `Number(raw)`. A reader that returns null skips the
  * market: a missing market beats a wrong line. A specifier with keys its market does not
- * define (a time window, say) is a different bet and is skipped too.
+ * define (a time window, say) is a different bet and is skipped too. Each rule names those
+ * keys (`keys`), so `findSpecifierKeyMismatches` can report such a skip: it is the one skip
+ * the evidence never shows, and it can take a whole family of lines with it.
  *
  * Plan: docs/superpowers/plans/2026-11-06-scraper-recovery/betby-betters-lebull.md, the
  * "Phase 1" table under Observations.
@@ -19,6 +21,7 @@ import {
   classifyLine,
   formatLine,
   formatSignedLine,
+  parseSpecifiers,
   readEuropeanHandicap,
   readLine,
   readTotalLine,
@@ -28,6 +31,8 @@ import type { NormalizedMarketType } from "../types.js";
 export interface BetbyMarketRule {
   /** Every catalog code `resolve` can return. */
   codes: NormalizedMarketType[];
+  /** The specifier keys the market defines. `resolve` skips a specifier with any other key set. */
+  keys: readonly string[];
   /** The code and line for one parsed specifier string, or null to skip the market. */
   resolve(specs: Record<string, string>): { code: NormalizedMarketType; paramValue?: string } | null;
   /** The selection code for one outcome, or null to drop the outcome. */
@@ -35,11 +40,23 @@ export interface BetbyMarketRule {
 }
 
 type Outcome = BetbyMarketRule["outcome"];
+type Resolved = ReturnType<BetbyMarketRule["resolve"]>;
 
 /** True when the specifier carries exactly these keys and no other. */
 function hasExactKeys(specs: Record<string, string>, keys: readonly string[]): boolean {
   const present = Object.keys(specs);
   return present.length === keys.length && keys.every((k) => Object.hasOwn(specs, k));
+}
+
+/** A rule whose `resolve` runs `read` only on a specifier with exactly `keys`. */
+function keyed(
+  keys: readonly string[],
+  codes: NormalizedMarketType[],
+  outcome: Outcome,
+  read: (specs: Record<string, string>) => Resolved,
+): BetbyMarketRule {
+  const own = Object.freeze([...keys]);
+  return { codes, keys: own, outcome, resolve: (specs) => (hasExactKeys(specs, own) ? read(specs) : null) };
 }
 
 /** Outcome id -> selection code. A Map, so an id such as `constructor` is never found on a prototype. */
@@ -80,35 +97,25 @@ const EXACT_GOALS_BY_ID: Outcome = (externalId) => {
 
 /** A market without specifiers. */
 function plain(code: NormalizedMarketType, outcome: Outcome): BetbyMarketRule {
-  return { codes: [code], resolve: (specs) => (hasExactKeys(specs, []) ? { code } : null), outcome };
+  return keyed([], [code], outcome, () => ({ code }));
 }
 
 /** `total=<line>`: half lines go to `halfCode`, whole and quarter lines (push, split) to `asianCode`. */
 function total(halfCode: NormalizedMarketType, asianCode: NormalizedMarketType): BetbyMarketRule {
-  return {
-    codes: [halfCode, asianCode],
-    resolve(specs) {
-      if (!hasExactKeys(specs, ["total"])) return null;
-      const line = readTotalLine(specs.total);
-      if (line === null) return null;
-      return { code: classifyLine(line) === "half" ? halfCode : asianCode, paramValue: formatLine(line) };
-    },
-    outcome: OVER_UNDER,
-  };
+  return keyed(["total"], [halfCode, asianCode], OVER_UNDER, (specs) => {
+    const line = readTotalLine(specs.total);
+    if (line === null) return null;
+    return { code: classifyLine(line) === "half" ? halfCode : asianCode, paramValue: formatLine(line) };
+  });
 }
 
 /** `total=<line>`, half lines only: the code has no push or split settlement. */
 function halfLineTotal(code: NormalizedMarketType, outcome: Outcome): BetbyMarketRule {
-  return {
-    codes: [code],
-    resolve(specs) {
-      if (!hasExactKeys(specs, ["total"])) return null;
-      const line = readTotalLine(specs.total);
-      if (line === null || classifyLine(line) !== "half") return null;
-      return { code, paramValue: formatLine(line) };
-    },
-    outcome,
-  };
+  return keyed(["total"], [code], outcome, (specs) => {
+    const line = readTotalLine(specs.total);
+    if (line === null || classifyLine(line) !== "half") return null;
+    return { code, paramValue: formatLine(line) };
+  });
 }
 
 /**
@@ -117,38 +124,25 @@ function halfLineTotal(code: NormalizedMarketType, outcome: Outcome): BetbyMarke
  * ASIAN_HANDICAP); quarter lines are skipped.
  */
 function asianHandicap(code: NormalizedMarketType): BetbyMarketRule {
-  return {
-    codes: [code],
-    resolve(specs) {
-      if (!hasExactKeys(specs, ["hcp"])) return null;
-      const line = readLine(specs.hcp);
-      if (line === null || classifyLine(line) === "quarter") return null;
-      return { code, paramValue: formatSignedLine(line) };
-    },
-    outcome: HANDICAP,
-  };
+  return keyed(["hcp"], [code], HANDICAP, (specs) => {
+    const line = readLine(specs.hcp);
+    if (line === null || classifyLine(line) === "quarter") return null;
+    return { code, paramValue: formatSignedLine(line) };
+  });
 }
 
 /** `hcp=a:b`: the home side's goal start a-b, signed (`1:0` -> `+1`); a level start is skipped. */
 function europeanHandicap(code: NormalizedMarketType): BetbyMarketRule {
-  return {
-    codes: [code],
-    resolve(specs) {
-      if (!hasExactKeys(specs, ["hcp"])) return null;
-      const start = readEuropeanHandicap(specs.hcp);
-      return start === null ? null : { code, paramValue: formatSignedLine(start) };
-    },
-    outcome: EUROPEAN_HANDICAP,
-  };
+  return keyed(["hcp"], [code], EUROPEAN_HANDICAP, (specs) => {
+    const start = readEuropeanHandicap(specs.hcp);
+    return start === null ? null : { code, paramValue: formatSignedLine(start) };
+  });
 }
 
 /** UOF 8 `{goalnr}. gol`: only the first goal has a catalog code. */
-const FIRST_GOAL: BetbyMarketRule = {
-  codes: ["FIRST_TEAM_TO_SCORE"],
-  resolve: (specs) =>
-    hasExactKeys(specs, ["goalnr"]) && specs.goalnr === "1" ? { code: "FIRST_TEAM_TO_SCORE" } : null,
-  outcome: TEAM_TO_SCORE,
-};
+const FIRST_GOAL = keyed(["goalnr"], ["FIRST_TEAM_TO_SCORE"], TEAM_TO_SCORE, (specs) =>
+  specs.goalnr === "1" ? { code: "FIRST_TEAM_TO_SCORE" } : null,
+);
 
 const GOAL_RANGE_VARIANT = "sr:goal_range:7+";
 
@@ -156,17 +150,17 @@ const GOAL_RANGE_VARIANT = "sr:goal_range:7+";
  * UOF 25 "Przedział goli", only the `sr:goal_range:7+` variant, by outcome id. The names are
  * not trusted: in the same description the `bb:goal_range:11+` variant calls `…:0-2` "0-1 goli".
  */
-const GOAL_RANGE: BetbyMarketRule = {
-  codes: ["GOAL_RANGE"],
-  resolve: (specs) =>
-    hasExactKeys(specs, ["variant"]) && specs.variant === GOAL_RANGE_VARIANT ? { code: "GOAL_RANGE" } : null,
-  outcome: byId({
+const GOAL_RANGE = keyed(
+  ["variant"],
+  ["GOAL_RANGE"],
+  byId({
     [`${GOAL_RANGE_VARIANT}:1342`]: "0-1",
     [`${GOAL_RANGE_VARIANT}:1343`]: "2-3",
     [`${GOAL_RANGE_VARIANT}:1344`]: "4-6",
     [`${GOAL_RANGE_VARIANT}:1345`]: "7+",
   }),
-};
+  (specs) => (specs.variant === GOAL_RANGE_VARIANT ? { code: "GOAL_RANGE" } : null),
+);
 
 /** The 36 phase-1 UOF market ids. Any other id normalizes to null (a hidden OTHER row). */
 export const BETBY_MARKET_RULES: Readonly<Record<string, BetbyMarketRule>> = Object.freeze({
@@ -250,3 +244,40 @@ export const BETBY_MARKET_RULES: Readonly<Record<string, BetbyMarketRule>> = Obj
   "25": GOAL_RANGE,
   "50063": plain("EXACT_GOALS", EXACT_GOALS_BY_ID),
 });
+
+/** The rule for a UOF market id, string or number, or null. Own keys only: `constructor` has no rule. */
+export function betbyRuleFor(marketId: string | number | undefined): BetbyMarketRule | null {
+  if (marketId === undefined) return null;
+  const id = String(marketId);
+  return Object.hasOwn(BETBY_MARKET_RULES, id) ? BETBY_MARKET_RULES[id] : null;
+}
+
+/** True when a parsed specifier carries exactly the keys `rule` defines. */
+export function hasRuleKeys(rule: BetbyMarketRule, specs: Record<string, string>): boolean {
+  return hasExactKeys(specs, rule.keys);
+}
+
+/** A market pair as the smoke output prints it: `18[total=2.5]`, `1[]`. */
+export function marketPairLabel(marketId: string | number, specifier: string | undefined): string {
+  return `${marketId}[${specifier ?? ""}]`;
+}
+
+/**
+ * Every pair whose market id has a phase-1 rule but whose specifier key set is not the one that
+ * rule defines (`18[total=2.5|type=x]`, `18[]`), in input order. The normalizer skips such a
+ * pair, so a whole family (the nine TOTAL_GOALS lines of 18, say) can vanish while the match
+ * still clears a market-count floor. A Betby smoke run is meant to fail on any entry here.
+ * Pairs the rules skip by design (`19[total=1]`, `8[goalnr=2]`, a goal-range variant other
+ * than `sr:goal_range:7+`) and ids without a rule are not reported.
+ */
+export function findSpecifierKeyMismatches(
+  markets: Iterable<{ bookmakerMarketId?: string | number; paramValue?: string }>,
+): string[] {
+  const found: string[] = [];
+  for (const m of markets) {
+    const rule = betbyRuleFor(m.bookmakerMarketId);
+    if (rule === null || hasRuleKeys(rule, parseSpecifiers(m.paramValue ?? ""))) continue;
+    found.push(marketPairLabel(String(m.bookmakerMarketId), m.paramValue));
+  }
+  return found;
+}

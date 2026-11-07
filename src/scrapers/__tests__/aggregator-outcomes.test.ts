@@ -134,6 +134,11 @@ describe("runAllFullOfferScrapers: honest outcomes", () => {
     expect(logged(errorSpy)).toContain(
       `[Aggregator/FullOffer] forbet persist_failed: 20 matches, 20 markets found, 0 saved - ${FORBET_ERR}`,
     );
+    expect(logged(logSpy)).toMatch(
+      new RegExp(
+        `\\[Aggregator/FullOffer\\] Run ${r.runId} completed in \\d+ms: 0 ok, 1 failed, 20 matches, 20 markets found, 0 saved`,
+      ),
+    );
   });
 
   it("logs the scraper's error text", async () => {
@@ -253,10 +258,44 @@ describe("runAllFullOfferScrapers: honest outcomes", () => {
     expect(r.outcomes[0]).toMatchObject({
       status: "persist_failed",
       matchesFound: 20,
+      marketsFound: 20,
       marketsSaved: 0,
       error: "Save failed: Cannot read properties of undefined (reading 'length')",
     });
-    expect(r.results.get("lvbet")?.success).toBe(true);
+    expect(r.summary).toMatchObject({ successCount: 0, errorCount: 1, totalMarketsSaved: 0 });
+  });
+
+  it("keeps the pre-outcomes back-compat view of a save that throws: a failed result, outside the scrape totals", async () => {
+    // A throw can stop normalizeAndSaveMatches half way through replacing match.markets,
+    // so these matches must not feed the post-normalization totals (base behaviour).
+    scrapers.lvbet.scrapeFullOffer.mockResolvedValueOnce({
+      success: true,
+      bookmaker: "lvbet",
+      league: "premier-league",
+      matches: freshMatches(20, 2),
+      duration: 31_000,
+    });
+    save.mockRejectedValueOnce(new Error("Cannot read properties of undefined (reading 'length')"));
+    scrapers.sts.scrapeFullOffer.mockResolvedValueOnce({
+      success: true,
+      bookmaker: "sts",
+      league: "premier-league",
+      matches: twenty,
+    });
+    save.mockResolvedValueOnce(saved(5130));
+
+    const r = await runAllFullOfferScrapers("premier-league", ["lvbet", "sts"]);
+
+    expect(r.results.get("lvbet")).toMatchObject({
+      success: false,
+      matches: [],
+      error: "Save failed: Cannot read properties of undefined (reading 'length')",
+    });
+    expect(r.results.get("sts")).toMatchObject({ success: true, matches: twenty });
+    expect(r.allMatches).toHaveLength(20);
+    expect(r.summary).toMatchObject({ totalMatchesFound: 20, totalMarketsFound: 20, totalMarketsSaved: 5130 });
+    // The outcome still describes what was scraped and why nothing was saved.
+    expect(r.outcomes[0]).toMatchObject({ status: "persist_failed", matchesFound: 20, marketsFound: 40, durationMs: 31_000 });
   });
 
   it("keeps every outcome when one scraper's cleanup throws", async () => {

@@ -2,6 +2,7 @@ import type { PolishBookmaker } from "../config/index.js";
 import { runAllScrapers, runAllFullOfferScrapers, closeAllBrowsers, type AggregatedResult } from "../scrapers/aggregator.js";
 import { insertScraperRuns } from "../repositories/scraper-run-repository.js";
 import { scraperHealth } from "./scraper-health.js";
+import { isOkRunStatus } from "./run-outcome.js";
 
 export interface ScrapeResult {
   runId: string;
@@ -46,17 +47,13 @@ export async function runScrapeAndPersist(
       `${matchesWithFullOffer} matches, ${fullOfferMarketsScraped} markets`
     );
 
-    for (const [bookmaker, result] of fullOfferResult.results) {
-      scraperHealth.recordRun(
-        bookmaker,
-        result.success,
-        result.duration ?? 0,
-        result.error
-      );
-
-      if (!result.success && result.error) {
-        errors.push(`${bookmaker}: ${result.error}`);
-      }
+    // Health and errors[] follow the classified outcomes, not results[bm].success: a
+    // bookmaker that scraped matches but saved nothing (persist_failed) or found none
+    // (empty) is a failure, and its save error is reported.
+    for (const o of fullOfferResult.outcomes) {
+      const ok = isOkRunStatus(o.status);
+      scraperHealth.recordRun(o.bookmaker, ok, o.durationMs, o.error ?? undefined);
+      if (!ok && o.error) errors.push(`${o.bookmaker}: ${o.error}`);
     }
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : "Unknown error";

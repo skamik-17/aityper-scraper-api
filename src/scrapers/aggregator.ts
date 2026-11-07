@@ -211,7 +211,10 @@ export interface FullOfferAggregatedResult {
   startedAt: Date;
   completedAt: Date;
   totalDuration: number;
-  /** Raw scraper results, kept for back-compat. Use `outcomes` for run status. */
+  /**
+   * Scraper results, kept for back-compat (a save that threw reads as success:false, as before).
+   * Use `outcomes` for run status: a result can say success while nothing was saved.
+   */
   results: Map<PolishBookmaker, FullOfferScraperResult>;
   allMatches: FullMatchOffer[];
   /** One classified outcome per bookmaker, in targetBookmakers order. */
@@ -252,6 +255,8 @@ function logOutcome(o: BookmakerRunOutcome): void {
 /**
  * Scrape, normalize and save one bookmaker, then classify the pair.
  * A thrown scraper becomes scrape_failed, a thrown save persist_failed.
+ * The returned `result` is the back-compat view kept in `results`: a thrown
+ * save reads as a failed result there, as it did before outcomes existed.
  */
 async function runFullOfferForBookmaker(
   runId: string,
@@ -262,6 +267,7 @@ async function runFullOfferForBookmaker(
   const scraper = SCRAPERS[bookmaker];
   let result: FullOfferScraperResult;
   let save: NormalizeAndSaveResult | null = null;
+  let saveThrew: string | null = null;
   let marketsFound = 0;
 
   if (!scraper) {
@@ -284,7 +290,8 @@ async function runFullOfferForBookmaker(
         save = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
       } catch (error) {
         console.error(`[Aggregator/FullOffer] ${bookmaker} save threw:`, error);
-        save = { matchesProcessed: 0, marketsNormalized: 0, marketsSaved: 0, errors: [`Save failed: ${errorMessage(error)}`] };
+        saveThrew = `Save failed: ${errorMessage(error)}`;
+        save = { matchesProcessed: 0, marketsNormalized: 0, marketsSaved: 0, errors: [saveThrew] };
       }
     }
   }
@@ -314,6 +321,14 @@ async function runFullOfferForBookmaker(
     durationMs: result.duration ?? finishedAt.getTime() - startedAt.getTime(),
   };
   logOutcome(outcome);
+
+  // Back-compat for `results` and the scrape totals: before outcomes existed, a thrown save
+  // turned into a failed result, so its matches stayed out of allMatches/totalMarketsFound.
+  // Keep that: the throw can stop normalizeAndSaveMatches half way through replacing
+  // match.markets, so those matches would mix raw and normalized market counts.
+  if (saveThrew !== null) {
+    return { result: { ...result, success: false, matches: [], error: saveThrew }, outcome };
+  }
   return { result, outcome };
 }
 

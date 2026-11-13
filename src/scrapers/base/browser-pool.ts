@@ -11,152 +11,157 @@ export const BROWSER_ARGS: readonly string[] = [
   "--disable-site-isolation-trials",
 ];
 
-class BrowserPool {
-  private pool: Browser[] = [];
-  private available: Browser[] = [];
-  private maxSize: number;
-  private waiting: Array<(browser: Browser) => void> = [];
-  private isClosing = false;
-  private pendingCreations = 0; // Track browsers being created
+export type BrowserLauncher = () => Promise<Browser>;
 
-  constructor(maxSize = 4) {
-    this.maxSize = maxSize;
-  }
+interface Waiter {
+  /** A browser to use, or null: "a slot may be free now, try again". */
+  resolve(browser: Browser | null): void;
+  reject(error: Error): void;
+}
+
+export class BrowserPool {
+  private pool: Browser[] = []; // launched and not closed
+  private leased = new Set<Browser>();
+  private waiting: Waiter[] = [];
+  private pendingCreations = 0;
+  private isClosing = false;
+  private generation = 0; // bumped by closeAll, so a launch that finishes later is discarded
+
+  constructor(
+    private readonly maxSize = 4,
+    private readonly launch: BrowserLauncher = () => chromium.launch({ headless: true, args: [...BROWSER_ARGS] }),
+  ) {}
 
   /**
-   * Acquire a browser from the pool
-   * Returns an existing available browser or creates a new one if pool not full
-   * Waits if all browsers are in use and pool is at max capacity
+   * Acquire a browser. Launches one while the pool has room, otherwise waits
+   * for a release. Every waiter is settled: it gets a browser, retries when a
+   * slot frees up, or is rejected by closeAll.
    */
   async acquire(): Promise<Browser> {
-    // Don't allow acquisition while closing
-    if (this.isClosing) {
-      throw new Error("Browser pool is closing, cannot acquire new browser");
-    }
-
-    // Return available browser if exists
-    if (this.available.length > 0) {
-      const browser = this.available.pop()!;
-      // Check if browser is still connected
-      if (browser.isConnected()) {
-        console.log(`[BrowserPool] Reusing browser (${this.available.length} available, ${this.pool.length} total)`);
-        return browser;
+    for (;;) {
+      if (this.isClosing) {
+        throw new Error("Browser pool is closing, cannot acquire new browser");
       }
-      // Browser disconnected, remove from pool and try again
-      this.pool = this.pool.filter(b => b !== browser);
-      return this.acquire();
-    }
 
-    // Create new browser if pool not full (including pending creations)
-    if (this.pool.length + this.pendingCreations < this.maxSize) {
-      this.pendingCreations++;
-      console.log(`[BrowserPool] Creating new browser (${this.pool.length + this.pendingCreations}/${this.maxSize})`);
-      try {
-        const browser = await chromium.launch({
-          headless: true,
-          args: [...BROWSER_ARGS],
-        });
+      if (this.pool.length + this.pendingCreations < this.maxSize) {
+        const generation = this.generation;
+        this.pendingCreations++;
+        console.log(`[BrowserPool] Creating new browser (${this.pool.length + this.pendingCreations}/${this.maxSize})`);
+        let browser: Browser;
+        try {
+          browser = await this.launch();
+        } catch (error) {
+          this.wakeOne();
+          throw error;
+        } finally {
+          this.pendingCreations--;
+        }
+        if (generation !== this.generation || this.isClosing) {
+          browser.close().catch(() => {});
+          throw new Error("Browser pool closed while launching a browser");
+        }
         this.pool.push(browser);
+        this.leased.add(browser);
         return browser;
-      } finally {
-        this.pendingCreations--;
       }
-    }
 
-    // Wait for available browser
-    console.log(`[BrowserPool] Pool full, waiting for available browser...`);
-    return new Promise((resolve) => {
-      this.waiting.push(resolve);
-    });
+      console.log(`[BrowserPool] Pool full, waiting for available browser...`);
+      const handed = await new Promise<Browser | null>((resolve, reject) => {
+        this.waiting.push({ resolve, reject });
+      });
+      if (handed) return handed;
+    }
   }
 
   /**
-   * Release a browser back to the pool
+   * Return a browser. It goes to the oldest waiter, or is closed when nobody
+   * waits (an idle browser would otherwise hold its memory until closeAll).
    */
   release(browser: Browser): void {
-    if (this.isClosing) {
-      // If closing, just close the browser
-      browser.close().catch(() => {});
+    if (!this.leased.delete(browser)) {
+      console.warn("[BrowserPool] Ignoring release of a browser that is not leased");
       return;
     }
 
-    // Check if browser is still valid
-    if (!browser.isConnected()) {
-      this.pool = this.pool.filter(b => b !== browser);
-      console.log(`[BrowserPool] Browser disconnected, removed from pool (${this.pool.length} total)`);
+    if (this.isClosing || !browser.isConnected()) {
+      this.drop(browser);
+      this.wakeOne();
       return;
     }
 
-    // If someone is waiting, give them the browser directly
-    if (this.waiting.length > 0) {
-      const resolve = this.waiting.shift()!;
+    const waiter = this.waiting.shift();
+    if (waiter) {
+      this.leased.add(browser);
       console.log(`[BrowserPool] Giving browser to waiting request`);
-      resolve(browser);
+      waiter.resolve(browser);
       return;
     }
 
-    // Otherwise add to available pool
-    this.available.push(browser);
-    console.log(`[BrowserPool] Browser released (${this.available.length} available, ${this.pool.length} total)`);
+    this.drop(browser);
+    console.log(`[BrowserPool] Closing released browser (no waiters, ${this.pool.length} total)`);
   }
 
   /**
    * Remove a browser from the pool (when it's known to be invalid)
    */
   remove(browser: Browser): void {
-    this.pool = this.pool.filter(b => b !== browser);
-    this.available = this.available.filter(b => b !== browser);
+    this.leased.delete(browser);
+    this.drop(browser);
     console.log(`[BrowserPool] Browser removed from pool (${this.pool.length} total)`);
-    browser.close().catch(() => {});
+    this.wakeOne();
   }
 
   /**
-   * Close all browsers in the pool
-   * Should be called at the end of a scraping cycle
+   * Close all browsers and reject every pending waiter.
+   * Should be called at the end of a scraping cycle.
    */
   async closeAll(): Promise<void> {
     this.isClosing = true;
+    this.generation++;
 
-    // Reject any waiting requests
-    for (const resolve of this.waiting) {
-      // This will cause the waiting promise to resolve with a closed browser
-      // which will throw an error - but that's better than hanging forever
-    }
+    const waiters = this.waiting;
     this.waiting = [];
+    for (const waiter of waiters) {
+      waiter.reject(new Error("Browser pool closed while waiting for a browser"));
+    }
 
     console.log(`[BrowserPool] Closing all ${this.pool.length} browsers`);
 
-    // Close all browsers
-    const closePromises = this.pool.map(async (browser) => {
-      try {
-        if (browser.isConnected()) {
-          await browser.close();
+    await Promise.all(
+      this.pool.map(async (browser) => {
+        try {
+          if (browser.isConnected()) {
+            await browser.close();
+          }
+        } catch (error) {
+          console.error("[BrowserPool] Error closing browser:", error);
         }
-      } catch (error) {
-        console.error("[BrowserPool] Error closing browser:", error);
-      }
-    });
+      }),
+    );
 
-    await Promise.all(closePromises);
-
-    // Reset state
     this.pool = [];
-    this.available = [];
+    this.leased.clear();
     this.isClosing = false;
 
     console.log("[BrowserPool] All browsers closed");
   }
 
   /**
-   * Get current pool statistics
+   * Get current pool statistics. Idle browsers are closed on release, so
+   * `available` is always 0.
    */
   getStats(): { total: number; available: number; inUse: number; waiting: number } {
-    return {
-      total: this.pool.length,
-      available: this.available.length,
-      inUse: this.pool.length - this.available.length,
-      waiting: this.waiting.length,
-    };
+    return { total: this.pool.length, available: 0, inUse: this.leased.size, waiting: this.waiting.length };
+  }
+
+  private drop(browser: Browser): void {
+    this.pool = this.pool.filter((b) => b !== browser);
+    browser.close().catch(() => {});
+  }
+
+  /** Let one waiter retry: a slot may have freed up. */
+  private wakeOne(): void {
+    this.waiting.shift()?.resolve(null);
   }
 }
 

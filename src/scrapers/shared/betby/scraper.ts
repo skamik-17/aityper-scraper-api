@@ -1,3 +1,25 @@
+/**
+ * Browserless scraper for the Betby (bettech, Sportradar UOF) brands betters and lebull.
+ *
+ * It still extends PlaywrightScraper, because the aggregator, the audit tooling and the
+ * scripts all address scrapers through that class, but it never opens a browser: every
+ * method reads the prematch snapshot, the event endpoint and the market descriptions over
+ * plain HTTP through BetbyClient.
+ *
+ * Per league: the snapshot lists the upcoming matches with their listing markets (1, 10,
+ * 16, 18). The event endpoint then gives each match its full market list. A match the
+ * event endpoint has no payload for (or one naming other teams) keeps its listing markets,
+ * so one withdrawn or thin far event never costs the run. A match whose event request
+ * itself failed is skipped instead (a listing write would replace its full offer); two
+ * consecutive failures stop the scrape, and more than MAX_SKIPPED_DETAIL_RATIO failed
+ * requests fail it, both with nothing written.
+ *
+ * Betby ids are 19-digit strings above 2^53 and stay strings here (matchId, eventId,
+ * tournament id, deep links).
+ *
+ * Each scrapeFullOffer runs under a ScrapeBudget (BETBY_BUDGET_MS unless the caller passes
+ * one). A budget abort fails the scrape with nothing written: no listing fallback then.
+ */
 
 import { getBookmakerLeagueId } from "../../../config/leagues.js";
 import type { FullMatchOffer, FullOfferScraperResult } from "../../../types/full-offer.js";
@@ -42,7 +64,7 @@ export interface BetbyRunStats {
 }
 
 /** What the event endpoint gave for one match: a payload, no payload (listing fallback), or a failed request. */
-type FullEventOutcome = { event: BetbyEvent } | { none: string } | { failed: string }; // over, under
+type FullEventOutcome = { event: BetbyEvent } | { none: string } | { failed: string };
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);

@@ -1,3 +1,16 @@
+/**
+ * forBET Playwright Scraper
+ *
+ * Main entry point implementing the PlaywrightScraper interface.
+ * Uses network interception to fetch odds directly from forBET API.
+ *
+ * Architecture:
+ * - index.ts (this file): Orchestration and interface implementation
+ * - navigation.ts: Playwright browser interactions
+ * - parser.ts: Pure data transformation logic
+ * - types.ts: Internal type definitions
+ * - constants.ts: URLs, IDs, and configuration
+ */
 
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";

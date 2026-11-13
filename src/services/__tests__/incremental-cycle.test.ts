@@ -248,4 +248,18 @@ describe("incremental ticks in hourly units (Review Focus 6)", () => {
     });
     expect(incrementalHourLedger.take("forbet", PL)).toEqual({ passes: 0, failedPasses: 0, firstError: null });
   });
+
+  it("an admin run (no modes) leaves the hour's incremental failures to the next hourly outcome", async () => {
+    m.scrapers.forbet.listEvents.mockRejectedValueOnce(new Error("fetch HTTP 503 https://api.example/list"));
+    await incrementalTick();
+    m.scrapers.forbet.listEvents.mockResolvedValue([refOf("forbet", 0)]);
+    // Admin: recordOutcomes absent, no modes
+    await runScrapeCycle([PL], ["forbet"], { closeBrowsers: false });
+    const [admin] = m.insertOutcomes.mock.calls[0][0] as Array<{ status: string; error: string | null }>;
+    expect(admin.error ?? "").not.toContain("incremental passes this hour failed");
+    // The hourly tick still reports the hour's failure
+    await runScrapeCycle([PL], ["forbet"], { modes: { forbet: "incremental" }, recordOutcomes: true, closeBrowsers: false });
+    const [hourly] = m.insertOutcomes.mock.calls[1][0] as Array<{ status: string; error: string | null }>;
+    expect(hourly.error).toContain("1 of 1 incremental passes this hour failed | fetch HTTP 503 https://api.example/list");
+  });
 });

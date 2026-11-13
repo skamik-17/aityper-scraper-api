@@ -1,3 +1,17 @@
+/**
+ * Totalbet scraper (UUID "dealer" API)
+ *
+ * Plain HTTP, no browser: one league list request, then one event-detail request
+ * per listed event, at most TOTALBET_DETAIL_CONCURRENCY at once, all under one
+ * scrape budget (TOTALBET_BUDGET_MS unless the caller passes one). The class still extends
+ * PlaywrightScraper only for the shared scraper interface (aggregator, audit tools);
+ * it never opens a browser.
+ *
+ * League category UUIDs come from src/config/leagues.ts. Every failure is reported
+ * in the result's error string. A match whose detail failed is skipped, never written
+ * with its list 1X2: a 1X2-only write would replace the match's full offer. More than
+ * MAX_SKIPPED_DETAIL_RATIO failed details fail the run, with nothing written.
+ */
 
 import type { PolishBookmaker } from "../../../config/index.js";
 import { getBookmakerLeagueId } from "../../../config/leagues.js";

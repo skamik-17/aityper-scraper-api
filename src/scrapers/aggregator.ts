@@ -174,12 +174,6 @@ function logOutcome(o: BookmakerRunOutcome): void {
   else console.log(line);
 }
 
-/**
- * Scrape, normalize and save one bookmaker, then classify the pair.
- * A thrown scraper becomes scrape_failed, a thrown save persist_failed.
- * The returned `result` is the back-compat view kept in `results`: a thrown
- * save reads as a failed result there, as it did before outcomes existed.
- */
 /** One unit's result; `outcome` is null on an incremental tick (plan 10: outcomes stay hourly). */
 interface UnitRun {
   bookmaker: PolishBookmaker;
@@ -187,6 +181,12 @@ interface UnitRun {
   outcome: BookmakerRunOutcome | null;
 }
 
+/**
+ * Scrape, normalize and save one bookmaker, then classify the pair.
+ * A thrown scraper becomes scrape_failed, a thrown save persist_failed.
+ * The returned `result` is the back-compat view kept in `results`: a thrown
+ * save reads as a failed result there, as it did before outcomes existed.
+ */
 async function runFullOfferForBookmaker(
   runId: string,
   bookmaker: PolishBookmaker,
@@ -197,6 +197,9 @@ async function runFullOfferForBookmaker(
   const startedAt = new Date();
   const scraper = SCRAPERS[bookmaker];
   const recordOutcomes = unit.recordOutcomes !== false;
+  // Only a tick-planned run (modes set) owns the hour's incremental ledger; an admin or startup
+  // run (no modes) must leave it to the next hourly outcome
+  const takesHour = recordOutcomes && unit.mode !== undefined;
   let result: FullOfferScraperResult;
   let save: NormalizeAndSaveResult | null = null;
   let record: FinalizeResult = null;
@@ -264,7 +267,7 @@ async function runFullOfferForBookmaker(
   let classified: { status: BookmakerRunOutcome["status"]; error: string | null; matchesFound: number; marketsSaved: number };
   if (pass) {
     // Hourly tick: the hour's incremental passes are folded into this outcome; other ticks only note the pass
-    const hour = recordOutcomes ? incrementalHourLedger.take(bookmaker, league) : { passes: 0, failedPasses: 0, firstError: null };
+    const hour = takesHour ? incrementalHourLedger.take(bookmaker, league) : { passes: 0, failedPasses: 0, firstError: null };
     const c = classifyIncrementalOutcome(pass, save, record, hour);
     if (!recordOutcomes) incrementalHourLedger.note(bookmaker, league, pass);
     classified = { status: c.status, error: c.error, matchesFound: c.matchesFound, marketsSaved: c.marketsSaved };
@@ -273,7 +276,7 @@ async function runFullOfferForBookmaker(
     classified = { ...c, matchesFound: result.matches.length, marketsSaved: save?.marketsSaved ?? 0 };
     if (incrementalUnit && !recordOutcomes) {
       incrementalHourLedger.noteFailure(bookmaker, league, c.error ?? "incremental pass returned no result");
-    } else if (incrementalUnit) {
+    } else if (incrementalUnit && takesHour) {
       // The hourly outcome still accounts for the hour's incremental passes
       const hour = incrementalHourLedger.take(bookmaker, league);
       if (hour.failedPasses > 0) {
@@ -402,15 +405,15 @@ export interface FullOfferCycleRequest {
   recordOutcomes?: boolean;
 }
 
+/** Bookmakers already told they keep the hourly full pass (once per process). */
+const warnedNotIncremental = new Set<PolishBookmaker>();
+
 /**
  * One scrape cycle over several leagues, bookmaker-major: one job per bookmaker walks
  * its supported leagues in order (one scraper, one browser at a time), browser jobs
  * capped and staggered, longest budgets first. Each league keeps its own run id,
  * Starting and completion lines and result; the map's key order is req.leagues.
  */
-/** Bookmakers already told they keep the hourly full pass (once per process). */
-const warnedNotIncremental = new Set<PolishBookmaker>();
-
 export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map<string, FullOfferAggregatedResult>> {
   const startedAt = new Date();
   // Plan 10: a scraper without the incremental contract keeps its full pass at the full

@@ -168,15 +168,19 @@ function reason(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-function buildSnapshot(
+/**
+ * Status and health of every configured bookmaker from already-read inputs.
+ * Exported so the route-test fixtures assemble the snapshot exactly as production does.
+ */
+export function buildSnapshot(
   source: BookmakerStatusSnapshot["source"],
   summaries: Map<PolishBookmaker, BookmakerRunSummary>,
   lastOddsAt: Map<PolishBookmaker, Date>,
   freshnessKnown: boolean,
   lastSuccessfulRunAt: string | null,
   now: Date,
+  staleAfter: number = staleAfterMs(CONFIG.SCRAPE_INTERVAL_MINUTES),
 ): BookmakerStatusSnapshot {
-  const staleAfter = staleAfterMs(CONFIG.SCRAPE_INTERVAL_MINUTES);
   const status = {} as Record<PolishBookmaker, BookmakerStatus>;
   const health = {} as Record<PolishBookmaker, BookmakerHealthMeta>;
 

@@ -152,7 +152,7 @@ See [`.env.example`](.env.example) for the full list. The required variables are
 - `npm run start`: Run the compiled production build.
 - `npm run test` / `npm run test:run`: Execute the test suite using Vitest.
 - `npm run test:coverage`: Generate a test coverage report.
-- `npm run db:migrate`: Apply pending migrations to the Supabase database.
+- `npm run db:migrate -- <file>`: Apply ONE migration from `supabase/migrations/` to the local Supabase database. `npm run db:migrate -- --all` re-runs every migration 01..N, only for a fresh or emptied database: it re-creates tables and re-seeds data, so never run it against a live database. Without an argument it prints the usage line and exits 2.
 
 ## Database
 The system leverages Supabase (PostgreSQL) with a highly optimized schema:
@@ -162,7 +162,7 @@ The system leverages Supabase (PostgreSQL) with a highly optimized schema:
 - **Optimized Views**:
     - `latest_odds`: Returns only the most recent odds for active matches.
     - `market_comparison`: Groups odds by market type across all bookmakers for side-by-side comparison.
-- **Migrations**: SQL migrations under `supabase/migrations/` manage the evolution of the schema; apply them with `npm run db:migrate`.
+- **Migrations**: SQL migrations under `supabase/migrations/` manage the evolution of the schema; apply a new one with `npm run db:migrate -- <file>` (`--all` only for a fresh or emptied database).
 
 ## Scheduler
 The `SchedulerService` manages background tasks:
@@ -175,7 +175,7 @@ The `SchedulerService` manages background tasks:
 ### Prerequisites
 - Node.js 20+
 - npm 10+
-- Supabase account and project (schema applied via `npm run db:migrate`)
+- Supabase account and project (schema applied via `npm run db:migrate -- --all` on a fresh database)
 - Playwright browsers (`npx playwright install chromium`)
 
 ### Installation
@@ -193,9 +193,9 @@ The `SchedulerService` manages background tasks:
     # Edit .env with your Supabase project, admin key, and the frontend's origin
     ```
 
-3.  Initialize the database:
+3.  Initialize the database (fresh database only; `--all` re-creates tables and re-seeds data, so never run it against a live database):
     ```bash
-    npm run db:migrate
+    npm run db:migrate -- --all
     npx tsx scripts/sync-market-types.ts   # populate market_types from the catalog
     ```
 

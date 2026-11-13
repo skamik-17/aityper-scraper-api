@@ -101,16 +101,22 @@ describe("POST /api/odds/batch meta", () => {
     expect(meta.bookmakerHealth.sts.lastSuccessAt).toBe("2026-11-06T16:02:49.798Z");
   });
 
-  it("a league whose fetch threw contributes nothing to the status maps", async () => {
-    m.getAllLatestOdds.mockImplementation(async (league: string) => {
-      if (league === "la-liga") throw new Error("statement timeout");
-      return leagueOdds(league);
-    });
-    const { meta } = await post(["premier-league", "la-liga"]);
-    expect(meta.bookmakerStatus.betcris).toBe("stale");
-    expect(meta.bookmakerHealth.betcris.status).toBe("stale");
-    expect(Object.keys(meta.bookmakerStatus)).toHaveLength(14);
-    expect(meta.lastUpdated).toBe("2026-11-06T16:02:49.798Z");
+  it("a league whose fetch threw contributes nothing to the status maps, and says why in the log", async () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      m.getAllLatestOdds.mockImplementation(async (league: string) => {
+        if (league === "la-liga") throw new Error("statement timeout");
+        return leagueOdds(league);
+      });
+      const { meta } = await post(["premier-league", "la-liga"]);
+      expect(meta.bookmakerStatus.betcris).toBe("stale");
+      expect(meta.bookmakerHealth.betcris.status).toBe("stale");
+      expect(Object.keys(meta.bookmakerStatus)).toHaveLength(14);
+      expect(meta.lastUpdated).toBe("2026-11-06T16:02:49.798Z");
+      expect(errorSpy.mock.calls).toEqual([["[Odds/batch] la-liga failed: statement timeout"]]);
+    } finally {
+      errorSpy.mockRestore();
+    }
   });
 
   it("lastUpdated is the newest per-league value over all requested leagues", async () => {

@@ -42,10 +42,21 @@ function summarizeErrors(errors: readonly string[]): string | null {
   return errors.length === 1 ? errors[0] : `${errors[0]} (+${errors.length - 1} more)`;
 }
 
+/** Error prefixes of the save stage in scrape-helpers.ts and the aggregator's thrown save. */
+const SAVE_STAGE_PREFIXES = ["Batch insert failed", "Batch save failed", "Save failed"];
+
+function isSaveStageError(error: string): boolean {
+  return SAVE_STAGE_PREFIXES.some((prefix) => error.startsWith(prefix));
+}
+
 /**
  * Rules, in order: scraper failed -> scrape_failed; 0 matches -> empty;
- * 0 markets saved -> persist_failed; saved with errors -> partial; else success.
+ * 0 markets saved -> persist_failed; saved with a save error or a scraper
+ * error -> partial; else success.
  * An empty scraper error string carries no cause, so it gets the default text.
+ * A successful scrape can still carry an error (betcris aborted part-way,
+ * totalbet detail failures or slug drift); that run is partial, so the text
+ * reaches scraper_runs and the health endpoint.
  */
 export function classifyBookmakerRun(
   scrape: Pick<FullOfferScraperResult, "success" | "matches" | "error">,
@@ -66,7 +77,11 @@ export function classifyBookmakerRun(
 
   const saveError = summarizeErrors(save.errors);
   if (save.marketsSaved === 0) {
-    if (saveError) return { status: "persist_failed", error: saveError };
+    // Nothing saved: the save-stage error is the cause, so it goes before the
+    // normalization errors that scrape-helpers pushes first.
+    const ordered = [...save.errors.filter(isSaveStageError), ...save.errors.filter((e) => !isSaveStageError(e))];
+    const cause = summarizeErrors(ordered);
+    if (cause) return { status: "persist_failed", error: cause };
     if (save.marketsNormalized === 0) {
       return { status: "persist_failed", error: `${matches} matches scraped but 0 markets normalized` };
     }
@@ -76,7 +91,9 @@ export function classifyBookmakerRun(
     };
   }
 
-  if (saveError) return { status: "partial", error: saveError };
+  if (scrape.error || saveError) {
+    return { status: "partial", error: [scrape.error, saveError].filter(Boolean).join(" | ") };
+  }
   return { status: "success", error: null };
 }
 
@@ -94,6 +111,19 @@ function fetchCause(details: unknown): string | null {
   const match = CAUSE_PATTERN.exec(details);
   if (!match) return null;
   return (match[1] ?? "").trim() || match[2] || null;
+}
+
+/** At most this many characters of a DB error message. */
+const MAX_DB_MESSAGE_CHARS = 300;
+
+/**
+ * The message on one line, at most MAX_DB_MESSAGE_CHARS long. postgrest-js puts
+ * the raw body in `message` when an error response is not JSON (a gateway's
+ * HTML 502), and its first line alone ("<html>") would drop the cause.
+ */
+function boundedMessage(message: unknown): string | null {
+  if (typeof message !== "string") return null;
+  return message.replace(/\s+/g, " ").trim().slice(0, MAX_DB_MESSAGE_CHARS) || null;
 }
 
 function firstLine(text: string): string | null {
@@ -116,7 +146,7 @@ export function formatDbError(error: unknown): string {
   if (typeof error !== "object") return String(error);
 
   const { message, details, code } = error as { message?: unknown; details?: unknown; code?: unknown };
-  const text = typeof message === "string" && message.length > 0 ? message : "Unknown database error";
+  const text = boundedMessage(message) ?? "Unknown database error";
 
   const cause = fetchCause(details);
   if (cause) return `${text} (${cause})`;

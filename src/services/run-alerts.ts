@@ -34,14 +34,25 @@ export function formatAbortAlert(league: string, reason: string): string {
   return `[ALERT] scrape run ABORTED for ${league}: database unreachable - ${reason}`;
 }
 
+/** The scrape run threw before any bookmaker outcome existed. */
+export function formatRunFailedAlert(league: string, reason: string): string {
+  return `[ALERT] ${league}: scrape run failed before any outcome - ${reason}`;
+}
+
 /**
  * Alert lines for one run, in this order:
  * - persist: bookmakers that scraped matches but saved nothing, every run;
- * - empty collapse: when at least half the bookmakers returned 0 matches, one
- *   league line replaces the streak lines of those empty bookmakers;
- * - per bookmaker of this run: a streak line when its failure streak reaches
- *   the threshold (once per streak), a resolved line when it is OK again after
- *   at least `threshold` failed runs.
+ * - empty collapse: when at least half the configured bookmakers returned 0
+ *   matches, one league line replaces the streak lines of those empty
+ *   bookmakers for this run;
+ * - per bookmaker of this run: a streak line at the first run whose failure
+ *   streak is at or above the threshold and not yet alerted, a resolved line
+ *   when it is OK again after at least `threshold` failed runs.
+ * `alertedStreaks` holds the streaks already alerted ("<league>|<bookmaker>")
+ * and is updated in place: a bookmaker's entry is added when its streak line
+ * fires and removed when it is OK again. A streak line held back by a
+ * collapse therefore fires on the next failed run. The state lives in memory,
+ * so after a restart an ongoing streak alerts once more.
  * Only bookmakers with an outcome in this run get per-bookmaker lines, so a
  * single-bookmaker run does not repeat another bookmaker's alert.
  */
@@ -50,8 +61,11 @@ export function buildRunAlerts(a: {
   outcomes: BookmakerRunOutcome[];
   summaries: Map<PolishBookmaker, BookmakerRunSummary>;
   threshold: number;
+  /** Configured bookmakers (CONFIG.BOOKMAKERS.length): a one-bookmaker run is not a collapse. */
+  bookmakerCount: number;
+  alertedStreaks: Set<string>;
 }): string[] {
-  const { league, outcomes, summaries, threshold } = a;
+  const { league, outcomes, summaries, threshold, bookmakerCount, alertedStreaks } = a;
   const lines: string[] = [];
 
   const notSaved = outcomes.filter((o) => o.status === "persist_failed");
@@ -63,10 +77,10 @@ export function buildRunAlerts(a: {
   }
 
   const empty = outcomes.filter((o) => o.status === "empty");
-  const collapse = empty.length > 0 && empty.length * 2 >= outcomes.length;
+  const collapse = empty.length > 0 && empty.length * 2 >= bookmakerCount;
   if (collapse) {
     lines.push(
-      `[ALERT] ${league}: ${empty.length}/${outcomes.length} bookmakers returned 0 matches - per-bookmaker alerts suppressed for this run`,
+      `[ALERT] ${league}: ${empty.length}/${bookmakerCount} bookmakers returned 0 matches - streak alerts of the empty bookmakers suppressed for this run`,
     );
   }
 
@@ -74,8 +88,14 @@ export function buildRunAlerts(a: {
     const s = summaries.get(o.bookmaker);
     if (!s) continue;
 
-    if (s.consecutiveFailures > 0 && s.consecutiveFailures === threshold) {
+    const key = `${league}|${o.bookmaker}`;
+    if (s.consecutiveFailures === 0) alertedStreaks.delete(key);
+
+    if (s.consecutiveFailures > 0 && s.consecutiveFailures >= threshold) {
+      if (alertedStreaks.has(key)) continue;
+      // Held back, not dropped: the next failed run of this streak alerts.
       if (collapse && o.status === "empty") continue;
+      alertedStreaks.add(key);
       lines.push(
         `[ALERT] ${o.bookmaker} (${league}) failed ${s.consecutiveFailures} consecutive runs since ${s.failingSince}: ${s.lastError}`,
       );

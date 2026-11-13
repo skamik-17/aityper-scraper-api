@@ -179,6 +179,28 @@ describe("runAllFullOfferScrapers: honest outcomes", () => {
     expect(r.summary).toMatchObject({ successCount: 2, totalMarketsSaved: 8280 });
   });
 
+  it("counts a partial save as OK, adds its saved markets and logs it as a warning", async () => {
+    const batchErr = "Batch insert failed (1 of 3 batches): TypeError: fetch failed (write EPIPE)";
+    scrapers.fortuna.scrapeFullOffer.mockResolvedValueOnce({
+      success: true,
+      bookmaker: "fortuna",
+      league: "premier-league",
+      matches: twenty,
+    });
+    save.mockResolvedValueOnce({ matchesProcessed: 20, marketsNormalized: 1300, marketsSaved: 500, errors: [batchErr] });
+
+    const r = await runAllFullOfferScrapers("premier-league", ["fortuna"]);
+
+    expect(r.outcomes[0]).toMatchObject({ bookmaker: "fortuna", status: "partial", marketsSaved: 500, error: batchErr });
+    expect(r.summary).toMatchObject({ successCount: 1, errorCount: 0, totalMarketsSaved: 500 });
+    const warned = warnSpy.mock.calls
+      .map((call: unknown[]) => String(call[0]))
+      .filter((l: string) => l.includes("fortuna partial"));
+    expect(warned).toHaveLength(1);
+    expect(warned[0].endsWith(` - ${batchErr}`)).toBe(true);
+    expect(logged(errorSpy)).not.toContain("fortuna");
+  });
+
   it("turns a thrown scraper into scrape_failed with the exception message", async () => {
     scrapers.sts.scrapeFullOffer.mockRejectedValueOnce(new Error("browserType.launch: Executable doesn't exist"));
 

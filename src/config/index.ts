@@ -23,6 +23,24 @@ export const ALL_POLISH_BOOKMAKERS = [
 // Type for all Polish bookmakers (used in type definitions)
 export type PolishBookmaker = (typeof ALL_POLISH_BOOKMAKERS)[number];
 
+const DEFAULT_ALERT_CONSECUTIVE_FAILURES = 3;
+
+/**
+ * ALERT_CONSECUTIVE_FAILURES as a positive integer. Unset or blank gives the
+ * default; any other value that is not a positive integer gives the default
+ * with one warning, because parseInt would turn it into NaN or 0 and silently
+ * disable every streak alert. Runs once, when CONFIG is built.
+ */
+function alertThreshold(raw: string | undefined): number {
+  const value = raw?.trim() ?? "";
+  if (value === "") return DEFAULT_ALERT_CONSECUTIVE_FAILURES;
+  if (/^\d+$/.test(value) && Number(value) >= 1) return Number(value);
+  console.warn(
+    `[Config] ALERT_CONSECUTIVE_FAILURES=${JSON.stringify(raw)} is not a positive integer, using ${DEFAULT_ALERT_CONSECUTIVE_FAILURES}`
+  );
+  return DEFAULT_ALERT_CONSECUTIVE_FAILURES;
+}
+
 export const CONFIG = {
   // Server
   PORT: parseInt(process.env.PORT || "3001"),
@@ -45,7 +63,7 @@ export const CONFIG = {
 
   // Alerts: a bookmaker alert fires once its failure streak reaches this many runs.
   // The webhook (Slack-compatible {"text": ...}) is off unless a URL is set.
-  ALERT_CONSECUTIVE_FAILURES: parseInt(process.env.ALERT_CONSECUTIVE_FAILURES || "3"),
+  ALERT_CONSECUTIVE_FAILURES: alertThreshold(process.env.ALERT_CONSECUTIVE_FAILURES),
   ALERT_WEBHOOK_URL: process.env.ALERT_WEBHOOK_URL || null,
 
   // Supported leagues

@@ -32,12 +32,14 @@ function parseArgs(argv: string[]): Args | null {
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i];
     const value = argv[i + 1];
+    // A flag is never a value: "--league --json" is a usage error, not the league "--json".
+    const hasValue = value !== undefined && !value.startsWith("--");
     if (flag === "--json") {
       args.json = true;
-    } else if (flag === "--league" && value !== undefined) {
+    } else if (flag === "--league" && hasValue) {
       args.league = value;
       i++;
-    } else if (flag === "--threshold" && value !== undefined) {
+    } else if (flag === "--threshold" && hasValue) {
       const n = Number(value);
       if (!Number.isInteger(n) || n < 1) return null;
       args.threshold = n;

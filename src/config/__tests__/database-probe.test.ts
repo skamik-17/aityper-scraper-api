@@ -29,7 +29,7 @@ let fake: ReturnType<typeof createFakeSupabase>;
 let errorSpy: ReturnType<typeof vi.spyOn>;
 let warnSpy: ReturnType<typeof vi.spyOn>;
 
-function useFake(respond: (q: RecordedQuery) => FakeResponse) {
+function useFake(respond: (q: RecordedQuery) => FakeResponse | Promise<FakeResponse>) {
   fake = createFakeSupabase(respond);
   db.client = fake.client;
 }
@@ -51,7 +51,31 @@ describe("probeDatabase", () => {
   it("is ok when PostgREST answers a market_types read", async () => {
     useFake(() => ({ data: [{ id: 1 }] }));
     expect(await probeDatabase()).toEqual({ ok: true });
-    expect(fake.queries).toEqual([{ table: "market_types", calls: [["select", "id"], ["limit", 1]] }]);
+    expect(fake.queries).toEqual([
+      { table: "market_types", calls: [["select", "id"], ["limit", 1], ["abortSignal", expect.any(AbortSignal)]] },
+    ]);
+  });
+
+  it("gives up on a PostgREST that never answers: the request is aborted after 5 s", { timeout: 3_000 }, async () => {
+    // Keep the 5 s contract visible but let the signal fire after 20 ms.
+    const realTimeout = AbortSignal.timeout.bind(AbortSignal);
+    const timeoutSpy = vi.spyOn(AbortSignal, "timeout").mockImplementation(() => realTimeout(20));
+    try {
+      // Never answers on its own. Like postgrest-js, it turns the aborted fetch into an error result.
+      useFake((q) => {
+        const signal = q.calls.find(([method]) => method === "abortSignal")?.[1] as AbortSignal | undefined;
+        return new Promise<FakeResponse>((resolve) => {
+          signal?.addEventListener("abort", () => {
+            const reason = signal.reason as Error;
+            resolve({ error: { message: `${reason.name}: ${reason.message}`, details: reason.stack ?? "", hint: "", code: "" } });
+          });
+        });
+      });
+      expect(await probeDatabase()).toEqual({ ok: false, error: "TimeoutError: The operation was aborted due to timeout" });
+      expect(timeoutSpy).toHaveBeenCalledWith(5000);
+    } finally {
+      timeoutSpy.mockRestore();
+    }
   });
 
   it("reports the formatted socket cause when the database is unreachable", async () => {

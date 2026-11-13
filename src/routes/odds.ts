@@ -218,12 +218,13 @@ router.post("/batch", asyncHandler(async (req, res) => {
   const oddsOptions = full ? {} : { onlyMarketKeys: MATCH_LIST_MARKET_KEYS };
 
   // Fetch all leagues in parallel. A league whose fetch threw contributes no
-  // matches and no status.
+  // matches and no status; the log says which league and why.
   const results = await Promise.all(
     leagues.map(async (league): Promise<LeagueOdds> => {
       try {
         return { league, ...(await getAllLatestOdds(league, oddsOptions)) };
       } catch (error) {
+        console.error(`[Odds/batch] ${league} failed: ${error instanceof Error ? error.message : String(error)}`);
         return { league, matches: [], lastUpdated: null, bookmakerStatus: {}, bookmakerHealth: {} };
       }
     })

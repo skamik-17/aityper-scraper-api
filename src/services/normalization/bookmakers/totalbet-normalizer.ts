@@ -5,13 +5,17 @@
  * market per market_uuid with a namespaced id: "mid:<UOF market_id>" for column
  * layouts and "slug:<component slug>" for line layouts, the line itself in
  * paramValue. This normalizer maps exactly the phase-1 keys below to catalog
- * codes, plus the id-less "Wynik meczu" by name. Everything else is OTHER: no
- * regex patterns, no legacy numeric ids, and no log line per unmapped market.
+ * codes, plus the id-less, line-less "Wynik meczu" by name. Everything else is
+ * OTHER: no regex patterns, no legacy numeric ids, and no log line per unmapped
+ * market.
  *
  * Integrity rules:
  * - a parameterized code needs a well-formed line, else the market is dropped
+ * - a handicap line read from the grid position must equal the line printed in
+ *   each selection ("Leeds (-1.5)", "remis (1:0)"), else the market is dropped
  * - sides come from Totalbet's labels against the context teams, never from a
  *   bare fuzzy team match; a label that matches both teams resolves to nothing
+ * - a team-scoped market whose displayed team is not its code's side is dropped
  * - a market whose selections resolve to the same code twice is dropped
  * - OTHER outputs keep raw.paramValue so each line stays its own storage row
  */
@@ -64,7 +68,7 @@ export const TOTALBET_MARKET_KEY_TO_CODE: Readonly<Record<string, NormalizedMark
   "slug:dokaadny_wynik": "CORRECT_SCORE", "slug:1_poaowa_dokaadny_wynik": "HALF_TIME_CORRECT_SCORE", "slug:2_poaowa_dokaadny_wynik": "SECOND_HALF_CORRECT_SCORE",
 });
 
-/** Id-less markets by normalizeMarketName(name): only the detail and list-fallback 1X2. */
+/** Id-less, line-less markets by normalizeMarketName(name): only the detail and list-fallback 1X2. */
 export const TOTALBET_MARKET_NAME_TO_CODE: Readonly<Record<string, NormalizedMarketType>> = Object.freeze({
   "wynik meczu": "MATCH_WINNER",
 });
@@ -98,6 +102,19 @@ const TEAM_COLUMN_SIDE: Readonly<Record<string, "HOME" | "AWAY">> = Object.freez
   "mid:97": "HOME", "mid:96": "AWAY",
 });
 
+/**
+ * The six team-total line components. Their keys are CMS slugs ("competitor1"),
+ * so the team in the displayed name, "[N. połowa - ]Leeds - Total (suma)", must
+ * be the code's side; otherwise the market is dropped rather than re-sided.
+ */
+const TEAM_TOTAL_SIDE: Readonly<Record<string, "HOME" | "AWAY">> = Object.freeze({
+  "slug:competitor1_total_suma": "HOME", "slug:competitor2_total_suma": "AWAY",
+  "slug:1_poaowa_competitor_1_suma_goli": "HOME", "slug:1_poaowa_competitor_2_suma_goli": "AWAY",
+  "slug:2_poaowa_competitor1_suma_goli_": "HOME", "slug:2_poaowa_competitor2_suma_goli_": "AWAY",
+});
+
+const TEAM_TOTAL_NAME = /^(?:\d\. połowa - )?(.+) - Total \(suma\)$/i;
+
 const SIDES_BY_FAMILY: Readonly<Partial<Record<Family, readonly Side[]>>> = Object.freeze({
   result: ["HOME", "DRAW", "AWAY"],
   twoWay: ["HOME", "AWAY"],
@@ -107,6 +124,9 @@ const SIDES_BY_FAMILY: Readonly<Partial<Record<Family, readonly Side[]>>> = Obje
 
 const TOTAL_LINE = /^\d+\.5$/;
 const ASIAN_LINE = /^[+-]\d+(\.\d+)?$/;
+/** The line a handicap selection carries in its own name: "Leeds (-1.5)", "remis (1:0)". */
+const SELECTION_ASIAN_LINE = /\(([+-]?\d+(?:\.\d+)?)\)$/;
+const SELECTION_SCORE = /\((\d+:\d+)\)$/;
 const MIN_TEAM_LABEL_LENGTH = 3;
 const CANONICAL_PREFIX_LENGTH = 4;
 
@@ -177,7 +197,11 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
   const byId = rawId === undefined ? undefined : lookup(TOTALBET_MARKET_KEY_TO_CODE, rawId);
   if (byId) return { marketCode: byId, matchedBy: "id", rawId };
 
-  const byName = lookup(TOTALBET_MARKET_NAME_TO_CODE, normalizeMarketName(raw.name));
+  // Names identify only id-less, line-less markets: a component that carries an id or a
+  // line is never re-coded by its name (a renamed line component would lose its line,
+  // and a column without its own header would pass for another period's market).
+  const idLess = (rawId === undefined || rawId === "") && (raw.paramValue === undefined || raw.paramValue === null);
+  const byName = idLess ? lookup(TOTALBET_MARKET_NAME_TO_CODE, normalizeMarketName(raw.name)) : undefined;
   if (byName) return { marketCode: byName, matchedBy: "name", rawId };
 
   return { marketCode: "OTHER", matchedBy: "pattern", rawId };
@@ -229,13 +253,49 @@ function selectionCode(family: Family, name: string, ctx: NormalizationContext):
   }
 }
 
-/** True when the six team columns' header team is the code's side. */
-function teamColumnAgrees(rawId: string | undefined, name: string, ctx: NormalizationContext): boolean {
-  const expected = rawId === undefined ? undefined : lookup(TEAM_COLUMN_SIDE, rawId);
-  if (!expected) return true;
+/** True unless the market is team-scoped and the team its name shows is not the code's side. */
+function teamLabelAgrees(rawId: string | undefined, name: string, ctx: NormalizationContext): boolean {
+  if (rawId === undefined) return true;
   const cleaned = collapseWhitespace(name);
-  const separator = cleaned.lastIndexOf(" - ");
-  return separator >= 0 && resolveSide(cleaned.slice(separator + 3), ctx) === expected;
+
+  const columnSide = lookup(TEAM_COLUMN_SIDE, rawId);
+  if (columnSide) {
+    const separator = cleaned.lastIndexOf(" - ");
+    return separator >= 0 && resolveSide(cleaned.slice(separator + 3), ctx) === columnSide;
+  }
+
+  const totalSide = lookup(TEAM_TOTAL_SIDE, rawId);
+  if (totalSide) {
+    const team = TEAM_TOTAL_NAME.exec(cleaned)?.[1];
+    return team !== undefined && resolveSide(team, ctx) === totalSide;
+  }
+  return true;
+}
+
+/**
+ * True when every selection carries the market's own line. The grid parser reads a
+ * handicap line from the grid position; Totalbet also prints it in each selection
+ * name, so a mismatch means the position was misread:
+ * - asian: HOME shows the home line, AWAY its negation ("Leeds (-1.5)", "Tottenham (+1.5)")
+ * - european: every selection shows the row's start score ("remis (1:0)")
+ * A checked selection without its own line fails. Asian selections that resolve to
+ * no side are never priced as HOME or AWAY (they stay UNKNOWN), so they are not checked.
+ */
+function selectionLinesAgree(family: Family, rawLine: string | undefined, selections: TotalbetMarketOutput["selections"]): boolean {
+  switch (family) {
+    case "asian": {
+      const homeLine = Number(rawLine);
+      return selections.every((s) => {
+        if (s.code !== "HOME" && s.code !== "AWAY") return true;
+        const own = SELECTION_ASIAN_LINE.exec(collapseWhitespace(s.label))?.[1];
+        return own !== undefined && Number(own) === (s.code === "HOME" ? homeLine : -homeLine);
+      });
+    }
+    case "european":
+      return selections.every((s) => SELECTION_SCORE.exec(collapseWhitespace(s.label))?.[1] === rawLine);
+    default:
+      return true;
+  }
 }
 
 function hasDuplicateCode(selections: TotalbetMarketOutput["selections"]): boolean {
@@ -274,13 +334,14 @@ export const totalbetNormalizer: BookmakerMarketNormalizer = {
 
     const paramValue = lineFor(family, raw.paramValue);
     if (paramValue === null) return null;
-    if (!teamColumnAgrees(rawId, raw.name, ctx)) return null;
+    if (!teamLabelAgrees(rawId, raw.name, ctx)) return null;
 
     const selections = raw.selections.map((sel) => ({
       code: selectionCode(family, sel.name, ctx),
       label: sel.name,
       odds: sel.odds,
     }));
+    if (!selectionLinesAgree(family, raw.paramValue, selections)) return null;
     if (hasDuplicateCode(selections)) return null;
 
     const output: TotalbetMarketOutput = {

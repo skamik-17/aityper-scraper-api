@@ -172,6 +172,39 @@ describe("totalbet grid-parser (integrity guards)", () => {
     expect(pairs(ms[0])).toEqual([["Tottenham (+1.5)", 1.13]]);
   });
 
+  it("reads the 2-col home line only from a row that starts [L(homeLine), O(home)]", () => {
+    // A padded row: the away outcome is the first one and still sits in the row's left half,
+    // so a position guard alone would read the away line +1.5 as the home line.
+    const e = structuredClone(leeds);
+    const grid = e.component_lists[7].grid;
+    const [homeLine, , awayLine, away] = grid[1];
+    expect([homeLine.text, awayLine.text, away.name]).toEqual(["-1.5", "+1.5", "Tottenham (+1.5)"]);
+    const empty = { type: "empty" };
+    grid[1] = [homeLine, empty, awayLine, away, empty, empty, empty, empty];
+    // a row that does not start with its label
+    expect(grid[2][0]).toMatchObject({ type: "label", text: "-0.5" });
+    grid[2] = [empty, ...grid[2].slice(1)];
+    const ms = parseEventDetail(e).filter((m) => m.bookmakerMarketId === "slug:handicap");
+    expect(ms.map((m) => m.paramValue)).toEqual([undefined, undefined, "+0.5", "+1.5"]);
+    expect(pairs(ms[0])).toEqual([["Tottenham (+1.5)", 1.13]]);
+  });
+
+  it("skips a markets_in_columns cell whose header is not a label", () => {
+    // Component 15 "Wynik połowy" holds the half-time (mid:60) and second-half (mid:83) results.
+    // Renamed "Wynik meczu" with its "1. Połowa" header missing, a cell placed under the bare group
+    // name would be an id-less "Wynik meczu" next to the real full-time 1X2.
+    const e = structuredClone(leeds);
+    const halves = e.component_lists[15];
+    expect(halves.grid[0].map((h: any) => h.market_id)).toEqual([undefined, "60", "83"]);
+    halves.name = "Wynik meczu";
+    halves.grid[0][1] = { type: "empty" };
+    const ms = parseEventDetail(e);
+    expect(ms.filter((m) => m.name === "Wynik meczu").map(pairs)).toEqual([[["Leeds", 2.8], ["remis", 3.35], ["Tottenham", 2.47]]]);
+    expect(ms.find((m) => m.bookmakerMarketId === "mid:60")).toBeUndefined();
+    expect(pick(ms, "mid:83").name).toBe("Wynik meczu - 2. Połowa");
+    expect(ms).toHaveLength(101);
+  });
+
   it("keeps the home line when only the home outcome is closed", () => {
     const e = leedsWithCells((c) => c.name === "Leeds (-1.5)", (c) => { c.outcome_status = "closed"; });
     const m = pick(parseEventDetail(e), "slug:handicap", "-1.5");

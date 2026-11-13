@@ -106,7 +106,7 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // leg, with the result side folded into the selection code
   // (resolveResultOrBttsSide, from raw.name; the nie leg is dropped in
   // normalizeMarket). The clean-sheet bet takes the side as its team param
-  // (detectTeamSide).
+  // (detectTeamSide). Either side must agree with FORBET_ALT_BET_ID_SIDE.
   "-8041": "RESULT_OR_BTTS", // "<home> wygra lub obie drużyny strzelą gola"
   "-8042": "RESULT_OR_BTTS", // "remis w meczu lub obie drużyny strzelą gola"
   "-8043": "RESULT_OR_BTTS", // "<away> wygra lub obie drużyny strzelą gola"
@@ -312,10 +312,32 @@ const OVERRIDE_EXEMPT_MARKETS = new Set<NormalizedMarketType>([
 ]);
 
 /**
- * The "Wydarzy się min. jedno z: " wrapper forBET puts on its alternative
- * bets ("wins if either leg happens"), as it reads after normalizeForbetName.
+ * The start of the "Wydarzy się min. jedno z: " wrapper forBET puts on its
+ * alternative bets ("wins if either leg happens"), as it reads after
+ * normalizeForbetName. ALTERNATIVE_BET_PREFIX (the full wrapper, stripped
+ * before reading the legs) is built from it, so the detection in
+ * resolveForbetSpecialMarket and the strip accept the same spellings.
  */
-const ALTERNATIVE_BET_PREFIX = /^wydarzy sie min\.?\s*jedno z:\s*/;
+const ALTERNATIVE_BET_HEAD = /^wydarzy sie min\.?\s*jedno z/;
+const ALTERNATIVE_BET_PREFIX = new RegExp(`${ALTERNATIVE_BET_HEAD.source}:\\s*`);
+
+/**
+ * The side each "Wydarzy się min. jedno z" win/draw-or-X alternative bet id
+ * stands for. The shared-platform ids are positional: etoto maps them the
+ * same way (ETOTO_MARKET_ID_TEAM_SIDE), and both 2026-11-06 captures list
+ * them in this order. The side forBET's raw name yields through fuzzy team
+ * matching must agree with it, otherwise normalizeMarket drops the market
+ * rather than publish one team's price under the other side's code (no
+ * integrity detector watches the _OR_ codes).
+ */
+const FORBET_ALT_BET_ID_SIDE: Record<number, "HOME" | "AWAY" | "DRAW"> = {
+  [-8041]: "HOME", // "<home> wygra lub obie drużyny strzelą gola"
+  [-8042]: "DRAW", // "remis w meczu lub obie drużyny strzelą gola"
+  [-8043]: "AWAY", // "<away> wygra lub obie drużyny strzelą gola"
+  [-8044]: "HOME", // "<home> wygra lub którakolwiek drużyna zachowa czyste konto"
+  [-8045]: "DRAW", // "remis w meczu lub którakolwiek drużyna zachowa czyste konto"
+  [-8046]: "AWAY", // "<away> wygra lub którakolwiek drużyna zachowa czyste konto"
+};
 
 /**
  * Normalizes a forBET market/selection name for pattern matching:
@@ -392,7 +414,8 @@ const FORBET_TEAM_PARAM_MARKETS = new Set<NormalizedMarketType>([
   // RESULT_OR_BTTS, with the side in the selection code, not in a param.
   // "... <team> wygra lub którakolwiek drużyna zachowa czyste konto"
   // (-8044/-8046) lands here; detectTeamSide strips the alternative-bet
-  // wrapper to find the team, and normalizeMarket drops it if that fails.
+  // wrapper to find the team, and normalizeMarket drops it if that fails or
+  // disagrees with the id's side (FORBET_ALT_BET_ID_SIDE).
   "TEAM_WIN_OR_CLEAN_SHEET",
   // CORNERS_TEAM_RANGE is parameterized by team (param HOME/AWAY, catalog
   // validParameters) rather than split into separate HOME_/AWAY_ codes.
@@ -561,7 +584,7 @@ function resolveForbetSpecialMarket(
   // → RESULT_OR_BTTS, and the clean-sheet ids -8044/-8046 →
   // TEAM_WIN_OR_CLEAN_SHEET and -8045 → DRAW_OR_CLEAN_SHEET. The rest must
   // stay out of the canonical markets they name.
-  if (/^wydarzy sie min\.? jedno z/.test(name)) {
+  if (ALTERNATIVE_BET_HEAD.test(name)) {
     return FORBET_MARKET_ID_TO_CODE[Number(raw.bookmakerMarketId)] ?? "OTHER";
   }
 
@@ -1774,7 +1797,9 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
     // and much shorter-priced bet. Like the RESULT_OR_TOTAL "nie" above, it
     // has no counterpart in that vocabulary and is dropped. An unresolved
     // side, an unrecognised label or a missing/duplicated tak leg drops the
-    // whole market rather than guess.
+    // whole market rather than guess. So does a name-derived side that
+    // disagrees with the positional id (FORBET_ALT_BET_ID_SIDE): the name was
+    // misread, and publishing would put one side's price under another's code.
     if (marketCode === "RESULT_OR_BTTS") {
       const side = resolveResultOrBttsSide(raw.name, ctx);
       const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
@@ -1782,6 +1807,14 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
         console.warn(
           `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak leg for "${raw.name}"`
+        );
+        return null;
+      }
+      const idSide: "HOME" | "AWAY" | "DRAW" | undefined =
+        gameTypeId === null ? undefined : FORBET_ALT_BET_ID_SIDE[gameTypeId];
+      if (side !== idSide) {
+        console.warn(
+          `[forbet] RESULT_OR_BTTS: name side ${side} disagrees with id ${gameTypeId} (${idSide ?? "no side"}) for "${raw.name}"`
         );
         return null;
       }
@@ -1805,14 +1838,15 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
       };
     }
 
-    // TurboPrzewaga (-31170, the only forbet id routed here) quotes three
-    // legs: <home> / remis / <away>. The catalog WIN_OR_WIN_BY_2 is 2-way
-    // HOME/AWAY, and forbet prices "remis" like the plain 1X2 draw that
-    // MATCH_WINNER already carries, so that leg is dropped. The team legs
-    // must resolve to exactly one HOME and one AWAY. Anything else (an
-    // unresolvable team name, both legs on one side, an extra selection)
-    // drops the market rather than guessing a side, and the legs never go
-    // through mergeDuplicateSelectionCodes, which would fabricate a price.
+    // Every forbet market mapped to WIN_OR_WIN_BY_2 (today only -31170,
+    // TurboPrzewaga) quotes three legs: <home> / remis / <away>. The catalog
+    // WIN_OR_WIN_BY_2 is 2-way HOME/AWAY, and forbet prices "remis" like the
+    // plain 1X2 draw that MATCH_WINNER already carries, so that leg is
+    // dropped. The team legs must resolve to exactly one HOME and one AWAY.
+    // Anything else (an unresolvable team name, both legs on one side, an
+    // extra non-draw selection) drops the market rather than guessing a side,
+    // and the legs never go through mergeDuplicateSelectionCodes, which would
+    // fabricate a price.
     if (marketCode === "WIN_OR_WIN_BY_2") {
       const teamLegs = raw.selections
         .map((sel) => ({
@@ -1861,6 +1895,19 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
         `[forbet] TEAM_WIN_OR_CLEAN_SHEET: could not resolve the team side for "${raw.name}"`
       );
       return null;
+    }
+    // The side detectTeamSide read from the name must also agree with the
+    // positional id (FORBET_ALT_BET_ID_SIDE): a misread name would otherwise
+    // publish one team's price under the other team's key.
+    if (marketCode === "TEAM_WIN_OR_CLEAN_SHEET") {
+      const idSide: "HOME" | "AWAY" | "DRAW" | undefined =
+        gameTypeId === null ? undefined : FORBET_ALT_BET_ID_SIDE[gameTypeId];
+      if (paramValue !== idSide) {
+        console.warn(
+          `[forbet] TEAM_WIN_OR_CLEAN_SHEET: name side ${paramValue} disagrees with id ${gameTypeId} (${idSide ?? "no side"}) for "${raw.name}"`
+        );
+        return null;
+      }
     }
 
     const marketKey = buildMarketKey(marketCode, paramValue);

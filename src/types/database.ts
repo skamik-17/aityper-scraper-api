@@ -140,6 +140,43 @@ export interface Database {
           }
         ];
       };
+      /** Snapshot model (migration 13): one row per (match, bookmaker); detail state from migration 16. */
+      odds_snapshot: {
+        Row: {
+          match_id: string;
+          bookmaker: PolishBookmaker;
+          league_slug: string;
+          event_url: string | null;
+          start_time: string | null;
+          last_run_id: string | null;
+          last_seen_at: string;
+          last_changed_at: string;
+          row_count: number;
+          status: "ok" | "degenerate";
+          degenerate_since: string | null;
+          /** Migration 16: when the detail behind this snapshot was last fetched; null = never stamped. */
+          last_detail_at: string | null;
+          /** Migration 16: listing-price fingerprint at that fetch. */
+          listing_fingerprint: string | null;
+        };
+        Insert: {
+          match_id: string;
+          bookmaker: PolishBookmaker;
+          league_slug: string;
+          event_url?: string | null;
+          start_time?: string | null;
+          last_run_id?: string | null;
+          last_seen_at: string;
+          last_changed_at: string;
+          row_count: number;
+          status?: "ok" | "degenerate";
+          degenerate_since?: string | null;
+          last_detail_at?: string | null;
+          listing_fingerprint?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["odds_snapshot"]["Insert"]>;
+        Relationships: [];
+      };
       scraper_runs: {
         Row: {
           id: number;
@@ -251,6 +288,18 @@ export interface Database {
       cleanup_old_odds: {
         Args: { hours_to_keep?: number };
         Returns: number;
+      };
+      /** Migration 16: stamp fetched events and confirm unchanged ones after an incremental pass. */
+      record_incremental_pass: {
+        Args: {
+          p_run_id: string;
+          p_bookmaker: string;
+          p_fetched: Array<{ match_id: string; fingerprint: string | null }>;
+          p_confirmed: Array<{ match_id: string; fingerprint: string | null }>;
+          p_cap_near?: string;
+          p_cap_far?: string;
+        };
+        Returns: { stamped: number; confirmed: number; not_confirmed: number; confirmed_rows: number };
       };
     };
     Enums: {

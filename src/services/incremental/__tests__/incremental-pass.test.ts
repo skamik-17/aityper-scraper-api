@@ -155,18 +155,27 @@ describe("runIncrementalPass", () => {
     expect(r.pending).toEqual({ fetched: [], confirmed: [] });
   });
 
-  it("state read failure fetches every non-started event", async () => {
+  it("state read failure on an incremental tick fetches nothing and fails the pass (no 10-minute full scrapes)", async () => {
     deps.loadState = vi.fn(async () => {
       throw new Error("odds_snapshot state read failed: fetch failed (ECONNREFUSED)");
     });
     const s = fakeScraper([ev("A", FAR), ev("B", NEAR), ev("C", STARTED)]);
     const r = await run(s);
-    expect(r.incremental.ledger).toBe("db");
-    expect(r.incremental.due).toBe(2);
-    expect(r.matches.map((m) => m.matchId)).toEqual(["A", "B"]);
+    expect(r).toMatchObject({ success: false, matches: [] });
+    expect(r.error).toBe("state unavailable: odds_snapshot state read failed: fetch failed (ECONNREFUSED)");
+    expect(r.pending).toEqual({ fetched: [], confirmed: [] });
     expect(lines).toContain(
-      "[IncrementalPass] state unavailable for forbet/premier-league: odds_snapshot state read failed: fetch failed (ECONNREFUSED); fetching all",
+      "[IncrementalPass] state unavailable for forbet/premier-league: odds_snapshot state read failed: fetch failed (ECONNREFUSED); fetching nothing until the hourly pass",
     );
+  });
+
+  it("state read failure on the forced (hourly) pass still fetches every non-started event", async () => {
+    deps.loadState = vi.fn(async () => {
+      throw new Error("odds_snapshot state read failed: fetch failed (ECONNREFUSED)");
+    });
+    const s = fakeScraper([ev("A", FAR), ev("B", NEAR), ev("C", STARTED)]);
+    const r = await run(s, "forced");
+    expect(r.matches.map((m) => m.matchId)).toEqual(["A", "B"]);
   });
 
   it("one failed detail of two keeps success and leaves it due", async () => {

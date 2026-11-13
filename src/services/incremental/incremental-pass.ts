@@ -220,6 +220,12 @@ export async function runIncrementalPass(
       try {
         state = await d.loadState(league, bookmaker);
       } catch (e) {
+        if (mode !== "forced") {
+          // Unknown state must not turn every 10-minute tick into a full scrape (e.g. migration 16
+          // missing): fetch nothing; the hourly forced pass still fetches everything.
+          d.log(`[IncrementalPass] state unavailable for ${bookmaker}/${league}: ${errorText(e)}; fetching nothing until the hourly pass`);
+          return finish({ success: false, matches: [], error: `state unavailable: ${errorText(e)}` }, { fetched: [], confirmed: [] });
+        }
         state = new Map();
         d.log(`[IncrementalPass] state unavailable for ${bookmaker}/${league}: ${errorText(e)}; fetching all`);
       }

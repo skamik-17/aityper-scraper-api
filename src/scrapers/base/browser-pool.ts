@@ -4,12 +4,9 @@
  */
 
 import { chromium, Browser } from "playwright";
+import { BROWSER_ARGS } from "./browser-runtime.js";
 
-// Never add --disable-features: Chromium keeps the last one, which would replace Playwright's own list.
-export const BROWSER_ARGS: readonly string[] = [
-  "--disable-blink-features=AutomationControlled",
-  "--disable-site-isolation-trials",
-];
+export { BROWSER_ARGS } from "./browser-runtime.js";
 
 export type BrowserLauncher = () => Promise<Browser>;
 

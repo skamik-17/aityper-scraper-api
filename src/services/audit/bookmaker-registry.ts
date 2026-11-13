@@ -6,7 +6,7 @@ import { superbetScraper } from "../../scrapers/bookmakers/superbet/index.js";
 import { lvbetScraper } from "../../scrapers/bookmakers/lvbet/index.js";
 import { fuksiarzScraper } from "../../scrapers/bookmakers/index.js";
 import { betcrisScraper } from "../../scrapers/bookmakers/betcris/index.js";
-import { betfanScraper } from "../../scrapers/bookmakers/betfan/index.js";
+import { betfanScraper } from "../../scrapers/bookmakers/index.js";
 import { bettersScraper } from "../../scrapers/bookmakers/betters/index.js";
 import { etotoScraper } from "../../scrapers/bookmakers/index.js";
 import { forbetScraper } from "../../scrapers/bookmakers/index.js";

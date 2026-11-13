@@ -12,6 +12,7 @@ describe("per-brand transport selection", () => {
     ["etoto", "SCRAPER_TRANSPORT_ETOTO", "etotoScraper", "EtotoHttpScraper", "EtotoBrowserScraper"],
     ["forbet", "SCRAPER_TRANSPORT_FORBET", "forbetScraper", "ForbetHttpScraper", "ForbetBrowserScraper"],
     ["fuksiarz", "SCRAPER_TRANSPORT_FUKSIARZ", "fuksiarzScraper", "FuksiarzHttpScraper", "FuksiarzBrowserScraper"],
+    ["betfan", "SCRAPER_TRANSPORT_BETFAN", "betfanScraper", "BetfanHttpScraper", "BetfanBrowserScraper"],
   ])(
     "%s: HTTP by default, browser class when %s=browser",
     async (_bm, env, inst, httpCls, browserCls) => {

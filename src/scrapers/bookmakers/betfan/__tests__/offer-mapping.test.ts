@@ -5,7 +5,7 @@ import {
   loadFixtureRoutes,
   withoutScrapedAt,
 } from "../../../shared/rest-market/__tests__/offline-harness.js";
-import { BetfanPlaywrightScraper } from "../index.js";
+import { BetfanBrowserScraper } from "../index.js";
 import { toBetfanOffer } from "../offer-mapping.js";
 import { isValidEvent } from "../parser.js";
 import type { BetfanEvent } from "../types.js";
@@ -22,7 +22,7 @@ const mapped = () =>
   listed.filter(isValidEvent).map((e) => toBetfanOffer(e, detailOf(e), "premier-league")).filter((o) => o !== null);
 
 async function oldBrowserRun() {
-  const scraper = new BetfanPlaywrightScraper();
+  const scraper = new BetfanBrowserScraper();
   const { calls } = driveBrowserScraperOffline(scraper, loadFixtureRoutes("betfan", URLS));
   const result = await scraper.scrapeFullOffer("premier-league");
   return { result, calls };

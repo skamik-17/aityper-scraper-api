@@ -35,7 +35,8 @@ import {
 import type { BetfanEvent } from "./types.js";
 import { toBetfanOffer } from "./offer-mapping.js";
 
-export class BetfanPlaywrightScraper extends PlaywrightScraper {
+/** betfan's browser path, kept as the SCRAPER_TRANSPORT_BETFAN=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class BetfanBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betfan";
   config: ScraperConfig;
 
@@ -241,7 +242,12 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
 
           try {
             const detailEvent = await fetchEventDetails(page, String(event.eventId));
-            const offer = toBetfanOffer(event, detailEvent?.games?.length ? detailEvent : event, leagueSlug);
+            if (!detailEvent) {
+              // No listing fallback: a thin listing write would replace the match's full offer
+              console.warn(`[Betfan/FullOffer] Skipping ${event.eventId}: detail failed`);
+              continue;
+            }
+            const offer = toBetfanOffer(event, detailEvent, leagueSlug);
             if (offer) {
               matches.push(offer);
               console.log(`[Betfan/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
@@ -272,4 +278,3 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const betfanScraper = new BetfanPlaywrightScraper();

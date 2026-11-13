@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/betfan-prep-audit.ts --url "<betfan event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { betfanScraper } from "../src/scrapers/bookmakers/betfan/index.js";
+import { betfanScraper } from "../src/scrapers/bookmakers/index.js";
 import { betfanNormalizer } from "../src/services/normalization/bookmakers/betfan-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

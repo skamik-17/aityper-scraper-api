@@ -15,6 +15,8 @@ import { ForbetBrowserScraper } from "./forbet/index.js";
 import { ForbetHttpScraper } from "../shared/rest-market/brands/forbet.js";
 import { FuksiarzBrowserScraper } from "./fuksiarz/index.js";
 import { FuksiarzHttpScraper } from "../shared/rest-market/brands/fuksiarz.js";
+import { BetfanBrowserScraper } from "./betfan/index.js";
+import { BetfanHttpScraper } from "../shared/rest-market/brands/betfan.js";
 
 // Modular scrapers (refactored)
 export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet/index.js";
@@ -25,7 +27,8 @@ export { ForbetHttpScraper } from "../shared/rest-market/brands/forbet.js";
 export { lebullScraper, LebullPlaywrightScraper } from "./lebull/index.js";
 export { FuksiarzBrowserScraper } from "./fuksiarz/index.js";
 export { FuksiarzHttpScraper } from "../shared/rest-market/brands/fuksiarz.js";
-export { betfanScraper, BetfanPlaywrightScraper } from "./betfan/index.js";
+export { BetfanBrowserScraper } from "./betfan/index.js";
+export { BetfanHttpScraper } from "../shared/rest-market/brands/betfan.js";
 export { betclicScraper, BetclicPlaywrightScraper } from "./betclic/index.js";
 export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet/index.js";
 export { stsScraper, STSScraper } from "./sts/index.js";
@@ -43,3 +46,6 @@ export const forbetScraper: FullOfferScraper =
 
 export const fuksiarzScraper: FullOfferScraper =
   getTransportOverride("fuksiarz") === "browser" ? new FuksiarzBrowserScraper() : new FuksiarzHttpScraper();
+
+export const betfanScraper: FullOfferScraper =
+  getTransportOverride("betfan") === "browser" ? new BetfanBrowserScraper() : new BetfanHttpScraper();

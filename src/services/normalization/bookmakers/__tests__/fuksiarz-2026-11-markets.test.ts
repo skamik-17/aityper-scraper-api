@@ -82,3 +82,27 @@ describe("fuksiarz each-team OVER-only codes never publish UNDER", () => {
     expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["OVER", 1.4]]);
   });
 });
+
+// Same defect class as controller ruling 3 (superbet "3+" shown as "3"):
+// HALF_TIME_HOME_EXACT_GOALS's bands are 0/1/2/2+/3 and "3" means exactly 3
+// ("Gospodarze strzelą dokładnie 3 goli w 1. połowie"). Fuksiarz quotes the
+// discrete counts 3, 4 and 5 (WC golden entry 198: 3 @19, 4 @30, 5 @30); the
+// three used to be merged into one 3-or-more price (8.38) under "3". The real
+// exactly-3 price is kept and 4/5, which have no catalog band, are dropped.
+describe("fuksiarz HALF_TIME_HOME_EXACT_GOALS keeps exactly 3 apart from 4 and 5", () => {
+  const ctxFM = { homeTeam: "France", awayTeam: "Morocco", league: "world-cup-2026" } as NormalizationContext;
+  it("-4555 (golden #198) publishes 0/1/2/3 with the exactly-3 price", () => {
+    const out = fuksiarzNormalizer.normalizeMarket({
+      bookmakerMarketId: "-4555",
+      name: "1. połowa - Francja - dokładna liczba goli",
+      selections: [
+        { name: "0", odds: 1.98 }, { name: "1", odds: 2.55 }, { name: "2", odds: 6 },
+        { name: "3", odds: 19 }, { name: "4", odds: 30 }, { name: "5", odds: 30 },
+      ],
+    }, ctxFM)!;
+    expect(out.marketCode).toBe("HALF_TIME_HOME_EXACT_GOALS");
+    expect(out.selections.map((s) => [s.code, s.label, s.odds])).toEqual([
+      ["0", "0", 1.98], ["1", "1", 2.55], ["2", "2", 6], ["3", "3", 19],
+    ]);
+  });
+});

@@ -28,7 +28,6 @@ import type {
   TotalbetComponent,
   TotalbetDetailEvent,
   TotalbetEventBase,
-  TotalbetListEvent,
 } from "./api-types.js";
 
 type OutcomeCell = Extract<TotalbetCell, { type: "outcome" }>;
@@ -46,9 +45,6 @@ interface MarketDraft {
   conflict: boolean;
 }
 
-const MATCH_WINNER_NAME = "Wynik meczu";
-const LIST_MATCH_WINNER_ID = "1";
-
 /** Collapses whitespace runs to one space and trims ("Crystal Palace  lub remis" -> "Crystal Palace lub remis"). */
 export function cleanName(raw: string): string {
   return raw.replace(/\s+/g, " ").trim();
@@ -62,32 +58,6 @@ export function parseParticipants(e: TotalbetEventBase): { homeTeam: string; awa
     return typeof name === "string" ? cleanName(name) : "";
   });
   return homeTeam && awayTeam ? { homeTeam, awayTeam } : null;
-}
-
-/**
- * 1X2 prices of a league-list event: market id "1", outcomes by sort 1/2/3
- * (home, draw, away). Null unless the market and all three outcomes are active
- * and priced above 1.
- */
-export function parseListEvent1X2(e: TotalbetListEvent): { home: number; draw: number; away: number } | null {
-  const outcomes = listMatchWinnerOutcomes(e);
-  if (!outcomes) return null;
-  const [home, draw, away] = outcomes;
-  return { home: home.odds, draw: draw.odds, away: away.odds };
-}
-
-/**
- * The list 1X2 as an id-less "Wynik meczu" market, the fallback offer when an
- * event detail cannot be fetched. Gated exactly like parseListEvent1X2.
- */
-export function listEventToMatchWinnerMarket(e: TotalbetListEvent): ScrapedMarket | null {
-  const outcomes = listMatchWinnerOutcomes(e);
-  if (!outcomes) return null;
-  return {
-    name: MATCH_WINNER_NAME,
-    groupName: MATCH_WINNER_NAME,
-    selections: outcomes.map(({ name, odds }) => ({ name, odds, status: "active" })),
-  };
 }
 
 /**
@@ -213,24 +183,6 @@ function toSelection(cell: OutcomeCell): MarketSelection | null {
   const odds = parseOdds(cell.odds);
   if (odds === null) return null;
   return { name: cleanName(cell.name), odds, externalId: cell.uuid, status: "active" };
-}
-
-/** The three list 1X2 outcomes in sort order 1/2/3, or null unless all are active and priced. */
-function listMatchWinnerOutcomes(e: TotalbetListEvent): { name: string; odds: number }[] | null {
-  const markets: unknown[] = Array.isArray(e.markets) ? e.markets : [];
-  const market = markets.find((m) => isRecord(m) && String(m.id) === LIST_MATCH_WINNER_ID);
-  if (!isRecord(market) || market.status !== "active" || !Array.isArray(market.outcomes)) return null;
-
-  const picked: { name: string; odds: number }[] = [];
-  for (const sort of [1, 2, 3]) {
-    const candidates = market.outcomes.filter((o: unknown) => isRecord(o) && o.sort === sort);
-    if (candidates.length !== 1) return null;
-    const outcome = candidates[0] as Record<string, unknown>;
-    const odds = parseOdds(outcome.odds);
-    if (outcome.status !== "active" || odds === null || typeof outcome.name !== "string") return null;
-    picked.push({ name: cleanName(outcome.name), odds });
-  }
-  return picked;
 }
 
 /** Decimal odds from the API's string; null for placeholders (<= 1) and anything unparsable. */

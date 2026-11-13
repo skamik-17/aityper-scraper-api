@@ -195,9 +195,3 @@ export function buildScrapedMarkets(
   }
   return result;
 }
-
-/** The Betby event id in a betters or lebull event URL: its last run of 15 or more digits. */
-export function extractBetbyEventId(url: string): string | null {
-  const runs = url.match(/\d{15,}/g);
-  return runs === null ? null : runs[runs.length - 1];
-}

@@ -1,32 +1,12 @@
-/**
- * Totalbet scraper (UUID "dealer" API)
- *
- * Plain HTTP, no browser: one league list request, then one event-detail request
- * per listed event, at most TOTALBET_DETAIL_CONCURRENCY at once, all under one
- * scrape budget (TOTALBET_BUDGET_MS unless the caller passes one). The class still extends
- * PlaywrightScraper only for the shared scraper interface (aggregator, audit tools);
- * it never opens a browser.
- *
- * League category UUIDs come from src/config/leagues.ts. Every failure is reported
- * in the result's error string. A match whose detail failed is skipped, never written
- * with its list 1X2: a 1X2-only write would replace the match's full offer. More than
- * MAX_SKIPPED_DETAIL_RATIO failed details fail the run, with nothing written.
- */
 
-import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
 import { getBookmakerLeagueId } from "../../../config/leagues.js";
-import type { FullMatchOffer, FullOfferScraperResult, Market1X2Odds, ScrapedMarket } from "../../../types/full-offer.js";
+import type { FullMatchOffer, FullOfferScraperResult, ScrapedMarket } from "../../../types/full-offer.js";
 import type {
-  EventUrlEntry,
-  MatchDetailResult,
-  MatchIdentifier,
-  RawScrapedOdds,
   ScraperConfig,
-  ScraperResult,
 } from "../../../types/scraper.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
 import { mapLimit } from "../../shared/concurrency.js";
@@ -37,7 +17,6 @@ import type { TransportStats } from "../../shared/scraper-contract.js";
 import {
   buildEventUrl,
   createHttpFetchJson,
-  extractEventUuidFromUrl,
   fetchEventDetail,
   fetchLeagueEvents,
   type EventDetailResult,
@@ -51,7 +30,7 @@ import {
   TOTALBET_DETAIL_CONCURRENCY,
   TOTALBET_REQUEST_TIMEOUT_MS,
 } from "./constants.js";
-import { listEventToMatchWinnerMarket, parseEventDetail, parseParticipants } from "./grid-parser.js";
+import { parseEventDetail, parseParticipants } from "./grid-parser.js";
 
 /** Injectable transport (tests pass a fake FetchJson or a replay HttpClient). */
 export interface TotalbetDeps {
@@ -63,10 +42,7 @@ export interface TotalbetDeps {
   detailConcurrency?: number;
 }
 
-type Teams = { homeTeam: string; awayTeam: string };
-
 const LOG = "[Totalbet/FullOffer]";
-const MATCH_WINNER_NAME = "Wynik meczu";
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Name kept for compatibility with existing imports; this scraper never opens a browser. */
@@ -96,136 +72,6 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     return { http: { ...stats, byStatus: { ...stats.byStatus } } };
   }
 
-  /** League list only: one RawScrapedOdds per event with an oriented, fully active list 1X2. */
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    const startTime = Date.now();
-    const categoryUuid = leagueCategoryUuid(league);
-    if (!categoryUuid) {
-      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
-    }
-
-    try {
-      const list = await fetchLeagueEvents(categoryUuid, this.fetchJson);
-      if (list.error) {
-        return { status: "error", bookmaker: this.bookmaker, error: list.error, duration: Date.now() - startTime, timestamp: new Date() };
-      }
-
-      const matches: RawScrapedOdds[] = [];
-      for (const event of list.events) {
-        const teams = parseParticipants(event);
-        const market = listEventToMatchWinnerMarket(event);
-        if (!teams || !market) continue;
-
-        const odds = orientedMatchWinnerOdds(market, teams);
-        if (!odds) {
-          console.warn(`[Totalbet] skipped ${teams.homeTeam} vs ${teams.awayTeam}: 1X2 outcome names do not match the participants`);
-          continue;
-        }
-
-        matches.push({
-          bookmaker: this.bookmaker,
-          eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-          homeTeam: getCanonicalTeamName(teams.homeTeam, league),
-          awayTeam: getCanonicalTeamName(teams.awayTeam, league),
-          homeOdds: odds.home,
-          drawOdds: odds.draw,
-          awayOdds: odds.away,
-          hasNoTaxPromo: false,
-          scrapedAt: new Date(),
-          eventUrl: buildEventUrl(event.uuid),
-        });
-      }
-
-      console.log(`[Totalbet] Found ${matches.length} matches with valid odds for ${league}`);
-      return { status: "success", bookmaker: this.bookmaker, data: matches, duration: Date.now() - startTime, timestamp: new Date() };
-    } catch (error) {
-      return this.createErrorResult(error, Date.now() - startTime);
-    }
-  }
-
-  async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
-    const startTime = Date.now();
-    const league = match.leagueId ?? "ekstraklasa";
-
-    const allMatches = await this.scrapeLeague(league);
-    if (allMatches.status !== "success" || !allMatches.data) {
-      return allMatches;
-    }
-
-    const matchResult = findMatchingEvent(
-      { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-      allMatches.data,
-      league
-    );
-
-    if (!matchResult) {
-      return this.createNotFoundResult(
-        `Match not found on Totalbet: ${match.homeTeam} vs ${match.awayTeam}`,
-        Date.now() - startTime
-      );
-    }
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: [matchResult.event],
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
-  }
-
-  /** One event detail, reduced to its 1X2 ("Wynik meczu" in grid order home, draw, away). */
-  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
-    const startTime = Date.now();
-    const eventUuid = extractEventUuidFromUrl(eventUrl);
-    if (!eventUuid) {
-      return this.createMatchDetailNotFoundResult("Invalid Totalbet event URL", Date.now() - startTime);
-    }
-
-    try {
-      const detail = await fetchEventDetail(eventUuid, this.fetchJson);
-      if (!detail.event) {
-        const message = detail.error ?? `No detail for Totalbet event ${eventUuid}`;
-        // An event that is no longer an active prematch event is a state change, not a fetch failure.
-        return detail.notPrematch
-          ? this.createMatchDetailNotFoundResult(message, Date.now() - startTime)
-          : this.createMatchDetailErrorResult(new Error(message), Date.now() - startTime);
-      }
-
-      const teams = parseParticipants(detail.event);
-      // Exactly one id-less, line-less "Wynik meczu": two such markets are ambiguous, so no 1X2 is read.
-      const candidates = parseEventDetail(detail.event).filter(
-        (m) => m.name === MATCH_WINNER_NAME && m.bookmakerMarketId === undefined && m.paramValue === undefined
-      );
-      const odds = teams && candidates.length === 1 ? orientedMatchWinnerOdds(candidates[0], teams) : null;
-      if (!teams || !odds) {
-        return this.createMatchDetailNotFoundResult(
-          `No oriented 1X2 market in Totalbet event ${eventUuid}`,
-          Date.now() - startTime
-        );
-      }
-
-      return {
-        status: "success",
-        bookmaker: this.bookmaker,
-        data: {
-          bookmaker: this.bookmaker,
-          eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-          homeTeam: teams.homeTeam,
-          awayTeam: teams.awayTeam,
-          eventUrl,
-          hasNoTaxPromo: false,
-          scrapedAt: new Date(),
-          market1X2: odds,
-        },
-        duration: Date.now() - startTime,
-        timestamp: new Date(),
-      };
-    } catch (error) {
-      return this.createMatchDetailErrorResult(error, Date.now() - startTime);
-    }
-  }
-
   async scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
     const categoryUuid = leagueCategoryUuid(league);
@@ -238,10 +84,6 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     } catch (error) {
       return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
     }
-  }
-
-  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
-    return [];
   }
 
   private async scrapeLeagueOffer(
@@ -413,18 +255,6 @@ function settledDetail(result: PromiseSettledResult<EventDetailResult>): EventDe
 function leagueCategoryUuid(league: string): string | null {
   const id = getBookmakerLeagueId(league, "totalbet");
   return typeof id === "string" && UUID_PATTERN.test(id) ? id : null;
-}
-
-/**
- * Home, draw and away prices of a 3-way "Wynik meczu" market, in grid (or list sort)
- * order. Null unless the first and last outcome names are the home and away
- * participants: a reordered grid would otherwise publish one team's price as the other's.
- */
-function orientedMatchWinnerOdds(market: ScrapedMarket, teams: Teams): Market1X2Odds | null {
-  if (market.selections.length !== 3) return null;
-  const [home, draw, away] = market.selections;
-  if (home.name !== teams.homeTeam || away.name !== teams.awayTeam) return null;
-  return { home: home.odds, draw: draw.odds, away: away.odds };
 }
 
 /**

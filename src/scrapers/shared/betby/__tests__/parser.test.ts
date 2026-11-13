@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildScrapedMarkets, extractBetbyEventId, renderTemplate, selectLeagueEvents } from "../parser.js";
+import { buildScrapedMarkets, renderTemplate, selectLeagueEvents } from "../parser.js";
 import type { BetbyEvent, BetbyMarketDescriptions, BetbySnapshot } from "../types.js";
 import { loadJson, snapshotFrom } from "./fixtures.js";
 
@@ -104,11 +104,5 @@ describe("betby parser", () => {
     expect(m[1].selections.map((s) => [s.externalId, s.name])).toEqual([["74", "tak"], ["76", "nie"], ["75", "75"]]);
     expect(m[2]).toEqual({ name: "Rynek 999001", bookmakerMarketId: "999001", paramValue: undefined, selections: [
       { name: "9", odds: 3, externalId: "9" }, { name: "10", odds: 2, externalId: "10" }] });
-  });
-
-  it("extractBetbyEventId reads both brands' URLs", () => {
-    expect(extractBetbyEventId("https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league/leeds-united-tottenham-hotspur-2725816334213586962")).toBe("2725816334213586962");
-    expect(extractBetbyEventId("https://lebull-pl-bb.boxwebcdn.work/event/1/1669818860410376192/1669818860469096448/2725816334213586962")).toBe("2725816334213586962");
-    expect(extractBetbyEventId("https://www.betters.pl/zaklady-sportowe")).toBeNull();
   });
 });

@@ -15,8 +15,6 @@ const ALLOWED = new Set([
   "bookmakers/betcris",
   "bookmakers/pzbuk",
   "bookmakers/sts",
-  "bookmakers/totalbet",
-  "shared/betby",
 ]);
 
 describe("legacy 1X2 path", () => {

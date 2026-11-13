@@ -3,9 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { ScrapedMarket } from "../../../../types/full-offer.js";
 import {
   cleanName,
-  listEventToMatchWinnerMarket,
   parseEventDetail,
-  parseListEvent1X2,
   parseParticipants,
 } from "../grid-parser.js";
 
@@ -79,11 +77,6 @@ describe("totalbet grid-parser (plan contract)", () => {
     expect(ms).toHaveLength(21);
     expect(pairs(pick(ms, "mid:10"))).toEqual([["Crystal Palace lub remis", 2.28], ["Crystal Palace lub Liverpool", 1.21], ["remis lub Liverpool", 1.16]]);
     expect(parseParticipants(cp)).toEqual({ homeTeam: "Crystal Palace", awayTeam: "Liverpool" });
-  });
-
-  it("grid-parser reads the list 1X2 by sort order", () => {
-    expect(parseListEvent1X2(list[0])).toEqual({ home: 1.65, draw: 3.95, away: 4.9 });
-    expect(listEventToMatchWinnerMarket(list[0])!.selections.map((s) => s.odds)).toEqual([1.65, 3.95, 4.9]);
   });
 
   it("grid-parser treats unknown component types as single markets", () => {
@@ -238,47 +231,12 @@ describe("totalbet grid-parser (integrity guards)", () => {
   });
 });
 
-describe("totalbet grid-parser (participants and list 1X2)", () => {
+describe("totalbet grid-parser (participants)", () => {
   it("parseParticipants needs two non-empty names", () => {
     expect(parseParticipants(list[0])).toEqual({ homeTeam: "Everton", awayTeam: "Coventry City" });
     expect(parseParticipants({ ...list[0], participants: [list[0].participants[0]] })).toBeNull();
     expect(parseParticipants({ ...list[0], participants: [list[0].participants[0], { name: "  ", uuid: "x" }] })).toBeNull();
     // Three participants leave home and away ambiguous.
     expect(parseParticipants({ ...list[0], participants: [...list[0].participants, { name: "Leeds", uuid: "y" }] })).toBeNull();
-  });
-
-  it("listEventToMatchWinnerMarket builds an id-less Wynik meczu market in sort order", () => {
-    const outcomes = [...list[0].markets[0].outcomes].reverse();
-    const e = { ...list[0], markets: [{ ...list[0].markets[0], outcomes }] };
-    expect(parseListEvent1X2(e)).toEqual({ home: 1.65, draw: 3.95, away: 4.9 });
-    const m = listEventToMatchWinnerMarket(e)!;
-    expect(m).toMatchObject({ name: "Wynik meczu", groupName: "Wynik meczu" });
-    expect(m.bookmakerMarketId).toBeUndefined();
-    expect(m.paramValue).toBeUndefined();
-    expect(m.selections).toEqual([
-      { name: "Everton", odds: 1.65, status: "active" },
-      { name: "remis", odds: 3.95, status: "active" },
-      { name: "Coventry City", odds: 4.9, status: "active" },
-    ]);
-  });
-
-  const withOutcome = (sort: number, patch: Record<string, unknown>) => {
-    const market = list[0].markets[0];
-    const outcomes = market.outcomes.map((o: any) => (o.sort === sort ? { ...o, ...patch } : o));
-    return { ...list[0], markets: [{ ...market, outcomes }] };
-  };
-
-  it.each([
-    ["a suspended outcome", withOutcome(2, { status: "suspended" })],
-    ["a placeholder price", withOutcome(1, { odds: "1.00" })],
-    ["an unparsable price", withOutcome(3, { odds: "-" })],
-    ["a missing sort", withOutcome(3, { sort: 4 })],
-    ["a duplicated sort", { ...list[0], markets: [{ ...list[0].markets[0], outcomes: [...list[0].markets[0].outcomes, { ...list[0].markets[0].outcomes[0], odds: "2.00" }] }] }],
-    ["a suspended market", { ...list[0], markets: [{ ...list[0].markets[0], status: "suspended" }] }],
-    ["no market with id 1", { ...list[0], markets: [{ ...list[0].markets[0], id: "2" }] }],
-    ["no markets", { ...list[0], markets: [] }],
-  ])("the list 1X2 is null with %s", (_label, e) => {
-    expect(parseListEvent1X2(e)).toBeNull();
-    expect(listEventToMatchWinnerMarket(e)).toBeNull();
   });
 });

@@ -11,16 +11,19 @@
  *   A2  every match within --max-days with a full event payload has >= --min-markets
  *       normalized non-OTHER markets; at most --max-listing-only of those matches fell back
  *       to listing markets. Matches further out are reported as shallow and do not gate.
- *   A3  no UNKNOWN selection in a non-OTHER market, no price below 1.01
+ *   A3  no UNKNOWN selection in a non-OTHER market, no price below 1.01, and no phase-1 market
+ *       whose specifier key set changed (keyMismatch: the normalizer would drop it), on any match
  *   A4  with --compare-api: every MATCH_WINNER price within --max-1x2-dev of the median of
- *       at least 3 other bookmakers (betters and lebull are never peers)
+ *       at least 3 other bookmakers (betters and lebull are never peers), and no HOME/DRAW/AWAY
+ *       missing from Betby's MATCH_WINNER while at least 3 other bookmakers quote it
  *   A5  with --compare-api: every match is listed by the odds API under the same canonical
  *       home and away names
  *   A8  the scrape took less than 15 s
  *
  * Output: one line per scraped match and one "SMOKE ..." summary line, followed by one
  * "  reason: ..." line per failed rule. Exit 0 on PASS or SKIP (no upcoming match in the
- * snapshot), 1 on FAIL or when the smoke could not run, 2 on bad arguments.
+ * snapshot), 1 on FAIL or when the smoke could not run, 2 on bad arguments (an unknown flag,
+ * a repeated flag or a flag without its value, so a typo cannot switch A4/A5 off).
  *
  * Usage:
  *   npx tsx scripts/betby-smoke.ts --bookmaker betters --league premier-league
@@ -38,12 +41,15 @@ import {
   isGated,
   marketStats,
   matchWinnerDeviation,
+  matchWinnerMissing,
   oddsListKey,
+  parseSmokeFlags,
   type OddsListMatch,
   type SmokeGateOptions,
   type SmokeMatchRow,
 } from "../src/scrapers/shared/betby/smoke-gate.js";
 import type { BetbyBookmaker } from "../src/scrapers/shared/betby/types.js";
+import { findSpecifierKeyMismatches } from "../src/services/normalization/bookmakers/betby-market-rules.js";
 import { bettersNormalizer } from "../src/services/normalization/bookmakers/betters-normalizer.js";
 import { lebullNormalizer } from "../src/services/normalization/bookmakers/lebull-normalizer.js";
 import { getNormalizerForBookmaker, normalizeMarketsForBookmaker } from "../src/services/normalization/index.js";
@@ -67,6 +73,7 @@ const USAGE = `Usage: npx tsx scripts/betby-smoke.ts --bookmaker <betters|lebull
   --max-listing-only <n>    gated matches allowed to fall back to listing markets (default 1)
   --max-1x2-dev <ratio>     MATCH_WINNER deviation from the peer median (default 0.10)
 
+Every option above takes a value; an unknown, repeated or value-less option is an error.
 Calls the brand's Betby API over plain HTTP; never opens a browser or writes to the DB.
 Exit 0 on PASS or SKIP, 1 on FAIL, 2 on bad arguments.`;
 
@@ -83,10 +90,13 @@ function usageError(message: string): never {
 }
 
 function parseArgs(argv: string[]): Args {
-  const get = (flag: string): string | undefined => {
-    const i = argv.indexOf(flag);
-    return i >= 0 && i < argv.length - 1 ? argv[i + 1] : undefined;
-  };
+  let flags: ReturnType<typeof parseSmokeFlags>;
+  try {
+    flags = parseSmokeFlags(argv);
+  } catch (err) {
+    usageError(err instanceof Error ? err.message : String(err));
+  }
+  const get = (flag: string): string | undefined => flags.values.get(flag);
   const num = (flag: string, fallback: number): number => {
     const raw = get(flag);
     if (raw === undefined) return fallback;
@@ -95,7 +105,7 @@ function parseArgs(argv: string[]): Args {
     return value;
   };
 
-  if (argv.includes("--help") || argv.includes("-h")) {
+  if (flags.help) {
     console.log(USAGE);
     process.exit(0);
   }
@@ -187,14 +197,17 @@ async function main(): Promise<void> {
       startTime: match.startTime ?? "",
       full: full.has(match.matchId),
       ...marketStats(normalized),
+      keyMismatches: findSpecifierKeyMismatches(match.markets),
       apiFound: oddsList === null ? null : peerRow !== undefined,
       max1x2Dev: peerRow === undefined ? null : matchWinnerDeviation(normalized, peerRow),
+      oneXTwoMissing: peerRow === undefined ? [] : matchWinnerMissing(normalized, peerRow),
     };
     rows.push(row);
     console.log(
       `${row.eventId} ${match.homeTeam} - ${match.awayTeam} start=${row.startTime}` +
         ` scope=${isGated(row.startTime, options) ? "gated" : "far"} markets=${match.markets.length}` +
-        ` normalized=${row.normalized} unknownInMapped=${row.unknownInMapped} full=${row.full ? "yes" : "no"}` +
+        ` normalized=${row.normalized} unknownInMapped=${row.unknownInMapped} keyMismatch=${row.keyMismatches.length}` +
+        ` full=${row.full ? "yes" : "no"}` +
         ` 1x2=${oneXTwo(normalized)} dev=${formatPct(row.max1x2Dev)}` +
         ` api=${row.apiFound === null ? "n/a" : row.apiFound ? "found" : "missing"} url=${match.eventUrl}`,
     );
@@ -209,6 +222,7 @@ async function main(): Promise<void> {
       ` minNormalizedGated=${gatedFull.length > 0 ? Math.min(...gatedFull) : "n/a"}` +
       ` listingOnlyGated=${gatedRows.filter((r) => !r.full).length}` +
       ` unknownInMapped=${rows.reduce((n, r) => n + r.unknownInMapped, 0)}` +
+      ` keyMismatches=${rows.reduce((n, r) => n + r.keyMismatches.length, 0)}` +
       ` max1x2Dev=${formatPct(deviations.length > 0 ? Math.max(...deviations) : null)}` +
       ` durationMs=${durationMs} RESULT=${verdict.result}`,
   );

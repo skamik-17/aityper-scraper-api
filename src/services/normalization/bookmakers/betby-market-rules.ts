@@ -266,7 +266,7 @@ export function marketPairLabel(marketId: string | number, specifier: string | u
  * Every pair whose market id has a phase-1 rule but whose specifier key set is not the one that
  * rule defines (`18[total=2.5|type=x]`, `18[]`), in input order. The normalizer skips such a
  * pair, so a whole family (the nine TOTAL_GOALS lines of 18, say) can vanish while the match
- * still clears a market-count floor. A Betby smoke run is meant to fail on any entry here.
+ * still clears a market-count floor. The Betby smoke (`scripts/betby-smoke.ts`) fails on any entry here.
  * Pairs the rules skip by design (`19[total=1]`, `8[goalnr=2]`, a goal-range variant other
  * than `sr:goal_range:7+`) and ids without a rule are not reported.
  */

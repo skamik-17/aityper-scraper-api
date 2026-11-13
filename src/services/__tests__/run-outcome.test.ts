@@ -106,7 +106,23 @@ describe("formatDbError", () => {
     expect(formatDbError(null)).toBe("Unknown database error");
     expect(formatDbError(undefined)).toBe("Unknown database error");
     expect(formatDbError({ code: "", message: "" })).toBe("Unknown database error");
+    expect(formatDbError({ message: " \n\t " })).toBe("Unknown database error");
     expect(formatDbError(new Error(""))).toBe("Error");
+  });
+
+  it("keeps a non-JSON error body (gateway HTML) on one bounded line", () => {
+    // postgrest-js sets `message` to the raw body when an error response is not JSON.
+    const html =
+      "<html>\r\n<head><title>502 Bad Gateway</title></head>\r\n<body>\r\n" +
+      "<center><h1>502 Bad Gateway</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n";
+    expect(formatDbError({ message: html })).toBe(
+      "<html> <head><title>502 Bad Gateway</title></head> <body> <center><h1>502 Bad Gateway</h1></center> <hr><center>nginx</center> </body> </html>",
+    );
+
+    const long = formatDbError({ message: `<html>\n${"<p>filler</p>\n".repeat(100)}</html>` });
+    expect(long).not.toContain("\n");
+    expect(long.length).toBe(300);
+    expect(long.startsWith("<html> <p>filler</p> <p>filler</p>")).toBe(true);
   });
 });
 
@@ -158,6 +174,59 @@ describe("classifyBookmakerRun", () => {
     expect(
       classifyBookmakerRun({ success: true, matches: twenty }, { marketsNormalized: 3301, marketsSaved: 2801, errors }),
     ).toEqual({ status: "partial", error: "Normalization failed for Everton vs Coventry City: boom (+1 more)" });
+  });
+
+  it("nothing saved names the save-stage cause first, even after a normalization error", () => {
+    // scrape-helpers pushes normalization errors before the batch error.
+    const errors = [
+      "Normalization failed for Everton vs Coventry City: boom",
+      "Batch insert failed (12 of 12 batches): TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:54321)",
+    ];
+    expect(
+      classifyBookmakerRun({ success: true, matches: twenty }, { marketsNormalized: 5900, marketsSaved: 0, errors }),
+    ).toEqual({
+      status: "persist_failed",
+      error:
+        "Batch insert failed (12 of 12 batches): TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:54321) (+1 more)",
+    });
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: twenty },
+        { marketsNormalized: 5900, marketsSaved: 0, errors: [errors[0], "Batch save failed: boom", "Save failed: oops"] },
+      ).error,
+    ).toBe("Batch save failed: boom (+2 more)");
+  });
+
+  it("a successful scrape that carries an error is partial, so the scraper's diagnostics survive", () => {
+    // betcris (betcris/index.ts): success with the matches captured before the abort.
+    const betcris = "aborted after 3 consecutive per-match capture failures";
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: [twenty[0], twenty[1]], error: betcris },
+        { marketsNormalized: 40, marketsSaved: 40, errors: [] },
+      ),
+    ).toEqual({ status: "partial", error: betcris });
+
+    // totalbet (totalbet/index.ts): detail failures and slug drift are its diagnostics (totalbet.md risk 8).
+    const totalbet =
+      "Detail fetch failed for 17/20 events (first: HTTP 503) | phase-1 keys missing for Everton vs Coventry City: total,btts";
+    expect(
+      classifyBookmakerRun({ success: true, matches: twenty, error: totalbet }, { marketsNormalized: 60, marketsSaved: 60, errors: [] }),
+    ).toEqual({ status: "partial", error: totalbet });
+
+    // The save error follows the scraper's.
+    const batch = "Batch insert failed (1 of 2 batches): TypeError: fetch failed (write EPIPE)";
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: twenty, error: totalbet },
+        { marketsNormalized: 60, marketsSaved: 30, errors: [batch] },
+      ),
+    ).toEqual({ status: "partial", error: `${totalbet} | ${batch}` });
+
+    // An empty error string carries nothing.
+    expect(
+      classifyBookmakerRun({ success: true, matches: twenty, error: "" }, { marketsNormalized: 60, marketsSaved: 60, errors: [] }),
+    ).toEqual({ status: "success", error: null });
   });
 
   it("clean save is success", () => {

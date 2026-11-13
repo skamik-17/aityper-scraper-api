@@ -90,9 +90,14 @@ describe("buildScraperHealthReport", () => {
   it("counts every status bucket, stale included", () => {
     // Run 2 has no stale bookmaker, so the first test cannot tell a counted stale from a dropped one.
     const snap = snapshotFromRun2();
-    snap.status.lebull = "stale";
-    snap.status.sts = "stale";
-    expect(buildScraperHealthReport("premier-league", snap, null, null, NOW).counts).toEqual({ available: 8, stale: 2, error: 4 });
+    for (const bm of ["lebull", "sts"] as const) {
+      snap.status[bm] = "stale";
+      snap.health[bm].status = "stale";
+    }
+    const r = buildScraperHealthReport("premier-league", snap, null, null, NOW);
+    expect(r.counts).toEqual({ available: 8, stale: 2, error: 4 });
+    expect(r.bookmakers.find((b) => b.bookmaker === "sts")?.status).toBe("stale");
+    expect(r.bookmakers.find((b) => b.bookmaker === "lebull")?.status).toBe("stale");
   });
 
   it("passes the last run and the last abort through", () => {

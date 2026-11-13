@@ -20,6 +20,8 @@ const MAX_FAILED_REQUESTS = 20;
 const MAX_WEBSOCKETS = 10;
 /** Failed fetch/xhr calls listed in the issue text. */
 const MAX_LISTED_FAILED_REQUESTS = 3;
+/** Error documents, and off-host redirects, listed in the issue text; the rest are counted. */
+const MAX_LISTED_PER_RULE = 3;
 /** Bound for page.url() / page.title() at snapshot time: a navigating page can stall title(). */
 const SNAPSHOT_READ_TIMEOUT_MS = 2000;
 /** Redirect hops followed back to the requested URL (Playwright chains are short). */
@@ -191,9 +193,13 @@ function siteOf(url: string | undefined): string | null {
 
 /**
  * Issue lines, in rule order:
- * 1. main-frame document >= 400; 2. navigation without a response;
- * 3. off-host redirect; 4. failed fetch/xhr (own site first, other-site 401/403
- * dropped, at most 3); 5. soft-404 title, only without a rule-1 line;
+ * 1. main-frame document >= 400 (at most 3, then "(+n more)");
+ * 2. navigation without a response;
+ * 3. off-host redirect (at most 3, then "(+n more)"); it covers HTTP redirect
+ * chains only: a JS or meta-refresh redirect to another host is a new
+ * navigation and produces no "redirected" line;
+ * 4. failed fetch/xhr (own site first, other-site 401/403 dropped, at most 3);
+ * 5. soft-404 title, only without a rule-1 line;
  * 6. opened websockets, when asked. Identical lines are listed once.
  */
 export function describeNavigationIssues(
@@ -204,19 +210,28 @@ export function describeNavigationIssues(
   const add = (line: string): void => {
     if (!issues.includes(line)) issues.push(line);
   };
+  // The first MAX_LISTED_PER_RULE distinct lines; the last listed one counts the rest.
+  const addCapped = (lines: string[]): void => {
+    const distinct = [...new Set(lines)];
+    const listed = distinct.slice(0, MAX_LISTED_PER_RULE);
+    const more = distinct.length - listed.length;
+    if (more > 0) listed[listed.length - 1] += ` (+${more} more)`;
+    listed.forEach(add);
+  };
 
-  for (const doc of d.documents) {
-    if (doc.status >= 400) add(`document HTTP ${doc.status} ${doc.finalUrl}`);
-  }
-  const hasErrorDocument = issues.length > 0;
+  const errorDocuments = d.documents.filter((doc) => doc.status >= 400);
+  addCapped(errorDocuments.map((doc) => `document HTTP ${doc.status} ${doc.finalUrl}`));
+  const hasErrorDocument = errorDocuments.length > 0;
 
   for (const nav of d.failedNavigations) add(`document failed ${nav.errorText} ${nav.url}`);
 
+  const redirects: string[] = [];
   for (const doc of d.documents) {
     const from = hostOf(doc.requestedUrl);
     const to = hostOf(doc.finalUrl);
-    if (from && to && from !== to) add(`redirected ${from} -> ${to}`);
+    if (from && to && from !== to) redirects.push(`redirected ${from} -> ${to}`);
   }
+  addCapped(redirects);
 
   // Other-site 401/403 are anonymous analytics or customer calls, not the cause.
   const ownSite = siteOf(d.documents[0]?.requestedUrl);

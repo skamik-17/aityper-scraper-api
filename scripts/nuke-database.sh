@@ -35,7 +35,7 @@ fi
 
 if [ "$1" != "--yes" ]; then
     echo -e "${YELLOW}This will DROP all tables, views, types, and functions in the public schema.${NC}"
-    echo -e "${YELLOW}Re-run migrations with apply-migrations.sh after this.${NC}\n"
+    echo -e "${YELLOW}Re-run migrations with ./scripts/apply-migrations.sh --all after this.${NC}\n"
     read -p "Type 'nuke' to confirm: " confirm
     if [ "$confirm" != "nuke" ]; then
         echo -e "${RED}Aborted${NC}"
@@ -84,4 +84,4 @@ END $$;
 SQL
 
 echo -e "${GREEN}✓ Database nuked${NC}"
-echo -e "${CYAN}Run ./scripts/apply-migrations.sh to rebuild${NC}"
+echo -e "${CYAN}Run ./scripts/apply-migrations.sh --all (npm run db:migrate -- --all) to rebuild${NC}"

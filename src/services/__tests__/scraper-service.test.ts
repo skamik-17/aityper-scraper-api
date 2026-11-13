@@ -312,6 +312,52 @@ describe("runScrapeAndPersist: DB preflight and run integrity", () => {
     expect(errorText()).toContain("[ALERT] betters (premier-league) failed 3 consecutive runs since 2026-11-06T14:00:00.000Z");
   });
 
+  it("alerts a streak once across runs: the streak state outlives the run", async () => {
+    for (const hour of ["13", "14"]) {
+      scraperHealth.recordOutcome(
+        outcome({ runId: `run-${hour}00`, bookmaker: "betters", status: "scrape_failed", matchesFound: 0, error: BETTERS_ERR, startedAt: new Date(`2026-11-06T${hour}:00:00.000Z`) }),
+      );
+    }
+    m.runAllFullOfferScrapers
+      .mockResolvedValueOnce(aggregated([outcome({ runId: "run-1500", bookmaker: "betters", status: "scrape_failed", matchesFound: 0, error: BETTERS_ERR, startedAt: new Date("2026-11-06T15:00:00.000Z") })]))
+      .mockResolvedValueOnce(aggregated([outcome({ runId: "run-1600", bookmaker: "betters", status: "scrape_failed", matchesFound: 0, error: BETTERS_ERR, startedAt: new Date("2026-11-06T16:00:00.000Z") })]));
+
+    await runScrapeAndPersist("premier-league", ["betters"]);
+    await runScrapeAndPersist("premier-league", ["betters"]);
+
+    const streakLines = errorSpy.mock.calls
+      .map((call: unknown[]) => String(call[0]))
+      .filter((l: string) => l.startsWith("[ALERT] betters"));
+    expect(streakLines).toEqual([`[ALERT] betters (premier-league) failed 3 consecutive runs since 2026-11-06T13:00:00.000Z: ${BETTERS_ERR}`]);
+  });
+
+  it("alerts when the aggregator throws, instead of a clean-looking empty run", async () => {
+    m.runAllFullOfferScrapers.mockRejectedValueOnce(new Error("browserType.launch: Executable doesn't exist"));
+
+    const r = await runScrapeAndPersist("premier-league");
+
+    expect(errorText()).toContain(
+      "[ALERT] premier-league: scrape run failed before any outcome - browserType.launch: Executable doesn't exist",
+    );
+    expect(r.errors).toContain("Full offer: browserType.launch: Executable doesn't exist");
+    expect(m.closeAllBrowsers).toHaveBeenCalledTimes(1);
+  });
+
+  it("still prints the summary, alerts and closes the browsers when the run history is unreadable", async () => {
+    // A DB row without run_id and with a timestamp nothing can parse: toIso throws a RangeError.
+    m.getRecentRunRows.mockResolvedValue([
+      { ...toScraperRunInsert(outcome({ bookmaker: "forbet", status: "scrape_failed" })), run_id: null, started_at: "not a timestamp" },
+    ]);
+
+    await expect(runScrapeAndPersist("premier-league", ["forbet"])).resolves.toMatchObject({ aborted: null });
+
+    expect(warnSpy.mock.calls.flat().join("\n")).toContain("[ScraperService] run history unusable, streak alerts skipped for this run:");
+    expect(scrapeRunLines()).toHaveLength(1);
+    // The persist alert does not need the history.
+    expect(errorText()).toContain("[ALERT] premier-league: 1 bookmaker(s) scraped but NOT saved (forbet)");
+    expect(m.closeAllBrowsers).toHaveBeenCalledTimes(1);
+  });
+
   it("closes the browser pool after the run only when asked to", async () => {
     await runScrapeAndPersist("premier-league", ["forbet"]);
     expect(m.closeAllBrowsers).toHaveBeenCalledTimes(1);

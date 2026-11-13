@@ -8,6 +8,8 @@
  * `{ data: null, error: null, ...respond(query) }`. `respond` runs once per
  * query, when the query is first awaited, so it sees the complete call list.
  * A `respond` that throws makes the await reject, like a thrown fetch would.
+ * `respond` may return a promise, e.g. one that settles only when the
+ * recorded `abortSignal` fires.
  */
 export interface RecordedQuery {
   table: string;
@@ -24,7 +26,9 @@ export interface FakeResponse {
 // `lt` is not part of a plain read/write chain, but pruneStaleOddsRows()
 // (full-offer-repository.ts) chains `.delete().eq().eq().lt()` after every
 // clean batch save, so repository tests that reach that path need it.
+// `abortSignal` bounds probeDatabase() (config/database.ts).
 const CHAIN_METHODS = [
+  "abortSignal",
   "select",
   "insert",
   "upsert",
@@ -40,7 +44,7 @@ const CHAIN_METHODS = [
   "single",
 ] as const;
 
-export function createFakeSupabase(respond: (q: RecordedQuery) => FakeResponse): {
+export function createFakeSupabase(respond: (q: RecordedQuery) => FakeResponse | Promise<FakeResponse>): {
   client: any;
   queries: RecordedQuery[];
 } {
@@ -63,7 +67,9 @@ export function createFakeSupabase(respond: (q: RecordedQuery) => FakeResponse):
         onFulfilled?: (value: { data: unknown; error: unknown }) => unknown,
         onRejected?: (reason: unknown) => unknown,
       ) => {
-        settled ??= Promise.resolve().then(() => ({ data: null, error: null, ...respond(query) }));
+        settled ??= Promise.resolve()
+          .then(() => respond(query))
+          .then((response) => ({ data: null, error: null, ...response }));
         return settled.then(onFulfilled, onRejected);
       };
       return builder;

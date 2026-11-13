@@ -236,6 +236,37 @@ describe("describeNavigationIssues (live 2026-11-06 captures)", () => {
     ]);
   });
 
+  it("lists at most 3 failing documents and counts the rest", () => {
+    // e.g. a failed pzbuk run whose per-event detail navigations all 404.
+    const documents = Array.from({ length: 10 }, (_, i) => ({
+      requestedUrl: `https://www.pzbuk.pl/pl/sport/event/${i}`,
+      finalUrl: `https://www.pzbuk.pl/pl/sport/event/${i}`,
+      status: 404,
+    }));
+    expect(describeNavigationIssues({ ...base, documents })).toEqual([
+      "document HTTP 404 https://www.pzbuk.pl/pl/sport/event/0",
+      "document HTTP 404 https://www.pzbuk.pl/pl/sport/event/1",
+      "document HTTP 404 https://www.pzbuk.pl/pl/sport/event/2 (+7 more)",
+    ]);
+    // Repeats of one failing URL are one fact, not several.
+    expect(describeNavigationIssues({ ...base, documents: [documents[0], documents[0], documents[0], documents[0]] })).toEqual([
+      "document HTTP 404 https://www.pzbuk.pl/pl/sport/event/0",
+    ]);
+  });
+
+  it("lists at most 3 off-host redirects and counts the rest", () => {
+    const documents = Array.from({ length: 5 }, (_, i) => ({
+      requestedUrl: `https://www.site${i}.pl/`,
+      finalUrl: "https://landing.example.com/",
+      status: 200,
+    }));
+    expect(describeNavigationIssues({ ...base, documents })).toEqual([
+      "redirected www.site0.pl -> landing.example.com",
+      "redirected www.site1.pl -> landing.example.com",
+      "redirected www.site2.pl -> landing.example.com (+2 more)",
+    ]);
+  });
+
   it("does not throw on a URL it cannot parse", () =>
     expect(
       describeNavigationIssues({

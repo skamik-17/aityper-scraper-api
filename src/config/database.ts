@@ -23,15 +23,23 @@ export function getSupabase(): SupabaseClient<Database> {
 
 export type DbProbe = { ok: true } | { ok: false; error: string };
 
+/** Bound of one probe request: a hung PostgREST or a blackholed host must not stall the preflight. */
+const PROBE_TIMEOUT_MS = 5000;
+
 /**
  * One read through PostgREST to a real table, so a PostgREST that answers
  * while Postgres is still starting (PGRST002) counts as not ready.
- * Never throws: an unreachable DB or a client that cannot be created
- * gives `{ ok: false }` with the formatted cause.
+ * Never throws: an unreachable DB, a request that takes longer than
+ * PROBE_TIMEOUT_MS or a client that cannot be created gives `{ ok: false }`
+ * with the formatted cause.
  */
 export async function probeDatabase(): Promise<DbProbe> {
   try {
-    const { error } = await getSupabase().from("market_types").select("id").limit(1);
+    const { error } = await getSupabase()
+      .from("market_types")
+      .select("id")
+      .limit(1)
+      .abortSignal(AbortSignal.timeout(PROBE_TIMEOUT_MS));
     // PGRST116 (no rows for a single-row read) still proves the DB answered
     if (error && error.code !== "PGRST116") {
       return { ok: false, error: formatDbError(error) };

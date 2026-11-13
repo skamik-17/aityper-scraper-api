@@ -8,15 +8,13 @@
 import { CONFIG, type PolishBookmaker } from "../../config/index.js";
 import type { BookmakerRunOutcome } from "../../services/run-outcome.js";
 import {
-  deriveBookmakerStatus,
+  buildSnapshot,
   staleAfterMs,
   summarizeBookmakerRuns,
-  type BookmakerHealthMeta,
   type BookmakerRunSummary,
   type BookmakerStatusSnapshot,
 } from "../../services/bookmaker-status.js";
 import { toScraperRunInsert } from "../../repositories/scraper-run-repository.js";
-import type { BookmakerStatus } from "../../types/database.js";
 
 export const RUN_ID = "440d2fc6-658b-46fe-b288-05261faa0caf";
 
@@ -77,7 +75,8 @@ export const RUN2_FAILED: Partial<Record<PolishBookmaker, string>> = {
 
 /**
  * The status snapshot right after run 2, built through the real row mapping,
- * summary and status derivation: 9 bookmakers available, 5 in error.
+ * summary and production snapshot assembly (60-minute interval, no odds
+ * freshness rows): 9 bookmakers available, 5 in error.
  */
 export function snapshotFromRun2(now: Date = new Date("2026-11-06T16:16:18.614Z")): BookmakerStatusSnapshot {
   const outcomes = CONFIG.BOOKMAKERS.map((bookmaker) => {
@@ -87,26 +86,5 @@ export function snapshotFromRun2(now: Date = new Date("2026-11-06T16:16:18.614Z"
       : outcome({ bookmaker, status: "scrape_failed", matchesFound: 0, error: RUN2_FAILED[bookmaker] ?? null });
   });
   const summaries = summarizeBookmakerRuns(outcomes.map(toScraperRunInsert), CONFIG.BOOKMAKERS);
-
-  const status = {} as Record<PolishBookmaker, BookmakerStatus>;
-  const health = {} as Record<PolishBookmaker, BookmakerHealthMeta>;
-  for (const bm of CONFIG.BOOKMAKERS) {
-    const s = summaries.get(bm);
-    status[bm] = deriveBookmakerStatus(s, null, now, staleAfterMs(60));
-    health[bm] = {
-      status: status[bm],
-      lastSuccessAt: s?.lastSuccessAt ?? null,
-      failingSince: s?.failingSince ?? null,
-      consecutiveFailures: s?.consecutiveFailures ?? 0,
-    };
-  }
-
-  return {
-    source: "scraper_runs",
-    status,
-    health,
-    summaries,
-    lastOddsAt: new Map(),
-    lastSuccessfulRunAt: "2026-11-06T16:02:49.798Z",
-  };
+  return buildSnapshot("scraper_runs", summaries, new Map(), true, "2026-11-06T16:02:49.798Z", now, staleAfterMs(60));
 }

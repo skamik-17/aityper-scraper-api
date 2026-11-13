@@ -28,3 +28,13 @@ export function getOddsWriteModel(env: NodeJS.ProcessEnv = process.env): OddsWri
   }
   return "legacy";
 }
+
+/**
+ * Reads follow the primary write model: the snapshot tables only once the owner has
+ * switched (migration 14 applied, ODDS_WRITE_MODEL=switched or snapshot); before that,
+ * table odds, so this code is safe to deploy ahead of migrations 13-14.
+ */
+export function readsSnapshotModel(env: NodeJS.ProcessEnv = process.env): boolean {
+  const model = getOddsWriteModel(env);
+  return model === "switched" || model === "snapshot";
+}

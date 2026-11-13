@@ -26,6 +26,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getSupabase } from "../src/config/database.js";
+import { readsSnapshotModel } from "../src/config/odds-storage.js";
 import { getNormalizedTeamName } from "../src/utils/team-matcher.js";
 import type { PolishBookmaker } from "../src/config/index.js";
 import type { FullMatchOffer } from "../src/types/full-offer.js";
@@ -122,6 +123,15 @@ export interface RawBundle {
 async function resolveEventUrls(matchId: string): Promise<Map<string, string>> {
   const sb = getSupabase();
   const urls = new Map<string, string>();
+  // Snapshot model: one row per (match, bookmaker) already holds the current event URL
+  if (readsSnapshotModel()) {
+    const { data, error } = await (sb as any).from("odds_snapshot").select("bookmaker, event_url").eq("match_id", matchId);
+    if (error) throw new Error(`DB: ${error.message}`);
+    for (const row of (data ?? []) as Array<{ bookmaker: string; event_url: string | null }>) {
+      if (row.event_url) urls.set(row.bookmaker, row.event_url);
+    }
+    return urls;
+  }
   const seenAt = new Map<string, string>();
   let from = 0;
   const page = 1000;

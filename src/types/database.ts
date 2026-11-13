@@ -194,6 +194,10 @@ export interface Database {
           category: MarketCategory;
           has_parameter: boolean;
           expected_selections: NormalizedSelection[];
+          /** Snapshot model (migration 14): when this quote's content last changed. */
+          changed_at?: string;
+          /** Snapshot model (migration 14): "degenerate" while the prune guard keeps an older snapshot. */
+          snapshot_status?: "ok" | "degenerate";
         };
         Relationships: [];
       };

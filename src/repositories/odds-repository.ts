@@ -5,6 +5,7 @@ import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-match
 import { fetchAllRows } from "../utils/supabase-pagination.js";
 import { parseDbTimestamp } from "../utils/db-timestamp.js";
 import { formatDbError } from "../services/run-outcome.js";
+import { readsSnapshotModel } from "../config/odds-storage.js";
 import { generateMatchId } from "./full-offer-repository.js";
 
 export interface AggregatedMatchOdds {
@@ -87,10 +88,16 @@ export interface MatchInfoRow {
   start_time: string | null;
 }
 
+/**
+ * One match's header. From table matches once reads follow the snapshot model (kickoff =
+ * max over the bookmakers' reports), else from an arbitrary odds row of the match.
+ */
 export async function getMatchInfoById(matchId: string): Promise<MatchInfoRow | null> {
   const supabase = getSupabase();
+  const table = readsSnapshotModel() ? "matches" : "odds";
 
-  const { data, error } = await (supabase.from("odds") as any)
+  const { data, error } = await (supabase as any)
+    .from(table)
     .select("match_id, home_team, away_team, league_slug, start_time")
     .eq("match_id", matchId)
     .limit(1);
@@ -114,6 +121,8 @@ export async function getMatchInfoById(matchId: string): Promise<MatchInfoRow | 
 
 /**
  * Newest scraped_at of one bookmaker's odds in one league, or null without rows.
+ * Once reads follow the snapshot model it is odds_snapshot.last_seen_at (index
+ * odds_snapshot_league_bm_seen); a degenerate snapshot keeps its last good time.
  * Throws an Error with the formatted DB cause on a PostgREST error.
  */
 export async function getLastScrapeTime(
@@ -121,13 +130,15 @@ export async function getLastScrapeTime(
   leagueSlug: string
 ): Promise<Date | null> {
   const supabase = getSupabase();
+  const snapshot = readsSnapshotModel();
+  const column = snapshot ? "last_seen_at" : "scraped_at";
 
-  const { data, error } = await supabase
-    .from("odds")
-    .select("scraped_at")
+  const { data, error } = await (supabase as any)
+    .from(snapshot ? "odds_snapshot" : "odds")
+    .select(column)
     .eq("league_slug", leagueSlug)
     .eq("bookmaker", bookmaker)
-    .order("scraped_at", { ascending: false })
+    .order(column, { ascending: false })
     .limit(1);
 
   if (error) {
@@ -137,7 +148,7 @@ export async function getLastScrapeTime(
     return null;
   }
 
-  return parseDbTimestamp(data[0].scraped_at);
+  return parseDbTimestamp(data[0][column]);
 }
 
 /**

@@ -31,6 +31,7 @@ const bookmakerOf = (q: RecordedQuery) =>
   q.calls.find(([method, column]) => method === "eq" && column === "bookmaker")?.[2] as string;
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   db.client = null;
 });
 
@@ -59,5 +60,23 @@ describe("getOddsFreshnessByBookmaker", () => {
     await expect(getOddsFreshnessByBookmaker("premier-league", ["sts"])).rejects.toThrow(
       "odds freshness query failed for sts: TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:54321)",
     );
+  });
+
+  it("after the switch, one limit(1) query per bookmaker on odds_snapshot.last_seen_at", async () => {
+    vi.stubEnv("ODDS_WRITE_MODEL", "switched");
+    useFake((q) => {
+      const latest = LATEST[bookmakerOf(q)];
+      return { data: latest ? [{ last_seen_at: latest }] : [] };
+    });
+    const m = await getOddsFreshnessByBookmaker("premier-league", ["sts", "fortuna", "totalbet"]);
+    expect(fake.queries).toHaveLength(3);
+    for (const q of fake.queries) {
+      expect(q.table).toBe("odds_snapshot");
+      expect(q.calls).toContainEqual(["eq", "league_slug", "premier-league"]);
+      expect(q.calls).toContainEqual(["order", "last_seen_at", { ascending: false }]);
+      expect(q.calls).toContainEqual(["limit", 1]);
+    }
+    expect(m.get("fortuna")!.toISOString()).toBe("2026-11-06T16:00:45.385Z");
+    expect(m.has("totalbet")).toBe(false);
   });
 });

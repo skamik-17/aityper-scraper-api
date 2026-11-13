@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 /**
  * Script to clear all data from local Supabase database
- * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs] [--dry-run] [--stats]
+ * Usage: npx tsx scripts/clear-database.ts [--all | --odds | --runs | --history] [--dry-run] [--stats]
  *
  * Current database structure:
  *   - market_types: 41 seed rows (NEVER cleared)
@@ -10,8 +10,10 @@
  *
  * Options:
  *   --all      Clear all data tables (default)
- *   --odds     Clear only odds table
+ *   --odds     Clear only the odds tables: odds_current, odds_snapshot, matches and,
+ *              while it exists, the legacy odds table
  *   --runs     Clear only scraper_runs table
+ *   --history  Clear odds_history (the change log); the only way to clear it
  *   --dry-run  Show what would be deleted without actually deleting
  *   --stats     Show current statistics only
  */
@@ -44,31 +46,48 @@ async function getTableCount(tableName: string): Promise<number> {
   return count ?? 0;
 }
 
-async function clearOdds(dryRun: boolean): Promise<number> {
-  const count = await getTableCount("odds");
+/** PostgREST answers PGRST205 for a table that does not exist (odds after migration 15). */
+async function tableExists(tableName: string): Promise<boolean> {
+  const { error } = await (supabase as any).from(tableName).select("*", { count: "exact", head: true });
+  return (error as { code?: unknown } | null)?.code !== "PGRST205";
+}
+
+/** Deletes every row; safeupdate needs a filter, so the delete carries `match_id IS NOT NULL`. */
+async function clearByMatchId(tableName: string, dryRun: boolean): Promise<number> {
+  if (!(await tableExists(tableName))) {
+    console.log(`  [${tableName}] Table not found - skipped`);
+    return 0;
+  }
+  const count = await getTableCount(tableName);
 
   if (count === 0) {
-    console.log("  [odds] Already empty");
+    console.log(`  [${tableName}] Already empty`);
     return 0;
   }
 
   if (dryRun) {
-    console.log(`  [odds] Would delete ${count} rows`);
+    console.log(`  [${tableName}] Would delete ${count} rows`);
     return count;
   }
 
-  const { error } = await supabase
-    .from("odds")
-    .delete()
-    .gte("scraped_at", "1970-01-01");
+  const { error } = await (supabase as any).from(tableName).delete().not("match_id", "is", null);
 
   if (error) {
-    console.error(`  [odds] Error: ${error.message}`);
+    console.error(`  [${tableName}] Error: ${error.message}`);
     return 0;
   }
 
-  console.log(`  [odds] Deleted ${count} rows`);
+  console.log(`  [${tableName}] Deleted ${count} rows`);
   return count;
+}
+
+/** The odds tables: the snapshot model (children first) and the legacy table while it exists. */
+async function clearOdds(dryRun: boolean): Promise<number> {
+  let total = 0;
+  for (const table of ["odds_current", "odds_snapshot", "matches", "odds"]) {
+    total += await clearByMatchId(table, dryRun);
+  }
+  return total;
 }
 
 async function clearScraperRuns(dryRun: boolean): Promise<number> {
@@ -109,7 +128,23 @@ async function showStats(): Promise<void> {
     },
     {
       name: "odds",
-      description: "Scraped odds data (all scrapes)",
+      description: "Legacy scraped odds (all scrapes; dropped in migration 15)",
+    },
+    {
+      name: "matches",
+      description: "One row per fixture (snapshot model)",
+    },
+    {
+      name: "odds_snapshot",
+      description: "One row per match and bookmaker (snapshot model)",
+    },
+    {
+      name: "odds_current",
+      description: "Current quote per match, bookmaker and market (snapshot model)",
+    },
+    {
+      name: "odds_history",
+      description: "Append-only change log (cleared only with --history)",
     },
     {
       name: "scraper_runs",
@@ -156,7 +191,8 @@ async function main(): Promise<void> {
   const showOnly = args.includes("--stats");
   const clearOddsFlag = args.includes("--odds");
   const clearRunsFlag = args.includes("--runs");
-  const clearAll = args.includes("--all") || (!clearOddsFlag && !clearRunsFlag && !showOnly);
+  const clearHistoryFlag = args.includes("--history");
+  const clearAll = args.includes("--all") || (!clearOddsFlag && !clearRunsFlag && !clearHistoryFlag && !showOnly);
 
   console.log("╔══════════════════════════════════════════════╗");
   console.log("║   Supabase Database Cleanup Script            ║");
@@ -183,6 +219,7 @@ async function main(): Promise<void> {
     const targets: string[] = [];
     if (clearOddsFlag) targets.push("odds");
     if (clearRunsFlag) targets.push("scraper_runs");
+    if (clearHistoryFlag) targets.push("odds_history");
     console.log(`Clearing: ${targets.join(", ")}\n`);
   }
 
@@ -194,6 +231,11 @@ async function main(): Promise<void> {
 
   if (clearAll || clearRunsFlag) {
     totalDeleted += await clearScraperRuns(dryRun);
+  }
+
+  // Never part of --all: the change log feeds the value model
+  if (clearHistoryFlag) {
+    totalDeleted += await clearByMatchId("odds_history", dryRun);
   }
 
   console.log();

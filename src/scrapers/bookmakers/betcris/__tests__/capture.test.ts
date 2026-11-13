@@ -159,14 +159,28 @@ describe("betcris captureSwarm", () => {
     await vi.advanceTimersByTimeAsync(40000); // the rejection lands after resolve; must not be unhandled
   });
 
-  it("betcris capture: single-event mode unions game 31321159 and resolves on plateau", async () => {
+  it("betcris capture: single-event mode resolves on the SINGLE_GAME_VIEW reply, before the plateau", async () => {
     const url = `${LEAGUE}/31321159`;
-    const out = await settle(captureSwarm(createFakeSwarmPage(() => ({ events: match })).page, url, { singleEventMode: true, targetGameNumber: 31321159 }));
+    const t0 = Date.now(); let at = -1;
+    const out = await settle(captureSwarm(createFakeSwarmPage(() => ({ events: match })).page, url, { singleEventMode: true, targetGameNumber: 31321159 })
+      .then((o) => ((at = Date.now() - t0), o)));
     expect(out.failure).toBeNull();
     expect(out.attempts[0].firstUsefulFrameMs).toBe(2654);
+    expect(at).toBe(2654); // before: the 3 s plateau, >= 5654
     const g = findGame(out.data!, 31321159); // local helper
     expect(Object.keys(g.market ?? {})).toHaveLength(613);
     expect(g.markets_count).toBe(635);
+  });
+
+  it("betcris capture: without a SINGLE_GAME_VIEW-tagged reply the plateau still decides", async () => {
+    const url = `${LEAGUE}/31321159`;
+    const untagged = match.map((e) => (e.kind === "recv" && e.t === 2654 ? { ...e, payload: e.payload!.replace('"rid":"SINGLE_GAME_VIEW', '"rid":"Other') } : e));
+    const t0 = Date.now(); let at = -1;
+    const out = await settle(captureSwarm(createFakeSwarmPage(() => ({ events: untagged })).page, url, { singleEventMode: true, targetGameNumber: 31321159 })
+      .then((o) => ((at = Date.now() - t0), o)));
+    expect(out.failure).toBeNull();
+    expect(at).toBeGreaterThanOrEqual(2654 + 3000);
+    expect(Object.keys(findGame(out.data!, 31321159).market ?? {})).toHaveLength(613);
   });
 
   it("betcris capture: target_game_missing for an id that never appears, without a retry", async () => {

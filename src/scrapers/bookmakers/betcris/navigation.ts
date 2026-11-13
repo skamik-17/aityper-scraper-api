@@ -24,7 +24,6 @@ import {
 } from "node:timers";
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import {
-  BASE_URL,
   COMPETITION_IDS,
   REQUEST_TIMEOUT,
   WS_CONFIG,
@@ -372,7 +371,20 @@ function runCaptureAttempt(
           onTargetSeen();
         }
 
-        // Full offer captured: the union reached the game's self-reported total.
+        // Full offer captured: the match page's own SINGLE_GAME_VIEW reply carries
+        // the whole game in one frame. Only a tagged frame that itself holds the
+        // target with markets counts (an early SGV reply can carry `sport: {}`).
+        if (
+          attempt.firstUsefulFrameMs !== null &&
+          String(msg.rid ?? "").startsWith("SINGLE_GAME_VIEW") &&
+          analyzeSwarmData(msg.data.data as SwarmData, targetGameNumber).targetMarketCount > 0
+        ) {
+          void finish(null);
+          return;
+        }
+
+        // Fallback: the union reached the game's self-reported total (it rarely
+        // does; otherwise the plateau or the max wait decides).
         const target = targetGameNumber ? stats.targetMarketsCount : 0;
         if (attempt.firstUsefulFrameMs !== null && target > 0 && currentBest >= target) {
           void finish(null);
@@ -697,21 +709,7 @@ export function extractGameIdFromUrl(eventUrl: string): number | null {
   return isNaN(gameId) ? null : gameId;
 }
 
-/**
- * Build the canonical event URL from game context
- *
- * @param regionAlias - Region alias (e.g., "England")
- * @param competitionId - Competition ID
- * @param gameId - Game ID
- * @returns Full event URL
- */
-export function buildEventUrl(
-  regionAlias: string,
-  competitionId: number,
-  gameId: number
-): string {
-  return `${BASE_URL}/zaklady-bukmacherskie/match/Soccer/${regionAlias}/${competitionId}/${gameId}`;
-}
+export { buildEventUrl } from "./swarm-offer.js";
 
 /**
  * Get competition ID for a league

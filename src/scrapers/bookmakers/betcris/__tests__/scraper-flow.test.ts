@@ -6,6 +6,10 @@ import {
   type FakeSwarmPage,
   type RecordedSwarmEvent,
 } from "./helpers/fake-swarm-page.js";
+import { browserOfferPage, recordedGame, recordedListing, retarget, RECORDED_GAME_IDS } from "./helpers/swarm-fixtures.js";
+import { buildBetcrisMatchOffer } from "../swarm-offer.js";
+import { parseSwarmDataForFullOffer } from "../parser.js";
+import type { FullMatchOffer } from "../../../../types/full-offer.js";
 
 const league = loadRecording("league-538-frames.json");
 const match = loadRecording("match-31321159-frames.json");
@@ -16,16 +20,9 @@ const EMPTY: RecordedSwarmEvent[] = [
   { t: 700, kind: "domcontentloaded" },
 ];
 
-/** The recorded match frames, with game 31321159 renamed to `id` */
-function retarget(events: RecordedSwarmEvent[], id: number): RecordedSwarmEvent[] {
-  return events.map((e) =>
-    e.payload ? { ...e, payload: e.payload.replaceAll("31321159", String(id)) } : e
-  );
-}
-
 describe("betcris scraper flow", () => {
-  // A fresh module per test: eventsCache (index.ts) is module-level and
-  // scrapeFullOffer fills it.
+  // A fresh module per test, so no module-level state of the scraper leaks
+  // from one test into the next.
   let BetcrisPlaywrightScraper: typeof import("../index.js").BetcrisPlaywrightScraper;
 
   /** Every browser session of the scraper gets the fake page */
@@ -61,7 +58,7 @@ describe("betcris scraper flow", () => {
   });
 
   it("betcris scrapeMatchDetails: browser branch returns game 31321159 from the recorded frames", async () => {
-    const url = `${LEAGUE}/31321159`; // fresh module, so the cache path (index.ts:164-199) is skipped
+    const url = `${LEAGUE}/31321159`;
     const fake = createFakeSwarmPage(() => ({ events: match }));
     useFakeBrowser(fake);
     const r = await settle(new BetcrisPlaywrightScraper().scrapeMatchDetails(url));
@@ -173,6 +170,62 @@ describe("betcris scraper flow", () => {
     const skipped = vi.mocked(console.warn).mock.calls.map(([m]) => String(m)).filter((m) => m.startsWith("[Betcris/FullOffer] Skipped game"));
     expect(skipped.map((m) => m.match(/captured: (\w+)/)?.[1])).toEqual(["no_swarm_socket", "no_swarm_socket", "target_game_missing", "no_swarm_socket"]);
     expect(console.warn).toHaveBeenCalledWith("[Betcris/FullOffer] Aborting per-match loop: 3 consecutive capture failures");
+  });
+
+  const offerPage = () => createFakeSwarmPage((url) => (url.endsWith("/538") ? { events: league } : { events: retarget(match, Number(url.split("/").pop())) }));
+
+  it("betcris scrapeFullOffer: writes no module-level events cache", async () => {
+    const { ScraperCache } = await import("../../../../services/cache-manager.js");
+    const setMany = vi.spyOn(ScraperCache.prototype, "setMany");
+    useFakeBrowser(offerPage());
+    await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    expect(setMany).not.toHaveBeenCalled(); // before: once per captured game (20)
+  });
+
+  it("betcris scrapeMatchDetails: navigates even right after scrapeFullOffer captured the game", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const s = new BetcrisPlaywrightScraper();
+    await settle(s.scrapeFullOffer("premier-league"));
+    expect(fake.gotoAt).toHaveLength(1 + 20);
+    const r = await settle(s.scrapeMatchDetails(`${LEAGUE}/31321159`));
+    expect(r.status).toBe("success");
+    expect(fake.gotoAt).toHaveLength(1 + 20 + 1); // before: served from the cache, no navigation
+  });
+
+  // The budget module the scraper sees (fresh per test after vi.resetModules), so its
+  // BudgetExceededError is recognised by the scraper's budgetAbortReason.
+  const createScrapeBudget = async (maxMs: number) => (await import("../../../shared/budget.js")).createScrapeBudget(maxMs);
+
+  // README §8 Q13: listing at 1908 ms, then each game ends on its SGV reply 2654 ms
+  // after goto plus the 100 ms pause, so game 2 is done at 7416 ms and game 3 in flight.
+  it("betcris scrapeFullOffer: a budget cut returns the games captured so far with the cause", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const maxMs = 1908 + 2 * 2754 + 1000;
+    const t0 = Date.now();
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league", await createScrapeBudget(maxMs)));
+    expect(r.success).toBe(true);
+    expect(r.matches.map((m) => m.matchId)).toEqual(["31321159", "31333512"]);
+    expect(r.error).toBe(`scrape budget of ${maxMs}ms exceeded`);
+    expect(Date.now() - t0).toBeLessThanOrEqual(maxMs + 100); // settle() steps of 100 ms
+    expect(fake.gotoAt).toHaveLength(1 + 3); // no game starts after the cut
+    expect(console.warn).toHaveBeenCalledWith(`[Betcris/FullOffer] Stopping per-match loop: scrape budget of ${maxMs}ms exceeded`);
+  });
+
+  it("betcris scrapeFullOffer: a budget cut before any game is captured is a failure with the cause", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league", await createScrapeBudget(3000)));
+    expect(r).toMatchObject({ success: false, matches: [], error: "scrape budget of 3000ms exceeded" });
+    expect(fake.gotoAt).toHaveLength(1 + 1);
+  });
+
+  it("betcris scrapeFullOffer: every offer equals buildBetcrisMatchOffer on the same recorded payloads", async () => {
+    useFakeBrowser(browserOfferPage());
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    const strip = ({ scrapedAt: _s, ...m }: FullMatchOffer) => m;
+    const expected = parseSwarmDataForFullOffer(recordedListing(), "premier-league", 538)
+      .map((e) => strip(buildBetcrisMatchOffer(e, recordedGame(e.game.id), "premier-league", new Date())!));
+    expect(r.matches.map((m) => m.matchId)).toEqual(RECORDED_GAME_IDS.map(String));
+    expect(r.matches.map(strip)).toEqual(expected);
   });
 
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {

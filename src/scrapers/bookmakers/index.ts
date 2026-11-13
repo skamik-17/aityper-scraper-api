@@ -36,7 +36,7 @@ export { BetfanHttpScraper } from "../shared/rest-market/brands/betfan.js";
 export { betclicScraper, BetclicPlaywrightScraper } from "./betclic/index.js";
 export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet/index.js";
 export { stsScraper, STSScraper } from "./sts/index.js";
-export { betcrisScraper, BetcrisPlaywrightScraper } from "./betcris/index.js";
+export { betcrisScraper, BetcrisBrowserScraper, BetcrisSwarmScraper, BetcrisPlaywrightScraper } from "./betcris/index.js";
 export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
 export { PzbukBrowserScraper, PzbukWsScraper } from "./pzbuk/index.js";
 export { LVBetBrowserScraper, LVBetHttpScraper } from "./lvbet/index.js";

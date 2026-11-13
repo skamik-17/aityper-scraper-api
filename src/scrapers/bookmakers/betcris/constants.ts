@@ -257,3 +257,28 @@ export const WS_CONFIG = {
  * Request timeout in milliseconds
  */
 export const REQUEST_TIMEOUT = 30000;
+
+/**
+ * Direct Swarm (BetConstruct WebSocket) transport. The site id and socket URL
+ * come from the `partnerConfigs` line of the betcris.pl page (EXECUTION C keeps
+ * betcris.pl; its config names eu-swarm-ws-re, which serves site 1874631), with
+ * the socket the SPA itself opens as the fallback.
+ */
+export const SWARM_TRANSPORT = {
+  PARTNER_CONFIG_URL: "https://www.betcris.pl/",
+  PARTNER_CONFIG_TIMEOUT_MS: 10_000,
+  PARTNER_CONFIG_TTL_MS: 6 * 60 * 60 * 1000,
+  PARTNER_CONFIG_FAILURE_TTL_MS: 10 * 60 * 1000,
+  FALLBACK_SITE_ID: "1874631",
+  FALLBACK_SOCKET_URL: "wss://eu-swarm-springre.trexname.com/",
+  ORIGIN: "https://www.betcris.pl",
+  LANGUAGE: "pol",
+  SOURCE: 42,
+  CONNECT_TIMEOUT_MS: 5_000,
+  SESSION_TIMEOUT_MS: 5_000,
+  LISTING_TIMEOUT_MS: 10_000,
+  GAME_TIMEOUT_MS: 10_000,
+  GAME_CONCURRENCY: 4,
+  OPEN_ATTEMPTS: 2,
+  OPEN_RETRY_DELAY_MS: 1_000,
+} as const;

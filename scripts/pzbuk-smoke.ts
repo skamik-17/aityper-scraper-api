@@ -2,8 +2,9 @@
 /**
  * PZBuk live smoke test.
  *
- * Scrapes one league's full offer with the real PZBuk scraper (opens a
- * browser and calls pzbuk.pl; no DB and no running server needed), normalizes
+ * Scrapes one league's full offer with the picked PZBuk scraper (calls
+ * pzbuk.pl over its WebSocket API, a browser only with
+ * SCRAPER_TRANSPORT_PZBUK=browser; no DB and no running server needed), normalizes
  * every market the way the service does before saving (scrape-helpers.ts), and
  * checks the acceptance thresholds of
  * docs/superpowers/plans/2026-11-06-scraper-recovery/pzbuk.md. With --peers it
@@ -36,14 +37,15 @@
  * "[pzbuk] Dropping …" warnings; inspect each one), the transport counters
  * invalidFrames / chunkedFrames / maxFrameBytes (A11), ordinalMarkets /
  * templateMarkets (A12) and durationMs (A8, wall clock of scrapeFullOffer;
- * <= 600000 expected).
+ * < 3000 expected on the default WebSocket transport, <= 600000 on the browser).
  *
  * Usage:
  *   npx tsx scripts/pzbuk-smoke.ts --league premier-league
  *   npx tsx scripts/pzbuk-smoke.ts --league premier-league --peers http://localhost:3001
  *   npx tsx scripts/pzbuk-smoke.ts --help
  */
-import { pzbukScraper } from "../src/scrapers/bookmakers/pzbuk/index.js";
+import { pzbukScraper } from "../src/scrapers/bookmakers/index.js";
+import { hasFrameCounters, type PzbukFrameCounters } from "../src/scrapers/bookmakers/pzbuk/index.js";
 import { getMarketMetadata } from "../src/data/market-catalog.js";
 import { normalizeMarketsForBookmaker } from "../src/services/normalization/index.js";
 import type { FullMatchOffer, ScrapedMarket } from "../src/types/full-offer.js";
@@ -86,10 +88,15 @@ const USAGE = `Usage: npx tsx scripts/pzbuk-smoke.ts --league <slug> [--peers <b
                      pass is false
   --help, -h         print this help and exit
 
-Opens a browser and calls pzbuk.pl; never writes to the DB.
+Calls pzbuk.pl over its WebSocket API (a browser only with SCRAPER_TRANSPORT_PZBUK=browser); never writes to the DB.
 Prints one MATCH line per match and one SMOKE line; exit 0 when "pass" is true, 1 otherwise.`;
 
-type TransportStats = typeof pzbukScraper.lastTransportStats;
+type FrameCounters = PzbukFrameCounters;
+
+/** The picked scraper's cumulative frame counters (zeros if it has none). */
+function frameCountersOf(scraper: typeof pzbukScraper): FrameCounters {
+  return hasFrameCounters(scraper) ? scraper.frameCounters() : { invalidFrames: 0, chunkedFrames: 0, maxFrameBytes: 0 };
+}
 
 export interface Args {
   league?: string;
@@ -381,7 +388,7 @@ export interface SmokeSummary {
 export function summarize(input: {
   success: boolean;
   reports: MatchReport[];
-  transport: TransportStats;
+  transport: FrameCounters;
   durationMs: number;
   peers: PeersStatus;
 }): SmokeSummary {
@@ -471,10 +478,18 @@ async function main(): Promise<void> {
 
   let pass = false;
   try {
+    const before = frameCountersOf(pzbukScraper);
     const startedAt = Date.now();
     const result = await pzbukScraper.scrapeFullOffer(league);
     const durationMs = Date.now() - startedAt;
-    const transport = { ...pzbukScraper.lastTransportStats };
+    const after = frameCountersOf(pzbukScraper);
+    // Counters are cumulative: diff around the one call. One call per process,
+    // so the max frame size is this call's.
+    const transport: FrameCounters = {
+      invalidFrames: after.invalidFrames - before.invalidFrames,
+      chunkedFrames: after.chunkedFrames - before.chunkedFrames,
+      maxFrameBytes: after.maxFrameBytes,
+    };
     if (!result.success) {
       console.log(`[pzbuk-smoke] scrapeFullOffer failed: ${result.error ?? "(no error message)"}`);
     }

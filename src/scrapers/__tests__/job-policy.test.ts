@@ -27,8 +27,9 @@ describe("job policy", () => {
 
   it("pins the transport of every getScraper(bm) default instance (cross-plan #8)", () => {
     // Plans 02-04 moved these to plain HTTP; plan 05 updates the set when it changes a pick.
+    const WEBSOCKET = new Set(["pzbuk"]); // plan 05c
     const BROWSERLESS = new Set(["betclic", "betters", "lebull", "totalbet", "etoto", "forbet", "fuksiarz", "betfan", "fortuna", "superbet", "lvbet"]);
     expect(Object.fromEntries(CONFIG.BOOKMAKERS.map((bm) => [bm, resolveJobTransport(getScraper(bm)!)])))
-      .toEqual(Object.fromEntries(CONFIG.BOOKMAKERS.map((bm) => [bm, BROWSERLESS.has(bm) ? "http" : "browser"])));
+      .toEqual(Object.fromEntries(CONFIG.BOOKMAKERS.map((bm) => [bm, WEBSOCKET.has(bm) ? "websocket" : BROWSERLESS.has(bm) ? "http" : "browser"])));
   });
 });

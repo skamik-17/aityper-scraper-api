@@ -325,12 +325,27 @@ export function emptyDiagnostics(): CaptureDiagnostics {
   };
 }
 
+/** Frame counters summed over captures or sessions (max for maxFrameBytes). */
+export type PzbukFrameCounters = Pick<CaptureDiagnostics, "invalidFrames" | "chunkedFrames" | "maxFrameBytes">;
+
+export function emptyFrameCounters(): PzbukFrameCounters {
+  return { invalidFrames: 0, chunkedFrames: 0, maxFrameBytes: 0 };
+}
+
+/** Adds one capture's counters: sums invalid and chunked frames, keeps the max frame size. */
+export function addFrameCounters(into: PzbukFrameCounters, d: CaptureDiagnostics): void {
+  into.invalidFrames += d.invalidFrames;
+  into.chunkedFrames += d.chunkedFrames;
+  into.maxFrameBytes = Math.max(into.maxFrameBytes, d.maxFrameBytes);
+}
+
 /** The socket answered with INITIAL_STATE, but no message carried any event. */
 export function isEmptyListing(d: CaptureDiagnostics): boolean {
   return d.initialStates > 0 && d.maxEvents === 0;
 }
 
-function lastFrameDetails(d: CaptureDiagnostics): string {
+/** `, last error: …` and `, last control: TYPE[ message]` of a capture, or "". */
+export function lastFrameDetails(d: CaptureDiagnostics): string {
   let details = "";
   if (d.lastInvalidError) details += `, last error: ${d.lastInvalidError}`;
   if (d.lastControl) {

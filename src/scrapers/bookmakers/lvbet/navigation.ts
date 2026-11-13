@@ -56,7 +56,7 @@ export async function fetchLeagueMatches(
   }
 
   try {
-    const apiUrl = `${API_BASE_URL}/matches/competition-view/?sports_groups_ids=${tournamentId}&lang=pl`;
+    const apiUrl = lvbetCompetitionViewUrl(tournamentId);
     console.log(`[LVBet/Navigation] Fetching matches from: ${apiUrl}`);
 
     const response = await page.request.fetch(apiUrl);
@@ -86,8 +86,7 @@ export async function fetchMarketsForMatches(
   }
 
   try {
-    const matchIdsParam = matchIds.join(",");
-    const apiUrl = `${API_BASE_URL}/markets/search/?matches_ids=${matchIdsParam}&lang=pl`;
+    const apiUrl = lvbetMarketsSearchUrl(matchIds);
     console.log(`[LVBet/Navigation] Fetching markets for ${matchIds.length} matches`);
 
     const response = await page.request.fetch(apiUrl);
@@ -190,4 +189,14 @@ export function buildEventUrl(match: LVBetMatch, league: string): string {
  */
 export function buildSimpleEventUrl(matchId: string): string {
   return `${BASE_URL}/pl/zaklady-bukmacherskie/pilka-nozna/--/${matchId}/`;
+}
+
+/** A competition's match listing; template literal only, so nothing is percent-encoded. */
+export function lvbetCompetitionViewUrl(tournamentId: number): string {
+  return `${API_BASE_URL}/matches/competition-view/?sports_groups_ids=${tournamentId}&lang=pl`;
+}
+
+/** Markets of the given matches; the raw `bc:` ids are joined with commas, never encoded. */
+export function lvbetMarketsSearchUrl(matchIds: readonly string[]): string {
+  return `${API_BASE_URL}/markets/search/?matches_ids=${matchIds.join(",")}&lang=pl`;
 }

@@ -27,13 +27,12 @@ import {
 } from "./navigation.js";
 import {
   buildOddsMap,
-  parseAllMarkets,
   parseExtendedMarkets,
   isValidMatch,
   hasValid1X2Odds,
 } from "./parser.js";
 import type { LVBetMatch } from "./types.js";
-import { toIsoStartTime } from "../../shared/start-time.js";
+import { mapLvbetMatchOffer, selectLvbetMatches } from "./full-offer-mapping.js";
 
 export class LVBetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "lvbet";
@@ -261,38 +260,11 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
 
         const matches: FullMatchOffer[] = [];
 
-        for (const match of matchesData.matches) {
-          if (!isValidMatch(match)) continue;
-
+        for (const match of selectLvbetMatches(matchesData)) {
           try {
             const marketsData = await fetchMarketsForMatch(page, match.match_id);
-
-            if (marketsData && marketsData.length > 0) {
-              const homeTeam = match.home![0];
-              const awayTeam = match.away![0];
-
-              const markets = parseAllMarkets(marketsData, {
-                homeTeam,
-                awayTeam,
-              });
-
-              if (markets.length > 0) {
-                matches.push({
-                  matchId: match.match_id,
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(awayTeam, leagueSlug),
-                  eventUrl: buildEventUrl(match, leagueSlug),
-                  markets,
-                  startTime: toIsoStartTime(match.date),
-                  scrapedAt: new Date(),
-                });
-
-                console.log(
-                  `[LVBet/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets`
-                );
-              }
-            }
+            const offer = marketsData ? mapLvbetMatchOffer(match, marketsData, leagueSlug) : null;
+            if (offer) matches.push(offer);
 
             await this.delay(REQUEST_DELAY);
           } catch (error) {

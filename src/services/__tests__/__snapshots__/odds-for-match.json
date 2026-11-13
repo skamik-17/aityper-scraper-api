@@ -1,0 +1,5004 @@
+{
+ "matchId": "premier-league:afc bournemouth:nottingham forest",
+ "homeTeam": "AFC Bournemouth",
+ "awayTeam": "Nottingham Forest",
+ "leagueSlug": "premier-league",
+ "markets": {
+  "ANY_TEAM_TO_WIN": {
+   "code": "ANY_TEAM_TO_WIN",
+   "namePl": "Którakolwiek z drużyn wygra mecz",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nie",
+       "odds": 3.25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-013",
+       "normalizedName": "NO"
+      },
+      {
+       "name": "Tak",
+       "odds": 1.3,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-013",
+       "normalizedName": "YES"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    }
+   },
+   "bestOdds": {
+    "NO": {
+     "bookmaker": "fortuna",
+     "odds": 3.25
+    },
+    "YES": {
+     "bookmaker": "fortuna",
+     "odds": 1.3
+    }
+   }
+  },
+  "AWAY_WIN_AT_LEAST_ONE_HALF": {
+   "code": "AWAY_WIN_AT_LEAST_ONE_HALF",
+   "namePl": "Gość wygra przynajmniej jedną połowę",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.08,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.61,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.12,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.65,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 2.12
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.65
+    }
+   }
+  },
+  "AWAY_WIN_BOTH_HALVES": {
+   "code": "AWAY_WIN_BOTH_HALVES",
+   "namePl": "Gość wygra obie połowy",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 8.25,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.02,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 9.4,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.03,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 9.4
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.03
+    }
+   }
+  },
+  "AWAY_WIN_TO_NIL": {
+   "code": "AWAY_WIN_TO_NIL",
+   "namePl": "Gość wygra do zera",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 6.4,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.1,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 6.4
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.1
+    }
+   }
+  },
+  "DOUBLE_CHANCE": {
+   "code": "DOUBLE_CHANCE",
+   "namePl": "Podwójna szansa",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth lub remis",
+       "odds": 1.26,
+       "normalizedName": "HOME_OR_DRAW"
+      },
+      {
+       "name": "Bournemouth lub Nottingham Forest",
+       "odds": 1.24,
+       "normalizedName": "HOME_OR_AWAY"
+      },
+      {
+       "name": "Remis lub Nottingham Forest",
+       "odds": 1.71,
+       "normalizedName": "DRAW_OR_AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "1X",
+       "odds": 1.25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-031",
+       "normalizedName": "HOME_OR_DRAW"
+      },
+      {
+       "name": "X2",
+       "odds": 1.62,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-031",
+       "normalizedName": "DRAW_OR_AWAY"
+      },
+      {
+       "name": "12",
+       "odds": 1.26,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-031",
+       "normalizedName": "HOME_OR_AWAY"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1X",
+       "odds": 1.3,
+       "normalizedName": "HOME_OR_DRAW"
+      },
+      {
+       "name": "12",
+       "odds": 1.3,
+       "normalizedName": "HOME_OR_AWAY"
+      },
+      {
+       "name": "X2",
+       "odds": 1.77,
+       "normalizedName": "DRAW_OR_AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME_OR_DRAW": {
+     "bookmaker": "sts",
+     "odds": 1.3
+    },
+    "HOME_OR_AWAY": {
+     "bookmaker": "sts",
+     "odds": 1.3
+    },
+    "DRAW_OR_AWAY": {
+     "bookmaker": "sts",
+     "odds": 1.77
+    }
+   }
+  },
+  "DRAW_NO_BET": {
+   "code": "DRAW_NO_BET",
+   "namePl": "Remis bez zakładu",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth",
+       "odds": 1.43,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Nottingham Forest",
+       "odds": 2.37,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nottingham",
+       "odds": 2.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01c",
+       "normalizedName": "AWAY"
+      },
+      {
+       "name": "Bournemouth",
+       "odds": 1.48,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01c",
+       "normalizedName": "HOME"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1",
+       "odds": 1.48,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2",
+       "odds": 2.55,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "fortuna",
+     "odds": 1.48
+    },
+    "AWAY": {
+     "bookmaker": "fortuna",
+     "odds": 2.55
+    }
+   }
+  },
+  "HOME_WIN_AT_LEAST_ONE_HALF": {
+   "code": "HOME_WIN_AT_LEAST_ONE_HALF",
+   "namePl": "Gospodarz wygra przynajmniej jedną połowę",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.5,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2.3,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.52,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2.35,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 1.52
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 2.35
+    }
+   }
+  },
+  "HOME_WIN_BOTH_HALVES": {
+   "code": "HOME_WIN_BOTH_HALVES",
+   "namePl": "Gospodarz wygra obie połowy",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 5.1,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.1,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 5.5,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.11,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 5.5
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.11
+    }
+   }
+  },
+  "HOME_WIN_TO_NIL": {
+   "code": "HOME_WIN_TO_NIL",
+   "namePl": "Gospodarz wygra do zera",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 3.6,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.26,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 3.6
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.26
+    }
+   }
+  },
+  "MATCH_WINNER": {
+   "code": "MATCH_WINNER",
+   "namePl": "Wynik meczu",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth",
+       "odds": 1.95,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis ",
+       "odds": 3.4,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest",
+       "odds": 3.42,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nottingham",
+       "odds": 3.4,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-020",
+       "normalizedName": "AWAY"
+      },
+      {
+       "name": "Remis",
+       "odds": 3.4,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-020",
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Bournemouth",
+       "odds": 1.98,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-020",
+       "normalizedName": "HOME"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Bournemouth",
+       "odds": 2.02,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis",
+       "odds": 3.3,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham",
+       "odds": 3.45,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 2.02
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 3.4
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 3.45
+    }
+   }
+  },
+  "WIN_OR_WIN_BY_2": {
+   "code": "WIN_OR_WIN_BY_2",
+   "namePl": "Wygrana lub przewaga 2 goli w meczu",
+   "viewType": "BINARY_BUTTONS",
+   "category": "WYNIK_MECZU",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth",
+       "odds": 1.88,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Nottingham Forest",
+       "odds": 3.2,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 1.88
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 3.2
+    }
+   }
+  },
+  "AWAY_EXACT_GOALS": {
+   "code": "AWAY_EXACT_GOALS",
+   "namePl": "Gość - dokładna liczba goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 2.85,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 2.43,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 4.05,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3+",
+       "odds": 7.5,
+       "normalizedName": "3+"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 2.85,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 2.5,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 4.2,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3+",
+       "odds": 7.1,
+       "normalizedName": "3+"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "betclic",
+     "odds": 2.85
+    },
+    "1": {
+     "bookmaker": "sts",
+     "odds": 2.5
+    },
+    "2": {
+     "bookmaker": "sts",
+     "odds": 4.2
+    },
+    "3+": {
+     "bookmaker": "betclic",
+     "odds": 7.5
+    }
+   }
+  },
+  "AWAY_GOAL_RANGE": {
+   "code": "AWAY_GOAL_RANGE",
+   "namePl": "Gość - przedział goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "1-3",
+       "odds": 1.4,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-000",
+       "normalizedName": "1-3"
+      },
+      {
+       "name": "1-2",
+       "odds": 1.56,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-000",
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "4+",
+       "odds": 25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-000",
+       "normalizedName": "4+"
+      },
+      {
+       "name": "2-3",
+       "odds": 2.85,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-000",
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "Nikt",
+       "odds": 2.7,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-000",
+       "normalizedName": "0"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1-2",
+       "odds": 1.57,
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "1-3",
+       "odds": 1.4,
+       "normalizedName": "1-3"
+      },
+      {
+       "name": "2-3",
+       "odds": 2.9,
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "4+",
+       "odds": 19,
+       "normalizedName": "4+"
+      },
+      {
+       "name": "0",
+       "odds": 2.85,
+       "normalizedName": "0"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "sts",
+     "odds": 2.85
+    },
+    "1-3": {
+     "bookmaker": "fortuna",
+     "odds": 1.4
+    },
+    "1-2": {
+     "bookmaker": "sts",
+     "odds": 1.57
+    },
+    "4+": {
+     "bookmaker": "fortuna",
+     "odds": 25
+    },
+    "2-3": {
+     "bookmaker": "sts",
+     "odds": 2.9
+    }
+   }
+  },
+  "AWAY_HALF_WITH_MOST_GOALS": {
+   "code": "AWAY_HALF_WITH_MOST_GOALS",
+   "namePl": "Gość - połowa z większą liczbą goli",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "1. Połowa",
+       "odds": 3.5,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Remis ",
+       "odds": 2.12,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "2. Połowa",
+       "odds": 2.62,
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Równo",
+       "odds": 2.18,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02z",
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Pierwsza",
+       "odds": 3.65,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02z",
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Druga",
+       "odds": 2.7,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02z",
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1. połowa",
+       "odds": 3.6,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "2. połowa",
+       "odds": 2.65,
+       "normalizedName": "2ND_HALF"
+      },
+      {
+       "name": "Remis",
+       "odds": 2.15,
+       "normalizedName": "DRAW"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "1ST_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 3.65
+    },
+    "DRAW": {
+     "bookmaker": "fortuna",
+     "odds": 2.18
+    },
+    "2ND_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 2.7
+    }
+   }
+  },
+  "AWAY_SCORE_BOTH_HALVES": {
+   "code": "AWAY_SCORE_BOTH_HALVES",
+   "namePl": "Gość strzeli w obu połowach",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 3.93,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.16,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 4.3,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.18,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 4.3
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.18
+    }
+   }
+  },
+  "AWAY_TEAM_ODD_EVEN_GOALS": {
+   "code": "AWAY_TEAM_ODD_EVEN_GOALS",
+   "namePl": "Gość - parzyste/nieparzyste",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 1.95,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.65,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Parz.",
+       "odds": 1.73,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00h",
+       "normalizedName": "EVEN"
+      },
+      {
+       "name": "Niep.",
+       "odds": 2.07,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00h",
+       "normalizedName": "ODD"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 2.05,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.72,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "ODD": {
+     "bookmaker": "fortuna",
+     "odds": 2.07
+    },
+    "EVEN": {
+     "bookmaker": "fortuna",
+     "odds": 1.73
+    }
+   }
+  },
+  "AWAY_TEAM_TO_SCORE": {
+   "code": "AWAY_TEAM_TO_SCORE",
+   "namePl": "Gość strzeli",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.85,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-036",
+       "normalizedName": "NO"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.37,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-036",
+       "normalizedName": "YES"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.38,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2.85,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "NO": {
+     "bookmaker": "fortuna",
+     "odds": 2.85
+    },
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 1.38
+    }
+   }
+  },
+  "AWAY_TEAM_TOTAL_GOALS:0.5": {
+   "code": "AWAY_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gości",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "0.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 0,5",
+       "odds": 1.36,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 0,5",
+       "odds": 2.85,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 0.5",
+       "odds": 2.7,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01j",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 0.5",
+       "odds": 1.35,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01j",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+0.5",
+       "odds": 1.37,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-0.5",
+       "odds": 2.9,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.37
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 2.9
+    }
+   }
+  },
+  "AWAY_TEAM_TOTAL_GOALS:1.5": {
+   "code": "AWAY_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gości",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 1,5",
+       "odds": 2.65,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 1,5",
+       "odds": 1.38,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 1.5",
+       "odds": 2.6,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-021",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 1.5",
+       "odds": 1.37,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-021",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+1.5",
+       "odds": 2.8,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-1.5",
+       "odds": 1.4,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 2.8
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.4
+    }
+   }
+  },
+  "AWAY_TEAM_TOTAL_GOALS:2.5": {
+   "code": "AWAY_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gości",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "2.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 2,5",
+       "odds": 7.5,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 2,5",
+       "odds": 1.08,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 2.5",
+       "odds": 1.07,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00r",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 2.5",
+       "odds": 5.6,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00r",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+2.5",
+       "odds": 7.25,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-2.5",
+       "odds": 1.09,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "betclic",
+     "odds": 7.5
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.09
+    }
+   }
+  },
+  "AWAY_TEAM_TOTAL_GOALS:3.5": {
+   "code": "AWAY_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gości",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "3.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 3,5",
+       "odds": 9.25,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 3,5",
+       "odds": 1.01,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+3.5",
+       "odds": 19,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-3.5",
+       "odds": 1.01,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 19
+    },
+    "UNDER": {
+     "bookmaker": "betclic",
+     "odds": 1.01
+    }
+   }
+  },
+  "BOTH_HALVES_OVER_GOALS:1.5": {
+   "code": "BOTH_HALVES_OVER_GOALS",
+   "namePl": "Obie połowy powyżej X goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 4.3,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.13,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 4.8,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.15,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 4.8
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.15
+    }
+   }
+  },
+  "BOTH_HALVES_UNDER_GOALS:1.5": {
+   "code": "BOTH_HALVES_UNDER_GOALS",
+   "namePl": "Obie połowy poniżej X goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.42,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.41,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.55,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.45,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 2.55
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.45
+    }
+   }
+  },
+  "BTTS": {
+   "code": "BTTS",
+   "namePl": "Obie strzelą",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.61,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.64,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00l",
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2.04,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00l",
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.68,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 2.1,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 1.68
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 2.1
+    }
+   }
+  },
+  "BTTS_2PLUS_GOALS": {
+   "code": "BTTS_2PLUS_GOALS",
+   "namePl": "Obie strzelą po 2+",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 5.25,
+       "normalizedName": "YES"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "betclic",
+     "odds": 5.25
+    }
+   }
+  },
+  "BTTS_BY_HALF": {
+   "code": "BTTS_BY_HALF",
+   "namePl": "BTTS w połowach",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak / Tak",
+       "odds": 13,
+       "normalizedName": "BOTH"
+      },
+      {
+       "name": "Tak / Nie",
+       "odds": 5.1,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Nie / Tak",
+       "odds": 3.58,
+       "normalizedName": "2ND_HALF"
+      },
+      {
+       "name": "Nie / Nie",
+       "odds": 1.55,
+       "normalizedName": "NONE"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nie/Nie",
+       "odds": 1.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00g",
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "Tak/Nie",
+       "odds": 5,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00g",
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Tak/Tak",
+       "odds": 13,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00g",
+       "normalizedName": "BOTH"
+      },
+      {
+       "name": "Nie/Tak",
+       "odds": 3.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00g",
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "nie / nie",
+       "odds": 1.55,
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "tak / nie",
+       "odds": 5.1,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "tak / tak",
+       "odds": 13,
+       "normalizedName": "BOTH"
+      },
+      {
+       "name": "nie / tak",
+       "odds": 3.6,
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "BOTH": {
+     "bookmaker": "betclic",
+     "odds": 13
+    },
+    "1ST_HALF": {
+     "bookmaker": "betclic",
+     "odds": 5.1
+    },
+    "2ND_HALF": {
+     "bookmaker": "sts",
+     "odds": 3.6
+    },
+    "NONE": {
+     "bookmaker": "betclic",
+     "odds": 1.55
+    }
+   }
+  },
+  "EXACT_GOALS": {
+   "code": "EXACT_GOALS",
+   "namePl": "Dokładna liczba goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 12.75,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 5.4,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 3.65,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3",
+       "odds": 4.1,
+       "normalizedName": "3"
+      },
+      {
+       "name": "4",
+       "odds": 5.5,
+       "normalizedName": "4"
+      },
+      {
+       "name": "5",
+       "odds": 10,
+       "normalizedName": "5"
+      },
+      {
+       "name": "6+",
+       "odds": 13,
+       "normalizedName": "6+"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 11.5,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 5.1,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 3.5,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3",
+       "odds": 3.9,
+       "normalizedName": "3"
+      },
+      {
+       "name": "4",
+       "odds": 5.25,
+       "normalizedName": "4"
+      },
+      {
+       "name": "5",
+       "odds": 9.5,
+       "normalizedName": "5"
+      },
+      {
+       "name": "6+",
+       "odds": 10.5,
+       "normalizedName": "6+"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "betclic",
+     "odds": 12.75
+    },
+    "1": {
+     "bookmaker": "betclic",
+     "odds": 5.4
+    },
+    "2": {
+     "bookmaker": "betclic",
+     "odds": 3.65
+    },
+    "3": {
+     "bookmaker": "betclic",
+     "odds": 4.1
+    },
+    "4": {
+     "bookmaker": "betclic",
+     "odds": 5.5
+    },
+    "5": {
+     "bookmaker": "betclic",
+     "odds": 10
+    },
+    "6+": {
+     "bookmaker": "betclic",
+     "odds": 13
+    }
+   }
+  },
+  "FIRST_GOAL_TIME": {
+   "code": "FIRST_GOAL_TIME",
+   "namePl": "Czas pierwszego gola (10 min)",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "00:00 - 09:59",
+       "odds": 3.9,
+       "normalizedName": "1-10"
+      },
+      {
+       "name": "10:00 - 19:59",
+       "odds": 4.3,
+       "normalizedName": "11-20"
+      },
+      {
+       "name": "20:00 - 29:59",
+       "odds": 5.4,
+       "normalizedName": "21-30"
+      },
+      {
+       "name": "30:00 - 39:59",
+       "odds": 6.9,
+       "normalizedName": "31-40"
+      },
+      {
+       "name": "40:00 - 49:59",
+       "odds": 7.5,
+       "normalizedName": "41-50"
+      },
+      {
+       "name": "50:00 - 59:59",
+       "odds": 11,
+       "normalizedName": "51-60"
+      },
+      {
+       "name": "60:00 - 69:59",
+       "odds": 15,
+       "normalizedName": "61-70"
+      },
+      {
+       "name": "70:00 - 79:59",
+       "odds": 21,
+       "normalizedName": "71-80"
+      },
+      {
+       "name": "80:00 - Koniec meczu (90min)",
+       "odds": 19.75,
+       "normalizedName": "81-90"
+      },
+      {
+       "name": "Brak Gola",
+       "odds": 12.75,
+       "normalizedName": "NONE"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "1-10": {
+     "bookmaker": "betclic",
+     "odds": 3.9
+    },
+    "11-20": {
+     "bookmaker": "betclic",
+     "odds": 4.3
+    },
+    "21-30": {
+     "bookmaker": "betclic",
+     "odds": 5.4
+    },
+    "31-40": {
+     "bookmaker": "betclic",
+     "odds": 6.9
+    },
+    "41-50": {
+     "bookmaker": "betclic",
+     "odds": 7.5
+    },
+    "51-60": {
+     "bookmaker": "betclic",
+     "odds": 11
+    },
+    "61-70": {
+     "bookmaker": "betclic",
+     "odds": 15
+    },
+    "71-80": {
+     "bookmaker": "betclic",
+     "odds": 21
+    },
+    "81-90": {
+     "bookmaker": "betclic",
+     "odds": 19.75
+    },
+    "NONE": {
+     "bookmaker": "betclic",
+     "odds": 12.75
+    }
+   }
+  },
+  "FIRST_GOAL_TIME_ALT": {
+   "code": "FIRST_GOAL_TIME_ALT",
+   "namePl": "Czas pierwszego gola (15 min)",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "00:00 - 14:59",
+       "odds": 2.68,
+       "normalizedName": "1-15"
+      },
+      {
+       "name": "15:00 - 29:59",
+       "odds": 3.42,
+       "normalizedName": "16-30"
+      },
+      {
+       "name": "30:00 - Przerwa",
+       "odds": 4.3,
+       "normalizedName": "31-45"
+      },
+      {
+       "name": "Przerwa - 59:59",
+       "odds": 7.25,
+       "normalizedName": "46-60"
+      },
+      {
+       "name": "60:00 - 74:59",
+       "odds": 10.5,
+       "normalizedName": "61-75"
+      },
+      {
+       "name": "75:00 - Koniec meczu (90min)",
+       "odds": 13.5,
+       "normalizedName": "76-90"
+      },
+      {
+       "name": "Brak Gola",
+       "odds": 12.75,
+       "normalizedName": "NONE"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1-15",
+       "odds": 2.85,
+       "normalizedName": "1-15"
+      },
+      {
+       "name": "16-30",
+       "odds": 3.7,
+       "normalizedName": "16-30"
+      },
+      {
+       "name": "31-45",
+       "odds": 4.6,
+       "normalizedName": "31-45"
+      },
+      {
+       "name": "46-60",
+       "odds": 7.9,
+       "normalizedName": "46-60"
+      },
+      {
+       "name": "61-75",
+       "odds": 11.5,
+       "normalizedName": "61-75"
+      },
+      {
+       "name": "76-90",
+       "odds": 15,
+       "normalizedName": "76-90"
+      },
+      {
+       "name": "Bez gola",
+       "odds": 11.5,
+       "normalizedName": "NONE"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "1-15": {
+     "bookmaker": "sts",
+     "odds": 2.85
+    },
+    "16-30": {
+     "bookmaker": "sts",
+     "odds": 3.7
+    },
+    "31-45": {
+     "bookmaker": "sts",
+     "odds": 4.6
+    },
+    "46-60": {
+     "bookmaker": "sts",
+     "odds": 7.9
+    },
+    "61-75": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    },
+    "76-90": {
+     "bookmaker": "sts",
+     "odds": 15
+    },
+    "NONE": {
+     "bookmaker": "betclic",
+     "odds": 12.75
+    }
+   }
+  },
+  "FIRST_GOAL_TIME:10min": {
+   "code": "FIRST_GOAL_TIME",
+   "namePl": "Czas pierwszego gola (10 min)",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": "10min",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1-10",
+       "odds": 4,
+       "normalizedName": "1-10"
+      },
+      {
+       "name": "11-20",
+       "odds": 4.5,
+       "normalizedName": "11-20"
+      },
+      {
+       "name": "21-30",
+       "odds": 5.6,
+       "normalizedName": "21-30"
+      },
+      {
+       "name": "31-40",
+       "odds": 7.1,
+       "normalizedName": "31-40"
+      },
+      {
+       "name": "41-50",
+       "odds": 7.75,
+       "normalizedName": "41-50"
+      },
+      {
+       "name": "51-60",
+       "odds": 11.5,
+       "normalizedName": "51-60"
+      },
+      {
+       "name": "61-70",
+       "odds": 16,
+       "normalizedName": "61-70"
+      },
+      {
+       "name": "71-80",
+       "odds": 21,
+       "normalizedName": "71-80"
+      },
+      {
+       "name": "81-90",
+       "odds": 21,
+       "normalizedName": "81-90"
+      },
+      {
+       "name": "Bez gola",
+       "odds": 11.5,
+       "normalizedName": "NONE"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "1-10": {
+     "bookmaker": "sts",
+     "odds": 4
+    },
+    "11-20": {
+     "bookmaker": "sts",
+     "odds": 4.5
+    },
+    "21-30": {
+     "bookmaker": "sts",
+     "odds": 5.6
+    },
+    "31-40": {
+     "bookmaker": "sts",
+     "odds": 7.1
+    },
+    "41-50": {
+     "bookmaker": "sts",
+     "odds": 7.75
+    },
+    "51-60": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    },
+    "61-70": {
+     "bookmaker": "sts",
+     "odds": 16
+    },
+    "71-80": {
+     "bookmaker": "sts",
+     "odds": 21
+    },
+    "81-90": {
+     "bookmaker": "sts",
+     "odds": 21
+    },
+    "NONE": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    }
+   }
+  },
+  "FIRST_TEAM_TO_SCORE": {
+   "code": "FIRST_TEAM_TO_SCORE",
+   "namePl": "Która drużyna strzeli pierwszego gola",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nottingham",
+       "odds": 2.2,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-030",
+       "normalizedName": "AWAY"
+      },
+      {
+       "name": "Nikt",
+       "odds": 11,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-030",
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "Bournemouth",
+       "odds": 1.64,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-030",
+       "normalizedName": "HOME"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1",
+       "odds": 1.72,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Bez gola",
+       "odds": 11.5,
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "2",
+       "odds": 2.35,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 2.35
+    },
+    "NONE": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    },
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 1.72
+    }
+   }
+  },
+  "GOAL_RANGE": {
+   "code": "GOAL_RANGE",
+   "namePl": "Przedział goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "0 - 1",
+       "odds": 3.73,
+       "normalizedName": "0-1"
+      },
+      {
+       "name": "2 - 3",
+       "odds": 1.96,
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "4 - 5",
+       "odds": 3.53,
+       "normalizedName": "4-5"
+      },
+      {
+       "name": "6+",
+       "odds": 13,
+       "normalizedName": "6+"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "0-1": {
+     "bookmaker": "betclic",
+     "odds": 3.73
+    },
+    "2-3": {
+     "bookmaker": "betclic",
+     "odds": 1.96
+    },
+    "4-5": {
+     "bookmaker": "betclic",
+     "odds": 3.53
+    },
+    "6+": {
+     "bookmaker": "betclic",
+     "odds": 13
+    }
+   }
+  },
+  "HALF_WITH_MORE_GOALS": {
+   "code": "HALF_WITH_MORE_GOALS",
+   "namePl": "Połowa z większą liczbą goli",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "1. Połowa",
+       "odds": 2.93,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Remis ",
+       "odds": 3.3,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "2. Połowa",
+       "odds": 2.02,
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Rowno",
+       "odds": 3.45,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01b",
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Drugi",
+       "odds": 2.08,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01b",
+       "normalizedName": "2ND_HALF"
+      },
+      {
+       "name": "Pierwszy",
+       "odds": 3.05,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01b",
+       "normalizedName": "1ST_HALF"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1. połowa",
+       "odds": 3,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "2. połowa",
+       "odds": 2.05,
+       "normalizedName": "2ND_HALF"
+      },
+      {
+       "name": "Remis",
+       "odds": 3.35,
+       "normalizedName": "DRAW"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "1ST_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 3.05
+    },
+    "DRAW": {
+     "bookmaker": "fortuna",
+     "odds": 3.45
+    },
+    "2ND_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 2.08
+    }
+   }
+  },
+  "HOME_EXACT_GOALS": {
+   "code": "HOME_EXACT_GOALS",
+   "namePl": "Gospodarz - dokładna liczba goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 4.4,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 2.77,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 3.38,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3+",
+       "odds": 3.9,
+       "normalizedName": "3+"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "0",
+       "odds": 4.3,
+       "normalizedName": "0"
+      },
+      {
+       "name": "1",
+       "odds": 2.8,
+       "normalizedName": "1"
+      },
+      {
+       "name": "2",
+       "odds": 3.45,
+       "normalizedName": "2"
+      },
+      {
+       "name": "3+",
+       "odds": 3.9,
+       "normalizedName": "3+"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "betclic",
+     "odds": 4.4
+    },
+    "1": {
+     "bookmaker": "sts",
+     "odds": 2.8
+    },
+    "2": {
+     "bookmaker": "sts",
+     "odds": 3.45
+    },
+    "3+": {
+     "bookmaker": "betclic",
+     "odds": 3.9
+    }
+   }
+  },
+  "HOME_GOAL_RANGE": {
+   "code": "HOME_GOAL_RANGE",
+   "namePl": "Gospodarz - przedział goli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nikt",
+       "odds": 4.1,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02u",
+       "normalizedName": "0"
+      },
+      {
+       "name": "2-3",
+       "odds": 2.14,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02u",
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "4+",
+       "odds": 9.4,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02u",
+       "normalizedName": "4+"
+      },
+      {
+       "name": "1-2",
+       "odds": 1.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02u",
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "1-3",
+       "odds": 1.29,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02u",
+       "normalizedName": "1-3"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1-2",
+       "odds": 1.56,
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "1-3",
+       "odds": 1.3,
+       "normalizedName": "1-3"
+      },
+      {
+       "name": "2-3",
+       "odds": 2.15,
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "4+",
+       "odds": 8.75,
+       "normalizedName": "4+"
+      },
+      {
+       "name": "0",
+       "odds": 4.3,
+       "normalizedName": "0"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "sts",
+     "odds": 4.3
+    },
+    "2-3": {
+     "bookmaker": "sts",
+     "odds": 2.15
+    },
+    "4+": {
+     "bookmaker": "fortuna",
+     "odds": 9.4
+    },
+    "1-2": {
+     "bookmaker": "sts",
+     "odds": 1.56
+    },
+    "1-3": {
+     "bookmaker": "sts",
+     "odds": 1.3
+    }
+   }
+  },
+  "HOME_HALF_WITH_MOST_GOALS": {
+   "code": "HOME_HALF_WITH_MOST_GOALS",
+   "namePl": "Gospodarz - połowa z większą liczbą goli",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "1. Połowa",
+       "odds": 3.08,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Remis ",
+       "odds": 2.55,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "2. Połowa",
+       "odds": 2.37,
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Rowno",
+       "odds": 2.65,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02w",
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Pierwszy",
+       "odds": 3.2,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02w",
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "Drugi",
+       "odds": 2.45,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02w",
+       "normalizedName": "2ND_HALF"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1. połowa",
+       "odds": 3.15,
+       "normalizedName": "1ST_HALF"
+      },
+      {
+       "name": "2. połowa",
+       "odds": 2.4,
+       "normalizedName": "2ND_HALF"
+      },
+      {
+       "name": "Remis",
+       "odds": 2.6,
+       "normalizedName": "DRAW"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "1ST_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 3.2
+    },
+    "DRAW": {
+     "bookmaker": "fortuna",
+     "odds": 2.65
+    },
+    "2ND_HALF": {
+     "bookmaker": "fortuna",
+     "odds": 2.45
+    }
+   }
+  },
+  "HOME_SCORE_BOTH_HALVES": {
+   "code": "HOME_SCORE_BOTH_HALVES",
+   "namePl": "Gospodarz strzeli w obu połowach",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.75,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.32,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 2.95,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.35,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 2.95
+    },
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 1.35
+    }
+   }
+  },
+  "HOME_TEAM_ODD_EVEN_GOALS": {
+   "code": "HOME_TEAM_ODD_EVEN_GOALS",
+   "namePl": "Gospodarz - parzyste/nieparzyste",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 1.85,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.73,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Parz.",
+       "odds": 1.82,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02i",
+       "normalizedName": "EVEN"
+      },
+      {
+       "name": "Niep.",
+       "odds": 1.96,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02i",
+       "normalizedName": "ODD"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 1.95,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.8,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "ODD": {
+     "bookmaker": "fortuna",
+     "odds": 1.96
+    },
+    "EVEN": {
+     "bookmaker": "fortuna",
+     "odds": 1.82
+    }
+   }
+  },
+  "HOME_TEAM_TO_SCORE": {
+   "code": "HOME_TEAM_TO_SCORE",
+   "namePl": "Gospodarz strzeli",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 4.2,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-009",
+       "normalizedName": "NO"
+      },
+      {
+       "name": "Nie",
+       "odds": 1.19,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-009",
+       "normalizedName": "YES"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Tak",
+       "odds": 1.2,
+       "normalizedName": "YES"
+      },
+      {
+       "name": "Nie",
+       "odds": 4.3,
+       "normalizedName": "NO"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "NO": {
+     "bookmaker": "sts",
+     "odds": 4.3
+    },
+    "YES": {
+     "bookmaker": "sts",
+     "odds": 1.2
+    }
+   }
+  },
+  "HOME_TEAM_TOTAL_GOALS:0.5": {
+   "code": "HOME_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gospodarzy",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "0.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 0,5",
+       "odds": 1.18,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 0,5",
+       "odds": 4.4,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 0.5",
+       "odds": 3.9,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01w",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 0.5",
+       "odds": 1.17,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01w",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+0.5",
+       "odds": 1.2,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-0.5",
+       "odds": 4.3,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.2
+    },
+    "UNDER": {
+     "bookmaker": "betclic",
+     "odds": 4.4
+    }
+   }
+  },
+  "HOME_TEAM_TOTAL_GOALS:1.5": {
+   "code": "HOME_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gospodarzy",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 1,5",
+       "odds": 1.88,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 1,5",
+       "odds": 1.76,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 1.5",
+       "odds": 1.86,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02v",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 1.5",
+       "odds": 1.75,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02v",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+1.5",
+       "odds": 1.95,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-1.5",
+       "odds": 1.8,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.95
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.8
+    }
+   }
+  },
+  "HOME_TEAM_TOTAL_GOALS:2.5": {
+   "code": "HOME_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gospodarzy",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "2.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 2,5",
+       "odds": 3.9,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 2,5",
+       "odds": 1.21,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 2.5",
+       "odds": 3.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01s",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 2.5",
+       "odds": 1.21,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01s",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+2.5",
+       "odds": 3.9,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-2.5",
+       "odds": 1.22,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "betclic",
+     "odds": 3.9
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.22
+    }
+   }
+  },
+  "HOME_TEAM_TOTAL_GOALS:3.5": {
+   "code": "HOME_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gospodarzy",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "3.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 3,5",
+       "odds": 6.9,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 3,5",
+       "odds": 1.05,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+3.5",
+       "odds": 8.75,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-3.5",
+       "odds": 1.06,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 8.75
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.06
+    }
+   }
+  },
+  "HOME_TEAM_TOTAL_GOALS:4.5": {
+   "code": "HOME_TEAM_TOTAL_GOALS",
+   "namePl": "Gole gospodarzy",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "4.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 4,5",
+       "odds": 9.5,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 4,5",
+       "odds": 1.01,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+4.5",
+       "odds": 13,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-4.5",
+       "odds": 1.008,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 13
+    },
+    "UNDER": {
+     "bookmaker": "betclic",
+     "odds": 1.01
+    }
+   }
+  },
+  "LAST_TEAM_TO_SCORE": {
+   "code": "LAST_TEAM_TO_SCORE",
+   "namePl": "Ostatni gol",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nottingham",
+       "odds": 2.36,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02m",
+       "normalizedName": "AWAY"
+      },
+      {
+       "name": "Nikt",
+       "odds": 13,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02m",
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "Bournemouth",
+       "odds": 1.73,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02m",
+       "normalizedName": "HOME"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1",
+       "odds": 1.72,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Bez gola",
+       "odds": 11.5,
+       "normalizedName": "NONE"
+      },
+      {
+       "name": "2",
+       "odds": 2.35,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "AWAY": {
+     "bookmaker": "fortuna",
+     "odds": 2.36
+    },
+    "NONE": {
+     "bookmaker": "fortuna",
+     "odds": 13
+    },
+    "HOME": {
+     "bookmaker": "fortuna",
+     "odds": 1.73
+    }
+   }
+  },
+  "MULTI_GOAL_RANGE": {
+   "code": "MULTI_GOAL_RANGE",
+   "namePl": "Multi-gole (przedziały)",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "3-5",
+       "odds": 1.85,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "3-5"
+      },
+      {
+       "name": "4-5",
+       "odds": 3.25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "4-5"
+      },
+      {
+       "name": "1-3",
+       "odds": 1.44,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "1-3"
+      },
+      {
+       "name": "3-6",
+       "odds": 1.72,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "3-6"
+      },
+      {
+       "name": "1-2",
+       "odds": 2.05,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "5-6",
+       "odds": 6,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "5-6"
+      },
+      {
+       "name": "1-5",
+       "odds": 1.11,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "1-5"
+      },
+      {
+       "name": "4-6",
+       "odds": 2.8,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "4-6"
+      },
+      {
+       "name": "1-4",
+       "odds": 1.2,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "1-4"
+      },
+      {
+       "name": "2-3",
+       "odds": 1.85,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "7+",
+       "odds": 25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "7+"
+      },
+      {
+       "name": "1-6",
+       "odds": 1.07,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "1-6"
+      },
+      {
+       "name": "2-5",
+       "odds": 1.3,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "2-5"
+      },
+      {
+       "name": "2-4",
+       "odds": 1.45,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "2-4"
+      },
+      {
+       "name": "3-4",
+       "odds": 2.21,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "3-4"
+      },
+      {
+       "name": "2-6",
+       "odds": 1.25,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "2-6"
+      },
+      {
+       "name": "Nikt",
+       "odds": 11,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-014",
+       "normalizedName": "0"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1-2",
+       "odds": 1.98,
+       "normalizedName": "1-2"
+      },
+      {
+       "name": "1-3",
+       "odds": 1.4,
+       "normalizedName": "1-3"
+      },
+      {
+       "name": "1-4",
+       "odds": 1.19,
+       "normalizedName": "1-4"
+      },
+      {
+       "name": "1-5",
+       "odds": 1.1,
+       "normalizedName": "1-5"
+      },
+      {
+       "name": "1-6",
+       "odds": 1.07,
+       "normalizedName": "1-6"
+      },
+      {
+       "name": "2-3",
+       "odds": 1.78,
+       "normalizedName": "2-3"
+      },
+      {
+       "name": "2-4",
+       "odds": 1.42,
+       "normalizedName": "2-4"
+      },
+      {
+       "name": "2-5",
+       "odds": 1.28,
+       "normalizedName": "2-5"
+      },
+      {
+       "name": "2-6",
+       "odds": 1.23,
+       "normalizedName": "2-6"
+      },
+      {
+       "name": "3-4",
+       "odds": 2.12,
+       "normalizedName": "3-4"
+      },
+      {
+       "name": "3-5",
+       "odds": 1.78,
+       "normalizedName": "3-5"
+      },
+      {
+       "name": "3-6",
+       "odds": 1.67,
+       "normalizedName": "3-6"
+      },
+      {
+       "name": "4-5",
+       "odds": 3.1,
+       "normalizedName": "4-5"
+      },
+      {
+       "name": "4-6",
+       "odds": 2.65,
+       "normalizedName": "4-6"
+      },
+      {
+       "name": "5-6",
+       "odds": 5.6,
+       "normalizedName": "5-6"
+      },
+      {
+       "name": "7+",
+       "odds": 25,
+       "normalizedName": "7+"
+      },
+      {
+       "name": "0",
+       "odds": 11.5,
+       "normalizedName": "0"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "0": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    },
+    "3-5": {
+     "bookmaker": "fortuna",
+     "odds": 1.85
+    },
+    "4-5": {
+     "bookmaker": "fortuna",
+     "odds": 3.25
+    },
+    "1-3": {
+     "bookmaker": "fortuna",
+     "odds": 1.44
+    },
+    "3-6": {
+     "bookmaker": "fortuna",
+     "odds": 1.72
+    },
+    "1-2": {
+     "bookmaker": "fortuna",
+     "odds": 2.05
+    },
+    "5-6": {
+     "bookmaker": "fortuna",
+     "odds": 6
+    },
+    "1-5": {
+     "bookmaker": "fortuna",
+     "odds": 1.11
+    },
+    "4-6": {
+     "bookmaker": "fortuna",
+     "odds": 2.8
+    },
+    "1-4": {
+     "bookmaker": "fortuna",
+     "odds": 1.2
+    },
+    "2-3": {
+     "bookmaker": "fortuna",
+     "odds": 1.85
+    },
+    "7+": {
+     "bookmaker": "fortuna",
+     "odds": 25
+    },
+    "1-6": {
+     "bookmaker": "fortuna",
+     "odds": 1.07
+    },
+    "2-5": {
+     "bookmaker": "fortuna",
+     "odds": 1.3
+    },
+    "2-4": {
+     "bookmaker": "fortuna",
+     "odds": 1.45
+    },
+    "3-4": {
+     "bookmaker": "fortuna",
+     "odds": 2.21
+    },
+    "2-6": {
+     "bookmaker": "fortuna",
+     "odds": 1.25
+    }
+   }
+  },
+  "ODD_EVEN_GOALS": {
+   "code": "ODD_EVEN_GOALS",
+   "namePl": "Parzyste/Nieparzyste",
+   "viewType": "BINARY_BUTTONS",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 1.88,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.76,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "Nieparzyste",
+       "odds": 1.92,
+       "normalizedName": "ODD"
+      },
+      {
+       "name": "Parzyste",
+       "odds": 1.8,
+       "normalizedName": "EVEN"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "ODD": {
+     "bookmaker": "sts",
+     "odds": 1.92
+    },
+    "EVEN": {
+     "bookmaker": "sts",
+     "odds": 1.8
+    }
+   }
+  },
+  "TEAMS_TO_SCORE": {
+   "code": "TEAMS_TO_SCORE",
+   "namePl": "Ile drużyn strzeli",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Obie",
+       "odds": 1.62,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-023",
+       "normalizedName": "TWO_TEAMS"
+      },
+      {
+       "name": "Żadna",
+       "odds": 12,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-023",
+       "normalizedName": "ZERO_TEAMS"
+      },
+      {
+       "name": "Tylko Bournemouth",
+       "odds": 3.45,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-023",
+       "normalizedName": "ONE_TEAM_HOME"
+      },
+      {
+       "name": "Tylko Nottingham",
+       "odds": 6.4,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-023",
+       "normalizedName": "ONE_TEAM_AWAY"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "brak goli",
+       "odds": 11.5,
+       "normalizedName": "ZERO_TEAMS"
+      },
+      {
+       "name": "tylko 1. drużyna",
+       "odds": 3.6,
+       "normalizedName": "ONE_TEAM_HOME"
+      },
+      {
+       "name": "tylko 2. drużyna",
+       "odds": 6.4,
+       "normalizedName": "ONE_TEAM_AWAY"
+      },
+      {
+       "name": "obie drużyny",
+       "odds": 1.68,
+       "normalizedName": "TWO_TEAMS"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "TWO_TEAMS": {
+     "bookmaker": "sts",
+     "odds": 1.68
+    },
+    "ZERO_TEAMS": {
+     "bookmaker": "fortuna",
+     "odds": 12
+    },
+    "ONE_TEAM_HOME": {
+     "bookmaker": "sts",
+     "odds": 3.6
+    },
+    "ONE_TEAM_AWAY": {
+     "bookmaker": "fortuna",
+     "odds": 6.4
+    }
+   }
+  },
+  "TIME_PERIOD_RESULT:10": {
+   "code": "TIME_PERIOD_RESULT",
+   "namePl": "Wynik w przedziale czasowym",
+   "viewType": "TRIPLE_BUTTONS",
+   "category": "GOLE",
+   "paramValue": "10",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1",
+       "odds": 7.1,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "X",
+       "odds": 1.19,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "2",
+       "odds": 10,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 7.1
+    },
+    "DRAW": {
+     "bookmaker": "sts",
+     "odds": 1.19
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 10
+    }
+   }
+  },
+  "TOTAL_GOALS_ASIAN:1": {
+   "code": "TOTAL_GOALS_ASIAN",
+   "namePl": "Liczba goli (z możliwym zwrotem)",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 1",
+       "odds": 1.05,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-028",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 1",
+       "odds": 7.6,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-028",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+1",
+       "odds": 1.06,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-1",
+       "odds": 8.1,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.06
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 8.1
+    }
+   }
+  },
+  "TOTAL_GOALS_ASIAN:2": {
+   "code": "TOTAL_GOALS_ASIAN",
+   "namePl": "Liczba goli (z możliwym zwrotem)",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "2",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 2",
+       "odds": 1.36,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01h",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 2",
+       "odds": 2.88,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01h",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+2",
+       "odds": 1.37,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-2",
+       "odds": 2.95,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.37
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 2.95
+    }
+   }
+  },
+  "TOTAL_GOALS_ASIAN:3": {
+   "code": "TOTAL_GOALS_ASIAN",
+   "namePl": "Liczba goli (z możliwym zwrotem)",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "3",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 3",
+       "odds": 2.28,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02j",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 3",
+       "odds": 1.55,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02j",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+3",
+       "odds": 2.3,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-3",
+       "odds": 1.56,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 2.3
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.56
+    }
+   }
+  },
+  "TOTAL_GOALS_ASIAN:4": {
+   "code": "TOTAL_GOALS_ASIAN",
+   "namePl": "Liczba goli (z możliwym zwrotem)",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "4",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 4",
+       "odds": 4.45,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00x",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 4",
+       "odds": 1.17,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00x",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+4",
+       "odds": 4.6,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-4",
+       "odds": 1.17,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 4.6
+    },
+    "UNDER": {
+     "bookmaker": "fortuna",
+     "odds": 1.17
+    }
+   }
+  },
+  "TOTAL_GOALS_ASIAN:5": {
+   "code": "TOTAL_GOALS_ASIAN",
+   "namePl": "Liczba goli (z możliwym zwrotem)",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "5",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 5",
+       "odds": 8.2,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01r",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 5",
+       "odds": 1.04,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01r",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+5",
+       "odds": 8.75,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-5",
+       "odds": 1.05,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 8.75
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.05
+    }
+   }
+  },
+  "TOTAL_GOALS:0.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "0.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 0,5",
+       "odds": 1.03,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 0,5",
+       "odds": 6.9,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 0.5",
+       "odds": 8.7,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00v",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 0.5",
+       "odds": 1.04,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00v",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+0.5",
+       "odds": 1.04,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-0.5",
+       "odds": 11.5,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "fortuna",
+     "odds": 1.04
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 11.5
+    }
+   }
+  },
+  "TOTAL_GOALS:1.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "1.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 1,5",
+       "odds": 1.2,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 1,5",
+       "odds": 3.45,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 1.5",
+       "odds": 1.24,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-005",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 1.5",
+       "odds": 3.6,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-005",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+1.5",
+       "odds": 1.25,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-1.5",
+       "odds": 3.75,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.25
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 3.75
+    }
+   }
+  },
+  "TOTAL_GOALS:2.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "2.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 2,5",
+       "odds": 1.69,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 2,5",
+       "odds": 1.89,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 2.5",
+       "odds": 1.94,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01v",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 2.5",
+       "odds": 1.77,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01v",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+2.5",
+       "odds": 1.78,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-2.5",
+       "odds": 1.95,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 1.78
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.95
+    }
+   }
+  },
+  "TOTAL_GOALS:3.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "3.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 3,5",
+       "odds": 2.63,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 3,5",
+       "odds": 1.35,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 3.5",
+       "odds": 1.37,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02p",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 3.5",
+       "odds": 2.84,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-02p",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+3.5",
+       "odds": 2.9,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-3.5",
+       "odds": 1.38,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 2.9
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.38
+    }
+   }
+  },
+  "TOTAL_GOALS:4.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "4.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 4,5",
+       "odds": 4.45,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 4,5",
+       "odds": 1.12,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Więcej niż 4.5",
+       "odds": 5,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-035",
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Mniej niż 4.5",
+       "odds": 1.13,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-035",
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+4.5",
+       "odds": 5.25,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-4.5",
+       "odds": 1.14,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 5.25
+    },
+    "UNDER": {
+     "bookmaker": "sts",
+     "odds": 1.14
+    }
+   }
+  },
+  "TOTAL_GOALS:5.5": {
+   "code": "TOTAL_GOALS",
+   "namePl": "Liczba goli",
+   "viewType": "PARAMETER_SLIDER",
+   "category": "GOLE",
+   "paramValue": "5.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Powyżej 5,5",
+       "odds": 6.6,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "Poniżej 5,5",
+       "odds": 1.03,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Mniej niż 5.5",
+       "odds": 1.04,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01l",
+       "normalizedName": "UNDER"
+      },
+      {
+       "name": "Więcej niż 5.5",
+       "odds": 8.5,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-01l",
+       "normalizedName": "OVER"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "+5.5",
+       "odds": 10.5,
+       "normalizedName": "OVER"
+      },
+      {
+       "name": "-5.5",
+       "odds": 1.04,
+       "normalizedName": "UNDER"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "OVER": {
+     "bookmaker": "sts",
+     "odds": 10.5
+    },
+    "UNDER": {
+     "bookmaker": "fortuna",
+     "odds": 1.04
+    }
+   }
+  },
+  "WINNING_MARGIN": {
+   "code": "WINNING_MARGIN",
+   "namePl": "Margines zwycięstwa",
+   "viewType": "COMBINATION",
+   "category": "GOLE",
+   "paramValue": null,
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth przewagą 1 gola",
+       "odds": 3.8,
+       "normalizedName": "HOME_BY_1"
+      },
+      {
+       "name": "Bournemouth przewagą 2 goli",
+       "odds": 5.75,
+       "normalizedName": "HOME_BY_2"
+      },
+      {
+       "name": "Bournemouth przewagą 3 lub więcej goli",
+       "odds": 7.75,
+       "normalizedName": "HOME_BY_3PLUS"
+      },
+      {
+       "name": "Remis ",
+       "odds": 3.18,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest przewagą 1 gola",
+       "odds": 5.25,
+       "normalizedName": "AWAY_BY_1"
+      },
+      {
+       "name": "Nottingham Forest przewagą 2 goli",
+       "odds": 11.25,
+       "normalizedName": "AWAY_BY_2"
+      },
+      {
+       "name": "Nottingham Forest przewagą 3 lub więcej goli",
+       "odds": 24,
+       "normalizedName": "AWAY_BY_3PLUS"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1 o 1",
+       "odds": 4,
+       "normalizedName": "HOME_BY_1"
+      },
+      {
+       "name": "1 o 2",
+       "odds": 5.9,
+       "normalizedName": "HOME_BY_2"
+      },
+      {
+       "name": "1 o 3+",
+       "odds": 8,
+       "normalizedName": "HOME_BY_3PLUS"
+      },
+      {
+       "name": "2 o 1",
+       "odds": 5.4,
+       "normalizedName": "AWAY_BY_1"
+      },
+      {
+       "name": "2 o 2",
+       "odds": 10.5,
+       "normalizedName": "AWAY_BY_2"
+      },
+      {
+       "name": "2 o 3+",
+       "odds": 23,
+       "normalizedName": "AWAY_BY_3PLUS"
+      },
+      {
+       "name": "Remis",
+       "odds": 3.3,
+       "normalizedName": "DRAW"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME_BY_1": {
+     "bookmaker": "sts",
+     "odds": 4
+    },
+    "HOME_BY_2": {
+     "bookmaker": "sts",
+     "odds": 5.9
+    },
+    "HOME_BY_3PLUS": {
+     "bookmaker": "sts",
+     "odds": 8
+    },
+    "DRAW": {
+     "bookmaker": "sts",
+     "odds": 3.3
+    },
+    "AWAY_BY_1": {
+     "bookmaker": "sts",
+     "odds": 5.4
+    },
+    "AWAY_BY_2": {
+     "bookmaker": "betclic",
+     "odds": 11.25
+    },
+    "AWAY_BY_3PLUS": {
+     "bookmaker": "betclic",
+     "odds": 24
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:-1": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-1",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (-1)",
+       "odds": 3.43,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth -1)",
+       "odds": 3.8,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (+1)",
+       "odds": 1.71,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 3.43
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 3.8
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 1.71
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:-2": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-2",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (-2)",
+       "odds": 7.75,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth -2)",
+       "odds": 5.75,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (+2)",
+       "odds": 1.23,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 7.75
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 5.75
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 1.23
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:-3": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-3",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (-3)",
+       "odds": 14.5,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth -3)",
+       "odds": 8,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (+3)",
+       "odds": 1.06,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 14.5
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 8
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 1.06
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:-4": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-4",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (-4)",
+       "odds": 22,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth -4)",
+       "odds": 9.75,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (+4)",
+       "odds": 1.01,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 22
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 9.75
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 1.01
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:+1": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "+1",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (+1)",
+       "odds": 1.26,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth +1)",
+       "odds": 5.25,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (-1)",
+       "odds": 7.25,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 1.26
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 5.25
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 7.25
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:+2": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "+2",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (+2)",
+       "odds": 1.06,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth +2)",
+       "odds": 11.25,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (-2)",
+       "odds": 24,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 1.06
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 11.25
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 24
+    }
+   }
+  },
+  "ASIAN_HANDICAP_3WAY:+3": {
+   "code": "ASIAN_HANDICAP_3WAY",
+   "namePl": "Handicap azjatycki (3-dróg)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "+3",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (+3)",
+       "odds": 1.01,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Remis (Bournemouth +3)",
+       "odds": 9.25,
+       "normalizedName": "DRAW"
+      },
+      {
+       "name": "Nottingham Forest (-3)",
+       "odds": 26,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "betclic",
+     "odds": 1.01
+    },
+    "DRAW": {
+     "bookmaker": "betclic",
+     "odds": 9.25
+    },
+    "AWAY": {
+     "bookmaker": "betclic",
+     "odds": 26
+    }
+   }
+  },
+  "ASIAN_HANDICAP_PUSH:-1": {
+   "code": "ASIAN_HANDICAP_PUSH",
+   "namePl": "Handicap (z możliwym zwrotem)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-1",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1 (-1)",
+       "odds": 2.85,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2 (+1)",
+       "odds": 1.4,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 2.85
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 1.4
+    }
+   }
+  },
+  "ASIAN_HANDICAP_PUSH:-2": {
+   "code": "ASIAN_HANDICAP_PUSH",
+   "namePl": "Handicap (z możliwym zwrotem)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-2",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1 (-2)",
+       "odds": 6.5,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2 (+2)",
+       "odds": 1.1,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 6.5
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 1.1
+    }
+   }
+  },
+  "ASIAN_HANDICAP_PUSH:+0": {
+   "code": "ASIAN_HANDICAP_PUSH",
+   "namePl": "Handicap (z możliwym zwrotem)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "+0",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1 (+0)",
+       "odds": 1.48,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2 (-0)",
+       "odds": 2.55,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 1.48
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 2.55
+    }
+   }
+  },
+  "ASIAN_HANDICAP_PUSH:+1": {
+   "code": "ASIAN_HANDICAP_PUSH",
+   "namePl": "Handicap (z możliwym zwrotem)",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "+1",
+   "bookmakerOdds": {
+    "sts": {
+     "selections": [
+      {
+       "name": "1 (+1)",
+       "odds": 1.11,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2 (-1)",
+       "odds": 6.4,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 1.11
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 6.4
+    }
+   }
+  },
+  "ASIAN_HANDICAP:-0.5": {
+   "code": "ASIAN_HANDICAP",
+   "namePl": "Handicap",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-0.5",
+   "bookmakerOdds": {
+    "betclic": {
+     "selections": [
+      {
+       "name": "Bournemouth (-0,5)",
+       "odds": 1.88,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Nottingham Forest (+0.5)",
+       "odds": 1.7,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/bournemouth-nottingham-forest-m1268169867034626",
+     "scrapedAt": "2026-11-13T16:00:40.06+00:00"
+    },
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Bournemouth (-0.5)",
+       "odds": 1.96,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00i",
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "Nottingham (+0.5)",
+       "odds": 1.75,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00i",
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    },
+    "sts": {
+     "selections": [
+      {
+       "name": "1 (-0.5)",
+       "odds": 2.02,
+       "normalizedName": "HOME"
+      },
+      {
+       "name": "2 (+0.5)",
+       "odds": 1.77,
+       "normalizedName": "AWAY"
+      }
+     ],
+     "eventUrl": "https://www.sts.pl/kursy/bournemouth-nottingham/f2921911",
+     "scrapedAt": "2026-11-13T16:01:35.656+00:00"
+    }
+   },
+   "bestOdds": {
+    "HOME": {
+     "bookmaker": "sts",
+     "odds": 2.02
+    },
+    "AWAY": {
+     "bookmaker": "sts",
+     "odds": 1.77
+    }
+   }
+  },
+  "ASIAN_HANDICAP:-1": {
+   "code": "ASIAN_HANDICAP",
+   "namePl": "Handicap",
+   "viewType": "HANDICAP_SELECTOR",
+   "category": "HANDICAP",
+   "paramValue": "-1",
+   "bookmakerOdds": {
+    "fortuna": {
+     "selections": [
+      {
+       "name": "Nottingham (+1)",
+       "odds": 1.39,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00y",
+       "normalizedName": "AWAY"
+      },
+      {
+       "name": "Bournemouth (-1)",
+       "odds": 2.8,
+       "status": "active",
+       "externalId": "ufo:mkt:1xw-09z-00y",
+       "normalizedName": "HOME"
+      }
+     ],
+     "eventUrl": "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/bournemouth-nottingham-ufo:mtch:1xw-09z",
+     "scrapedAt": "2026-11-13T16:00:27.197+00:00"
+    }
+   },
+   "bestOdds": {
+    "AWAY": {
+     "bookmaker": "fortuna",
+     "odds": 1.39
+    },
+    "HOME": {
+     "bookmaker": "fortuna",
+     "odds": 2.8
+    }
+   }
+  }
+ }
+}

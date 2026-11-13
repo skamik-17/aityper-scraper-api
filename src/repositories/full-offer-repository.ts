@@ -62,7 +62,7 @@ export interface FullOfferComparison {
   }>;
 }
 
-function generateMatchId(homeTeam: string, awayTeam: string, leagueSlug: string): string {
+export function generateMatchId(homeTeam: string, awayTeam: string, leagueSlug: string): string {
   const homeNorm = getNormalizedTeamName(homeTeam, leagueSlug);
   const awayNorm = getNormalizedTeamName(awayTeam, leagueSlug);
   return `${leagueSlug}:${homeNorm}:${awayNorm}`;

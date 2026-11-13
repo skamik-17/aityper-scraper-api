@@ -5,6 +5,7 @@ import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-match
 import { fetchAllRows } from "../utils/supabase-pagination.js";
 import { parseDbTimestamp } from "../utils/db-timestamp.js";
 import { formatDbError } from "../services/run-outcome.js";
+import { generateMatchId } from "./full-offer-repository.js";
 
 export interface AggregatedMatchOdds {
   match_id: string;
@@ -54,17 +55,19 @@ export async function getMatchOdds(
   leagueSlug: string = "ekstraklasa"
 ): Promise<LatestOddsRow[]> {
   const supabase = getSupabase();
-  const homeCanonical = getCanonicalTeamName(homeTeam, leagueSlug);
-  const awayCanonical = getCanonicalTeamName(awayTeam, leagueSlug);
+  // latest_odds partitions its window by match_id, so this filter is pushed
+  // below the window (team-name filters were not: ~7.7 s per request).
+  // (match_id, bookmaker, market_key) is unique there, so the order is total
+  // and offset paging is stable.
+  const matchId = generateMatchId(homeTeam, awayTeam, leagueSlug);
 
   const { data, error } = await fetchAllRows<LatestOddsRow>((from, to) =>
     supabase
       .from("latest_odds")
       .select("*")
-      .eq("league_slug", leagueSlug)
-      .eq("home_team", homeCanonical)
-      .eq("away_team", awayCanonical)
+      .eq("match_id", matchId)
       .order("market_key")
+      .order("bookmaker")
       .range(from, to) as any,
   );
 

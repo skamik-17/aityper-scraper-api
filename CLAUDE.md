@@ -88,26 +88,37 @@ The API reads and writes the local Supabase stack (`SUPABASE_URL`, PostgREST on
 
 ## Scraper Architecture
 
-All scrapers extend `PlaywrightScraper` (`src/scrapers/base/playwright-base.ts`):
+Every scraper implements `FullOfferScraper` (`src/scrapers/shared/scraper-contract.ts`):
 
 ```typescript
-abstract class PlaywrightScraper {
-  abstract scrapeLeague(league: string): Promise<ScraperResult>;
-  abstract scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
-  abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
-  // Provides: initBrowser(), applyStealthScripts(), navigateWithRetry()
+interface FullOfferScraper {
+  readonly bookmaker: PolishBookmaker;
+  scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult>;
+  cleanup(): Promise<void>;
 }
 ```
 
-Each bookmaker scraper implements league-specific URL configs and parsing logic. The
-`ScraperAggregator` (`src/scrapers/aggregator.ts`) runs all scrapers in parallel.
+Transports: `HttpScraper` (`src/scrapers/base/http-scraper.ts`; the /rest/market family in
+`src/scrapers/shared/rest-market/`, fortuna, superbet, lvbet), betclic's gRPC-web client, and
+`PlaywrightScraper` (`src/scrapers/base/playwright-base.ts`) for the browser paths. A scraper
+that can list its events cheaply also implements `IncrementalScraper`
+(`src/scrapers/shared/incremental/incremental-scraper.ts`: `listEvents` + `fetchEvent`), and its
+full pass is exactly those two, so incremental passes (plan 10, `INCREMENTAL_BOOKMAKERS`) fetch
+only the due details. The aggregator (`src/scrapers/aggregator.ts`) runs one job per bookmaker
+under the RunCoordinator; `getScraper(bm)` returns the picked instance.
+
+The legacy 1X2 methods (`scrapeLeague`, `scrapeMatch`, `scrapeMatchDetails`, `extractEventUrls`)
+are optional on `PlaywrightScraper`, called by nothing, and being deleted; never add them
+(`src/scrapers/__tests__/legacy-path.test.ts` guards this).
 
 ### Adding a New Scraper
-1. Create `src/scrapers/bookmakers/{bookmaker}.ts`
-2. Extend `PlaywrightScraper`, implement abstract methods
-3. Add league URL configs with selectors
-4. Export instance in `src/scrapers/bookmakers/index.ts`
-5. Register in `SCRAPERS` map in `aggregator.ts`
+1. Create `src/scrapers/bookmakers/{bookmaker}/` with a pure mapping (listing + detail payload →
+   `FullMatchOffer`) and its tests on recorded payloads
+2. Implement `FullOfferScraper` (prefer `HttpScraper`; add `IncrementalScraper` when the listing
+   carries kickoff and prices), declaring `readonly transport`
+3. Add the league ids in `src/config/leagues.ts`
+4. Export the picked instance in `src/scrapers/bookmakers/index.ts`
+5. Register it in the `SCRAPERS` map in `aggregator.ts`
 
 ## Team Name Normalization
 

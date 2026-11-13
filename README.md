@@ -73,10 +73,11 @@ Odds are currently scraped and normalized for the following football leagues:
 
 ## Scraper System
 ### Base Architecture
-All scrapers extend the `PlaywrightScraper` base class, which provides standardized methods:
-- `scrapeLeague()`: Entry point for league-wide odds extraction.
-- `scrapeMatchDetails()`: Deep dive into a specific match for expanded markets (players, stats).
-- `autoScroll()` & `waitForNetworkIdle()`: Utilities for handling dynamic content.
+Every scraper implements one contract, `FullOfferScraper.scrapeFullOffer(league, budget)`: all
+markets of every listed match of a league (`src/scrapers/shared/scraper-contract.ts`).
+- HTTP, WebSocket or gRPC-web transports by default; `PlaywrightScraper` remains for the browser paths.
+- `IncrementalScraper` (`listEvents` + `fetchEvent`) lets the scheduler fetch only the matches
+  whose kickoff tier or listing prices make them due (`INCREMENTAL_BOOKMAKERS`, off by default).
 
 ### Implementation Strategies
 - **WebSocket Interception (STS)**: STS uses WebSockets for real-time updates. The service includes a specialized sniffer that intercepts these messages to extract data without heavy DOM parsing.

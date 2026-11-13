@@ -31,4 +31,23 @@ describe("legacy 1X2 path", () => {
     for (const n of ["runAllScrapers", "runSingleScraper", "AggregatedResult"]) expect(names).not.toContain(n);
     expect(names).toContain("getScraper");
   });
+
+  // Task 17 (partial): what has no user left while sts, betcris and pzbuk still carry the
+  // legacy path. The full "legacy types are gone" check lands with their deletion.
+  it("legacy types without a user are gone", () => {
+    const scraperTypes = exportedNames(ROOT, "src/types/scraper.ts");
+    for (const t of ["NormalizedMatch", "AggregatedOdds", "Scraper"]) expect(scraperTypes).not.toContain(t);
+    expect(scraperTypes).toEqual(expect.arrayContaining(["ScraperConfig", "DEFAULT_SCRAPER_CONFIGS"]));
+  });
+
+  it("the dead scraper_runs writers are gone", () => {
+    const names = exportedNames(ROOT, "src/repositories/scraper-run-repository.ts");
+    for (const n of ["ScraperRunRecord", "insertScraperRun", "updateScraperRun"]) expect(names).not.toContain(n);
+    expect(names).toEqual(expect.arrayContaining(["insertBookmakerRunOutcomes", "toScraperRunInsert", "getLastSuccessfulScrapeTime"]));
+  });
+
+  it("the base class has no legacy result helper nothing calls", () => {
+    const base = readFileSync(join(ROOT, "src/scrapers/base/playwright-base.ts"), "utf8");
+    for (const m of ["createTimeoutResult", "createMatchDetailTimeoutResult", "createNotImplementedResult"]) expect(base).not.toContain(m);
+  });
 });

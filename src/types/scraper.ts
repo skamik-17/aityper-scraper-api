@@ -101,36 +101,6 @@ export interface MatchIdentifier {
   leagueId?: string;
 }
 
-// Normalized match for comparison
-export interface NormalizedMatch {
-  homeTeam: string;
-  awayTeam: string;
-  normalizedHome: string;
-  normalizedAway: string;
-}
-
-// Aggregated odds from all scrapers
-export interface AggregatedOdds {
-  matchId: string;
-  homeTeam: string;
-  awayTeam: string;
-  odds: RawScrapedOdds[];
-  timestamp: Date;
-  matchConfidence: number; // 0-1, confidence that all odds are for the same match
-}
-
-// Scraper interface
-export interface Scraper {
-  bookmaker: PolishBookmaker;
-  config: ScraperConfig;
-  scrapeLeague(league: string): Promise<ScraperResult>;
-  scrapeEkstraklasa(): Promise<ScraperResult>;
-  scrapePremierLeague(): Promise<ScraperResult>;
-  scrapeMatch(match: MatchIdentifier): Promise<ScraperResult>;
-  scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
-  extractEventUrls(page: any): Promise<EventUrlEntry[]>;
-}
-
 // Default scraper configs
 export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
   betclic: {

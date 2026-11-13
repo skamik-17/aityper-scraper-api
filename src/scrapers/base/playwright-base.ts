@@ -226,16 +226,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     return { status: "error", bookmaker: this.bookmaker, error: errorMessage, duration, timestamp: new Date() };
   }
 
-  protected createTimeoutResult(duration: number): ScraperResult {
-    return {
-      status: "timeout",
-      bookmaker: this.bookmaker,
-      error: `Scraping timed out after ${this.config.timeout}ms`,
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
   protected createNotFoundResult(message: string, duration: number): ScraperResult {
     return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
   }
@@ -250,28 +240,8 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     };
   }
 
-  protected createMatchDetailTimeoutResult(duration: number): MatchDetailResult {
-    return {
-      status: "timeout",
-      bookmaker: this.bookmaker,
-      error: `Match detail scraping timed out after ${this.config.timeout}ms`,
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
   protected createMatchDetailNotFoundResult(message: string, duration: number): MatchDetailResult {
     return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
-  }
-
-  protected createNotImplementedResult(duration: number): MatchDetailResult {
-    return {
-      status: "error",
-      bookmaker: this.bookmaker,
-      error: `Extended market scraping not yet implemented for ${this.bookmaker}`,
-      duration,
-      timestamp: new Date(),
-    };
   }
 
   // Full offer helper methods

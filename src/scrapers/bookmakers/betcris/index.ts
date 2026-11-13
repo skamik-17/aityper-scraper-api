@@ -13,7 +13,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import {
   COMPETITION_IDS,
@@ -34,21 +33,6 @@ import {
   parseSwarmDataForFullOffer,
   parseAllMarkets,
 } from "./parser.js";
-import type { SwarmGame, ParsedTeams } from "./types.js";
-
-interface CachedBetcrisGame {
-  game: SwarmGame;
-  teams: ParsedTeams;
-  regionAlias: string;
-  competitionId: number;
-  eventUrl: string;
-}
-
-const eventsCache = new ScraperCache<CachedBetcrisGame>({
-  name: "betcris-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
 
 export class BetcrisPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betcris";
@@ -61,14 +45,6 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(entries: CachedBetcrisGame[]): void {
-    eventsCache.setMany(entries.map((e) => ({ key: String(e.game.id), value: e })));
-  }
-
-  private getCachedEvent(gameId: string): CachedBetcrisGame | undefined {
-    return eventsCache.get(gameId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -154,43 +130,6 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
     if (!gameId) {
       return this.createMatchDetailNotFoundResult("Invalid URL format", Date.now() - startTime);
-    }
-
-    const cachedEvent = this.getCachedEvent(String(gameId));
-    if (cachedEvent) {
-      const mockSwarmData = {
-        sport: {
-          "1": {
-            id: 1,
-            name: "Soccer",
-            alias: "Soccer",
-            region: {
-              "1": {
-                id: 1,
-                name: "Region",
-                alias: cachedEvent.regionAlias,
-                competition: {
-                  "1": {
-                    id: cachedEvent.competitionId,
-                    name: "Competition",
-                    game: { [gameId]: cachedEvent.game },
-                  },
-                },
-              },
-            },
-          },
-        },
-      };
-      const matchData = parseSwarmDataForMatchDetails(mockSwarmData, eventUrl, gameId);
-      if (matchData) {
-        return {
-          status: "success",
-          bookmaker: this.bookmaker,
-          data: matchData,
-          duration: Date.now() - startTime,
-          timestamp: new Date(),
-        };
-      }
     }
 
     return this.executeWithBrowser(
@@ -306,14 +245,6 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
                   }
                 }
               }
-
-              this.updateCache([{
-                game: fullGame,
-                teams,
-                regionAlias,
-                competitionId: compId,
-                eventUrl,
-              }]);
 
               const allMarkets = parseAllMarkets(fullGame, teams);
 

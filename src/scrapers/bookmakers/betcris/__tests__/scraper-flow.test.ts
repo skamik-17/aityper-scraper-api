@@ -24,8 +24,8 @@ function retarget(events: RecordedSwarmEvent[], id: number): RecordedSwarmEvent[
 }
 
 describe("betcris scraper flow", () => {
-  // A fresh module per test: eventsCache (index.ts) is module-level and
-  // scrapeFullOffer fills it.
+  // A fresh module per test, so no module-level state of the scraper leaks
+  // from one test into the next.
   let BetcrisPlaywrightScraper: typeof import("../index.js").BetcrisPlaywrightScraper;
 
   /** Every browser session of the scraper gets the fake page */
@@ -61,7 +61,7 @@ describe("betcris scraper flow", () => {
   });
 
   it("betcris scrapeMatchDetails: browser branch returns game 31321159 from the recorded frames", async () => {
-    const url = `${LEAGUE}/31321159`; // fresh module, so the cache path (index.ts:164-199) is skipped
+    const url = `${LEAGUE}/31321159`;
     const fake = createFakeSwarmPage(() => ({ events: match }));
     useFakeBrowser(fake);
     const r = await settle(new BetcrisPlaywrightScraper().scrapeMatchDetails(url));
@@ -173,6 +173,26 @@ describe("betcris scraper flow", () => {
     const skipped = vi.mocked(console.warn).mock.calls.map(([m]) => String(m)).filter((m) => m.startsWith("[Betcris/FullOffer] Skipped game"));
     expect(skipped.map((m) => m.match(/captured: (\w+)/)?.[1])).toEqual(["no_swarm_socket", "no_swarm_socket", "target_game_missing", "no_swarm_socket"]);
     expect(console.warn).toHaveBeenCalledWith("[Betcris/FullOffer] Aborting per-match loop: 3 consecutive capture failures");
+  });
+
+  const offerPage = () => createFakeSwarmPage((url) => (url.endsWith("/538") ? { events: league } : { events: retarget(match, Number(url.split("/").pop())) }));
+
+  it("betcris scrapeFullOffer: writes no module-level events cache", async () => {
+    const { ScraperCache } = await import("../../../../services/cache-manager.js");
+    const setMany = vi.spyOn(ScraperCache.prototype, "setMany");
+    useFakeBrowser(offerPage());
+    await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    expect(setMany).not.toHaveBeenCalled(); // before: once per captured game (20)
+  });
+
+  it("betcris scrapeMatchDetails: navigates even right after scrapeFullOffer captured the game", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const s = new BetcrisPlaywrightScraper();
+    await settle(s.scrapeFullOffer("premier-league"));
+    expect(fake.gotoAt).toHaveLength(1 + 20);
+    const r = await settle(s.scrapeMatchDetails(`${LEAGUE}/31321159`));
+    expect(r.status).toBe("success");
+    expect(fake.gotoAt).toHaveLength(1 + 20 + 1); // before: served from the cache, no navigation
   });
 
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {

@@ -33,8 +33,11 @@ export interface TickPlan {
   hourly: boolean;
 }
 
-/** A tick this close to a full interval after the last full run counts as the full one. */
-const FULL_DUE_SLACK_MS = 60_000;
+/**
+ * A tick within half a pass of a full interval after the last full run counts as the full one,
+ * so the hourly run lands at interval ± half a tick and never drifts later each hour.
+ */
+const fullDueSlackMs = (cfg: IncrementalConfig) => (cfg.passMinutes * 60_000) / 2;
 
 export function planTick(i: {
   now: number;
@@ -43,7 +46,7 @@ export function planTick(i: {
   bookmakers: readonly PolishBookmaker[];
   cfg: IncrementalConfig;
 }): TickPlan {
-  const fullDue = i.lastFullAt === null || i.now - i.lastFullAt >= i.fullIntervalMs - FULL_DUE_SLACK_MS;
+  const fullDue = i.lastFullAt === null || i.now - i.lastFullAt >= i.fullIntervalMs - fullDueSlackMs(i.cfg);
   const modes: Partial<Record<PolishBookmaker, ScrapeMode>> = {};
   for (const bm of i.bookmakers) {
     if (i.cfg.bookmakers.has(bm)) {

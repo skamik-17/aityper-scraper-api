@@ -36,6 +36,12 @@ describe("planTick", () => {
     expect(tick(at("11:00:00Z"), cfg(["forbet", "etoto"], true))).toEqual({ modes: allFull, hourly: true });
   });
 
+  it("the hourly run is due within half a tick of the interval, so it never drifts past it", () => {
+    // passMinutes 10: due from 55 min after the last full run
+    expect(tick(at("11:04:30Z"), cfg(["forbet"])).hourly).toBe(true);
+    expect(tick(at("11:05:30Z"), cfg(["forbet"])).hourly).toBe(false);
+  });
+
   it("modes keep CONFIG.BOOKMAKERS order", () =>
     expect(Object.keys(tick(at("11:00:00Z"), cfg(["etoto", "forbet"])).modes)).toEqual([...CONFIG.BOOKMAKERS]));
 });

@@ -5,16 +5,10 @@
 
 import { chromium, Browser } from "playwright";
 
-// Browser launch arguments (shared with playwright-base.ts)
-const BROWSER_ARGS = [
-  "--no-sandbox",
-  "--disable-setuid-sandbox",
-  "--disable-dev-shm-usage",
-  "--disable-accelerated-2d-canvas",
-  "--disable-gpu",
+// Never add --disable-features: Chromium keeps the last one, which would replace Playwright's own list.
+export const BROWSER_ARGS: readonly string[] = [
   "--disable-blink-features=AutomationControlled",
-  "--disable-features=IsolateOrigins,site-per-process",
-  "--window-size=1920,1080",
+  "--disable-site-isolation-trials",
 ];
 
 class BrowserPool {
@@ -60,7 +54,7 @@ class BrowserPool {
       try {
         const browser = await chromium.launch({
           headless: true,
-          args: BROWSER_ARGS,
+          args: [...BROWSER_ARGS],
         });
         this.pool.push(browser);
         return browser;

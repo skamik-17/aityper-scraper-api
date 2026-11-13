@@ -69,7 +69,9 @@ export function renderTemplate(t: string, specs: Record<string, string>, competi
 export function selectLeagueEvents(s: BetbySnapshot, tournamentId: string, nowMs: number): BetbyEventRef[] {
   const picked: { scheduled: number; ref: BetbyEventRef }[] = [];
   for (const [eventId, event] of Object.entries(s.events)) {
-    const d = event.desc;
+    // The snapshot holds every sport of the brand; one malformed event must not fail every league.
+    const d = event?.desc;
+    if (d === null || typeof d !== "object") continue;
     if (d.sport !== "1" || d.type !== "match" || d.tournament !== tournamentId) continue;
     if (!Array.isArray(d.competitors) || d.competitors.length !== 2) continue;
     if (!(d.scheduled * 1000 > nowMs)) continue;

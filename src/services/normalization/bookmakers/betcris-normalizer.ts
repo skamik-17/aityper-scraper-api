@@ -1395,11 +1395,17 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     if (
       marketType &&
       BETCRIS_TEAM_TIER_LADDER_IDS.has(marketType) &&
-      !(raw.paramValue && NUMERIC_PARAM.test(raw.paramValue))
+      !(
+        raw.paramValue &&
+        NUMERIC_PARAM.test(raw.paramValue) &&
+        parseFloat(raw.paramValue.replace(",", ".")) > 0
+      )
     ) {
-      // A team-ladder rung always carries its numeric line (tier - 0.5). An
-      // entry without one is a parser residual (a non-tier event such as
-      // "Tak"): exclude it to OTHER instead of publishing a lineless row.
+      // A team-ladder rung always carries its numeric line (tier - 0.5, with
+      // tier >= 1). An entry without one is a parser residual (a non-tier
+      // event such as "Tak"): exclude it to OTHER instead of publishing a
+      // lineless row. A line of 0 or below ("0+" -> -0.5) is no line any peer
+      // quotes: excluded too.
       return null;
     }
     if (marketType) {
@@ -1716,7 +1722,7 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
       // paramValue since there is no numeric line to report. A genuine
       // numeric line (the already-working single-market-per-player shape)
       // stays on the raw.name fallback below.
-      if (raw.paramValue && !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)) {
+      if (raw.paramValue && !NUMERIC_PARAM.test(raw.paramValue)) {
         paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
       } else {
         const playerMatch = raw.name.match(/^([^(.:]+?)\s*\(/);
@@ -1843,7 +1849,7 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
         marketCode === "PLAYER_4_OR_MORE_GOALS" ||
         marketCode === "PLAYER_GOAL_AND_RESULT") &&
       raw.paramValue &&
-      !/^[+-]?\d+([.,]\d+)?$/.test(raw.paramValue)
+      !NUMERIC_PARAM.test(raw.paramValue)
     ) {
       paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
     }

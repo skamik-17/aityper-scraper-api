@@ -322,7 +322,8 @@ function getTierLadderKind(marketType: string): TierLadderKind | null {
  * - player list: one entry whose selections are player names, built only
  *   from "1+" events.
  * Every event that does not fit its ladder's shape (a non-tier label, a
- * subject where none belongs or a missing one, a list tier other than 1+)
+ * subject where none belongs or a missing one, a team tier "0+", a list tier
+ * other than 1+)
  * goes, with its original label, into one trailing residual entry without
  * `paramValue`. No tier is ever invented or collapsed.
  */
@@ -339,7 +340,8 @@ function splitTierLadder(
 
   for (const selection of selections) {
     const label = parseTierLabel(selection.name);
-    if (kind === "team" && label && label.subject === null) {
+    // A team rung needs tier >= 1: "0+" would be Over -0.5, a line no peer quotes.
+    if (kind === "team" && label && label.subject === null && label.tier >= 1) {
       rungs.push({ tier: label.tier, selection });
     } else if (kind === "player" && label && label.subject !== null) {
       const tiers = players.get(label.subject) ?? [];

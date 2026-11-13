@@ -8048,10 +8048,12 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
   // numericId 1169 (EXACT_GOALS_YN, "Dokładnie X goli w meczu") retired —
   // round 9 /audit-match (Arsenal vs Coventry City): its Tak/Nie card
   // duplicated EXACT_GOALS' "1" selection (both bookmakers that fed it,
-  // betcris and lvbet, quoted identical odds under both cards). betcris/
-  // lvbet's "Exactly1GoalsinMatch"/"dokładnie 1 gol w meczu" raw markets
-  // now route straight into EXACT_GOALS with the YES leg recoded onto its
-  // "1" selection (see those normalizers) instead of a standalone code.
+  // betcris and lvbet, quoted identical odds under both cards). betcris'
+  // "Exactly1GoalsinMatch" raw market now routes straight into EXACT_GOALS
+  // with the YES leg recoded onto its "1" selection (see that normalizer)
+  // instead of a standalone code. lvbet routes its "Dokładnie 1 gol w meczu"
+  // to OTHER since the 2026-11 recovery, because its full "Dokładna liczba
+  // goli" ladder maps to EXACT_GOALS.
   {
     numericId: 1170,
     code: "HALF_TIME_LAST_TEAM_TO_SCORE",
@@ -9420,7 +9422,7 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER", "HOME_UNDER", "DRAW_OVER", "DRAW_UNDER", "AWAY_OVER", "AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli", DRAW_OVER: "Remis i powyżej {param} goli", DRAW_UNDER: "Remis i poniżej {param} goli", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli" },
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa lub powyżej {param} goli", HOME_UNDER: "{homeTeam} wygrywa lub poniżej {param} goli", DRAW_OVER: "Remis lub powyżej {param} goli", DRAW_UNDER: "Remis lub poniżej {param} goli", AWAY_OVER: "{awayTeam} wygrywa lub powyżej {param} goli", AWAY_UNDER: "{awayTeam} wygrywa lub poniżej {param} goli" },
     displayOrder: 525,
   },
   {

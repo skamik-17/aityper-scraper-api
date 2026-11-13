@@ -28,8 +28,6 @@ import {
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { matchToCanonical } from "../../../utils/team-matcher.js";
 
-const LVBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {};
-
 const LVBET_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "zwyciezca meczu": "MATCH_WINNER",
   "wynik meczu": "MATCH_WINNER",
@@ -139,8 +137,12 @@ export const LVBET_PLAYER_LADDER_PATTERNS: ReadonlyArray<{ pattern: RegExp; code
 ];
 
 // Audited name-pattern -> code mappings.
-// LVBET exposes no stable market id, so markets are recognized purely by their
-// (normalized: lowercased, diacritics-stripped, whitespace-collapsed) name.
+// LVBET exposes no product-unique market id, so markets are recognized purely
+// by their (normalized: lowercased, diacritics-stripped, whitespace-collapsed)
+// name. bookmakerMarketId carries markets_class_id, which different products
+// share (class 3944 holds the exact-goals "Bez goli" twin and "Dokładnie N
+// gol(e) w meczu"; 3264 holds the corners total and its 3-way twin), so it
+// must never route a market: an id map would send sibling products to one code.
 // Each pattern anchors on the STABLE phrase of a market and generalizes embedded
 // team/player names and over/under lines. Order matters: more specific patterns
 // MUST appear before generic catch-alls within the same family.
@@ -152,14 +154,23 @@ const LVBET_AUDIT_NAME_PATTERNS: Array<{ pattern: RegExp; code: NormalizedMarket
   // unanchored single-player PLAYER_GOAL_OR_ASSIST pattern further down
   // would otherwise swallow it and publish each pair as a fake "player".
   { pattern: /zawodnik strzeli gola lub zanotuje asyste - podwojna szansa/, code: "TWO_PLAYERS_GOAL_OR_ASSIST" },
-  // "1. połowa - Liczba goli (3-drogowo) N" (Powyżej/Dokładnie/Poniżej at
-  // whole lines 1 and 2) is a 3-way half-time total. The generic half-time
-  // heuristic in resolveMarketCode would put it on the 2-way
-  // HALF_TIME_TOTAL_GOALS:N, where it merged with the real 2-way line and its
-  // UNKNOWN "Dokładnie" leg made the grouper drop LVBet's whole entry.
-  // HALF_TIME_TOTAL_GOALS_3WAY has no line parameter, so it cannot hold both
-  // lines; exclude it (betcris excludes the same shape).
-  { pattern: /^1\. połowa - liczba goli \(3-drogowo\)/, code: "OTHER" },
+  // "Zawodnik strzeli gola lub zanotuje asystę - Potrójna szansa" (a trio
+  // "<A> or <B> or <C>") and "... w 1. połowie" (a first-half product) are
+  // different bets from the full-match single-player PLAYER_GOAL_OR_ASSIST.
+  // Its unanchored pattern further down would publish the trio as one fake
+  // player and the half product under the full-match code; exclude every
+  // suffixed sibling the Podwójna szansa entry above does not claim.
+  { pattern: /zawodnik strzeli gola lub zanotuje asyste (?:- |w )/, code: "OTHER" },
+  // "1. połowa - Liczba goli (3-drogowo) N" and its "2. połowa" twin
+  // (Powyżej/Dokładnie/Poniżej at whole lines) are 3-way half totals: the
+  // 3-way OVER loses on exactly N, where the 2-way OVER pushes. The generic
+  // half heuristics in resolveMarketCode would put them on the 2-way
+  // HALF_TIME_/SECOND_HALF_TOTAL_GOALS:N, where they merged with the real
+  // 2-way line and their UNKNOWN "Dokładnie" leg made the grouper drop
+  // LVBet's whole entry. HALF_TIME_TOTAL_GOALS_3WAY has no line parameter,
+  // so it cannot hold both lines, and the catalog has no second-half 3-way
+  // code; exclude both (betcris excludes the same shape).
+  { pattern: /^[12]\. połowa - liczba goli \(3-drogowo\)/, code: "OTHER" },
 
   // --- Time-period stats (must precede generic corner/throw-in families) ---
   // A prior special case routed ONLY the "…Rzuty rożne 0.5" line to the
@@ -746,19 +757,11 @@ function refineTeamScopedStatCode(
 function resolveMarketCode(
   raw: RawBookmakerMarket,
   ctx: NormalizationContext
-): { code: NormalizedMarketType; matchedBy: "id" | "name" | "pattern" } {
-  const rawId = raw.bookmakerMarketId ? Number(raw.bookmakerMarketId) : null;
-  if (rawId !== null && !Number.isNaN(rawId)) {
-    const idMatch = LVBET_MARKET_ID_TO_CODE[rawId];
-    if (idMatch) {
-      return { code: idMatch, matchedBy: "id" };
-    }
-  }
-
+): { code: NormalizedMarketType; matchedBy: "name" | "pattern" } {
   const normalizedName = normalizeMarketName(raw.name);
 
   // Audited name-pattern mappings take precedence over the generic heuristics
-  // below, since LVBET has no stable market id. Patterns are ordered
+  // below, since LVBET has no product-unique market id. Patterns are ordered
   // specific-first so e.g. corner/foul/card "1. połowa" variants are not
   // swallowed by the generic half-time result heuristic.
   for (const { pattern, code } of LVBET_AUDIT_NAME_PATTERNS) {
@@ -1283,27 +1286,49 @@ function normalizeLvbetPlayerName(raw: string): string {
   return alias ?? canonicalizePlayerName(raw);
 }
 
-/**
- * Folds a bare numeric exact-goals selection ("2", "3", "5") that has no
- * literal catalog match into the market's own highest "N+" catch-all bucket
- * that it still satisfies (e.g. SECOND_HALF_EXACT_GOALS's "2+" swallows raw
- * "2"/"3"/"4+"; AWAY_EXACT_GOALS's "3+" swallows raw "4"/"5"/"6+"), instead of
- * silently dropping the whole tail the way a literal-only match would.
- */
-function mergeIntoExactGoalsCatchAll(
-  marketCode: NormalizedMarketType,
-  compact: string
-): NormalizedSelection | null {
-  if (isCatalogSelection(marketCode, compact)) return compact as NormalizedSelection;
-  const value = parseInt(compact.replace("+", ""), 10);
-  if (Number.isNaN(value)) return null;
-  const metadata = getMarketMetadata(marketCode);
-  const catchAllThreshold = (metadata?.selections ?? [])
+/** The market's highest catalog "N+" bucket threshold that `value` satisfies. */
+function exactGoalsCatchAllThreshold(marketCode: NormalizedMarketType, value: number): number | undefined {
+  return (getMarketMetadata(marketCode)?.selections ?? [])
     .filter((s) => /^\d+\+$/.test(s))
     .map((s) => parseInt(s, 10))
     .sort((a, b) => b - a)
     .find((threshold) => value >= threshold);
-  return catchAllThreshold !== undefined ? (`${catchAllThreshold}+` as NormalizedSelection) : null;
+}
+
+/**
+ * Folds a numeric exact-goals selection with no literal catalog match into
+ * the market's highest catalog "T+" bucket it satisfies (e.g.
+ * SECOND_HALF_EXACT_GOALS's "2+" takes raw "2"/"3"/"4+"), but only when the
+ * fold is the same bet. "T+" means T or more goals, so the raw outcomes that
+ * land in it must be exactly T, T+1, ..., K-1 plus the raw tail "K+", with
+ * none missing. Anything less publishes a narrower outcome under "T+" at a
+ * price that is too high (false +EV): a "7+" next to a literal catalog "6"
+ * would publish P(>=7) as "6+", and a literal "3" without its "4+" tail would
+ * publish P(=3) as "3+". Such selections are dropped with a warning; a higher
+ * "+" tier never folds into a lower one on its own (controller ruling 7).
+ */
+function mergeIntoExactGoalsCatchAll(
+  marketCode: NormalizedMarketType,
+  compact: string,
+  siblingCompacts: string[]
+): NormalizedSelection | null {
+  if (isCatalogSelection(marketCode, compact)) return compact as NormalizedSelection;
+  const threshold = exactGoalsCatchAllThreshold(marketCode, parseInt(compact, 10));
+  if (threshold === undefined) return null;
+  const folded = siblingCompacts.filter(
+    (c) => /^\d+\+?$/.test(c) && !isCatalogSelection(marketCode, c) && exactGoalsCatchAllThreshold(marketCode, parseInt(c, 10)) === threshold
+  );
+  const literals = folded.filter((c) => !c.endsWith("+")).map((c) => parseInt(c, 10)).sort((a, b) => a - b);
+  const tails = folded.filter((c) => c.endsWith("+")).map((c) => parseInt(c, 10));
+  const complete =
+    tails.length === 1 && literals.length === tails[0] - threshold && literals.every((v, i) => v === threshold + i);
+  if (!complete) {
+    console.warn(
+      `[lvbet] ${marketCode}: dropping "${compact}", folding [${folded.join(", ")}] into "${threshold}+" would not price ${threshold} or more goals`
+    );
+    return null;
+  }
+  return `${threshold}+` as NormalizedSelection;
 }
 
 /**
@@ -1899,23 +1924,24 @@ function normalizeSelectionForMarket(
       // HOME/AWAY/DRAW. LVBet's grouped bands ("0 lub 1", "4 do 6", "7 lub
       // więcej") have no catalog counterpart and are dropped, but a bare
       // numeric tail beyond the catalog's exact buckets ("2", "3", "5") is
-      // folded into the market's own "N+" catch-all instead of being
+      // folded into the market's own "N+" catch-all when the fold is
+      // complete (see mergeIntoExactGoalsCatchAll), instead of being
       // silently discarded.
       const compact = trimmed.replace(/\s+/g, "");
       if (!/^\d+\+?$/.test(compact)) return null;
       // A raw "(n)+" tail (e.g. LVBet's "4+" meaning four-or-more) folds
-      // into the SAME catalog "N+" catch-all bucket as a lower literal
-      // sibling (e.g. a separate literal "3") whenever both values are at
-      // or above that bucket's threshold — genuinely the same outcome, not
-      // a narrowing conflict. Both are mapped to that shared code here; the
-      // caller combines same-code duplicates' implied probabilities into
-      // one fair price via mergeDuplicateCodedSelections instead of
-      // silently dropping either raw quote (audit-match, Arsenal vs
-      // Coventry City, POLOWY/HALF_TIME_EXACT_GOALS index 218: LVBet's own
-      // "3"=5.8 and "4+"=11 were being collapsed into a single "3+"=5.8,
-      // dropping the "4+" leg's probability mass and overstating the
-      // combined line's true odds).
-      return mergeIntoExactGoalsCatchAll(marketCode, compact);
+      // into the SAME catalog "N+" catch-all bucket as the lower literal
+      // siblings (e.g. a separate literal "3") that complete it — genuinely
+      // the same outcome, not a narrowing conflict. All of them are mapped
+      // to that shared code here; the caller combines same-code duplicates'
+      // implied probabilities into one fair price via
+      // mergeDuplicateCodedSelections instead of silently dropping either
+      // raw quote (audit-match, Arsenal vs Coventry City, POLOWY/
+      // HALF_TIME_EXACT_GOALS index 218: LVBet's own "3"=5.8 and "4+"=11
+      // were being collapsed into a single "3+"=5.8, dropping the "4+" leg's
+      // probability mass and overstating the combined line's true odds).
+      const siblingCompacts = (siblingSelectionNames ?? [selectionName]).map((n) => n.trim().replace(/\s+/g, ""));
+      return mergeIntoExactGoalsCatchAll(marketCode, compact, siblingCompacts);
     }
 
     case "RESULT_AND_BTTS":

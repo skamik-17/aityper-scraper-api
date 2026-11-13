@@ -42,7 +42,12 @@ describe("LVBet parser - v5 payload shape", () => {
   });
 
   it("never emits the literal externalId 'undefined'", () => {
-    for (const m of parseAllMarkets(evidence, teams)) for (const s of m.selections) expect(s.externalId).not.toBe("undefined");
+    for (const m of parseAllMarkets(evidence, teams)) {
+      for (const s of m.selections) {
+        expect(s.externalId).not.toBe("undefined");
+        expect(s.externalId).toMatch(/^bc:\d+$/);
+      }
+    }
   });
 
   it("parseExtendedMarkets accepts a numeric line", () => {

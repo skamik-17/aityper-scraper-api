@@ -6,6 +6,7 @@ import {
   type FakeSwarmPage,
   type RecordedSwarmEvent,
 } from "./helpers/fake-swarm-page.js";
+import { retarget } from "./helpers/swarm-fixtures.js";
 
 const league = loadRecording("league-538-frames.json");
 const match = loadRecording("match-31321159-frames.json");
@@ -15,13 +16,6 @@ const EMPTY: RecordedSwarmEvent[] = [
   { t: 0, kind: "goto" },
   { t: 700, kind: "domcontentloaded" },
 ];
-
-/** The recorded match frames, with game 31321159 renamed to `id` */
-function retarget(events: RecordedSwarmEvent[], id: number): RecordedSwarmEvent[] {
-  return events.map((e) =>
-    e.payload ? { ...e, payload: e.payload.replaceAll("31321159", String(id)) } : e
-  );
-}
 
 describe("betcris scraper flow", () => {
   // A fresh module per test, so no module-level state of the scraper leaks

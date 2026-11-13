@@ -120,6 +120,20 @@ describe("runScrapeCycle", () => {
     expect(r.get("premier-league")).toMatchObject({ interrupted: "shutdown: SIGTERM" });
   });
 
+  it("an interrupted league still resolves a recovery among its finished outcomes", async () => {
+    const at = (min: number) => new Date(Date.parse("2026-11-06T16:00:00.000Z") - min * 60_000).toISOString();
+    // betclic failed the 4 runs before this one; this interrupted run finished it OK
+    m.getRecentRunRows.mockResolvedValue([1, 2, 3, 4].map((n) => ({
+      run_id: `r${n}`, bookmaker: "betclic", league_slug: "premier-league", status: "scrape_failed", error_message: "x",
+      matches_found: 0, markets_found: 0, markets_saved: 0, duration_ms: 1, started_at: at(n * 60), finished_at: at(n * 60),
+    })));
+    m.runFullOfferCycle.mockResolvedValue(new Map([["premier-league",
+      { ...aggregatedFor("premier-league", [outcome({ bookmaker: "betclic", marketsSaved: 3150 })]), interrupted: "shutdown: SIGTERM" }]]));
+    await runScrapeCycle(["premier-league"]);
+    expect(errorSpy.mock.calls.flat().join("\n")).toContain("[ALERT-RESOLVED] betclic (premier-league) ok again after 4 failed runs");
+    expect(logSpy.mock.calls.filter(([l]) => String(l).startsWith("[ScrapeRun]"))).toHaveLength(0);
+  });
+
   it("a SIGTERM during the startup DB wait interrupts without an ABORTED alert (Review Focus 3)", async () => {
     const ctl = new AbortController();
     m.waitForDatabase.mockImplementationOnce(async () => {

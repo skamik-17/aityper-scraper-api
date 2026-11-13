@@ -3,7 +3,7 @@ import { CONFIG, type PolishBookmaker } from "../../config/index.js";
 import { outcome, summary, RUN2_OK } from "../../__tests__/helpers/run-fixtures.js";
 import type { BookmakerRunSummary } from "../bookmaker-status.js";
 import type { BookmakerRunOutcome } from "../run-outcome.js";
-import { buildRunAlerts, emitAlerts, formatAbortAlert, formatRunSummaryLine } from "../run-alerts.js";
+import { buildResolvedAlerts, buildRunAlerts, emitAlerts, formatAbortAlert, formatRunSummaryLine } from "../run-alerts.js";
 
 // Run 2 (440d2fc6): 9 bookmakers saved rows, 5 returned no events.
 const run2 = CONFIG.BOOKMAKERS.map((bm) =>
@@ -415,5 +415,23 @@ describe("alert config", () => {
       expect((await loadConfig()).ALERT_CONSECUTIVE_FAILURES).toBe(1);
       expect(warnSpy).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe("buildResolvedAlerts (an interrupted run's recoveries)", () => {
+  it("resolves a recovery that lands in an interrupted run and clears its streak; never raises a failure alert", () => {
+    const alerted = new Set(["premier-league|betters", "premier-league|lebull"]);
+    const lines = buildResolvedAlerts({
+      league: "premier-league",
+      outcomes: [outcome({ bookmaker: "betters", status: "success" }), outcome({ bookmaker: "lebull", status: "scrape_failed", error: "x" })],
+      summaries: summaries(
+        summary({ bookmaker: "betters", lastStatus: "success", consecutiveFailures: 0, recoveredAfterFailures: 4 }),
+        summary({ bookmaker: "lebull", lastStatus: "scrape_failed", consecutiveFailures: 9, failingSince: "2026-11-06T09:00:00.000Z", lastError: "x" }),
+      ),
+      threshold: 3,
+      alertedStreaks: alerted,
+    });
+    expect(lines).toEqual(["[ALERT-RESOLVED] betters (premier-league) ok again after 4 failed runs"]);
+    expect([...alerted]).toEqual(["premier-league|lebull"]);
   });
 });

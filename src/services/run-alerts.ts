@@ -107,6 +107,30 @@ export function buildRunAlerts(a: {
   return lines;
 }
 
+/**
+ * Recoveries only, for an interrupted run: its finished OK outcomes clear their alerted
+ * streak and resolve it, so the next completed run cannot miss the recovery. Failure alerts
+ * wait for a completed run.
+ */
+export function buildResolvedAlerts(a: {
+  league: string;
+  outcomes: BookmakerRunOutcome[];
+  summaries: Map<PolishBookmaker, BookmakerRunSummary>;
+  threshold: number;
+  alertedStreaks: Set<string>;
+}): string[] {
+  const lines: string[] = [];
+  for (const o of a.outcomes) {
+    const s = a.summaries.get(o.bookmaker);
+    if (!s || s.consecutiveFailures > 0) continue;
+    a.alertedStreaks.delete(`${a.league}|${o.bookmaker}`);
+    if (s.recoveredAfterFailures > 0 && s.recoveredAfterFailures >= a.threshold) {
+      lines.push(`[ALERT-RESOLVED] ${o.bookmaker} (${a.league}) ok again after ${s.recoveredAfterFailures} failed runs`);
+    }
+  }
+  return lines;
+}
+
 function reason(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }

@@ -14,6 +14,7 @@ import { isOkRunStatus, type BookmakerRunOutcome } from "./run-outcome.js";
 import { ensureMarketTypesSynced } from "./market-types-sync.js";
 import { mergeRunRows, STATUS_WINDOW_RUNS, summarizeBookmakerRuns, type BookmakerRunSummary } from "./bookmaker-status.js";
 import {
+  buildResolvedAlerts,
   buildRunAlerts,
   emitAlerts,
   formatAbortAlert,
@@ -120,7 +121,8 @@ async function persistInterruptedLeague(
   bookmakers: readonly PolishBookmaker[] | undefined,
   startedAt: Date,
   result: FullOfferAggregatedResult,
-  reason: string
+  reason: string,
+  signal?: AbortSignal
 ): Promise<ScrapeResult> {
   const errors: string[] = [];
   const outcomes = result.outcomes;
@@ -140,6 +142,27 @@ async function persistInterruptedLeague(
   console.log(
     `[ScraperService] ${league} run ${result.runId.slice(0, 8)} interrupted (${reason}): persisted ${outcomes.length} of ${supportedCount(league, bookmakers)} outcomes`
   );
+  // Recoveries among the finished outcomes are resolved now; failure alerts wait for a completed run
+  if (outcomes.some((o) => isOkRunStatus(o.status))) {
+    try {
+      const dbRows = await getRecentRunRows(league, STATUS_WINDOW_RUNS * CONFIG.BOOKMAKERS.length);
+      const rows = mergeRunRows(scraperHealth.getRecentOutcomes(league).map(toScraperRunInsert), dbRows);
+      const summaries = summarizeBookmakerRuns(rows, bookmakers ?? CONFIG.BOOKMAKERS);
+      await emitAlerts(
+        buildResolvedAlerts({
+          league,
+          outcomes,
+          summaries,
+          threshold: CONFIG.ALERT_CONSECUTIVE_FAILURES,
+          alertedStreaks: scraperHealth.getAlertedStreaks(),
+        }),
+        CONFIG.ALERT_WEBHOOK_URL,
+        signal
+      );
+    } catch (error) {
+      console.warn(`[ScraperService] run history unusable, recoveries not resolved for this interrupted run: ${errorMessage(error)}`);
+    }
+  }
   const completedAt = new Date();
   return {
     runId: result.runId,
@@ -172,7 +195,7 @@ async function persistLeagueRun(
   signal?: AbortSignal
 ): Promise<ScrapeResult> {
   if (fullOfferResult?.interrupted) {
-    return persistInterruptedLeague(league, bookmakers, startedAt, fullOfferResult, fullOfferResult.interrupted);
+    return persistInterruptedLeague(league, bookmakers, startedAt, fullOfferResult, fullOfferResult.interrupted, signal);
   }
   const errors: string[] = [];
   let runId = "unknown";

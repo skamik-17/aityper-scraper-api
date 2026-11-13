@@ -76,11 +76,33 @@ describe("forbet recovery 2026-11", () => {
         name: "TurboPrzewaga - 2 gole przewagi lub wygrana",
         selections: [{ name: "Everton", odds: 1.63 }, { name: "remis", odds: 3.9 }, { name: "Everton", odds: 4.5 }],
       }, ctxEC)).toBeNull();
-      expect(warn).toHaveBeenCalledTimes(2);
-      expect(String(warn.mock.calls[0][0])).toContain("WIN_OR_WIN_BY_2");
+      // An extra non-draw leg next to one HOME and one AWAY: only the
+      // teamLegs.length guard catches it.
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: "-31170",
+        name: "TurboPrzewaga - 2 gole przewagi lub wygrana",
+        selections: [
+          { name: "Everton", odds: 1.63 },
+          { name: "remis", odds: 3.9 },
+          { name: "Coventry", odds: 4.5 },
+          { name: "Inne", odds: 9 },
+        ],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(3);
+      expect(warn.mock.calls.every((call) => String(call[0]).includes("WIN_OR_WIN_BY_2"))).toBe(true);
     } finally {
       warn.mockRestore();
     }
+  });
+
+  it("forbet TurboPrzewaga quoted without a remis leg still maps to HOME/AWAY", () => {
+    const out = forbetNormalizer.normalizeMarket({
+      bookmakerMarketId: "-31170",
+      name: "TurboPrzewaga - 2 gole przewagi lub wygrana",
+      selections: [{ name: "Everton", odds: 1.63 }, { name: "Coventry", odds: 4.5 }],
+    }, ctxEC)!;
+    expect(out.marketKey).toBe("WIN_OR_WIN_BY_2");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["HOME", 1.63], ["AWAY", 4.5]]);
   });
 
   it("forbet Handicap 2:0 (-6048) stays on EUROPEAN_HANDICAP:+2", () => {
@@ -192,5 +214,57 @@ describe("forbet recovery 2026-11", () => {
     } finally {
       warn.mockRestore();
     }
+  });
+
+  // The shared-platform ids are positional: -8041/-8044 are the home team,
+  // -8043/-8046 the away team, -8042 the draw (as etoto maps them). A raw name
+  // whose side disagrees with its id means the name was misread, so the
+  // market is dropped instead of publishing one team's price under the other.
+  it.each([
+    ["-8041", "Coventry wygra lub obie drużyny strzelą gola"],
+    ["-8041", "remis w meczu lub obie drużyny strzelą gola"],
+    ["-8042", "Everton wygra lub obie drużyny strzelą gola"],
+    ["-8043", "Everton wygra lub obie drużyny strzelą gola"],
+    ["-8043", "remis w meczu lub obie drużyny strzelą gola"],
+  ])("forbet RESULT_OR_BTTS %s is dropped when the name side disagrees with the id (%s)", (id, leg) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: id,
+        name: `Wydarzy się min. jedno z: ${leg}`,
+        selections: [{ name: "tak", odds: 1.13 }, { name: "nie", odds: 4.7 }],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain("RESULT_OR_BTTS");
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it.each([
+    ["-8044", "Coventry"],
+    ["-8046", "Everton"],
+  ])("forbet TEAM_WIN_OR_CLEAN_SHEET %s is dropped when the name side disagrees with the id (%s)", (id, team) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: id,
+        name: `Wydarzy się min. jedno z: ${team} wygra lub którakolwiek drużyna zachowa czyste konto`,
+        selections: [{ name: "tak", odds: 1.28 }, { name: "nie", odds: 3.15 }],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(String(warn.mock.calls[0][0])).toContain("TEAM_WIN_OR_CLEAN_SHEET");
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("forbet alternative bet spelled without a space after 'min.' stays out of BTTS on an unmapped id", () => {
+    const out = forbetNormalizer.normalizeMarket({
+      bookmakerMarketId: "-8099",
+      name: "Wydarzy się min.jedno z: Everton wygra lub obie drużyny strzelą gola",
+      selections: [{ name: "tak", odds: 1.13 }, { name: "nie", odds: 4.7 }],
+    }, ctxEC)!;
+    expect(out.marketCode).toBe("OTHER");
   });
 });

@@ -243,8 +243,11 @@ const BETCLIC_MARKET_PATTERNS: Array<{
   // stripped in resolveCornersTeamMarket/resolveTeamTacklesMarket) - keeping
   // MOST_SHOTS consistent with that established convention rather than
   // fragmenting the bookmaker pool per fix-pattern #5.
-  { pattern: /^1x2 strzaly/i, code: "MOST_SHOTS" },
-  { pattern: /^faule\s+1x2\s*\(opta\)/i, code: "FOUL_RACE" },
+  // Anchored at both ends (controller ruling 22): only the full-match names,
+  // optionally with the extra-time suffix, are the race; "1x2 strzaly - 1.
+  // polowa" or "1x2 strzaly celne" must not pass for it.
+  { pattern: /^1x2 strzaly(?:\s*\((?:120 min|z dogrywka)\))?$/i, code: "MOST_SHOTS" },
+  { pattern: /^faule\s+1x2\s*\(opta\)(?:\s*\((?:z dogrywka|120 min)\))?$/i, code: "FOUL_RACE" },
   { pattern: /^strzelec:/i, code: "OTHER" },
    { pattern: /^2\s+graczy\s+strzeli\s+pow\.\s*\d+[,.]?\d*\s+gol/i, code: "TWO_PLAYERS_COMBINED_GOALS" },
   { pattern: /^3\s+graczy\s+strzeli\s+pow\.\s*\d+[,.]?\d*\s+gol/i, code: "THREE_PLAYERS_COMBINED_GOALS" },

@@ -549,6 +549,9 @@ const TEAM_SCOPED_CODE_MAP: Partial<
   },
 };
 
+/** "<team> - liczba ..." (normalized text): a single team's stat line, unlike the whole-match "liczba ...". */
+const TEAM_PREFIXED_STAT_TITLE = /^\S.*?\s[-–]\s*liczba\b/;
+
 const FIRST_HALF_PREFIX = /^1\.?\s*polow/;
 const SECOND_HALF_PREFIX = /^2\.?\s*polow/;
 
@@ -760,19 +763,24 @@ function refineMarketCode(
   // single team's line merged into the whole-match market corrupts the
   // parameter list (e.g. a team's lower card count masquerading as the
   // match-wide total at the same param rows).
-  if (
-    (code === "TOTAL_SHOTS" ||
-      code === "TOTAL_SHOTS_ON_TARGET" ||
-      code === "FOULS_TOTAL" ||
-      code === "CORNERS_TOTAL" ||
-      code === "CARDS_TOTAL") &&
-    teamSide() !== null
-  ) {
+  const wholeMatchStatTotal =
+    code === "TOTAL_SHOTS" ||
+    code === "TOTAL_SHOTS_ON_TARGET" ||
+    code === "FOULS_TOTAL" ||
+    code === "CORNERS_TOTAL" ||
+    code === "CARDS_TOTAL";
+  if (wholeMatchStatTotal && teamSide() !== null) {
     if (code === "TOTAL_SHOTS") code = "TEAM_TOTAL_SHOTS";
     else if (code === "TOTAL_SHOTS_ON_TARGET") code = "TEAM_TOTAL_SHOTS_ON_TARGET";
     else if (code === "FOULS_TOTAL") code = "TEAM_TOTAL_FOULS";
     else if (code === "CARDS_TOTAL") code = "CARDS_TEAM";
     else code = "CORNERS_TEAM";
+  } else if (wholeMatchStatTotal && TEAM_PREFIXED_STAT_TITLE.test(name)) {
+    // Controller ruling 22: a "<team> - liczba ..." title whose team does not
+    // resolve is still one team's line; on the whole-match code it would
+    // pool with the match totals. Whole-match titles start with "liczba".
+    console.warn(`[betfan] Team-prefixed stat line "${raw.name}" (code ${code}) names no match team, published as OTHER`);
+    code = "OTHER";
   }
 
   // Team-scoped markets routed to HOME_*/AWAY_* catalog codes

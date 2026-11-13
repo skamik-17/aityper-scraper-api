@@ -4167,6 +4167,11 @@
             "code": "HOME_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.14
+          },
+          {
+            "code": "HOME_OR_BTTS_NO",
+            "label": "nie",
+            "odds": 4.4
           }
         ]
       },
@@ -4209,6 +4214,11 @@
             "code": "AWAY_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.67
+          },
+          {
+            "code": "AWAY_OR_BTTS_NO",
+            "label": "nie",
+            "odds": 1.99
           }
         ]
       },
@@ -4265,6 +4275,11 @@
             "code": "DRAW_OR_BTTS_YES",
             "label": "tak",
             "odds": 1.7
+          },
+          {
+            "code": "DRAW_OR_BTTS_NO",
+            "label": "nie",
+            "odds": 1.96
           }
         ]
       },

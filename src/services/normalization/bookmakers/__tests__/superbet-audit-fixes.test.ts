@@ -256,19 +256,6 @@ describe("superbet: exact-goals family maps by id", () => {
       ],
       ["0", "1", "2", "3+"],
     ],
-    // Regression: 558 was already mapped; its catalog top band is a bare "3".
-    [
-      "558",
-      "HALF_TIME_HOME_EXACT_GOALS",
-      "1.połowa - Arsenal - dokładna liczba goli",
-      [
-        ["0", 3],
-        ["1", 2.5],
-        ["2", 3.75],
-        ["3+", 5.8],
-      ],
-      ["0", "1", "2", "3"],
-    ],
   ];
 
   it.each(rows)("exact goals: id %s maps to %s", (id, marketCode, name, sels, codes) => {
@@ -287,6 +274,48 @@ describe("superbet: exact-goals family maps by id", () => {
     expect(out.selections.map((s) => s.code)).toEqual(codes);
     expect(out.selections.map((s) => s.odds)).toEqual(sels.map(([, odds]) => odds));
     expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  // Controller ruling 3: HALF_TIME_HOME_EXACT_GOALS's catalog bands are
+  // 0/1/2/2+/3, with no "3+". Superbet's top band is "3+" (3 or more), which
+  // used to be published as "3" (exactly 3). No catalog tier carries a 3+
+  // price for this market, so the band is dropped, never relabelled.
+  it("558 drops the '3+' band instead of publishing it as exactly '3'", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "558",
+        name: "1.połowa - Arsenal - dokładna liczba goli",
+        selections: [
+          { name: "0", odds: 3 },
+          { name: "1", odds: 2.5 },
+          { name: "2", odds: 3.75 },
+          { name: "3+", odds: 5.8 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("HALF_TIME_HOME_EXACT_GOALS");
+    expect(out.marketKey).toBe("HALF_TIME_HOME_EXACT_GOALS");
+    expect(out.debug?.matchedBy).toBe("id");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["0", 3], ["1", 2.5], ["2", 3.75]]);
+  });
+
+  it("558 keeps a real exactly-3 band", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "558",
+        name: "1.połowa - Arsenal - dokładna liczba goli",
+        selections: [
+          { name: "0", odds: 3 },
+          { name: "1", odds: 2.5 },
+          { name: "2", odds: 3.75 },
+          { name: "3", odds: 9 },
+          { name: "4+", odds: 21 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["0", 3], ["1", 2.5], ["2", 3.75], ["3", 9]]);
   });
 
   // Hypothetical ladder: every live 568 ladder (100 ladders on the 20 PL
@@ -315,17 +344,17 @@ describe("superbet: exact-goals family maps by id", () => {
 
 // Superbet's "<X> lub obie drużyny strzelą gola" is one Tak/Nie market per
 // result leg (231006 home, 231007 draw, 231008 away). "Nie" is NOT(<X> or
-// BTTS), so neither happens. The catalog's <SIDE>_OR_BTTS_NO is "<X> or
-// BTTS-No", a different and much shorter-priced bet. Only the tak leg is
-// published, as forbet does. Raw values are the WC golden fixture entries
-// 2705, 2728 and 2706 (Tak/Nie implied probabilities sum to 1.08, so "Nie" is
-// the complement of "Tak").
-describe("superbet: RESULT_OR_BTTS publishes only the tak leg", () => {
+// BTTS), so neither happens, which is what the catalog's <SIDE>_OR_BTTS_NO
+// says ("Ani 1, ani obie strzelą"). Both legs are published, as etoto and
+// forbet do. Raw values are the WC golden fixture entries 2705, 2728 and 2706
+// (Tak/Nie implied probabilities sum to 1.08, so "Nie" is the complement of
+// "Tak").
+describe("superbet: RESULT_OR_BTTS publishes tak as YES and nie as NO", () => {
   it.each([
-    ["231006", "Francja wygra lub obie drużyny strzelą gola", 1.15, 4.8, "HOME_OR_BTTS_YES"],
-    ["231007", "Remis lub obie drużyny strzelą gola", 1.72, 2, "DRAW_OR_BTTS_YES"],
-    ["231008", "Maroko wygra lub obie drużyny strzelą gola", 1.68, 2.07, "AWAY_OR_BTTS_YES"],
-  ] as const)("%s (%s) keeps only the tak leg", (id, name, tak, nie, code) => {
+    ["231006", "Francja wygra lub obie drużyny strzelą gola", 1.15, 4.8, "HOME"],
+    ["231007", "Remis lub obie drużyny strzelą gola", 1.72, 2, "DRAW"],
+    ["231008", "Maroko wygra lub obie drużyny strzelą gola", 1.68, 2.07, "AWAY"],
+  ] as const)("%s (%s) keeps both legs under the side's codes", (id, name, tak, nie, side) => {
     const out = run(
       {
         bookmakerMarketId: id,
@@ -341,8 +370,28 @@ describe("superbet: RESULT_OR_BTTS publishes only the tak leg", () => {
     expect(out.marketKey).toBe("RESULT_OR_BTTS");
     expect(out.paramValue).toBeUndefined();
     expect(out.debug?.matchedBy).toBe("id");
-    expect(out.selections).toEqual([{ code, label: "Tak", odds: tak }]);
+    expect(out.selections).toEqual([
+      { code: `${side}_OR_BTTS_YES`, label: "Tak", odds: tak },
+      { code: `${side}_OR_BTTS_NO`, label: "Nie", odds: nie },
+    ]);
     expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it("drops the market when the nie leg is duplicated", () => {
+    const out = superbetNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "231006",
+        name: "Francja wygra lub obie drużyny strzelą gola",
+        selections: [
+          { name: "Tak", odds: 1.15 },
+          { name: "Nie", odds: 4.8 },
+          { name: "Nie", odds: 5 },
+        ],
+      },
+      fraMar
+    );
+    expect(out).toBeNull();
+    expect(console.warn).toHaveBeenCalledTimes(1);
   });
 
   it("drops the market when there is no single tak leg", () => {

@@ -77,9 +77,9 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // home/away pair (side would have been lost) plus a standalone
   // DRAW_OR_BTTS card. Routed into the single combined RESULT_OR_BTTS code
   // instead - side is resolved via SUPERBET_SIDE_BY_MARKET_ID below and
-  // folded into the selection code in normalizeMarket (HOME_OR_BTTS_YES,
-  // DRAW_OR_BTTS_YES, AWAY_OR_BTTS_YES). Only the tak leg is published: the
-  // raw "nie" is "neither happens", not the catalog's "<X> or BTTS-No".
+  // folded into the selection code in normalizeMarket (HOME_OR_BTTS_YES/NO,
+  // DRAW_OR_BTTS_YES/NO, AWAY_OR_BTTS_YES/NO). The raw "nie" is "neither
+  // happens", which is what the catalog's <SIDE>_OR_BTTS_NO says.
   231006: "RESULT_OR_BTTS", // "{home} wygra lub obie strzelą"
   231007: "RESULT_OR_BTTS", // "Remis lub obie drużyny strzelą gola"
   231008: "RESULT_OR_BTTS", // "{away} wygra lub obie strzelą"
@@ -1200,16 +1200,6 @@ function normalizeSelectionForMarket(
     case "CORNERS_TEAM_RANGE":
       return normalizeRangeSelection(trimmed, lower);
 
-    case "HALF_TIME_HOME_EXACT_GOALS": {
-      // The catalog's top band is a bare count ("3"); Superbet quotes it as
-      // "3+" - strip the "+" so the odds join the existing comparison column.
-      const plusBand = trimmed.match(/^(\d+)\+$/);
-      if (plusBand && literalCatalogCodes?.includes(plusBand[1])) {
-        return plusBand[1] as NormalizedSelection;
-      }
-      return normalizeRangeSelection(trimmed, lower);
-    }
-
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
@@ -1481,12 +1471,16 @@ function normalizeSelectionForMarket(
     // Every in-vocabulary band was already returned by the literal catalog-
     // code passthrough at the top. Anything else must not reach the 1X2
     // mapper below, where a bare "3" (outside HALF_TIME_EXACT_GOALS's
-    // 0/1/2/2+/3+) would become DRAW.
+    // 0/1/2/2+/3+) would become DRAW. HALF_TIME_HOME_EXACT_GOALS's bands are
+    // 0/1/2/2+/3 with no "3+": Superbet's top band "3+" (3 or more) used to
+    // be stripped to "3" (exactly 3). It is UNKNOWN now and dropped in
+    // normalizeMarket (controller ruling 3).
     case "EXACT_GOALS":
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS":
     case "HALF_TIME_EXACT_GOALS":
     case "HALF_TIME_AWAY_EXACT_GOALS":
+    case "HALF_TIME_HOME_EXACT_GOALS":
       return "UNKNOWN";
 
     case "OTHER":
@@ -1717,23 +1711,24 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     // BTTS" from 3 separate ids (231006 home / 231007 draw / 231008 away)
     // into one combined card, so the side is folded into the selection code
     // itself (231007, the draw, has no side at all). Each id is its own
-    // Tak/Nie market. Only "Tak" ("<X> or BTTS") is published, as
-    // <SIDE>_OR_BTTS_YES. Superbet's "Nie" is NOT(<X> or BTTS), i.e. neither
-    // happens (WC fixture: "Francja wygra lub obie drużyny strzelą gola" Tak
-    // 1.15 / Nie 4.8), but the catalog <SIDE>_OR_BTTS_NO means "<X> or
-    // BTTS-No", a different and much shorter-priced bet, so the nie leg is
-    // dropped (same as forbet). An unrecognised label or a missing or
-    // duplicated tak leg drops the whole market rather than guess.
+    // Tak/Nie market. "Tak" is "<X> or BTTS" (<SIDE>_OR_BTTS_YES); "Nie" is
+    // NOT(<X> or BTTS), i.e. neither happens (WC fixture: "Francja wygra lub
+    // obie drużyny strzelą gola" Tak 1.15 / Nie 4.8), which is what the
+    // catalog's <SIDE>_OR_BTTS_NO says ("Ani 1, ani obie strzelą"; rulings 4
+    // and 21). An unrecognised label, a missing or duplicated tak leg or a
+    // duplicated nie leg drops the whole market rather than guess.
     if (marketCode === "RESULT_OR_BTTS") {
       const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
       const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
-      if (legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+      const noSelections = raw.selections.filter((_, i) => legs[i] === "NO");
+      if (legs.includes("UNKNOWN") || yesSelections.length !== 1 || noSelections.length > 1) {
         console.warn(
           `[superbet] RESULT_OR_BTTS: could not resolve the tak leg for "${raw.name}" (id: ${rawId ?? "none"})`
         );
         return null;
       }
       const yesSelection = yesSelections[0];
+      const resultSide = side ?? "DRAW";
       return {
         marketCode,
         paramValue: undefined,
@@ -1741,10 +1736,15 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
         marketName: getMarketMetadata(marketCode)?.labels.pl ?? raw.name,
         selections: [
           {
-            code: `${side ?? "DRAW"}_OR_BTTS_YES` as NormalizedSelection,
+            code: `${resultSide}_OR_BTTS_YES` as NormalizedSelection,
             label: yesSelection.name,
             odds: yesSelection.odds,
           },
+          ...noSelections.map((sel) => ({
+            code: `${resultSide}_OR_BTTS_NO` as NormalizedSelection,
+            label: sel.name,
+            odds: sel.odds,
+          })),
         ],
         debug: {
           rawName: raw.name,
@@ -1780,6 +1780,14 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     // instead of surfacing a second, unlabeled-looking button online.
     if (EACH_TEAM_OVER_ONLY_MARKETS.has(marketCode)) {
       selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+    }
+
+    // HALF_TIME_HOME_EXACT_GOALS has no catalog tier for Superbet's "3+"
+    // band (see normalizeSelectionForMarket): drop it rather than publish a
+    // 3-or-more price under another band.
+    if (marketCode === "HALF_TIME_HOME_EXACT_GOALS") {
+      selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+      if (selections.length === 0) return null;
     }
 
     // "Liczba czerwonych kartek" (RED_CARDS_TOTAL's OVER/UNDER selections on

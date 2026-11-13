@@ -213,4 +213,39 @@ describe("betfan recovery 2026-11", () => {
     expect(warn).toHaveBeenCalledTimes(1);
     expect(String(warn.mock.calls[0][0])).toContain(name);
   });
+
+  // Controller ruling 22 (betfan): a team-prefixed stat title whose team does
+  // not resolve, under a whole-match id, used to stay on the whole-match code,
+  // so one team's line pooled with the match totals. It drops to OTHER.
+  it.each([
+    ["-200194", "Szwajcaria - liczba strzałów (OPTA)", "12.5"],
+    ["-30242", "Szwajcaria - liczba celnych strzałów na bramkę (OPTA)", "4.5"],
+    ["-30243", "Szwajcaria - liczba fauli (OPTA)", "11.5"],
+    ["23", "Szwajcaria - liczba rzutów rożnych", "4.5"],
+    ["13", "Szwajcaria - liczba kartek", "2.5"],
+  ])("betfan whole-match id %s with an unresolved team title (%s) drops to OTHER", (id, name, line) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(projection(betfanNormalizer.normalizeMarket(ouRaw(id, name, line), ctxEC))).toEqual(DROPPED_TO_OTHER);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain(name);
+  });
+
+  it("betfan whole-match and resolved team stat titles keep their codes", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const keys = [
+      ouRaw("-200194", "Liczba strzałów (OPTA)", "24.5"),
+      ouRaw("23", "Liczba rzutów rożnych", "9.5"),
+      ouRaw("13", "Liczba kartek", "3.5"),
+      ouRaw("23", "Everton - liczba rzutów rożnych", "4.5"),
+      ouRaw("13", "Coventry City - liczba kartek", "1.5"),
+    ].map((raw) => betfanNormalizer.normalizeMarket(raw, ctxEC)?.marketKey);
+    expect(keys).toEqual([
+      "TOTAL_SHOTS:24.5",
+      "CORNERS_TOTAL:9.5",
+      "CARDS_TOTAL:3.5",
+      "CORNERS_TEAM:HOME:4.5",
+      "CARDS_TEAM:AWAY:1.5",
+    ]);
+    expect(warn).not.toHaveBeenCalled();
+  });
 });

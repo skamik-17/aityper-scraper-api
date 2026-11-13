@@ -43,9 +43,16 @@ const EKSTRAKLASA_ALIASES: Record<string, string> = {
   "Raków Cz.": "Rakow Czestochowa",
   Raków: "Rakow Czestochowa",
   "Raków Częstochowa": "Rakow Czestochowa",
+  // Bare "Wisła" is not an alias: it is Wisła Kraków or Wisła Płock (see
+  // AMBIGUOUS_NAMES).
   "W.Płock": "Wisla Plock",
-  Wisła: "Wisla Plock",
+  "Wisła P.": "Wisla Plock",
   "Wisła Płock": "Wisla Plock",
+  "Wisła K.": "Wisla Krakow",
+  "Wisła Kraków": "Wisla Krakow",
+  Wieczysta: "Wieczysta Krakow",
+  "Wieczysta K.": "Wieczysta Krakow",
+  "Wieczysta Kraków": "Wieczysta Krakow",
   Nieciecza: "Bruk-Bet Termalica Nieciecza",
   Termalica: "Bruk-Bet Termalica Nieciecza",
   "Termalica Nieciecza": "Bruk-Bet Termalica Nieciecza",
@@ -537,6 +544,17 @@ const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
 };
 
 /**
+ * Normalized names that are a real short form of more than one club in the
+ * league, so any single answer would be a guess. They resolve to nothing
+ * (fail closed) instead of reaching the substring or fuzzy tiers, which would
+ * pick one club. A wrong club merges two different fixtures; an unresolved
+ * name only keeps one bookmaker's fixture apart.
+ */
+const AMBIGUOUS_NAMES: Record<string, ReadonlySet<string>> = {
+  ekstraklasa: new Set(["wisla"]), // Wisła Kraków or Wisła Płock
+};
+
+/**
  * Cache of alias tables keyed by normalized alias name, per league.
  * Bookmaker fragments often arrive already lowercased / diacritic-stripped
  * (e.g. from composite-selection splitters), which never hits the raw-keyed
@@ -679,6 +697,11 @@ function resolveCanonical(
   const normalizedAliasMatch = getNormalizedAliases(league)[normalized];
   if (normalizedAliasMatch) {
     return teams.find((t) => t.name === normalizedAliasMatch) ?? null;
+  }
+
+  // 1c. A name shared by several clubs of this league resolves to nothing.
+  if (AMBIGUOUS_NAMES[league]?.has(normalized)) {
+    return null;
   }
 
   // 2. Check exact normalized match

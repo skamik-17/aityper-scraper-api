@@ -1,0 +1,5305 @@
+{
+ "data": {
+  "event": {
+   "name": "Manchester City - Fulham",
+   "status": "active",
+   "type": "prematch",
+   "path": [
+    {
+     "name": "Piłka nożna",
+     "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9"
+    },
+    {
+     "name": "Anglia",
+     "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c"
+    },
+    {
+     "name": "Premier League",
+     "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf"
+    }
+   ],
+   "result": ":",
+   "components": [],
+   "category": {
+    "name": "Anglia",
+    "type": "sport",
+    "level": "category",
+    "image": null,
+    "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "icon": "https://cdn.totalbet.pl/categories/b3fefc74-697a-4164-b81c-ce43966a4fd6.svg",
+    "parent_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "header_photo": null,
+    "three_d_icon": null
+   },
+   "uuid": "b9241ab0-80fd-46fa-8249-c9397d40a205",
+   "betbuilder_available": true,
+   "category_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+   "event_layout": "horizontal",
+   "iframe": null,
+   "mobile_statscore_widget_id": "67e3cded6b587a60a98542e5",
+   "statscore_widget_id": "67a4c28b3ed1d6f55eb65bcb",
+   "tournament": {
+    "name": "Premier League",
+    "type": "sport",
+    "level": "tournament",
+    "image": "https://cdn.totalbet.pl/categories/483fe2dd-cda6-44ec-a168-e83750755f83.svg",
+    "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+    "icon": null,
+    "parent_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "header_photo": null,
+    "three_d_icon": "https://cdn.totalbet.pl/categories/e01f0ee2-2ec9-4f6a-a966-d3b169355f77.svg"
+   },
+   "discipline_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+   "market_count": 162,
+   "additional_info": null,
+   "jackpot_available": false,
+   "live_data": {
+    "away_score": null,
+    "category_id": "sr:sport:1",
+    "clock": null,
+    "home_score": null,
+    "match_status": {
+     "id": "0",
+     "name": "Przed startem",
+     "uuid": "dfb45fd3-3264-4605-89a0-317e439735c0"
+    },
+    "model_name": "soccer",
+    "period_scores": null,
+    "statistics": null
+   },
+   "matchday": 11,
+   "participants": [
+    {
+     "name": "Manchester City",
+     "uuid": "25d6ad47-654b-4dda-bb39-36cce5eab0ba",
+     "image_source": null
+    },
+    {
+     "name": "Fulham",
+     "uuid": "ae338ee4-ccad-4e99-82ec-062b3418afa6",
+     "image_source": null
+    }
+   ],
+   "start_at": "2026-11-21T12:30:00Z",
+   "tournament_uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+   "type_participants": "pair",
+   "discipline": {
+    "name": "Piłka nożna",
+    "type": "sport",
+    "level": "sport",
+    "image": "https://cdn.totalbet.pl/categories/5e27e539-7ee3-47b2-b3cd-e3655300ab06.svg",
+    "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "icon": "https://cdn.totalbet.pl/categories/0abf437f-9ab9-4826-9fcd-c40dafde9c8a.svg",
+    "parent_uuid": null,
+    "header_photo": "https://cdn.totalbet.pl/categories/72e9000b-1a8c-431e-a6e7-d2d17aa7c267.jpg",
+    "three_d_icon": "https://cdn.totalbet.pl/categories/870b3543-eea3-4f3d-8690-3a0ae2659fcf.svg"
+   },
+   "component_lists": [
+    {
+     "name": "Wynik meczu",
+     "type": "single_market",
+     "sort_order": 1,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie (zakład nie uwzględnia dogrywki, podobnie jak w przypadku pozostałych zakładów, chyba, że ich opis lub specyfika - np. Awans - stanowią inaczej)",
+     "game_groups": [
+      "dcde9df8-f44f-4073-8444-0969fd472f82",
+      "dcde9df8-f44f-4073-8444-0969fd472f82"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "b99cea9a-493b-41f0-8fee-0a776850e0a0",
+        "betbuilder_available": true,
+        "market_uuid": "953ae968-3e78-4ef7-98ed-a946363b8457",
+        "odds": "1.38",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "a7becf4c-d879-4467-9f57-8c9192136966",
+        "betbuilder_available": true,
+        "market_uuid": "953ae968-3e78-4ef7-98ed-a946363b8457",
+        "odds": "5.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fulham"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "814ce7b5-ef2b-4c2e-a00e-4ebcb001f95a",
+        "betbuilder_available": true,
+        "market_uuid": "953ae968-3e78-4ef7-98ed-a946363b8457",
+        "odds": "6.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "single_market_953ae968-3e78-4ef7-98ed-a946363b8457",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa",
+     "type": "markets_in_columns",
+     "sort_order": 2,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się dana część spotkania wybierając dwie z trzech opcji.",
+     "game_groups": [
+      "dcde9df8-f44f-4073-8444-0969fd472f82",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "10"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "63"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "85"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City lub remis"
+       },
+       {
+        "name": "Manchester City lub remis",
+        "type": "outcome",
+        "uuid": "a9120ef8-e415-4adc-b486-317a6d5e66b0",
+        "betbuilder_available": true,
+        "market_uuid": "ec8867a1-f3a6-4421-8b56-cfde5487b087",
+        "odds": "1.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City lub remis",
+        "type": "outcome",
+        "uuid": "f80f067d-b0f0-4233-b758-385b0d92e91d",
+        "betbuilder_available": true,
+        "market_uuid": "166e4643-4309-4afb-8874-bc3ce87ff37f",
+        "odds": "1.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City lub remis",
+        "type": "outcome",
+        "uuid": "d46d3192-45c7-4cb6-80ad-6726ee0dae14",
+        "betbuilder_available": true,
+        "market_uuid": "be9a212e-d0dc-4374-8750-7af153936c9b",
+        "odds": "1.13",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City lub Fulham"
+       },
+       {
+        "name": "Manchester City lub Fulham",
+        "type": "outcome",
+        "uuid": "462719be-c98a-4bed-8c9a-95b858ed00a5",
+        "betbuilder_available": true,
+        "market_uuid": "ec8867a1-f3a6-4421-8b56-cfde5487b087",
+        "odds": "1.17",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City lub Fulham",
+        "type": "outcome",
+        "uuid": "43d98ffe-9594-4c62-af6b-4612b23e9947",
+        "betbuilder_available": true,
+        "market_uuid": "166e4643-4309-4afb-8874-bc3ce87ff37f",
+        "odds": "1.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City lub Fulham",
+        "type": "outcome",
+        "uuid": "f048e7d4-3c1b-4165-b0fe-99da93a9a9ae",
+        "betbuilder_available": true,
+        "market_uuid": "be9a212e-d0dc-4374-8750-7af153936c9b",
+        "odds": "1.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis lub Fulham"
+       },
+       {
+        "name": "remis lub Fulham",
+        "type": "outcome",
+        "uuid": "6644655e-edf2-4a2e-a3c8-f7c55562d6f4",
+        "betbuilder_available": true,
+        "market_uuid": "ec8867a1-f3a6-4421-8b56-cfde5487b087",
+        "odds": "2.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis lub Fulham",
+        "type": "outcome",
+        "uuid": "57d6c182-47d0-45bf-9200-1bdacbb8d80b",
+        "betbuilder_available": true,
+        "market_uuid": "166e4643-4309-4afb-8874-bc3ce87ff37f",
+        "odds": "1.79",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis lub Fulham",
+        "type": "outcome",
+        "uuid": "6f5a7315-ba61-48d9-96c8-1f33b955811a",
+        "betbuilder_available": true,
+        "market_uuid": "be9a212e-d0dc-4374-8750-7af153936c9b",
+        "odds": "1.89",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "podwajna_szansa",
+     "product_active": true
+    },
+    {
+     "name": "Dwie szanse (1. połowa lub mecz)",
+     "type": "single_market",
+     "sort_order": 3,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się 1. połowa lub jaki będzie wynik na koniec meczu.",
+     "game_groups": [
+      "dcde9df8-f44f-4073-8444-0969fd472f82",
+      "dcde9df8-f44f-4073-8444-0969fd472f82"
+     ],
+     "grid": [],
+     "slug": "single_market_7c6534db-ceb6-4660-bc14-f93b1d301695",
+     "product_active": true
+    },
+    {
+     "name": "Obie drużyny strzelą gola",
+     "type": "markets_in_columns",
+     "sort_order": 4,
+     "tooltip": "Należy wytypować, czy oba zespoły strzelą gola w danej części spotkania.",
+     "game_groups": [
+      "dcde9df8-f44f-4073-8444-0969fd472f82",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "29"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "75"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "95"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "f87b88e6-7fb6-4c44-97dc-cb3d2f709d80",
+        "betbuilder_available": true,
+        "market_uuid": "9f021f53-b00a-4291-b5ff-eeb3350c099c",
+        "odds": "1.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "27d15deb-5379-4761-9c4e-71dc1127c5b3",
+        "betbuilder_available": true,
+        "market_uuid": "09b3defc-ff19-4185-a7b9-9113206662e9",
+        "odds": "3.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "0709ae77-9596-4ef1-b63e-a15de8142ef9",
+        "betbuilder_available": true,
+        "market_uuid": "d6d71cd0-1d79-47e5-b4e3-fc8a081fd824",
+        "odds": "3.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "e1fc97da-592c-4002-86a4-881bf371ff62",
+        "betbuilder_available": true,
+        "market_uuid": "9f021f53-b00a-4291-b5ff-eeb3350c099c",
+        "odds": "2.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "49f8d5be-fbce-48c9-9dab-51fa0b489189",
+        "betbuilder_available": true,
+        "market_uuid": "09b3defc-ff19-4185-a7b9-9113206662e9",
+        "odds": "1.22",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "82e7612c-d5be-4c60-9e51-e81d348a8432",
+        "betbuilder_available": true,
+        "market_uuid": "d6d71cd0-1d79-47e5-b4e3-fc8a081fd824",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "obie_druayny_strzela_gola",
+     "product_active": true
+    },
+    {
+     "name": "Suma goli",
+     "type": "total",
+     "sort_order": 5,
+     "tooltip": "Należy wytypować czy suma goli będzie mieściła się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124",
+      "dcde9df8-f44f-4073-8444-0969fd472f82"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "c6a9da62-b2ea-4bc9-82e4-afd3bf5299c0",
+        "betbuilder_available": true,
+        "market_uuid": "2d396166-9ddd-4cde-adc6-081a1102378e",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "34955a9f-b4b9-45b2-8a5e-7af6ea911b77",
+        "betbuilder_available": true,
+        "market_uuid": "2d396166-9ddd-4cde-adc6-081a1102378e",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "1db02f91-30e6-486b-98c1-c6cfe8523033",
+        "betbuilder_available": true,
+        "market_uuid": "24da4a6a-b198-4a11-af5d-c176bbb27b07",
+        "odds": "4.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "1460ec71-79a2-482e-9b79-eb2e2cdc9051",
+        "betbuilder_available": true,
+        "market_uuid": "24da4a6a-b198-4a11-af5d-c176bbb27b07",
+        "odds": "1.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "d1a40ff4-0271-48f1-8811-cfc6502aacbc",
+        "betbuilder_available": true,
+        "market_uuid": "c9316d60-3247-4aa2-95b3-3cfd77dbb355",
+        "odds": "2.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "46dce079-5074-45c7-945b-175229dc2440",
+        "betbuilder_available": true,
+        "market_uuid": "c9316d60-3247-4aa2-95b3-3cfd77dbb355",
+        "odds": "1.49",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "20eab429-44c4-4f1f-bab1-d00f61c80605",
+        "betbuilder_available": true,
+        "market_uuid": "a917170e-7d50-46c0-b812-f79969588972",
+        "odds": "1.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "d4aebd13-04fa-4006-a35c-d53f44341276",
+        "betbuilder_available": true,
+        "market_uuid": "a917170e-7d50-46c0-b812-f79969588972",
+        "odds": "2.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "31eb8302-3392-41c3-b6e6-a401af24a56a",
+        "betbuilder_available": true,
+        "market_uuid": "8fac7dba-d680-42ec-98f2-e99eea64cdd6",
+        "odds": "1.24",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "8be1929b-b001-4d20-a578-ac5a85efcdea",
+        "betbuilder_available": true,
+        "market_uuid": "8fac7dba-d680-42ec-98f2-e99eea64cdd6",
+        "odds": "3.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5.5"
+       },
+       {
+        "name": "poniżej 5.5",
+        "type": "outcome",
+        "uuid": "4c3744cc-67cf-41ee-b2f5-32c6f096421f",
+        "betbuilder_available": true,
+        "market_uuid": "c344167d-882e-4f87-a8bf-4869cdf10a76",
+        "odds": "1.09",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 5.5",
+        "type": "outcome",
+        "uuid": "189c7a41-5b2a-45a8-8f81-230690b689b8",
+        "betbuilder_available": true,
+        "market_uuid": "c344167d-882e-4f87-a8bf-4869cdf10a76",
+        "odds": "6.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 11,
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "dcde9df8-f44f-4073-8444-0969fd472f82"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "32"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "31"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "1621f293-7b35-4356-b366-ec8711a37151",
+        "betbuilder_available": true,
+        "market_uuid": "5b722f4a-7127-41b8-9ae2-5eb23e3791f5",
+        "odds": "6.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "92a48e75-bbc6-4fbc-b104-a6abc62fb6fb",
+        "betbuilder_available": true,
+        "market_uuid": "bb5f7d60-4e90-4180-b7d3-8759dd3e3a3d",
+        "odds": "2.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "41419911-1a72-42dd-aa25-af533434a57b",
+        "betbuilder_available": true,
+        "market_uuid": "5b722f4a-7127-41b8-9ae2-5eb23e3791f5",
+        "odds": "1.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "5987e648-978b-4c6d-a3e4-7c63e566b07b",
+        "betbuilder_available": true,
+        "market_uuid": "bb5f7d60-4e90-4180-b7d3-8759dd3e3a3d",
+        "odds": "1.56",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "strzeli_gola",
+     "product_active": true
+    },
+    {
+     "name": "Manchester City - suma goli",
+     "type": "total",
+     "sort_order": 13,
+     "tooltip": "Należy wytypować czy suma goli wskazanej drużyny przekroczy wartość określoną w zakładzie.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "cd5a6bc7-2e65-422e-b58d-751d9a06f16b",
+        "betbuilder_available": true,
+        "market_uuid": "07f486a3-ad02-4e05-9a11-fe25d3f43560",
+        "odds": "6.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "c64ead68-5009-4915-ae13-7970a854ab73",
+        "betbuilder_available": true,
+        "market_uuid": "07f486a3-ad02-4e05-9a11-fe25d3f43560",
+        "odds": "1.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "b2fb53ef-3c62-4bff-a351-00cd0ff74518",
+        "betbuilder_available": true,
+        "market_uuid": "332627c5-6de3-497f-bafa-92c0c9d9784f",
+        "odds": "2.76",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "a2689ac9-e7a3-47a8-82bd-ca03f754cffb",
+        "betbuilder_available": true,
+        "market_uuid": "332627c5-6de3-497f-bafa-92c0c9d9784f",
+        "odds": "1.39",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "0f3b7b50-1e6c-470b-b74b-1f62df355dab",
+        "betbuilder_available": true,
+        "market_uuid": "da4bf40c-6f45-408a-889f-5384669716e2",
+        "odds": "1.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "2fce206b-5725-4d2a-9df5-e81bd9046ffa",
+        "betbuilder_available": true,
+        "market_uuid": "da4bf40c-6f45-408a-889f-5384669716e2",
+        "odds": "2.19",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "6a3c10df-c634-4891-96d7-7c23ace404d8",
+        "betbuilder_available": true,
+        "market_uuid": "b556591e-310d-4758-b523-5d7b0d8091a7",
+        "odds": "1.21",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "da761901-4af8-4aad-bd1b-d03d88661767",
+        "betbuilder_available": true,
+        "market_uuid": "b556591e-310d-4758-b523-5d7b0d8091a7",
+        "odds": "3.95",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "5b64b1c6-9abf-4f4b-b1c3-2f3aefbf5323",
+        "betbuilder_available": true,
+        "market_uuid": "f3f9fb37-55fe-4916-b973-57a6b1c77255",
+        "odds": "1.06",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "40fc0fe1-99b2-496f-9b37-0d3c88867056",
+        "betbuilder_available": true,
+        "market_uuid": "f3f9fb37-55fe-4916-b973-57a6b1c77255",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "{competitor1}_sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "Fulham - suma goli",
+     "type": "total",
+     "sort_order": 18,
+     "tooltip": "Należy wytypować czy suma goli wskazanej drużyny przekroczy wartość określoną w zakładzie.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "de4062e1-7970-4f53-8b10-b4a8fe2be9f5",
+        "betbuilder_available": true,
+        "market_uuid": "d43c6fb1-cf4e-42ef-911f-0926309a5d7d",
+        "odds": "2.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "23f72038-c376-4616-ae74-e330aba72aa3",
+        "betbuilder_available": true,
+        "market_uuid": "d43c6fb1-cf4e-42ef-911f-0926309a5d7d",
+        "odds": "1.56",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "bfa274fa-94ab-408a-ad1e-becf5b0f74b0",
+        "betbuilder_available": true,
+        "market_uuid": "fae78b61-afc6-45a7-92f6-a3f10a06509e",
+        "odds": "1.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "bacd308a-7a2d-49be-9540-100adcf76e5f",
+        "betbuilder_available": true,
+        "market_uuid": "fae78b61-afc6-45a7-92f6-a3f10a06509e",
+        "odds": "3.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "e07bf809-f93f-4b5f-a622-2c28dd2597ce",
+        "betbuilder_available": true,
+        "market_uuid": "db9ecb94-890d-449b-928f-b1d1e6238e10",
+        "odds": "1.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "fc119361-3fd0-4cd3-8f76-a8f1f458e8b6",
+        "betbuilder_available": true,
+        "market_uuid": "db9ecb94-890d-449b-928f-b1d1e6238e10",
+        "odds": "8.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "a6634949-ff02-4bb2-bf97-156164788348",
+        "betbuilder_available": true,
+        "market_uuid": "d0bf1c4f-a62b-423e-8f4a-16a33ccc99a7",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "067d71d3-54d8-42f0-a1c4-90f8ed312d54",
+        "betbuilder_available": true,
+        "market_uuid": "d0bf1c4f-a62b-423e-8f4a-16a33ccc99a7",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "{competitor2}_sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "Handicap",
+     "type": "handicap_2col",
+     "sort_order": 23,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "game_groups": [
+      "385dc9b4-00db-46f8-8651-3c6a53e11c9d",
+      "dcde9df8-f44f-4073-8444-0969fd472f82"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-2.5"
+       },
+       {
+        "name": "Manchester City (-2.5)",
+        "type": "outcome",
+        "uuid": "b94dd0a5-2cfa-4ad0-9287-6ad79ef22497",
+        "betbuilder_available": false,
+        "market_uuid": "142847ae-7a70-4fc0-8856-362877a4a4aa",
+        "odds": "3.32",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+2.5"
+       },
+       {
+        "name": "Fulham (+2.5)",
+        "type": "outcome",
+        "uuid": "10f89a20-ca80-4b60-a60f-5fdd579f51af",
+        "betbuilder_available": false,
+        "market_uuid": "142847ae-7a70-4fc0-8856-362877a4a4aa",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Manchester City (-1.5)",
+        "type": "outcome",
+        "uuid": "1c25e005-79f0-45d5-a22b-8e67b1066917",
+        "betbuilder_available": false,
+        "market_uuid": "cea2f770-5de6-4bf1-a31e-27684cabb170",
+        "odds": "1.99",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Fulham (+1.5)",
+        "type": "outcome",
+        "uuid": "3c8c28ed-85d9-482b-bfab-1a82b07981c6",
+        "betbuilder_available": false,
+        "market_uuid": "cea2f770-5de6-4bf1-a31e-27684cabb170",
+        "odds": "1.73",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Manchester City (-0.5)",
+        "type": "outcome",
+        "uuid": "a6f9152f-c037-4088-a48f-a6677dff0e69",
+        "betbuilder_available": false,
+        "market_uuid": "ce26fecb-bcdf-4f13-bae9-b9da0f771cf3",
+        "odds": "1.37",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Fulham (+0.5)",
+        "type": "outcome",
+        "uuid": "45a89d63-cafb-4ea4-b09f-442ebab90f25",
+        "betbuilder_available": false,
+        "market_uuid": "ce26fecb-bcdf-4f13-bae9-b9da0f771cf3",
+        "odds": "2.84",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Manchester City (+0.5)",
+        "type": "outcome",
+        "uuid": "f3ccccbb-7913-45da-ab0e-3ee5ffb0f077",
+        "betbuilder_available": false,
+        "market_uuid": "9f426428-fc24-4179-aa83-0a0d5adfb887",
+        "odds": "1.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Fulham (-0.5)",
+        "type": "outcome",
+        "uuid": "84ea71b2-2916-4a3c-ab97-46da63ce2b42",
+        "betbuilder_available": false,
+        "market_uuid": "9f426428-fc24-4179-aa83-0a0d5adfb887",
+        "odds": "5.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "handicap",
+     "product_active": true
+    },
+    {
+     "name": "Handicap ",
+     "type": "handicap_3col",
+     "sort_order": 27,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "game_groups": [
+      "385dc9b4-00db-46f8-8651-3c6a53e11c9d"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Manchester City (1:0)",
+        "type": "outcome",
+        "uuid": "03eb163e-aeb4-41b5-9acb-0e165637d0a8",
+        "betbuilder_available": true,
+        "market_uuid": "6131cfb2-482e-4cb9-89c1-275340c57918",
+        "odds": "1.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "f1521059-207e-4b1f-baf8-4c48450fbb4b",
+        "betbuilder_available": true,
+        "market_uuid": "6131cfb2-482e-4cb9-89c1-275340c57918",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (1:0)",
+        "type": "outcome",
+        "uuid": "108b2759-911e-4a3b-a534-39d4491dbc1c",
+        "betbuilder_available": true,
+        "market_uuid": "6131cfb2-482e-4cb9-89c1-275340c57918",
+        "odds": "16.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "name": "Manchester City (2:0)",
+        "type": "outcome",
+        "uuid": "1519792c-2ba9-46af-82d5-0118214a160c",
+        "betbuilder_available": true,
+        "market_uuid": "7a16d7e4-e1c9-4fdc-834a-a86d72364f57",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (2:0)",
+        "type": "outcome",
+        "uuid": "e4f418cf-1d5c-4d91-994c-e194618a0f5d",
+        "betbuilder_available": true,
+        "market_uuid": "7a16d7e4-e1c9-4fdc-834a-a86d72364f57",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (2:0)",
+        "type": "outcome",
+        "uuid": "b8a9e66e-8de9-49f5-a1db-d1975acbd132",
+        "betbuilder_available": true,
+        "market_uuid": "7a16d7e4-e1c9-4fdc-834a-a86d72364f57",
+        "odds": "35.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Manchester City (0:1)",
+        "type": "outcome",
+        "uuid": "5fc6c50c-23bb-4eda-b469-aa53a712146f",
+        "betbuilder_available": true,
+        "market_uuid": "0f942f2b-5438-49d2-ae72-f207462c3c4e",
+        "odds": "2.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "bb700bbd-f492-40d6-9840-f211394745fb",
+        "betbuilder_available": true,
+        "market_uuid": "0f942f2b-5438-49d2-ae72-f207462c3c4e",
+        "odds": "3.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:1)",
+        "type": "outcome",
+        "uuid": "82fb2a45-27e1-44c5-8262-34b8f847b762",
+        "betbuilder_available": true,
+        "market_uuid": "0f942f2b-5438-49d2-ae72-f207462c3c4e",
+        "odds": "2.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Manchester City (0:2)",
+        "type": "outcome",
+        "uuid": "ae8ec2c0-8f3a-40db-a04d-7b86c4b1e595",
+        "betbuilder_available": true,
+        "market_uuid": "084e3759-a2e6-40cb-bcc4-40a53e4f4a81",
+        "odds": "3.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "e948af9f-450f-4175-b75a-91c2edea0107",
+        "betbuilder_available": true,
+        "market_uuid": "084e3759-a2e6-40cb-bcc4-40a53e4f4a81",
+        "odds": "4.35",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:2)",
+        "type": "outcome",
+        "uuid": "558b341e-82f2-4c70-b352-6cf651d081d8",
+        "betbuilder_available": true,
+        "market_uuid": "084e3759-a2e6-40cb-bcc4-40a53e4f4a81",
+        "odds": "1.73",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:3"
+       },
+       {
+        "name": "Manchester City (0:3)",
+        "type": "outcome",
+        "uuid": "47c78f6c-5a14-4d38-a181-c3a6801ed30d",
+        "betbuilder_available": true,
+        "market_uuid": "3cb7f3de-6ee0-47af-bdad-f0d0f696232c",
+        "odds": "6.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:3)",
+        "type": "outcome",
+        "uuid": "6c234ecf-1352-4a12-bcb2-772562d414c7",
+        "betbuilder_available": true,
+        "market_uuid": "3cb7f3de-6ee0-47af-bdad-f0d0f696232c",
+        "odds": "6.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:3)",
+        "type": "outcome",
+        "uuid": "8672b968-2bdd-452b-9d27-c2c05d233626",
+        "betbuilder_available": true,
+        "market_uuid": "3cb7f3de-6ee0-47af-bdad-f0d0f696232c",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:4"
+       },
+       {
+        "name": "Manchester City (0:4)",
+        "type": "outcome",
+        "uuid": "b10b0b33-6017-473a-9531-7ba9470c793f",
+        "betbuilder_available": true,
+        "market_uuid": "92274ac0-f4fe-4c73-8e6c-74f4797ad44f",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:4)",
+        "type": "outcome",
+        "uuid": "863dcca6-caed-4a76-99a0-e085e4c3f5f6",
+        "betbuilder_available": true,
+        "market_uuid": "92274ac0-f4fe-4c73-8e6c-74f4797ad44f",
+        "odds": "9.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:4)",
+        "type": "outcome",
+        "uuid": "76827289-d9d8-43eb-a878-5963cdca1c8f",
+        "betbuilder_available": true,
+        "market_uuid": "92274ac0-f4fe-4c73-8e6c-74f4797ad44f",
+        "odds": "1.09",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:5"
+       },
+       {
+        "name": "Manchester City (0:5)",
+        "type": "outcome",
+        "uuid": "2779daa9-1ba3-4e91-a350-c8befd73a2c5",
+        "betbuilder_available": true,
+        "market_uuid": "c9554ff2-0c1d-4750-9a19-10899f2f144c",
+        "odds": "22.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:5)",
+        "type": "outcome",
+        "uuid": "94a3b2a1-f6c2-4f85-a483-d639813c463f",
+        "betbuilder_available": true,
+        "market_uuid": "c9554ff2-0c1d-4750-9a19-10899f2f144c",
+        "odds": "13.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:5)",
+        "type": "outcome",
+        "uuid": "ee58b6fc-1789-4f3c-8dda-c5e6208f0321",
+        "betbuilder_available": true,
+        "market_uuid": "c9554ff2-0c1d-4750-9a19-10899f2f144c",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "handicap_hcp",
+     "product_active": true
+    },
+    {
+     "name": "Który zespół zdobędzie gola",
+     "type": "single_market",
+     "sort_order": 34,
+     "tooltip": "Należy wytypować, która z drużyn biorących udział w spotkaniu zdobędzie bramkę.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [],
+     "slug": "single_market_350616a9-39c5-4ec6-aa67-31894f73671d",
+     "product_active": true
+    },
+    {
+     "name": "Remis = zwrot",
+     "type": "markets_in_columns",
+     "sort_order": 35,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się dana część spotkania. W przypadku remisu następuje zwrot stawki.",
+     "game_groups": [
+      "dcde9df8-f44f-4073-8444-0969fd472f82",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "11"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "64"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "86"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "3002cc4a-78d1-4aed-b71e-65bd1a24e1e2",
+        "betbuilder_available": false,
+        "market_uuid": "1b4940cf-bb0a-412e-96fc-35435c967222",
+        "odds": "1.14",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "74754053-6824-46a7-b48b-5021e2406e6d",
+        "betbuilder_available": false,
+        "market_uuid": "29360469-e005-4826-b4d6-fbfcf00c75fd",
+        "odds": "1.21",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "245670ea-ef70-4b06-b6f8-1b17102db2f9",
+        "betbuilder_available": false,
+        "market_uuid": "a1a0e657-00e8-47b4-9897-1ea94cd4fe73",
+        "odds": "1.22",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fulham"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "4a1e244c-0e7f-40b3-b5a9-f7283f768587",
+        "betbuilder_available": false,
+        "market_uuid": "1b4940cf-bb0a-412e-96fc-35435c967222",
+        "odds": "4.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "81b7ba35-694c-4f02-8a47-f78651645698",
+        "betbuilder_available": false,
+        "market_uuid": "29360469-e005-4826-b4d6-fbfcf00c75fd",
+        "odds": "3.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "ad933832-2f3b-48cd-8887-cfe6b4f90d5f",
+        "betbuilder_available": false,
+        "market_uuid": "a1a0e657-00e8-47b4-9897-1ea94cd4fe73",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "test",
+     "product_active": true
+    },
+    {
+     "name": "Zawodnik strzeli gola",
+     "type": "single_market",
+     "sort_order": 36,
+     "tooltip": "Należy wytypować, który z zawodników zdobędzie gola w meczu",
+     "game_groups": [
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8",
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8"
+     ],
+     "grid": [],
+     "slug": "single_market_63f7d737-5b13-434d-a383-01b4888f33d5",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + obie drużyny strzelą gola",
+     "type": "markets_in_columns",
+     "sort_order": 37,
+     "tooltip": "Należy wytypować rozstrzygnięcie danej części spotkania oraz dodatkowo czy obie drużyny strzelą gola.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "35"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "543"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "78"
+       }
+      ]
+     ],
+     "slug": "wynik_obie_druayny_strzela",
+     "product_active": true
+    },
+    {
+     "name": "Obie połowy powyżej 1.5",
+     "type": "single_market",
+     "sort_order": 38,
+     "tooltip": "Należy wytypować czy suma goli w każdej połowie meczu będzie lub nie będzie wyższa niż wartość podana w zakładzie.",
+     "game_groups": [
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [],
+     "slug": "single_market_a6d02073-cc45-4cb2-afa2-58c76f39a84a",
+     "product_active": true
+    },
+    {
+     "name": "Obie połowy poniżej 1.5",
+     "type": "single_market",
+     "sort_order": 39,
+     "tooltip": "Należy wytypować czy suma goli w każdej połowie meczu będzie lub nie będzie wyższa niż wartość podana w zakładzie.",
+     "game_groups": [
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [],
+     "slug": "single_market_07f05266-7ac6-4eea-b1cd-e53a94594519",
+     "product_active": true
+    },
+    {
+     "name": "Dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 40,
+     "tooltip": "Należy wytypować ile dokładnie goli zostanie strzelonych w spotkaniu.",
+     "game_groups": [
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [],
+     "slug": "single_market_dab12938-5a6e-40a4-a6b0-15987702a504",
+     "product_active": true
+    },
+    {
+     "name": "Suma goli (przedziały)",
+     "type": "single_market",
+     "sort_order": 41,
+     "tooltip": "Należy wytypować, w którym przedziale będzie mieściła się liczba goli strzelonych w spotkaniu.",
+     "game_groups": [
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124",
+      "c3428a6d-255d-4f5b-a314-c2ce703e2124"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "0-1"
+       },
+       {
+        "name": "0-1",
+        "type": "outcome",
+        "uuid": "b30825ff-4b69-4a2a-8f22-87698e1634dc",
+        "betbuilder_available": true,
+        "market_uuid": "188e9a79-c5fe-4f40-9bcf-672551b732b5",
+        "odds": "4.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2-3"
+       },
+       {
+        "name": "2-3",
+        "type": "outcome",
+        "uuid": "8cdabdd6-21a9-45ad-9052-fbad31345b16",
+        "betbuilder_available": true,
+        "market_uuid": "188e9a79-c5fe-4f40-9bcf-672551b732b5",
+        "odds": "1.97",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4-5"
+       },
+       {
+        "name": "4-5",
+        "type": "outcome",
+        "uuid": "ca037d47-ca75-4a1f-adac-778317a6e069",
+        "betbuilder_available": true,
+        "market_uuid": "188e9a79-c5fe-4f40-9bcf-672551b732b5",
+        "odds": "2.67",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "6+"
+       },
+       {
+        "name": "6+",
+        "type": "outcome",
+        "uuid": "712ef7e7-d35e-40e6-86d2-d6e83cfaa8cf",
+        "betbuilder_available": true,
+        "market_uuid": "188e9a79-c5fe-4f40-9bcf-672551b732b5",
+        "odds": "6.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "single_market_188e9a79-c5fe-4f40-9bcf-672551b732b5",
+     "product_active": true
+    },
+    {
+     "name": "Manchester City – dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 42,
+     "tooltip": "Należy wytypować ile dokładnie goli strzeli w meczu drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [],
+     "slug": "single_market_373deb5d-5270-4e39-b2ed-2aed795c8578",
+     "product_active": true
+    },
+    {
+     "name": "Fulham - dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 43,
+     "tooltip": "Należy wytypować ile dokładnie goli strzeli w meczu drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [],
+     "slug": "single_market_aa5571fd-d50e-4ab8-82dc-506c23658e05",
+     "product_active": true
+    },
+    {
+     "name": "Wygra do zera",
+     "type": "markets_in_columns",
+     "sort_order": 44,
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie wygra mecz nie tracąc gola w spotkaniu.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "33"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "34"
+       }
+      ]
+     ],
+     "slug": "wygra_do_zera",
+     "product_active": true
+    },
+    {
+     "name": "Wygra obie połowy",
+     "type": "markets_in_columns",
+     "sort_order": 46,
+     "tooltip": "Należy wytypować czy dana drużyna strzeli więcej goli od rywala w każdej połowie.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "48"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "49"
+       }
+      ]
+     ],
+     "slug": "wygra_obie_polowy",
+     "product_active": true
+    },
+    {
+     "name": "Wygra jakąkolwiek połowę",
+     "type": "markets_in_columns",
+     "sort_order": 48,
+     "tooltip": "Należy wytypować czy dana drużyna strzeli więcej goli od rywala w przynajmniej jednej z połów spotkania.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "50"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "51"
+       }
+      ]
+     ],
+     "slug": "test_komponent",
+     "product_active": true
+    },
+    {
+     "name": "Zdobędzie gola w obu połowach",
+     "type": "markets_in_columns",
+     "sort_order": 50,
+     "tooltip": "Należy wytypować czy dana drużyna zdobędzie przynajmniej jednego gola w każdej połowie spotkania.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "56"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "57"
+       }
+      ]
+     ],
+     "slug": "zdobedzie_gola_w_obu_polowach",
+     "product_active": true
+    },
+    {
+     "name": "Połowa z większą liczbą goli",
+     "type": "markets_in_columns",
+     "sort_order": 52,
+     "tooltip": "Należy wskazać połowę, w której dana drużyna zdobędzie większą liczbę goli.",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "53"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "54"
+       }
+      ]
+     ],
+     "slug": "polowa_wieksza_liczba_goli",
+     "product_active": true
+    },
+    {
+     "name": "Wygra spotkanie",
+     "type": "markets_in_columns",
+     "sort_order": 54,
+     "tooltip": "Należy wytypować czy dana drużyna wygra spotkanie. ",
+     "game_groups": [
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "879"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "880"
+       }
+      ]
+     ],
+     "slug": "wygra_spotkanie",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + suma goli",
+     "type": "single_market",
+     "sort_order": 56,
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w spotkaniu oraz czy suma goli przekroczy określoną w zakładzie wartość.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_3eb368b4-3b78-46e3-bbf1-0f7dcab7ad99",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + suma goli",
+     "type": "single_market",
+     "sort_order": 57,
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w spotkaniu oraz czy suma goli przekroczy określoną w zakładzie wartość.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_fcee7797-b164-44bc-86a0-d3ac3a9d2864",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + suma goli",
+     "type": "single_market",
+     "sort_order": 58,
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w spotkaniu oraz czy suma goli przekroczy określoną w zakładzie wartość.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_00c8dd89-224a-4937-9f09-f4d1a9bccff7",
+     "product_active": true
+    },
+    {
+     "name": "Wynik + suma goli",
+     "type": "single_market",
+     "sort_order": 59,
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w spotkaniu oraz czy suma goli przekroczy określoną w zakładzie wartość.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_0aadd8c9-387f-4c19-9d77-2ef74a17c7a8",
+     "product_active": true
+    },
+    {
+     "name": "Wynik połowy",
+     "type": "markets_in_columns",
+     "sort_order": 60,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się wskazana połowa meczu.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "60"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "83"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "df0996fe-fc20-4dea-ba8f-29cae9c1b58d",
+        "betbuilder_available": true,
+        "market_uuid": "20f62958-1cf6-4b0a-b895-4b4afcb5a49a",
+        "odds": "1.81",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City",
+        "type": "outcome",
+        "uuid": "22b86c38-3249-4a06-a5d7-37f100dc993d",
+        "betbuilder_available": true,
+        "market_uuid": "084b73a3-73cb-4739-bd1e-a798f22de4e4",
+        "odds": "1.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "905b512d-95be-4953-bc2f-bf3831d8ef9a",
+        "betbuilder_available": true,
+        "market_uuid": "20f62958-1cf6-4b0a-b895-4b4afcb5a49a",
+        "odds": "2.71",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis",
+        "type": "outcome",
+        "uuid": "0e69cd8a-8e13-48ff-a0ea-dbb7259e706a",
+        "betbuilder_available": true,
+        "market_uuid": "084b73a3-73cb-4739-bd1e-a798f22de4e4",
+        "odds": "3.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fulham"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "73d49132-17e0-474d-a9d1-69c355838361",
+        "betbuilder_available": true,
+        "market_uuid": "20f62958-1cf6-4b0a-b895-4b4afcb5a49a",
+        "odds": "6.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham",
+        "type": "outcome",
+        "uuid": "a545c1c4-a514-4c5b-9526-cb2ea03f6f25",
+        "betbuilder_available": true,
+        "market_uuid": "084b73a3-73cb-4739-bd1e-a798f22de4e4",
+        "odds": "5.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "wynikpolowy",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Suma goli",
+     "type": "total",
+     "sort_order": 64,
+     "tooltip": "Należy wytypować czy suma goli w pierwszej połowie będzie mieściła się poniżej czy powyżej wskazanej wartości. ",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "f6804663-7263-4196-9edd-0c241c2790c2",
+        "betbuilder_available": true,
+        "market_uuid": "bf126564-0266-4f47-a84a-ca17aa3e8b5e",
+        "odds": "3.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "e2ec072a-a5c7-4afe-812a-fcacb7c49a79",
+        "betbuilder_available": true,
+        "market_uuid": "bf126564-0266-4f47-a84a-ca17aa3e8b5e",
+        "odds": "1.23",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "e3917ae4-9041-4972-b408-733c9862f3e2",
+        "betbuilder_available": true,
+        "market_uuid": "fe4a646b-956e-4ebd-9d45-c81b4328c0f6",
+        "odds": "1.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "290c8322-7f94-46f7-bdb5-37e9d8ca89f7",
+        "betbuilder_available": true,
+        "market_uuid": "fe4a646b-956e-4ebd-9d45-c81b4328c0f6",
+        "odds": "2.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "d5b4ea85-a0f3-4aea-8993-6c95e1df77ae",
+        "betbuilder_available": true,
+        "market_uuid": "e7b473da-be51-460a-89fa-3b6942fb1d00",
+        "odds": "1.17",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "40349a0c-fce9-4c90-95e8-ef386b3d9c63",
+        "betbuilder_available": true,
+        "market_uuid": "e7b473da-be51-460a-89fa-3b6942fb1d00",
+        "odds": "4.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1.poåowa_sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 67,
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w pierwszej połowie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "77"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "76"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "6e57f9d6-6e3e-44ba-9f8c-9c79518be3b5",
+        "betbuilder_available": true,
+        "market_uuid": "bf95f479-0e44-400e-970d-41cf8c0e75c4",
+        "odds": "2.53",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "de2189fe-29cf-4721-9356-351783ff891c",
+        "betbuilder_available": true,
+        "market_uuid": "306e3a4c-c68f-4fe8-996e-3909a6122c7f",
+        "odds": "1.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "3fbc8bfc-94aa-4a78-83c6-e949fa87cc23",
+        "betbuilder_available": true,
+        "market_uuid": "bf95f479-0e44-400e-970d-41cf8c0e75c4",
+        "odds": "1.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "87f4662e-52d5-4d25-8c74-d66955a9d8b8",
+        "betbuilder_available": true,
+        "market_uuid": "306e3a4c-c68f-4fe8-996e-3909a6122c7f",
+        "odds": "2.58",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1_polowa_czyste_konto",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Manchester City - Suma goli",
+     "type": "total",
+     "sort_order": 69,
+     "tooltip": "Należy wytypować ile goli  zdobędzie w pierwszej połowie drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "066de2ae-c5f0-43fe-aa9c-49e780736150",
+        "betbuilder_available": true,
+        "market_uuid": "6a2c19ef-5ce1-47f3-ac4c-6df11e4ccc9e",
+        "odds": "2.61",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "f4bd7b32-90ca-4511-8df8-d964492e7b28",
+        "betbuilder_available": true,
+        "market_uuid": "6a2c19ef-5ce1-47f3-ac4c-6df11e4ccc9e",
+        "odds": "1.44",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "9f759379-c814-4967-846e-86c79f298727",
+        "betbuilder_available": true,
+        "market_uuid": "2eefbddc-e6c5-4c31-abc6-8900aff0490b",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "28a15058-a6b2-4655-abae-0ff65576523b",
+        "betbuilder_available": true,
+        "market_uuid": "2eefbddc-e6c5-4c31-abc6-8900aff0490b",
+        "odds": "3.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "29ef9b6e-4140-4272-9016-a3aff2bf484f",
+        "betbuilder_available": true,
+        "market_uuid": "3194a5c3-658b-4c62-b215-88d553edb422",
+        "odds": "1.06",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "2aabd001-3b52-44c3-a5c9-26423b3b254c",
+        "betbuilder_available": true,
+        "market_uuid": "3194a5c3-658b-4c62-b215-88d553edb422",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1.poåowa_{competitor1}_sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Fulham - Suma goli",
+     "type": "total",
+     "sort_order": 72,
+     "tooltip": "Należy wytypować ile goli  zdobędzie w pierwszej połowie drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "ee0e5a98-e6c6-4dcf-a9eb-cdca5d3b3276",
+        "betbuilder_available": true,
+        "market_uuid": "34eec158-fc04-49fa-b1e9-d9be27cefd8d",
+        "odds": "1.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "f093502a-6354-48c8-9d5b-fd586c12201c",
+        "betbuilder_available": true,
+        "market_uuid": "34eec158-fc04-49fa-b1e9-d9be27cefd8d",
+        "odds": "2.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "57486443-7f30-427e-99a7-eb80ee1a1ce4",
+        "betbuilder_available": true,
+        "market_uuid": "9bd4617d-9e37-4dcb-99e4-70bf86597a89",
+        "odds": "1.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "98817393-7efe-4ae2-9a9b-de41a0b7cc5f",
+        "betbuilder_available": true,
+        "market_uuid": "9bd4617d-9e37-4dcb-99e4-70bf86597a89",
+        "odds": "8.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1.poåowa_{competitor2}_sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - handicap",
+     "type": "handicap_2col",
+     "sort_order": 75,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Manchester City (-1.5)",
+        "type": "outcome",
+        "uuid": "b7dd039e-dc46-4ef7-8420-f761cc03b901",
+        "betbuilder_available": false,
+        "market_uuid": "12150ff1-cc53-4875-afad-288d5fcfe425",
+        "odds": "3.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Fulham (+1.5)",
+        "type": "outcome",
+        "uuid": "cec73606-92ec-4cf0-94e1-7dfa181cb9ab",
+        "betbuilder_available": false,
+        "market_uuid": "12150ff1-cc53-4875-afad-288d5fcfe425",
+        "odds": "1.21",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Manchester City (-0.5)",
+        "type": "outcome",
+        "uuid": "bb0b0876-92f8-450d-a86c-8cc26653004f",
+        "betbuilder_available": false,
+        "market_uuid": "72d655b7-a592-4eee-b90e-752b7ea46137",
+        "odds": "1.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Fulham (+0.5)",
+        "type": "outcome",
+        "uuid": "59855295-f1ab-4d1a-bd17-9a2fd44b56a0",
+        "betbuilder_available": false,
+        "market_uuid": "72d655b7-a592-4eee-b90e-752b7ea46137",
+        "odds": "1.89",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1_poaowa_handicap",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - Handicap",
+     "type": "handicap_3col",
+     "sort_order": 78,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa uwzględniając doliczenie handicapu jednej z drużyn. ",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Manchester City (1:0)",
+        "type": "outcome",
+        "uuid": "04e05747-2f5b-4194-9d1f-534089bfdf70",
+        "betbuilder_available": true,
+        "market_uuid": "c9784ba2-a4e9-4b44-8a7d-aea8bbe3e72c",
+        "odds": "1.09",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "042dce46-cb5b-40e0-943b-4b99633a3338",
+        "betbuilder_available": true,
+        "market_uuid": "c9784ba2-a4e9-4b44-8a7d-aea8bbe3e72c",
+        "odds": "5.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (1:0)",
+        "type": "outcome",
+        "uuid": "7d847316-bebe-4da3-b544-9d96dad3306e",
+        "betbuilder_available": true,
+        "market_uuid": "c9784ba2-a4e9-4b44-8a7d-aea8bbe3e72c",
+        "odds": "22.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Manchester City (0:1)",
+        "type": "outcome",
+        "uuid": "49a4f660-7237-435d-844c-169e974b7770",
+        "betbuilder_available": true,
+        "market_uuid": "e0f3252c-ffcb-4c05-ba13-4987c6be15ff",
+        "odds": "3.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "1f8570d6-be8f-440c-879c-0393da10b214",
+        "betbuilder_available": true,
+        "market_uuid": "e0f3252c-ffcb-4c05-ba13-4987c6be15ff",
+        "odds": "2.83",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:1)",
+        "type": "outcome",
+        "uuid": "a588dc30-e2ef-4cd0-a052-567b3afc2e47",
+        "betbuilder_available": true,
+        "market_uuid": "e0f3252c-ffcb-4c05-ba13-4987c6be15ff",
+        "odds": "1.86",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Manchester City (0:2)",
+        "type": "outcome",
+        "uuid": "56e8b485-6298-4fb7-8bb5-1fd494bed1f6",
+        "betbuilder_available": true,
+        "market_uuid": "28d7246e-359a-4fe6-a32c-6f42ca14f348",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "7a028e05-68e6-475d-8710-f6036770b699",
+        "betbuilder_available": true,
+        "market_uuid": "28d7246e-359a-4fe6-a32c-6f42ca14f348",
+        "odds": "4.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:2)",
+        "type": "outcome",
+        "uuid": "2526d4e7-5607-474f-bf6d-428bc4094b4d",
+        "betbuilder_available": true,
+        "market_uuid": "28d7246e-359a-4fe6-a32c-6f42ca14f348",
+        "odds": "1.19",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:3"
+       },
+       {
+        "name": "Manchester City (0:3)",
+        "type": "outcome",
+        "uuid": "94251600-e456-4cb8-b982-8cdcbea6d365",
+        "betbuilder_available": true,
+        "market_uuid": "5b4a2b5b-f454-43d1-b6de-68fb09a416a4",
+        "odds": "22.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:3)",
+        "type": "outcome",
+        "uuid": "5238bd81-71ee-4832-b7d9-6bb8acb3503b",
+        "betbuilder_available": true,
+        "market_uuid": "5b4a2b5b-f454-43d1-b6de-68fb09a416a4",
+        "odds": "7.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:3)",
+        "type": "outcome",
+        "uuid": "e86223be-a623-4e2d-ab1c-28541932270d",
+        "betbuilder_available": true,
+        "market_uuid": "5b4a2b5b-f454-43d1-b6de-68fb09a416a4",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "1_poaowa_handicap_3way",
+     "product_active": true
+    },
+    {
+     "name": "Strzeli 1. gola",
+     "type": "markets_in_columns",
+     "sort_order": 82,
+     "tooltip": "Należy wytypować, która drużyna strzeli wskazanego gola w wymienionej części spotkania.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "1232e56e-f19d-4266-af5f-b7af4a081d02",
+      "b9aa271d-22de-4a94-af0f-cf6b94f419c9"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "8"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "62"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "84"
+       }
+      ]
+     ],
+     "slug": "strzeli_goalnr_gola",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 83,
+     "tooltip": "Należy wytypować ile dokładnie goli zostanie strzelonych w pierwszej połowie spotkania.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_22816244-70bb-488c-8569-3c84fe07ba56",
+     "product_active": true
+    },
+    {
+     "name": "Połowa - Wynik + suma goli",
+     "type": "markets_in_columns",
+     "sort_order": 85,
+     "tooltip": "Należy wytypować jakie rozstrzygnięcie padnie w wskazanej połowie oraz czy suma goli w wskazanej połowie przekroczy określoną w zakładzie wartość.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "79"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "544"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City + poniżej 1.5"
+       },
+       {
+        "name": "Manchester City + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "b83ff8c4-d251-4ca2-bf8d-d608c2b9ac35",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "3.47",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "368d95b2-c13e-4fea-8fba-c32861430e90",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "3.85",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Manchester City + powyżej 1.5"
+       },
+       {
+        "name": "Manchester City + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "b5711906-6e65-4cba-9bdd-4ac5db3f7bc4",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "3.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Manchester City + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "c6782b52-a3c5-4795-b964-29f18c4c30b1",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "2.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis + poniżej 1.5"
+       },
+       {
+        "name": "remis + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "e5913905-3330-453f-9ce1-df68489e5931",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "278c150e-b3d9-44ab-b0c6-7b7b144630a1",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "4.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "remis + powyżej 1.5"
+       },
+       {
+        "name": "remis + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "0fcb5cf6-1ed4-4e62-a678-c342afa76b19",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "7.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "3fe278fd-173c-4e75-9e76-96ab9af5676f",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "6.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fulham + poniżej 1.5"
+       },
+       {
+        "name": "Fulham + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "108f853b-a5fa-4264-a831-e9823343162a",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "8.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham + poniżej 1.5",
+        "type": "outcome",
+        "uuid": "6c882002-e655-4a6f-811b-f4c490bfeb08",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "8.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "Fulham + powyżej 1.5"
+       },
+       {
+        "name": "Fulham + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "74398d1f-0727-4aa6-9612-3e4dd6aec87a",
+        "betbuilder_available": false,
+        "market_uuid": "3c0812f9-b3b1-4905-8100-fdc97397b4db",
+        "odds": "17.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham + powyżej 1.5",
+        "type": "outcome",
+        "uuid": "2ace5b3d-9896-4d0a-81ac-0ba6cc4c5ccc",
+        "betbuilder_available": false,
+        "market_uuid": "39e1e0eb-efba-483e-bacd-0e2c49ad0d8a",
+        "odds": "11.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "wskazanapolowa_wynik+sumagoli",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Total (suma)",
+     "type": "total",
+     "sort_order": 90,
+     "tooltip": "Należy wytypować czy suma goli/punktów w drugiej połowie będzie mieściła się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "dd8e4853-6bfa-4ad4-9842-3b93db0262b5",
+        "betbuilder_available": true,
+        "market_uuid": "66da3448-331c-4040-9241-60248eda4b43",
+        "odds": "4.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "de68b77a-2ef0-46d4-82dd-19a3034dc32c",
+        "betbuilder_available": true,
+        "market_uuid": "66da3448-331c-4040-9241-60248eda4b43",
+        "odds": "1.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "638a051d-0fc8-4521-97cb-eb42ab8c2398",
+        "betbuilder_available": true,
+        "market_uuid": "9163baa8-4b73-4ff3-add6-8bda122de249",
+        "odds": "1.98",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "fee58ff4-d7fa-4682-800e-f4ee7143d80b",
+        "betbuilder_available": true,
+        "market_uuid": "9163baa8-4b73-4ff3-add6-8bda122de249",
+        "odds": "1.74",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "89d1fe53-53d6-49a1-a1a0-c3adad37f784",
+        "betbuilder_available": true,
+        "market_uuid": "a54edd19-d5c3-442b-973c-8fd3e7c7c6a1",
+        "odds": "1.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "12f70d91-5807-4c0a-802f-b2690817f117",
+        "betbuilder_available": true,
+        "market_uuid": "a54edd19-d5c3-442b-973c-8fd3e7c7c6a1",
+        "odds": "3.22",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_suma",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 93,
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w drugiej połowie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "97"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "96"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "f5eae909-3403-48d1-8d4d-ffc88f46a68a",
+        "betbuilder_available": true,
+        "market_uuid": "3b8fde8f-f740-47dc-aa12-f82a0bb110d7",
+        "odds": "2.97",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "e3fb84e8-fea3-4491-804e-92a0ad6e32ef",
+        "betbuilder_available": true,
+        "market_uuid": "c71c1580-92fa-4ae0-bd84-6c7ee424eed4",
+        "odds": "1.54",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "1525d968-f6fa-4b31-aef1-fe7eaf7659b7",
+        "betbuilder_available": true,
+        "market_uuid": "3b8fde8f-f740-47dc-aa12-f82a0bb110d7",
+        "odds": "1.31",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "3ac3e7ae-5ff0-40eb-9cbb-0f480d0d4397",
+        "betbuilder_available": true,
+        "market_uuid": "c71c1580-92fa-4ae0-bd84-6c7ee424eed4",
+        "odds": "2.21",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_polowa_czyste_konto",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Manchester City - Total (suma)",
+     "type": "total",
+     "sort_order": 95,
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "bfb9fa67-ffce-4303-b3dc-deb1e05434e4",
+        "betbuilder_available": true,
+        "market_uuid": "f7e5c1d2-1dee-4c27-a616-ae16fb3c9c12",
+        "odds": "3.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "ff9fec7f-2f2b-4e47-b606-3f44c4817bae",
+        "betbuilder_available": true,
+        "market_uuid": "f7e5c1d2-1dee-4c27-a616-ae16fb3c9c12",
+        "odds": "1.33",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "b4f6ad29-3e0d-4b4a-aef9-27dc70066e3c",
+        "betbuilder_available": true,
+        "market_uuid": "fa5d66dc-1735-4897-a381-e9304189d45a",
+        "odds": "1.49",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "6bcb08fe-0a8f-4e23-bba4-568c22b075a0",
+        "betbuilder_available": true,
+        "market_uuid": "fa5d66dc-1735-4897-a381-e9304189d45a",
+        "odds": "2.46",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "8e3147f5-b795-4d45-9869-d1093e908787",
+        "betbuilder_available": true,
+        "market_uuid": "da0d6fc4-c25a-408a-b6fc-ba08a95c1f36",
+        "odds": "1.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "86c59f6e-9cc8-47bd-8c27-a2b46e7e7bf9",
+        "betbuilder_available": true,
+        "market_uuid": "da0d6fc4-c25a-408a-b6fc-ba08a95c1f36",
+        "odds": "5.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_competitor1_suma_goli_",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Fulham - Total (suma)",
+     "type": "total",
+     "sort_order": 98,
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "ddafee26-ed52-4181-ae26-4f69ea750760",
+        "betbuilder_available": true,
+        "market_uuid": "875b538d-f259-47e2-b0cf-9ba2d26f7977",
+        "odds": "1.57",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "61ece59f-a63b-428a-8ba6-5dd4d44bb249",
+        "betbuilder_available": true,
+        "market_uuid": "875b538d-f259-47e2-b0cf-9ba2d26f7977",
+        "odds": "2.26",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "fdc65c00-ccec-464a-a2ff-07f72a50a83c",
+        "betbuilder_available": true,
+        "market_uuid": "510c836f-94e7-4600-a5a2-5607e7a4ce87",
+        "odds": "1.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "c461546d-a6da-4714-b2ea-0f0f31f1b4b8",
+        "betbuilder_available": true,
+        "market_uuid": "510c836f-94e7-4600-a5a2-5607e7a4ce87",
+        "odds": "7.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "f5239289-3a0d-4bac-b072-92ab64a5a803",
+        "betbuilder_available": true,
+        "market_uuid": "04c62630-c6fa-4564-beae-ba5b6090bb82",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "045d4c25-e1b0-4a27-8309-0a1b5d8f9000",
+        "betbuilder_available": true,
+        "market_uuid": "04c62630-c6fa-4564-beae-ba5b6090bb82",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_competitor2_suma_goli_",
+     "product_active": true
+    },
+    {
+     "name": "2. Połowa - Handicap",
+     "type": "handicap_2col",
+     "sort_order": 101,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się druga połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-1.5"
+       },
+       {
+        "name": "Manchester City (-1.5)",
+        "type": "outcome",
+        "uuid": "48ccdfe4-05f7-4273-b514-317a2aeb2b66",
+        "betbuilder_available": false,
+        "market_uuid": "ad824ccb-c7ed-4c14-b30d-e62804d8c879",
+        "odds": "3.12",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+1.5"
+       },
+       {
+        "name": "Fulham (+1.5)",
+        "type": "outcome",
+        "uuid": "d8434e57-e355-46d8-a20a-a38dbdedf6da",
+        "betbuilder_available": false,
+        "market_uuid": "ad824ccb-c7ed-4c14-b30d-e62804d8c879",
+        "odds": "1.28",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "-0.5"
+       },
+       {
+        "name": "Manchester City (-0.5)",
+        "type": "outcome",
+        "uuid": "a6ac06ef-2300-4b64-8328-4243c8647312",
+        "betbuilder_available": false,
+        "market_uuid": "9845a1d4-e435-4176-8d5d-35e938dd3a80",
+        "odds": "1.66",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "label",
+        "text": "+0.5"
+       },
+       {
+        "name": "Fulham (+0.5)",
+        "type": "outcome",
+        "uuid": "f498f2a0-d231-4f05-9e8a-3e6be7c4c70f",
+        "betbuilder_available": false,
+        "market_uuid": "9845a1d4-e435-4176-8d5d-35e938dd3a80",
+        "odds": "2.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_handicap",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Handicap",
+     "type": "handicap_3col",
+     "sort_order": 103,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się druga połowa, uwzględniając doliczenie handicapu jednej z drużyn.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City"
+       },
+       {
+        "type": "label",
+        "text": "remis"
+       },
+       {
+        "type": "label",
+        "text": "Fulham"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "name": "Manchester City (1:0)",
+        "type": "outcome",
+        "uuid": "86548be9-eaf6-4170-b8f9-c066b8fa6ec0",
+        "betbuilder_available": true,
+        "market_uuid": "336bc3eb-275e-445d-9572-239c0317a414",
+        "odds": "1.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (1:0)",
+        "type": "outcome",
+        "uuid": "b37219de-1995-43ac-926a-21fcfad717cf",
+        "betbuilder_available": true,
+        "market_uuid": "336bc3eb-275e-445d-9572-239c0317a414",
+        "odds": "5.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (1:0)",
+        "type": "outcome",
+        "uuid": "bc83d958-13f6-4b46-87b6-0dd6a38b5daa",
+        "betbuilder_available": true,
+        "market_uuid": "336bc3eb-275e-445d-9572-239c0317a414",
+        "odds": "17.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:1"
+       },
+       {
+        "name": "Manchester City (0:1)",
+        "type": "outcome",
+        "uuid": "67acd025-65ac-4a6e-8863-014c299b34aa",
+        "betbuilder_available": true,
+        "market_uuid": "7aa55c6b-4977-432d-86ac-ca32f2d97ed6",
+        "odds": "3.17",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:1)",
+        "type": "outcome",
+        "uuid": "41fa809e-9234-420b-bad9-4533bba27061",
+        "betbuilder_available": true,
+        "market_uuid": "7aa55c6b-4977-432d-86ac-ca32f2d97ed6",
+        "odds": "3.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:1)",
+        "type": "outcome",
+        "uuid": "5c440741-d7df-4b11-afaa-980a3e161060",
+        "betbuilder_available": true,
+        "market_uuid": "7aa55c6b-4977-432d-86ac-ca32f2d97ed6",
+        "odds": "1.99",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:2"
+       },
+       {
+        "name": "Manchester City (0:2)",
+        "type": "outcome",
+        "uuid": "ceafa796-0ac2-45df-b0d4-30a21abf1e4b",
+        "betbuilder_available": true,
+        "market_uuid": "b352311c-ff8b-4c55-afec-86fac799957d",
+        "odds": "7.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:2)",
+        "type": "outcome",
+        "uuid": "6556745d-f481-4b41-9409-7fef5be34a69",
+        "betbuilder_available": true,
+        "market_uuid": "b352311c-ff8b-4c55-afec-86fac799957d",
+        "odds": "4.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:2)",
+        "type": "outcome",
+        "uuid": "073e1956-60fb-4e23-ad63-62821c916170",
+        "betbuilder_available": true,
+        "market_uuid": "b352311c-ff8b-4c55-afec-86fac799957d",
+        "odds": "1.26",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0:3"
+       },
+       {
+        "name": "Manchester City (0:3)",
+        "type": "outcome",
+        "uuid": "84bfc970-14ea-457f-8eb8-0e82eca33aa8",
+        "betbuilder_available": true,
+        "market_uuid": "31db0319-3281-4496-92c8-0ce562601989",
+        "odds": "17.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "remis (0:3)",
+        "type": "outcome",
+        "uuid": "c5c0c1f9-8648-495a-a6c8-42944261f0cb",
+        "betbuilder_available": true,
+        "market_uuid": "31db0319-3281-4496-92c8-0ce562601989",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "Fulham (0:3)",
+        "type": "outcome",
+        "uuid": "c114ce96-0878-4781-8403-4b4b2632b855",
+        "betbuilder_available": true,
+        "market_uuid": "31db0319-3281-4496-92c8-0ce562601989",
+        "odds": "1.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_handicap_3",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 108,
+     "tooltip": "Należy wytypować ile dokładnie goli zostanie strzelonych w drugiej połowie spotkania.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_20d3e0d7-a974-4f87-879a-3fb99404bc97",
+     "product_active": true
+    },
+    {
+     "name": "Suma goli + obie drużyny strzelą",
+     "type": "single_market",
+     "sort_order": 111,
+     "tooltip": "Należy wytypować czy suma goli w meczu mieściła będzie się poniżej czy powyżej wskazanej wartości oraz czy obie drużyny strzelą przynajmniej gola w spotkaniu.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "poniżej 2.5 + nie"
+       },
+       {
+        "name": "poniżej 2.5 + nie",
+        "type": "outcome",
+        "uuid": "c8b9c807-eef6-403f-b985-594a7f4c33d9",
+        "betbuilder_available": false,
+        "market_uuid": "8219a2dd-3100-46e9-9848-5cdb6287be16",
+        "odds": "2.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "powyżej 2.5 + nie"
+       },
+       {
+        "name": "powyżej 2.5 + nie",
+        "type": "outcome",
+        "uuid": "712f8075-1656-473b-87f3-0adedfb44df3",
+        "betbuilder_available": false,
+        "market_uuid": "8219a2dd-3100-46e9-9848-5cdb6287be16",
+        "odds": "4.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "poniżej 2.5 + tak"
+       },
+       {
+        "name": "poniżej 2.5 + tak",
+        "type": "outcome",
+        "uuid": "6fecbe73-26aa-4d1c-9187-460dadf9db7a",
+        "betbuilder_available": false,
+        "market_uuid": "8219a2dd-3100-46e9-9848-5cdb6287be16",
+        "odds": "9.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "powyżej 2.5 + tak"
+       },
+       {
+        "name": "powyżej 2.5 + tak",
+        "type": "outcome",
+        "uuid": "bb990541-0ec6-4566-88f2-dcafad1ee54a",
+        "betbuilder_available": false,
+        "market_uuid": "8219a2dd-3100-46e9-9848-5cdb6287be16",
+        "odds": "1.87",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "single_market_8219a2dd-3100-46e9-9848-5cdb6287be16",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + suma goli",
+     "type": "single_market",
+     "sort_order": 112,
+     "tooltip": "Należy wytypować rozstrzygnięcie meczu wybierając dwie z trzech opcji oraz dodatkowo czy w meczu suma goli będzie poniżej czy powyżej określonej wartości. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_8513f2be-18d8-4112-80fc-66572e7fcf4e",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + suma goli",
+     "type": "single_market",
+     "sort_order": 113,
+     "tooltip": "Należy wytypować rozstrzygnięcie meczu wybierając dwie z trzech opcji oraz dodatkowo czy w meczu suma goli będzie poniżej czy powyżej określonej wartości. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_7a2f164a-e1c5-468c-bec6-a002a819c828",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + suma goli",
+     "type": "single_market",
+     "sort_order": 114,
+     "tooltip": "Należy wytypować rozstrzygnięcie meczu wybierając dwie z trzech opcji oraz dodatkowo czy w meczu suma goli będzie poniżej czy powyżej określonej wartości. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_3e102a5f-078c-40dc-a287-7e0972aa78d4",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + suma goli",
+     "type": "single_market",
+     "sort_order": 115,
+     "tooltip": "Należy wytypować rozstrzygnięcie meczu wybierając dwie z trzech opcji oraz dodatkowo czy w meczu suma goli będzie poniżej czy powyżej określonej wartości. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_100e16f4-0325-4aeb-bb27-ae035a8ccfc3",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa + obie drużyny strzelą",
+     "type": "markets_in_columns",
+     "sort_order": 116,
+     "tooltip": "Należy wytypować rozstrzygnięcie danej części spotkania wybierając dwie z trzech opcji oraz dodatkowo czy w danej część spotkania obie drużyny strzelą gola. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz",
+        "market_id": "546"
+       },
+       {
+        "type": "label",
+        "text": "1. Połowa",
+        "market_id": "542"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "545"
+       }
+      ]
+     ],
+     "slug": "podwajna_szansa_obie_druayny_strzela",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa (mecz) + obie drużyny strzelą (1. połowa)",
+     "type": "single_market",
+     "sort_order": 119,
+     "tooltip": "Należy wytypować rozstrzygnięcie jeśli chodzi o mecz mając do wyboru dwie z trzech opcji oraz dodatkowo czy w danej połowie obie drużyny strzelą gola. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_56a3af39-cc9c-47cf-9fd0-4eb314d33eff",
+     "product_active": true
+    },
+    {
+     "name": "Podwójna szansa (mecz) + obie drużyny strzelą (2. połowa)",
+     "type": "single_market",
+     "sort_order": 120,
+     "tooltip": "Należy wytypować rozstrzygnięcie jeśli chodzi o mecz mając do wyboru dwie z trzech opcji oraz dodatkowo czy w danej połowie obie drużyny strzelą gola. ",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_ac150d2b-f6da-4038-bc06-a9e2a09e1438",
+     "product_active": true
+    },
+    {
+     "name": "Strzeli 1. gola + wynik meczu",
+     "type": "single_market",
+     "sort_order": 121,
+     "tooltip": "Należy wytypować, która z drużyn zdobędzie wymienionego gola i jakim rozstrzygnięciem zakończy się spotkanie.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde"
+     ],
+     "grid": [],
+     "slug": "single_market_b1264c96-5549-47ff-a044-80c38d11e9f7",
+     "product_active": true
+    },
+    {
+     "name": "Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 122,
+     "tooltip": "Należy wytypować dokładny wynik, jakim zakończy się spotkanie.",
+     "game_groups": [
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "aca0f62f-ef40-4aee-94e2-a8e2be0316d1",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "442f2338-24f7-4043-a88a-90861bcd22bc",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "17.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "f0a734f9-ad2f-403d-93a3-f842212a0eb5",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "19.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "27851da9-c485-48b9-9694-39eefd991517",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "6.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "83cbd0bf-bf28-4fad-9cd5-fd3011ace813",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "1197f108-505c-4a88-88ea-ebf55bc93275",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "40.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "8dcf7542-285b-423d-8b35-1a0b50fcdbe0",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "7.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "48135d93-b875-4ae1-9822-60d9b766309c",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "15.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "6a2189fc-ce7d-41cd-98a5-aac7734655a1",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "18.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:0"
+       },
+       {
+        "type": "label",
+        "text": "3:3"
+       },
+       {
+        "type": "label",
+        "text": "0:3"
+       }
+      ],
+      [
+       {
+        "name": "3:0",
+        "type": "outcome",
+        "uuid": "2467c959-2436-4716-9846-32b59916b6fe",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "8.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "3:3",
+        "type": "outcome",
+        "uuid": "119dbbc4-ca16-42ff-b9af-8bd382b49950",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "60.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:3",
+        "type": "outcome",
+        "uuid": "98ed39bc-2dc9-4f6e-a85d-c6236941d9e2",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:3"
+       }
+      ],
+      [
+       {
+        "name": "3:1",
+        "type": "outcome",
+        "uuid": "70ff9577-8590-4abf-8c40-54652cde2c30",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "9.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:3",
+        "type": "outcome",
+        "uuid": "257c1892-ad77-4511-b84c-5ee72c98ba35",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "60.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3:2"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "2:3"
+       }
+      ],
+      [
+       {
+        "name": "3:2",
+        "type": "outcome",
+        "uuid": "45f809c8-3254-466d-bb4d-c63491056018",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "19.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "2:3",
+        "type": "outcome",
+        "uuid": "10c8d83c-7ea8-43b8-88fa-c47c518c0d59",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "50.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:4"
+       }
+      ],
+      [
+       {
+        "name": "4:0",
+        "type": "outcome",
+        "uuid": "479fe21a-ce0e-4770-87fc-5be2b33db0cd",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "14.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:4",
+        "type": "outcome",
+        "uuid": "affc194b-5bca-4dd7-a9e6-8f129c51edb1",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:4"
+       }
+      ],
+      [
+       {
+        "name": "4:1",
+        "type": "outcome",
+        "uuid": "89621c32-8d6e-42f5-a3dc-aba0f1f1d49a",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "15.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:4",
+        "type": "outcome",
+        "uuid": "73216ceb-1a9f-4baf-865f-889b36f236ef",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4:2"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "2:4"
+       }
+      ],
+      [
+       {
+        "name": "4:2",
+        "type": "outcome",
+        "uuid": "4da24425-436d-455d-a13c-9534674f037a",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "2:4",
+        "type": "outcome",
+        "uuid": "f2d08e77-3a33-4ee2-9442-1575475763bb",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:5"
+       }
+      ],
+      [
+       {
+        "name": "5:0",
+        "type": "outcome",
+        "uuid": "285e2f7d-cbb1-4048-a0f3-f8812dc92b7a",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:5",
+        "type": "outcome",
+        "uuid": "46c2e36f-e541-4103-9d41-cad8225064e4",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "5:1"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "1:5"
+       }
+      ],
+      [
+       {
+        "name": "5:1",
+        "type": "outcome",
+        "uuid": "3f7bb650-3089-4e66-b914-6d936c01af0e",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "1:5",
+        "type": "outcome",
+        "uuid": "bad3720e-0527-4fd0-a04d-bff765490511",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "6:0"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "0:6"
+       }
+      ],
+      [
+       {
+        "name": "6:0",
+        "type": "outcome",
+        "uuid": "3cf415e4-8dfb-4da1-9eb6-bba666c309a2",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "80.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       },
+       {
+        "name": "0:6",
+        "type": "outcome",
+        "uuid": "ab453bbc-0c0f-436d-9b59-24b9ff4bf159",
+        "betbuilder_available": true,
+        "market_uuid": "4a67a249-d206-4d48-a021-b3b5e47c9be2",
+        "odds": "100.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "dokaadny_wynik",
+     "product_active": true
+    },
+    {
+     "name": "1. Połowa - Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 123,
+     "tooltip": "Należy wytypować dokładny wynik pierwszej połowy.",
+     "game_groups": [
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "68e82423-efa2-46be-b56d-a104af312231",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "3.47",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "fa9e13ed-d07e-4dac-bb54-6afbebe05320",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "3.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "da6a091f-a3e2-4a6d-92ac-798786533d6f",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "8.75",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "56d35f9d-2684-4dcd-b5d2-38eebf1b7308",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "6.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "dc6d5537-c305-452d-8fb9-a3a16c3423af",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "c912d39f-14c8-4d69-8327-2e5f915ec529",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "40.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "4cb7f131-8397-40f4-bd5e-e9beefc4fa84",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "15.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "1f56efa8-a51c-4564-9730-7726cfe31f9e",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "70.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "85fdb4b3-11fd-416a-a4c1-ea35811c7212",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "40.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "inny"
+       },
+       {
+        "type": "empty"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "name": "inny",
+        "type": "outcome",
+        "uuid": "3182a7fe-0a73-4f28-8640-6a0bf2442fc9",
+        "betbuilder_available": true,
+        "market_uuid": "121b240a-41e7-41de-9cf8-5dc1dd0896a4",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       }
+      ]
+     ],
+     "slug": "1_poaowa_dokaadny_wynik",
+     "product_active": true
+    },
+    {
+     "name": "2. Połowa - Dokładny wynik",
+     "type": "exact_result",
+     "sort_order": 124,
+     "tooltip": "Należy wytypować dokładny wynik drugiej połowy.",
+     "game_groups": [
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4"
+     ],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": "1:0"
+       },
+       {
+        "type": "label",
+        "text": "0:0"
+       },
+       {
+        "type": "label",
+        "text": "0:1"
+       }
+      ],
+      [
+       {
+        "name": "1:0",
+        "type": "outcome",
+        "uuid": "fa76d7fd-89ca-4aa5-9c37-bc83bc41379b",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "4.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:0",
+        "type": "outcome",
+        "uuid": "2ade2ca6-abae-4c5b-8052-afb55c068657",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "5.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:1",
+        "type": "outcome",
+        "uuid": "6471a98a-b4de-478a-8122-58fe5e3156cc",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "9.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:0"
+       },
+       {
+        "type": "label",
+        "text": "1:1"
+       },
+       {
+        "type": "label",
+        "text": "0:2"
+       }
+      ],
+      [
+       {
+        "name": "2:0",
+        "type": "outcome",
+        "uuid": "8f548343-87ea-4f57-bd1f-a2d9b45de035",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "6.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:1",
+        "type": "outcome",
+        "uuid": "2bb7d498-844a-4800-8b33-62da7ed26008",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "7.80",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "0:2",
+        "type": "outcome",
+        "uuid": "7ce0400e-df99-4057-b5a6-eb537494b10f",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "35.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2:1"
+       },
+       {
+        "type": "label",
+        "text": "2:2"
+       },
+       {
+        "type": "label",
+        "text": "1:2"
+       }
+      ],
+      [
+       {
+        "name": "2:1",
+        "type": "outcome",
+        "uuid": "50c6233a-0ec9-4ff9-8ae6-2a24d26ab634",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "2:2",
+        "type": "outcome",
+        "uuid": "6f74376a-13bc-4665-bb0d-695ad63ae4c3",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "45.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "1:2",
+        "type": "outcome",
+        "uuid": "58d48fc5-f1f5-457e-9db1-a9304a466463",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "30.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "inny"
+       },
+       {
+        "type": "empty"
+       }
+      ],
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "name": "inny",
+        "type": "outcome",
+        "uuid": "beb2a711-c95f-45af-8041-35f1a5d2ba5a",
+        "betbuilder_available": true,
+        "market_uuid": "bb31d7ac-0455-4e6e-ae11-7d232b0bea60",
+        "odds": "5.40",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "type": "empty"
+       }
+      ]
+     ],
+     "slug": "2_poaowa_dokaadny_wynik",
+     "product_active": true
+    },
+    {
+     "name": "Zawodnik strzeli 1. gola",
+     "type": "single_market",
+     "sort_order": 125,
+     "tooltip": "Należy wytypować, który z zawodników zdobędzie wymienionego w zakładzie gola w meczu.",
+     "game_groups": [
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8",
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8"
+     ],
+     "grid": [],
+     "slug": "single_market_d1d50dc7-eb00-4377-aaf8-1586f006f20f",
+     "product_active": true
+    },
+    {
+     "name": "Zawodnik strzeli ostatniego gola",
+     "type": "single_market",
+     "sort_order": 126,
+     "tooltip": "Należy wytypować, który z zawodników zdobędzie ostatniego gola w meczu",
+     "game_groups": [
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8",
+      "eed3a0f7-90b1-46c2-9bfe-f06252bc42f8"
+     ],
+     "grid": [],
+     "slug": "single_market_6f3b93a9-e65b-4581-badc-eda5e27de997",
+     "product_active": true
+    },
+    {
+     "name": "10 minut - Wynik od 1 do 10 min",
+     "type": "single_market",
+     "sort_order": 127,
+     "tooltip": "Należy wytypować rozstrzygnięcie jakie padnie we wskazanym w zakładzie przedziale czasowym.",
+     "game_groups": [
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6",
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6"
+     ],
+     "grid": [],
+     "slug": "single_market_92317007-8437-4522-813b-f56d6750ded9",
+     "product_active": true
+    },
+    {
+     "name": "Ostatni gol",
+     "type": "single_market",
+     "sort_order": 128,
+     "tooltip": "Należy wytypować, która drużyna strzeli ostatniego gola w spotkaniu.",
+     "game_groups": [
+      "1232e56e-f19d-4266-af5f-b7af4a081d02",
+      "1232e56e-f19d-4266-af5f-b7af4a081d02"
+     ],
+     "grid": [],
+     "slug": "single_market_195b95b2-de16-4692-8524-6485499488a9",
+     "product_active": true
+    },
+    {
+     "name": "Połowa z największą liczbą goli/punktów",
+     "type": "single_market",
+     "sort_order": 129,
+     "tooltip": "Należy wytypować, w której połowie spotkania padnie najwięcej goli/punktów.",
+     "game_groups": [
+      "1232e56e-f19d-4266-af5f-b7af4a081d02",
+      "1232e56e-f19d-4266-af5f-b7af4a081d02"
+     ],
+     "grid": [],
+     "slug": "single_market_a5532781-c277-447b-b272-5ee8effff5a3",
+     "product_active": true
+    },
+    {
+     "name": "Kiedy zostanie strzelony 1. gol (10 minut)",
+     "type": "single_market",
+     "sort_order": 130,
+     "tooltip": "Należy wytypować w którym przedziale czasu zdobyty zostanie wymieniony gol w meczu.",
+     "game_groups": [
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6",
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6"
+     ],
+     "grid": [],
+     "slug": "single_market_59128f21-3286-4a8e-8481-60c8c87f1e56",
+     "product_active": true
+    },
+    {
+     "name": "Kiedy zostanie strzelony 1. gol (15 minut)",
+     "type": "single_market",
+     "sort_order": 131,
+     "tooltip": "Należy wytypować w którym przedziale czasu zdobyty zostanie wymieniony gol w meczu.",
+     "game_groups": [
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6",
+      "fa9e98c0-4f6b-4e02-940c-db92b41476e6"
+     ],
+     "grid": [],
+     "slug": "single_market_de5b4ad1-6b3c-4c33-a550-a26808da774e",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy",
+     "type": "single_market",
+     "sort_order": 133,
+     "tooltip": "Należy wytypować jakie będzie w spotkaniu rozstrzygnięcie do przerwy oraz na koniec meczu. ",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_bd7bc117-868e-4ec6-bbc8-119d98de42b3",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + suma goli",
+     "type": "single_market",
+     "sort_order": 134,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w spotkaniu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_e6af9980-ee67-43ed-869e-59f2f9c40d3c",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + suma goli",
+     "type": "single_market",
+     "sort_order": 135,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w spotkaniu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_59a84a6f-2e53-4de1-a129-05846321f425",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + suma goli",
+     "type": "single_market",
+     "sort_order": 136,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w spotkaniu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_efc0a7e9-ee12-439e-bf5a-d99af501852a",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + suma goli",
+     "type": "single_market",
+     "sort_order": 137,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w spotkaniu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_632c4df7-00f9-46c4-85f1-f9b5789de898",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + 1. połowa suma goli",
+     "type": "single_market",
+     "sort_order": 138,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w pierwszej połowie mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_4b8df7c4-de8f-4177-809b-91f85cbcd368",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + 1. połowa suma goli",
+     "type": "single_market",
+     "sort_order": 139,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w pierwszej połowie mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_14e04979-9db6-4e7d-a295-2aee22d66e39",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + 1. połowa suma goli",
+     "type": "single_market",
+     "sort_order": 140,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa oraz jakim rozstrzygnięciem zakończy się spotkanie oraz czy suma goli w pierwszej połowie mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_9cf43a01-6da5-436d-bf23-e0c27a330a3d",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy + dokładna liczba goli",
+     "type": "single_market",
+     "sort_order": 141,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się pierwsza połowa i jakim rozstrzygnięciem zakończy się spotkanie oraz ile dokładnie padnie goli w meczu.",
+     "game_groups": [
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "4ead2d5c-bb63-4bc1-9254-b836446eecde",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_63311ffe-5be8-43c8-bdb8-aa1323c130d1",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa/wynik końcowy - dokładny wynik",
+     "type": "single_market",
+     "sort_order": 142,
+     "tooltip": "Należy wytypować jakim dokładnym wynikiem zakończy się pierwsza połowa oraz jakim dokładnym wynikiem zakończy się spotkanie.",
+     "game_groups": [
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4",
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4"
+     ],
+     "grid": [],
+     "slug": "single_market_5fd5198b-b574-4b64-8871-1f82ba211e5e",
+     "product_active": true
+    },
+    {
+     "name": "Zwycięstwo Manchester City = zwrot",
+     "type": "single_market",
+     "sort_order": 143,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie. W przypadku zwycięstwa drużyny wymienionej jako pierwsza, następuje zwrot stawki.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7",
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [],
+     "slug": "single_market_ec5bfda6-6c03-442b-b14a-51ccdc9e1823",
+     "product_active": true
+    },
+    {
+     "name": "Zwycięstwo Fulham = zwrot",
+     "type": "single_market",
+     "sort_order": 144,
+     "tooltip": "Należy wytypować jakim rozstrzygnięciem zakończy się spotkanie. W przypadku zwycięstwa drużyny wymienionej jako druga, następuje zwrot stawki.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7",
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [],
+     "slug": "single_market_f0971f04-342e-476c-a3e4-f3687103bf50",
+     "product_active": true
+    },
+    {
+     "name": "Rozmiar zwycięstwa",
+     "type": "single_market",
+     "sort_order": 145,
+     "tooltip": "Należy wytypować jakim zakresem goli wygra któraś z drużyn lub że w spotkaniu padnie remis.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7",
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [],
+     "slug": "single_market_59d9cffc-963d-45b4-bec4-0a131f76bd6d",
+     "product_active": true
+    },
+    {
+     "name": "Którakolwiek z drużyn wygra",
+     "type": "single_market",
+     "sort_order": 146,
+     "tooltip": "Należy wytypować czy którakolwiek z drużyn wygra spotkanie.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7",
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [],
+     "slug": "single_market_f93ff5e4-2fe8-4e0e-bc99-efdb0b173d6e",
+     "product_active": true
+    },
+    {
+     "name": "1./2.połowa  - Obie drużyny strzelą gola",
+     "type": "single_market",
+     "sort_order": 147,
+     "tooltip": "Należy wytypować czy w odpowiednio poszczególnych połowach obie drużyny strzelą gola. ",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [],
+     "slug": "single_market_f6f4c856-3e2d-4682-a1a4-268504493d84",
+     "product_active": true
+    },
+    {
+     "name": "Wynik meczu lub obie drużyny strzelą",
+     "type": "markets_in_columns",
+     "sort_order": 148,
+     "tooltip": "Wynik meczu LUB obie drużyny strzelą. Należy wytypować czy będzie miało miejsce choć jedno z dwóch podanych zdarzeń. W przypadku wybrania opcji 'nie' - zostanie ona rozliczona jako wygrana, jeżeli nie spełni się żadne z dwóch wymienionych zdarzeń.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "860"
+       },
+       {
+        "type": "label",
+        "text": "Remis",
+        "market_id": "861"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "862"
+       }
+      ]
+     ],
+     "slug": "wynikmeczulubobiedruzynystrzela",
+     "product_active": true
+    },
+    {
+     "name": "Wynik meczu lub którakolwiek czyste konto",
+     "type": "markets_in_columns",
+     "sort_order": 151,
+     "tooltip": "Wynik meczu LUB którakolwiek z drużyn zachowa czyste konto, tzn. nie straci bramki w meczu. Należy wytypować czy będzie miało miejsce choć jedno z dwóch podanych zdarzeń. W przypadku wybrania opcji 'nie' - zostanie ona rozliczona jako wygrana, jeżeli nie spełni się żadne z dwóch wymienionych zdarzeń.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "863"
+       },
+       {
+        "type": "label",
+        "text": "Remis",
+        "market_id": "864"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "865"
+       }
+      ]
+     ],
+     "slug": "wynikmeczulubktorakolwiekczystekonto",
+     "product_active": true
+    },
+    {
+     "name": "Wynik meczu lub powyżej 2.5",
+     "type": "markets_in_columns",
+     "sort_order": 154,
+     "tooltip": "Wynik meczu 1 LUB powyżej X goli. Należy wytypować czy będzie miało miejsce choć jedno z dwóch podanych zdarzeń. W przypadku wybrania opcji 'nie' - zostanie ona rozliczona jako wygrana, jeżeli nie spełni się żadne z dwóch wymienionych zdarzeń.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "854"
+       },
+       {
+        "type": "label",
+        "text": "Remis",
+        "market_id": "856"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "858"
+       }
+      ]
+     ],
+     "slug": "wynikmeczulubpowyzej",
+     "product_active": true
+    },
+    {
+     "name": "Wynik meczu lub poniżej 2.5",
+     "type": "markets_in_columns",
+     "sort_order": 155,
+     "tooltip": "Wynik meczu LUB poniżej X goli. Należy wytypować czy będzie miało miejsce choć jedno z dwóch podanych zdarzeń. W przypadku wybrania opcji 'nie' - zostanie ona rozliczona jako wygrana, jeżeli nie spełni się żadne z dwóch wymienionych zdarzeń.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "855"
+       },
+       {
+        "type": "label",
+        "text": "Remis",
+        "market_id": "857"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "859"
+       }
+      ]
+     ],
+     "slug": "wynikmeczulubponizej",
+     "product_active": true
+    },
+    {
+     "name": "Multi-wyniki",
+     "type": "single_market",
+     "sort_order": 160,
+     "tooltip": "Należy wytypować czy w meczu padnie dokładny wynik dostępny w wybranym przez nas typie (np. typ “1:0, 2:0 lub 3:0” oznacza, że drużyna gospodarzy wygra mecz 1:0, 2:0 lub 3:0). Wybór typu INNY (oraz analogicznie w przypadku typu „inne zwycięstwo gospodarzy” oraz „inne zwycięstwo gości”) oznacza iż w spotkaniu musi paść wynik który nie był dostępny spośród tych widocznych na liście pod tym zakładem.",
+     "game_groups": [
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4",
+      "6c3de89e-13bf-45d7-8f3c-f4e60af4cad4"
+     ],
+     "grid": [],
+     "slug": "single_market_c5461c14-c094-4b14-b47d-2deba57cd640",
+     "product_active": true
+    },
+    {
+     "name": "Suma goli - Parzyste/Nieparzyste",
+     "type": "markets_in_columns",
+     "sort_order": 161,
+     "tooltip": "Należy wytypować czy w danej części spotkania padnie parzysta czy nieparzysta liczba goli, 0 traktowane jest jako liczba parzysta.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37",
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Cały mecz"
+       },
+       {
+        "type": "label",
+        "text": "1 połowa"
+       },
+       {
+        "type": "label",
+        "text": "2 połowa"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nieparzysta"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "e3c3f6c5-a94e-4b79-b214-49a89d5f1c9d",
+        "betbuilder_available": true,
+        "market_uuid": "7be4e942-5fd9-4e30-98da-e2e046209214",
+        "odds": "1.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "29703642-12bd-4fbf-8841-2ea9dd765b0c",
+        "betbuilder_available": true,
+        "market_uuid": "b2ad5bfd-73dc-4b01-9821-04fb075d7a9d",
+        "odds": "1.86",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "parzysta"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "9d13e273-b1ce-4069-86f7-08ed679f4aff",
+        "betbuilder_available": true,
+        "market_uuid": "7be4e942-5fd9-4e30-98da-e2e046209214",
+        "odds": "1.74",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "61bf46c9-1680-4889-a016-f8a8661ecd77",
+        "betbuilder_available": true,
+        "market_uuid": "b2ad5bfd-73dc-4b01-9821-04fb075d7a9d",
+        "odds": "1.84",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "sumagoli_parzyste/nieparzyste",
+     "product_active": true
+    },
+    {
+     "name": "Parzyste/Nieparzyste",
+     "type": "markets_in_columns",
+     "sort_order": 162,
+     "tooltip": "Należy wytypować czy w danej części spotkania padnie parzysta czy nieparzysta liczba goli/punktów. 0 traktowane jest jako liczba parzysta.",
+     "game_groups": [
+      "9b0fa5ec-28f6-485b-b42a-2c10bb6fbe37"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "2. Połowa",
+        "market_id": "94"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nieparzysta"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "528a1b64-8de5-4e78-9c85-3ffaeeb4f21c",
+        "betbuilder_available": true,
+        "market_uuid": "85bf9279-c348-476d-9eaa-35967e4cca6a",
+        "odds": "1.87",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "parzysta"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "a5b4f03a-dfff-4996-b323-8bb7a9341c59",
+        "betbuilder_available": true,
+        "market_uuid": "85bf9279-c348-476d-9eaa-35967e4cca6a",
+        "odds": "1.77",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "parzystenieparzyste",
+     "product_active": true
+    },
+    {
+     "name": "Suma goli parzysta/nieparzysta",
+     "type": "markets_in_columns",
+     "sort_order": 164,
+     "tooltip": "Należy wytypować czy suma goli/punktów zdobytych w meczu przez daną drużynę będzie parzysta czy nieparzysta. 0 traktowane jest jako liczba parzysta.",
+     "game_groups": [
+      "63f5da58-3ab2-4ccf-b615-85b2500e4aa7"
+     ],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Manchester City",
+        "market_id": "27"
+       },
+       {
+        "type": "label",
+        "text": "Fulham",
+        "market_id": "28"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nieparzysta"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "c9ac0f83-4575-446b-a42b-d84357bf9fe1",
+        "betbuilder_available": true,
+        "market_uuid": "244db5f1-f2fd-40b0-aab4-6abb9935c875",
+        "odds": "1.87",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nieparzysta",
+        "type": "outcome",
+        "uuid": "df0de96f-5de9-4464-bac5-0827b6cd0f61",
+        "betbuilder_available": true,
+        "market_uuid": "f8fef52d-6b56-4c26-86fa-99d2d6a2df94",
+        "odds": "2.17",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "parzysta"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "6c041c89-d9cc-4ae4-9236-40cb164b7c8e",
+        "betbuilder_available": true,
+        "market_uuid": "244db5f1-f2fd-40b0-aab4-6abb9935c875",
+        "odds": "1.83",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "parzysta",
+        "type": "outcome",
+        "uuid": "e089fb9e-8f5c-4708-aa39-6e0b897a0942",
+        "betbuilder_available": true,
+        "market_uuid": "f8fef52d-6b56-4c26-86fa-99d2d6a2df94",
+        "odds": "1.62",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "slug": "suma_goli_parzysta_nieparzysta",
+     "product_active": true
+    }
+   ],
+   "next_matchdays": [
+    12,
+    13
+   ],
+   "jackpot_prize_pool": null,
+   "promotion_cms_url": null,
+   "tipster_eid": "m:sr:match:72221406"
+  }
+ },
+ "state": "success",
+ "_meta": null
+}

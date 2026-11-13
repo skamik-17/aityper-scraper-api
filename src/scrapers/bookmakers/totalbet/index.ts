@@ -46,12 +46,13 @@ import {
 import type { TotalbetDetailEvent } from "./api-types.js";
 import {
   PHASE1_CHECK_MIN_MARKETS,
+  PHASE1_LEGACY_KEYS,
   PHASE1_MARKET_KEYS,
   TOTALBET_BUDGET_MS,
   TOTALBET_DETAIL_CONCURRENCY,
   TOTALBET_REQUEST_TIMEOUT_MS,
 } from "./constants.js";
-import { listEventToMatchWinnerMarket, parseEventDetail, parseParticipants } from "./grid-parser.js";
+import { columnKey, listEventToMatchWinnerMarket, parseEventDetail, parseParticipants } from "./grid-parser.js";
 
 /** Injectable transport (tests pass a fake FetchJson or a replay HttpClient). */
 export interface TotalbetDeps {
@@ -258,6 +259,12 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
 
     const list = await fetchLeagueEvents(categoryUuid, this.fetchJson, budget.signal);
     if (list.error) return failure(budgetFailure(budget) ?? list.error);
+    if (list.events.length === 0) {
+      // README §3 empty-listing rule: success with no matches (observability: `empty`)
+      const reason = list.empty ?? `No prematch events for ${league}`;
+      console.warn(`${LOG} ${reason}`);
+      return { success: true, bookmaker: this.bookmaker, league, matches: [], error: reason, duration: Date.now() - startTime };
+    }
     console.log(`${LOG} Found ${list.events.length} prematch events for ${league}`);
 
     // Details run concurrently; the results are read below in list order, so the
@@ -430,8 +437,10 @@ function orientedMatchWinnerOdds(market: ScrapedMarket, teams: Teams): Market1X2
 /**
  * Phase-1 keys absent from a large event's raw component_lists (slug-drift check).
  * Keys are read before any status filtering, so suspended markets raise no alarm:
- * every component slug, plus the market_id of each markets_in_columns header label,
- * read with the same rules as the grid parser.
+ * every component slug, plus the key of each markets_in_columns header label
+ * (columnKey, the grid parser's own rule). A current key also counts as present
+ * when its pre-2026-11-13 alias is served (PHASE1_LEGACY_KEYS); the warning names
+ * the current key.
  */
 function missingPhase1Keys(event: TotalbetDetailEvent): string[] {
   if (!(event.market_count >= PHASE1_CHECK_MIN_MARKETS)) return [];
@@ -445,12 +454,16 @@ function missingPhase1Keys(event: TotalbetDetailEvent): string[] {
     const header: unknown = component.grid[0];
     if (!Array.isArray(header)) continue;
     for (const head of header) {
-      if (isRecord(head) && head.type === "label" && typeof head.text === "string" && head.market_id) {
-        present.add(`mid:${head.market_id}`);
+      if (isRecord(head) && head.type === "label" && typeof head.text === "string") {
+        const key = columnKey(component, { text: head.text, market_id: head.market_id });
+        if (key) present.add(key);
       }
     }
   }
-  return PHASE1_MARKET_KEYS.filter((key) => !present.has(key));
+  return PHASE1_MARKET_KEYS.filter((key) => {
+    const legacy = Object.hasOwn(PHASE1_LEGACY_KEYS, key) ? PHASE1_LEGACY_KEYS[key] : undefined;
+    return !present.has(key) && (legacy === undefined || !present.has(legacy));
+  });
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

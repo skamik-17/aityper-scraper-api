@@ -2,10 +2,13 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getBookmakerLeagueId } from "../../../../config/leagues.js";
 // Test-only cross-layer import: keeps the scraper's duplicated key list in sync with the normalizer.
-import { TOTALBET_MARKET_KEY_TO_CODE } from "../../../../services/normalization/bookmakers/totalbet-normalizer.js";
+import {
+  TOTALBET_LEGACY_MARKET_KEY_TO_CODE,
+  TOTALBET_MARKET_KEY_TO_CODE,
+} from "../../../../services/normalization/bookmakers/totalbet-normalizer.js";
 import { PlaywrightScraper } from "../../../base/playwright-base.js";
 import type { FetchJson } from "../api-client.js";
-import { PHASE1_MARKET_KEYS, TOTALBET_DETAIL_CONCURRENCY } from "../constants.js";
+import { PHASE1_LEGACY_KEYS, PHASE1_MARKET_KEYS, TOTALBET_DETAIL_CONCURRENCY } from "../constants.js";
 import { TotalbetPlaywrightScraper } from "../index.js";
 
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8"));
@@ -105,15 +108,53 @@ describe("totalbet scraper (plan contract)", () => {
     const leeds = load("event-detail-leeds-tottenham.trimmed.json");
     const noSuma = { ...leeds, data: { event: { ...leeds.data.event, component_lists: leeds.data.event.component_lists.filter((c: any) => c.slug !== "suma") } } };
     const warn = vi.spyOn(console, "warn");
-    // same fake as above, but the Leeds detail without the "suma" component (market_count stays 439)
+    // same fake as above, but the Leeds detail without the "suma" component (market_count stays 439);
+    // the warning names the current key, whose legacy alias "slug:suma" is gone too
     const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ "0e45932b-1433-4cf5-b658-5c308b7c2b60": noSuma }) }).scrapeFullOffer("premier-league");
-    expect(r.error).toContain("phase-1 keys missing for Leeds United vs Tottenham Hotspur: slug:suma");
-    expect(warn).toHaveBeenCalledWith("[Totalbet/FullOffer] phase-1 keys missing for Leeds United vs Tottenham Hotspur: slug:suma");
+    expect(r.error).toContain("phase-1 keys missing for Leeds United vs Tottenham Hotspur: slug:sumagoli");
+    expect(warn).toHaveBeenCalledWith("[Totalbet/FullOffer] phase-1 keys missing for Leeds United vs Tottenham Hotspur: slug:sumagoli");
     warn.mockRestore();
   });
 
   it("totalbet PHASE1_MARKET_KEYS matches the normalizer key table", () =>
     expect([...PHASE1_MARKET_KEYS]).toEqual(Object.keys(TOTALBET_MARKET_KEY_TO_CODE)));
+
+  it("totalbet PHASE1_LEGACY_KEYS matches the normalizer's legacy table, code for code", () => {
+    expect(Object.values(PHASE1_LEGACY_KEYS).sort()).toEqual(Object.keys(TOTALBET_LEGACY_MARKET_KEY_TO_CODE).sort());
+    for (const [current, legacy] of Object.entries(PHASE1_LEGACY_KEYS)) {
+      expect(TOTALBET_MARKET_KEY_TO_CODE[current]).toBe(TOTALBET_LEGACY_MARKET_KEY_TO_CODE[legacy]);
+    }
+  });
+
+  // The 2026-11-13 layout (Manchester City v Fulham probe): before the key update every
+  // Premier League run ended `partial` with "phase-1 keys missing … mid:26,mid:74,slug:suma,…".
+  it("totalbet raises no drift warning on the 2026-11-13 layout and maps its goal totals", async () => {
+    const mcfc = load("event-detail-mancity-fulham-2026-11-13.trimmed.json");
+    const details = Object.fromEntries(LIST_UUIDS.map((uuid) => {
+      const body = structuredClone(mcfc);
+      body.data.event.uuid = uuid;
+      return [uuid, body];
+    }));
+    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith(details) }).scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: true });
+    expect(r.matches).toHaveLength(20);
+    expect(r.error).toBeUndefined();
+    const ids = new Set(r.matches[0].markets.map((m) => m.bookmakerMarketId));
+    for (const key of ["slug:sumagoli", "slug:{competitor1}_sumagoli", "col:sumagoli_parzyste/nieparzyste#Cały mecz", "mid:94"]) {
+      expect(ids.has(key)).toBe(true);
+    }
+  });
+
+  it("totalbet names the current key when neither it nor its legacy alias is served", async () => {
+    const mcfc = load("event-detail-mancity-fulham-2026-11-13.trimmed.json");
+    const body = structuredClone(mcfc);
+    body.data.event.uuid = LEEDS;
+    body.data.event.component_lists = body.data.event.component_lists.filter((c: any) => c.slug !== "sumagoli_parzyste/nieparzyste");
+    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: allDetails({ [LEEDS]: body }) }).scrapeFullOffer("premier-league");
+    expect(r.error).toBe(
+      "phase-1 keys missing for Leeds United vs Tottenham Hotspur: col:sumagoli_parzyste/nieparzyste#Cały mecz,col:sumagoli_parzyste/nieparzyste#1 połowa",
+    );
+  });
 
   it("totalbet skips a match whose detail failed instead of writing the list 1X2", async () => {
     const fake = allDetails({ [EVERTON]: undefined });
@@ -130,6 +171,19 @@ describe("totalbet scraper (plan contract)", () => {
     const s = new TotalbetPlaywrightScraper(undefined, { fetchJson: async () => ({ status: 404, contentType: "text/html", body: "x" }) });
     expect(await s.scrapeFullOffer("premier-league")).toMatchObject({ success: false,
       error: "fetch HTTP 404 https://totalbet.pl/dealer/bdata/v1/bet/events?page=1&per_page=100&category_uuid=8793bb6a-4684-44ba-b92e-4d896e6cbfbf&category_type=sport&type=standard" });
+  });
+
+  // Controller ruling 22 / README §3: a valid listing with 0 prematch events is
+  // `success: true, matches: []`, so the run classifies as `empty` (not
+  // `scrape_failed`) and the league-collapse alert can count it.
+  it("totalbet reports an empty listing as success with no matches and no detail request", async () => {
+    const emptyList = { data: { events: [] }, state: "success",
+      _meta: { pagination: { total_pages: 1, current_page: 1, items_count: 0, per_page: 100 }, event_types: [] } };
+    const fake = fakeWith({}, emptyList);
+    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fake }).scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: true, matches: [],
+      error: `No prematch events for category ${PL} (items_count=0, event_types=[])` });
+    expect(fake.calls).toEqual([LIST_P1]);
   });
 
   it("totalbet rejects leagues without a UUID", async () =>

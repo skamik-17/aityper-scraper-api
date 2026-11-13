@@ -139,14 +139,17 @@ describe("forbet recovery 2026-11", () => {
     expect(turbo.selections.map((s) => [s.code, s.odds])).toEqual([["HOME", 1.16], ["AWAY", 14]]);
   });
 
-  it("forbet Everton v Coventry alternative bets map to RESULT_OR_BTTS (tak leg only) / TEAM_WIN_OR_CLEAN_SHEET / DRAW_OR_CLEAN_SHEET", () => {
+  it("forbet Everton v Coventry alternative bets map to RESULT_OR_BTTS (tak and nie) / TEAM_WIN_OR_CLEAN_SHEET / DRAW_OR_CLEAN_SHEET", () => {
     const outs = normalizeCapture("forbet-event-57945881-everton-coventry.trimmed.json", ctxEC);
     const rob = outs.filter((o) => o.marketKey === "RESULT_OR_BTTS").flatMap((o) => o.selections.map((s) => [s.code, s.odds]));
     // forbet's "nie" leg (4.7 / 2.31 / 2.16 here) is "neither the result nor
-    // BTTS", while the catalog <SIDE>_OR_BTTS_NO is "the result OR BTTS-No"
-    // (lebull's 1.2-1.6 bet). Only the tak leg is published.
-    expect(rob).toEqual([["HOME_OR_BTTS_YES", 1.13], ["AWAY_OR_BTTS_YES", 1.5], ["DRAW_OR_BTTS_YES", 1.57]]);
-    expect(outs.flatMap((o) => o.selections).filter((s) => /_OR_BTTS_NO$/.test(s.code))).toHaveLength(0);
+    // BTTS", which is what the catalog <SIDE>_OR_BTTS_NO says ("Ani 1, ani
+    // obie strzelą"), so both legs are published.
+    expect(rob).toEqual([
+      ["HOME_OR_BTTS_YES", 1.13], ["HOME_OR_BTTS_NO", 4.7],
+      ["AWAY_OR_BTTS_YES", 1.5], ["AWAY_OR_BTTS_NO", 2.31],
+      ["DRAW_OR_BTTS_YES", 1.57], ["DRAW_OR_BTTS_NO", 2.16],
+    ]);
     const cs = Object.fromEntries(outs.filter((o) => /CLEAN_SHEET/.test(o.marketCode)).map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])]));
     expect(cs).toEqual({
       "TEAM_WIN_OR_CLEAN_SHEET:HOME": [["YES", 1.28], ["NO", 3.15]],
@@ -161,8 +164,11 @@ describe("forbet recovery 2026-11", () => {
   it("forbet Arsenal v Hull alternative bets resolve 'Arsenal FC' / 'Hull City' to HOME / AWAY", () => {
     const outs = normalizeCapture("forbet-event-57945911-arsenal-hull.trimmed.json", ctxAH);
     const rob = outs.filter((o) => o.marketKey === "RESULT_OR_BTTS").flatMap((o) => o.selections.map((s) => [s.code, s.odds]));
-    expect(rob).toEqual([["HOME_OR_BTTS_YES", 1.04], ["AWAY_OR_BTTS_YES", 2.15], ["DRAW_OR_BTTS_YES", 2.1]]);
-    expect(outs.flatMap((o) => o.selections).filter((s) => /_OR_BTTS_NO$/.test(s.code))).toHaveLength(0);
+    expect(rob).toEqual([
+      ["HOME_OR_BTTS_YES", 1.04], ["HOME_OR_BTTS_NO", 7.4],
+      ["AWAY_OR_BTTS_YES", 2.15], ["AWAY_OR_BTTS_NO", 1.57],
+      ["DRAW_OR_BTTS_YES", 2.1], ["DRAW_OR_BTTS_NO", 1.6],
+    ]);
     const cs = Object.fromEntries(outs.filter((o) => /CLEAN_SHEET/.test(o.marketCode)).map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])]));
     expect(cs).toEqual({
       "TEAM_WIN_OR_CLEAN_SHEET:HOME": [["YES", 1.07], ["NO", 6.2]],
@@ -186,13 +192,20 @@ describe("forbet recovery 2026-11", () => {
         name: "Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola",
         selections: [{ name: "tak", odds: 1.13 }, { name: "może", odds: 4.7 }],
       }, ctxEC)).toBeNull();
-      // Only the "nie" leg quoted (tak suspended): nie is never published.
+      // Only the "nie" leg quoted (tak suspended): a nie leg is published
+      // only next to its own tak leg.
       expect(forbetNormalizer.normalizeMarket({
         bookmakerMarketId: "-8041",
         name: "Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola",
         selections: [{ name: "nie", odds: 4.7 }],
       }, ctxEC)).toBeNull();
-      expect(warn).toHaveBeenCalledTimes(3);
+      // Duplicated nie leg: which price is the real one cannot be told.
+      expect(forbetNormalizer.normalizeMarket({
+        bookmakerMarketId: "-8041",
+        name: "Wydarzy się min. jedno z: Everton wygra lub obie drużyny strzelą gola",
+        selections: [{ name: "tak", odds: 1.13 }, { name: "nie", odds: 4.7 }, { name: "nie", odds: 5 }],
+      }, ctxEC)).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(4);
       expect(warn.mock.calls.every((call) => String(call[0]).includes("RESULT_OR_BTTS"))).toBe(true);
     } finally {
       warn.mockRestore();

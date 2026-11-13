@@ -170,22 +170,26 @@ describe("totalbet api-client fetchLeagueEvents", () => {
     }
   });
 
-  it("reports an empty category explicitly", async () => {
+  // An empty listing is not an error (README §3 empty-listing rule): `error`
+  // stays for transport and payload failures, `empty` carries the diagnosis.
+  it("reports an empty category explicitly, as empty and not as an error", async () => {
     const U = "00000000-0000-0000-0000-000000000000";
     const body = { data: { events: [] }, state: "success", _meta: { pagination: { total_pages: 1, current_page: 1, items_count: 0, per_page: 100 }, event_types: [] } };
     const r = await fetchLeagueEvents(U, fake({ [buildListUrl(U, 1)]: ok(body) }));
-    expect(r.events).toEqual([]);
-    expect(r.error).toBe("No prematch events for category 00000000-0000-0000-0000-000000000000 (items_count=0, event_types=[])");
+    expect(r).toEqual({
+      events: [],
+      empty: "No prematch events for category 00000000-0000-0000-0000-000000000000 (items_count=0, event_types=[])",
+    });
   });
 
   it("reports a category whose events all belong elsewhere as empty", async () => {
     // A country-level UUID lists other tournaments: none of them may be kept.
     const ANGLIA = "033125c9-6c26-42b0-b7cf-43940dbeed5c";
     const r = await fetchLeagueEvents(ANGLIA, fake({ [buildListUrl(ANGLIA, 1)]: ok(load("pl-events-list.json")) }));
-    expect(r.events).toEqual([]);
-    expect(r.error).toBe(
-      `No prematch events for category ${ANGLIA} (items_count=20, event_types=[{"count":20,"type":"prematch"},{"count":28,"type":"outright"}])`,
-    );
+    expect(r).toEqual({
+      events: [],
+      empty: `No prematch events for category ${ANGLIA} (items_count=20, event_types=[{"count":20,"type":"prematch"},{"count":28,"type":"outright"}])`,
+    });
   });
 });
 

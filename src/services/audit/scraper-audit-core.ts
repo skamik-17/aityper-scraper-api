@@ -453,6 +453,7 @@ export function buildPrepAuditOutput(opts: BuildPrepOptions): PrepAuditOutput {
 interface MarketAnalysis {
   name: string;
   bookmakerMarketId: string;
+  paramValue?: string;
   groupName: string;
   rawSelections: { name: string; odds: number }[];
   normalized: ReturnType<BookmakerMarketNormalizer["normalizeMarket"]>;
@@ -520,6 +521,7 @@ function analyzeMarket(
   return {
     name: raw.name,
     bookmakerMarketId: String(raw.bookmakerMarketId ?? ""),
+    ...(raw.paramValue !== undefined ? { paramValue: raw.paramValue } : {}),
     groupName: raw.groupName ?? "",
     rawSelections: raw.selections,
     normalized,
@@ -661,10 +663,18 @@ function printMarketDetail(
     console.log(`\n📱 FRONTEND JSON (MarketWithParams format):`);
     console.log(JSON.stringify(frontendJson, null, 2));
   }
+  // The market's own id and line are what the normalizer looked up: without
+  // them a renamed id (a market that fell to OTHER) cannot be read from here.
   console.log(`\n🔧 RAW JSON:`);
   console.log(
     JSON.stringify(
-      { name: analysis.name, groupName: analysis.groupName, selections: analysis.rawSelections },
+      {
+        name: analysis.name,
+        groupName: analysis.groupName,
+        ...(analysis.bookmakerMarketId ? { bookmakerMarketId: analysis.bookmakerMarketId } : {}),
+        ...(analysis.paramValue !== undefined ? { paramValue: analysis.paramValue } : {}),
+        selections: analysis.rawSelections,
+      },
       null,
       2,
     ),

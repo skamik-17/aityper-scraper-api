@@ -250,6 +250,7 @@ const MERGE_DUPLICATE_CODE_MARKETS = new Set<NormalizedMarketType>([
  */
 const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "CARDS_EXACT",
+  "HALF_TIME_HOME_EXACT_GOALS",
   "HALF_TIME_GOAL_RANGE",
   "SECOND_HALF_GOAL_RANGE",
   "HOME_GOAL_RANGE",
@@ -1583,10 +1584,12 @@ function normalizeSelectionForMarket(
       return trimmed as NormalizedSelection;
 
     case "HALF_TIME_HOME_EXACT_GOALS":
-      // Unlike the away variant, the home catalog code has no separate "3+"
-      // tier — "3" itself is the open 3-or-more bucket. Fuksiarz quotes
-      // discrete 3/4/5 tails that must collapse (and merge) into it.
-      if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) >= 3) return "3" as NormalizedSelection;
+      // The home catalog code's bands are 0/1/2/2+/3, and "3" means exactly
+      // 3 (unlike the away variant, there is no "3+"). Fuksiarz quotes the
+      // discrete counts 3, 4 and 5: "3" keeps its own price, while 4 and 5
+      // have no band and are dropped (UNKNOWN_FILTERED_MARKETS). Merging them
+      // into "3" would publish a 3-or-more price as exactly 3.
+      if (/^\d+$/.test(trimmed) && parseInt(trimmed, 10) >= 4) return "UNKNOWN";
       return trimmed as NormalizedSelection;
 
     case "HALF_TIME_HOME_EXACT_CORNERS":

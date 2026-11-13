@@ -50,22 +50,48 @@ type Family = "result" | "twoWay" | "doubleChance" | "total" | "asian" | "europe
 type TotalbetMarketOutput = NormalizedMarketOutput & { marketName: string };
 
 /** Phase-1 keys (grid-parser bookmakerMarketId) -> catalog code. */
+/**
+ * Slug prefix of the 1st-half "Suma goli" components since 2026-11-13: totalbet
+ * mis-decodes the "ł" of "1. połowa" into "a" + U+030A + U+0082.
+ */
+const HALF_SUMA_GOLI = "1.poa\u030a\u0082owa";
+
+/**
+ * Raw keys of the current (2026-11-13) layout: `mid:<UOF market_id>` of a column
+ * header, `slug:<component slug>`, and `col:<component slug>#<header text>` for a
+ * column whose header has no market_id (grid-parser columnKey).
+ */
 export const TOTALBET_MARKET_KEY_TO_CODE: Readonly<Record<string, NormalizedMarketType>> = Object.freeze({
   "mid:10": "DOUBLE_CHANCE", "mid:63": "HALF_TIME_DOUBLE_CHANCE", "mid:85": "SECOND_HALF_DOUBLE_CHANCE",
   "mid:29": "BTTS", "mid:75": "HALF_TIME_BTTS", "mid:95": "SECOND_HALF_BTTS",
   "mid:11": "DRAW_NO_BET", "mid:64": "HALF_TIME_DRAW_NO_BET", "mid:86": "SECOND_HALF_DRAW_NO_BET",
   "mid:60": "HALF_TIME_RESULT", "mid:83": "SECOND_HALF_RESULT",
-  "mid:26": "ODD_EVEN_GOALS", "mid:74": "HALF_TIME_ODD_EVEN_GOALS", "mid:94": "SECOND_HALF_ODD_EVEN_GOALS",
+  "col:sumagoli_parzyste/nieparzyste#Cały mecz": "ODD_EVEN_GOALS",
+  "col:sumagoli_parzyste/nieparzyste#1 połowa": "HALF_TIME_ODD_EVEN_GOALS",
+  "mid:94": "SECOND_HALF_ODD_EVEN_GOALS",
   "mid:32": "HOME_TEAM_TO_SCORE", "mid:31": "AWAY_TEAM_TO_SCORE",
   "mid:77": "HALF_TIME_HOME_TO_SCORE", "mid:76": "HALF_TIME_AWAY_TO_SCORE",
   "mid:97": "SECOND_HALF_HOME_TO_SCORE", "mid:96": "SECOND_HALF_AWAY_TO_SCORE",
-  "slug:suma": "TOTAL_GOALS", "slug:1_poaowa_suma": "HALF_TIME_TOTAL_GOALS", "slug:2_poaowa_suma": "SECOND_HALF_TOTAL_GOALS",
-  "slug:competitor1_total_suma": "HOME_TEAM_TOTAL_GOALS", "slug:competitor2_total_suma": "AWAY_TEAM_TOTAL_GOALS",
-  "slug:1_poaowa_competitor_1_suma_goli": "HALF_TIME_HOME_TEAM_TOTAL_GOALS", "slug:1_poaowa_competitor_2_suma_goli": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+  "slug:sumagoli": "TOTAL_GOALS", [`slug:${HALF_SUMA_GOLI}_sumagoli`]: "HALF_TIME_TOTAL_GOALS", "slug:2_poaowa_suma": "SECOND_HALF_TOTAL_GOALS",
+  "slug:{competitor1}_sumagoli": "HOME_TEAM_TOTAL_GOALS", "slug:{competitor2}_sumagoli": "AWAY_TEAM_TOTAL_GOALS",
+  [`slug:${HALF_SUMA_GOLI}_{competitor1}_sumagoli`]: "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+  [`slug:${HALF_SUMA_GOLI}_{competitor2}_sumagoli`]: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
   "slug:2_poaowa_competitor1_suma_goli_": "SECOND_HALF_HOME_TEAM_TOTAL_GOALS", "slug:2_poaowa_competitor2_suma_goli_": "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS",
   "slug:handicap": "ASIAN_HANDICAP", "slug:1_poaowa_handicap": "FIRST_HALF_ASIAN_HANDICAP", "slug:2_poaowa_handicap": "SECOND_HALF_ASIAN_HANDICAP",
   "slug:handicap_hcp": "EUROPEAN_HANDICAP", "slug:1_poaowa_handicap_3way": "FIRST_HALF_EUROPEAN_HANDICAP", "slug:2_poaowa_handicap_3": "SECOND_HALF_EUROPEAN_HANDICAP",
   "slug:dokaadny_wynik": "CORRECT_SCORE", "slug:1_poaowa_dokaadny_wynik": "HALF_TIME_CORRECT_SCORE", "slug:2_poaowa_dokaadny_wynik": "SECOND_HALF_CORRECT_SCORE",
+});
+
+/**
+ * Keys of the same markets before the 2026-11-13 layout ("Total (suma)"
+ * components, odd/even columns 26/74). Still mapped, so an event or league that
+ * keeps the old layout normalizes the same; not part of the drift list.
+ */
+export const TOTALBET_LEGACY_MARKET_KEY_TO_CODE: Readonly<Record<string, NormalizedMarketType>> = Object.freeze({
+  "slug:suma": "TOTAL_GOALS", "slug:1_poaowa_suma": "HALF_TIME_TOTAL_GOALS",
+  "slug:competitor1_total_suma": "HOME_TEAM_TOTAL_GOALS", "slug:competitor2_total_suma": "AWAY_TEAM_TOTAL_GOALS",
+  "slug:1_poaowa_competitor_1_suma_goli": "HALF_TIME_HOME_TEAM_TOTAL_GOALS", "slug:1_poaowa_competitor_2_suma_goli": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+  "mid:26": "ODD_EVEN_GOALS", "mid:74": "HALF_TIME_ODD_EVEN_GOALS",
 });
 
 /** Id-less, line-less markets by normalizeMarketName(name): only the detail and list-fallback 1X2. */
@@ -103,17 +129,21 @@ const TEAM_COLUMN_SIDE: Readonly<Record<string, "HOME" | "AWAY">> = Object.freez
 });
 
 /**
- * The six team-total line components. Their keys are CMS slugs ("competitor1"),
- * so the team in the displayed name, "[N. połowa - ]Leeds - Total (suma)", must
- * be the code's side; otherwise the market is dropped rather than re-sided.
+ * The team-total line components. Their keys are CMS slugs ("competitor1"), so
+ * the team in the displayed name, "[N. połowa - ]Leeds - Total (suma)" or, since
+ * 2026-11-13, "[1. połowa - ]Leeds - suma goli", must be the code's side;
+ * otherwise the market is dropped rather than re-sided.
  */
 const TEAM_TOTAL_SIDE: Readonly<Record<string, "HOME" | "AWAY">> = Object.freeze({
+  "slug:{competitor1}_sumagoli": "HOME", "slug:{competitor2}_sumagoli": "AWAY",
+  [`slug:${HALF_SUMA_GOLI}_{competitor1}_sumagoli`]: "HOME", [`slug:${HALF_SUMA_GOLI}_{competitor2}_sumagoli`]: "AWAY",
+  "slug:2_poaowa_competitor1_suma_goli_": "HOME", "slug:2_poaowa_competitor2_suma_goli_": "AWAY",
+  // pre-2026-11-13 keys
   "slug:competitor1_total_suma": "HOME", "slug:competitor2_total_suma": "AWAY",
   "slug:1_poaowa_competitor_1_suma_goli": "HOME", "slug:1_poaowa_competitor_2_suma_goli": "AWAY",
-  "slug:2_poaowa_competitor1_suma_goli_": "HOME", "slug:2_poaowa_competitor2_suma_goli_": "AWAY",
 });
 
-const TEAM_TOTAL_NAME = /^(?:\d\. połowa - )?(.+) - Total \(suma\)$/i;
+const TEAM_TOTAL_NAME = /^(?:\d\. połowa - )?(.+) - (?:Total \(suma\)|suma goli)$/i;
 
 const SIDES_BY_FAMILY: Readonly<Partial<Record<Family, readonly Side[]>>> = Object.freeze({
   result: ["HOME", "DRAW", "AWAY"],
@@ -194,7 +224,10 @@ function resolveMarketCode(raw: RawBookmakerMarket): {
   const rawId =
     raw.bookmakerMarketId === undefined || raw.bookmakerMarketId === null ? undefined : String(raw.bookmakerMarketId);
 
-  const byId = rawId === undefined ? undefined : lookup(TOTALBET_MARKET_KEY_TO_CODE, rawId);
+  const byId =
+    rawId === undefined
+      ? undefined
+      : (lookup(TOTALBET_MARKET_KEY_TO_CODE, rawId) ?? lookup(TOTALBET_LEGACY_MARKET_KEY_TO_CODE, rawId));
   if (byId) return { marketCode: byId, matchedBy: "id", rawId };
 
   // Names identify only id-less, line-less markets: a component that carries an id or a
@@ -272,6 +305,32 @@ function teamLabelAgrees(rawId: string | undefined, name: string, ctx: Normaliza
   return true;
 }
 
+type Period = "FULL" | "FIRST_HALF" | "SECOND_HALF";
+
+/** The period a catalog code is about. */
+function codePeriod(code: NormalizedMarketType): Period {
+  if (code.startsWith("HALF_TIME_") || code.startsWith("FIRST_HALF_")) return "FIRST_HALF";
+  if (code.startsWith("SECOND_HALF_")) return "SECOND_HALF";
+  return "FULL";
+}
+
+/** The period a slug component's displayed name shows: "1. połowa - …", "2. Połowa - …", or none (whole match). */
+function namePeriod(name: string): Period {
+  const half = /^([12])\.\s*po[łl]owa\b/iu.exec(collapseWhitespace(name))?.[1];
+  return half === "1" ? "FIRST_HALF" : half === "2" ? "SECOND_HALF" : "FULL";
+}
+
+/**
+ * True unless the market is slug-keyed and its displayed name shows another period
+ * than its code. A slug is a CMS key that carries the period on its own
+ * ("1_poaowa_suma"); a name that disagrees means a reused or misread slug.
+ * Column markets (mid keys) are not checked: their period is the column header.
+ */
+function periodAgrees(rawId: string | undefined, marketCode: NormalizedMarketType, name: string): boolean {
+  if (rawId === undefined || !rawId.startsWith("slug:")) return true;
+  return namePeriod(name) === codePeriod(marketCode);
+}
+
 /**
  * True when every selection carries the market's own line. The grid parser reads a
  * handicap line from the grid position; Totalbet also prints it in each selection
@@ -335,6 +394,7 @@ export const totalbetNormalizer: BookmakerMarketNormalizer = {
     const paramValue = lineFor(family, raw.paramValue);
     if (paramValue === null) return null;
     if (!teamLabelAgrees(rawId, raw.name, ctx)) return null;
+    if (!periodAgrees(rawId, marketCode, raw.name)) return null;
 
     const selections = raw.selections.map((sel) => ({
       code: selectionCode(family, sel.name, ctx),

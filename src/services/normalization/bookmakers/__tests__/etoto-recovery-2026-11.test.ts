@@ -195,10 +195,9 @@ describe("etoto final review fixes 2026-11", () => {
 
   // "<X> lub obie strzelą" is a complementary Tak/Nie book: France v Morocco
   // -8041 Tak 1.15 / Nie 4.7 implies 0.870 + 0.213 = 1.08. So "Nie" is
-  // NOT(<X> or BTTS), i.e. neither happens. The catalog <SIDE>_OR_BTTS_NO is
-  // "<X> or BTTS-No", a different and much shorter-priced bet, so only the tak
-  // leg is published (the forbet RESULT_OR_BTTS rule).
-  it("etoto 'X lub obie strzelą' publishes only the tak leg (golden France v Morocco raw)", () => {
+  // NOT(<X> or BTTS), i.e. neither happens, which is what the catalog's
+  // <SIDE>_OR_BTTS_NO now says ("Ani 1, ani obie strzelą"). Both legs publish.
+  it("etoto 'X lub obie strzelą' publishes tak as <SIDE>_OR_BTTS_YES and nie as <SIDE>_OR_BTTS_NO (golden France v Morocco raw)", () => {
     const tn = (tak: number, nie: number) => [{ name: "Tak", odds: tak }, { name: "Nie", odds: nie }];
     const home = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8041", name: "Francja wygra lub obie strzelą",
       selections: tn(1.15, 4.7) }, ctxFM);
@@ -207,16 +206,17 @@ describe("etoto final review fixes 2026-11", () => {
     const away = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8043", name: "Maroko wygra lub obie strzelą",
       selections: tn(1.7, 2.03) }, ctxFM);
     expect([home?.marketKey, draw?.marketKey, away?.marketKey]).toEqual(["RESULT_OR_BTTS", "RESULT_OR_BTTS", "RESULT_OR_BTTS"]);
-    expect(codesOf(home)).toEqual([["HOME_OR_BTTS_YES", 1.15]]);
-    expect(codesOf(draw)).toEqual([["DRAW_OR_BTTS_YES", 1.73]]);
-    expect(codesOf(away)).toEqual([["AWAY_OR_BTTS_YES", 1.7]]);
+    expect(codesOf(home)).toEqual([["HOME_OR_BTTS_YES", 1.15], ["HOME_OR_BTTS_NO", 4.7]]);
+    expect(codesOf(draw)).toEqual([["DRAW_OR_BTTS_YES", 1.73], ["DRAW_OR_BTTS_NO", 2]]);
+    expect(codesOf(away)).toEqual([["AWAY_OR_BTTS_YES", 1.7], ["AWAY_OR_BTTS_NO", 2.03]]);
   });
 
-  it("etoto RESULT_OR_BTTS with no single resolvable tak leg is dropped", () => {
+  it("etoto RESULT_OR_BTTS with no single resolvable tak leg, or a duplicated nie leg, is dropped", () => {
     const run = (selections: Array<{ name: string; odds: number }>) =>
       etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8041", name: "Francja wygra lub obie strzelą", selections }, ctxFM);
     expect(run([{ name: "Nie", odds: 4.7 }])).toBeNull();
     expect(run([{ name: "Tak", odds: 1.15 }, { name: "Tak", odds: 1.2 }])).toBeNull();
+    expect(run([{ name: "Tak", odds: 1.15 }, { name: "Nie", odds: 4.7 }, { name: "Nie", odds: 5 }])).toBeNull();
     expect(run([{ name: "Tak", odds: 1.15 }, { name: "Może", odds: 4.7 }])).toBeNull();
   });
 

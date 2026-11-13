@@ -5450,7 +5450,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","DRAW_OVER","DRAW_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli w 1. połowie", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli w 1. połowie", DRAW_OVER: "Remis i powyżej {param} goli w 1. połowie", DRAW_UNDER: "Remis i poniżej {param} goli w 1. połowie", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli w 1. połowie", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli w 1. połowie" },
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa lub powyżej {param} goli w 1. połowie", HOME_UNDER: "{homeTeam} wygrywa lub poniżej {param} goli w 1. połowie", DRAW_OVER: "Remis lub powyżej {param} goli w 1. połowie", DRAW_UNDER: "Remis lub poniżej {param} goli w 1. połowie", AWAY_OVER: "{awayTeam} wygrywa lub powyżej {param} goli w 1. połowie", AWAY_UNDER: "{awayTeam} wygrywa lub poniżej {param} goli w 1. połowie" },
     displayOrder: 500,
   },
   {
@@ -8677,11 +8677,11 @@ const WAVE_EXPANSION_MARKETS: MarketCatalogEntry[] = [
     category: MarketCategory.KOMBINACJE,
     subCategory: "kombinacje",
     labels: { pl: "Wynik meczu lub obie strzelą", en: "Result or Btts" },
-    descriptions: { pl: "Zakład wygrywa, jeśli spełni się wybrany wynik meczu albo wybrany wariant obu drużyn strzelających gola — wystarczy jeden z tych warunków.", en: "The bet wins if the chosen match result happens or the chosen both-teams-to-score outcome happens — either condition is enough." },
+    descriptions: { pl: "Opcja „lub obie strzelą” wygrywa, jeśli padnie wybrany wynik meczu albo obie drużyny strzelą gola — wystarczy jeden z tych warunków. Opcja „ani…, ani obie strzelą” to zakład przeciwny: wygrywa tylko wtedy, gdy nie spełni się żaden z nich.", en: "The \"or both teams score\" pick wins if the chosen match result happens or both teams score — either condition is enough. The \"neither…, nor both teams score\" pick is the opposite bet: it wins only if neither condition happens." },
     hasParameter: false,
     selections: ["HOME_OR_BTTS_YES", "AWAY_OR_BTTS_YES", "DRAW_OR_BTTS_YES", "HOME_OR_BTTS_NO", "AWAY_OR_BTTS_NO", "DRAW_OR_BTTS_NO"],
     viewType: ViewType.COMBINATION,
-    descriptionTemplates: { HOME_OR_BTTS_YES: "{homeTeam} wygrywa lub obie strzelą", AWAY_OR_BTTS_YES: "{awayTeam} wygrywa lub obie strzelą", DRAW_OR_BTTS_YES: "Remis lub obie strzelą", HOME_OR_BTTS_NO: "{homeTeam} wygrywa lub nie obie drużyny strzelą", AWAY_OR_BTTS_NO: "{awayTeam} wygrywa lub nie obie drużyny strzelą", DRAW_OR_BTTS_NO: "Remis lub nie obie drużyny strzelą" },
+    descriptionTemplates: { HOME_OR_BTTS_YES: "{homeTeam} wygrywa lub obie strzelą", AWAY_OR_BTTS_YES: "{awayTeam} wygrywa lub obie strzelą", DRAW_OR_BTTS_YES: "Remis lub obie strzelą", HOME_OR_BTTS_NO: "{homeTeam} nie wygrywa i przynajmniej jedna drużyna nie strzela gola", AWAY_OR_BTTS_NO: "{awayTeam} nie wygrywa i przynajmniej jedna drużyna nie strzela gola", DRAW_OR_BTTS_NO: "Brak remisu i przynajmniej jedna drużyna nie strzela gola" },
     displayOrder: 476,
   },
   {
@@ -10074,10 +10074,12 @@ export const SELECTION_LABELS: Record<string, string> = {
   // RESULT_AND_FIRST_GOAL extra outcome
   DRAW_NONE: "X i brak gola",
 
-  // RESULT_OR_BTTS
-  HOME_OR_BTTS_YES: "1 lub obie strzelą", HOME_OR_BTTS_NO: "1 lub nie obie strzelą",
-  DRAW_OR_BTTS_YES: "X lub obie strzelą", DRAW_OR_BTTS_NO: "X lub nie obie strzelą",
-  AWAY_OR_BTTS_YES: "2 lub obie strzelą", AWAY_OR_BTTS_NO: "2 lub nie obie strzelą",
+  // RESULT_OR_BTTS. Every bookmaker that quotes it (etoto, superbet, forbet)
+  // prices "<X> lub obie strzelą" as a Tak/Nie pair, so <SIDE>_OR_BTTS_NO is
+  // NOT(<X> or BTTS): neither the result nor both teams scoring.
+  HOME_OR_BTTS_YES: "1 lub obie strzelą", HOME_OR_BTTS_NO: "Ani 1, ani obie strzelą",
+  DRAW_OR_BTTS_YES: "X lub obie strzelą", DRAW_OR_BTTS_NO: "Ani X, ani obie strzelą",
+  AWAY_OR_BTTS_YES: "2 lub obie strzelą", AWAY_OR_BTTS_NO: "Ani 2, ani obie strzelą",
 
   // HALFTIME_FULLTIME_AND_BTTS
   HOME_HOME_YES: "1/1 i tak", HOME_HOME_NO: "1/1 i nie", HOME_DRAW_YES: "1/X i tak",

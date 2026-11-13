@@ -82,15 +82,20 @@ describe("BetbyScraper", () => {
     expect(r.success).toBe(false); expect(r.error).toContain("fetch HTTP 404 https://api-h-c7818b61-608.sptpub.com/");
   });
 
-  it("unknown league fails fast and zero upcoming matches is a diagnosed failure", async () => {
+  // Controller ruling 22 / README §3: a snapshot with no upcoming match of the
+  // tournament is an empty listing, `success: true, matches: []` (run status
+  // `empty`), with the diagnosis kept in `error`.
+  it("unknown league fails fast and zero upcoming matches is a diagnosed empty listing", async () => {
     const f = createEvidenceFetch("betters");
     const r1 = await new BettersPlaywrightScraper({ fetchText: f, eventDelayMs: 0 }).scrapeFullOffer("unknown-league");
     expect(r1).toMatchObject({ success: false, error: "Unknown league: unknown-league" });
     expect(f.calls).toHaveLength(0);
     const late = new BettersPlaywrightScraper({ fetchText: createEvidenceFetch("betters"), now: () => Date.parse("2027-06-01T00:00:00Z"), eventDelayMs: 0 });
     const r2 = await late.scrapeFullOffer("premier-league");
-    expect(r2.success).toBe(false);
+    expect(r2.success).toBe(true);
+    expect(r2.matches).toEqual([]);
     expect(r2.error).toMatch(/0 upcoming matches for tournament 1669818860469096448 in snapshot 1793982002415/);
+    expect(late.lastRunStats).toEqual({ full: [], listingOnly: [], failed: [] });
   });
 
   it("scrapeLeague returns listing 1X2 and scrapeMatchDetails reads the event endpoint", async () => {

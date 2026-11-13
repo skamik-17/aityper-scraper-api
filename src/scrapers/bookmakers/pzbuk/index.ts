@@ -17,7 +17,7 @@ import type {
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
+import { buildPzbukMatchOffer } from "./full-offer-mapper.js";
 
 import {
   navigateToLeaguePage,
@@ -52,12 +52,6 @@ interface PZBukCachedEvent {
   selections: PZBukSelection[];
 }
 
-const eventsCache = new ScraperCache<PZBukCachedEvent>({
-  name: "pzbuk-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class PzbukPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "pzbuk";
   config: ScraperConfig;
@@ -75,26 +69,6 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(
-    events: PZBukEvent[],
-    markets: PZBukMarket[],
-    selections: PZBukSelection[]
-  ): void {
-    const entries = events.map((event) => ({
-      key: event.id,
-      value: {
-        event,
-        markets: markets.filter((m) => m.eventId === event.id),
-        selections: selections.filter((s) => s.eventId === event.id),
-      },
-    }));
-    eventsCache.setMany(entries);
-  }
-
-  private getCachedEvent(eventId: string): PZBukCachedEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   private addTransportStats(diagnostics: CaptureDiagnostics): void {
@@ -131,12 +105,6 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
 
         console.log(
           `[PZBuk] Captured ${wsData.events.length} events, ${wsData.selections?.length || 0} selections`
-        );
-
-        this.updateCache(
-          wsData.events,
-          wsData.markets || [],
-          wsData.selections || []
         );
 
         const matches: RawScrapedOdds[] = [];
@@ -226,19 +194,8 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
   async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
     const startTime = Date.now();
 
-    const eventIdMatch = eventUrl.match(/\/event\/(\d+)/);
-    const eventId = eventIdMatch?.[1];
-
-    if (eventId) {
-      const cached = this.getCachedEvent(eventId);
-      if (cached) {
-        return this.buildMatchDetailResult(cached, eventUrl, startTime);
-      }
-    }
-
-    // The cache lookup above keeps its legacy "/event/<id>" pattern on purpose
-    // (a hit would serve the thin league snapshot). The capture filter must
-    // match the real "/events/<id>-<slug>" URL, or any event's payload is merged.
+    // The capture filter must match the real "/events/<id>-<slug>" URL, or
+    // any event's payload is merged.
     const captureEventId = eventUrl.match(/\/events\/(\d+)/)?.[1];
 
     return this.executeWithBrowser(
@@ -262,7 +219,6 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         }
 
         const event = wsData.events[0];
-        this.updateCache([event], wsData.markets, wsData.selections);
 
         const cached: PZBukCachedEvent = {
           event,
@@ -420,8 +376,6 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
             if (!eventState) {
               recordFailure(`${label}: ${describeCaptureFailure(diagnostics)}`);
             } else {
-              this.updateCache([event], eventState.markets, eventState.selections);
-
               const markets = parseAllMarkets(eventState, event.id, teams);
 
               if (markets.length === 0) {
@@ -429,16 +383,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
                   `${label}: 0 markets parsed from ${eventState.selections.length} selections`
                 );
               } else {
-                matches.push({
-                  matchId: event.id,
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl,
-                  markets,
-                  startTime: event.startingOn,
-                  scrapedAt: new Date(),
-                });
+                matches.push(buildPzbukMatchOffer(event, teams, markets, leagueSlug, new Date()));
 
                 const groups = diagnostics.groups ?? { declared: [], seen: [] };
                 console.log(

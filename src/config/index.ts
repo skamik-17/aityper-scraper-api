@@ -37,10 +37,8 @@ export const CONFIG = {
 
   // Scraper settings
   SCRAPERS_ON: process.env.SCRAPERS_ON !== "false", // Default: true, set to "false" to disable
-  SCRAPE_INTERVAL_MINUTES: parseInt(
-    process.env.SCRAPE_INTERVAL_MINUTES || "30"
-  ),
-  SCRAPE_CRON: `*/${process.env.SCRAPE_INTERVAL_MINUTES || "30"} * * * *`,
+  // Validated by validateConfig (an integer 1-1440): the loop starts runs this far apart, ±10 %
+  SCRAPE_INTERVAL_MINUTES: Number(process.env.SCRAPE_INTERVAL_MINUTES ?? "30"),
 
   // Alerts: a bookmaker alert fires once its failure streak reaches this many runs.
   // The webhook (Slack-compatible {"text": ...}) is off unless a URL is set.
@@ -77,8 +75,20 @@ export type EnabledLeague = (typeof CONFIG.ENABLED_LEAGUES)[number];
 // Type for enabled bookmakers (subset of PolishBookmaker)
 export type EnabledBookmaker = (typeof CONFIG.BOOKMAKERS)[number];
 
+/** SCRAPE_INTERVAL_MINUTES as minutes: unset -> 30; else an integer 1-1440, or a named error. */
+export function assertScrapeIntervalMinutes(raw: string | undefined): number {
+  if (raw === undefined) return 30;
+  const n = /^\d+$/.test(raw) ? Number(raw) : NaN;
+  if (!Number.isInteger(n) || n < 1 || n > 1440) {
+    throw new Error(`Invalid SCRAPE_INTERVAL_MINUTES "${raw}": expected an integer 1-1440`);
+  }
+  return n;
+}
+
 // Validate required env vars
 export function validateConfig(): void {
+  assertScrapeIntervalMinutes(process.env.SCRAPE_INTERVAL_MINUTES);
+
   const required = ["SUPABASE_URL", "SUPABASE_SERVICE_KEY"];
 
   for (const key of required) {

@@ -8,6 +8,7 @@ import { CONFIG } from "../config/index.js";
 import { waitForDatabase } from "../config/database.js";
 import { runScrapeCycle, type ScrapeResult } from "./scraper-service.js";
 import { RunCoordinator, type RunExecutionContext, type RunRequest } from "./run-coordinator.js";
+import { IntervalScheduler } from "./interval-scheduler.js";
 import type { PolishBookmaker } from "../config/index.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
@@ -26,7 +27,7 @@ export interface MultiLeagueScrapeResult {
   totalUniqueMatches: number;
 }
 
-let scrapeTask: cron.ScheduledTask | null = null;
+let intervalScheduler: IntervalScheduler | null = null;
 let cleanupTask: cron.ScheduledTask | null = null;
 let tsdbSyncTask: cron.ScheduledTask | null = null;
 // Results of startup/interval runs; admin runs (often one bookmaker) are kept apart so they
@@ -181,33 +182,18 @@ export async function runInitialTsdbSync(dbWaitMs: number = STARTUP_DB_WAIT_MS):
  * Start the scheduled scraping job
  */
 export function startScheduler(): void {
-  if (scrapeTask) {
+  if (intervalScheduler) {
     console.log("[Scheduler] Already running");
     return;
   }
 
-  console.log(
-    `[Scheduler] Starting with cron: ${CONFIG.SCRAPE_CRON} (every ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes)`
-  );
+  console.log(`[Scheduler] Starting interval loop: every ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes (±10 %)`);
   console.log(`[Scheduler] Enabled leagues: ${CONFIG.ENABLED_LEAGUES.join(", ")}`);
 
-  // Schedule scraping job
-  scrapeTask = cron.schedule(
-    CONFIG.SCRAPE_CRON,
-    async () => {
-      const started = runCoordinator.start(fullRun("interval"));
-      if (!started.accepted) {
-        const { runId, trigger } = started.running;
-        console.log(`[Scheduler] Previous scrape still running (run ${runId.slice(0, 8)}, ${trigger}), skipping...`);
-        return;
-      }
-      await started.run.done;
-    },
-    {
-      scheduled: true,
-      timezone: "Europe/Warsaw",
-    }
-  );
+  // The next run starts interval ± 10 % after the last one started; a tick never overlaps a run.
+  const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60_000;
+  intervalScheduler = new IntervalScheduler({ intervalMs, coordinator: runCoordinator, request: fullRun });
+  intervalScheduler.start(intervalMs);
 
   // Schedule daily cleanup at 3 AM
   cleanupTask = cron.schedule(
@@ -271,9 +257,9 @@ export function startTsdbSyncJobs(): void {
  * Stop the scheduled scraping job
  */
 export function stopScheduler(): void {
-  if (scrapeTask) {
-    scrapeTask.stop();
-    scrapeTask = null;
+  if (intervalScheduler) {
+    intervalScheduler.stop();
+    intervalScheduler = null;
   }
   if (cleanupTask) {
     cleanupTask.stop();
@@ -292,26 +278,20 @@ export function stopScheduler(): void {
 export function getSchedulerStatus(): {
   isScheduled: boolean;
   isRunning: boolean;
+  currentRun: { runId: string; trigger: string; startedAt: string } | null;
   lastResults: Record<string, ScrapeResult>;
   lastAdminResults: Record<string, ScrapeResult>;
   nextRun: Date | null;
   enabledLeagues: readonly string[];
 } {
-  let nextRun: Date | null = null;
-
-  if (scrapeTask) {
-    // Calculate next run time
-    const now = new Date();
-    const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60 * 1000;
-    nextRun = new Date(Math.ceil(now.getTime() / intervalMs) * intervalMs);
-  }
-
+  const running = runCoordinator.current();
   return {
-    isScheduled: scrapeTask !== null,
-    isRunning: runCoordinator.current() !== null,
+    isScheduled: intervalScheduler !== null,
+    isRunning: running !== null,
+    currentRun: running ? { runId: running.runId, trigger: running.trigger, startedAt: running.startedAt.toISOString() } : null,
     lastResults: Object.fromEntries(lastResults),
     lastAdminResults: Object.fromEntries(lastAdminResults),
-    nextRun,
+    nextRun: intervalScheduler?.nextRunAt() ?? null,
     enabledLeagues: CONFIG.ENABLED_LEAGUES,
   };
 }

@@ -16,6 +16,7 @@
  *   1  the bookmaker failed (dry: scrape_failed or empty; --persist: any other outcome)
  *   2  usage error or unknown bookmaker
  *   3  --persist run refused: database unreachable
+ *   4  --persist refused: a scrape run is in progress or due within 5 min
  *
  * Unlike scripts/audit-probe.ts, whose contract is exit 0 for every probe
  * outcome, this script fails loudly.
@@ -25,6 +26,7 @@ import { closeAllBrowsers, getScraper } from "../src/scrapers/aggregator.js";
 import { normalizeMarketsForBookmaker } from "../src/services/normalization/index.js";
 import { runScrapeAndPersist } from "../src/services/scraper-service.js";
 import { isOkRunStatus } from "../src/services/run-outcome.js";
+import { probeCurrentRun } from "../src/services/run-guard.js";
 import type { FullOfferScraperResult } from "../src/types/full-offer.js";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -190,6 +192,23 @@ async function main(): Promise<number> {
     console.error(`Unknown bookmaker: ${args.bookmaker}`);
     console.error(`Known: ${ALL_POLISH_BOOKMAKERS.join(", ")}`);
     return 2;
+  }
+
+  // A persisting smoke runs outside the server's coordinator: never overlap a scheduled run.
+  if (args.persist) {
+    const url = process.env.SMOKE_HEALTH_URL ?? `http://localhost:${CONFIG.PORT}/api/health`;
+    const probe = await probeCurrentRun(url);
+    if (probe.state === "running") {
+      console.error(`Refusing --persist: scrape run ${probe.run.runId.slice(0, 8)} (${probe.run.trigger}) in progress since ${probe.run.startedAt}`);
+      return 4;
+    }
+    if (probe.state === "due") {
+      console.error(`Refusing --persist: next scheduled run at ${probe.nextScrapeAt} (within 5 min)`);
+      return 4;
+    }
+    if (probe.state === "unreachable") {
+      console.error(`smoke-bookmaker: no server at ${url} (${probe.error}); no scheduled run can overlap`);
+    }
   }
 
   const startedAt = Date.now();

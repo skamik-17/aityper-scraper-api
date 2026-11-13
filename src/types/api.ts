@@ -51,6 +51,9 @@ export interface HealthCheckData {
   lastScrapeCompleted: string | null; // When scrape cycle finished
   lastScrapeDuration: number | null;  // Wall-clock time in seconds
   lastScrapeStats: Record<string, ScrapeStats> | null;
+  /** The interval loop's next start; null while a run is in progress or when not scheduled. */
+  nextScrapeAt: string | null;
+  currentRun: { runId: string; trigger: string; startedAt: string } | null;
 }
 
 // GET /api/health/scrapers: one entry per configured bookmaker

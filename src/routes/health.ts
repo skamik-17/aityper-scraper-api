@@ -58,6 +58,8 @@ router.get("/", asyncHandler(async (_req, res) => {
     lastScrapeCompleted: latestComplete?.toISOString() ?? null,
     lastScrapeDuration: scrapeDuration,
     lastScrapeStats: hasStats ? lastScrapeStats : null,
+    nextScrapeAt: scheduler.nextRun?.toISOString() ?? null,
+    currentRun: scheduler.currentRun,
   };
 
   const response: ApiSuccessResponse<HealthCheckData> = {

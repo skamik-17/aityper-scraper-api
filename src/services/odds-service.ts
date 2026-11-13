@@ -8,6 +8,7 @@ import { getBookmakerStatusSnapshot, type BookmakerHealthMeta } from "./bookmake
 import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, MarketSelectionJson, ViewType, MarketCategory } from "../types/database.js";
 import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
+import { getPlannedNextRun } from "./interval-scheduler.js";
 
 export async function getAllLatestOdds(
   leagueSlug: string = "ekstraklasa",
@@ -172,10 +173,6 @@ export async function getOddsForMatch(
 }
 
 export function getNextUpdateTime(): string {
-  const now = new Date();
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60 * 1000;
-  const nextUpdate = new Date(
-    Math.ceil(now.getTime() / intervalMs) * intervalMs
-  );
-  return nextUpdate.toISOString();
+  return (getPlannedNextRun() ?? new Date(Date.now() + intervalMs)).toISOString();
 }

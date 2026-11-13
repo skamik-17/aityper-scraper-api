@@ -87,6 +87,14 @@ describe("buildScraperHealthReport", () => {
     });
   });
 
+  it("counts every status bucket, stale included", () => {
+    // Run 2 has no stale bookmaker, so the first test cannot tell a counted stale from a dropped one.
+    const snap = snapshotFromRun2();
+    snap.status.lebull = "stale";
+    snap.status.sts = "stale";
+    expect(buildScraperHealthReport("premier-league", snap, null, null, NOW).counts).toEqual({ available: 8, stale: 2, error: 4 });
+  });
+
   it("passes the last run and the last abort through", () => {
     const lastRun: ScrapeStats = {
       startedAt: "2026-11-06T16:00:00.350Z",

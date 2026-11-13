@@ -375,46 +375,7 @@
     },
     {
       "blessed": true,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "MATCH_RESOLUTION_METHOD",
-        "marketKey": "MATCH_RESOLUTION_METHOD",
-        "matchedBy": "name",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "REGULAR_TIME",
-            "label": "Francja regulaminowy czas gry",
-            "odds": 1.43
-          },
-          {
-            "code": "REGULAR_TIME",
-            "label": "Maroko regulaminowy czas gry",
-            "odds": 5.31
-          },
-          {
-            "code": "EXTRA_TIME",
-            "label": "Francja po dogrywce",
-            "odds": 7.97
-          },
-          {
-            "code": "EXTRA_TIME",
-            "label": "Maroko po dogrywce",
-            "odds": 24.59
-          },
-          {
-            "code": "PENALTIES",
-            "label": "Francja po rzutach karnych",
-            "odds": 12.29
-          },
-          {
-            "code": "PENALTIES",
-            "label": "Maroko po rzutach karnych",
-            "odds": 12.29
-          }
-        ]
-      },
+      "expected": null,
       "index": 11,
       "marketCode": "MATCH_RESOLUTION_METHOD",
       "rawName": "W jaki sposób rozstrzygnie się mecz?"

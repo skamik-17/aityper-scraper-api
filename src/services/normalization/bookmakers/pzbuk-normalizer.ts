@@ -22,12 +22,23 @@ import {
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode } from "../../../data/market-catalog.js";
 
+// The id map runs before matchMarketByName and its scope guard, so a non-OTHER
+// entry here wins over the real API name. Only ids proven by a real name or by
+// an odds cross-check may carry a catalog code; every other id is parked in
+// OTHER with its evidence (EXECUTION rule 8).
 const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "1": "MATCH_WINNER",
-  "2": "HALF_TIME_RESULT",
-  "3": "EUROPEAN_HANDICAP",
-  "4": "HALFTIME_FULLTIME",
-  "5": "ASIAN_HANDICAP",
+  // "Zakwalifikowanie się" (to qualify), world-cup-2026_france_morocco.json #13;
+  // was HALF_TIME_RESULT by guess.
+  "2": "TEAM_TO_QUALIFY",
+  // Ids 3/4 were never observed (absent from evidence/pzbuk/market-type-ids-2026-11-06.json
+  // and both goldens). The real full-match handicap is id 14 and HT/FT is id 42.
+  "3": "OTHER",
+  "4": "OTHER",
+  // "W jaki sposób rozstrzygnie się mecz?" with team x method selections
+  // ("Francja regulaminowy czas gry", …), world-cup-2026_france_morocco.json #11:
+  // not an Asian handicap. The name override handles the named market.
+  "5": "OTHER",
   // "1. gol" ({SpecialIntValue1}. goal; "1. gol" is routed by name), evidence/pzbuk/market-type-ids-2026-11-06.json
   "8": "OTHER",
   "10": "DOUBLE_CHANCE",
@@ -75,10 +86,11 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   //   France  vs Morocco        id 19 @0.5 = 1.72/1.93  ==  Morocco 1.70/2.10
   // (France's own 0.5 line is 1.15, nowhere near). Under HOME_TEAM_TOTAL_GOALS
   // that made pzbuk read as "Arsenal to score" at 2.19 against a field of 1.05.
-  // Id 20 never appears in either capture; it is set to the mirror side so the
-  // pair stays consistent — re-verify it the first time a fixture carries it.
   "19": "AWAY_TEAM_TOTAL_GOALS",
-  "20": "HOME_TEAM_TOTAL_GOALS",
+  // Id 20 was set to HOME_TEAM_TOTAL_GOALS as the "mirror" of 19. Refuted: the
+  // home team total is id 18 ("{Competitors[0]} total",
+  // evidence/pzbuk/market-type-ids-2026-11-06.json); id 20 was never observed.
+  "20": "OTHER",
   // "Everton FC Dokładna liczba goli" ({Competitors[0]} exact goals), evidence/pzbuk/market-type-ids-2026-11-06.json
   "21": "OTHER",
   // Audit: id 22 delivered goals-count selections ("0"/"1"/"2"/"3+"),
@@ -122,14 +134,22 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   "36": "OTHER",
   // "Strzelec ostatniego gola" (Last goalscorer), evidence/pzbuk/market-type-ids-2026-11-06.json
   "37": "GOALSCORER_LAST",
-  "38": "AWAY_EXACT_GOALS",
-  "39": "RESULT_AND_BTTS",
+  // Id 38 was guessed AWAY_EXACT_GOALS. Away exact goals is id 22 ("{Competitors[1]}
+  // exact goals", evidence/pzbuk/market-type-ids-2026-11-06.json); id 38 was never observed.
+  "38": "OTHER",
+  // Ids 39/41 were never observed. They would share the trusted keys of id 33
+  // (RESULT_AND_BTTS) and id 504 (DOUBLE_CHANCE_BTTS) without the id-27/id-33
+  // cross-check that id 504's entry requires; a half-scoped 6-outcome variant
+  // passes the combo vocabulary guard and would collide first-seen.
+  "39": "OTHER",
   // Audit r3: id 40 surfaced in RESULT_AND_TOTAL at bogus param "0" with a
   // single UNKNOWN selection — the RESULT_AND_TOTAL shape was never verified
   // for this id; park in OTHER (ids 35/73/502 carry the verified combos).
   "40": "OTHER",
-  "41": "DOUBLE_CHANCE_BTTS",
-  "42": "DOUBLE_CHANCE_TOTAL",
+  "41": "OTHER",
+  // "Połowa/Reg. czas gry" (half-time/full-time), both goldens and
+  // evidence/pzbuk/market-type-ids-2026-11-06.json; was DOUBLE_CHANCE_TOTAL by guess.
+  "42": "HALFTIME_FULLTIME",
   // Audit /audit-match (Arsenal vs Coventry City): ids 43/45/46 were
   // previously unmapped (dropped as unknown markets). Implied P(yes) proves
   // this is the "win both halves / win at least one half" family, block-
@@ -366,6 +386,15 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // /podw[óo]jna szansa/ pattern (this file) would otherwise re-route id 498
   // to DOUBLE_CHANCE via its real API name and reopen the same collision.
   "498": "OTHER",
+  // "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą" (match double chance
+  // & 2nd-half BTTS), evidence/pzbuk/market-type-ids-2026-11-06.json. No catalog
+  // code; without this entry /podw[óo]jna szansa/ in matchMarketByName routes it
+  // to DOUBLE_CHANCE (the id-498 hazard).
+  "499": "OTHER",
+  // "1. Połowa - Podwójna szansa & oba zespoły strzelą" (1st half double chance
+  // & BTTS), evidence/pzbuk/market-type-ids-2026-11-06.json. Parked like 499/503;
+  // HALF_TIME_DOUBLE_CHANCE_BTTS is unverified for this id.
+  "500": "OTHER",
   // "2. Połowa - 1x2 & oba zespoły strzelą" (2nd half - 1x2 & both teams to
   // score), evidence/pzbuk/market-type-ids-2026-11-06.json. The real name
   // supersedes audit r4's full-match RESULT_AND_BTTS reading: the 6-outcome
@@ -451,7 +480,10 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // "Zawodnik z kartką (lub zmiennik)" card market — it was overwriting the
   // real scorer market (id 2179, "Zawodnik (lub zmiennik) strzeli gola"), so
   // goalscorer odds were showing booking prices (Gyokeres 4.09 vs peers 1.9).
-  "2395": "PLAYER_CARDS",
+  // Final review: OTHER, not PLAYER_CARDS. It is the same substitute-inclusive
+  // product as 2179/2186 and not comparable with a plain player-card bet (it
+  // was dropped only because its player selections resolved to UNKNOWN).
+  "2395": "OTHER",
 };
 
 /**
@@ -628,7 +660,11 @@ function normalizeSelectionForMarket(
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
     case "MATCH_RESOLUTION_METHOD": {
-      // "w regulaminowym czasie gry" / "po dogrywce" / "po rzutach karnych"
+      // "w regulaminowym czasie gry" / "po dogrywce" / "po rzutach karnych".
+      // A label that names a side ("Francja regulaminowy czas gry") belongs to
+      // the 6-way team x method market (WIN_METHOD): reading it as the 3-way
+      // REGULAR_TIME would publish one team's price as the match's.
+      if (namesSide(trimmed, ctx)) return "UNKNOWN";
       if (/regulaminow/i.test(trimmed)) return "REGULAR_TIME" as NormalizedSelection;
       if (/dogryw/i.test(trimmed)) return "EXTRA_TIME" as NormalizedSelection;
       if (/karn/i.test(trimmed)) return "PENALTIES" as NormalizedSelection;
@@ -900,6 +936,23 @@ function normalizeSelectionForMarket(
   }
 }
 
+/** Text before the resolution method in a label ("Francja" in "Francja po dogrywce"). */
+const RESOLUTION_METHOD_TAIL = /\s*\b(?:w\s+|po\s+)?(?:regulaminow|dogryw|rzut|karn)[\s\S]*$/i;
+
+/**
+ * True when a match-resolution label names a side: a context team name inside
+ * it (the same test as detectMarketBySelections), or a lead before the method
+ * that resolves to HOME/DRAW/AWAY (Polish team names via the league aliases).
+ */
+function namesSide(label: string, ctx: NormalizationContext): boolean {
+  const lower = label.toLowerCase();
+  const home = ctx.homeTeam.toLowerCase();
+  const away = ctx.awayTeam.toLowerCase();
+  if ((home.length >= 3 && lower.includes(home)) || (away.length >= 3 && lower.includes(away))) return true;
+  const lead = label.replace(RESOLUTION_METHOD_TAIL, "").replace(/[\s/,:;-]+$/, "").trim();
+  return lead !== "" && normalize1x2Selection(lead, ctx.homeTeam, ctx.awayTeam, ctx.league) !== "UNKNOWN";
+}
+
 function parseCombinationSelection(
   selName: string,
   ctx: NormalizationContext
@@ -1121,24 +1174,29 @@ export const pzbukNormalizer: BookmakerMarketNormalizer = {
       return null;
     }
 
-    // Fail closed on composite markets. A code outside the catalog vocabulary,
-    // or one code on two selections, means a label was misread (2026-11-07:
-    // "Brighton & Hove Albion & tak" read as HOME). Storage keeps selection
-    // codes verbatim and the grouper's COMBINATION path publishes them
-    // unfiltered, so drop the market rather than publish a mislabelled price.
-    if (COMBO_SELECTION_CODES.has(marketCode)) {
-      const vocabulary = new Set(getMarketMetadata(marketCode)?.selections ?? []);
+    // Fail closed. One code on two selections, in any non-OTHER market, means
+    // a label was misread or the market is a wider product than its code
+    // (2026-11-07: "Brighton & Hove Albion & tak" read as HOME; the 6-way team
+    // x method market read as the 3-way MATCH_RESOLUTION_METHOD). On composite
+    // markets a code outside the catalog vocabulary is a misread as well.
+    // Storage keeps selection codes verbatim and the grouper keeps the first
+    // quote of a repeated code, so drop the market rather than publish a
+    // mislabelled price.
+    if (marketCode !== "OTHER") {
+      const vocabulary = COMBO_SELECTION_CODES.has(marketCode)
+        ? new Set(getMarketMetadata(marketCode)?.selections ?? [])
+        : null;
       const seen = new Set<string>();
       const misread = selections.filter((s) => {
         const code = String(s.code);
-        const bad = !vocabulary.has(code) || seen.has(code);
+        const bad = (vocabulary !== null && !vocabulary.has(code)) || seen.has(code);
         seen.add(code);
         return bad;
       });
       if (misread.length > 0) {
         console.warn(
           `[pzbuk] Dropping ${marketCode} "${raw.name}" (id: ${raw.bookmakerMarketId ?? "none"}): ` +
-            `unrecognized selections ${misread.map((s) => `"${s.label}" -> ${s.code}`).join(", ")}`
+            `misread or repeated selections ${misread.map((s) => `"${s.label}" -> ${s.code}`).join(", ")}`
         );
         return null;
       }

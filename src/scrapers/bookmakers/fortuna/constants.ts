@@ -41,10 +41,14 @@ export const LEAGUE_URLS: Record<string, string> = {
 /**
  * Tournament IDs for Fortuna API
  * Format: "ufo:tour:XX-XXX"
- * Found via network inspection of the Fortuna API
+ * Found via network inspection of the Fortuna API. Ekstraklasa re-probed on
+ * 2026-11-13 (the old ufo:tour:00-0b9 answers HTTP 404): see
+ * evidence/fortuna/tournament-probe-ekstraklasa.txt under
+ * docs/superpowers/plans/2026-11-06-scraper-recovery/. src/config/leagues.ts
+ * holds the same ids; tournament-ids.test.ts keeps the two copies in sync.
  */
 export const TOURNAMENT_IDS: Record<string, string> = {
-  ekstraklasa: "ufo:tour:00-0b9",       // Ekstraklasa (Poland)
+  ekstraklasa: "ufo:tour:00-05k",       // Ekstraklasa (Poland), "Ekstraklasa Polska"
   "premier-league": "ufo:tour:00-03m",  // Premier League (England)
   laliga: "ufo:tour:00-0h7",            // La Liga (Spain)
   "serie-a": "ufo:tour:00-06t",         // Serie A (Italy)

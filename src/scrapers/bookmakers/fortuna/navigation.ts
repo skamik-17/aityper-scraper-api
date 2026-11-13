@@ -49,7 +49,7 @@ export async function navigateToBaseSite(page: Page): Promise<boolean> {
  * Executes the API request within the browser context
  *
  * @param page - Playwright page with established session
- * @param tournamentId - Fortuna tournament ID (e.g., "ufo:tour:00-0b9")
+ * @param tournamentId - Fortuna tournament ID (e.g., "ufo:tour:00-05k")
  * @returns API response with fixtures or null on error
  */
 export async function fetchFixtures(

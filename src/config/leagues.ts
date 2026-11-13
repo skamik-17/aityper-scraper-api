@@ -23,7 +23,7 @@ export const LEAGUES: LeagueConfig[] = [
     country: "Poland",
     bookmakers: {
       sts: { id: 46, url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/polska/ekstraklasa" },
-      fortuna: { id: "ufo:tour:00-0b9" },
+      fortuna: { id: "ufo:tour:00-05k" },
       betclic: { id: 221 },
       superbet: { id: 644 },
       lvbet: { id: 37669 },

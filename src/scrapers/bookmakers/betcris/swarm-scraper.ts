@@ -34,6 +34,11 @@ function errorText(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+/** A non-zero Swarm code on the listing (see swarm-client.ts onFrame) */
+function isSwarmCodeError(error: unknown): boolean {
+  return /^swarm get code /.test(errorText(error));
+}
+
 /** A dropped or timed-out socket; never a budget or run abort */
 function isReopenable(error: Error | null): error is Error {
   return error !== null && !(error instanceof BudgetExceededError) && /^ws (failed|closed|timeout) /.test(error.message);
@@ -90,9 +95,19 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
         connectMs = Date.now() - start;
 
         const listingStarted = Date.now();
-        const listing = await client.request("get", swarmListingParams(competitionId), SWARM_TRANSPORT.LISTING_TIMEOUT_MS);
+        // 0 games or a Swarm error code may mean a stale partner config (site id or
+        // socket): re-read it and retry once instead of keeping it for up to 6 h.
+        let suspect: string | null;
+        ({ entries, suspect } = await this.listGamesOrSuspect(client, competitionId, league));
+        if (suspect !== null) {
+          console.warn(`[Betcris/Swarm] listing gave ${suspect}; re-reading partnerConfigs and retrying once`);
+          this.configCache.invalidate();
+          void client.close();
+          client = null;
+          ({ client, config } = await this.connect(b, trackedOpen));
+          entries = await this.listGames(client, competitionId, league);
+        }
         listingMs = Date.now() - listingStarted;
-        entries = parseSwarmDataForFullOffer(listing.data?.data ?? {}, league, competitionId);
       } catch (e) {
         const error = errorText(e);
         console.error(`[${this.bookmaker}] Full offer scraper error: ${error}`);
@@ -158,6 +173,27 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
       // Not awaited: a server that ignores our close frame (live: 1006) must not
       // add the session's terminate delay to the result.
       void client?.close();
+    }
+  }
+
+  /** The prematch games of the competition (P1XP2 only) */
+  private async listGames(swarm: SwarmClient, competitionId: number, league: string): Promise<BetcrisListingEntry[]> {
+    const listing = await swarm.request("get", swarmListingParams(competitionId), SWARM_TRANSPORT.LISTING_TIMEOUT_MS);
+    return parseSwarmDataForFullOffer(listing.data?.data ?? {}, league, competitionId);
+  }
+
+  /** The listing, or why it makes the partner config suspect: 0 games or a Swarm error code */
+  private async listGamesOrSuspect(
+    swarm: SwarmClient,
+    competitionId: number,
+    league: string
+  ): Promise<{ entries: BetcrisListingEntry[]; suspect: string | null }> {
+    try {
+      const entries = await this.listGames(swarm, competitionId, league);
+      return { entries, suspect: entries.length === 0 ? "0 games" : null };
+    } catch (e) {
+      if (!isSwarmCodeError(e)) throw e;
+      return { entries: [], suspect: errorText(e) };
     }
   }
 

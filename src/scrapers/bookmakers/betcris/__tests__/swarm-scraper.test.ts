@@ -169,6 +169,48 @@ describe("BetcrisSwarmScraper", () => {
     expect(errors()).toContain(`[betcris] Full offer scraper error: ws closed 1006 ${WS}`);
   });
 
+  /** A fake whose listing reply is `bad(q)` in the first `badSessions` sessions */
+  const badListingFake = (bad: (q: FakeSwarmRequest) => string, badSessions = 1) => {
+    const fake: FakeSwarm = createFakeSwarm(recordedAnswer({ override: (q) =>
+      (q.params?.where?.competition && fake.opened.length <= badSessions ? bad(q) : undefined) }));
+    return fake;
+  };
+  const emptyListing = (q: FakeSwarmRequest) => JSON.stringify({ code: 0, rid: q.rid, data: { data: {} } });
+  const codeListing = (q: FakeSwarmRequest) => JSON.stringify({ code: 12, rid: q.rid, msg: "Invalid site" });
+
+  it.each([
+    ["0 games", emptyListing, "0 games"],
+    ["a non-zero Swarm code", codeListing, `swarm get code 12 ${WS}`],
+  ])("betcris swarm: a listing with %s re-reads partnerConfigs and retries once", async (_label, bad, cause) => {
+    const fake = badListingFake(bad); const h = http();
+    const r = await settle(scraper(fake, h).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: true }); expect(r.error).toBeUndefined();
+    expect(r.matches).toHaveLength(20);
+    expect(h.calls).toEqual([PAGE, PAGE]); expect(fake.opened).toHaveLength(2); expect(fake.closed).toBe(2);
+    expect(warns()).toContain(`[Betcris/Swarm] listing gave ${cause}; re-reading partnerConfigs and retrying once`);
+  });
+
+  it("betcris swarm: 0 games again after the retry is an empty success, no third try", async () => {
+    const fake = badListingFake(emptyListing, 2); const h = http();
+    const r = await settle(scraper(fake, h).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: true, matches: [] });
+    expect(h.calls).toEqual([PAGE, PAGE]); expect(fake.opened).toHaveLength(2);
+  });
+
+  it("betcris swarm: a listing code again after the retry fails with the code", async () => {
+    const fake = badListingFake(codeListing, 2); const h = http();
+    const r = await settle(scraper(fake, h).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: false, matches: [], error: `swarm get code 12 ${WS}` });
+    expect(h.calls).toEqual([PAGE, PAGE]); expect(fake.opened).toHaveLength(2); expect(fake.closed).toBe(2);
+  });
+
+  it("betcris swarm: a listing timeout is not a config problem and is not retried", async () => {
+    const fake = badListingFake(() => "silent" as any); const h = http();
+    const r = await settle(scraper(fake, h).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: false, error: `ws timeout 10000ms ${WS}` });
+    expect(h.calls).toEqual([PAGE]); expect(fake.opened).toHaveLength(1);
+  });
+
   it("betcris swarm: handshake fails twice → handshake cause, config re-read between attempts", async () => {
     const err = () => new Error(`ws handshake HTTP 403 ${WS}`);
     const fake = createFakeSwarm(recordedAnswer(), { openErrors: [err(), err()] }); const h = http(); const s = scraper(fake, h);

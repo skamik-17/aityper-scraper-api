@@ -4,6 +4,7 @@ import {
   findOutliers,
   findArbitrage,
   isExclusiveSelectionSet,
+  matchPairsFromOddsList,
 } from "../../../scripts/odds-outliers.js";
 
 const ARGS = { dev: 0.35, minBooks: 4 } as Parameters<typeof findOutliers>[2];
@@ -575,5 +576,14 @@ describe("findOutliers — absolute/tail probability floor (false-alarm regressi
     const pzbukFinding = findings.find((f) => f.bookmaker === "pzbuk");
     expect(pzbukFinding).toBeDefined();
     expect(pzbukFinding!.severity).toBe("BROKEN");
+  });
+});
+
+describe("listMatches source", () => {
+  it("matchPairsFromOddsList reads /api/odds?league= matches", () => {
+    expect(matchPairsFromOddsList({ success: true, data: { matches: [
+      { homeTeam: "AFC Bournemouth", awayTeam: "Nottingham Forest", markets: {} }, { homeTeam: "", awayTeam: "X" }] } }))
+      .toEqual([{ home: "AFC Bournemouth", away: "Nottingham Forest" }]);
+    expect(matchPairsFromOddsList({ success: false })).toEqual([]);
   });
 });

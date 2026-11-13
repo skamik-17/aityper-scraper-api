@@ -13,6 +13,7 @@ const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, i
 
 const leeds = load("event-detail-leeds-tottenham.trimmed.json").data.event;
 const cp = load("event-detail-crystal-palace-liverpool.core.json").data.event;
+const mcfc = load("event-detail-mancity-fulham-2026-11-13.trimmed.json").data.event;
 const list = load("pl-events-list.json").data.events;
 const pick = (ms: ScrapedMarket[], id: string, p?: string) => ms.find((m) => m.bookmakerMarketId === id && m.paramValue === p)!;
 const pairs = (m: ScrapedMarket) => m.selections.map((s) => [s.name, s.odds]);
@@ -39,6 +40,27 @@ describe("totalbet grid-parser (plan contract)", () => {
     expect(dc.name).toBe("Podwójna szansa - Cały mecz");
     expect(pairs(dc)).toEqual([["Leeds lub remis", 1.5], ["Leeds lub Tottenham", 1.33], ["remis lub Tottenham", 1.42]]);
     expect(pairs(pick(parseEventDetail(leeds), "mid:32"))).toEqual([["nie", 3.15], ["tak", 1.31]]);
+  });
+
+  // 2026-11-13 layout (probe of Manchester City v Fulham): the full-match and
+  // 1st-half odd/even columns moved to "Suma goli - Parzyste/Nieparzyste",
+  // whose header labels carry no market_id. Such a column is keyed by its
+  // component slug and header text, so it keeps an id of its own.
+  it("grid-parser keys an id-less column by its component slug and header", () => {
+    const ms = parseEventDetail(mcfc);
+    expect(pick(ms, "col:sumagoli_parzyste/nieparzyste#Cały mecz")).toMatchObject({
+      name: "Suma goli - Parzyste/Nieparzyste - Cały mecz",
+    });
+    expect(pairs(pick(ms, "col:sumagoli_parzyste/nieparzyste#Cały mecz"))).toEqual([["nieparzysta", 1.9], ["parzysta", 1.74]]);
+    expect(pairs(pick(ms, "col:sumagoli_parzyste/nieparzyste#1 połowa"))).toEqual([["nieparzysta", 1.86], ["parzysta", 1.84]]);
+    // a header with its own market_id keeps the mid key
+    expect(pairs(pick(ms, "mid:94"))).toEqual([["nieparzysta", 1.87], ["parzysta", 1.77]]);
+    // an id-less column of a component without a slug stays id-less
+    const e = structuredClone(mcfc);
+    const oddEven = e.component_lists.find((c: any) => c.slug === "sumagoli_parzyste/nieparzyste");
+    oddEven.slug = "";
+    const bare = parseEventDetail(e).filter((m) => m.name.startsWith("Suma goli - Parzyste/Nieparzyste"));
+    expect(bare.map((m) => m.bookmakerMarketId)).toEqual([undefined, undefined]);
   });
 
   it("grid-parser puts total lines into paramValue", () => {

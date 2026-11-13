@@ -126,6 +126,17 @@ export function parseEventDetail(e: TotalbetDetailEvent): ScrapedMarket[] {
     .map((d) => d.market);
 }
 
+/**
+ * Raw key of one markets_in_columns column: `mid:<market_id>` when the header
+ * carries a UOF market_id, else `col:<component slug>#<header text>` when the
+ * component has a slug, else none. The scraper's drift check reads the same keys.
+ */
+export function columnKey(component: { slug?: unknown }, head: { text: string; market_id?: unknown }): string | undefined {
+  if (head.market_id) return `mid:${head.market_id}`;
+  if (typeof component.slug === "string" && component.slug !== "") return `col:${component.slug}#${cleanName(head.text)}`;
+  return undefined;
+}
+
 /** Calls visit(cell, placement) for every outcome cell of one component. */
 function placeComponent(
   component: TotalbetComponent,
@@ -145,7 +156,9 @@ function placeComponent(
 
   switch (component.type) {
     case "markets_in_columns": {
-      // The header row names each column and carries its UOF market_id.
+      // The header row names each column and carries its UOF market_id. A header
+      // without one (e.g. "Suma goli - Parzyste/Nieparzyste", 2026-11-13) is keyed
+      // by its component slug and header text, "col:<slug>#<text>".
       const [header = [], ...body] = grid;
       for (const row of body) {
         eachOutcome(row, (col) => {
@@ -155,7 +168,7 @@ function placeComponent(
           if (!isLabelCell(head)) return undefined;
           return {
             name: `${groupName} - ${cleanName(head.text)}`,
-            bookmakerMarketId: head.market_id ? `mid:${head.market_id}` : undefined,
+            bookmakerMarketId: columnKey(component, head),
           };
         });
       }

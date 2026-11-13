@@ -1,0 +1,32 @@
+# totalbet probe #2, 2026-11-13 22:31:56-22:32:01Z (read-only, no DB, backend idle: currentRun null, nextScrapeAt 23:27:22Z)
+# command: heavy --live npx tsx docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/totalbet/tools/totalbet-probe2.ts  (runScraperDiscovery over the real TotalbetPlaywrightScraper; its FetchJson records each response)
+# traffic: 21 GETs (1 list + 20 details), same as scripts/totalbet-market-discovery.ts
+# fixture: src/scrapers/bookmakers/totalbet/__tests__/fixtures/event-detail-mancity-fulham-2026-11-13.trimmed.json
+
+## component keys in all 20 recorded PL details (count of events serving each)
+20 col:sumagoli_parzyste/nieparzyste#1 połowa ('markets_in_columns', 'Suma goli - Parzyste/Nieparzyste / 1 połowa')
+20 col:sumagoli_parzyste/nieparzyste#2 połowa ('markets_in_columns', 'Suma goli - Parzyste/Nieparzyste / 2 połowa')
+20 col:sumagoli_parzyste/nieparzyste#Cały mecz ('markets_in_columns', 'Suma goli - Parzyste/Nieparzyste / Cały mecz')
+20 mid:27 ('markets_in_columns', 'Suma goli parzysta/nieparzysta / Brentford')
+20 mid:28 ('markets_in_columns', 'Suma goli parzysta/nieparzysta / Everton')
+20 mid:94 ('markets_in_columns', 'Parzyste/Nieparzyste / 2. Połowa')
+20 slug:1.poa\u030a\x82owa_sumagoli ('total', '1. połowa - Suma goli')
+20 slug:1.poa\u030a\x82owa_{competitor1}_sumagoli ('total', '<team> name')
+20 slug:1.poa\u030a\x82owa_{competitor2}_sumagoli ('total', '<team> name')
+20 slug:2_poaowa_competitor1_suma_goli_ ('total', '<team> name')
+20 slug:2_poaowa_competitor2_suma_goli_ ('total', '<team> name')
+20 slug:2_poaowa_suma ('total', '2. połowa - Total (suma)')
+20 slug:parzystenieparzyste ('markets_in_columns', 'Parzyste/Nieparzyste')
+20 slug:suma_goli_parzysta_nieparzysta ('markets_in_columns', 'Suma goli parzysta/nieparzysta')
+20 slug:sumagoli ('total', 'Suma goli')
+20 slug:sumagoli_parzyste/nieparzyste ('markets_in_columns', 'Suma goli - Parzyste/Nieparzyste')
+20 slug:wskazanapolowa_wynik+sumagoli ('markets_in_columns', 'Połowa - Wynik + suma goli')
+20 slug:{competitor1}_sumagoli ('total', '<team> name')
+20 slug:{competitor2}_sumagoli ('total', '<team> name')
+old keys served by any of the 20 events: none
+
+## offline replay of the 20 recorded details (tools/totalbet-replay2.ts)
+before (master keys): mapped 1093 of 3242 raw markets, 31 codes, 20 drift warnings (mid:26,mid:74,slug:suma,...), goal totals/odd-even (full, 1st half, team) 0
+after: mapped 1615 of 3242, 39 codes, 0 drift warnings, 0 UNKNOWN selections; TOTAL_GOALS 120, HALF_TIME_TOTAL_GOALS 60, HOME_TEAM_TOTAL_GOALS 97, AWAY_TEAM_TOTAL_GOALS 89, HALF_TIME_HOME_TEAM_TOTAL_GOALS 58, HALF_TIME_AWAY_TEAM_TOTAL_GOALS 58, ODD_EVEN_GOALS 20, HALF_TIME_ODD_EVEN_GOALS 20
+all 522 raw markets on the new keys normalize (none dropped by the side or period guards)
+orientation (Man City v Fulham): HOME_TEAM_TO_SCORE tak 1.07 = {competitor1}_sumagoli 0.5 over 1.07; AWAY tak 1.56 = {competitor2} 0.5 over 1.56; HT home tak 1.42 ~ 1st-half {competitor1} 0.5 over 1.44

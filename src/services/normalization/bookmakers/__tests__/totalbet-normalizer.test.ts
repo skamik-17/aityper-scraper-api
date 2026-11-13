@@ -5,6 +5,7 @@ import { resolveStorageMarketKey } from "../../../../repositories/full-offer-rep
 import { normalizer } from "../../index.js";
 import type { NormalizedMarketOutput } from "../../types.js";
 import {
+  TOTALBET_LEGACY_MARKET_KEY_TO_CODE,
   TOTALBET_MARKET_KEY_TO_CODE,
   europeanLineFromScore,
   resolveSide,
@@ -419,9 +420,106 @@ describe("totalbet normalizer (integrity guards)", () => {
     expect(other.selections[0].label).toBe(outs.find(({ m }) => m.name === "Zawodnik strzeli gola")!.m.selections[0].name);
   });
 
-  it("totalbet key table holds exactly the 38 phase-1 keys", () => {
+  it("totalbet key table holds exactly the 38 phase-1 keys of the 2026-11-13 layout", () => {
     expect(Object.keys(TOTALBET_MARKET_KEY_TO_CODE)).toHaveLength(38);
-    expect(Object.keys(TOTALBET_MARKET_KEY_TO_CODE).filter((k) => k.startsWith("mid:"))).toHaveLength(20);
+    expect(Object.keys(TOTALBET_MARKET_KEY_TO_CODE).filter((k) => k.startsWith("mid:"))).toHaveLength(18);
     expect(Object.keys(TOTALBET_MARKET_KEY_TO_CODE).filter((k) => k.startsWith("slug:"))).toHaveLength(18);
+    expect(Object.keys(TOTALBET_MARKET_KEY_TO_CODE).filter((k) => k.startsWith("col:"))).toHaveLength(2);
+  });
+
+  it("totalbet keeps the 8 pre-2026-11-13 keys as legacy aliases of the same codes", () => {
+    expect(TOTALBET_LEGACY_MARKET_KEY_TO_CODE).toEqual({
+      "slug:suma": "TOTAL_GOALS",
+      "slug:1_poaowa_suma": "HALF_TIME_TOTAL_GOALS",
+      "slug:competitor1_total_suma": "HOME_TEAM_TOTAL_GOALS",
+      "slug:competitor2_total_suma": "AWAY_TEAM_TOTAL_GOALS",
+      "slug:1_poaowa_competitor_1_suma_goli": "HALF_TIME_HOME_TEAM_TOTAL_GOALS",
+      "slug:1_poaowa_competitor_2_suma_goli": "HALF_TIME_AWAY_TEAM_TOTAL_GOALS",
+      "mid:26": "ODD_EVEN_GOALS",
+      "mid:74": "HALF_TIME_ODD_EVEN_GOALS",
+    });
+    for (const key of Object.keys(TOTALBET_LEGACY_MARKET_KEY_TO_CODE)) expect(Object.hasOwn(TOTALBET_MARKET_KEY_TO_CODE, key)).toBe(false);
+  });
+});
+
+// The 2026-11-13 layout, recorded by the read-only probe of Manchester City v
+// Fulham (b9241ab0-…, 22:31Z): totalbet renamed "Total (suma)" to "Suma goli"
+// (slugs "sumagoli", "{competitor1}_sumagoli", "1.poa\u030a\u0082owa_sumagoli", …)
+// and moved the full-match / 1st-half odd/even columns into "Suma goli -
+// Parzyste/Nieparzyste", whose headers carry no market_id. Before the fix all
+// of them normalized to OTHER on every Premier League match.
+describe("totalbet normalizer (2026-11-13 layout, Manchester City v Fulham probe)", () => {
+  const ctxMF = { homeTeam: "Manchester City", awayTeam: "Fulham", league: "premier-league", leagueName: "premier-league" };
+  const mf = run("event-detail-mancity-fulham-2026-11-13.trimmed.json", ctxMF);
+
+  it.each([
+    ["TOTAL_GOALS:0.5", { UNDER: 10, OVER: 1.02 }],
+    ["TOTAL_GOALS:2.5", { UNDER: 2.46, OVER: 1.49 }],
+    ["TOTAL_GOALS:5.5", { UNDER: 1.09, OVER: 6.2 }],
+    ["HALF_TIME_TOTAL_GOALS:1.5", { UNDER: 1.65, OVER: 2.11 }],
+    ["HOME_TEAM_TOTAL_GOALS:0.5", { UNDER: 6.9, OVER: 1.07 }],
+    ["HOME_TEAM_TOTAL_GOALS:4.5", { UNDER: 1.06, OVER: 7.2 }],
+    ["AWAY_TEAM_TOTAL_GOALS:0.5", { UNDER: 2.28, OVER: 1.56 }],
+    ["AWAY_TEAM_TOTAL_GOALS:3.5", { UNDER: 1.01, OVER: 12 }],
+    ["HALF_TIME_HOME_TEAM_TOTAL_GOALS:0.5", { UNDER: 2.61, OVER: 1.44 }],
+    ["HALF_TIME_AWAY_TEAM_TOTAL_GOALS:1.5", { UNDER: 1.04, OVER: 8.75 }],
+    ["SECOND_HALF_TOTAL_GOALS:1.5", { UNDER: 1.98, OVER: 1.74 }],
+    ["ODD_EVEN_GOALS", { ODD: 1.9, EVEN: 1.74 }],
+    ["HALF_TIME_ODD_EVEN_GOALS", { ODD: 1.86, EVEN: 1.84 }],
+    ["SECOND_HALF_ODD_EVEN_GOALS", { ODD: 1.87, EVEN: 1.77 }],
+  ])("totalbet maps %s with the recorded odds", (key, expected) => expect(byKey(key, mf)).toEqual(expected));
+
+  it("totalbet publishes every line of the renamed totals", () => {
+    const lines = (code: string) => mf.filter(({ o }) => o?.marketCode === code).map(({ o }) => o!.paramValue);
+    expect(lines("TOTAL_GOALS")).toEqual(["0.5", "1.5", "2.5", "3.5", "4.5", "5.5"]);
+    expect(lines("HALF_TIME_TOTAL_GOALS")).toEqual(["0.5", "1.5", "2.5"]);
+    expect(lines("HOME_TEAM_TOTAL_GOALS")).toEqual(["0.5", "1.5", "2.5", "3.5", "4.5"]);
+    expect(lines("AWAY_TEAM_TOTAL_GOALS")).toEqual(["0.5", "1.5", "2.5", "3.5"]);
+    expect(lines("HALF_TIME_HOME_TEAM_TOTAL_GOALS")).toEqual(["0.5", "1.5", "2.5"]);
+    expect(lines("HALF_TIME_AWAY_TEAM_TOTAL_GOALS")).toEqual(["0.5", "1.5"]);
+  });
+
+  it("totalbet keeps the team totals on their own side (team-to-score cross-check)", () => {
+    // Manchester City strongly favoured: each side's to-score YES equals its own 0.5 OVER
+    expect(byKey("HOME_TEAM_TO_SCORE", mf).YES).toBe(byKey("HOME_TEAM_TOTAL_GOALS:0.5", mf).OVER);
+    expect(byKey("AWAY_TEAM_TO_SCORE", mf).YES).toBe(byKey("AWAY_TEAM_TOTAL_GOALS:0.5", mf).OVER);
+    for (const [own, other] of [["HOME", "AWAY"], ["AWAY", "HOME"]]) {
+      const yes = byKey(`HALF_TIME_${own}_TO_SCORE`, mf).YES;
+      expect(Math.abs(yes - byKey(`HALF_TIME_${own}_TEAM_TOTAL_GOALS:0.5`, mf).OVER)).toBeLessThan(
+        Math.abs(yes - byKey(`HALF_TIME_${other}_TEAM_TOTAL_GOALS:0.5`, mf).OVER),
+      );
+    }
+  });
+
+  it("totalbet leaves no phase-1 goal total or odd/even market on OTHER", () => {
+    const others = new Set(mf.filter(({ o }) => o?.marketCode === "OTHER").map(({ m }) => m.name));
+    expect(others).toEqual(
+      new Set([
+        "Suma goli (przedziały)",
+        "Suma goli + obie drużyny strzelą",
+        "Suma goli parzysta/nieparzysta - Manchester City",
+        "Suma goli parzysta/nieparzysta - Fulham",
+        "Połowa - Wynik + suma goli - 1. Połowa",
+        "Połowa - Wynik + suma goli - 2. Połowa",
+      ]),
+    );
+    expect(mf.flatMap(({ o }) => (o && o.marketCode !== "OTHER" ? o.selections : [])).filter((s) => s.code === "UNKNOWN")).toEqual([]);
+  });
+
+  it("totalbet drops a renamed team total whose name names the other team", () => {
+    const tt = (bookmakerMarketId: string, name: string) =>
+      totalbetNormalizer.normalizeMarket(
+        { bookmakerMarketId, name, paramValue: "0.5", selections: [{ name: "poniżej 0.5", odds: 6.9 }, { name: "powyżej 0.5", odds: 1.07 }] },
+        ctxMF,
+      );
+    expect(tt("slug:{competitor1}_sumagoli", "Fulham - suma goli")).toBeNull();
+    expect(tt("slug:1.poa\u030a\u0082owa_{competitor2}_sumagoli", "1. połowa - Manchester City - Suma goli")).toBeNull();
+    expect(tt("slug:{competitor1}_sumagoli", "1. połowa - Manchester City - Suma goli")).toBeNull();
+    expect(tt("slug:{competitor1}_sumagoli", "Manchester City - suma goli")).toMatchObject({ marketKey: "HOME_TEAM_TOTAL_GOALS:0.5" });
+  });
+
+  it("totalbet still maps the pre-2026-11-13 keys", () => {
+    expect(byKey("TOTAL_GOALS:2.5")).toEqual({ UNDER: 1.82, OVER: 1.89 });
+    expect(Object.keys(byKey("ODD_EVEN_GOALS")).sort()).toEqual(["EVEN", "ODD"]);
   });
 });

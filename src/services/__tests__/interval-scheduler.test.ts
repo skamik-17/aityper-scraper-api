@@ -94,4 +94,33 @@ describe("interval scheduler", () => {
     await vi.advanceTimersByTimeAsync(2 * H);
     expect(exec).toHaveBeenCalledTimes(2);
   });
+
+  it("a null request skips the tick and schedules the next one (plan 10)", async () => {
+    const TEN = 600_000;
+    let calls = 0;
+    // Ticks 1 and 3 have nothing due; tick 2 starts a run
+    const sparse = (trigger: "startup" | "interval"): RunRequest | null => (++calls % 2 === 1 ? null : request(trigger));
+    const s = new IntervalScheduler({ intervalMs: TEN, coordinator, request: sparse, random: () => 0.5 });
+    s.start(5_000);
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(exec).not.toHaveBeenCalled();
+    expect(s.nextRunAt()!.getTime()).toBe(T0 + 5_000 + TEN);
+    expect(vi.mocked(console.log).mock.calls.flat()).toContain("[Scheduler] nothing due");
+    await vi.advanceTimersByTimeAsync(TEN);
+    expect(exec).toHaveBeenCalledTimes(1);
+    s.stop();
+  });
+
+  it("the hourly flag and the modes reach the run request (plan 10)", async () => {
+    const withModes = (trigger: "startup" | "interval"): RunRequest => ({
+      ...request(trigger),
+      modes: { forbet: "incremental" },
+      recordOutcomes: false,
+    });
+    const s = new IntervalScheduler({ intervalMs: H, coordinator, request: withModes, random: () => 0.5 });
+    s.start(5_000);
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(exec.mock.calls[0][0]).toMatchObject({ modes: { forbet: "incremental" }, recordOutcomes: false });
+    s.stop();
+  });
 });

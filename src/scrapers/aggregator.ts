@@ -15,6 +15,15 @@ import { runJobsWithCaps, type CappedJob, type JobCaps } from "./job-scheduler.j
 import { isLeagueSupported } from "../config/leagues.js";
 import { normalizeAndSaveMatches, type NormalizeAndSaveResult } from "../services/scrape-helpers.js";
 import { classifyBookmakerRun, isOkRunStatus, type BookmakerRunOutcome } from "../services/run-outcome.js";
+import { getIncrementalConfig } from "../config/incremental.js";
+import {
+  classifyIncrementalOutcome,
+  finalizeIncrementalPass,
+  incrementalHourLedger,
+  isIncrementalPassResult,
+  type FinalizeResult,
+} from "../services/incremental/incremental-pass.js";
+import { withScrapeMode, type ScrapeMode } from "../services/incremental/scrape-dispatch.js";
 import {
   diffTransportStats,
   formatScrapeMetricsLine,
@@ -132,10 +141,12 @@ function failedUnit(
   bookmaker: PolishBookmaker,
   league: string,
   startedAt: Date,
-  error: unknown
-): { result: FullOfferScraperResult; outcome: BookmakerRunOutcome } {
+  error: unknown,
+  recordOutcome = true
+): { result: FullOfferScraperResult; outcome: BookmakerRunOutcome | null } {
   console.error(`[Aggregator/FullOffer] ${bookmaker} unit threw for ${league}:`, error);
   const result: FullOfferScraperResult = { success: false, bookmaker, league, matches: [], error: `Unit failed: ${errorMessage(error)}` };
+  if (!recordOutcome) return { result, outcome: null };
   const { status, error: cause } = classifyBookmakerRun(result, null);
   const finishedAt = new Date();
   const outcome: BookmakerRunOutcome = {
@@ -168,16 +179,26 @@ function logOutcome(o: BookmakerRunOutcome): void {
  * The returned `result` is the back-compat view kept in `results`: a thrown
  * save reads as a failed result there, as it did before outcomes existed.
  */
+/** One unit's result; `outcome` is null on an incremental tick (plan 10: outcomes stay hourly). */
+interface UnitRun {
+  bookmaker: PolishBookmaker;
+  result: FullOfferScraperResult;
+  outcome: BookmakerRunOutcome | null;
+}
+
 async function runFullOfferForBookmaker(
   runId: string,
   bookmaker: PolishBookmaker,
   league: string,
-  runSignal?: AbortSignal
-): Promise<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }> {
+  runSignal?: AbortSignal,
+  unit: { mode?: ScrapeMode; recordOutcomes?: boolean } = {}
+): Promise<Omit<UnitRun, "bookmaker"> & { metricsStatus: BookmakerRunOutcome["status"] }> {
   const startedAt = new Date();
   const scraper = SCRAPERS[bookmaker];
+  const recordOutcomes = unit.recordOutcomes !== false;
   let result: FullOfferScraperResult;
   let save: NormalizeAndSaveResult | null = null;
+  let record: FinalizeResult = null;
   let saveThrew: string | null = null;
   let marketsFound = 0;
   let scrapeMs = 0;
@@ -194,8 +215,10 @@ async function runFullOfferForBookmaker(
     const statsBefore = readTransportStats(scraper);
     const scrapeStarted = Date.now();
     try {
+      // Plan 10: the unit's pass (full, incremental or plan-only); the scraper itself when not incremental
+      const picked = withScrapeMode(bookmaker, scraper, unit.mode ?? "full", { runId, cfg: getIncrementalConfig() });
       result = await scrapeWithHardDeadline(
-        scraper,
+        picked,
         { runId, bookmaker, league, transport: jobTransport, maxDurationMs: maxDurationMsFor(bookmaker, jobTransport) },
         runSignal
       );
@@ -223,29 +246,45 @@ async function runFullOfferForBookmaker(
       saveMs = Date.now() - saveStarted;
     }
   }
+
+  // Plan 10: stamp the fetched events and confirm the unchanged ones (plan-only passes finalized themselves)
+  const pass = isIncrementalPassResult(result) && result.incremental.mode !== "plan-only" ? result : null;
+  if (pass) record = await finalizeIncrementalPass(pass, runId);
   const finishedAt = new Date();
 
-  const { status, error } = classifyBookmakerRun(result, save);
-  const outcome: BookmakerRunOutcome = {
-    runId,
-    bookmaker,
-    league,
-    status,
-    matchesFound: result.matches.length,
-    marketsFound,
-    marketsSaved: save?.marketsSaved ?? 0,
-    error,
-    startedAt,
-    finishedAt,
-    durationMs: result.duration ?? finishedAt.getTime() - startedAt.getTime(),
-  };
-  logOutcome(outcome);
+  let classified: { status: BookmakerRunOutcome["status"]; error: string | null; matchesFound: number; marketsSaved: number };
+  if (pass) {
+    // Hourly tick: the hour's incremental passes are folded into this outcome; other ticks only note the pass
+    const hour = recordOutcomes ? incrementalHourLedger.take(bookmaker, league) : { passes: 0, failedPasses: 0, firstError: null };
+    const c = classifyIncrementalOutcome(pass, save, record, hour);
+    if (!recordOutcomes) incrementalHourLedger.note(bookmaker, league, pass);
+    classified = { status: c.status, error: c.error, matchesFound: c.matchesFound, marketsSaved: c.marketsSaved };
+  } else {
+    const c = classifyBookmakerRun(result, save);
+    classified = { ...c, matchesFound: result.matches.length, marketsSaved: save?.marketsSaved ?? 0 };
+  }
+  const outcome: BookmakerRunOutcome | null = recordOutcomes
+    ? {
+        runId,
+        bookmaker,
+        league,
+        status: classified.status,
+        matchesFound: classified.matchesFound,
+        marketsFound,
+        marketsSaved: classified.marketsSaved,
+        error: classified.error,
+        startedAt,
+        finishedAt,
+        durationMs: result.duration ?? finishedAt.getTime() - startedAt.getTime(),
+      }
+    : null;
+  if (outcome) logOutcome(outcome);
 
   const metrics: ScrapeMetrics = {
     phasesMs: { scrape: scrapeMs, normalizeSave: saveMs },
     matches: result.matches.length,
     marketsFound,
-    marketsSaved: outcome.marketsSaved,
+    marketsSaved: classified.marketsSaved,
     ...(transport?.http ? { http: transport.http } : {}),
     ...(transport?.ws ? { ws: transport.ws } : {}),
   };
@@ -256,9 +295,9 @@ async function runFullOfferForBookmaker(
   // Keep that: the throw can stop normalizeAndSaveMatches half way through replacing
   // match.markets, so those matches would mix raw and normalized market counts.
   if (saveThrew !== null) {
-    return { result: { ...result, success: false, matches: [], error: saveThrew }, outcome };
+    return { result: { ...result, success: false, matches: [], error: saveThrew }, outcome, metricsStatus: classified.status };
   }
-  return { result, outcome };
+  return { result, outcome, metricsStatus: classified.status };
 }
 
 /** One league of a cycle: what runAllFullOfferScrapers returns. */
@@ -267,8 +306,9 @@ function aggregateLeague(
   league: string,
   startedAt: Date,
   completedAt: Date,
-  runs: Array<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>,
-  interruption: { reason: string; units: number } | null = null
+  runs: UnitRun[],
+  interruption: { reason: string; units: number } | null = null,
+  recordOutcomes = true
 ): FullOfferAggregatedResult {
   const totalDuration = completedAt.getTime() - startedAt.getTime();
   const results = new Map<PolishBookmaker, FullOfferScraperResult>();
@@ -277,9 +317,9 @@ function aggregateLeague(
   // Scrape-based, post-normalization totals, as before outcomes existed.
   let totalMarketsFound = 0;
 
-  for (const { result, outcome } of runs) {
-    results.set(outcome.bookmaker, result);
-    outcomes.push(outcome);
+  for (const { bookmaker, result, outcome } of runs) {
+    results.set(bookmaker, result);
+    if (outcome) outcomes.push(outcome);
 
     if (result.success && result.matches.length > 0) {
       allMatches.push(...result.matches);
@@ -295,7 +335,13 @@ function aggregateLeague(
   const outcomeMatches = outcomes.reduce((sum, o) => sum + o.matchesFound, 0);
   const outcomeMarketsFound = outcomes.reduce((sum, o) => sum + o.marketsFound, 0);
 
-  if (interruption) {
+  if (!recordOutcomes) {
+    // Plan 10: an incremental tick prints no "Run ... completed" line (observability counts those per hour)
+    const state = interruption ? `interrupted (${interruption.reason})` : "completed";
+    console.log(
+      `[Aggregator/FullOffer] Incremental tick ${runId} for ${league} ${state} after ${totalDuration}ms: ${runs.length} passes, ${allMatches.length} matches fetched`
+    );
+  } else if (interruption) {
     console.log(
       `[Aggregator/FullOffer] Run ${runId} interrupted after ${totalDuration}ms (${interruption.reason}): ${outcomes.length} of ${interruption.units} bookmakers finished`
     );
@@ -331,6 +377,10 @@ export interface FullOfferCycleRequest {
   runIds?: Readonly<Record<string, string>>;
   signal?: AbortSignal;
   caps?: JobCaps;
+  /** Plan 10: the pass per bookmaker; absent = "full" for every bookmaker. */
+  modes?: Partial<Record<PolishBookmaker, ScrapeMode>>;
+  /** Plan 10: false on incremental ticks (no outcomes); absent = true. */
+  recordOutcomes?: boolean;
 }
 
 /**
@@ -346,15 +396,15 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
   const unitsByLeague = new Map(
     req.leagues.map((league) => [league, targetBookmakers.filter((bm) => isLeagueSupported(league, bm))])
   );
+  const recordOutcomes = req.recordOutcomes !== false;
   for (const league of req.leagues) {
+    const what = recordOutcomes ? "run" : "incremental tick";
     console.log(
-      `[Aggregator/FullOffer] Starting run ${runIds.get(league)} for ${league} with ${unitsByLeague.get(league)!.length} bookmakers`
+      `[Aggregator/FullOffer] Starting ${what} ${runIds.get(league)} for ${league} with ${unitsByLeague.get(league)!.length} bookmakers`
     );
   }
 
-  const runsByLeague = new Map(
-    req.leagues.map((league) => [league, new Map<PolishBookmaker, { result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>()])
-  );
+  const runsByLeague = new Map(req.leagues.map((league) => [league, new Map<PolishBookmaker, UnitRun>()]));
   const sampler = startCycleSampler();
   const queuedAt = Date.now();
   const jobFor = (bookmaker: PolishBookmaker): CappedJob<void> => {
@@ -379,18 +429,22 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
             }
             const unitStartedAt = new Date();
             try {
-              const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
-              runsByLeague.get(league)!.set(bookmaker, run);
+              const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal, {
+                mode: req.modes?.[bookmaker],
+                recordOutcomes,
+              });
+              runsByLeague.get(league)!.set(bookmaker, { bookmaker, result: run.result, outcome: run.outcome });
               if (run.result.metrics) {
-                leagues[league] = { runId: run.outcome.runId, status: run.outcome.status, ...run.result.metrics };
+                leagues[league] = { runId: runIds.get(league)!, status: run.metricsStatus, ...run.result.metrics };
               }
             } catch (error) {
               if (error instanceof RunInterruptedError) {
                 interrupted = true;
                 break;
               }
-              // Any other throw still yields an outcome, and the job goes on to its next league
-              runsByLeague.get(league)!.set(bookmaker, failedUnit(runIds.get(league)!, bookmaker, league, unitStartedAt, error));
+              // Any other throw still yields an outcome (none on an incremental tick), and the job goes on
+              const failed = failedUnit(runIds.get(league)!, bookmaker, league, unitStartedAt, error, recordOutcomes);
+              runsByLeague.get(league)!.set(bookmaker, { bookmaker, ...failed });
             }
           }
         } finally {
@@ -449,7 +503,7 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
     // Interrupted: the run was aborted before every unit of this league finished
     const interruption =
       req.signal?.aborted && ordered.length < units.length ? { reason: reasonText(req.signal), units: units.length } : null;
-    results.set(league, aggregateLeague(runIds.get(league)!, league, startedAt, completedAt, ordered, interruption));
+    results.set(league, aggregateLeague(runIds.get(league)!, league, startedAt, completedAt, ordered, interruption, recordOutcomes));
   }
   return results;
 }

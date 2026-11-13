@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createReplayHttpClient } from "../../../../__tests__/helpers/replay-http.js";
-import { browserPool } from "../../../base/browser-pool.js";
+import { browserRuntime } from "../../../base/browser-runtime.js";
 import { BetfanBrowserScraper } from "../../../bookmakers/index.js";
 import { BETFAN_REST_MARKET, BetfanHttpScraper } from "../brands/betfan.js";
 import { driveBrowserScraperOffline, loadFixtureRoutes, withoutScrapedAt, type ReplayRoutes } from "./offline-harness.js";
@@ -63,11 +63,11 @@ describe("betfan over HTTP", () => {
   });
 
   it("HTTP path requests the listing and 3 details and opens no browser", async () => {
-    const acquire = vi.spyOn(browserPool, "acquire");
+    const openSession = vi.spyOn(browserRuntime, "openSession");
     const replay = createReplayHttpClient(loadFixtureRoutes("betfan", URLS));
     await new BetfanHttpScraper(replay).scrapeFullOffer("premier-league");
     expect([...replay.calls].sort()).toEqual([URLS.list, ...IDS.map(URLS.detail)].sort());
-    expect(acquire).not.toHaveBeenCalled();
+    expect(openSession).not.toHaveBeenCalled();
   });
 
   it("skips betfan's error envelope", async () => {

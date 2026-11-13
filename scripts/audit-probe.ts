@@ -10,6 +10,7 @@
  *   npx tsx scripts/audit-probe.ts --bookmaker superbet --league world-cup-2026
  */
 import { getBookmakerAuditTargets } from "../src/services/audit/bookmaker-registry.js";
+import { browserRuntime } from "../src/scrapers/base/browser-runtime.js";
 
 function arg(flag: string): string | undefined {
   const i = process.argv.indexOf(flag);
@@ -55,6 +56,9 @@ async function main() {
     console.log(
       JSON.stringify({ bookmaker, league, reachable: false, error: e instanceof Error ? e.message : String(e) }),
     );
+  } finally {
+    // An open browser keeps Node alive until it is closed
+    await browserRuntime.closeIfIdle();
   }
 }
 

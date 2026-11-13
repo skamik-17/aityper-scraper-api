@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getBookmakerLeagueId } from "../../../../config/leagues.js";
-import { browserPool } from "../../../base/browser-pool.js";
+import { browserRuntime } from "../../../base/browser-runtime.js";
 import { createScrapeBudget } from "../../budget.js";
 import { createHttpClient } from "../../http/http-client.js";
 import { restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
@@ -173,10 +173,10 @@ describe("RestMarketHttpScraper", () => {
   });
 
   it("opens no browser", async () => {
-    const acquire = vi.spyOn(browserPool, "acquire");
+    const openSession = vi.spyOn(browserRuntime, "openSession");
     const r = await scraperWith(baseRoutes()).scrapeFullOffer("premier-league");
     expect(r.success).toBe(true);
-    expect(acquire).not.toHaveBeenCalled();
+    expect(openSession).not.toHaveBeenCalled();
   });
 
   it("rejects an unsupported league", async () =>

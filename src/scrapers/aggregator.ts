@@ -8,7 +8,7 @@ import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
 import type { FullOfferScraperResult, FullMatchOffer, ScrapeMetrics } from "../types/full-offer.js";
 import type { FullOfferScraper } from "./shared/scraper-contract.js";
-import { browserPool } from "./base/browser-pool.js";
+import { browserRuntime } from "./base/browser-runtime.js";
 import { RunInterruptedError, scrapeWithHardDeadline } from "./hard-deadline.js";
 import { DEFAULT_JOB_CAPS, maxDurationMsFor, orderBrowserJobs, resolveJobTransport } from "./job-policy.js";
 import { runJobsWithCaps, type CappedJob, type JobCaps } from "./job-scheduler.js";
@@ -80,7 +80,7 @@ export function getScraper(bookmaker: PolishBookmaker): FullOfferScraper | undef
  * Should be called at the end of a full scraping cycle
  */
 export async function closeAllBrowsers(): Promise<void> {
-  await browserPool.closeAll();
+  await browserRuntime.closeAll();
 }
 
 /**

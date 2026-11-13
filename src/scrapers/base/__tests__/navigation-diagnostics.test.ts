@@ -682,6 +682,8 @@ describe("PlaywrightScraper.executeFullOfferScrape", () => {
     };
     readonly cleanup = vi.fn(async () => {});
     initError: Error | null = null;
+    /** Sessions handed out first, in order; then the single page as before. */
+    readonly sessions: BrowserSession[] = [];
 
     constructor(
       readonly page: FakePage,
@@ -692,6 +694,8 @@ describe("PlaywrightScraper.executeFullOfferScrape", () => {
 
     protected async initBrowser(): Promise<BrowserSession> {
       if (this.initError) throw this.initError;
+      const queued = this.sessions.shift();
+      if (queued) return queued;
       return {
         page: asPage(this.page),
         browser: {} as Browser,
@@ -781,6 +785,47 @@ describe("PlaywrightScraper.executeFullOfferScrape", () => {
       error: "Browser pool is closing, cannot acquire new browser",
     });
     expect(result).not.toHaveProperty("diagnostics");
+  });
+
+  it("a retried crash carries the second attempt's diagnostics", async () => {
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    const pageA = createFakePage();
+    const pageB = createFakePage();
+    const cleanupA = vi.fn(async () => {});
+    const cleanupB = vi.fn(async () => {});
+    let attempt = 0;
+    const scraper = new TestScraper(page, async (p, league) => {
+      attempt++;
+      if (attempt === 1) {
+        expect(p).toBe(asPage(pageA));
+        loadDocument(pageA, LEAGUE_URL, 200);
+        throw new Error("Target page, context or browser has been closed");
+      }
+      expect(p).toBe(asPage(pageB));
+      loadDocument(pageB, LEAGUE_URL, 404);
+      return { success: false, bookmaker: "betters", league, matches: [], error: "No events found from API" };
+    });
+    scraper.sessions.push(
+      {
+        page: asPage(pageA),
+        browser: {} as Browser,
+        context: { close: async () => {} } as unknown as BrowserContext,
+        cleanup: cleanupA,
+        runtime: { crashed: () => true, remainingMs: () => 200_000, lifetimeMs: 240_000 },
+      },
+      {
+        page: asPage(pageB),
+        browser: {} as Browser,
+        context: { close: async () => {} } as unknown as BrowserContext,
+        cleanup: cleanupB,
+        runtime: { crashed: () => false, remainingMs: () => 200_000, lifetimeMs: 240_000 },
+      },
+    );
+    const r = await scraper.scrapeFullOffer("premier-league");
+    expect(attempt).toBe(2);
+    expect(r.error).toBe(`No events found from API | document HTTP 404 ${LEAGUE_URL}`);
+    expect(r.diagnostics!.documents).toEqual([{ requestedUrl: LEAGUE_URL, finalUrl: LEAGUE_URL, status: 404 }]);
+    expect([cleanupA.mock.calls.length, cleanupB.mock.calls.length]).toEqual([1, 1]);
   });
 
   it("an unknown league never opens a browser", async () => {

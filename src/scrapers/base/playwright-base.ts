@@ -1,16 +1,18 @@
 /**
  * Playwright Base Scraper
- * Abstract class providing common Playwright functionality for all scrapers
+ * Abstract class providing common Playwright functionality for all scrapers.
+ * Sessions come from the shared browser runtime (one Chromium, a context per session).
  */
 
-import { Browser, Page, BrowserContext } from "playwright";
+import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
 import type { ScraperConfig } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
-import { browserPool } from "./browser-pool.js";
+import { browserRuntime, type BrowserSession } from "./browser-runtime.js";
+import { resolveBrowserPolicy } from "./browser-policy.js";
 import { currentScrapeJob } from "../shared/job-context.js";
 import type { FullOfferScraper } from "../shared/scraper-contract.js";
-import type { ScrapeBudget } from "../shared/budget.js";
+import { createScrapeBudget, type ScrapeBudget } from "../shared/budget.js";
 import {
   attachNavigationRecorder,
   enrichFullOfferFailure,
@@ -18,17 +20,10 @@ import {
   type NavigationRecorder,
 } from "./navigation-diagnostics.js";
 
-// Default browser options
-const DEFAULT_USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+export type { BrowserSession } from "./browser-runtime.js";
 
-// Return type for initBrowser - includes cleanup function for proper resource management
-export interface BrowserSession {
-  page: Page;
-  browser: Browser;
-  context: BrowserContext;
-  cleanup: () => Promise<void>;
-}
+/** A crashed session is retried once when at least this share of its lifetime is left. */
+const CRASH_RETRY_MIN_LEFT = 0.4;
 
 export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
@@ -45,96 +40,18 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   }
 
   /**
-   * Initialize browser session with proper resource management
-   * Returns browser, context, page and a cleanup function
-   * Safe for concurrent usage across multiple leagues
+   * Opens a browser session on the shared runtime. The budget comes from the caller or
+   * from the plan 07 job this runs in; the session never outlives the bookmaker's policy
+   * lifetime (its job budget by default) nor the budget.
    */
-  protected async initBrowser(): Promise<BrowserSession> {
-    let browser: Browser | null = null;
-    let context: BrowserContext | null = null;
-
-    // Try up to 2 times to get a valid browser
-    for (let attempt = 0; attempt < 2; attempt++) {
-      browser = await browserPool.acquire();
-
-      try {
-        context = await browser.newContext({
-          userAgent: DEFAULT_USER_AGENT,
-          locale: "pl-PL",
-          viewport: { width: 1920, height: 1080 },
-          javaScriptEnabled: true,
-          ignoreHTTPSErrors: true,
-          bypassCSP: true,
-        });
-
-        const page = await context.newPage();
-
-        // Create cleanup function with captured references
-        const capturedBrowser = browser;
-        const capturedContext = context;
-        const cleanup = async () => {
-          try {
-            if (capturedContext) await capturedContext.close();
-            if (capturedBrowser) browserPool.release(capturedBrowser);
-          } catch (error) {
-            console.error(`[${this.bookmaker}] Error during cleanup:`, error);
-          }
-        };
-
-        return { page, browser, context, cleanup };
-      } catch (error) {
-        console.log(`[${this.bookmaker}] Browser invalid, retrying...`);
-        if (browser) browserPool.remove(browser);
-        continue;
-      }
-    }
-
-    // Last attempt
-    browser = await browserPool.acquire();
-    context = await browser.newContext({
-      userAgent: DEFAULT_USER_AGENT,
-      locale: "pl-PL",
-      viewport: { width: 1920, height: 1080 },
-      javaScriptEnabled: true,
-      ignoreHTTPSErrors: true,
-      bypassCSP: true,
-    });
-
-    const page = await context.newPage();
-
-    await this.applyStealthScripts(page);
-
-    const capturedBrowser = browser;
-    const capturedContext = context;
-    const cleanup = async () => {
-      try {
-        if (capturedContext) await capturedContext.close();
-        if (capturedBrowser) browserPool.release(capturedBrowser);
-      } catch (error) {
-        console.error(`[${this.bookmaker}] Error during cleanup:`, error);
-      }
-    };
-
-    return { page, browser, context, cleanup };
-  }
-
-  /**
-   * Apply stealth scripts to hide automation detection
-   */
-  protected async applyStealthScripts(page: Page): Promise<void> {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "webdriver", { get: () => false });
-      Object.defineProperty(navigator, "plugins", {
-        get: () => [
-          { name: "Chrome PDF Plugin", filename: "internal-pdf-viewer" },
-          { name: "Chrome PDF Viewer", filename: "mhjfbmdgcfjbbpaeojofohoefgiehjai" },
-          { name: "Native Client", filename: "internal-nacl-plugin" },
-        ],
-      });
-      Object.defineProperty(navigator, "languages", {
-        get: () => ["pl-PL", "pl", "en-US", "en"],
-      });
-      (window as unknown as { chrome: unknown }).chrome = { runtime: {} };
+  protected async initBrowser(budget?: ScrapeBudget): Promise<BrowserSession> {
+    const effective = budget ?? currentScrapeJob()?.budget;
+    const policy = resolveBrowserPolicy(this.bookmaker, this.config);
+    return browserRuntime.openSession({
+      bookmaker: this.bookmaker,
+      policy,
+      signal: effective?.signal,
+      maxSessionMs: Math.min(policy.maxSessionMs, effective?.remainingMs() ?? Infinity),
     });
   }
 
@@ -224,41 +141,71 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     };
   }
 
+  /**
+   * Runs `operation` on a fresh session and always cleans it up. When the browser crashed
+   * under the session (Chromium disconnected) and at least 40 % of its lifetime is left,
+   * the operation runs once more on a new session within the remaining time.
+   */
   protected async executeWithBrowser<T>(
     operation: (page: Page, session: BrowserSession) => Promise<T>,
-    errorHandler: (error: unknown, duration: number) => T
+    errorHandler: (error: unknown, duration: number) => T,
+    budget?: ScrapeBudget
   ): Promise<T> {
     const startTime = Date.now();
-    let cleanup: (() => Promise<void>) | null = null;
-    let detach: (() => void) | null = null;
+    let attemptBudget = budget;
 
-    try {
-      const session = await this.initBrowser();
-      cleanup = session.cleanup;
-      // The job's budget closes the context, so a scrape that ignores its signal still stops
-      const signal = currentScrapeJob()?.budget.signal;
-      const closeContext = () => {
-        void session.context.close().catch(() => {});
-      };
-      if (signal?.aborted) {
-        closeContext();
-      } else if (signal) {
-        signal.addEventListener("abort", closeContext, { once: true });
-        detach = () => signal.removeEventListener("abort", closeContext);
+    for (let attempt = 1; ; attempt++) {
+      let session: BrowserSession | null = null;
+      let detach: (() => void) | null = null;
+      let outcome: { ok: true; value: T } | { ok: false; error: unknown };
+
+      try {
+        session = await this.initBrowser(attemptBudget);
+        // The job's budget closes the context, so a scrape that ignores its signal still stops
+        const signal = currentScrapeJob()?.budget.signal;
+        const context = session.context;
+        const closeContext = () => {
+          void context.close().catch(() => {});
+        };
+        if (signal?.aborted) {
+          closeContext();
+        } else if (signal) {
+          signal.addEventListener("abort", closeContext, { once: true });
+          detach = () => signal.removeEventListener("abort", closeContext);
+        }
+        outcome = { ok: true, value: await operation(session.page, session) };
+      } catch (error) {
+        outcome = { ok: false, error };
+      } finally {
+        detach?.();
       }
-      return await operation(session.page, session);
-    } catch (error) {
-      return errorHandler(error, Date.now() - startTime);
-    } finally {
-      detach?.();
-      if (cleanup) await cleanup();
+
+      const runtime = session?.runtime;
+      if (attempt === 1 && session && runtime?.crashed()) {
+        const left = runtime.remainingMs();
+        const span = `${Math.round(left / 1000)}s of ${Math.round(runtime.lifetimeMs / 1000)}s left`;
+        if (left > 0 && left >= CRASH_RETRY_MIN_LEFT * runtime.lifetimeMs) {
+          await session.cleanup();
+          console.log(`[${this.bookmaker}] browser disconnected mid-session; retrying once (${span})`);
+          attemptBudget = budget ?? createScrapeBudget(left, currentScrapeJob()?.budget.signal);
+          continue;
+        }
+        console.log(`[${this.bookmaker}] browser disconnected mid-session; not retrying (${span})`);
+      }
+
+      try {
+        return outcome.ok ? outcome.value : errorHandler(outcome.error, Date.now() - startTime);
+      } finally {
+        if (session) await session.cleanup();
+      }
     }
   }
 
   protected async executeFullOfferScrape(
     league: string,
     leagueValidator: (league: string) => boolean,
-    scrapeLogic: (page: Page, league: string) => Promise<FullOfferScraperResult>
+    scrapeLogic: (page: Page, league: string) => Promise<FullOfferScraperResult>,
+    budget?: ScrapeBudget
   ): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
 
@@ -290,7 +237,8 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
         const result = this.createFullOfferErrorResult(league, error, duration);
         // The page may already be closed or crashed: use what was recorded so far.
         return recorder ? enrichFullOfferFailure(result, recorder.current()) : result;
-      }
+      },
+      budget
     );
   }
 }

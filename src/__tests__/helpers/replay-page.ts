@@ -92,8 +92,10 @@ export async function runBrowserPathOffline(
   const requests: string[] = [];
   const fetchImpl = serveRoutes(routes, requests);
   const page = fakePage(fetchImpl);
-  const init = vi.spyOn(scraper as never, "initBrowser").mockResolvedValue(session(page) as never);
-  const delay = vi.spyOn(scraper as never, "delay").mockResolvedValue(undefined as never);
+  // initBrowser and delay are protected; the spies reach them through this view
+  const target = scraper as unknown as { initBrowser: () => Promise<unknown>; delay: (ms: number) => Promise<void> };
+  const init = vi.spyOn(target, "initBrowser").mockResolvedValue(session(page));
+  const delay = vi.spyOn(target, "delay").mockResolvedValue(undefined);
   const before = globalThis.fetch;
   globalThis.fetch = fetchImpl as typeof fetch;
   try {

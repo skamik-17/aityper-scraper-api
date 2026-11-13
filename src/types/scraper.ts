@@ -4,6 +4,16 @@
 
 import type { PolishBookmaker } from "../config/index.js";
 
+/** What a browser session blocks through CDP. There is no stylesheet level: CSS is never blocked. */
+export type BrowserBlockLevel = "none" | "media" | "media+trackers";
+
+/** Browser-path policy of one scraper (plan 08). Defaults: block "none", stealth off, lifetime = the job budget. */
+export interface BrowserPolicy {
+  block: BrowserBlockLevel;
+  stealth: boolean;
+  maxSessionMs?: number;
+}
+
 // Scraper configuration
 export interface ScraperConfig {
   bookmaker: PolishBookmaker;
@@ -13,7 +23,7 @@ export interface ScraperConfig {
   retries: number;
   rateLimit: number; // requests per minute
   enabled: boolean;
-  disableResourceBlocking?: boolean; // Some scrapers need full page load (WebSocket-based)
+  policy?: { browser?: BrowserPolicy };
 }
 
 // Default scraper configs
@@ -134,7 +144,6 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
-    disableResourceBlocking: true, // Uses WebSocket for Swarm API data
   },
   pzbuk: {
     bookmaker: "pzbuk",
@@ -144,6 +153,5 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
-    disableResourceBlocking: true, // Uses WebSocket for RSocket data
   },
 };

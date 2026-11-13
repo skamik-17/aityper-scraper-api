@@ -22,9 +22,6 @@ import {
 const DEFAULT_USER_AGENT =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
-// Resource types to block for faster loading
-const BLOCKED_RESOURCE_TYPES = ["image", "stylesheet", "font", "media"];
-
 // Return type for initBrowser - includes cleanup function for proper resource management
 export interface BrowserSession {
   page: Page;
@@ -104,16 +101,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     });
 
     const page = await context.newPage();
-
-    if (!this.config.disableResourceBlocking) {
-      await page.route("**/*", (route) => {
-        const resourceType = route.request().resourceType();
-        if (BLOCKED_RESOURCE_TYPES.includes(resourceType)) {
-          return route.abort();
-        }
-        return route.continue();
-      });
-    }
 
     await this.applyStealthScripts(page);
 

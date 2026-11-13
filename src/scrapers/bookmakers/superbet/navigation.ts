@@ -71,6 +71,20 @@ export async function navigateToBaseSite(page: Page): Promise<boolean> {
   }
 }
 
+/** Days of upcoming prematch events the listing asks for. */
+export const SUPERBET_LISTING_WINDOW_DAYS = 90;
+
+/**
+ * Listing URL for the by-date endpoint: from today to today + 90 days, both
+ * as UTC calendar days (a fixed end date would silently empty the listing
+ * once it passes).
+ */
+export function buildSuperbetListingUrl(tournamentIds: string, now: Date = new Date()): string {
+  const startDate = now.toISOString().slice(0, 10);
+  const endDate = new Date(now.getTime() + SUPERBET_LISTING_WINDOW_DAYS * 86_400_000).toISOString().slice(0, 10);
+  return `${API_BASE_URL}/events/by-date?offerState=prematch&startDate=${startDate}+00:00:00&endDate=${endDate}+00:00:00&sportId=${SPORT_ID_FOOTBALL}&tournamentIds=${tournamentIds}`;
+}
+
 /**
  * Fetch events for a league from the Superbet API
  * Executes the API request within the browser context to use session cookies
@@ -96,11 +110,8 @@ export async function fetchLeagueEvents(
 
   try {
     const apiData = await page.evaluate(
-      async ({ apiBaseUrl, sportId, tid }) => {
+      async (apiUrl: string) => {
         try {
-          const today = new Date().toISOString().split("T")[0];
-          // Fetch events up to 2027 to catch all upcoming matches
-          const apiUrl = `${apiBaseUrl}/events/by-date?offerState=prematch&startDate=${today}+00:00:00&endDate=2027-12-30+00:00:00&sportId=${sportId}&tournamentIds=${tid}`;
           const res = await fetch(apiUrl);
           if (!res.ok) {
             return { data: [], error: `HTTP ${res.status}` };
@@ -111,7 +122,7 @@ export async function fetchLeagueEvents(
           return { data: [], error: String(err) };
         }
       },
-      { apiBaseUrl: API_BASE_URL, sportId: SPORT_ID_FOOTBALL, tid: tournamentIdsParam }
+      buildSuperbetListingUrl(tournamentIdsParam)
     );
 
     if (apiData?.error) {

@@ -19,6 +19,7 @@ import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 import {
   navigateAndCaptureLeagueData,
   navigateAndCaptureMatchData,
+  captureMatchWithRetry,
   extractFixtureIdFromUrl,
 } from "./navigation.js";
 import {
@@ -308,14 +309,18 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
 
         for (const fixture of fixtures) {
           try {
-            const matchCaptureResult = await navigateAndCaptureMatchData(
-              page,
-              fixture.eventUrl
+            // Without the fixture snapshot only the i_pl markets parse (1
+            // market), and writing that would prune the match's previous
+            // complete snapshot. Skip the match instead: its rows stay as-is.
+            const matchCaptureResult = await captureMatchWithRetry(
+              (u) => navigateAndCaptureMatchData(page, u),
+              fixture.eventUrl,
+              fixture.id
             );
 
             if (!matchCaptureResult) {
               console.warn(
-                `[STS/FullOffer] No data for ${fixture.home} vs ${fixture.away}`
+                `[STS/FullOffer] No fixture snapshot for ${fixture.home} vs ${fixture.away} after 2 attempts - skipping (previous snapshot kept)`
               );
               continue;
             }

@@ -244,15 +244,13 @@ export const OUTCOME_TYPES = {
 } as const;
 
 /**
- * WebSocket URL pattern for identifying PZBuk sportsbook data stream
+ * WebSocket URL pattern for identifying PZBuk sportsbook data stream.
+ * Matches the JSON-envelope socket (`sportsbook-api/ws?franchiseCode=…&locale=…`).
+ * The legacy RSocket path (`sportsbook-api/websocket`) does not match: a
+ * transport rollback to it captures no frames, so the scrape fails instead of
+ * returning data.
  */
-export const WEBSOCKET_URL_PATTERN = "sportsbook-api/websocket";
-
-/**
- * Maximum timeout for WebSocket data capture (milliseconds)
- * Increased to 30s to allow for sequential processing of all markets
- */
-export const WS_CAPTURE_TIMEOUT = 30000;
+export const WEBSOCKET_URL_PATTERN = "sportsbook-api/ws";
 
 /**
  * Polling interval for checking WebSocket data availability

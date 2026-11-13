@@ -1,0 +1,3936 @@
+{
+  "bookmaker": "lvbet",
+  "entries": [
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_OR_TOTAL",
+        "marketKey": "RESULT_OR_TOTAL:2.5",
+        "matchedBy": "pattern",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OVER",
+            "label": "Arsenal lub powyżej (2.5)",
+            "odds": 1.09
+          },
+          {
+            "code": "HOME_UNDER",
+            "label": "Arsenal lub poniżej (2.5)",
+            "odds": 1.03
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "Remis lub powyżej (2.5)",
+            "odds": 1.3
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "Remis lub poniżej (2.5)",
+            "odds": 2.17
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Hull City lub powyżej (2.5)",
+            "odds": 1.42
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Hull City lub poniżej (2.5)",
+            "odds": 2.15
+          }
+        ]
+      },
+      "index": 71,
+      "marketCode": "RESULT_OR_TOTAL",
+      "rawName": "Rezultat lub ilość bramek (2.5) 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 118,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Liczba goli (3-drogowo) 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Abdulkadir Omur",
+        "matchedBy": "pattern",
+        "paramValue": "Abdulkadir Omur",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.25
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.1
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 394,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ben White",
+        "matchedBy": "pattern",
+        "paramValue": "Ben White",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.6
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.9
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 395,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Brooke Norton-Cuffy",
+        "matchedBy": "pattern",
+        "paramValue": "Brooke Norton-Cuffy",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.37
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.5
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 396,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Bruno Guimaraes",
+        "matchedBy": "pattern",
+        "paramValue": "Bruno Guimaraes",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.05
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.4
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      },
+      "index": 397,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Christos Mouzakitis",
+        "matchedBy": "pattern",
+        "paramValue": "Christos Mouzakitis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.15
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 9.5
+          }
+        ]
+      },
+      "index": 398,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Christos Tzolis",
+        "matchedBy": "pattern",
+        "paramValue": "Christos Tzolis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 9.5
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 399,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:David Raya",
+        "matchedBy": "pattern",
+        "paramValue": "David Raya",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 7.25
+          }
+        ]
+      },
+      "index": 400,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Declan Rice",
+        "matchedBy": "pattern",
+        "paramValue": "Declan Rice",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 401,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Eberechi Eze",
+        "matchedBy": "pattern",
+        "paramValue": "Eberechi Eze",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.57
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 402,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Elliot Stroud",
+        "matchedBy": "pattern",
+        "paramValue": "Elliot Stroud",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.1
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 403,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ezri Konsa",
+        "matchedBy": "pattern",
+        "paramValue": "Ezri Konsa",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.55
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 10
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 404,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Gabriel",
+        "matchedBy": "pattern",
+        "paramValue": "Gabriel",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.55
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.55
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 405,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Hidemasa Morita",
+        "matchedBy": "pattern",
+        "paramValue": "Hidemasa Morita",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.25
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7
+          }
+        ]
+      },
+      "index": 406,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Jack Butland",
+        "matchedBy": "pattern",
+        "paramValue": "Jack Butland",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 26
+          }
+        ]
+      },
+      "index": 407,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Jens Hjerto Dahl",
+        "matchedBy": "pattern",
+        "paramValue": "Jens Hjerto Dahl",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.05
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.3
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 10
+          }
+        ]
+      },
+      "index": 408,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Joe Gelhardt",
+        "matchedBy": "pattern",
+        "paramValue": "Joe Gelhardt",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.85
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.7
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 8.5
+          }
+        ]
+      },
+      "index": 409,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:John Egan",
+        "matchedBy": "pattern",
+        "paramValue": "John Egan",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.5
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.3
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 9
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 17
+          }
+        ]
+      },
+      "index": 410,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Jurrien Timber",
+        "matchedBy": "pattern",
+        "paramValue": "Jurrien Timber",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 411,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Kai Havertz",
+        "matchedBy": "pattern",
+        "paramValue": "Kai Havertz",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.42
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.7
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 412,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Konstantinos Tzolakis",
+        "matchedBy": "pattern",
+        "paramValue": "Konstantinos Tzolakis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 26
+          }
+        ]
+      },
+      "index": 413,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Lewie Coyle",
+        "matchedBy": "pattern",
+        "paramValue": "Lewie Coyle",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.38
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6.75
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 414,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Lucas Gourna-Douath",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Gourna-Douath",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.8
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.4
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 415,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Lucas Herrington",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Herrington",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.45
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 416,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Martin Odegaard",
+        "matchedBy": "pattern",
+        "paramValue": "Martin Odegaard",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.72
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 4.6
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 12
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 23
+          }
+        ]
+      },
+      "index": 417,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Martin Zubimendi",
+        "matchedBy": "pattern",
+        "paramValue": "Martin Zubimendi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.38
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 7
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      },
+      "index": 418,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Mikel Merino",
+        "matchedBy": "pattern",
+        "paramValue": "Mikel Merino",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.82
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      },
+      "index": 419,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Mohamed Belloumi",
+        "matchedBy": "pattern",
+        "paramValue": "Mohamed Belloumi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.16
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.1
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      },
+      "index": 420,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Mohamed-Ali Cho",
+        "matchedBy": "pattern",
+        "paramValue": "Mohamed-Ali Cho",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.2
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.85
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 421,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Myles Lewis-Skelly",
+        "matchedBy": "pattern",
+        "paramValue": "Myles Lewis-Skelly",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.25
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.1
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 422,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Nobel Mendy",
+        "matchedBy": "pattern",
+        "paramValue": "Nobel Mendy",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.92
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.95
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 9
+          }
+        ]
+      },
+      "index": 423,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Noni Madueke",
+        "matchedBy": "pattern",
+        "paramValue": "Noni Madueke",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.85
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 7.5
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 15
+          }
+        ]
+      },
+      "index": 424,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Oli McBurnie",
+        "matchedBy": "pattern",
+        "paramValue": "Oli McBurnie",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.14
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.6
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 2.8
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.9
+          }
+        ]
+      },
+      "index": 425,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Regan Slater",
+        "matchedBy": "pattern",
+        "paramValue": "Regan Slater",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.4
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.7
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 426,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Riccardo Calafiori",
+        "matchedBy": "pattern",
+        "paramValue": "Riccardo Calafiori",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6.5
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 427,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Ryan Giles",
+        "matchedBy": "pattern",
+        "paramValue": "Ryan Giles",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.4
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6.25
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 428,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Semi Ajayi",
+        "matchedBy": "pattern",
+        "paramValue": "Semi Ajayi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.52
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 9.75
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 19
+          }
+        ]
+      },
+      "index": 429,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Sorba Thomas",
+        "matchedBy": "pattern",
+        "paramValue": "Sorba Thomas",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.35
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.6
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6.5
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 430,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Tim Iroegbunam",
+        "matchedBy": "pattern",
+        "paramValue": "Tim Iroegbunam",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.4
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 2.2
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 4.2
+          }
+        ]
+      },
+      "index": 431,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:Viktor Gyokeres",
+        "matchedBy": "pattern",
+        "paramValue": "Viktor Gyokeres",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.2
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.9
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 12
+          }
+        ]
+      },
+      "index": 432,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_FOULS",
+        "marketKey": "PLAYER_FOULS:William Saliba",
+        "matchedBy": "pattern",
+        "paramValue": "William Saliba",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.62
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.95
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 433,
+      "marketCode": "PLAYER_FOULS",
+      "rawName": "Popełnione faule"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SAVES",
+        "marketKey": "PLAYER_SAVES:David Raya",
+        "matchedBy": "pattern",
+        "paramValue": "David Raya",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.77
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.3
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 479,
+      "marketCode": "PLAYER_SAVES",
+      "rawName": "Obrony bramkarza"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SAVES",
+        "marketKey": "PLAYER_SAVES:Jack Butland",
+        "matchedBy": "pattern",
+        "paramValue": "Jack Butland",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.38
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 1.85
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 2.7
+          },
+          {
+            "code": "7+",
+            "label": "Powyzej 6.5",
+            "odds": 4.4
+          }
+        ]
+      },
+      "index": 480,
+      "marketCode": "PLAYER_SAVES",
+      "rawName": "Obrony bramkarza"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SAVES",
+        "marketKey": "PLAYER_SAVES:Konstantinos Tzolakis",
+        "matchedBy": "pattern",
+        "paramValue": "Konstantinos Tzolakis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.42
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 1.88
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 2.8
+          },
+          {
+            "code": "7+",
+            "label": "Powyzej 6.5",
+            "odds": 4.6
+          }
+        ]
+      },
+      "index": 481,
+      "marketCode": "PLAYER_SAVES",
+      "rawName": "Obrony bramkarza"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Abdulkadir Omur",
+        "matchedBy": "pattern",
+        "paramValue": "Abdulkadir Omur",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.37
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.4
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 486,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ben White",
+        "matchedBy": "pattern",
+        "paramValue": "Ben White",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.57
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 487,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Brooke Norton-Cuffy",
+        "matchedBy": "pattern",
+        "paramValue": "Brooke Norton-Cuffy",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.67
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 4.2
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 25
+          }
+        ]
+      },
+      "index": 488,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Bruno Guimaraes",
+        "matchedBy": "pattern",
+        "paramValue": "Bruno Guimaraes",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.11
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.47
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 2.42
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 4.75
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 10
+          }
+        ]
+      },
+      "index": 489,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Christos Mouzakitis",
+        "matchedBy": "pattern",
+        "paramValue": "Christos Mouzakitis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.42
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.85
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 7.25
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 17
+          }
+        ]
+      },
+      "index": 490,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Christos Tzolis",
+        "matchedBy": "pattern",
+        "paramValue": "Christos Tzolis",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.88
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 2.9
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 5.1
+          }
+        ]
+      },
+      "index": 491,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Declan Rice",
+        "matchedBy": "pattern",
+        "paramValue": "Declan Rice",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.18
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.77
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 7.5
+          }
+        ]
+      },
+      "index": 492,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Eberechi Eze",
+        "matchedBy": "pattern",
+        "paramValue": "Eberechi Eze",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.88
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 2.95
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 5.2
+          }
+        ]
+      },
+      "index": 493,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Elliot Stroud",
+        "matchedBy": "pattern",
+        "paramValue": "Elliot Stroud",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      },
+      "index": 494,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ezri Konsa",
+        "matchedBy": "pattern",
+        "paramValue": "Ezri Konsa",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.6
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.9
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 495,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Gabriel",
+        "matchedBy": "pattern",
+        "paramValue": "Gabriel",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.45
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      },
+      "index": 496,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Hidemasa Morita",
+        "matchedBy": "pattern",
+        "paramValue": "Hidemasa Morita",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.8
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 4.9
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 26
+          }
+        ]
+      },
+      "index": 497,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jens Hjerto Dahl",
+        "matchedBy": "pattern",
+        "paramValue": "Jens Hjerto Dahl",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.47
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.9
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      },
+      "index": 498,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Joe Gelhardt",
+        "matchedBy": "pattern",
+        "paramValue": "Joe Gelhardt",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.13
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.55
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 2.6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 5.3
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 499,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:John Egan",
+        "matchedBy": "pattern",
+        "paramValue": "John Egan",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 2.17
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 7.25
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 17
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 36
+          }
+        ]
+      },
+      "index": 500,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Jurrien Timber",
+        "matchedBy": "pattern",
+        "paramValue": "Jurrien Timber",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 501,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Kai Havertz",
+        "matchedBy": "pattern",
+        "paramValue": "Kai Havertz",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.3
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.75
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 2.65
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 4.5
+          }
+        ]
+      },
+      "index": 502,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Lewie Coyle",
+        "matchedBy": "pattern",
+        "paramValue": "Lewie Coyle",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 2.47
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 9
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 503,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Lucas Gourna-Douath",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Gourna-Douath",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.75
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 4.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 13
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 26
+          }
+        ]
+      },
+      "index": 504,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Lucas Herrington",
+        "matchedBy": "pattern",
+        "paramValue": "Lucas Herrington",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 2.75
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 10
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 23
+          }
+        ]
+      },
+      "index": 505,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Martin Odegaard",
+        "matchedBy": "pattern",
+        "paramValue": "Martin Odegaard",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.22
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.67
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 2.65
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 4.85
+          }
+        ]
+      },
+      "index": 506,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Martin Zubimendi",
+        "matchedBy": "pattern",
+        "paramValue": "Martin Zubimendi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.25
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.12
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 4.6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 11
+          }
+        ]
+      },
+      "index": 507,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mikel Merino",
+        "matchedBy": "pattern",
+        "paramValue": "Mikel Merino",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.2
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.57
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 2.42
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 4.3
+          }
+        ]
+      },
+      "index": 508,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mohamed Belloumi",
+        "matchedBy": "pattern",
+        "paramValue": "Mohamed Belloumi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.11
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.45
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 2.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 4.5
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 9.5
+          }
+        ]
+      },
+      "index": 509,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Mohamed-Ali Cho",
+        "matchedBy": "pattern",
+        "paramValue": "Mohamed-Ali Cho",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.2
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.88
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.65
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 8.25
+          }
+        ]
+      },
+      "index": 510,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Myles Lewis-Skelly",
+        "matchedBy": "pattern",
+        "paramValue": "Myles Lewis-Skelly",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.33
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 6
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 14
+          }
+        ]
+      },
+      "index": 511,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Nobel Mendy",
+        "matchedBy": "pattern",
+        "paramValue": "Nobel Mendy",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.88
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 5.5
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 31
+          }
+        ]
+      },
+      "index": 512,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Noni Madueke",
+        "matchedBy": "pattern",
+        "paramValue": "Noni Madueke",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.13
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.4
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.98
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 3.2
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 5.8
+          }
+        ]
+      },
+      "index": 513,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Oli McBurnie",
+        "matchedBy": "pattern",
+        "paramValue": "Oli McBurnie",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.16
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.7
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3.1
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.75
+          }
+        ]
+      },
+      "index": 514,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Regan Slater",
+        "matchedBy": "pattern",
+        "paramValue": "Regan Slater",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.67
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 4.3
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 12
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 23
+          }
+        ]
+      },
+      "index": 515,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Riccardo Calafiori",
+        "matchedBy": "pattern",
+        "paramValue": "Riccardo Calafiori",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.15
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 1.65
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 3
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 6.25
+          }
+        ]
+      },
+      "index": 516,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Ryan Giles",
+        "matchedBy": "pattern",
+        "paramValue": "Ryan Giles",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 2.5
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 9
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 517,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Semi Ajayi",
+        "matchedBy": "pattern",
+        "paramValue": "Semi Ajayi",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 2.45
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 8.75
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 518,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Sorba Thomas",
+        "matchedBy": "pattern",
+        "paramValue": "Sorba Thomas",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.3
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 2.32
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 5.2
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 13
+          }
+        ]
+      },
+      "index": 519,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Tim Iroegbunam",
+        "matchedBy": "pattern",
+        "paramValue": "Tim Iroegbunam",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.62
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 3.95
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 11
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 21
+          }
+        ]
+      },
+      "index": 520,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:Viktor Gyokeres",
+        "matchedBy": "pattern",
+        "paramValue": "Viktor Gyokeres",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 1.35
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 1.85
+          },
+          {
+            "code": "5+",
+            "label": "Powyzej 4.5",
+            "odds": 2.9
+          },
+          {
+            "code": "6+",
+            "label": "Powyzej 5.5",
+            "odds": 5
+          }
+        ]
+      },
+      "index": 521,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "PLAYER_SHOTS",
+        "marketKey": "PLAYER_SHOTS:William Saliba",
+        "matchedBy": "pattern",
+        "paramValue": "William Saliba",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1+",
+            "label": "Powyzej 0.5",
+            "odds": 1.88
+          },
+          {
+            "code": "2+",
+            "label": "Powyzej 1.5",
+            "odds": 5.3
+          },
+          {
+            "code": "3+",
+            "label": "Powyzej 2.5",
+            "odds": 14
+          },
+          {
+            "code": "4+",
+            "label": "Powyzej 3.5",
+            "odds": 29
+          }
+        ]
+      },
+      "index": 522,
+      "marketCode": "PLAYER_SHOTS",
+      "rawName": "Strzały"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TWO_PLAYERS_GOAL_OR_ASSIST",
+        "marketKey": "TWO_PLAYERS_GOAL_OR_ASSIST",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "C. Tzolis & K. Havertz",
+            "label": "Christos Tzolis or Kai Havertz",
+            "odds": 1.18
+          },
+          {
+            "code": "K. Havertz & M. Odegaard",
+            "label": "Martin Odegaard or Kai Havertz",
+            "odds": 1.2
+          },
+          {
+            "code": "C. Tzolis & M. Odegaard",
+            "label": "Christos Tzolis or Martin Odegaard",
+            "odds": 1.22
+          },
+          {
+            "code": "B. Guimaraes & K. Havertz",
+            "label": "Bruno Guimaraes or Kai Havertz",
+            "odds": 1.28
+          },
+          {
+            "code": "B. Guimaraes & C. Tzolis",
+            "label": "Christos Tzolis or Bruno Guimaraes",
+            "odds": 1.3
+          },
+          {
+            "code": "B. Guimaraes & M. Odegaard",
+            "label": "Martin Odegaard or Bruno Guimaraes",
+            "odds": 1.35
+          },
+          {
+            "code": "D. Rice & O. McBurnie",
+            "label": "Oliver McBurnie or Declan Rice",
+            "odds": 1.82
+          },
+          {
+            "code": "D. Rice & G. Magalhaes",
+            "label": "Declan Rice or Gabriel Magalhaes",
+            "odds": 1.9
+          },
+          {
+            "code": "D. Rice & M. Belloumi",
+            "label": "Mohamed Belloumi or Declan Rice",
+            "odds": 1.95
+          },
+          {
+            "code": "G. Magalhaes & O. McBurnie",
+            "label": "Oliver McBurnie or Gabriel Magalhaes",
+            "odds": 2.65
+          }
+        ]
+      },
+      "index": 582,
+      "marketCode": "TWO_PLAYERS_GOAL_OR_ASSIST",
+      "rawName": "Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 615,
+      "marketCode": "OTHER",
+      "rawName": "Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
+        "matchedBy": "pattern",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 16.5
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 5.85
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 4.05
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 3.85
+          },
+          {
+            "code": "4",
+            "label": "4",
+            "odds": 4.55
+          },
+          {
+            "code": "5",
+            "label": "5",
+            "odds": 6.75
+          },
+          {
+            "code": "6+",
+            "label": "6+",
+            "odds": 7.25
+          }
+        ]
+      },
+      "index": 618,
+      "marketCode": "EXACT_GOALS",
+      "rawName": "Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TWO_PLAYERS_COMBINED_GOALS",
+        "marketKey": "TWO_PLAYERS_COMBINED_GOALS:1.5",
+        "matchedBy": "pattern",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "K. Havertz & V. Gyokeres",
+            "label": "V. Gyokeres & K. Havertz",
+            "odds": 2.15
+          },
+          {
+            "code": "C. Tzolis & V. Gyokeres",
+            "label": "V. Gyokeres & C. Tzolis",
+            "odds": 2.65
+          },
+          {
+            "code": "N. Madueke & V. Gyokeres",
+            "label": "V. Gyokeres & N. Madueke",
+            "odds": 2.7
+          },
+          {
+            "code": "E. Eze & V. Gyokeres",
+            "label": "V. Gyokeres & E. Eze",
+            "odds": 2.8
+          },
+          {
+            "code": "M. Merino & V. Gyokeres",
+            "label": "M. Merino & V. Gyokeres",
+            "odds": 2.8
+          },
+          {
+            "code": "M. Odegaard & V. Gyokeres",
+            "label": "M. Ødegaard & V. Gyokeres",
+            "odds": 2.95
+          },
+          {
+            "code": "C. Tzolis & K. Havertz",
+            "label": "C. Tzolis & K. Havertz",
+            "odds": 3
+          },
+          {
+            "code": "K. Havertz & N. Madueke",
+            "label": "K. Havertz & N. Madueke",
+            "odds": 3.05
+          },
+          {
+            "code": "E. Eze & K. Havertz",
+            "label": "K. Havertz & E. Eze",
+            "odds": 3.15
+          },
+          {
+            "code": "K. Havertz & M. Merino",
+            "label": "M. Merino & K. Havertz",
+            "odds": 3.25
+          },
+          {
+            "code": "B. Guimaraes & V. Gyokeres",
+            "label": "V. Gyokeres & B. Guimaraes",
+            "odds": 3.25
+          },
+          {
+            "code": "K. Havertz & M. Odegaard",
+            "label": "M. Ødegaard & K. Havertz",
+            "odds": 3.35
+          },
+          {
+            "code": "D. Rice & V. Gyokeres",
+            "label": "V. Gyokeres & D. Rice",
+            "odds": 3.7
+          },
+          {
+            "code": "B. Guimaraes & K. Havertz",
+            "label": "K. Havertz & B. Guimaraes",
+            "odds": 3.85
+          },
+          {
+            "code": "O. McBurnie & V. Gyokeres",
+            "label": "O. McBurnie & V. Gyokeres",
+            "odds": 3.9
+          },
+          {
+            "code": "J. Gelhardt & V. Gyokeres",
+            "label": "V. Gyokeres & J. Gelhardt",
+            "odds": 3.9
+          },
+          {
+            "code": "G. Magalhaes & V. Gyokeres",
+            "label": "V. Gyokeres & Gabriel Mag",
+            "odds": 4.1
+          },
+          {
+            "code": "R. Calafiori & V. Gyokeres",
+            "label": "V. Gyokeres & R. Calafiori",
+            "odds": 4.1
+          },
+          {
+            "code": "M. Belloumi & V. Gyokeres",
+            "label": "V. Gyokeres & M. Belloumi",
+            "odds": 4.1
+          },
+          {
+            "code": "J. Timber & V. Gyokeres",
+            "label": "V. Gyokeres & J. Timber",
+            "odds": 4.2
+          },
+          {
+            "code": "C. Tzolis & N. Madueke",
+            "label": "C. Tzolis & N. Madueke",
+            "odds": 4.2
+          },
+          {
+            "code": "B. White & V. Gyokeres",
+            "label": "V. Gyokeres & B. White",
+            "odds": 4.3
+          },
+          {
+            "code": "C. Tzolis & E. Eze",
+            "label": "C. Tzolis & E. Eze",
+            "odds": 4.3
+          },
+          {
+            "code": "D. Rice & K. Havertz",
+            "label": "D. Rice & K. Havertz",
+            "odds": 4.4
+          },
+          {
+            "code": "E. Stroud & V. Gyokeres",
+            "label": "V. Gyokeres & E. Stroud",
+            "odds": 4.4
+          },
+          {
+            "code": "C. Tzolis & M. Merino",
+            "label": "M. Merino & C. Tzolis",
+            "odds": 4.4
+          },
+          {
+            "code": "E. Konsa & V. Gyokeres",
+            "label": "V. Gyokeres & E. Konsa",
+            "odds": 4.5
+          },
+          {
+            "code": "S. Thomas & V. Gyokeres",
+            "label": "V. Gyokeres & S. Thomas",
+            "odds": 4.5
+          },
+          {
+            "code": "E. Eze & N. Madueke",
+            "label": "E. Eze & N. Madueke",
+            "odds": 4.5
+          },
+          {
+            "code": "M. Merino & N. Madueke",
+            "label": "M. Merino & N. Madueke",
+            "odds": 4.6
+          },
+          {
+            "code": "C. Tzolis & M. Odegaard",
+            "label": "M. Ødegaard & C. Tzolis",
+            "odds": 4.7
+          },
+          {
+            "code": "J. Gelhardt & K. Havertz",
+            "label": "J. Gelhardt & K. Havertz",
+            "odds": 4.7
+          },
+          {
+            "code": "K. Havertz & O. McBurnie",
+            "label": "O. McBurnie & K. Havertz",
+            "odds": 4.7
+          },
+          {
+            "code": "E. Eze & M. Merino",
+            "label": "M. Merino & E. Eze",
+            "odds": 4.75
+          },
+          {
+            "code": "M. Odegaard & N. Madueke",
+            "label": "M. Ødegaard & N. Madueke",
+            "odds": 4.85
+          },
+          {
+            "code": "G. Magalhaes & K. Havertz",
+            "label": "K. Havertz & Gabriel Mag",
+            "odds": 4.9
+          },
+          {
+            "code": "K. Havertz & R. Calafiori",
+            "label": "K. Havertz & R. Calafiori",
+            "odds": 4.9
+          },
+          {
+            "code": "K. Havertz & M. Belloumi",
+            "label": "M. Belloumi & K. Havertz",
+            "odds": 4.9
+          },
+          {
+            "code": "J. Timber & K. Havertz",
+            "label": "K. Havertz & J. Timber",
+            "odds": 5.1
+          },
+          {
+            "code": "E. Eze & M. Odegaard",
+            "label": "M. Ødegaard & E. Eze",
+            "odds": 5.1
+          },
+          {
+            "code": "M. Merino & M. Odegaard",
+            "label": "M. Ødegaard & M. Merino",
+            "odds": 5.1
+          },
+          {
+            "code": "B. White & K. Havertz",
+            "label": "K. Havertz & B. White",
+            "odds": 5.3
+          },
+          {
+            "code": "K. Havertz & S. Thomas",
+            "label": "K. Havertz & S. Thomas",
+            "odds": 5.4
+          },
+          {
+            "code": "E. Stroud & K. Havertz",
+            "label": "E. Stroud & K. Havertz",
+            "odds": 5.4
+          },
+          {
+            "code": "E. Konsa & K. Havertz",
+            "label": "E. Konsa & K. Havertz",
+            "odds": 5.5
+          },
+          {
+            "code": "B. Guimaraes & C. Tzolis",
+            "label": "C. Tzolis & B. Guimaraes",
+            "odds": 5.6
+          },
+          {
+            "code": "B. Guimaraes & N. Madueke",
+            "label": "B. Guimaraes & N. Madueke",
+            "odds": 5.9
+          },
+          {
+            "code": "B. Guimaraes & E. Eze",
+            "label": "E. Eze & B. Guimaraes",
+            "odds": 6.25
+          },
+          {
+            "code": "B. Guimaraes & M. Merino",
+            "label": "M. Merino & B. Guimaraes",
+            "odds": 6.25
+          },
+          {
+            "code": "B. Guimaraes & M. Odegaard",
+            "label": "M. Ødegaard & B. Guimaraes",
+            "odds": 6.75
+          },
+          {
+            "code": "C. Tzolis & D. Rice",
+            "label": "C. Tzolis & D. Rice",
+            "odds": 7
+          },
+          {
+            "code": "D. Rice & N. Madueke",
+            "label": "D. Rice & N. Madueke",
+            "odds": 7.25
+          },
+          {
+            "code": "C. Tzolis & O. McBurnie",
+            "label": "O. McBurnie & C. Tzolis",
+            "odds": 7.5
+          },
+          {
+            "code": "C. Tzolis & J. Gelhardt",
+            "label": "J. Gelhardt & C. Tzolis",
+            "odds": 7.5
+          },
+          {
+            "code": "D. Rice & E. Eze",
+            "label": "D. Rice & E. Eze",
+            "odds": 7.75
+          },
+          {
+            "code": "D. Rice & M. Merino",
+            "label": "M. Merino & D. Rice",
+            "odds": 7.75
+          },
+          {
+            "code": "J. Gelhardt & N. Madueke",
+            "label": "J. Gelhardt & N. Madueke",
+            "odds": 8
+          },
+          {
+            "code": "C. Tzolis & R. Calafiori",
+            "label": "C. Tzolis & R. Calafiori",
+            "odds": 8
+          },
+          {
+            "code": "C. Tzolis & M. Belloumi",
+            "label": "C. Tzolis & M. Belloumi",
+            "odds": 8
+          },
+          {
+            "code": "N. Madueke & O. McBurnie",
+            "label": "O. McBurnie & N. Madueke",
+            "odds": 8
+          },
+          {
+            "code": "C. Tzolis & G. Magalhaes",
+            "label": "C. Tzolis & Gabriel Mag",
+            "odds": 8
+          },
+          {
+            "code": "D. Rice & M. Odegaard",
+            "label": "M. Ødegaard & D. Rice",
+            "odds": 8.5
+          },
+          {
+            "code": "G. Magalhaes & N. Madueke",
+            "label": "Gabriel Mag & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "code": "M. Belloumi & N. Madueke",
+            "label": "M. Belloumi & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "code": "E. Eze & O. McBurnie",
+            "label": "O. McBurnie & E. Eze",
+            "odds": 8.5
+          },
+          {
+            "code": "N. Madueke & R. Calafiori",
+            "label": "R. Calafiori & N. Madueke",
+            "odds": 8.5
+          },
+          {
+            "code": "C. Tzolis & J. Timber",
+            "label": "C. Tzolis & J. Timber",
+            "odds": 8.5
+          },
+          {
+            "code": "E. Eze & J. Gelhardt",
+            "label": "J. Gelhardt & E. Eze",
+            "odds": 8.5
+          },
+          {
+            "code": "J. Gelhardt & M. Merino",
+            "label": "M. Merino & J. Gelhardt",
+            "odds": 8.75
+          },
+          {
+            "code": "M. Merino & O. McBurnie",
+            "label": "O. McBurnie & M. Merino",
+            "odds": 8.75
+          },
+          {
+            "code": "B. White & C. Tzolis",
+            "label": "C. Tzolis & B. White",
+            "odds": 8.75
+          },
+          {
+            "code": "E. Eze & R. Calafiori",
+            "label": "E. Eze & R. Calafiori",
+            "odds": 9
+          },
+          {
+            "code": "J. Timber & N. Madueke",
+            "label": "J. Timber & N. Madueke",
+            "odds": 9
+          },
+          {
+            "code": "C. Tzolis & E. Stroud",
+            "label": "C. Tzolis & E. Stroud",
+            "odds": 9.25
+          },
+          {
+            "code": "E. Eze & M. Belloumi",
+            "label": "M. Belloumi & E. Eze",
+            "odds": 9.25
+          },
+          {
+            "code": "E. Eze & G. Magalhaes",
+            "label": "E. Eze & Gabriel Mag",
+            "odds": 9.25
+          },
+          {
+            "code": "B. White & N. Madueke",
+            "label": "B. White & N. Madueke",
+            "odds": 9.25
+          },
+          {
+            "code": "M. Belloumi & M. Merino",
+            "label": "M. Merino & M. Belloumi",
+            "odds": 9.5
+          },
+          {
+            "code": "C. Tzolis & E. Konsa",
+            "label": "C. Tzolis & E. Konsa",
+            "odds": 9.5
+          },
+          {
+            "code": "C. Tzolis & S. Thomas",
+            "label": "C. Tzolis & S. Thomas",
+            "odds": 9.5
+          },
+          {
+            "code": "G. Magalhaes & M. Merino",
+            "label": "M. Merino & Gabriel Mag",
+            "odds": 9.5
+          },
+          {
+            "code": "J. Gelhardt & M. Odegaard",
+            "label": "M. Ødegaard & J. Gelhardt",
+            "odds": 9.5
+          },
+          {
+            "code": "M. Merino & R. Calafiori",
+            "label": "M. Merino & R. Calafiori",
+            "odds": 9.5
+          },
+          {
+            "code": "E. Eze & J. Timber",
+            "label": "J. Timber & E. Eze",
+            "odds": 9.75
+          },
+          {
+            "code": "M. Odegaard & O. McBurnie",
+            "label": "O. McBurnie & M. Ødegaard",
+            "odds": 9.75
+          },
+          {
+            "code": "E. Stroud & N. Madueke",
+            "label": "E. Stroud & N. Madueke",
+            "odds": 10
+          },
+          {
+            "code": "B. White & E. Eze",
+            "label": "B. White & E. Eze",
+            "odds": 10
+          },
+          {
+            "code": "E. Konsa & N. Madueke",
+            "label": "E. Konsa & N. Madueke",
+            "odds": 10
+          },
+          {
+            "code": "J. Timber & M. Merino",
+            "label": "M. Merino & J. Timber",
+            "odds": 10
+          },
+          {
+            "code": "N. Madueke & S. Thomas",
+            "label": "N. Madueke & S. Thomas",
+            "odds": 10
+          },
+          {
+            "code": "B. White & M. Merino",
+            "label": "M. Merino & B. White",
+            "odds": 10
+          },
+          {
+            "code": "M. Odegaard & R. Calafiori",
+            "label": "M. Ødegaard & R. Calafiori",
+            "odds": 11
+          },
+          {
+            "code": "G. Magalhaes & M. Odegaard",
+            "label": "M. Ødegaard & Gabriel Mag",
+            "odds": 11
+          },
+          {
+            "code": "M. Belloumi & M. Odegaard",
+            "label": "M. Ødegaard & M. Belloumi",
+            "odds": 11
+          },
+          {
+            "code": "E. Eze & E. Stroud",
+            "label": "E. Stroud & E. Eze",
+            "odds": 11
+          },
+          {
+            "code": "E. Eze & S. Thomas",
+            "label": "E. Eze & S. Thomas",
+            "odds": 11
+          },
+          {
+            "code": "E. Eze & E. Konsa",
+            "label": "E. Konsa & E. Eze",
+            "odds": 11
+          },
+          {
+            "code": "E. Stroud & M. Merino",
+            "label": "M. Merino & E. Stroud",
+            "odds": 11
+          },
+          {
+            "code": "J. Timber & M. Odegaard",
+            "label": "M. Ødegaard & J. Timber",
+            "odds": 11
+          },
+          {
+            "code": "E. Konsa & M. Merino",
+            "label": "M. Merino & E. Konsa",
+            "odds": 11
+          },
+          {
+            "code": "M. Merino & S. Thomas",
+            "label": "M. Merino & S. Thomas",
+            "odds": 11
+          },
+          {
+            "code": "B. Guimaraes & D. Rice",
+            "label": "D. Rice & B. Guimaraes",
+            "odds": 11
+          },
+          {
+            "code": "B. White & M. Odegaard",
+            "label": "M. Ødegaard & B. White",
+            "odds": 12
+          },
+          {
+            "code": "E. Stroud & M. Odegaard",
+            "label": "M. Ødegaard & E. Stroud",
+            "odds": 13
+          },
+          {
+            "code": "E. Konsa & M. Odegaard",
+            "label": "M. Ødegaard & E. Konsa",
+            "odds": 13
+          },
+          {
+            "code": "M. Odegaard & S. Thomas",
+            "label": "M. Ødegaard & S. Thomas",
+            "odds": 13
+          },
+          {
+            "code": "B. Guimaraes & O. McBurnie",
+            "label": "O. McBurnie & B. Guimaraes",
+            "odds": 13
+          },
+          {
+            "code": "B. Guimaraes & J. Gelhardt",
+            "label": "J. Gelhardt & B. Guimaraes",
+            "odds": 13
+          },
+          {
+            "code": "B. Guimaraes & R. Calafiori",
+            "label": "B. Guimaraes & R. Calafiori",
+            "odds": 14
+          },
+          {
+            "code": "B. Guimaraes & G. Magalhaes",
+            "label": "Gabriel Mag & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "code": "B. Guimaraes & M. Belloumi",
+            "label": "M. Belloumi & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "code": "B. Guimaraes & J. Timber",
+            "label": "J. Timber & B. Guimaraes",
+            "odds": 15
+          },
+          {
+            "code": "B. Guimaraes & B. White",
+            "label": "B. White & B. Guimaraes",
+            "odds": 17
+          },
+          {
+            "code": "D. Rice & J. Gelhardt",
+            "label": "J. Gelhardt & D. Rice",
+            "odds": 19
+          },
+          {
+            "code": "B. Guimaraes & E. Stroud",
+            "label": "E. Stroud & B. Guimaraes",
+            "odds": 19
+          },
+          {
+            "code": "B. Guimaraes & S. Thomas",
+            "label": "B. Guimaraes & S. Thomas",
+            "odds": 19
+          },
+          {
+            "code": "D. Rice & O. McBurnie",
+            "label": "O. McBurnie & D. Rice",
+            "odds": 19
+          },
+          {
+            "code": "B. Guimaraes & E. Konsa",
+            "label": "E. Konsa & B. Guimaraes",
+            "odds": 19
+          },
+          {
+            "code": "D. Rice & G. Magalhaes",
+            "label": "D. Rice & Gabriel Mag",
+            "odds": 21
+          },
+          {
+            "code": "D. Rice & R. Calafiori",
+            "label": "D. Rice & R. Calafiori",
+            "odds": 21
+          },
+          {
+            "code": "D. Rice & M. Belloumi",
+            "label": "M. Belloumi & D. Rice",
+            "odds": 21
+          },
+          {
+            "code": "J. Gelhardt & O. McBurnie",
+            "label": "O. McBurnie & J. Gelhardt",
+            "odds": 23
+          },
+          {
+            "code": "D. Rice & J. Timber",
+            "label": "D. Rice & J. Timber",
+            "odds": 23
+          },
+          {
+            "code": "B. White & D. Rice",
+            "label": "D. Rice & B. White",
+            "odds": 25
+          },
+          {
+            "code": "J. Gelhardt & M. Belloumi",
+            "label": "J. Gelhardt & M. Belloumi",
+            "odds": 25
+          },
+          {
+            "code": "M. Belloumi & O. McBurnie",
+            "label": "O. McBurnie & M. Belloumi",
+            "odds": 25
+          },
+          {
+            "code": "O. McBurnie & R. Calafiori",
+            "label": "O. McBurnie & R. Calafiori",
+            "odds": 25
+          },
+          {
+            "code": "G. Magalhaes & J. Gelhardt",
+            "label": "J. Gelhardt & Gabriel Mag",
+            "odds": 25
+          },
+          {
+            "code": "G. Magalhaes & O. McBurnie",
+            "label": "O. McBurnie & Gabriel Mag",
+            "odds": 25
+          },
+          {
+            "code": "J. Gelhardt & R. Calafiori",
+            "label": "J. Gelhardt & R. Calafiori",
+            "odds": 25
+          },
+          {
+            "code": "G. Magalhaes & R. Calafiori",
+            "label": "Gabriel Mag & R. Calafiori",
+            "odds": 29
+          },
+          {
+            "code": "M. Belloumi & R. Calafiori",
+            "label": "M. Belloumi & R. Calafiori",
+            "odds": 29
+          },
+          {
+            "code": "J. Timber & O. McBurnie",
+            "label": "O. McBurnie & J. Timber",
+            "odds": 29
+          },
+          {
+            "code": "D. Rice & E. Stroud",
+            "label": "E. Stroud & D. Rice",
+            "odds": 29
+          },
+          {
+            "code": "J. Gelhardt & J. Timber",
+            "label": "J. Gelhardt & J. Timber",
+            "odds": 29
+          },
+          {
+            "code": "G. Magalhaes & M. Belloumi",
+            "label": "M. Belloumi & Gabriel Mag",
+            "odds": 29
+          },
+          {
+            "code": "D. Rice & E. Konsa",
+            "label": "E. Konsa & D. Rice",
+            "odds": 29
+          },
+          {
+            "code": "D. Rice & S. Thomas",
+            "label": "D. Rice & S. Thomas",
+            "odds": 29
+          },
+          {
+            "code": "B. White & J. Gelhardt",
+            "label": "J. Gelhardt & B. White",
+            "odds": 31
+          },
+          {
+            "code": "B. White & O. McBurnie",
+            "label": "O. McBurnie & B. White",
+            "odds": 31
+          },
+          {
+            "code": "J. Timber & R. Calafiori",
+            "label": "J. Timber & R. Calafiori",
+            "odds": 34
+          },
+          {
+            "code": "G. Magalhaes & J. Timber",
+            "label": "J. Timber & Gabriel Mag",
+            "odds": 34
+          },
+          {
+            "code": "J. Timber & M. Belloumi",
+            "label": "M. Belloumi & J. Timber",
+            "odds": 34
+          },
+          {
+            "code": "B. White & R. Calafiori",
+            "label": "B. White & R. Calafiori",
+            "odds": 36
+          },
+          {
+            "code": "E. Stroud & O. McBurnie",
+            "label": "O. McBurnie & E. Stroud",
+            "odds": 36
+          },
+          {
+            "code": "E. Stroud & J. Gelhardt",
+            "label": "J. Gelhardt & E. Stroud",
+            "odds": 36
+          },
+          {
+            "code": "B. White & G. Magalhaes",
+            "label": "B. White & Gabriel Mag",
+            "odds": 36
+          },
+          {
+            "code": "B. White & M. Belloumi",
+            "label": "M. Belloumi & B. White",
+            "odds": 36
+          },
+          {
+            "code": "O. McBurnie & S. Thomas",
+            "label": "O. McBurnie & S. Thomas",
+            "odds": 36
+          },
+          {
+            "code": "E. Konsa & O. McBurnie",
+            "label": "O. McBurnie & E. Konsa",
+            "odds": 36
+          },
+          {
+            "code": "J. Gelhardt & S. Thomas",
+            "label": "J. Gelhardt & S. Thomas",
+            "odds": 36
+          },
+          {
+            "code": "E. Konsa & J. Gelhardt",
+            "label": "J. Gelhardt & E. Konsa",
+            "odds": 36
+          },
+          {
+            "code": "B. White & J. Timber",
+            "label": "B. White & J. Timber",
+            "odds": 41
+          },
+          {
+            "code": "E. Stroud & M. Belloumi",
+            "label": "E. Stroud & M. Belloumi",
+            "odds": 41
+          },
+          {
+            "code": "E. Stroud & G. Magalhaes",
+            "label": "E. Stroud & Gabriel Mag",
+            "odds": 41
+          },
+          {
+            "code": "E. Stroud & R. Calafiori",
+            "label": "E. Stroud & R. Calafiori",
+            "odds": 41
+          },
+          {
+            "code": "E. Konsa & R. Calafiori",
+            "label": "E. Konsa & R. Calafiori",
+            "odds": 41
+          },
+          {
+            "code": "E. Konsa & G. Magalhaes",
+            "label": "E. Konsa & Gabriel Mag",
+            "odds": 41
+          },
+          {
+            "code": "M. Belloumi & S. Thomas",
+            "label": "M. Belloumi & S. Thomas",
+            "odds": 41
+          },
+          {
+            "code": "R. Calafiori & S. Thomas",
+            "label": "R. Calafiori & S. Thomas",
+            "odds": 41
+          },
+          {
+            "code": "E. Konsa & M. Belloumi",
+            "label": "E. Konsa & M. Belloumi",
+            "odds": 41
+          },
+          {
+            "code": "G. Magalhaes & S. Thomas",
+            "label": "Gabriel Mag & S. Thomas",
+            "odds": 41
+          },
+          {
+            "code": "E. Stroud & J. Timber",
+            "label": "E. Stroud & J. Timber",
+            "odds": 46
+          },
+          {
+            "code": "E. Konsa & J. Timber",
+            "label": "E. Konsa & J. Timber",
+            "odds": 51
+          },
+          {
+            "code": "J. Timber & S. Thomas",
+            "label": "J. Timber & S. Thomas",
+            "odds": 51
+          },
+          {
+            "code": "B. White & E. Stroud",
+            "label": "E. Stroud & B. White",
+            "odds": 51
+          },
+          {
+            "code": "B. White & E. Konsa",
+            "label": "E. Konsa & B. White",
+            "odds": 56
+          },
+          {
+            "code": "B. White & S. Thomas",
+            "label": "B. White & S. Thomas",
+            "odds": 56
+          },
+          {
+            "code": "E. Konsa & E. Stroud",
+            "label": "E. Konsa & E. Stroud",
+            "odds": 67
+          },
+          {
+            "code": "E. Stroud & S. Thomas",
+            "label": "E. Stroud & S. Thomas",
+            "odds": 67
+          },
+          {
+            "code": "E. Konsa & S. Thomas",
+            "label": "E. Konsa & S. Thomas",
+            "odds": 71
+          }
+        ]
+      },
+      "index": 791,
+      "marketCode": "TWO_PLAYERS_COMBINED_GOALS",
+      "rawName": "Obaj gracze strzelą łącznie przynajmniej 2 gole"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2.5",
+        "matchedBy": "pattern",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Powyżej (2.5)",
+            "odds": 1.55
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej (2.5)",
+            "odds": 2.5
+          }
+        ]
+      },
+      "index": 901,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Liczba goli 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.0",
+        "matchedBy": "pattern",
+        "paramValue": "1.0",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "Powyżej (1.0)",
+            "odds": 1.5
+          },
+          {
+            "code": "UNDER",
+            "label": "Poniżej (1.0)",
+            "odds": 2.5
+          }
+        ]
+      },
+      "index": 947,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. Połowa - Liczba goli 1"
+    }
+  ],
+  "matchIdSafe": "premier-league_arsenal_hull_city"
+}

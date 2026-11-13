@@ -209,6 +209,8 @@ Outcome-id groups shared across markets:
 | 25 | Przedział goli | `variant=sr:goal_range:7+` | name leading token: `0-1 goli`→`0-1`, `2-3 gole`→`2-3`, `4-6 goli`→`4-6`, `7+ goli`→`7+` | GOAL_RANGE |
 | 50063 | Dokładna liczba goli | — | `bb:exact_goals:N` → `"N"` (catalog has 0–9) | EXACT_GOALS |
 
+**Line guard (rules 18, 68, 90, 19, 20, 37, 36, 547, 16, 66, 14, 65).** Read `total` with `readTotalLine`, `hcp` with `readLine`, and the European `hcp=a:b` with `readEuropeanHandicap` (Task 4, `specifiers.ts`). When the reader returns `null`, the rule skips the market. That covers a missing key, a blank value (`total=` would read as 0 through `Number`), a non-decimal value (`abc`, `Infinity`, `1e1`), a value off the quarter grid (`2.3`, `0.3`), a total ≤ 0, and a malformed or level `a:b` (`x:0`, `1`, `1:`, `1:1`). Classify and format only the number the reader returned. Never pass `Number(raw)` to `classifyLine`, `formatLine` or `formatSignedLine`: they class NaN and off-grid values as "quarter" and print `"NaN"`. "Half lines only" means `classifyLine(v) === "half"` on the reader's value. Every line in the evidence passes the readers (Task 4 test `the readers accept every total and handicap line in the evidence`), so the counts below do not change.
+
 On Leeds–Tottenham this yields **68 normalized market instances with 68 distinct marketKeys** (simulated on the evidence). The keys are `TOTAL_GOALS:0.5…4.5` (5), `TOTAL_GOALS_ASIAN:1…4` (4), `ASIAN_HANDICAP:-1.5/+1.5/-1/0/+1` (5; Betby sends `hcp=-1.0`, `hcp=0`, `hcp=1`), `FIRST_HALF_ASIAN_HANDICAP:0`, `EUROPEAN_HANDICAP:+1/+2/-1`, and so on. The other two evidence events yield 71 and 66. Under the PUSH alternative of D1 the count stays 68; only 4 keys change code.
 
 **Decision D1, taken by the owner before Task 5: the code for integer handicap lines.** The blessed goldens disagree with the catalog wording.
@@ -357,6 +359,7 @@ The standalone single-bookmaker smoke test has two forms. Neither touches the da
 3. **Blocked outcomes and a legitimate 1.01 price.** `{k:"0.0", b:1}` must vanish, and a real `1.01` must stay. Test: Task 4 `buildScrapedMarkets drops blocked outcomes and keeps 1.01`.
 4. **The event endpoint has no data for one match** (it went live or was withdrawn). Live behaviour: HTTP 200 with an envelope **without `events`** (`evidence/*/event-missing-envelope.json`). HTTP 404 was not observed but stays handled. Expected: `fetchEvent` returns `null` without throwing; that match falls back to its listing markets (1/10/16/18); the other matches and the run still succeed. Tests: Task 3 `fetchEvent returns null when the 200 envelope has no events`; Task 6 `scrapeFullOffer falls back to listing markets when the event payload has no events` and `scrapeFullOffer falls back to listing markets when the event endpoint 404s`.
 5. **Integer and quarter lines and mixed formatting** (`hcp=-1.0` vs `hcp=1` vs `hcp=-1`, `total=3`, `total=2.75`). Expected under the D1 default: ASIAN_HANDICAP with `"-1"`, `"0"`, `"+1"`; TOTAL_GOALS_ASIAN with `"3"`, `"2.75"`; quarter handicaps skipped. Tests: Task 5 `handicap integer and quarter lines` and `totals half, integer and quarter lines`.
+   Malformed lines (`total=`, `total=abc`, `total=2.3`, `total=Infinity`, `hcp=0.3`, `hcp=x:0`, `hcp=1`, `hcp=1:`) skip the market; they never become `…:NaN`, `…:0`, `…:2.3` or `…:+1`. Tests: Task 4 `readLine rejects blank, non-decimal, non-finite and off-grid values` and `readEuropeanHandicap rejects malformed and level a:b values`; Task 5 `line rules skip blank, malformed and off-grid lines`.
 6. **A far-future event with a thin market list** (Liverpool–Man Utd, 16 days out: 11 ids, 39 pairs, 34 normalized). Expected: the scraper keeps it and counts it as a full payload; the smoke reports it as `shallow` and does not fail A2. Tests: Task 6 `scrapeFullOffer keeps a thin far-future event as a full payload`; Task 8 `evaluateSmoke reports a thin far-future match as shallow without failing`.
 
 ---
@@ -370,7 +373,7 @@ src/scrapers/shared/betby/
   discovery.ts        pure bootstrap/renderer/config parsers + discoverBetters/LebullEndpoints + resolveEndpoints
   brands.ts           BETBY_BRANDS: pinned endpoints, discover fn, eventUrl builder, log tag
   client.ts           BetbyClient: endpoints/snapshot/event/descriptions with caches and the chunk-chain protocol
-  specifiers.ts       parseSpecifiers, classifyLine, formatSignedLine, formatLine (shared with the normalizer)
+  specifiers.ts       parseSpecifiers, readLine, readTotalLine, readEuropeanHandicap, classifyLine, formatSignedLine, formatLine (shared with the normalizer)
   parser.ts           renderTemplate, selectLeagueEvents, buildScrapedMarkets, extractBetbyEventId, MIN_VALID_ODDS
   scraper.ts          BetbyScraper extends PlaywrightScraper (browserless)
   smoke-gate.ts       pure acceptance logic for scripts/betby-smoke.ts (oneXTwoDeviation, evaluateSmoke)
@@ -707,7 +710,10 @@ it("fetchDescriptions is cached for 6 h", async () => {
 **Interfaces:**
 - Produces (`specifiers.ts`):
   - `parseSpecifiers(s: string): Record<string, string>` (split on `|`, then on the first `=`)
-  - `classifyLine(v: number): "half" | "integer" | "quarter"`
+  - `readLine(v: string | undefined): number | null`: the value when it is a plain decimal (`/^[+-]?\d+(\.\d+)?$/`) on the quarter grid (`Number.isSafeInteger(n * 4)`), else `null`. `""`, `" "`, `abc`, `Infinity`, `1e1` and `2.3` are all `null`. (Added by the Task 4 review fix.)
+  - `readTotalLine(v: string | undefined): number | null`: a `readLine` value `> 0`, else `null`.
+  - `readEuropeanHandicap(v: string | undefined): number | null`: `/^(\d+):(\d+)$/` gives `a - b`; `null` on a miss or when `a == b`.
+  - `classifyLine(v: number): "half" | "integer" | "quarter"` (expects a reader's value: NaN and off-grid values come back as "quarter")
   - `formatSignedLine(v: number): string` (`+`/`-` prefix, `"0"` for 0 per decision D1, trailing `.0` dropped)
   - `formatLine(v: number): string` (no sign, `String(v)`)
 - Produces (`parser.ts`):
@@ -819,10 +825,10 @@ Here `snapshotFrom(bm)` is a test helper in `fixtures.ts` that builds a `BetbySn
 - Test: `src/services/normalization/bookmakers/__tests__/betby-normalizer.test.ts`
 
 **Interfaces:**
-- Consumes: `parseSpecifiers`, `classifyLine`, `formatSignedLine`, `formatLine` (Task 4); `buildMarketKey` (`helpers/index.ts:17`); `getMarketMetadata` and `isValidMarketCode` (catalog); Task 1 passthrough.
+- Consumes: `parseSpecifiers`, `readLine`, `readTotalLine`, `readEuropeanHandicap`, `classifyLine`, `formatSignedLine`, `formatLine` (Task 4); `buildMarketKey` (`helpers/index.ts:17`); `getMarketMetadata` and `isValidMarketCode` (catalog); Task 1 passthrough.
 - Produces:
   - `interface BetbyMarketRule { codes: NormalizedMarketType[]; resolve(specs: Record<string, string>): { code: NormalizedMarketType; paramValue?: string } | null; outcome(externalId: string | undefined, label: string): string | null }`
-  - `BETBY_MARKET_RULES: Readonly<Record<string, BetbyMarketRule>>`: exactly the 36 phase-1 ids of the Observations table, with outcome maps and param rules as written there.
+  - `BETBY_MARKET_RULES: Readonly<Record<string, BetbyMarketRule>>`: exactly the 36 phase-1 ids of the Observations table, with outcome maps and param rules as written there. Every line rule (18, 68, 90, 19, 20, 37, 36, 547, 16, 66, 14, 65) reads its line in `resolve` through the Task 4 readers before it classifies or formats it, and returns `null` when the reader does ("Line guard" under the Observations table).
   - `createBetbyNormalizer(bookmaker: "betters" | "lebull"): BookmakerMarketNormalizer`
 - `normalizeMarket` behavior:
   1. Look up the rule by `String(raw.bookmakerMarketId)`; no rule → `null`. A numeric id from the facade must work too.
@@ -868,6 +874,31 @@ it("european handicap a:b -> signed home goal start", () => {
   expect(e("hcp=1:0")!.selections.map((s) => s.code)).toEqual(["HOME", "DRAW", "AWAY"]);
   expect(e("hcp=0:1")!.marketKey).toBe("EUROPEAN_HANDICAP:-1");
   expect(e("hcp=1:1")).toBeNull();
+});
+it("line rules skip blank, malformed and off-grid lines", () => {
+  // Each rule gets outcome ids it maps, so a null can only come from the line guard.
+  type Sel = ReturnType<typeof sel>;
+  const OU = [sel("12", "ponad", 1.9), sel("13", "poniżej", 1.9)];
+  const AH = [sel("1714", "Leeds United", 1.9), sel("1715", "Tottenham Hotspur", 1.9)];
+  const EH = [sel("1711", "Leeds United", 1.5), sel("1712", "remis", 3.9), sel("1713", "Tottenham Hotspur", 4.9)];
+  const norm = (id: string, p: string, sels: Sel[]) => n.normalizeMarket({ bookmakerMarketId: id, name: "x", paramValue: p, selections: sels }, ctx);
+  const LINE_RULES: [string, "total" | "hcp", string, Sel[]][] = [
+    ["18", "total", "2.5", OU], ["68", "total", "2.5", OU], ["90", "total", "2.5", OU], ["19", "total", "1.5", OU], ["20", "total", "1.5", OU],
+    ["37", "total", "2.5", [sel("794", "Leeds United i poniżej", 4), sel("796", "Leeds United i ponad", 4)]],
+    ["36", "total", "2.5", [sel("90", "ponad i tak", 2.5), sel("92", "poniżej i tak", 5)]],
+    ["547", "total", "2.5", [sel("1724", "1X i poniżej", 2.6), sel("1727", "1X i ponad", 2.2)]],
+    ["16", "hcp", "-1.5", AH], ["66", "hcp", "-1.5", AH],
+  ];
+  for (const [id, key, good, sels] of LINE_RULES) {
+    expect(norm(id, `${key}=${good}`, sels), `${id} ${key}=${good}`).not.toBeNull(); // control
+    for (const bad of ["abc", "", " ", "2.3", "0.3", "Infinity", "NaN", "1e1"]) expect(norm(id, `${key}=${bad}`, sels), `${id} ${key}=${bad}`).toBeNull();
+    expect(norm(id, "", sels), `${id} without ${key}`).toBeNull();
+  }
+  for (const id of ["18", "68", "90"]) for (const bad of ["0", "-2.5"]) expect(norm(id, `total=${bad}`, OU), `${id} total=${bad}`).toBeNull();
+  for (const id of ["14", "65"]) {
+    expect(norm(id, "hcp=1:0", EH)!.marketKey).toMatch(/EUROPEAN_HANDICAP:\+1$/); // control
+    for (const bad of ["x:0", "0:x", "1", "1:", ":1", "", "1:1", "-1:0", "1.5:0"]) expect(norm(id, `hcp=${bad}`, EH), `${id} hcp=${bad}`).toBeNull();
+  }
 });
 it("correct score names -> h-a codes and inny -> OTHER", () => {
   // Leeds evidence: 274 "0:0" 9.75, 276 "1:0" 8.5; 324 "inny" is in the descriptions but not offered on Leeds, so its odds are synthetic

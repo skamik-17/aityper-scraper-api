@@ -16,39 +16,59 @@ export interface LVBetRate {
 }
 
 /**
- * Individual selection within a market
+ * Individual selection within a market (client-api/v5 shape)
  */
 export interface LVBetSelection {
-  /** Selection ID */
-  id: number;
+  /** Selection ID (e.g., "bc:7392415565") */
+  selection_id: string;
   /** Display name for the selection */
   name: string;
   /** Position/order within the market (0, 1, 2 for 1X2) */
   order: number;
   /** Odds information */
   rate?: LVBetRate;
-  /** Selection status */
+  /** Selection status ("open" / "suspended" in v5, never "active") */
   status?: string;
 }
 
 /**
- * Single market from LVBet API (from /markets/search endpoint)
+ * Market group the market is listed under on the LVBet site
+ */
+export interface LVBetMarketsGroup {
+  /** Group display name (e.g., "Suma", "Zawodnicy - statystyki") */
+  name: string;
+  /** Group ID */
+  markets_group_id: number;
+}
+
+/**
+ * Single market from LVBet API (from /markets/search endpoint, client-api/v5 shape)
  */
 export interface LVBetMarket {
-  /** Market ID */
-  id: number;
+  /** Market instance ID (e.g., "bc:2511211325"), unique per market in a match */
+  market_id: string;
   /** Match ID this market belongs to */
   match_id: string;
-  /** Market name (e.g., "Zwyciezca meczu", "Suma goli") */
+  /** Market name (e.g., "Zwyciezca meczu", "Liczba goli") */
   name: string;
+  /**
+   * Line value for O/U markets. The v5 payload sends a number (2.5, 1.75,
+   * 0 for line-less markets); string kept for older captures.
+   */
+  line?: number | string;
+  /**
+   * Market-type (class) ID. Shared by sibling products (one class can cover
+   * several market names), so never treat it as a product key on its own.
+   */
+  markets_class_id?: number;
+  /** Group the market is listed under */
+  markets_group?: LVBetMarketsGroup;
   /** Whether this is the primary market for the match */
   is_primary?: boolean;
-  /** Line value for O/U markets (e.g., "2.5") */
-  line?: string;
   /** All selections for this market */
   selections?: LVBetSelection[];
-  /** Market status */
-  status?: string;
+  /** Market state ("open" / "suspended") */
+  state?: { status: string };
 }
 
 /**

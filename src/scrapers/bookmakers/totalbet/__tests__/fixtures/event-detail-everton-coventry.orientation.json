@@ -1,0 +1,1027 @@
+{
+ "data": {
+  "event": {
+   "name": "Everton - Coventry City",
+   "status": "active",
+   "type": "prematch",
+   "path": [
+    {
+     "name": "Piłka nożna",
+     "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9"
+    },
+    {
+     "name": "Anglia",
+     "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c"
+    },
+    {
+     "name": "Premier League",
+     "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf"
+    }
+   ],
+   "result": ":",
+   "components": [],
+   "category": {
+    "name": "Anglia",
+    "type": "sport",
+    "level": "category",
+    "image": null,
+    "uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "icon": "https://cdn.totalbet.pl/categories/b3fefc74-697a-4164-b81c-ce43966a4fd6.svg",
+    "parent_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "header_photo": null,
+    "three_d_icon": null
+   },
+   "uuid": "495716e5-fd45-43e5-8947-a0bf3ff676ab",
+   "betbuilder_available": true,
+   "tournament": {
+    "name": "Premier League",
+    "type": "sport",
+    "level": "tournament",
+    "image": "https://cdn.totalbet.pl/categories/483fe2dd-cda6-44ec-a168-e83750755f83.svg",
+    "uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+    "icon": null,
+    "parent_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+    "header_photo": null,
+    "three_d_icon": "https://cdn.totalbet.pl/categories/e01f0ee2-2ec9-4f6a-a966-d3b169355f77.svg"
+   },
+   "tournament_uuid": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
+   "category_uuid": "033125c9-6c26-42b0-b7cf-43940dbeed5c",
+   "start_at": "2026-11-06T20:00:00Z",
+   "event_layout": "horizontal",
+   "iframe": null,
+   "mobile_statscore_widget_id": "67e3cded6b587a60a98542e5",
+   "statscore_widget_id": "67a4c28b3ed1d6f55eb65bcb",
+   "discipline_uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+   "market_count": 488,
+   "additional_info": "🚀 TOTALprzewaga i 🔥 TOTALboost dostępny!",
+   "jackpot_available": false,
+   "live_data": {
+    "away_score": null,
+    "category_id": "sr:sport:1",
+    "clock": null,
+    "home_score": null,
+    "match_status": {
+     "id": "0",
+     "name": "Przed startem",
+     "uuid": "dfb45fd3-3264-4605-89a0-317e439735c0"
+    },
+    "model_name": "soccer",
+    "period_scores": null,
+    "statistics": {
+     "corners": {
+      "away": "0",
+      "home": "0"
+     },
+     "red_cards": {
+      "away": "0",
+      "home": "0"
+     },
+     "yellow_cards": {
+      "away": "0",
+      "home": "0"
+     }
+    }
+   },
+   "matchday": 10,
+   "participants": [
+    {
+     "name": "Everton",
+     "uuid": "88987a8c-b69a-4046-9a9e-105d6e6112fd",
+     "image_source": null
+    },
+    {
+     "name": "Coventry City",
+     "uuid": "01c90ca9-293b-4311-a9de-5f25b3927ce8",
+     "image_source": null
+    }
+   ],
+   "type_participants": "pair",
+   "discipline": {
+    "name": "Piłka nożna",
+    "type": "sport",
+    "level": "sport",
+    "image": "https://cdn.totalbet.pl/categories/5e27e539-7ee3-47b2-b3cd-e3655300ab06.svg",
+    "uuid": "ff57b93d-f74c-4015-a23b-e89f68b8d2c9",
+    "icon": "https://cdn.totalbet.pl/categories/0abf437f-9ab9-4826-9fcd-c40dafde9c8a.svg",
+    "parent_uuid": null,
+    "header_photo": "https://cdn.totalbet.pl/categories/72e9000b-1a8c-431e-a6e7-d2d17aa7c267.jpg",
+    "three_d_icon": "https://cdn.totalbet.pl/categories/870b3543-eea3-4f3d-8690-3a0ae2659fcf.svg"
+   },
+   "next_matchdays": [
+    11,
+    12
+   ],
+   "jackpot_prize_pool": null,
+   "promotion_cms_url": null,
+   "tipster_eid": "m:sr:match:72221378",
+   "component_lists": [
+    {
+     "name": "Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 14,
+     "slug": "strzeli_gola",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Everton",
+        "market_id": "32"
+       },
+       {
+        "type": "label",
+        "text": "Coventry City",
+        "market_id": "31"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "71fed09e-6a74-42c1-a037-f839ffebaa91",
+        "betbuilder_available": true,
+        "market_uuid": "55e74e52-35be-42a1-a699-b441193a399d",
+        "odds": "4.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "65c8aa5b-431d-4d4e-b07b-ca85bab15236",
+        "betbuilder_available": true,
+        "market_uuid": "cdedca0f-424f-45e4-b44b-89ad0d819ca6",
+        "odds": "2.36",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "10be3c9d-5afb-45bc-9b12-4ac98967175a",
+        "betbuilder_available": true,
+        "market_uuid": "55e74e52-35be-42a1-a699-b441193a399d",
+        "odds": "1.14",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "c1f0007e-5043-4d34-9bd0-8716e36050b5",
+        "betbuilder_available": true,
+        "market_uuid": "cdedca0f-424f-45e4-b44b-89ad0d819ca6",
+        "odds": "1.52",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola.",
+     "product_active": true
+    },
+    {
+     "name": "Everton - Total (suma)",
+     "type": "total",
+     "sort_order": 16,
+     "slug": "competitor1_total_suma",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "97113ab5-4419-4ea0-bffd-b05fe42a7028",
+        "betbuilder_available": true,
+        "market_uuid": "966baf92-f0b3-4bc1-8ca0-d3d7b2f2e50a",
+        "odds": "4.90",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "aa8f47b0-b66e-4c57-bf1e-fc8c61dd579a",
+        "betbuilder_available": true,
+        "market_uuid": "966baf92-f0b3-4bc1-8ca0-d3d7b2f2e50a",
+        "odds": "1.14",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "23227407-c08b-4a75-a401-e59756838cb2",
+        "betbuilder_available": true,
+        "market_uuid": "4767b86d-cdcc-4dd1-8c10-99ef8e4e76d6",
+        "odds": "2.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "acbaadff-5c5d-4156-8818-5a420715fa05",
+        "betbuilder_available": true,
+        "market_uuid": "4767b86d-cdcc-4dd1-8c10-99ef8e4e76d6",
+        "odds": "1.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "a0e41c68-07da-4e0c-887f-38eac33882fb",
+        "betbuilder_available": true,
+        "market_uuid": "193f2530-76a0-4127-965e-76ccb7963406",
+        "odds": "1.32",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "c71f2852-7d53-4399-827b-3d00f679fd38",
+        "betbuilder_available": true,
+        "market_uuid": "193f2530-76a0-4127-965e-76ccb7963406",
+        "odds": "3.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "ad5df339-1dee-4337-9d81-bd2787bb773e",
+        "betbuilder_available": true,
+        "market_uuid": "95d8615a-10d0-44dd-bbbb-f5a513fd785a",
+        "odds": "1.09",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "c7b9807e-77d0-4040-b9c4-68be010fbca9",
+        "betbuilder_available": true,
+        "market_uuid": "95d8615a-10d0-44dd-bbbb-f5a513fd785a",
+        "odds": "6.10",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "4.5"
+       },
+       {
+        "name": "poniżej 4.5",
+        "type": "outcome",
+        "uuid": "a78de510-c671-49e2-8fe4-b1abd79a2ac2",
+        "betbuilder_available": true,
+        "market_uuid": "26136afa-cd6d-4e08-aafa-a2594672030d",
+        "odds": "1.02",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 4.5",
+        "type": "outcome",
+        "uuid": "dcf89395-4441-4669-af33-7d13c4d9cbf9",
+        "betbuilder_available": true,
+        "market_uuid": "26136afa-cd6d-4e08-aafa-a2594672030d",
+        "odds": "10.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować czy suma goli/punktów zdobytych przez drużynę wymienioną na pierwszym miejscu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "Coventry City - Total (suma)",
+     "type": "total",
+     "sort_order": 21,
+     "slug": "competitor2_total_suma",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "94e408f8-3026-41b1-9bf5-4fbfce3d082f",
+        "betbuilder_available": true,
+        "market_uuid": "ca78d57a-5588-490d-93b7-ee5d78771c32",
+        "odds": "2.36",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "a6f34319-14c0-4229-a530-9e6b98aea82b",
+        "betbuilder_available": true,
+        "market_uuid": "ca78d57a-5588-490d-93b7-ee5d78771c32",
+        "odds": "1.52",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "2690d5ea-d331-4d66-9e66-84b0eff4b5eb",
+        "betbuilder_available": true,
+        "market_uuid": "594a09d3-0ad4-40c4-acbf-e0ee26fa0e2b",
+        "odds": "1.27",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "b1db74e6-3e49-4b54-8f10-1b23f76be1df",
+        "betbuilder_available": true,
+        "market_uuid": "594a09d3-0ad4-40c4-acbf-e0ee26fa0e2b",
+        "odds": "3.45",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "adceec4a-7b4d-4709-88e3-e6461eb2c50f",
+        "betbuilder_available": true,
+        "market_uuid": "a53b4ae3-d479-4a67-b8e4-cb6d1c1d33ce",
+        "odds": "1.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "34286e66-81fb-4d18-8a40-61d5c168df9c",
+        "betbuilder_available": true,
+        "market_uuid": "a53b4ae3-d479-4a67-b8e4-cb6d1c1d33ce",
+        "odds": "8.25",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "3.5"
+       },
+       {
+        "name": "poniżej 3.5",
+        "type": "outcome",
+        "uuid": "2138dfb8-f902-4424-aaaa-d8ec0344dceb",
+        "betbuilder_available": true,
+        "market_uuid": "64b1bce4-16d4-4968-a499-93c73a010972",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 3.5",
+        "type": "outcome",
+        "uuid": "122fda77-fd64-45d4-8738-1867c0bc94ad",
+        "betbuilder_available": true,
+        "market_uuid": "64b1bce4-16d4-4968-a499-93c73a010972",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować czy suma goli/punktów zdobytych przez drużynę wymienioną na pierwszym miejscu mieściła będzie się poniżej czy powyżej wskazanej wartości.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 83,
+     "slug": "1_polowa_czyste_konto",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Everton",
+        "market_id": "77"
+       },
+       {
+        "type": "label",
+        "text": "Coventry City",
+        "market_id": "76"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "4da9d062-1bbf-4f0b-81b7-562bc47559a2",
+        "betbuilder_available": true,
+        "market_uuid": "b7e8bded-47b0-42c2-9ad1-58fb42c6ff04",
+        "odds": "2.06",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "04669b13-5c5c-4711-a53f-b3522a6242ee",
+        "betbuilder_available": true,
+        "market_uuid": "087b2288-0e67-49ff-828f-3901233df283",
+        "odds": "1.42",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "0b694013-b9f6-4998-a7c5-9352acf8065d",
+        "betbuilder_available": true,
+        "market_uuid": "b7e8bded-47b0-42c2-9ad1-58fb42c6ff04",
+        "odds": "1.63",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "b1c84276-d82c-49c3-877f-b9f9a8bd0eba",
+        "betbuilder_available": true,
+        "market_uuid": "087b2288-0e67-49ff-828f-3901233df283",
+        "odds": "2.53",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w pierwszej połowie.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Everton - Total (suma)",
+     "type": "total",
+     "sort_order": 85,
+     "slug": "1_poaowa_competitor_1_suma_goli",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "9f7e9e79-ec56-4f13-8e8e-211d5f13952b",
+        "betbuilder_available": true,
+        "market_uuid": "feb804cc-1814-4c82-be9b-f77180d6152e",
+        "odds": "2.11",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "3d4ad749-af8d-4ae0-bdf5-7cf38c88a437",
+        "betbuilder_available": true,
+        "market_uuid": "feb804cc-1814-4c82-be9b-f77180d6152e",
+        "odds": "1.65",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "0470877b-29bf-488e-b5c9-0abe75bf6e77",
+        "betbuilder_available": true,
+        "market_uuid": "45f1b880-1f7a-49c8-b3cc-4322a539da60",
+        "odds": "1.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "8eb30d0c-9819-4563-b6ad-bcbe3f86b0c0",
+        "betbuilder_available": true,
+        "market_uuid": "45f1b880-1f7a-49c8-b3cc-4322a539da60",
+        "odds": "4.05",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "c0b452a2-0a66-4c3d-a63c-4dae56fbfdce",
+        "betbuilder_available": true,
+        "market_uuid": "1598a98e-701c-4f1a-9af8-38ca90a9b607",
+        "odds": "1.03",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "b3752cee-a3f3-4fea-bd72-7fe419dc66fb",
+        "betbuilder_available": true,
+        "market_uuid": "1598a98e-701c-4f1a-9af8-38ca90a9b607",
+        "odds": "9.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w pierwszej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "1. połowa - Coventry City - Total (suma)",
+     "type": "total",
+     "sort_order": 88,
+     "slug": "1_poaowa_competitor_2_suma_goli",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "1e0786e2-30b1-403d-8e63-658213edef6b",
+        "betbuilder_available": true,
+        "market_uuid": "57ba268c-4efc-44c1-8226-002f2cb33fdb",
+        "odds": "1.44",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "608b7866-240b-42cc-883f-ee127e995cf4",
+        "betbuilder_available": true,
+        "market_uuid": "57ba268c-4efc-44c1-8226-002f2cb33fdb",
+        "odds": "2.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "848666b6-9750-4770-bf97-5a247dd9330d",
+        "betbuilder_available": true,
+        "market_uuid": "e954aa8c-778d-424e-95c3-22a0cf8bdd66",
+        "odds": "1.04",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "23821273-25f5-42ee-bb7c-dd690e60ada3",
+        "betbuilder_available": true,
+        "market_uuid": "e954aa8c-778d-424e-95c3-22a0cf8bdd66",
+        "odds": "8.50",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w pierwszej połowie drużyna wymieniona jako druga.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Strzeli gola",
+     "type": "markets_in_columns",
+     "sort_order": 110,
+     "slug": "2_polowa_czyste_konto",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "empty"
+       },
+       {
+        "type": "label",
+        "text": "Everton",
+        "market_id": "97"
+       },
+       {
+        "type": "label",
+        "text": "Coventry City",
+        "market_id": "96"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "nie"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "13fb2172-3e45-4324-8a16-e9b9d7389cdb",
+        "betbuilder_available": true,
+        "market_uuid": "5bf9208b-3c39-4147-a284-cbf955218897",
+        "odds": "2.38",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "nie",
+        "type": "outcome",
+        "uuid": "f30f60f1-18f9-49b9-b629-2996324dde9c",
+        "betbuilder_available": true,
+        "market_uuid": "de6cfbeb-5174-4c58-b05d-768fdfe7a1ac",
+        "odds": "1.57",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "tak"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "767be80a-98c9-4012-88c1-0a3dec290518",
+        "betbuilder_available": true,
+        "market_uuid": "5bf9208b-3c39-4147-a284-cbf955218897",
+        "odds": "1.47",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "tak",
+        "type": "outcome",
+        "uuid": "9592ec0d-03bd-40c1-afc4-d50e1cb6ea37",
+        "betbuilder_available": true,
+        "market_uuid": "de6cfbeb-5174-4c58-b05d-768fdfe7a1ac",
+        "odds": "2.15",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować czy drużyna wymieniona w zakładzie strzeli gola w drugiej połowie.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Everton - Total (suma)",
+     "type": "total",
+     "sort_order": 112,
+     "slug": "2_poaowa_competitor1_suma_goli_",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "03e2913c-f473-42cd-98c4-9e54f6321841",
+        "betbuilder_available": true,
+        "market_uuid": "8d8fbad8-791f-408f-8cd0-dee1b56006bd",
+        "odds": "2.44",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "3cbbd950-2617-4332-a558-b1fc64cf2e32",
+        "betbuilder_available": true,
+        "market_uuid": "8d8fbad8-791f-408f-8cd0-dee1b56006bd",
+        "odds": "1.49",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "3a121e3d-fc03-4b67-8a31-afae050a6efe",
+        "betbuilder_available": true,
+        "market_uuid": "f59b8f38-5242-4ff3-825f-101aa660c267",
+        "odds": "1.30",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "3e4f1b07-b34a-4dd5-9658-618b14507b56",
+        "betbuilder_available": true,
+        "market_uuid": "f59b8f38-5242-4ff3-825f-101aa660c267",
+        "odds": "3.22",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "a83b6a1b-4d2e-42fe-b568-06bf4a502df3",
+        "betbuilder_available": true,
+        "market_uuid": "2cf43caa-dd31-4080-920c-e1f3c4c71a4a",
+        "odds": "1.06",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "a4811e44-94f0-412e-abe3-7235fa6e4f13",
+        "betbuilder_available": true,
+        "market_uuid": "2cf43caa-dd31-4080-920c-e1f3c4c71a4a",
+        "odds": "7.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    },
+    {
+     "name": "2. połowa - Coventry City - Total (suma)",
+     "type": "total",
+     "sort_order": 115,
+     "slug": "2_poaowa_competitor2_suma_goli_",
+     "game_groups": [],
+     "grid": [
+      [
+       {
+        "type": "label",
+        "text": ""
+       },
+       {
+        "type": "label",
+        "text": "Poniżej"
+       },
+       {
+        "type": "label",
+        "text": "Powyżej"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "0.5"
+       },
+       {
+        "name": "poniżej 0.5",
+        "type": "outcome",
+        "uuid": "c22400cf-7f5c-4b61-ad8b-52b2ad048a5e",
+        "betbuilder_available": true,
+        "market_uuid": "f9c90816-1deb-412b-9532-90a71b5c8d02",
+        "odds": "1.60",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 0.5",
+        "type": "outcome",
+        "uuid": "1d73146f-eaaf-497e-89d9-ca6df8cda3b6",
+        "betbuilder_available": true,
+        "market_uuid": "f9c90816-1deb-412b-9532-90a71b5c8d02",
+        "odds": "2.20",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "1.5"
+       },
+       {
+        "name": "poniżej 1.5",
+        "type": "outcome",
+        "uuid": "c18142fe-3fff-492c-bdb1-1c3ef9f42a2b",
+        "betbuilder_available": true,
+        "market_uuid": "d4db4da2-8d97-430a-8893-d67fe0b867e7",
+        "odds": "1.07",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 1.5",
+        "type": "outcome",
+        "uuid": "25e82783-cc54-444f-9c0e-59cf5889c620",
+        "betbuilder_available": true,
+        "market_uuid": "d4db4da2-8d97-430a-8893-d67fe0b867e7",
+        "odds": "6.70",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ],
+      [
+       {
+        "type": "label",
+        "text": "2.5"
+       },
+       {
+        "name": "poniżej 2.5",
+        "type": "outcome",
+        "uuid": "f8f5049b-a24d-4988-b626-64be18faea70",
+        "betbuilder_available": true,
+        "market_uuid": "5e0b22be-4802-4dc3-915b-75f8945cbd92",
+        "odds": "1.01",
+        "market_status": "active",
+        "outcome_status": "active"
+       },
+       {
+        "name": "powyżej 2.5",
+        "type": "outcome",
+        "uuid": "17eba640-bb5b-47f4-bae8-df32f1e54029",
+        "betbuilder_available": true,
+        "market_uuid": "5e0b22be-4802-4dc3-915b-75f8945cbd92",
+        "odds": "12.00",
+        "market_status": "active",
+        "outcome_status": "active"
+       }
+      ]
+     ],
+     "tooltip": "Należy wytypować ile goli/punktów zdobędzie w drugiej połowie drużyna wymieniona w zakładzie.",
+     "product_active": true
+    }
+   ]
+  }
+ },
+ "state": "success",
+ "_meta": null
+}

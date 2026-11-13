@@ -45,6 +45,8 @@ export interface PZBukEvent {
   isSuspended: boolean;
   /** Participants keyed by some ID */
   primaryParticipants: Record<string, PZBukParticipant>;
+  /** Market groups (event page tabs such as "Popularne", "Gole"), keyed by group id */
+  marketGroups?: Record<string, PZBukMarketGroup>;
 }
 
 /**
@@ -55,6 +57,10 @@ export interface PZBukMarketType {
   id: string;
   /** Market type name */
   name: string;
+  /** English name template (e.g. "1st half - total corners") */
+  originalName?: string;
+  /** Ids of the market groups this market type is listed under */
+  marketGroupIds?: number[];
 }
 
 /**
@@ -115,13 +121,16 @@ export interface PZBukInitialState {
 }
 
 /**
- * WebSocket frame message structure
+ * Message carried inside a WebSocket DATA frame (or a legacy RSocket frame).
  */
 export interface PZBukWebSocketMessage {
-  /** Message type: "INITIAL_STATE", "UPDATE", etc. */
+  /** Message type: "INITIAL_STATE", "SELECTION_DELTA", "EVENT_DELTA" */
   type: string;
-  /** Payload containing data */
-  payload: PZBukInitialState;
+  /**
+   * Message payload. A `PZBukInitialState` for INITIAL_STATE; the delta
+   * payload shapes are not modelled.
+   */
+  payload: unknown;
 }
 
 /**
@@ -138,4 +147,16 @@ export interface ParsedTeams {
 export interface GroupedSelections {
   /** Key format: "eventId:marketTypeId" or "eventId:marketTypeId:points" */
   [key: string]: PZBukSelection[];
+}
+
+/**
+ * Market group (event page tab) declared on an event
+ */
+export interface PZBukMarketGroup {
+  /** Market group ID, as used in SUBSCRIBE `filters.marketGroupIds` */
+  id: number;
+  /** Group display name (e.g. "Popularne") */
+  name: string;
+  /** Number of markets the group declares */
+  marketsCount: number;
 }

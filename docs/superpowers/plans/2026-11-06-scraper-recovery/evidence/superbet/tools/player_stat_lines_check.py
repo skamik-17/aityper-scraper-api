@@ -64,5 +64,5 @@ for path in args:
             print(f"    {p}")
         if len(problems) > 5:
             print(f"    ... {len(problems) - 5} more")
-print("RESULT", "PASS" if fail == 0 else f"FAIL ({fail})")
+print("RESULT", "PASS" if fail == 0 else f"FAIL ({fail})", f"files={len(args)}")
 sys.exit(1 if fail else 0)

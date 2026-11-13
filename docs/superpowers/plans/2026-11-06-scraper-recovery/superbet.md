@@ -207,7 +207,7 @@ The offline A/B confirms that no catalog code was lost.
    - `tail -n +$START $LOG | grep -cE '^\[superbet\] Unmapped market .*\(id: (232507|232508|232513|232514|232515|232516)\)$'` = 0 (today 111).
    - The same grep with `(540|541|545|568|569)` = 0 (today 100).
    - `[Superbet/FullOffer] Completed: N matches` with N ≥ the number of PL fixtures the other bookmakers list (today 20).
-   - `python3 -I evidence/superbet/tools/fetch_near_term.py <dir> && python3 -I evidence/superbet/tools/exact_goals_check.py <dir>/*.json` prints `RESULT PASS`. That means superbet is present in all 5 exact-goals codes on every match kicking off within 72 h, and is within 20 % of the peer median wherever that median is below 10. Today it prints `RESULT FAIL (50)`.
+   - `python3 -I evidence/superbet/tools/fetch_near_term.py <dir> && python3 -I evidence/superbet/tools/exact_goals_check.py <dir>/*.json` prints `RESULT PASS files=<n>` with n ≥ 1. That means superbet is present in all 5 exact-goals codes on every match kicking off within 72 h, and is within 20 % of the peer median wherever that median is below 10. Today it prints `RESULT FAIL (50)`. With no file arguments (no PL fixture within 72 h) the tool exits 1 with a usage line instead of passing.
    - `/api/odds` superbet MATCH_WINNER `externalId == "undefined"`: 0 of 60 (today 60/60). Command in Task 3 Step 6.
 4. **Single-bookmaker live smoke (standalone, read-only, no DB writes).** Command shape proven on the current code on 2026-11-06 17:34Z; output in `evidence/superbet/discovery-smoke-derived-url-2026-11-06.txt`:
 

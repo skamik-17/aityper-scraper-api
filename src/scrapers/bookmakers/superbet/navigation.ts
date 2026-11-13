@@ -197,3 +197,8 @@ export function extractEventIdFromUrl(eventUrl: string): string | null {
 export function buildEventUrl(eventId: number | string): string {
   return `${BASE_URL}/zaklady-bukmacherskie/pilka-nozna/${eventId}`;
 }
+
+/** One event's detail (full offer) in the offer API. */
+export function superbetEventDetailUrl(eventId: number | string): string {
+  return `${API_BASE_URL}/events/${eventId}`;
+}

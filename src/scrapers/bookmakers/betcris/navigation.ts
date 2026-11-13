@@ -90,7 +90,9 @@ interface CaptureAttemptResult {
  * Deadlines:
  * - goto settled (resolved or rejected) and no Swarm socket within
  *   wsOpenTimeoutMs -> navigation_failed (goto rejected) / no_swarm_socket;
- * - first socket opened and no useful frame within firstUsefulFrameTimeoutMs ->
+ * - first socket opened and no useful frame within firstUsefulFrameTimeoutMs
+ *   (FIRST_USEFUL_FRAME_TIMEOUT for the listing,
+ *   FIRST_USEFUL_FRAME_TIMEOUT_SINGLE_EVENT for a match page) ->
  *   no_sport_frames / competition_missing / no_games_with_markets /
  *   target_game_missing.
  * A deadline (or the single-event max wait) that fires more than STALL_LATE_MS
@@ -112,7 +114,10 @@ export async function captureSwarm(
   const resolved: SwarmCaptureTiming = {
     wsOpenTimeoutMs: timing.wsOpenTimeoutMs ?? WS_CONFIG.WS_OPEN_TIMEOUT,
     firstUsefulFrameTimeoutMs:
-      timing.firstUsefulFrameTimeoutMs ?? WS_CONFIG.FIRST_USEFUL_FRAME_TIMEOUT,
+      timing.firstUsefulFrameTimeoutMs ??
+      (config.singleEventMode
+        ? WS_CONFIG.FIRST_USEFUL_FRAME_TIMEOUT_SINGLE_EVENT
+        : WS_CONFIG.FIRST_USEFUL_FRAME_TIMEOUT),
     maxAttempts: Math.max(1, timing.maxAttempts ?? WS_CONFIG.MAX_ATTEMPTS),
     retryBackoffMs: timing.retryBackoffMs ?? WS_CONFIG.RETRY_BACKOFF,
   };
@@ -212,28 +217,39 @@ function runCaptureAttempt(
     const finish = async (failure: SwarmCaptureFailure | null): Promise<void> => {
       if (done) return;
       done = true;
-      sampleLoopGap(); // the tail since the sampler's last tick
-      clearRealInterval(loopSampler);
-      clearTimeout(wsOpenTimer);
-      clearTimeout(firstUsefulTimer);
-      clearTimeout(maxWaitTimer);
-      for (const timer of graceTimers) clearTimeout(timer);
-      clearInterval(plateauPoll);
-      page.off("websocket", onWebSocket);
-      for (const cleanup of socketCleanups) cleanup();
-
       attempt.failure = failure;
+      // Callers do `void finish(...)`: a throwing cleanup step (a page wrapper,
+      // a socket) must neither leave the attempt unresolved nor become an
+      // unhandled rejection. Own timers and the loop monitor are released
+      // first, so a throw from the page or a socket cannot leak them.
       try {
-        attempt.finalUrl = page.url();
-      } catch {
-        attempt.finalUrl = null;
+        sampleLoopGap(); // the tail since the sampler's last tick
+        clearRealInterval(loopSampler);
+        clearTimeout(wsOpenTimer);
+        clearTimeout(firstUsefulTimer);
+        clearTimeout(maxWaitTimer);
+        for (const timer of graceTimers) clearTimeout(timer);
+        clearInterval(plateauPoll);
+        attempt.eventLoopDelayMaxMs = Math.round(Math.max(loopDelay.max / 1e6, loopGapMaxMs));
+        loopDelay.disable();
+
+        try {
+          attempt.finalUrl = page.url();
+        } catch {
+          attempt.finalUrl = null;
+        }
+        page.off("websocket", onWebSocket);
+        for (const cleanup of socketCleanups) cleanup();
+        if (failure) {
+          attempt.pageTitle = await readPageTitle(page);
+        }
+      } catch (error) {
+        console.warn(
+          `[Betcris/Navigation] capture cleanup failed: ${error instanceof Error ? error.message : String(error)}`
+        );
+      } finally {
+        resolve({ attempt, data: failure ? null : merged });
       }
-      attempt.eventLoopDelayMaxMs = Math.round(Math.max(loopDelay.max / 1e6, loopGapMaxMs));
-      loopDelay.disable();
-      if (failure) {
-        attempt.pageTitle = await readPageTitle(page);
-      }
-      resolve({ attempt, data: failure ? null : merged });
     };
 
     // Decide after one setImmediate turn, and only if the attempt is still open:

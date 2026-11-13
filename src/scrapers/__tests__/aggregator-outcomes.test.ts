@@ -372,3 +372,26 @@ describe("runAllFullOfferScrapers: honest outcomes", () => {
     );
   });
 });
+
+describe("runAllFullOfferScrapers: partial outcome (perf plan 07 Task 0)", () => {
+  it("a scraper that saved data but reports a cause is partial: counted ok, warn line with the cause", async () => {
+    scrapers.betcris.scrapeFullOffer.mockResolvedValueOnce({
+      success: true,
+      bookmaker: "betcris",
+      league: "premier-league",
+      matches: freshMatches(20, 1),
+      error: "aborted after 3 consecutive per-match capture failures",
+    });
+    save.mockResolvedValueOnce(saved(6000));
+    const r = await runAllFullOfferScrapers("premier-league", ["betcris"]);
+    expect(r.outcomes[0]).toMatchObject({
+      status: "partial",
+      marketsSaved: 6000,
+      error: "aborted after 3 consecutive per-match capture failures",
+    });
+    expect(r.summary).toMatchObject({ successCount: 1, errorCount: 0 });
+    expect(logged(warnSpy)).toContain(
+      "[Aggregator/FullOffer] betcris partial: 20 matches, 20 markets found, 6000 saved - aborted after 3 consecutive per-match capture failures",
+    );
+  });
+});

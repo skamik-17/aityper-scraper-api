@@ -211,3 +211,42 @@ describe("run fixtures", () => {
     expect(o.finishedAt.getTime() - o.startedAt.getTime()).toBe(o.durationMs);
   });
 });
+
+describe("classifyBookmakerRun: a scraper cause with saved rows (perf plan 07 Task 0)", () => {
+  it("success with a scraper cause and saved rows is partial and keeps the cause (README §5.1)", () =>
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: twenty, error: "aborted after 3 consecutive per-match capture failures" },
+        { marketsNormalized: 6000, marketsSaved: 6000, errors: [] },
+      ),
+    ).toEqual({ status: "partial", error: "aborted after 3 consecutive per-match capture failures" }));
+
+  it("joins the scraper cause and the save errors with ' | '", () =>
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: twenty, error: "1 of 20 details failed | fetch HTTP 503 https://api.example/1" },
+        {
+          marketsNormalized: 4200,
+          marketsSaved: 4100,
+          errors: ["Batch insert failed (1 of 12 batches): TypeError: fetch failed (other side closed)"],
+        },
+      ),
+    ).toEqual({
+      status: "partial",
+      error:
+        "1 of 20 details failed | fetch HTTP 503 https://api.example/1 | Batch insert failed (1 of 12 batches): TypeError: fetch failed (other side closed)",
+    }));
+
+  it("an empty scraper error string is no cause", () =>
+    expect(
+      classifyBookmakerRun({ success: true, matches: twenty, error: "" }, { marketsNormalized: 10, marketsSaved: 10, errors: [] }),
+    ).toEqual({ status: "success", error: null }));
+
+  it("a scraper cause never turns a run that saved nothing into partial", () =>
+    expect(
+      classifyBookmakerRun(
+        { success: true, matches: twenty, error: "aborted after 3 consecutive per-match capture failures" },
+        { marketsNormalized: 420, marketsSaved: 0, errors: [] },
+      ),
+    ).toEqual({ status: "persist_failed", error: "0 of 420 normalized markets saved (all filtered as non-canonical)" }));
+});

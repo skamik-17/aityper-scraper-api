@@ -44,7 +44,8 @@ function summarizeErrors(errors: readonly string[]): string | null {
 
 /**
  * Rules, in order: scraper failed -> scrape_failed; 0 matches -> empty;
- * 0 markets saved -> persist_failed; saved with errors -> partial; else success.
+ * 0 markets saved -> persist_failed; saved with a scraper cause or save errors
+ * -> partial (both causes joined with " | "); else success.
  * An empty scraper error string carries no cause, so it gets the default text.
  */
 export function classifyBookmakerRun(
@@ -76,6 +77,7 @@ export function classifyBookmakerRun(
     };
   }
 
+  if (scrape.error) return { status: "partial", error: [scrape.error, saveError].filter(Boolean).join(" | ") };
   if (saveError) return { status: "partial", error: saveError };
   return { status: "success", error: null };
 }

@@ -56,28 +56,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   }
 
   /**
-   * Navigate to a URL with retry logic
-   */
-  protected async navigateWithRetry(
-    page: Page,
-    url: string,
-    options: { timeout?: number; waitUntil?: "load" | "domcontentloaded" | "networkidle" } = {}
-  ): Promise<void> {
-    const { timeout = this.config.timeout, waitUntil = "networkidle" } = options;
-    const maxRetries = this.config.retries;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        await page.goto(url, { timeout, waitUntil });
-        return;
-      } catch (error) {
-        if (attempt === maxRetries) throw error;
-        await this.delay(Math.pow(2, attempt) * 1000);
-      }
-    }
-  }
-
-  /**
    * Wait for a selector with timeout
    */
   protected async waitForSelector(page: Page, selector: string, timeout?: number): Promise<boolean> {

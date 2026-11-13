@@ -164,8 +164,8 @@ describe("PlaywrightScraper on the browser runtime", () => {
 
   it("browserPool.acquire is retired", async () => expect(browserPool.acquire()).rejects.toThrow("browserPool.acquire() is retired"));
 
-  it("the dead route/stealth path is gone", () => {
+  it("the dead route/stealth path and navigateWithRetry are gone", () => {
     const src = readFileSync(new URL("../playwright-base.ts", import.meta.url), "utf8");
-    expect(src).not.toMatch(/\.route\(|applyStealthScripts|BLOCKED_RESOURCE_TYPES|disableResourceBlocking|DEFAULT_USER_AGENT|browserPool/);
+    expect(src).not.toMatch(/\.route\(|applyStealthScripts|BLOCKED_RESOURCE_TYPES|disableResourceBlocking|DEFAULT_USER_AGENT|browserPool|navigateWithRetry/);
   });
 });

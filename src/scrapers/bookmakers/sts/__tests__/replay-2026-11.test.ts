@@ -31,12 +31,17 @@ const CASES = [
 describe("STS offline replay of the 2026-11 Premier League snapshots", () => {
   it.each(CASES)("replay $home vs $away: full STS offer normalizes", ({ id, file, home, away, minNormalized, totals }) => {
     const ipl = parseWebSocketJson(fx("i_pl.trimmed.txt"))!;
-    const fixture = parseFixtures(ipl, "premier-league").find((f) => f.id === id)!;
-    const raw = parseAllMarkets(fixture, parseWebSocketJson(fx(file)), ipl);     // same call shape as the full-offer loop in index.ts
+    const fixture = parseFixtures(ipl, "premier-league").find((f) => f.id === id);
+    expect(fixture, id).toBeDefined();                                            // a strict-filter regression fails here, not as a TypeError
+    const raw = parseAllMarkets(fixture!, parseWebSocketJson(fx(file)), ipl);    // same call shape as the full-offer loop in index.ts
     const n = normalizeMarketsForBookmaker(raw, "sts", home, away, "premier-league");
     const other = n.filter((m) => m.normalizedType === "OTHER");
     expect(n.length - other.length).toBeGreaterThanOrEqual(minNormalized);
     expect(other.length).toBeLessThanOrEqual(2);                                  // only 197/198 (mapped OTHER on purpose); pre-fix 117 / 111
+    // Pin which ids are OTHER: 197/198 (team red card, mapped OTHER on purpose). A swap (197 mapping while another id leaks
+    // to OTHER) keeps the count; Leeds has no golden to catch it.
+    const otherIds = other.map((m) => m.bookmakerMarketId).sort();
+    expect(["197", "198"], otherIds.join(",")).toEqual(expect.arrayContaining(otherIds));
     const codes = new Set(n.map((m) => m.normalizedType));
     for (const code of REQUIRED) expect(codes.has(code), code).toBe(true);        // pre-fix all 12 missing
     // Every cards/corners total line stays its own entry (Task 4): the count bars above would still pass a re-collapse (~525)

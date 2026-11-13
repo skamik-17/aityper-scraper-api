@@ -37,7 +37,7 @@ The parsing layer is strictly separated from the browser layer. `parser.ts` take
 The scraper is pre-configured for major European football leagues via `LEAGUE_CONFIG`. Each league configuration includes a target URL, a numeric tournament ID, and string filters for country and tournament names to ensure high accuracy when filtering the global STS data stream.
 
 *   **Ekstraklasa** (Poland): `tournamentId: 46`, Filters: "polska", "ekstraklasa".
-*   **Premier League** (England): `tournamentId: 17`, Filters: "angli", "premier league".
+*   **Premier League** (England): strict match on the ids `categoryId: 1` + `tournamentId: 17` (`strictTournamentId: true`); the name filters "angli", "premier league" stay as a second guard (alone they also match the Northern Premier League and Premier League 2 under category 249, "Anglia Amatorzy").
 *   **LaLiga** (Spain): `tournamentId: 8`, Filters: "hiszpan", "laliga". (Includes logic to exclude Segunda Division).
 *   **Serie A** (Italy): `tournamentId: 23`, Filters: "wloch", "serie a".
 *   **Ligue 1** (France): `tournamentId: 16`, Filters: "francj", "ligue 1".

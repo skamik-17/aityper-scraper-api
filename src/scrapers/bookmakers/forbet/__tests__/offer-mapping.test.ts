@@ -5,7 +5,7 @@ import {
   loadFixtureRoutes,
   withoutScrapedAt,
 } from "../../../shared/rest-market/__tests__/offline-harness.js";
-import { ForbetPlaywrightScraper } from "../index.js";
+import { ForbetBrowserScraper } from "../index.js";
 import { toForbetOffer } from "../offer-mapping.js";
 import { isValidEvent } from "../parser.js";
 import type { ForbetEvent } from "../types.js";
@@ -22,7 +22,7 @@ const mapped = () =>
   list.data.filter(isValidEvent).map((e) => toForbetOffer(e, detailOf(e), "premier-league")).filter((o) => o !== null);
 
 async function oldBrowserRun() {
-  const scraper = new ForbetPlaywrightScraper();
+  const scraper = new ForbetBrowserScraper();
   const { calls } = driveBrowserScraperOffline(scraper, loadFixtureRoutes("forbet", URLS));
   const result = await scraper.scrapeFullOffer("premier-league");
   return { result, calls };

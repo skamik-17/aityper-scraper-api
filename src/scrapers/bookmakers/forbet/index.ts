@@ -56,7 +56,8 @@ import { toForbetOffer } from "./offer-mapping.js";
 /**
  * forBET Playwright Scraper Implementation
  */
-export class ForbetPlaywrightScraper extends PlaywrightScraper {
+/** forbet's browser path, kept as the SCRAPER_TRANSPORT_FORBET=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class ForbetBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "forbet";
   config: ScraperConfig;
 
@@ -271,7 +272,12 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
 
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));
-            const offer = toForbetOffer(event, detailData?.data || event, leagueSlug);
+            if (!detailData?.data) {
+              // No listing fallback: a thin listing write would replace the match's full offer
+              console.warn(`[forBET/FullOffer] Skipping ${event.eventId}: detail failed`);
+              continue;
+            }
+            const offer = toForbetOffer(event, detailData.data, leagueSlug);
             if (offer) {
               matches.push(offer);
               console.log(`[forBET/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
@@ -302,5 +308,3 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-// Export singleton instance
-export const forbetScraper = new ForbetPlaywrightScraper();

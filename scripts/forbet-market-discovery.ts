@@ -11,7 +11,7 @@
  *   npx tsx scripts/forbet-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/forbet-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { forbetScraper } from "../src/scrapers/bookmakers/forbet/index.js";
+import { forbetScraper } from "../src/scrapers/bookmakers/index.js";
 import { forbetNormalizer } from "../src/services/normalization/bookmakers/forbet-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

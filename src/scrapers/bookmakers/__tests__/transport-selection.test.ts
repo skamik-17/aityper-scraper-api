@@ -8,7 +8,10 @@ afterEach(() => {
 });
 
 describe("per-brand transport selection", () => {
-  it.each([["etoto", "SCRAPER_TRANSPORT_ETOTO", "etotoScraper", "EtotoHttpScraper", "EtotoBrowserScraper"]])(
+  it.each([
+    ["etoto", "SCRAPER_TRANSPORT_ETOTO", "etotoScraper", "EtotoHttpScraper", "EtotoBrowserScraper"],
+    ["forbet", "SCRAPER_TRANSPORT_FORBET", "forbetScraper", "ForbetHttpScraper", "ForbetBrowserScraper"],
+  ])(
     "%s: HTTP by default, browser class when %s=browser",
     async (_bm, env, inst, httpCls, browserCls) => {
       vi.stubEnv(env, "");

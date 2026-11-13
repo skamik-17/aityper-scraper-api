@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/forbet-prep-audit.ts --url "<forbet event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { forbetScraper } from "../src/scrapers/bookmakers/forbet/index.js";
+import { forbetScraper } from "../src/scrapers/bookmakers/index.js";
 import { forbetNormalizer } from "../src/services/normalization/bookmakers/forbet-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

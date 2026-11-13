@@ -9,7 +9,7 @@ import { betcrisScraper } from "../../scrapers/bookmakers/betcris/index.js";
 import { betfanScraper } from "../../scrapers/bookmakers/betfan/index.js";
 import { bettersScraper } from "../../scrapers/bookmakers/betters/index.js";
 import { etotoScraper } from "../../scrapers/bookmakers/index.js";
-import { forbetScraper } from "../../scrapers/bookmakers/forbet/index.js";
+import { forbetScraper } from "../../scrapers/bookmakers/index.js";
 import { lebullScraper } from "../../scrapers/bookmakers/lebull/index.js";
 import { pzbukScraper } from "../../scrapers/bookmakers/pzbuk/index.js";
 import { totalbetScraper } from "../../scrapers/bookmakers/totalbet/index.js";

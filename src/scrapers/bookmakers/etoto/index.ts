@@ -30,12 +30,11 @@ import {
   parseDoubleChance,
   parseBTTS,
   parseOverUnder,
-  parseAllMarkets,
   isValidEvent,
   hasValid1X2Odds,
 } from "./parser.js";
 import type { EtotoEvent } from "./types.js";
-import { toIsoStartTime } from "../../shared/start-time.js";
+import { toEtotoOffer } from "./offer-mapping.js";
 
 export class EtotoPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "etoto";
@@ -260,26 +259,10 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
 
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));
-            const fullEvent = detailData?.data || event;
-
-            const teams = parseTeamNames(fullEvent.eventName);
-            const markets = parseAllMarkets(fullEvent, teams);
-
-            if (markets.length > 0) {
-              matches.push({
-                matchId: String(fullEvent.eventId),
-                bookmaker: this.bookmaker,
-                homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                eventUrl: buildEventUrl(fullEvent.eventId),
-                markets,
-                startTime: toIsoStartTime(fullEvent.eventStart),
-                scrapedAt: new Date(),
-              });
-
-              console.log(
-                `[eToto/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
-              );
+            const offer = toEtotoOffer(event, detailData?.data || event, leagueSlug);
+            if (offer) {
+              matches.push(offer);
+              console.log(`[eToto/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
             }
 
             await this.delay(100);

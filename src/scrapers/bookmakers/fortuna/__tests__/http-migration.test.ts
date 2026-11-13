@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { captureLogs, envelope, runBrowserPathOffline, type ReplayRoutes } from "../../../../__tests__/helpers/replay-page.js";
+import { createReplayHttpClient } from "../../../../__tests__/helpers/replay-http.js";
+import { captureLogs, envelope, runBrowserPathOffline, stripScrapedAt, type ReplayRoutes } from "../../../../__tests__/helpers/replay-page.js";
+import { browserPool } from "../../../base/browser-pool.js";
+import { FortunaHttpScraper } from "../http-scraper.js";
+import { fortunaFixtureMarketsUrl, fortunaFixturesUrl } from "../navigation.js";
 import { mapFortunaFixtureOffer, selectFortunaFixtures } from "../full-offer-mapping.js";
 import { FortunaPlaywrightScraper } from "../index.js";
 import { parseAllMarkets } from "../parser.js";
@@ -65,4 +69,60 @@ describe("fortuna full-offer mapping", () => {
     const { logs } = await captureLogs(async () => mapFortunaFixtureOffer(ARSENAL, ARSENAL_MARKETS, "premier-league"));
     expect(logs).toEqual([`[Fortuna/FullOffer] Arsenal vs Hull: ${parsedArsenal().length} markets`]);
   });
+});
+
+const fullOfferLines = (l: string[]) => l.filter((line) => line.startsWith("[Fortuna/FullOffer]"));
+
+describe("FortunaHttpScraper", () => {
+  const run = (routes: ReplayRoutes) => new FortunaHttpScraper(createReplayHttpClient(routes)).scrapeFullOffer("premier-league");
+
+  it("URL builders reproduce the browser URLs byte for byte", () => {
+    expect(fortunaFixturesUrl("ufo:tour:00-03m")).toBe(LISTING_URL);
+    expect(fortunaFixtureMarketsUrl("ufo:mtch:1xi-0a1")).toBe(MARKETS_URL("ufo:mtch:1xi-0a1"));
+  });
+
+  it("declares transport http", () => expect(new FortunaHttpScraper().transport).toBe("http"));
+
+  it("contract: deep-equals the browser path; the failed fixture is reported, not dropped silently", async () => {
+    const old = await runBrowserPathOffline(new FortunaPlaywrightScraper(), "premier-league", ROUTES);
+    const client = createReplayHttpClient(ROUTES);
+    const { value: neu, logs } = await captureLogs(() => new FortunaHttpScraper(client).scrapeFullOffer("premier-league"));
+    expect(neu).toMatchObject({ success: true, error: `1 of 2 details failed | fetch HTTP 500 ${MARKETS_URL("ufo:mtch:1xi-0a0")}` });
+    expect(neu.matches).toHaveLength(1);
+    expect(stripScrapedAt(neu.matches)).toEqual(stripScrapedAt(old.result.matches));
+    expect(client.calls.filter((u) => !old.requests.includes(u))).toEqual([]);
+    expect(client.calls.some((u) => u.endsWith("/markets/overview"))).toBe(false);
+    expect(fullOfferLines(logs)).toEqual(fullOfferLines(old.logs));
+  });
+
+  it("never acquires a browser", async () => {
+    const acquire = vi.spyOn(browserPool, "acquire");
+    await run(ROUTES);
+    expect(acquire).not.toHaveBeenCalled();
+  });
+
+  it("fails with the first cause when more than half the details fail", async () =>
+    expect(await run({ ...ROUTES, [MARKETS_URL("ufo:mtch:1xi-0a1")]: { status: 500, body: "upstream" } }))
+      .toMatchObject({ success: false, matches: [], error: `2 of 2 details failed | fetch HTTP 500 ${MARKETS_URL("ufo:mtch:1xi-0a0")}` }));
+
+  it("a listing HTTP error becomes the result error", async () =>
+    expect(await run({ ...ROUTES, [LISTING_URL]: { status: 404, body: "nf" } })).toMatchObject({ success: false, error: `fetch HTTP 404 ${LISTING_URL}` }));
+
+  it("a challenged listing names SCRAPER_TRANSPORT_FORTUNA", async () =>
+    expect((await run({ ...ROUTES, [LISTING_URL]: { status: 403, body: "<html>", contentType: "text/html" } })).error)
+      .toBe(`fetch HTTP 403 ${LISTING_URL} | possible Cloudflare challenge, fallback SCRAPER_TRANSPORT_FORTUNA=browser`));
+
+  it("an empty listing is success:true with no matches and no detail request (README §3)", async () => {
+    const client = createReplayHttpClient({ ...ROUTES, [LISTING_URL]: { body: '{"fixtures":[]}' } });
+    expect(await new FortunaHttpScraper(client).scrapeFullOffer("premier-league")).toMatchObject({ success: true, matches: [] });
+    expect(client.calls).toEqual([LISTING_URL]);
+    expect(console.warn).toHaveBeenCalledWith(`[Fortuna/FullOffer] No fixtures found from API ${LISTING_URL}`);
+  });
+
+  it("a malformed listing (no fixtures array) fails", async () =>
+    expect(await run({ ...ROUTES, [LISTING_URL]: { body: '{"error":"x"}' } })).toMatchObject({ success: false, error: `fetch unexpected payload ${LISTING_URL}` }));
+
+  it("wrong shape: a 200 that is not an array is skipped, never an empty offer", async () =>
+    expect(await run({ ...ROUTES, [MARKETS_URL("ufo:mtch:1xi-0a1")]: { body: '{"error":"x"}' }, [MARKETS_URL("ufo:mtch:1xi-0a0")]: { body: "[]" } }))
+      .toMatchObject({ success: false, error: `1 of 1 details failed | fetch unexpected payload ${MARKETS_URL("ufo:mtch:1xi-0a1")}` }));
 });

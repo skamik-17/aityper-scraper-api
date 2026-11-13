@@ -291,3 +291,13 @@ export function extractFixtureIdFromUrl(eventUrl: string): string | null {
 export function buildEventUrl(fixtureId: string, seoName: string): string {
   return `${BASE_URL}/zaklady-bukmacherskie/pilka-nozna/${seoName}-${fixtureId}`;
 }
+
+/** A tournament's fixture listing; the `:` in the id stays literal, as in the browser's request. */
+export function fortunaFixturesUrl(tournamentId: string): string {
+  return `${API_STRUCTURE_URL}/prematch/tournament/${tournamentId}/fixtures`;
+}
+
+/** One fixture's full market list (not the overview). */
+export function fortunaFixtureMarketsUrl(fixtureId: string): string {
+  return `${API_MARKETS_URL}/fixture/${fixtureId}/markets`;
+}

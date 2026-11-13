@@ -240,6 +240,9 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     // k: events whose detail failed and that fell back to the list 1X2.
     let detailsFailed = 0;
     let firstDetailError: string | undefined;
+    // Events skipped because their detail is no longer an active prematch event.
+    let skippedNotPrematch = 0;
+    let firstNotPrematchError: string | undefined;
 
     for (const listEvent of list.events) {
       // Match identity always comes from the list event, so it never depends on detail success.
@@ -257,6 +260,8 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       if (detail.notPrematch) {
         // Kicked off (or was suspended) after the list call: no prematch price may be
         // stored for it, so there is no list-1X2 fallback either.
+        skippedNotPrematch++;
+        firstNotPrematchError ??= detail.error;
         console.log(`${LOG} skipped ${homeTeam} vs ${awayTeam}: detail is ${detail.notPrematch.type}/${detail.notPrematch.status}`);
         continue;
       }
@@ -299,11 +304,17 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       console.log(`${LOG} ${homeTeam} vs ${awayTeam}: ${markets.length} markets (market_count ${(detail.event ?? listEvent).market_count})`);
     }
 
+    const success = detailsFailed < detailsCounted;
     const errorParts: string[] = [];
     if (detailsFailed > 0) {
       const text = `Detail fetch failed for ${detailsFailed}/${detailsCounted} events (first: ${firstDetailError})`;
       console.warn(`${LOG} ${text}`);
       errorParts.push(text);
+    }
+    // Kick-off skips are routine on a healthy run, so they are reported only when the run
+    // fails: then they can be the reason (e.g. every detail went live at a shared kick-off).
+    if (skippedNotPrematch > 0 && (matches.length === 0 || !success)) {
+      errorParts.push(`Skipped ${skippedNotPrematch} not-prematch events (first: ${firstNotPrematchError})`);
     }
     errorParts.push(...driftErrors);
 
@@ -316,7 +327,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     console.log(`${LOG} Completed: ${matches.length} matches, ${totalMarkets} total markets`);
 
     return {
-      success: detailsFailed < detailsCounted,
+      success,
       bookmaker: this.bookmaker,
       league,
       matches,

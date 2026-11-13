@@ -180,7 +180,7 @@ async function requestJson(url: string, fetchJson: FetchJson): Promise<RequestOu
   try {
     response = await fetchJson(url);
   } catch (err) {
-    return { ok: false, error: `Request failed: ${errorMessage(err)} (${url})` };
+    return { ok: false, error: `Request failed: ${errorMessage(err)}${causeSuffix(err)} (${url})` };
   }
 
   const { status, contentType, body } = response;
@@ -251,4 +251,16 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
+}
+
+/**
+ * " [<reason>]" from err.cause, else "". undici reports every transport failure as
+ * "fetch failed"; the real reason (ENOTFOUND, ECONNRESET, a TLS error) is only in
+ * the cause, as its code or, without one, its message.
+ */
+function causeSuffix(err: unknown): string {
+  const cause = err instanceof Error ? err.cause : undefined;
+  if (!isRecord(cause)) return "";
+  const reason = [cause.code, cause.message].find((v): v is string => typeof v === "string" && v !== "");
+  return reason ? ` [${reason}]` : "";
 }

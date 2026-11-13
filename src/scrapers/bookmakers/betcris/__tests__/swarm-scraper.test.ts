@@ -6,6 +6,7 @@ import { BetcrisSwarmScraper } from "../swarm-scraper.js";
 import { swarmListingParams, SWARM_WHAT } from "../swarm-client.js";
 import { findGameInSwarmData } from "../swarm-offer.js";
 import { parseAllMarkets, parseSwarmDataForFullOffer } from "../parser.js";
+import type { SwarmGame } from "../types.js";
 import { createFakeSwarm, recordedAnswer, type FakeSwarm, type FakeSwarmRequest } from "./helpers/fake-swarm-session.js";
 import { loadFixtureText, projectSwarmData, recordedGame, recordedListing, RECORDED_GAME_IDS } from "./helpers/swarm-fixtures.js";
 import { settle } from "./helpers/fake-swarm-page.js";
@@ -70,6 +71,46 @@ describe("BetcrisSwarmScraper", () => {
     const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
     expect(r.matches).toHaveLength(19);
     expect(warns()).toContain("[Betcris/FullOffer] Skipped game 31333513 (Leeds vs Tottenham): swarm game 31333513 missing from reply");
+  });
+
+  /** The projected recorded reply to `q` (a game or the listing) with game `id` passed through `edit` */
+  const editedReply = (q: FakeSwarmRequest, id: number, edit: (g: SwarmGame) => void) => {
+    const data = projectSwarmData(q.params.where.competition ? recordedListing() : recordedGame(id), q.params.what);
+    edit(findGameInSwarmData(data, id)!);
+    return JSON.stringify({ code: 0, rid: q.rid, data: { data } });
+  };
+  const only1x2 = (g: SwarmGame) => {
+    g.market = Object.fromEntries(Object.entries(g.market!).filter(([, m]) => m.type === "P1XP2"));
+  };
+
+  it.each([
+    ["no markets", (g: SwarmGame) => { g.market = {}; }, "0"],
+    ["only its listing 1X2", only1x2, "1"],
+  ])("betcris swarm: skips a game whose reply holds it with %s instead of writing its listing copy", async (_label, edit, n) => {
+    const fake = createFakeSwarm(recordedAnswer({ override: (q) => (isGame(q) && q.params.where.game.id === 31333513 ? editedReply(q, 31333513, edit) : undefined) }));
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
+    const cause = `swarm game 31333513 detail has ${n} markets, no more than its listing copy (1); 635 reported`;
+    expect(r).toMatchObject({ success: true, error: `1 of 20 details failed | ${cause}` });
+    expect(r.matches).toHaveLength(19); expect(r.matches.map((m) => m.matchId)).not.toContain("31333513");
+    expect(warns()).toContain(`[Betcris/FullOffer] Skipped game 31333513 (Leeds vs Tottenham): ${cause}`);
+  });
+
+  it("betcris swarm: 11 of 20 thin replies fail the league", async () => {
+    const thin = new Set(RECORDED_GAME_IDS.slice(0, 11));
+    const fake = createFakeSwarm(recordedAnswer({ override: (q) => (isGame(q) && thin.has(q.params.where.game.id) ? editedReply(q, q.params.where.game.id, (g) => { g.market = {}; }) : undefined) }));
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: false, matches: [], error: expect.stringMatching(/^11 of 20 details failed \| swarm game \d+ detail has 0 markets/) });
+  });
+
+  it("betcris swarm: writes a game that reports no more markets than its 1X2", async () => {
+    const thinGame = (g: SwarmGame) => { only1x2(g); g.markets_count = 1; };
+    const fake = createFakeSwarm(recordedAnswer({ override: (q) => {
+      if (q.params?.where?.competition) return editedReply(q, 31333513, (g) => { g.markets_count = 1; });
+      return isGame(q) && q.params.where.game.id === 31333513 ? editedReply(q, 31333513, thinGame) : undefined;
+    } }));
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: true }); expect(r.error).toBeUndefined();
+    expect(r.matches.find((m) => m.matchId === "31333513")!.markets.map((m) => m.bookmakerMarketId)).toEqual(["P1XP2"]);
   });
 
   it.each([[10, true, 10], [11, false, 0]])("betcris swarm: %i of 20 silent games → success %s", async (n, ok, kept) => {

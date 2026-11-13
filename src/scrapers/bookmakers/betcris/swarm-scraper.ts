@@ -1,8 +1,8 @@
 /**
  * Betcris full offer over one direct WebSocket session to its BetConstruct
  * Swarm backend: request_session, one competition listing, then one request
- * per game (GAME_CONCURRENCY in flight). A failed or slow game is skipped,
- * never downgraded to its listing copy. Every reply goes through the same
+ * per game (GAME_CONCURRENCY in flight). A failed, slow or thin game is
+ * skipped, never downgraded to its listing copy. Every reply goes through the same
  * pure mapping as the browser path (swarm-offer.ts).
  */
 import type { PolishBookmaker } from "../../../config/index.js";
@@ -22,7 +22,7 @@ import { COMPETITION_IDS, SWARM_TRANSPORT } from "./constants.js";
 import { parseSwarmDataForFullOffer } from "./parser.js";
 import { openSwarmClient, swarmGameParams, swarmListingParams, type SwarmClient } from "./swarm-client.js";
 import { createSwarmPartnerConfigCache, type ResolvedSwarmConfig, type SwarmPartnerConfigCache } from "./swarm-config.js";
-import { buildBetcrisMatchOffer, findGameInSwarmData, type BetcrisListingEntry } from "./swarm-offer.js";
+import { buildBetcrisMatchOffer, detailSkipReason, type BetcrisListingEntry } from "./swarm-offer.js";
 
 export interface BetcrisSwarmDeps {
   http?: HttpClient;
@@ -99,7 +99,9 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
         async (e) => {
           const reply = await swarm.request("get", swarmGameParams(e.game.id), SWARM_TRANSPORT.GAME_TIMEOUT_MS);
           const data = reply.data?.data ?? {};
-          if (!findGameInSwarmData(data, e.game.id)) throw new Error(`swarm game ${e.game.id} missing from reply`);
+          // A missing or thin copy (`market: {}`, the 1X2 only) is a failed game, never its listing copy
+          const skip = detailSkipReason(e, data);
+          if (skip) throw new Error(`swarm ${skip}`);
           // Mapped here, so no raw payload outlives its game
           return buildBetcrisMatchOffer(e, data, league, new Date());
         },

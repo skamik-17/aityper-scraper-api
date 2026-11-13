@@ -228,6 +228,32 @@ describe("betcris scraper flow", () => {
     expect(r.matches.map(strip)).toEqual(expected);
   });
 
+  it("betcris scrapeFullOffer: a game whose detail reply has no markets writes nothing for it, never its listing 1X2", async () => {
+    // The SINGLE_GAME_VIEW reply holds the game with `market: {}`; the GameList frames still union its 1X2 in.
+    const emptied = (events: RecordedSwarmEvent[]) => events.map((e) => {
+      if (e.kind !== "recv" || !e.payload?.startsWith('{"code":0,"rid":"SINGLE_GAME_VIEW')) return e;
+      const msg = JSON.parse(e.payload);
+      for (const sport of Object.values<any>(msg.data?.data?.sport ?? {}))
+        for (const region of Object.values<any>(sport.region ?? {}))
+          for (const competition of Object.values<any>(region.competition ?? {}))
+            for (const game of Object.values<any>(competition.game ?? {})) game.market = {};
+      return { ...e, payload: JSON.stringify(msg) };
+    });
+    const fake = createFakeSwarmPage((url) => {
+      if (url.endsWith("/538")) return { events: league };
+      const id = Number(url.split("/").pop());
+      return { events: id === 31333513 ? emptied(retarget(match, id)) : retarget(match, id) };
+    });
+    useFakeBrowser(fake);
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    expect(r.success).toBe(true);
+    expect(r.matches).toHaveLength(19);
+    expect(r.matches.map((m) => m.matchId)).not.toContain("31333513");
+    expect(vi.mocked(console.warn).mock.calls.map(([m]) => String(m))).toContain(
+      "[Betcris/FullOffer] Skipped game 31333513 (Leeds vs Tottenham): game 31333513 detail has 1 markets, no more than its listing copy (1); 635 reported"
+    );
+  });
+
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {
     const fake = createFakeSwarmPage((url) => (url.endsWith("/538") ? { events: league } : { events: EMPTY }));
     useFakeBrowser(fake);

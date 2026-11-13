@@ -34,7 +34,7 @@ import {
   parseSwarmDataForMatchDetails,
   parseSwarmDataForFullOffer,
 } from "./parser.js";
-import { buildBetcrisMatchOffer } from "./swarm-offer.js";
+import { buildBetcrisMatchOffer, detailSkipReason } from "./swarm-offer.js";
 
 const BUDGET_CUT = Symbol("betcris-budget-cut");
 
@@ -270,12 +270,15 @@ export class BetcrisBrowserScraper extends PlaywrightScraper {
               }
             } else {
               consecutiveFailures = 0;
-              const offer = buildBetcrisMatchOffer(
-                { game, teams, regionAlias, competitionId: compId },
-                matchWsData,
-                leagueSlug,
-                new Date()
-              );
+              const entry = { game, teams, regionAlias, competitionId: compId };
+              // A missing or thin copy is skipped, never written as its listing 1X2
+              const skip = detailSkipReason(entry, matchWsData);
+              if (skip) {
+                console.warn(
+                  `[Betcris/FullOffer] Skipped game ${game.id} (${teams.homeTeam} vs ${teams.awayTeam}): ${skip}`
+                );
+              }
+              const offer = skip ? null : buildBetcrisMatchOffer(entry, matchWsData, leagueSlug, new Date());
               if (offer) {
                 matches.push(offer);
                 console.log(

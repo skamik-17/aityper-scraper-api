@@ -134,6 +134,8 @@ export class FakeBrowser {
   /** What SystemInfo.getProcessInfo returns; tests change it between samples. */
   processInfo: Array<{ id: number; type?: string; cpuTime: number }> = [];
   readonly browserCdps: FakeCdp[] = [];
+  /** Methods every page CDP session of contexts created from now on fails on. */
+  readonly cdpFailOn = new Set<string>();
   private readonly events = new EventEmitter();
 
   version(): string {
@@ -147,6 +149,7 @@ export class FakeBrowser {
   async newContext(options: Record<string, unknown> = {}): Promise<FakeContext> {
     if (!this.connected) throw new Error("Target page, context or browser has been closed");
     const ctx = new FakeContext(this, options);
+    for (const m of this.cdpFailOn) ctx.cdpFailOn.add(m);
     this.contexts.push(ctx);
     return ctx;
   }

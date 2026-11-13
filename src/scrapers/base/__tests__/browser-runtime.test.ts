@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { blockedUrlPatterns, DEFAULT_BROWSER_POLICY } from "../browser-policy.js";
 import { BROWSER_ARGS, BROWSER_CONTEXT_USER_AGENT, BrowserRuntime } from "../browser-runtime.js";
 import { createFakeLauncher, type FakeLauncher } from "./helpers/fake-playwright.js";
 
@@ -170,7 +171,7 @@ describe("BrowserRuntime", () => {
     const ac = new AbortController();
     const s = await open("sts", { signal: ac.signal });
     ac.abort(new Error("scrape budget of 5000ms exceeded"));
-    expect(fake.browsers[0].contexts[0].closeReason).toBe("scrape budget of 5000ms exceeded");
+    await vi.waitFor(() => expect(fake.browsers[0].contexts[0].closeReason).toBe("scrape budget of 5000ms exceeded"));
     expect(s.runtime!.remainingMs()).toBe(0);
     expect(rt.activeSessions).toBe(0);
     const other = await open();
@@ -201,5 +202,93 @@ describe("BrowserRuntime", () => {
     vi.spyOn(fake.browsers[0], "newContext").mockRejectedValueOnce(new Error("newContext boom"));
     await expect(open()).rejects.toThrow("newContext boom");
     expect(rt.activeSessions).toBe(0);
+  });
+});
+
+describe("page setup and stats", () => {
+  const MEDIA = { ...DEFAULT_BROWSER_POLICY, block: "media" as const };
+
+  it("prepares the first page before openSession resolves", async () => {
+    const s = await rt.openSession({ bookmaker: "fortuna", maxSessionMs: 10_000, policy: MEDIA });
+    const cdp = fake.browsers[0].contexts[0].cdpOf(s.page);
+    expect(cdp.sent.map((x) => x.method)).toEqual(["Network.enable", "Network.setBlockedURLs"]);
+    expect(cdp.sent[1].params).toEqual({ urlPatterns: blockedUrlPatterns("media").map((urlPattern) => ({ urlPattern, block: true })) });
+  });
+
+  it("policy none sends no setBlockedURLs and never routes", async () => {
+    const s = await rt.openSession({ bookmaker: "fortuna", maxSessionMs: 10_000 });
+    const ctx = fake.browsers[0].contexts[0];
+    expect(ctx.cdpOf(s.page).sent.map((x) => x.method)).toEqual(["Network.enable"]);
+    expect(ctx.routeCalls).toBe(0);
+  });
+
+  it("popup pages are prepared too", async () => {
+    await rt.openSession({ bookmaker: "fortuna", maxSessionMs: 10_000, policy: MEDIA });
+    const ctx = fake.browsers[0].contexts[0];
+    const p = await ctx.openPopup();
+    await vi.waitFor(() => expect(ctx.cdpOf(p).sent.map((x) => x.method)).toEqual(["Network.enable", "Network.setBlockedURLs"]));
+  });
+
+  it("a failing setBlockedURLs degrades with one warning and the session still opens", async () => {
+    await open().then((s) => s.cleanup());
+    fake.browsers[0].cdpFailOn.add("Network.setBlockedURLs");
+    const s = await rt.openSession({ bookmaker: "fortuna", maxSessionMs: 10_000, policy: MEDIA });
+    const ctx = fake.browsers[0].contexts[1];
+    await ctx.openPopup();
+    await vi.waitFor(() => expect(ctx.pages).toHaveLength(2));
+    await new Promise((r) => setTimeout(r, 5));
+    const lines = vi.mocked(console.warn).mock.calls.filter((c) => String(c[0]).includes("page setup degraded"));
+    expect(lines).toEqual([["[BrowserRuntime] fortuna page setup degraded: Network.setBlockedURLs Network.setBlockedURLs failed"]]);
+    expect(ctx.cdpOf(s.page).sent.map((x) => x.method)).toEqual(["Network.enable", "Network.setBlockedURLs"]);
+  });
+
+  it("counts requests, bytes and blocked requests", async () => {
+    const s = await open();
+    const cdp = fake.browsers[0].contexts[0].cdpOf(s.page);
+    cdp.emit("Network.loadingFinished", { encodedDataLength: 1000 });
+    cdp.emit("Network.loadingFinished", { encodedDataLength: 1000 });
+    cdp.emit("Network.loadingFailed", { blockedReason: "inspector" });
+    cdp.emit("Network.loadingFailed", { errorText: "net::ERR_FAILED" });
+    expect(rt.stats()).toMatchObject({ launches: 1, sessions: 1, requests: 4, encodedBytes: 2000, blockedRequests: 1 });
+  });
+
+  it("sums Chromium CPU keeping the max per pid", async () => {
+    const s = await open();
+    fake.browsers[0].processInfo = [{ id: 1, cpuTime: 1.5 }, { id: 2, cpuTime: 0.5 }];
+    await s.cleanup();
+    fake.browsers[0].processInfo = [{ id: 1, cpuTime: 2.0 }];
+    expect(rt.stats().chromiumCpuMs).toBe(2000);
+    const log = vi.mocked(console.log);
+    await rt.closeAll();
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^\[BrowserRuntime\] closed \(closeAll\): .* chromiumCpuMs=2500$/));
+  });
+
+  it("logs the closed line on closeAll and resets the counters", async () => {
+    const s = await open();
+    const cdp = fake.browsers[0].contexts[0].cdpOf(s.page);
+    cdp.emit("Network.loadingFinished", { encodedDataLength: 1000 });
+    cdp.emit("Network.loadingFinished", { encodedDataLength: 1000 });
+    cdp.emit("Network.loadingFailed", { blockedReason: "inspector" });
+    fake.browsers[0].processInfo = [{ id: 1, cpuTime: 1.5 }, { id: 2, cpuTime: 0.5 }];
+    await s.cleanup();
+    fake.browsers[0].processInfo = [{ id: 1, cpuTime: 2.0 }];
+    await rt.closeAll();
+    expect(console.log).toHaveBeenCalledWith(
+      "[BrowserRuntime] closed (closeAll): launches=1 sessions=1 crashes=0 requests=3 bytes=2000 blocked=1 chromiumCpuMs=2500",
+    );
+    expect(rt.stats()).toEqual({ launches: 0, sessions: 0, crashes: 0, requests: 0, encodedBytes: 0, blockedRequests: 0, chromiumCpuMs: 0 });
+  });
+
+  it("logs a closed line with the crash when the browser disconnects", async () => {
+    await open();
+    fake.browsers[0].crash();
+    expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^\[BrowserRuntime\] closed \(disconnected\): launches=1 sessions=1 crashes=1 /));
+  });
+
+  it("an idle close logs the closed line too", async () => {
+    const s = await open();
+    await s.cleanup();
+    await rt.closeIfIdle();
+    expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^\[BrowserRuntime\] closed \(closeIfIdle\): launches=1 sessions=1 /));
   });
 });

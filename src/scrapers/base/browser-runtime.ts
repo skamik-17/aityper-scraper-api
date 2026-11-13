@@ -9,8 +9,10 @@
  * - The idle browser closes after BROWSER_IDLE_CLOSE_MS; closeIfIdle() closes it at once
  *   (one-shot scripts), closeAll() closes everything and leaves the runtime usable.
  */
-import { chromium, type Browser, type BrowserContext, type LaunchOptions, type Page } from "playwright";
+import { chromium, type Browser, type BrowserContext, type CDPSession, type LaunchOptions, type Page } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
+import { preparePage, type PageSetup } from "./browser-page-setup.js";
+import { blockedUrlPatterns, DEFAULT_BROWSER_POLICY, type ResolvedBrowserPolicy } from "./browser-policy.js";
 import { Semaphore } from "./semaphore.js";
 
 // Never add --disable-features: Chromium keeps the last one, which would replace Playwright's own list.
@@ -46,7 +48,22 @@ export interface OpenSessionOptions {
   signal?: AbortSignal;
   /** Lifetime counted from the permit grant. */
   maxSessionMs: number;
+  /** Blocking and stealth of the session's pages; default DEFAULT_BROWSER_POLICY. */
+  policy?: ResolvedBrowserPolicy;
 }
+
+/** Counters since the last browser close (the closed line prints and resets them). */
+export interface BrowserRuntimeStats {
+  launches: number;
+  sessions: number;
+  crashes: number;
+  requests: number;
+  encodedBytes: number;
+  blockedRequests: number;
+  chromiumCpuMs: number;
+}
+
+type CloseReason = "idle" | "closeIfIdle" | "closeAll" | "disconnected";
 
 export interface SessionRuntimeInfo {
   crashed(): boolean;
@@ -80,6 +97,8 @@ interface LiveSession {
 
 const reasonText = (reason: unknown): string => (reason instanceof Error ? reason.message : String(reason));
 
+const zeroCounters = () => ({ launches: 0, sessions: 0, crashes: 0, requests: 0, encodedBytes: 0, blockedRequests: 0 });
+
 export class BrowserRuntime {
   private semaphore: Semaphore | null = null;
   private browser: Promise<Browser> | null = null;
@@ -93,6 +112,11 @@ export class BrowserRuntime {
   private idleTimer: ReturnType<typeof setTimeout> | null = null;
   /** Browsers this runtime closes itself: their "disconnected" is not a crash. */
   private readonly ownCloses = new WeakSet<Browser>();
+  /** One browser-level CDP session per launch, for SystemInfo.getProcessInfo. */
+  private readonly cpuSessions = new Map<number, Promise<CDPSession | null>>();
+  /** Max cpuTime (s) seen per "<generation>:<pid>" since the last closed line. */
+  private readonly cpuMax = new Map<string, number>();
+  private counters = zeroCounters();
 
   constructor(private readonly options: BrowserRuntimeOptions = {}) {}
 
@@ -102,6 +126,12 @@ export class BrowserRuntime {
 
   get waitingSessions(): number {
     return this.semaphore?.waiting ?? 0;
+  }
+
+  stats(): BrowserRuntimeStats {
+    let cpuSeconds = 0;
+    for (const v of this.cpuMax.values()) cpuSeconds += v;
+    return { ...this.counters, chromiumCpuMs: Math.round(cpuSeconds * 1000) };
   }
 
   private get maxSessions(): number {
@@ -163,10 +193,12 @@ export class BrowserRuntime {
       s.context = context;
       if (s.ended || epoch !== this.epoch) throw new Error("BrowserRuntime is closing");
       const page = await context.newPage();
+      await this.preparePages(context, page, o);
       if (s.ended) throw new Error("Target page, context or browser has been closed");
       if (o.signal?.aborted) throw o.signal.reason;
 
       this.armSession(s, o.signal);
+      this.counters.sessions++;
 
       return {
         page,
@@ -214,6 +246,8 @@ export class BrowserRuntime {
         .launch(this.options.launchOptions ?? { headless: true, args: [...BROWSER_ARGS] })
         .then((browser) => {
           browser.on("disconnected", () => this.onDisconnected(browser, generation));
+          this.counters.launches++;
+          this.cpuSessions.set(generation, browser.newBrowserCDPSession().catch(() => null));
           console.log(`[BrowserRuntime] launched Chromium ${browser.version()} (generation ${generation})`);
           return browser;
         });
@@ -225,6 +259,59 @@ export class BrowserRuntime {
     }
     const generation = this.generation;
     return this.browser.then((browser) => ({ browser, generation }));
+  }
+
+  /** Prepares the first page now and every later page of the context (popups) once, best effort. */
+  private async preparePages(context: BrowserContext, first: Page, o: OpenSessionOptions): Promise<void> {
+    const policy = o.policy ?? DEFAULT_BROWSER_POLICY;
+    let degraded = false;
+    const setup: PageSetup = {
+      label: o.bookmaker,
+      blockPatterns: blockedUrlPatterns(policy.block),
+      onNetwork: (e) => {
+        this.counters.requests++;
+        this.counters.encodedBytes += e.bytes;
+        if (e.blocked) this.counters.blockedRequests++;
+      },
+      onDegraded: (line) => {
+        if (degraded) return;
+        degraded = true;
+        console.warn(line);
+      },
+    };
+    const prepared = new WeakSet<Page>();
+    const prepare = (page: Page) => {
+      if (prepared.has(page)) return Promise.resolve();
+      prepared.add(page);
+      return preparePage(context, page, setup);
+    };
+    await prepare(first);
+    context.on("page", (page: Page) => void prepare(page));
+  }
+
+  /** Records the max cpuTime per Chromium process of one launch; never throws. */
+  private async sampleCpu(generation: number): Promise<void> {
+    const cdp = await this.cpuSessions.get(generation);
+    if (!cdp) return;
+    try {
+      const info = (await cdp.send("SystemInfo.getProcessInfo")) as { processInfo?: Array<{ id: number; cpuTime: number }> };
+      for (const p of info.processInfo ?? []) {
+        const key = `${generation}:${p.id}`;
+        this.cpuMax.set(key, Math.max(this.cpuMax.get(key) ?? 0, p.cpuTime));
+      }
+    } catch {
+      // the browser may be gone or closing: keep what was sampled before
+    }
+  }
+
+  private logClosed(reason: CloseReason): void {
+    const st = this.stats();
+    console.log(
+      `[BrowserRuntime] closed (${reason}): launches=${st.launches} sessions=${st.sessions} crashes=${st.crashes} ` +
+        `requests=${st.requests} bytes=${st.encodedBytes} blocked=${st.blockedRequests} chromiumCpuMs=${st.chromiumCpuMs}`,
+    );
+    this.counters = zeroCounters();
+    this.cpuMax.clear();
   }
 
   private armSession(s: LiveSession, signal: AbortSignal | undefined): void {
@@ -250,7 +337,11 @@ export class BrowserRuntime {
     this.sessions.delete(s);
     s.release();
     const context = s.context;
+    const generation = s.generation;
+    const sample = context && generation > 0 && !s.crashed;
     const done = (async () => {
+      // Sample before the context's renderer exits, so its CPU time is counted
+      if (sample) await this.sampleCpu(generation);
       if (context) await context.close(reason === undefined ? undefined : { reason }).catch(() => {});
     })();
     s.closing = done;
@@ -269,6 +360,9 @@ export class BrowserRuntime {
       s.crashed = true;
       void this.endSession(s);
     }
+    this.counters.crashes++;
+    this.cpuSessions.delete(generation);
+    this.logClosed("disconnected");
   }
 
   private scheduleIdle(): void {
@@ -286,10 +380,11 @@ export class BrowserRuntime {
     this.idleTimer = null;
   }
 
-  private async closeBrowser(_reason: "idle" | "closeIfIdle" | "closeAll"): Promise<void> {
+  private async closeBrowser(reason: Exclude<CloseReason, "disconnected">): Promise<void> {
     this.cancelIdle();
     const pending = this.browser;
     if (!pending) return;
+    const generation = this.generation;
     this.browser = null;
     let browser: Browser;
     try {
@@ -299,6 +394,9 @@ export class BrowserRuntime {
     }
     await Promise.all([...this.ending]);
     this.ownCloses.add(browser);
+    if (browser.isConnected()) await this.sampleCpu(generation);
+    this.cpuSessions.delete(generation);
+    this.logClosed(reason);
     await browser.close().catch((error: unknown) => console.error("[BrowserRuntime] error closing the browser:", error));
   }
 }

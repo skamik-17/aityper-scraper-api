@@ -14,6 +14,7 @@ import type {
 } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
 import { browserPool } from "./browser-pool.js";
+import { currentScrapeJob } from "../shared/job-context.js";
 import type { FullOfferScraper } from "../shared/scraper-contract.js";
 import type { ScrapeBudget } from "../shared/budget.js";
 import {
@@ -340,14 +341,27 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   ): Promise<T> {
     const startTime = Date.now();
     let cleanup: (() => Promise<void>) | null = null;
+    let detach: (() => void) | null = null;
 
     try {
       const session = await this.initBrowser();
       cleanup = session.cleanup;
+      // The job's budget closes the context, so a scrape that ignores its signal still stops
+      const signal = currentScrapeJob()?.budget.signal;
+      const closeContext = () => {
+        void session.context.close().catch(() => {});
+      };
+      if (signal?.aborted) {
+        closeContext();
+      } else if (signal) {
+        signal.addEventListener("abort", closeContext, { once: true });
+        detach = () => signal.removeEventListener("abort", closeContext);
+      }
       return await operation(session.page, session);
     } catch (error) {
       return errorHandler(error, Date.now() - startTime);
     } finally {
+      detach?.();
       if (cleanup) await cleanup();
     }
   }

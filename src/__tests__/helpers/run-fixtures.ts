@@ -121,3 +121,35 @@ export function deferred<T>(): { promise: Promise<T>; resolve: (value: T) => voi
   });
   return { promise, resolve, reject };
 }
+
+/** A successful full-offer result for `bm`. */
+export function okResult(bm: PolishBookmaker, matches: import("../../types/full-offer.js").FullMatchOffer[] = [], league = "premier-league") {
+  return { success: true, bookmaker: bm, league, matches };
+}
+
+/** Twenty minimal matches H0..H19 vs A0..A19, one 1X2 market each. */
+export function twentyMatches(): import("../../types/full-offer.js").FullMatchOffer[] {
+  return Array.from({ length: 20 }, (_, i) => ({
+    matchId: `m${i}`,
+    bookmaker: "betclic" as PolishBookmaker,
+    homeTeam: `H${i}`,
+    awayTeam: `A${i}`,
+    eventUrl: `https://example.test/m${i}`,
+    markets: [{ name: "1X2", selections: [{ name: "1", odds: 2 }, { name: "X", odds: 3 }, { name: "2", odds: 4 }] }],
+    scrapedAt: new Date("2026-11-07T10:00:00.000Z"),
+  })) as import("../../types/full-offer.js").FullMatchOffer[];
+}
+
+/** A ScrapeBudget ending at `deadline` (epoch ms) whose signal the test aborts through `controller`. */
+export function fakeBudget(deadline: number): import("../../scrapers/shared/budget.js").ScrapeBudget & { controller: AbortController } {
+  const controller = new AbortController();
+  return {
+    controller,
+    signal: controller.signal,
+    deadline,
+    remainingMs: () => (controller.signal.aborted ? 0 : Math.max(0, deadline - Date.now())),
+    checkpoint: () => {
+      if (controller.signal.aborted) throw controller.signal.reason;
+    },
+  };
+}

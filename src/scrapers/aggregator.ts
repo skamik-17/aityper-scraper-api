@@ -9,6 +9,8 @@ import { CONFIG } from "../config/index.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import type { FullOfferScraper } from "./shared/scraper-contract.js";
 import { browserPool } from "./base/browser-pool.js";
+import { scrapeWithHardDeadline } from "./hard-deadline.js";
+import { maxDurationMsFor, resolveJobTransport } from "./job-policy.js";
 import { normalizeAndSaveMatches, type NormalizeAndSaveResult } from "../services/scrape-helpers.js";
 import { classifyBookmakerRun, isOkRunStatus, type BookmakerRunOutcome } from "../services/run-outcome.js";
 import {
@@ -120,7 +122,8 @@ function logOutcome(o: BookmakerRunOutcome): void {
 async function runFullOfferForBookmaker(
   runId: string,
   bookmaker: PolishBookmaker,
-  league: string
+  league: string,
+  runSignal?: AbortSignal
 ): Promise<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }> {
   const startedAt = new Date();
   const scraper = SCRAPERS[bookmaker];
@@ -134,8 +137,14 @@ async function runFullOfferForBookmaker(
     result = { success: false, bookmaker, league, matches: [], error: `No scraper configured for ${bookmaker}` };
   } else {
     console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
+    // Transport from the picked instance; the budget and hard deadline follow from it
+    const transport = resolveJobTransport(scraper);
     try {
-      result = await scraper.scrapeFullOffer(league);
+      result = await scrapeWithHardDeadline(
+        scraper,
+        { runId, bookmaker, league, transport, maxDurationMs: maxDurationMsFor(bookmaker, transport) },
+        runSignal
+      );
     } catch (error) {
       console.error(`[Aggregator/FullOffer] ${bookmaker} scraper threw:`, error);
       result = { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
@@ -210,7 +219,7 @@ export async function runAllFullOfferScrapers(
 
   // Run all scrapers in parallel; Promise.all keeps targetBookmakers order.
   const runs = await Promise.all(
-    targetBookmakers.map((bookmaker) => runFullOfferForBookmaker(runId, bookmaker, league))
+    targetBookmakers.map((bookmaker) => runFullOfferForBookmaker(runId, bookmaker, league, opts.signal))
   );
 
   const completedAt = new Date();

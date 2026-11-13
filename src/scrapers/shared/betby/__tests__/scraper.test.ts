@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi, type MockInstance } fr
 import { getBookmakerLeagueId } from "../../../../config/leagues.js";
 import { BettersPlaywrightScraper } from "../../../bookmakers/betters/index.js";
 import { LebullPlaywrightScraper } from "../../../bookmakers/lebull/index.js";
+import { PlaywrightScraper } from "../../../base/playwright-base.js";
 import { createEvidenceFetch } from "./fake-fetch.js";
 import { loadJson } from "./fixtures.js";
 
@@ -28,7 +29,9 @@ describe("BetbyScraper", () => {
   });
 
   it("betters scrapeFullOffer returns 11 PL matches with string ids, canonical teams and Betby URLs", async () => {
+    const initBrowser = vi.spyOn(PlaywrightScraper.prototype as any, "initBrowser").mockRejectedValue(new Error("browser disabled in unit tests"));
     const r = await s.scrapeFullOffer("premier-league");
+    expect(initBrowser).not.toHaveBeenCalled();
     expect(r.success).toBe(true); expect(r.matches).toHaveLength(11);
     const leeds = r.matches.find((m) => m.matchId === "2725816334213586962")!;
     expect(leeds).toMatchObject({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur", startTime: "2026-11-07T12:30:00.000Z",

@@ -21,6 +21,21 @@ export interface RestMarketBrand<E> {
   eventId(event: E): string;
   /** The offer, or null when the detail has no markets. */
   toOffer(listed: E, detail: E, league: string): FullMatchOffer | null;
+  /** Plan 10: the canonical teams the offer of this listed event carries (same helpers as toOffer). */
+  teamsOf(event: E, league: string): { homeTeam: string; awayTeam: string };
+  /** Plan 10: the listing's prices as fingerprint parts, `["o:<outcomeId>", odds]` per listed outcome. */
+  listingPrices(event: E): Array<[string, number]>;
+}
+
+/** A listing game's outcomes as fingerprint parts; an outcome without an id is keyed by its position. */
+export function outcomePriceParts(
+  games: ReadonlyArray<{ outcomes?: ReadonlyArray<{ outcomeId?: number; outcomeOdds: number }> }> | undefined,
+): Array<[string, number]> {
+  const parts: Array<[string, number]> = [];
+  (games ?? []).forEach((g, gi) =>
+    (g.outcomes ?? []).forEach((o, oi) => parts.push([o.outcomeId === undefined ? `g${gi}:${oi}` : `o:${o.outcomeId}`, o.outcomeOdds])),
+  );
+  return parts;
 }
 
 /** Detail requests in flight at once per brand. */

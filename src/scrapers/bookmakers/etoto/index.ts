@@ -1,39 +1,20 @@
-import type { Page } from "playwright";
+
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
 import type {
   ScraperConfig,
-  ScraperResult,
-  RawScrapedOdds,
-  MatchIdentifier,
-  MatchDetailResult,
-  RawScrapedMatchOdds,
-  EventUrlEntry,
 } from "../../../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-
-import { CATEGORY_IDS } from "./constants.js";
 import {
   navigateToBaseSite,
   fetchLeagueEvents,
-  fetchAllLeagueEvents,
   fetchEventDetails,
-  extractEventIdFromUrl,
-  buildEventUrl,
 } from "./navigation.js";
 import {
-  parseTeamNames,
-  parse1X2Odds,
-  parseDoubleChance,
-  parseBTTS,
-  parseOverUnder,
   isValidEvent,
-  hasValid1X2Odds,
 } from "./parser.js";
-import type { EtotoEvent } from "./types.js";
 import { toEtotoOffer } from "./offer-mapping.js";
 
 /** etoto's browser path, kept as the SCRAPER_TRANSPORT_ETOTO=browser fallback (src/scrapers/bookmakers/index.ts picks). */
@@ -47,177 +28,6 @@ export class EtotoBrowserScraper extends PlaywrightScraper {
       ...DEFAULT_SCRAPER_CONFIGS.etoto,
       ...config,
       enabled: true,
-    };
-  }
-
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    return this.executeLeagueScrape(
-      league,
-      (l) => isLeagueSupported(l, this.bookmaker),
-      async (page, leagueSlug) => {
-        const startTime = Date.now();
-        console.log(`[eToto] Fetching data for category: ${CATEGORY_IDS[leagueSlug]}`);
-
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createErrorResult(
-            new Error("Failed to navigate to eToto"),
-            Date.now() - startTime
-          );
-        }
-
-        await this.delay(500);
-
-        const events = await fetchLeagueEvents(page, leagueSlug);
-        if (events.length === 0) {
-          return this.createNotFoundResult(
-            "Could not fetch eToto API data",
-            Date.now() - startTime
-          );
-        }
-
-        console.log(`[eToto] Captured ${events.length} events from API`);
-
-        const matches: RawScrapedOdds[] = [];
-
-        for (const event of events) {
-          if (!isValidEvent(event)) continue;
-
-          const teams = parseTeamNames(event.eventName);
-          const odds1x2 = parse1X2Odds(event);
-
-          if (odds1x2.home <= 1 || odds1x2.draw <= 1 || odds1x2.away <= 1) {
-            continue;
-          }
-
-          matches.push({
-            bookmaker: this.bookmaker,
-            eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-            homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-            awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-            homeOdds: odds1x2.home,
-            drawOdds: odds1x2.draw,
-            awayOdds: odds1x2.away,
-            hasNoTaxPromo: false,
-            scrapedAt: new Date(),
-            eventUrl: buildEventUrl(event.eventId),
-          });
-        }
-
-        console.log(`[eToto] Found ${matches.length} matches with valid odds`);
-
-        return {
-          status: "success",
-          bookmaker: this.bookmaker,
-          data: matches,
-          duration: Date.now() - startTime,
-          timestamp: new Date(),
-        };
-      }
-    );
-  }
-
-  /**
-   * Scrape a specific match by team names
-   */
-  async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
-    const startTime = Date.now();
-    const league = match.leagueId ?? "ekstraklasa";
-
-    // Get all matches from the league
-    const allMatches = await this.scrapeLeague(league);
-    if (allMatches.status !== "success" || !allMatches.data) {
-      return allMatches;
-    }
-
-    // Find the matching event
-    const matchResult = findMatchingEvent(
-      { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-      allMatches.data,
-      league
-    );
-
-    if (!matchResult) {
-      return this.createNotFoundResult(
-        `Match not found on eToto: ${match.homeTeam} vs ${match.awayTeam}`,
-        Date.now() - startTime
-      );
-    }
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: [matchResult.event],
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
-  }
-
-  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
-    const startTime = Date.now();
-    const eventId = extractEventIdFromUrl(eventUrl);
-
-    if (!eventId) {
-      return this.createMatchDetailNotFoundResult("Invalid eToto event URL", Date.now() - startTime);
-    }
-
-    return this.executeWithBrowser(
-      async (page) => {
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createMatchDetailErrorResult(
-            new Error("Failed to navigate to eToto"),
-            Date.now() - startTime
-          );
-        }
-
-        await this.delay(500);
-
-        const allEvents = await fetchAllLeagueEvents(page);
-
-        const event = allEvents.find((e) => String(e.eventId) === eventId);
-        if (!event) {
-          return this.createMatchDetailNotFoundResult("Event not found in eToto API", Date.now() - startTime);
-        }
-
-        return this.buildMatchDetailResult(event, eventUrl, startTime);
-      },
-      (error, duration) => this.createMatchDetailErrorResult(error, duration)
-    );
-  }
-
-  private buildMatchDetailResult(event: EtotoEvent, eventUrl: string, startTime: number): MatchDetailResult {
-    const teams = parseTeamNames(event.eventName);
-    const odds1x2 = parse1X2Odds(event);
-    const doubleChance = parseDoubleChance(event);
-    const btts = parseBTTS(event);
-    const overUnder = parseOverUnder(event);
-
-    console.log(`[eToto] Parsed match details for: ${teams.homeTeam} vs ${teams.awayTeam}`);
-    console.log(
-      `[eToto] Markets: 1X2=${odds1x2.home > 0}, DC=${doubleChance !== null}, BTTS=${btts !== null}, O/U lines=${overUnder ? Object.keys(overUnder).length : 0}`
-    );
-
-    const matchOdds: RawScrapedMatchOdds = {
-      bookmaker: this.bookmaker,
-      eventName: event.eventName,
-      homeTeam: teams.homeTeam,
-      awayTeam: teams.awayTeam,
-      eventUrl,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
-      market1X2: { home: odds1x2.home, draw: odds1x2.draw, away: odds1x2.away },
-      marketDoubleChance: doubleChance || undefined,
-      marketBTTS: btts || undefined,
-      marketOverUnder: overUnder || undefined,
-    };
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: matchOdds,
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
     };
   }
 
@@ -294,10 +104,6 @@ export class EtotoBrowserScraper extends PlaywrightScraper {
         };
       }
     );
-  }
-
-  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
-    return [];
   }
 }
 

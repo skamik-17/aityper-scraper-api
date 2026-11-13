@@ -81,6 +81,7 @@ export const PROTO_FIELDS = {
   MATCH_ID: 1,
   MATCH_NAME: 2,
   MATCH_START_TIME: 3,
+  MATCH_MARKET_COUNT: 7,
   MATCH_MARKETS: 9,
 
   // Market fields

@@ -14,10 +14,11 @@
  */
 import { API_BASE_URL } from "../../../bookmakers/betfan/constants.js";
 import { toBetfanOffer } from "../../../bookmakers/betfan/offer-mapping.js";
-import { isValidEvent } from "../../../bookmakers/betfan/parser.js";
+import { isValidEvent, parseTeamNames } from "../../../bookmakers/betfan/parser.js";
+import { getCanonicalTeamName } from "../../../../utils/team-matcher.js";
 import type { BetfanEvent } from "../../../bookmakers/betfan/types.js";
 import type { HttpClient } from "../../http/http-client.js";
-import type { RestMarketBrand } from "../brand.js";
+import { outcomePriceParts, type RestMarketBrand } from "../brand.js";
 import { RestMarketHttpScraper } from "../rest-market-scraper.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -46,6 +47,12 @@ export const BETFAN_REST_MARKET: RestMarketBrand<BetfanEvent> = {
   isMatch: isValidEvent,
   eventId: (event) => String(event.eventId),
   toOffer: toBetfanOffer,
+  teamsOf: (event, league) => {
+    // Same parse and canonicalization as toBetfanOffer
+    const teams = parseTeamNames(event);
+    return { homeTeam: getCanonicalTeamName(teams.homeTeam, league), awayTeam: getCanonicalTeamName(teams.awayTeam, league) };
+  },
+  listingPrices: (event) => outcomePriceParts(event.games),
 };
 
 export class BetfanHttpScraper extends RestMarketHttpScraper<BetfanEvent> {

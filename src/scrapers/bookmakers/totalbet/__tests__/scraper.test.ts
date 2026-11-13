@@ -189,20 +189,6 @@ describe("totalbet scraper (plan contract)", () => {
   it("totalbet rejects leagues without a UUID", async () =>
     expect(await scraper.scrapeFullOffer("bundesliga")).toMatchObject({ success: false, error: "Unknown league: bundesliga" }));
 
-  it("totalbet scrapeLeague returns list 1X2 rows", async () => {
-    const r = await scraper.scrapeLeague("premier-league");
-    expect(r.status).toBe("success"); expect(r.data).toHaveLength(20);
-    expect(r.data![0]).toMatchObject({ homeTeam: "Everton", awayTeam: "Coventry City", homeOdds: 1.65, drawOdds: 3.95, awayOdds: 4.9,
-      eventUrl: "https://totalbet.pl/event-details/495716e5-fd45-43e5-8947-a0bf3ff676ab" });
-  });
-
-  it("totalbet scrapeMatchDetails reads 1X2 from the detail", async () => {
-    const r = await scraper.scrapeMatchDetails("https://totalbet.pl/event-details/0e45932b-1433-4cf5-b658-5c308b7c2b60");
-    expect(r.data!.market1X2).toEqual({ home: 2.8, draw: 3.35, away: 2.47 });
-    // A URL without an event UUID is refused before any request, not fetched and failed.
-    expect(await scraper.scrapeMatchDetails("https://totalbet.pl/sports/event/1")).toMatchObject({ status: "not_found", error: "Invalid Totalbet event URL" });
-  });
-
   it("totalbet league config carries the category UUIDs", () => {
     expect(Object.fromEntries(["ekstraklasa", "premier-league", "laliga", "serie-a", "ligue-1", "world-cup-2026"].map((s) => [s, getBookmakerLeagueId(s, "totalbet")]))).toEqual({
       ekstraklasa: "ae7d4621-313d-4df6-b3be-046b76a32938", "premier-league": "8793bb6a-4684-44ba-b92e-4d896e6cbfbf",
@@ -372,55 +358,5 @@ describe("totalbet scraper (wiring and integrity guards)", () => {
     });
     const r2 = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ [LEEDS]: noDcId }) }).scrapeFullOffer("premier-league");
     expect(r2.error).toContain("phase-1 keys missing for Leeds United vs Tottenham Hotspur: mid:10");
-  });
-
-  it("totalbet scrapeLeague drops an event whose 1X2 outcome names do not match its participants", async () => {
-    const list = load("pl-events-list.json");
-    const [home, , away] = list.data.events[0].markets[0].outcomes;
-    [home.name, away.name] = [away.name, home.name];
-    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({}, list) }).scrapeLeague("premier-league");
-    expect(r.status).toBe("success");
-    expect(r.data).toHaveLength(19);
-    expect(r.data!.map((m) => m.eventUrl)).not.toContain(`https://totalbet.pl/event-details/${EVERTON}`);
-  });
-
-  it("totalbet scrapeLeague reports unknown leagues and list errors", async () => {
-    expect(await scraper.scrapeLeague("bundesliga")).toMatchObject({ status: "not_found", error: "Unknown league: bundesliga" });
-    const down = new TotalbetPlaywrightScraper(undefined, { fetchJson: async () => ({ status: 404, contentType: "text/html", body: "x" }) });
-    expect(await down.scrapeLeague("premier-league")).toMatchObject({ status: "error", error: `fetch HTTP 404 ${LIST_P1}` });
-  });
-
-  it("totalbet scrapeMatch finds one event from the list", async () => {
-    const r = await scraper.scrapeMatch({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur", leagueId: "premier-league" });
-    expect(r.status).toBe("success");
-    expect(r.data).toHaveLength(1);
-    expect(r.data![0]).toMatchObject({ homeOdds: 2.8, drawOdds: 3.35, awayOdds: 2.47, eventUrl: `https://totalbet.pl/event-details/${LEEDS}` });
-  });
-
-  it("totalbet scrapeMatchDetails reports detail errors and refuses a misoriented 1X2", async () => {
-    expect(await scraper.scrapeMatchDetails(`https://totalbet.pl/event-details/${EVERTON}`)).toMatchObject({
-      status: "error", error: `fetch HTTP 404 ${DETAIL_PREFIX}${EVERTON} reason=not_found` });
-
-    const live = detailWith("event-detail-leeds-tottenham.trimmed.json", (e) => { e.type = "live"; });
-    const liveScraper = new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ [LEEDS]: live }) });
-    expect(await liveScraper.scrapeMatchDetails(`https://totalbet.pl/event-details/${LEEDS}`)).toMatchObject({ status: "not_found" });
-
-    const swapped = detailWith("event-detail-leeds-tottenham.trimmed.json", (e) => {
-      const grid = e.component_lists.find((c: any) => c.name === "Wynik meczu").grid;
-      [grid[0], grid[2]] = [grid[2], grid[0]];
-    });
-    const swappedScraper = new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ [LEEDS]: swapped }) });
-    const r = await swappedScraper.scrapeMatchDetails(`https://totalbet.pl/event-details/${LEEDS}`);
-    expect(r.status).not.toBe("success");
-    expect(r.data).toBeUndefined();
-
-    // two id-less "Wynik meczu" markets with different prices: ambiguous, so no 1X2 at all
-    const twice = detailWith("event-detail-leeds-tottenham.trimmed.json", (e) => {
-      const copy = structuredClone(e.component_lists.find((c: any) => c.name === "Wynik meczu"));
-      for (const row of copy.grid) for (const cell of row) if (cell.type === "outcome") Object.assign(cell, { market_uuid: "copy", odds: "9.00" });
-      e.component_lists.push(copy);
-    });
-    const twiceScraper = new TotalbetPlaywrightScraper(undefined, { fetchJson: fakeWith({ [LEEDS]: twice }) });
-    expect((await twiceScraper.scrapeMatchDetails(`https://totalbet.pl/event-details/${LEEDS}`)).status).not.toBe("success");
   });
 });

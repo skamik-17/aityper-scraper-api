@@ -135,8 +135,3 @@ export const REQUEST_TIMEOUT = 30000;
  * Character used by eToto to separate team names in eventName
  */
 export const TEAM_SEPARATOR = " - ";
-
-/**
- * Cache TTL for events data in milliseconds
- */
-export const CACHE_TTL = 60000;

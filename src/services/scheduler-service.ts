@@ -14,6 +14,8 @@ import { runRetentionCleanup } from "./retention-service.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
 import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
 import { decideStartupScrape, getStalestOkRunAt } from "./startup-policy.js";
+import { formatIncrementalConfigLine, getIncrementalConfig } from "../config/incremental.js";
+import { buildTickRequest, type ScrapeMode } from "./incremental/scrape-dispatch.js";
 
 // At startup the local Supabase stack can still be coming up: wait for it instead of failing once.
 const STARTUP_DB_WAIT_MS = 120_000;
@@ -42,7 +44,14 @@ export interface RunLeaguesOptions {
   bookmakers?: readonly PolishBookmaker[];
   runIds?: Readonly<Record<string, string>>;
   signal?: AbortSignal;
+  /** Plan 10: the pass per bookmaker of an interval tick. */
+  modes?: Partial<Record<PolishBookmaker, ScrapeMode>>;
+  /** Plan 10: false on incremental ticks. */
+  recordOutcomes?: boolean;
 }
+
+// Plan 10: when the last full (hourly) run started; the interval ticks plan against it.
+let lastFullAt: number | null = null;
 
 /**
  * Run scrape for all enabled leagues (in parallel for speed).
@@ -65,6 +74,8 @@ export async function runAllLeaguesScrape(options: RunLeaguesOptions = {}): Prom
       dbWaitMs: options.dbWaitMs,
       runIds: options.runIds,
       signal: options.signal,
+      ...(options.modes ? { modes: options.modes } : {}),
+      ...(options.recordOutcomes === false ? { recordOutcomes: false } : {}),
     });
     leagueResults = leagues.map((league) => {
       const result = cycle.get(league) ?? null;
@@ -107,13 +118,22 @@ async function executeRun(req: RunRequest, ctx: RunExecutionContext): Promise<vo
   if (startup) console.log("[Scheduler] Running initial scrape on startup for all leagues");
   else if (req.trigger === "interval") console.log(`[Scheduler] Starting scheduled scrape at ${new Date().toISOString()}`);
 
+  // Plan 10: startup and hourly interval runs are the full runs the incremental ticks plan against
+  const recordOutcomes = req.recordOutcomes !== false;
+  if (req.trigger !== "admin" && recordOutcomes) lastFullAt = Date.now();
+
   const multi = await runAllLeaguesScrape({
     leagues: req.leagues,
-    bookmakers: req.trigger === "admin" ? req.bookmakers : undefined,
+    // A planned tick names its bookmakers; startup and plain interval runs take them all
+    bookmakers: req.trigger === "admin" || req.modes ? req.bookmakers : undefined,
     runIds: ctx.runIds,
     signal: ctx.signal,
     dbWaitMs: startup ? STARTUP_DB_WAIT_MS : undefined,
+    ...(req.modes ? { modes: req.modes } : {}),
+    ...(recordOutcomes ? {} : { recordOutcomes: false }),
   });
+  // An incremental tick never replaces the health view of the last full run
+  if (!recordOutcomes) return;
   const target = req.trigger === "admin" ? lastAdminResults : lastResults;
   for (const [league, result] of multi.leagues) target.set(league, result);
 
@@ -185,12 +205,33 @@ export async function startScheduler(): Promise<void> {
     return;
   }
 
-  console.log(`[Scheduler] Starting interval loop: every ${CONFIG.SCRAPE_INTERVAL_MINUTES} minutes (±10 %)`);
+  // Plan 10: with incremental bookmakers the loop ticks every pass interval and plans each tick
+  const incremental = getIncrementalConfig();
+  const ticking = incremental.bookmakers.size > 0;
+  if (incremental.error !== null) console.error(formatIncrementalConfigLine(incremental));
+  else console.log(formatIncrementalConfigLine(incremental));
+
+  const tickMinutes = ticking ? incremental.passMinutes : CONFIG.SCRAPE_INTERVAL_MINUTES;
+  console.log(`[Scheduler] Starting interval loop: every ${tickMinutes} minutes (±10 %)`);
   console.log(`[Scheduler] Enabled leagues: ${CONFIG.ENABLED_LEAGUES.join(", ")}`);
 
   // The next run starts interval ± 10 % after the last one started; a tick never overlaps a run.
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60_000;
-  const scheduler = new IntervalScheduler({ intervalMs, coordinator: runCoordinator, request: fullRun });
+  const tickMs = tickMinutes * 60_000;
+  const request = ticking
+    ? (trigger: "startup" | "interval"): RunRequest | null =>
+        trigger === "startup"
+          ? fullRun("startup")
+          : buildTickRequest({
+              now: Date.now(),
+              lastFullAt,
+              fullIntervalMs: intervalMs,
+              leagues: CONFIG.ENABLED_LEAGUES,
+              bookmakers: CONFIG.BOOKMAKERS,
+              cfg: incremental,
+            })
+    : fullRun;
+  const scheduler = new IntervalScheduler({ intervalMs: tickMs, coordinator: runCoordinator, request });
   intervalScheduler = scheduler;
 
   // Retention at boot, not awaited: a long first DELETE must not delay the schedule
@@ -212,18 +253,18 @@ export async function startScheduler(): Promise<void> {
 
   // Startup scrape or the next interval run, from how fresh the stored data is
   const now = new Date();
-  const decision = decideStartupScrape(
-    CONFIG.STARTUP_SCRAPE,
-    await getStalestOkRunAt(CONFIG.ENABLED_LEAGUES),
-    now,
-    intervalMs
-  );
+  const stalestOkRunAt = await getStalestOkRunAt(CONFIG.ENABLED_LEAGUES);
+  const decision = decideStartupScrape(CONFIG.STARTUP_SCRAPE, stalestOkRunAt, now, intervalMs);
   // stopScheduler() (shutdown) may have run during the freshness lookup
   if (intervalScheduler !== scheduler) return;
-  const firstAt = new Date(now.getTime() + decision.firstDelayMs).toISOString();
+  // The ticks plan against the stalest league's last OK run until the next full run starts
+  lastFullAt = stalestOkRunAt?.getTime() ?? null;
+  // An incremental bookmaker must not wait a whole interval for its first pass
+  const firstDelayMs = ticking && decision.firstTrigger === "interval" ? Math.min(decision.firstDelayMs, tickMs) : decision.firstDelayMs;
+  const firstAt = new Date(now.getTime() + firstDelayMs).toISOString();
   const what = decision.firstTrigger === "startup" ? "in 5s" : "skipped";
   console.log(`[Scheduler] Startup scrape ${what} (${decision.reason}); first run at ${firstAt}`);
-  scheduler.start(decision.firstDelayMs, decision.firstTrigger);
+  scheduler.start(firstDelayMs, decision.firstTrigger);
 }
 
 /**

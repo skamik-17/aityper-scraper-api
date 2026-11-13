@@ -98,18 +98,6 @@ describe("BetbyScraper", () => {
     expect(late.lastRunStats).toEqual({ full: [], listingOnly: [], failed: [] });
   });
 
-  it("scrapeLeague returns listing 1X2 and scrapeMatchDetails reads the event endpoint", async () => {
-    const league = await s.scrapeLeague("premier-league");
-    expect(league.status).toBe("success");
-    expect(league.data!.find((o) => o.eventId === "2725816334213586962")).toMatchObject({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur", homeOdds: 2.74, drawOdds: 3.3, awayOdds: 2.54 });
-    const d = await s.scrapeMatchDetails("https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league/leeds-united-tottenham-hotspur-2725816334213586962");
-    expect(d.status).toBe("success");
-    expect(d.data).toMatchObject({ market1X2: { home: 2.74, draw: 3.3, away: 2.54 }, marketBTTS: { yes: 1.7, no: 2.08 },
-      marketDoubleChance: { homeOrDraw: 1.49, drawOrAway: 1.43, homeOrAway: 1.32 } });
-    expect(d.data!.marketOverUnder!["2.5"]).toEqual({ over: 1.93, under: 1.85 });
-    expect(d.data!.marketOverUnder!["3"]).toBeUndefined(); // integer lines are not part of the legacy O/U shape
-  });
-
   it("getBookmakerLeagueId returns Betby tournament ids as strings", () => {
     expect(getBookmakerLeagueId("premier-league", "betters")).toBe("1669818860469096448");
     expect(getBookmakerLeagueId("ekstraklasa", "lebull")).toBe("1669818868635406336");
@@ -199,52 +187,6 @@ describe("BetbyScraper", () => {
     expect(sd.lastRunStats).toBeNull();
   });
 
-  it("scrapeLeague fails fast on an unknown league and returns canonical names with Betby URLs", async () => {
-    const f = createEvidenceFetch("betters");
-    const unknown = await new BettersPlaywrightScraper({ fetchText: f }).scrapeLeague("unknown-league");
-    expect(unknown).toMatchObject({ status: "not_found", error: "Unknown league: unknown-league" });
-    expect(f.calls).toHaveLength(0);
-    const league = await s.scrapeLeague("premier-league");
-    expect(league.data).toHaveLength(11);
-    expect(league.data!.find((o) => o.eventId === "2725446939305979931")).toMatchObject({
-      bookmaker: "betters", homeTeam: "Liverpool", awayTeam: "Manchester United", eventName: "Liverpool FC - Manchester United FC",
-      eventUrl: "https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league/liverpool-fc-manchester-united-2725446939305979931", // desc.slug as Betby serves it
-    });
-  });
-
-  it("scrapeMatch finds a fixture by team names", async () => {
-    const hit = await s.scrapeMatch({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur", leagueId: "premier-league" });
-    expect(hit.status).toBe("success");
-    expect(hit.data).toHaveLength(1);
-    expect(hit.data![0]).toMatchObject({ eventId: LEEDS, homeOdds: 2.74 });
-    const miss = await s.scrapeMatch({ homeTeam: "Leeds United", awayTeam: "Chelsea", leagueId: "premier-league" });
-    expect(miss.status).toBe("not_found");
-  });
-
-  it("scrapeMatchDetails rejects a URL without an event id and an event Betby does not serve", async () => {
-    const noId = await s.scrapeMatchDetails("https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league");
-    expect(noId.status).toBe("not_found");
-    const missing = await s.scrapeMatchDetails(`https://www.betters.pl/zaklady-sportowe/soccer/england/premier-league/everton-fc-coventry-city-${EVERTON}`);
-    expect(missing).toMatchObject({ status: "not_found" });
-    expect(missing.error).toContain(EVERTON);
-  });
-
-  it("scrapeMatchDetails keeps only half lines of plain full-time totals", async () => {
-    const d = await s.scrapeMatchDetails(`https://www.betters.pl/x-${LEEDS}`);
-    expect(Object.keys(d.data!.marketOverUnder!).sort()).toEqual(["0.5", "1.5", "2.5", "3.5", "4.5"]);
-    expect(d.data).toMatchObject({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur", eventId: LEEDS });
-  });
-
-  it("scrapeMatchDetails ignores a totals specifier with keys besides total", async () => {
-    // A time-window total is a different bet; it must not show up as a full-time line.
-    const windowed = loadJson("betters", `event-${LEEDS}.json`);
-    windowed.events[LEEDS].markets["18"]["from=1|to=15|total=5.5"] = { "12": { k: "9.9" }, "13": { k: "1.01" } };
-    const f = createEvidenceFetch("betters", { overrides: { [`/event/pl/${LEEDS}`]: JSON.stringify(windowed) } });
-    const d = await new BettersPlaywrightScraper({ fetchText: f, now: NOW }).scrapeMatchDetails(`https://www.betters.pl/x-${LEEDS}`);
-    expect(Object.keys(d.data!.marketOverUnder!).sort()).toEqual(["0.5", "1.5", "2.5", "3.5", "4.5"]);
-    expect(d.data!.marketOverUnder!["1.5"]).toEqual({ over: 1.29, under: 3.5 });
-  });
-
   it("scrapeFullOffer pauses eventDelayMs between event requests, 150 ms by default", async () => {
     type WithDelay = { delay: (ms: number) => Promise<void> };
     const delay = vi.spyOn(BettersPlaywrightScraper.prototype as unknown as WithDelay, "delay").mockResolvedValue(undefined);
@@ -257,9 +199,5 @@ describe("BetbyScraper", () => {
     delay.mockClear();
     await s.scrapeFullOffer("premier-league"); // eventDelayMs: 0
     expect(delay).not.toHaveBeenCalled();
-  });
-
-  it("extractEventUrls returns no entries", async () => {
-    expect(await s.extractEventUrls(undefined as never)).toEqual([]);
   });
 });

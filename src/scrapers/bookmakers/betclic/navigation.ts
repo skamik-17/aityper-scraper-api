@@ -504,42 +504,6 @@ export async function fetchLeagueMatches(league: string, opts: GrpcCallOptions =
 }
 
 /**
- * Fetch full match details by match ID
- *
- * @param matchId - Match ID as string
- * @returns Raw protobuf buffer with match details
- */
-export async function fetchMatchDetails(matchId: string): Promise<Buffer | null> {
-  try {
-    console.log(`[Betclic/Navigation] Fetching match details for: ${matchId}`);
-    const requestBody = buildMatchDetailsRequest(matchId);
-    const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
-
-    if (response.length < 100) {
-      console.warn(`[Betclic/Navigation] Insufficient data for match ${matchId}`);
-      return null;
-    }
-
-    return response;
-  } catch (error) {
-    console.error(`[Betclic/Navigation] Failed to fetch match ${matchId}:`, error);
-    return null;
-  }
-}
-
-/**
- * Extract match ID from Betclic event URL
- * URL format: https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/team-team-m12345678901234
- *
- * @param eventUrl - Full URL to the match page
- * @returns Match ID string or null if not found
- */
-export function extractMatchIdFromUrl(eventUrl: string): string | null {
-  const match = eventUrl.match(/m(\d+)$/);
-  return match ? match[1] : null;
-}
-
-/**
  * Build the canonical event URL from match data
  *
  * @param matchId - Match ID
@@ -567,34 +531,6 @@ export function buildEventUrl(
     .replace(/[^a-z0-9-]/g, "");
 
   return `https://www.betclic.pl/pilka-nozna-sfootball/${leagueSlug}/${homeSlug}-${awaySlug}-m${matchId}`;
-}
-
-/**
- * Build a simple event URL when only match ID is known
- */
-export function buildEventUrlSimple(matchId: string): string {
-  return `https://www.betclic.pl/zaklady/m${matchId}`;
-}
-
-/**
- * Check if a league is supported by Betclic scraper
- */
-export function isLeagueSupported(league: string): boolean {
-  return league in COMPETITION_IDS;
-}
-
-/**
- * Get competition ID for a league
- */
-export function getCompetitionId(league: string): number | undefined {
-  return COMPETITION_IDS[league];
-}
-
-/**
- * Delay helper for rate limiting between requests
- */
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**

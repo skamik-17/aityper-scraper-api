@@ -53,24 +53,6 @@ export async function navigateToLeaguePage(
   }
 }
 
-/**
- * Navigate to the base site to establish session
- * Used when fetching individual event details
- */
-export async function navigateToBaseSite(page: Page): Promise<boolean> {
-  try {
-    console.log(`[Superbet/Navigation] Navigating to base site: ${BASE_URL}`);
-    await page.goto(BASE_URL, {
-      timeout: REQUEST_TIMEOUT,
-      waitUntil: "domcontentloaded",
-    });
-    return true;
-  } catch (error) {
-    console.error(`[Superbet/Navigation] Failed to navigate to base site:`, error);
-    return false;
-  }
-}
-
 /** Days of upcoming prematch events the listing asks for. */
 export const SUPERBET_LISTING_WINDOW_DAYS = 90;
 
@@ -177,18 +159,6 @@ export async function fetchEventDetails(
     console.error(`[Superbet/Navigation] Failed to fetch event details:`, error);
     return null;
   }
-}
-
-/**
- * Extract event ID from a Superbet event URL
- *
- * @param eventUrl - Full URL to the event page
- * @returns Event ID string or null if not found
- */
-export function extractEventIdFromUrl(eventUrl: string): string | null {
-  // URL format: https://superbet.pl/zaklady-bukmacherskie/pilka-nozna/123456
-  const match = eventUrl.match(/\/(\d+)$/);
-  return match ? match[1] : null;
 }
 
 /**

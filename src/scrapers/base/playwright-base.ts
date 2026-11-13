@@ -43,40 +43,20 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
 
-  /**
-   * Scrape all matches for a specific league
-   * @param league - League slug (e.g., "ekstraklasa", "premier-league")
-   */
-  abstract scrapeLeague(league: string): Promise<ScraperResult>;
+  // Legacy 1X2 members (plan 10 Part B): optional while the last subclasses still carry
+  // them; nothing calls them (src/scrapers/__tests__/legacy-path.test.ts).
 
-  /**
-   * Scrape all Ekstraklasa matches (backwards compatibility)
-   */
-  scrapeEkstraklasa(): Promise<ScraperResult> {
-    return this.scrapeLeague("ekstraklasa");
-  }
+  /** Legacy: listing matches with 1X2 odds for a league. */
+  scrapeLeague?(league: string): Promise<ScraperResult>;
 
-  /**
-   * Scrape all Premier League matches
-   */
-  scrapePremierLeague(): Promise<ScraperResult> {
-    return this.scrapeLeague("premier-league");
-  }
+  /** Legacy: one match from the listing. */
+  scrapeMatch?(match: MatchIdentifier): Promise<ScraperResult>;
 
-  /**
-   * Scrape a specific match
-   */
-  abstract scrapeMatch(match: MatchIdentifier): Promise<ScraperResult>;
+  /** Legacy: Double Chance, Over/Under and BTTS from one match page. */
+  scrapeMatchDetails?(eventUrl: string): Promise<MatchDetailResult>;
 
-  /**
-   * Scrape detailed match page for extended markets (Double Chance, Over/Under, BTTS)
-   */
-  abstract scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
-
-  /**
-   * Extract event URLs from the current listing page
-   */
-  abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
+  /** Legacy: event URLs from the current listing page. */
+  extractEventUrls?(page: Page): Promise<EventUrlEntry[]>;
 
   /**
    * Scrape full offer (all markets) for all matches in a league
@@ -246,16 +226,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     return { status: "error", bookmaker: this.bookmaker, error: errorMessage, duration, timestamp: new Date() };
   }
 
-  protected createTimeoutResult(duration: number): ScraperResult {
-    return {
-      status: "timeout",
-      bookmaker: this.bookmaker,
-      error: `Scraping timed out after ${this.config.timeout}ms`,
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
   protected createNotFoundResult(message: string, duration: number): ScraperResult {
     return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
   }
@@ -270,28 +240,8 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     };
   }
 
-  protected createMatchDetailTimeoutResult(duration: number): MatchDetailResult {
-    return {
-      status: "timeout",
-      bookmaker: this.bookmaker,
-      error: `Match detail scraping timed out after ${this.config.timeout}ms`,
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
   protected createMatchDetailNotFoundResult(message: string, duration: number): MatchDetailResult {
     return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
-  }
-
-  protected createNotImplementedResult(duration: number): MatchDetailResult {
-    return {
-      status: "error",
-      bookmaker: this.bookmaker,
-      error: `Extended market scraping not yet implemented for ${this.bookmaker}`,
-      duration,
-      timestamp: new Date(),
-    };
   }
 
   // Full offer helper methods

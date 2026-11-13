@@ -129,8 +129,3 @@ export const MARKET_TYPES: Record<number, string> = {
  * Request timeout in milliseconds
  */
 export const REQUEST_TIMEOUT = 30000;
-
-/**
- * Cache TTL for events data in milliseconds (1 minute)
- */
-export const CACHE_TTL = 60000;

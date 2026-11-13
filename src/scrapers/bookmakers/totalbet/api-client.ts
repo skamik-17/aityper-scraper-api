@@ -85,13 +85,6 @@ export function buildEventUrl(eventUuid: string): string {
   return `${BASE_URL}/event-details/${eventUuid}`;
 }
 
-const EVENT_URL_UUID_PATTERN = /\/event-details\/([0-9a-f-]{36})/i;
-
-/** Event UUID from a public event page URL; null for anything else (including legacy numeric URLs). */
-export function extractEventUuidFromUrl(url: string): string | null {
-  return EVENT_URL_UUID_PATTERN.exec(url)?.[1] ?? null;
-}
-
 export interface ListEventsResult {
   events: TotalbetListEvent[];
   /** A transport or payload failure: the listing could not be read. */

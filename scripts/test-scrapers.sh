@@ -19,23 +19,16 @@ BACKEND_URL="http://localhost:3001"
 ADMIN_KEY="${ADMIN_API_KEY:-dev-admin-key-12345}"
 DEFAULT_LEAGUE="premier-league"
 
-# Available scrapers (class name : display name)
-declare -A SCRAPERS=(
-    ["betclic"]="BetclicPlaywrightScraper"
-    ["betcris"]="BetcrisPlaywrightScraper"
-    ["betfan"]="BetfanBrowserScraper"
-    ["betters"]="BettersPlaywrightScraper"
-    ["etoto"]="EtotoBrowserScraper"
-    ["forbet"]="ForbetBrowserScraper"
-    ["fortuna"]="FortunaBrowserScraper"
-    ["fuksiarz"]="FuksiarzBrowserScraper"
-    ["lebull"]="LebullPlaywrightScraper"
-    ["lvbet"]="LVBetBrowserScraper"
-    ["pzbuk"]="PzbukBrowserScraper"
-    ["sts"]="STSScraper"
-    ["superbet"]="SuperbetBrowserScraper"
-    ["totalbet"]="TotalbetPlaywrightScraper"
-)
+# Available scrapers (bookmaker keys; each one runs its picked full-offer scraper)
+SCRAPERS=(betclic betcris betfan betters etoto forbet fortuna fuksiarz lebull lvbet pzbuk sts superbet totalbet)
+
+is_scraper() {
+    local key="$1"
+    for s in "${SCRAPERS[@]}"; do
+        [ "$s" = "$key" ] && return 0
+    done
+    return 1
+}
 
 print_header() {
     echo -e "\n${CYAN}╔══════════════════════════════════════════════════════════════╗${NC}"
@@ -177,17 +170,15 @@ trigger_scrape() {
     fi
 }
 
-# Test single scraper with full details
+# Test single scraper: its full offer (scrapeFullOffer), main markets of one match
 test_single_scraper() {
     local scraper_key="$1"
     local league="${2:-$DEFAULT_LEAGUE}"
     local match_filter="${3:-}"
 
-    # Find scraper class name
-    local scraper_class="${SCRAPERS[$scraper_key]}"
-    if [ -z "$scraper_class" ]; then
+    if ! is_scraper "$scraper_key"; then
         print_error "Nieznany scraper: $scraper_key"
-        echo -e "Dostępne: ${!SCRAPERS[*]}"
+        echo -e "Dostępne: ${SCRAPERS[*]}"
         return 1
     fi
 
@@ -195,87 +186,9 @@ test_single_scraper() {
 
     cd "$BACKEND_DIR" || exit 1
 
-    timeout 120 npx tsx -e "
-import { $scraper_class } from './src/scrapers/bookmakers/index.ts';
-
-(async () => {
-    const scraper = new $scraper_class();
-    const matchFilter = '$match_filter'.toLowerCase();
-
-    console.log('\\n\x1b[36m▸ Scraping listing...\x1b[0m');
-    const listStart = Date.now();
-    const result = await scraper.scrapeLeague('$league');
-    const listDuration = Date.now() - listStart;
-
-    if (result.status !== 'success' || !result.data?.length) {
-        console.log('\x1b[31m✗ Listing failed:\x1b[0m', result.status);
-        process.exit(1);
-    }
-
-    console.log('\x1b[32m✓ Listing:\x1b[0m', result.data.length, 'matches', '(\x1b[2m' + listDuration + 'ms\x1b[0m)');
-
-    // Find match
-    let match = result.data[0];
-    if (matchFilter) {
-        const filtered = result.data.find(m =>
-            m.homeTeam?.toLowerCase().includes(matchFilter) ||
-            m.awayTeam?.toLowerCase().includes(matchFilter)
-        );
-        if (filtered) match = filtered;
-        else console.log('\x1b[33m⚠ Match filter not found, using first match\x1b[0m');
-    }
-
-    console.log('\x1b[36m▸ Testing:\x1b[0m', match.homeTeam, 'vs', match.awayTeam);
-
-    if (!match.eventUrl) {
-        console.log('\x1b[33m⚠ No eventUrl, skipping details\x1b[0m');
-        process.exit(0);
-    }
-
-    console.log('\x1b[36m▸ Scraping match details...\x1b[0m');
-    const detailStart = Date.now();
-    const detail = await scraper.scrapeMatchDetails(match.eventUrl);
-    const detailDuration = Date.now() - detailStart;
-
-    if (detail.status !== 'success' || !detail.data) {
-        console.log('\x1b[31m✗ Details failed:\x1b[0m', detail.status);
-        process.exit(1);
-    }
-
-    const d = detail.data;
-    console.log('\x1b[32m✓ Details:\x1b[0m', '(\x1b[2m' + detailDuration + 'ms\x1b[0m)');
-
-    // Print markets
-    if (d.market1X2) {
-        console.log('  \x1b[32m✓\x1b[0m 1X2:', d.market1X2.home, '/', d.market1X2.draw, '/', d.market1X2.away);
-    }
-
-    if (d.marketBTTS) {
-        console.log('  \x1b[32m✓\x1b[0m BTTS: Yes', d.marketBTTS.yes, '/ No', d.marketBTTS.no);
-    } else {
-        console.log('  \x1b[31m✗\x1b[0m BTTS: brak');
-    }
-
-    if (d.marketOverUnder) {
-        const lines = Object.keys(d.marketOverUnder).sort((a,b) => parseFloat(a) - parseFloat(b));
-        const ou25 = d.marketOverUnder['2.5'];
-        if (ou25) {
-            console.log('  \x1b[32m✓\x1b[0m O/U 2.5: Over', ou25.over, '/ Under', ou25.under, '\x1b[2m(' + lines.length + ' lines)\x1b[0m');
-        } else {
-            console.log('  \x1b[32m✓\x1b[0m O/U:', lines.join(', '));
-        }
-    } else {
-        console.log('  \x1b[31m✗\x1b[0m O/U: brak');
-    }
-
-    if (d.marketDoubleChance) {
-        console.log('  \x1b[32m✓\x1b[0m DC: 1X', d.marketDoubleChance.homeOrDraw, '/ X2', d.marketDoubleChance.drawOrAway, '/ 12', d.marketDoubleChance.homeOrAway);
-    }
-
-    console.log('');
-    process.exit(0);
-})();
-" 2>&1
+    local args=(--bookmaker "$scraper_key" --league "$league")
+    [ -n "$match_filter" ] && args+=(--match "$match_filter")
+    timeout 600 npx tsx scripts/scraper-check.ts "${args[@]}" 2>&1
 
     local exit_code=$?
     cd - > /dev/null
@@ -293,7 +206,7 @@ test_all_scrapers() {
     local fail_count=0
     local results=()
 
-    for scraper_key in "${!SCRAPERS[@]}"; do
+    for scraper_key in "${SCRAPERS[@]}"; do
         echo -e "\n${MAGENTA}━━━ $scraper_key ━━━${NC}"
 
         if test_single_scraper "$scraper_key" "$league" "$match_filter"; then
@@ -315,7 +228,7 @@ test_all_scrapers() {
     done
 }
 
-# Quick test - just listing, no details
+# Quick test - full offer of the main scrapers, match counts only
 quick_test() {
     local league="${1:-$DEFAULT_LEAGUE}"
 
@@ -323,43 +236,7 @@ quick_test() {
 
     cd "$BACKEND_DIR" || exit 1
 
-    timeout 300 npx tsx -e "
-import * as scrapers from './src/scrapers/bookmakers/index.ts';
-
-(async () => {
-    const SCRAPERS = {
-        betclic: scrapers.BetclicPlaywrightScraper,
-        betcris: scrapers.BetcrisPlaywrightScraper,
-        fortuna: scrapers.FortunaBrowserScraper,
-        lvbet: scrapers.LVBetBrowserScraper,
-        sts: scrapers.STSScraper,
-        superbet: scrapers.SuperbetBrowserScraper,
-        fuksiarz: scrapers.FuksiarzBrowserScraper,
-    };
-
-    console.log('Testing', Object.keys(SCRAPERS).length, 'main scrapers...\\n');
-
-    for (const [name, Scraper] of Object.entries(SCRAPERS)) {
-        try {
-            const scraper = new Scraper();
-            const start = Date.now();
-            const result = await scraper.scrapeLeague('$league');
-            const duration = Date.now() - start;
-
-            if (result.status === 'success' && result.data?.length) {
-                console.log('\x1b[32m✓\x1b[0m', name.padEnd(12), result.data.length, 'matches', '\x1b[2m(' + duration + 'ms)\x1b[0m');
-            } else {
-                console.log('\x1b[31m✗\x1b[0m', name.padEnd(12), result.status);
-            }
-        } catch (e) {
-            console.log('\x1b[31m✗\x1b[0m', name.padEnd(12), 'error:', e.message?.substring(0, 50));
-        }
-    }
-
-    console.log('');
-    process.exit(0);
-})();
-" 2>&1
+    timeout 600 npx tsx scripts/scraper-check.ts --quick --league "$league" 2>&1
 
     cd - > /dev/null
 }
@@ -378,106 +255,14 @@ compare_odds() {
 
     cd "$BACKEND_DIR" || exit 1
 
-    timeout 300 npx tsx -e "
-import * as scrapers from './src/scrapers/bookmakers/index.ts';
-
-(async () => {
-    const SCRAPERS = {
-        betclic: scrapers.BetclicPlaywrightScraper,
-        betcris: scrapers.BetcrisPlaywrightScraper,
-        fortuna: scrapers.FortunaBrowserScraper,
-        lvbet: scrapers.LVBetBrowserScraper,
-        sts: scrapers.STSScraper,
-        superbet: scrapers.SuperbetBrowserScraper,
-    };
-
-    const filter = '$match_filter'.toLowerCase();
-    const results = [];
-
-    for (const [name, Scraper] of Object.entries(SCRAPERS)) {
-        try {
-            const scraper = new Scraper();
-            const listResult = await scraper.scrapeLeague('$league');
-
-            if (listResult.status !== 'success') continue;
-
-            const match = listResult.data?.find(m =>
-                m.homeTeam?.toLowerCase().includes(filter) ||
-                m.awayTeam?.toLowerCase().includes(filter)
-            );
-
-            if (!match?.eventUrl) continue;
-
-            const detail = await scraper.scrapeMatchDetails(match.eventUrl);
-            if (detail.status !== 'success') continue;
-
-            results.push({
-                name,
-                match: match.homeTeam + ' vs ' + match.awayTeam,
-                home: detail.data?.market1X2?.home,
-                draw: detail.data?.market1X2?.draw,
-                away: detail.data?.market1X2?.away,
-                bttsYes: detail.data?.marketBTTS?.yes,
-                bttsNo: detail.data?.marketBTTS?.no,
-                ou25Over: detail.data?.marketOverUnder?.['2.5']?.over,
-                ou25Under: detail.data?.marketOverUnder?.['2.5']?.under,
-            });
-        } catch (e) {
-            // skip
-        }
-    }
-
-    if (results.length === 0) {
-        console.log('\x1b[31mNie znaleziono meczu\x1b[0m');
-        process.exit(1);
-    }
-
-    console.log('\x1b[36mMecz:\x1b[0m', results[0].match);
-    console.log('');
-
-    // 1X2 comparison
-    console.log('\x1b[1m1X2:\x1b[0m');
-    console.log('Bookmaker'.padEnd(12), '1'.padStart(6), 'X'.padStart(6), '2'.padStart(6));
-    console.log('-'.repeat(36));
-    for (const r of results) {
-        if (r.home) {
-            console.log(r.name.padEnd(12), String(r.home).padStart(6), String(r.draw).padStart(6), String(r.away).padStart(6));
-        }
-    }
-
-    // BTTS comparison
-    console.log('');
-    console.log('\x1b[1mBTTS:\x1b[0m');
-    console.log('Bookmaker'.padEnd(12), 'Yes'.padStart(6), 'No'.padStart(6));
-    console.log('-'.repeat(24));
-    for (const r of results) {
-        if (r.bttsYes) {
-            console.log(r.name.padEnd(12), String(r.bttsYes).padStart(6), String(r.bttsNo).padStart(6));
-        }
-    }
-
-    // O/U 2.5 comparison
-    console.log('');
-    console.log('\x1b[1mO/U 2.5:\x1b[0m');
-    console.log('Bookmaker'.padEnd(12), 'Over'.padStart(6), 'Under'.padStart(6));
-    console.log('-'.repeat(24));
-    for (const r of results) {
-        if (r.ou25Over) {
-            console.log(r.name.padEnd(12), String(r.ou25Over).padStart(6), String(r.ou25Under).padStart(6));
-        }
-    }
-
-    console.log('');
-    process.exit(0);
-})();
-" 2>&1
+    timeout 600 npx tsx scripts/scraper-check.ts --compare "$match_filter" --league "$league" 2>&1
 
     cd - > /dev/null
 }
 
 list_scrapers() {
     print_section "Dostępne scrapery"
-    for key in $(echo "${!SCRAPERS[@]}" | tr ' ' '\n' | sort); do
+    for key in $(echo "${SCRAPERS[@]}" | tr ' ' '\n' | sort); do
         echo -e "  ${CYAN}•${NC} $key"
     done
 }
@@ -511,7 +296,7 @@ show_help() {
     echo "  $0 test-all premier-league         # Pełny test wszystkich"
     echo ""
     echo -e "${BOLD}Dostępne scrapery:${NC}"
-    echo "  ${!SCRAPERS[*]}" | fold -s -w 60 | sed 's/^/  /'
+    echo "  ${SCRAPERS[*]}" | fold -s -w 60 | sed 's/^/  /'
 }
 
 # Main

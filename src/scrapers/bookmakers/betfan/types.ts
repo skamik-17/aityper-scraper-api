@@ -153,11 +153,3 @@ export interface OverUnderLineOdds {
   over: number;
   under: number;
 }
-
-/**
- * Cache entry for events data
- */
-export interface EventsCacheEntry {
-  events: Map<string, BetfanEvent>;
-  timestamp: number;
-}

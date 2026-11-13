@@ -5,6 +5,7 @@
  */
 import { randomUUID } from "node:crypto";
 import type { PolishBookmaker } from "../config/index.js";
+import type { ScrapeMode } from "./incremental/scrape-dispatch.js";
 
 export type RunTrigger = "startup" | "interval" | "admin";
 
@@ -12,6 +13,10 @@ export interface RunRequest {
   trigger: RunTrigger;
   leagues: readonly string[];
   bookmakers: readonly PolishBookmaker[];
+  /** Plan 10: the pass per bookmaker; absent = "full" for every bookmaker (startup, admin). */
+  modes?: Partial<Record<PolishBookmaker, ScrapeMode>>;
+  /** Plan 10: false on incremental ticks (no outcome, [ScrapeRun] or alert); absent = true. */
+  recordOutcomes?: boolean;
 }
 
 export interface RunExecutionContext {

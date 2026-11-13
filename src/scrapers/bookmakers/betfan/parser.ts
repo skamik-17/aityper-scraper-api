@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import { GAME_TYPES, MARKET_GROUPS, MARKET_TYPES } from "./constants.js";
 
 /**
@@ -40,10 +39,6 @@ import type {
   BetfanGame,
   BetfanOutcome,
   ParsedTeams,
-  Parsed1X2Odds,
-  ParsedDoubleChanceOdds,
-  ParsedBTTSOdds,
-  OverUnderLineOdds,
 } from "./types.js";
 
 /**
@@ -132,152 +127,6 @@ function getSelectionName(outcome: BetfanOutcome, gameType: number): string {
   }
 
   return `Opcja ${outcome.outcomePosition}`;
-}
-
-/**
- * Parse 1X2 market odds from event data
- * Used for backward compatibility with scrapeLeague
- */
-export function parse1X2Odds(event: BetfanEvent): Parsed1X2Odds {
-  const result: Parsed1X2Odds = { home: 0, draw: 0, away: 0 };
-
-  for (const game of event.games || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-    const outcomes = game.outcomes || [];
-
-    // 1X2 - gameType 1, gameName "Mecz" or "1X2"
-    if (
-      game.gameType === GAME_TYPES.MATCH_RESULT_1X2 &&
-      (gameName === "mecz" || gameName === "1x2") &&
-      outcomes.length === 3 &&
-      result.home === 0
-    ) {
-      const sorted = [...outcomes].sort(
-        (a, b) => a.outcomePosition - b.outcomePosition
-      );
-      result.home = sorted[0]?.outcomeOdds || 0;
-      result.draw = sorted[1]?.outcomeOdds || 0;
-      result.away = sorted[2]?.outcomeOdds || 0;
-      break;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Parse Double Chance market from event data
- */
-export function parseDoubleChance(event: BetfanEvent): ParsedDoubleChanceOdds | null {
-  const result: ParsedDoubleChanceOdds = {
-    homeOrDraw: 0,
-    drawOrAway: 0,
-    homeOrAway: 0,
-  };
-  let found = false;
-
-  for (const game of event.games || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-    const outcomes = game.outcomes || [];
-
-    if (
-      game.gameType === GAME_TYPES.DOUBLE_CHANCE &&
-      gameName.includes("szansa") &&
-      outcomes.length === 3
-    ) {
-      for (const o of outcomes) {
-        const name = (o.outcomeName || "").toLowerCase().replace(/\//g, "");
-        if (name === "1x" || name === "x1") {
-          result.homeOrDraw = o.outcomeOdds;
-          found = true;
-        } else if (name === "x2" || name === "2x") {
-          result.drawOrAway = o.outcomeOdds;
-          found = true;
-        } else if (name === "12" || name === "21") {
-          result.homeOrAway = o.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse BTTS market from event data
- */
-export function parseBTTS(event: BetfanEvent): ParsedBTTSOdds | null {
-  const result: ParsedBTTSOdds = { yes: 0, no: 0 };
-  let found = false;
-
-  for (const game of event.games || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (
-      game.gameType === GAME_TYPES.BTTS &&
-      gameName.includes("obie") &&
-      gameName.includes("strzelą")
-    ) {
-      for (const o of game.outcomes || []) {
-        const name = (o.outcomeName || "").toLowerCase();
-        if (name === "tak") {
-          result.yes = o.outcomeOdds;
-          found = true;
-        } else if (name === "nie") {
-          result.no = o.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse Over/Under markets from event data
- * Returns a record keyed by line (e.g., "2.5")
- */
-export function parseOverUnder(
-  event: BetfanEvent
-): Record<string, OverUnderLineOdds> | null {
-  const result: Record<string, OverUnderLineOdds> = {};
-
-  for (const game of event.games || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-    const outcomes = game.outcomes || [];
-
-    // Over/Under - gameType 8 (handles both "Liczba goli" and "Ponizej/powyzej X.X goli")
-    if (game.gameType === GAME_TYPES.OVER_UNDER && outcomes.length === 2) {
-      // Try to get line from game name first (e.g., "Ponizej/powyzej 2.5 goli")
-      const gameLineMatch = gameName.match(/(\d+[.,]?\d*)\s*gol/);
-
-      for (const o of outcomes) {
-        const outcomeName = (o.outcomeName || "").toLowerCase();
-        // Get line from outcome name (e.g., "Powyzej 2.5") or from game name
-        const outcomeLineMatch = outcomeName.match(/(\d+[.,]?\d*)/);
-        const lineMatch = outcomeLineMatch || gameLineMatch;
-
-        if (lineMatch) {
-          const lineVal = parseFloat(lineMatch[1].replace(",", "."));
-          if (lineVal % 1 === 0.5) {
-            const line = lineVal.toFixed(1);
-            if (!result[line]) result[line] = { over: 0, under: 0 };
-            if (outcomeName.includes("powyżej") || outcomeName.includes("powyzej")) {
-              result[line].over = o.outcomeOdds;
-            } else if (outcomeName.includes("poniżej") || outcomeName.includes("ponizej")) {
-              result[line].under = o.outcomeOdds;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
 }
 
 /**
@@ -450,12 +299,4 @@ export function isValidEvent(event: BetfanEvent): boolean {
   if (!teams.homeTeam || !teams.awayTeam) return false;
 
   return true;
-}
-
-/**
- * Check if event has valid 1X2 odds
- */
-export function hasValid1X2Odds(event: BetfanEvent): boolean {
-  const odds1x2 = parse1X2Odds(event);
-  return odds1x2.home > 1 && odds1x2.draw > 1 && odds1x2.away > 1;
 }

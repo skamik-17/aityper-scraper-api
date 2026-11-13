@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildEventUrl,
   buildListUrl,
-  extractEventUuidFromUrl,
   fetchEventDetail,
   createHttpFetchJson,
   fetchLeagueEvents,
@@ -278,12 +277,9 @@ describe("totalbet api-client URL helpers", () => {
     expect(buildListUrl(PL, 3)).toBe(LIST_P1.replace("page=1&", "page=3&"));
   });
 
-  it("buildEventUrl and extractEventUuidFromUrl round-trip and reject legacy URLs", () => {
+  it("buildEventUrl builds the event-details URL", () => {
     const u = "0e45932b-1433-4cf5-b658-5c308b7c2b60";
     expect(buildEventUrl(u)).toBe(`https://totalbet.pl/event-details/${u}`);
-    expect(extractEventUuidFromUrl(buildEventUrl(u))).toBe(u);
-    expect(extractEventUuidFromUrl(`https://totalbet.pl/event-details/${u}?groupUUID=betbuilder`)).toBe(u);
-    expect(extractEventUuidFromUrl("https://totalbet.pl/sports/event/123456")).toBeNull();
   });
 });
 

@@ -23,7 +23,8 @@ export function computeNextDelayMs(a: {
 export interface IntervalSchedulerOptions {
   intervalMs: number;
   coordinator: Pick<RunCoordinator, "start" | "whenIdle">;
-  request: (trigger: "startup" | "interval") => RunRequest;
+  /** null: nothing is due on this tick (plan 10); the next tick is scheduled as after a run. */
+  request: (trigger: "startup" | "interval") => RunRequest | null;
   random?: () => number;
 }
 
@@ -72,18 +73,27 @@ export class IntervalScheduler {
   }
 
   private async tick(trigger: "startup" | "interval"): Promise<void> {
-    let started = this.o.coordinator.start(this.o.request(trigger));
-    while (!started.accepted) {
+    const tickAt = Date.now();
+    let req = this.o.request(trigger);
+    let started = req === null ? null : this.o.coordinator.start(req);
+    while (started !== null && !started.accepted) {
       const { runId, trigger: runningTrigger } = started.running;
       console.log(`[Scheduler] ${trigger} run waits for run ${runId.slice(0, 8)} (${runningTrigger})`);
       await this.o.coordinator.whenIdle();
       if (this.stopped) return;
-      started = this.o.coordinator.start(this.o.request(trigger));
+      req = this.o.request(trigger);
+      started = req === null ? null : this.o.coordinator.start(req);
     }
-    await started.run.done;
-    if (this.stopped) return;
+    let lastStartedAt = tickAt;
+    if (started === null) {
+      console.log("[Scheduler] nothing due");
+    } else {
+      await started.run.done;
+      if (this.stopped) return;
+      lastStartedAt = started.run.startedAt.getTime();
+    }
     const delay = computeNextDelayMs({
-      lastStartedAt: started.run.startedAt.getTime(),
+      lastStartedAt,
       now: Date.now(),
       intervalMs: this.o.intervalMs,
       random: this.random(),

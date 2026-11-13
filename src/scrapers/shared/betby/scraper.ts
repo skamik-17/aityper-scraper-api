@@ -1,39 +1,11 @@
-/**
- * Browserless scraper for the Betby (bettech, Sportradar UOF) brands betters and lebull.
- *
- * It still extends PlaywrightScraper, because the aggregator, the audit tooling and the
- * scripts all address scrapers through that class, but it never opens a browser: every
- * method reads the prematch snapshot, the event endpoint and the market descriptions over
- * plain HTTP through BetbyClient.
- *
- * Per league: the snapshot lists the upcoming matches with their listing markets (1, 10,
- * 16, 18). The event endpoint then gives each match its full market list. A match the
- * event endpoint has no payload for (or one naming other teams) keeps its listing markets,
- * so one withdrawn or thin far event never costs the run. A match whose event request
- * itself failed is skipped instead (a listing write would replace its full offer); two
- * consecutive failures stop the scrape, and more than MAX_SKIPPED_DETAIL_RATIO failed
- * requests fail it, both with nothing written.
- *
- * Betby ids are 19-digit strings above 2^53 and stay strings here (matchId, eventId,
- * tournament id, deep links).
- *
- * Each scrapeFullOffer runs under a ScrapeBudget (BETBY_BUDGET_MS unless the caller passes
- * one). A budget abort fails the scrape with nothing written: no listing fallback then.
- */
-import type { Page } from "playwright";
+
 import { getBookmakerLeagueId } from "../../../config/leagues.js";
-import type { FullMatchOffer, FullOfferScraperResult, ScrapedMarket } from "../../../types/full-offer.js";
+import type { FullMatchOffer, FullOfferScraperResult } from "../../../types/full-offer.js";
 import type {
-  EventUrlEntry,
-  MatchDetailResult,
-  MatchIdentifier,
-  RawScrapedMatchOdds,
-  RawScrapedOdds,
   ScraperConfig,
-  ScraperResult,
 } from "../../../types/scraper.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { BudgetExceededError, budgetAbortReason, createScrapeBudget, type ScrapeBudget } from "../budget.js";
 import { MAX_SKIPPED_DETAIL_RATIO } from "../detail-fetch.js";
@@ -42,8 +14,7 @@ import { HttpError } from "../http/http-error.js";
 import type { TransportStats } from "../scraper-contract.js";
 import { BetbyClient } from "./client.js";
 import { BETBY_BUDGET_MS } from "./http.js";
-import { buildScrapedMarkets, extractBetbyEventId, selectLeagueEvents } from "./parser.js";
-import { classifyLine, formatLine, parseSpecifiers, readTotalLine } from "./specifiers.js";
+import { buildScrapedMarkets, selectLeagueEvents } from "./parser.js";
 import type { BetbyBookmaker, BetbyBrandConfig, BetbyEvent, BetbyEventRef, FetchText } from "./types.js";
 
 /** Pause between two event requests of one league, to stay gentle on an API with unknown rate limits. */
@@ -71,13 +42,7 @@ export interface BetbyRunStats {
 }
 
 /** What the event endpoint gave for one match: a payload, no payload (listing fallback), or a failed request. */
-type FullEventOutcome = { event: BetbyEvent } | { none: string } | { failed: string };
-
-/** UOF outcome ids of the legacy markets (`scrapeLeague`, `scrapeMatchDetails`). */
-const RESULT_IDS = ["1", "2", "3"] as const; // home, draw, away
-const DOUBLE_CHANCE_IDS = ["9", "11", "10"] as const; // 1X, X2, 12
-const BTTS_IDS = ["74", "76"] as const; // yes, no
-const TOTAL_IDS = ["12", "13"] as const; // over, under
+type FullEventOutcome = { event: BetbyEvent } | { none: string } | { failed: string }; // over, under
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -89,43 +54,6 @@ function competitorNames(event: BetbyEvent): [string, string] | null {
   if (!Array.isArray(competitors) || competitors.length !== 2) return null;
   const [home, away] = competitors.map((c) => (typeof c?.name === "string" ? c.name.trim() : ""));
   return home === "" || away === "" ? null : [home, away];
-}
-
-/**
- * Prices of one market by outcome id, in the order asked, or null unless every id quotes.
- * `markets` comes from buildScrapedMarkets, which already dropped blocked outcomes and
- * prices below 1.01. `paramValue` undefined means the market without a specifier.
- */
-function quotes(
-  markets: ScrapedMarket[],
-  marketId: string,
-  paramValue: string | undefined,
-  outcomeIds: readonly string[],
-): number[] | null {
-  const market = markets.find((m) => m.bookmakerMarketId === marketId && m.paramValue === paramValue);
-  if (market === undefined) return null;
-  const byId = new Map(market.selections.map((s) => [s.externalId, s.odds]));
-  const prices = outcomeIds.map((id) => byId.get(id));
-  return prices.every((p) => p !== undefined) ? (prices as number[]) : null;
-}
-
-/**
- * Full-time totals (market 18) on half lines, keyed `"2.5"` as the legacy O/U shape expects.
- * Whole and quarter lines can push or split, so they stay out, and so does any specifier
- * with keys besides `total` (a time window is a different bet).
- */
-function halfLineTotals(markets: ScrapedMarket[]): Record<string, { over: number; under: number }> {
-  const totals: Record<string, { over: number; under: number }> = {};
-  for (const m of markets) {
-    if (m.bookmakerMarketId !== "18" || m.paramValue === undefined) continue;
-    const specs = parseSpecifiers(m.paramValue);
-    if (Object.keys(specs).length !== 1) continue;
-    const line = readTotalLine(specs.total);
-    if (line === null || classifyLine(line) !== "half") continue;
-    const prices = quotes([m], "18", m.paramValue, TOTAL_IDS);
-    if (prices !== null) totals[formatLine(line)] = { over: prices[0], under: prices[1] };
-  }
-  return totals;
 }
 
 export class BetbyScraper extends PlaywrightScraper {
@@ -240,106 +168,6 @@ export class BetbyScraper extends PlaywrightScraper {
       const cause = runBudget.signal.aborted ? budgetAbortReason(runBudget.signal) : err;
       return this.createFullOfferErrorResult(league, cause, Date.now() - startedAt);
     }
-  }
-
-  /** The upcoming matches with their listing 1X2. */
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    const startedAt = Date.now();
-    try {
-      const tournamentId = this.tournamentId(league);
-      if (tournamentId === null) return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startedAt);
-
-      const snapshot = await this.client.fetchSnapshot();
-      const data: RawScrapedOdds[] = [];
-      for (const ref of selectLeagueEvents(snapshot, tournamentId, this.now())) {
-        const prices = quotes(buildScrapedMarkets(ref.listingMarkets, {}, [ref.homeTeam, ref.awayTeam]), "1", undefined, RESULT_IDS);
-        if (prices === null) continue;
-        data.push({
-          bookmaker: this.bookmaker,
-          eventName: `${ref.homeTeam} - ${ref.awayTeam}`,
-          homeTeam: getCanonicalTeamName(ref.homeTeam, league),
-          awayTeam: getCanonicalTeamName(ref.awayTeam, league),
-          homeOdds: prices[0],
-          drawOdds: prices[1],
-          awayOdds: prices[2],
-          hasNoTaxPromo: false,
-          scrapedAt: new Date(this.now()),
-          eventId: ref.eventId,
-          eventUrl: this.brand.buildEventUrl(ref),
-        });
-      }
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startedAt, timestamp: new Date() };
-    } catch (err) {
-      return this.createErrorResult(err, Date.now() - startedAt);
-    }
-  }
-
-  async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
-    const startedAt = Date.now();
-    const league = match.leagueId ?? "ekstraklasa";
-
-    const all = await this.scrapeLeague(league);
-    if (all.status !== "success" || !all.data) return all;
-
-    const hit = findMatchingEvent({ homeTeam: match.homeTeam, awayTeam: match.awayTeam }, all.data, league);
-    if (!hit) {
-      return this.createNotFoundResult(
-        `Match not found on ${this.tag}: ${match.homeTeam} vs ${match.awayTeam}`,
-        Date.now() - startedAt,
-      );
-    }
-    return { status: "success", bookmaker: this.bookmaker, data: [hit.event], duration: Date.now() - startedAt, timestamp: new Date() };
-  }
-
-  /** 1X2 (1), double chance (10), BTTS (29) and half-line totals (18) from the event endpoint. */
-  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
-    const startedAt = Date.now();
-    const eventId = extractBetbyEventId(eventUrl);
-    if (eventId === null) {
-      return this.createMatchDetailNotFoundResult(`Invalid ${this.tag} event URL: ${eventUrl}`, Date.now() - startedAt);
-    }
-
-    try {
-      const event = await this.client.fetchEvent(eventId);
-      const teams = event === null ? null : competitorNames(event);
-      if (event === null || teams === null) {
-        return this.createMatchDetailNotFoundResult(`Event ${eventId} not found in the ${this.tag} API`, Date.now() - startedAt);
-      }
-
-      const markets = buildScrapedMarkets(event.markets, {}, teams);
-      const result = quotes(markets, "1", undefined, RESULT_IDS);
-      if (result === null) {
-        return this.createMatchDetailNotFoundResult(`Event ${eventId} has no complete 1X2 on ${this.tag}`, Date.now() - startedAt);
-      }
-      const doubleChance = quotes(markets, "10", undefined, DOUBLE_CHANCE_IDS);
-      const btts = quotes(markets, "29", undefined, BTTS_IDS);
-      const totals = halfLineTotals(markets);
-
-      const data: RawScrapedMatchOdds = {
-        bookmaker: this.bookmaker,
-        eventName: `${teams[0]} - ${teams[1]}`,
-        homeTeam: teams[0],
-        awayTeam: teams[1],
-        eventUrl,
-        eventId,
-        hasNoTaxPromo: false,
-        scrapedAt: new Date(this.now()),
-        market1X2: { home: result[0], draw: result[1], away: result[2] },
-        marketDoubleChance: doubleChance
-          ? { homeOrDraw: doubleChance[0], drawOrAway: doubleChance[1], homeOrAway: doubleChance[2] }
-          : undefined,
-        marketBTTS: btts ? { yes: btts[0], no: btts[1] } : undefined,
-        marketOverUnder: Object.keys(totals).length > 0 ? totals : undefined,
-      };
-      return { status: "success", bookmaker: this.bookmaker, data, duration: Date.now() - startedAt, timestamp: new Date() };
-    } catch (err) {
-      return this.createMatchDetailErrorResult(err, Date.now() - startedAt);
-    }
-  }
-
-  /** Betby event URLs come from the snapshot, never from a listing page. */
-  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
-    return [];
   }
 
   /** The league's Betby tournament id, or null when the league is not mapped for this brand. */

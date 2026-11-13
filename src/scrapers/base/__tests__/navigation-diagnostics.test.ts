@@ -7,7 +7,7 @@ import type {
   FullOfferScraperResult,
   NavigationDiagnostics,
 } from "../../../types/full-offer.js";
-import type { MatchDetailResult, ScraperConfig, ScraperResult } from "../../../types/scraper.js";
+import type { ScraperConfig } from "../../../types/scraper.js";
 import {
   attachNavigationRecorder,
   describeNavigationIssues,
@@ -704,18 +704,6 @@ describe("PlaywrightScraper.executeFullOfferScrape", () => {
       return this.executeFullOfferScrape(league, (l) => l === "premier-league", this.logic);
     }
 
-    scrapeLeague(): Promise<ScraperResult> {
-      throw new Error("not used");
-    }
-    scrapeMatch(): Promise<ScraperResult> {
-      throw new Error("not used");
-    }
-    scrapeMatchDetails(): Promise<MatchDetailResult> {
-      throw new Error("not used");
-    }
-    extractEventUrls(): Promise<never[]> {
-      throw new Error("not used");
-    }
   }
 
   const LEAGUE_URL = "https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485";

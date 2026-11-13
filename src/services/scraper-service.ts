@@ -22,6 +22,7 @@ import {
   formatRunSummaryLine,
 } from "./run-alerts.js";
 import { runRetentionCleanup } from "./retention-service.js";
+import type { ScrapeMode } from "./incremental/scrape-dispatch.js";
 
 export interface ScrapeResult {
   runId: string;
@@ -62,6 +63,35 @@ export interface ScrapeCycleOptions {
   signal?: AbortSignal;
   /** Close the browser pool after the cycle (default true). */
   closeBrowsers?: boolean;
+  /** Plan 10: the pass per bookmaker; absent = "full" for every bookmaker. */
+  modes?: Partial<Record<PolishBookmaker, ScrapeMode>>;
+  /**
+   * Plan 10: false on incremental ticks. The tick then writes no scraper_runs rows, keeps
+   * nothing in the in-memory outcome history, prints no [ScrapeRun] line and raises no
+   * alert, so all of those stay in hourly units. Absent = true.
+   */
+  recordOutcomes?: boolean;
+}
+
+/** An incremental tick's league result: no outcome is recorded anywhere (outcomes stay hourly). */
+function incrementalTickResult(league: string, startedAt: Date, result: FullOfferAggregatedResult | null, cycleError: string | null): ScrapeResult {
+  const completedAt = new Date();
+  return {
+    runId: result?.runId ?? "unknown",
+    league,
+    startedAt,
+    completedAt,
+    duration: completedAt.getTime() - startedAt.getTime(),
+    successCount: 0,
+    errorCount: 0,
+    uniqueMatches: result?.allMatches.length ?? 0,
+    marketsScraped: result?.summary.totalMarketsFound ?? 0,
+    errors: cycleError ? [`Full offer: ${cycleError}`] : [],
+    aborted: null,
+    interrupted: result?.interrupted ?? null,
+    marketsSaved: 0,
+    outcomes: [],
+  };
 }
 
 /** The result of a league refused by the preflight: no scraper started, nothing written. */
@@ -327,6 +357,15 @@ export async function runScrapeCycle(
     }
     return interrupted;
   }
+  if (!probe.ok && options.recordOutcomes === false) {
+    // An incremental tick raises no alert: the next hourly tick does, in hourly units
+    console.warn(`[ScraperService] incremental tick skipped: database unreachable - ${probe.error}`);
+    const refused = new Map<string, ScrapeResult>();
+    for (const league of leagues) {
+      refused.set(league, abortedLeague(league, options.runIds?.[league] ?? "aborted", startedAt, new Date(), bookmakers, probe.error));
+    }
+    return refused;
+  }
   if (!probe.ok) {
     const refused = new Map<string, ScrapeResult>();
     for (const league of leagues) {
@@ -350,21 +389,35 @@ export async function runScrapeCycle(
   let cycleError: string | null = null;
   try {
     for (const league of leagues) console.log(`[ScraperService] Starting full offer scrape for ${league}`);
-    cycle = await runFullOfferCycle({ leagues, bookmakers, runIds: options.runIds, signal: options.signal });
+    cycle = await runFullOfferCycle({
+      leagues,
+      bookmakers,
+      runIds: options.runIds,
+      signal: options.signal,
+      ...(options.modes ? { modes: options.modes } : {}),
+      ...(options.recordOutcomes === false ? { recordOutcomes: false } : {}),
+    });
   } catch (error) {
     cycleError = error instanceof Error ? error.message : "Unknown error";
     console.error("[ScraperService] Full offer scraping failed:", cycleError);
   }
 
-  // 5-8 per league, in league order.
+  // 5-8 per league, in league order. An incremental tick records nothing (plan 10).
+  const recordOutcomes = options.recordOutcomes !== false;
   const results = new Map<string, ScrapeResult>();
   for (const league of leagues) {
-    results.set(league, await persistLeagueRun(league, bookmakers, startedAt, cycle?.get(league) ?? null, cycleError, signal));
+    const result = cycle?.get(league) ?? null;
+    results.set(
+      league,
+      recordOutcomes
+        ? await persistLeagueRun(league, bookmakers, startedAt, result, cycleError, signal)
+        : incrementalTickResult(league, startedAt, result, cycleError)
+    );
   }
 
   // Retention after a completed cycle, not awaited: a long DELETE never holds the run lock
-  // or the shutdown drain. An interrupted cycle skips it.
-  if ([...results.values()].every((r) => r.interrupted === null)) void runRetentionCleanup();
+  // or the shutdown drain. An interrupted cycle skips it, and so does an incremental tick (hourly).
+  if (recordOutcomes && [...results.values()].every((r) => r.interrupted === null)) void runRetentionCleanup();
 
   // 9. Once per cycle.
   if (options.closeBrowsers !== false) {

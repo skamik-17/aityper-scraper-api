@@ -1,38 +1,17 @@
-import type { Page } from "playwright";
+
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
 import type {
   ScraperConfig,
-  ScraperResult,
-  RawScrapedOdds,
-  MatchIdentifier,
-  MatchDetailResult,
-  RawScrapedMatchOdds,
-  EventUrlEntry,
 } from "../../../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-
-import { LEAGUE_URLS, TOURNAMENT_IDS } from "./constants.js";
 import {
   navigateToLeaguePage,
-  navigateToBaseSite,
   fetchLeagueEvents,
   fetchEventDetails,
-  extractEventIdFromUrl,
-  buildEventUrl,
 } from "./navigation.js";
-import {
-  parseTeamNames,
-  parse1X2Odds,
-  parseDoubleChance,
-  parseBTTS,
-  parseOverUnder,
-  isValidEvent,
-} from "./parser.js";
-import type { SuperbetEvent } from "./types.js";
 import { mapSuperbetEventOffer, selectUpcomingSuperbetEvents } from "./full-offer-mapping.js";
 
 /** superbet's browser path, kept as the SCRAPER_TRANSPORT_SUPERBET=browser fallback (src/scrapers/bookmakers/index.ts picks). */
@@ -46,166 +25,6 @@ export class SuperbetBrowserScraper extends PlaywrightScraper {
       ...DEFAULT_SCRAPER_CONFIGS.superbet,
       ...config,
       enabled: true,
-    };
-  }
-
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    return this.executeLeagueScrape(
-      league,
-      (l) => isLeagueSupported(l, this.bookmaker),
-      async (page, leagueSlug) => {
-        const startTime = Date.now();
-
-        const navSuccess = await navigateToLeaguePage(page, leagueSlug);
-        if (!navSuccess) {
-          return this.createErrorResult(
-            new Error("Failed to navigate to league page"),
-            Date.now() - startTime
-          );
-        }
-
-        const apiData = await fetchLeagueEvents(page, leagueSlug);
-        if (!apiData || !apiData.data || apiData.data.length === 0) {
-          return this.createNotFoundResult(
-            "Could not capture Superbet API data",
-            Date.now() - startTime
-          );
-        }
-
-        console.log(`[Superbet] Captured ${apiData.data.length} events from API`);
-
-        const matches: RawScrapedOdds[] = apiData.data
-          .filter(isValidEvent)
-          .map((event) => {
-            const teams = parseTeamNames(event.matchName);
-            const odds1x2 = parse1X2Odds(event);
-
-            return {
-              bookmaker: this.bookmaker,
-              eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-              homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-              awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-              homeOdds: odds1x2.home,
-              drawOdds: odds1x2.draw,
-              awayOdds: odds1x2.away,
-              hasNoTaxPromo: false,
-              scrapedAt: new Date(),
-              eventUrl: buildEventUrl(event.eventId),
-            };
-          })
-          .filter((m) => m.homeOdds > 0);
-
-        console.log(`[Superbet] Found ${matches.length} matches with valid odds`);
-
-        return {
-          status: "success",
-          bookmaker: this.bookmaker,
-          data: matches,
-          duration: Date.now() - startTime,
-          timestamp: new Date(),
-        };
-      }
-    );
-  }
-
-  async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
-    const startTime = Date.now();
-    const league = match.leagueId ?? "ekstraklasa";
-
-    const allMatches = await this.scrapeLeague(league);
-    if (allMatches.status !== "success" || !allMatches.data) {
-      return allMatches;
-    }
-
-    const matchResult = findMatchingEvent(
-      { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-      allMatches.data,
-      league
-    );
-
-    if (!matchResult) {
-      return this.createNotFoundResult(
-        `Match not found on Superbet: ${match.homeTeam} vs ${match.awayTeam}`,
-        Date.now() - startTime
-      );
-    }
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: [matchResult.event],
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
-  }
-
-  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
-    const startTime = Date.now();
-    const eventId = extractEventIdFromUrl(eventUrl);
-
-    if (!eventId) {
-      return this.createMatchDetailNotFoundResult("Invalid Superbet event URL", Date.now() - startTime);
-    }
-
-    return this.executeWithBrowser(
-      async (page) => {
-        const navSuccess = await navigateToBaseSite(page);
-        if (!navSuccess) {
-          return this.createMatchDetailErrorResult(
-            new Error("Failed to navigate to base site"),
-            Date.now() - startTime
-          );
-        }
-
-        const detailData = await fetchEventDetails(page, eventId);
-        if (!detailData || !detailData.data || detailData.data.length === 0) {
-          return this.createMatchDetailNotFoundResult(
-            "Could not capture Superbet detail API data",
-            Date.now() - startTime
-          );
-        }
-
-        const event = detailData.data[0];
-
-        return this.buildMatchDetailResult(event, eventUrl, startTime);
-      },
-      (error, duration) => this.createMatchDetailErrorResult(error, duration)
-    );
-  }
-
-  private buildMatchDetailResult(event: SuperbetEvent, eventUrl: string, startTime: number): MatchDetailResult {
-    const teams = parseTeamNames(event.matchName);
-    const odds = event.odds || [];
-
-    const odds1x2 = parse1X2Odds(event);
-    const doubleChance = parseDoubleChance(odds);
-    const btts = parseBTTS(odds);
-    const overUnder = parseOverUnder(odds);
-
-    const matchOdds: RawScrapedMatchOdds = {
-      bookmaker: this.bookmaker,
-      eventName: event.matchName || "",
-      homeTeam: teams.homeTeam,
-      awayTeam: teams.awayTeam,
-      eventUrl,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
-      market1X2: {
-        home: odds1x2.home,
-        draw: odds1x2.draw,
-        away: odds1x2.away,
-      },
-      marketDoubleChance: doubleChance || undefined,
-      marketBTTS: btts || undefined,
-      marketOverUnder: overUnder || undefined,
-    };
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: matchOdds,
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
     };
   }
 
@@ -281,10 +100,6 @@ export class SuperbetBrowserScraper extends PlaywrightScraper {
         };
       }
     );
-  }
-
-  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
-    return [];
   }
 }
 

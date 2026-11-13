@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   GAME_TYPES,
   MARKET_GROUPS,
@@ -21,9 +20,6 @@ import type {
   EtotoGame,
   EtotoOutcome,
   ParsedTeams,
-  Parsed1X2Odds,
-  ParsedDoubleChance,
-  ParsedBTTS,
 } from "./types.js";
 
 /**
@@ -112,139 +108,6 @@ export function getMarketName(game: EtotoGame): string {
       // Use original game name if available
       return game.gameName || `Rynek ${game.gameType}`;
   }
-}
-
-/**
- * Parse 1X2 market odds from event data
- * Used for backward compatibility with scrapeLeague
- */
-export function parse1X2Odds(event: EtotoEvent): Parsed1X2Odds {
-  const result: Parsed1X2Odds = { home: 0, draw: 0, away: 0 };
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    // 1X2 - gameType 1
-    if (
-      game.gameType === GAME_TYPES.MATCH_RESULT_1X2 &&
-      gameName === "1x2" &&
-      game.outcomes.length === 3 &&
-      result.home === 0
-    ) {
-      const sorted = [...game.outcomes].sort(
-        (a, b) => a.outcomePosition - b.outcomePosition
-      );
-      result.home = sorted[0]?.outcomeOdds || 0;
-      result.draw = sorted[1]?.outcomeOdds || 0;
-      result.away = sorted[2]?.outcomeOdds || 0;
-      break;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Parse Double Chance market from event games
- */
-export function parseDoubleChance(event: EtotoEvent): ParsedDoubleChance | null {
-  const result: ParsedDoubleChance = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-  let found = false;
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (game.gameType === GAME_TYPES.DOUBLE_CHANCE && gameName.includes("szansa")) {
-      for (const o of game.outcomes) {
-        const name = (o.outcomeName || "").toUpperCase();
-        if (name === "1X") {
-          result.homeOrDraw = o.outcomeOdds;
-          found = true;
-        } else if (name === "X2") {
-          result.drawOrAway = o.outcomeOdds;
-          found = true;
-        } else if (name === "12") {
-          result.homeOrAway = o.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse BTTS market from event games
- */
-export function parseBTTS(event: EtotoEvent): ParsedBTTS | null {
-  const result: ParsedBTTS = { yes: 0, no: 0 };
-  let found = false;
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (
-      game.gameType === GAME_TYPES.BTTS &&
-      gameName.includes("obie") &&
-      gameName.includes("strzel")
-    ) {
-      for (const o of game.outcomes) {
-        const name = (o.outcomeName || "").toLowerCase();
-        if (name === "tak") {
-          result.yes = o.outcomeOdds;
-          found = true;
-        } else if (name === "nie") {
-          result.no = o.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse Over/Under markets from event games
- * Returns a record keyed by line (e.g., "2.5")
- */
-export function parseOverUnder(
-  event: EtotoEvent
-): Record<string, MarketOverUnderOdds> | null {
-  const result: Record<string, MarketOverUnderOdds> = {};
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (
-      game.gameType === GAME_TYPES.TOTAL_GOALS &&
-      gameName.includes("suma") &&
-      gameName.includes("gol") &&
-      game.outcomes.length === 2
-    ) {
-      const lineVal = game.argument;
-      if (typeof lineVal === "number" && lineVal % 1 === 0.5) {
-        const line = lineVal.toFixed(1);
-        if (!result[line]) {
-          result[line] = { over: 0, under: 0 };
-        }
-
-        for (const o of game.outcomes) {
-          const name = (o.outcomeName || "").toLowerCase();
-          if (name.includes("powyżej") || name.includes("powyzej")) {
-            result[line].over = o.outcomeOdds;
-          } else if (name.includes("poniżej") || name.includes("ponizej")) {
-            result[line].under = o.outcomeOdds;
-          }
-        }
-      }
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
 }
 
 /**
@@ -386,12 +249,4 @@ export function isValidEvent(event: EtotoEvent): boolean {
   if (isComboEvent(event)) return false;
 
   return true;
-}
-
-/**
- * Check if event has valid 1X2 odds
- */
-export function hasValid1X2Odds(event: EtotoEvent): boolean {
-  const odds1x2 = parse1X2Odds(event);
-  return odds1x2.home > 1 && odds1x2.draw > 1 && odds1x2.away > 1;
 }

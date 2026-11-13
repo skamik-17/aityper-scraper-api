@@ -110,11 +110,3 @@ export interface ParsedOverUnder {
   over: number;
   under: number;
 }
-
-/**
- * Event data cache entry
- */
-export interface CachedEventData {
-  event: EtotoEvent;
-  timestamp: number;
-}

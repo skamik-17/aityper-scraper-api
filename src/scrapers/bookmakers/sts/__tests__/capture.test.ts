@@ -56,6 +56,13 @@ describe("STS WebSocket frame capture", () => {
     const out = await captureMatchWithRetry(async () => results[calls++], "u", "f2921896");
     expect(out).toBe(withSnap); expect(calls).toBe(2);
   });
+  it("captureMatchWithRetry stops on the first attempt that has the snapshot (no second navigation)", async () => {
+    const withSnap = empty(); recordStsFrame(withSnap, fx(SNAP));
+    const laterSnap = empty(); recordStsFrame(laterSnap, fx(SNAP));
+    const results = [withSnap, laterSnap]; let calls = 0;
+    const out = await captureMatchWithRetry(async () => results[calls++], "u", "f2921896");
+    expect(out).toBe(withSnap); expect(calls).toBe(1);
+  });
   it("captureMatchWithRetry returns null after 2 attempts without a snapshot", async () => {
     let calls = 0;
     expect(await captureMatchWithRetry(async () => { calls++; return empty(); }, "u", "f2921896")).toBeNull();

@@ -253,8 +253,9 @@ export const OVER_UNDER_LINE_MARKET_IDS = new Set<number>([
   809, // "2. połowa - wynik i liczba goli" (SECOND_HALF_RESULT_AND_TOTAL)
   812, // "Podwójna szansa i liczba goli" (DOUBLE_CHANCE_TOTAL)
   1012, // "Połowa/koniec i liczba goli" (HALFTIME_FULLTIME_AND_TOTAL)
-  // Cards/corners totals: every line is named the same ("Liczba kartek"),
-  // so without the suffix only one of the 3-5 lines per market survived
+  // Cards/corners totals: every line of a market shares one name (e.g.
+  // "Liczba kartek", "Liczba rzutów rożnych"), so without the suffix only one
+  // of the 3-5 lines per market survived
   185, // "Liczba kartek" (CARDS_TOTAL)
   206, // "1. połowa - liczba kartek" (HALF_TIME_CARDS_TOTAL)
   228, // "Liczba rzutów rożnych" (CORNERS_TOTAL)

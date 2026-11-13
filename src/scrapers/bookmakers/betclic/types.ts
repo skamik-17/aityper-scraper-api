@@ -38,6 +38,8 @@ export interface BetclicListingMatch {
   matchName: string;
   /** Raw kickoff string from listing proto field 3, e.g. "2026-11-07T12:30:00.0000000Z" */
   startTime?: string;
+  /** Markets the match offers, listing proto field 7 (plan 10 fingerprint); absent when not sent */
+  marketCount?: number;
   /** Parsed home team name */
   homeTeam: string;
   /** Parsed away team name */

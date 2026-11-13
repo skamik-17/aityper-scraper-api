@@ -975,6 +975,9 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
       const matchFields = matchEntry.value;
       const matchName = getFieldValue<string>(matchFields, PROTO_FIELDS.MATCH_NAME) || "";
       const startTime = getFieldValue<string>(matchFields, PROTO_FIELDS.MATCH_START_TIME);
+      const rawMarketCount = getFieldValue<unknown>(matchFields, PROTO_FIELDS.MATCH_MARKET_COUNT);
+      const marketCount =
+        typeof rawMarketCount === "number" && Number.isInteger(rawMarketCount) && rawMarketCount >= 0 ? rawMarketCount : undefined;
       const parts = matchName.split(TEAM_SEPARATOR).map((t) => t.trim());
       if (parts.length !== 2) continue;
 
@@ -1016,6 +1019,7 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
           matchId,
           matchName,
           ...(startTime ? { startTime } : {}),
+          ...(marketCount !== undefined ? { marketCount } : {}),
           homeTeam,
           awayTeam,
           homeOdds: odds[0],

@@ -47,9 +47,11 @@ import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
 import { toIsoStartTime } from "../../shared/start-time.js";
 import type { TransportStats, TransportStatsSource } from "../../shared/scraper-contract.js";
+import type { EventRef, IncrementalScraper } from "../../shared/incremental/incremental-scraper.js";
+import { listingFingerprintOrNull } from "../../shared/incremental/listing-fingerprint.js";
 import { setMaxListeners } from "node:events";
 import { mapLimit } from "../../shared/concurrency.js";
-import { createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
+import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
 import { MAX_SKIPPED_DETAIL_RATIO } from "../../shared/detail-fetch.js";
 import { BETCLIC_MAX_DURATION_MS, resolveBetclicMatchConcurrency } from "./constants.js";
 
@@ -80,7 +82,10 @@ const eventsCache = new ScraperCache<BetclicListingMatch>({
   maxSize: 500,
 });
 
-export class BetclicPlaywrightScraper extends PlaywrightScraper implements TransportStatsSource {
+export class BetclicPlaywrightScraper
+  extends PlaywrightScraper
+  implements TransportStatsSource, IncrementalScraper<BetclicListingMatch>
+{
   bookmaker: PolishBookmaker = "betclic";
   readonly transport = "http" as const;
   config: ScraperConfig;
@@ -94,6 +99,11 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
       ...config,
       enabled: true,
     };
+  }
+
+  /** Plan 10: matches fetched at once on incremental passes, as on the full pass. */
+  get detailConcurrency(): number {
+    return resolveBetclicMatchConcurrency();
   }
 
   /** A copy of the cumulative counters; callers diff two readings around a unit of work. */
@@ -441,6 +451,59 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
     } catch (error) {
       if (ctx.budget.signal.aborted) return { kind: "budget" };
       return { kind: "skipped", reason: error instanceof Error ? error.message : String(error) };
+    }
+  }
+
+  /**
+   * Plan 10: the listing as event refs, with plan 06's listing request and log line. The
+   * fingerprint is the listed 1X2 plus the match's market count (proto field 7).
+   */
+  async listEvents(league: string, budget: ScrapeBudget): Promise<EventRef<BetclicListingMatch>[]> {
+    if (!isLeagueSupported(league, this.bookmaker)) throw new Error(`Unknown league: ${league}`);
+    setMaxListeners(RUN_SIGNAL_MAX_LISTENERS, budget.signal);
+    const runStats = createBetclicTransportStats();
+    try {
+      const listingData = await fetchLeagueMatches(league, { stats: runStats, signal: budget.signal });
+      if (!listingData) {
+        throw new Error(budget.signal.aborted ? "budget exhausted before the listing" : "No events found from API");
+      }
+      const listingMatches = parseListingResponse(listingData, league);
+      console.log(`[Betclic/FullOffer] Found ${listingMatches.length} events in listing`);
+      return listingMatches
+        .filter((m) => m.matchId)
+        .map((m) => ({
+          eventId: m.matchId!,
+          homeTeam: getCanonicalTeamName(m.homeTeam, league),
+          awayTeam: getCanonicalTeamName(m.awayTeam, league),
+          kickoff: toIsoStartTime(m.startTime) ?? null,
+          fingerprint: listingFingerprintOrNull(
+            [["1", m.homeOdds], ["X", m.drawOdds], ["2", m.awayOdds], ["marketCount", m.marketCount ?? -1]],
+            `[Betclic/FullOffer] ${m.matchId}`
+          ),
+          eventUrl: buildEventUrl(m.matchId!, league, m.homeTeam, m.awayTeam),
+          listing: m,
+        }));
+    } finally {
+      addBetclicTransportStats(this.totals, runStats);
+    }
+  }
+
+  /**
+   * Plan 10: one listed match through plan 06's fetchMatchOffer. "0 markets parsed" is
+   * an answer without markets (null); any other skip throws its reason; a budget stop
+   * throws BudgetExceededError.
+   */
+  async fetchEvent(league: string, ref: EventRef<BetclicListingMatch>, budget: ScrapeBudget): Promise<FullMatchOffer | null> {
+    setMaxListeners(RUN_SIGNAL_MAX_LISTENERS, budget.signal);
+    const matchStats = createBetclicTransportStats();
+    try {
+      const outcome = await this.fetchMatchOffer(ref.listing, { league, stats: matchStats, budget });
+      if (outcome.kind === "written") return outcome.offer;
+      if (outcome.kind === "budget") throw new BudgetExceededError(`budget exhausted before ${ref.homeTeam} vs ${ref.awayTeam} completed`);
+      if (outcome.reason === "0 markets parsed") return null;
+      throw new Error(outcome.reason);
+    } finally {
+      addBetclicTransportStats(this.totals, matchStats);
     }
   }
 

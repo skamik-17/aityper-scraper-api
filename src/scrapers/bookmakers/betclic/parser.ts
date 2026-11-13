@@ -830,6 +830,94 @@ export function parseAllMarketsFromMultipleResponses(responses: Buffer[]): Scrap
 }
 
 // ============================================================================
+// MATCH HEADER (declared market categories)
+// ============================================================================
+
+/** One protobuf field: its number, wire type and, for length-delimited fields, the payload range. */
+interface HeaderField {
+  field: number;
+  wire: number;
+  start: number;
+  end: number;
+}
+
+/** A varint inside [pos, end), or null when it runs past `end` or past 10 bytes. */
+function readBoundedVarint(buf: Buffer, pos: number, end: number): { value: number; next: number } | null {
+  let value = 0;
+  for (let i = 0; i < 10; i++) {
+    if (pos + i >= end) return null;
+    const byte = buf[pos + i];
+    value += (byte & 0x7f) * 2 ** (7 * i);
+    if ((byte & 0x80) === 0) return { value, next: pos + i + 1 };
+  }
+  return null;
+}
+
+/**
+ * The top-level fields of the message in [start, end), skipping every payload by its
+ * length. Null when the bytes are not a well-formed message (unknown wire type, a
+ * varint or a length running past `end`).
+ */
+function readHeaderFields(buf: Buffer, start: number, end: number): HeaderField[] | null {
+  const fields: HeaderField[] = [];
+  let pos = start;
+  while (pos < end) {
+    const tag = readBoundedVarint(buf, pos, end);
+    if (tag === null) return null;
+    const field = Math.floor(tag.value / 8);
+    const wire = tag.value % 8;
+    pos = tag.next;
+    if (wire === 0) {
+      const v = readBoundedVarint(buf, pos, end);
+      if (v === null) return null;
+      fields.push({ field, wire, start: pos, end: v.next });
+      pos = v.next;
+    } else if (wire === 1 || wire === 5) {
+      const size = wire === 1 ? 8 : 4;
+      if (pos + size > end) return null;
+      fields.push({ field, wire, start: pos, end: pos + size });
+      pos += size;
+    } else if (wire === 2) {
+      const len = readBoundedVarint(buf, pos, end);
+      if (len === null || len.next + len.value > end) return null;
+      fields.push({ field, wire, start: len.next, end: len.next + len.value });
+      pos = len.next + len.value;
+    } else {
+      return null;
+    }
+  }
+  return fields;
+}
+
+/**
+ * The market categories a match declares in its header: field 2 of every field-10
+ * submessage of the match message (root field 1 → field 1), in order. Only the
+ * header's top-level fields are walked; markets are never decoded. Every market-group
+ * response carries the same header. Malformed input gives an empty list, never a throw.
+ */
+export function parseMatchHeader(raw: Buffer): { categories: string[] } {
+  const none = { categories: [] };
+  const lenField = (fields: HeaderField[] | null, n: number) => fields?.find((f) => f.field === n && f.wire === 2);
+
+  const wrapper = lenField(readHeaderFields(raw, 0, raw.length), 1);
+  if (!wrapper) return none;
+  const match = lenField(readHeaderFields(raw, wrapper.start, wrapper.end), 1);
+  if (!match) return none;
+  const matchFields = readHeaderFields(raw, match.start, match.end);
+  if (!matchFields) return none;
+
+  const categories: string[] = [];
+  for (const f of matchFields) {
+    if (f.field !== 10 || f.wire !== 2) continue;
+    const category = readHeaderFields(raw, f.start, f.end);
+    if (category === null) return none;
+    const id = lenField(category, 2);
+    if (id) categories.push(raw.toString("utf8", id.start, id.end));
+  }
+  return { categories };
+}
+
+// ============================================================================
 // LISTING RESPONSE PARSER
 // ============================================================================
 

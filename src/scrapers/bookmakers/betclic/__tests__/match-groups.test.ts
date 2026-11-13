@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { assessMatchGroups, MIN_GROUP_BYTES, type BetclicGroupName, type BetclicGroupResult } from "../match-groups.js";
-import { parseAllMarketsFromMultipleResponses } from "../parser.js";
-import { groupResults } from "./betclic-fixtures.js";
+import { parseAllMarketsFromMultipleResponses, parseMatchHeader } from "../parser.js";
+import { groupResults, HANDICAP_MSG, TOP_MSG } from "./betclic-fixtures.js";
 
 const ORDER: BetclicGroupName[] = ["TOP", "WYNIK", "STRZELCY", "GOLE", "METODA_GOLA", "HANDICAP", "STATYSTYKI"];
 
@@ -72,5 +72,21 @@ describe("assessMatchGroups", () => {
     const a = assessMatchGroups(all);
     expect(a.ok && a.responses).toHaveLength(2);
     expect(parseAllMarketsFromMultipleResponses(a.ok ? a.responses : [])).toEqual(parseAllMarketsFromMultipleResponses(all.map((r) => r.response!)));
+  });
+});
+
+describe("parseMatchHeader", () => {
+  const OPTA_CATEGORIES = ["ca_ftb_top", "ca_ftb_ft", "ca_ftb_rslt", "ca_ftb_pssb", "ca_ftb_gsc", "ca_ftb_goa", "ca_ftb_cshcp", "ca_ftb_prp"];
+
+  it("reads the declared categories from TOP (Arsenal-Hull)", () =>
+    expect(parseMatchHeader(TOP_MSG)).toEqual({ categories: OPTA_CATEGORIES }));
+
+  it("every group carries the same header (HANDICAP)", () => expect(parseMatchHeader(HANDICAP_MSG)).toEqual(parseMatchHeader(TOP_MSG)));
+
+  it("malformed input gives an empty list", () => {
+    expect(parseMatchHeader(Buffer.from("not protobuf"))).toEqual({ categories: [] });
+    expect(parseMatchHeader(Buffer.alloc(0))).toEqual({ categories: [] });
+    expect(parseMatchHeader(TOP_MSG.subarray(0, 5995))).toEqual({ categories: [] }); // truncated: lengths overrun
+    expect(parseMatchHeader(Buffer.from([0x08, 0xff]))).toEqual({ categories: [] }); // varint past the end
   });
 });

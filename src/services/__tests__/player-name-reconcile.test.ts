@@ -1,5 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { groupMarketsByTypeWithParameters, reconcilePlayerNameVariants } from "../market-type-grouper.js";
+import {
+  abbreviationRank,
+  groupMarketsByTypeWithParameters,
+  isAbbreviatedPlayerName,
+  isNonPersonParam,
+  reconcilePlayerNameVariants,
+} from "../market-type-grouper.js";
 import type { ScrapedMarket } from "../../types/full-offer.js";
 
 /**
@@ -211,6 +217,9 @@ describe("reconcilePlayerNameVariants - stranded abbreviated rows (2026-11)", ()
       ["Jan Paul van Hecke wyrzucony z boiska", ["fortuna"]],
     ]));
     expect(alias.get("J. van Hecke")).toBe("Jan Paul van Hecke");
+    // Spelled-out (rank 0) members of a non-clique cluster stay as they are.
+    expect(alias.has("Jan Paul van Hecke wyrzucony z boiska")).toBe(false);
+    expect(alias.has("Jan Paul van Hecke")).toBe(false);
   });
   it("keeps folding Fortuna's red-card sentence into the player (guard)", () => {
     const alias = reconcilePlayerNameVariants(names([
@@ -237,6 +246,16 @@ describe("reconcilePlayerNameVariants - hyphen spellings merged in step 1 (2026-
     expect(alias.get("Jens Hjerto-Dahl")).toBe("Jens Hjerto Dahl");
     expect(alias.get("J. Hjerto-Dahl")).toBe("Jens Hjerto Dahl");
     expect(alias.has("Jens Hjerto Dahl")).toBe(false);
+  });
+  it("folds the Calvert-Lewin initial into the spaced step-1 winner (ruling 5 probe)", () => {
+    const alias = reconcilePlayerNameVariants(names([
+      ["D. Calvert-Lewin", ["fuksiarz"]],
+      ["Dominic Calvert-Lewin", ["betfan"]],
+      ["Dominic Calvert Lewin", ["fortuna", "sts"]],
+    ]));
+    expect(alias.get("Dominic Calvert-Lewin")).toBe("Dominic Calvert Lewin");
+    expect(alias.get("D. Calvert-Lewin")).toBe("Dominic Calvert Lewin");
+    expect(alias.has("Dominic Calvert Lewin")).toBe(false);
   });
   it("folds a spaced initial spelling into a hyphenated step-1 winner", () => {
     const alias = reconcilePlayerNameVariants(names([
@@ -268,5 +287,48 @@ describe("reconcilePlayerNameVariants - hyphen spellings merged in step 1 (2026-
     ]));
     expect(alias.get("Justin James")).toBe("James Justin");
     expect(alias.has("J. James")).toBe(false);
+  });
+});
+
+describe("player-param classifiers (2026-11 review)", () => {
+  it.each([
+    ["Mohamed Bachir Belloumi wyrzucony z boiska", 0],
+    ["Oscar Zambrano", 0],
+    ["M Grimes", 1],
+    ["O. Zambrano", 1],
+    ["Zambrano O.", 2],
+    ["Borges Rodrigues R.", 2],
+    ["Jan P. van Hecke", 2],
+    ["m grimes", 0],
+    ["", 0],
+  ] as const)("abbreviationRank(%j) is %i", (name, rank) => {
+    // Only a single UPPERCASE letter counts as an initial: Fortuna's Polish "z" is a word.
+    expect(abbreviationRank(name)).toBe(rank);
+  });
+
+  it.each([
+    ["Mohamed Bachir Belloumi wyrzucony z boiska", false],
+    ["Oscar Zambrano", false],
+    ["M Grimes", true],
+    ["O. Zambrano", true],
+    ["Zambrano O.", true],
+    ["", false],
+  ] as const)("isAbbreviatedPlayerName(%j) is %s", (name, abbreviated) => {
+    expect(isAbbreviatedPlayerName(name)).toBe(abbreviated);
+  });
+
+  it.each([
+    ["Dominic Solanke or Dominic Calvert-Lewin", true],
+    ["Jayden Bogle i Mohammed Kudus", true],
+    ["Ao Tanaka lub Archie Gray", true],
+    ["Omar Marmoush and Harry Wilson", true],
+    ["Ao Tanaka & Archie Gray", true],
+    ["Kai Havertz 1+", true],
+    ["Ben Davies (24/04/93)", true],
+    ["Bruno Guimaraes wyrzucony z boiska", false],
+    ["Jan-Paul van Hecke", false],
+    ["Ivan Ilic", false],
+  ] as const)("isNonPersonParam(%j) is %s", (name, nonPerson) => {
+    expect(isNonPersonParam(name)).toBe(nonPerson);
   });
 });

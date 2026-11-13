@@ -13,6 +13,7 @@ import { chromium, type Browser, type BrowserContext, type CDPSession, type Laun
 import type { PolishBookmaker } from "../../config/index.js";
 import { preparePage, type PageSetup } from "./browser-page-setup.js";
 import { blockedUrlPatterns, DEFAULT_BROWSER_POLICY, type ResolvedBrowserPolicy } from "./browser-policy.js";
+import { STEALTH_INIT_SCRIPT, stealthUserAgent, userAgentOverride } from "./browser-stealth.js";
 import { Semaphore } from "./semaphore.js";
 
 // Never add --disable-features: Chromium keeps the last one, which would replace Playwright's own list.
@@ -181,8 +182,9 @@ export class BrowserRuntime {
       s.generation = generation;
       if (s.ended) throw new Error("Target page, context or browser has been closed");
 
+      const policy = o.policy ?? DEFAULT_BROWSER_POLICY;
       const context = await browser.newContext({
-        userAgent: BROWSER_CONTEXT_USER_AGENT,
+        userAgent: policy.stealth ? stealthUserAgent(browser.version()) : BROWSER_CONTEXT_USER_AGENT,
         locale: "pl-PL",
         viewport: { ...SESSION_VIEWPORT },
         serviceWorkers: "block",
@@ -192,8 +194,10 @@ export class BrowserRuntime {
       });
       s.context = context;
       if (s.ended || epoch !== this.epoch) throw new Error("BrowserRuntime is closing");
+      // Once per context, before any page exists, so every page and popup gets the shims
+      if (policy.stealth) await context.addInitScript(STEALTH_INIT_SCRIPT);
       const page = await context.newPage();
-      await this.preparePages(context, page, o);
+      await this.preparePages(context, page, o.bookmaker, policy, browser.version());
       if (s.ended) throw new Error("Target page, context or browser has been closed");
       if (o.signal?.aborted) throw o.signal.reason;
 
@@ -262,12 +266,18 @@ export class BrowserRuntime {
   }
 
   /** Prepares the first page now and every later page of the context (popups) once, best effort. */
-  private async preparePages(context: BrowserContext, first: Page, o: OpenSessionOptions): Promise<void> {
-    const policy = o.policy ?? DEFAULT_BROWSER_POLICY;
+  private async preparePages(
+    context: BrowserContext,
+    first: Page,
+    bookmaker: PolishBookmaker,
+    policy: ResolvedBrowserPolicy,
+    browserVersion: string,
+  ): Promise<void> {
     let degraded = false;
     const setup: PageSetup = {
-      label: o.bookmaker,
+      label: bookmaker,
       blockPatterns: blockedUrlPatterns(policy.block),
+      ...(policy.stealth ? { userAgentOverride: userAgentOverride(browserVersion) } : {}),
       onNetwork: (e) => {
         this.counters.requests++;
         this.counters.encodedBytes += e.bytes;

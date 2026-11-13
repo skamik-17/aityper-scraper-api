@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { blockedUrlPatterns, DEFAULT_BROWSER_POLICY } from "../browser-policy.js";
 import { BROWSER_ARGS, BROWSER_CONTEXT_USER_AGENT, BrowserRuntime } from "../browser-runtime.js";
+import { STEALTH_INIT_SCRIPT, stealthUserAgent, userAgentOverride } from "../browser-stealth.js";
 import { createFakeLauncher, type FakeLauncher } from "./helpers/fake-playwright.js";
 
 let fake: FakeLauncher;
@@ -290,5 +291,39 @@ describe("page setup and stats", () => {
     await s.cleanup();
     await rt.closeIfIdle();
     expect(console.log).toHaveBeenCalledWith(expect.stringMatching(/^\[BrowserRuntime\] closed \(closeIfIdle\): launches=1 sessions=1 /));
+  });
+});
+
+describe("stealth", () => {
+  const STEALTH = { ...DEFAULT_BROWSER_POLICY, stealth: true };
+
+  it("stealth sets the context UA, adds the init script once and overrides every page incl. popups", async () => {
+    const s = await rt.openSession({ bookmaker: "sts", maxSessionMs: 10_000, policy: STEALTH });
+    const ctx = fake.browsers[0].contexts[0];
+    expect(ctx.options.userAgent).toBe(stealthUserAgent("143.0.7499.4"));
+    expect(ctx.initScripts).toEqual([STEALTH_INIT_SCRIPT]);
+    const sent = ctx.cdpOf(s.page).sent;
+    expect(sent.map((x) => x.method)).toEqual(["Network.enable", "Network.setUserAgentOverride"]);
+    expect(sent[1].params).toEqual(userAgentOverride("143.0.7499.4"));
+    const p = await ctx.openPopup();
+    await vi.waitFor(() => expect(ctx.cdpOf(p).sent.map((x) => x.method)).toEqual(["Network.enable", "Network.setUserAgentOverride"]));
+    expect(ctx.initScripts).toHaveLength(1);
+  });
+
+  it("stealth with blocking overrides the UA before blocking", async () => {
+    const s = await rt.openSession({ bookmaker: "sts", maxSessionMs: 10_000, policy: { ...STEALTH, block: "media" } });
+    expect(fake.browsers[0].contexts[0].cdpOf(s.page).sent.map((x) => x.method)).toEqual([
+      "Network.enable",
+      "Network.setUserAgentOverride",
+      "Network.setBlockedURLs",
+    ]);
+  });
+
+  it("stealth off changes nothing (BROWSER_CONTEXT_USER_AGENT, no init script, no setUserAgentOverride)", async () => {
+    const s = await rt.openSession({ bookmaker: "sts", maxSessionMs: 10_000 });
+    const ctx = fake.browsers[0].contexts[0];
+    expect(ctx.options.userAgent).toBe(BROWSER_CONTEXT_USER_AGENT);
+    expect(ctx.initScripts).toEqual([]);
+    expect(ctx.cdpOf(s.page).sent.map((x) => x.method)).toEqual(["Network.enable"]);
   });
 });

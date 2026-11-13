@@ -215,3 +215,82 @@ describe.skipIf(!canLaunch)("blocking", () => {
     expect(lines[0]).toMatch(/requests=[1-9]\d* bytes=[1-9]\d* blocked=[1-9]\d* chromiumCpuMs=[1-9]\d*/);
   });
 });
+
+/** Records the client hints and UA of the document and of a fetch it makes, on 127.0.0.1 (a secure context). */
+function startHintsSite(): Promise<{ server: Server; port: number; seen: Record<string, { secChUa?: string; ua?: string }> }> {
+  const seen: Record<string, { secChUa?: string; ua?: string }> = {};
+  const server = createServer((req, res) => {
+    const path = (req.url ?? "/").split("?")[0];
+    seen[path] = { secChUa: req.headers["sec-ch-ua"] as string | undefined, ua: req.headers["user-agent"] };
+    if (path === "/") {
+      res.setHeader("content-type", "text/html");
+      res.end(`<!doctype html><html><head><title>hints</title></head><body><script>
+        window.xhrDone = fetch("/xhr").then((r) => r.text());
+      </script></body></html>`);
+    } else {
+      res.setHeader("content-type", "text/plain");
+      res.end("ok");
+    }
+  });
+  return new Promise((resolve) => server.listen(0, "127.0.0.1", () => resolve({ server, port: (server.address() as AddressInfo).port, seen })));
+}
+
+describe.skipIf(!canLaunch)("stealth", () => {
+  let site: Awaited<ReturnType<typeof startHintsSite>>;
+  let rt: BrowserRuntime;
+
+  beforeAll(async () => {
+    site = await startHintsSite();
+  });
+  afterAll(() => new Promise<void>((r) => site.server.close(() => r())));
+  beforeEach(() => {
+    vi.spyOn(console, "log").mockImplementation(() => {});
+    rt = new BrowserRuntime({ maxSessions: 3, idleCloseMs: 60_000 });
+  });
+  afterEach(async () => {
+    await rt.closeAll();
+    vi.restoreAllMocks();
+  });
+
+  async function headersAndFingerprint(policy: ResolvedBrowserPolicy) {
+    for (const k of Object.keys(site.seen)) delete site.seen[k];
+    const s = await rt.openSession({ bookmaker: "sts", maxSessionMs: 30_000, policy });
+    await s.page.goto(`http://127.0.0.1:${site.port}/`, { waitUntil: "load" });
+    await s.page.evaluate(() => (window as unknown as { xhrDone: Promise<string> }).xhrDone);
+    const fp = await s.page.evaluate(() => ({
+      platform: navigator.platform,
+      plugins: navigator.plugins.length,
+      mimeTypes: navigator.mimeTypes.length,
+      pdfViewerEnabled: navigator.pdfViewerEnabled,
+      chrome: typeof (window as unknown as { chrome?: unknown }).chrome,
+      pluginsTag: Object.prototype.toString.call(navigator.plugins),
+      firstPlugin: navigator.plugins[0]?.name ?? null,
+      webdriver: navigator.webdriver,
+      languages: [...navigator.languages],
+    }));
+    await s.cleanup();
+    return { secChUa: site.seen["/"]?.secChUa ?? "", xhrSecChUa: site.seen["/xhr"]?.secChUa ?? "", ua: site.seen["/"]?.ua ?? "", fp };
+  }
+
+  it("stealth: document and fetch carry the browser's own brands with HeadlessChrome replaced", { timeout: 30_000 }, async () => {
+    const plain = await headersAndFingerprint({ ...DEFAULT_BROWSER_POLICY });
+    const st = await headersAndFingerprint({ ...DEFAULT_BROWSER_POLICY, stealth: true });
+    expect(plain.secChUa).toContain('"HeadlessChrome"');
+    expect(plain.ua).toContain("Chrome/120.0.0.0");
+    expect(st.secChUa).toBe(plain.secChUa.replace('"HeadlessChrome"', '"Google Chrome"'));
+    expect(st.xhrSecChUa).toBe(st.secChUa);
+    expect(st.fp).toMatchObject({
+      platform: "Win32",
+      plugins: 5,
+      mimeTypes: 2,
+      pdfViewerEnabled: true,
+      chrome: "object",
+      pluginsTag: "[object PluginArray]",
+      firstPlugin: "PDF Viewer",
+      webdriver: false,
+      languages: ["pl-PL", "pl", "en-US", "en"],
+    });
+    expect(st.ua).toMatch(/Chrome\/\d+\.0\.0\.0 Safari\/537\.36$/);
+    expect(st.ua).not.toContain("Headless");
+  });
+});

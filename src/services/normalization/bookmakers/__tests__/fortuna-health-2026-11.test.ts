@@ -141,6 +141,48 @@ describe("Task 1: corners races never feed a 1X2 code", () => {
       warn.mockRestore();
     }
   });
+  // synthetic (final review F2): only a "więcej rzutów rożnych" name is a race. Any
+  // other corners market under a 1X2 or race id (a per-team range, a total) is
+  // neither a 1X2 nor a race, and a race id without a corners name is no race.
+  it.each([
+    ["00-0p", "1.połowa: Arsenal przedział rzutów rożnych",
+      [{ name: "0-1", odds: 1.6 }, { name: "2", odds: 3.5 }, { name: "3", odds: 4 }, { name: "4+", odds: 6 }]],
+    ["00-60", "Mecz: liczba rzutów rożnych",
+      [{ name: "Arsenal", odds: 1.5 }, { name: "Remis", odds: 9 }, { name: "Hull", odds: 4 }]],
+  ])("%s '%s' (corners, no race wording) is dropped with a warning", (id, name, selections) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections }, ctxOf("arsenalHull"))).toBeNull();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] Corners market under a"));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+  it.each([
+    ["00-0p", "1.połowa"],
+    ["00-0e", "Mecz"],
+  ])("%s '%s' (a race id without a corners name) is dropped with a warning", (id, name) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name,
+        selections: [{ name: "Arsenal", odds: 1.49 }, { name: "Remis", odds: 2.95 }, { name: "Hull", odds: 12 }] }, ctxOf("arsenalHull"))).toBeNull();
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] CORNERS_RACE id without a corners name"));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+  // synthetic (final review F3): a bare "1.połowa"/"2.połowa" name (no colon) under a
+  // MATCH_WINNER id is the half's 1X2, never the full-match one.
+  it.each([
+    ["00-60", "1.połowa", "HALF_TIME_RESULT"],
+    ["00-2x", "2.połowa", "SECOND_HALF_RESULT"],
+    ["00-60", "1.\u00a0połowa\u00a0", "HALF_TIME_RESULT"],
+  ])("%s bare '%s' is %s", (id, name, key) => {
+    const out = run({ bookmakerMarketId: `ufo:mtyp:${id}`, name,
+      selections: [{ name: "Arsenal", odds: 1.49 }, { name: "Remis", odds: 2.95 }, { name: "Hull", odds: 12 }] }, ctxOf("arsenalHull"));
+    expect(out?.marketKey).toBe(key);
+    expect(legs(out)).toEqual(["HOME@1.49", "DRAW@2.95", "AWAY@12"]);
+  });
 });
 
 describe("Task 2: every player market carries its player", () => {
@@ -175,7 +217,7 @@ describe("Task 2: every player market carries its player", () => {
     expect(legs(out)).toEqual([leg]);
   });
   it("a mononym behind a dotted prefix keeps its name (Man.City Rodri)", () => {
-    const out = run({ bookmakerMarketId: "ufo:mtyp:00-nf", name: "Man.City Rodri strzeli pierwszego gola w meczu (OPTA)",
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-nf", name: "Man.City\u00a0Rodri\u00a0strzeli pierwszego gola w meczu (OPTA)",
       selections: [{ name: "Tak", odds: 21 }] }, ctxOf("forestCity")); // synthetic: live prefix + live mononym shape
     expect(out?.marketKey).toBe("GOALSCORER_FIRST:Rodri");
     expect(legs(out)).toEqual(["PLAYER@21"]);
@@ -201,7 +243,7 @@ describe("Task 2: every player market carries its player", () => {
   it("a team name where the player should be yields no row", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     try {
-      const out = run({ bookmakerMarketId: "ufo:mtyp:00-lf", name: "Nottingham - liczba strzałów (OPTA)",
+      const out = run({ bookmakerMarketId: "ufo:mtyp:00-lf", name: "Nottingham\u00a0- liczba strzałów\u00a0(OPTA)",
         selections: [{ name: "1+", odds: 1.1 }] }, ctxOf("forestCity")); // synthetic
       expect(out).toBeNull();
       expect(warn.mock.calls.flat().join(" ")).toContain("Player market without extractable player");
@@ -350,10 +392,10 @@ describe("Task 2 review: team labels and name shapes outside the Premier League"
 
   it.each([
     // synthetic: a lone short token or a lone initial has no anchor and is never a team label
-    [{ homeTeam: "Le Havre", awayTeam: "Lorient", league: "ligue-1" }, "00-lf", "Le Fée, Enzo - liczba strzałów (OPTA)", "PLAYER_SHOTS:Enzo Le Fee"],
-    [{ homeTeam: "Valencia", awayTeam: "Real Madrid", league: "laliga" }, "00-lf", "M. Endrick - liczba strzałów (OPTA)", "PLAYER_SHOTS:M. Endrick"],
+    [{ homeTeam: "Le Havre", awayTeam: "Lorient", league: "ligue-1" }, "00-lf", "Le Fée, Enzo\u00a0- liczba strzałów\u00a0(OPTA)", "PLAYER_SHOTS:Enzo Le Fee"],
+    [{ homeTeam: "Valencia", awayTeam: "Real Madrid", league: "laliga" }, "00-lf", "M. Endrick\u00a0- liczba strzałów\u00a0(OPTA)", "PLAYER_SHOTS:M. Endrick"],
     // synthetic: a first name that is a whole token of the team name survives a 2-token label
-    [{ homeTeam: "Genoa", awayTeam: "AC Milan", league: "serie-a" }, "00-nf", "AC Milan Milan Badelj strzeli pierwszego gola w meczu (OPTA)", "GOALSCORER_FIRST:Milan Badelj"],
+    [{ homeTeam: "Genoa", awayTeam: "AC Milan", league: "serie-a" }, "00-nf", "AC Milan\u00a0Milan Badelj\u00a0strzeli pierwszego gola w meczu (OPTA)", "GOALSCORER_FIRST:Milan Badelj"],
   ])("guard %#: %s keeps its player", (ctx, id, name, key) => {
     expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections: [{ name: "1+", odds: 3 }] }, ctx)?.marketKey).toBe(key);
   });
@@ -371,8 +413,9 @@ describe("Task 3: new market types (00-bt and 00-bu held back)", () => {
   });
   it("arsenalHull 00-k6 'Mecz: liczba asyst w meczu' -> one ASSISTS_TOTAL key per line", () => {
     const outs = liveAll("arsenalHull", "00-k6").map((raw) => run(raw, ctxOf("arsenalHull")));
-    expect(outs.map((o) => o?.marketKey).sort()).toEqual(["ASSISTS_TOTAL:1.5", "ASSISTS_TOTAL:2.5"]);
-    expect(outs.map(legs)).toEqual(expect.arrayContaining([["OVER@2.3", "UNDER@1.56"], ["OVER@1.18", "UNDER@4.4"]]));
+    // Each line is tied to its own prices, so a line-to-price swap fails.
+    expect(outs.map((o) => `${o?.marketKey} ${legs(o).join(" ")}`).sort())
+      .toEqual(["ASSISTS_TOTAL:1.5 OVER@1.18 UNDER@4.4", "ASSISTS_TOTAL:2.5 OVER@2.3 UNDER@1.56"]);
   });
   it.each([
     // settlement differs from the peers' PENALTY_OR_RED_CARD (open question 1)
@@ -488,6 +531,73 @@ describe("Task 4: pre-existing ids with catalog codes (00-07 and 00-08 held back
       warn.mockRestore();
     }
   });
+  // synthetic (final review F1): any wording after the number still counts as a
+  // margin above 3, so "o 3 gole" is never published as 3+ next to it.
+  it.each(["Arsenal/o 4+ gole", "Arsenal/o 4 i więcej goli", "Arsenal/o 4 lub więcej", "Hull/o\u00a04+", "/o 4 gole"])(
+    "WINNING_MARGIN with a '%s' leg is dropped", (leg) => {
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      try {
+        const out = run({ bookmakerMarketId: "ufo:mtyp:00-09", name: "Mecz: wynik/różnica zwycięstwa",
+          selections: [{ name: "Arsenal/o 1 gol", odds: 4 }, { name: "Arsenal/o 2 gole", odds: 3.7 }, { name: "Arsenal/o 3 gole", odds: 2.2 },
+            { name: leg, odds: 5.5 }, { name: "Remis", odds: 7 }] }, ctxOf("arsenalHull"));
+        expect(out).toBeNull();
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining("[fortuna] WINNING_MARGIN"));
+      } finally {
+        warn.mockRestore();
+      }
+    });
+  it("WINNING_MARGIN drops a leg whose wording after the number is not plain 'gol(e)' ('o 3+ gole')", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-09", name: "Mecz: wynik/różnica zwycięstwa",
+      selections: [{ name: "Arsenal/o 1 gol", odds: 4 }, { name: "Arsenal/o 3+ gole", odds: 2.2 }, { name: "Remis", odds: 7 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("WINNING_MARGIN");
+    expect(legs(out)).toEqual(["HOME_BY_1@4", "DRAW@7"]);
+  });
+  it("a placeholder pair-id name keeps the id's positional code (00-1i 'Rynek ufo:mtyp:00-1i' -> AWAY_WIN_TO_NIL)", () => {
+    const out = run({ bookmakerMarketId: "ufo:mtyp:00-1i", name: "Rynek ufo:mtyp:00-1i",
+      selections: [{ name: "Tak", odds: 9.4 }, { name: "Nie", odds: 1.01 }] }, ctxOf("arsenalHull")); // synthetic
+    expect(out?.marketKey).toBe("AWAY_WIN_TO_NIL");
+    expect(legs(out)).toEqual(["YES@9.4", "NO@1.01"]);
+  });
+});
+
+describe("Final review F3: every id of Tasks 3-5 publishes only its own scope", () => {
+  const yesNo = [{ name: "Tak", odds: 3 }, { name: "Nie", odds: 1.3 }];
+  it.each([
+    // full-match ids quoting a half
+    ["00-9a", "1.połowa: rzut karny", yesNo],
+    ["00-k6", "1.połowa: liczba asyst", [{ name: "Powyżej 1.5", odds: 2.1 }, { name: "Poniżej 1.5", odds: 1.7 }]],
+    ["00-1h", "2.połowa: Arsenal - wygra do zera", yesNo],
+    ["00-19", "1.połowa: suma goli", [{ name: "parzysty", odds: 1.9 }, { name: "nieparzysty", odds: 1.9 }]],
+    ["00-09", "1.połowa: wynik/różnica zwycięstwa", [{ name: "Arsenal/o 1 gol", odds: 3 }, { name: "Remis", odds: 2.4 }]],
+    ["00-0f", "1.połowa: 1.rzut rożny", [{ name: "Arsenal", odds: 1.6 }, { name: "Hull", odds: 2.3 }]],
+    ["00-16", "1.połowa: Arsenal dokładna liczba goli", [{ name: "0", odds: 3 }, { name: "1", odds: 2.2 }, { name: "2+", odds: 3.4 }]],
+    ["00-17", "2.połowa: Hull dokładna liczba goli", [{ name: "0", odds: 1.4 }, { name: "1", odds: 3.5 }, { name: "2+", odds: 9 }]],
+    // first-half ids quoting the match or the 2nd half
+    ["00-2n", "Mecz: obie drużyny strzelą gola", yesNo],
+    ["00-0a", "2.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)", yesNo],
+    ["00-0c", "Mecz:\u00a0Arsenal\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)", yesNo],
+    ["00-0d", "Hull\u00a0- Czerwona Kartka (bez CK dla trenera i sztabu)", yesNo],
+    // the second-half id quoting the match or the 1st half
+    ["00-3e", "Mecz: dokładna liczba goli", [{ name: "0", odds: 9 }, { name: "1", odds: 4 }, { name: "2+", odds: 1.3 }]],
+    ["00-3e", "1.połowa: dokładna liczba goli", [{ name: "0", odds: 2.4 }, { name: "1", odds: 2.6 }, { name: "2+", odds: 4 }]],
+  ])("%s '%s' is dropped with a warning", (id, name, selections) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections }, ctxOf("arsenalHull"))).toBeNull(); // synthetic
+      expect(warn).toHaveBeenCalledWith(expect.stringContaining(`[fortuna] scope mismatch for ufo:mtyp:${id}`));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+  it.each([
+    // the live scopes: "Mecz:" or no prefix for the full-match ids, the half prefix for the others
+    ["00-2n", "1.połowa: obie drużyny strzelą gola", "HALF_TIME_BTTS"],
+    ["00-0a", "1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)", "HALF_TIME_RED_CARD"],
+    ["00-9a", "Mecz: rzut karny", "PENALTY_AWARDED"],
+    ["00-9a", "rzut karny", "PENALTY_AWARDED"],
+  ])("%s '%s' keeps %s", (id, name, key) => {
+    expect(run({ bookmakerMarketId: `ufo:mtyp:${id}`, name, selections: yesNo }, ctxOf("arsenalHull"))?.marketKey).toBe(key); // synthetic
+  });
 });
 
 describe("Task 5: exact-goals markets", () => {
@@ -539,6 +649,15 @@ describe("Task 6: result or a 2-goal lead", () => {
   it("arsenalHull 00-p1 '… 1 gol(e) PRZEWAGI' stays dropped", () => {
     expect(run(live("arsenalHull", "00-p1", "\u00a01\u00a0").raw, ctxOf("arsenalHull"))).toBeNull();
   });
+  // synthetic (final review F4): only the exact full-match name is the 2-way code; a
+  // period- or extra-time-qualified variant is a different bet and stays dropped.
+  it.each([
+    "Wynik meczu lub\u00a02\u00a0gol(e) PRZEWAGI - 1. połowa",
+    "Wynik meczu lub 2 gol(e) PRZEWAGI (z dogrywką)",
+  ])("'%s' is dropped", (name) => {
+    expect(run({ bookmakerMarketId: "ufo:mtyp:00-p1", name,
+      selections: [{ name: "Hull", odds: 12 }, { name: "Remis", odds: 6.5 }, { name: "Arsenal", odds: 1.1 }] }, ctxOf("arsenalHull"))).toBeNull();
+  });
   it("is dropped when its team legs do not resolve to exactly one HOME and one AWAY", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     try {
@@ -552,7 +671,7 @@ describe("Task 6: result or a 2-goal lead", () => {
         selections: [{ name: "Remis", odds: 6.5 }, { name: "Arsenal", odds: 12.5 }, { name: "Arsenal", odds: 1.14 }] },
         ctxOf("arsenalHull"))).toBeNull(); // synthetic
       expect(warn).toHaveBeenCalledTimes(2);
-      expect(String(warn.mock.calls[0][0])).toContain("[fortuna] WIN_OR_WIN_BY_2");
+      expect(warn.mock.calls.every((c) => String(c[0]).includes("[fortuna] WIN_OR_WIN_BY_2"))).toBe(true);
     } finally {
       warn.mockRestore();
     }

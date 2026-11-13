@@ -811,6 +811,23 @@ function findMarketCodeFromName(name: string): NormalizedMarketType | null {
   return null;
 }
 
+/**
+ * Parses a WINNING_MARGIN leg ("Arsenal/o 2 gole" = Arsenal wins by exactly 2)
+ * into its team label and margin. `plain` is true only for the observed
+ * wording, a bare number followed by "gol"/"gole"/"goli"; any other wording
+ * after the number ("o 4+ gole", "o 4 i więcej goli", "o 4 lub więcej") still
+ * yields the number, so the margin-above-3 guard in normalizeMarket sees it,
+ * as it does a leg with no team label. The selection mapper and that guard
+ * share this one grammar.
+ */
+function parseFortunaMarginLeg(
+  name: string
+): { sideLabel: string; n: number; plain: boolean } | null {
+  const leg = name.trim().match(/^(.*?)\s*\/\s*o\s+(\d+)(.*)$/iu);
+  if (!leg) return null;
+  return { sideLabel: leg[1].trim(), n: Number(leg[2]), plain: /^\s+gol/iu.test(leg[3]) };
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -1274,12 +1291,11 @@ function normalizeSelectionForMarket(
     // normalizeMarket drops a book that also lists a margin above 3.
     case "WINNING_MARGIN": {
       if (isFortunaDrawLabel(trimmed)) return "DRAW";
-      const margin = trimmed.match(/^(.+?)\s*\/\s*o\s+(\d+)\s+gol/iu);
-      if (!margin) return "UNKNOWN";
-      const side = normalize1x2Selection(margin[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
-      const n = Number(margin[2]);
-      if ((side !== "HOME" && side !== "AWAY") || n < 1) return "UNKNOWN";
-      return `${side}_BY_${n >= 3 ? "3PLUS" : n}` as NormalizedSelection;
+      const margin = parseFortunaMarginLeg(trimmed);
+      if (!margin || !margin.plain || !margin.sideLabel) return "UNKNOWN";
+      const side = normalize1x2Selection(margin.sideLabel, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      if ((side !== "HOME" && side !== "AWAY") || margin.n < 1) return "UNKNOWN";
+      return `${side}_BY_${margin.n >= 3 ? "3PLUS" : margin.n}` as NormalizedSelection;
     }
 
     default: {
@@ -1364,16 +1380,66 @@ function extractParamValue(
   }
 }
 
-// Codes a corners-race name must never keep, mapped to the race of the same
-// scope (used when the name carries no "Mecz:"/"1.połowa:"/"2.połowa:" prefix
-// of its own). CORNERS_RACE is listed so the handicap check also covers the
-// race ids themselves (00-0e, 00-0p).
+// A corners market name ("więcej rzutów rożnych", "liczba rzutów rożnych
+// handicap", "Mecz: wiecej rzutow roznych").
+const FORTUNA_CORNERS_NAME_RE = /rzut(?:[oó]w)?\s+ro[żz]nych/iu;
+// The corners race wording ("więcej rzutów rożnych", "wiecej rzutow roznych").
+const FORTUNA_CORNERS_RACE_WORDING_RE = /wi[eę]cej\s+rzut/iu;
+// A handicap-style name ("handicap", or a score line such as "(0:1)").
+const FORTUNA_HANDICAP_STYLE_RE = /handicap|\d+\s*:\s*\d+/iu;
+// A half-scope prefix: "1.połowa:"/"2. połowa:", or a name that is exactly
+// "1.połowa"/"2.połowa" (the bare half 1X2 name has no colon).
+const FORTUNA_HALF_SCOPE_RE = /^([12])\s*\.?\s*po[łl]owa\s*(?::|$)/iu;
+
+// The ids whose code a corners-race name can arrive under, keyed by that
+// code: the 1X2 codes, which a race must never keep, and CORNERS_RACE itself
+// (00-0e, 00-0p). The value is the race of the code's scope, used when the
+// name carries no "Mecz:"/"1.połowa:"/"2.połowa:" prefix of its own. The
+// name is authoritative both ways: only race wording makes a race, and a
+// race id whose name is not about corners is dropped.
 const FORTUNA_CORNERS_RACE_BY_CODE: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
   MATCH_WINNER: "CORNERS_RACE",
   HALF_TIME_RESULT: "HALF_TIME_CORNERS_RACE",
   SECOND_HALF_RESULT: "SECOND_HALF_CORNERS_RACE",
   CORNERS_RACE: "CORNERS_RACE",
 };
+
+// The scope each id added by the 2026-11 health plan (Tasks 3-5) was
+// verified with on ~3,000 live markets. Fortuna reuses ids across scopes
+// (00-21, 00-2x, 00-0p, 00-1y), and these codes have no half counterpart to
+// reroute to, so a name whose scope prefix disagrees is dropped rather than
+// published under the wrong period. A name without a prefix is full-match.
+const FORTUNA_ID_EXPECTED_SCOPE: Record<string, "match" | "h1" | "h2"> = {
+  "ufo:mtyp:00-9a": "match",
+  "ufo:mtyp:00-bv": "match",
+  "ufo:mtyp:00-k7": "match",
+  "ufo:mtyp:00-k6": "match",
+  "ufo:mtyp:00-1h": "match",
+  "ufo:mtyp:00-1i": "match",
+  "ufo:mtyp:00-1o": "match",
+  "ufo:mtyp:00-1p": "match",
+  "ufo:mtyp:00-2b": "match",
+  "ufo:mtyp:00-2c": "match",
+  "ufo:mtyp:00-1r": "match",
+  "ufo:mtyp:00-1s": "match",
+  "ufo:mtyp:00-16": "match",
+  "ufo:mtyp:00-17": "match",
+  "ufo:mtyp:00-0f": "match",
+  "ufo:mtyp:00-19": "match",
+  "ufo:mtyp:00-09": "match",
+  "ufo:mtyp:00-2n": "h1",
+  "ufo:mtyp:00-0c": "h1",
+  "ufo:mtyp:00-0d": "h1",
+  "ufo:mtyp:00-0a": "h1",
+  "ufo:mtyp:00-3e": "h2",
+};
+
+/** The scope a market name's prefix names: "1.połowa"/"2.połowa", else the match. */
+function fortunaNameScope(name: string): "match" | "h1" | "h2" {
+  const half = name.trim().match(FORTUNA_HALF_SCOPE_RE);
+  if (!half) return "match";
+  return half[1] === "1" ? "h1" : "h2";
+}
 
 export const fortunaNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "fortuna",
@@ -1392,7 +1458,9 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // other variant, the 1-goal one included, has no catalog code: drop it.
     const normalizedName = normalizeMarketName(raw.name);
     if (/^wynik meczu lub/.test(normalizedName)) {
-      if (!/^wynik meczu lub\s+2\s+gol/.test(normalizedName)) return null;
+      // The whole name: a period- or extra-time-qualified variant ("... - 1.
+      // połowa") is a different bet, never the full-match 2-way code.
+      if (!/^wynik meczu lub\s+2\s+gol\(e\)\s+przewagi$/.test(normalizedName)) return null;
       const teamLegs = raw.selections
         .filter((sel) => !isFortunaDrawLabel(sel.name))
         .map((sel) => ({
@@ -1467,7 +1535,7 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // ("Mecz: liczba rzutów rożnych handicap") is authoritative over a stale
     // id assumption — never price a corners handicap into the goal-handicap
     // ASIAN_HANDICAP bucket.
-    if (marketCode === "ASIAN_HANDICAP" && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
+    if (marketCode === "ASIAN_HANDICAP" && FORTUNA_CORNERS_NAME_RE.test(raw.name)) {
       marketCode = "CORNERS_HANDICAP";
     }
 
@@ -1476,18 +1544,32 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // serve "1. połowa: więcej rzutów rożnych" as HALF_TIME_RESULT (a fake
     // +EV draw against the real "1.połowa" 1X2). An explicit scope prefix is
     // authoritative (the half reroute below assigns the half); an unscoped
-    // name keeps the scope of its id's code. A handicap-style corners name is
-    // neither a 1X2 nor a race, so it is dropped rather than priced as one.
+    // name keeps the scope of its id's code. Only race wording makes a race:
+    // a handicap-style or any other corners name (a per-team range, a total)
+    // is neither a 1X2 nor a race, so it is dropped rather than priced as
+    // one. A race id (00-0e, 00-0p) whose name is not about corners is no
+    // race either.
     const cornersRaceCode = FORTUNA_CORNERS_RACE_BY_CODE[marketCode];
-    if (cornersRaceCode && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
+    if (cornersRaceCode && FORTUNA_CORNERS_NAME_RE.test(raw.name)) {
       const unscopedName = stripFortunaScope(raw.name);
-      if (/handicap|\d+\s*:\s*\d+/iu.test(unscopedName)) {
+      if (FORTUNA_HANDICAP_STYLE_RE.test(unscopedName)) {
         console.warn(
           `[fortuna] Corners handicap under a ${marketCode} id dropped: "${raw.name}" (id: ${marketId ?? "none"})`
         );
         return null;
       }
+      if (!FORTUNA_CORNERS_RACE_WORDING_RE.test(unscopedName)) {
+        console.warn(
+          `[fortuna] Corners market under a ${marketCode} id dropped: "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
       marketCode = unscopedName === raw.name.trim() ? cornersRaceCode : "CORNERS_RACE";
+    } else if (marketCode === "CORNERS_RACE") {
+      console.warn(
+        `[fortuna] CORNERS_RACE id without a corners name dropped: "${raw.name}" (id: ${marketId ?? "none"})`
+      );
+      return null;
     }
 
     // A "2-way" handicap quoting a draw outcome is actually a 3-way handicap;
@@ -1530,15 +1612,16 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // Fortuna reuses some marketTypeIds across scopes/products (verified
     // against this fixture): the id->code static map can hand back a
     // full-match code even when the live payload's name is explicitly scoped
-    // to a half. The name is authoritative — reroute to the half-scoped
-    // counterpart, or drop the entry when no counterpart exists, instead of
-    // silently poisoning full-match best-odds with half-scoped prices.
+    // to a half. The name is authoritative — reroute the codes below to their
+    // half-scoped counterpart. A bare "1.połowa"/"2.połowa" name (no colon)
+    // is scoped too. The ids in FORTUNA_ID_EXPECTED_SCOPE have no
+    // counterpart and are dropped on a scope mismatch right after.
     if (matchedBy === "id") {
-      const halfScope = raw.name.trim().match(/^([12])\s*\.?\s*po[łl]owa\s*:/iu);
+      const halfScope = raw.name.trim().match(FORTUNA_HALF_SCOPE_RE);
       if (halfScope) {
         const isSecondHalf = halfScope[1] === "2";
         if (marketCode === "MATCH_WINNER") {
-          const isHandicapStyle = /handicap|\d+\s*:\s*\d+/iu.test(scopedName);
+          const isHandicapStyle = FORTUNA_HANDICAP_STYLE_RE.test(scopedName);
           marketCode = isSecondHalf
             ? isHandicapStyle
               ? "SECOND_HALF_EUROPEAN_HANDICAP"
@@ -1561,6 +1644,19 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
             ? "SECOND_HALF_DOUBLE_CHANCE_BTTS"
             : "HALF_TIME_DOUBLE_CHANCE_BTTS";
         }
+      }
+    }
+
+    // The ids of Tasks 3-5 carry one scope each. A placeholder name ("Rynek
+    // ufo:mtyp:00-0d") says nothing about the scope, so it keeps the id's.
+    const expectedScope = marketId ? FORTUNA_ID_EXPECTED_SCOPE[marketId] : undefined;
+    if (expectedScope && !isPlaceholderMarketName(raw.name)) {
+      const nameScope = fortunaNameScope(raw.name);
+      if (nameScope !== expectedScope) {
+        console.warn(
+          `[fortuna] scope mismatch for ${marketId}: expected ${expectedScope}, name says ${nameScope}: "${raw.name}"`
+        );
+        return null;
       }
     }
 
@@ -1676,13 +1772,13 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     }
 
     // WINNING_MARGIN maps "o 3 gole" to BY_3PLUS because it is the top bucket
-    // of every observed book. A book that also lists "o 4 gole" would make
-    // "o 3 gole" mean exactly 3 — drop the market rather than misprice it.
+    // of every observed book. A book that also lists a margin of 4 or more,
+    // whatever its wording ("o 4 gole", "o 4+ gole", "o 4 i więcej goli"),
+    // would make "o 3 gole" mean exactly 3 — drop the market rather than
+    // misprice it.
     if (
       marketCode === "WINNING_MARGIN" &&
-      raw.selections.some(
-        (sel) => Number(sel.name.match(/\/\s*o\s+(\d+)\s+gol/iu)?.[1] ?? 0) >= 4
-      )
+      raw.selections.some((sel) => (parseFortunaMarginLeg(sel.name)?.n ?? 0) >= 4)
     ) {
       console.warn(
         `[fortuna] WINNING_MARGIN with a margin above 3 dropped: "${raw.name}" (id: ${marketId ?? "none"})`

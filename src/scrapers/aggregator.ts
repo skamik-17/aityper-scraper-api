@@ -6,7 +6,7 @@
 import { v4 as uuidv4 } from "uuid";
 import type { PolishBookmaker } from "../config/index.js";
 import { CONFIG } from "../config/index.js";
-import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
+import type { FullOfferScraperResult, FullMatchOffer, ScrapeMetrics } from "../types/full-offer.js";
 import type { FullOfferScraper } from "./shared/scraper-contract.js";
 import { browserPool } from "./base/browser-pool.js";
 import { RunInterruptedError, scrapeWithHardDeadline } from "./hard-deadline.js";
@@ -15,6 +15,14 @@ import { runJobsWithCaps, type CappedJob, type JobCaps } from "./job-scheduler.j
 import { isLeagueSupported } from "../config/leagues.js";
 import { normalizeAndSaveMatches, type NormalizeAndSaveResult } from "../services/scrape-helpers.js";
 import { classifyBookmakerRun, isOkRunStatus, type BookmakerRunOutcome } from "../services/run-outcome.js";
+import {
+  diffTransportStats,
+  formatScrapeMetricsLine,
+  readTransportStats,
+  startCycleSampler,
+  startEventLoopWindow,
+  type JobMetricsLine,
+} from "./metrics/scrape-metrics.js";
 import {
   stsScraper,
   fortunaScraper,
@@ -140,6 +148,9 @@ async function runFullOfferForBookmaker(
   let save: NormalizeAndSaveResult | null = null;
   let saveThrew: string | null = null;
   let marketsFound = 0;
+  let scrapeMs = 0;
+  let saveMs = 0;
+  let transport: ReturnType<typeof diffTransportStats>;
 
   if (!scraper) {
     console.warn(`[Aggregator/FullOffer] No scraper found for ${bookmaker}`);
@@ -147,11 +158,13 @@ async function runFullOfferForBookmaker(
   } else {
     console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
     // Transport from the picked instance; the budget and hard deadline follow from it
-    const transport = resolveJobTransport(scraper);
+    const jobTransport = resolveJobTransport(scraper);
+    const statsBefore = readTransportStats(scraper);
+    const scrapeStarted = Date.now();
     try {
       result = await scrapeWithHardDeadline(
         scraper,
-        { runId, bookmaker, league, transport, maxDurationMs: maxDurationMsFor(bookmaker, transport) },
+        { runId, bookmaker, league, transport: jobTransport, maxDurationMs: maxDurationMsFor(bookmaker, jobTransport) },
         runSignal
       );
     } catch (error) {
@@ -160,11 +173,14 @@ async function runFullOfferForBookmaker(
       console.error(`[Aggregator/FullOffer] ${bookmaker} scraper threw:`, error);
       result = { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
     }
+    scrapeMs = Date.now() - scrapeStarted;
+    transport = diffTransportStats(statsBefore, readTransportStats(scraper));
 
     // Raw count, taken before normalizeAndSaveMatches replaces each match.markets.
     marketsFound = countMarkets(result.matches);
 
     if (result.success && result.matches.length > 0) {
+      const saveStarted = Date.now();
       try {
         save = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
       } catch (error) {
@@ -172,6 +188,7 @@ async function runFullOfferForBookmaker(
         saveThrew = `Save failed: ${errorMessage(error)}`;
         save = { matchesProcessed: 0, marketsNormalized: 0, marketsSaved: 0, errors: [saveThrew] };
       }
+      saveMs = Date.now() - saveStarted;
     }
   }
   const finishedAt = new Date();
@@ -191,6 +208,16 @@ async function runFullOfferForBookmaker(
     durationMs: result.duration ?? finishedAt.getTime() - startedAt.getTime(),
   };
   logOutcome(outcome);
+
+  const metrics: ScrapeMetrics = {
+    phasesMs: { scrape: scrapeMs, normalizeSave: saveMs },
+    matches: result.matches.length,
+    marketsFound,
+    marketsSaved: outcome.marketsSaved,
+    ...(transport?.http ? { http: transport.http } : {}),
+    ...(transport?.ws ? { ws: transport.ws } : {}),
+  };
+  result = { ...result, metrics };
 
   // Back-compat for `results` and the scrape totals: before outcomes existed, a thrown save
   // turned into a failed result, so its matches stayed out of allMatches/totalMarketsFound.
@@ -296,22 +323,39 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
   const runsByLeague = new Map(
     req.leagues.map((league) => [league, new Map<PolishBookmaker, { result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>()])
   );
+  const sampler = startCycleSampler();
+  const queuedAt = Date.now();
   const jobFor = (bookmaker: PolishBookmaker): CappedJob<void> => {
     const scraper = SCRAPERS[bookmaker];
+    const transport = scraper ? resolveJobTransport(scraper) : "http";
     return {
       key: bookmaker,
-      browser: scraper ? resolveJobTransport(scraper) === "browser" : false,
+      browser: transport === "browser",
       run: async () => {
+        const jobStarted = Date.now();
+        const proc = sampler.track();
+        const eventLoop = startEventLoopWindow();
+        const leagues: JobMetricsLine["leagues"] = {};
+        let interrupted = false;
         try {
           for (const league of req.leagues) {
             if (!isLeagueSupported(league, bookmaker)) continue;
             // No new league starts after a run abort
-            if (req.signal?.aborted) break;
+            if (req.signal?.aborted) {
+              interrupted = true;
+              break;
+            }
             try {
               const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
               runsByLeague.get(league)!.set(bookmaker, run);
+              if (run.result.metrics) {
+                leagues[league] = { runId: run.outcome.runId, status: run.outcome.status, ...run.result.metrics };
+              }
             } catch (error) {
-              if (error instanceof RunInterruptedError) break;
+              if (error instanceof RunInterruptedError) {
+                interrupted = true;
+                break;
+              }
               throw error;
             }
           }
@@ -324,6 +368,21 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
               console.error(`[Aggregator/FullOffer] ${bookmaker} cleanup failed:`, error);
             }
           }
+          const procSummary = proc.stop();
+          console.log(
+            formatScrapeMetricsLine({
+              bookmaker,
+              transport,
+              queueMs: jobStarted - queuedAt,
+              durationMs: Date.now() - jobStarted,
+              interrupted,
+              leagues,
+              eventLoopDelayMs: eventLoop.stop(),
+              // A job shorter than one tick has no sample: the RSS now is a lower bound
+              nodeRssPeakMb: Math.max(procSummary.nodePeakRssMb, Math.round(process.memoryUsage().rss / 2 ** 20)),
+              chromiumPeakRssMb: transport === "browser" ? procSummary.chromiumPeakRssMb : null,
+            })
+          );
         }
       },
     };
@@ -336,7 +395,11 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
     ...browserOrder.map((bm) => jobs.find((j) => j.key === bm)!),
     ...jobs.filter((j) => !j.browser),
   ];
-  await runJobsWithCaps(ordered, req.caps ?? DEFAULT_JOB_CAPS, req.signal);
+  try {
+    await runJobsWithCaps(ordered, req.caps ?? DEFAULT_JOB_CAPS, req.signal);
+  } finally {
+    await sampler.stop();
+  }
 
   const completedAt = new Date();
   const results = new Map<string, FullOfferAggregatedResult>();

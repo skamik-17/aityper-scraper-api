@@ -94,6 +94,19 @@ export interface NavigationDiagnostics {
 }
 
 /**
+ * Per (bookmaker, league) unit metrics, set by the aggregator after the save.
+ * `http` has the HttpStats shape, diffed around the unit.
+ */
+export interface ScrapeMetrics {
+  phasesMs: { scrape: number; normalizeSave: number };
+  matches: number;
+  marketsFound: number;
+  marketsSaved: number;
+  http?: { requests: number; retries: number; failures: number; bytes: number; byStatus: Record<string, number> };
+  ws?: { framesReceived: number; bytesReceived: number };
+}
+
+/**
  * Result from scraping full offer for a league
  */
 export interface FullOfferScraperResult {
@@ -111,6 +124,8 @@ export interface FullOfferScraperResult {
   duration?: number;
   /** Navigation facts, present only on failed or empty results */
   diagnostics?: NavigationDiagnostics;
+  /** Unit metrics, owned by the aggregator */
+  metrics?: ScrapeMetrics;
 }
 
 /**

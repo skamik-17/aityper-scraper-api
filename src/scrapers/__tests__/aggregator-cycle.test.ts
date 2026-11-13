@@ -12,6 +12,10 @@ const { scrapers, save } = vi.hoisted(() => {
 });
 vi.mock("../bookmakers/index.js", async () => Object.fromEntries(Object.entries(scrapers).map(([bm, s]) => [`${bm}Scraper`, s])));
 vi.mock("../../services/scrape-helpers.js", async () => ({ normalizeAndSaveMatches: save }));
+vi.mock("../../utils/proc-sampler.js", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../utils/proc-sampler.js")>()),
+  readProcessTree: async () => ({ rootRssBytes: 300 * 2 ** 20, chromium: [] }),
+}));
 
 import { runFullOfferCycle } from "../aggregator.js";
 
@@ -109,5 +113,44 @@ describe("runFullOfferCycle", () => {
   it("an uninterrupted league reports interrupted: null", async () => {
     const r = await runFullOfferCycle({ leagues: ["premier-league"], bookmakers: ["betclic"] });
     expect(r.get("premier-league")!.interrupted).toBeNull();
+  });
+
+  it("one [ScrapeMetrics] line per job across leagues; per-league metrics on the results", async () => {
+    // The forbet fake counts its requests cumulatively, like an HttpClient
+    const http = { requests: 0, retries: 0, failures: 0, bytes: 0, byStatus: {} as Record<string, number> };
+    const forbet = scrapers.forbet as typeof scrapers.forbet & { transportStats?: () => unknown };
+    forbet.transportStats = () => ({ http: { ...http, byStatus: { ...http.byStatus } } });
+    forbet.scrapeFullOffer.mockImplementation(async (league: string) => {
+      http.requests += 20;
+      http.bytes += 5_000;
+      http.byStatus["200"] = (http.byStatus["200"] ?? 0) + 20;
+      return okResult("forbet", twentyMatches(), league);
+    });
+    save.mockResolvedValue({ matchesProcessed: 20, marketsNormalized: 20, marketsSaved: 5869, errors: [] });
+    try {
+      const r = await runFullOfferCycle({ leagues: ["premier-league", "laliga"], bookmakers: ["betclic", "forbet"], runIds: { "premier-league": ID_PL, laliga: ID_LL } });
+      const lines = logSpy.mock.calls.flat().map(String).filter((l) => l.startsWith("[ScrapeMetrics] "));
+      expect(lines).toHaveLength(2);
+      const line = JSON.parse(lines.find((l) => l.includes('"bookmaker":"forbet"'))!.slice(16));
+      expect(Object.keys(line.leagues)).toEqual(["premier-league", "laliga"]);
+      expect(line).toMatchObject({ transport: "http", interrupted: false, chromiumPeakRssMb: null,
+        leagues: { "premier-league": { runId: ID_PL, status: "success", matches: 20, marketsSaved: 5869, http: { requests: 20, bytes: 5_000 } },
+          laliga: { runId: ID_LL, http: { requests: 20, bytes: 5_000, byStatus: { "200": 20 } } } } });
+      expect(r.get("premier-league")!.results.get("forbet")!.metrics).toMatchObject({ matches: 20, marketsSaved: 5869 });
+    } finally {
+      delete forbet.transportStats;
+    }
+  });
+
+  it("an interrupted job still prints its [ScrapeMetrics] line, marked interrupted", async () => {
+    const ctl = new AbortController();
+    scrapers.forbet.scrapeFullOffer.mockImplementationOnce(() => new Promise(() => {}));
+    const p = runFullOfferCycle({ leagues: ["premier-league", "laliga"], bookmakers: ["forbet"], signal: ctl.signal });
+    await vi.advanceTimersByTimeAsync(0);
+    ctl.abort(new Error("shutdown: SIGTERM"));
+    await p;
+    const lines = logSpy.mock.calls.flat().map(String).filter((l) => l.startsWith("[ScrapeMetrics] "));
+    expect(lines).toHaveLength(1);
+    expect(JSON.parse(lines[0].slice(16))).toMatchObject({ bookmaker: "forbet", interrupted: true, leagues: {} });
   });
 });

@@ -25,7 +25,9 @@ import {
   RETRY_DELAY,
   MARKET_GROUP_FILTERS,
 } from "./constants.js";
+import type { IncomingMessage } from "node:http";
 import { pipeline } from "node:stream";
+import { setTimeout as sleep } from "node:timers/promises";
 import { createGunzip } from "node:zlib";
 import type { HttpStats } from "../../shared/http/http-client.js";
 import { encodeVarint, encodeBigVarint } from "./parser.js";
@@ -60,11 +62,15 @@ export function formatBetclicTransportStats(s: Readonly<BetclicTransportStats>):
   return `wire ${s.bytes} B, ${s.requests} requests, ${s.retries} retries, ${s.failures} failures, gzip ${s.gzipResponses}/${s.byStatus["200"] ?? 0}`;
 }
 
-/** Per-call options: counters to add to, and the frame deadline (default GRPC_FRAME_DEADLINE). */
+/** Per-call options: counters to add to, the frame deadline (default GRPC_FRAME_DEADLINE) and a run signal. */
 export interface GrpcCallOptions {
   stats?: BetclicTransportStats;
   deadlineMs?: number;
+  /** Aborts the call: the stream is destroyed, the call rejects "gRPC aborted <url>" and is never retried. */
+  signal?: AbortSignal;
 }
+
+const abortedError = (url: string): Error => new Error(`gRPC aborted ${url}`);
 
 function countStatus(stats: BetclicTransportStats | undefined, key: string): void {
   if (stats) stats.byStatus[key] = (stats.byStatus[key] ?? 0) + 1;
@@ -107,11 +113,21 @@ export async function fetchGrpcStream(
       console.warn(
         `[Betclic/Navigation] Attempt ${attempt + 1}/${MAX_RETRIES} failed: ${lastError.message}`
       );
+      // Never retry after an abort: the run is over
+      if (opts.signal?.aborted) {
+        lastError = abortedError(url);
+        break;
+      }
 
       if (attempt < MAX_RETRIES - 1) {
-        // Wait before retry with exponential backoff
+        // Wait before retry with linear backoff; an abort ends the wait at once
         const delay = RETRY_DELAY * (attempt + 1);
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        try {
+          await sleep(delay, undefined, opts.signal ? { signal: opts.signal } : undefined);
+        } catch {
+          lastError = abortedError(url);
+          break;
+        }
       }
     }
   }
@@ -135,12 +151,33 @@ export async function fetchGrpcWithNodeHttp(
   timeoutMs: number,
   opts: GrpcCallOptions = {}
 ): Promise<Buffer> {
+  const { stats, signal } = opts;
+  if (signal?.aborted) throw abortedError(url);
   const parsedUrl = new URL(url);
   // Dynamic import to avoid top-level import issues
   const transport = parsedUrl.protocol === "http:" ? await import("node:http") : await import("node:https");
-  const { stats } = opts;
+  if (signal?.aborted) throw abortedError(url);
 
-  return new Promise((resolve, reject) => {
+  return new Promise((outerResolve, outerReject) => {
+    // The abort listener lives exactly as long as the call
+    const onAbort = (): void => {
+      const error = abortedError(url);
+      if (!response) countStatus(stats, "aborted");
+      response?.destroy(error);
+      req.destroy(error);
+      reject(error);
+    };
+    const detach = (): void => signal?.removeEventListener("abort", onAbort);
+    const resolve = (value: Buffer): void => {
+      detach();
+      outerResolve(value);
+    };
+    const reject = (error: Error): void => {
+      detach();
+      outerReject(error);
+    };
+    let response: IncomingMessage | undefined;
+
     const options = {
       hostname: parsedUrl.hostname,
       port: parsedUrl.port || 443,
@@ -154,11 +191,10 @@ export async function fetchGrpcWithNodeHttp(
 
     // The frame deadline counts from the request start, not from the headers
     const startedAt = Date.now();
-    let gotResponse = false;
     if (stats) stats.requests++;
 
     const req = transport.request(options, (res) => {
-      gotResponse = true;
+      response = res;
       // The SOURCE response and the request/socket, never only a wrapper stream
       const release = () => {
         res.destroy();
@@ -202,14 +238,16 @@ export async function fetchGrpcWithNodeHttp(
     });
 
     req.on("error", (error) => {
-      if (!gotResponse) countStatus(stats, "network");
+      // An abort destroys the request with its own error and is counted in onAbort
+      if (!response && !signal?.aborted) countStatus(stats, "network");
       reject(error);
     });
     req.on("timeout", () => {
-      if (!gotResponse) countStatus(stats, "timeout");
+      if (!response) countStatus(stats, "timeout");
       req.destroy();
       reject(new Error("Request timeout"));
     });
+    signal?.addEventListener("abort", onAbort, { once: true });
 
     req.write(frame.toString("base64"));
     req.end();

@@ -47,23 +47,32 @@ import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
 import { toIsoStartTime } from "../../shared/start-time.js";
 import type { TransportStats, TransportStatsSource } from "../../shared/scraper-contract.js";
+import { setMaxListeners } from "node:events";
 import { mapLimit } from "../../shared/concurrency.js";
-import { resolveBetclicMatchConcurrency } from "./constants.js";
+import { createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
+import { MAX_SKIPPED_DETAIL_RATIO } from "../../shared/detail-fetch.js";
+import { BETCLIC_MAX_DURATION_MS, resolveBetclicMatchConcurrency } from "./constants.js";
 
-/** Same value as plan 02's MAX_SKIPPED_DETAIL_RATIO: more skipped matches than this fails the run. */
-const MAX_SKIPPED_MATCH_RATIO = 0.5;
+/** Listeners on the run signal: 21 concurrent group streams plus the listing and mapLimit. */
+const RUN_SIGNAL_MAX_LISTENERS = 64;
 
 /** Per-run context handed to fetchMatchOffer. */
 interface MatchFetchContext {
   league: string;
   /** The match's own transport counters. */
   stats: BetclicTransportStats;
+  /** The run budget; its signal aborts the match's streams. */
+  budget: ScrapeBudget;
 }
 
-/** What happened to one listed match: written, or skipped with the reason (no write, no prune). */
+/**
+ * What happened to one listed match: written; skipped with the reason (no write, no
+ * prune); or stopped by the run budget (not counted as a failure).
+ */
 type BetclicMatchOutcome =
   | { kind: "written"; offer: FullMatchOffer }
-  | { kind: "skipped"; reason: string };
+  | { kind: "skipped"; reason: string }
+  | { kind: "budget" };
 
 const eventsCache = new ScraperCache<BetclicListingMatch>({
   name: "betclic-events",
@@ -263,7 +272,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
     }
   }
 
-  async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+  async scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
 
     if (!isLeagueSupported(league, this.bookmaker)) {
@@ -274,10 +283,25 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
       );
     }
 
+    const budgetExhausted = (): FullOfferScraperResult => ({
+      success: false,
+      bookmaker: this.bookmaker,
+      league,
+      matches: [],
+      error: "budget exhausted before the listing",
+      duration: Date.now() - startTime,
+    });
+    // A caller's budget can only shorten the run's own 90 s
+    const ms = budget ? Math.min(BETCLIC_MAX_DURATION_MS, budget.remainingMs()) : BETCLIC_MAX_DURATION_MS;
+    if (ms <= 0) return budgetExhausted();
+    const run = createScrapeBudget(ms, budget?.signal);
+    setMaxListeners(RUN_SIGNAL_MAX_LISTENERS, run.signal);
+
     const runStats = createBetclicTransportStats();
     try {
-      const listingData = await fetchLeagueMatches(league, { stats: runStats });
+      const listingData = await fetchLeagueMatches(league, { stats: runStats, signal: run.signal });
       if (!listingData) {
+        if (run.signal.aborted) return budgetExhausted();
         return {
           success: false,
           bookmaker: this.bookmaker,
@@ -296,9 +320,11 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
       // A few matches at a time; every log line is one console call, so concurrent
       // matches interleave whole lines only. Results come back in listing order.
       const withIds = listingMatches.filter((m) => m.matchId);
+      // Matches not started when the budget aborts reject with its reason (mapLimit)
       const settled = await mapLimit(withIds, resolveBetclicMatchConcurrency(), async (listingMatch) => {
+        run.checkpoint();
         const matchStats = createBetclicTransportStats();
-        const outcome = await this.fetchMatchOffer(listingMatch, { league, stats: matchStats });
+        const outcome = await this.fetchMatchOffer(listingMatch, { league, stats: matchStats, budget: run });
         console.log(
           `[Betclic/Transport] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: ${formatBetclicTransportStats(matchStats)}`
         );
@@ -310,15 +336,19 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
         }
         await this.delay(50);
         return outcome;
-      });
+      }, run.signal);
 
       const matches: FullMatchOffer[] = [];
       const skipped: string[] = [];
+      let budgetStopped = 0;
       for (const result of settled) {
         if (result.status === "rejected") {
-          skipped.push(result.reason instanceof Error ? result.reason.message : String(result.reason));
+          if (run.signal.aborted) budgetStopped++;
+          else skipped.push(result.reason instanceof Error ? result.reason.message : String(result.reason));
         } else if (result.value.kind === "written") {
           matches.push(result.value.offer);
+        } else if (result.value.kind === "budget") {
+          budgetStopped++;
         } else {
           skipped.push(result.value.reason);
         }
@@ -332,13 +362,21 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
         `[Betclic/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
       );
 
+      // m = written + skipped; budget-stopped matches are not failures and stay out of m
       const attempted = matches.length + skipped.length;
-      const error =
-        skipped.length > 0 ? `${skipped.length} of ${attempted} details failed | ${skipped[0]}` : undefined;
+      const parts: string[] = [];
+      if (skipped.length > 0) parts.push(`${skipped.length} of ${attempted} details failed | ${skipped[0]}`);
+      if (budgetStopped > 0) {
+        const text = `${budgetStopped} of ${withIds.length} matches not completed`;
+        console.warn(`[Betclic/FullOffer] Budget exhausted after ${Date.now() - startTime} ms: ${text}`);
+        parts.push(`budget exhausted: ${text}`);
+      }
+      const error = parts.length > 0 ? parts.join("; ") : undefined;
       if (error) console.warn(`[betclic] ${error}`);
 
       const failed =
-        attempted > 0 && (matches.length === 0 || skipped.length / attempted > MAX_SKIPPED_MATCH_RATIO);
+        (matches.length === 0 && attempted + budgetStopped > 0) ||
+        (attempted > 0 && skipped.length / attempted > MAX_SKIPPED_DETAIL_RATIO);
 
       return {
         success: !failed,
@@ -371,11 +409,12 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
         `[Betclic/FullOffer] Fetching markets for ${homeTeam} vs ${awayTeam} (ID: ${matchId})`
       );
 
-      const results = await fetchMarketGroupResults(matchId, { stats: ctx.stats });
+      const results = await fetchMarketGroupResults(matchId, { stats: ctx.stats, signal: ctx.budget.signal });
       // Every group carries the same header; TOP's says which categories the match declares.
       const top = results.find((r) => r.group === "TOP")?.response;
       const assessment = assessMatchGroups(results, top ? parseMatchHeader(top).categories : []);
-      if (!assessment.ok) return { kind: "skipped", reason: assessment.reason };
+      // A match whose required groups all completed is kept even if the budget aborted meanwhile
+      if (!assessment.ok) return ctx.budget.signal.aborted ? { kind: "budget" } : { kind: "skipped", reason: assessment.reason };
 
       console.log(
         `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: received ${assessment.responses.length} response(s) from 7 market groups, ${assessment.duplicates.length} duplicate(s) not parsed`
@@ -400,6 +439,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
       );
       return { kind: "written", offer };
     } catch (error) {
+      if (ctx.budget.signal.aborted) return { kind: "budget" };
       return { kind: "skipped", reason: error instanceof Error ? error.message : String(error) };
     }
   }

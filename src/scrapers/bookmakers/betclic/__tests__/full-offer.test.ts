@@ -17,6 +17,11 @@ vi.mock("../navigation.js", async (importOriginal) => ({
   fetchMarketGroupResults: h.fetchMarketGroupResults,
 }));
 
+vi.mock("../../../shared/budget.js", async (importOriginal) => {
+  const m = await importOriginal<typeof import("../../../shared/budget.js")>();
+  return { ...m, createScrapeBudget: vi.fn(m.createScrapeBudget) };
+});
+
 vi.mock("../parser.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../parser.js")>()),
   parseListingResponse: h.listing,
@@ -24,6 +29,8 @@ vi.mock("../parser.js", async (importOriginal) => ({
 
 import { BetclicPlaywrightScraper } from "../index.js";
 import { resolveBetclicMatchConcurrency } from "../constants.js";
+import { createScrapeBudget } from "../../../shared/budget.js";
+import { getMaxListeners } from "node:events";
 
 const odds = { homeOdds: 1.3, drawOdds: 5.5, awayOdds: 9 };
 const ARSENAL = { matchId: "1261715874385920", matchName: "Arsenal - Hull", homeTeam: "Arsenal", awayTeam: "Hull", ...odds };
@@ -214,5 +221,107 @@ describe("BetclicPlaywrightScraper.scrapeFullOffer", () => {
     h.listing.mockReturnValue([ARSENAL, LEEDS, THIRD]);
     byMatch({ [ARSENAL.matchId]: groupResults({ TOP: TOP_ERR }), [LEEDS.matchId]: groupResults({ TOP: TOP_ERR }) });
     expect(await scrape()).toMatchObject({ success: false, matches: [], error: `2 of 3 details failed | TOP missing: ${TOP_ERR}` });
+  });
+});
+
+describe("BetclicPlaywrightScraper.scrapeFullOffer budget", () => {
+  beforeEach(() => vi.stubEnv("BETCLIC_MATCH_CONCURRENCY", "1"));
+
+  it("stops starting matches once the budget aborts and returns the completed ones", async () => {
+    h.listing.mockReturnValue([ARSENAL, LEEDS, THIRD]);
+    const parent = new AbortController();
+    h.fetchMarketGroupResults.mockImplementationOnce(async () => {
+      parent.abort();
+      return groupResults(); // complete: kept
+    });
+    const r = await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    expect(h.fetchMarketGroupResults).toHaveBeenCalledTimes(1);
+    expect(r).toMatchObject({ success: true, error: "budget exhausted: 2 of 3 matches not completed" });
+    expect(r.matches.map((m) => m.matchId)).toEqual([ARSENAL.matchId]);
+    expect(warnLines().some((l) => /^\[Betclic\/FullOffer\] Budget exhausted after \d+ ms: 2 of 3 matches not completed$/.test(l))).toBe(true);
+  });
+
+  it("a match aborted in flight is not counted as failed", async () => {
+    h.listing.mockReturnValue([ARSENAL, LEEDS, THIRD]);
+    const parent = new AbortController();
+    h.fetchMarketGroupResults
+      .mockImplementationOnce(async () => groupResults())
+      .mockImplementationOnce(async () => {
+        parent.abort();
+        return groupResults({ STRZELCY: "gRPC aborted https://offering.begmedia.com/x" });
+      });
+    const r = await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    expect(r).toMatchObject({ success: true, error: "budget exhausted: 2 of 3 matches not completed" });
+    expect(r.matches.map((m) => m.matchId)).toEqual([ARSENAL.matchId]);
+    expect(warnLines().some((l) => l.startsWith("[Betclic/FullOffer] Skipping"))).toBe(false);
+  });
+
+  it("skips and budget-stops are reported together", async () => {
+    h.listing.mockReturnValue([ARSENAL, LEEDS, THIRD]);
+    const parent = new AbortController();
+    h.fetchMarketGroupResults
+      .mockImplementationOnce(async () => groupResults({ TOP: TOP_ERR }))
+      .mockImplementationOnce(async () => {
+        parent.abort();
+        return groupResults();
+      });
+    const r = await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    expect(r).toMatchObject({
+      success: true,
+      error: `1 of 2 details failed | TOP missing: ${TOP_ERR}; budget exhausted: 1 of 3 matches not completed`,
+    });
+  });
+
+  it("a budget spent during the listing starts no match", async () => {
+    h.listing.mockReturnValue([ARSENAL, LEEDS, THIRD]);
+    const parent = new AbortController();
+    h.fetchLeagueMatches.mockImplementationOnce(async () => {
+      parent.abort();
+      return Buffer.alloc(16);
+    });
+    const r = await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    expect(r).toMatchObject({ success: false, matches: [], error: "budget exhausted: 3 of 3 matches not completed" });
+    expect(h.fetchMarketGroupResults).not.toHaveBeenCalled();
+  });
+
+  it("a listing that failed because the budget ran out says so", async () => {
+    const parent = new AbortController();
+    h.fetchLeagueMatches.mockImplementationOnce(async () => {
+      parent.abort();
+      return null;
+    });
+    const r = await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    expect(r).toMatchObject({ success: false, matches: [], error: "budget exhausted before the listing" });
+  });
+
+  it("a spent caller budget fails before the listing", async () => {
+    const parent = new AbortController();
+    const b = createScrapeBudget(60_000, parent.signal);
+    parent.abort();
+    expect(await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", b)).toMatchObject({
+      success: false, matches: [], error: "budget exhausted before the listing" });
+    expect(h.fetchLeagueMatches).not.toHaveBeenCalled();
+  });
+
+  it("passes an AbortSignal with raised max listeners to every group fetch", async () => {
+    h.listing.mockReturnValue([ARSENAL]);
+    h.fetchMarketGroupResults.mockResolvedValue(groupResults());
+    await scrape();
+    const signal = h.fetchMarketGroupResults.mock.calls[0][1].signal;
+    expect(signal).toBeInstanceOf(AbortSignal);
+    expect(getMaxListeners(signal)).toBe(64);
+    expect(h.fetchLeagueMatches.mock.calls[0][1].signal).toBe(signal);
+  });
+
+  it("uses 90 s without a caller budget and caps at the caller's remaining time", async () => {
+    h.listing.mockReturnValue([ARSENAL]);
+    h.fetchMarketGroupResults.mockResolvedValue(groupResults());
+    await scrape();
+    expect(vi.mocked(createScrapeBudget).mock.calls.at(-1)).toEqual([90_000, undefined]);
+    const parent = new AbortController();
+    await new BetclicPlaywrightScraper().scrapeFullOffer("premier-league", createScrapeBudget(60_000, parent.signal));
+    const [ms, sig] = vi.mocked(createScrapeBudget).mock.calls.at(-1)!;
+    expect(ms).toBeLessThanOrEqual(60_000);
+    expect(sig).toBeInstanceOf(AbortSignal);
   });
 });

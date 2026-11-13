@@ -186,6 +186,52 @@ describe("betclic gRPC-web transport", () => {
     await expect(s.waitClosed(1, 1000)).resolves.toBe(1);
   });
 
+  it("an abort mid-stream rejects \"gRPC aborted <url>\", makes no retry and closes the socket", async () => {
+    const s = await startFakeGrpc((_req, res) => {
+      res.writeHead(200, { "content-encoding": "gzip" });
+      res.write(openGzip(TOP_B64).subarray(0, 30000)); // then stalls
+    });
+    const ac = new AbortController();
+    setTimeout(() => ac.abort(), 50);
+    const t0 = Date.now();
+    await expect(fetchGrpcStream(`${s.url}/x`, Buffer.from([0x08, 0x03]), 30_000, { signal: ac.signal })).rejects.toThrow(`gRPC aborted ${s.url}/x`);
+    expect(Date.now() - t0).toBeLessThan(500);
+    expect(s.requests).toHaveLength(1);
+    await expect(s.waitClosed(1, 1000)).resolves.toBe(1);
+  });
+
+  it("an abort during the retry delay rejects at once", async () => {
+    const s = await startFakeGrpc((_req, res) => {
+      res.writeHead(503);
+      res.end();
+    });
+    const ac = new AbortController();
+    setTimeout(() => ac.abort(), 100);
+    const t0 = Date.now();
+    await expect(fetchGrpcStream(`${s.url}/x`, Buffer.from([0x08, 0x03]), 30_000, { signal: ac.signal })).rejects.toThrow(`gRPC aborted ${s.url}/x`);
+    expect(Date.now() - t0).toBeLessThan(500);
+    expect(s.requests).toHaveLength(1);
+  });
+
+  it("an already-aborted signal sends no request", async () => {
+    const s = await startFakeGrpc(gzipOpen(HANDICAP_B64));
+    const stats = createBetclicTransportStats();
+    await expect(fetchGrpcStream(`${s.url}/x`, Buffer.from([0x08, 0x03]), 5000, { signal: AbortSignal.abort(), stats }))
+      .rejects.toThrow(`gRPC aborted ${s.url}/x`);
+    expect(s.requests).toHaveLength(0);
+    expect(stats).toMatchObject({ requests: 0, failures: 1 });
+  });
+
+  it("an abort before the response headers counts as aborted, not network", async () => {
+    const s = await startFakeGrpc(() => {}); // never answers
+    const ac = new AbortController();
+    setTimeout(() => ac.abort(), 50);
+    const stats = createBetclicTransportStats();
+    await expect(fetchGrpcWithNodeHttp(`${s.url}/x`, FRAME, 30_000, { signal: ac.signal, stats })).rejects.toThrow(`gRPC aborted ${s.url}/x`);
+    expect(stats.byStatus).toEqual({ aborted: 1 });
+    await expect(s.waitClosed(1, 1000)).resolves.toBe(1);
+  });
+
   it("counts compressed wire bytes with HttpStats semantics", async () => {
     const s = await startFakeGrpc(gzipOpen(HANDICAP_B64));
     const stats = createBetclicTransportStats();

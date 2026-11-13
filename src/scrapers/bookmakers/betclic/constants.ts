@@ -278,6 +278,9 @@ export type MarketGroupFilter = (typeof MARKET_GROUP_FILTERS)[keyof typeof MARKE
  */
 export const BETCLIC_MATCH_CONCURRENCY = 3;
 
+/** Run budget of one scrapeFullOffer; a caller's budget can only shorten it. */
+export const BETCLIC_MAX_DURATION_MS = 90_000;
+
 /** BETCLIC_MATCH_CONCURRENCY when it is an integer 1-7, else 3. Read on every call. */
 export function resolveBetclicMatchConcurrency(env: NodeJS.ProcessEnv = process.env): number {
   const raw = env.BETCLIC_MATCH_CONCURRENCY;

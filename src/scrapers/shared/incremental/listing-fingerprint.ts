@@ -15,3 +15,19 @@ export function listingFingerprint(parts: ReadonlyArray<readonly [key: string, v
   const sorted = [...parts].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
   return createHash("sha1").update(JSON.stringify(sorted)).digest("hex").slice(0, 16);
 }
+
+/**
+ * listingFingerprint for scraper listings: a malformed listing (a duplicate key) must not
+ * fail the pass, so it yields null (the kickoff tiers still apply) and one warning.
+ */
+export function listingFingerprintOrNull(
+  parts: ReadonlyArray<readonly [key: string, value: number | string]>,
+  context: string,
+): string | null {
+  try {
+    return listingFingerprint(parts);
+  } catch (error) {
+    console.warn(`${context}: no listing fingerprint (${error instanceof Error ? error.message : String(error)})`);
+    return null;
+  }
+}

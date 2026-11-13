@@ -87,6 +87,8 @@ export interface LVBetMatch {
   date?: string;
   /** Match status */
   status?: string;
+  /** Competition view: the match's state, incl. how many markets it offers (plan 10 fingerprint) */
+  state?: { markets_count?: number; status?: string };
 }
 
 /**
@@ -95,6 +97,8 @@ export interface LVBetMatch {
 export interface LVBetCompetitionResponse {
   /** Array of matches */
   matches?: LVBetMatch[];
+  /** The listing's main-market prices, one or more entries per match (plan 10 fingerprint) */
+  primary_column_markets?: LVBetMarket[];
   /** Error message if any */
   error?: string;
 }

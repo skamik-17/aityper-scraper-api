@@ -12,7 +12,7 @@ import type { ScrapeBudget } from "../budget.js";
 import { fetchDetailsSkippingFailures } from "../detail-fetch.js";
 import type { HttpClient } from "../http/http-client.js";
 import type { EventRef } from "../incremental/incremental-scraper.js";
-import { listingFingerprint } from "../incremental/listing-fingerprint.js";
+import { listingFingerprintOrNull } from "../incremental/listing-fingerprint.js";
 import { toIsoStartTime } from "../start-time.js";
 import { REST_MARKET_DETAIL_CONCURRENCY, REST_MARKET_HEADERS, withChallengeHint, type RestMarketBrand } from "./brand.js";
 
@@ -31,13 +31,7 @@ function fingerprintOf<E>(brand: RestMarketBrand<E>, event: E): string | null {
   const parts: Array<[string, number]> = brand.listingPrices(event);
   const gamesCount = (event as { gamesCount?: unknown }).gamesCount;
   if (typeof gamesCount === "number") parts.push(["gamesCount", gamesCount]);
-  try {
-    return listingFingerprint(parts);
-  } catch (error) {
-    // A malformed listing must not fail the pass: without a fingerprint the kickoff tiers still apply
-    console.warn(`${brand.logTag} No listing fingerprint for ${brand.eventId(event)}: ${error instanceof Error ? error.message : String(error)}`);
-    return null;
-  }
+  return listingFingerprintOrNull(parts, `${brand.logTag} ${brand.eventId(event)}`);
 }
 
 /** The listed matches (brand.isMatch), in listing order. Throws on a listing failure. */

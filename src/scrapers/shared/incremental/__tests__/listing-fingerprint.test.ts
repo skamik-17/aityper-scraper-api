@@ -11,3 +11,15 @@ describe("listingFingerprint", () => {
   it("rejects duplicate keys", () =>
     expect(() => listingFingerprint([P[0], ["1:0", 2.8]])).toThrow("duplicate fingerprint key 1:0"));
 });
+
+describe("listingFingerprintOrNull", () => {
+  it("is the fingerprint, or null with one warning on a duplicate key", async () => {
+    const { listingFingerprintOrNull } = await import("../listing-fingerprint.js");
+    const { vi } = await import("vitest");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(listingFingerprintOrNull(P, "[x] e1")).toBe("41f59ecfdb96fa22");
+    expect(listingFingerprintOrNull([P[0], ["1:0", 2.8]], "[x] e1")).toBeNull();
+    expect(warn.mock.calls.flat()).toEqual(["[x] e1: no listing fingerprint (duplicate fingerprint key 1:0)"]);
+    warn.mockRestore();
+  });
+});

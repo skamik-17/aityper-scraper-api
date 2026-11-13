@@ -129,11 +129,21 @@ describe("totalbet api-client fetchLeagueEvents", () => {
     expect((await fetchLeagueEvents(PL, f)).error).toBe(`Non-JSON response (HTTP 200, text/html; charset=utf-8) from ${LIST_P1}`);
   });
 
-  it("reports network failures", async () => {
-    const f: FetchJson = async () => {
-      throw new Error("fetch failed");
+  it("reports network failures with undici's real cause", async () => {
+    const throwing = (err: unknown): FetchJson => async () => {
+      throw err;
     };
-    expect((await fetchLeagueEvents(PL, f)).error).toBe(`Request failed: fetch failed (${LIST_P1})`);
+    expect((await fetchLeagueEvents(PL, throwing(new Error("fetch failed")))).error).toBe(`Request failed: fetch failed (${LIST_P1})`);
+    // undici says "fetch failed" for every transport error; the reason is only in err.cause
+    const reset = Object.assign(new Error("read ECONNRESET"), { code: "ECONNRESET" });
+    expect((await fetchLeagueEvents(PL, throwing(new TypeError("fetch failed", { cause: reset })))).error).toBe(
+      `Request failed: fetch failed [ECONNRESET] (${LIST_P1})`,
+    );
+    // a cause without a code contributes its message
+    const tls = new Error("unable to verify the first certificate");
+    expect((await fetchLeagueEvents(PL, throwing(new TypeError("fetch failed", { cause: tls })))).error).toBe(
+      `Request failed: fetch failed [unable to verify the first certificate] (${LIST_P1})`,
+    );
   });
 
   it("reports malformed list payloads", async () => {
@@ -275,6 +285,15 @@ describe("totalbet api-client nodeFetchJson", () => {
   it("nodeFetchJson returns non-JSON bodies as text", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => new Response("<html>challenge</html>", { status: 403, headers: { "content-type": "text/html; charset=utf-8" } })));
     expect(await nodeFetchJson("https://x.test/")).toEqual({ status: 403, contentType: "text/html; charset=utf-8", body: "<html>challenge</html>" });
+  });
+
+  it("fetchEventDetail keeps the transport cause on the default nodeFetchJson path", async () => {
+    const cause = Object.assign(new Error("getaddrinfo ENOTFOUND totalbet.pl"), { code: "ENOTFOUND" });
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("fetch failed", { cause });
+    }));
+    const uuid = "0e45932b-1433-4cf5-b658-5c308b7c2b60";
+    expect(await fetchEventDetail(uuid)).toEqual({ event: null, error: `Request failed: fetch failed [ENOTFOUND] (${DETAIL_URL(uuid)})` });
   });
 
   it("fetchLeagueEvents defaults to nodeFetchJson and reports an unparsable JSON body as a request failure", async () => {

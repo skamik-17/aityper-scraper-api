@@ -784,6 +784,19 @@ node_modules/.bin/tsx $E/replay-player-keys.mts .scratch/fortuna-capture-after.j
 
 Expected `RESULT`: `full` ≥ 1, `bare` 0, `leak` 0, `labelLeak` 0, `sharedTeamToken` 0, `collisions` 0, `warnNoPlayer` 0, `mononym.rows` with `PLAYER_SHOTS:Murillo` and `GOALSCORER_FIRST:Murillo` `["PLAYER@…"]`, and `verdict` `CHECKED`. `sharedNameToken` lines are shared given names (`James`, `Lucas`); read them, they are not failures. `verdict` `NOT RUN` (no full-offer match) or `PARTIAL` (mononym absent) is recorded as such, never as PASS. If Murillo's match has started, rerun with `--mononym` set to a name from the `mononyms:` lines of a full-offer match.
 
+Amended by the Task 7 review. Step 2 first ran on 2026-11-13, when every listed PL fixture had 109-110 raw markets, so its full-offer gates were NOT RUN. Repeat Step 2 once a round opens (PL `raw` near 1200 again), with three changes:
+- **Use a new dump file.** `--dump` overwrites without asking (`smoke-full-offer.mts:42`), and evidence lines (2)-(3) cite `.scratch/fortuna-capture-after.json` as their source. Set `D=.scratch/fortuna-capture-fullround-$(date -u +%Y%m%dT%H%MZ).json`, check `test ! -e "$D"`, and use `"$D"` in the three commands above.
+- **Append the evidence.** Add the new live line and the new Task 6 replay line to `$E/smoke-after-fix-fortuna.txt`, below the existing lines, each under a `#` line with the command, the UTC time and the exit code. Do not replace the existing lines.
+- **Check the exact-goals digit labels of Task 5** on the dump. The code gates cannot see this path. The normalizer's legacy branch (`fortuna-normalizer.ts:1258-1269`) turns the old parser labels (`Remis`, the home team, the away team) back into `0`/`1`/`2` and emits the same `HOME_`/`AWAY_`/`SECOND_HALF_EXACT_GOALS` keys. So the `≥ F − 1` gates would pass even if the parser exemption (`parser.ts:122-126`, applied at `:157`) never fired on live data. Run this probe (offline):
+
+```bash
+python3 -I -c "import json,sys; c=json.load(open(sys.argv[1])); L=[s['name'] for m in c['matches'] for mk in m['markets'] if mk['bookmakerMarketId'] in ('ufo:mtyp:00-16','ufo:mtyp:00-17','ufo:mtyp:00-3e') for s in mk['selections']]; S=sorted(set(L)); print('EXACT_GOALS_LABELS', len(L), S, 'NOT RUN' if not L else ('PASS' if set(S) <= {'0','1','2','2+','3+'} else 'FAIL'))" "$D"
+```
+
+Expected: `EXACT_GOALS_LABELS <n> [...] PASS`, with `n` > 0 and a label set that is a non-empty subset of `['0', '1', '2', '2+', '3+']`. The other two verdicts:
+- `NOT RUN` means `n` = 0, a dump without a full-offer match. All 2026-11-13 dumps print this. Record it as NOT RUN, never PASS.
+- `FAIL` means a `Remis` or team label reached the dump. That is a parser regression even when every code gate passes. The Task 0 capture, taken before Task 5, prints 99 labels and `FAIL`.
+
 - [ ] **Step 2b: Leagues outside the Premier League.** The scheduled run never scrapes them (criterion 5), so run each one explicitly, one at a time under `heavy --live` (La Liga's slug is `laliga`):
 
 ```bash
@@ -794,7 +807,7 @@ for L in laliga serie-a ligue-1 ekstraklasa; do
 done
 ```
 
-Expected per league: `warnPatternCount` 0, and the same `RESULT` values as Step 2. Measured on the 2026-11-07 00:40Z captures with the Task 2 review fixes, contexts re-derived from Fortuna's labels by the fixed team matcher: 0 warnings, 0 leaks, 0 shared team tokens and 0 collisions in all three leagues (fortuna Task 2 report, fix round 1). Ekstraklasa answered `No fixtures found from API` for `ufo:tour:00-0b9` (`src/scrapers/bookmakers/fortuna/constants.ts:47`) on that date: record NOT RUN if it still does.
+Expected per league: `warnPatternCount` 0, and the same `RESULT` values as Step 2. Measured on the 2026-11-07 00:40Z captures with the Task 2 review fixes, contexts re-derived from Fortuna's labels by the fixed team matcher: 0 warnings, 0 leaks, 0 shared team tokens and 0 collisions in all three leagues (fortuna Task 2 report, fix round 1). Ekstraklasa answered `No fixtures found from API` for `ufo:tour:00-0b9` (`src/scrapers/bookmakers/fortuna/constants.ts:47`) on that date: record NOT RUN if it still does. Amended by the Task 7 review: it still answered that way on 2026-11-13T15:56Z. totalbet had listed 7 Ekstraklasa fixtures on 2026-11-07T01:25Z, so the id is very likely stale. The follow-up is [fortuna-ekstraklasa.md](fortuna-ekstraklasa.md): rediscover the id, replace it behind a test, then re-run this step for Ekstraklasa.
 
 The Task 6 replay (the loop's second line, offline, amended by the Task 6 review) gives `warnPatternCount` 0 and `requiredCodeMatchCounts.WIN_OR_WIN_BY_2` equal to `matches`. Measured at `a8cdb71` on the same 2026-11-07 00:40Z captures, with the contexts of the fixed team matcher:
 - La Liga 19 of 19, Serie A 19 of 19 and Ligue 1 17 of 17, with 0 warnings each.

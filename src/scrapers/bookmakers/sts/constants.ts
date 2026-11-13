@@ -469,6 +469,11 @@ export const WS_DATA_TIMEOUT = 12000;
 export const WS_POLL_INTERVAL = 500;
 
 /**
+ * The per-fixture loop stops after this many consecutive fixtures without a snapshot
+ */
+export const MAX_CONSECUTIVE_MATCH_FAILURES = 3;
+
+/**
  * Cookie consent button text
  */
 export const COOKIE_BUTTON_TEXT = "Akceptuj wszystkie";

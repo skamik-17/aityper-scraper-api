@@ -31,6 +31,7 @@ import {
   oddsToMarketOverUnder,
 } from "./parser.js";
 import type { STSFixture } from "./types.js";
+import { MAX_CONSECUTIVE_MATCH_FAILURES } from "./constants.js";
 
 const eventsCache = new ScraperCache<STSFixture>({
   name: "sts-events",
@@ -306,6 +307,9 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
         this.updateCache(fixtures);
 
         const matches: FullMatchOffer[] = [];
+        let misses = 0;
+        let consecutiveMisses = 0;
+        let firstMissed: STSFixture | undefined;
 
         for (const fixture of fixtures) {
           try {
@@ -322,8 +326,27 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
               console.warn(
                 `[STS/FullOffer] No fixture snapshot for ${fixture.home} vs ${fixture.away} after 2 attempts - skipping (previous snapshot kept)`
               );
+              misses++;
+              firstMissed ??= fixture;
+              if (++consecutiveMisses >= MAX_CONSECUTIVE_MATCH_FAILURES) {
+                // A systemic miss (protocol change, block) would otherwise cost
+                // ~20 s per fixture for the whole league; stop and keep the
+                // previous rows instead of writing anything.
+                console.warn(
+                  `[STS/FullOffer] Aborting per-fixture loop: ${consecutiveMisses} consecutive fixtures without a snapshot`
+                );
+                return {
+                  success: false,
+                  bookmaker: this.bookmaker,
+                  league: leagueSlug,
+                  matches: [],
+                  error: `${misses} of ${fixtures.length} details failed | no fixture snapshot ${firstMissed.eventUrl}`,
+                  duration: Date.now() - startTime,
+                };
+              }
               continue;
             }
+            consecutiveMisses = 0;
 
             const fixtureJson = matchCaptureResult.fixtureData.get(fixture.id) || null;
             const matchInitialJson = parseWebSocketJson(matchCaptureResult.initialData);
@@ -413,6 +436,9 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
           bookmaker: this.bookmaker,
           league: leagueSlug,
           matches,
+          ...(misses > 0 && firstMissed
+            ? { error: `${misses} of ${fixtures.length} details failed | no fixture snapshot ${firstMissed.eventUrl}` }
+            : {}),
           duration: Date.now() - startTime,
         };
       }

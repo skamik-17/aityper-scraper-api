@@ -5,7 +5,9 @@ Prints one RUN_CHECK JSON line; exit 0 when every completed STS run after <start
 Fails closed on runs that never print a Found line: any STS full-offer result without saved
 matches (`[Aggregator/FullOffer] sts completed: success=...`, e.g. an empty strict listing after
 an id renumbering), any thrown STS scrape (`sts failed:`) and any strict-id miss warning from
-the parser is a problem. Those aggregator lines carry no league; they are attributed to the
+the parser is a problem. With observability's outcome line (`sts <status>: N matches, ...`),
+`success` and `partial` lines are not problems, while `empty`, `scrape_failed` (this includes
+a tripped snapshot circuit breaker) and `persist_failed` are. Those aggregator lines carry no league; they are attributed to the
 Premier League, the only enabled league (src/config/index.ts ENABLED_LEAGUES), so an STS
 failure in a manually triggered other league also fails the check.
 Every parser fold-drop warning (`[STS] <H> vs <A>: dropped N of M lines of market <id> that
@@ -18,7 +20,7 @@ for no, line in enumerate(open(log, encoding="utf-8", errors="replace"), 1):
     if no <= start:
         continue
     line = line.rstrip("\n")
-    if m := re.match(r"^\[Aggregator/FullOffer\] sts (completed: success=.*|failed:.*)$", line):
+    if m := re.match(r"^\[Aggregator/FullOffer\] sts (completed: success=.*|failed:.*|(?:empty|scrape_failed|persist_failed): .*)$", line):
         problems.append({"line": no, "stsFailed": m[1][:200]})
     elif re.match(r"^\[STS\] Strict id filter for premier-league .*matched 0 fixtures", line):
         problems.append({"line": no, "strictIdMiss": line[:500]})

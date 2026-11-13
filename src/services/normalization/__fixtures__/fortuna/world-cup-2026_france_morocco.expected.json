@@ -13057,8 +13057,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "HALF_TIME_RESULT",
-        "marketKey": "HALF_TIME_RESULT",
+        "marketCode": "HALF_TIME_CORNERS_RACE",
+        "marketKey": "HALF_TIME_CORNERS_RACE",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -13081,7 +13081,7 @@
         ]
       },
       "index": 861,
-      "marketCode": "HALF_TIME_RESULT",
+      "marketCode": "HALF_TIME_CORNERS_RACE",
       "rawName": "1. połowa: więcej rzutów rożnych"
     },
     {

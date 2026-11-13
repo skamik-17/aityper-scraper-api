@@ -1,0 +1,574 @@
+{
+ "source": "Verbatim Fortuna parser output from read-only full-offer captures of 2026-11-07 (laliga 00:39Z, serie-a and ligue-1 00:42Z), selected for the fortuna.md Task 2 review fixes. labels = Fortuna's fixture labels; ctx = getCanonicalTeamName(labels) after the alias fixes.",
+ "atlBarcelona": {
+  "matchId": "ufo:mtch:1xj-01i",
+  "labels": [
+   "Atl. Madryt",
+   "Barcelona"
+  ],
+  "ctx": {
+   "homeTeam": "Atletico Madrid",
+   "awayTeam": "Barcelona",
+   "league": "laliga"
+  },
+  "markets": [
+   {
+    "name": "Atl. Madryt Lookman, Ademola strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 5,
+      "externalId": "ufo:mkt:1xj-01i-0z5",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Atl.Madrid wygra , Pablo Barrios strzeli gola",
+    "bookmakerMarketId": "ufo:mtyp:00-70",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Atl.Madrid wygra , Pablo Barrios strzeli gola",
+      "odds": 10,
+      "externalId": "ufo:mkt:1xj-01i-09j",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Atl. Madryt Koke strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 25,
+      "externalId": "ufo:mkt:1xj-01i-1mc",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Atl. Madryt Le Normand, Robin strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 35,
+      "externalId": "ufo:mkt:1xj-01i-1e6",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "espanyolCoruna": {
+  "matchId": "ufo:mtch:1xj-01f",
+  "labels": [
+   "Espanyol",
+   "A Coruňa"
+  ],
+  "ctx": {
+   "homeTeam": "Espanyol",
+   "awayTeam": "A Coruňa",
+   "league": "laliga"
+  },
+  "markets": [
+   {
+    "name": "A Coruňa Jensen, Jonathan Asp strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 6,
+      "externalId": "ufo:mkt:1xj-01f-0m9",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "A Coruňa Diego Villares Yanez strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 15,
+      "externalId": "ufo:mkt:1xj-01f-0pe",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "A Coruňa Angelino strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 30,
+      "externalId": "ufo:mkt:1xj-01f-0a8",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "valenciaRealMadrid": {
+  "matchId": "ufo:mtch:1xj-01q",
+  "labels": [
+   "Valencia",
+   "Real M."
+  ],
+  "ctx": {
+   "homeTeam": "Valencia",
+   "awayTeam": "Real Madrid",
+   "league": "laliga"
+  },
+  "markets": [
+   {
+    "name": "Aaron Ndive Mayol de la Cueva - liczba strzałów (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-lf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 6,
+      "externalId": "ufo:mkt:1xj-01q-1t7",
+      "status": "active"
+     },
+     {
+      "name": "1+",
+      "odds": 2,
+      "externalId": "ufo:mkt:1xj-01q-1t7",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Aaron Ndive Mayol de la Cueva - asystuje (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-la",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 10,
+      "externalId": "ufo:mkt:1xj-01q-1sa",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Aaron Ndive Mayol de la Cueva liczba spalonych w 1.połowie (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-pn",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 13,
+      "externalId": "ufo:mkt:1xj-01q-1sb",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Valencia Aaron Ndive Mayol de la Cueva strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 20,
+      "externalId": "ufo:mkt:1xj-01q-1ub",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Real M. Alexander-Arnold, Trent strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 25,
+      "externalId": "ufo:mkt:1xj-01q-1nw",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Endrick - liczba fauli (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-lg",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 2.3,
+      "externalId": "ufo:mkt:1xj-01q-1ok",
+      "status": "active"
+     },
+     {
+      "name": "3+",
+      "odds": 4.75,
+      "externalId": "ufo:mkt:1xj-01q-1ok",
+      "status": "active"
+     },
+     {
+      "name": "1+",
+      "odds": 1.25,
+      "externalId": "ufo:mkt:1xj-01q-1ok",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Real M. Endrick strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 5,
+      "externalId": "ufo:mkt:1xj-01q-1kn",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "romaSassuolo": {
+  "matchId": "ufo:mtch:1xi-01f",
+  "labels": [
+   "AS Roma",
+   "Sassuolo"
+  ],
+  "ctx": {
+   "homeTeam": "Roma",
+   "awayTeam": "Sassuolo",
+   "league": "serie-a"
+  },
+  "markets": [
+   {
+    "name": "AS Roma Soule, Matias strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 5,
+      "externalId": "ufo:mkt:1xi-01f-1b8",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "AS Roma Emanuele Lulli strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 16,
+      "externalId": "ufo:mkt:1xi-01f-0sd",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "genoaMilan": {
+  "matchId": "ufo:mtch:1xj-033",
+  "labels": [
+   "Genoa",
+   "AC Milan"
+  ],
+  "ctx": {
+   "homeTeam": "Genoa",
+   "awayTeam": "AC Milan",
+   "league": "serie-a"
+  },
+  "markets": [
+   {
+    "name": "AC Milan Modric, Luka strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 15,
+      "externalId": "ufo:mkt:1xj-033-0lh",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "monzaAtalanta": {
+  "matchId": "ufo:mtch:1xj-035",
+  "labels": [
+   "Monza",
+   "A.Bergamo"
+  ],
+  "ctx": {
+   "homeTeam": "Monza",
+   "awayTeam": "Atalanta",
+   "league": "serie-a"
+  },
+  "markets": [
+   {
+    "name": "Atalanta wygra , Nikola Krstovic strzeli gola",
+    "bookmakerMarketId": "ufo:mtyp:00-70",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Atalanta wygra , Nikola Krstovic strzeli gola",
+      "odds": 3.3,
+      "externalId": "ufo:mkt:1xj-035-03x",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "leMansMonaco": {
+  "matchId": "ufo:mtch:1xj-0aq",
+  "labels": [
+   "Le Mans",
+   "Monaco"
+  ],
+  "ctx": {
+   "homeTeam": "Le Mans",
+   "awayTeam": "Monaco",
+   "league": "ligue-1"
+  },
+  "markets": [
+   {
+    "name": "Le Mans Vercruysse, Jean strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 14,
+      "externalId": "ufo:mkt:1xj-0aq-0us",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "leHavreLorient": {
+  "matchId": "ufo:mtch:1xj-0am",
+  "labels": [
+   "Le Havre",
+   "Lorient"
+  ],
+  "ctx": {
+   "homeTeam": "Le Havre",
+   "awayTeam": "Lorient",
+   "league": "ligue-1"
+  },
+  "markets": [
+   {
+    "name": "Le Havre Sota Nakamura strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ne",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 7,
+      "externalId": "ufo:mkt:1xj-0am-0kz",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "angersNice": {
+  "matchId": "ufo:mtch:1xj-0an",
+  "labels": [
+   "Angers",
+   "Nice"
+  ],
+  "ctx": {
+   "homeTeam": "Angers",
+   "awayTeam": "Nice",
+   "league": "ligue-1"
+  },
+  "markets": [
+   {
+    "name": "Nice N`Goumou, Nathan strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 6.5,
+      "externalId": "ufo:mkt:1xj-0an-0g7",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Van den Boomen, Branco - liczba strzałów (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-lf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 1.24,
+      "externalId": "ufo:mkt:1xj-0an-0wf",
+      "status": "active"
+     },
+     {
+      "name": "2+",
+      "odds": 2.2,
+      "externalId": "ufo:mkt:1xj-0an-0wf",
+      "status": "active"
+     },
+     {
+      "name": "3+",
+      "odds": 4.75,
+      "externalId": "ufo:mkt:1xj-0an-0wf",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "N`Goumou, Nathan - liczba strzałów (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-lf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 2.2,
+      "externalId": "ufo:mkt:1xj-0an-0wk",
+      "status": "active"
+     },
+     {
+      "name": "3+",
+      "odds": 4.5,
+      "externalId": "ufo:mkt:1xj-0an-0wk",
+      "status": "active"
+     },
+     {
+      "name": "1+",
+      "odds": 1.24,
+      "externalId": "ufo:mkt:1xj-0an-0wk",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Van den Boomen, Branco strzeli gola głową (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-ox",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 25,
+      "externalId": "ufo:mkt:1xj-0an-08r",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Van den Boomen, Branco liczba strzałów z pola karnego (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-oe",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "2+",
+      "odds": 5,
+      "externalId": "ufo:mkt:1xj-0an-14f",
+      "status": "active"
+     },
+     {
+      "name": "1+",
+      "odds": 1.82,
+      "externalId": "ufo:mkt:1xj-0an-14f",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "N`Goumou, Nathan liczba strzałów z pola karnego (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-oe",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 1.42,
+      "externalId": "ufo:mkt:1xj-0an-14m",
+      "status": "active"
+     },
+     {
+      "name": "2+",
+      "odds": 3,
+      "externalId": "ufo:mkt:1xj-0an-14m",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "Van den Boomen, Branco liczba spalonych w 1.połowie (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-pn",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 15,
+      "externalId": "ufo:mkt:1xj-0an-192",
+      "status": "active"
+     }
+    ]
+   },
+   {
+    "name": "N`Goumou, Nathan liczba spalonych w 1.połowie (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-pn",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "1+",
+      "odds": 3.8,
+      "externalId": "ufo:mkt:1xj-0an-19j",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ },
+ "auxerreParisFC": {
+  "matchId": "ufo:mtch:1xi-0ae",
+  "labels": [
+   "Auxerre",
+   "Paris FC"
+  ],
+  "ctx": {
+   "homeTeam": "Auxerre",
+   "awayTeam": "Paris FC",
+   "league": "ligue-1"
+  },
+  "markets": [
+   {
+    "name": "Paris FC Lees Melou, Pierre strzeli pierwszego gola w meczu (OPTA)",
+    "bookmakerMarketId": "ufo:mtyp:00-nf",
+    "groupName": "Inne",
+    "selections": [
+     {
+      "name": "Tak",
+      "odds": 14,
+      "externalId": "ufo:mkt:1xi-0ae-0fl",
+      "status": "active"
+     }
+    ]
+   }
+  ]
+ }
+}

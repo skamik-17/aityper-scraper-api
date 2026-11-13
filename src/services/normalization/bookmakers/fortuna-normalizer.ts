@@ -25,6 +25,7 @@ import {
 } from "../helpers/index.js";
 import { getMarketMetadata, isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 import { MARKET_TYPE_IDS } from "../../../scrapers/bookmakers/fortuna/constants.js";
+import { matchTeamByExactAlias } from "../../../utils/team-matcher.js";
 
 // Round-3 audit: id identities re-verified against the live markets API
 // (fixture "Norwegia - Anglia", 2026-07-08). Many ids previously guessed from
@@ -123,8 +124,7 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // market. Excluded until verified live (absent from the checked fixture).
   // NOTE: 00-s6/00-rw are quarter-scoped goal totals ("2.kwarta: liczba
   // goli") — no catalog code for quarter totals; excluded.
-  // NOTE: 00-k6 is "Mecz: liczba asyst w meczu" — no ASSISTS_TOTAL catalog
-  // code; excluded (was wrongly bucketed into TOTAL_GOALS).
+  // 00-k6 "Mecz: liczba asyst w meczu" -> ASSISTS_TOTAL (O/U; the line comes from the selection).
   // Statistics (OPTA)
   "ufo:mtyp:00-0i": "CORNERS_TOTAL", // "Mecz: liczba rzutów rożnych"
   "ufo:mtyp:00-0t": "HALF_TIME_CORNERS_TOTAL", // "1.połowa: liczba rzutów rożnych"
@@ -203,9 +203,51 @@ const FORTUNA_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // Match result family
   "ufo:mtyp:00-60": "MATCH_WINNER",
   "ufo:mtyp:00-2x": "MATCH_WINNER",
-  "ufo:mtyp:00-0p": "MATCH_WINNER",
+  // 00-0p is not a result market: every payload seen (live PL 2026-11-06, the
+  // August Arsenal vs Coventry raw, WC golden entry 861) is the corners race
+  // "1. połowa: więcej rzutów rożnych". As MATCH_WINNER the half reroute
+  // turned it into HALF_TIME_RESULT and served it as the half-time 1X2; as
+  // CORNERS_RACE the reroute assigns HALF_TIME_/SECOND_HALF_CORNERS_RACE from
+  // the name's "1."/"2." prefix.
+  "ufo:mtyp:00-0p": "CORNERS_RACE",
   "ufo:mtyp:00-9b": "VAR_REVIEW",
   "ufo:mtyp:00-r7": "PENALTY_IN_BOTH_HALVES",
+  "ufo:mtyp:00-9a": "PENALTY_AWARDED", // "Mecz: rzut karny"
+  // NOTE: 00-bt "Mecz: rzut karny i czerwona kartka" is held back from
+  // RED_CARD_AND_PENALTY, like 00-bu from PENALTY_OR_RED_CARD. Its settlement
+  // rules could not be verified, and its YES (a flat 12 on most PL matches,
+  // live 2026-11-07) sits 15-29% above every peer, so it would take best odds
+  // on every match. Map it only once the owner confirms how Fortuna settles it.
+  "ufo:mtyp:00-bv": "OWN_GOAL", // "Mecz: gol samobójczy"
+  "ufo:mtyp:00-k7": "HEADER_GOAL", // "Mecz: gol zdobyty strzałem głową"
+  "ufo:mtyp:00-k6": "ASSISTS_TOTAL", // "Mecz: liczba asyst w meczu"
+  "ufo:mtyp:00-2n": "HALF_TIME_BTTS", // "1.połowa: obie drużyny strzelą gola"
+  // Team pairs: the first id of each pair is the home team. The label is
+  // authoritative (FORTUNA_SIDED_CODE_FLIP / the red-card team param below).
+  "ufo:mtyp:00-1h": "HOME_WIN_TO_NIL", // "Mecz: <team1> - wygra do zera"
+  "ufo:mtyp:00-1i": "AWAY_WIN_TO_NIL",
+  "ufo:mtyp:00-1o": "HOME_WIN_BOTH_HALVES", // "Mecz: <team1> - wygra obie połowy"
+  "ufo:mtyp:00-1p": "AWAY_WIN_BOTH_HALVES",
+  "ufo:mtyp:00-2b": "HOME_SCORE_BOTH_HALVES", // "Mecz: <team1> - strzeli gola w obu połowach"
+  "ufo:mtyp:00-2c": "AWAY_SCORE_BOTH_HALVES",
+  "ufo:mtyp:00-1r": "HOME_WIN_AT_LEAST_ONE_HALF", // "Mecz: <team1> - wygra przynajmniej jedną połowę"
+  "ufo:mtyp:00-1s": "AWAY_WIN_AT_LEAST_ONE_HALF",
+  "ufo:mtyp:00-16": "HOME_EXACT_GOALS", // "<team1> dokładna liczba goli" ("0", "1", "2", "3+")
+  "ufo:mtyp:00-17": "AWAY_EXACT_GOALS",
+  // NOTE: 00-07/00-08 "Mecz: <team> - Czerwona Kartka (bez CK dla trenera i
+  // sztabu)" are held back from RED_CARD_TEAM, like 00-bt above. No owner
+  // decision covers that settlement (cards to coaches and staff excluded),
+  // and their YES (odds 7-11, live 2026-11-07) sits 5-18% above the peer
+  // median on every PL full-offer match and above every peer on 10 of 18
+  // rows, so it would often take best odds. Map them only once the owner
+  // confirms; the id sides and the red-card team param below stay in place.
+  "ufo:mtyp:00-0c": "HALF_TIME_RED_CARD_TEAM", // "1.połowa: <team1> - Czerwona Kartka (...)"
+  "ufo:mtyp:00-0d": "HALF_TIME_RED_CARD_TEAM",
+  "ufo:mtyp:00-0a": "HALF_TIME_RED_CARD", // "1.połowa: Czerwona Kartka (bez CK dla trenera i sztabu)"
+  "ufo:mtyp:00-3e": "SECOND_HALF_EXACT_GOALS", // "2.połowa: dokładna liczba goli" ("0", "1", "2+")
+  "ufo:mtyp:00-0f": "FIRST_CORNER", // "Mecz: 1.rzut rożny" (the "Nikt" leg is dropped)
+  "ufo:mtyp:00-19": "ODD_EVEN_GOALS", // "Mecz: suma goli" (parzysty / nieparzysty)
+  "ufo:mtyp:00-09": "WINNING_MARGIN", // "Mecz: wynik/różnica zwycięstwa" ("Arsenal/o 2 gole", "Remis")
   "ufo:mtyp:00-rx": "TIME_PERIOD_RESULT", // "2.kwarta"
   "ufo:mtyp:00-rz": "TIME_PERIOD_RESULT", // "3.kwarta"
   "ufo:mtyp:00-s1": "TIME_PERIOD_RESULT", // "4.kwarta"
@@ -388,18 +430,87 @@ function canonicalizeFortunaPlayerName(raw: string): string {
 }
 
 /**
- * Strips a leading team-name token that OPTA occasionally prefixes directly
- * onto the player name with no punctuation ("Maroko Diop, Issa strzeli
- * pierwszego gola w meczu (OPTA)"), which would otherwise leak into the
- * extracted surname ("Issa Maroko Diop"). Abbreviated team prefixes
- * ("W.Ziel.Przyl. Cabral, Jovane") already fail to match below because of
- * their embedded periods and need no special handling here.
+ * True when `prefix` is a team label of `teamName`, without any substring or
+ * fuzzy matching. normalize1x2Selection matches fuzzily ("Aston Villa
+ * George", "Hull Lucas" and "Nottingham Murillo" all resolve to a side, and
+ * "Van" resolves to Angers in Ligue 1), so a leading token run is only
+ * stripped when this also holds. It holds when either:
+ * - `prefix` resolves to `teamName` through an explicit alias of `league`
+ *   (matchTeamByExactAlias: "AS Roma" -> Roma, "Atl. Madryt" -> Atletico
+ *   Madrid, "Maroko" -> Morocco), or
+ * - the segments of `prefix` (whitespace tokens, further split after each
+ *   dot, folded like market names) match distinct folded tokens of
+ *   `teamName` in order, and at least one segment is an anchor. A segment
+ *   matches a team token when it is an anchor (3+ characters and a prefix of
+ *   the token: "Coventry City", "Man.City"), a dotted abbreviation of any
+ *   length that prefixes the token ("Real M." for Real Madrid), or a short
+ *   token equal to the whole token ("AC Milan", "Le Havre", "A Coruňa").
+ * "Aston Villa George" fails for "Aston Villa", "AC Milan Milan" fails for
+ * "AC Milan" (each team token is used once, so a first name equal to a team
+ * token survives), and a lone "Le", "A" or "M." fails everywhere because it
+ * has no anchor.
+ */
+function isStrictFortunaTeamPrefix(prefix: string, teamName: string, league?: string): boolean {
+  if (league && matchTeamByExactAlias(prefix, league)?.name === teamName) return true;
+  const teamTokens = normalizeMarketName(teamName).split(/[\s.]+/).filter(Boolean);
+  const segments = normalizeMarketName(prefix)
+    .split(" ")
+    .flatMap((token) => token.match(/[^.]+\.?/g) ?? []);
+  let anchored = false;
+  let next = 0;
+  for (const segment of segments) {
+    const dotted = segment.endsWith(".");
+    const body = dotted ? segment.slice(0, -1) : segment;
+    const anchor = body.length >= 3;
+    const at = teamTokens.findIndex(
+      (t, i) => i >= next && (t === body || ((anchor || dotted) && t.startsWith(body)))
+    );
+    if (at < 0) return false;
+    if (anchor) anchored = true;
+    next = at + 1;
+  }
+  return anchored;
+}
+
+/**
+ * True when `prefix` is a team label of either side: normalize1x2Selection
+ * resolves it to a side and isStrictFortunaTeamPrefix holds for one of the
+ * two teams. Either team is accepted because only the strip depends on it.
+ */
+function isFortunaTeamLabel(prefix: string, ctx: NormalizationContext): boolean {
+  const side = normalize1x2Selection(prefix, ctx.homeTeam, ctx.awayTeam, ctx.league);
+  if (side !== "HOME" && side !== "AWAY") return false;
+  return [ctx.homeTeam, ctx.awayTeam].some(
+    (team) => !!team && isStrictFortunaTeamPrefix(prefix, team, ctx.league)
+  );
+}
+
+/**
+ * Strips the team-name prefix that OPTA occasionally puts directly in front
+ * of the player name with no punctuation, which would otherwise leak into
+ * the extracted name:
+ * - single token: "Maroko Diop, Issa strzeli pierwszego gola w meczu (OPTA)"
+ *   ("Issa Maroko Diop" otherwise)
+ * - dotted token: "Man.City Dias, Ruben strzeli ..." ("Ruben City Dias"),
+ *   "W.Ziel.Przyl. Cabral, Jovane strzeli ..."
+ * - multi-word: "Aston Villa McGinn, John strzeli ..." ("John Villa McGinn"),
+ *   "Coventry City Thomas, Bobby strzeli ...", "AC Milan Modric, Luka ...",
+ *   "Le Havre Sota Nakamura - ...", "Real M. Endrick strzeli ..."
+ * The first 3, then 2, then 1 token(s) are stripped only when they form a
+ * team label (isFortunaTeamLabel), so "Hull Lucas Herrington" keeps "Lucas
+ * Herrington" even though "Hull Lucas" fuzzy-resolves to the away side, and
+ * "Van den Boomen, Branco" keeps "Van" even though "Van" fuzzy-resolves to
+ * Angers.
  */
 function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): string {
-  const leadingWord = name.match(/^([\p{Lu}][\p{L}'-]*)\s+/u)?.[1];
+  const tokens = name.split(/\s+/);
+  for (const n of [3, 2]) {
+    if (tokens.length <= n) continue;
+    if (isFortunaTeamLabel(tokens.slice(0, n).join(" "), ctx)) return tokens.slice(n).join(" ");
+  }
+  const leadingWord = name.match(/^([\p{Lu}][\p{L}'.-]*)\s+/u)?.[1];
   if (!leadingWord) return name;
-  const side = normalize1x2Selection(leadingWord, ctx.homeTeam, ctx.awayTeam, ctx.league);
-  return side === "HOME" || side === "AWAY" ? name.slice(leadingWord.length).trim() : name;
+  return isFortunaTeamLabel(leadingWord, ctx) ? name.slice(leadingWord.length).trim() : name;
 }
 
 /**
@@ -413,12 +524,23 @@ function stripFortunaLeadingTeamToken(name: string, ctx: NormalizationContext): 
  *   Lastname" order with no comma at all ("Youssef Belammari liczba
  *   spalonych w 1.połowie (OPTA)", "Ayoube Amaimouni Echghouyab - liczba
  *   fauli (OPTA)") — already in natural order, so no swap is needed.
+ *   Lowercase particles may sit between the capitalized words ("Aaron Ndive
+ *   Mayol de la Cueva - liczba strzałów (OPTA)").
+ * - single-name fallback: mononyms ("Murillo - liczba strzałów (OPTA)",
+ *   "Nottingham Murillo strzeli pierwszego gola w meczu (OPTA)" once the
+ *   team prefix is stripped).
+ * Backtick, acute and left-quote apostrophes ("N`Goumou, Nathan liczba
+ * ...") are read as a plain apostrophe first, as canonicalizePlayerName
+ * does, so every form of the name reaches the same key.
  */
 function extractFortunaPlayerName(
   rawName: string,
   ctx: NormalizationContext
 ): string | undefined {
-  const name = stripFortunaLeadingTeamToken(stripFortunaScope(rawName), ctx);
+  const name = stripFortunaLeadingTeamToken(
+    stripFortunaScope(rawName).replace(/[`´‘]/gu, "'"),
+    ctx
+  );
 
   // The name portion may itself contain a hyphenated given/surname ("Mateta,
   // Jean-Philippe - ..."), so it must allow hyphens; only the literal " - "
@@ -438,10 +560,24 @@ function extractFortunaPlayerName(
 
   // No-comma fallback: capture the leading run of 2+ capitalized words
   // immediately preceding the dash separator or a known count/verb keyword.
+  // Lowercase particles may sit between two capitalized words ("Mayol de la
+  // Cueva"), never at either end.
   const noCommaMatch = name.match(
-    /^([\p{Lu}][\p{L}'’.-]*(?:\s+[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
+    /^([\p{Lu}][\p{L}'’.-]*(?:\s+(?:(?:de|del|della|di|da|dos|du|la|le|van|von|den|der)\s+)*[\p{Lu}][\p{L}'’.-]*)+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
   );
   if (noCommaMatch) return canonicalizeFortunaPlayerName(noCommaMatch[1].trim());
+
+  // Single-name fallback: a mononym is one capitalized token before the same
+  // separator/keyword ("Murillo - liczba strzałów (OPTA)", "Rodri strzeli
+  // ..."). A token that resolves to a team ("Nottingham - liczba strzałów")
+  // or a generic word (Mecz, SuperSub, Zawodnik) is not a player.
+  const singleMatch = name.match(
+    /^([\p{Lu}][\p{L}'’.-]+)\s+(?:-\s+|liczba\s|(?:strzeli|asystuje|otrzyma|zaliczy|odda)\b)/u
+  );
+  if (singleMatch && !/^(?:mecz|supersub|zawodnik)$/iu.test(singleMatch[1])) {
+    const side = normalize1x2Selection(singleMatch[1], ctx.homeTeam, ctx.awayTeam, ctx.league);
+    if (side !== "HOME" && side !== "AWAY") return canonicalizeFortunaPlayerName(singleMatch[1]);
+  }
 
   return undefined;
 }
@@ -509,6 +645,10 @@ const FORTUNA_TEAM_SCOPED_ID_SIDE: Record<string, "HOME" | "AWAY"> = {
   "ufo:mtyp:00-7c": "HOME",
   "ufo:mtyp:00-7d": "AWAY",
   "ufo:mtyp:00-7e": "AWAY",
+  "ufo:mtyp:00-07": "HOME", // team red card (held back from RED_CARD_TEAM, see the id map)
+  "ufo:mtyp:00-08": "AWAY",
+  "ufo:mtyp:00-0c": "HOME", // 1st-half team red card
+  "ufo:mtyp:00-0d": "AWAY",
 };
 
 // Markets whose side lives in the parameter ("HOME:4.5"), matching the
@@ -552,7 +692,35 @@ const FORTUNA_SIDED_CODE_FLIP: Partial<
   AWAY_TEAM_TOTAL_FOULS: { side: "AWAY", counterpart: "HOME_TEAM_TOTAL_FOULS" },
   HOME_TEAM_TOTAL_OFFSIDES: { side: "HOME", counterpart: "AWAY_TEAM_TOTAL_OFFSIDES" },
   AWAY_TEAM_TOTAL_OFFSIDES: { side: "AWAY", counterpart: "HOME_TEAM_TOTAL_OFFSIDES" },
+  HOME_WIN_TO_NIL: { side: "HOME", counterpart: "AWAY_WIN_TO_NIL" },
+  AWAY_WIN_TO_NIL: { side: "AWAY", counterpart: "HOME_WIN_TO_NIL" },
+  HOME_WIN_BOTH_HALVES: { side: "HOME", counterpart: "AWAY_WIN_BOTH_HALVES" },
+  AWAY_WIN_BOTH_HALVES: { side: "AWAY", counterpart: "HOME_WIN_BOTH_HALVES" },
+  HOME_SCORE_BOTH_HALVES: { side: "HOME", counterpart: "AWAY_SCORE_BOTH_HALVES" },
+  AWAY_SCORE_BOTH_HALVES: { side: "AWAY", counterpart: "HOME_SCORE_BOTH_HALVES" },
+  HOME_WIN_AT_LEAST_ONE_HALF: { side: "HOME", counterpart: "AWAY_WIN_AT_LEAST_ONE_HALF" },
+  AWAY_WIN_AT_LEAST_ONE_HALF: { side: "AWAY", counterpart: "HOME_WIN_AT_LEAST_ONE_HALF" },
+  HOME_EXACT_GOALS: { side: "HOME", counterpart: "AWAY_EXACT_GOALS" },
+  AWAY_EXACT_GOALS: { side: "AWAY", counterpart: "HOME_EXACT_GOALS" },
 };
+
+/**
+ * Resolves the team a "<scope>: <team> - <market>" label names ("Mecz:
+ * Arsenal - wygra do zera", "1.połowa: Hull - Czerwona Kartka", "Arsenal
+ * dokładna liczba goli"): the scope-stripped text before the first " - " or
+ * " dokładna ". Placeholder and undelimited names yield no side, so callers
+ * fall back to the id's positional side instead of guessing a team.
+ */
+function resolveFortunaPrefixTeamSide(
+  rawName: string,
+  ctx: NormalizationContext
+): "HOME" | "AWAY" | undefined {
+  if (isPlaceholderMarketName(rawName)) return undefined;
+  const teamToken = stripFortunaScope(rawName).match(/^(.+?)\s+(?:-\s|dok[łl]adna\s)/u);
+  if (!teamToken) return undefined;
+  const side = normalize1x2Selection(teamToken[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+  return side === "HOME" || side === "AWAY" ? side : undefined;
+}
 
 /** Splits a Fortuna combo selection ("Remis/Tak", "10 / +2.5") at the first slash. */
 function splitFortunaCombo(name: string): [string, string] | null {
@@ -749,6 +917,8 @@ function normalizeSelectionForMarket(
     case "OFFSIDES_1X2":
     case "CARDS_RACE":
     case "CORNERS_RACE":
+    case "HALF_TIME_CORNERS_RACE":
+    case "SECOND_HALF_CORNERS_RACE":
       // Some Fortuna result markets label the draw leg "Równo" ("even").
       if (isFortunaDrawLabel(trimmed)) return "DRAW";
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
@@ -782,6 +952,7 @@ function normalizeSelectionForMarket(
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
+    case "ASSISTS_TOTAL":
       // Integer-line phrasing: "więcej niż 2" / "mniej niż 2", also the short
       // form without "niż" ("więcej 1" / "mniej 0,5").
       if (/^wiecej\b/.test(normalized)) return "OVER";
@@ -1014,6 +1185,13 @@ function normalizeSelectionForMarket(
       if (/^obie/.test(normalized)) return "BOTH" as NormalizedSelection;
       return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
+    // FIRST_CORNER is HOME/AWAY only, so "Nikt" (no corner) has no code and
+    // is dropped. It must be caught before team matching: the fuzzy matcher
+    // resolves "Nikt" to Leeds United, which priced the ~100 leg as HOME.
+    case "FIRST_CORNER":
+      if (/^(nikt|zaden|zadna|brak)\b/.test(normalized)) return "UNKNOWN";
+      return normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
@@ -1066,6 +1244,42 @@ function normalizeSelectionForMarket(
       if (yesNo === "YES") return "NO";
       if (yesNo === "NO") return "YES";
       return trimmed as NormalizedSelection;
+    }
+
+    // Exact goals: the parser keeps the API's goal counts ("0", "1", "2",
+    // "3+"; the 2nd half "0", "1", "2+"), which already left through the
+    // literal passthrough above. Older captures and the frozen WC raw still
+    // carry the legacy parser rewrite of the codes "0"/"1"/"2" into the draw
+    // label, the home team and the away team (whichever team the market is
+    // about), so translate those back. A digit label that gets here is not a
+    // catalog code and must never reach the 1X2 matcher, which reads "3" as
+    // DRAW; a translation outside the vocabulary (a "2" in the 2nd-half book)
+    // is UNKNOWN too, and normalizeMarket drops UNKNOWN legs of these codes.
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "SECOND_HALF_EXACT_GOALS": {
+      if (/\d/.test(trimmed)) return "UNKNOWN";
+      const side = isFortunaDrawLabel(trimmed)
+        ? "DRAW"
+        : normalize1x2Selection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
+      const legacyCode =
+        side === "DRAW" ? "0" : side === "HOME" ? "1" : side === "AWAY" ? "2" : undefined;
+      return legacyCode && literalCatalogCodes?.includes(legacyCode)
+        ? (legacyCode as NormalizedSelection)
+        : "UNKNOWN";
+    }
+
+    // "Arsenal/o 2 gole" = Arsenal wins by exactly 2. "o 3 gole" is the top
+    // bucket of every observed book (they sum to ~116-121%), so it is 3+;
+    // normalizeMarket drops a book that also lists a margin above 3.
+    case "WINNING_MARGIN": {
+      if (isFortunaDrawLabel(trimmed)) return "DRAW";
+      const margin = trimmed.match(/^(.+?)\s*\/\s*o\s+(\d+)\s+gol/iu);
+      if (!margin) return "UNKNOWN";
+      const side = normalize1x2Selection(margin[1].trim(), ctx.homeTeam, ctx.awayTeam, ctx.league);
+      const n = Number(margin[2]);
+      if ((side !== "HOME" && side !== "AWAY") || n < 1) return "UNKNOWN";
+      return `${side}_BY_${n >= 3 ? "3PLUS" : n}` as NormalizedSelection;
     }
 
     default: {
@@ -1150,18 +1364,61 @@ function extractParamValue(
   }
 }
 
+// Codes a corners-race name must never keep, mapped to the race of the same
+// scope (used when the name carries no "Mecz:"/"1.połowa:"/"2.połowa:" prefix
+// of its own). CORNERS_RACE is listed so the handicap check also covers the
+// race ids themselves (00-0e, 00-0p).
+const FORTUNA_CORNERS_RACE_BY_CODE: Partial<Record<NormalizedMarketType, NormalizedMarketType>> = {
+  MATCH_WINNER: "CORNERS_RACE",
+  HALF_TIME_RESULT: "HALF_TIME_CORNERS_RACE",
+  SECOND_HALF_RESULT: "SECOND_HALF_CORNERS_RACE",
+  CORNERS_RACE: "CORNERS_RACE",
+};
+
 export const fortunaNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "fortuna",
 
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     const marketId = raw.bookmakerMarketId ? String(raw.bookmakerMarketId) : null;
 
-    // "Wynik meczu lub 2 gol(e) przewagi" (result OR a 2-goal lead at any point)
-    // settles differently from plain 1X2, and its 3-way shape does not fit the
-    // 2-way WIN_OR_WIN_BY_2 catalog code either. Exclude — never route to
-    // MATCH_WINNER even though the odds look 1X2-like.
-    if (/^wynik meczu lub/.test(normalizeMarketName(raw.name))) {
-      return null;
+    // "Wynik meczu lub N gol(e) PRZEWAGI" (00-p1: a team leg wins if the team
+    // wins the match OR takes an N-goal lead at any point) settles differently
+    // from plain 1X2, so it never reaches MATCH_WINNER even though its odds
+    // look 1X2-like. The 2-goal variant is the 2-way WIN_OR_WIN_BY_2 that
+    // betclic and forbet quote: keep the two team legs and drop "Remis", which
+    // Fortuna prices like the plain final-result draw that MATCH_WINNER
+    // already carries. The team legs must resolve to exactly one HOME and one
+    // AWAY; anything else drops the market rather than guessing a side. Every
+    // other variant, the 1-goal one included, has no catalog code: drop it.
+    const normalizedName = normalizeMarketName(raw.name);
+    if (/^wynik meczu lub/.test(normalizedName)) {
+      if (!/^wynik meczu lub\s+2\s+gol/.test(normalizedName)) return null;
+      const teamLegs = raw.selections
+        .filter((sel) => !isFortunaDrawLabel(sel.name))
+        .map((sel) => ({
+          code: normalize1x2Selection(sel.name, ctx.homeTeam, ctx.awayTeam, ctx.league),
+          label: sel.name,
+          odds: sel.odds,
+        }));
+      const homeLegs = teamLegs.filter((sel) => sel.code === "HOME");
+      const awayLegs = teamLegs.filter((sel) => sel.code === "AWAY");
+      if (teamLegs.length !== 2 || homeLegs.length !== 1 || awayLegs.length !== 1) {
+        console.warn(
+          `[fortuna] WIN_OR_WIN_BY_2: could not resolve one HOME and one AWAY leg for "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
+      return {
+        marketCode: "WIN_OR_WIN_BY_2",
+        paramValue: undefined,
+        marketKey: buildMarketKey("WIN_OR_WIN_BY_2"),
+        selections: teamLegs,
+        debug: {
+          rawName: raw.name,
+          rawId: marketId ?? undefined,
+          matchedBy: "name",
+        },
+      };
     }
 
     let marketCode: NormalizedMarketType | null = null;
@@ -1212,6 +1469,25 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // ASIAN_HANDICAP bucket.
     if (marketCode === "ASIAN_HANDICAP" && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
       marketCode = "CORNERS_HANDICAP";
+    }
+
+    // The same name-over-id rule for 1X2 codes: a corners race must never
+    // feed a 1X2 code, whatever id or scope it arrives with. 00-0p used to
+    // serve "1. połowa: więcej rzutów rożnych" as HALF_TIME_RESULT (a fake
+    // +EV draw against the real "1.połowa" 1X2). An explicit scope prefix is
+    // authoritative (the half reroute below assigns the half); an unscoped
+    // name keeps the scope of its id's code. A handicap-style corners name is
+    // neither a 1X2 nor a race, so it is dropped rather than priced as one.
+    const cornersRaceCode = FORTUNA_CORNERS_RACE_BY_CODE[marketCode];
+    if (cornersRaceCode && /rzut(?:[oó]w)?\s+ro[żz]nych/iu.test(raw.name)) {
+      const unscopedName = stripFortunaScope(raw.name);
+      if (/handicap|\d+\s*:\s*\d+/iu.test(unscopedName)) {
+        console.warn(
+          `[fortuna] Corners handicap under a ${marketCode} id dropped: "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
+      marketCode = unscopedName === raw.name.trim() ? cornersRaceCode : "CORNERS_RACE";
     }
 
     // A "2-way" handicap quoting a draw outcome is actually a 3-way handicap;
@@ -1270,6 +1546,8 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
             : isHandicapStyle
               ? "FIRST_HALF_EUROPEAN_HANDICAP"
               : "HALF_TIME_RESULT";
+        } else if (marketCode === "CORNERS_RACE") {
+          marketCode = isSecondHalf ? "SECOND_HALF_CORNERS_RACE" : "HALF_TIME_CORNERS_RACE";
         } else if (marketCode === "RESULT_AND_TOTAL" && isSecondHalf) {
           marketCode = "SECOND_HALF_RESULT_AND_TOTAL";
         } else if (marketCode === "ASIAN_HANDICAP_PUSH" && isSecondHalf) {
@@ -1367,12 +1645,15 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       teamWinMatchSide = side;
     }
 
-    // Side-directional team codes (team goals/fouls/offsides): flip to the
+    // Side-directional team codes (team goals/fouls/offsides, win to nil,
+    // win/score both halves, win at least one half, exact goals): flip to the
     // counterpart code when the label names the opposite team — the id->side
-    // pairing is positional and the label is authoritative.
+    // pairing is positional and the label is authoritative. "<team> - wygra
+    // do zera" carries no "liczba" keyword, hence the prefix fallback.
     const sidedFlip = FORTUNA_SIDED_CODE_FLIP[marketCode];
     if (sidedFlip) {
-      const nameSide = resolveFortunaTeamSide(raw.name, ctx);
+      const nameSide =
+        resolveFortunaTeamSide(raw.name, ctx) ?? resolveFortunaPrefixTeamSide(raw.name, ctx);
       if (nameSide && nameSide !== sidedFlip.side) {
         marketCode = sidedFlip.counterpart;
       }
@@ -1391,6 +1672,21 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
 
     if (!isValidMarketCode(marketCode)) {
       console.error(`[fortuna] Market code "${marketCode}" not in catalog`);
+      return null;
+    }
+
+    // WINNING_MARGIN maps "o 3 gole" to BY_3PLUS because it is the top bucket
+    // of every observed book. A book that also lists "o 4 gole" would make
+    // "o 3 gole" mean exactly 3 — drop the market rather than misprice it.
+    if (
+      marketCode === "WINNING_MARGIN" &&
+      raw.selections.some(
+        (sel) => Number(sel.name.match(/\/\s*o\s+(\d+)\s+gol/iu)?.[1] ?? 0) >= 4
+      )
+    ) {
+      console.warn(
+        `[fortuna] WINNING_MARGIN with a margin above 3 dropped: "${raw.name}" (id: ${marketId ?? "none"})`
+      );
       return null;
     }
 
@@ -1453,6 +1749,16 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       }
     }
 
+    // A player market whose name yields no player ("Nottingham - liczba
+    // strzałów (OPTA)") would otherwise land under the bare key, leaking the
+    // raw label into the peers' "base" bundle and colliding with other such
+    // rows. Drop it instead. PLAYER_RED_CARD is exempt: it keeps the bare key
+    // with the player in the selection ("Murillo wyrzucony z boiska").
+    if (isPlayerMarket && !playerName && !parlayPlayerParam && marketCode !== "PLAYER_RED_CARD") {
+      console.warn(`[fortuna] Player market without extractable player: "${raw.name}" (id: ${marketId ?? "none"})`);
+      return null;
+    }
+
     // Player markets (both stat-line AND dropdown shape, e.g. GOALSCORER_*)
     // use the player as the market parameter. Checking isPlayerMarket here
     // (not just FORTUNA_PLAYER_STAT_MARKETS) matters: playerName IS already
@@ -1470,6 +1776,18 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
     // "TEAM_WIN_MATCH" key and storage would silently keep only one.
     if (teamWinMatchSide) {
       paramValue = teamWinMatchSide;
+    }
+
+    // Team red cards (1st half 00-0c/00-0d; the full-match 00-07/00-08 are
+    // held back, see the id map) carry the side as the parameter: the team
+    // named in the label first, else the id's positional side. Without a
+    // side both teams would share one key — drop.
+    if (marketCode === "RED_CARD_TEAM" || marketCode === "HALF_TIME_RED_CARD_TEAM") {
+      const redCardSide =
+        resolveFortunaPrefixTeamSide(raw.name, ctx) ??
+        (marketId ? FORTUNA_TEAM_SCOPED_ID_SIDE[marketId] : undefined);
+      if (!redCardSide) return null;
+      paramValue = redCardSide;
     }
 
     // Side-in-parameter team markets combine the side with the numeric line
@@ -1557,7 +1875,15 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
       // Drops the bundled "corners race" garbage rows (see the UNKNOWN case
       // above) so only genuine range/count selections reach the output.
       marketCode === "HALF_TIME_HOME_EXACT_CORNERS" ||
-      marketCode === "HALF_TIME_AWAY_EXACT_CORNERS"
+      marketCode === "HALF_TIME_AWAY_EXACT_CORNERS" ||
+      // FIRST_CORNER is HOME/AWAY only: Fortuna's "Nikt" (no corner) leg has
+      // no catalog code. WINNING_MARGIN drops an unresolvable label, and the
+      // exact-goals codes a label outside their vocabulary.
+      marketCode === "FIRST_CORNER" ||
+      marketCode === "WINNING_MARGIN" ||
+      marketCode === "HOME_EXACT_GOALS" ||
+      marketCode === "AWAY_EXACT_GOALS" ||
+      marketCode === "SECOND_HALF_EXACT_GOALS"
     ) {
       finalSelections = selections.filter((sel) => sel.code !== "UNKNOWN");
       if (finalSelections.length === 0) return null;

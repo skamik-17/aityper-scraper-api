@@ -15,6 +15,7 @@ describe("per-brand transport selection", () => {
     ["betfan", "SCRAPER_TRANSPORT_BETFAN", "betfanScraper", "BetfanHttpScraper", "BetfanBrowserScraper"],
     ["fortuna", "SCRAPER_TRANSPORT_FORTUNA", "fortunaScraper", "FortunaHttpScraper", "FortunaBrowserScraper"],
     ["superbet", "SCRAPER_TRANSPORT_SUPERBET", "superbetScraper", "SuperbetHttpScraper", "SuperbetBrowserScraper"],
+    ["lvbet", "SCRAPER_TRANSPORT_LVBET", "lvbetScraper", "LVBetHttpScraper", "LVBetBrowserScraper"],
   ])(
     "%s: HTTP by default, browser class when %s=browser",
     async (_bm, env, inst, httpCls, browserCls) => {
@@ -29,7 +30,7 @@ describe("per-brand transport selection", () => {
     },
   );
 
-  it.each([["fortuna", "fortunaScraper"], ["superbet", "superbetScraper"]])("the audit registry audits the selected %s instance", async (bm, inst) => {
+  it.each([["fortuna", "fortunaScraper"], ["superbet", "superbetScraper"], ["lvbet", "lvbetScraper"]])("the audit registry audits the selected %s instance", async (bm, inst) => {
     const m: any = await import("../index.js");
     const reg = await import("../../../services/audit/bookmaker-registry.js");
     expect(reg.getBookmakerAuditTargets(bm)!.scraper).toBe(m[inst]);

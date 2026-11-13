@@ -70,7 +70,7 @@ import { ForbetBrowserScraper } from "../forbet/index.js";
 import { EtotoBrowserScraper } from "../etoto/index.js";
 import { FuksiarzBrowserScraper } from "../fuksiarz/index.js";
 import { BetfanBrowserScraper } from "../betfan/index.js";
-import { LVBetPlaywrightScraper } from "../lvbet/index.js";
+import { LVBetBrowserScraper } from "../lvbet/index.js";
 import { SuperbetBrowserScraper } from "../superbet/index.js";
 import { BetclicPlaywrightScraper } from "../betclic/index.js";
 import { parseListingResponse } from "../betclic/parser.js";
@@ -99,7 +99,7 @@ const SCRAPERS = [
   ["etoto", () => new EtotoBrowserScraper()],
   ["fuksiarz", () => new FuksiarzBrowserScraper()],
   ["betfan", () => new BetfanBrowserScraper()],
-  ["lvbet", () => new LVBetPlaywrightScraper()],
+  ["lvbet", () => new LVBetBrowserScraper()],
   ["superbet", () => new SuperbetBrowserScraper()],
 ] as const;
 

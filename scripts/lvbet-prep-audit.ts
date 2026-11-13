@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/lvbet-prep-audit.ts --url "<lvbet event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { lvbetScraper } from "../src/scrapers/bookmakers/lvbet/index.js";
+import { lvbetScraper } from "../src/scrapers/bookmakers/index.js";
 import { lvbetNormalizer } from "../src/services/normalization/bookmakers/lvbet-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

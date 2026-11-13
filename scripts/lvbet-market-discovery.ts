@@ -11,7 +11,7 @@
  *   npx tsx scripts/lvbet-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/lvbet-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { lvbetScraper } from "../src/scrapers/bookmakers/lvbet/index.js";
+import { lvbetScraper } from "../src/scrapers/bookmakers/index.js";
 import { lvbetNormalizer } from "../src/services/normalization/bookmakers/lvbet-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

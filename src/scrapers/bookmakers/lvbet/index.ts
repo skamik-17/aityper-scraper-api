@@ -34,7 +34,8 @@ import {
 import type { LVBetMatch } from "./types.js";
 import { mapLvbetMatchOffer, selectLvbetMatches } from "./full-offer-mapping.js";
 
-export class LVBetPlaywrightScraper extends PlaywrightScraper {
+/** lvbet's browser path, kept as the SCRAPER_TRANSPORT_LVBET=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class LVBetBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "lvbet";
   config: ScraperConfig;
 
@@ -296,4 +297,4 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const lvbetScraper = new LVBetPlaywrightScraper();
+export { LVBetHttpScraper } from "./http-scraper.js";

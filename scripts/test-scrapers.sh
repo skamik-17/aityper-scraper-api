@@ -30,7 +30,7 @@ declare -A SCRAPERS=(
     ["fortuna"]="FortunaBrowserScraper"
     ["fuksiarz"]="FuksiarzBrowserScraper"
     ["lebull"]="LebullPlaywrightScraper"
-    ["lvbet"]="LVBetPlaywrightScraper"
+    ["lvbet"]="LVBetBrowserScraper"
     ["pzbuk"]="PzbukPlaywrightScraper"
     ["sts"]="STSScraper"
     ["superbet"]="SuperbetBrowserScraper"
@@ -331,7 +331,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
         betclic: scrapers.BetclicPlaywrightScraper,
         betcris: scrapers.BetcrisPlaywrightScraper,
         fortuna: scrapers.FortunaBrowserScraper,
-        lvbet: scrapers.LVBetPlaywrightScraper,
+        lvbet: scrapers.LVBetBrowserScraper,
         sts: scrapers.STSScraper,
         superbet: scrapers.SuperbetBrowserScraper,
         fuksiarz: scrapers.FuksiarzBrowserScraper,
@@ -386,7 +386,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
         betclic: scrapers.BetclicPlaywrightScraper,
         betcris: scrapers.BetcrisPlaywrightScraper,
         fortuna: scrapers.FortunaBrowserScraper,
-        lvbet: scrapers.LVBetPlaywrightScraper,
+        lvbet: scrapers.LVBetBrowserScraper,
         sts: scrapers.STSScraper,
         superbet: scrapers.SuperbetBrowserScraper,
     };

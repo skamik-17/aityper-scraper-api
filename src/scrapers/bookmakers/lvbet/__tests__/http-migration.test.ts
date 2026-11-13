@@ -5,7 +5,7 @@ import { captureLogs, envelope, runBrowserPathOffline, stripScrapedAt, type Repl
 import { browserPool } from "../../../base/browser-pool.js";
 import type { HttpClient } from "../../../shared/http/http-client.js";
 import { LVBetHttpScraper } from "../http-scraper.js";
-import { LVBetPlaywrightScraper } from "../index.js";
+import { LVBetBrowserScraper } from "../index.js";
 import { parseAllMarkets } from "../parser.js";
 import type { LVBetCompetitionResponse, LVBetMarket } from "../types.js";
 import { mapLvbetMatchOffer, selectLvbetMatches } from "../full-offer-mapping.js";
@@ -40,7 +40,7 @@ afterEach(() => vi.restoreAllMocks());
 
 describe("lvbet browser path (characterization, recorded 2026-11-06/07)", () => {
   it("browser path (characterization): two offers in listing order, failed match absent", async () => {
-    const { result, requests } = await runBrowserPathOffline(new LVBetPlaywrightScraper(), "premier-league", ROUTES);
+    const { result, requests } = await runBrowserPathOffline(new LVBetBrowserScraper(), "premier-league", ROUTES);
     expect(result.success).toBe(true);
     expect(result.matches.map(envelope)).toEqual(ENVELOPES);
     expect(result.matches[0].markets).toEqual(parseAllMarkets(MARKETS("bc:31340648"), { homeTeam: "Ipswich Town", awayTeam: "Bournemouth" }));
@@ -76,7 +76,7 @@ describe("LVBetHttpScraper", () => {
   it("declares transport http", () => expect(new LVBetHttpScraper().transport).toBe("http"));
 
   it("contract: deep-equals the browser path; the failed match is reported, not dropped silently", async () => {
-    const old = await runBrowserPathOffline(new LVBetPlaywrightScraper(), "premier-league", ROUTES);
+    const old = await runBrowserPathOffline(new LVBetBrowserScraper(), "premier-league", ROUTES);
     const client = createReplayHttpClient(ROUTES);
     const { value: neu, logs } = await captureLogs(() => new LVBetHttpScraper(client).scrapeFullOffer("premier-league"));
     expect(neu).toMatchObject({ success: true, error: `1 of 3 details failed | fetch HTTP 500 ${SEARCH_URL("bc:31419246")}` });

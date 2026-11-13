@@ -26,8 +26,7 @@ import {
   MARKET_GROUP_FILTERS,
 } from "./constants.js";
 import { encodeVarint, encodeBigVarint } from "./parser.js";
-import { BetclicPlaywrightTabScraper } from "./tab-scraper.js";
-import { createHash } from "crypto";
+import { MIN_GROUP_BYTES, type BetclicGroupName, type BetclicGroupResult } from "./match-groups.js";
 
 /**
  * Fetch data from gRPC-web endpoint with retry logic
@@ -479,200 +478,57 @@ function delay(ms: number): Promise<void> {
 }
 
 /**
- * Fetch markets from all market group tabs for a match
+ * Fetch every market group of a match in parallel.
  *
- * Uses parallel fetching for all tabs simultaneously.
- * Filters out responses smaller than 100 bytes (empty/invalid data).
+ * Returns one entry per group in MARKET_GROUP_FILTERS order and never
+ * throws: a failed group carries its error message so the caller can decide
+ * whether the match is complete enough to be written (see match-groups.ts).
  */
-export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
-  const filterEntries = Object.entries(MARKET_GROUP_FILTERS) as [string, string | null][];
+export async function fetchMarketGroupResults(matchId: string): Promise<BetclicGroupResult[]> {
+  const filterEntries = Object.entries(MARKET_GROUP_FILTERS) as [BetclicGroupName, string | null][];
 
   console.log(
     `[Betclic/Navigation] Fetching ${filterEntries.length} market groups in parallel for match ${matchId}`
   );
 
-  const fetchPromises = filterEntries.map(async ([groupName, categoryId]) => {
-    try {
-      const requestBody = buildMatchDetailsRequestWithFilter(matchId, categoryId);
-      const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
-      return { groupName, response, success: true };
-    } catch (error) {
-      console.warn(
-        `[Betclic/Navigation] Failed to fetch group ${groupName}:`,
-        error instanceof Error ? error.message : error
-      );
-      return { groupName, response: null, success: false };
-    }
-  });
+  const results = await Promise.all(
+    filterEntries.map(async ([group, categoryId]): Promise<BetclicGroupResult> => {
+      try {
+        const requestBody = buildMatchDetailsRequestWithFilter(matchId, categoryId);
+        const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
+        return { group, response, error: null };
+      } catch (error) {
+        console.warn(
+          `[Betclic/Navigation] Failed to fetch group ${group}:`,
+          error instanceof Error ? error.message : error
+        );
+        return { group, response: null, error: error instanceof Error ? error.message : String(error) };
+      }
+    })
+  );
 
-  const results = await Promise.all(fetchPromises);
-
-  const responses: Buffer[] = [];
-  for (const { groupName, response, success } of results) {
-    if (success && response && response.length >= 100) {
-      responses.push(response);
-      console.log(`[Betclic/Navigation] Group ${groupName}: ${response.length} bytes`);
+  let valid = 0;
+  for (const { group, response } of results) {
+    if (response && response.length >= MIN_GROUP_BYTES) {
+      valid++;
+      console.log(`[Betclic/Navigation] Group ${group}: ${response.length} bytes`);
     }
   }
 
   console.log(
-    `[Betclic/Navigation] Fetched ${responses.length}/${filterEntries.length} valid responses for match ${matchId}`
+    `[Betclic/Navigation] Fetched ${valid}/${filterEntries.length} valid responses for match ${matchId}`
   );
 
-  return responses;
+  return results;
 }
 
 /**
- * Calculate SHA-256 hash of a buffer for comparison
- *
- * This helper is used to detect if API responses are identical across
- * different filter values, which indicates that server-side filtering
- * is not working (as discovered in research-003).
- *
- * @param buffer - Buffer to hash
- * @returns SHA-256 hash string
+ * Fetch markets from all market groups of a match: the completed responses of
+ * at least MIN_GROUP_BYTES, in group order. Kept for the audit scripts.
  */
-function calculateBufferHash(buffer: Buffer): string {
-  return createHash("sha256").update(buffer).digest("hex");
-}
-
-/**
- * Calculate unique hashes from an array of buffers
- *
- * @param buffers - Array of Buffers to compare
- * @returns Array of unique hash strings
- */
-function calculateBufferHashes(buffers: Buffer[]): string[] {
-  const hashes = buffers.map((buffer) => calculateBufferHash(buffer));
-  const unique = Array.from(new Set(hashes));
-  return unique;
-}
-
-/**
- * Fetch markets using hybrid approach (API + Playwright fallback)
- *
- * This function implements graceful degradation:
- * 1. First tries direct API (fetchAllMarketGroups)
- * 2. Detects if all API responses are identical (compare buffer hashes)
- * 3. If identical, falls back to Playwright tab clicking
- * 4. Returns merged markets from whichever method was used
- *
- * This provides a robust scraping strategy that:
- * - Uses fast API method when it works correctly
- * - Falls back to Playwright DOM scraping when API doesn't filter properly
- * - Handles errors gracefully with a fallback chain
- *
- * @param matchId - Match ID as string (BigInt-compatible)
- * @param matchUrl - Full URL to match page (for Playwright fallback)
- * @returns Promise<Buffer[]> - Array of response Buffers containing markets
- *
- * @example
- * ```typescript
- * const matchId = "905675290968064";
- * const matchUrl = "https://www.betclic.pl/pilka-nozna-sfootball/premier-league-c3/west-ham-sunderland-m905675290968064";
- * const responses = await fetchMarketsHybrid(matchId, matchUrl);
- * const markets = parseAllMarketsFromMultipleResponses(responses);
- * ```
- */
-export async function fetchMarketsHybrid(
-  matchId: string,
-  matchUrl: string
-): Promise<Buffer[]> {
-  console.log(
-    `[Betclic/Navigation] Starting hybrid scrape for match ${matchId}`
-  );
-  console.log(`[Betclic/Navigation] Match URL: ${matchUrl}`);
-
-  let apiResponses: Buffer[] = [];
-  let methodUsed: "API" | "Playwright" = "API";
-  let apiError: Error | unknown = null;
-
-  try {
-    console.log(`[Betclic/Navigation] Trying direct API first...`);
-    apiResponses = await fetchAllMarketGroups(matchId);
-    console.log(
-      `[Betclic/Navigation] API returned ${apiResponses.length} responses`
-    );
-
-    const uniqueHashes = calculateBufferHashes(apiResponses);
-
-    if (uniqueHashes.length === 1) {
-      methodUsed = "Playwright";
-      console.log(
-        `[Betclic/Navigation] All API responses identical (${apiResponses.length} responses with same hash)`
-      );
-      console.log(
-        `[Betclic/Navigation] Server-side filtering not working, falling back to Playwright tab clicking`
-      );
-      console.log(
-        `[Betclic/Navigation] Buffer hash (first 16 chars): ${uniqueHashes[0].substring(0, 16)}...`
-      );
-    } else {
-      methodUsed = "API";
-      console.log(
-        `[Betclic/Navigation] API responses differ (${uniqueHashes.length} unique hashes), using API method`
-      );
-    }
-
-    if (methodUsed === "API") {
-      console.log(`[Betclic/Navigation] Method used: Direct API`);
-      return apiResponses;
-    }
-  } catch (error) {
-    apiError = error;
-    console.warn(
-      `[Betclic/Navigation] API fetch failed:`,
-      error instanceof Error ? error.message : error
-    );
-    methodUsed = "Playwright";
-    console.log(`[Betclic/Navigation] Falling back to Playwright (API error)`);
-  }
-
-  if (methodUsed === "Playwright") {
-    try {
-      console.log(
-        `[Betclic/Navigation] Fetching markets via Playwright tab clicking...`
-      );
-      const tabScraper = new BetclicPlaywrightTabScraper();
-      const playwrightResponses = await tabScraper.fetchMarketsWithTabClicks(
-        matchUrl
-      );
-
-      console.log(
-        `[Betclic/Navigation] Playwright returned ${playwrightResponses.length} responses`
-      );
-      console.log(`[Betclic/Navigation] Method used: Playwright tab clicking`);
-
-      if (apiResponses.length > 0) {
-        console.log(
-          `[Betclic/Navigation] Combining API responses with Playwright responses`
-        );
-        return [...apiResponses, ...playwrightResponses];
-      }
-
-      return playwrightResponses;
-    } catch (playwrightError) {
-      console.error(
-        `[Betclic/Navigation] Playwright fallback failed:`,
-        playwrightError instanceof Error ? playwrightError.message : playwrightError
-      );
-
-      if (apiResponses.length > 0) {
-        console.log(
-          `[Betclic/Navigation] Returning API responses as ultimate fallback`
-        );
-        return apiResponses;
-      }
-
-      throw new Error(
-        `Both API and Playwright methods failed. API: ${
-          apiError instanceof Error ? apiError.message : apiError
-        }, Playwright: ${
-          playwrightError instanceof Error ? playwrightError.message : playwrightError
-        }`
-      );
-    }
-  }
-
-  return apiResponses;
+export async function fetchAllMarketGroups(matchId: string): Promise<Buffer[]> {
+  const results = await fetchMarketGroupResults(matchId);
+  return results
+    .filter((r): r is BetclicGroupResult & { response: Buffer } => r.response !== null && r.response.length >= MIN_GROUP_BYTES)
+    .map((r) => r.response);
 }

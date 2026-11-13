@@ -82,13 +82,16 @@ Betclic has 7 tabs with different market categories. Each tab requires a separat
 scrapeFullOffer()
     │
     ▼
-fetchAllMarketGroups(matchId)
+fetchMarketGroupResults(matchId)        # 7 group requests in parallel, never throws
     │
     ├─► Request with no filter (TOP)
     ├─► Request with ca_ftb_rslt (WYNIK)
     ├─► Request with ca_ftb_gsc (STRZELCY)
     └─► ... (7 requests total)
     │
+    ▼
+assessMatchGroups()                     # skip the match unless TOP is present
+    │                                   # and every required group completed
     ▼
 parseAllMarketsFromMultipleResponses()
     │
@@ -98,6 +101,9 @@ parseAllMarketsFromMultipleResponses()
     ▼
 ScrapedMarket[]
 ```
+
+A skipped match produces no offer, so nothing is written or pruned for it and
+its previous snapshot keeps being served. There is no browser fallback.
 
 ## Protobuf Parsing
 

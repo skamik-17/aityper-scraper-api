@@ -23,8 +23,7 @@ import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 import {
   fetchLeagueMatches,
   fetchMatchDetails,
-  fetchAllMarketGroups,
-  fetchMarketsHybrid,
+  fetchMarketGroupResults,
   extractMatchIdFromUrl,
   buildEventUrl,
 } from "./navigation.js";
@@ -40,6 +39,20 @@ import {
   extractOverUnderFromMarkets,
 } from "./parser.js";
 import type { BetclicListingMatch } from "./types.js";
+import { assessMatchGroups } from "./match-groups.js";
+
+/** Same value as plan 02's MAX_SKIPPED_DETAIL_RATIO: more skipped matches than this fails the run. */
+const MAX_SKIPPED_MATCH_RATIO = 0.5;
+
+/** Per-run context handed to fetchMatchOffer. */
+interface MatchFetchContext {
+  league: string;
+}
+
+/** What happened to one listed match: written, or skipped with the reason (no write, no prune). */
+type BetclicMatchOutcome =
+  | { kind: "written"; offer: FullMatchOffer }
+  | { kind: "skipped"; reason: string };
 
 const eventsCache = new ScraperCache<BetclicListingMatch>({
   name: "betclic-events",
@@ -49,6 +62,7 @@ const eventsCache = new ScraperCache<BetclicListingMatch>({
 
 export class BetclicPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betclic";
+  readonly transport = "http" as const;
   config: ScraperConfig;
 
   constructor(config?: Partial<ScraperConfig>) {
@@ -260,66 +274,22 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       this.updateCache(listingMatches);
 
       const matches: FullMatchOffer[] = [];
+      const skipped: string[] = [];
 
       for (const listingMatch of listingMatches) {
         if (!listingMatch.matchId) continue;
 
-        try {
-          // Build full match URL for Playwright fallback
-          const matchUrl = buildEventUrl(
-            listingMatch.matchId,
-            league,
-            listingMatch.homeTeam,
-            listingMatch.awayTeam
-          );
-
-          console.log(
-            `[Betclic/FullOffer] Fetching markets for ${listingMatch.homeTeam} vs ${listingMatch.awayTeam} (ID: ${listingMatch.matchId})`
-          );
-
-          const responses = await fetchMarketsHybrid(
-            listingMatch.matchId,
-            matchUrl
-          );
-
-          console.log(
-            `[Betclic/FullOffer] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: received ${responses.length} response(s) from hybrid fetch`
-          );
-
-          // Parse and merge all responses
-          const markets = parseAllMarketsFromMultipleResponses(responses);
-
-          if (markets.length > 0) {
-            const homeTeam = listingMatch.homeTeam;
-            const awayTeam = listingMatch.awayTeam;
-
-            matches.push({
-              matchId: listingMatch.matchId,
-              bookmaker: this.bookmaker,
-              homeTeam: getCanonicalTeamName(homeTeam, league),
-              awayTeam: getCanonicalTeamName(awayTeam, league),
-              eventUrl: buildEventUrl(
-                listingMatch.matchId,
-                league,
-                homeTeam,
-                awayTeam
-              ),
-              markets,
-              scrapedAt: new Date(),
-            });
-
-            console.log(
-              `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets total`
-            );
-          }
-
-          await this.delay(50);
-        } catch (error) {
+        const outcome = await this.fetchMatchOffer(listingMatch, { league });
+        if (outcome.kind === "written") {
+          matches.push(outcome.offer);
+        } else {
+          skipped.push(outcome.reason);
           console.warn(
-            `[Betclic/FullOffer] Failed to fetch details for match ${listingMatch.matchId}:`,
-            error
+            `[Betclic/FullOffer] Skipping ${listingMatch.homeTeam} vs ${listingMatch.awayTeam} (ID: ${listingMatch.matchId}): ${outcome.reason}`
           );
         }
+
+        await this.delay(50);
       }
 
       const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
@@ -327,15 +297,69 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         `[Betclic/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
       );
 
+      const attempted = matches.length + skipped.length;
+      const error =
+        skipped.length > 0 ? `${skipped.length} of ${attempted} details failed | ${skipped[0]}` : undefined;
+      if (error) console.warn(`[betclic] ${error}`);
+
+      const failed =
+        attempted > 0 && (matches.length === 0 || skipped.length / attempted > MAX_SKIPPED_MATCH_RATIO);
+
       return {
-        success: true,
+        success: !failed,
         bookmaker: this.bookmaker,
         league,
-        matches,
+        matches: failed ? [] : matches,
+        ...(error ? { error } : {}),
         duration: Date.now() - startTime,
       };
     } catch (error) {
       return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
+    }
+  }
+
+  /**
+   * Fetch and parse one listed match. Never throws: a match whose groups are
+   * incomplete, that parses to no markets, or whose fetch throws is skipped
+   * with the reason, so nothing is written or pruned for it.
+   */
+  private async fetchMatchOffer(
+    listingMatch: BetclicListingMatch,
+    ctx: MatchFetchContext
+  ): Promise<BetclicMatchOutcome> {
+    const { homeTeam, awayTeam } = listingMatch;
+    const matchId = listingMatch.matchId!;
+    try {
+      console.log(
+        `[Betclic/FullOffer] Fetching markets for ${homeTeam} vs ${awayTeam} (ID: ${matchId})`
+      );
+
+      const assessment = assessMatchGroups(await fetchMarketGroupResults(matchId));
+      if (!assessment.ok) return { kind: "skipped", reason: assessment.reason };
+
+      console.log(
+        `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: received ${assessment.responses.length} response(s) from 7 market groups`
+      );
+
+      const markets = parseAllMarketsFromMultipleResponses(assessment.responses);
+      if (markets.length === 0) return { kind: "skipped", reason: "0 markets parsed" };
+
+      const offer: FullMatchOffer = {
+        matchId,
+        bookmaker: this.bookmaker,
+        homeTeam: getCanonicalTeamName(homeTeam, ctx.league),
+        awayTeam: getCanonicalTeamName(awayTeam, ctx.league),
+        eventUrl: buildEventUrl(matchId, ctx.league, homeTeam, awayTeam),
+        markets,
+        scrapedAt: new Date(),
+      };
+
+      console.log(
+        `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: ${markets.length} markets total`
+      );
+      return { kind: "written", offer };
+    } catch (error) {
+      return { kind: "skipped", reason: error instanceof Error ? error.message : String(error) };
     }
   }
 

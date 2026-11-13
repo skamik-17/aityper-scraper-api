@@ -247,53 +247,11 @@ backend/src/scrapers/bookmakers/betclic/
 ├── index.ts          # Main scraper - orchestrates fetch + parse
 ├── navigation.ts     # gRPC transport, request building, multi-fetch
 ├── parser.ts         # Protobuf decoding, market extraction, merging
-├── constants.ts      # API config, field numbers, MARKET_GROUP_FILTERS, TAB_SELECTORS
+├── constants.ts      # API config, field numbers, MARKET_GROUP_FILTERS
+├── match-groups.ts   # Per-match group completeness check (skip incomplete matches)
 ├── types.ts          # TypeScript interfaces
 └── README.md         # Comprehensive documentation
 ```
-
-### TAB_SELECTORS Pattern
-
-**Purpose:** CSS selectors for Betclic tab navigation (Playwright DOM scraping)
-
-**Source:** Screenshot analysis of `docs/betclic-screenshots/Top.png`
-
-**Structure:** All selectors follow ARIA accessibility patterns (`role="tab"`, `role="tablist"`)
-
-**Components:**
-- `container` - Primary/fallback for tab list container
-- `button` - Generic tab button selector (used by tab-scraper.ts)
-- `buttonPattern` - Template selector with placeholder `{{TabName}}` for specific tabs
-- `tabs` - Pre-computed tab names: TOP, WYNIK, STRZELCY, GOLE, METODA_GOLA, HANDICAP, STATYSTYKI
-- `excludeTab` - "MyCombi" special feature tab (not a market category)
-- `activeIndicator` - CSS/ARIA attributes for selected tab detection
-- `allTabs` - Generic selector for all tab buttons
-
-**Helper Function:** `getTabSelector(tabName, options?)` - Returns complete selector for specific tab name
-
-**Key Pattern:** Use `as const` for type safety, provide primary/fallback selectors for resilience
-
-### Performance Optimization Patterns
-
-**Session Caching (Tab Scraper):**
-- Module-level `cachedSession` variable tracks browser session for reuse between matches
-- `SESSION_REUSE_THRESHOLD` (2 minutes): Prefers reuse within this window
-- `SESSION_TTL` (5 minutes): Maximum cache lifetime
-- Session marked as `isBusy` during use to prevent concurrent access
-- `cleanup()` method properly closes cached session to prevent memory leaks
-
-**Resource Blocking:**
-- `BLOCKED_ANALYTICS_DOMAINS`: 12 tracking/analytics domains blocked for performance
-- `BLOCKED_SCRIPT_PATTERNS`: 12 tracking patterns (analytics, pixel, beacon, gtag, etc.)
-- Blocked resource types: image, font, media, stylesheet
-- First rule in `setupGrpcOnlyInterception()` allows gRPC (offering.begmedia.com)
-- Essential scripts from betclic.pl allowed through (needed for tab functionality)
-- All other resources blocked to improve load times by 50-80%
-
-**Performance Metrics Tracking:**
-- `PerformanceMetrics` interface tracks: sessionReused, navigationTime, totalResponses, matchDuration, tab durations
-- `logPerformanceMetrics()` outputs comprehensive performance statistics
-- Metrics help verify optimization targets: < 60s for 10 matches avg
 
 ### Common Tasks
 

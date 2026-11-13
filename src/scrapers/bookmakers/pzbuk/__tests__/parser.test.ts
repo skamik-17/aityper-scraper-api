@@ -8,10 +8,11 @@ import {
   parseBTTS,
   parseOverUnder,
   hasValid1X2Odds,
+  parseTeamNames,
 } from "../parser.js";
 import { MARKET_TYPES } from "../constants.js";
 import { decodeFrame, initialStatesOf, SingleEventAccumulator } from "../ws-protocol.js";
-import type { PZBukInitialState } from "../types.js";
+import type { PZBukEvent, PZBukInitialState } from "../types.js";
 
 describe("pzbuk parseAllMarkets - rich names and stable ids", () => {
   it("uses the real API market name and carries bookmakerMarketId", () => {
@@ -167,5 +168,19 @@ describe("pzbuk id labels", () => {
     const markets = parseAllMarkets(data, "e");
     expect(markets).toHaveLength(1);
     expect(markets[0].name).toBe("Kartki 1x2");
+  });
+});
+
+describe("pzbuk parseTeamNames: event-name fallback", () => {
+  const event = (eventName: string) => ({ eventName, primaryParticipants: {} }) as unknown as PZBukEvent;
+  it.each([
+    ["Paris Saint-Germain - Olympique Lyon", "Paris Saint-Germain", "Olympique Lyon"],
+    ["Aston Villa – Chelsea FC", "Aston Villa", "Chelsea FC"],
+    ["Leeds United vs. Tottenham Hotspur", "Leeds United", "Tottenham Hotspur"],
+  ])("splits %j only at a spaced separator", (name, homeTeam, awayTeam) => {
+    expect(parseTeamNames(event(name))).toEqual({ homeTeam, awayTeam });
+  });
+  it.each(["Leeds United", "Leeds United -", "", "Nottingham Forest.Everton"])("never invents a name from %j", (name) => {
+    expect(parseTeamNames(event(name))).toEqual({ homeTeam: "", awayTeam: "" });
   });
 });

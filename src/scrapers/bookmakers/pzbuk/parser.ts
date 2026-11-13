@@ -24,9 +24,18 @@ import {
   OUTCOME_TYPES,
 } from "./constants.js";
 
+/** "Home - Away", "Home – Away" or "Home vs Away": a separator with whitespace on both sides */
+const EVENT_NAME_SEPARATOR = /\s+(?:[-\u2013]|vs\.?)\s+/i;
+
+function nameText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 /**
  * Extract team names from PZBuk event data
- * First tries primaryParticipants, falls back to parsing eventName
+ * First tries primaryParticipants, falls back to parsing eventName. A name
+ * neither source holds stays "" (isValidEvent then skips the event), never
+ * a fragment of the other team's name.
  */
 export function parseTeamNames(event: PZBukEvent): ParsedTeams {
   let homeTeam = "";
@@ -35,15 +44,15 @@ export function parseTeamNames(event: PZBukEvent): ParsedTeams {
   // Try to get from primaryParticipants
   for (const participant of Object.values(event.primaryParticipants || {})) {
     if (participant.venueRole === "Home") {
-      homeTeam = participant.name.trim();
+      homeTeam = nameText(participant.name);
     } else if (participant.venueRole === "Away") {
-      awayTeam = participant.name.trim();
+      awayTeam = nameText(participant.name);
     }
   }
 
   // Fallback: parse eventName "Home - Away"
   if (!homeTeam || !awayTeam) {
-    const parts = event.eventName.split(/\s*[-\u2013vs.]+\s*/);
+    const parts = nameText(event.eventName).split(EVENT_NAME_SEPARATOR);
     if (parts.length >= 2) {
       homeTeam = parts[0].trim();
       awayTeam = parts[1].trim();

@@ -13,6 +13,8 @@ import { EtotoBrowserScraper } from "./etoto/index.js";
 import { EtotoHttpScraper } from "../shared/rest-market/brands/etoto.js";
 import { ForbetBrowserScraper } from "./forbet/index.js";
 import { ForbetHttpScraper } from "../shared/rest-market/brands/forbet.js";
+import { FuksiarzBrowserScraper } from "./fuksiarz/index.js";
+import { FuksiarzHttpScraper } from "../shared/rest-market/brands/fuksiarz.js";
 
 // Modular scrapers (refactored)
 export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet/index.js";
@@ -21,7 +23,8 @@ export { EtotoHttpScraper } from "../shared/rest-market/brands/etoto.js";
 export { ForbetBrowserScraper } from "./forbet/index.js";
 export { ForbetHttpScraper } from "../shared/rest-market/brands/forbet.js";
 export { lebullScraper, LebullPlaywrightScraper } from "./lebull/index.js";
-export { fuksiarzScraper, FuksiarzPlaywrightScraper } from "./fuksiarz/index.js";
+export { FuksiarzBrowserScraper } from "./fuksiarz/index.js";
+export { FuksiarzHttpScraper } from "../shared/rest-market/brands/fuksiarz.js";
 export { betfanScraper, BetfanPlaywrightScraper } from "./betfan/index.js";
 export { betclicScraper, BetclicPlaywrightScraper } from "./betclic/index.js";
 export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet/index.js";
@@ -37,3 +40,6 @@ export const etotoScraper: FullOfferScraper =
 
 export const forbetScraper: FullOfferScraper =
   getTransportOverride("forbet") === "browser" ? new ForbetBrowserScraper() : new ForbetHttpScraper();
+
+export const fuksiarzScraper: FullOfferScraper =
+  getTransportOverride("fuksiarz") === "browser" ? new FuksiarzBrowserScraper() : new FuksiarzHttpScraper();

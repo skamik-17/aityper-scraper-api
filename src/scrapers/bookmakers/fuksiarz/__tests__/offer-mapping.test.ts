@@ -5,7 +5,7 @@ import {
   loadFixtureRoutes,
   withoutScrapedAt,
 } from "../../../shared/rest-market/__tests__/offline-harness.js";
-import { FuksiarzPlaywrightScraper } from "../index.js";
+import { FuksiarzBrowserScraper } from "../index.js";
 import { toFuksiarzOffer } from "../offer-mapping.js";
 import { isValidEvent } from "../parser.js";
 import type { FuksiarzEvent } from "../types.js";
@@ -23,7 +23,7 @@ const mapped = () =>
   list.data.filter(isValidEvent).map((e) => toFuksiarzOffer(e, detailOf(e), "premier-league")).filter((o) => o !== null);
 
 async function oldBrowserRun() {
-  const scraper = new FuksiarzPlaywrightScraper();
+  const scraper = new FuksiarzBrowserScraper();
   const { calls } = driveBrowserScraperOffline(scraper, loadFixtureRoutes("fuksiarz", URLS));
   const result = await scraper.scrapeFullOffer("premier-league");
   return { result, calls };

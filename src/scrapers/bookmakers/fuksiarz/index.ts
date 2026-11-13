@@ -31,7 +31,8 @@ import {
 import type { FuksiarzEvent } from "./types.js";
 import { toFuksiarzOffer } from "./offer-mapping.js";
 
-export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
+/** fuksiarz's browser path, kept as the SCRAPER_TRANSPORT_FUKSIARZ=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class FuksiarzBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "fuksiarz";
   config: ScraperConfig;
 
@@ -230,8 +231,14 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
           if (!isValidEvent(event)) continue;
 
           try {
-            const detailResponse = await fetchEventDetails(page, String(event.eventId));
-            const offer = toFuksiarzOffer(event, detailResponse?.data || event, leagueSlug);
+            const eventId = String(event.eventId);
+            const detailResponse = await fetchEventDetails(page, eventId);
+            if (!detailResponse?.data) {
+              // No listing fallback: a thin listing write would replace the match's full offer
+              console.warn(`[Fuksiarz/FullOffer] Skipping ${eventId}: detail failed`);
+              continue;
+            }
+            const offer = toFuksiarzOffer(event, detailResponse.data, leagueSlug);
             if (offer) {
               matches.push(offer);
               console.log(`[Fuksiarz/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
@@ -262,4 +269,3 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const fuksiarzScraper = new FuksiarzPlaywrightScraper();

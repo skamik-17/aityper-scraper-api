@@ -28,7 +28,7 @@ declare -A SCRAPERS=(
     ["etoto"]="EtotoBrowserScraper"
     ["forbet"]="ForbetBrowserScraper"
     ["fortuna"]="FortunaPlaywrightScraper"
-    ["fuksiarz"]="FuksiarzPlaywrightScraper"
+    ["fuksiarz"]="FuksiarzBrowserScraper"
     ["lebull"]="LebullPlaywrightScraper"
     ["lvbet"]="LVBetPlaywrightScraper"
     ["pzbuk"]="PzbukPlaywrightScraper"
@@ -334,7 +334,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
         lvbet: scrapers.LVBetPlaywrightScraper,
         sts: scrapers.STSScraper,
         superbet: scrapers.SuperbetPlaywrightScraper,
-        fuksiarz: scrapers.FuksiarzPlaywrightScraper,
+        fuksiarz: scrapers.FuksiarzBrowserScraper,
     };
 
     console.log('Testing', Object.keys(SCRAPERS).length, 'main scrapers...\\n');

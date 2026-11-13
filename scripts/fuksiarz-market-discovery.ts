@@ -11,7 +11,7 @@
  *   npx tsx scripts/fuksiarz-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/fuksiarz-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { fuksiarzScraper } from "../src/scrapers/bookmakers/fuksiarz/index.js";
+import { fuksiarzScraper } from "../src/scrapers/bookmakers/index.js";
 import { fuksiarzNormalizer } from "../src/services/normalization/bookmakers/fuksiarz-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

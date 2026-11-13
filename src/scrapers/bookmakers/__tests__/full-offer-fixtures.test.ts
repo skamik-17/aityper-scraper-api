@@ -68,7 +68,7 @@ import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { ScraperCache } from "../../../services/cache-manager.js";
 import { ForbetBrowserScraper } from "../forbet/index.js";
 import { EtotoBrowserScraper } from "../etoto/index.js";
-import { FuksiarzPlaywrightScraper } from "../fuksiarz/index.js";
+import { FuksiarzBrowserScraper } from "../fuksiarz/index.js";
 import { BetfanPlaywrightScraper } from "../betfan/index.js";
 import { LVBetPlaywrightScraper } from "../lvbet/index.js";
 import { SuperbetPlaywrightScraper } from "../superbet/index.js";
@@ -97,7 +97,7 @@ afterEach(() => {
 const SCRAPERS = [
   ["forbet", () => new ForbetBrowserScraper()],
   ["etoto", () => new EtotoBrowserScraper()],
-  ["fuksiarz", () => new FuksiarzPlaywrightScraper()],
+  ["fuksiarz", () => new FuksiarzBrowserScraper()],
   ["betfan", () => new BetfanPlaywrightScraper()],
   ["lvbet", () => new LVBetPlaywrightScraper()],
   ["superbet", () => new SuperbetPlaywrightScraper()],

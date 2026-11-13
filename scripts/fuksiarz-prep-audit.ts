@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/fuksiarz-prep-audit.ts --url "<fuksiarz event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { fuksiarzScraper } from "../src/scrapers/bookmakers/fuksiarz/index.js";
+import { fuksiarzScraper } from "../src/scrapers/bookmakers/index.js";
 import { fuksiarzNormalizer } from "../src/services/normalization/bookmakers/fuksiarz-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

@@ -4,7 +4,7 @@ import type { BookmakerMarketNormalizer } from "../normalization/types.js";
 import { fortunaScraper } from "../../scrapers/bookmakers/fortuna/index.js";
 import { superbetScraper } from "../../scrapers/bookmakers/superbet/index.js";
 import { lvbetScraper } from "../../scrapers/bookmakers/lvbet/index.js";
-import { fuksiarzScraper } from "../../scrapers/bookmakers/fuksiarz/index.js";
+import { fuksiarzScraper } from "../../scrapers/bookmakers/index.js";
 import { betcrisScraper } from "../../scrapers/bookmakers/betcris/index.js";
 import { betfanScraper } from "../../scrapers/bookmakers/betfan/index.js";
 import { bettersScraper } from "../../scrapers/bookmakers/betters/index.js";

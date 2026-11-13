@@ -5,11 +5,12 @@ import type { ScrapeResult } from "../scraper-service.js";
 
 const m = vi.hoisted(() => ({
   runScrapeAndPersist: vi.fn(),
+  runScrapeCycle: vi.fn(),
   closeAllBrowsers: vi.fn(),
   cronJobs: [] as Array<{ expr: string; fn: () => unknown }>,
 }));
 
-vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist }));
+vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
 vi.mock("../../scrapers/aggregator.js", async () => ({ closeAllBrowsers: m.closeAllBrowsers }));
 vi.mock("node-cron", async () => ({
   default: {
@@ -47,8 +48,9 @@ function scrapeResult(league: string, runId: string): ScrapeResult {
 beforeEach(() => {
   vi.clearAllMocks();
   m.runScrapeAndPersist.mockReset();
-  m.runScrapeAndPersist.mockImplementation(async (league: string, _bm: unknown, _close: boolean, options?: { runId?: string }) =>
-    scrapeResult(league, options?.runId ?? "none"));
+  m.runScrapeCycle.mockReset();
+  m.runScrapeCycle.mockImplementation(async (leagues: string[], _bm: unknown, options?: { runIds?: Record<string, string> }) =>
+    new Map(leagues.map((l) => [l, scrapeResult(l, options?.runIds?.[l] ?? "none")])));
   m.closeAllBrowsers.mockResolvedValue(undefined);
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(console, "error").mockImplementation(() => {});
@@ -60,16 +62,17 @@ afterEach(async () => {
 
 describe("scheduler runs through the RunCoordinator", () => {
   it("an admin start during a running interval run is refused and closes no browsers (Review Focus 2)", async () => {
-    const d = deferred<ScrapeResult>();
-    m.runScrapeAndPersist.mockReturnValueOnce(d.promise);
+    const d = deferred<Map<string, ScrapeResult>>();
+    m.runScrapeCycle.mockReturnValueOnce(d.promise);
     const first = runCoordinator.start({ trigger: "interval", leagues: ["premier-league"], bookmakers: [...CONFIG.BOOKMAKERS] });
     if (!first.accepted) throw new Error("first run refused");
     expect(runCoordinator.start({ trigger: "admin", leagues: ["premier-league"], bookmakers: ["pzbuk"] }).accepted).toBe(false);
     expect(m.closeAllBrowsers).not.toHaveBeenCalled();
-    d.resolve(scrapeResult("premier-league", first.run.runId));
+    d.resolve(new Map([["premier-league", scrapeResult("premier-league", first.run.runId)]]));
     await first.run.done;
-    expect(m.runScrapeAndPersist).toHaveBeenCalledTimes(1);
-    expect(m.closeAllBrowsers).toHaveBeenCalledTimes(1);
+    expect(m.runScrapeCycle).toHaveBeenCalledTimes(1);
+    // The cycle closes the browsers; the scheduler never does
+    expect(m.closeAllBrowsers).not.toHaveBeenCalled();
   });
 
   it("passes run id and signal down; isRunning covers every trigger; admin results stay out of lastResults (Review Focus 2)", async () => {
@@ -80,8 +83,8 @@ describe("scheduler runs through the RunCoordinator", () => {
     if (!r.accepted) throw new Error("admin run refused");
     expect(getSchedulerStatus().isRunning).toBe(true);
     await r.run.done;
-    expect(m.runScrapeAndPersist).toHaveBeenLastCalledWith("premier-league", ["forbet"], false,
-      expect.objectContaining({ runId: r.run.runIds["premier-league"], signal: expect.any(AbortSignal) }));
+    expect(m.runScrapeCycle).toHaveBeenLastCalledWith(["premier-league"], ["forbet"],
+      expect.objectContaining({ runIds: r.run.runIds, signal: expect.any(AbortSignal) }));
     expect(getSchedulerStatus().lastResults["premier-league"].runId).toBe(full.run.runId);
     expect(getSchedulerStatus().lastAdminResults["premier-league"].runId).toBe(r.run.runId);
     expect(getSchedulerStatus().isRunning).toBe(false);

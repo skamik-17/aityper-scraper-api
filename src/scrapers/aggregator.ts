@@ -10,7 +10,9 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer
 import type { FullOfferScraper } from "./shared/scraper-contract.js";
 import { browserPool } from "./base/browser-pool.js";
 import { scrapeWithHardDeadline } from "./hard-deadline.js";
-import { maxDurationMsFor, resolveJobTransport } from "./job-policy.js";
+import { DEFAULT_JOB_CAPS, maxDurationMsFor, orderBrowserJobs, resolveJobTransport } from "./job-policy.js";
+import { runJobsWithCaps, type CappedJob, type JobCaps } from "./job-scheduler.js";
+import { isLeagueSupported } from "../config/leagues.js";
 import { normalizeAndSaveMatches, type NormalizeAndSaveResult } from "../services/scrape-helpers.js";
 import { classifyBookmakerRun, isOkRunStatus, type BookmakerRunOutcome } from "../services/run-outcome.js";
 import {
@@ -165,15 +167,6 @@ async function runFullOfferForBookmaker(
   }
   const finishedAt = new Date();
 
-  if (scraper) {
-    try {
-      await scraper.cleanup();
-    } catch (error) {
-      // The scrape and save already happened: keep this outcome instead of failing the whole run.
-      console.error(`[Aggregator/FullOffer] ${bookmaker} cleanup failed:`, error);
-    }
-  }
-
   const { status, error } = classifyBookmakerRun(result, save);
   const outcome: BookmakerRunOutcome = {
     runId,
@@ -200,31 +193,15 @@ async function runFullOfferForBookmaker(
   return { result, outcome };
 }
 
-/**
- * Run full offer scrapers for all bookmakers
- * Scrapes ALL available markets from each bookmaker
- */
-export async function runAllFullOfferScrapers(
-  league: string = CONFIG.ENABLED_LEAGUES[0],
-  bookmakers?: PolishBookmaker[],
-  opts: { runId?: string; signal?: AbortSignal } = {}
-): Promise<FullOfferAggregatedResult> {
-  const runId = opts.runId ?? uuidv4();
-  const startedAt = new Date();
-  const targetBookmakers = bookmakers || CONFIG.BOOKMAKERS;
-
-  console.log(
-    `[Aggregator/FullOffer] Starting run ${runId} for ${league} with ${targetBookmakers.length} bookmakers`
-  );
-
-  // Run all scrapers in parallel; Promise.all keeps targetBookmakers order.
-  const runs = await Promise.all(
-    targetBookmakers.map((bookmaker) => runFullOfferForBookmaker(runId, bookmaker, league, opts.signal))
-  );
-
-  const completedAt = new Date();
+/** One league of a cycle: what runAllFullOfferScrapers returns. */
+function aggregateLeague(
+  runId: string,
+  league: string,
+  startedAt: Date,
+  completedAt: Date,
+  runs: Array<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>
+): FullOfferAggregatedResult {
   const totalDuration = completedAt.getTime() - startedAt.getTime();
-
   const results = new Map<PolishBookmaker, FullOfferScraperResult>();
   const allMatches: FullMatchOffer[] = [];
   const outcomes: BookmakerRunOutcome[] = [];
@@ -270,4 +247,98 @@ export async function runAllFullOfferScrapers(
       totalMarketsSaved,
     },
   };
+}
+
+export interface FullOfferCycleRequest {
+  leagues: readonly string[];
+  bookmakers?: readonly PolishBookmaker[];
+  runIds?: Readonly<Record<string, string>>;
+  signal?: AbortSignal;
+  caps?: JobCaps;
+}
+
+/**
+ * One scrape cycle over several leagues, bookmaker-major: one job per bookmaker walks
+ * its supported leagues in order (one scraper, one browser at a time), browser jobs
+ * capped and staggered, longest budgets first. Each league keeps its own run id,
+ * Starting and completion lines and result; the map's key order is req.leagues.
+ */
+export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map<string, FullOfferAggregatedResult>> {
+  const startedAt = new Date();
+  const targetBookmakers = req.bookmakers ?? CONFIG.BOOKMAKERS;
+  const runIds = new Map(req.leagues.map((league) => [league, req.runIds?.[league] ?? uuidv4()]));
+  const unitsByLeague = new Map(
+    req.leagues.map((league) => [league, targetBookmakers.filter((bm) => isLeagueSupported(league, bm))])
+  );
+  for (const league of req.leagues) {
+    console.log(
+      `[Aggregator/FullOffer] Starting run ${runIds.get(league)} for ${league} with ${unitsByLeague.get(league)!.length} bookmakers`
+    );
+  }
+
+  const runsByLeague = new Map(
+    req.leagues.map((league) => [league, new Map<PolishBookmaker, { result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>()])
+  );
+  const jobFor = (bookmaker: PolishBookmaker): CappedJob<void> => {
+    const scraper = SCRAPERS[bookmaker];
+    return {
+      key: bookmaker,
+      browser: scraper ? resolveJobTransport(scraper) === "browser" : false,
+      run: async () => {
+        try {
+          for (const league of req.leagues) {
+            if (!isLeagueSupported(league, bookmaker)) continue;
+            const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
+            runsByLeague.get(league)!.set(bookmaker, run);
+          }
+        } finally {
+          if (scraper) {
+            try {
+              await scraper.cleanup();
+            } catch (error) {
+              // The scrape and save already happened: keep this outcome instead of failing the whole run.
+              console.error(`[Aggregator/FullOffer] ${bookmaker} cleanup failed:`, error);
+            }
+          }
+        }
+      },
+    };
+  };
+
+  const withJobs = targetBookmakers.filter((bm) => req.leagues.some((league) => isLeagueSupported(league, bm)));
+  const jobs = withJobs.map(jobFor);
+  const browserOrder = orderBrowserJobs(jobs.filter((j) => j.browser).map((j) => j.key as PolishBookmaker));
+  const ordered = [
+    ...browserOrder.map((bm) => jobs.find((j) => j.key === bm)!),
+    ...jobs.filter((j) => !j.browser),
+  ];
+  await runJobsWithCaps(ordered, req.caps ?? DEFAULT_JOB_CAPS, req.signal);
+
+  const completedAt = new Date();
+  const results = new Map<string, FullOfferAggregatedResult>();
+  for (const league of req.leagues) {
+    const runs = runsByLeague.get(league)!;
+    // Outcomes keep targetBookmakers order
+    const ordered = unitsByLeague.get(league)!.flatMap((bm) => (runs.has(bm) ? [runs.get(bm)!] : []));
+    results.set(league, aggregateLeague(runIds.get(league)!, league, startedAt, completedAt, ordered));
+  }
+  return results;
+}
+
+/**
+ * Run full offer scrapers for all bookmakers on one league: the one-league cycle.
+ * Scrapes ALL available markets from each bookmaker.
+ */
+export async function runAllFullOfferScrapers(
+  league: string = CONFIG.ENABLED_LEAGUES[0],
+  bookmakers?: PolishBookmaker[],
+  opts: { runId?: string; signal?: AbortSignal } = {}
+): Promise<FullOfferAggregatedResult> {
+  const cycle = await runFullOfferCycle({
+    leagues: [league],
+    bookmakers,
+    runIds: opts.runId ? { [league]: opts.runId } : undefined,
+    signal: opts.signal,
+  });
+  return cycle.get(league)!;
 }

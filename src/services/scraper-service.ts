@@ -1,6 +1,6 @@
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
 import { probeDatabase, waitForDatabase } from "../config/database.js";
-import { runAllFullOfferScrapers, closeAllBrowsers } from "../scrapers/aggregator.js";
+import { runFullOfferCycle, closeAllBrowsers, type FullOfferAggregatedResult } from "../scrapers/aggregator.js";
 import {
   getRecentRunRows,
   insertBookmakerRunOutcomes,
@@ -36,51 +36,51 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+export interface ScrapeCycleOptions {
+  dbWaitMs?: number;
+  runIds?: Readonly<Record<string, string>>;
+  signal?: AbortSignal;
+  /** Close the browser pool after the cycle (default true). */
+  closeBrowsers?: boolean;
+}
+
+/** The result of a league refused by the preflight: no scraper started, nothing written. */
+function abortedLeague(
+  league: string,
+  runId: string,
+  startedAt: Date,
+  abortedAt: Date,
+  bookmakers: readonly PolishBookmaker[] | undefined,
+  line: string
+): ScrapeResult {
+  return {
+    runId,
+    league,
+    startedAt,
+    completedAt: abortedAt,
+    duration: abortedAt.getTime() - startedAt.getTime(),
+    successCount: 0,
+    errorCount: (bookmakers ?? CONFIG.BOOKMAKERS).length,
+    uniqueMatches: 0,
+    marketsScraped: 0,
+    errors: [line],
+    aborted: "db_unreachable",
+    marketsSaved: 0,
+    outcomes: [],
+  };
+}
+
 /**
- * Scrape one league and persist the result. The run is refused, loudly and
- * before any scraper starts, when the database is unreachable: otherwise every
- * scraped market would be thrown away. `dbWaitMs` waits for a database that is
- * still starting instead of probing once (used by the startup run).
+ * Steps 5-8 for one league of a cycle: health, scraper_runs rows, streaks, the summary
+ * line and the alerts. Never throws: the scraping already happened.
  */
-export async function runScrapeAndPersist(
-  league: string = CONFIG.ENABLED_LEAGUES[0],
-  bookmakers?: PolishBookmaker[],
-  closeBrowsers: boolean = true,
-  options: { dbWaitMs?: number; runId?: string; signal?: AbortSignal } = {}
+async function persistLeagueRun(
+  league: string,
+  bookmakers: readonly PolishBookmaker[] | undefined,
+  startedAt: Date,
+  fullOfferResult: FullOfferAggregatedResult | null,
+  cycleError: string | null
 ): Promise<ScrapeResult> {
-  const startedAt = new Date();
-  console.log(`[ScraperService] Starting scrape for ${league}`);
-
-  // 1-2. Preflight: no scraper starts without a reachable database.
-  const probe = options.dbWaitMs ? await waitForDatabase(options.dbWaitMs) : await probeDatabase();
-  if (!probe.ok) {
-    const line = formatAbortAlert(league, probe.error);
-    await emitAlerts([line], CONFIG.ALERT_WEBHOOK_URL);
-    const abortedAt = new Date();
-    scraperHealth.recordAbort(league, probe.error, abortedAt);
-    return {
-      // The coordinator's id for this league, so its log lines and the result agree
-      runId: options.runId ?? "aborted",
-      league,
-      startedAt,
-      completedAt: abortedAt,
-      duration: abortedAt.getTime() - startedAt.getTime(),
-      successCount: 0,
-      errorCount: (bookmakers ?? CONFIG.BOOKMAKERS).length,
-      uniqueMatches: 0,
-      marketsScraped: 0,
-      errors: [line],
-      aborted: "db_unreachable",
-      marketsSaved: 0,
-      outcomes: [],
-    };
-  }
-
-  // 3. The probe has just passed, so a failure here is a schema/FK problem; the per-batch errors will name it.
-  if (!(await ensureMarketTypesSynced())) {
-    console.warn("[ScraperService] market_types sync failed - continuing");
-  }
-
   const errors: string[] = [];
   let runId = "unknown";
   let successCount = 0;
@@ -88,14 +88,10 @@ export async function runScrapeAndPersist(
   let outcomes: BookmakerRunOutcome[] = [];
   let marketsSaved = 0;
   let finishedAt = new Date();
-
   let fullOfferMarketsScraped = 0;
   let matchesWithFullOffer = 0;
-  try {
-    // 4. Scrape, normalize and save.
-    console.log(`[ScraperService] Starting full offer scrape for ${league}`);
-    const fullOfferResult = await runAllFullOfferScrapers(league, bookmakers, { runId: options.runId, signal: options.signal });
 
+  if (fullOfferResult) {
     runId = fullOfferResult.runId || `run-${Date.now()}`;
     finishedAt = fullOfferResult.completedAt;
     matchesWithFullOffer = fullOfferResult.allMatches.length;
@@ -117,10 +113,8 @@ export async function runScrapeAndPersist(
       scraperHealth.recordOutcome(o);
       if (!isOkRunStatus(o.status) && o.error) errors.push(`${o.bookmaker}: ${o.error}`);
     }
-  } catch (error) {
-    const errorMsg = error instanceof Error ? error.message : "Unknown error";
-    console.error("[ScraperService] Full offer scraping failed:", errorMsg);
-    errors.push(`Full offer: ${errorMsg}`);
+  } else {
+    errors.push(`Full offer: ${cycleError ?? "Unknown error"}`);
     errorCount = 1;
   }
 
@@ -142,7 +136,7 @@ export async function runScrapeAndPersist(
     console.warn(`[ScraperService] scraper_runs history unavailable, alerts use this process's runs only: ${errorMessage(error)}`);
   }
   const rows = mergeRunRows(scraperHealth.getRecentOutcomes(league).map(toScraperRunInsert), dbRows);
-  const summaries = summarizeBookmakerRuns(rows, bookmakers ?? CONFIG.BOOKMAKERS);
+  const summaries = summarizeBookmakerRuns(rows, bookmakers ? [...bookmakers] : CONFIG.BOOKMAKERS);
 
   // 8. One summary line per run, then the alerts.
   console.log(formatRunSummaryLine({ league, runId, finishedAt, outcomes }));
@@ -151,25 +145,13 @@ export async function runScrapeAndPersist(
     CONFIG.ALERT_WEBHOOK_URL
   );
 
-  // 9.
-  if (closeBrowsers) {
-    try {
-      await closeAllBrowsers();
-      console.log("[ScraperService] Browser pool closed");
-    } catch (error) {
-      console.error("[ScraperService] Error closing browser pool:", error);
-    }
-  }
-
   const completedAt = new Date();
-  const duration = completedAt.getTime() - startedAt.getTime();
-
   return {
     runId,
     league,
     startedAt,
     completedAt,
-    duration,
+    duration: completedAt.getTime() - startedAt.getTime(),
     successCount,
     errorCount,
     uniqueMatches: matchesWithFullOffer,
@@ -179,6 +161,85 @@ export async function runScrapeAndPersist(
     marketsSaved,
     outcomes,
   };
+}
+
+/**
+ * Scrape several leagues in one bookmaker-major cycle and persist each league's run.
+ * The run is refused, loudly and before any scraper starts, when the database is
+ * unreachable: otherwise every scraped market would be thrown away. `dbWaitMs` waits for
+ * a database that is still starting instead of probing once (used by the startup run).
+ */
+export async function runScrapeCycle(
+  leagues: readonly string[],
+  bookmakers?: readonly PolishBookmaker[],
+  options: ScrapeCycleOptions = {}
+): Promise<Map<string, ScrapeResult>> {
+  const startedAt = new Date();
+  for (const league of leagues) console.log(`[ScraperService] Starting scrape for ${league}`);
+
+  // 1-2. Preflight once: no scraper starts without a reachable database.
+  const probe = options.dbWaitMs ? await waitForDatabase(options.dbWaitMs) : await probeDatabase();
+  if (!probe.ok) {
+    const refused = new Map<string, ScrapeResult>();
+    for (const league of leagues) {
+      const line = formatAbortAlert(league, probe.error);
+      await emitAlerts([line], CONFIG.ALERT_WEBHOOK_URL);
+      const abortedAt = new Date();
+      scraperHealth.recordAbort(league, probe.error, abortedAt);
+      // The coordinator's id for this league, so its log lines and the result agree
+      refused.set(league, abortedLeague(league, options.runIds?.[league] ?? "aborted", startedAt, abortedAt, bookmakers, line));
+    }
+    return refused;
+  }
+
+  // 3. The probe has just passed, so a failure here is a schema/FK problem; the per-batch errors will name it.
+  if (!(await ensureMarketTypesSynced())) {
+    console.warn("[ScraperService] market_types sync failed - continuing");
+  }
+
+  // 4. Scrape, normalize and save, all leagues in one cycle.
+  let cycle: Map<string, FullOfferAggregatedResult> | null = null;
+  let cycleError: string | null = null;
+  try {
+    for (const league of leagues) console.log(`[ScraperService] Starting full offer scrape for ${league}`);
+    cycle = await runFullOfferCycle({ leagues, bookmakers, runIds: options.runIds, signal: options.signal });
+  } catch (error) {
+    cycleError = error instanceof Error ? error.message : "Unknown error";
+    console.error("[ScraperService] Full offer scraping failed:", cycleError);
+  }
+
+  // 5-8 per league, in league order.
+  const results = new Map<string, ScrapeResult>();
+  for (const league of leagues) {
+    results.set(league, await persistLeagueRun(league, bookmakers, startedAt, cycle?.get(league) ?? null, cycleError));
+  }
+
+  // 9. Once per cycle.
+  if (options.closeBrowsers !== false) {
+    try {
+      await closeAllBrowsers();
+      console.log("[ScraperService] Browser pool closed");
+    } catch (error) {
+      console.error("[ScraperService] Error closing browser pool:", error);
+    }
+  }
+  return results;
+}
+
+/** Scrape one league and persist the result: the one-league cycle. */
+export async function runScrapeAndPersist(
+  league: string = CONFIG.ENABLED_LEAGUES[0],
+  bookmakers?: PolishBookmaker[],
+  closeBrowsers: boolean = true,
+  options: { dbWaitMs?: number; runId?: string; signal?: AbortSignal } = {}
+): Promise<ScrapeResult> {
+  const results = await runScrapeCycle([league], bookmakers, {
+    dbWaitMs: options.dbWaitMs,
+    runIds: options.runId ? { [league]: options.runId } : undefined,
+    signal: options.signal,
+    closeBrowsers,
+  });
+  return results.get(league)!;
 }
 
 /** The /api/health view of one league's last run. */

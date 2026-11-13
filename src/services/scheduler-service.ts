@@ -6,10 +6,9 @@
 import cron from "node-cron";
 import { CONFIG } from "../config/index.js";
 import { waitForDatabase } from "../config/database.js";
-import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
+import { runScrapeCycle, type ScrapeResult } from "./scraper-service.js";
 import { RunCoordinator, type RunExecutionContext, type RunRequest } from "./run-coordinator.js";
 import type { PolishBookmaker } from "../config/index.js";
-import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
 import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
@@ -55,36 +54,28 @@ export async function runAllLeaguesScrape(options: RunLeaguesOptions = {}): Prom
   let totalMarketsScraped = 0;
   let totalUniqueMatches = 0;
 
-  console.log(`[Scheduler] Scraping ${leagues.length} leagues in parallel...`);
+  console.log(`[Scheduler] Scraping ${leagues.length} leagues in one cycle...`);
 
-  // Run scrapers for all leagues in parallel (don't close browsers between leagues)
-  const leaguePromises = leagues.map(async (league) => {
-    console.log(`[Scheduler] Starting ${league}...`);
-    try {
-      // Pass closeBrowsers: false to avoid closing browsers between parallel league scrapes
-      const result = await runScrapeAndPersist(league, options.bookmakers ? [...options.bookmakers] : undefined, false, {
-        dbWaitMs: options.dbWaitMs,
-        runId: options.runIds?.[league],
-        signal: options.signal,
-      });
-      console.log(
-        `[Scheduler] ${league} completed: ${result.successCount} success, ${result.uniqueMatches} matches`
-      );
-      return { league, result, error: null };
-    } catch (error) {
-      console.error(`[Scheduler] ${league} scrape failed:`, error);
-      return { league, result: null, error };
-    }
-  });
-
-  const leagueResults = await Promise.all(leaguePromises);
-
-  // Close all browsers after all leagues are done
+  // One bookmaker-major cycle over all leagues; it closes the browser pool itself.
+  let leagueResults: Array<{ league: string; result: ScrapeResult | null }>;
   try {
-    await closeAllBrowsers();
-    console.log("[Scheduler] Browser pool closed");
+    const cycle = await runScrapeCycle(leagues, options.bookmakers, {
+      dbWaitMs: options.dbWaitMs,
+      runIds: options.runIds,
+      signal: options.signal,
+    });
+    leagueResults = leagues.map((league) => {
+      const result = cycle.get(league) ?? null;
+      if (result) {
+        console.log(
+          `[Scheduler] ${league} completed: ${result.successCount} success, ${result.uniqueMatches} matches`
+        );
+      }
+      return { league, result };
+    });
   } catch (error) {
-    console.error("[Scheduler] Error closing browser pool:", error);
+    console.error("[Scheduler] scrape cycle failed:", error);
+    leagueResults = leagues.map((league) => ({ league, result: null }));
   }
 
   for (const { league, result } of leagueResults) {

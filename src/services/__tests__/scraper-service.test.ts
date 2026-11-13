@@ -17,6 +17,9 @@ const m = vi.hoisted(() => ({
 
 vi.mock("../../scrapers/aggregator.js", async () => ({
   runAllFullOfferScrapers: m.runAllFullOfferScrapers,
+  // The cycle of one league delegates to the one-league mock, so the assertions below stay as they were
+  runFullOfferCycle: vi.fn(async (req: { leagues: string[]; bookmakers?: PolishBookmaker[] }) =>
+    new Map([[req.leagues[0], await m.runAllFullOfferScrapers(req.leagues[0], req.bookmakers)]])),
   closeAllBrowsers: m.closeAllBrowsers,
 }));
 vi.mock("../../config/database.js", async () => ({

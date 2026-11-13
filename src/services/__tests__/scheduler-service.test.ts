@@ -3,6 +3,7 @@ import { scraperHealth } from "../scraper-health.js";
 
 const m = vi.hoisted(() => ({
   runScrapeAndPersist: vi.fn(),
+  runScrapeCycle: vi.fn(),
   closeAllBrowsers: vi.fn(),
   syncStaleLeagues: vi.fn(),
   syncAllEnabledLeagues: vi.fn(),
@@ -11,7 +12,7 @@ const m = vi.hoisted(() => ({
   deleteScraperRunsOlderThan: vi.fn(),
 }));
 
-vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist }));
+vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
 vi.mock("../../scrapers/aggregator.js", async () => ({ closeAllBrowsers: m.closeAllBrowsers }));
 vi.mock("../tsdb-sync-service.js", async () => ({
   syncStaleLeagues: m.syncStaleLeagues,
@@ -61,6 +62,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   for (const fn of Object.values(m)) fn.mockReset();
   m.runScrapeAndPersist.mockResolvedValue(scrapeResult());
+  m.runScrapeCycle.mockResolvedValue(new Map([["premier-league", scrapeResult()]]));
   m.closeAllBrowsers.mockResolvedValue(undefined);
   m.syncStaleLeagues.mockResolvedValue([]);
   m.waitForDatabase.mockResolvedValue({ ok: true });
@@ -80,18 +82,17 @@ afterEach(() => {
 describe("runAllLeaguesScrape", () => {
   it("forwards dbWaitMs from runAllLeaguesScrape to runScrapeAndPersist", async () => {
     await runAllLeaguesScrape({ dbWaitMs: 120_000 });
-    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, expect.objectContaining({ dbWaitMs: 120_000 }));
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
   });
 
   it("cron and manual runs probe once instead of waiting", async () => {
     await runAllLeaguesScrape();
-    expect(m.runScrapeAndPersist.mock.calls[0][3]?.dbWaitMs).toBeUndefined();
+    expect(m.runScrapeCycle.mock.calls[0][2]?.dbWaitMs).toBeUndefined();
   });
 
   it("an aborted league counts every bookmaker as an error", async () => {
-    m.runScrapeAndPersist.mockResolvedValue(
-      scrapeResult({ aborted: "db_unreachable", successCount: 0, errorCount: 14, uniqueMatches: 0, marketsScraped: 0, marketsSaved: 0 }),
-    );
+    m.runScrapeCycle.mockResolvedValue(new Map([["premier-league",
+      scrapeResult({ aborted: "db_unreachable", successCount: 0, errorCount: 14, uniqueMatches: 0, marketsScraped: 0, marketsSaved: 0 })]]));
     expect(await runAllLeaguesScrape()).toMatchObject({ totalSuccessCount: 0, totalErrorCount: 14 });
   });
 });
@@ -156,8 +157,8 @@ describe("startup timers", () => {
     vi.setSystemTime(NOW);
     startScheduler();
     await vi.advanceTimersByTimeAsync(5_000);
-    expect(m.runScrapeAndPersist).toHaveBeenCalledTimes(1);
-    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, expect.objectContaining({ dbWaitMs: 120_000 }));
+    expect(m.runScrapeCycle).toHaveBeenCalledTimes(1);
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
   });
 
   it("the initial TSDB sync goes through runInitialTsdbSync", async () => {

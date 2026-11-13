@@ -26,6 +26,8 @@ import { normalizeMarketsForBookmaker } from "../src/services/normalization/inde
 import { runScrapeAndPersist } from "../src/services/scraper-service.js";
 import { isOkRunStatus } from "../src/services/run-outcome.js";
 import type { FullOfferScraperResult } from "../src/types/full-offer.js";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const USAGE = "Usage: smoke-bookmaker.ts --bookmaker <bm> [--league <slug>] [--persist]";
 
@@ -35,7 +37,7 @@ interface Args {
   persist: boolean;
 }
 
-interface SmokeResult {
+export interface SmokeResult {
   bookmaker: PolishBookmaker;
   league: string;
   /** Dry: scraped | empty | scrape_failed. --persist: the run outcome status, null without one. */
@@ -76,7 +78,7 @@ function parseArgs(argv: string[]): Args | null {
   return args.bookmaker ? (args as Args) : null;
 }
 
-function isBookmaker(bm: string): bm is PolishBookmaker {
+export function isBookmaker(bm: string): bm is PolishBookmaker {
   return (ALL_POLISH_BOOKMAKERS as readonly string[]).includes(bm);
 }
 
@@ -88,17 +90,24 @@ function share(part: number, total: number): number | null {
   return total > 0 ? Number((part / total).toFixed(4)) : null;
 }
 
-/** Scrape and normalize in memory; nothing touches the database. */
-async function dryRun(bookmaker: PolishBookmaker, league: string, startedAt: number): Promise<{ result: SmokeResult; code: number }> {
+/** One scrape, no database. A throw becomes a failed result (the aggregator's rule). */
+export async function scrapeOnce(bookmaker: PolishBookmaker, league: string): Promise<FullOfferScraperResult> {
   const scraper = getScraper(bookmaker)!;
-  let scrape: FullOfferScraperResult;
   try {
-    scrape = await scraper.scrapeFullOffer(league);
+    return await scraper.scrapeFullOffer(league);
   } catch (error) {
     // Same as the aggregator: a thrown scraper is a failed scrape.
-    scrape = { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
+    return { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
   }
+}
 
+/** Normalize a scrape in memory and summarise it; nothing touches the database. */
+export function summarizeDryRun(
+  bookmaker: PolishBookmaker,
+  league: string,
+  scrape: FullOfferScraperResult,
+  startedAt: number,
+): { result: SmokeResult; code: number } {
   const matches = scrape.matches ?? [];
   let marketsFound = 0;
   let marketsNormalized = 0;
@@ -138,6 +147,11 @@ async function dryRun(bookmaker: PolishBookmaker, league: string, startedAt: num
     // An empty league counts as a failure, as it does for a scheduled run.
     code: status === "scraped" ? 0 : 1,
   };
+}
+
+/** Scrape and normalize in memory; nothing touches the database. */
+async function dryRun(bookmaker: PolishBookmaker, league: string, startedAt: number): Promise<{ result: SmokeResult; code: number }> {
+  return summarizeDryRun(bookmaker, league, await scrapeOnce(bookmaker, league), startedAt);
 }
 
 /** One real run for this bookmaker: preflight, scrape, save, scraper_runs, alerts. */
@@ -191,11 +205,14 @@ async function main(): Promise<number> {
   }
 }
 
-main().then(
-  (code) => process.exit(code),
-  (error) => {
-    // Something other than the scrape broke (e.g. a normalizer threw): the bookmaker did not pass.
-    console.error("smoke-bookmaker failed:", error);
-    process.exit(1);
-  },
-);
+// Run only as the entry point: perf-smoke.ts imports scrapeOnce/summarizeDryRun from here.
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
+  main().then(
+    (code) => process.exit(code),
+    (error) => {
+      // Something other than the scrape broke (e.g. a normalizer threw): the bookmaker did not pass.
+      console.error("smoke-bookmaker failed:", error);
+      process.exit(1);
+    },
+  );
+}

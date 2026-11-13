@@ -169,7 +169,7 @@ Event page 4408475, 10 groups, 242 group markets (232 unique): 1 Popularne 28, 2
 | A3 | Non-OTHER normalized markets, every match | ≥ 40 | 76 (7-group estimate: 51) |
 | A4 | UNKNOWN share among selections of non-OTHER markets | ≤ 2% | 0% (2.3% before Task 4). The overall share, including OTHER, is 69% by design, so it is not used. |
 | A5 | Non-OTHER marketKey collisions with overlapping selection codes, per match | 0 | 0 (8 marketKeys before Task 4) |
-| A6 | PZBuk MATCH_WINNER vs median of other bookmakers, same match | ~~every selection within ±8%~~ (controller ruling 11) every selection within 2.5 pp of the peer median's implied probability (`|1/p − 1/median| ≤ 0.025`) or inside the peer [min, max]; `--peers` given but unavailable fails | max 1.8% (0.37 pp). A leak of id 126 would be +66% on HOME (23.9 pp); Arsenal v Hull City AWAY 16.68 vs 15.375 is 0.51 pp and passes. |
+| A6 | PZBuk MATCH_WINNER vs median of other bookmakers, same match | ~~every selection within ±8%~~ (controller ruling 11) every selection within 2.5 pp of the peer median's implied probability (`|1/p − 1/median| ≤ 0.025`) only (the peer [min, max] is no pass criterion); `--peers` given but unavailable fails | max 1.8% (0.37 pp). A leak of id 126 would be +66% on HOME (23.9 pp); Arsenal v Hull City AWAY 16.68 vs 15.375 is 0.51 pp and passes. |
 | A7 | Log `(groups X/Y)` per event | X = Y on ≥ 18/20 events | 10/10 |
 | A8 | `scrapeFullOffer` duration | ≤ 10 min | ≈ 17.4 s/event |
 | A9 | Service run | `pzbuk completed: ≥18 matches, >0 markets saved`, 0 `marketKey collision … pzbuk` warnings | – |

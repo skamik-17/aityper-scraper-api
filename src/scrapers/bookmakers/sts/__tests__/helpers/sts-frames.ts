@@ -40,6 +40,23 @@ export function wsInput(): StsReplayInput {
   return { ipl: wsIplFrame(), byFixture: Object.fromEntries(WS_IDS.map((id) => [id, [wsSnapshotFrame(id)]])) };
 }
 
+/**
+ * The same i_pl frame (header line kept) with B.S["1"].C reduced to category "1",
+ * its tournaments to "17" (Premier League) and that tournament's fixtures to `ids`.
+ * The market association map P is unchanged.
+ */
+export function restrictIplFrame(frame: string, ids: readonly string[]): string {
+  const newline = frame.indexOf("\n");
+  const body = JSON.parse(frame.slice(newline + 1));
+  const sport = body.B.S["1"];
+  const category = sport.C["1"];
+  const tournament = category.T["17"];
+  tournament.FX = Object.fromEntries(Object.entries(tournament.FX).filter(([id]) => ids.includes(id)));
+  category.T = { "17": tournament };
+  sport.C = { "1": category };
+  return `${frame.slice(0, newline)}\n${JSON.stringify(body)}`;
+}
+
 /** emptyCapture() with every frame recorded in order */
 export function captureFrom(frames: readonly string[]): WSCaptureResult {
   const capture = emptyCapture();

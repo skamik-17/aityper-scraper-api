@@ -43,40 +43,20 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
 
-  /**
-   * Scrape all matches for a specific league
-   * @param league - League slug (e.g., "ekstraklasa", "premier-league")
-   */
-  abstract scrapeLeague(league: string): Promise<ScraperResult>;
+  // Legacy 1X2 members (plan 10 Part B): optional while the last subclasses still carry
+  // them; nothing calls them (src/scrapers/__tests__/legacy-path.test.ts).
 
-  /**
-   * Scrape all Ekstraklasa matches (backwards compatibility)
-   */
-  scrapeEkstraklasa(): Promise<ScraperResult> {
-    return this.scrapeLeague("ekstraklasa");
-  }
+  /** Legacy: listing matches with 1X2 odds for a league. */
+  scrapeLeague?(league: string): Promise<ScraperResult>;
 
-  /**
-   * Scrape all Premier League matches
-   */
-  scrapePremierLeague(): Promise<ScraperResult> {
-    return this.scrapeLeague("premier-league");
-  }
+  /** Legacy: one match from the listing. */
+  scrapeMatch?(match: MatchIdentifier): Promise<ScraperResult>;
 
-  /**
-   * Scrape a specific match
-   */
-  abstract scrapeMatch(match: MatchIdentifier): Promise<ScraperResult>;
+  /** Legacy: Double Chance, Over/Under and BTTS from one match page. */
+  scrapeMatchDetails?(eventUrl: string): Promise<MatchDetailResult>;
 
-  /**
-   * Scrape detailed match page for extended markets (Double Chance, Over/Under, BTTS)
-   */
-  abstract scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult>;
-
-  /**
-   * Extract event URLs from the current listing page
-   */
-  abstract extractEventUrls(page: Page): Promise<EventUrlEntry[]>;
+  /** Legacy: event URLs from the current listing page. */
+  extractEventUrls?(page: Page): Promise<EventUrlEntry[]>;
 
   /**
    * Scrape full offer (all markets) for all matches in a league

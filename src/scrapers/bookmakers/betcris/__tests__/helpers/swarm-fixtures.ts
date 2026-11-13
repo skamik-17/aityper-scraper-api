@@ -6,6 +6,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SwarmData } from "../../types.js";
+import type { SwarmLevel, SwarmWhat } from "../../swarm-client.js";
 import {
   createFakeSwarmPage,
   loadRecording,
@@ -14,7 +15,9 @@ import {
 } from "./fake-swarm-page.js";
 
 const FIXTURES_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "fixtures");
-const RECORDED_GAME_ID = "31321159";
+/** The game id of the match recording */
+export const SWARM_RECORDED_GAME_ID = 31321159;
+const RECORDED_GAME_ID = String(SWARM_RECORDED_GAME_ID);
 
 /** The 20 game ids of the recorded GameList, in listing (ascending key) order */
 export const RECORDED_GAME_IDS: readonly number[] = Object.freeze([
@@ -81,4 +84,30 @@ export function browserOfferPage(): FakeSwarmPage {
       ? { events: leagueRecording() }
       : { events: retarget(matchRecording(), Number(url.split("/").pop())) }
   );
+}
+
+const SWARM_CHILD: Readonly<Record<SwarmLevel, SwarmLevel | null>> = {
+  sport: "region",
+  region: "competition",
+  competition: "game",
+  game: "market",
+  market: "event",
+  event: null,
+};
+
+function projectLevel(map: Record<string, any>, level: SwarmLevel, what: SwarmWhat): Record<string, any> {
+  const child = SWARM_CHILD[level];
+  const out: Record<string, any> = {};
+  for (const [key, node] of Object.entries(map)) {
+    const kept: Record<string, any> = {};
+    for (const field of what[level]) if (field in node) kept[field] = node[field];
+    if (child && node[child] && typeof node[child] === "object") kept[child] = projectLevel(node[child], child, what);
+    out[key] = kept;
+  }
+  return out;
+}
+
+/** What a Swarm `get` with `what` returns: per level only the requested keys (plus the child map) */
+export function projectSwarmData(data: SwarmData, what: SwarmWhat): SwarmData {
+  return data.sport ? { sport: projectLevel(data.sport, "sport", what) } as SwarmData : {};
 }

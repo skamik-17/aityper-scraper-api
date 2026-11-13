@@ -94,6 +94,13 @@ describe("scraperHealth.getRecentOutcomes", () => {
 });
 
 describe("scraperHealth aborts", () => {
+  it("keeps one abort record per league", () => {
+    scraperHealth.recordAbort("premier-league", "a", new Date("2026-11-06T15:44:05.000Z"));
+    scraperHealth.recordAbort("laliga", "b", new Date("2026-11-06T15:44:06.000Z"));
+    expect(scraperHealth.getLastAbort("premier-league")).toMatchObject({ league: "premier-league", reason: "a" });
+    expect(scraperHealth.getLastAbort()).toMatchObject({ league: "laliga" });
+  });
+
   it("remembers the last aborted run until reset", () => {
     expect(scraperHealth.getLastAbort()).toBeNull();
     scraperHealth.recordAbort("premier-league", "TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:59999)", new Date("2026-11-06T15:44:05.000Z"));

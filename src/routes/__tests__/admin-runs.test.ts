@@ -9,6 +9,8 @@ const { getRunsSummary } = vi.hoisted(() => ({ getRunsSummary: vi.fn() }));
 vi.mock("../../repositories/scraper-run-repository.js", async () => ({ getRunsSummary }));
 // The scrape trigger is not under test; keep the scraper tree (Playwright) out of this file.
 vi.mock("../../services/scraper-service.js", async () => ({ runScrapeAndPersist: vi.fn() }));
+// admin imports the coordinator; scheduler-service pulls in the aggregator, i.e. the whole scraper tree.
+vi.mock("../../services/scheduler-service.js", async () => ({ runCoordinator: { start: vi.fn() } }));
 
 import adminRouter from "../admin.js";
 import { errorHandler } from "../../middleware/error-handler.js";

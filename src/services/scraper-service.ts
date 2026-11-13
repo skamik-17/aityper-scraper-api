@@ -43,10 +43,10 @@ function errorMessage(error: unknown): string {
  * still starting instead of probing once (used by the startup run).
  */
 export async function runScrapeAndPersist(
-  league: string = "ekstraklasa",
+  league: string = CONFIG.ENABLED_LEAGUES[0],
   bookmakers?: PolishBookmaker[],
   closeBrowsers: boolean = true,
-  options: { dbWaitMs?: number } = {}
+  options: { dbWaitMs?: number; runId?: string; signal?: AbortSignal } = {}
 ): Promise<ScrapeResult> {
   const startedAt = new Date();
   console.log(`[ScraperService] Starting scrape for ${league}`);
@@ -59,7 +59,8 @@ export async function runScrapeAndPersist(
     const abortedAt = new Date();
     scraperHealth.recordAbort(league, probe.error, abortedAt);
     return {
-      runId: "aborted",
+      // The coordinator's id for this league, so its log lines and the result agree
+      runId: options.runId ?? "aborted",
       league,
       startedAt,
       completedAt: abortedAt,
@@ -93,7 +94,7 @@ export async function runScrapeAndPersist(
   try {
     // 4. Scrape, normalize and save.
     console.log(`[ScraperService] Starting full offer scrape for ${league}`);
-    const fullOfferResult = await runAllFullOfferScrapers(league, bookmakers);
+    const fullOfferResult = await runAllFullOfferScrapers(league, bookmakers, { runId: options.runId, signal: options.signal });
 
     runId = fullOfferResult.runId || `run-${Date.now()}`;
     finishedAt = fullOfferResult.completedAt;
@@ -196,11 +197,4 @@ export function toScrapeStats(result: ScrapeResult): ScrapeStats {
       .filter((o) => !isOkRunStatus(o.status))
       .map((o) => ({ bookmaker: o.bookmaker, status: o.status, error: o.error })),
   };
-}
-
-export async function runPartialScrape(
-  bookmakers: PolishBookmaker[],
-  league: string = "ekstraklasa"
-): Promise<ScrapeResult> {
-  return runScrapeAndPersist(league, bookmakers);
 }

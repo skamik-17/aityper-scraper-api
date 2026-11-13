@@ -80,12 +80,12 @@ afterEach(() => {
 describe("runAllLeaguesScrape", () => {
   it("forwards dbWaitMs from runAllLeaguesScrape to runScrapeAndPersist", async () => {
     await runAllLeaguesScrape({ dbWaitMs: 120_000 });
-    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, { dbWaitMs: 120_000 });
+    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, expect.objectContaining({ dbWaitMs: 120_000 }));
   });
 
   it("cron and manual runs probe once instead of waiting", async () => {
     await runAllLeaguesScrape();
-    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, undefined);
+    expect(m.runScrapeAndPersist.mock.calls[0][3]?.dbWaitMs).toBeUndefined();
   });
 
   it("an aborted league counts every bookmaker as an error", async () => {
@@ -157,7 +157,7 @@ describe("startup timers", () => {
     startScheduler();
     await vi.advanceTimersByTimeAsync(5_000);
     expect(m.runScrapeAndPersist).toHaveBeenCalledTimes(1);
-    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, { dbWaitMs: 120_000 });
+    expect(m.runScrapeAndPersist).toHaveBeenCalledWith("premier-league", undefined, false, expect.objectContaining({ dbWaitMs: 120_000 }));
   });
 
   it("the initial TSDB sync goes through runInitialTsdbSync", async () => {

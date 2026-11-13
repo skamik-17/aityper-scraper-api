@@ -7,6 +7,8 @@ import cron from "node-cron";
 import { CONFIG } from "../config/index.js";
 import { waitForDatabase } from "../config/database.js";
 import { runScrapeAndPersist, type ScrapeResult } from "./scraper-service.js";
+import { RunCoordinator, type RunExecutionContext, type RunRequest } from "./run-coordinator.js";
+import type { PolishBookmaker } from "../config/index.js";
 import { closeAllBrowsers } from "../scrapers/aggregator.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
@@ -17,7 +19,7 @@ const STARTUP_DB_WAIT_MS = 120_000;
 // Owner decision B11: keep scraper_runs for 30 days.
 const SCRAPER_RUNS_RETENTION_DAYS = 30;
 
-interface MultiLeagueScrapeResult {
+export interface MultiLeagueScrapeResult {
   leagues: Map<string, ScrapeResult>;
   totalSuccessCount: number;
   totalErrorCount: number;
@@ -28,28 +30,43 @@ interface MultiLeagueScrapeResult {
 let scrapeTask: cron.ScheduledTask | null = null;
 let cleanupTask: cron.ScheduledTask | null = null;
 let tsdbSyncTask: cron.ScheduledTask | null = null;
-let isRunning = false;
-let lastResults: Map<string, ScrapeResult> = new Map();
+// Results of startup/interval runs; admin runs (often one bookmaker) are kept apart so they
+// never replace the health views of the last full run.
+const lastResults: Map<string, ScrapeResult> = new Map();
+const lastAdminResults: Map<string, ScrapeResult> = new Map();
+
+export interface RunLeaguesOptions {
+  dbWaitMs?: number;
+  leagues?: readonly string[];
+  bookmakers?: readonly PolishBookmaker[];
+  runIds?: Readonly<Record<string, string>>;
+  signal?: AbortSignal;
+}
 
 /**
  * Run scrape for all enabled leagues (in parallel for speed).
  * `dbWaitMs` lets each league wait for the database instead of probing once.
  */
-export async function runAllLeaguesScrape(options?: { dbWaitMs?: number }): Promise<MultiLeagueScrapeResult> {
+export async function runAllLeaguesScrape(options: RunLeaguesOptions = {}): Promise<MultiLeagueScrapeResult> {
+  const leagues = options.leagues ?? CONFIG.ENABLED_LEAGUES;
   const results = new Map<string, ScrapeResult>();
   let totalSuccessCount = 0;
   let totalErrorCount = 0;
   let totalMarketsScraped = 0;
   let totalUniqueMatches = 0;
 
-  console.log(`[Scheduler] Scraping ${CONFIG.ENABLED_LEAGUES.length} leagues in parallel...`);
+  console.log(`[Scheduler] Scraping ${leagues.length} leagues in parallel...`);
 
   // Run scrapers for all leagues in parallel (don't close browsers between leagues)
-  const leaguePromises = CONFIG.ENABLED_LEAGUES.map(async (league) => {
+  const leaguePromises = leagues.map(async (league) => {
     console.log(`[Scheduler] Starting ${league}...`);
     try {
       // Pass closeBrowsers: false to avoid closing browsers between parallel league scrapes
-      const result = await runScrapeAndPersist(league, undefined, false, options);
+      const result = await runScrapeAndPersist(league, options.bookmakers ? [...options.bookmakers] : undefined, false, {
+        dbWaitMs: options.dbWaitMs,
+        runId: options.runIds?.[league],
+        signal: options.signal,
+      });
       console.log(
         `[Scheduler] ${league} completed: ${result.successCount} success, ${result.uniqueMatches} matches`
       );
@@ -89,6 +106,40 @@ export async function runAllLeaguesScrape(options?: { dbWaitMs?: number }): Prom
     totalMarketsScraped,
     totalUniqueMatches,
   };
+}
+
+/** Runs one coordinated request and files its results by trigger. */
+async function executeRun(req: RunRequest, ctx: RunExecutionContext): Promise<void> {
+  const startup = req.trigger === "startup";
+  if (startup) console.log("[Scheduler] Running initial scrape on startup for all leagues");
+  else if (req.trigger === "interval") console.log(`[Scheduler] Starting scheduled scrape at ${new Date().toISOString()}`);
+
+  const multi = await runAllLeaguesScrape({
+    leagues: req.leagues,
+    bookmakers: req.trigger === "admin" ? req.bookmakers : undefined,
+    runIds: ctx.runIds,
+    signal: ctx.signal,
+    dbWaitMs: startup ? STARTUP_DB_WAIT_MS : undefined,
+  });
+  const target = req.trigger === "admin" ? lastAdminResults : lastResults;
+  for (const [league, result] of multi.leagues) target.set(league, result);
+
+  if (startup) {
+    console.log(
+      `[Scheduler] Initial scrape completed: ${multi.totalSuccessCount} success, ${multi.totalUniqueMatches} matches across ${req.leagues.length} leagues`
+    );
+  } else {
+    console.log(
+      `[Scheduler] All leagues completed: ${multi.totalSuccessCount} success, ${multi.totalErrorCount} errors, ${multi.totalUniqueMatches} matches`
+    );
+  }
+}
+
+/** The process-wide run lock: startup, interval and admin runs all go through it. */
+export const runCoordinator = new RunCoordinator(executeRun);
+
+function fullRun(trigger: "startup" | "interval"): RunRequest {
+  return { trigger, leagues: [...CONFIG.ENABLED_LEAGUES], bookmakers: [...CONFIG.BOOKMAKERS] };
 }
 
 /**
@@ -153,25 +204,13 @@ export function startScheduler(): void {
   scrapeTask = cron.schedule(
     CONFIG.SCRAPE_CRON,
     async () => {
-      if (isRunning) {
-        console.log("[Scheduler] Previous scrape still running, skipping...");
+      const started = runCoordinator.start(fullRun("interval"));
+      if (!started.accepted) {
+        const { runId, trigger } = started.running;
+        console.log(`[Scheduler] Previous scrape still running (run ${runId.slice(0, 8)}, ${trigger}), skipping...`);
         return;
       }
-
-      isRunning = true;
-      console.log(`[Scheduler] Starting scheduled scrape at ${new Date().toISOString()}`);
-
-      try {
-        const multiResult = await runAllLeaguesScrape();
-        lastResults = multiResult.leagues;
-        console.log(
-          `[Scheduler] All leagues completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalErrorCount} errors, ${multiResult.totalUniqueMatches} matches`
-        );
-      } catch (error) {
-        console.error("[Scheduler] Scrape failed:", error);
-      } finally {
-        isRunning = false;
-      }
+      await started.run.done;
     },
     {
       scheduled: true,
@@ -194,19 +233,11 @@ export function startScheduler(): void {
   console.log("[Scheduler] Scheduled jobs started");
 
   // Run initial scrape on startup (after a short delay)
-  setTimeout(async () => {
-    console.log("[Scheduler] Running initial scrape on startup for all leagues");
-    isRunning = true;
-    try {
-      const multiResult = await runAllLeaguesScrape({ dbWaitMs: STARTUP_DB_WAIT_MS });
-      lastResults = multiResult.leagues;
-      console.log(
-        `[Scheduler] Initial scrape completed: ${multiResult.totalSuccessCount} success, ${multiResult.totalUniqueMatches} matches across ${CONFIG.ENABLED_LEAGUES.length} leagues`
-      );
-    } catch (error) {
-      console.error("[Scheduler] Initial scrape failed:", error);
-    } finally {
-      isRunning = false;
+  setTimeout(() => {
+    const started = runCoordinator.start(fullRun("startup"));
+    if (!started.accepted) {
+      const { runId, trigger } = started.running;
+      console.log(`[Scheduler] Previous scrape still running (run ${runId.slice(0, 8)}, ${trigger}), skipping...`);
     }
   }, 5000);
 }
@@ -271,6 +302,7 @@ export function getSchedulerStatus(): {
   isScheduled: boolean;
   isRunning: boolean;
   lastResults: Record<string, ScrapeResult>;
+  lastAdminResults: Record<string, ScrapeResult>;
   nextRun: Date | null;
   enabledLeagues: readonly string[];
 } {
@@ -283,57 +315,12 @@ export function getSchedulerStatus(): {
     nextRun = new Date(Math.ceil(now.getTime() / intervalMs) * intervalMs);
   }
 
-  // Convert Map to object for serialization
-  const resultsObj: Record<string, ScrapeResult> = {};
-  for (const [league, result] of lastResults) {
-    resultsObj[league] = result;
-  }
-
   return {
     isScheduled: scrapeTask !== null,
-    isRunning,
-    lastResults: resultsObj,
+    isRunning: runCoordinator.current() !== null,
+    lastResults: Object.fromEntries(lastResults),
+    lastAdminResults: Object.fromEntries(lastAdminResults),
     nextRun,
     enabledLeagues: CONFIG.ENABLED_LEAGUES,
   };
-}
-
-/**
- * Trigger manual scrape for all leagues
- */
-export async function triggerManualScrape(): Promise<MultiLeagueScrapeResult> {
-  if (isRunning) {
-    throw new Error("Scrape already in progress");
-  }
-
-  isRunning = true;
-  try {
-    const multiResult = await runAllLeaguesScrape();
-    lastResults = multiResult.leagues;
-    return multiResult;
-  } finally {
-    isRunning = false;
-  }
-}
-
-/**
- * Trigger manual scrape for a specific league
- */
-export async function triggerLeagueScrape(league: string): Promise<ScrapeResult> {
-  if (isRunning) {
-    throw new Error("Scrape already in progress");
-  }
-
-  if (!CONFIG.ENABLED_LEAGUES.includes(league as typeof CONFIG.ENABLED_LEAGUES[number])) {
-    throw new Error(`League ${league} is not enabled`);
-  }
-
-  isRunning = true;
-  try {
-    const result = await runScrapeAndPersist(league);
-    lastResults.set(league, result);
-    return result;
-  } finally {
-    isRunning = false;
-  }
 }

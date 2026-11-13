@@ -196,10 +196,11 @@ async function runFullOfferForBookmaker(
  * Scrapes ALL available markets from each bookmaker
  */
 export async function runAllFullOfferScrapers(
-  league: string = "ekstraklasa",
-  bookmakers?: PolishBookmaker[]
+  league: string = CONFIG.ENABLED_LEAGUES[0],
+  bookmakers?: PolishBookmaker[],
+  opts: { runId?: string; signal?: AbortSignal } = {}
 ): Promise<FullOfferAggregatedResult> {
-  const runId = uuidv4();
+  const runId = opts.runId ?? uuidv4();
   const startedAt = new Date();
   const targetBookmakers = bookmakers || CONFIG.BOOKMAKERS;
 

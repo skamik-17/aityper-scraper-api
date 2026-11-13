@@ -47,7 +47,8 @@ class ScraperHealthService {
   private stats: Map<PolishBookmaker, ScraperStats> = new Map();
   /** league -> bookmaker -> outcomes, newest first, at most STATUS_WINDOW_RUNS each */
   private outcomes: Map<string, Map<PolishBookmaker, BookmakerRunOutcome[]>> = new Map();
-  private lastAbort: RunAbort | null = null;
+  /** The last refused run per league. */
+  private readonly abortsByLeague = new Map<string, RunAbort>();
 
   /**
    * Record one bookmaker's classified run outcome
@@ -109,11 +110,18 @@ class ScraperHealthService {
    * Record a run that was refused before any scraper started
    */
   recordAbort(league: string, reason: string, at: Date): void {
-    this.lastAbort = { league, reason, at: at.toISOString() };
+    this.abortsByLeague.set(league, { league, reason, at: at.toISOString() });
   }
 
-  getLastAbort(): RunAbort | null {
-    return this.lastAbort ? { ...this.lastAbort } : null;
+  /** A league's last refused run; without a league, the newest of all (back-compat). */
+  getLastAbort(league?: string): RunAbort | null {
+    if (league !== undefined) {
+      const abort = this.abortsByLeague.get(league);
+      return abort ? { ...abort } : null;
+    }
+    let newest: RunAbort | null = null;
+    for (const abort of this.abortsByLeague.values()) if (!newest || abort.at >= newest.at) newest = abort;
+    return newest ? { ...newest } : null;
   }
 
   /**
@@ -225,7 +233,7 @@ class ScraperHealthService {
   reset(): void {
     this.stats.clear();
     this.outcomes.clear();
-    this.lastAbort = null;
+    this.abortsByLeague.clear();
   }
 
   /**

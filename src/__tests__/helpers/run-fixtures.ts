@@ -110,3 +110,14 @@ export function snapshotFromRun2(now: Date = new Date("2026-11-06T16:16:18.614Z"
     lastSuccessfulRunAt: "2026-11-06T16:02:49.798Z",
   };
 }
+
+/** A promise with its resolve/reject exposed, to hold a run open in a test. */
+export function deferred<T>(): { promise: Promise<T>; resolve: (value: T) => void; reject: (error: unknown) => void } {
+  let resolve!: (value: T) => void;
+  let reject!: (error: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}

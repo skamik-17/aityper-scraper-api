@@ -83,14 +83,13 @@ router.get("/scrapers", asyncHandler(async (req, res) => {
 
   const snap = await getBookmakerStatusSnapshot(league);
   const lastResult = getSchedulerStatus().lastResults[league];
-  const abort = scraperHealth.getLastAbort();
+  const abort = scraperHealth.getLastAbort(league);
 
   const data = buildScraperHealthReport(
     league,
     snap,
     lastResult ? toScrapeStats(lastResult) : null,
-    // The abort record is process-wide; a per-league report shows only its own league's.
-    abort && abort.league === league ? abort : null,
+    abort,
     new Date(),
   );
 

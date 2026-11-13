@@ -16,7 +16,7 @@ import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { requireAdminAuth } from "../middleware/auth.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
-import { runScrapeAndPersist } from "../services/scraper-service.js";
+import { runCoordinator } from "../services/scheduler-service.js";
 import { getRunsSummary } from "../repositories/scraper-run-repository.js";
 import { scraperHealth } from "../services/scraper-health.js";
 import { isOkRunStatus } from "../services/run-outcome.js";
@@ -32,7 +32,14 @@ router.use(requireAdminAuth);
  */
 router.post("/scrape", asyncHandler(async (req, res) => {
   const body = req.body as AdminScrapeRequest;
-  const league = body.league || "ekstraklasa";
+  const league = body.league ?? CONFIG.ENABLED_LEAGUES[0];
+  if (typeof league !== "string" || !(CONFIG.ENABLED_LEAGUES as readonly string[]).includes(league)) {
+    throw new ApiError(
+      400,
+      ERROR_CODES.INVALID_PARAMS,
+      `League not enabled: ${String(league)} (enabled: ${CONFIG.ENABLED_LEAGUES.join(", ")})`
+    );
+  }
   let bookmakers = body.bookmakers;
 
   // Validate bookmakers if provided
@@ -51,23 +58,24 @@ router.post("/scrape", asyncHandler(async (req, res) => {
     bookmakers = [...CONFIG.BOOKMAKERS] as PolishBookmaker[];
   }
 
-  // Start scrape (don't wait for completion)
-  const startedAt = new Date();
-
-  // Run async but respond immediately
-  runScrapeAndPersist(league, bookmakers).catch((err) => {
-    console.error("[Admin] Scrape failed:", err);
-  });
-
-  // Generate a run ID for tracking
-  const runId = `${Date.now()}-manual`;
+  // One run at a time: a busy coordinator answers 409 with the running run
+  const started = runCoordinator.start({ trigger: "admin", leagues: [league], bookmakers });
+  if (!started.accepted) {
+    const { runId, trigger, startedAt, leagues, bookmakers: running } = started.running;
+    throw new ApiError(
+      409,
+      ERROR_CODES.SCRAPE_IN_PROGRESS,
+      `Scrape run ${runId} (${trigger}) in progress since ${startedAt.toISOString()}`,
+      { runId, trigger, startedAt: startedAt.toISOString(), leagues, bookmakers: running }
+    );
+  }
 
   const data: AdminScrapeResponseData = {
-    runId,
+    runId: started.run.runId,
     status: "started",
     league,
     bookmakers,
-    startedAt: startedAt.toISOString(),
+    startedAt: started.run.startedAt.toISOString(),
   };
 
   const response: ApiSuccessResponse<AdminScrapeResponseData> = {

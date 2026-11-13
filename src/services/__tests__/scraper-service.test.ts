@@ -167,6 +167,12 @@ describe("runScrapeAndPersist: health and errors[] follow the outcomes", () => {
 });
 
 describe("runScrapeAndPersist: DB preflight and run integrity", () => {
+  it("a refused league carries the coordinator's run id", async () => {
+    m.probeDatabase.mockResolvedValue({ ok: false, error: DB_DOWN });
+    const r = await runScrapeAndPersist("premier-league", ["forbet"], false, { runId: "6f1c2b9e-0d4a-4c43-9a57-2a1f3c0e9b11" });
+    expect(r).toMatchObject({ runId: "6f1c2b9e-0d4a-4c43-9a57-2a1f3c0e9b11", aborted: "db_unreachable", outcomes: [] });
+  });
+
   it("aborts before launching any scraper when the database is unreachable", async () => {
     m.probeDatabase.mockResolvedValue({ ok: false, error: DB_DOWN });
     const r = await runScrapeAndPersist("premier-league", ["forbet"]);

@@ -1,6 +1,7 @@
 import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
+import { getTransportOverride } from "../../../config/transport.js";
 import type {
   ScraperConfig,
   ScraperResult,
@@ -13,6 +14,7 @@ import type {
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
+import type { FullOfferScraper } from "../../shared/scraper-contract.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
@@ -32,6 +34,7 @@ import {
 import type { STSFixture } from "./types.js";
 import { MAX_CONSECUTIVE_MATCH_FAILURES } from "./constants.js";
 import { mapStsFixtureToOffer, stsLog } from "./offer-mapping.js";
+import { StsWsScraper } from "./ws-scraper.js";
 
 const eventsCache = new ScraperCache<STSFixture>({
   name: "sts-events",
@@ -392,6 +395,16 @@ export class StsBrowserScraper extends PlaywrightScraper {
   }
 }
 
-export const stsScraper = new StsBrowserScraper();
+/**
+ * The single transport pick for STS (README §3): the direct WebSocket client by
+ * default, the browser class when SCRAPER_TRANSPORT_STS=browser. Read once at
+ * module load, so a change needs a restart.
+ */
+export function createStsScraper(env: NodeJS.ProcessEnv = process.env): FullOfferScraper {
+  return getTransportOverride("sts", env) === "browser" ? new StsBrowserScraper() : new StsWsScraper();
+}
 
+export const stsScraper: FullOfferScraper = createStsScraper();
+
+export { StsWsScraper };
 export { StsBrowserScraper as STSPlaywrightScraper, StsBrowserScraper as STSScraper };

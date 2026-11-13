@@ -10,10 +10,11 @@
  */
 import { API_BASE_URL, BASE_URL } from "../../../bookmakers/forbet/constants.js";
 import { toForbetOffer } from "../../../bookmakers/forbet/offer-mapping.js";
-import { isValidEvent } from "../../../bookmakers/forbet/parser.js";
+import { isValidEvent, parseTeamNames } from "../../../bookmakers/forbet/parser.js";
+import { getCanonicalTeamName } from "../../../../utils/team-matcher.js";
 import type { ForbetEvent } from "../../../bookmakers/forbet/types.js";
 import type { HttpClient } from "../../http/http-client.js";
-import { restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
+import { outcomePriceParts, restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
 import { RestMarketHttpScraper } from "../rest-market-scraper.js";
 
 export const FORBET_REST_MARKET: RestMarketBrand<ForbetEvent> = {
@@ -27,6 +28,12 @@ export const FORBET_REST_MARKET: RestMarketBrand<ForbetEvent> = {
   isMatch: isValidEvent,
   eventId: (event) => String(event.eventId),
   toOffer: toForbetOffer,
+  teamsOf: (event, league) => {
+    // Same parse and canonicalization as toForbetOffer
+    const teams = parseTeamNames(event.eventName);
+    return { homeTeam: getCanonicalTeamName(teams.homeTeam, league), awayTeam: getCanonicalTeamName(teams.awayTeam, league) };
+  },
+  listingPrices: (event) => outcomePriceParts(event.eventGames),
 };
 
 export class ForbetHttpScraper extends RestMarketHttpScraper<ForbetEvent> {

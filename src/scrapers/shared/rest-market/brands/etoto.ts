@@ -11,10 +11,11 @@
  */
 import { API_BASE_URL } from "../../../bookmakers/etoto/constants.js";
 import { toEtotoOffer } from "../../../bookmakers/etoto/offer-mapping.js";
-import { isValidEvent } from "../../../bookmakers/etoto/parser.js";
+import { isValidEvent, parseTeamNames } from "../../../bookmakers/etoto/parser.js";
+import { getCanonicalTeamName } from "../../../../utils/team-matcher.js";
 import type { EtotoEvent } from "../../../bookmakers/etoto/types.js";
 import type { HttpClient } from "../../http/http-client.js";
-import { restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
+import { outcomePriceParts, restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
 import { RestMarketHttpScraper } from "../rest-market-scraper.js";
 
 export const ETOTO_REST_MARKET: RestMarketBrand<EtotoEvent> = {
@@ -27,6 +28,12 @@ export const ETOTO_REST_MARKET: RestMarketBrand<EtotoEvent> = {
   isMatch: isValidEvent,
   eventId: (event) => String(event.eventId),
   toOffer: toEtotoOffer,
+  teamsOf: (event, league) => {
+    // Same parse and canonicalization as toEtotoOffer
+    const teams = parseTeamNames(event.eventName);
+    return { homeTeam: getCanonicalTeamName(teams.homeTeam, league), awayTeam: getCanonicalTeamName(teams.awayTeam, league) };
+  },
+  listingPrices: (event) => outcomePriceParts(event.eventGames),
 };
 
 export class EtotoHttpScraper extends RestMarketHttpScraper<EtotoEvent> {

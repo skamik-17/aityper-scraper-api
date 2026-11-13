@@ -10,10 +10,11 @@
  */
 import { API_BASE_URL, BASE_URL } from "../../../bookmakers/fuksiarz/constants.js";
 import { toFuksiarzOffer } from "../../../bookmakers/fuksiarz/offer-mapping.js";
-import { isValidEvent } from "../../../bookmakers/fuksiarz/parser.js";
+import { isValidEvent, parseTeamNames } from "../../../bookmakers/fuksiarz/parser.js";
+import { getCanonicalTeamName } from "../../../../utils/team-matcher.js";
 import type { FuksiarzEvent } from "../../../bookmakers/fuksiarz/types.js";
 import type { HttpClient } from "../../http/http-client.js";
-import { restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
+import { outcomePriceParts, restMarketDetail, restMarketListing, type RestMarketBrand } from "../brand.js";
 import { RestMarketHttpScraper } from "../rest-market-scraper.js";
 
 export const FUKSIARZ_REST_MARKET: RestMarketBrand<FuksiarzEvent> = {
@@ -26,6 +27,12 @@ export const FUKSIARZ_REST_MARKET: RestMarketBrand<FuksiarzEvent> = {
   isMatch: isValidEvent,
   eventId: (event) => String(event.eventId),
   toOffer: toFuksiarzOffer,
+  teamsOf: (event, league) => {
+    // Same parse and canonicalization as toFuksiarzOffer
+    const teams = parseTeamNames(event.eventName);
+    return { homeTeam: getCanonicalTeamName(teams.homeTeam, league), awayTeam: getCanonicalTeamName(teams.awayTeam, league) };
+  },
+  listingPrices: (event) => outcomePriceParts(event.eventGames),
 };
 
 export class FuksiarzHttpScraper extends RestMarketHttpScraper<FuksiarzEvent> {

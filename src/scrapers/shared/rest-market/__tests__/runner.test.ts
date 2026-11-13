@@ -24,6 +24,9 @@ const STUB: RestMarketBrand<Ev> = {
       ? null
       : { matchId: String(d.eventId), bookmaker: "etoto", homeTeam: l.name, awayTeam: "B", eventUrl: `u/${d.eventId}`,
           markets: d.games.map((g) => ({ name: g, selections: [] })), scrapedAt: new Date(0) },
+  // Plan 10 brand members (incremental listing); the full-pass assertions below are unchanged
+  teamsOf: (e) => ({ homeTeam: e.name, awayTeam: "B" }),
+  listingPrices: () => [],
 };
 
 const LIST = `https://x.test/list/${getBookmakerLeagueId("premier-league", "etoto")}`;

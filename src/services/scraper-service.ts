@@ -1,5 +1,6 @@
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
 import { probeDatabase, waitForDatabase } from "../config/database.js";
+import { isLeagueSupported } from "../config/leagues.js";
 import { runFullOfferCycle, closeAllBrowsers, type FullOfferAggregatedResult } from "../scrapers/aggregator.js";
 import {
   getRecentRunRows,
@@ -27,6 +28,8 @@ export interface ScrapeResult {
   errors: string[];
   /** Set when the run was refused before any scraper started. */
   aborted: "db_unreachable" | null;
+  /** Set when the run was aborted (shutdown) before it finished; outcomes hold the finished units. */
+  interrupted: string | null;
   /** Markets saved by bookmakers with an OK outcome. */
   marketsSaved: number;
   outcomes: BookmakerRunOutcome[];
@@ -34,6 +37,15 @@ export interface ScrapeResult {
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
+}
+
+function abortReason(signal: AbortSignal): string {
+  return errorMessage(signal.reason);
+}
+
+/** Units the cycle would run for this league: the denominator of an interrupted line. */
+function supportedCount(league: string, bookmakers: readonly PolishBookmaker[] | undefined): number {
+  return (bookmakers ?? CONFIG.BOOKMAKERS).filter((bm) => isLeagueSupported(league, bm)).length;
 }
 
 export interface ScrapeCycleOptions {
@@ -65,8 +77,78 @@ function abortedLeague(
     marketsScraped: 0,
     errors: [line],
     aborted: "db_unreachable",
+    interrupted: null,
     marketsSaved: 0,
     outcomes: [],
+  };
+}
+
+/** The result of a league whose run was aborted before any scraper started: nothing written. */
+function interruptedBeforeScrape(league: string, runId: string, startedAt: Date, reason: string): ScrapeResult {
+  const completedAt = new Date();
+  return {
+    runId,
+    league,
+    startedAt,
+    completedAt,
+    duration: completedAt.getTime() - startedAt.getTime(),
+    successCount: 0,
+    errorCount: 0,
+    uniqueMatches: 0,
+    marketsScraped: 0,
+    errors: [`interrupted (${reason})`],
+    aborted: null,
+    interrupted: reason,
+    marketsSaved: 0,
+    outcomes: [],
+  };
+}
+
+/**
+ * Persistence of an interrupted league: the finished outcomes go to health and
+ * scraper_runs, with no [ScrapeRun] line and no alerts (the run did not complete).
+ */
+async function persistInterruptedLeague(
+  league: string,
+  bookmakers: readonly PolishBookmaker[] | undefined,
+  startedAt: Date,
+  result: FullOfferAggregatedResult,
+  reason: string
+): Promise<ScrapeResult> {
+  const errors: string[] = [];
+  const outcomes = result.outcomes;
+  for (const o of outcomes) {
+    scraperHealth.recordOutcome(o);
+    if (!isOkRunStatus(o.status) && o.error) errors.push(`${o.bookmaker}: ${o.error}`);
+  }
+  if (outcomes.length > 0) {
+    try {
+      await insertBookmakerRunOutcomes(outcomes);
+    } catch (error) {
+      const msg = errorMessage(error);
+      console.error("[ScraperService] scraper_runs not persisted: " + msg);
+      errors.push(msg);
+    }
+  }
+  console.log(
+    `[ScraperService] ${league} run ${result.runId.slice(0, 8)} interrupted (${reason}): persisted ${outcomes.length} of ${supportedCount(league, bookmakers)} outcomes`
+  );
+  const completedAt = new Date();
+  return {
+    runId: result.runId,
+    league,
+    startedAt,
+    completedAt,
+    duration: completedAt.getTime() - startedAt.getTime(),
+    successCount: result.summary.successCount,
+    errorCount: result.summary.errorCount,
+    uniqueMatches: result.allMatches.length,
+    marketsScraped: result.summary.totalMarketsFound,
+    errors,
+    aborted: null,
+    interrupted: reason,
+    marketsSaved: result.summary.totalMarketsSaved,
+    outcomes,
   };
 }
 
@@ -79,8 +161,12 @@ async function persistLeagueRun(
   bookmakers: readonly PolishBookmaker[] | undefined,
   startedAt: Date,
   fullOfferResult: FullOfferAggregatedResult | null,
-  cycleError: string | null
+  cycleError: string | null,
+  signal?: AbortSignal
 ): Promise<ScrapeResult> {
+  if (fullOfferResult?.interrupted) {
+    return persistInterruptedLeague(league, bookmakers, startedAt, fullOfferResult, fullOfferResult.interrupted);
+  }
   const errors: string[] = [];
   let runId = "unknown";
   let successCount = 0;
@@ -142,7 +228,8 @@ async function persistLeagueRun(
   console.log(formatRunSummaryLine({ league, runId, finishedAt, outcomes }));
   await emitAlerts(
     buildRunAlerts({ league, outcomes, summaries, threshold: CONFIG.ALERT_CONSECUTIVE_FAILURES }),
-    CONFIG.ALERT_WEBHOOK_URL
+    CONFIG.ALERT_WEBHOOK_URL,
+    signal
   );
 
   const completedAt = new Date();
@@ -158,6 +245,7 @@ async function persistLeagueRun(
     marketsScraped: fullOfferMarketsScraped,
     errors,
     aborted: null,
+    interrupted: null,
     marketsSaved,
     outcomes,
   };
@@ -178,7 +266,21 @@ export async function runScrapeCycle(
   for (const league of leagues) console.log(`[ScraperService] Starting scrape for ${league}`);
 
   // 1-2. Preflight once: no scraper starts without a reachable database.
-  const probe = options.dbWaitMs ? await waitForDatabase(options.dbWaitMs) : await probeDatabase();
+  const signal = options.signal;
+  const probe = options.dbWaitMs
+    ? signal
+      ? await waitForDatabase(options.dbWaitMs, 5_000, signal)
+      : await waitForDatabase(options.dbWaitMs)
+    : await probeDatabase();
+  // A shutdown during the preflight interrupts: no ABORTED alert, no abort record
+  if (signal?.aborted) {
+    const reason = abortReason(signal);
+    const interrupted = new Map<string, ScrapeResult>();
+    for (const league of leagues) {
+      interrupted.set(league, interruptedBeforeScrape(league, options.runIds?.[league] ?? "interrupted", startedAt, reason));
+    }
+    return interrupted;
+  }
   if (!probe.ok) {
     const refused = new Map<string, ScrapeResult>();
     for (const league of leagues) {
@@ -211,7 +313,7 @@ export async function runScrapeCycle(
   // 5-8 per league, in league order.
   const results = new Map<string, ScrapeResult>();
   for (const league of leagues) {
-    results.set(league, await persistLeagueRun(league, bookmakers, startedAt, cycle?.get(league) ?? null, cycleError));
+    results.set(league, await persistLeagueRun(league, bookmakers, startedAt, cycle?.get(league) ?? null, cycleError, signal));
   }
 
   // 9. Once per cycle.

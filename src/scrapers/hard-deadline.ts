@@ -18,6 +18,19 @@ export interface HardDeadlineJob {
   maxDurationMs: number;
 }
 
+/** The run itself was aborted (shutdown) while this unit was still scraping: no outcome. */
+export class RunInterruptedError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RunInterruptedError";
+  }
+}
+
+function abortMessage(signal: AbortSignal): string {
+  const reason: unknown = signal.reason;
+  return reason instanceof Error ? reason.message : String(reason);
+}
+
 export function hardTimeoutMessage(maxDurationMs: number): string {
   return `hard timeout after ${Math.round(maxDurationMs / 1000)}s`;
 }
@@ -28,6 +41,7 @@ export async function scrapeWithHardDeadline(
   runSignal?: AbortSignal,
   deps: { graceMs?: number; createBudget?: typeof createScrapeBudget } = {},
 ): Promise<FullOfferScraperResult> {
+  if (runSignal?.aborted) throw new RunInterruptedError(abortMessage(runSignal));
   const started = Date.now();
   const graceMs = deps.graceMs ?? HARD_DEADLINE_GRACE_MS;
   const budget = (deps.createBudget ?? createScrapeBudget)(job.maxDurationMs, runSignal);
@@ -53,8 +67,17 @@ export async function scrapeWithHardDeadline(
     );
   });
 
+  // A run abort (shutdown) interrupts at once, with no grace
+  let detach: (() => void) | undefined;
+  const interrupted = new Promise<never>((_, reject) => {
+    if (!runSignal) return;
+    const onAbort = () => reject(new RunInterruptedError(abortMessage(runSignal)));
+    runSignal.addEventListener("abort", onAbort, { once: true });
+    detach = () => runSignal.removeEventListener("abort", onAbort);
+  });
+
   try {
-    const result = await Promise.race([scrape, hardStop]);
+    const result = await Promise.race([scrape, hardStop, interrupted]);
     // A failure that only came once the budget had run out is the deadline's doing
     if (!result.success && result.error !== message && Date.now() >= budget.deadline) {
       return { ...result, error: result.error ? `${message} | ${result.error}` : message };
@@ -62,5 +85,6 @@ export async function scrapeWithHardDeadline(
     return result;
   } finally {
     clearTimeout(timer);
+    detach?.();
   }
 }

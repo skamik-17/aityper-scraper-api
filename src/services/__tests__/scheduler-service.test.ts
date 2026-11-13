@@ -19,6 +19,11 @@ vi.mock("../tsdb-sync-service.js", async () => ({
   syncAllEnabledLeagues: m.syncAllEnabledLeagues,
 }));
 vi.mock("../../config/database.js", async () => ({ waitForDatabase: m.waitForDatabase }));
+vi.mock("../startup-policy.js", async () => ({
+  decideStartupScrape: () => ({ firstTrigger: "startup", firstDelayMs: 5_000, reason: "auto: no OK run on record" }),
+  getStalestOkRunAt: async () => null,
+  STARTUP_DELAY_MS: 5_000,
+}));
 vi.mock("../../repositories/odds-repository.js", async () => ({ cleanupOldOdds: m.cleanupOldOdds }));
 vi.mock("../../repositories/scraper-run-repository.js", async () => ({
   deleteScraperRunsOlderThan: m.deleteScraperRunsOlderThan,

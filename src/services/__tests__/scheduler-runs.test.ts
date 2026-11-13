@@ -24,8 +24,10 @@ vi.mock("../tsdb-sync-service.js", async () => ({ syncStaleLeagues: vi.fn(), syn
 vi.mock("../../config/database.js", async () => ({ waitForDatabase: vi.fn() }));
 vi.mock("../../repositories/odds-repository.js", async () => ({ cleanupOldOdds: vi.fn() }));
 vi.mock("../../repositories/scraper-run-repository.js", async () => ({ deleteScraperRunsOlderThan: vi.fn() }));
+const sp = vi.hoisted(() => ({ decideStartupScrape: vi.fn(), getStalestOkRunAt: vi.fn() }));
+vi.mock("../startup-policy.js", async () => ({ decideStartupScrape: sp.decideStartupScrape, getStalestOkRunAt: sp.getStalestOkRunAt, STARTUP_DELAY_MS: 5_000 }));
 
-import { getSchedulerStatus, runCoordinator } from "../scheduler-service.js";
+import { getSchedulerStatus, runCoordinator, startScheduler, stopScheduler } from "../scheduler-service.js";
 
 function scrapeResult(league: string, runId: string): ScrapeResult {
   return {
@@ -88,5 +90,28 @@ describe("scheduler runs through the RunCoordinator", () => {
     expect(getSchedulerStatus().lastResults["premier-league"].runId).toBe(full.run.runId);
     expect(getSchedulerStatus().lastAdminResults["premier-league"].runId).toBe(r.run.runId);
     expect(getSchedulerStatus().isRunning).toBe(false);
+  });
+
+  it("a fresh boot schedules the first interval run and starts no scrape; a startup run waits 120 s for the DB", async () => {
+    vi.useFakeTimers({ now: new Date("2026-11-07T10:00:00.000Z") });
+    try {
+      const T0 = Date.now();
+      sp.getStalestOkRunAt.mockResolvedValue(new Date("2026-11-07T09:40:00.000Z"));
+      sp.decideStartupScrape.mockReturnValueOnce({ firstTrigger: "interval", firstDelayMs: 2_400_000, reason: "auto: last OK run 20 min ago < 60 min" });
+      void startScheduler();
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(m.runScrapeCycle).not.toHaveBeenCalled();
+      expect(getSchedulerStatus().nextRun!.getTime()).toBe(T0 + 2_400_000);
+      stopScheduler();
+
+      sp.decideStartupScrape.mockReturnValueOnce({ firstTrigger: "startup", firstDelayMs: 5_000, reason: "auto: no OK run on record" });
+      void startScheduler();
+      await vi.advanceTimersByTimeAsync(5_000);
+      expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
+      await runCoordinator.whenIdle();
+      stopScheduler();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

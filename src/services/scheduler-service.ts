@@ -13,6 +13,7 @@ import type { PolishBookmaker } from "../config/index.js";
 import { cleanupOldOdds } from "../repositories/odds-repository.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
 import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
+import { decideStartupScrape, getStalestOkRunAt } from "./startup-policy.js";
 
 // At startup the local Supabase stack can still be coming up: wait for it instead of failing once.
 const STARTUP_DB_WAIT_MS = 120_000;
@@ -179,9 +180,10 @@ export async function runInitialTsdbSync(dbWaitMs: number = STARTUP_DB_WAIT_MS):
 }
 
 /**
- * Start the scheduled scraping job
+ * Start the scheduled scraping job. The first run is a startup scrape 5 s after boot
+ * or the next interval run, as the STARTUP_SCRAPE policy decides from data freshness.
  */
-export function startScheduler(): void {
+export async function startScheduler(): Promise<void> {
   if (intervalScheduler) {
     console.log("[Scheduler] Already running");
     return;
@@ -192,8 +194,8 @@ export function startScheduler(): void {
 
   // The next run starts interval ± 10 % after the last one started; a tick never overlaps a run.
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60_000;
-  intervalScheduler = new IntervalScheduler({ intervalMs, coordinator: runCoordinator, request: fullRun });
-  intervalScheduler.start(intervalMs);
+  const scheduler = new IntervalScheduler({ intervalMs, coordinator: runCoordinator, request: fullRun });
+  intervalScheduler = scheduler;
 
   // Schedule daily cleanup at 3 AM
   cleanupTask = cron.schedule(
@@ -209,14 +211,20 @@ export function startScheduler(): void {
 
   console.log("[Scheduler] Scheduled jobs started");
 
-  // Run initial scrape on startup (after a short delay)
-  setTimeout(() => {
-    const started = runCoordinator.start(fullRun("startup"));
-    if (!started.accepted) {
-      const { runId, trigger } = started.running;
-      console.log(`[Scheduler] Previous scrape still running (run ${runId.slice(0, 8)}, ${trigger}), skipping...`);
-    }
-  }, 5000);
+  // Startup scrape or the next interval run, from how fresh the stored data is
+  const now = new Date();
+  const decision = decideStartupScrape(
+    CONFIG.STARTUP_SCRAPE,
+    await getStalestOkRunAt(CONFIG.ENABLED_LEAGUES),
+    now,
+    intervalMs
+  );
+  // stopScheduler() (shutdown) may have run during the freshness lookup
+  if (intervalScheduler !== scheduler) return;
+  const firstAt = new Date(now.getTime() + decision.firstDelayMs).toISOString();
+  const what = decision.firstTrigger === "startup" ? "in 5s" : "skipped";
+  console.log(`[Scheduler] Startup scrape ${what} (${decision.reason}); first run at ${firstAt}`);
+  scheduler.start(decision.firstDelayMs, decision.firstTrigger);
 }
 
 /**

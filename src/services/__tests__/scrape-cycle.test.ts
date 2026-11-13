@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FullOfferAggregatedResult } from "../../scrapers/aggregator.js";
 import { outcome, RUN_ID } from "../../__tests__/helpers/run-fixtures.js";
+import { CONFIG } from "../../config/index.js";
 import { isOkRunStatus, type BookmakerRunOutcome } from "../run-outcome.js";
 
 const m = vi.hoisted(() => ({
@@ -104,5 +105,35 @@ describe("runScrapeCycle", () => {
   it("closeBrowsers: false leaves the browser pool to the caller", async () => {
     await runScrapeCycle(["premier-league"], undefined, { closeBrowsers: false });
     expect(m.closeAllBrowsers).not.toHaveBeenCalled();
+  });
+
+  it("an interrupted league persists finished outcomes without [ScrapeRun] or alerts (Review Focus 3)", async () => {
+    m.runFullOfferCycle.mockResolvedValue(new Map([["premier-league",
+      { ...aggregatedFor("premier-league", [outcome({ bookmaker: "betclic", marketsSaved: 3150 })]), interrupted: "shutdown: SIGTERM" }]]));
+    const r = await runScrapeCycle(["premier-league"]);
+    expect(m.insertBookmakerRunOutcomes).toHaveBeenCalledWith([expect.objectContaining({ bookmaker: "betclic" })]);
+    expect(logSpy.mock.calls.flat().join("\n")).toContain(`[ScraperService] premier-league run 440d2fc6 interrupted (shutdown: SIGTERM): persisted 1 of ${CONFIG.BOOKMAKERS.length} outcomes`);
+    expect(logSpy.mock.calls.filter(([l]) => String(l).startsWith("[ScrapeRun]"))).toHaveLength(0);
+    expect(errorSpy.mock.calls.flat().join("\n")).not.toContain("[ALERT]");
+    expect(r.get("premier-league")).toMatchObject({ interrupted: "shutdown: SIGTERM" });
+  });
+
+  it("a SIGTERM during the startup DB wait interrupts without an ABORTED alert (Review Focus 3)", async () => {
+    const ctl = new AbortController();
+    m.waitForDatabase.mockImplementationOnce(async () => {
+      ctl.abort(new Error("shutdown: SIGTERM"));
+      return { ok: false, error: "TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:54321)" };
+    });
+    const r = await runScrapeCycle(["premier-league"], undefined, { dbWaitMs: 120_000, signal: ctl.signal });
+    expect(m.waitForDatabase).toHaveBeenCalledWith(120_000, 5_000, ctl.signal);
+    expect(r.get("premier-league")).toMatchObject({ interrupted: "shutdown: SIGTERM", aborted: null, outcomes: [] });
+    expect(errorSpy.mock.calls.flat().join("\n")).not.toContain("[ALERT] scrape run ABORTED");
+    expect(scraperHealth.getLastAbort("premier-league")).toBeNull();
+  });
+
+  it("a completed run passes the run signal to the alert webhook and reports interrupted: null", async () => {
+    const ctl = new AbortController();
+    const r = await runScrapeCycle(["premier-league"], undefined, { signal: ctl.signal });
+    expect(r.get("premier-league")!.interrupted).toBeNull();
   });
 });

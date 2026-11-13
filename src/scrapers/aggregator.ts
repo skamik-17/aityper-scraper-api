@@ -9,7 +9,7 @@ import { CONFIG } from "../config/index.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import type { FullOfferScraper } from "./shared/scraper-contract.js";
 import { browserPool } from "./base/browser-pool.js";
-import { scrapeWithHardDeadline } from "./hard-deadline.js";
+import { RunInterruptedError, scrapeWithHardDeadline } from "./hard-deadline.js";
 import { DEFAULT_JOB_CAPS, maxDurationMsFor, orderBrowserJobs, resolveJobTransport } from "./job-policy.js";
 import { runJobsWithCaps, type CappedJob, type JobCaps } from "./job-scheduler.js";
 import { isLeagueSupported } from "../config/leagues.js";
@@ -82,6 +82,8 @@ export interface FullOfferAggregatedResult {
   allMatches: FullMatchOffer[];
   /** One classified outcome per bookmaker, in targetBookmakers order. */
   outcomes: BookmakerRunOutcome[];
+  /** Set when the run was aborted (shutdown) before every unit finished; outcomes hold the finished ones. */
+  interrupted?: string | null;
   summary: {
     /** Bookmakers with an OK outcome (success or partial: something was saved). */
     successCount: number;
@@ -97,6 +99,11 @@ export interface FullOfferAggregatedResult {
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Unknown error";
+}
+
+function reasonText(signal: AbortSignal): string {
+  const reason: unknown = signal.reason;
+  return reason instanceof Error ? reason.message : String(reason);
 }
 
 function countMarkets(matches: FullMatchOffer[]): number {
@@ -148,6 +155,8 @@ async function runFullOfferForBookmaker(
         runSignal
       );
     } catch (error) {
+      // A run abort leaves no outcome for this unit: the job wrapper stops on it
+      if (error instanceof RunInterruptedError) throw error;
       console.error(`[Aggregator/FullOffer] ${bookmaker} scraper threw:`, error);
       result = { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
     }
@@ -199,7 +208,8 @@ function aggregateLeague(
   league: string,
   startedAt: Date,
   completedAt: Date,
-  runs: Array<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>
+  runs: Array<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }>,
+  interruption: { reason: string; units: number } | null = null
 ): FullOfferAggregatedResult {
   const totalDuration = completedAt.getTime() - startedAt.getTime();
   const results = new Map<PolishBookmaker, FullOfferScraperResult>();
@@ -226,9 +236,15 @@ function aggregateLeague(
   const outcomeMatches = outcomes.reduce((sum, o) => sum + o.matchesFound, 0);
   const outcomeMarketsFound = outcomes.reduce((sum, o) => sum + o.marketsFound, 0);
 
-  console.log(
-    `[Aggregator/FullOffer] Run ${runId} completed in ${totalDuration}ms: ${successCount} ok, ${errorCount} failed, ${outcomeMatches} matches, ${outcomeMarketsFound} markets found, ${totalMarketsSaved} saved`
-  );
+  if (interruption) {
+    console.log(
+      `[Aggregator/FullOffer] Run ${runId} interrupted after ${totalDuration}ms (${interruption.reason}): ${outcomes.length} of ${interruption.units} bookmakers finished`
+    );
+  } else {
+    console.log(
+      `[Aggregator/FullOffer] Run ${runId} completed in ${totalDuration}ms: ${successCount} ok, ${errorCount} failed, ${outcomeMatches} matches, ${outcomeMarketsFound} markets found, ${totalMarketsSaved} saved`
+    );
+  }
 
   return {
     runId,
@@ -239,6 +255,7 @@ function aggregateLeague(
     results,
     allMatches,
     outcomes,
+    interrupted: interruption?.reason ?? null,
     summary: {
       successCount,
       errorCount,
@@ -288,8 +305,15 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
         try {
           for (const league of req.leagues) {
             if (!isLeagueSupported(league, bookmaker)) continue;
-            const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
-            runsByLeague.get(league)!.set(bookmaker, run);
+            // No new league starts after a run abort
+            if (req.signal?.aborted) break;
+            try {
+              const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
+              runsByLeague.get(league)!.set(bookmaker, run);
+            } catch (error) {
+              if (error instanceof RunInterruptedError) break;
+              throw error;
+            }
           }
         } finally {
           if (scraper) {
@@ -319,8 +343,12 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
   for (const league of req.leagues) {
     const runs = runsByLeague.get(league)!;
     // Outcomes keep targetBookmakers order
-    const ordered = unitsByLeague.get(league)!.flatMap((bm) => (runs.has(bm) ? [runs.get(bm)!] : []));
-    results.set(league, aggregateLeague(runIds.get(league)!, league, startedAt, completedAt, ordered));
+    const units = unitsByLeague.get(league)!;
+    const ordered = units.flatMap((bm) => (runs.has(bm) ? [runs.get(bm)!] : []));
+    // Interrupted: the run was aborted before every unit of this league finished
+    const interruption =
+      req.signal?.aborted && ordered.length < units.length ? { reason: reasonText(req.signal), units: units.length } : null;
+    results.set(league, aggregateLeague(runIds.get(league)!, league, startedAt, completedAt, ordered, interruption));
   }
   return results;
 }

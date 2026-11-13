@@ -37,6 +37,8 @@ export const CONFIG = {
 
   // Scraper settings
   SCRAPERS_ON: process.env.SCRAPERS_ON !== "false", // Default: true, set to "false" to disable
+  // Validated by validateConfig: scrape on boot only when stale (auto), always, or never
+  STARTUP_SCRAPE: (process.env.STARTUP_SCRAPE ?? "auto") as StartupScrapePolicy,
   // Validated by validateConfig (an integer 1-1440): the loop starts runs this far apart, ±10 %
   SCRAPE_INTERVAL_MINUTES: Number(process.env.SCRAPE_INTERVAL_MINUTES ?? "30"),
 
@@ -75,6 +77,15 @@ export type EnabledLeague = (typeof CONFIG.ENABLED_LEAGUES)[number];
 // Type for enabled bookmakers (subset of PolishBookmaker)
 export type EnabledBookmaker = (typeof CONFIG.BOOKMAKERS)[number];
 
+export type StartupScrapePolicy = "auto" | "always" | "never";
+
+/** STARTUP_SCRAPE as a policy: unset -> auto; else auto|always|never, or a named error. */
+export function assertStartupScrape(raw: string | undefined): StartupScrapePolicy {
+  if (raw === undefined) return "auto";
+  if (raw === "auto" || raw === "always" || raw === "never") return raw;
+  throw new Error(`Invalid STARTUP_SCRAPE "${raw}": expected auto|always|never`);
+}
+
 /** SCRAPE_INTERVAL_MINUTES as minutes: unset -> 30; else an integer 1-1440, or a named error. */
 export function assertScrapeIntervalMinutes(raw: string | undefined): number {
   if (raw === undefined) return 30;
@@ -88,6 +99,7 @@ export function assertScrapeIntervalMinutes(raw: string | undefined): number {
 // Validate required env vars
 export function validateConfig(): void {
   assertScrapeIntervalMinutes(process.env.SCRAPE_INTERVAL_MINUTES);
+  assertStartupScrape(process.env.STARTUP_SCRAPE);
 
   const required = ["SUPABASE_URL", "SUPABASE_SERVICE_KEY"];
 

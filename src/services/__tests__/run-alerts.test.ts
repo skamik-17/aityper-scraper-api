@@ -216,6 +216,18 @@ describe("emitAlerts", () => {
     timeoutSpy.mockRestore();
   });
 
+  it("a run signal aborts the webhook at once; the lines are already on stderr", async () => {
+    const f = vi.fn((_u: string, init: RequestInit) => new Promise((_, rej) => init.signal!.addEventListener("abort", () => rej(init.signal!.reason))));
+    vi.stubGlobal("fetch", f);
+    const ac = new AbortController();
+    const p = emitAlerts(["[ALERT] x"], "https://hooks.example/x", ac.signal);
+    ac.abort(new Error("shutdown: SIGTERM"));
+    await expect(p).resolves.toBeUndefined();
+    expect(errorSpy).toHaveBeenCalledWith("[ALERT] x");
+    expect(warnSpy).toHaveBeenCalledWith("[RunAlerts] webhook failed: shutdown: SIGTERM");
+    expect(timeoutSpy).toHaveBeenCalledWith(5000);
+  });
+
   it("webhook only when configured; failures never throw", async () => {
     const f = vi.fn().mockRejectedValue(new Error("ECONNREFUSED"));
     vi.stubGlobal("fetch", f);

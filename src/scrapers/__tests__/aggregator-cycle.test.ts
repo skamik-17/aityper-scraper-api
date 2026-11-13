@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { deferred, okResult, twentyMatches } from "../../__tests__/helpers/run-fixtures.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
+import type { NormalizeAndSaveResult } from "../../services/scrape-helpers.js";
 
 const { scrapers, save } = vi.hoisted(() => {
   const BMS = ["sts", "fortuna", "betclic", "superbet", "lvbet", "fuksiarz", "betfan", "totalbet", "forbet", "etoto", "betters", "lebull", "betcris", "pzbuk"];
@@ -85,5 +86,28 @@ describe("runFullOfferCycle", () => {
     const r = await p;
     expect(r.get("premier-league")!.outcomes[0]).toMatchObject({ status: "scrape_failed", error: "hard timeout after 120s" });
     expect(r.get("laliga")!.outcomes[0]).toMatchObject({ status: "success", marketsSaved: 5869 });
+  });
+
+  it("an abort drops units still scraping; a unit in its save phase finishes and is kept (Review Focus 3)", async () => {
+    const ctl = new AbortController();
+    const saving = deferred<NormalizeAndSaveResult>();
+    scrapers.betclic.scrapeFullOffer.mockResolvedValueOnce(okResult("betclic", twentyMatches()));
+    save.mockReturnValueOnce(saving.promise);
+    scrapers.forbet.scrapeFullOffer.mockReturnValueOnce(new Promise(() => {}));
+    const p = runFullOfferCycle({ leagues: ["premier-league", "laliga"], bookmakers: ["betclic", "forbet"], signal: ctl.signal });
+    await vi.advanceTimersByTimeAsync(0);
+    ctl.abort(new Error("shutdown: SIGTERM"));
+    saving.resolve({ matchesProcessed: 20, marketsNormalized: 3150, marketsSaved: 3150, errors: [] });
+    const r = await p;
+    expect(r.get("premier-league")).toMatchObject({ interrupted: "shutdown: SIGTERM" });
+    expect(r.get("premier-league")!.outcomes.map((o) => [o.bookmaker, o.status])).toEqual([["betclic", "success"]]);
+    expect(r.get("laliga")!.outcomes).toEqual([]);
+    expect(scrapers.betclic.scrapeFullOffer).toHaveBeenCalledTimes(1);
+    expect(logSpy.mock.calls.flat().join("\n")).toMatch(/Run \S+ interrupted after \d+ms \(shutdown: SIGTERM\): 1 of 2 bookmakers finished/);
+  });
+
+  it("an uninterrupted league reports interrupted: null", async () => {
+    const r = await runFullOfferCycle({ leagues: ["premier-league"], bookmakers: ["betclic"] });
+    expect(r.get("premier-league")!.interrupted).toBeNull();
   });
 });

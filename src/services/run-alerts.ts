@@ -91,8 +91,11 @@ function reason(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-/** Print every line to stderr; POST them to the webhook when one is configured. Never throws. */
-export async function emitAlerts(lines: string[], webhookUrl: string | null): Promise<void> {
+/**
+ * Print every line to stderr; POST them to the webhook when one is configured. Never throws.
+ * `signal` (the run's) ends the POST at once; the lines are already on stderr.
+ */
+export async function emitAlerts(lines: string[], webhookUrl: string | null, signal?: AbortSignal): Promise<void> {
   for (const line of lines) console.error(line);
   if (!webhookUrl || lines.length === 0) return;
 
@@ -101,7 +104,7 @@ export async function emitAlerts(lines: string[], webhookUrl: string | null): Pr
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text: lines.join("\n") }),
-      signal: AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
+      signal: signal ? AbortSignal.any([AbortSignal.timeout(WEBHOOK_TIMEOUT_MS), signal]) : AbortSignal.timeout(WEBHOOK_TIMEOUT_MS),
     });
     if (!res.ok) console.warn(`[RunAlerts] webhook failed: HTTP ${res.status}`);
   } catch (error) {

@@ -42,8 +42,11 @@ export async function probeDatabase(): Promise<DbProbe> {
   }
 }
 
-/** Probe until the DB answers or `timeoutMs` has passed; returns the last probe. */
-export async function waitForDatabase(timeoutMs: number, intervalMs = 5000): Promise<DbProbe> {
+/**
+ * Probe until the DB answers or `timeoutMs` has passed; returns the last probe. An abort of
+ * `signal` ends the wait at once (the loop stops after the current probe).
+ */
+export async function waitForDatabase(timeoutMs: number, intervalMs = 5000, signal?: AbortSignal): Promise<DbProbe> {
   const deadline = Date.now() + timeoutMs;
   let probe = await probeDatabase();
   if (!probe.ok) {
@@ -52,8 +55,17 @@ export async function waitForDatabase(timeoutMs: number, intervalMs = 5000): Pro
     );
   }
 
-  while (!probe.ok && Date.now() < deadline) {
-    await new Promise((resolve) => setTimeout(resolve, Math.min(intervalMs, Math.max(0, deadline - Date.now()))));
+  while (!probe.ok && Date.now() < deadline && !signal?.aborted) {
+    await new Promise<void>((resolve) => {
+      const timer = setTimeout(done, Math.min(intervalMs, Math.max(0, deadline - Date.now())));
+      function done() {
+        clearTimeout(timer);
+        signal?.removeEventListener("abort", done);
+        resolve();
+      }
+      signal?.addEventListener("abort", done, { once: true });
+    });
+    if (signal?.aborted) break;
     probe = await probeDatabase();
   }
   return probe;

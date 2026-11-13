@@ -10,7 +10,10 @@ import { CONFIG, validateConfig } from "./config/index.js";
 import { testConnection } from "./config/database.js";
 import routes from "./routes/index.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
-import { startScheduler, startTsdbSyncJobs, stopScheduler } from "./services/scheduler-service.js";
+import type { Server } from "node:http";
+import { runCoordinator, startScheduler, startTsdbSyncJobs, stopScheduler } from "./services/scheduler-service.js";
+import { closeAllBrowsers } from "./scrapers/aggregator.js";
+import { createShutdown, installProcessHandlers } from "./services/shutdown.js";
 import { ensureMarketTypesSynced } from "./services/market-types-sync.js";
 
 // Validate configuration
@@ -67,15 +70,21 @@ app.get("/", (_req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Graceful shutdown
-function gracefulShutdown(signal: string) {
-  console.log(`\n[Server] Received ${signal}, shutting down...`);
-  stopScheduler();
-  process.exit(0);
-}
+let server: Server | null = null;
 
-process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
-process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+// Draining shutdown: abort the run (finished units persist), close browsers, exit within 10 s
+installProcessHandlers(
+  process,
+  createShutdown({
+    stopScheduler,
+    coordinator: runCoordinator,
+    closeBrowsers: closeAllBrowsers,
+    closeServer: () => {
+      server?.close();
+    },
+    exit: (code) => process.exit(code),
+  })
+);
 
 // Start server
 async function start() {
@@ -100,7 +109,7 @@ async function start() {
   // Start scheduler (if scrapers enabled)
   if (CONFIG.NODE_ENV !== "test" && CONFIG.SCRAPERS_ON) {
     console.log("[Server] Starting scheduler...");
-    startScheduler();
+    void startScheduler();
   } else if (!CONFIG.SCRAPERS_ON) {
     console.log("[Server] Scrapers disabled (SCRAPERS_ON=false)");
   }
@@ -111,7 +120,7 @@ async function start() {
   }
 
   // Start listening
-  app.listen(CONFIG.PORT, () => {
+  server = app.listen(CONFIG.PORT, () => {
     console.log(`[Server] Running on http://localhost:${CONFIG.PORT}`);
     console.log(`[Server] Environment: ${CONFIG.NODE_ENV}`);
     console.log(`[Server] Scrapers: ${CONFIG.SCRAPERS_ON ? "ON" : "OFF"}`);

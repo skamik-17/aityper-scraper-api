@@ -1,9 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { parseFixtures, parseAllMarkets, parseWebSocketJson } from "../parser.js";
 import { normalizeMarketsForBookmaker } from "../../../../services/normalization/index.js";
+import { readStsFixture as fx } from "./helpers/sts-frames.js";
 
 /**
  * Offline replay gate for the 2026-11 STS offer: the real Premier League
@@ -13,8 +11,6 @@ import { normalizeMarketsForBookmaker } from "../../../../services/normalization
  * ids, the r=17 team-stats group and the per-line cards/corners totals were
  * lost (Arsenal 350 normalized / 117 OTHER, Leeds 341 / 111).
  */
-const fx = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), "fixtures", f), "utf8");
-
 const REQUIRED = ["GOALSCORER_ANYTIME", "PLAYER_SHOTS", "PLAYER_SHOTS_ON_TARGET", "PLAYER_ASSISTS", "PLAYER_CARDS",
   "PLAYER_GOAL_OR_ASSIST", "FIRST_PLAYER_CARDED", "PLAYER_RED_CARD", "CARDS_TEAM", "CORNERS_TEAM",
   "EACH_TEAM_TOTAL_CORNERS_OVER", "EACH_TEAM_TOTAL_CARDS_OVER"];

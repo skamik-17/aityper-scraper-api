@@ -18,7 +18,7 @@ export async function normalizeAndSaveMatches(
   matches: FullMatchOffer[],
   bookmaker: PolishBookmaker,
   league: string,
-  options: { useBatchInsert?: boolean } = {}
+  options: { useBatchInsert?: boolean; runId?: string } = {}
 ): Promise<NormalizeAndSaveResult> {
   const result: NormalizeAndSaveResult = {
     matchesProcessed: 0,
@@ -64,7 +64,8 @@ export async function normalizeAndSaveMatches(
 
   if (options.useBatchInsert && normalizedMatches.length > 0) {
     try {
-      const batchResult = await saveBatchFullOfferMarkets(normalizedMatches, bookmaker, league);
+      // The run id lands in odds_snapshot.last_run_id / odds_history.run_id (= scraper_runs.run_id)
+      const batchResult = await saveBatchFullOfferMarkets(normalizedMatches, bookmaker, league, { runId: options.runId });
       result.marketsSaved = batchResult.inserted;
       if (batchResult.failedBatches > 0) {
         result.errors.push(

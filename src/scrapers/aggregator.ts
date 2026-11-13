@@ -182,7 +182,7 @@ async function runFullOfferForBookmaker(
     if (result.success && result.matches.length > 0) {
       const saveStarted = Date.now();
       try {
-        save = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
+        save = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true, runId });
       } catch (error) {
         console.error(`[Aggregator/FullOffer] ${bookmaker} save threw:`, error);
         saveThrew = `Save failed: ${errorMessage(error)}`;

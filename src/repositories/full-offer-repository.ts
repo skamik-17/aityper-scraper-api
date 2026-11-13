@@ -9,7 +9,8 @@ import { calculateBestOdds } from "../utils/market-aggregation.js";
 import { RepositoryError } from "../utils/errors.js";
 import { fetchAllRows } from "../utils/supabase-pagination.js";
 import { formatDbError } from "../services/run-outcome.js";
-import { isPruneGuardEnabled } from "../config/odds-storage.js";
+import { getOddsWriteModel, isPruneGuardEnabled } from "../config/odds-storage.js";
+import { writeOddsSnapshots, type SnapshotMatchHeader, type SnapshotWriteSummary } from "./odds-snapshot-writer.js";
 import {
   CANONICAL_MARKET_CODES,
   MARKET_BY_CODE,
@@ -628,6 +629,10 @@ export interface BatchSaveResult {
   firstError: string | null;
   /** Matches whose prune the degenerate-write guard skipped; set only when non-empty. */
   pruneSkipped?: PruneSkip[];
+  /** The snapshot leg's summary (ODDS_WRITE_MODEL dual/switched/snapshot), else null. */
+  snapshot: SnapshotWriteSummary | null;
+  /** Failed batches/calls of the secondary leg: logged, never counted in `errors`. */
+  secondaryFailures: number;
 }
 
 export async function saveBatchFullOfferMarkets(
@@ -639,7 +644,8 @@ export async function saveBatchFullOfferMarkets(
     startTime?: string;
   }>,
   bookmaker: PolishBookmaker,
-  leagueSlug: string = "ekstraklasa"
+  leagueSlug: string = "ekstraklasa",
+  options: { runId?: string | null } = {}
 ): Promise<BatchSaveResult> {
   const supabase = getSupabase();
   const result: BatchSaveResult = {
@@ -650,6 +656,8 @@ export async function saveBatchFullOfferMarkets(
     failedBatches: 0,
     totalBatches: 0,
     firstError: null,
+    snapshot: null,
+    secondaryFailures: 0,
   };
 
   if (matches.length === 0) {
@@ -661,6 +669,8 @@ export async function saveBatchFullOfferMarkets(
   // bookmaker is constant across this whole call, so the written match ids and their
   // row counts are all the prune needs after the write succeeds (see pruneStaleOdds()).
   const rowsByMatchWritten = new Map<string, number>();
+  // The snapshot model's unit: one header and its records per written match
+  const perMatch: Array<{ header: SnapshotMatchHeader; records: OddsInsert[] }> = [];
 
   for (const match of matches) {
     const matchId = generateMatchId(match.homeTeam, match.awayTeam, leagueSlug);
@@ -720,6 +730,17 @@ export async function saveBatchFullOfferMarkets(
     allRecords.push(...recordsMap.values());
     // A match with 0 canonical records is still written, with 0 rows (Review Focus 1)
     rowsByMatchWritten.set(matchId, (rowsByMatchWritten.get(matchId) ?? 0) + recordsMap.size);
+    perMatch.push({
+      header: {
+        match_id: matchId,
+        league_slug: leagueSlug,
+        home_team: canonicalHome,
+        away_team: canonicalAway,
+        event_url: match.eventUrl ?? null,
+        start_time: match.startTime ?? null,
+      },
+      records: [...recordsMap.values()],
+    });
     result.matchesProcessed++;
   }
 
@@ -727,34 +748,95 @@ export async function saveBatchFullOfferMarkets(
     return result;
   }
 
-  const BATCH_SIZE = 500;
-  for (let i = 0; i < allRecords.length; i += BATCH_SIZE) {
-    const batch = allRecords.slice(i, i + BATCH_SIZE);
-    result.totalBatches++;
+  // Legacy leg: 500-row upserts into odds, then one batched prune when every batch landed.
+  const writeLegacy = async () => {
+    const leg = { inserted: 0, errors: 0, failedBatches: 0, totalBatches: 0, firstError: null as string | null, pruneSkipped: [] as PruneSkip[] };
+    const BATCH_SIZE = 500;
+    for (let i = 0; i < allRecords.length; i += BATCH_SIZE) {
+      const batch = allRecords.slice(i, i + BATCH_SIZE);
+      leg.totalBatches++;
 
-    const { error } = await (supabase as any)
-      .from("odds")
-      .upsert(batch, {
-        onConflict: "match_id,bookmaker,market_key,scraped_at",
-        ignoreDuplicates: false,
-      });
+      const { error } = await (supabase as any)
+        .from("odds")
+        .upsert(batch, {
+          onConflict: "match_id,bookmaker,market_key,scraped_at",
+          ignoreDuplicates: false,
+        });
 
-    if (error) {
-      console.error(`[FullOfferRepo] Batch insert error (batch ${Math.floor(i / BATCH_SIZE) + 1}):`, error);
-      result.errors += batch.length;
-      result.failedBatches++;
-      result.firstError ??= formatDbError(error);
-    } else {
-      result.inserted += batch.length;
+      if (error) {
+        console.error(`[FullOfferRepo] Batch insert error (batch ${Math.floor(i / BATCH_SIZE) + 1}):`, error);
+        leg.errors += batch.length;
+        leg.failedBatches++;
+        leg.firstError ??= formatDbError(error);
+      } else {
+        leg.inserted += batch.length;
+      }
     }
-  }
 
-  // See pruneStaleOdds() for why this runs and what it drops. This is the
-  // path production takes: aggregator.ts always calls normalizeAndSaveMatches
-  // with { useBatchInsert: true } (round 8 REPO-BATCH-STALE-PRUNE).
-  if (result.errors === 0 && result.inserted > 0) {
-    const pruned = await pruneStaleOdds(supabase, bookmaker, scrapedAt, rowsByMatchWritten);
-    if (pruned && pruned.prune_skipped.length > 0) result.pruneSkipped = pruned.prune_skipped;
+    // See pruneStaleOdds() for why this runs and what it drops. This is the
+    // path production takes: aggregator.ts always calls normalizeAndSaveMatches
+    // with { useBatchInsert: true } (round 8 REPO-BATCH-STALE-PRUNE).
+    if (leg.errors === 0 && leg.inserted > 0) {
+      const pruned = await pruneStaleOdds(supabase, bookmaker, scrapedAt, rowsByMatchWritten);
+      if (pruned) leg.pruneSkipped = pruned.prune_skipped;
+    }
+    return leg;
+  };
+
+  // Snapshot leg: one save_odds_snapshot call per written match (0-record matches included).
+  const writeSnapshot = async (role: "primary" | "secondary") => {
+    const s = await writeOddsSnapshots(options.runId ?? null, bookmaker, perMatch);
+    console.log(
+      `[FullOfferRepo] ${bookmaker} snapshot (${role}): ${s.calls} calls, received ${s.received}, inserted ${s.inserted}, ` +
+        `updated ${s.updated}, unchanged ${s.unchanged}, removed ${s.removed}, prune skipped ${s.pruneSkipped.length}, ` +
+        `failed ${s.failedCalls} in ${s.durationMs}ms`
+    );
+    result.snapshot = s;
+    return s;
+  };
+
+  const asPrimaryLegacy = (leg: Awaited<ReturnType<typeof writeLegacy>>) => {
+    result.inserted = leg.inserted;
+    result.errors = leg.errors;
+    result.failedBatches = leg.failedBatches;
+    result.totalBatches = leg.totalBatches;
+    result.firstError = leg.firstError;
+    if (leg.pruneSkipped.length > 0) result.pruneSkipped = leg.pruneSkipped;
+  };
+  // markets_saved keeps its meaning: the rows now current for this write
+  const asPrimarySnapshot = (s: SnapshotWriteSummary) => {
+    result.inserted = s.received;
+    result.errors = s.failedRows;
+    result.failedBatches = s.failedCalls;
+    result.totalBatches = s.calls;
+    result.firstError = s.firstError;
+    if (s.pruneSkipped.length > 0) result.pruneSkipped = s.pruneSkipped;
+  };
+  const secondaryFailed = (leg: "legacy" | "snapshot", failures: number, firstError: string | null) => {
+    if (failures === 0) return;
+    console.error(`[FullOfferRepo] ${leg} write (secondary) failed for ${bookmaker}: ${firstError}`);
+    result.secondaryFailures += failures;
+  };
+
+  switch (getOddsWriteModel()) {
+    case "legacy":
+      asPrimaryLegacy(await writeLegacy());
+      break;
+    case "dual": {
+      asPrimaryLegacy(await writeLegacy());
+      const s = await writeSnapshot("secondary");
+      secondaryFailed("snapshot", s.failedCalls, s.firstError);
+      break;
+    }
+    case "switched": {
+      asPrimarySnapshot(await writeSnapshot("primary"));
+      const leg = await writeLegacy();
+      secondaryFailed("legacy", leg.failedBatches, leg.firstError);
+      break;
+    }
+    case "snapshot":
+      asPrimarySnapshot(await writeSnapshot("primary"));
+      break;
   }
 
   return result;

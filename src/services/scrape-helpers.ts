@@ -1,3 +1,4 @@
+import { setImmediate as yieldToEventLoop } from "node:timers/promises";
 import type { PolishBookmaker } from "../config/index.js";
 import type { FullMatchOffer, ScrapedMarket } from "../types/full-offer.js";
 import { normalizeMarketsForBookmaker } from "./normalization/index.js";
@@ -31,6 +32,9 @@ export async function normalizeAndSaveMatches(
   const normalizedMatches: FullMatchOffer[] = [];
 
   for (const match of matches) {
+    // Normalization is synchronous CPU work shared with every other scraper's
+    // I/O; let ready callbacks (e.g. a gRPC read timer) run between matches.
+    await yieldToEventLoop();
     try {
       match.markets = normalizeMarketsForBookmaker(
         match.markets,

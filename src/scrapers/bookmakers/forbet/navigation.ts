@@ -89,60 +89,6 @@ export async function fetchLeagueEvents(
 }
 
 /**
- * Fetch events for all configured leagues from forBET API
- * Used when searching for a specific event by ID
- *
- * @param page - Playwright page with established session
- * @returns Map of eventId to event data
- */
-export async function fetchAllLeagueEvents(
-  page: Page
-): Promise<Map<string, ForbetEvent>> {
-  const allEvents = new Map<string, ForbetEvent>();
-
-  // Fetch all leagues in parallel
-  const leaguePromises = Object.entries(CATEGORY_IDS).map(async ([league, categoryId]) => {
-    const apiUrl = `${API_BASE_URL}/${categoryId}/events?gamesClass=major`;
-
-    try {
-      const response = await page.evaluate(async (url: string) => {
-        try {
-          const res = await fetch(url);
-          if (!res.ok) {
-            return { data: [], error: `HTTP ${res.status}` };
-          }
-          return await res.json();
-        } catch (err) {
-          return { data: [], error: String(err) };
-        }
-      }, apiUrl);
-
-      if (response?.error) {
-        console.warn(`[forBET/Navigation] API error for ${league}: ${response.error}`);
-        return [];
-      }
-
-      return (response as ForbetEventsResponse)?.data || [];
-    } catch (error) {
-      console.warn(`[forBET/Navigation] Failed to fetch ${league}:`, error);
-      return [];
-    }
-  });
-
-  const results = await Promise.all(leaguePromises);
-
-  // Merge all events into the map
-  for (const events of results) {
-    for (const event of events) {
-      allEvents.set(String(event.eventId), event);
-    }
-  }
-
-  console.log(`[forBET/Navigation] Fetched ${allEvents.size} total events across all leagues`);
-  return allEvents;
-}
-
-/**
  * Fetch detailed data for a single event from forBET API
  * This endpoint returns ALL available markets for the match (not just "major" games)
  *
@@ -185,27 +131,8 @@ export async function fetchEventDetails(
 }
 
 /**
- * Extract event ID from a forBET event URL
- *
- * @param eventUrl - Full URL to the event page
- * @returns Event ID string or null if not found
- */
-export function extractEventIdFromUrl(eventUrl: string): string | null {
-  // URL format: https://www.iforbet.pl/wydarzenie/123456
-  const match = eventUrl.match(/\/wydarzenie\/(\d+)/);
-  return match ? match[1] : null;
-}
-
-/**
  * Build the canonical event URL from an event ID
  */
 export function buildEventUrl(eventId: number | string): string {
   return `${BASE_URL}/wydarzenie/${eventId}`;
-}
-
-/**
- * Small delay helper for rate limiting
- */
-export function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }

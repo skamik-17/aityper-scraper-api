@@ -121,8 +121,3 @@ export const REQUEST_TIMEOUT = 30000;
  * Character used by Fuksiarz to separate team names in eventName
  */
 export const TEAM_SEPARATOR = " - ";
-
-/**
- * Cache TTL for events data in milliseconds (1 minute)
- */
-export const CACHE_TTL = 60000;

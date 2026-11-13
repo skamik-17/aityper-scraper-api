@@ -14,11 +14,7 @@ const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 const ALLOWED = new Set([
   "bookmakers/betclic",
   "bookmakers/betcris",
-  "bookmakers/betfan",
-  "bookmakers/etoto",
-  "bookmakers/forbet",
   "bookmakers/fortuna",
-  "bookmakers/fuksiarz",
   "bookmakers/lvbet",
   "bookmakers/pzbuk",
   "bookmakers/sts",

@@ -19,7 +19,7 @@ import {
   CATEGORY_IDS,
   REQUEST_TIMEOUT,
 } from "./constants.js";
-import type { EtotoEvent, EtotoEventsResponse } from "./types.js";
+import type { EtotoEvent } from "./types.js";
 
 // In-memory cache for events data
 
@@ -93,37 +93,6 @@ export async function fetchLeagueEvents(
     console.error(`[eToto/Navigation] Failed to fetch league events:`, error);
     return [];
   }
-}
-
-/**
- * Fetch events from all configured leagues
- * Useful when looking for a specific event by ID
- *
- * @param page - Playwright page with established session
- * @returns Array of all events from all leagues
- */
-export async function fetchAllLeagueEvents(page: Page): Promise<EtotoEvent[]> {
-  const allEvents: EtotoEvent[] = [];
-
-  for (const league of Object.keys(CATEGORY_IDS)) {
-    const events = await fetchLeagueEvents(page, league);
-    allEvents.push(...events);
-  }
-
-  return allEvents;
-}
-
-/**
- * Extract event ID from an eToto event URL
- *
- * @param eventUrl - Full URL to the event page
- * @returns Event ID string or null if not found
- */
-export function extractEventIdFromUrl(eventUrl: string): string | null {
-  // URL format: https://www.etoto.pl/zaklady-bukmacherskie/wydarzenie/123456
-  // or: https://www.etoto.pl/.../123456
-  const match = eventUrl.match(/\/wydarzenie\/(\d+)/) || eventUrl.match(/\/(\d+)$/);
-  return match ? match[1] : null;
 }
 
 /**

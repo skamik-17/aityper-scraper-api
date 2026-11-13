@@ -14,12 +14,11 @@
 
 import type { Page } from "playwright";
 import {
-  API_BASE_URL,
   BASE_URL,
   CATEGORY_IDS,
   REQUEST_TIMEOUT,
 } from "./constants.js";
-import type { FuksiarzEventsResponse, FuksiarzEvent, FuksiarzEventDetailResponse } from "./types.js";
+import type { FuksiarzEvent, FuksiarzEventDetailResponse } from "./types.js";
 
 /**
  * Navigate to the base site to establish session cookies
@@ -83,51 +82,6 @@ export async function fetchLeagueEvents(
 }
 
 /**
- * Fetch events from all supported leagues
- * Used when looking for a specific event across leagues
- *
- * @param page - Playwright page with established session
- * @returns Map of eventId to event data
- */
-export async function fetchAllLeagueEvents(
-  page: Page
-): Promise<Map<string, FuksiarzEvent>> {
-  const allEvents = new Map<string, FuksiarzEvent>();
-
-  // Fetch all leagues in parallel
-  const results = await Promise.all(
-    Object.values(CATEGORY_IDS).map(async (categoryId) => {
-      try {
-        const events = await page.evaluate(async (catId) => {
-          try {
-            const res = await fetch(
-              `https://fuksiarz.pl/rest/market/categories/multi/${catId}/events`
-            );
-            if (!res.ok) return [];
-            const data = await res.json();
-            return data?.data || [];
-          } catch {
-            return [];
-          }
-        }, categoryId);
-        return events as FuksiarzEvent[];
-      } catch {
-        return [];
-      }
-    })
-  );
-
-  // Merge all results into the map
-  for (const events of results) {
-    for (const event of events) {
-      allEvents.set(String(event.eventId), event);
-    }
-  }
-
-  return allEvents;
-}
-
-/**
  * Fetch detailed data for a single event from Fuksiarz API
  * This endpoint returns ALL available markets for the match (not just listing data)
  *
@@ -171,27 +125,8 @@ export async function fetchEventDetails(
 }
 
 /**
- * Extract event ID from a Fuksiarz event URL
- *
- * @param eventUrl - Full URL to the event page
- * @returns Event ID string or null if not found
- */
-export function extractEventIdFromUrl(eventUrl: string): string | null {
-  // URL format: https://fuksiarz.pl/szczegoly/123456
-  const match = eventUrl.match(/\/szczegoly\/(\d+)/);
-  return match ? match[1] : null;
-}
-
-/**
  * Build the canonical event URL from an event ID
  */
 export function buildEventUrl(eventId: number | string): string {
   return `${BASE_URL}/szczegoly/${eventId}`;
-}
-
-/**
- * Check if the league is supported by Fuksiarz scraper
- */
-export function isLeagueSupported(league: string): boolean {
-  return league in CATEGORY_IDS;
 }

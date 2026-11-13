@@ -131,11 +131,3 @@ export interface ParsedMarkets {
   mBTTS: ParsedBTTS;
   mOU: Record<string, ParsedOverUnder>;
 }
-
-/**
- * Cache entry for events data
- */
-export interface EventCacheEntry {
-  events: Map<string, ForbetEvent>;
-  timestamp: number;
-}

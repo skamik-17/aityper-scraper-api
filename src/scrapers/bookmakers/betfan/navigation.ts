@@ -14,12 +14,11 @@
 
 import type { Page } from "playwright";
 import {
-  API_BASE_URL,
   BASE_URL,
   CATEGORY_IDS,
   REQUEST_TIMEOUT,
 } from "./constants.js";
-import type { BetfanEventsResponse, BetfanEvent, BetfanEventDetailResponse } from "./types.js";
+import type { BetfanEvent } from "./types.js";
 
 /**
  * Navigate to the base Betfan site to establish session cookies
@@ -81,48 +80,6 @@ export async function fetchLeagueEvents(
 }
 
 /**
- * Fetch events from all supported leagues
- * Used when searching for a specific event by ID
- *
- * @param page - Playwright page with established session
- * @returns Map of eventId to event data
- */
-export async function fetchAllLeagueEvents(
-  page: Page
-): Promise<Map<string, BetfanEvent>> {
-  const allEvents = new Map<string, BetfanEvent>();
-  const categoryIds = Object.values(CATEGORY_IDS);
-
-  for (const categoryId of categoryIds) {
-    try {
-      const events = await page.evaluate(async (catId) => {
-        try {
-          const res = await fetch(
-            `https://betfan.pl/api/v1/market/categories/${catId}/events`
-          );
-          const data = await res.json();
-          return data?.data?.categories?.[0]?.events || [];
-        } catch {
-          return [];
-        }
-      }, categoryId);
-
-      for (const event of events as BetfanEvent[]) {
-        allEvents.set(String(event.eventId), event);
-      }
-    } catch (error) {
-      console.error(
-        `[Betfan/Navigation] Failed to fetch category ${categoryId}:`,
-        error
-      );
-    }
-  }
-
-  console.log(`[Betfan/Navigation] Fetched ${allEvents.size} total events`);
-  return allEvents;
-}
-
-/**
  * Fetch detailed data for a single event
  * This endpoint returns ALL available markets for the match (397+ markets)
  * compared to the listing API which only returns ~34 markets
@@ -167,18 +124,6 @@ export async function fetchEventDetails(
     console.error(`[Betfan/Navigation] Failed to fetch event details:`, error);
     return null;
   }
-}
-
-/**
- * Extract event ID from a Betfan event URL
- *
- * @param eventUrl - Full URL to the event page
- * @returns Event ID string or null if not found
- */
-export function extractEventIdFromUrl(eventUrl: string): string | null {
-  // URL format: https://betfan.pl/wydarzenie/123456
-  const match = eventUrl.match(/\/wydarzenie\/(\d+)/);
-  return match ? match[1] : null;
 }
 
 /**

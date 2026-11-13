@@ -120,11 +120,6 @@ export const MARKET_TYPES: Record<number, string> = {
 export const REQUEST_TIMEOUT = 30000;
 
 /**
- * Cache TTL for event data in milliseconds
- */
-export const CACHE_TTL = 60000;
-
-/**
  * Character used by forBET to separate team names
  */
 export const TEAM_SEPARATOR = " - ";

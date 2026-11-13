@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   GAME_TYPES,
   GAME_TYPE_NAMES,
@@ -22,10 +21,6 @@ import type {
   FuksiarzGame,
   FuksiarzOutcome,
   ParsedTeams,
-  Parsed1X2Odds,
-  ParsedDoubleChanceOdds,
-  ParsedBTTSOdds,
-  ParsedEventMarkets,
 } from "./types.js";
 
 /**
@@ -190,141 +185,6 @@ function isAmbiguousHalfWithMoreGoals(outcomes: FuksiarzOutcome[]): boolean {
 }
 
 /**
- * Parse 1X2 market odds from event data
- * Used for backward compatibility with scrapeLeague
- */
-export function parse1X2Odds(event: FuksiarzEvent): Parsed1X2Odds {
-  const result: Parsed1X2Odds = { home: 0, draw: 0, away: 0 };
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    // Look for 1X2 game type
-    if (game.gameType === GAME_TYPES.MATCH_RESULT_1X2 && gameName === "1x2") {
-      const outcomes = game.outcomes || [];
-      if (outcomes.length >= 3 && result.home === 0) {
-        // Sort by position to ensure correct order
-        const sorted = [...outcomes].sort((a, b) => a.outcomePosition - b.outcomePosition);
-        result.home = sorted[0]?.outcomeOdds || 0;
-        result.draw = sorted[1]?.outcomeOdds || 0;
-        result.away = sorted[2]?.outcomeOdds || 0;
-        break;
-      }
-    }
-  }
-
-  return result;
-}
-
-/**
- * Parse Double Chance market from event games
- */
-export function parseDoubleChance(event: FuksiarzEvent): ParsedDoubleChanceOdds | null {
-  const result: ParsedDoubleChanceOdds = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-  let found = false;
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (game.gameType === GAME_TYPES.DOUBLE_CHANCE && gameName.includes("szansa")) {
-      for (const outcome of game.outcomes || []) {
-        const name = (outcome.outcomeName || "").toLowerCase();
-        if (name === "1/x") {
-          result.homeOrDraw = outcome.outcomeOdds;
-          found = true;
-        } else if (name === "x/2") {
-          result.drawOrAway = outcome.outcomeOdds;
-          found = true;
-        } else if (name === "1/2") {
-          result.homeOrAway = outcome.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse BTTS market from event games
- */
-export function parseBTTS(event: FuksiarzEvent): ParsedBTTSOdds | null {
-  const result: ParsedBTTSOdds = { yes: 0, no: 0 };
-  let found = false;
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (game.gameType === GAME_TYPES.BTTS && gameName.includes("obie") && gameName.includes("strzel")) {
-      for (const outcome of game.outcomes || []) {
-        const name = (outcome.outcomeName || "").toLowerCase();
-        if (name === "tak") {
-          result.yes = outcome.outcomeOdds;
-          found = true;
-        } else if (name === "nie") {
-          result.no = outcome.outcomeOdds;
-          found = true;
-        }
-      }
-      break;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse Over/Under markets from event games
- * Returns a record keyed by line (e.g., "2.5")
- */
-export function parseOverUnder(event: FuksiarzEvent): Record<string, MarketOverUnderOdds> | null {
-  const result: Record<string, MarketOverUnderOdds> = {};
-
-  for (const game of event.eventGames || []) {
-    const gameName = (game.gameName || "").toLowerCase();
-
-    if (game.gameType === GAME_TYPES.OVER_UNDER && gameName === "liczba goli") {
-      for (const outcome of game.outcomes || []) {
-        const name = (outcome.outcomeName || "").toLowerCase();
-        const lineMatch = name.match(/(\d+[.,]?\d*)/);
-
-        if (lineMatch) {
-          const lineVal = parseFloat(lineMatch[1].replace(",", "."));
-          // Only include half-integer lines (e.g., 2.5, 3.5)
-          if (lineVal % 1 === 0.5) {
-            const line = lineVal.toFixed(1);
-            if (!result[line]) {
-              result[line] = { over: 0, under: 0 };
-            }
-            if (name.includes("powyżej") || name.includes("powyzej")) {
-              result[line].over = outcome.outcomeOdds;
-            } else if (name.includes("poniżej") || name.includes("ponizej")) {
-              result[line].under = outcome.outcomeOdds;
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
-}
-
-/**
- * Parse all legacy markets for backward compatibility
- */
-export function parseEventMarkets(event: FuksiarzEvent): ParsedEventMarkets {
-  return {
-    m1X2: parse1X2Odds(event),
-    mDC: parseDoubleChance(event) || { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 },
-    mBTTS: parseBTTS(event) || { yes: 0, no: 0 },
-    mOU: parseOverUnder(event) || {},
-  };
-}
-
-/**
  * Parse ALL markets from event into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -466,12 +326,4 @@ export function isValidEvent(event: FuksiarzEvent): boolean {
   if (!teams.homeTeam || !teams.awayTeam) return false;
 
   return true;
-}
-
-/**
- * Check if event has valid 1X2 odds
- */
-export function hasValid1X2Odds(event: FuksiarzEvent): boolean {
-  const odds1x2 = parse1X2Odds(event);
-  return odds1x2.home > 1 && odds1x2.draw > 1 && odds1x2.away > 1;
 }

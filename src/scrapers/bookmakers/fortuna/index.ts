@@ -31,10 +31,10 @@ import {
   parseDoubleChance,
   parseBTTS,
   parseOverUnder,
-  parseAllMarkets,
   isValidFixture,
 } from "./parser.js";
 import type { FortunaFixture, FortunaMarket } from "./types.js";
+import { mapFortunaFixtureOffer, selectFortunaFixtures } from "./full-offer-mapping.js";
 
 const fixturesCache = new ScraperCache<FortunaFixture>({
   name: "fortuna-fixtures",
@@ -297,33 +297,11 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
 
         const matches: FullMatchOffer[] = [];
 
-        for (const fixture of leagueData.fixtures) {
-          if (!isValidFixture(fixture)) continue;
-
+        for (const fixture of selectFortunaFixtures(leagueData)) {
           try {
             const allMarkets = await fetchAllMarketsForFixture(page, fixture.id);
-
-            if (allMarkets && allMarkets.length > 0) {
-              const teams = parseTeamNames(fixture);
-              const markets = parseAllMarkets(allMarkets, teams);
-
-              if (markets.length > 0) {
-                matches.push({
-                  matchId: fixture.id,
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl: buildEventUrl(fixture.id, fixture.seoName),
-                  markets,
-                  startTime: new Date(fixture.startDatetime).toISOString(),
-                  scrapedAt: new Date(),
-                });
-
-                console.log(
-                  `[Fortuna/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
-                );
-              }
-            }
+            const offer = allMarkets ? mapFortunaFixtureOffer(fixture, allMarkets, leagueSlug) : null;
+            if (offer) matches.push(offer);
 
             await this.delay(API_REQUEST_DELAY);
           } catch (error) {

@@ -305,22 +305,24 @@
   "A2": {
     "status": "DEFERRED",
     "reason": "Needs 3 consecutive full 14-bookmaker runs (startup, scheduled, or a full admin scrape) of the merged code; each persists to the DB. EXECUTION rules 3-4.",
-    "precondition": "The owner merges recovery/betcris into the main checkout (via recovery/integration). The dev server restarts and its startup run is the first full run.",
+    "precondition": "recovery/integration (which contains recovery/betcris) is merged into master in the main checkout. The dev server restarts and its startup run is the first full run.",
+    "runFrom": "/home/skamik/Documents/repositories/personal/aityper-scraper-api",
+    "when": "Right after the merge, plus the next two full runs. Count only full 14-bookmaker runs (startup, scheduled, or the admin scrape below without a bookmakers filter); never a betcris-only scrape.",
     "optionalFullScrape": "curl -s -X POST -H \"Authorization: Bearer dev-api-key\" -H \"Content-Type: application/json\" -d '{\"league\":\"premier-league\"}' http://localhost:3001/api/admin/scrape",
     "perRunCommands": [
-      "sed 's/\\x1b\\[[0-9;]*m//g' <server log> | grep -E '\\[Aggregator/FullOffer\\] betcris [a-z_]+:|\\[Betcris\\] (No WebSocket|capture ok)|\\[ScrapeHelpers\\] betcris:|\\[Betcris/FullOffer\\] (Found [0-9]+ games|Skipped game|Aborting per-match loop)|\\[Betcris/Navigation\\] (Capture attempt|[a-z-]+ deadline fired)'",
+      "sed 's/\\x1b\\[[0-9;]*m//g' <server log> | grep -E '\\[Aggregator/FullOffer\\] betcris ([a-z_]+:|scraper threw|save threw)|\\[Betcris\\] (No WebSocket|capture ok)|\\[ScrapeHelpers\\] betcris:|\\[Betcris/FullOffer\\] (Found [0-9]+ games|Skipped game|Aborting per-match loop)|\\[Betcris/Navigation\\] (Capture attempt|[a-z-]+ deadline fired)'",
       "sed 's/\\x1b\\[[0-9;]*m//g' <server log> | grep -oE '\\[Betcris/FullOffer\\] (Skipped game|Aborting per-match loop)|\\[Betcris/Navigation\\] (Capture attempt|[a-z-]+ deadline fired)' | sort | uniq -c"
     ],
     "unmappedSummaryGrep": "grep -E '^\\[ScrapeHelpers\\] [a-z]+: [0-9]+ unmapped market ids, [0-9]+ OTHER markets this run \\(top: ' <server log>",
     "expectedPerRun": [
-      "exactly one '[Betcris] capture ok: navMs=..., wsOpenMs=..., firstUsefulFrameMs=..., attempts=..., loopLagMaxMs=..., finalUrl=...' line for the listing; record firstUsefulFrameMs, attempts, loopLagMaxMs; flag firstUsefulFrameMs > 12000",
-      "aggregator line with N >= 18 betcris matches ('betcris completed: N matches, M markets saved', or 'betcris success: N matches, ...' after observability Task 3); per the ledger T7 ruling judge N >= G - 2 with G from '[Betcris/FullOffer] Found G games'",
-      "exactly one '[ScrapeHelpers] betcris: ... unmapped market ids, ... OTHER markets this run (top: ...)' line; none of the 26 ladder ids in its top list",
-      "few or no '[Betcris/FullOffer] Skipped game <id> (<home> vs <away>): No WebSocket data captured: <failure> (...)' lines, each with a classified reason",
-      "no '[Betcris/FullOffer] Aborting per-match loop: ...' line (if present, N <= G - 3: flag the run)",
+      "exactly one '[Betcris] capture ok: navMs=..., wsOpenMs=..., firstUsefulFrameMs=..., attempts=..., loopLagMaxMs=..., finalUrl=...' line for the listing; record firstUsefulFrameMs, attempts and loopLagMaxMs; flag firstUsefulFrameMs > 12000 (standalone reference 1742 / 1 / 23)",
+      "one '[Aggregator/FullOffer] betcris success: N matches, M markets found, S saved' line (aggregator.ts formatOutcomeLine) with N >= ceil(0.9 * G), G from the same run's '[Betcris/FullOffer] Found G games' line (18 of 20, 18 of 19)",
+      "exactly one '[ScrapeHelpers] betcris: X unmapped market ids, Y OTHER markets this run (top: ...)' line; none of the 26 ladder ids in its top list",
+      "no '[Betcris/FullOffer] Aborting per-match loop: ...' line and no '[Aggregator/FullOffer] betcris scraper threw:' or '[Aggregator/FullOffer] betcris save threw:' line",
+      "few or no '[Betcris/FullOffer] Skipped game <id> (<home> vs <away>): No WebSocket data captured: <failure> (...)' lines, each with a classified reason (only target_game_missing is game-level)",
       "any failure line has the classified form '[Betcris] No WebSocket data captured: <failure> (attempts=..., ..., title=\"...\", finalUrl=..., loopLagMaxMs=...)'",
-      "record the uniq -c counts of Skipped game / Aborting / Capture attempt / <name> deadline fired lines",
-      "3 consecutive runs pass; repeat once more after the betters/lebull/pzbuk/totalbet fixes land"
+      "record the uniq -c counts of Skipped game / Aborting / Capture attempt / <name> deadline fired lines; a 'deadline fired N ms late' line, with loopLagMaxMs, is the live evidence for the stall grace",
+      "pass = 3 consecutive passing runs. The betters/lebull/pzbuk/totalbet migrations are already in recovery/integration, so these runs carry their contention and no extra repeat is needed"
     ],
     "standaloneReference": {
       "captureOk": "navMs=713, wsOpenMs=818, firstUsefulFrameMs=1742, attempts=1, loopLagMaxMs=23, finalUrl=https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538",
@@ -329,18 +331,36 @@
   },
   "A3_A4": {
     "status": "DEFERRED",
-    "reason": "Needs /api/matches/.../normalized-markets served by the merged code after a persisted run; today's localhost:3001 serves master's betcris rows.",
+    "reason": "Needs /api/matches/.../normalized-markets served by the merged code after a persisted run (A2).",
     "when": "A PL match day, on a game with mc >= 500 that has not kicked off (team ladders appear only on match day).",
-    "runFrom": "/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/betcris",
-    "listGames": "GID=0 /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bcl && python3 -I -c \"import json,datetime as d;m=json.load(open('.scratch/bcl-list.json'));[print(g['id'],d.datetime.fromtimestamp(g['start_ts'],d.timezone.utc).isoformat(),g['team1_name'].strip(),'-',g['team2_name'].strip(),'mc=',g['markets_count']) for s in m['data']['data']['sport'].values() for r in s['region'].values() for c in r['competition'].values() for g in sorted(c['game'].values(),key=lambda g:g['start_ts'])]\"",
-    "commands": "GID=<id> /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bc\ncurl -s \"http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league\" > .scratch/nm.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/ladder_coverage.py .scratch/bc-game.json .scratch/nm.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/health.py .scratch/nm.json .scratch/rows.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I - .scratch/nm.json <<'EOF'\nimport json, sys, statistics\nTEAM = [\"FOULS_TOTAL\", \"TOTAL_SHOTS_ON_TARGET\", \"THROW_INS_TOTAL\", \"OFFSIDES_TOTAL\", \"HALF_TIME_TOTAL_SHOTS_ON_TARGET\"]\nd = json.load(open(sys.argv[1]))[\"data\"]; worst = 0; bad = []\nfor cat in d[\"categories\"]:\n    for m in cat[\"markets\"]:\n        if m[\"marketKey\"] not in TEAM: continue\n        devs = []\n        for p in m[\"parameters\"]:\n            bc = [s[\"odds\"] for b in p[\"bookmakers\"] if b[\"bookmaker\"] == \"betcris\" for s in b[\"selections\"] if s[\"type\"] == \"OVER\"]\n            peers = [s[\"odds\"] for b in p[\"bookmakers\"] if b[\"bookmaker\"] != \"betcris\" for s in b[\"selections\"] if s[\"type\"] == \"OVER\"]\n            if bc and len(peers) >= 2: devs.append(100 * (bc[0] / statistics.median(peers) - 1))\n        if devs:\n            med = statistics.median(devs); worst = max([worst] + [abs(x) for x in devs])\n            print(m[\"marketKey\"], \"lines\", len(devs), \"median dev %.1f%%\" % med, \"worst %.1f%%\" % max(devs, key=abs))\n            if abs(med) > 15 or max(abs(x) for x in devs) > 25: bad.append(m[\"marketKey\"])\nprint(\"LADDER_PEER_CHECK\", \"FAIL\" if bad else \"PASS\", bad)\nEOF\nGID=<id> /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/raw\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/phantom_strict.py .scratch/rows.json .scratch/raw-game.json",
+    "runFrom": "/home/skamik/Documents/repositories/personal/aityper-scraper-api",
+    "setup": "cd /home/skamik/Documents/repositories/personal/aityper-scraper-api && H=/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy && T=docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools && mkdir -p .scratch",
+    "listGames": "GID=0 $H --live node $T/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bcl && python3 -I -c \"import json,datetime as d;m=json.load(open('.scratch/bcl-list.json'));[print(g['id'],d.datetime.fromtimestamp(g['start_ts'],d.timezone.utc).isoformat(),g['team1_name'].strip(),'-',g['team2_name'].strip(),'mc=',g['markets_count']) for s in m['data']['data']['sport'].values() for r in s['region'].values() for c in r['competition'].values() for g in sorted(c['game'].values(),key=lambda g:g['start_ts'])]\"",
+    "commands": "GID=<id> $H --live node $T/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bc\ncurl -s \"http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league\" > .scratch/nm.json\n$H python3 -I $T/ladder_coverage.py .scratch/bc-game.json .scratch/nm.json\n$H python3 -I $T/health.py .scratch/nm.json .scratch/rows.json\n$H python3 -I $T/phantom_strict.py .scratch/rows.json .scratch/bc-game.json\n$H python3 -I $T/ladder_peer_check.py .scratch/nm.json",
     "expected": [
       "LADDER_COVERAGE fails=0 (exit 0)",
       "health.py: every '1X2 ... dev' within +-15%",
-      "LADDER_PEER_CHECK PASS (a game without team ladders prints no market lines and 'PASS []')",
       "phantom_strict.py: no 'PLAYER ABSENT in same raw market' key",
+      "ladder_peer_check.py: 'SWAP_SUSPECT []' and 'LADDER_PEER_CHECK PASS []' (exit 0); a game without team ladders prints no label lines and 'PASS []'",
+      "a FAIL caused only by a SWAP_SUSPECT label may be cleared by hand when the same side's other family fits its own side (TEAM_TOTAL_SHOTS against TEAM_TOTAL_SHOTS_ON_TARGET of the same side; FOULS against OFFSIDES or THROW_INS); record both labels' numbers",
       "health.py 'UNKNOWN/OTHER rows' is not a criterion"
     ],
+    "peerCheck": {
+      "scope": "Controller ruling 12. The 5 side-less totals (FOULS_TOTAL, TOTAL_SHOTS_ON_TARGET, THROW_INS_TOTAL, OFFSIDES_TOTAL, HALF_TIME_TOTAL_SHOTS_ON_TARGET) against the peer median on the same line, and each side of the 10 side-scoped team ladders (HOME_/AWAY_TEAM_TOTAL_FOULS, HOME_/AWAY_TEAM_TOTAL_OFFSIDES, HOME_/AWAY_TEAM_TOTAL_THROW_INS, TEAM_TOTAL_SHOTS HOME:/AWAY:, TEAM_TOTAL_SHOTS_ON_TARGET HOME:/AWAY:) against the same side of the peers and against the peers' opposite side at the same line. FAIL: a label's median deviation beyond +-15%, a line beyond +-25%, or a SWAP_SUSPECT (the opposite side fits better by more than 5 points). A swap is visible where the peers' two sides differ by more than that margin.",
+      "offlineTest": {
+        "date": "2026-11-13",
+        "inputs": "Leeds United - Tottenham Hotspur (31333513), 2026-11-07: peer rows from the live API (GET /normalized-markets at 01:36Z, master, no betcris ladder rows) merged with the betcris rows of the offline proxy (parser -> normalizer -> buildCategoriesWithMarketTypes) on the 01:31Z match-day dump, trimmed to the 13 ladder codes. Calibrated = every betcris OVER set to 0.95 x the same-side peer median. Swapped = every betcris side-scoped price moved to the other side.",
+        "results": {
+          "merged": "FAIL [AWAY_TEAM_TOTAL_FOULS, AWAY_TEAM_TOTAL_OFFSIDES, FOULS_TOTAL, OFFSIDES_TOTAL], SWAP_SUSPECT []; TEAM_TOTAL_SHOTS AWAY -13.3% own vs -9.3% opposite, TEAM_TOTAL_SHOTS_ON_TARGET HOME -1.5% vs -16.6%",
+          "mergedSwapped": "FAIL [AWAY_TEAM_TOTAL_OFFSIDES, FOULS_TOTAL, HOME_TEAM_TOTAL_OFFSIDES, OFFSIDES_TOTAL, TEAM_TOTAL_SHOTS_ON_TARGET AWAY], SWAP_SUSPECT [TEAM_TOTAL_SHOTS_ON_TARGET AWAY]",
+          "calibrated": "PASS [], SWAP_SUSPECT [] (exit 0)",
+          "calibratedSwapped": "FAIL [TEAM_TOTAL_SHOTS_ON_TARGET AWAY, TEAM_TOTAL_SHOTS_ON_TARGET HOME], SWAP_SUSPECT [TEAM_TOTAL_SHOTS_ON_TARGET AWAY, TEAM_TOTAL_SHOTS_ON_TARGET HOME] (exit 1)",
+          "previous5CodeSnippetOnCalibratedSwapped": "PASS [] (blind to a side swap)",
+          "peersOnlyPayload": "PASS [] (exit 0)"
+        },
+        "note": "The merged FAIL is on codes the 5-code check already covered (FOULS_TOTAL -20.1%, OFFSIDES_TOTAL -15.2% / worst -28.5%) plus the away fouls and offsides: betcris OVER is 15-20% shorter than the peers there, never longer, so it cannot create a false +EV. The peer rows may be older than the betcris dump. The live A4 run decides."
+      }
+    },
     "preMergeProxy": "Task 4 review fix (offline: raw dump -> parseAllMarkets -> normalizeMarketsForBookmaker -> buildCategoriesWithMarketTypes -> ladder_coverage.py) gave LADDER_COVERAGE fails=0 on 31321159 and on the 31333513 match-day dump of 2026-11-07T01:31Z (26 PASS). Parser and normalizer are unchanged since then (Tasks 5-6 touch only the audit archive and scrape-helpers)."
   }
 }

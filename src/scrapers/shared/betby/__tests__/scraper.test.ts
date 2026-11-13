@@ -37,6 +37,8 @@ describe("BetbyScraper", () => {
     expect(r.matches.map((m) => m.markets.length).filter((n) => n > 100).sort((a, b) => a - b)).toEqual([220, 238, 242]);
     expect(s.lastRunStats!.full).toEqual(["2725816334213586962", "2725816334213586981", "2726177353700085769", "2725446939305979931"]);
     expect(s.lastRunStats!.listingOnly).toHaveLength(7);
+    expect(s.lastRunStats!.failed).toEqual([]);
+    expect(r.error).toBeUndefined();
   });
 
   it("scrapeFullOffer keeps a thin far-future event as a full payload", async () => {
@@ -128,18 +130,41 @@ describe("BetbyScraper", () => {
     expect(fallbacks).toHaveLength(7);
     expect(fallbacks[0]).toMatch(new RegExp(`^\\[Betters/FullOffer\\] ${EVERTON}: no event payload \\(.+\\); using listing markets$`));
     const total = r.matches.reduce((n, m) => n + m.markets.length, 0);
-    expect(log).toHaveBeenCalledWith(`[Betters/FullOffer] Completed: 11 matches (4 full, 7 listing-only), ${total} markets`);
+    expect(log).toHaveBeenCalledWith(`[Betters/FullOffer] Completed: 11 matches (4 full, 7 listing-only, 0 failed), ${total} markets`);
     expect(r.matches.every((m) => m.bookmaker === "betters" && m.scrapedAt.getTime() === NOW())).toBe(true);
   });
 
-  it("scrapeFullOffer falls back to listing markets when fetching one event throws", async () => {
+  it("scrapeFullOffer skips a match whose event request failed instead of writing listing markets", async () => {
     const f = createEvidenceFetch("betters", { failures: { [`/event/pl/${LEEDS}`]: 500 } });
+    const sf = new BettersPlaywrightScraper({ fetchText: f, now: NOW, eventDelayMs: 0 });
+    const r = await sf.scrapeFullOffer("premier-league");
+    const url = `https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/${LEEDS}`;
+    expect(r.success).toBe(true); expect(r.matches).toHaveLength(10);
+    expect(r.matches.map((m) => m.matchId)).not.toContain(LEEDS);
+    expect(r.error).toBe(`1 of 11 details failed | fetch HTTP 500 ${url}`);
+    expect(warn).toHaveBeenCalledWith(`[Betters/FullOffer] ${LEEDS}: event request failed (fetch HTTP 500 ${url}); match skipped`);
+    expect(sf.lastRunStats!.failed).toEqual([LEEDS]);
+    expect(log).toHaveBeenCalledWith(expect.stringMatching(/^\[Betters\/FullOffer\] Completed: 10 matches \(3 full, 7 listing-only, 1 failed\), \d+ markets$/));
+  });
+
+  it("scrapeFullOffer stops after 2 consecutive event failures, writing nothing", async () => {
+    const f = createEvidenceFetch("betters", { failures: { "/event/pl/": 500 } });
     const r = await new BettersPlaywrightScraper({ fetchText: f, now: NOW, eventDelayMs: 0 }).scrapeFullOffer("premier-league");
-    expect(r.success).toBe(true); expect(r.matches).toHaveLength(11);
-    expect(r.matches.find((m) => m.matchId === LEEDS)!.markets).toHaveLength(16);
-    expect(warn).toHaveBeenCalledWith(
-      `[Betters/FullOffer] ${LEEDS}: no event payload (fetch HTTP 500 https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/${LEEDS}); using listing markets`,
-    );
+    expect(r).toMatchObject({ success: false, matches: [] });
+    expect(r.error).toMatch(/^stopped after 2 consecutive event failures \| fetch HTTP 500 https:\/\/api-h-c7818b61-608\.sptpub\.com\//);
+    expect(f.calls.filter((u) => u.includes("/event/pl/"))).toHaveLength(2);
+  });
+
+  it("scrapeFullOffer fails the run when more than half of the event requests fail", async () => {
+    // Every other event fails, so no two failures are consecutive: 6 of 11 failed.
+    const first = createEvidenceFetch("betters");
+    await new BettersPlaywrightScraper({ fetchText: first, now: NOW, eventDelayMs: 0 }).scrapeFullOffer("premier-league");
+    const ids = first.calls.filter((u) => u.includes("/event/pl/")).map((u) => u.split("/").pop()!);
+    const failing = Object.fromEntries(ids.filter((_, i) => i % 2 === 0).map((id) => [`/event/pl/${id}`, 500]));
+    const r = await new BettersPlaywrightScraper({ fetchText: createEvidenceFetch("betters", { failures: failing }), now: NOW, eventDelayMs: 0 })
+      .scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: false, matches: [] });
+    expect(r.error).toMatch(/^6 of 11 details failed \| fetch HTTP 500 /);
   });
 
   it("scrapeFullOffer ignores an event payload whose teams differ from the snapshot", async () => {

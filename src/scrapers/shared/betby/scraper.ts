@@ -8,8 +8,11 @@
  *
  * Per league: the snapshot lists the upcoming matches with their listing markets (1, 10,
  * 16, 18). The event endpoint then gives each match its full market list. A match the
- * event endpoint has no usable payload for keeps its listing markets, so one withdrawn or
- * just-started event never costs the run.
+ * event endpoint has no payload for (or one naming other teams) keeps its listing markets,
+ * so one withdrawn or thin far event never costs the run. A match whose event request
+ * itself failed is skipped instead (a listing write would replace its full offer); two
+ * consecutive failures stop the scrape, and more than MAX_SKIPPED_DETAIL_RATIO failed
+ * requests fail it, both with nothing written.
  *
  * Betby ids are 19-digit strings above 2^53 and stay strings here (matchId, eventId,
  * tournament id, deep links).
@@ -33,6 +36,7 @@ import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { BudgetExceededError, budgetAbortReason, createScrapeBudget, type ScrapeBudget } from "../budget.js";
+import { MAX_SKIPPED_DETAIL_RATIO } from "../detail-fetch.js";
 import type { HttpClient } from "../http/http-client.js";
 import { HttpError } from "../http/http-error.js";
 import type { TransportStats } from "../scraper-contract.js";
@@ -45,6 +49,9 @@ import type { BetbyBookmaker, BetbyBrandConfig, BetbyEvent, BetbyEventRef, Fetch
 /** Pause between two event requests of one league, to stay gentle on an API with unknown rate limits. */
 export const DEFAULT_EVENT_DELAY_MS = 150;
 
+/** Consecutive failed event requests after which a scrape stops (README §5.1). */
+export const MAX_CONSECUTIVE_EVENT_FAILURES = 2;
+
 export interface BetbyScraperDeps {
   /** Raw transport (tests); wins over `http`. */
   fetchText?: FetchText;
@@ -55,11 +62,16 @@ export interface BetbyScraperDeps {
   eventDelayMs?: number;
 }
 
-/** The eventIds of one scrapeFullOffer call, split by whether the event endpoint gave a payload. */
+/** The eventIds of one scrapeFullOffer call, split by what the event endpoint gave. */
 export interface BetbyRunStats {
   full: string[];
   listingOnly: string[];
+  /** Event requests that failed; these matches were skipped. */
+  failed: string[];
 }
+
+/** What the event endpoint gave for one match: a payload, no payload (listing fallback), or a failed request. */
+type FullEventOutcome = { event: BetbyEvent } | { none: string } | { failed: string };
 
 /** UOF outcome ids of the legacy markets (`scrapeLeague`, `scrapeMatchDetails`). */
 const RESULT_IDS = ["1", "2", "3"] as const; // home, draw, away
@@ -163,12 +175,30 @@ export class BetbyScraper extends PlaywrightScraper {
       }
 
       const descriptions = await this.client.fetchDescriptions(runBudget.signal);
-      const stats: BetbyRunStats = { full: [], listingOnly: [] };
+      const stats: BetbyRunStats = { full: [], listingOnly: [], failed: [] };
       const matches: FullMatchOffer[] = [];
+      // Error texts of the failed event requests: all of them, and the current unbroken run.
+      const failures: string[] = [];
+      let streak: string[] = [];
       for (const [i, ref] of refs.entries()) {
         if (i > 0 && this.eventDelayMs > 0) await this.delay(this.eventDelayMs);
         runBudget.checkpoint();
-        const event = await this.fullEvent(ref, runBudget.signal);
+        const outcome = await this.fullEvent(ref, runBudget.signal);
+        if ("failed" in outcome) {
+          stats.failed.push(ref.eventId);
+          failures.push(outcome.failed);
+          streak.push(outcome.failed);
+          console.warn(`[${this.tag}/FullOffer] ${ref.eventId}: event request failed (${outcome.failed}); match skipped`);
+          if (streak.length >= MAX_CONSECUTIVE_EVENT_FAILURES) {
+            // The endpoint is down: stop asking, and write nothing so the previous rows stay.
+            this.lastRunStats = stats;
+            const error = `stopped after ${streak.length} consecutive event failures | ${streak[0]}`;
+            return this.createFullOfferErrorResult(league, new Error(error), Date.now() - startedAt);
+          }
+          continue;
+        }
+        streak = [];
+        const event = "event" in outcome ? outcome.event : null;
         (event === null ? stats.listingOnly : stats.full).push(ref.eventId);
 
         const markets = buildScrapedMarkets(event?.markets ?? ref.listingMarkets, descriptions, [ref.homeTeam, ref.awayTeam]);
@@ -191,9 +221,18 @@ export class BetbyScraper extends PlaywrightScraper {
 
       const totalMarkets = matches.reduce((n, m) => n + m.markets.length, 0);
       console.log(
-        `[${this.tag}/FullOffer] Completed: ${matches.length} matches (${stats.full.length} full, ${stats.listingOnly.length} listing-only), ${totalMarkets} markets`,
+        `[${this.tag}/FullOffer] Completed: ${matches.length} matches (${stats.full.length} full, ${stats.listingOnly.length} listing-only, ${stats.failed.length} failed), ${totalMarkets} markets`,
       );
-      return { success: true, bookmaker: this.bookmaker, league, matches, duration: Date.now() - startedAt };
+      if (stats.failed.length === 0) {
+        return { success: true, bookmaker: this.bookmaker, league, matches, duration: Date.now() - startedAt };
+      }
+      // m: matches written plus failed requests; matches without quotable markets count in neither.
+      const attempted = matches.length + stats.failed.length;
+      const error = `${stats.failed.length} of ${attempted} details failed | ${failures[0]}`;
+      if (stats.failed.length / attempted > MAX_SKIPPED_DETAIL_RATIO) {
+        return this.createFullOfferErrorResult(league, new Error(error), Date.now() - startedAt);
+      }
+      return { success: true, bookmaker: this.bookmaker, league, matches, error, duration: Date.now() - startedAt };
     } catch (err) {
       // A budget abort reports the budget's reason, not the request it happened to cut.
       const cause = runBudget.signal.aborted ? budgetAbortReason(runBudget.signal) : err;
@@ -311,29 +350,34 @@ export class BetbyScraper extends PlaywrightScraper {
   }
 
   /**
-   * The full event payload for one match, or null (after a warning) when the listing markets
-   * must do: the endpoint has no event for the id, the request failed, or the payload names
-   * other teams than the snapshot. That last check matters because every outcome id is
-   * relative to competitor 1 and 2, so a reordered payload would put each price on the
-   * wrong side. A budget abort is rethrown instead: the scrape then fails as a whole.
+   * What the event endpoint gives for one match:
+   * - `{ event }`: a payload naming the snapshot's teams.
+   * - `{ none }` (after a warning): the listing markets must do, because the endpoint has no
+   *   event for the id (HTTP 200 without `events`, or 404) or the payload names other teams
+   *   than the snapshot. That check matters because every outcome id is relative to
+   *   competitor 1 and 2, so a reordered payload would put each price on the wrong side.
+   * - `{ failed }`: the request itself failed (another HTTP status, timeout, network, invalid
+   *   JSON); the caller skips the match.
+   * A budget abort is rethrown instead: the scrape then fails as a whole.
    */
-  private async fullEvent(ref: BetbyEventRef, signal: AbortSignal): Promise<BetbyEvent | null> {
-    let reason: string;
+  private async fullEvent(ref: BetbyEventRef, signal: AbortSignal): Promise<FullEventOutcome> {
+    let event: BetbyEvent | null;
     try {
-      const event = await this.client.fetchEvent(ref.eventId, signal);
-      const teams = event === null ? null : competitorNames(event);
-      if (event === null) {
-        reason = "the event endpoint has no event for this id";
-      } else if (teams === null || teams[0] !== ref.homeTeam || teams[1] !== ref.awayTeam) {
-        reason = `teams ${teams?.join(" - ") ?? "missing"} differ from the snapshot`;
-      } else {
-        return event;
-      }
+      event = await this.client.fetchEvent(ref.eventId, signal);
     } catch (err) {
       if (err instanceof BudgetExceededError || (err instanceof HttpError && err.kind === "aborted")) throw err;
-      reason = errorMessage(err);
+      return { failed: errorMessage(err) };
+    }
+    const teams = event === null ? null : competitorNames(event);
+    let reason: string;
+    if (event === null) {
+      reason = "the event endpoint has no event for this id";
+    } else if (teams === null || teams[0] !== ref.homeTeam || teams[1] !== ref.awayTeam) {
+      reason = `teams ${teams?.join(" - ") ?? "missing"} differ from the snapshot`;
+    } else {
+      return { event };
     }
     console.warn(`[${this.tag}/FullOffer] ${ref.eventId}: no event payload (${reason}); using listing markets`);
-    return null;
+    return { none: reason };
   }
 }

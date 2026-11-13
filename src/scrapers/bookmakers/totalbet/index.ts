@@ -8,8 +8,9 @@
  * it never opens a browser.
  *
  * League category UUIDs come from src/config/leagues.ts. Every failure is reported
- * in the result's error string; a run whose details all fail is a failed run even
- * when list-1X2 fallbacks exist, because a 1X2-only offer is an outage.
+ * in the result's error string. A match whose detail failed is skipped, never written
+ * with its list 1X2: a 1X2-only write would replace the match's full offer. More than
+ * MAX_SKIPPED_DETAIL_RATIO failed details fail the run, with nothing written.
  */
 
 import type { Page } from "playwright";
@@ -29,6 +30,7 @@ import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-mat
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
 import { mapLimit } from "../../shared/concurrency.js";
+import { MAX_SKIPPED_DETAIL_RATIO } from "../../shared/detail-fetch.js";
 import { createHttpClient, type HttpClient } from "../../shared/http/http-client.js";
 import type { TransportStats } from "../../shared/scraper-contract.js";
 
@@ -271,12 +273,9 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
 
     const matches: FullMatchOffer[] = [];
     const driftErrors: string[] = [];
-    // n: events whose detail answered or failed. Events skipped because they are no
-    // longer active prematch events (or have no participants) are not counted, so
-    // success (k < n) still means at least one detail answered: a run in which every
-    // reachable detail failed is an outage, even with list-1X2 fallbacks.
-    let detailsCounted = 0;
-    // k: events whose detail failed and that fell back to the list 1X2.
+    // Events whose detail request failed; each is skipped (no list-1X2 fallback). Events
+    // that are no longer active prematch events, or whose detail has no active market,
+    // are "no offer": skipped too, but not counted.
     let detailsFailed = 0;
     let firstDetailError: string | undefined;
 
@@ -298,23 +297,20 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
         console.log(`${LOG} skipped ${homeTeam} vs ${awayTeam}: detail is ${detail.notPrematch.type}/${detail.notPrematch.status}`);
         continue;
       }
-      detailsCounted++;
 
-      let markets: ScrapedMarket[];
-      if (detail.event) {
-        markets = parseEventDetail(detail.event);
-        const missing = missingPhase1Keys(detail.event);
-        if (missing.length > 0) {
-          const text = `phase-1 keys missing for ${homeTeam} vs ${awayTeam}: ${missing.join(",")}`;
-          console.warn(`${LOG} ${text}`);
-          driftErrors.push(text);
-        }
-      } else {
+      if (!detail.event) {
         detailsFailed++;
         firstDetailError ??= detail.error;
-        console.warn(`${LOG} ${homeTeam} vs ${awayTeam}: detail fetch failed, list 1X2 only: ${detail.error}`);
-        const fallback = listEventToMatchWinnerMarket(listEvent);
-        markets = fallback ? [fallback] : [];
+        console.warn(`${LOG} ${homeTeam} vs ${awayTeam}: detail fetch failed, match skipped: ${detail.error}`);
+        continue;
+      }
+
+      const markets: ScrapedMarket[] = parseEventDetail(detail.event);
+      const missing = missingPhase1Keys(detail.event);
+      if (missing.length > 0) {
+        const text = `phase-1 keys missing for ${homeTeam} vs ${awayTeam}: ${missing.join(",")}`;
+        console.warn(`${LOG} ${text}`);
+        driftErrors.push(text);
       }
 
       if (markets.length === 0) {
@@ -332,14 +328,15 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
         startTime: listEvent.start_at,
         scrapedAt: new Date(),
       });
-      // M for acceptance A2 (N >= 0.95*M): the count of the payload the markets were parsed
-      // from, i.e. the detail when it answered (as the drift check uses), else the list event.
-      console.log(`${LOG} ${homeTeam} vs ${awayTeam}: ${markets.length} markets (market_count ${(detail.event ?? listEvent).market_count})`);
+      // M for acceptance A2 (N >= 0.95*M): the count of the detail the markets were parsed from.
+      console.log(`${LOG} ${homeTeam} vs ${awayTeam}: ${markets.length} markets (market_count ${detail.event.market_count})`);
     }
 
     const errorParts: string[] = [];
+    // m: matches written plus failed details; "no offer" events count in neither.
+    const attempted = matches.length + detailsFailed;
     if (detailsFailed > 0) {
-      const text = `Detail fetch failed for ${detailsFailed}/${detailsCounted} events (first: ${firstDetailError})`;
+      const text = `${detailsFailed} of ${attempted} details failed | ${firstDetailError}`;
       console.warn(`${LOG} ${text}`);
       errorParts.push(text);
     }
@@ -349,12 +346,16 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       // The fixed text comes first; the detail and drift parts keep the HTTP reason (plan risk 8).
       return failure([`No parsable Totalbet events for ${league}`, ...errorParts].join(" | "));
     }
+    if (detailsFailed / attempted > MAX_SKIPPED_DETAIL_RATIO) {
+      // Too many skipped matches: fail without writing, so the previous rows stay.
+      return failure(errorParts.join(" | "));
+    }
 
     const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
     console.log(`${LOG} Completed: ${matches.length} matches, ${totalMarkets} total markets`);
 
     return {
-      success: detailsFailed < detailsCounted,
+      success: true,
       bookmaker: this.bookmaker,
       league,
       matches,

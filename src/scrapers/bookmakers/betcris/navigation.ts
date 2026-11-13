@@ -24,7 +24,6 @@ import {
 } from "node:timers";
 import type { Page, WebSocket as PlaywrightWebSocket } from "playwright";
 import {
-  COMPETITION_IDS,
   REQUEST_TIMEOUT,
   WS_CONFIG,
 } from "./constants.js";
@@ -678,42 +677,4 @@ function checkCompetitionExists(data: SwarmData, competitionId: number): boolean
   return false;
 }
 
-/**
- * Count total markets in Swarm data
- */
-export function countMarkets(data: SwarmData): number {
-  let count = 0;
-  for (const sport of Object.values(data.sport || {})) {
-    for (const region of Object.values(sport.region || {})) {
-      for (const competition of Object.values(region.competition || {})) {
-        for (const game of Object.values(competition.game || {})) {
-          count += Object.keys(game.market || {}).length;
-        }
-      }
-    }
-  }
-  return count;
-}
-
-/**
- * Extract game ID from a Betcris event URL
- *
- * URL format: https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538/28660755
- *
- * @param eventUrl - Full URL to the event page
- * @returns Game ID or null if not found
- */
-export function extractGameIdFromUrl(eventUrl: string): number | null {
-  const urlParts = eventUrl.split("/");
-  const gameId = parseInt(urlParts[urlParts.length - 1], 10);
-  return isNaN(gameId) ? null : gameId;
-}
-
 export { buildEventUrl } from "./swarm-offer.js";
-
-/**
- * Get competition ID for a league
- */
-export function getCompetitionId(league: string): number | undefined {
-  return COMPETITION_IDS[league];
-}

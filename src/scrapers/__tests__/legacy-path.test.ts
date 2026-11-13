@@ -11,11 +11,7 @@ import { exportedNames, findLegacyCalls, findLegacyMethods, legacyDirOf } from "
 const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 
 // Every legacyDirOf(...) the scan reports at this commit (`npx tsx scripts/legacy-lines.ts`)
-const ALLOWED = new Set([
-  "bookmakers/betcris",
-  "bookmakers/pzbuk",
-  "bookmakers/sts",
-]);
+const ALLOWED = new Set<string>([]);
 
 describe("legacy 1X2 path", () => {
   it("legacy 1X2 methods exist only in allowed directories", () =>

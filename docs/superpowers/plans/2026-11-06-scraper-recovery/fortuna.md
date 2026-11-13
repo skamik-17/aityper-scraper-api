@@ -219,6 +219,7 @@ Pass when:
      - `RED_CARD_AND_PENALTY` and `RED_CARD_TEAM`: 0, because `00-bt`, `00-07` and `00-08` are held back.
      - `SECOND_HALF_CORNERS_RACE`: 0, because Fortuna does not offer it today.
 2. **Fresh live smoke** after the fix: exit 0, `matches` equal to the number of PL fixtures Fortuna lists at that time (20 on 2026-11-06, 19 on 2026-11-07), and the code thresholds of criterion 1 with that run's own `M` and `F` (Task 4 review). A match that has kicked off since Task 0 leaves the fresh run, so `F` can be lower than on the Task 0 capture.
+   - Task 6 (amended by the Task 6 review): criterion 1's per-match formula (`normalized − before == idRaw` plus the 2-goal count) needs the Task 0 capture as `before`, so it says nothing about a fresh offer. On the fresh dump, the offline replay of Task 7 Step 2 is the check: exit 0, `warnPatternCount` 0 for the pattern `WIN_OR_WIN_BY_2: could not resolve`, and `requiredCodeMatchCounts.WIN_OR_WIN_BY_2` equal to `matches`. Fortuna lists one `00-p1` 2-goal market on every fixture, the 109-raw ones included (19 of 19 on the Task 0 capture). The fresh smoke alone cannot see a dropped 2-goal market: `CODES` has no `WIN_OR_WIN_BY_2`, its only `--warn-pattern` is `without extractable player`, `smoke-full-offer.mts` counts every other `console.warn` without printing it (`:39`, `:44`), and it exits 0 whatever the warning count.
 3. **API after the next scheduled run.** Only possible once the owner has merged this work into `master`: the :3001 backend runs the main checkout, and worktrees cannot write to the DB (EXECUTION.md, decision 1 and Workspace layout). Before that, Task 7 Step 2 is the offline equivalent. `python3 -I $E/api-checks.py` prints a `SUMMARY` with:
    - `verdict` `CHECKED` and `full` ≥ 1. With `full` 0 every count below is 0 without anything having been checked: record criteria 3-4 as NOT RUN, never PASS.
    - `full` 10 (or however many full-offer matches are listed)
@@ -232,9 +233,11 @@ Pass when:
 
    Every match's `ht:` line shows raw `'1.połowa'` and `ok=True`.
 4. **Pooling.** In the same output, the Forest–City `pool:` line lists fortuna on the `'Murillo'` row next to betfan, etoto, forbet and superbet (`SUMMARY.mononym.fortunaOnRow` true). Today fortuna is not on that row; its Murillo rows are in `base`. Also, `GET /api/matches/Nottingham%20Forest/Manchester%20City/normalized-markets?league=premier-league` has a `GOALSCORER_FIRST` parameter `Murillo` with a fortuna selection of type `PLAYER` (the `mononym:` line of the same output). Forest–City kicks off 2026-11-07T17:30Z; Task 7 Step 3 says which mononym to use after that. If the pool line says `ABSENT`, criterion 4 is NOT RUN.
+   - `WIN_OR_WIN_BY_2` (Task 6, added by the Task 6 review): on every listed fixture, check 5 of Task 7 Step 3 prints `ok=True`. That is exactly 1 `WIN_OR_WIN_BY_2` card, with fortuna on it holding exactly one HOME and one AWAY leg, next to betclic (where it lists the market) and forbet (once `recovery/forbet` is merged). Each fortuna leg is at or below fortuna's own `MATCH_WINNER` leg for the same side: winning or leading by 2 covers more outcomes than a plain win, so a higher price points to a swapped side. Fortuna's `MATCH_WINNER` `rawMarketName` does not start with `Wynik meczu lub`. Criterion 3's `newLegsUnder5.over10Pct` checks its legs under 5 against the peer median (`api-checks.py` `NEW_CODES`). Owner-gated like criteria 3-5: until the owner merges `recovery/fortuna` together with `recovery/forbet` and a scheduled run follows, record it as NOT RUN.
 5. **Log of that run**, with `L` = the ANSI-stripped backend log from the run's `[Scheduler] Starting scheduled scrape` line onwards. The scheduler scrapes only `CONFIG.ENABLED_LEAGUES`, which is `['premier-league']` (`src/config/index.ts:47-49`), so these greps never cover another league; Task 7 Step 2b covers them:
    - `grep -c 'marketKey collision with overlapping selection code .* for fortuna ' $L` → 0. Run 3 had 29: 10 `HALF_TIME_RESULT` plus 19 player keys.
    - `grep -c '\[fortuna\] Player market without extractable player' $L` → 0.
+   - `grep -c '\[fortuna\] WIN_OR_WIN_BY_2: could not resolve' $L` → 0 (Task 6, added by the Task 6 review). Any line is a 2-goal market dropped because its team legs did not resolve to one HOME and one AWAY.
 6. `npx tsc --noEmit` exits 0, `npx vitest run` is green, and golden `-t fortuna` reports `failures=0`. `golden-drift.mts --since <Task 0 baseline>` prints `{"blessed":[],"unblessed":[860,1751,1774,1802,1809,1817,1821,1834,1858,1872,1876,1883,1897,1900,1902,1903,1955,1956,1959,1967,1991,1992,1995],"gone":[]}`, plus 1790 if Task 6 was done. That is the 26 indices listed under Impact minus the held-back 1898, 1936 and 1962 (Task 4 review).
 
 ## Global Constraints
@@ -763,7 +766,17 @@ python3 -I -c "import json;b,a=[json.loads(open(f).read().split(' ',1)[1]) for f
 ```
 
 Expected: `True 0 <≤ 0.305> {…}`, with the code counts of acceptance criterion 1. Amended by the Task 4 review: `idRaw` is read from the after file (`y`), which counts only the 22 ids of the amended `IDS`. The Task 0 file (`x`) also counted the held-back `00-bt`, `00-07` and `00-08`, so `x['idRaw']` prints `False` on every full-offer match. If Task 6 was done, compare against `y['idRaw']` plus the match's `Wynik meczu lub 2 gol(e)` count instead (criterion 1, ledger P4).
-- [ ] **Step 2: Fresh live smoke, then the offline replay** (pre-merge equivalent of Steps 3-4). Run the Task 0 command with `--dump .scratch/fortuna-capture-after.json` instead of `/tmp/fortuna-capture.json` (under `heavy --live`), same flags → criterion 2. Save both `SMOKE_RESULT` lines to `$E/smoke-after-fix-fortuna.txt`. Then replay the dump through the normalizer and the repository's own `mergeMarketRecord` (no network, no DB):
+- [ ] **Step 2: Fresh live smoke, then the offline replay** (pre-merge equivalent of Steps 3-4). Run the Task 0 command with `--dump .scratch/fortuna-capture-after.json` instead of `/tmp/fortuna-capture.json` (under `heavy --live`), same flags → criterion 2. Then replay the same dump for the Task 6 market (amended by the Task 6 review). This runs offline under `heavy`, without `--live`, and adds no live traffic → criterion 2, Task 6 bullet:
+
+```bash
+node_modules/.bin/tsx $E/smoke-full-offer.mts fortuna premier-league WIN_OR_WIN_BY_2 --from .scratch/fortuna-capture-after.json --warn-pattern 'WIN_OR_WIN_BY_2: could not resolve'
+```
+
+Expected: exit 0, `warnPatternCount` 0, and `requiredCodeMatchCounts.WIN_OR_WIN_BY_2` equal to `matches`. Read the numbers, not the exit code: the script exits 0 whatever the warning count. Measured at `a8cdb71` (fortuna Task 6 report, fix round 1):
+- 19 of 19 with 0 warnings, both on the Task 0 capture and on the 2026-11-07 PL capture of the Task 2 review.
+- With the draw-leg filter removed as a mutation, the same replay of the Task 0 capture gives 0 of 19, `warnPatternCount` 19, and still exit 0.
+
+Save both `SMOKE_RESULT` lines to `$E/smoke-after-fix-fortuna.txt`, and add the Task 6 replay's line below them. Then replay the dump through the normalizer and the repository's own `mergeMarketRecord` (no network, no DB):
 
 ```bash
 node_modules/.bin/tsx $E/replay-player-keys.mts .scratch/fortuna-capture-after.json premier-league --mononym Murillo
@@ -776,17 +789,24 @@ Expected `RESULT`: `full` ≥ 1, `bare` 0, `leak` 0, `labelLeak` 0, `sharedTeamT
 ```bash
 for L in laliga serie-a ligue-1 ekstraklasa; do
   node_modules/.bin/tsx $E/smoke-full-offer.mts fortuna $L --dump .scratch/fortuna-$L-after.json --warn-pattern 'without extractable player' | grep '^SMOKE_RESULT'
+  node_modules/.bin/tsx $E/smoke-full-offer.mts fortuna $L WIN_OR_WIN_BY_2 --from .scratch/fortuna-$L-after.json --warn-pattern 'WIN_OR_WIN_BY_2: could not resolve'
   node_modules/.bin/tsx $E/replay-player-keys.mts .scratch/fortuna-$L-after.json $L --mononym <a name from its mononyms: lines>
 done
 ```
 
 Expected per league: `warnPatternCount` 0, and the same `RESULT` values as Step 2. Measured on the 2026-11-07 00:40Z captures with the Task 2 review fixes, contexts re-derived from Fortuna's labels by the fixed team matcher: 0 warnings, 0 leaks, 0 shared team tokens and 0 collisions in all three leagues (fortuna Task 2 report, fix round 1). Ekstraklasa answered `No fixtures found from API` for `ufo:tour:00-0b9` (`src/scrapers/bookmakers/fortuna/constants.ts:47`) on that date: record NOT RUN if it still does.
 
+The Task 6 replay (the loop's second line, offline, amended by the Task 6 review) gives `warnPatternCount` 0 and `requiredCodeMatchCounts.WIN_OR_WIN_BY_2` equal to `matches`. Measured at `a8cdb71` on the same 2026-11-07 00:40Z captures, with the contexts of the fixed team matcher:
+- La Liga 19 of 19, Serie A 19 of 19 and Ligue 1 17 of 17, with 0 warnings each.
+- On the same La Liga capture with the contexts of the old team matcher, it gives 17 of 19 and `warnPatternCount` 2, so it does see an unresolved team label.
+- A league with no fixtures (Ekstraklasa) exits 1 with `matches` 0: record NOT RUN.
+
 - [ ] **Step 3: After the owner's merge into `master` and the next scheduled run.** Before the merge no scheduled scrape runs this code (criterion 3), so Steps 3-4 stay open until then. The dev server restarted itself on the `src/` edits. Then:
   1. `python3 -I $E/api-checks.py --mononym Murillo > $E/api-checks-after-fix.txt` → criterion 3: `SUMMARY.verdict` `CHECKED`, `full` ≥ 1, and the counts of criterion 3. With `full` 0, record checks 1-3 as NOT RUN.
   2. Pooling → criterion 4: the `pool:` line of the mononym's match lists fortuna on the mononym row (`SUMMARY.mononym.fortunaOnRow` true).
   3. `GOALSCORER_FIRST` → criterion 4: the `mononym:` line of that match shows `'fortuna': ['PLAYER']`.
   4. The log greps of Step 4 → criterion 5.
+  5. `WIN_OR_WIN_BY_2` → criterion 4 (Task 6, added by the Task 6 review): the one-liner below, on every listed fixture. Owner-gated: run it only after the owner merges `recovery/fortuna` together with `recovery/forbet` and a scheduled run follows. Until then, record it as NOT RUN.
 
   Lifetime of the named matches: Fulham–Newcastle (Kevin) kicks off 2026-11-07T15:00Z and Forest–City (Murillo) at 17:30Z. Brighton–Brentford (Chema), Ipswich–Bournemouth (Rayan, Evanilson), Sunderland–Chelsea (Estevao) and Palace–Liverpool (Alisson) kick off 2026-11-08T14:00Z, Man Utd–Villa (Amad) at 16:30Z. After that the listed PL fixtures carry about 109 raw markets and no OPTA player markets until the next round opens. If the merge lands after 2026-11-08T16:30Z, run checks 2-3 with `--mononym` set to a name from the `fortuna mononyms:` lists of a full-offer match listed at that time; if none is listed, record checks 1-3 as NOT RUN.
 
@@ -802,6 +822,20 @@ curl -s 'http://localhost:3001/api/matches/Nottingham%20Forest/Manchester%20City
 curl -s 'http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league' | python3 -I -c "import json,sys; d=json.load(sys.stdin)['data']; print([[(s['type'],s['odds']) for s in b['selections']] for c in d['categories'] for mk in c['markets'] if mk['type']=='FIRST_CORNER' for p in mk['parameters'] for b in p['bookmakers'] if b['bookmaker']=='fortuna'])"
 ```
 
+  `WIN_OR_WIN_BY_2` card by hand (check 5, Task 6 review), per listed fixture:
+
+```bash
+curl -s 'http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league' | python3 -I -c "import json,sys; d=json.load(sys.stdin)['data']; mk=[m for c in d['categories'] for m in c['markets']]; bms=lambda t: [b for m in mk if m['type']==t for p in m['parameters'] for b in p['bookmakers']]; w=bms('WIN_OR_WIN_BY_2'); fw=[{s['type']:s['odds'] for s in b['selections']} for b in w if b['bookmaker']=='fortuna']; f1=[b for b in bms('MATCH_WINNER') if b['bookmaker']=='fortuna']; mw={s['type']:s['odds'] for b in f1 for s in b['selections']}; raw=[b.get('rawMarketName') for b in f1]; n=len([m for m in mk if m['type']=='WIN_OR_WIN_BY_2']); print(n, [(b['bookmaker'],[(s['type'],s['odds']) for s in b['selections']]) for b in w], raw, mw, 'ok=%s' % (n==1 and len(fw)==1 and sorted(fw[0])==['AWAY','HOME'] and all(o<=mw.get(k,0) for k,o in fw[0].items()) and len(raw)==1 and bool(raw[0]) and not ' '.join(raw[0].split()).lower().startswith('wynik meczu lub')))"
+```
+
+  Expected: `1`, then the card's legs per bookmaker, with fortuna HOME/AWAY next to betclic (where listed) and forbet. Next come fortuna's `MATCH_WINNER` `rawMarketName` (not starting with `Wynik meczu lub`) and its legs, then `ok=True`. `ok` requires all of:
+  - exactly 1 card;
+  - exactly one fortuna entry on it, with one HOME and one AWAY leg;
+  - each of those legs at or below fortuna's own `MATCH_WINNER` leg for the same side;
+  - a fortuna `MATCH_WINNER` `rawMarketName` that is present and does not start with `Wynik meczu lub` (NBSPs folded, case ignored).
+
+  Checked offline on the saved Forest–City response of the Task 2 review (fortuna Task 6 report, fix round 1). With fortuna added at its capture prices it prints `ok=True`. Swapped legs, a `Wynik meczu lub…` `MATCH_WINNER` label, or no fortuna entry (master, as saved) each print `ok=False`.
+
   Held-back ids, for the owner's decision (by hand, not a gate): per full-offer match, Fortuna's raw YES for `00-bt` and `00-07`/`00-08` (from `.scratch/fortuna-capture-after.json`) against the peers' YES on `RED_CARD_AND_PENALTY` and `RED_CARD_TEAM` HOME/AWAY from the same endpoint. Criterion 3 counts only legs under 5, so it never sees these prices.
 
 - [ ] **Step 4: Log greps** of that run → criterion 5 (Premier League only, see criterion 5).
@@ -812,8 +846,9 @@ curl -s 'http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?leag
 - Per match, Fortuna `HALF_TIME_RESULT` must have raw name `1.połowa` and every leg within 10% of the peer median (`api-checks.py`, `ht:` line). Any `ok=False` is a P0.
 - `marketKey collision with overlapping selection code … for fortuna` lines: zero expected after this plan. Merges with disjoint codes never log, so any line is a misroute.
 - `[fortuna] Player market without extractable player` lines: zero expected. Any line is a new name shape.
+- `[fortuna] WIN_OR_WIN_BY_2: could not resolve` lines (Task 6): zero expected. Any line is a 2-goal market dropped because a team label did not resolve.
 - The `[fortuna] Unknown market` id histogram per run. New ids with ≥ 10 lines are new products worth mapping. After this plan, about 22 ids should disappear from it (25 minus the held-back `00-bt`, `00-07` and `00-08`, which stay in it on purpose).
-- Fortuna legs priced at 5 or more against the best peer, on `HALF_TIME_RED_CARD_TEAM` and `HALF_TIME_RED_CARD` (YES at 9.6-12), and on `RED_CARD_TEAM` / `RED_CARD_AND_PENALTY` if the owner re-enables `00-07`/`00-08`/`00-bt`. Criterion 3 (`api-checks.py:217`) counts only legs under 5, so it cannot see them (Task 4 review).
+- Fortuna legs priced at 5 or more against the best peer, on `HALF_TIME_RED_CARD_TEAM` and `HALF_TIME_RED_CARD` (YES at 9.6-12), and on `RED_CARD_TEAM` / `RED_CARD_AND_PENALTY` if the owner re-enables `00-07`/`00-08`/`00-bt`. Criterion 3 (`api-checks.py:219`) counts only legs under 5, so it cannot see them (Task 4 review).
 - Per-match raw counts: lineup drift is ±4 markets between runs, so a change > 5% for the same match is a new signal.
 
 ## Self-review

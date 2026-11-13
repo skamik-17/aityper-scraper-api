@@ -139,9 +139,11 @@ for m in matches:
         if d > worst[0]:
             worst = (round(d, 1), f"{m['homeTeam']} vs {m['awayTeam']} {code} {per['fortuna'][code]} vs {med}")
 
+# WIN_OR_WIN_BY_2 is Task 6 (00-p1 "Wynik meczu lub 2 gol(e) PRZEWAGI"); its legs are
+# checked against betclic/forbet like every other code the plan maps.
 NEW_CODES = set(PLAN_CODES) | {"AWAY_WIN_TO_NIL", "AWAY_WIN_BOTH_HALVES", "AWAY_SCORE_BOTH_HALVES",
                                 "AWAY_WIN_AT_LEAST_ONE_HALF", "AWAY_EXACT_GOALS", "HALF_TIME_RED_CARD_TEAM",
-                                "FIRST_CORNER", "SECOND_HALF_CORNERS_RACE"}
+                                "FIRST_CORNER", "SECOND_HALF_CORNERS_RACE", "WIN_OR_WIN_BY_2"}
 tot = {"full": 0, "htBad": 0, "htcMissing": 0, "leak": 0, "labelLeak": 0, "sharedTeamToken": 0,
        "sharedNameToken": 0, "base": 0, "noLabels": 0}
 base_codes = set()

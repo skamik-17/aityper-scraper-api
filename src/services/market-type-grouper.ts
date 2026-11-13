@@ -896,9 +896,10 @@ export function groupMarketsByTypeWithParameters(
     // merged here in audit-loop cluster #19 — its own normalizer now sets
     // paramValue directly, this recovery remains only as a safety net)
     // (betcris/lvbet's former EXACT_GOALS_YN
-    // "Dokładnie 1 gol..." card was retired in round 9 — it now merges
-    // straight into EXACT_GOALS' own "1" selection instead of needing a
-    // recovered param here), lebull's TIME_BAND_TOTAL_GOALS/
+    // "Dokładnie 1 gol..." card was retired in round 9 — betcris now merges
+    // it straight into EXACT_GOALS' own "1" selection instead of needing a
+    // recovered param here; lvbet routes it to OTHER since the 2026-11
+    // recovery, because its full ladder maps to EXACT_GOALS), lebull's TIME_BAND_TOTAL_GOALS/
     // WINNING_MARGIN_ANY_EXACT/SCORE_REACHED/SCORE_OCCURS_DURING_MATCH all
     // spelled the parameter out in rawMarketName only). Recovering it here
     // also closes the silent-merge risk the audit flagged: a second line

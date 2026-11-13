@@ -199,7 +199,7 @@ Dump `market_comparison` (a Supabase view) for one match through PostgREST. The 
 `lvbet_ac.py` was checked on a synthetic copy of today's Ars–Hul dump with LVBet's hidden O/U and half-time prices injected and the pairs removed. It printed `PASS | tg2.5O=1.55(+2.0%) tg2.5U=2.5(+3.3%) tg3.5O=2.3(+0.9%) tg3.5U=1.62(+2.5%)`.
 
 - L1. In the cleaned log, `[LVBet/FullOffer] Completed: 20 matches` (= that run's fixture count; a fixture that has already kicked off drops out, e.g. `Completed: 19` on 2026-11-07 after Everton–Coventry). Two gates, both required:
-  - every match with published ladders has **≥ 850** in its `[LVBet/FullOffer] <H> vs <A>: N markets` line (today 615–664);
+  - every match with published ladders has per-player ladder rows present (`split>0` below) **and ≥ 850** in its `[LVBet/FullOffer] <H> vs <A>: N markets` line (today 615–664; controller ruling 9, 2026-11-13);
   - `lvbet_unsplit_ladders.py` prints `unsplit=0` for every match, i.e. **0 unsplit mapped ladder names**. Run it on the `full-offer` dumps, taken after the same pruned run as L2 (it prints `STALE` and exits 2 while pre-deploy rows are still served):
     ```bash
     python3 -I -c 'import json,sys,urllib.parse as u; [print(u.quote(m["homeTeam"]), u.quote(m["awayTeam"]), m["matchId"].split(":",1)[1].replace(":","_").replace(" ","-")) for m in json.load(open(sys.argv[1]))["data"]["matches"]]' $NM/odds.json \

@@ -64,7 +64,7 @@ function parseRetryAfter(value: string | null): number | null {
 }
 
 /** Rejects with onAbort() as soon as `signal` aborts; listens on a derived signal only. */
-function raceAbort<T>(promise: Promise<T>, signal: AbortSignal | undefined, onAbort: () => Error): Promise<T> {
+export function raceAbort<T>(promise: Promise<T>, signal: AbortSignal | undefined, onAbort: () => Error): Promise<T> {
   if (!signal) return promise;
   if (signal.aborted) {
     promise.catch(() => {});

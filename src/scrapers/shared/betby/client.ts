@@ -14,9 +14,24 @@
  * same object, so an in-place edit (a trimmed team name, merged markets) would leak into the
  * next league's scrape. Frozen, such an edit throws at once, because ES modules run in
  * strict mode.
+ *
+ * Transport: one HttpClient per client (so per brand), with two views over it: loads
+ * (endpoints, snapshot, descriptions) and events, each with its own per-request timeout.
+ * Shared loads never take a caller's signal: a caller whose budget aborts stops waiting,
+ * and the load finishes and is cached for the other leagues.
  */
+import { budgetAbortReason } from "../budget.js";
+import { createHttpClient, raceAbort, type HttpClient } from "../http/http-client.js";
+import { HttpError } from "../http/http-error.js";
+import type { TransportStats } from "../scraper-contract.js";
 import { resolveEndpoints } from "./discovery.js";
-import { BetbyHttpError, createFetchText, hostAndPath } from "./http.js";
+import {
+  BETBY_EVENT_TIMEOUT_MS,
+  BETBY_LOAD_TIMEOUT_MS,
+  BETBY_PER_HOST_CONCURRENCY,
+  createBetbyFetchText,
+  hostAndPath,
+} from "./http.js";
 import type {
   BetbyBrandConfig,
   BetbyEndpoints,
@@ -35,7 +50,10 @@ export const DESCRIPTIONS_TTL_MS = 21_600_000;
 export const SNAPSHOT_MAX_ATTEMPTS = 2;
 
 export interface BetbyClientDeps {
+  /** Raw transport for loads and events alike; wins over `http`. Its requests are not counted in transportStats(). */
   fetchText?: FetchText;
+  /** HTTP client behind the default transport; defaults to a fresh shared-HttpClient instance. */
+  http?: HttpClient;
   /** Clock for the caches, in ms. */
   now?: () => number;
   warn?: (message: string) => void;
@@ -64,6 +82,11 @@ class TtlCache<T> {
     });
     return entry.value;
   }
+}
+
+/** `promise`, or a rejection with the budget's error as soon as `signal` aborts (the work itself goes on). */
+function waitUnlessAborted<T>(promise: Promise<T>, signal: AbortSignal | undefined): Promise<T> {
+  return signal ? raceAbort(promise, signal, () => budgetAbortReason(signal)) : promise;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -122,7 +145,9 @@ function mergeChunks(manifestVersion: number, chunks: BetbyEnvelope[]): BetbySna
 }
 
 export class BetbyClient {
-  private readonly fetchText: FetchText;
+  private readonly http: HttpClient;
+  private readonly loadText: FetchText;
+  private readonly eventText: FetchText;
   private readonly warn: (message: string) => void;
   private readonly tag: string;
   private readonly endpointsCache: TtlCache<BetbyEndpoints>;
@@ -134,7 +159,9 @@ export class BetbyClient {
     private readonly brand: BetbyBrandConfig,
     deps: BetbyClientDeps = {},
   ) {
-    this.fetchText = deps.fetchText ?? createFetchText();
+    this.http = deps.http ?? createHttpClient({ perHostConcurrency: BETBY_PER_HOST_CONCURRENCY });
+    this.loadText = deps.fetchText ?? createBetbyFetchText(this.http, { timeoutMs: BETBY_LOAD_TIMEOUT_MS });
+    this.eventText = deps.fetchText ?? createBetbyFetchText(this.http, { timeoutMs: BETBY_EVENT_TIMEOUT_MS });
     this.warn = deps.warn ?? ((message) => console.warn(message));
     this.tag = `[Betby/${brand.logTag}]`;
     const now = deps.now ?? (() => Date.now());
@@ -143,28 +170,35 @@ export class BetbyClient {
     this.descriptionsCache = new TtlCache(DESCRIPTIONS_TTL_MS, now);
   }
 
-  /** Discovered endpoints, or the pinned ones when discovery fails (resolveEndpoints warns). */
-  getEndpoints(): Promise<BetbyEndpoints> {
-    return this.endpointsCache.get(async () => (await resolveEndpoints(this.brand, this.fetchText, this.warn)).endpoints);
+  /**
+   * Discovered endpoints, or the pinned ones when discovery fails (resolveEndpoints warns).
+   * `signal` bounds only this caller's wait, never the shared load.
+   */
+  getEndpoints(signal?: AbortSignal): Promise<BetbyEndpoints> {
+    const load = this.endpointsCache.get(async () => (await resolveEndpoints(this.brand, this.loadText, this.warn)).endpoints);
+    return waitUnlessAborted(load, signal);
   }
 
-  /** Every chunk of one manifest, merged; throws rather than return a partial snapshot. */
-  fetchSnapshot(): Promise<BetbySnapshot> {
-    return this.snapshotCache.get(() => this.loadSnapshot());
+  /**
+   * Every chunk of one manifest, merged; throws rather than return a partial snapshot.
+   * `signal` bounds only this caller's wait, never the shared load.
+   */
+  fetchSnapshot(signal?: AbortSignal): Promise<BetbySnapshot> {
+    return waitUnlessAborted(this.snapshotCache.get(() => this.loadSnapshot()), signal);
   }
 
   /**
    * The full event payload, or null when Betby has none for this id. HTTP errors other
-   * than 404, and bodies that are not JSON, propagate.
+   * than 404, and bodies that are not JSON, propagate. `signal` goes to the request.
    */
-  async fetchEvent(eventId: string): Promise<BetbyEvent | null> {
-    const { prematchBase, brandId } = await this.getEndpoints();
+  async fetchEvent(eventId: string, signal?: AbortSignal): Promise<BetbyEvent | null> {
+    const { prematchBase, brandId } = await this.getEndpoints(signal);
     let body: unknown;
     try {
-      body = await this.fetchJson(`${prematchBase}/prematch/brand/${brandId}/event/pl/${eventId}`);
+      body = await this.fetchJson(`${prematchBase}/prematch/brand/${brandId}/event/pl/${eventId}`, this.eventText, signal);
     } catch (err) {
       // Never observed live, but it means the same as the empty envelope below.
-      if (err instanceof BetbyHttpError && err.status === 404) return null;
+      if (err instanceof HttpError && err.kind === "http" && err.status === 404) return null;
       throw err;
     }
     // An unknown, live or withdrawn id answers HTTP 200 with an envelope that has no `events`.
@@ -172,8 +206,9 @@ export class BetbyClient {
     return (body.events[eventId] as BetbyEvent | null) ?? null;
   }
 
-  fetchDescriptions(): Promise<BetbyMarketDescriptions> {
-    return this.descriptionsCache.get(async () => {
+  /** Market descriptions. `signal` bounds only this caller's wait, never the shared load. */
+  fetchDescriptions(signal?: AbortSignal): Promise<BetbyMarketDescriptions> {
+    const load = this.descriptionsCache.get(async () => {
       const { descriptionsBase, brandId } = await this.getEndpoints();
       const url = `${descriptionsBase}/descriptions/brand/${brandId}/markets/pl`;
       const json = await this.fetchJson(url);
@@ -183,6 +218,13 @@ export class BetbyClient {
       }
       return deepFreeze(json as BetbyMarketDescriptions);
     });
+    return waitUnlessAborted(load, signal);
+  }
+
+  /** Counters of this brand's HttpClient, cumulative since construction (copies). */
+  transportStats(): TransportStats {
+    const stats = this.http.stats;
+    return { http: { ...stats, byStatus: { ...stats.byStatus } } };
   }
 
   private async loadSnapshot(): Promise<BetbySnapshot> {
@@ -214,8 +256,8 @@ export class BetbyClient {
     );
   }
 
-  private async fetchJson(url: string): Promise<unknown> {
-    const text = await this.fetchText(url);
+  private async fetchJson(url: string, fetchText: FetchText = this.loadText, signal?: AbortSignal): Promise<unknown> {
+    const text = await fetchText(url, signal ? { signal } : undefined);
     try {
       return JSON.parse(text) as unknown;
     } catch (err) {

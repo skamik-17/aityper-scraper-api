@@ -13,6 +13,9 @@
  *
  * Betby ids are 19-digit strings above 2^53 and stay strings here (matchId, eventId,
  * tournament id, deep links).
+ *
+ * Each scrapeFullOffer runs under a ScrapeBudget (BETBY_BUDGET_MS unless the caller passes
+ * one). A budget abort fails the scrape with nothing written: no listing fallback then.
  */
 import type { Page } from "playwright";
 import { getBookmakerLeagueId } from "../../../config/leagues.js";
@@ -29,7 +32,12 @@ import type {
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
+import { BudgetExceededError, budgetAbortReason, createScrapeBudget, type ScrapeBudget } from "../budget.js";
+import type { HttpClient } from "../http/http-client.js";
+import { HttpError } from "../http/http-error.js";
+import type { TransportStats } from "../scraper-contract.js";
 import { BetbyClient } from "./client.js";
+import { BETBY_BUDGET_MS } from "./http.js";
 import { buildScrapedMarkets, extractBetbyEventId, selectLeagueEvents } from "./parser.js";
 import { classifyLine, formatLine, parseSpecifiers, readTotalLine } from "./specifiers.js";
 import type { BetbyBookmaker, BetbyBrandConfig, BetbyEvent, BetbyEventRef, FetchText } from "./types.js";
@@ -38,7 +46,10 @@ import type { BetbyBookmaker, BetbyBrandConfig, BetbyEvent, BetbyEventRef, Fetch
 export const DEFAULT_EVENT_DELAY_MS = 150;
 
 export interface BetbyScraperDeps {
+  /** Raw transport (tests); wins over `http`. */
   fetchText?: FetchText;
+  /** HTTP client of the brand; defaults to a fresh shared-HttpClient instance. */
+  http?: HttpClient;
   /** Clock in ms: picks the upcoming matches and drives the client caches. */
   now?: () => number;
   eventDelayMs?: number;
@@ -107,6 +118,7 @@ function halfLineTotals(markets: ScrapedMarket[]): Record<string, { over: number
 
 export class BetbyScraper extends PlaywrightScraper {
   bookmaker: BetbyBookmaker;
+  readonly transport = "http" as const;
   config: ScraperConfig;
   readonly client: BetbyClient;
   /** The eventIds of the last scrapeFullOffer call; null until one completes. `scripts/betby-smoke.ts` reads it. */
@@ -126,17 +138,23 @@ export class BetbyScraper extends PlaywrightScraper {
     this.tag = brand.logTag;
     this.now = deps.now ?? (() => Date.now());
     this.eventDelayMs = deps.eventDelayMs ?? DEFAULT_EVENT_DELAY_MS;
-    this.client = new BetbyClient(brand, { fetchText: deps.fetchText, now: deps.now });
+    this.client = new BetbyClient(brand, { fetchText: deps.fetchText, http: deps.http, now: deps.now });
   }
 
-  async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+  /** Counters of this brand's HttpClient, cumulative since construction (copies). */
+  transportStats(): TransportStats {
+    return this.client.transportStats();
+  }
+
+  async scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
     const startedAt = Date.now();
     this.lastRunStats = null;
+    const runBudget = budget ?? createScrapeBudget(BETBY_BUDGET_MS);
     try {
       const tournamentId = this.tournamentId(league);
       if (tournamentId === null) throw new Error(`Unknown league: ${league}`);
 
-      const snapshot = await this.client.fetchSnapshot();
+      const snapshot = await this.client.fetchSnapshot(runBudget.signal);
       const refs = selectLeagueEvents(snapshot, tournamentId, this.now());
       if (refs.length === 0) {
         throw new Error(
@@ -144,12 +162,13 @@ export class BetbyScraper extends PlaywrightScraper {
         );
       }
 
-      const descriptions = await this.client.fetchDescriptions();
+      const descriptions = await this.client.fetchDescriptions(runBudget.signal);
       const stats: BetbyRunStats = { full: [], listingOnly: [] };
       const matches: FullMatchOffer[] = [];
       for (const [i, ref] of refs.entries()) {
         if (i > 0 && this.eventDelayMs > 0) await this.delay(this.eventDelayMs);
-        const event = await this.fullEvent(ref);
+        runBudget.checkpoint();
+        const event = await this.fullEvent(ref, runBudget.signal);
         (event === null ? stats.listingOnly : stats.full).push(ref.eventId);
 
         const markets = buildScrapedMarkets(event?.markets ?? ref.listingMarkets, descriptions, [ref.homeTeam, ref.awayTeam]);
@@ -176,7 +195,9 @@ export class BetbyScraper extends PlaywrightScraper {
       );
       return { success: true, bookmaker: this.bookmaker, league, matches, duration: Date.now() - startedAt };
     } catch (err) {
-      return this.createFullOfferErrorResult(league, err, Date.now() - startedAt);
+      // A budget abort reports the budget's reason, not the request it happened to cut.
+      const cause = runBudget.signal.aborted ? budgetAbortReason(runBudget.signal) : err;
+      return this.createFullOfferErrorResult(league, cause, Date.now() - startedAt);
     }
   }
 
@@ -294,12 +315,12 @@ export class BetbyScraper extends PlaywrightScraper {
    * must do: the endpoint has no event for the id, the request failed, or the payload names
    * other teams than the snapshot. That last check matters because every outcome id is
    * relative to competitor 1 and 2, so a reordered payload would put each price on the
-   * wrong side.
+   * wrong side. A budget abort is rethrown instead: the scrape then fails as a whole.
    */
-  private async fullEvent(ref: BetbyEventRef): Promise<BetbyEvent | null> {
+  private async fullEvent(ref: BetbyEventRef, signal: AbortSignal): Promise<BetbyEvent | null> {
     let reason: string;
     try {
-      const event = await this.client.fetchEvent(ref.eventId);
+      const event = await this.client.fetchEvent(ref.eventId, signal);
       const teams = event === null ? null : competitorNames(event);
       if (event === null) {
         reason = "the event endpoint has no event for this id";
@@ -309,6 +330,7 @@ export class BetbyScraper extends PlaywrightScraper {
         return event;
       }
     } catch (err) {
+      if (err instanceof BudgetExceededError || (err instanceof HttpError && err.kind === "aborted")) throw err;
       reason = errorMessage(err);
     }
     console.warn(`[${this.tag}/FullOffer] ${ref.eventId}: no event payload (${reason}); using listing markets`);

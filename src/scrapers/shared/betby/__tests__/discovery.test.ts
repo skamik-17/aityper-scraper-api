@@ -7,7 +7,9 @@ import {
   parseLebullSbConfig,
   resolveEndpoints,
 } from "../discovery.js";
-import { BetbyHttpError, createFetchText } from "../http.js";
+import { createBetbyFetchText } from "../http.js";
+import { createHttpClient, DEFAULT_USER_AGENT } from "../../http/http-client.js";
+import { HttpError } from "../../http/http-error.js";
 import type { BetbyEventRef } from "../types.js";
 import { createEvidenceFetch } from "./fake-fetch.js";
 import { loadJson, loadText } from "./fixtures.js";
@@ -56,7 +58,7 @@ describe("Betby endpoint discovery", () => {
     const warn = vi.fn();
     const r = await resolveEndpoints(BETBY_BRANDS.betters, createEvidenceFetch("betters", { failures: { "share/bootstrap": 503 } }), warn);
     expect(r.source).toBe("pinned");
-    expect(warn.mock.calls[0][0]).toMatch(/endpoint discovery failed: HTTP 503 from www\.betters\.pl\/share\/bootstrap; using pinned https:\/\/api-h-c7818b61-608\.sptpub\.com\/api\/v4/);
+    expect(warn.mock.calls[0][0]).toMatch(/endpoint discovery failed: fetch HTTP 503 https:\/\/www\.betters\.pl\/share\/bootstrap; using pinned https:\/\/api-h-c7818b61-608\.sptpub\.com\/api\/v4/);
   });
 
   it("resolveEndpoints uses the discovered host and logs drift once when the renderer names another api-h host", async () => {
@@ -150,45 +152,47 @@ describe("Betby endpoint discovery", () => {
   });
 });
 
-describe("createFetchText", () => {
-  const UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36";
+describe("createBetbyFetchText", () => {
+  const text = (timeoutMs = 1000) => createBetbyFetchText(createHttpClient(), { timeoutMs });
 
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it("sends the browser user agent, follows redirects and returns the body", async () => {
+  it("sends the shared Chrome user agent, follows redirects and returns the body", async () => {
     const fetchMock = vi.fn(async (_url: string, _init: RequestInit) => new Response("{\"ok\":true}", { status: 200 }));
     vi.stubGlobal("fetch", fetchMock);
     const url = "https://betters.sptpub.com/bt-renderer.min.js";
-    await expect(createFetchText()(url)).resolves.toBe("{\"ok\":true}");
+    await expect(text()(url)).resolves.toBe("{\"ok\":true}");
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [calledUrl, init] = fetchMock.mock.calls[0];
     expect(calledUrl).toBe(url);
-    expect(new Headers(init.headers).get("user-agent")).toBe(UA);
-    expect(init.redirect).toBe("follow");
+    expect(new Headers(init.headers).get("user-agent")).toBe(DEFAULT_USER_AGENT);
+    expect(init.redirect ?? "follow").toBe("follow"); // fetch's default
     expect(init.signal).toBeInstanceOf(AbortSignal);
   });
 
-  it("throws BetbyHttpError naming status, host and path on a non-2xx response", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("nope", { status: 503 })));
+  it("throws the client's HttpError naming status and full URL on a non-2xx response, after one retry", async () => {
+    const fetchMock = vi.fn(async () => new Response("nope", { status: 503, headers: { "retry-after": "0" } }));
+    vi.stubGlobal("fetch", fetchMock);
     const url = "https://www.betters.pl/share/bootstrap";
-    const err = await createFetchText()(url).catch((e: unknown) => e);
-    expect(err).toBeInstanceOf(BetbyHttpError);
-    expect(err).toMatchObject({ status: 503, url, message: "HTTP 503 from www.betters.pl/share/bootstrap" });
+    const err = await text()(url).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(HttpError);
+    expect(err).toMatchObject({ kind: "http", status: 503, url, message: "fetch HTTP 503 https://www.betters.pl/share/bootstrap" });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("rethrows network errors as 'Betby request failed' naming host and path", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("fetch failed"); }));
-    await expect(createFetchText()("https://www.lebull.pl/share/bootstrap"))
-      .rejects.toThrow("Betby request failed: www.lebull.pl/share/bootstrap: fetch failed");
+  it("names the network error code and URL", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("fetch failed", { cause: { code: "ECONNREFUSED" } }); }));
+    await expect(text()("https://www.lebull.pl/share/bootstrap"))
+      .rejects.toThrow("fetch failed ECONNREFUSED https://www.lebull.pl/share/bootstrap");
   });
 
   it("aborts a request that outlives timeoutMs", async () => {
     vi.stubGlobal("fetch", vi.fn((_url: string, init: RequestInit) => new Promise<Response>((_resolve, reject) => {
       init.signal!.addEventListener("abort", () => reject(init.signal!.reason));
     })));
-    await expect(createFetchText({ timeoutMs: 20 })("https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0"))
-      .rejects.toThrow(/^Betby request failed: api-h-c7818b61-608\.sptpub\.com\/api\/v4\/prematch\/brand\/2658970707769307140\/pl\/0: .*timeout/);
+    const url = "https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0";
+    await expect(text(20)(url)).rejects.toThrow(`fetch timeout 20ms ${url}`);
   });
 });

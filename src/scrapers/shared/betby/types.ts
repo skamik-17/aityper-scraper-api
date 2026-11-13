@@ -8,8 +8,8 @@
 
 export type BetbyBookmaker = "betters" | "lebull";
 
-/** GET a URL and resolve with the response body as text. */
-export type FetchText = (url: string) => Promise<string>;
+/** GET a URL and resolve with the response body as text. `init` is optional: a fake that ignores it still fits. */
+export type FetchText = (url: string, init?: { signal?: AbortSignal }) => Promise<string>;
 
 export interface BetbyEndpoints {
   /** Base for manifest, snapshot chunks and full events, e.g. `https://api-h-….sptpub.com/api/v4`. */

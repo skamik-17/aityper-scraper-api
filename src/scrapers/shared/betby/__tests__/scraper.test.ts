@@ -74,7 +74,7 @@ describe("BetbyScraper", () => {
 
   it("scrapeFullOffer reports the HTTP status and host instead of 'No events found'", async () => {
     const r = await new BettersPlaywrightScraper({ fetchText: createEvidenceFetch("betters", { failures: { "/pl/0": 404 } }) }).scrapeFullOffer("premier-league");
-    expect(r.success).toBe(false); expect(r.error).toContain("HTTP 404 from api-h-c7818b61-608.sptpub.com");
+    expect(r.success).toBe(false); expect(r.error).toContain("fetch HTTP 404 https://api-h-c7818b61-608.sptpub.com/");
   });
 
   it("unknown league fails fast and zero upcoming matches is a diagnosed failure", async () => {
@@ -138,7 +138,7 @@ describe("BetbyScraper", () => {
     expect(r.success).toBe(true); expect(r.matches).toHaveLength(11);
     expect(r.matches.find((m) => m.matchId === LEEDS)!.markets).toHaveLength(16);
     expect(warn).toHaveBeenCalledWith(
-      `[Betters/FullOffer] ${LEEDS}: no event payload (HTTP 500 from api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/${LEEDS}); using listing markets`,
+      `[Betters/FullOffer] ${LEEDS}: no event payload (fetch HTTP 500 https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/${LEEDS}); using listing markets`,
     );
   });
 
@@ -162,7 +162,7 @@ describe("BetbyScraper", () => {
     const sd = new BettersPlaywrightScraper({ fetchText: f, now: NOW, eventDelayMs: 0 });
     const r = await sd.scrapeFullOffer("premier-league");
     expect(r).toMatchObject({ success: false, matches: [] });
-    expect(r.error).toContain("HTTP 503 from api-h-c7818b61-608.sptpub.com/api/v3/descriptions");
+    expect(r.error).toContain("fetch HTTP 503 https://api-h-c7818b61-608.sptpub.com/api/v3/descriptions");
     expect(sd.lastRunStats).toBeNull();
   });
 

@@ -1,7 +1,14 @@
+import type { HttpClient } from "../http/http-client.js";
 import type { FetchText } from "./types.js";
 
-const USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36";
-const DEFAULT_TIMEOUT_MS = 15_000;
+/** Per-attempt timeout of one event request (README §5.1: 5 s for event calls). */
+export const BETBY_EVENT_TIMEOUT_MS = 5_000;
+/** Per-attempt timeout of the manifest, snapshot chunks, descriptions and discovery documents. */
+export const BETBY_LOAD_TIMEOUT_MS = 10_000;
+/** Default time budget of one league scrape (README §5.1: ~45 s). */
+export const BETBY_BUDGET_MS = 45_000;
+/** loadSnapshot fetches every chunk at once (7 in the evidence); a lower limit would serialize them. */
+export const BETBY_PER_HOST_CONCURRENCY = 8;
 
 /** `host` + `pathname` of a URL, for error messages that name the endpoint without query noise. */
 export function hostAndPath(url: string): string {
@@ -13,55 +20,11 @@ export function hostAndPath(url: string): string {
   }
 }
 
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
-}
-
-/** A Betby endpoint answered with a non-2xx status. */
-export class BetbyHttpError extends Error {
-  constructor(
-    readonly status: number,
-    readonly url: string,
-  ) {
-    super(`HTTP ${status} from ${hostAndPath(url)}`);
-    this.name = "BetbyHttpError";
-  }
-}
-
 /**
- * Plain HTTP GET over Node's global fetch (gzip/br are decoded by undici).
- * Non-2xx responses throw BetbyHttpError; network failures and timeouts throw
- * `Betby request failed: <host><path>: <reason>`.
+ * FetchText over the shared HttpClient: one retry on network/timeout/429/5xx (never on 404),
+ * redirects followed. Failures are the client's HttpErrors, unchanged (`fetch HTTP <status> <url>`,
+ * `fetch timeout <ms>ms <url>`, `fetch failed <cause> <url>`, `fetch aborted <url>`).
  */
-export function createFetchText(opts: { timeoutMs?: number } = {}): FetchText {
-  const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  return async (url: string): Promise<string> => {
-    const fail = (err: unknown): never => {
-      throw new Error(`Betby request failed: ${hostAndPath(url)}: ${errorMessage(err)}`, { cause: err });
-    };
-
-    let res: Response;
-    try {
-      res = await fetch(url, {
-        headers: { "User-Agent": USER_AGENT },
-        redirect: "follow",
-        signal: AbortSignal.timeout(timeoutMs),
-      });
-    } catch (err) {
-      return fail(err);
-    }
-
-    if (!res.ok) {
-      // Release the connection; the error body is never needed.
-      await res.body?.cancel().catch(() => undefined);
-      throw new BetbyHttpError(res.status, url);
-    }
-
-    try {
-      return await res.text();
-    } catch (err) {
-      // The timeout also covers reading the body.
-      return fail(err);
-    }
-  };
+export function createBetbyFetchText(http: HttpClient, opts: { timeoutMs: number }): FetchText {
+  return (url, init) => http.getText(url, { timeoutMs: opts.timeoutMs, retries: 1, signal: init?.signal });
 }

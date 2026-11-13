@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { BETBY_BRANDS } from "../brands.js";
 import { BetbyClient } from "../client.js";
-import { BetbyHttpError } from "../http.js";
+import { httpStatusError } from "../../http/http-error.js";
 import type { FetchText } from "../types.js";
 import { createEvidenceFetch } from "./fake-fetch.js";
 import { loadJson, loadText } from "./fixtures.js";
@@ -66,7 +66,7 @@ describe("BetbyClient", () => {
 
   it("fetchSnapshot error names host, path and status", async () => {
     const c = new BetbyClient(BETBY_BRANDS.betters, { fetchText: createEvidenceFetch("betters", { failures: { "/pl/0": 404 } }) });
-    await expect(c.fetchSnapshot()).rejects.toThrow("HTTP 404 from api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0");
+    await expect(c.fetchSnapshot()).rejects.toThrow("fetch HTTP 404 https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0");
   });
 
   it("fetchEvent returns the raw event", async () => {
@@ -153,12 +153,12 @@ describe("BetbyClient", () => {
     const f: FetchText = async (url) => {
       if (failNextManifest && url.endsWith("/pl/0")) {
         failNextManifest = false;
-        throw new BetbyHttpError(503, url);
+        throw httpStatusError(url, 503, null, "");
       }
       return evidence(url);
     };
     const c = new BetbyClient(BETBY_BRANDS.betters, { fetchText: f, now: () => 0 });
-    await expect(c.fetchSnapshot()).rejects.toThrow("HTTP 503 from api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0");
+    await expect(c.fetchSnapshot()).rejects.toThrow("fetch HTTP 503 https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/pl/0");
     expect(Object.keys((await c.fetchSnapshot()).events)).toHaveLength(58);
   });
 
@@ -192,7 +192,7 @@ describe("BetbyClient", () => {
   it("fetchEvent propagates HTTP errors other than 404", async () => {
     const f = createEvidenceFetch("betters", { failures: { "/event/pl/2725816334213586962": 503 } });
     await expect(new BetbyClient(BETBY_BRANDS.betters, { fetchText: f }).fetchEvent("2725816334213586962")).rejects.toThrow(
-      "HTTP 503 from api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/2725816334213586962",
+      "fetch HTTP 503 https://api-h-c7818b61-608.sptpub.com/api/v4/prematch/brand/2658970707769307140/event/pl/2725816334213586962",
     );
   });
 

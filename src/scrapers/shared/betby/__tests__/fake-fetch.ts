@@ -2,12 +2,12 @@
 // tests make zero live requests. Routing rules are checked in order; the first
 // match wins.
 import { existsSync } from "node:fs";
-import { BetbyHttpError } from "../http.js";
+import { httpStatusError } from "../../http/http-error.js";
 import type { BetbyBookmaker, FetchText } from "../types.js";
 import { fixturePath, loadJson, loadText } from "./fixtures.js";
 
 export interface EvidenceFetchOptions {
-  /** `url.includes(key)` -> throw BetbyHttpError(status, url). */
+  /** `url.includes(key)` -> throw the HttpClient's `fetch HTTP <status> <url>` error. */
   failures?: Record<string, number>;
   /** `url.includes(key)` -> serve this body on every matching request. */
   overrides?: Record<string, string>;
@@ -41,7 +41,7 @@ export function createEvidenceFetch(bm: BetbyBookmaker, opts: EvidenceFetchOptio
 
     // 1. Injected HTTP failures.
     const failureKey = findKey(opts.failures, url);
-    if (failureKey !== undefined) throw new BetbyHttpError(opts.failures![failureKey], url);
+    if (failureKey !== undefined) throw httpStatusError(url, opts.failures![failureKey], null, "");
 
     // 2. One-shot overrides.
     const onceKey = findKey(opts.overridesOnce, url, consumedOnce);
@@ -80,7 +80,7 @@ export function createEvidenceFetch(bm: BetbyBookmaker, opts: EvidenceFetchOptio
     if (chunk) {
       chunks ??= loadJson<{ chunks: TrimmedChunk[] }>(bm, "snapshot-trimmed.json").chunks;
       const hit = chunks.find((c) => c.requestedVersion === Number(chunk[1]));
-      if (!hit) throw new BetbyHttpError(404, url);
+      if (!hit) throw httpStatusError(url, 404, null, "");
       return JSON.stringify(hit);
     }
 

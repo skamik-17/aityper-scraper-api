@@ -23,6 +23,13 @@ function reasonText(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason);
 }
 
+/** The error a scrape fails with once `signal` (a budget's signal) has aborted. */
+export function budgetAbortReason(signal: AbortSignal): BudgetExceededError {
+  const reason = signal.reason;
+  if (reason instanceof BudgetExceededError) return reason;
+  return new BudgetExceededError(`scrape aborted: ${reasonText(reason)}`);
+}
+
 export function createScrapeBudget(maxDurationMs: number, parent?: AbortSignal): ScrapeBudget {
   if (!Number.isFinite(maxDurationMs) || maxDurationMs <= 0) {
     throw new RangeError(`maxDurationMs must be a positive finite number, got ${maxDurationMs}`);
@@ -45,10 +52,7 @@ export function createScrapeBudget(maxDurationMs: number, parent?: AbortSignal):
     deadline,
     remainingMs: () => (signal.aborted ? 0 : Math.max(0, deadline - Date.now())),
     checkpoint: () => {
-      if (!signal.aborted) return;
-      const reason = signal.reason;
-      if (reason instanceof BudgetExceededError) throw reason;
-      throw new BudgetExceededError(`scrape aborted: ${reasonText(reason)}`);
+      if (signal.aborted) throw budgetAbortReason(signal);
     },
   };
 }

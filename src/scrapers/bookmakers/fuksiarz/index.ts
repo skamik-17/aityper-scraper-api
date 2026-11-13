@@ -25,11 +25,11 @@ import {
 } from "./navigation.js";
 import {
   parseTeamNames,
-  parseAllMarkets,
   parseEventMarkets,
   isValidEvent,
 } from "./parser.js";
 import type { FuksiarzEvent } from "./types.js";
+import { toFuksiarzOffer } from "./offer-mapping.js";
 
 export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "fuksiarz";
@@ -230,31 +230,11 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
           if (!isValidEvent(event)) continue;
 
           try {
-            const eventId = String(event.eventId);
-            const teams = parseTeamNames(event.eventName);
-
-            const detailResponse = await fetchEventDetails(page, eventId);
-            const fullEvent = detailResponse?.data || event;
-
-            const markets = parseAllMarkets(fullEvent, teams);
-
-            if (markets.length > 0) {
-              matches.push({
-                matchId: eventId,
-                bookmaker: this.bookmaker,
-                homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                eventUrl: buildEventUrl(event.eventId),
-                markets,
-                startTime: fullEvent.eventStart
-                  ? new Date(fullEvent.eventStart < 1_000_000_000_000 ? fullEvent.eventStart * 1000 : fullEvent.eventStart).toISOString()
-                  : undefined,
-                scrapedAt: new Date(),
-              });
-
-              console.log(
-                `[Fuksiarz/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
-              );
+            const detailResponse = await fetchEventDetails(page, String(event.eventId));
+            const offer = toFuksiarzOffer(event, detailResponse?.data || event, leagueSlug);
+            if (offer) {
+              matches.push(offer);
+              console.log(`[Fuksiarz/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
             }
 
             await this.delay(100);

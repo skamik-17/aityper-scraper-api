@@ -409,30 +409,51 @@ export async function saveFullOfferMarkets(
   return result;
 }
 
+export interface MarketComparisonRow {
+  match_id: string;
+  league_slug: string;
+  home_team: string;
+  away_team: string;
+  market_key: string;
+  market_type_id: number;
+  market_code: string;
+  market_name_pl: string;
+  market_name_en: string;
+  view_type: string;
+  category: string;
+  param_value: string | null;
+  raw_market_name: string | null;
+  bookmaker: string;
+  selections: MarketSelection[];
+  event_url: string | null;
+  scraped_at: string;
+}
+
+/**
+ * Every latest row of one match in one call (migration 12's get_match_market_rows), ordered
+ * by category, market_key, bookmaker like market_comparison. One json value, so PostgREST's
+ * 1 000-row cap does not apply and no page recomputes the window.
+ */
+export async function getMatchMarketRows(matchId: string): Promise<MarketComparisonRow[]> {
+  const supabase = getSupabase();
+  const { data, error } = await (supabase as any).rpc("get_match_market_rows", { p_match_id: matchId });
+  if (error) {
+    console.error("[FullOfferRepo] getFullOfferByMatch error:", error);
+    throw new RepositoryError("Failed to get full offer", "getFullOfferByMatch", error);
+  }
+  return Array.isArray(data) ? (data as MarketComparisonRow[]) : [];
+}
+
 export async function getFullOfferByMatch(
   homeTeam: string,
   awayTeam: string,
   leagueSlug: string = "ekstraklasa"
 ): Promise<FullOfferComparison | null> {
-  const supabase = getSupabase();
   const matchId = generateMatchId(homeTeam, awayTeam, leagueSlug);
   const canonicalHome = getCanonicalTeamName(homeTeam, leagueSlug);
   const canonicalAway = getCanonicalTeamName(awayTeam, leagueSlug);
 
-  const { data, error } = await fetchAllRows<any>((from, to) =>
-    supabase
-      .from("market_comparison")
-      .select("*")
-      .eq("match_id", matchId)
-      .order("category")
-      .order("market_key")
-      .range(from, to) as any,
-  );
-
-  if (error) {
-    console.error("[FullOfferRepo] getFullOfferByMatch error:", error);
-    throw new RepositoryError("Failed to get full offer", "getFullOfferByMatch", error);
-  }
+  const data = await getMatchMarketRows(matchId);
 
   if (data.length === 0) {
     return null; // No data is not an error

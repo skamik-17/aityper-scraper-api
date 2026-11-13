@@ -55,4 +55,16 @@ $$;
 REVOKE ALL ON FUNCTION prune_stale_odds(text, timestamptz, jsonb, numeric, integer, boolean) FROM PUBLIC, anon, authenticated;
 GRANT EXECUTE ON FUNCTION prune_stale_odds(text, timestamptz, jsonb, numeric, integer, boolean) TO service_role;
 
+-- get_match_market_rows: one-call match read for getFullOfferByMatch. Replaces 7 offset pages of
+-- market_comparison (each recomputing a window and spilling a sort; 51 GB of temp writes and
+-- 1,355 s of DB time in 9 h). json, so PostgREST max_rows does not apply.
+CREATE OR REPLACE FUNCTION get_match_market_rows(p_match_id text)
+RETURNS json LANGUAGE sql STABLE SET work_mem = '16MB' AS $$
+  SELECT COALESCE(json_agg(r ORDER BY r.category, r.market_key, r.bookmaker), '[]'::json)
+  FROM (SELECT match_id, league_slug, home_team, away_team, market_key, market_type_id, market_code,
+               market_name_pl, market_name_en, view_type, category, param_value, raw_market_name,
+               bookmaker, selections, event_url, scraped_at
+        FROM latest_odds WHERE match_id = p_match_id) r
+$$;
+
 NOTIFY pgrst, 'reload schema';

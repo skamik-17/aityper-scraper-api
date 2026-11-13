@@ -30,6 +30,11 @@ const arsCov: NormalizationContext = {
   awayTeam: "Coventry City",
   league: "premier-league",
 };
+const fraMar: NormalizationContext = {
+  homeTeam: "France",
+  awayTeam: "Morocco",
+  league: "world-cup-2026",
+};
 
 function run(raw: RawBookmakerMarket, ctx: NormalizationContext) {
   const out = superbetNormalizer.normalizeMarket(raw, ctx);
@@ -37,8 +42,9 @@ function run(raw: RawBookmakerMarket, ctx: NormalizationContext) {
   return out;
 }
 
-// OTHER-by-name results log an expected "[superbet] Unmapped market" warning;
-// silence it so the test output stays clean.
+// OTHER-by-name results log an expected "[superbet] Unmapped market" warning.
+// The spy silences it and lets tests assert which rows warn: id-routed rows
+// must not, so the run log keeps no unmapped line for them.
 beforeEach(() => {
   vi.spyOn(console, "warn").mockImplementation(() => {});
 });
@@ -95,6 +101,38 @@ describe("superbet: names containing 'ou' never become TOTAL_GOALS", () => {
     expect(out.marketCode).toBe("OTHER");
   });
 
+  // All six team yes/no specials route to OTHER by id, so none of them logs
+  // "[superbet] Unmapped market" (111 such lines per run before the fix).
+  // Home rows (232507/232513/232515) are the ones above. Away rows
+  // (232508/232514/232516) are Bournemouth - Nottingham Forest on the live
+  // :3001 backend (superbet scrape 2026-11-13T17:00Z), where each of the
+  // three names the away team.
+  it.each([
+    ["232507", "Bournemouth strzeli co najmniej 2 gole z rzędu", 2.27, 1.54],
+    ["232508", "Nottingham Forest strzeli co najmniej 2 gole z rzędu", 3.55, 1.24],
+    ["232513", "Bournemouth wygra wcześniej przegrywając", 8.6, 1.04],
+    ["232514", "Nottingham Forest wygra wcześniej przegrywając", 15, 1.01],
+    ["232515", "Bournemouth będzie prowadzić w dowolnym momencie", 1.49, 2.42],
+    ["232516", "Nottingham Forest będzie prowadzić w dowolnym momencie", 2, 1.7],
+  ] as const)("%s (%s) is OTHER by id and logs no unmapped warning", (id, name, tak, nie) => {
+    const out = run(
+      {
+        bookmakerMarketId: id,
+        name,
+        selections: [
+          { name: "Tak", odds: tak },
+          { name: "Nie", odds: nie },
+        ],
+      },
+      bou
+    );
+    expect(out.marketCode).toBe("OTHER");
+    expect(out.marketKey).toBe("OTHER");
+    expect(out.paramValue).toBeUndefined();
+    expect(out.debug?.matchedBy).toBe("id");
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
   it("Toulouse leader market without id is OTHER", () => {
     const out = run(
       {
@@ -108,6 +146,10 @@ describe("superbet: names containing 'ou' never become TOTAL_GOALS", () => {
     );
     expect(out.marketCode).toBe("OTHER");
     expect(out.debug?.matchedBy).toBe("name");
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '[superbet] Unmapped market "Toulouse będzie prowadzić w dowolnym momencie" (id: none)'
+    );
   });
 
   it("genuine O/U names stay TOTAL_GOALS", () => {
@@ -140,6 +182,10 @@ describe("superbet: names containing 'ou' never become TOTAL_GOALS", () => {
       arsCov
     );
     expect(out.marketCode).toBe("OTHER");
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '[superbet] Unmapped market "Więcej asyst: Odegaard, Martin vs Tchaouna, Loum" (id: 232370)'
+    );
   });
 });
 
@@ -240,6 +286,94 @@ describe("superbet: exact-goals family maps by id", () => {
     expect(out.debug?.matchedBy).toBe("id");
     expect(out.selections.map((s) => s.code)).toEqual(codes);
     expect(out.selections.map((s) => s.odds)).toEqual(sels.map(([, odds]) => odds));
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  // Hypothetical ladder: every live 568 ladder (100 ladders on the 20 PL
+  // fixtures, 2026-11-13) uses the catalog bands 0/1/2/3+. A band outside the
+  // vocabulary (0,1,2,2+,3+) must become UNKNOWN. It must never reach the 1X2
+  // mapper, where a bare "3" becomes DRAW.
+  it("568 off-vocabulary bands become UNKNOWN, never DRAW", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "568",
+        name: "1.połowa - dokładna liczba goli",
+        selections: [
+          { name: "0", odds: 3.85 },
+          { name: "1", odds: 2.67 },
+          { name: "2", odds: 3.55 },
+          { name: "3", odds: 9.5 },
+          { name: "4+", odds: 21 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("HALF_TIME_EXACT_GOALS");
+    expect(out.selections.map((s) => s.code)).toEqual(["0", "1", "2", "UNKNOWN", "UNKNOWN"]);
+  });
+});
+
+// Superbet's "<X> lub obie drużyny strzelą gola" is one Tak/Nie market per
+// result leg (231006 home, 231007 draw, 231008 away). "Nie" is NOT(<X> or
+// BTTS), so neither happens. The catalog's <SIDE>_OR_BTTS_NO is "<X> or
+// BTTS-No", a different and much shorter-priced bet. Only the tak leg is
+// published, as forbet does. Raw values are the WC golden fixture entries
+// 2705, 2728 and 2706 (Tak/Nie implied probabilities sum to 1.08, so "Nie" is
+// the complement of "Tak").
+describe("superbet: RESULT_OR_BTTS publishes only the tak leg", () => {
+  it.each([
+    ["231006", "Francja wygra lub obie drużyny strzelą gola", 1.15, 4.8, "HOME_OR_BTTS_YES"],
+    ["231007", "Remis lub obie drużyny strzelą gola", 1.72, 2, "DRAW_OR_BTTS_YES"],
+    ["231008", "Maroko wygra lub obie drużyny strzelą gola", 1.68, 2.07, "AWAY_OR_BTTS_YES"],
+  ] as const)("%s (%s) keeps only the tak leg", (id, name, tak, nie, code) => {
+    const out = run(
+      {
+        bookmakerMarketId: id,
+        name,
+        selections: [
+          { name: "Tak", odds: tak },
+          { name: "Nie", odds: nie },
+        ],
+      },
+      fraMar
+    );
+    expect(out.marketCode).toBe("RESULT_OR_BTTS");
+    expect(out.marketKey).toBe("RESULT_OR_BTTS");
+    expect(out.paramValue).toBeUndefined();
+    expect(out.debug?.matchedBy).toBe("id");
+    expect(out.selections).toEqual([{ code, label: "Tak", odds: tak }]);
+    expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  it("drops the market when there is no single tak leg", () => {
+    const out = superbetNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "231006",
+        name: "Francja wygra lub obie drużyny strzelą gola",
+        selections: [{ name: "Nie", odds: 4.8 }],
+      },
+      fraMar
+    );
+    expect(out).toBeNull();
+    expect(console.warn).toHaveBeenCalledTimes(1);
+    expect(console.warn).toHaveBeenCalledWith(
+      '[superbet] RESULT_OR_BTTS: could not resolve the tak leg for "Francja wygra lub obie drużyny strzelą gola" (id: 231006)'
+    );
+  });
+
+  it("drops the market on an unrecognised label", () => {
+    const out = superbetNormalizer.normalizeMarket(
+      {
+        bookmakerMarketId: "231007",
+        name: "Remis lub obie drużyny strzelą gola",
+        selections: [
+          { name: "Tak", odds: 1.72 },
+          { name: "Remis", odds: 2 },
+        ],
+      },
+      fraMar
+    );
+    expect(out).toBeNull();
   });
 });
 
@@ -266,6 +400,7 @@ describe("superbet: today's First-Last player formats", () => {
     expect(out.paramValue).toBe("John Egan");
     expect(out.selections.map((s) => s.code)).toEqual(["1+", "2+", "3+"]);
     expect(out.selections.map((s) => s.odds)).toEqual([2.12, 6, 17]);
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   it("236226 First-Last goalscorer stays verbatim", () => {
@@ -366,6 +501,7 @@ describe("superbet: player stat lines key the player", () => {
       expect(out.debug?.matchedBy).toBe("id");
       expect(out.marketKey).toBe(`${out.marketCode}:${out.paramValue}`);
     }
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   it("238453 (tackles suffered, no catalog code) is OTHER by id", () => {
@@ -376,6 +512,7 @@ describe("superbet: player stat lines key the player", () => {
       expect(out.marketCode).toBe("OTHER");
       expect(out.debug?.matchedBy).toBe("id");
     }
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   // Right/left-foot shot lines have no catalog code either. One real row each
@@ -392,6 +529,7 @@ describe("superbet: player stat lines key the player", () => {
     );
     expect(out.marketCode).toBe("OTHER");
     expect(out.debug?.matchedBy).toBe("id");
+    expect(console.warn).not.toHaveBeenCalled();
   });
 
   // The sample has no rows for these four ids. Names, lines and prices are
@@ -459,5 +597,6 @@ describe("superbet: player stat lines key the player", () => {
       expect(out.debug?.matchedBy).toBe("id");
       expect(out.marketKey).toBe(`${out.marketCode}:${out.paramValue}`);
     }
+    expect(console.warn).not.toHaveBeenCalled();
   });
 });

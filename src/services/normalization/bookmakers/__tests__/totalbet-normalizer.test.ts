@@ -290,9 +290,11 @@ describe("totalbet normalizer (integrity guards)", () => {
   });
 
   it("totalbet drops an Asian handicap whose selections carry another line than the market", () => {
+    // The displayed name shows the slug's own period, as in the captures ("1. Połowa - handicap").
+    const nameFor = (id: string) => (id.startsWith("slug:1_") ? "1. Połowa - handicap" : id.startsWith("slug:2_") ? "2. Połowa - Handicap" : "Handicap");
     const ah = (bookmakerMarketId: string, paramValue: string, names: string[]) =>
       totalbetNormalizer.normalizeMarket(
-        { bookmakerMarketId, name: "Handicap", paramValue, selections: names.map((name) => ({ name, odds: 1.13 })) },
+        { bookmakerMarketId, name: nameFor(bookmakerMarketId), paramValue, selections: names.map((name) => ({ name, odds: 1.13 })) },
         ctx,
       );
     // A padded row [L(-1.5), E, L(+1.5), O(away), E, E, E, E] read by grid position gives the away
@@ -367,6 +369,38 @@ describe("totalbet normalizer (integrity guards)", () => {
     expect(tt("slug:2_poaowa_competitor2_suma_goli_", "2. Połowa - Tottenham - Total (suma)")).toMatchObject({
       marketKey: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS:0.5",
     });
+  });
+
+  // Controller ruling 22 (totalbet): the period of a slug-keyed market used to
+  // come from the CMS slug alone. The displayed name shows the period too
+  // ("1. połowa - …", "2. Połowa - …", none for the whole match); when the two
+  // disagree the slug was reused or misread, so the market is dropped rather
+  // than published under another period's code.
+  it("totalbet drops a slug-keyed market whose name shows another period", () => {
+    const line = (bookmakerMarketId: string, name: string, paramValue = "0.5") =>
+      totalbetNormalizer.normalizeMarket(
+        { bookmakerMarketId, name, paramValue, selections: [{ name: "poniżej 0.5", odds: 3.15 }, { name: "powyżej 0.5", odds: 1.31 }] },
+        ctx,
+      );
+    expect(line("slug:suma", "1. połowa - Total (suma)")).toBeNull();
+    expect(line("slug:1_poaowa_suma", "2. połowa - Total (suma)")).toBeNull();
+    expect(line("slug:1_poaowa_suma", "Total (suma)")).toBeNull();
+    expect(line("slug:2_poaowa_suma", "1. Połowa - Total (suma)")).toBeNull();
+    expect(line("slug:competitor1_total_suma", "1. połowa - Leeds - Total (suma)")).toBeNull();
+    expect(line("slug:2_poaowa_competitor1_suma_goli_", "Leeds - Total (suma)")).toBeNull();
+    const hcp = (bookmakerMarketId: string, name: string) =>
+      totalbetNormalizer.normalizeMarket(
+        { bookmakerMarketId, name, paramValue: "-1.5", selections: [{ name: "Leeds (-1.5)", odds: 3.1 }, { name: "Tottenham (+1.5)", odds: 1.36 }] },
+        ctx,
+      );
+    expect(hcp("slug:handicap", "1. Połowa - handicap")).toBeNull();
+    expect(hcp("slug:2_poaowa_handicap", "Handicap")).toBeNull();
+    // agreeing names still map
+    expect(line("slug:suma", "Total (suma)")).toMatchObject({ marketKey: "TOTAL_GOALS:0.5" });
+    expect(line("slug:1_poaowa_suma", "1. połowa - Total (suma)")).toMatchObject({ marketKey: "HALF_TIME_TOTAL_GOALS:0.5" });
+    expect(line("slug:2_poaowa_suma", "2. Połowa - Total (suma)")).toMatchObject({ marketKey: "SECOND_HALF_TOTAL_GOALS:0.5" });
+    expect(hcp("slug:1_poaowa_handicap", "1. Połowa - handicap")).toMatchObject({ marketKey: "FIRST_HALF_ASIAN_HANDICAP:-1.5" });
+    expect(hcp("slug:handicap", "Handicap")).toMatchObject({ marketKey: "ASIAN_HANDICAP:-1.5" });
   });
 
   it("totalbet looks up only own keys of its tables", () => {

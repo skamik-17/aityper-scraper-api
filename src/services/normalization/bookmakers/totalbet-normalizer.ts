@@ -272,6 +272,32 @@ function teamLabelAgrees(rawId: string | undefined, name: string, ctx: Normaliza
   return true;
 }
 
+type Period = "FULL" | "FIRST_HALF" | "SECOND_HALF";
+
+/** The period a catalog code is about. */
+function codePeriod(code: NormalizedMarketType): Period {
+  if (code.startsWith("HALF_TIME_") || code.startsWith("FIRST_HALF_")) return "FIRST_HALF";
+  if (code.startsWith("SECOND_HALF_")) return "SECOND_HALF";
+  return "FULL";
+}
+
+/** The period a slug component's displayed name shows: "1. połowa - …", "2. Połowa - …", or none (whole match). */
+function namePeriod(name: string): Period {
+  const half = /^([12])\.\s*po[łl]owa\b/iu.exec(collapseWhitespace(name))?.[1];
+  return half === "1" ? "FIRST_HALF" : half === "2" ? "SECOND_HALF" : "FULL";
+}
+
+/**
+ * True unless the market is slug-keyed and its displayed name shows another period
+ * than its code. A slug is a CMS key that carries the period on its own
+ * ("1_poaowa_suma"); a name that disagrees means a reused or misread slug.
+ * Column markets (mid keys) are not checked: their period is the column header.
+ */
+function periodAgrees(rawId: string | undefined, marketCode: NormalizedMarketType, name: string): boolean {
+  if (rawId === undefined || !rawId.startsWith("slug:")) return true;
+  return namePeriod(name) === codePeriod(marketCode);
+}
+
 /**
  * True when every selection carries the market's own line. The grid parser reads a
  * handicap line from the grid position; Totalbet also prints it in each selection
@@ -335,6 +361,7 @@ export const totalbetNormalizer: BookmakerMarketNormalizer = {
     const paramValue = lineFor(family, raw.paramValue);
     if (paramValue === null) return null;
     if (!teamLabelAgrees(rawId, raw.name, ctx)) return null;
+    if (!periodAgrees(rawId, marketCode, raw.name)) return null;
 
     const selections = raw.selections.map((sel) => ({
       code: selectionCode(family, sel.name, ctx),

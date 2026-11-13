@@ -11,6 +11,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "dev:stack": "bash scripts/dev-stack.sh",
     "build": "tsc",
     "start": "node dist/index.js",
     "db:migrate": "./scripts/apply-migrations.sh",

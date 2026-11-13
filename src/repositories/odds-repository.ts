@@ -3,6 +3,8 @@ import type { PolishBookmaker } from "../config/index.js";
 import type { Database, LatestOddsRow, OddsInsert } from "../types/database.js";
 import { getCanonicalTeamName, getNormalizedTeamName } from "../utils/team-matcher.js";
 import { fetchAllRows } from "../utils/supabase-pagination.js";
+import { parseDbTimestamp } from "../utils/db-timestamp.js";
+import { formatDbError } from "../services/run-outcome.js";
 
 export interface AggregatedMatchOdds {
   match_id: string;
@@ -107,9 +109,13 @@ export async function getMatchInfoById(matchId: string): Promise<MatchInfoRow | 
   };
 }
 
+/**
+ * Newest scraped_at of one bookmaker's odds in one league, or null without rows.
+ * Throws an Error with the formatted DB cause on a PostgREST error.
+ */
 export async function getLastScrapeTime(
   bookmaker: PolishBookmaker,
-  leagueSlug: string = "ekstraklasa"
+  leagueSlug: string
 ): Promise<Date | null> {
   const supabase = getSupabase();
 
@@ -121,46 +127,33 @@ export async function getLastScrapeTime(
     .order("scraped_at", { ascending: false })
     .limit(1);
 
-  if (error || !data || data.length === 0) {
+  if (error) {
+    throw new Error(`odds freshness query failed for ${bookmaker}: ${formatDbError(error)}`);
+  }
+  if (!data || data.length === 0) {
     return null;
   }
 
-  return new Date(data[0].scraped_at);
+  return parseDbTimestamp(data[0].scraped_at);
 }
 
-export async function getBookmakerStatus(leagueSlug: string = "ekstraklasa") {
-  const supabase = getSupabase();
+/**
+ * Newest scraped_at per bookmaker: one limit(1) query each. A single unbounded
+ * select would be capped at PostgREST max_rows (1000) and, ordered by
+ * scraped_at, see only the latest bookmaker. Bookmakers without rows are absent.
+ */
+export async function getOddsFreshnessByBookmaker(
+  leagueSlug: string,
+  bookmakers: readonly PolishBookmaker[]
+): Promise<Map<PolishBookmaker, Date>> {
+  const latest = await Promise.all(bookmakers.map((bm) => getLastScrapeTime(bm, leagueSlug)));
 
-  const { data, error } = await supabase
-    .from("odds")
-    .select("bookmaker, scraped_at")
-    .eq("league_slug", leagueSlug)
-    .order("scraped_at", { ascending: false });
-
-  if (error) {
-    console.error("[OddsRepository] getBookmakerStatus error:", error);
-    throw error;
-  }
-
-  const statusMap = new Map<PolishBookmaker, { lastScrape: Date; matchCount: number }>();
-  const matchCounts = new Map<PolishBookmaker, number>();
-
-  for (const row of data || []) {
-    const bm = row.bookmaker as PolishBookmaker;
-    if (!statusMap.has(bm)) {
-      statusMap.set(bm, {
-        lastScrape: new Date(row.scraped_at),
-        matchCount: 0,
-      });
-    }
-    matchCounts.set(bm, (matchCounts.get(bm) || 0) + 1);
-  }
-
-  for (const [bm, status] of Array.from(statusMap.entries())) {
-    status.matchCount = matchCounts.get(bm) || 0;
-  }
-
-  return statusMap;
+  const freshness = new Map<PolishBookmaker, Date>();
+  bookmakers.forEach((bm, i) => {
+    const scrapedAt = latest[i];
+    if (scrapedAt && !isNaN(scrapedAt.getTime())) freshness.set(bm, scrapedAt);
+  });
+  return freshness;
 }
 
 export async function cleanupOldOdds(hoursToKeep: number = 24): Promise<{ deleted: number }> {

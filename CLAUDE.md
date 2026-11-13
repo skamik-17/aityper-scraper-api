@@ -42,13 +42,42 @@ frontend change unless it also changes a response shape the frontend depends on.
 
 ```bash
 npm run dev          # Start Express + scrapers (port 3001), hot reload
+npm run dev:stack    # Check/start local Supabase, then npm run dev (-- --check: probe only; -- --no-scrapers)
 npm run build        # TypeScript compile to dist/
 npm run start         # Run the compiled build
 npm run test          # Vitest watch mode
 npm run test:run       # Vitest single run (CI)
 npm run test:coverage  # Vitest with coverage report
-npm run db:migrate    # Apply Supabase migrations (./scripts/apply-migrations.sh)
+npm run db:migrate -- <file>   # Apply ONE migration (./scripts/apply-migrations.sh <file>; --all re-runs 01..N, never against a live DB)
 ```
+
+## Local Supabase
+
+The API reads and writes the local Supabase stack (`SUPABASE_URL`, PostgREST on
+`http://127.0.0.1:54321`). A scrape run refuses to start while the database is unreachable.
+
+- **Start procedure:** `npm run dev:stack` (`bash scripts/dev-stack.sh [--check] [--no-scrapers]`).
+  It loads `.env` (variables already in the environment win) and probes `market_types`
+  through PostgREST; only HTTP 200 counts as up. It exits 1 if the API already answers on
+  `:${PORT:-3001}`. When a local stack is down, it `docker start`s the stopped
+  `com.supabase.cli.project=backend` containers (except `edge_runtime`). When no such
+  container exists (e.g. after `supabase stop`), it runs `supabase start` with CLI 2.70.5:
+  the copy already under `~/.npm/_npx/*/node_modules/supabase` when there is one (works
+  offline), otherwise `npx --yes supabase@2.70.5 start`. npx keys its cache on the raw
+  argument, so that pinned spec does not reuse a bare `npx supabase` cache: its first run
+  needs network access (npm registry plus a ~56 MB CLI download from GitHub). It then waits
+  up to 90 s for HTTP 200 and execs `npm run dev`. `--no-scrapers` sets `SCRAPERS_ON=false`.
+- **Check only:** `npm run dev:stack -- --check` prints
+  `Supabase reachable at <url> (market_types HTTP 200)` and exits 0, or
+  `Supabase NOT reachable at <url> (HTTP <code>)` and exits 1. It starts nothing.
+- **Migrations:** apply exactly one file, e.g.
+  `npm run db:migrate -- 11_scraper_runs_observability.sql`. Without an argument the script
+  prints its usage line and exits 2; `--all` re-runs 01..N and must never be used against a
+  live DB.
+- **Scraper health:** `npx tsx scripts/scraper-status.ts [--league <slug>] [--json]` prints
+  each bookmaker's last run status (exit 1 at the failure threshold, 2 when the DB is
+  unreachable). `npx tsx scripts/smoke-bookmaker.ts --bookmaker <bm> [--persist]` scrapes one
+  bookmaker: dry by default; `--persist` writes to the DB and exits 3 when it is unreachable.
 
 ## Key Configuration Files
 

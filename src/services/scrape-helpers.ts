@@ -60,8 +60,10 @@ export async function normalizeAndSaveMatches(
     try {
       const batchResult = await saveBatchFullOfferMarkets(normalizedMatches, bookmaker, league);
       result.marketsSaved = batchResult.inserted;
-      if (batchResult.errors > 0) {
-        result.errors.push(`Batch insert had ${batchResult.errors} errors`);
+      if (batchResult.failedBatches > 0) {
+        result.errors.push(
+          `Batch insert failed (${batchResult.failedBatches} of ${batchResult.totalBatches} batches): ${batchResult.firstError}`
+        );
       }
     } catch (error) {
       const errorMsg = `Batch save failed: ${error instanceof Error ? error.message : "Unknown error"}`;

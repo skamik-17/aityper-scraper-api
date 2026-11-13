@@ -75,6 +75,25 @@ export interface FullMatchOffer {
 }
 
 /**
+ * Navigation facts recorded on the scraper page (HTTP status, host, websockets).
+ * Attached only to failed or empty full-offer results.
+ */
+export interface NavigationDiagnostics {
+  /** Main-frame document responses, max 50. requestedUrl is the start of the redirect chain. */
+  documents: Array<{ requestedUrl: string; finalUrl: string; status: number }>;
+  /** Main-frame documents that got no response (DNS, refused, TLS, goto timeout), max 10 */
+  failedNavigations: Array<{ url: string; errorText: string }>;
+  /** fetch/xhr responses with status >= 400, deduped by url+status, max 20 */
+  failedRequests: Array<{ url: string; status: number; resourceType: string }>;
+  /** Websocket URLs opened by the page, deduped, max 10 */
+  websockets: string[];
+  /** Page URL when the snapshot was taken */
+  finalUrl: string | null;
+  /** Page title when the snapshot was taken */
+  title: string | null;
+}
+
+/**
  * Result from scraping full offer for a league
  */
 export interface FullOfferScraperResult {
@@ -90,6 +109,8 @@ export interface FullOfferScraperResult {
   error?: string;
   /** Scraping duration in milliseconds */
   duration?: number;
+  /** Navigation facts, present only on failed or empty results */
+  diagnostics?: NavigationDiagnostics;
 }
 
 /**

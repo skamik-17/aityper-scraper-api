@@ -5,7 +5,7 @@ import {
   loadFixtureRoutes,
   withoutScrapedAt,
 } from "../../../shared/rest-market/__tests__/offline-harness.js";
-import { EtotoPlaywrightScraper } from "../index.js";
+import { EtotoBrowserScraper } from "../index.js";
 import { toEtotoOffer } from "../offer-mapping.js";
 import { isValidEvent } from "../parser.js";
 import type { EtotoEvent } from "../types.js";
@@ -22,7 +22,7 @@ const mapped = () =>
   list.data.filter(isValidEvent).map((e) => toEtotoOffer(e, detailOf(e), "premier-league")).filter((o) => o !== null);
 
 async function oldBrowserRun() {
-  const scraper = new EtotoPlaywrightScraper();
+  const scraper = new EtotoBrowserScraper();
   const { calls } = driveBrowserScraperOffline(scraper, loadFixtureRoutes("etoto", URLS));
   const result = await scraper.scrapeFullOffer("premier-league");
   return { result, calls };

@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/etoto-prep-audit.ts --url "<etoto event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { etotoScraper } from "../src/scrapers/bookmakers/etoto/index.js";
+import { etotoScraper } from "../src/scrapers/bookmakers/index.js";
 import { etotoNormalizer } from "../src/services/normalization/bookmakers/etoto-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

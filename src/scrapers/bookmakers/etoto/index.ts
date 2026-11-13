@@ -36,7 +36,8 @@ import {
 import type { EtotoEvent } from "./types.js";
 import { toEtotoOffer } from "./offer-mapping.js";
 
-export class EtotoPlaywrightScraper extends PlaywrightScraper {
+/** etoto's browser path, kept as the SCRAPER_TRANSPORT_ETOTO=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class EtotoBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "etoto";
   config: ScraperConfig;
 
@@ -259,7 +260,12 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
 
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));
-            const offer = toEtotoOffer(event, detailData?.data || event, leagueSlug);
+            if (!detailData?.data) {
+              // No listing fallback: a thin listing write would replace the match's full offer
+              console.warn(`[eToto/FullOffer] Skipping ${event.eventId}: detail failed`);
+              continue;
+            }
+            const offer = toEtotoOffer(event, detailData.data, leagueSlug);
             if (offer) {
               matches.push(offer);
               console.log(`[eToto/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
@@ -295,5 +301,3 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-// Export singleton instance
-export const etotoScraper = new EtotoPlaywrightScraper();

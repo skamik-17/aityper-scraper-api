@@ -2,11 +2,20 @@
  * Export all bookmaker scrapers
  *
  * All scrapers refactored to modular directory structure.
+ *
+ * Brands with a browserless path pick their transport here, once at module load
+ * (README §3 single pick): HTTP by default, the browser class when
+ * SCRAPER_TRANSPORT_<BM>=browser. A change needs a restart.
  */
+import { getTransportOverride } from "../../config/transport.js";
+import type { FullOfferScraper } from "../shared/scraper-contract.js";
+import { EtotoBrowserScraper } from "./etoto/index.js";
+import { EtotoHttpScraper } from "../shared/rest-market/brands/etoto.js";
 
 // Modular scrapers (refactored)
 export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet/index.js";
-export { etotoScraper, EtotoPlaywrightScraper } from "./etoto/index.js";
+export { EtotoBrowserScraper } from "./etoto/index.js";
+export { EtotoHttpScraper } from "../shared/rest-market/brands/etoto.js";
 export { forbetScraper, ForbetPlaywrightScraper } from "./forbet/index.js";
 export { lebullScraper, LebullPlaywrightScraper } from "./lebull/index.js";
 export { fuksiarzScraper, FuksiarzPlaywrightScraper } from "./fuksiarz/index.js";
@@ -19,3 +28,6 @@ export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
 export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk/index.js";
 export { lvbetScraper, LVBetPlaywrightScraper } from "./lvbet/index.js";
 export { fortunaScraper, FortunaPlaywrightScraper } from "./fortuna/index.js";
+
+export const etotoScraper: FullOfferScraper =
+  getTransportOverride("etoto") === "browser" ? new EtotoBrowserScraper() : new EtotoHttpScraper();

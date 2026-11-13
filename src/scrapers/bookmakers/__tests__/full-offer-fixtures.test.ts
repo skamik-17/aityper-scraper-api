@@ -67,7 +67,7 @@ vi.mock("../betclic/navigation.js", async (orig) => {
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { ScraperCache } from "../../../services/cache-manager.js";
 import { ForbetPlaywrightScraper } from "../forbet/index.js";
-import { EtotoPlaywrightScraper } from "../etoto/index.js";
+import { EtotoBrowserScraper } from "../etoto/index.js";
 import { FuksiarzPlaywrightScraper } from "../fuksiarz/index.js";
 import { BetfanPlaywrightScraper } from "../betfan/index.js";
 import { LVBetPlaywrightScraper } from "../lvbet/index.js";
@@ -96,7 +96,7 @@ afterEach(() => {
 
 const SCRAPERS = [
   ["forbet", () => new ForbetPlaywrightScraper()],
-  ["etoto", () => new EtotoPlaywrightScraper()],
+  ["etoto", () => new EtotoBrowserScraper()],
   ["fuksiarz", () => new FuksiarzPlaywrightScraper()],
   ["betfan", () => new BetfanPlaywrightScraper()],
   ["lvbet", () => new LVBetPlaywrightScraper()],

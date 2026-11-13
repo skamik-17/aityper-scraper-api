@@ -11,7 +11,7 @@
  *   npx tsx scripts/etoto-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/etoto-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { etotoScraper } from "../src/scrapers/bookmakers/etoto/index.js";
+import { etotoScraper } from "../src/scrapers/bookmakers/index.js";
 import { etotoNormalizer } from "../src/services/normalization/bookmakers/etoto-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

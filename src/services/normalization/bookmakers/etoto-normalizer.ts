@@ -1367,28 +1367,32 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       }
       selections = [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }];
     } else if (marketCode === "RESULT_OR_BTTS") {
-      // Cluster #12 / controller ruling 4: etoto quotes each "<team> wygra
-      // lub obie strzelą" / "Remis lub obie strzelą" leg (-8041/-8042/-8043)
-      // as its own complementary Tak/Nie market (France v Morocco -8041: Tak
-      // 1.15 / Nie 4.7, implied 0.870 + 0.213 = 1.08). Only "tak" ("<X> or
-      // BTTS") is published, as <SIDE>_OR_BTTS_YES. etoto's "nie" is NOT(<X>
-      // or BTTS), i.e. neither happens, but the catalog <SIDE>_OR_BTTS_NO means
-      // "<X> or BTTS-No", a different and much shorter-priced bet, so "nie" is
-      // dropped (the forbet rule). The side comes from the id; an id with no
-      // side entry other than the draw leg (-8042), an unrecognised label or a
-      // missing/duplicated tak leg drops the whole market rather than guess.
+      // Cluster #12 / controller rulings 4 and 21: etoto quotes each "<team>
+      // wygra lub obie strzelą" / "Remis lub obie strzelą" leg (-8041/-8042/
+      // -8043) as its own complementary Tak/Nie market (France v Morocco
+      // -8041: Tak 1.15 / Nie 4.7, implied 0.870 + 0.213 = 1.08). "tak" is
+      // "<X> or BTTS" (<SIDE>_OR_BTTS_YES); "nie" is NOT(<X> or BTTS), i.e.
+      // neither happens, which is what the catalog's <SIDE>_OR_BTTS_NO says
+      // ("Ani 1, ani obie strzelą"). The side comes from the id; an id with
+      // no side entry other than the draw leg (-8042), an unrecognised label,
+      // a missing/duplicated tak leg or a duplicated nie leg drops the whole
+      // market rather than guess.
       const side = teamSide ?? (marketId === -8042 ? "DRAW" : undefined);
       const legs = raw.selections.map((sel: { name: string }) => normalizeYesNoSelection(sel.name));
       const yesSelections = raw.selections.filter((_: unknown, i: number) => legs[i] === "YES");
-      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
-        console.warn(`[etoto] RESULT_OR_BTTS: could not resolve the side or tak leg for "${raw.name}"`);
+      const noSelections = raw.selections.filter((_: unknown, i: number) => legs[i] === "NO");
+      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1 || noSelections.length > 1) {
+        console.warn(`[etoto] RESULT_OR_BTTS: could not resolve the side or tak/nie legs for "${raw.name}"`);
         return null;
       }
-      selections = [{
-        code: `${side}_OR_BTTS_YES` as NormalizedSelection,
-        label: yesSelections[0].name,
-        odds: yesSelections[0].odds,
-      }];
+      selections = [
+        { code: `${side}_OR_BTTS_YES` as NormalizedSelection, label: yesSelections[0].name, odds: yesSelections[0].odds },
+        ...noSelections.map((sel: { name: string; odds: number }) => ({
+          code: `${side}_OR_BTTS_NO` as NormalizedSelection,
+          label: sel.name,
+          odds: sel.odds,
+        })),
+      ];
     } else {
       selections = raw.selections.map((sel: { name: string; odds: number }) => ({
         code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, teamSide),

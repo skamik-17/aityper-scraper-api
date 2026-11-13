@@ -102,10 +102,10 @@ const FORBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-8037": "RESULT_OR_TOTAL", // "remis w meczu lub powyżej 2.5 goli"
   "-8038": "RESULT_OR_TOTAL", // "remis w meczu lub poniżej 2.5 goli"
   // The rest of the "Wydarzy się min. jedno z" alternative bets, on the same
-  // shared-platform ids etoto maps. RESULT_OR_BTTS publishes only the tak
-  // leg, with the result side folded into the selection code
-  // (resolveResultOrBttsSide, from raw.name; the nie leg is dropped in
-  // normalizeMarket). The clean-sheet bet takes the side as its team param
+  // shared-platform ids etoto maps. RESULT_OR_BTTS publishes the tak and nie
+  // legs, with the result side folded into the selection code
+  // (resolveResultOrBttsSide, from raw.name; see normalizeMarket). The
+  // clean-sheet bet takes the side as its team param
   // (detectTeamSide). Either side must agree with FORBET_ALT_BET_ID_SIDE.
   "-8041": "RESULT_OR_BTTS", // "<home> wygra lub obie drużyny strzelą gola"
   "-8042": "RESULT_OR_BTTS", // "remis w meczu lub obie drużyny strzelą gola"
@@ -549,8 +549,8 @@ function resolveResultOrTotalCombo(
  * Resolves the result leg of a raw "win-or-BTTS" alternative bet ("Wydarzy
  * się min. jedno z: <team> wygra lub obie drużyny strzelą gola" / "... remis
  * w meczu lub obie drużyny strzelą gola", ids -8041/-8042/-8043) to the side
- * the pooled RESULT_OR_BTTS selection code carries (HOME_OR_BTTS_YES,
- * AWAY_OR_BTTS_YES, DRAW_OR_BTTS_YES). Returns null for anything else,
+ * the pooled RESULT_OR_BTTS selection codes carry (HOME_OR_BTTS_YES/NO,
+ * AWAY_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/NO). Returns null for anything else,
  * including a team leg that does not resolve to HOME/AWAY.
  */
 function resolveResultOrBttsSide(
@@ -1790,23 +1790,22 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
     // forBET quotes each "<team>|remis w meczu lub obie drużyny strzelą gola"
     // leg (-8041/-8042/-8043) as its own Tak/Nie market, and all three pool
     // into one RESULT_OR_BTTS row, so the result side (from raw.name) goes
-    // into the code. Only "tak" ("<X> or BTTS") is published, as
-    // <SIDE>_OR_BTTS_YES. forBET's "nie" is NOT(<X> or BTTS), i.e. neither
-    // happens, but the catalog <SIDE>_OR_BTTS_NO means "<X> or BTTS-No"
-    // (lebull's "<X> lub Przynajmniej jedna drużyna nie strzeli"), a different
-    // and much shorter-priced bet. Like the RESULT_OR_TOTAL "nie" above, it
-    // has no counterpart in that vocabulary and is dropped. An unresolved
-    // side, an unrecognised label or a missing/duplicated tak leg drops the
-    // whole market rather than guess. So does a name-derived side that
+    // into the code. "tak" is "<X> or BTTS" (<SIDE>_OR_BTTS_YES); forBET's
+    // "nie" is NOT(<X> or BTTS), i.e. neither happens, which is what the
+    // catalog's <SIDE>_OR_BTTS_NO says ("Ani 1, ani obie strzelą"; rulings 4
+    // and 21). An unresolved side, an unrecognised label, a missing/duplicated
+    // tak leg or a duplicated nie leg drops the whole market rather than
+    // guess. So does a name-derived side that
     // disagrees with the positional id (FORBET_ALT_BET_ID_SIDE): the name was
     // misread, and publishing would put one side's price under another's code.
     if (marketCode === "RESULT_OR_BTTS") {
       const side = resolveResultOrBttsSide(raw.name, ctx);
       const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
       const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
-      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+      const noSelections = raw.selections.filter((_, i) => legs[i] === "NO");
+      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1 || noSelections.length > 1) {
         console.warn(
-          `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak leg for "${raw.name}"`
+          `[forbet] RESULT_OR_BTTS: could not resolve the result side or tak/nie legs for "${raw.name}"`
         );
         return null;
       }
@@ -1829,6 +1828,11 @@ export const forbetNormalizer: BookmakerMarketNormalizer = {
             label: yesSelection.name,
             odds: yesSelection.odds,
           },
+          ...noSelections.map((sel) => ({
+            code: `${side}_OR_BTTS_NO` as NormalizedSelection,
+            label: sel.name,
+            odds: sel.odds,
+          })),
         ],
         debug: {
           rawName: raw.name,

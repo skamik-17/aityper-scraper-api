@@ -77,9 +77,9 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // home/away pair (side would have been lost) plus a standalone
   // DRAW_OR_BTTS card. Routed into the single combined RESULT_OR_BTTS code
   // instead - side is resolved via SUPERBET_SIDE_BY_MARKET_ID below and
-  // folded into the selection code in normalizeMarket (HOME_OR_BTTS_YES,
-  // DRAW_OR_BTTS_YES, AWAY_OR_BTTS_YES). Only the tak leg is published: the
-  // raw "nie" is "neither happens", not the catalog's "<X> or BTTS-No".
+  // folded into the selection code in normalizeMarket (HOME_OR_BTTS_YES/NO,
+  // DRAW_OR_BTTS_YES/NO, AWAY_OR_BTTS_YES/NO). The raw "nie" is "neither
+  // happens", which is what the catalog's <SIDE>_OR_BTTS_NO says.
   231006: "RESULT_OR_BTTS", // "{home} wygra lub obie strzelą"
   231007: "RESULT_OR_BTTS", // "Remis lub obie drużyny strzelą gola"
   231008: "RESULT_OR_BTTS", // "{away} wygra lub obie strzelą"
@@ -1717,23 +1717,24 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     // BTTS" from 3 separate ids (231006 home / 231007 draw / 231008 away)
     // into one combined card, so the side is folded into the selection code
     // itself (231007, the draw, has no side at all). Each id is its own
-    // Tak/Nie market. Only "Tak" ("<X> or BTTS") is published, as
-    // <SIDE>_OR_BTTS_YES. Superbet's "Nie" is NOT(<X> or BTTS), i.e. neither
-    // happens (WC fixture: "Francja wygra lub obie drużyny strzelą gola" Tak
-    // 1.15 / Nie 4.8), but the catalog <SIDE>_OR_BTTS_NO means "<X> or
-    // BTTS-No", a different and much shorter-priced bet, so the nie leg is
-    // dropped (same as forbet). An unrecognised label or a missing or
-    // duplicated tak leg drops the whole market rather than guess.
+    // Tak/Nie market. "Tak" is "<X> or BTTS" (<SIDE>_OR_BTTS_YES); "Nie" is
+    // NOT(<X> or BTTS), i.e. neither happens (WC fixture: "Francja wygra lub
+    // obie drużyny strzelą gola" Tak 1.15 / Nie 4.8), which is what the
+    // catalog's <SIDE>_OR_BTTS_NO says ("Ani 1, ani obie strzelą"; rulings 4
+    // and 21). An unrecognised label, a missing or duplicated tak leg or a
+    // duplicated nie leg drops the whole market rather than guess.
     if (marketCode === "RESULT_OR_BTTS") {
       const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
       const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
-      if (legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+      const noSelections = raw.selections.filter((_, i) => legs[i] === "NO");
+      if (legs.includes("UNKNOWN") || yesSelections.length !== 1 || noSelections.length > 1) {
         console.warn(
           `[superbet] RESULT_OR_BTTS: could not resolve the tak leg for "${raw.name}" (id: ${rawId ?? "none"})`
         );
         return null;
       }
       const yesSelection = yesSelections[0];
+      const resultSide = side ?? "DRAW";
       return {
         marketCode,
         paramValue: undefined,
@@ -1741,10 +1742,15 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
         marketName: getMarketMetadata(marketCode)?.labels.pl ?? raw.name,
         selections: [
           {
-            code: `${side ?? "DRAW"}_OR_BTTS_YES` as NormalizedSelection,
+            code: `${resultSide}_OR_BTTS_YES` as NormalizedSelection,
             label: yesSelection.name,
             odds: yesSelection.odds,
           },
+          ...noSelections.map((sel) => ({
+            code: `${resultSide}_OR_BTTS_NO` as NormalizedSelection,
+            label: sel.name,
+            odds: sel.odds,
+          })),
         ],
         debug: {
           rawName: raw.name,

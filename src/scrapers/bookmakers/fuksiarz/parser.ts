@@ -159,41 +159,34 @@ function getSelectionName(
 
 /**
  * Fuksiarz's feed for game type 38 ("Half with more goals") sends its
- * outcome labels in template order (1st half / equal / 2nd half). In
- * 2026-08 the prices arrived in provider order (1st half / 2nd half /
+ * outcome labels in template order (1st half / equal / 2nd half). In the
+ * 2026-08 feed the prices arrived in provider order (1st half / 2nd half /
  * equal), so the "equal" label carried the 2nd-half price (~2.1) and the
  * "2nd half" label carried the draw price (~3.6), inverted against every
  * other book quoting the same market id 38 (betfan 2.75/2.10/3.70, forbet
- * 2.65/2.02/3.55, etoto 2.80/2.11/3.80). Move the two labels back onto the
- * prices they belong to.
+ * 2.65/2.02/3.55, etoto 2.80/2.11/3.80). The 2026-11 feed puts the prices on
+ * the right labels but keeps the template label order.
  *
- * The guard is on prices: an equal goal split is always the least likely
- * outcome (the longest price) and the 2nd half the favourite, so correct
- * data always has odds("equal") > odds("2nd half"). The label-order guard
- * alone stopped being sufficient once Fuksiarz fixed the prices (2026-11)
- * but kept the template label order: it then inverted correct data and
- * published a fake 2nd-half best price on every match. The labels are
- * swapped only when they are in template order AND the "equal" price is
- * the shorter one; a missing or zero price leaves the outcomes untouched.
+ * With template-order labels, an "equal" price shorter than the 2nd-half
+ * price fits two cases: the 2026-08 inversion, or a genuine low-total match
+ * where an equal split (mostly 0-0) really is the most likely outcome. The
+ * payload cannot tell them apart, and swapping the labels of a genuine
+ * low-total market would publish a fake best price, so such a market is
+ * dropped, never swapped. Any other label order, correctly ordered prices or
+ * a missing/zero price passes through unchanged (hasValidOdds later removes
+ * a zero-priced selection).
  */
-function repairHalfWithMoreGoalsLabels(outcomes: FuksiarzOutcome[]): FuksiarzOutcome[] {
-  if (outcomes.length !== 3) return outcomes;
+function isAmbiguousHalfWithMoreGoals(outcomes: FuksiarzOutcome[]): boolean {
+  if (outcomes.length !== 3) return false;
   const isDrawLike = (n?: string) => /^(r[oó]wno|remis|tyle samo)$/i.test((n || "").trim());
   const isSecondHalf = (n?: string) => /^2\.?\s*po[łl]owa$/i.test((n || "").trim());
   if (!isDrawLike(outcomes[1].outcomeName) || !isSecondHalf(outcomes[2].outcomeName)) {
-    return outcomes;
+    return false;
   }
   const drawPrice = outcomes[1].outcomeOdds;
   const secondHalfPrice = outcomes[2].outcomeOdds;
-  // `!(x > 0)` also rejects undefined/NaN, since the feed type is not enforced at runtime
-  if (!(drawPrice > 0) || !(secondHalfPrice > 0) || drawPrice >= secondHalfPrice) {
-    return outcomes;
-  }
-  return [
-    outcomes[0],
-    { ...outcomes[1], outcomeName: outcomes[2].outcomeName },
-    { ...outcomes[2], outcomeName: outcomes[1].outcomeName },
-  ];
+  // `x > 0` also rejects undefined/NaN, since the feed type is not enforced at runtime
+  return drawPrice > 0 && secondHalfPrice > 0 && drawPrice < secondHalfPrice;
 }
 
 /**
@@ -426,11 +419,18 @@ export function parseAllMarkets(
       const orderedOutcomes = [...outcomes].sort(
         (a, b) => a.outcomePosition - b.outcomePosition
       );
-      const fixedOutcomes =
-        game.gameType === GAME_TYPES.HALF_WITH_MORE_GOALS
-          ? repairHalfWithMoreGoalsLabels(orderedOutcomes)
-          : orderedOutcomes;
-      const selections: MarketSelection[] = fixedOutcomes
+      if (
+        game.gameType === GAME_TYPES.HALF_WITH_MORE_GOALS &&
+        isAmbiguousHalfWithMoreGoals(orderedOutcomes)
+      ) {
+        console.warn(
+          `[Fuksiarz] HALF_WITH_MORE_GOALS dropped: równo priced shorter than 2. połowa ` +
+            `(event ${event.eventId} ${event.eventName}: równo ${orderedOutcomes[1].outcomeOdds}, ` +
+            `2. połowa ${orderedOutcomes[2].outcomeOdds})`
+        );
+        continue;
+      }
+      const selections: MarketSelection[] = orderedOutcomes
         .map((outcome) => ({
           name: getSelectionName(outcome, game.gameType, parsedTeams),
           odds: outcome.outcomeOdds || 0,

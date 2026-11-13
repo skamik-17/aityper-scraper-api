@@ -47,6 +47,8 @@ import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
 import { toIsoStartTime } from "../../shared/start-time.js";
 import type { TransportStats, TransportStatsSource } from "../../shared/scraper-contract.js";
+import { mapLimit } from "../../shared/concurrency.js";
+import { resolveBetclicMatchConcurrency } from "./constants.js";
 
 /** Same value as plan 02's MAX_SKIPPED_DETAIL_RATIO: more skipped matches than this fails the run. */
 const MAX_SKIPPED_MATCH_RATIO = 0.5;
@@ -291,28 +293,35 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
 
       this.updateCache(listingMatches);
 
-      const matches: FullMatchOffer[] = [];
-      const skipped: string[] = [];
-
-      for (const listingMatch of listingMatches) {
-        if (!listingMatch.matchId) continue;
-
+      // A few matches at a time; every log line is one console call, so concurrent
+      // matches interleave whole lines only. Results come back in listing order.
+      const withIds = listingMatches.filter((m) => m.matchId);
+      const settled = await mapLimit(withIds, resolveBetclicMatchConcurrency(), async (listingMatch) => {
         const matchStats = createBetclicTransportStats();
         const outcome = await this.fetchMatchOffer(listingMatch, { league, stats: matchStats });
         console.log(
           `[Betclic/Transport] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: ${formatBetclicTransportStats(matchStats)}`
         );
         addBetclicTransportStats(runStats, matchStats);
-        if (outcome.kind === "written") {
-          matches.push(outcome.offer);
-        } else {
-          skipped.push(outcome.reason);
+        if (outcome.kind === "skipped") {
           console.warn(
             `[Betclic/FullOffer] Skipping ${listingMatch.homeTeam} vs ${listingMatch.awayTeam} (ID: ${listingMatch.matchId}): ${outcome.reason}`
           );
         }
-
         await this.delay(50);
+        return outcome;
+      });
+
+      const matches: FullMatchOffer[] = [];
+      const skipped: string[] = [];
+      for (const result of settled) {
+        if (result.status === "rejected") {
+          skipped.push(result.reason instanceof Error ? result.reason.message : String(result.reason));
+        } else if (result.value.kind === "written") {
+          matches.push(result.value.offer);
+        } else {
+          skipped.push(result.value.reason);
+        }
       }
 
       const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);

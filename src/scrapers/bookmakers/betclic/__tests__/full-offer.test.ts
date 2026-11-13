@@ -23,6 +23,7 @@ vi.mock("../parser.js", async (importOriginal) => ({
 }));
 
 import { BetclicPlaywrightScraper } from "../index.js";
+import { resolveBetclicMatchConcurrency } from "../constants.js";
 
 const odds = { homeOdds: 1.3, drawOdds: 5.5, awayOdds: 9 };
 const ARSENAL = { matchId: "1261715874385920", matchName: "Arsenal - Hull", homeTeam: "Arsenal", awayTeam: "Hull", ...odds };
@@ -50,7 +51,71 @@ beforeEach(() => {
   logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
   warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 });
-afterEach(() => vi.restoreAllMocks());
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllEnvs();
+});
+
+const SEVEN = Array.from({ length: 7 }, (_, i) => ({
+  matchId: `126170000000000${i}`, matchName: `Home${i} - Away${i}`, homeTeam: `Home${i}`, awayTeam: `Away${i}`, ...odds,
+}));
+
+/** Counts in-flight matches; later matches finish first. */
+function trackConcurrency() {
+  const seen = { inFlight: 0, peak: 0 };
+  h.fetchMarketGroupResults.mockImplementation(async (id: string) => {
+    seen.inFlight++;
+    seen.peak = Math.max(seen.peak, seen.inFlight);
+    await new Promise((r) => setTimeout(r, 40 - 5 * Number(id.slice(-1))));
+    seen.inFlight--;
+    return groupResults();
+  });
+  return seen;
+}
+
+describe("BetclicPlaywrightScraper.scrapeFullOffer concurrency", () => {
+  it("fetches at most 3 matches at a time and keeps listing order", async () => {
+    h.listing.mockReturnValue(SEVEN);
+    const seen = trackConcurrency();
+    const r = await scrape();
+    expect(seen.peak).toBe(3);
+    expect(r.matches.map((m) => m.matchId)).toEqual(SEVEN.map((m) => m.matchId));
+  });
+
+  it("BETCLIC_MATCH_CONCURRENCY=1 runs one match at a time", async () => {
+    vi.stubEnv("BETCLIC_MATCH_CONCURRENCY", "1");
+    h.listing.mockReturnValue(SEVEN);
+    const seen = trackConcurrency();
+    const r = await scrape();
+    expect(seen.peak).toBe(1);
+    expect(r.matches).toHaveLength(7);
+  });
+
+  it("keeps the check-log-vs-smoke formats under concurrency", async () => {
+    h.listing.mockReturnValue(SEVEN);
+    trackConcurrency();
+    await scrape();
+    const totals = logLines().filter((l) => /^\[Betclic\/FullOffer\] (.+?) vs (.+?): (\d+) markets total$/.test(l));
+    expect(totals).toHaveLength(7);
+    expect(logLines().filter((l) => l === "[Betclic/FullOffer] Found 7 events in listing")).toHaveLength(1);
+  });
+
+  it("the first skip reason follows listing order, not completion order", async () => {
+    h.listing.mockReturnValue(SEVEN);
+    h.fetchMarketGroupResults.mockImplementation(async (id: string) => {
+      await new Promise((r) => setTimeout(r, 40 - 5 * Number(id.slice(-1))));
+      return id.endsWith("1") || id.endsWith("5") ? groupResults({ TOP: `TOP down ${id.slice(-1)}` }) : groupResults();
+    });
+    expect((await scrape()).error).toBe("2 of 7 details failed | TOP missing: TOP down 1");
+  });
+
+  it("resolveBetclicMatchConcurrency accepts 1-7 only", () => {
+    expect(resolveBetclicMatchConcurrency({})).toBe(3);
+    expect(resolveBetclicMatchConcurrency({ BETCLIC_MATCH_CONCURRENCY: "1" })).toBe(1);
+    expect(resolveBetclicMatchConcurrency({ BETCLIC_MATCH_CONCURRENCY: "7" })).toBe(7);
+    for (const v of ["0", "8", "2.5", "x"]) expect(resolveBetclicMatchConcurrency({ BETCLIC_MATCH_CONCURRENCY: v })).toBe(3);
+  });
+});
 
 describe("BetclicPlaywrightScraper.scrapeFullOffer", () => {
   it("declares the http transport (plan 07 job classification)", () =>

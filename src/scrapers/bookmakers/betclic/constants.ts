@@ -271,3 +271,16 @@ export const MARKET_GROUP_FILTERS = {
  * Type for market group filter values (string category IDs or null for no filter)
  */
 export type MarketGroupFilter = (typeof MARKET_GROUP_FILTERS)[keyof typeof MARKET_GROUP_FILTERS];
+
+/**
+ * Matches fetched at a time (each opens 7 group streams, so 3 matches = 21 streams).
+ * Override with BETCLIC_MATCH_CONCURRENCY (1-7); 1 gives the sequential reference run.
+ */
+export const BETCLIC_MATCH_CONCURRENCY = 3;
+
+/** BETCLIC_MATCH_CONCURRENCY when it is an integer 1-7, else 3. Read on every call. */
+export function resolveBetclicMatchConcurrency(env: NodeJS.ProcessEnv = process.env): number {
+  const raw = env.BETCLIC_MATCH_CONCURRENCY;
+  const n = raw !== undefined && /^\d+$/.test(raw.trim()) ? Number(raw.trim()) : NaN;
+  return Number.isInteger(n) && n >= 1 && n <= 7 ? n : BETCLIC_MATCH_CONCURRENCY;
+}

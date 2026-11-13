@@ -300,6 +300,8 @@ describe("finalizeIncrementalPass", () => {
     expect(lines[0].startsWith("[IncrementalPass] {")).toBe(true);
     const json = JSON.parse(lines[0].slice("[IncrementalPass] ".length));
     expect(json).toMatchObject({ runId: RUN, bookmaker: "forbet", league: LEAGUE, stampMiss: 1, confirmedRows: 220, stamped: 0, notConfirmed: 0, error: null });
+    // The log has no timestamps of its own: the report windows passes by this field
+    expect(json.at).toBe("2026-11-07T12:00:00.000Z");
   });
 
   it("finalize survives a record failure", async () => {

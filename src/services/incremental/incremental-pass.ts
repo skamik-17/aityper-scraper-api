@@ -340,6 +340,8 @@ export async function finalizeIncrementalPass(
       confirmedRows: ok?.confirmedRows ?? null,
       stampMiss: ok ? stats.fetched - ok.stamped : null,
       error,
+      // The log has no timestamps of its own: the report windows passes by this field
+      at: new Date(d.now()).toISOString(),
     })}`,
   );
   return rec;

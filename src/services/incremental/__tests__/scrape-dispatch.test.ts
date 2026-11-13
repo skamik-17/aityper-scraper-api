@@ -154,6 +154,7 @@ describe("scrapeForRun", () => {
       matches: 2,
       requests: 20,
       bytes: 2000,
+      at: "2026-11-07T12:00:00.000Z",
     });
     const pass = lines.filter((l) => l.startsWith("[IncrementalPass] {"));
     expect(pass).toHaveLength(1);

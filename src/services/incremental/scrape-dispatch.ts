@@ -119,6 +119,7 @@ export async function scrapeForRun(
           requests: after.requests - before.requests,
           bytes: after.bytes - before.bytes,
           durationMs: Date.now() - started,
+          at: new Date(ctx.deps?.now?.() ?? Date.now()).toISOString(),
         })}`,
       );
       const plan = await runIncrementalPass(scraper, league, passOpts("plan-only"), ctx.deps);

@@ -1,0 +1,3552 @@
+{
+  "bookmaker": "betters",
+  "entries": [
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "MATCH_WINNER",
+        "marketKey": "MATCH_WINNER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 2.74
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 3.3
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 2.54
+          }
+        ]
+      },
+      "index": 0,
+      "marketCode": "MATCH_WINNER",
+      "rawName": "1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_TEAM_TO_SCORE",
+        "marketKey": "FIRST_TEAM_TO_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 2
+          },
+          {
+            "code": "NONE",
+            "label": "żaden",
+            "odds": 9.5
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 1,
+      "marketCode": "FIRST_TEAM_TO_SCORE",
+      "rawName": "1. gol"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE",
+        "marketKey": "DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.32
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Tottenham Hotspur",
+            "odds": 1.43
+          },
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Leeds United lub remis",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 2,
+      "marketCode": "DOUBLE_CHANCE",
+      "rawName": "Podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DRAW_NO_BET",
+        "marketKey": "DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 1.96
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 1.83
+          }
+        ]
+      },
+      "index": 3,
+      "marketCode": "DRAW_NO_BET",
+      "rawName": "Zakład bez remisu"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 4,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United bez zakładu"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 5,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur bez zakładu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EUROPEAN_HANDICAP",
+        "marketKey": "EUROPEAN_HANDICAP:-1",
+        "matchedBy": "id",
+        "paramValue": "-1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (0:1)",
+            "odds": 5.5
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (0:1)",
+            "odds": 4
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (0:1)",
+            "odds": 1.42
+          }
+        ]
+      },
+      "index": 6,
+      "marketCode": "EUROPEAN_HANDICAP",
+      "rawName": "Handicap europejski 0:1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EUROPEAN_HANDICAP",
+        "marketKey": "EUROPEAN_HANDICAP:+1",
+        "matchedBy": "id",
+        "paramValue": "+1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (1:0)",
+            "odds": 1.5
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (1:0)",
+            "odds": 3.9
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (1:0)",
+            "odds": 4.9
+          }
+        ]
+      },
+      "index": 7,
+      "marketCode": "EUROPEAN_HANDICAP",
+      "rawName": "Handicap europejski 1:0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EUROPEAN_HANDICAP",
+        "marketKey": "EUROPEAN_HANDICAP:+2",
+        "matchedBy": "id",
+        "paramValue": "+2",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (2:0)",
+            "odds": 1.14
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (2:0)",
+            "odds": 6.5
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (2:0)",
+            "odds": 10.5
+          }
+        ]
+      },
+      "index": 8,
+      "marketCode": "EUROPEAN_HANDICAP",
+      "rawName": "Handicap europejski 2:0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ASIAN_HANDICAP",
+        "marketKey": "ASIAN_HANDICAP:-1",
+        "matchedBy": "id",
+        "paramValue": "-1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (-1)",
+            "odds": 4.7
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (+1)",
+            "odds": 1.18
+          }
+        ]
+      },
+      "index": 9,
+      "marketCode": "ASIAN_HANDICAP",
+      "rawName": "Handicap -1.0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ASIAN_HANDICAP",
+        "marketKey": "ASIAN_HANDICAP:-1.5",
+        "matchedBy": "id",
+        "paramValue": "-1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (-1.5)",
+            "odds": 5.8
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (+1.5)",
+            "odds": 1.13
+          }
+        ]
+      },
+      "index": 10,
+      "marketCode": "ASIAN_HANDICAP",
+      "rawName": "Handicap -1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ASIAN_HANDICAP",
+        "marketKey": "ASIAN_HANDICAP:0",
+        "matchedBy": "id",
+        "paramValue": "0",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (0)",
+            "odds": 1.97
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (0)",
+            "odds": 1.82
+          }
+        ]
+      },
+      "index": 11,
+      "marketCode": "ASIAN_HANDICAP",
+      "rawName": "Handicap 0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ASIAN_HANDICAP",
+        "marketKey": "ASIAN_HANDICAP:+1",
+        "matchedBy": "id",
+        "paramValue": "+1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (+1)",
+            "odds": 1.21
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (-1)",
+            "odds": 4.3
+          }
+        ]
+      },
+      "index": 12,
+      "marketCode": "ASIAN_HANDICAP",
+      "rawName": "Handicap 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ASIAN_HANDICAP",
+        "marketKey": "ASIAN_HANDICAP:+1.5",
+        "matchedBy": "id",
+        "paramValue": "+1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (+1.5)",
+            "odds": 1.14
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (-1.5)",
+            "odds": 5.6
+          }
+        ]
+      },
+      "index": 13,
+      "marketCode": "ASIAN_HANDICAP",
+      "rawName": "Handicap 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.04
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 10
+          }
+        ]
+      },
+      "index": 14,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:1",
+        "matchedBy": "id",
+        "paramValue": "1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1",
+            "odds": 1.06
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1",
+            "odds": 8.8
+          }
+        ]
+      },
+      "index": 15,
+      "marketCode": "TOTAL_GOALS_ASIAN",
+      "rawName": "Suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 1.29
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 3.5
+          }
+        ]
+      },
+      "index": 16,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:2",
+        "matchedBy": "id",
+        "paramValue": "2",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2",
+            "odds": 1.47
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2",
+            "odds": 2.66
+          }
+        ]
+      },
+      "index": 17,
+      "marketCode": "TOTAL_GOALS_ASIAN",
+      "rawName": "Suma 2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 1.93
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.85
+          }
+        ]
+      },
+      "index": 18,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:3",
+        "matchedBy": "id",
+        "paramValue": "3",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 3",
+            "odds": 2.66
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 3",
+            "odds": 1.47
+          }
+        ]
+      },
+      "index": 19,
+      "marketCode": "TOTAL_GOALS_ASIAN",
+      "rawName": "Suma 3"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 3.5",
+            "odds": 3.4
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 3.5",
+            "odds": 1.31
+          }
+        ]
+      },
+      "index": 20,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_ASIAN",
+        "marketKey": "TOTAL_GOALS_ASIAN:4",
+        "matchedBy": "id",
+        "paramValue": "4",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 4",
+            "odds": 5.6
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 4",
+            "odds": 1.14
+          }
+        ]
+      },
+      "index": 21,
+      "marketCode": "TOTAL_GOALS_ASIAN",
+      "rawName": "Suma 4"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS",
+        "marketKey": "TOTAL_GOALS:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 4.5",
+            "odds": 6.8
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 4.5",
+            "odds": 1.1
+          }
+        ]
+      },
+      "index": 22,
+      "marketCode": "TOTAL_GOALS",
+      "rawName": "Suma 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.3
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.3
+          }
+        ]
+      },
+      "index": 23,
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
+      "rawName": "Leeds United - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 24,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.5
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.49
+          }
+        ]
+      },
+      "index": 25,
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
+      "rawName": "Leeds United - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 26,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma 2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TOTAL_GOALS",
+        "marketKey": "HOME_TEAM_TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 5.8
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.11
+          }
+        ]
+      },
+      "index": 27,
+      "marketCode": "HOME_TEAM_TOTAL_GOALS",
+      "rawName": "Leeds United - suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.28
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.5
+          }
+        ]
+      },
+      "index": 28,
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+      "rawName": "Tottenham Hotspur - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 29,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.36
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.54
+          }
+        ]
+      },
+      "index": 30,
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+      "rawName": "Tottenham Hotspur - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 31,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma 2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+        "marketKey": "AWAY_TEAM_TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 5.6
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.12
+          }
+        ]
+      },
+      "index": 32,
+      "marketCode": "AWAY_TEAM_TOTAL_GOALS",
+      "rawName": "Tottenham Hotspur - suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "GOAL_RANGE",
+        "marketKey": "GOAL_RANGE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-1",
+            "label": "0-1 goli",
+            "odds": 3.1
+          },
+          {
+            "code": "2-3",
+            "label": "2-3 gole",
+            "odds": 1.9
+          },
+          {
+            "code": "4-6",
+            "label": "4-6 goli",
+            "odds": 3.4
+          },
+          {
+            "code": "7+",
+            "label": "7+ goli",
+            "odds": 30
+          }
+        ]
+      },
+      "index": 33,
+      "marketCode": "GOAL_RANGE",
+      "rawName": "Przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "ODD_EVEN_GOALS",
+        "marketKey": "ODD_EVEN_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "ODD",
+            "label": "nieparzysty",
+            "odds": 1.94
+          },
+          {
+            "code": "EVEN",
+            "label": "parzysty",
+            "odds": 1.86
+          }
+        ]
+      },
+      "index": 34,
+      "marketCode": "ODD_EVEN_GOALS",
+      "rawName": "Parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 35,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 36,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "BTTS",
+        "marketKey": "BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 1.7
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 2.08
+          }
+        ]
+      },
+      "index": 37,
+      "marketCode": "BTTS",
+      "rawName": "Obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 38,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 39,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 40,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - wygrana do zera"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 41,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - wygrana do zera"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_BTTS",
+        "marketKey": "RESULT_AND_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_YES",
+            "label": "Leeds United & tak",
+            "odds": 5.25
+          },
+          {
+            "code": "HOME_NO",
+            "label": "Leeds United & nie",
+            "odds": 4.7
+          },
+          {
+            "code": "DRAW_YES",
+            "label": "remis & tak",
+            "odds": 4.6
+          },
+          {
+            "code": "DRAW_NO",
+            "label": "remis & nie",
+            "odds": 10
+          },
+          {
+            "code": "AWAY_YES",
+            "label": "Tottenham Hotspur & tak",
+            "odds": 4.9
+          },
+          {
+            "code": "AWAY_NO",
+            "label": "Tottenham Hotspur & nie",
+            "odds": 4.4
+          }
+        ]
+      },
+      "index": 42,
+      "marketCode": "RESULT_AND_BTTS",
+      "rawName": "1x2 i obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER_YES",
+            "label": "ponad 2.5 & tak",
+            "odds": 2.1
+          },
+          {
+            "code": "UNDER_YES",
+            "label": "poniżej 2.5 & tak",
+            "odds": 5.75
+          },
+          {
+            "code": "OVER_NO",
+            "label": "ponad 2.5 & nie",
+            "odds": 8.5
+          },
+          {
+            "code": "UNDER_NO",
+            "label": "poniżej 2.5 & nie",
+            "odds": 2.15
+          }
+        ]
+      },
+      "index": 43,
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
+      "rawName": "Suma i obie drużyny strzelą gola 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER_YES",
+            "label": "ponad 3.5 & tak",
+            "odds": 3.3
+          },
+          {
+            "code": "UNDER_YES",
+            "label": "poniżej 3.5 & tak",
+            "odds": 2.7
+          },
+          {
+            "code": "OVER_NO",
+            "label": "ponad 3.5 & nie",
+            "odds": 19
+          },
+          {
+            "code": "UNDER_NO",
+            "label": "poniżej 3.5 & nie",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 44,
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
+      "rawName": "Suma i obie drużyny strzelą gola 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "TOTAL_GOALS_AND_BTTS",
+        "marketKey": "TOTAL_GOALS_AND_BTTS:4.5",
+        "matchedBy": "id",
+        "paramValue": "4.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER_YES",
+            "label": "ponad 4.5 & tak",
+            "odds": 6.25
+          },
+          {
+            "code": "UNDER_YES",
+            "label": "poniżej 4.5 & tak",
+            "odds": 2.05
+          },
+          {
+            "code": "OVER_NO",
+            "label": "ponad 4.5 & nie",
+            "odds": 45
+          },
+          {
+            "code": "UNDER_NO",
+            "label": "poniżej 4.5 & nie",
+            "odds": 1.88
+          }
+        ]
+      },
+      "index": 45,
+      "marketCode": "TOTAL_GOALS_AND_BTTS",
+      "rawName": "Suma i obie drużyny strzelą gola 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Leeds United & poniżej 1.5",
+            "odds": 8.75
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Leeds United & ponad 1.5",
+            "odds": 3.5
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 1.5",
+            "odds": 10
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 1.5",
+            "odds": 4.6
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Tottenham Hotspur & poniżej 1.5",
+            "odds": 8.5
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Tottenham Hotspur & ponad 1.5",
+            "odds": 3.2
+          }
+        ]
+      },
+      "index": 46,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 i suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Leeds United & poniżej 2.5",
+            "odds": 5.75
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Leeds United & ponad 2.5",
+            "odds": 4.4
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 2.5",
+            "odds": 4.3
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 2.5",
+            "odds": 12
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Tottenham Hotspur & poniżej 2.5",
+            "odds": 5.5
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Tottenham Hotspur & ponad 2.5",
+            "odds": 4
+          }
+        ]
+      },
+      "index": 47,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 i suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "RESULT_AND_TOTAL",
+        "marketKey": "RESULT_AND_TOTAL:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_UNDER",
+            "label": "Leeds United & poniżej 3.5",
+            "odds": 3.5
+          },
+          {
+            "code": "HOME_OVER",
+            "label": "Leeds United & ponad 3.5",
+            "odds": 9
+          },
+          {
+            "code": "DRAW_UNDER",
+            "label": "remis & poniżej 3.5",
+            "odds": 4.3
+          },
+          {
+            "code": "DRAW_OVER",
+            "label": "remis & ponad 3.5",
+            "odds": 12
+          },
+          {
+            "code": "AWAY_UNDER",
+            "label": "Tottenham Hotspur & poniżej 3.5",
+            "odds": 3.2
+          },
+          {
+            "code": "AWAY_OVER",
+            "label": "Tottenham Hotspur & ponad 3.5",
+            "odds": 8.25
+          }
+        ]
+      },
+      "index": 48,
+      "marketCode": "RESULT_AND_TOTAL",
+      "rawName": "1x2 i suma 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "CORRECT_SCORE",
+        "marketKey": "CORRECT_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-0",
+            "label": "0:0",
+            "odds": 9.75
+          },
+          {
+            "code": "1-0",
+            "label": "1:0",
+            "odds": 8.5
+          },
+          {
+            "code": "2-0",
+            "label": "2:0",
+            "odds": 13
+          },
+          {
+            "code": "3-0",
+            "label": "3:0",
+            "odds": 27
+          },
+          {
+            "code": "4-0",
+            "label": "4:0",
+            "odds": 55
+          },
+          {
+            "code": "0-1",
+            "label": "0:1",
+            "odds": 8.25
+          },
+          {
+            "code": "1-1",
+            "label": "1:1",
+            "odds": 6.75
+          },
+          {
+            "code": "2-1",
+            "label": "2:1",
+            "odds": 9.5
+          },
+          {
+            "code": "3-1",
+            "label": "3:1",
+            "odds": 21
+          },
+          {
+            "code": "4-1",
+            "label": "4:1",
+            "odds": 50
+          },
+          {
+            "code": "0-2",
+            "label": "0:2",
+            "odds": 12
+          },
+          {
+            "code": "1-2",
+            "label": "1:2",
+            "odds": 9
+          },
+          {
+            "code": "2-2",
+            "label": "2:2",
+            "odds": 14
+          },
+          {
+            "code": "3-2",
+            "label": "3:2",
+            "odds": 27
+          },
+          {
+            "code": "4-2",
+            "label": "4:2",
+            "odds": 65
+          },
+          {
+            "code": "0-3",
+            "label": "0:3",
+            "odds": 23
+          },
+          {
+            "code": "1-3",
+            "label": "1:3",
+            "odds": 19
+          },
+          {
+            "code": "2-3",
+            "label": "2:3",
+            "odds": 26
+          },
+          {
+            "code": "3-3",
+            "label": "3:3",
+            "odds": 55
+          },
+          {
+            "code": "4-3",
+            "label": "4:3",
+            "odds": 100
+          },
+          {
+            "code": "0-4",
+            "label": "0:4",
+            "odds": 50
+          },
+          {
+            "code": "1-4",
+            "label": "1:4",
+            "odds": 45
+          },
+          {
+            "code": "2-4",
+            "label": "2:4",
+            "odds": 60
+          },
+          {
+            "code": "3-4",
+            "label": "3:4",
+            "odds": 100
+          },
+          {
+            "code": "5-0",
+            "label": "5:0",
+            "odds": 100
+          },
+          {
+            "code": "5-1",
+            "label": "5:1",
+            "odds": 100
+          },
+          {
+            "code": "5-2",
+            "label": "5:2",
+            "odds": 100
+          },
+          {
+            "code": "0-5",
+            "label": "0:5",
+            "odds": 100
+          },
+          {
+            "code": "1-5",
+            "label": "1:5",
+            "odds": 100
+          },
+          {
+            "code": "2-5",
+            "label": "2:5",
+            "odds": 100
+          }
+        ]
+      },
+      "index": 49,
+      "marketCode": "CORRECT_SCORE",
+      "rawName": "Dokładny wynik"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALFTIME_FULLTIME",
+        "marketKey": "HALFTIME_FULLTIME",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_HOME",
+            "label": "Leeds United/Leeds United",
+            "odds": 4.25
+          },
+          {
+            "code": "HOME_DRAW",
+            "label": "Leeds United/remis",
+            "odds": 14
+          },
+          {
+            "code": "HOME_AWAY",
+            "label": "Leeds United/Tottenham Hotspur",
+            "odds": 29
+          },
+          {
+            "code": "DRAW_HOME",
+            "label": "remis/Leeds United",
+            "odds": 6.75
+          },
+          {
+            "code": "DRAW_DRAW",
+            "label": "remis/remis",
+            "odds": 5.25
+          },
+          {
+            "code": "DRAW_AWAY",
+            "label": "remis/Tottenham Hotspur",
+            "odds": 6.25
+          },
+          {
+            "code": "AWAY_HOME",
+            "label": "Tottenham Hotspur/Leeds United",
+            "odds": 30
+          },
+          {
+            "code": "AWAY_DRAW",
+            "label": "Tottenham Hotspur/remis",
+            "odds": 14
+          },
+          {
+            "code": "AWAY_AWAY",
+            "label": "Tottenham Hotspur/Tottenham Hotspur",
+            "odds": 3.9
+          }
+        ]
+      },
+      "index": 50,
+      "marketCode": "HALFTIME_FULLTIME",
+      "rawName": "Do przerwy / koniec meczu"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 51,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United wygra obie połowy"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 52,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur wygra obie połowy"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 53,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United wygra przynajmniej jedną połowę"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 54,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur wygra przynajmniej jedną połowę"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_WITH_MORE_GOALS",
+        "marketKey": "HALF_WITH_MORE_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1ST_HALF",
+            "label": "1. Połowa",
+            "odds": 3.05
+          },
+          {
+            "code": "2ND_HALF",
+            "label": "2. Połowa",
+            "odds": 2.02
+          },
+          {
+            "code": "DRAW",
+            "label": "równo",
+            "odds": 3.4
+          }
+        ]
+      },
+      "index": 55,
+      "marketCode": "HALF_WITH_MORE_GOALS",
+      "rawName": "Połowa z większą liczbą goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 56,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United strzeli gola w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 57,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur strzeli gola w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_RESULT",
+        "marketKey": "HALF_TIME_RESULT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 3.3
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 2.16
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 3.1
+          }
+        ]
+      },
+      "index": 58,
+      "marketCode": "HALF_TIME_RESULT",
+      "rawName": "1. połowa - 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 59,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - 1. gol"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_DOUBLE_CHANCE",
+        "marketKey": "HALF_TIME_DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.62
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Tottenham Hotspur",
+            "odds": 1.29
+          },
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Leeds United lub remis",
+            "odds": 1.29
+          }
+        ]
+      },
+      "index": 60,
+      "marketCode": "HALF_TIME_DOUBLE_CHANCE",
+      "rawName": "1. połowa - podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_DRAW_NO_BET",
+        "marketKey": "HALF_TIME_DRAW_NO_BET",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 1.87
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 1.86
+          }
+        ]
+      },
+      "index": 61,
+      "marketCode": "HALF_TIME_DRAW_NO_BET",
+      "rawName": "1. połowa - zakład bez remisu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+        "marketKey": "FIRST_HALF_EUROPEAN_HANDICAP:-1",
+        "matchedBy": "id",
+        "paramValue": "-1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (0:1)",
+            "odds": 10.5
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (0:1)",
+            "odds": 4
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (0:1)",
+            "odds": 1.3
+          }
+        ]
+      },
+      "index": 62,
+      "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+      "rawName": "1. połowa – handicap europejski 0:1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+        "marketKey": "FIRST_HALF_EUROPEAN_HANDICAP:+1",
+        "matchedBy": "id",
+        "paramValue": "+1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (1:0)",
+            "odds": 1.35
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (1:0)",
+            "odds": 3.8
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (1:0)",
+            "odds": 9.5
+          }
+        ]
+      },
+      "index": 63,
+      "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+      "rawName": "1. połowa – handicap europejski 1:0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+        "marketKey": "FIRST_HALF_EUROPEAN_HANDICAP:+2",
+        "matchedBy": "id",
+        "paramValue": "+2",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (2:0)",
+            "odds": 1.04
+          },
+          {
+            "code": "DRAW",
+            "label": "remis (2:0)",
+            "odds": 9.25
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (2:0)",
+            "odds": 24
+          }
+        ]
+      },
+      "index": 64,
+      "marketCode": "FIRST_HALF_EUROPEAN_HANDICAP",
+      "rawName": "1. połowa – handicap europejski 2:0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "FIRST_HALF_ASIAN_HANDICAP",
+        "marketKey": "FIRST_HALF_ASIAN_HANDICAP:0",
+        "matchedBy": "id",
+        "paramValue": "0",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United (0)",
+            "odds": 1.91
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur (0)",
+            "odds": 1.84
+          }
+        ]
+      },
+      "index": 65,
+      "marketCode": "FIRST_HALF_ASIAN_HANDICAP",
+      "rawName": "1. połowa - handicap 0"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.39
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 2.88
+          }
+        ]
+      },
+      "index": 66,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. połowa - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
+        "marketKey": "HALF_TIME_TOTAL_GOALS_ASIAN:1",
+        "matchedBy": "id",
+        "paramValue": "1",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1",
+            "odds": 1.84
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1",
+            "odds": 1.91
+          }
+        ]
+      },
+      "index": 67,
+      "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
+      "rawName": "1. połowa - suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.8
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.4
+          }
+        ]
+      },
+      "index": 68,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. połowa - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
+        "marketKey": "HALF_TIME_TOTAL_GOALS_ASIAN:2",
+        "matchedBy": "id",
+        "paramValue": "2",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2",
+            "odds": 5.8
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2",
+            "odds": 1.11
+          }
+        ]
+      },
+      "index": 69,
+      "marketCode": "HALF_TIME_TOTAL_GOALS_ASIAN",
+      "rawName": "1. połowa - suma 2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_TOTAL_GOALS",
+        "marketKey": "HALF_TIME_TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 7
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.08
+          }
+        ]
+      },
+      "index": 70,
+      "marketCode": "HALF_TIME_TOTAL_GOALS",
+      "rawName": "1. połowa - suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 71,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 72,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 73,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 74,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 75,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - suma 1"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 76,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 77,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_BTTS",
+        "marketKey": "HALF_TIME_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 4.3
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.19
+          }
+        ]
+      },
+      "index": 78,
+      "marketCode": "HALF_TIME_BTTS",
+      "rawName": "1. połowa - obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 79,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 80,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 81,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - 1x2 i obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 82,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - 1x2 i suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HALF_TIME_CORRECT_SCORE",
+        "marketKey": "HALF_TIME_CORRECT_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0-0",
+            "label": "0:0",
+            "odds": 2.75
+          },
+          {
+            "code": "0-1",
+            "label": "0:1",
+            "odds": 4.25
+          },
+          {
+            "code": "0-2",
+            "label": "0:2",
+            "odds": 11.5
+          },
+          {
+            "code": "0-3",
+            "label": "0:3",
+            "odds": 35
+          },
+          {
+            "code": "0-4",
+            "label": "0:4",
+            "odds": 100
+          },
+          {
+            "code": "1-0",
+            "label": "1:0",
+            "odds": 4.5
+          },
+          {
+            "code": "1-1",
+            "label": "1:1",
+            "odds": 7.25
+          },
+          {
+            "code": "1-2",
+            "label": "1:2",
+            "odds": 18
+          },
+          {
+            "code": "1-3",
+            "label": "1:3",
+            "odds": 50
+          },
+          {
+            "code": "2-0",
+            "label": "2:0",
+            "odds": 13
+          },
+          {
+            "code": "2-1",
+            "label": "2:1",
+            "odds": 18
+          },
+          {
+            "code": "2-2",
+            "label": "2:2",
+            "odds": 45
+          },
+          {
+            "code": "2-3",
+            "label": "2:3",
+            "odds": 100
+          },
+          {
+            "code": "3-0",
+            "label": "3:0",
+            "odds": 40
+          },
+          {
+            "code": "3-1",
+            "label": "3:1",
+            "odds": 55
+          },
+          {
+            "code": "3-2",
+            "label": "3:2",
+            "odds": 90
+          },
+          {
+            "code": "4-0",
+            "label": "4:0",
+            "odds": 100
+          }
+        ]
+      },
+      "index": 83,
+      "marketCode": "HALF_TIME_CORRECT_SCORE",
+      "rawName": "1. połowa - dokładny wynik"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_RESULT",
+        "marketKey": "SECOND_HALF_RESULT",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 3.05
+          },
+          {
+            "code": "DRAW",
+            "label": "remis",
+            "odds": 2.42
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 2.84
+          }
+        ]
+      },
+      "index": 84,
+      "marketCode": "SECOND_HALF_RESULT",
+      "rawName": "2. połowa - 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_DOUBLE_CHANCE",
+        "marketKey": "SECOND_HALF_DOUBLE_CHANCE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME_OR_AWAY",
+            "label": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.47
+          },
+          {
+            "code": "DRAW_OR_AWAY",
+            "label": "remis lub Tottenham Hotspur",
+            "odds": 1.3
+          },
+          {
+            "code": "HOME_OR_DRAW",
+            "label": "Leeds United lub remis",
+            "odds": 1.35
+          }
+        ]
+      },
+      "index": 85,
+      "marketCode": "SECOND_HALF_DOUBLE_CHANCE",
+      "rawName": "2. połowa - podwójna szansa"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 86,
+      "marketCode": "OTHER",
+      "rawName": "2. połowa - zakład bez remisu"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:0.5",
+        "matchedBy": "id",
+        "paramValue": "0.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 0.5",
+            "odds": 1.27
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 0.5",
+            "odds": 3.25
+          }
+        ]
+      },
+      "index": 87,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. połowa - suma 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 1.5",
+            "odds": 2.14
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 1.5",
+            "odds": 1.6
+          }
+        ]
+      },
+      "index": 88,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. połowa - suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_TOTAL_GOALS",
+        "marketKey": "SECOND_HALF_TOTAL_GOALS:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "OVER",
+            "label": "ponad 2.5",
+            "odds": 4.7
+          },
+          {
+            "code": "UNDER",
+            "label": "poniżej 2.5",
+            "odds": 1.14
+          }
+        ]
+      },
+      "index": 89,
+      "marketCode": "SECOND_HALF_TOTAL_GOALS",
+      "rawName": "2. połowa - suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "SECOND_HALF_BTTS",
+        "marketKey": "SECOND_HALF_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 3.25
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 1.27
+          }
+        ]
+      },
+      "index": 90,
+      "marketCode": "SECOND_HALF_BTTS",
+      "rawName": "2. połowa - obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 91,
+      "marketCode": "OTHER",
+      "rawName": "Kiedy padnie 1. gol (interwał 10 min)"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 92,
+      "marketCode": "OTHER",
+      "rawName": "Kartki 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 93,
+      "marketCode": "OTHER",
+      "rawName": "1. kartka"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 94,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 95,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 96,
+      "marketCode": "OTHER",
+      "rawName": "Suma kartek 5.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 97,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma kartek 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 98,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma kartek 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 99,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma kartek 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 100,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma kartek 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 101,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma kartek 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 102,
+      "marketCode": "OTHER",
+      "rawName": "Dokładna liczba kartek"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 103,
+      "marketCode": "OTHER",
+      "rawName": "Czerwona kartka"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 104,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - czerwona kartka"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 105,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - czerwona kartka"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 106,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - suma kartek 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 107,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - dokładna liczba kartek"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 108,
+      "marketCode": "OTHER",
+      "rawName": "Rzuty rożne 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 109,
+      "marketCode": "OTHER",
+      "rawName": "Handicap rzutów rożnych -1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 110,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych 7.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 111,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych 8.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 112,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych 9.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 113,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych 10.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 114,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych 11.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 115,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma rzutów rożnych 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 116,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma rzutów rożnych 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 117,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma rzutów rożnych 5.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 118,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma rzutów rożnych 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 119,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma rzutów rożnych 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 120,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma rzutów rożnych 5.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 121,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - przedział rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 122,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - przedział rzutów rożnych"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 123,
+      "marketCode": "OTHER",
+      "rawName": "Suma rzutów rożnych - parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 124,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - rzuty rożne 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 125,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - handicap rzutów rożnych 0"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 126,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - suma rzutów rożnych 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 127,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - suma rzutów rożnych 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 128,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - suma rzutów rożnych 5.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 129,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - suma rzutów rożnych 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 130,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - suma rzutów rożnych 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 131,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - rzuty rożne parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 132,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 133,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 134,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - podwójna szansa i obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 135,
+      "marketCode": "OTHER",
+      "rawName": "2. połowa - 1x2 i obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_BTTS",
+        "marketKey": "DOUBLE_CHANCE_BTTS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_YES",
+            "label": "Leeds United/remis & tak",
+            "odds": 2.6
+          },
+          {
+            "code": "1X_NO",
+            "label": "Leeds United/remis & nie",
+            "odds": 3.4
+          },
+          {
+            "code": "12_YES",
+            "label": "Leeds United/Tottenham Hotspur & tak",
+            "odds": 2.65
+          },
+          {
+            "code": "12_NO",
+            "label": "Leeds United/Tottenham Hotspur & nie",
+            "odds": 2.35
+          },
+          {
+            "code": "X2_YES",
+            "label": "remis/Tottenham Hotspur & tak",
+            "odds": 2.5
+          },
+          {
+            "code": "X2_NO",
+            "label": "remis/Tottenham Hotspur & nie",
+            "odds": 3.15
+          }
+        ]
+      },
+      "index": 136,
+      "marketCode": "DOUBLE_CHANCE_BTTS",
+      "rawName": "Podwójna szansa i obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_TOTAL",
+        "marketKey": "DOUBLE_CHANCE_TOTAL:1.5",
+        "matchedBy": "id",
+        "paramValue": "1.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_UNDER",
+            "label": "Leeds United/remis & poniżej 1.5",
+            "odds": 4.8
+          },
+          {
+            "code": "12_UNDER",
+            "label": "Leeds United/Tottenham Hotspur & poniżej 1.5",
+            "odds": 4.4
+          },
+          {
+            "code": "X2_UNDER",
+            "label": "remis/Tottenham Hotspur & poniżej 1.5",
+            "odds": 4.8
+          },
+          {
+            "code": "1X_OVER",
+            "label": "Leeds United/remis & ponad 1.5",
+            "odds": 2.1
+          },
+          {
+            "code": "12_OVER",
+            "label": "Leeds United/Tottenham Hotspur & ponad 1.5",
+            "odds": 1.75
+          },
+          {
+            "code": "X2_OVER",
+            "label": "remis/Tottenham Hotspur & ponad 1.5",
+            "odds": 1.95
+          }
+        ]
+      },
+      "index": 137,
+      "marketCode": "DOUBLE_CHANCE_TOTAL",
+      "rawName": "Podwójna szansa i suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_TOTAL",
+        "marketKey": "DOUBLE_CHANCE_TOTAL:2.5",
+        "matchedBy": "id",
+        "paramValue": "2.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_UNDER",
+            "label": "Leeds United/remis & poniżej 2.5",
+            "odds": 2.55
+          },
+          {
+            "code": "12_UNDER",
+            "label": "Leeds United/Tottenham Hotspur & poniżej 2.5",
+            "odds": 2.9
+          },
+          {
+            "code": "X2_UNDER",
+            "label": "remis/Tottenham Hotspur & poniżej 2.5",
+            "odds": 2.5
+          },
+          {
+            "code": "1X_OVER",
+            "label": "Leeds United/remis & ponad 2.5",
+            "odds": 3.4
+          },
+          {
+            "code": "12_OVER",
+            "label": "Leeds United/Tottenham Hotspur & ponad 2.5",
+            "odds": 2.2
+          },
+          {
+            "code": "X2_OVER",
+            "label": "remis/Tottenham Hotspur & ponad 2.5",
+            "odds": 3.15
+          }
+        ]
+      },
+      "index": 138,
+      "marketCode": "DOUBLE_CHANCE_TOTAL",
+      "rawName": "Podwójna szansa i suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "DOUBLE_CHANCE_TOTAL",
+        "marketKey": "DOUBLE_CHANCE_TOTAL:3.5",
+        "matchedBy": "id",
+        "paramValue": "3.5",
+        "parameters": null,
+        "selections": [
+          {
+            "code": "1X_UNDER",
+            "label": "Leeds United/remis & poniżej 3.5",
+            "odds": 2
+          },
+          {
+            "code": "12_UNDER",
+            "label": "Leeds United/Tottenham Hotspur & poniżej 3.5",
+            "odds": 1.75
+          },
+          {
+            "code": "X2_UNDER",
+            "label": "remis/Tottenham Hotspur & poniżej 3.5",
+            "odds": 1.9
+          },
+          {
+            "code": "1X_OVER",
+            "label": "Leeds United/remis & ponad 3.5",
+            "odds": 5.5
+          },
+          {
+            "code": "12_OVER",
+            "label": "Leeds United/Tottenham Hotspur & ponad 3.5",
+            "odds": 4.5
+          },
+          {
+            "code": "X2_OVER",
+            "label": "remis/Tottenham Hotspur & ponad 3.5",
+            "odds": 5
+          }
+        ]
+      },
+      "index": 139,
+      "marketCode": "DOUBLE_CHANCE_TOTAL",
+      "rawName": "Podwójna szansa i suma 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "HOME_TEAM_TO_SCORE",
+        "marketKey": "HOME_TEAM_TO_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 1.29
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 3.3
+          }
+        ]
+      },
+      "index": 140,
+      "marketCode": "HOME_TEAM_TO_SCORE",
+      "rawName": "Leeds United strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "AWAY_TEAM_TO_SCORE",
+        "marketKey": "AWAY_TEAM_TO_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "YES",
+            "label": "tak",
+            "odds": 1.28
+          },
+          {
+            "code": "NO",
+            "label": "nie",
+            "odds": 3.45
+          }
+        ]
+      },
+      "index": 141,
+      "marketCode": "AWAY_TEAM_TO_SCORE",
+      "rawName": "Tottenham Hotspur strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 142,
+      "marketCode": "OTHER",
+      "rawName": "Obie drużyny strzelą gola w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 143,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 144,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 145,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 146,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 147,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur przedział goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 148,
+      "marketCode": "OTHER",
+      "rawName": "Dowolna drużyna wygra"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 149,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United wygra mecz, mimo że przegrywała"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 150,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur wygra mecz, mimo że przegrywała"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 151,
+      "marketCode": "OTHER",
+      "rawName": "Gol w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 152,
+      "marketCode": "OTHER",
+      "rawName": "Wygrana w obu połowach"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 153,
+      "marketCode": "OTHER",
+      "rawName": "Wygrana w przynajmniej jednej połowie"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "LAST_TEAM_TO_SCORE",
+        "marketKey": "LAST_TEAM_TO_SCORE",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "HOME",
+            "label": "Leeds United",
+            "odds": 2.1
+          },
+          {
+            "code": "NONE",
+            "label": "bez gola",
+            "odds": 10
+          },
+          {
+            "code": "AWAY",
+            "label": "Tottenham Hotspur",
+            "odds": 2
+          }
+        ]
+      },
+      "index": 154,
+      "marketCode": "LAST_TEAM_TO_SCORE",
+      "rawName": "Ostatnia drużyna, która strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 155,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - różnica bramek dowolnej drużyny"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 156,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - rzuty rożne parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 157,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - rzuty rożne parzyste/nieparzyste"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 158,
+      "marketCode": "OTHER",
+      "rawName": "Która drużyna nie strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 159,
+      "marketCode": "OTHER",
+      "rawName": "Obie drużyny strzelą 2 lub więcej goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 160,
+      "marketCode": "OTHER",
+      "rawName": "Wygrana do zera"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 161,
+      "marketCode": "OTHER",
+      "rawName": "Kiedy padnie 1. gol (interwał 30 min)"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 162,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-10:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 163,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-15:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 164,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-20:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 165,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-25:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 166,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-30:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 167,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-35:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 168,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-40:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 169,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-50:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 170,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-55:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 171,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-60:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 172,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-65:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 173,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-70:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 174,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-75:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 175,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-80:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 176,
+      "marketCode": "OTHER",
+      "rawName": "1x2 w przedziale czasowym 0:00-85:00"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 177,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-10:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 178,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-15:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 179,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-20:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 180,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-25:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 181,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-30:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 182,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-35:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 183,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-40:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 184,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-50:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 185,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-55:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 186,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-60:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 187,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-65:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 188,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-70:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 189,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-75:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 190,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-80:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 191,
+      "marketCode": "OTHER",
+      "rawName": "Handicap w przedziale czasowym 0:00-85:00 -0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 192,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-10:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 193,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-15:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 194,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-20:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 195,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-25:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 196,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-30:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 197,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-35:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 198,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-40:00 0.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 199,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-50:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 200,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-55:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 201,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-60:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 202,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-65:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 203,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-70:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 204,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-75:00 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 205,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-80:00 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 206,
+      "marketCode": "OTHER",
+      "rawName": "Suma w przedziale czasowym 0:00-85:00 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 207,
+      "marketCode": "OTHER",
+      "rawName": "Bez remisu - obie drużyny strzelą gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 208,
+      "marketCode": "OTHER",
+      "rawName": "Czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 209,
+      "marketCode": "OTHER",
+      "rawName": "1x2 i pierwszy gol"
+    },
+    {
+      "blessed": true,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "EXACT_GOALS",
+        "marketKey": "EXACT_GOALS",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "0",
+            "label": "0",
+            "odds": 10
+          },
+          {
+            "code": "1",
+            "label": "1",
+            "odds": 4.5
+          },
+          {
+            "code": "2",
+            "label": "2",
+            "odds": 3.7
+          },
+          {
+            "code": "3",
+            "label": "3",
+            "odds": 3.9
+          },
+          {
+            "code": "4",
+            "label": "4",
+            "odds": 6
+          },
+          {
+            "code": "5",
+            "label": "5",
+            "odds": 11
+          },
+          {
+            "code": "6",
+            "label": "6",
+            "odds": 23
+          },
+          {
+            "code": "7",
+            "label": "7",
+            "odds": 55
+          },
+          {
+            "code": "8",
+            "label": "8",
+            "odds": 100
+          }
+        ]
+      },
+      "index": 210,
+      "marketCode": "EXACT_GOALS",
+      "rawName": "Dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 211,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 212,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 213,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 214,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 215,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur - dokładna liczba goli"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 216,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - czyste konto"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 217,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 218,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur strzeli gola"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 219,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - podwójna szansa i suma 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 220,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - podwójna szansa i suma 2.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 221,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Leeds United wygrana do zera"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 222,
+      "marketCode": "OTHER",
+      "rawName": "1. połowa - Tottenham Hotspur wygrana do zera"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 223,
+      "marketCode": "OTHER",
+      "rawName": "Strzały celne 1x2"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 224,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów celnych 7.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 225,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów celnych 8.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 226,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów celnych 9.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 227,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - strzały celne 4.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 228,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - strzały celne 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 229,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów 25.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 230,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów 26.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 231,
+      "marketCode": "OTHER",
+      "rawName": "Suma strzałów 27.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 232,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma strzałów 12.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 233,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma strzałów 13.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 234,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma strzałów 14.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 235,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma strzałów 11.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 236,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma strzałów 12.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 237,
+      "marketCode": "OTHER",
+      "rawName": "Tottenham Hotspur - suma strzałów 13.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 238,
+      "marketCode": "OTHER",
+      "rawName": "Suma spalonych 3.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 239,
+      "marketCode": "OTHER",
+      "rawName": "Leeds United - suma spalonych 1.5"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 240,
+      "marketCode": "OTHER",
+      "rawName": "Będzie rzut karny"
+    },
+    {
+      "blessed": true,
+      "expected": null,
+      "index": 241,
+      "marketCode": "OTHER",
+      "rawName": "Czy padnie gol samobójczy"
+    }
+  ],
+  "matchIdSafe": "premier-league_leeds-united_tottenham-hotspur"
+}

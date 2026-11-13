@@ -1,0 +1,26 @@
+{
+ "slug": "betters",
+ "language": "pl",
+ "languages": [
+  "pl"
+ ],
+ "currency": "PLN",
+ "currencies": [
+  "PLN"
+ ],
+ "country_language_map": {
+  "PL": "pl"
+ },
+ "country_currency_map": {
+  "PL": "PLN"
+ },
+ "country": "PL",
+ "cdn": "https://www.betters.pl/media/",
+ "ws": "/ws/",
+ "sb_host": "https://betterspl-ssr.boxwebcdn.work/",
+ "bettech_brand_id": "2658970707769307140",
+ "bettech_script": "https://betters.sptpub.com/bt-renderer.min.js",
+ "app_host": "https://s3.betters.pl/hub/",
+ "ip": "<redacted>",
+ "constants": []
+}

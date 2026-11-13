@@ -372,7 +372,20 @@ function runCaptureAttempt(
           onTargetSeen();
         }
 
-        // Full offer captured: the union reached the game's self-reported total.
+        // Full offer captured: the match page's own SINGLE_GAME_VIEW reply carries
+        // the whole game in one frame. Only a tagged frame that itself holds the
+        // target with markets counts (an early SGV reply can carry `sport: {}`).
+        if (
+          attempt.firstUsefulFrameMs !== null &&
+          String(msg.rid ?? "").startsWith("SINGLE_GAME_VIEW") &&
+          analyzeSwarmData(msg.data.data as SwarmData, targetGameNumber).targetMarketCount > 0
+        ) {
+          void finish(null);
+          return;
+        }
+
+        // Fallback: the union reached the game's self-reported total (it rarely
+        // does; otherwise the plateau or the max wait decides).
         const target = targetGameNumber ? stats.targetMarketsCount : 0;
         if (attempt.firstUsefulFrameMs !== null && target > 0 && currentBest >= target) {
           void finish(null);

@@ -151,38 +151,3 @@ export interface AggregatedFullOfferResult {
     totalMarkets: number;
   };
 }
-
-/**
- * Over/Under market odds structure
- * Used by parsers for structured O/U markets
- */
-export interface MarketOverUnderOdds {
-  over: number;
-  under: number;
-}
-
-/**
- * 1X2 (Match Winner) market odds structure
- */
-export interface Market1X2Odds {
-  home: number;
-  draw: number;
-  away: number;
-}
-
-/**
- * Double Chance market odds structure
- */
-export interface MarketDoubleChanceOdds {
-  homeOrDraw: number;   // 1X
-  drawOrAway: number;   // X2
-  homeOrAway: number;   // 12
-}
-
-/**
- * Both Teams To Score (BTTS) market odds structure
- */
-export interface MarketBTTSOdds {
-  yes: number;
-  no: number;
-}

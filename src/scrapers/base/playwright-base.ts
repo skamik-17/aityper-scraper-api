@@ -5,13 +5,7 @@
 
 import { Browser, Page, BrowserContext } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
-import type {
-  ScraperResult,
-  ScraperConfig,
-  MatchIdentifier,
-  MatchDetailResult,
-  EventUrlEntry,
-} from "../../types/scraper.js";
+import type { ScraperConfig } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
 import { browserPool } from "./browser-pool.js";
 import { currentScrapeJob } from "../shared/job-context.js";
@@ -42,21 +36,6 @@ export interface BrowserSession {
 export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
-
-  // Legacy 1X2 members (plan 10 Part B): optional while the last subclasses still carry
-  // them; nothing calls them (src/scrapers/__tests__/legacy-path.test.ts).
-
-  /** Legacy: listing matches with 1X2 odds for a league. */
-  scrapeLeague?(league: string): Promise<ScraperResult>;
-
-  /** Legacy: one match from the listing. */
-  scrapeMatch?(match: MatchIdentifier): Promise<ScraperResult>;
-
-  /** Legacy: Double Chance, Over/Under and BTTS from one match page. */
-  scrapeMatchDetails?(eventUrl: string): Promise<MatchDetailResult>;
-
-  /** Legacy: event URLs from the current listing page. */
-  extractEventUrls?(page: Page): Promise<EventUrlEntry[]>;
 
   /**
    * Scrape full offer (all markets) for all matches in a league
@@ -217,33 +196,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  protected createErrorResult(error: unknown, duration: number): ScraperResult {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error(`[${this.bookmaker}] Scraper error: ${errorMessage}`);
-    if (error instanceof Error && error.stack) {
-      console.error(`[${this.bookmaker}] Stack:`, error.stack.split('\n').slice(0, 3).join('\n'));
-    }
-    return { status: "error", bookmaker: this.bookmaker, error: errorMessage, duration, timestamp: new Date() };
-  }
-
-  protected createNotFoundResult(message: string, duration: number): ScraperResult {
-    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
-  }
-
-  protected createMatchDetailErrorResult(error: unknown, duration: number): MatchDetailResult {
-    return {
-      status: "error",
-      bookmaker: this.bookmaker,
-      error: error instanceof Error ? error.message : "Unknown error",
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
-  protected createMatchDetailNotFoundResult(message: string, duration: number): MatchDetailResult {
-    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
-  }
-
   // Full offer helper methods
 
   protected createFullOfferErrorResult(
@@ -352,23 +304,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
         // The page may already be closed or crashed: use what was recorded so far.
         return recorder ? enrichFullOfferFailure(result, recorder.current()) : result;
       }
-    );
-  }
-
-  protected async executeLeagueScrape(
-    league: string,
-    leagueValidator: (league: string) => boolean,
-    scrapeLogic: (page: Page, league: string) => Promise<ScraperResult>
-  ): Promise<ScraperResult> {
-    const startTime = Date.now();
-
-    if (!leagueValidator(league)) {
-      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
-    }
-
-    return this.executeWithBrowser(
-      async (page) => scrapeLogic(page, league),
-      (error, duration) => this.createErrorResult(error, duration)
     );
   }
 }

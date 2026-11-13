@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { browserPool } from "../scrapers/base/browser-pool.js";
 import { PlaywrightScraper } from "../scrapers/base/playwright-base.js";
 import type { FullOfferScraperResult } from "../types/full-offer.js";
-import { DEFAULT_SCRAPER_CONFIGS, type MatchDetailResult, type ScraperConfig, type ScraperResult } from "../types/scraper.js";
+import { DEFAULT_SCRAPER_CONFIGS, type ScraperConfig } from "../types/scraper.js";
 import { driveBrowserScraperOffline, runBrowserPathOffline, withoutScrapedAt, type ReplayRoutes } from "./helpers/replay-page.js";
 
 class Probe extends PlaywrightScraper {
@@ -19,19 +19,6 @@ class Probe extends PlaywrightScraper {
       await this.logic(page);
       return { success: true, bookmaker: "fortuna", league, matches: [] };
     });
-  }
-
-  scrapeLeague(): Promise<ScraperResult> {
-    throw new Error("unused");
-  }
-  scrapeMatch(): Promise<ScraperResult> {
-    throw new Error("unused");
-  }
-  scrapeMatchDetails(): Promise<MatchDetailResult> {
-    throw new Error("unused");
-  }
-  async extractEventUrls(): Promise<never[]> {
-    return [];
   }
 }
 

@@ -30,12 +30,10 @@ import {
   parseDoubleChance,
   parseBTTS,
   parseOverUnder,
-  parseAllMarkets,
   isValidEvent,
-  isUpcomingOfferedEvent,
 } from "./parser.js";
 import type { SuperbetEvent } from "./types.js";
-import { toIsoStartTime } from "../../shared/start-time.js";
+import { mapSuperbetEventOffer, selectUpcomingSuperbetEvents } from "./full-offer-mapping.js";
 
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "superbet";
@@ -244,10 +242,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
         // marketCount 0-1) in with upcoming ones. Keep only genuine upcoming
         // events that still carry an offer, then process the soonest first so
         // matches[0] reflects the true full offer rather than a settled match.
-        const now = Date.now();
-        const upcomingEvents = apiData.data
-          .filter((event) => isUpcomingOfferedEvent(event, now))
-          .sort((a, b) => (a.unixDateMillis ?? 0) - (b.unixDateMillis ?? 0));
+        const upcomingEvents = selectUpcomingSuperbetEvents(apiData.data, Date.now());
 
         console.log(
           `[Superbet/FullOffer] ${upcomingEvents.length} upcoming events with an active offer`
@@ -259,30 +254,8 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
 
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));
-
-            if (detailData && detailData.data && detailData.data.length > 0) {
-              const fullEvent = detailData.data[0];
-
-              const teams = parseTeamNames(fullEvent.matchName);
-              const markets = parseAllMarkets(fullEvent, teams);
-
-              if (markets.length > 0) {
-                matches.push({
-                  matchId: String(fullEvent.eventId),
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl: buildEventUrl(fullEvent.eventId),
-                  markets,
-                  startTime: toIsoStartTime(fullEvent.unixDateMillis),
-                  scrapedAt: new Date(),
-                });
-
-                console.log(
-                  `[Superbet/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
-                );
-              }
-            }
+            const offer = mapSuperbetEventOffer(detailData, leagueSlug);
+            if (offer) matches.push(offer);
 
             await this.delay(100);
           } catch (error) {

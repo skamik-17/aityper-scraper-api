@@ -3,6 +3,7 @@ import { PlaywrightScraper } from "../../../base/playwright-base.js";
 import { groupResults, ORDER, TOP_MSG } from "./betclic-fixtures.js";
 import { hasTransportStats } from "../../../shared/scraper-contract.js";
 import { addBetclicTransportStats, type BetclicTransportStats } from "../navigation.js";
+import { toIsoStartTime } from "../../../shared/start-time.js";
 
 const h = vi.hoisted(() => ({
   fetchLeagueMatches: vi.fn(),
@@ -123,6 +124,25 @@ describe("BetclicPlaywrightScraper.scrapeFullOffer", () => {
     expect(second).toEqual({ http: { requests: 30, retries: 0, failures: 0, bytes: 4200, byStatus: { "200": 30 } } });
     expect(second).not.toBe(first);
     expect(second.http!.byStatus).not.toBe(first.http!.byStatus);
+  });
+
+  it("writes an OPTA match whose METODA_GOLA failed", async () => {
+    h.listing.mockReturnValue([ARSENAL]);
+    byMatch({ [ARSENAL.matchId]: groupResults({ METODA_GOLA: "x" }) });
+    const r = await scrape();
+    expect(r.success).toBe(true);
+    expect(r.matches[0].markets).toHaveLength(32);
+    expect(warnLines().some((l) => l.startsWith("[Betclic/FullOffer] Skipping"))).toBe(false);
+  });
+
+  it("never sets startTime from the header (plan 01 owns betclic start_time)", async () => {
+    const LISTED_KICKOFF = "2026-11-07T15:00:00.0000000Z";
+    h.listing.mockReturnValue([{ ...ARSENAL, startTime: LISTED_KICKOFF }, LEEDS]);
+    h.fetchMarketGroupResults.mockResolvedValue(groupResults());
+    const r = await scrape();
+    expect(r.matches[0].startTime).toBe(toIsoStartTime(LISTED_KICKOFF));
+    expect(r.matches[0].startTime).toBe("2026-11-07T15:00:00.000Z");
+    expect(r.matches[1].startTime).toBeUndefined(); // no listing kickoff: the header never supplies one
   });
 
   it("fails the run when more than half of the attempted matches are skipped", async () => {

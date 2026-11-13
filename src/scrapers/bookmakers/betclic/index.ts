@@ -41,6 +41,7 @@ import {
   extractDoubleChanceFromMarkets,
   extractBTTSFromMarkets,
   extractOverUnderFromMarkets,
+  parseMatchHeader,
 } from "./parser.js";
 import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
@@ -361,7 +362,10 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
         `[Betclic/FullOffer] Fetching markets for ${homeTeam} vs ${awayTeam} (ID: ${matchId})`
       );
 
-      const assessment = assessMatchGroups(await fetchMarketGroupResults(matchId, { stats: ctx.stats }));
+      const results = await fetchMarketGroupResults(matchId, { stats: ctx.stats });
+      // Every group carries the same header; TOP's says which categories the match declares.
+      const top = results.find((r) => r.group === "TOP")?.response;
+      const assessment = assessMatchGroups(results, top ? parseMatchHeader(top).categories : []);
       if (!assessment.ok) return { kind: "skipped", reason: assessment.reason };
 
       console.log(

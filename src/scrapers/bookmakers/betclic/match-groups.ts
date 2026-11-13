@@ -24,13 +24,34 @@ export interface BetclicDuplicateGroup {
 }
 
 export type MatchGroupAssessment =
-  | { ok: true; responses: Buffer[]; emptyGroups: BetclicGroupName[]; duplicates: BetclicDuplicateGroup[] }
+  | {
+      ok: true;
+      responses: Buffer[];
+      emptyGroups: BetclicGroupName[];
+      duplicates: BetclicDuplicateGroup[];
+      /** Groups the match does not declare that failed: served as TOP's own payload, so nothing is lost. */
+      optionalFailed: BetclicGroupName[];
+    }
   | { ok: false; reason: string };
 
 const GROUP_ORDER = Object.keys(MARKET_GROUP_FILTERS) as BetclicGroupName[];
 
-export function assessMatchGroups(results: readonly BetclicGroupResult[]): MatchGroupAssessment {
+/**
+ * `declared` is the category list of the match header (parseMatchHeader). When it is
+ * non-empty, the required groups are TOP plus every group whose category the match
+ * declares; an undeclared category is served as TOP's own payload, so its failure
+ * loses nothing. When it is empty (unreadable header), all 7 groups are required.
+ */
+export function assessMatchGroups(
+  results: readonly BetclicGroupResult[],
+  declared: readonly string[] = []
+): MatchGroupAssessment {
   const byGroup = new Map(results.map((r) => [r.group, r]));
+  const declaredSet = new Set(declared);
+  const isRequired = (group: BetclicGroupName): boolean => {
+    const category = MARKET_GROUP_FILTERS[group];
+    return declaredSet.size === 0 || category === null || declaredSet.has(category);
+  };
 
   const top = byGroup.get("TOP");
   if (!top || top.error !== null || !top.response || top.response.length < MIN_GROUP_BYTES) {
@@ -39,14 +60,17 @@ export function assessMatchGroups(results: readonly BetclicGroupResult[]): Match
   }
 
   const failed: string[] = [];
+  const optionalFailed: BetclicGroupName[] = [];
   for (const group of GROUP_ORDER) {
     const r = byGroup.get(group);
-    if (!r) failed.push(`${group} (not fetched)`);
-    else if (r.error !== null || !r.response) failed.push(`${group} (${r.error ?? "no response"})`);
+    const problem = !r ? "not fetched" : r.error !== null || !r.response ? r.error ?? "no response" : null;
+    if (problem === null) continue;
+    if (isRequired(group)) failed.push(`${group} (${problem})`);
+    else optionalFailed.push(group);
   }
   if (failed.length > 0) {
-    const valid = GROUP_ORDER.length - failed.length;
-    return { ok: false, reason: `${valid}/${GROUP_ORDER.length} required groups valid; failed: ${failed.join("; ")}` };
+    const required = GROUP_ORDER.filter(isRequired).length;
+    return { ok: false, reason: `${required - failed.length}/${required} required groups valid; failed: ${failed.join("; ")}` };
   }
 
   // Far matches echo TOP's payload for several groups. A byte-equal payload adds no
@@ -56,7 +80,8 @@ export function assessMatchGroups(results: readonly BetclicGroupResult[]): Match
   const emptyGroups: BetclicGroupName[] = [];
   const duplicates: BetclicDuplicateGroup[] = [];
   for (const group of GROUP_ORDER) {
-    const response = byGroup.get(group)!.response!;
+    const response = byGroup.get(group)?.response;
+    if (!response) continue; // an optional group that failed
     if (response.length < MIN_GROUP_BYTES) {
       emptyGroups.push(group);
       continue;
@@ -69,5 +94,5 @@ export function assessMatchGroups(results: readonly BetclicGroupResult[]): Match
     responses.push(response);
     kept.push(group);
   }
-  return { ok: true, responses, emptyGroups, duplicates };
+  return { ok: true, responses, emptyGroups, duplicates, optionalFailed };
 }

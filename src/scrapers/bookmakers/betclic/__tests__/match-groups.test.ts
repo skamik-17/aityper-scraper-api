@@ -75,6 +75,34 @@ describe("assessMatchGroups", () => {
   });
 });
 
+describe("assessMatchGroups with the declared categories", () => {
+  const OPTA_CATEGORIES = ["ca_ftb_top", "ca_ftb_ft", "ca_ftb_rslt", "ca_ftb_pssb", "ca_ftb_gsc", "ca_ftb_goa", "ca_ftb_cshcp", "ca_ftb_prp"];
+
+  it("METODA_GOLA failing on an OPTA match does not skip it", () => {
+    const a = assessMatchGroups(distinct({ METODA_GOLA: "gRPC-web frame deadline (10000 ms): 0/null bytes" }), OPTA_CATEGORIES);
+    expect(a).toMatchObject({ ok: true, optionalFailed: ["METODA_GOLA"] });
+    expect(a.ok && a.responses).toHaveLength(6);
+  });
+
+  it("a declared group failing still skips", () =>
+    expect(assessMatchGroups(distinct({ STRZELCY: "Incomplete gRPC-web frame: 388976/1295527 bytes" }), OPTA_CATEGORIES)).toEqual({
+      ok: false,
+      reason: "5/6 required groups valid; failed: STRZELCY (Incomplete gRPC-web frame: 388976/1295527 bytes)",
+    }));
+
+  it("far match (live-probed declared list): STRZELCY and STATYSTYKI are optional, 4 required", () => {
+    const FAR_CATEGORIES = ["ca_ftb_top", "ca_ftb_ft", "ca_ftb_rslt", "ca_ftb_goa", "ca_ftb_cshcp"];
+    expect(assessMatchGroups(distinct({ STRZELCY: "x", STATYSTYKI: "y" }), FAR_CATEGORIES)).toMatchObject({ ok: true, optionalFailed: ["STRZELCY", "STATYSTYKI"] });
+    expect(assessMatchGroups(distinct({ GOLE: "z" }), FAR_CATEGORIES)).toEqual({ ok: false, reason: "3/4 required groups valid; failed: GOLE (z)" });
+  });
+
+  it("an unreadable header keeps all 7 required", () =>
+    expect(assessMatchGroups(distinct({ METODA_GOLA: "x" }), [])).toEqual({ ok: false, reason: "6/7 required groups valid; failed: METODA_GOLA (x)" }));
+
+  it("all 7 completed: nothing optional failed", () =>
+    expect(assessMatchGroups(distinct(), OPTA_CATEGORIES)).toMatchObject({ ok: true, optionalFailed: [] }));
+});
+
 describe("parseMatchHeader", () => {
   const OPTA_CATEGORIES = ["ca_ftb_top", "ca_ftb_ft", "ca_ftb_rslt", "ca_ftb_pssb", "ca_ftb_gsc", "ca_ftb_goa", "ca_ftb_cshcp", "ca_ftb_prp"];
 

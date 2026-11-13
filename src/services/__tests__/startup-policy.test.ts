@@ -1,17 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const h = vi.hoisted(() => ({ getLastSuccessfulScrapeTime: vi.fn(), getOddsFreshnessByBookmaker: vi.fn() }));
-vi.mock("../../repositories/scraper-run-repository.js", async () => ({ getLastSuccessfulScrapeTime: h.getLastSuccessfulScrapeTime }));
+const h = vi.hoisted(() => ({ getLastSuccessfulScrapeTime: vi.fn(), getOddsFreshnessByBookmaker: vi.fn(), getRecentRunRows: vi.fn() }));
+vi.mock("../../repositories/scraper-run-repository.js", async () => ({
+  getLastSuccessfulScrapeTime: h.getLastSuccessfulScrapeTime,
+  getRecentRunRows: h.getRecentRunRows,
+}));
 vi.mock("../../repositories/odds-repository.js", async () => ({ getOddsFreshnessByBookmaker: h.getOddsFreshnessByBookmaker }));
 
 import { decideStartupScrape, getLastOkRunAt, getStalestOkRunAt } from "../startup-policy.js";
+import { CONFIG } from "../../config/index.js";
+import { isLeagueSupported } from "../../config/leagues.js";
 
 const NOW = new Date("2026-11-07T10:00:00.000Z");
 const H = 3_600_000;
 
+// scraper_runs rows, newest first: every supported bookmaker reported at `at`, except `older`
+function rowsFor(league: string, at: string, older: Record<string, string | null> = {}) {
+  return CONFIG.BOOKMAKERS.filter((bm) => isLeagueSupported(league, bm) && older[bm] !== null)
+    .map((bm) => ({ bookmaker: bm, league_slug: league, status: "success", started_at: older[bm] ?? at, finished_at: older[bm] ?? at }))
+    .sort((a, b) => b.started_at.localeCompare(a.started_at));
+}
+
 beforeEach(() => {
   h.getLastSuccessfulScrapeTime.mockReset();
   h.getOddsFreshnessByBookmaker.mockReset();
+  h.getRecentRunRows.mockReset();
+  h.getRecentRunRows.mockImplementation(async (league: string) => rowsFor(league, "2026-11-07T09:02:49.798+00:00"));
 });
 
 describe("decideStartupScrape", () => {
@@ -43,9 +57,35 @@ describe("freshness lookups", () => {
     expect(await getLastOkRunAt("premier-league")).toBeNull();
   });
 
+  it("a run interrupted before the browser bookmakers finished leaves the league as old as their last outcome", async () => {
+    h.getLastSuccessfulScrapeTime.mockResolvedValue(new Date("2026-11-07T09:58:00.000Z"));
+    h.getRecentRunRows.mockResolvedValue(rowsFor("premier-league", "2026-11-07T09:58:00.000+00:00", {
+      betcris: "2026-11-07T08:55:00.000+00:00",
+      pzbuk: "2026-11-07T08:57:00.000+00:00",
+    }));
+    expect(await getLastOkRunAt("premier-league")).toEqual(new Date("2026-11-07T08:55:00.000Z"));
+    expect(h.getRecentRunRows).toHaveBeenCalledWith("premier-league", expect.any(Number));
+  });
+
+  it("a one-bookmaker admin run does not make the league fresh; a failing bookmaker's outcome still counts", async () => {
+    h.getLastSuccessfulScrapeTime.mockResolvedValue(new Date("2026-11-07T09:59:00.000Z"));
+    const rows = rowsFor("premier-league", "2026-11-07T08:50:00.000+00:00", { forbet: "2026-11-07T09:59:00.000+00:00" });
+    rows.find((r) => r.bookmaker === "totalbet")!.status = "scrape_failed";
+    h.getRecentRunRows.mockResolvedValue(rows);
+    expect(await getLastOkRunAt("premier-league")).toEqual(new Date("2026-11-07T08:50:00.000Z"));
+  });
+
+  it("a supported bookmaker without any outcome on record makes freshness unknown (null)", async () => {
+    h.getLastSuccessfulScrapeTime.mockResolvedValue(new Date("2026-11-07T09:58:00.000Z"));
+    h.getRecentRunRows.mockResolvedValue(rowsFor("premier-league", "2026-11-07T09:58:00.000+00:00", { pzbuk: null }));
+    expect(await getLastOkRunAt("premier-league")).toBeNull();
+  });
+
   it("getStalestOkRunAt: the oldest league wins; any unknown league -> null", async () => {
     h.getLastSuccessfulScrapeTime.mockImplementation(async (league: string) =>
       league === "premier-league" ? new Date("2026-11-07T09:40:00.000Z") : new Date("2026-11-07T08:45:00.000Z"));
+    h.getRecentRunRows.mockImplementation(async (league: string) =>
+      rowsFor(league, league === "premier-league" ? "2026-11-07T09:40:00.000+00:00" : "2026-11-07T08:45:00.000+00:00"));
     expect(await getStalestOkRunAt(["premier-league", "laliga"])).toEqual(new Date("2026-11-07T08:45:00.000Z"));
     h.getLastSuccessfulScrapeTime.mockImplementation(async (league: string) => (league === "premier-league" ? new Date("2026-11-07T09:40:00.000Z") : null));
     h.getOddsFreshnessByBookmaker.mockResolvedValue(new Map());

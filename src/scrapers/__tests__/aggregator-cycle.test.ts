@@ -153,4 +153,19 @@ describe("runFullOfferCycle", () => {
     expect(lines).toHaveLength(1);
     expect(JSON.parse(lines[0].slice(16))).toMatchObject({ bookmaker: "forbet", interrupted: true, leagues: {} });
   });
+
+  it("a unit that throws becomes scrape_failed with its cause, and the job goes on to the next league", async () => {
+    // A malformed scraper result (no matches array) throws inside the unit
+    scrapers.forbet.scrapeFullOffer.mockImplementation(async (league: string) =>
+      league === "premier-league" ? ({ success: true, bookmaker: "forbet", league } as never) : okResult("forbet", twentyMatches(), league));
+    const errorSpy = vi.mocked(console.error);
+    const r = await runFullOfferCycle({ leagues: ["premier-league", "laliga"], bookmakers: ["forbet"], runIds: { "premier-league": ID_PL, laliga: ID_LL } });
+    const pl = r.get("premier-league")!.outcomes;
+    expect(pl).toHaveLength(1);
+    expect(pl[0]).toMatchObject({ bookmaker: "forbet", runId: ID_PL, status: "scrape_failed" });
+    expect(pl[0].error).toMatch(/^Unit failed: /);
+    expect(r.get("premier-league")!.interrupted).toBeNull();
+    expect(r.get("laliga")!.outcomes.map((o) => [o.bookmaker, o.status])).toEqual([["forbet", "success"]]);
+    expect(errorSpy.mock.calls.flat().join("\n")).toContain("[Aggregator/FullOffer] forbet scrape_failed:");
+  });
 });

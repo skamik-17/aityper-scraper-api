@@ -23,7 +23,7 @@ describe("job policy", () => {
     expect([
       maxDurationMsFor("pzbuk", "browser"), maxDurationMsFor("betcris", "browser"), maxDurationMsFor("sts", "browser"),
       maxDurationMsFor("fortuna", "browser"), maxDurationMsFor("pzbuk", "websocket"), maxDurationMsFor("forbet", "http"),
-    ]).toEqual([600_000, 600_000, 360_000, 240_000, 120_000, 120_000]));
+    ]).toEqual([600_000, 720_000, 360_000, 240_000, 120_000, 120_000]));
 
   it("pins the transport of every getScraper(bm) default instance (cross-plan #8)", () => {
     // Plans 02-04 moved these to plain HTTP; plan 05 updates the set when it changes a pick.

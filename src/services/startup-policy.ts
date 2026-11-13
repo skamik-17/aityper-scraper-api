@@ -4,8 +4,11 @@
  * Unknown freshness (DB down, no OK run) counts as stale: never a silent skip.
  */
 import { CONFIG, type StartupScrapePolicy } from "../config/index.js";
+import { isLeagueSupported } from "../config/leagues.js";
 import { getOddsFreshnessByBookmaker } from "../repositories/odds-repository.js";
-import { getLastSuccessfulScrapeTime } from "../repositories/scraper-run-repository.js";
+import { getLastSuccessfulScrapeTime, getRecentRunRows } from "../repositories/scraper-run-repository.js";
+import { parseDbTimestamp } from "../utils/db-timestamp.js";
+import { STATUS_WINDOW_RUNS } from "./bookmaker-status.js";
 
 export const STARTUP_DELAY_MS = 5_000;
 
@@ -38,11 +41,32 @@ export function decideStartupScrape(
   };
 }
 
-/** A league's last OK run: scraper_runs first, else the newest odds row; any error -> null. */
+/**
+ * A league's last OK run: scraper_runs first, else the newest odds row; any error -> null.
+ * With scraper_runs, the league is only as fresh as its stalest supported bookmaker's newest
+ * outcome (any status): a run interrupted before the browser jobs finished, or a
+ * one-bookmaker admin run, leaves the others' data old. A supported bookmaker with no
+ * outcome on record makes it unknown (null).
+ */
 export async function getLastOkRunAt(league: string): Promise<Date | null> {
   try {
     const last = await getLastSuccessfulScrapeTime(league);
-    if (last) return last;
+    if (last) {
+      const rows = await getRecentRunRows(league, STATUS_WINDOW_RUNS * CONFIG.BOOKMAKERS.length);
+      // Rows come newest first: the first row per bookmaker is its newest outcome
+      const newest = new Map<string, Date>();
+      for (const row of rows) {
+        if (!newest.has(row.bookmaker)) newest.set(row.bookmaker, parseDbTimestamp(row.finished_at ?? row.started_at));
+      }
+      let oldest = last;
+      for (const bm of CONFIG.BOOKMAKERS) {
+        if (!isLeagueSupported(league, bm)) continue;
+        const at = newest.get(bm);
+        if (!at || isNaN(at.getTime())) return null;
+        if (at < oldest) oldest = at;
+      }
+      return oldest;
+    }
     const freshness = await getOddsFreshnessByBookmaker(league, CONFIG.BOOKMAKERS);
     let newest: Date | null = null;
     for (const at of freshness.values()) if (!newest || at > newest) newest = at;

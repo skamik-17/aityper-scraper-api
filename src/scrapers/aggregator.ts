@@ -123,6 +123,38 @@ function formatOutcomeLine(o: BookmakerRunOutcome): string {
   return o.error ? `${line} - ${o.error}` : line;
 }
 
+/**
+ * The outcome of a unit that threw outside the scrape and save guards (a malformed scraper
+ * result, a bug): scrape_failed with the cause, so the bookmaker never silently drops out.
+ */
+function failedUnit(
+  runId: string,
+  bookmaker: PolishBookmaker,
+  league: string,
+  startedAt: Date,
+  error: unknown
+): { result: FullOfferScraperResult; outcome: BookmakerRunOutcome } {
+  console.error(`[Aggregator/FullOffer] ${bookmaker} unit threw for ${league}:`, error);
+  const result: FullOfferScraperResult = { success: false, bookmaker, league, matches: [], error: `Unit failed: ${errorMessage(error)}` };
+  const { status, error: cause } = classifyBookmakerRun(result, null);
+  const finishedAt = new Date();
+  const outcome: BookmakerRunOutcome = {
+    runId,
+    bookmaker,
+    league,
+    status,
+    matchesFound: 0,
+    marketsFound: 0,
+    marketsSaved: 0,
+    error: cause,
+    startedAt,
+    finishedAt,
+    durationMs: finishedAt.getTime() - startedAt.getTime(),
+  };
+  logOutcome(outcome);
+  return { result, outcome };
+}
+
 function logOutcome(o: BookmakerRunOutcome): void {
   const line = formatOutcomeLine(o);
   if (!isOkRunStatus(o.status)) console.error(line);
@@ -345,6 +377,7 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
               interrupted = true;
               break;
             }
+            const unitStartedAt = new Date();
             try {
               const run = await runFullOfferForBookmaker(runIds.get(league)!, bookmaker, league, req.signal);
               runsByLeague.get(league)!.set(bookmaker, run);
@@ -356,7 +389,8 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
                 interrupted = true;
                 break;
               }
-              throw error;
+              // Any other throw still yields an outcome, and the job goes on to its next league
+              runsByLeague.get(league)!.set(bookmaker, failedUnit(runIds.get(league)!, bookmaker, league, unitStartedAt, error));
             }
           }
         } finally {
@@ -396,7 +430,11 @@ export async function runFullOfferCycle(req: FullOfferCycleRequest): Promise<Map
     ...jobs.filter((j) => !j.browser),
   ];
   try {
-    await runJobsWithCaps(ordered, req.caps ?? DEFAULT_JOB_CAPS, req.signal);
+    const settled = await runJobsWithCaps(ordered, req.caps ?? DEFAULT_JOB_CAPS, req.signal);
+    // A job that still rejected (outside its units) is logged, never dropped silently
+    settled.forEach((r, i) => {
+      if (r.status === "rejected") console.error(`[Aggregator/FullOffer] ${ordered[i].key} job failed:`, r.reason);
+    });
   } finally {
     await sampler.stop();
   }

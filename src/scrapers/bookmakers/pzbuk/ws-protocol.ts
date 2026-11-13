@@ -330,7 +330,8 @@ export function isEmptyListing(d: CaptureDiagnostics): boolean {
   return d.initialStates > 0 && d.maxEvents === 0;
 }
 
-function lastFrameDetails(d: CaptureDiagnostics): string {
+/** `, last error: …` and `, last control: TYPE[ message]` of a capture, or "". */
+export function lastFrameDetails(d: CaptureDiagnostics): string {
   let details = "";
   if (d.lastInvalidError) details += `, last error: ${d.lastInvalidError}`;
   if (d.lastControl) {

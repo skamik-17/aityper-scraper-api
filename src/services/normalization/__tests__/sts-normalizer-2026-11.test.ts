@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { stsNormalizer } from "../bookmakers/sts-normalizer.js";
 import type { NormalizationContext, RawBookmakerMarket } from "../types.js";
 
@@ -239,18 +239,81 @@ describe("stsNormalizer 2026-11 renumbered ids and team cards/corners", () => {
     assertRow(row);
   });
 
-  it("never invents a team side when the name does not say 1./2. drużyna", () => {
-    const cards = stsNormalizer.normalizeMarket(
-      toRaw(188, "Liczba kartek drużyny 1.5", [["+1.5", 3.4], ["-1.5", 1.28]]),
-      ctx,
-    );
-    const corners = stsNormalizer.normalizeMarket(
-      toRaw(231, "Liczba rzutów rożnych drużyny 8.5", [["+8.5", 2.7], ["-8.5", 1.4]]),
-      ctx,
-    );
-    expect(cards!.marketKey).toBe("CARDS_TEAM:1.5");
-    expect(cards!.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
-    expect(corners!.marketKey).toBe("CORNERS_TEAM:8.5");
-    expect(corners!.selections.map((s) => s.code)).toEqual(["OVER", "UNDER"]);
+});
+
+// Handcrafted fail-closed rows (rule 8): none of these shapes occurs in the
+// 2026-11 snapshots, where every team-stat row names its side and line and
+// every "każda drużyna" row its threshold with a single "Tak" price. If STS
+// ever sends them, a side-less or line-less team row must be dropped, never
+// published as a bare CARDS_TEAM:<line> / CORNERS_TEAM:<line> row that pools
+// with peers' rows under an undefined side.
+interface DropRow {
+  label: string;
+  id: number;
+  name: string;
+  sels: Array<[string, number]>;
+}
+
+const dropRows: DropRow[] = [
+  {
+    label: "side-less cards line",
+    id: 188,
+    name: "Liczba kartek drużyny 1.5",
+    sels: [["+1.5", 3.4], ["-1.5", 1.28]],
+  },
+  {
+    label: "side-less corners line",
+    id: 231,
+    name: "Liczba rzutów rożnych drużyny 8.5",
+    sels: [["+8.5", 2.7], ["-8.5", 1.4]],
+  },
+  {
+    label: "cards row with a side but no line",
+    id: 188,
+    name: "1. drużyna - liczba kartek",
+    sels: [["Powyżej", 3.4], ["Poniżej", 1.28]],
+  },
+  {
+    label: "corners row with a side but no line",
+    id: 234,
+    name: "2. drużyna - liczba rzutów rożnych",
+    sels: [["Powyżej", 1.75], ["Poniżej", 1.9]],
+  },
+  {
+    label: "each-team corners row without an 'N lub więcej' threshold",
+    id: 1287,
+    name: "Rzuty rożne - każda drużyna",
+    sels: [["Tak", 2.9]],
+  },
+  {
+    label: "each-team cards row quoting only 'Nie'",
+    id: 2287,
+    name: "Kartki - każda drużyna - 2 lub więcej",
+    sels: [["Nie", 1.15]],
+  },
+];
+
+describe("stsNormalizer 2026-11 team-stat rows fail closed", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it.each(dropRows)("drops a $label (id $id) with one warning", (row) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const out = stsNormalizer.normalizeMarket(toRaw(row.id, row.name, row.sels), ctx);
+    expect(out).toBeNull();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain(row.name);
+  });
+
+  it("keeps only the 'Tak' leg of an each-team row: 'Nie' is not UNDER and not in the catalog", () => {
+    assertRow({
+      id: 2287,
+      name: "Kartki - każda drużyna - 2 lub więcej",
+      sels: [["Tak", 5], ["Nie", 1.15]],
+      code: "EACH_TEAM_TOTAL_CARDS_OVER",
+      key: "EACH_TEAM_TOTAL_CARDS_OVER:1.5",
+      expected: ["OVER@5"],
+    });
   });
 });

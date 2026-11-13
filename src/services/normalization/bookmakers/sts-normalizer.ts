@@ -521,6 +521,13 @@ function stsTeamSideFromMarketName(marketName: string | undefined): "HOME" | "AW
   return home ? "HOME" : "AWAY";
 }
 
+// "<stat> - każda drużyna - N lub więcej" codes: the catalog defines only the
+// OVER selection (every team reaches N), keyed by the N - 0.5 line.
+const STS_EACH_TEAM_OVER_CODES: ReadonlySet<NormalizedMarketType> = new Set<NormalizedMarketType>([
+  "EACH_TEAM_TOTAL_CORNERS_OVER",
+  "EACH_TEAM_TOTAL_CARDS_OVER",
+]);
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -762,12 +769,11 @@ function normalizeSelectionForMarket(
     // STS quotes this conditional market as a single 'Tak' outcome, not as
     // a player-name dropdown like the other *_LINEUP codes.
     case "PLAYER_CARDS_LINEUP":
-      if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && trimmed.startsWith("+")) return "OVER";
       // ids 1287/2287 ("... każda drużyna - N lub więcej") quote one "Tak"
       // outcome: every team reaches N, i.e. OVER the N - 0.5 line in the
-      // param. "Nie" (some team stays below N) is not UNDER, so only "Tak"
-      // maps here.
-      if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && lower === "tak") return "OVER";
+      // param. "Nie" (some team stays below N) is not UNDER, so only "+N"
+      // and "Tak" map here; normalizeMarket drops every other leg.
+      if (STS_EACH_TEAM_OVER_CODES.has(marketCode) && (trimmed.startsWith("+") || lower === "tak")) return "OVER";
       return normalizeYesNoSelection(trimmed);
 
     case "PLAYER_RED_CARD":
@@ -1243,7 +1249,8 @@ function extractParamValue(
   // CORNERS_TEAM's selections are plain OVER/UNDER, so the team side rides
   // in the param as "<HOME|AWAY>:<line>", the convention every peer uses;
   // otherwise ids 231 and 234 collide on one CORNERS_TEAM:<line> key. A name
-  // that names no side keeps the bare line (never guess a side).
+  // that names no side keeps the bare line (never guess a side), and
+  // normalizeMarket drops that row.
   if (marketCode === "CORNERS_TEAM") {
     const line = parseOverUnderLine(raw.selections.map((s) => s.name));
     const side = stsTeamSideFromMarketName(raw.name);
@@ -1268,7 +1275,7 @@ function extractParamValue(
     if (windowMatch) return windowMatch[1];
   }
 
-  if (marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") {
+  if (STS_EACH_TEAM_OVER_CODES.has(marketCode)) {
     for (const sel of raw.selections) {
       const match = sel.name.match(/^\+(\d+(?:[.,]\d+)?)$/);
       if (match) {
@@ -1631,13 +1638,34 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
       marketCode = collapsed.marketCode as NormalizedMarketType;
       paramValue = collapsed.paramValue;
     }
+
+    // Rule 8: a team-stat line that does not name its team, its line or its
+    // threshold is ambiguous. Drop it instead of publishing a side-less
+    // CARDS_TEAM OVER/UNDER, a bare CORNERS_TEAM:<line> (it would pool with
+    // peers' bare-line rows under an undefined side) or a param-less row.
+    const teamStatDrop = stsTeamStatDropReason(marketCode, marketName, paramValue);
+    if (teamStatDrop) {
+      console.warn(`[sts] Dropping ${marketCode} "${raw.name}" (id: ${stsId ?? "none"}): ${teamStatDrop}`);
+      return null;
+    }
+
     const marketKey = buildMarketKey(marketCode, paramValue);
 
-    const selections = raw.selections.map((sel) => ({
+    let selections = raw.selections.map((sel) => ({
       code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, marketName),
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // The catalog defines only OVER for the each-team codes: drop the "Nie"
+    // leg (some team stays below N, which is not UNDER), as superbet does.
+    if (STS_EACH_TEAM_OVER_CODES.has(marketCode)) {
+      selections = selections.filter((sel) => sel.code === "OVER");
+      if (selections.length === 0) {
+        console.warn(`[sts] Dropping ${marketCode} "${raw.name}" (id: ${stsId ?? "none"}): no OVER ("Tak") selection`);
+        return null;
+      }
+    }
 
     return {
       marketCode,
@@ -1652,6 +1680,30 @@ export const stsNormalizer: BookmakerMarketNormalizer = {
     };
   },
 };
+
+// Why a team-stat row must be dropped, or null when it is safe to publish.
+// CARDS_TEAM carries the side in its selections (read from the market name)
+// and CORNERS_TEAM in its "<HOME|AWAY>:<line>" param; both need a side and a
+// line. The each-team codes need the "N lub więcej" threshold in the param.
+function stsTeamStatDropReason(
+  marketCode: NormalizedMarketType,
+  marketName: string,
+  paramValue: string | undefined
+): string | null {
+  if (marketCode === "CARDS_TEAM" || marketCode === "CORNERS_TEAM") {
+    const side = stsTeamSideFromMarketName(marketName);
+    if (!side) return "the name names no team side (1./2. drużyna)";
+    if (paramValue === undefined) return "no line";
+    if (marketCode === "CORNERS_TEAM" && !paramValue.startsWith(`${side}:`)) {
+      return `param "${paramValue}" is not "${side}:<line>"`;
+    }
+    return null;
+  }
+  if (STS_EACH_TEAM_OVER_CODES.has(marketCode) && paramValue === undefined) {
+    return 'no "N lub więcej" threshold';
+  }
+  return null;
+}
 
 function ensureSign(value: string): string {
   if (!value.startsWith("+") && !value.startsWith("-")) return `+${value}`;

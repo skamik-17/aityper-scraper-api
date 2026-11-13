@@ -116,7 +116,8 @@ describe("saveBatchFullOfferMarkets: batch errors", () => {
       "premier-league",
     );
     expect(r).toMatchObject({ inserted: 1, errors: 0, failedBatches: 0, totalBatches: 1, firstError: null });
-    expect(fake.queries.map(methods)).toEqual([["upsert"], ["delete", "eq", "eq", "lt"]]);
+    expect(fake.queries.map(methods)).toEqual([["upsert"], ["rpc"]]);
+    expect(fake.queries[1].table).toBe("rpc:prune_stale_odds");
     expect(errorSpy).not.toHaveBeenCalled();
   });
 });

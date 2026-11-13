@@ -8,6 +8,8 @@
  * `{ data: null, error: null, ...respond(query) }`. `respond` runs once per
  * query, when the query is first awaited, so it sees the complete call list.
  * A `respond` that throws makes the await reject, like a thrown fetch would.
+ * `client.rpc(fn, args)` is recorded the same way, as table `rpc:<fn>` with the
+ * single call `["rpc", args]`.
  */
 export interface RecordedQuery {
   table: string;
@@ -21,9 +23,8 @@ export interface FakeResponse {
   count?: number | null;
 }
 
-// `lt` is not part of a plain read/write chain, but pruneStaleOddsRows()
-// (full-offer-repository.ts) chains `.delete().eq().eq().lt()` after every
-// clean batch save, so repository tests that reach that path need it.
+// `lt` is not part of a plain read/write chain; reads and deletes bounded
+// by a timestamp chain it.
 const CHAIN_METHODS = [
   "select",
   "insert",
@@ -46,12 +47,27 @@ export function createFakeSupabase(respond: (q: RecordedQuery) => FakeResponse):
 } {
   const queries: RecordedQuery[] = [];
 
+  const thenable = (query: RecordedQuery) => {
+    let settled: Promise<{ data: unknown; error: unknown }> | undefined;
+    return (
+      onFulfilled?: (value: { data: unknown; error: unknown }) => unknown,
+      onRejected?: (reason: unknown) => unknown,
+    ) => {
+      settled ??= Promise.resolve().then(() => ({ data: null, error: null, ...respond(query) }));
+      return settled.then(onFulfilled, onRejected);
+    };
+  };
+
   const client = {
+    rpc(fn: string, args?: unknown) {
+      const query: RecordedQuery = { table: `rpc:${fn}`, calls: [["rpc", args]] };
+      queries.push(query);
+      return { then: thenable(query) };
+    },
     from(table: string) {
       const query: RecordedQuery = { table, calls: [] };
       queries.push(query);
 
-      let settled: Promise<{ data: unknown; error: unknown }> | undefined;
       const builder: Record<string, unknown> = {};
       for (const method of CHAIN_METHODS) {
         builder[method] = (...args: unknown[]) => {
@@ -59,13 +75,7 @@ export function createFakeSupabase(respond: (q: RecordedQuery) => FakeResponse):
           return builder;
         };
       }
-      builder.then = (
-        onFulfilled?: (value: { data: unknown; error: unknown }) => unknown,
-        onRejected?: (reason: unknown) => unknown,
-      ) => {
-        settled ??= Promise.resolve().then(() => ({ data: null, error: null, ...respond(query) }));
-        return settled.then(onFulfilled, onRejected);
-      };
+      builder.then = thenable(query);
       return builder;
     },
   };

@@ -9,6 +9,7 @@ import { calculateBestOdds } from "../utils/market-aggregation.js";
 import { RepositoryError } from "../utils/errors.js";
 import { fetchAllRows } from "../utils/supabase-pagination.js";
 import { formatDbError } from "../services/run-outcome.js";
+import { isPruneGuardEnabled } from "../config/odds-storage.js";
 import {
   CANONICAL_MARKET_CODES,
   MARKET_BY_CODE,
@@ -98,7 +99,7 @@ function getMarketTypeId(normalizedType: string): number | null {
  * when no id is available. Both are deterministic across re-scrapes of the
  * SAME raw market, so a re-scrape updates the same row via the upsert's
  * (match_id, bookmaker, market_key, scraped_at) conflict target instead of
- * duplicating it, and pruneStaleOddsRows() (which prunes by match+bookmaker+
+ * duplicating it, and pruneStaleOdds() (which prunes by match+bookmaker+
  * scraped_at only, never by market_key) keeps cleaning up old scrapes
  * exactly as before.
  *
@@ -248,6 +249,18 @@ export function mergeMarketRecord(
   }
 }
 
+export interface PruneSkip {
+  match_id: string;
+  new_rows: number;
+  previous_rows: number;
+}
+
+export interface PruneStaleOddsResult {
+  deleted: number;
+  pruned_matches: number;
+  prune_skipped: PruneSkip[];
+}
+
 /**
  * Drops rows from a PREVIOUS scrape of this (match, bookmaker) pair that are
  * older than the scrape just written. Rows are only ever appended, so a
@@ -264,24 +277,47 @@ export function mergeMarketRecord(
  * actually ran in production. Logs the number of rows actually removed
  * (round 8 P3-prune-stale-snapshots) so a silent RLS/permission failure on
  * the DELETE is visible instead of looking identical to "nothing to prune".
+ *
+ * One call per bookmaker save (migration 12's prune_stale_odds), not one DELETE
+ * per match: `newCounts` holds every written match's row count, 0 included. The
+ * degenerate-write guard uses it only when ODDS_PRUNE_GUARD=true (owner B13).
+ * Returns null on error (logged); never throws.
  */
-async function pruneStaleOddsRows(
+async function pruneStaleOdds(
   supabase: ReturnType<typeof getSupabase>,
-  matchId: string,
   bookmaker: PolishBookmaker,
-  scrapedAt: string
-): Promise<void> {
-  const { count, error: pruneError } = await (supabase as any)
-    .from("odds")
-    .delete({ count: "exact" })
-    .eq("match_id", matchId)
-    .eq("bookmaker", bookmaker)
-    .lt("scraped_at", scrapedAt);
-
-  if (pruneError) {
-    console.error(`[FullOfferRepo] Stale-row prune error for ${bookmaker}/${matchId}:`, pruneError);
-  } else if (count) {
-    console.log(`[FullOfferRepo] Pruned ${count} stale row(s) for ${bookmaker}/${matchId}`);
+  scrapedAt: string,
+  newCounts: ReadonlyMap<string, number>
+): Promise<PruneStaleOddsResult | null> {
+  try {
+    const { data, error } = await (supabase as any).rpc("prune_stale_odds", {
+      p_bookmaker: bookmaker,
+      p_scraped_at: scrapedAt,
+      p_new_counts: Object.fromEntries(newCounts),
+      p_guard: isPruneGuardEnabled(),
+    });
+    if (error) {
+      const hint = (error as { code?: unknown }).code === "PGRST202" ? " (apply supabase/migrations/12_odds_quick_wins.sql)" : "";
+      console.error(`[FullOfferRepo] Stale-row prune failed for ${bookmaker}: ${formatDbError(error)}${hint}`);
+      return null;
+    }
+    const r: PruneStaleOddsResult = {
+      deleted: Number(data?.deleted ?? 0),
+      pruned_matches: Number(data?.pruned_matches ?? 0),
+      prune_skipped: Array.isArray(data?.prune_skipped) ? data.prune_skipped : [],
+    };
+    if (r.deleted > 0) {
+      console.log(`[FullOfferRepo] Pruned ${r.deleted} stale row(s) across ${r.pruned_matches} match(es) for ${bookmaker}`);
+    }
+    for (const skip of r.prune_skipped) {
+      console.warn(
+        `[FullOfferRepo] Prune skipped for ${bookmaker}/${skip.match_id}: degenerate write (${skip.new_rows} of ${skip.previous_rows} rows)`
+      );
+    }
+    return r;
+  } catch (error) {
+    console.error(`[FullOfferRepo] Stale-row prune failed for ${bookmaker}: ${formatDbError(error)}`);
+    return null;
   }
 }
 
@@ -365,9 +401,9 @@ export async function saveFullOfferMarkets(
     }
   }
 
-  // See pruneStaleOddsRows() for why this runs and what it drops.
+  // See pruneStaleOdds() for why this runs and what it drops.
   if (result.errors === 0 && result.inserted > 0) {
-    await pruneStaleOddsRows(supabase, matchId, bookmaker, scrapedAt);
+    await pruneStaleOdds(supabase, bookmaker, scrapedAt, new Map([[matchId, records.length]]));
   }
 
   return result;
@@ -569,6 +605,8 @@ export interface BatchSaveResult {
   totalBatches: number;
   /** formatDbError() of the first failed batch, so the cause survives the run. */
   firstError: string | null;
+  /** Matches whose prune the degenerate-write guard skipped; set only when non-empty. */
+  pruneSkipped?: PruneSkip[];
 }
 
 export async function saveBatchFullOfferMarkets(
@@ -599,10 +637,9 @@ export async function saveBatchFullOfferMarkets(
 
   const scrapedAt = new Date().toISOString();
   const allRecords: OddsInsert[] = [];
-  // matchId -> bookmaker is constant across this whole call, so a per-match
-  // set of ids visited is enough to know which (match, bookmaker) pairs to
-  // prune after the write succeeds (see pruneStaleOddsRows()).
-  const matchIdsWritten = new Set<string>();
+  // bookmaker is constant across this whole call, so the written match ids and their
+  // row counts are all the prune needs after the write succeeds (see pruneStaleOdds()).
+  const rowsByMatchWritten = new Map<string, number>();
 
   for (const match of matches) {
     const matchId = generateMatchId(match.homeTeam, match.awayTeam, leagueSlug);
@@ -660,7 +697,8 @@ export async function saveBatchFullOfferMarkets(
     }
 
     allRecords.push(...recordsMap.values());
-    matchIdsWritten.add(matchId);
+    // A match with 0 canonical records is still written, with 0 rows (Review Focus 1)
+    rowsByMatchWritten.set(matchId, (rowsByMatchWritten.get(matchId) ?? 0) + recordsMap.size);
     result.matchesProcessed++;
   }
 
@@ -690,15 +728,12 @@ export async function saveBatchFullOfferMarkets(
     }
   }
 
-  // See pruneStaleOddsRows() for why this runs and what it drops. This is
-  // the ONLY place the prune actually executes in production: aggregator.ts
-  // always calls normalizeAndSaveMatches with { useBatchInsert: true }, so
-  // saveFullOfferMarkets's own copy of this call never runs (round 8
-  // REPO-BATCH-STALE-PRUNE).
+  // See pruneStaleOdds() for why this runs and what it drops. This is the
+  // path production takes: aggregator.ts always calls normalizeAndSaveMatches
+  // with { useBatchInsert: true } (round 8 REPO-BATCH-STALE-PRUNE).
   if (result.errors === 0 && result.inserted > 0) {
-    for (const matchId of matchIdsWritten) {
-      await pruneStaleOddsRows(supabase, matchId, bookmaker, scrapedAt);
-    }
+    const pruned = await pruneStaleOdds(supabase, bookmaker, scrapedAt, rowsByMatchWritten);
+    if (pruned && pruned.prune_skipped.length > 0) result.pruneSkipped = pruned.prune_skipped;
   }
 
   return result;

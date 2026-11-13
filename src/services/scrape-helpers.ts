@@ -10,6 +10,8 @@ export interface NormalizeAndSaveResult {
   marketsNormalized: number;
   marketsSaved: number;
   errors: string[];
+  /** Matches whose prune the degenerate-write guard skipped; set only when > 0. */
+  pruneSkipped?: number;
 }
 
 export async function normalizeAndSaveMatches(
@@ -68,6 +70,15 @@ export async function normalizeAndSaveMatches(
         result.errors.push(
           `Batch insert failed (${batchResult.failedBatches} of ${batchResult.totalBatches} batches): ${batchResult.firstError}`
         );
+      }
+      // A kept snapshot is a cause, not a failure: with markets saved the run is partial
+      const skipped = batchResult.pruneSkipped ?? [];
+      if (skipped.length > 0) {
+        const first = skipped[0];
+        result.errors.push(
+          `Prune skipped (degenerate write) for ${skipped.length} of ${batchResult.matchesProcessed} matches: ${first.match_id} ${first.new_rows}/${first.previous_rows} rows`
+        );
+        result.pruneSkipped = skipped.length;
       }
     } catch (error) {
       const errorMsg = `Batch save failed: ${error instanceof Error ? error.message : "Unknown error"}`;

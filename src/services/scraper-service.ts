@@ -14,6 +14,7 @@ import { isOkRunStatus, type BookmakerRunOutcome } from "./run-outcome.js";
 import { ensureMarketTypesSynced } from "./market-types-sync.js";
 import { mergeRunRows, STATUS_WINDOW_RUNS, summarizeBookmakerRuns } from "./bookmaker-status.js";
 import { buildRunAlerts, emitAlerts, formatAbortAlert, formatRunSummaryLine } from "./run-alerts.js";
+import { runRetentionCleanup } from "./retention-service.js";
 
 export interface ScrapeResult {
   runId: string;
@@ -315,6 +316,10 @@ export async function runScrapeCycle(
   for (const league of leagues) {
     results.set(league, await persistLeagueRun(league, bookmakers, startedAt, cycle?.get(league) ?? null, cycleError, signal));
   }
+
+  // Retention after a completed cycle, not awaited: a long DELETE never holds the run lock
+  // or the shutdown drain. An interrupted cycle skips it.
+  if ([...results.values()].every((r) => r.interrupted === null)) void runRetentionCleanup();
 
   // 9. Once per cycle.
   if (options.closeBrowsers !== false) {

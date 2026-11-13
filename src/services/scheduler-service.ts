@@ -10,7 +10,7 @@ import { runScrapeCycle, type ScrapeResult } from "./scraper-service.js";
 import { RunCoordinator, type RunExecutionContext, type RunRequest } from "./run-coordinator.js";
 import { IntervalScheduler } from "./interval-scheduler.js";
 import type { PolishBookmaker } from "../config/index.js";
-import { cleanupOldOdds } from "../repositories/odds-repository.js";
+import { runRetentionCleanup } from "./retention-service.js";
 import { deleteScraperRunsOlderThan } from "../repositories/scraper-run-repository.js";
 import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js";
 import { decideStartupScrape, getStalestOkRunAt } from "./startup-policy.js";
@@ -136,17 +136,13 @@ function fullRun(trigger: "startup" | "interval"): RunRequest {
 }
 
 /**
- * Daily cleanup: old odds rows, then scraper_runs older than the retention.
+ * Daily cleanup: odds retention, then scraper_runs older than the retention.
  * Each step is logged and never fatal.
  */
 export async function runDailyCleanup(): Promise<void> {
   console.log("[Scheduler] Running daily cleanup");
-  try {
-    const result = await cleanupOldOdds();
-    console.log(`[Scheduler] Cleanup complete, deleted: ${result.deleted}`);
-  } catch (error) {
-    console.error("[Scheduler] Cleanup failed:", error);
-  }
+  // Never throws; it logs its own result
+  await runRetentionCleanup();
 
   try {
     const deleted = await deleteScraperRunsOlderThan(SCRAPER_RUNS_RETENTION_DAYS);
@@ -196,6 +192,9 @@ export async function startScheduler(): Promise<void> {
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60_000;
   const scheduler = new IntervalScheduler({ intervalMs, coordinator: runCoordinator, request: fullRun });
   intervalScheduler = scheduler;
+
+  // Retention at boot, not awaited: a long first DELETE must not delay the schedule
+  void runRetentionCleanup();
 
   // Schedule daily cleanup at 3 AM
   cleanupTask = cron.schedule(

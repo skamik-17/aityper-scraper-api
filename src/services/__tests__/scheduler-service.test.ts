@@ -132,9 +132,9 @@ describe("runInitialTsdbSync", () => {
 describe("runDailyCleanup (owner decision B11: keep scraper_runs 30 days)", () => {
   it("prunes old odds and scraper_runs older than 30 days", async () => {
     await runDailyCleanup();
-    expect(m.cleanupOldOdds).toHaveBeenCalledTimes(1);
+    expect(m.cleanupOldOdds).toHaveBeenCalledWith(24);
     expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledWith(30);
-    expect(logSpy).toHaveBeenCalledWith("[Scheduler] Cleanup complete, deleted: 12");
+    expect(logSpy).toHaveBeenCalledWith(expect.stringMatching(/^\[Retention\] deleted 12 odds rows older than 24h in \d+ms$/));
     expect(logSpy).toHaveBeenCalledWith("[Scheduler] scraper_runs older than 30 days deleted: 3");
   });
 
@@ -142,7 +142,7 @@ describe("runDailyCleanup (owner decision B11: keep scraper_runs 30 days)", () =
     const boom = new Error("rpc failed");
     m.cleanupOldOdds.mockRejectedValue(boom);
     await expect(runDailyCleanup()).resolves.toBeUndefined();
-    expect(errorSpy).toHaveBeenCalledWith("[Scheduler] Cleanup failed:", boom);
+    expect(errorSpy).toHaveBeenCalledWith("[Retention] cleanup failed: rpc failed");
     expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledTimes(1);
   });
 

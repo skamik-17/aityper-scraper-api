@@ -13,7 +13,9 @@ const m = vi.hoisted(() => ({
   ensureMarketTypesSynced: vi.fn(),
   insertBookmakerRunOutcomes: vi.fn(),
   getRecentRunRows: vi.fn(),
+  runRetentionCleanup: vi.fn(),
 }));
+vi.mock("../retention-service.js", async () => ({ runRetentionCleanup: m.runRetentionCleanup }));
 
 vi.mock("../../scrapers/aggregator.js", async () => ({
   runFullOfferCycle: m.runFullOfferCycle,
@@ -129,6 +131,23 @@ describe("runScrapeCycle", () => {
     expect(r.get("premier-league")).toMatchObject({ interrupted: "shutdown: SIGTERM", aborted: null, outcomes: [] });
     expect(errorSpy.mock.calls.flat().join("\n")).not.toContain("[ALERT] scrape run ABORTED");
     expect(scraperHealth.getLastAbort("premier-league")).toBeNull();
+  });
+
+  it("starts retention once after a completed cycle, after outcomes were persisted, without awaiting it; never after a refusal or an interruption", async () => {
+    // A slow DELETE must not hold the run
+    m.runRetentionCleanup.mockReturnValue(new Promise(() => {}));
+    await runScrapeCycle(["premier-league"]);
+    expect(m.runRetentionCleanup).toHaveBeenCalledTimes(1);
+    expect(m.insertBookmakerRunOutcomes.mock.invocationCallOrder[0]).toBeLessThan(m.runRetentionCleanup.mock.invocationCallOrder[0]);
+
+    m.probeDatabase.mockResolvedValueOnce({ ok: false, error: "TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:54321)" });
+    await runScrapeCycle(["premier-league"]);
+    expect(m.runRetentionCleanup).toHaveBeenCalledTimes(1);
+
+    m.runFullOfferCycle.mockResolvedValueOnce(new Map([["premier-league",
+      { ...aggregatedFor("premier-league", [outcome({ bookmaker: "betclic" })]), interrupted: "shutdown: SIGTERM" }]]));
+    await runScrapeCycle(["premier-league"]);
+    expect(m.runRetentionCleanup).toHaveBeenCalledTimes(1);
   });
 
   it("a completed run passes the run signal to the alert webhook and reports interrupted: null", async () => {

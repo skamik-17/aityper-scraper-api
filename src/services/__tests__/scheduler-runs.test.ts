@@ -8,7 +8,10 @@ const m = vi.hoisted(() => ({
   runScrapeCycle: vi.fn(),
   closeAllBrowsers: vi.fn(),
   cronJobs: [] as Array<{ expr: string; fn: () => unknown }>,
+  runRetentionCleanup: vi.fn(),
+  deleteScraperRunsOlderThan: vi.fn(),
 }));
+vi.mock("../retention-service.js", async () => ({ runRetentionCleanup: m.runRetentionCleanup }));
 
 vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
 vi.mock("../../scrapers/aggregator.js", async () => ({ closeAllBrowsers: m.closeAllBrowsers }));
@@ -23,7 +26,7 @@ vi.mock("node-cron", async () => ({
 vi.mock("../tsdb-sync-service.js", async () => ({ syncStaleLeagues: vi.fn(), syncAllEnabledLeagues: vi.fn() }));
 vi.mock("../../config/database.js", async () => ({ waitForDatabase: vi.fn() }));
 vi.mock("../../repositories/odds-repository.js", async () => ({ cleanupOldOdds: vi.fn() }));
-vi.mock("../../repositories/scraper-run-repository.js", async () => ({ deleteScraperRunsOlderThan: vi.fn() }));
+vi.mock("../../repositories/scraper-run-repository.js", async () => ({ deleteScraperRunsOlderThan: m.deleteScraperRunsOlderThan }));
 const sp = vi.hoisted(() => ({ decideStartupScrape: vi.fn(), getStalestOkRunAt: vi.fn() }));
 vi.mock("../startup-policy.js", async () => ({ decideStartupScrape: sp.decideStartupScrape, getStalestOkRunAt: sp.getStalestOkRunAt, STARTUP_DELAY_MS: 5_000 }));
 
@@ -113,5 +116,21 @@ describe("scheduler runs through the RunCoordinator", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("boot starts retention once; the 03:00 job runs retention, then the 30-day scraper_runs delete", async () => {
+    m.cronJobs.length = 0;
+    m.runRetentionCleanup.mockResolvedValue({ deleted: 0, durationMs: 1, error: null });
+    m.deleteScraperRunsOlderThan.mockResolvedValue(0);
+    sp.getStalestOkRunAt.mockResolvedValue(null);
+    sp.decideStartupScrape.mockReturnValueOnce({ firstTrigger: "interval", firstDelayMs: 3_600_000, reason: "STARTUP_SCRAPE=never" });
+    const started = startScheduler();
+    expect(m.runRetentionCleanup).toHaveBeenCalledTimes(1);
+    await started;
+    await m.cronJobs.find((j) => j.expr === "0 3 * * *")!.fn();
+    expect(m.runRetentionCleanup).toHaveBeenCalledTimes(2);
+    expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledWith(30);
+    expect(m.runRetentionCleanup.mock.invocationCallOrder[1]).toBeLessThan(m.deleteScraperRunsOlderThan.mock.invocationCallOrder[0]);
+    stopScheduler();
   });
 });

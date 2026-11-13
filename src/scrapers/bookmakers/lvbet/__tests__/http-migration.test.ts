@@ -1,6 +1,10 @@
 import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { envelope, runBrowserPathOffline, type ReplayRoutes } from "../../../../__tests__/helpers/replay-page.js";
+import { createReplayHttpClient } from "../../../../__tests__/helpers/replay-http.js";
+import { captureLogs, envelope, runBrowserPathOffline, stripScrapedAt, type ReplayRoutes } from "../../../../__tests__/helpers/replay-page.js";
+import { browserPool } from "../../../base/browser-pool.js";
+import type { HttpClient } from "../../../shared/http/http-client.js";
+import { LVBetHttpScraper } from "../http-scraper.js";
 import { LVBetPlaywrightScraper } from "../index.js";
 import { parseAllMarkets } from "../parser.js";
 import type { LVBetCompetitionResponse, LVBetMarket } from "../types.js";
@@ -61,5 +65,66 @@ describe("lvbet full-offer mapping and URL builders", () => {
   it("mapLvbetMatchOffer maps Ipswich and returns null without markets", () => {
     expect(envelope(mapLvbetMatchOffer(CV().matches![0], MARKETS("bc:31340648"), "premier-league")!)).toEqual(ENVELOPES[0]);
     expect(mapLvbetMatchOffer(CV().matches![0], [], "premier-league")).toBeNull();
+  });
+});
+
+const fullOfferLines = (l: string[]) => l.filter((line) => line.startsWith("[LVBet/FullOffer]"));
+
+describe("LVBetHttpScraper", () => {
+  const run = (routes: ReplayRoutes) => new LVBetHttpScraper(createReplayHttpClient(routes)).scrapeFullOffer("premier-league");
+
+  it("declares transport http", () => expect(new LVBetHttpScraper().transport).toBe("http"));
+
+  it("contract: deep-equals the browser path; the failed match is reported, not dropped silently", async () => {
+    const old = await runBrowserPathOffline(new LVBetPlaywrightScraper(), "premier-league", ROUTES);
+    const client = createReplayHttpClient(ROUTES);
+    const { value: neu, logs } = await captureLogs(() => new LVBetHttpScraper(client).scrapeFullOffer("premier-league"));
+    expect(neu).toMatchObject({ success: true, error: `1 of 3 details failed | fetch HTTP 500 ${SEARCH_URL("bc:31419246")}` });
+    expect(neu.matches).toHaveLength(2);
+    expect(stripScrapedAt(neu.matches)).toEqual(stripScrapedAt(old.result.matches));
+    expect(client.calls.filter((u) => !old.requests.includes(u))).toEqual([]);
+    expect(client.calls.every((u) => !u.includes("%3A"))).toBe(true);
+    expect(fullOfferLines(logs)).toEqual(fullOfferLines(old.logs));
+  });
+
+  it("never acquires a browser", async () => {
+    const acquire = vi.spyOn(browserPool, "acquire");
+    await run(ROUTES);
+    expect(acquire).not.toHaveBeenCalled();
+  });
+
+  it("fails with the first cause when more than half the details fail", async () =>
+    expect(await run({ ...ROUTES, [SEARCH_URL("bc:31340648")]: { status: 500, body: '{"detail":"upstream"}' } }))
+      .toMatchObject({ success: false, error: `2 of 3 details failed | fetch HTTP 500 ${SEARCH_URL("bc:31340648")}` }));
+
+  it("a listing HTTP error becomes the result error", async () =>
+    expect(await run({ ...ROUTES, [LISTING_URL]: { status: 503, body: "down" } })).toMatchObject({ success: false, error: `fetch HTTP 503 ${LISTING_URL}` }));
+
+  it("an empty listing is success:true with no matches and no detail request (README §3)", async () => {
+    const client = createReplayHttpClient({ ...ROUTES, [LISTING_URL]: { body: '{"matches":[]}' } });
+    expect(await new LVBetHttpScraper(client).scrapeFullOffer("premier-league")).toMatchObject({ success: true, matches: [] });
+    expect(client.calls).toEqual([LISTING_URL]);
+    expect(console.warn).toHaveBeenCalledWith(`[LVBet/FullOffer] No matches found from API ${LISTING_URL}`);
+  });
+
+  it("a malformed listing (no matches array) fails", async () =>
+    expect(await run({ ...ROUTES, [LISTING_URL]: { body: '{"detail":"x"}' } })).toMatchObject({ success: false, error: `fetch unexpected payload ${LISTING_URL}` }));
+
+  it("wrong shape: a 200 that is not an array is skipped, never an empty offer", async () =>
+    expect(await run({ ...ROUTES, [SEARCH_URL("bc:31340648")]: { body: '{"detail":"x"}' } }))
+      .toMatchObject({ success: false, error: `2 of 3 details failed | fetch unexpected payload ${SEARCH_URL("bc:31340648")}` }));
+
+  it("keeps listing order when the first detail resolves last", async () => {
+    const base = createReplayHttpClient(ROUTES);
+    const slow: HttpClient = {
+      stats: base.stats,
+      getText: (u, o) => base.getText(u, o),
+      getJson: async <T>(u: string, o?: Parameters<HttpClient["getJson"]>[1]) => {
+        if (u === SEARCH_URL("bc:31340648")) await new Promise((r) => setTimeout(r, 50));
+        return base.getJson<T>(u, o);
+      },
+    };
+    const r = await new LVBetHttpScraper(slow).scrapeFullOffer("premier-league");
+    expect(r.matches.map((m) => m.matchId)).toEqual(["bc:31340648", "bc:31333515"]);
   });
 });

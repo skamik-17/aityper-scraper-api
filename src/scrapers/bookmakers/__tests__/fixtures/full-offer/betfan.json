@@ -1,0 +1,1006 @@
+{
+ "listing": [
+  {
+   "eventId": 40932985,
+   "remoteId": 72221384,
+   "eventName": "Leeds United - Tottenham",
+   "eventStart": 1794054600000,
+   "eventType": 1,
+   "eventCodeId": 9815,
+   "gamesCount": 240,
+   "treatAsSport": 1,
+   "category3AggregatedId": 0,
+   "eventExtendedData": {
+    "feedProviderId": "1",
+    "remoteCategoryId": "sr:tournament:17"
+   },
+   "videoStream": false,
+   "isCustomBetAvailable": true,
+   "customBetAvailable": true,
+   "sportId": 1,
+   "parentId": 223,
+   "categoryId": 244,
+   "sportName": "Piłka nożna",
+   "parentName": "Anglia",
+   "categoryName": "Premier League",
+   "games": [],
+   "disableNoFollow": false,
+   "marketTypes": [
+    {
+     "marketType": 1,
+     "gameIds": [
+      1427358651,
+      1427358195,
+      1427363853,
+      1437432313,
+      1432693254,
+      1432693256,
+      1427363794,
+      1427363797,
+      1427363796,
+      1432693257,
+      1432693255,
+      1432693258,
+      1427363850
+     ]
+    },
+    {
+     "marketType": 4,
+     "gameIds": [
+      1437432313,
+      1432693254,
+      1432693256,
+      1427363794,
+      1427363797,
+      1427363796,
+      1432693257,
+      1432693255,
+      1432693258
+     ]
+    },
+    {
+     "marketType": 14,
+     "gameIds": [
+      1427363852,
+      1427363823,
+      1427363831,
+      1427363800,
+      1427363841,
+      1427363833,
+      1427363807
+     ]
+    },
+    {
+     "marketType": 2,
+     "gameIds": [
+      1437333307,
+      1435177157,
+      1435177158,
+      1435177154,
+      1435177155,
+      1435177153,
+      1437333320,
+      1437333340,
+      1437333366
+     ]
+    },
+    {
+     "marketType": 33,
+     "gameIds": [
+      1437432314,
+      1435903284,
+      1435225225,
+      1435903285,
+      1437432315
+     ]
+    }
+   ],
+   "participants": [
+    {
+     "participantName": "Leeds United",
+     "participantId": 168,
+     "number": 1
+    },
+    {
+     "participantName": "Tottenham",
+     "participantId": 423,
+     "number": 2
+    }
+   ],
+   "isLive": false,
+   "stakeInfo": {
+    "betCount": 624,
+    "outcomePopularity": {
+     "779980277": {
+      "outcomeId": 779980277,
+      "betCount": 4,
+      "lastStakeDate": "2026-11-02T22:18:08.947+00:00"
+     },
+     "779980279": {
+      "outcomeId": 779980279,
+      "betCount": 187,
+      "lastStakeDate": "2026-11-07T00:06:44.715+00:00"
+     },
+     "779981290": {
+      "outcomeId": 779981290,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-06T21:47:31.559+00:00"
+     },
+     "779981291": {
+      "outcomeId": 779981291,
+      "betCount": 17,
+      "lastStakeDate": "2026-11-06T22:48:46.322+00:00"
+     },
+     "779981292": {
+      "outcomeId": 779981292,
+      "betCount": 7,
+      "lastStakeDate": "2026-11-06T23:08:19.442+00:00"
+     },
+     "779981293": {
+      "outcomeId": 779981293,
+      "betCount": 72,
+      "lastStakeDate": "2026-11-07T00:29:50.589+00:00"
+     },
+     "779998785": {
+      "outcomeId": 779998785,
+      "betCount": 14,
+      "lastStakeDate": "2026-11-05T15:57:41.215+00:00"
+     },
+     "779998786": {
+      "outcomeId": 779998786,
+      "betCount": 5,
+      "lastStakeDate": "2026-11-06T21:06:33.702+00:00"
+     },
+     "779999001": {
+      "outcomeId": 779999001,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T21:53:34.598+00:00"
+     },
+     "779999003": {
+      "outcomeId": 779999003,
+      "betCount": 23,
+      "lastStakeDate": "2026-11-06T23:58:12.563+00:00"
+     },
+     "779999055": {
+      "outcomeId": 779999055,
+      "betCount": 5,
+      "lastStakeDate": "2026-11-07T00:22:59.001+00:00"
+     },
+     "779999057": {
+      "outcomeId": 779999057,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T22:32:21.531+00:00"
+     },
+     "779999059": {
+      "outcomeId": 779999059,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T18:28:02.634+00:00"
+     },
+     "780088474": {
+      "outcomeId": 780088474,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-01T19:11:45.002+00:00"
+     },
+     "806177098": {
+      "outcomeId": 806177098,
+      "betCount": 9,
+      "lastStakeDate": "2026-11-03T01:14:12.741+00:00"
+     },
+     "806177100": {
+      "outcomeId": 806177100,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-04T21:57:51.742+00:00"
+     },
+     "806177109": {
+      "outcomeId": 806177109,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T10:09:05.057+00:00"
+     },
+     "806177111": {
+      "outcomeId": 806177111,
+      "betCount": 3,
+      "lastStakeDate": "2026-11-05T22:58:08.592+00:00"
+     },
+     "806177127": {
+      "outcomeId": 806177127,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-06T23:45:39.497+00:00"
+     },
+     "806177128": {
+      "outcomeId": 806177128,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T07:49:20.62+00:00"
+     },
+     "806177131": {
+      "outcomeId": 806177131,
+      "betCount": 222,
+      "lastStakeDate": "2026-11-06T22:58:56.926+00:00"
+     },
+     "806177132": {
+      "outcomeId": 806177132,
+      "betCount": 3,
+      "lastStakeDate": "2026-11-06T23:34:38.05+00:00"
+     },
+     "806177134": {
+      "outcomeId": 806177134,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T21:22:11.166+00:00"
+     },
+     "806614726": {
+      "outcomeId": 806614726,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-01T21:44:21.142+00:00"
+     },
+     "807907608": {
+      "outcomeId": 807907608,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T23:30:32.227+00:00"
+     },
+     "811965183": {
+      "outcomeId": 811965183,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-01T21:50:48.162+00:00"
+     },
+     "818218753": {
+      "outcomeId": 818218753,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T21:01:47.264+00:00"
+     },
+     "818218764": {
+      "outcomeId": 818218764,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T23:05:35.244+00:00"
+     },
+     "818218809": {
+      "outcomeId": 818218809,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-06T19:28:01.381+00:00"
+     },
+     "818448420": {
+      "outcomeId": 818448420,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T11:06:45.572+00:00"
+     },
+     "821692144": {
+      "outcomeId": 821692144,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T16:38:53.327+00:00"
+     },
+     "821692146": {
+      "outcomeId": 821692146,
+      "betCount": 2,
+      "lastStakeDate": "2026-11-06T23:15:04.094+00:00"
+     },
+     "821692148": {
+      "outcomeId": 821692148,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T19:33:16.476+00:00"
+     },
+     "823094152": {
+      "outcomeId": 823094152,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T21:23:42.243+00:00"
+     },
+     "824358659": {
+      "outcomeId": 824358659,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T16:34:55.647+00:00"
+     },
+     "827001245": {
+      "outcomeId": 827001245,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-05T22:16:13.291+00:00"
+     },
+     "828716311": {
+      "outcomeId": 828716311,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T09:51:12.084+00:00"
+     },
+     "829109858": {
+      "outcomeId": 829109858,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T23:58:10.044+00:00"
+     },
+     "829117542": {
+      "outcomeId": 829117542,
+      "betCount": 12,
+      "lastStakeDate": "2026-11-06T22:15:29.733+00:00"
+     },
+     "830641247": {
+      "outcomeId": 830641247,
+      "betCount": 5,
+      "lastStakeDate": "2026-11-06T21:44:00.327+00:00"
+     },
+     "830693588": {
+      "outcomeId": 830693588,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T22:09:56.489+00:00"
+     },
+     "830829260": {
+      "outcomeId": 830829260,
+      "betCount": 1,
+      "lastStakeDate": "2026-11-06T23:22:03.509+00:00"
+     },
+     "830970950": {
+      "outcomeId": 830970950,
+      "betCount": 3,
+      "lastStakeDate": "2026-11-07T00:05:56.529+00:00"
+     }
+    }
+   }
+  }
+ ],
+ "detail": {
+  "backgroundURL": "https://storage.betfan.pl/category-backgrounds/Pilkanozna.webp",
+  "disableNoFollow": false,
+  "eventId": 40932985,
+  "remoteId": 72221384,
+  "eventName": "Leeds United - Tottenham",
+  "eventStart": 1794054600000,
+  "eventType": 1,
+  "eventCodeId": 9815,
+  "gamesCount": 240,
+  "treatAsSport": 1,
+  "category3AggregatedId": 0,
+  "eventExtendedData": {
+   "feedProviderId": "1",
+   "remoteCategoryId": "sr:tournament:17"
+  },
+  "isCustomBetAvailable": true,
+  "customBetAvailable": true,
+  "sportId": 1,
+  "parentId": 223,
+  "categoryId": 244,
+  "sportName": "Piłka nożna",
+  "parentName": "Anglia",
+  "categoryName": "Premier League",
+  "games": [
+   {
+    "gameId": 1427358651,
+    "gameName": "Mecz",
+    "gameType": 1,
+    "gameCode": 633605,
+    "argument": null,
+    "combinationType": 1,
+    "marketTypes": [
+     1
+    ],
+    "gameLayout": 1,
+    "eventLayout": 1,
+    "outcomes": [
+     {
+      "outcomeId": 779981291,
+      "outcomeName": "Leeds United",
+      "outcomeOdds": 2.8,
+      "outcomePosition": 0,
+      "status": 100,
+      "betCount": 17
+     },
+     {
+      "outcomeId": 779981292,
+      "outcomeName": "X",
+      "outcomeOdds": 3.3,
+      "outcomePosition": 1,
+      "status": 100,
+      "betCount": 7
+     },
+     {
+      "outcomeId": 779981293,
+      "outcomeName": "Tottenham",
+      "outcomeOdds": 2.5,
+      "outcomePosition": 2,
+      "status": 100,
+      "betCount": 72
+     }
+    ],
+    "combinationTypes": [
+     1
+    ],
+    "isCashoutAvailable": true,
+    "totalBets": 96
+   },
+   {
+    "gameId": 1427358195,
+    "gameName": "Podwójna szansa",
+    "gameType": 4,
+    "gameCode": 633556,
+    "argument": null,
+    "combinationType": 1,
+    "marketTypes": [
+     1
+    ],
+    "gameLayout": 3,
+    "eventLayout": 14,
+    "outcomes": [
+     {
+      "outcomeId": 779980277,
+      "outcomeName": "1X",
+      "outcomeOdds": 1.52,
+      "outcomePosition": 0,
+      "status": 100,
+      "betCount": 4
+     },
+     {
+      "outcomeId": 779980278,
+      "outcomeName": "12",
+      "outcomeOdds": 1.33,
+      "outcomePosition": 1,
+      "status": 100
+     },
+     {
+      "outcomeId": 779980279,
+      "outcomeName": "X2",
+      "outcomeOdds": 1.43,
+      "outcomePosition": 2,
+      "status": 100,
+      "betCount": 187
+     }
+    ],
+    "isCashoutAvailable": true,
+    "totalBets": 191
+   },
+   {
+    "gameId": 1427363853,
+    "gameName": "Obie drużyny strzelą gola",
+    "gameType": 98,
+    "gameCode": 638652,
+    "argument": null,
+    "combinationType": 1,
+    "marketTypes": [
+     1
+    ],
+    "gameLayout": 2,
+    "eventLayout": 6,
+    "outcomes": [
+     {
+      "outcomeId": 779999003,
+      "outcomeName": "Tak",
+      "outcomeOdds": 1.7,
+      "outcomePosition": 0,
+      "status": 100,
+      "betCount": 23
+     },
+     {
+      "outcomeId": 779999004,
+      "outcomeName": "Nie",
+      "outcomeOdds": 2.05,
+      "outcomePosition": 1,
+      "status": 100
+     }
+    ],
+    "isCashoutAvailable": true,
+    "totalBets": 23
+   }
+  ],
+  "marketTypes": [
+   {
+    "marketType": 1,
+    "gameIds": [
+     1427358651,
+     1427358195,
+     1427363853,
+     1427363822,
+     1427358650,
+     1435903275,
+     1435903274,
+     1436667948,
+     1432693261,
+     1437432313,
+     1432693254,
+     1432693256,
+     1427363794,
+     1427363797,
+     1427363796,
+     1432693257,
+     1432693255,
+     1432693258,
+     1427363876,
+     1432693268,
+     1427363877,
+     1432693269,
+     1427363878,
+     1437432308,
+     1427363850,
+     1427363848,
+     1427363784,
+     1435903280,
+     1435903281,
+     1435903282
+    ]
+   },
+   {
+    "marketType": 4,
+    "gameIds": [
+     1437432313,
+     1432693254,
+     1432693256,
+     1427363794,
+     1427363797,
+     1427363796,
+     1432693257,
+     1432693255,
+     1432693258,
+     1432693247,
+     1432693248,
+     1432693249,
+     1437432311,
+     1437432312,
+     1432693243,
+     1432693244,
+     1432693245,
+     1437432309,
+     1437432310,
+     1427363838,
+     1427363782,
+     1427363786,
+     1435903283,
+     1435903276,
+     1435903279,
+     1435903273,
+     1435903286,
+     1435903287,
+     1435903288,
+     1435903289,
+     1427363791,
+     1427363845,
+     1427363863,
+     1432693242,
+     1427363864,
+     1432693246,
+     1427363821,
+     1427363820,
+     1427363815
+    ]
+   },
+   {
+    "marketType": 14,
+    "gameIds": [
+     1427363852,
+     1427363823,
+     1427363824,
+     1427363876,
+     1432693268,
+     1427363877,
+     1432693269,
+     1427363878,
+     1437432308,
+     1427363831,
+     1427363799,
+     1427363842,
+     1427363787,
+     1427363875,
+     1427363867,
+     1427363865,
+     1427363866,
+     1427363869,
+     1427363854,
+     1427363855,
+     1427363856,
+     1427363857,
+     1427363858,
+     1427363859,
+     1427363861,
+     1427363862,
+     1427363851,
+     1435903277,
+     1435903278,
+     1427363800,
+     1427363841,
+     1427363839,
+     1432693259,
+     1427363803,
+     1427363806,
+     1427363804,
+     1432693260,
+     1437432305,
+     1427363844,
+     1427363833,
+     1427363809,
+     1427363780,
+     1427363778,
+     1427363779,
+     1427363781,
+     1427363871,
+     1427363872,
+     1427363873,
+     1427363879,
+     1427363880,
+     1427363881,
+     1427363882,
+     1427363883,
+     1427363886,
+     1427363810,
+     1427363816,
+     1427363813,
+     1427363818,
+     1427363814,
+     1427363819,
+     1427363835,
+     1427363836,
+     1427363789,
+     1427363884,
+     1427363811,
+     1427363807
+    ]
+   },
+   {
+    "marketType": 17,
+    "gameIds": [
+     1427363846,
+     1432693266,
+     1432693263,
+     1432693267,
+     1427363870,
+     1432693264,
+     1432693262,
+     1432693265,
+     1436691943,
+     1436691941,
+     1432693252,
+     1432693250,
+     1427363793,
+     1432693251,
+     1432693253,
+     1436691942
+    ]
+   },
+   {
+    "marketType": 2,
+    "gameIds": [
+     1435177168,
+     1437333307,
+     1435177157,
+     1435177158,
+     1435177154,
+     1435177155,
+     1435177153,
+     1437333320,
+     1437333340,
+     1437333366,
+     1437333594,
+     1437333658,
+     1435177180,
+     1437333671,
+     1437333673,
+     1437333695,
+     1435177181,
+     1437333727,
+     1437333747,
+     1437333771,
+     1435177163,
+     1435177160,
+     1435177161,
+     1435177178,
+     1435177172,
+     1435177175,
+     1437432306,
+     1435177159,
+     1437432307,
+     1435177169,
+     1435177179,
+     1435177174,
+     1435177177,
+     1435177167,
+     1435177164,
+     1435177165,
+     1435177171
+    ]
+   },
+   {
+    "marketType": 33,
+    "gameIds": [
+     1435225228,
+     1437432314,
+     1435903284,
+     1435225225,
+     1435903285,
+     1437432315,
+     1437333834,
+     1437333841,
+     1437333927,
+     1437333936,
+     1435225229,
+     1435225227,
+     1437091387,
+     1435225226,
+     1437091389,
+     1437432316,
+     1437266984,
+     1437266986,
+     1437266989,
+     1437266988,
+     1434903961,
+     1434903959,
+     1435902823,
+     1437266985,
+     1437266987
+    ]
+   },
+   {
+    "marketType": 53,
+    "gameIds": [
+     1433176601,
+     1433176600,
+     1435902819,
+     1435902825,
+     1435902826,
+     1435902818,
+     1434903960,
+     1435902798,
+     1435902799,
+     1435902821,
+     1435902820,
+     1435902792,
+     1435902776,
+     1435902777,
+     1435902778,
+     1435902779,
+     1435902781,
+     1435902784,
+     1435902787,
+     1435902824,
+     1435902772,
+     1435902773,
+     1435902774,
+     1435902775,
+     1435902802,
+     1435902803,
+     1435902804,
+     1435999664,
+     1435902809,
+     1435902810,
+     1435902811,
+     1435902812,
+     1434903947,
+     1435902813,
+     1435902814,
+     1435902815,
+     1435902816,
+     1435902817,
+     1436556356
+    ]
+   },
+   {
+    "marketType": 41,
+    "gameIds": [
+     1427363825,
+     1427363827,
+     1427363829
+    ]
+   }
+  ],
+  "participants": [
+   {
+    "participantName": "Leeds United",
+    "participantId": 168,
+    "number": 1
+   },
+   {
+    "participantName": "Tottenham",
+    "participantId": 423,
+    "number": 2
+   }
+  ],
+  "isLive": false,
+  "stakeInfo": {
+   "betCount": 624,
+   "outcomePopularity": {
+    "779980277": {
+     "outcomeId": 779980277,
+     "betCount": 4,
+     "lastStakeDate": "2026-11-02T22:18:08.947+00:00"
+    },
+    "779980279": {
+     "outcomeId": 779980279,
+     "betCount": 187,
+     "lastStakeDate": "2026-11-07T00:06:44.715+00:00"
+    },
+    "779981290": {
+     "outcomeId": 779981290,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-06T21:47:31.559+00:00"
+    },
+    "779981291": {
+     "outcomeId": 779981291,
+     "betCount": 17,
+     "lastStakeDate": "2026-11-06T22:48:46.322+00:00"
+    },
+    "779981292": {
+     "outcomeId": 779981292,
+     "betCount": 7,
+     "lastStakeDate": "2026-11-06T23:08:19.442+00:00"
+    },
+    "779981293": {
+     "outcomeId": 779981293,
+     "betCount": 72,
+     "lastStakeDate": "2026-11-07T00:29:50.589+00:00"
+    },
+    "779998785": {
+     "outcomeId": 779998785,
+     "betCount": 14,
+     "lastStakeDate": "2026-11-05T15:57:41.215+00:00"
+    },
+    "779998786": {
+     "outcomeId": 779998786,
+     "betCount": 5,
+     "lastStakeDate": "2026-11-06T21:06:33.702+00:00"
+    },
+    "779999001": {
+     "outcomeId": 779999001,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T21:53:34.598+00:00"
+    },
+    "779999003": {
+     "outcomeId": 779999003,
+     "betCount": 23,
+     "lastStakeDate": "2026-11-06T23:58:12.563+00:00"
+    },
+    "779999055": {
+     "outcomeId": 779999055,
+     "betCount": 5,
+     "lastStakeDate": "2026-11-07T00:22:59.001+00:00"
+    },
+    "779999057": {
+     "outcomeId": 779999057,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T22:32:21.531+00:00"
+    },
+    "779999059": {
+     "outcomeId": 779999059,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T18:28:02.634+00:00"
+    },
+    "780088474": {
+     "outcomeId": 780088474,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-01T19:11:45.002+00:00"
+    },
+    "806177098": {
+     "outcomeId": 806177098,
+     "betCount": 9,
+     "lastStakeDate": "2026-11-03T01:14:12.741+00:00"
+    },
+    "806177100": {
+     "outcomeId": 806177100,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-04T21:57:51.742+00:00"
+    },
+    "806177109": {
+     "outcomeId": 806177109,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T10:09:05.057+00:00"
+    },
+    "806177111": {
+     "outcomeId": 806177111,
+     "betCount": 3,
+     "lastStakeDate": "2026-11-05T22:58:08.592+00:00"
+    },
+    "806177127": {
+     "outcomeId": 806177127,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-06T23:45:39.497+00:00"
+    },
+    "806177128": {
+     "outcomeId": 806177128,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T07:49:20.62+00:00"
+    },
+    "806177131": {
+     "outcomeId": 806177131,
+     "betCount": 222,
+     "lastStakeDate": "2026-11-06T22:58:56.926+00:00"
+    },
+    "806177132": {
+     "outcomeId": 806177132,
+     "betCount": 3,
+     "lastStakeDate": "2026-11-06T23:34:38.05+00:00"
+    },
+    "806177134": {
+     "outcomeId": 806177134,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T21:22:11.166+00:00"
+    },
+    "806614726": {
+     "outcomeId": 806614726,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-01T21:44:21.142+00:00"
+    },
+    "807907608": {
+     "outcomeId": 807907608,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T23:30:32.227+00:00"
+    },
+    "811965183": {
+     "outcomeId": 811965183,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-01T21:50:48.162+00:00"
+    },
+    "818218753": {
+     "outcomeId": 818218753,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T21:01:47.264+00:00"
+    },
+    "818218764": {
+     "outcomeId": 818218764,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T23:05:35.244+00:00"
+    },
+    "818218809": {
+     "outcomeId": 818218809,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-06T19:28:01.381+00:00"
+    },
+    "818448420": {
+     "outcomeId": 818448420,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T11:06:45.572+00:00"
+    },
+    "821692144": {
+     "outcomeId": 821692144,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T16:38:53.327+00:00"
+    },
+    "821692146": {
+     "outcomeId": 821692146,
+     "betCount": 2,
+     "lastStakeDate": "2026-11-06T23:15:04.094+00:00"
+    },
+    "821692148": {
+     "outcomeId": 821692148,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T19:33:16.476+00:00"
+    },
+    "823094152": {
+     "outcomeId": 823094152,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T21:23:42.243+00:00"
+    },
+    "824358659": {
+     "outcomeId": 824358659,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T16:34:55.647+00:00"
+    },
+    "827001245": {
+     "outcomeId": 827001245,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-05T22:16:13.291+00:00"
+    },
+    "828716311": {
+     "outcomeId": 828716311,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T09:51:12.084+00:00"
+    },
+    "829109858": {
+     "outcomeId": 829109858,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T23:58:10.044+00:00"
+    },
+    "829117542": {
+     "outcomeId": 829117542,
+     "betCount": 12,
+     "lastStakeDate": "2026-11-06T22:15:29.733+00:00"
+    },
+    "830641247": {
+     "outcomeId": 830641247,
+     "betCount": 5,
+     "lastStakeDate": "2026-11-06T21:44:00.327+00:00"
+    },
+    "830693588": {
+     "outcomeId": 830693588,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T22:09:56.489+00:00"
+    },
+    "830829260": {
+     "outcomeId": 830829260,
+     "betCount": 1,
+     "lastStakeDate": "2026-11-06T23:22:03.509+00:00"
+    },
+    "830970950": {
+     "outcomeId": 830970950,
+     "betCount": 3,
+     "lastStakeDate": "2026-11-07T00:05:56.529+00:00"
+    }
+   }
+  }
+ }
+}

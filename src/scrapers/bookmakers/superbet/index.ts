@@ -14,7 +14,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import { LEAGUE_URLS, TOURNAMENT_IDS } from "./constants.js";
 import {
@@ -37,12 +36,6 @@ import {
 } from "./parser.js";
 import type { SuperbetEvent } from "./types.js";
 
-const eventsCache = new ScraperCache<SuperbetEvent>({
-  name: "superbet-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "superbet";
   config: ScraperConfig;
@@ -54,14 +47,6 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(events: SuperbetEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): SuperbetEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -88,8 +73,6 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[Superbet] Captured ${apiData.data.length} events from API`);
-
-        this.updateCache(apiData.data);
 
         const matches: RawScrapedOdds[] = apiData.data
           .filter(isValidEvent)
@@ -164,11 +147,6 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
       return this.createMatchDetailNotFoundResult("Invalid Superbet event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
-    }
-
     return this.executeWithBrowser(
       async (page) => {
         const navSuccess = await navigateToBaseSite(page);
@@ -188,7 +166,6 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
         }
 
         const event = detailData.data[0];
-        this.updateCache([event]);
 
         return this.buildMatchDetailResult(event, eventUrl, startTime);
       },
@@ -284,7 +261,6 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
 
             if (detailData && detailData.data && detailData.data.length > 0) {
               const fullEvent = detailData.data[0];
-              this.updateCache([fullEvent]);
 
               const teams = parseTeamNames(fullEvent.matchName);
               const markets = parseAllMarkets(fullEvent, teams);

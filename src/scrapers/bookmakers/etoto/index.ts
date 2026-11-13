@@ -14,7 +14,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import { CATEGORY_IDS } from "./constants.js";
 import {
@@ -37,12 +36,6 @@ import {
 } from "./parser.js";
 import type { EtotoEvent } from "./types.js";
 
-const eventsCache = new ScraperCache<EtotoEvent>({
-  name: "etoto-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class EtotoPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "etoto";
   config: ScraperConfig;
@@ -54,14 +47,6 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(events: EtotoEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): EtotoEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -91,7 +76,6 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[eToto] Captured ${events.length} events from API`);
-        this.updateCache(events);
 
         const matches: RawScrapedOdds[] = [];
 
@@ -176,11 +160,6 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
       return this.createMatchDetailNotFoundResult("Invalid eToto event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
-    }
-
     return this.executeWithBrowser(
       async (page) => {
         const navSuccess = await navigateToBaseSite(page);
@@ -194,7 +173,6 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
         await this.delay(500);
 
         const allEvents = await fetchAllLeagueEvents(page);
-        this.updateCache(allEvents);
 
         const event = allEvents.find((e) => String(e.eventId) === eventId);
         if (!event) {
@@ -273,7 +251,6 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[eToto/FullOffer] Found ${events.length} events, fetching details for each...`);
-        this.updateCache(events);
 
         const matches: FullMatchOffer[] = [];
 

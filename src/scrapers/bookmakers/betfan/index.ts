@@ -14,7 +14,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import { CATEGORY_IDS } from "./constants.js";
 import {
@@ -36,12 +35,6 @@ import {
 } from "./parser.js";
 import type { BetfanEvent } from "./types.js";
 
-const eventsCache = new ScraperCache<BetfanEvent>({
-  name: "betfan-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class BetfanPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betfan";
   config: ScraperConfig;
@@ -53,14 +46,6 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(events: BetfanEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): BetfanEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -85,7 +70,6 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[Betfan] Captured ${events.length} events from API`);
-        this.updateCache(events);
 
         const matches: RawScrapedOdds[] = [];
         for (const event of events) {
@@ -162,11 +146,6 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
       return this.createMatchDetailNotFoundResult("Invalid Betfan event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
-    }
-
     return this.executeWithBrowser(
       async (page) => {
         const navSuccess = await navigateToBaseSite(page);
@@ -178,7 +157,6 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
         }
 
         const allEvents = await fetchAllLeagueEvents(page);
-        this.updateCache(Array.from(allEvents.values()));
 
         const event = allEvents.get(eventId);
         if (!event) {
@@ -255,7 +233,6 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[Betfan/FullOffer] Found ${events.length} events`);
-        this.updateCache(events);
 
         const matches: FullMatchOffer[] = [];
 

@@ -14,7 +14,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import {
   navigateToBaseSite,
@@ -32,12 +31,6 @@ import {
 } from "./parser.js";
 import type { FuksiarzEvent } from "./types.js";
 
-const eventsCache = new ScraperCache<FuksiarzEvent>({
-  name: "fuksiarz-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "fuksiarz";
   config: ScraperConfig;
@@ -49,14 +42,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(events: FuksiarzEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): FuksiarzEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -80,7 +65,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[Fuksiarz] Captured ${events.length} events from API`);
-        this.updateCache(events);
 
         const matches: RawScrapedOdds[] = events
           .filter(isValidEvent)
@@ -155,11 +139,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
       return this.createMatchDetailNotFoundResult("Invalid Fuksiarz event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
-    }
-
     return this.executeWithBrowser(
       async (page) => {
         const navSuccess = await navigateToBaseSite(page);
@@ -171,7 +150,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
         }
 
         const allEvents = await fetchAllLeagueEvents(page);
-        this.updateCache(Array.from(allEvents.values()));
 
         const event = allEvents.get(eventId);
         if (!event) {
@@ -245,7 +223,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[Fuksiarz/FullOffer] Found ${events.length} events`);
-        this.updateCache(events);
 
         const matches: FullMatchOffer[] = [];
 
@@ -258,10 +235,6 @@ export class FuksiarzPlaywrightScraper extends PlaywrightScraper {
 
             const detailResponse = await fetchEventDetails(page, eventId);
             const fullEvent = detailResponse?.data || event;
-
-            if (detailResponse?.data) {
-              eventsCache.set(eventId, detailResponse.data);
-            }
 
             const markets = parseAllMarkets(fullEvent, teams);
 

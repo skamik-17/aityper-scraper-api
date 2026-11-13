@@ -14,7 +14,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import { REQUEST_DELAY } from "./constants.js";
 import {
@@ -35,12 +34,6 @@ import {
 } from "./parser.js";
 import type { LVBetMatch } from "./types.js";
 
-const matchesCache = new ScraperCache<LVBetMatch>({
-  name: "lvbet-matches",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
-
 export class LVBetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "lvbet";
   config: ScraperConfig;
@@ -52,14 +45,6 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(matches: LVBetMatch[]): void {
-    matchesCache.setMany(matches.map((m) => ({ key: m.match_id, value: m })));
-  }
-
-  private getCachedMatch(matchId: string): LVBetMatch | undefined {
-    return matchesCache.get(matchId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -86,7 +71,6 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[LVBet] Found ${matchesData.matches.length} matches from API`);
-        this.updateCache(matchesData.matches);
 
         const matchIds = matchesData.matches.map((m) => m.match_id);
         const marketsData = await fetchMarketsForMatches(page, matchIds);
@@ -273,7 +257,6 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
         }
 
         console.log(`[LVBet/FullOffer] Found ${matchesData.matches.length} matches`);
-        this.updateCache(matchesData.matches);
 
         const matches: FullMatchOffer[] = [];
 

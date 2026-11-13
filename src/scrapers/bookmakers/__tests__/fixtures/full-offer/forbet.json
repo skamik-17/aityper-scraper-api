@@ -1,0 +1,299 @@
+{
+ "listing": [
+  {
+   "eventId": 57945888,
+   "remoteId": 72221384,
+   "eventName": "Leeds United - Tottenham",
+   "eventStart": 1794054600000,
+   "eventType": 1,
+   "category3Id": 199,
+   "category2Id": 155,
+   "category1Id": 1,
+   "category3Name": "Premier League",
+   "category2Name": "Anglia",
+   "category1Name": "Piłka nożna",
+   "eventCodeId": 0,
+   "gamesCount": 491,
+   "eventGames": [],
+   "treatAsSport": 1,
+   "category3AggregatedId": 0,
+   "eventExtendedData": {
+    "feedProviderId": "1",
+    "remoteCategoryId": "sr:tournament:17"
+   },
+   "participants": [
+    {
+     "localId": 4074,
+     "remoteId": 34,
+     "rawRemoteId": "sr:competitor:34",
+     "name": "Leeds United",
+     "number": 1
+    },
+    {
+     "localId": 1127,
+     "remoteId": 33,
+     "rawRemoteId": "sr:competitor:33",
+     "name": "Tottenham",
+     "number": 2
+    }
+   ],
+   "isCustomBetAvailable": true,
+   "customBetAvailable": true
+  }
+ ],
+ "detail": {
+  "code": 200,
+  "description": "OK.",
+  "data": {
+   "eventId": 57945888,
+   "remoteId": 72221384,
+   "eventName": "Leeds United - Tottenham",
+   "eventStart": 1794054600000,
+   "eventType": 1,
+   "category3Id": 199,
+   "category2Id": 155,
+   "category1Id": 1,
+   "category3Name": "Premier League",
+   "category2Name": "Anglia",
+   "category1Name": "Piłka nożna",
+   "eventCodeId": 0,
+   "gamesCount": 491,
+   "outcomesCount": null,
+   "treatAsSport": 1,
+   "category3AggregatedId": 0,
+   "metaCategoryId": [],
+   "eventGames": [
+    {
+     "gameId": 638780461,
+     "gameName": "1X2",
+     "gameType": 1,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 1,
+     "eventLayout": 1,
+     "outcomes": [
+      {
+       "outcomeId": 422365597,
+       "outcomeName": "Leeds United",
+       "outcomeOdds": 2.75,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 422365600,
+       "outcomeName": "remis",
+       "outcomeOdds": 3.3,
+       "outcomePosition": 1,
+       "status": 100
+      },
+      {
+       "outcomeId": 422365602,
+       "outcomeName": "Tottenham",
+       "outcomeOdds": 2.55,
+       "outcomePosition": 2,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    },
+    {
+     "gameId": 638788275,
+     "gameName": "TurboPrzewaga - 2 gole przewagi lub wygrana",
+     "gameType": -31170,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 1,
+     "eventLayout": 1,
+     "outcomes": [
+      {
+       "outcomeId": 422392616,
+       "outcomeName": "Leeds United",
+       "outcomeOdds": 2.65,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 422392617,
+       "outcomeName": "remis",
+       "outcomeOdds": 3.25,
+       "outcomePosition": 1,
+       "status": 100
+      },
+      {
+       "outcomeId": 422392618,
+       "outcomeName": "Tottenham",
+       "outcomeOdds": 2.43,
+       "outcomePosition": 2,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    },
+    {
+     "gameId": 638780441,
+     "gameName": "Podwójna szansa",
+     "gameType": 4,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 3,
+     "eventLayout": 14,
+     "outcomes": [
+      {
+       "outcomeId": 422365542,
+       "outcomeName": "1/X",
+       "outcomeOdds": 1.52,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 422365546,
+       "outcomeName": "1/2",
+       "outcomeOdds": 1.36,
+       "outcomePosition": 1,
+       "status": 100
+      },
+      {
+       "outcomeId": 422365557,
+       "outcomeName": "X/2",
+       "outcomeOdds": 1.46,
+       "outcomePosition": 2,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    }
+   ],
+   "cashoutEnabled": null,
+   "participants": [
+    {
+     "localId": 4074,
+     "remoteId": 34,
+     "rawRemoteId": "sr:competitor:34",
+     "name": "Leeds United",
+     "number": 1
+    },
+    {
+     "localId": 1127,
+     "remoteId": 33,
+     "rawRemoteId": "sr:competitor:33",
+     "name": "Tottenham",
+     "number": 2
+    }
+   ],
+   "tvChannelInfo": null,
+   "result": null,
+   "videoStream": null,
+   "betsCounter": null,
+   "sportId": null,
+   "countryId": null,
+   "leagueId": null,
+   "sportName": null,
+   "customBetAvailable": true,
+   "liveEventId": null,
+   "category3Order": 5,
+   "eventExtendedData": {
+    "feedProviderId": "1",
+    "remoteCategoryId": "sr:tournament:17"
+   },
+   "isOutright": null,
+   "marketTypesOrder": null,
+   "flashscoreLink": null,
+   "eventGamesManual": null,
+   "recommendationScore": null,
+   "confidence": null,
+   "extendedMarketTypeInfo": {
+    "1": {
+     "name": "Popularne",
+     "sort": 1
+    },
+    "2": {
+     "name": "Rzuty rożne",
+     "sort": 3
+    },
+    "35": {
+     "name": "Nieparzyste / Parzyste",
+     "sort": 65
+    },
+    "3": {
+     "name": "Kartki",
+     "sort": 4
+    },
+    "4": {
+     "name": "Poniżej/Powyżej",
+     "sort": 11
+    },
+    "36": {
+     "name": "Dokładny wynik",
+     "sort": 37
+    },
+    "5": {
+     "name": "Drużynowe",
+     "sort": 12
+    },
+    "6": {
+     "name": "Strzały",
+     "sort": 6
+    },
+    "40": {
+     "name": "Zakłady specjalne",
+     "sort": 2
+    },
+    "10": {
+     "name": "Spalone",
+     "sort": 10
+    },
+    "42": {
+     "name": "Statystyki zawodników",
+     "sort": 7
+    },
+    "14": {
+     "name": "1. połowa",
+     "sort": 8
+    },
+    "15": {
+     "name": "Gol",
+     "sort": 20
+    },
+    "16": {
+     "name": "2. połowa",
+     "sort": 9
+    },
+    "17": {
+     "name": "Handicap",
+     "sort": 19
+    },
+    "18": {
+     "name": "Inne",
+     "sort": 21
+    },
+    "52": {
+     "name": "Zakłady łączone",
+     "sort": 54
+    },
+    "54": {
+     "name": "Statystyki",
+     "sort": 5
+    }
+   },
+   "domsetic": null
+  }
+ }
+}

@@ -1,0 +1,348 @@
+{
+ "listing": {
+  "data": [
+   {
+    "uuid": "ea873705-7221-5746-b59c-b0065152cbfd",
+    "eventId": 14656301,
+    "matchDate": "2026-11-21 12:30:00",
+    "homeTeamId": "303",
+    "awayTeamId": "317",
+    "matchCode": 5650,
+    "incrementId": 1000194,
+    "offerId": 14656301,
+    "sportId": 5,
+    "categoryId": 45,
+    "tournamentId": 106,
+    "betradarId": "72221406",
+    "matchTags": "v2",
+    "matchPromotedLiveOrder": 10000,
+    "tournamentPromotedLiveOrder": 10000,
+    "matchTimestamp": 1794002904990,
+    "hasLive": true,
+    "matchName": "Manchester City·Fulham",
+    "specialOfferIds": null,
+    "offerStateStatus": {
+     "1": "active"
+    },
+    "marketCount": 131,
+    "counts": {
+     "odds": {
+      "1": 1278,
+      "2": 0
+     },
+     "markets": {
+      "1": 131,
+      "2": 0
+     }
+    },
+    "odds": [],
+    "oddsResults": null,
+    "matchResults": null,
+    "resolvingRules": null,
+    "utcDate": "2026-11-21T12:30:00Z",
+    "unixDateMillis": 1795264200000,
+    "streams": [
+     "PREMATCH"
+    ],
+    "superAdvantage": "SA_PREMATCH"
+   }
+  ]
+ },
+ "detail": {
+  "error": false,
+  "dataIn": {
+   "eventId": 14656301,
+   "lang": "pl-PL"
+  },
+  "data": [
+   {
+    "uuid": "ea873705-7221-5746-b59c-b0065152cbfd",
+    "eventId": 14656301,
+    "matchDate": "2026-11-21 12:30:00",
+    "homeTeamId": "303",
+    "awayTeamId": "317",
+    "matchCode": 5650,
+    "incrementId": 1000194,
+    "offerId": 14656301,
+    "sportId": 5,
+    "categoryId": 45,
+    "tournamentId": 106,
+    "betradarId": "72221406",
+    "matchTags": "v2",
+    "matchPromotedLiveOrder": 10000,
+    "tournamentPromotedLiveOrder": 10000,
+    "matchTimestamp": 1794002904990,
+    "hasLive": true,
+    "matchName": "Manchester City·Fulham",
+    "specialOfferIds": null,
+    "offerStateStatus": {
+     "1": "active"
+    },
+    "marketCount": 131,
+    "counts": {
+     "odds": {
+      "1": 1278,
+      "2": 0
+     },
+     "markets": {
+      "1": 131,
+      "2": 0
+     }
+    },
+    "odds": [
+     {
+      "uuid": "86c874ef-c63b-529c-9279-ea78ae9c73db",
+      "marketUuid": "3cced9b3-79fe-5219-bbf7-e4b27981d3b1",
+      "marketId": 547,
+      "outcomeId": 1470,
+      "price": 1.4,
+      "status": "active",
+      "marketGroupOrder": 245094,
+      "marketTags": "preselected",
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "Combinable,BPWM,Pre-selected market,pm_boostable_market,Match Betting,v2",
+      "code": "1",
+      "extra": {
+       "generosity_prob_away": "0.160694",
+       "generosity_prob_home": "0.691210",
+       "tags": "BPWM,Combinable,Match Betting,Pre-selected market,pm_boostable_market,v2"
+      },
+      "name": "1",
+      "marketName": "Mecz",
+      "info": "Manchester City wygra mecz",
+      "superAdvantageEligible": true
+     },
+     {
+      "uuid": "b22e9177-6b18-55af-8fce-e1f1ffad1731",
+      "marketUuid": "3cced9b3-79fe-5219-bbf7-e4b27981d3b1",
+      "marketId": 547,
+      "outcomeId": 1471,
+      "price": 4.6,
+      "status": "active",
+      "marketGroupOrder": 245094,
+      "marketTags": "preselected",
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "BPWM,Combinable,Match Betting,Pre-selected market,pm_boostable_market,v2",
+      "code": "0",
+      "extra": {
+       "generosity_prob_away": "0.160694",
+       "generosity_prob_home": "0.691210",
+       "tags": "BPWM,Combinable,Match Betting,Pre-selected market,pm_boostable_market,v2"
+      },
+      "name": "X",
+      "marketName": "Mecz",
+      "info": "Remis w meczu"
+     },
+     {
+      "uuid": "a87653b2-24b5-5032-b59b-683257e84e43",
+      "marketUuid": "3cced9b3-79fe-5219-bbf7-e4b27981d3b1",
+      "marketId": 547,
+      "outcomeId": 1472,
+      "price": 5.8,
+      "status": "active",
+      "marketGroupOrder": 245094,
+      "marketTags": "preselected",
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "BPWM,Combinable,Match Betting,Pre-selected market,pm_boostable_market,v2",
+      "code": "2",
+      "extra": {
+       "generosity_prob_away": "0.160694",
+       "generosity_prob_home": "0.691210",
+       "tags": "BPWM,Combinable,Match Betting,Pre-selected market,pm_boostable_market,v2"
+      },
+      "name": "2",
+      "marketName": "Mecz",
+      "info": "Fulham wygra mecz",
+      "superAdvantageEligible": true
+     },
+     {
+      "uuid": "ec424821-af64-586d-be25-457b49adb184",
+      "marketUuid": "1ae3148e-19c0-589f-93bf-6fbb9282a5b7",
+      "marketId": 531,
+      "outcomeId": 1363,
+      "price": 1.08,
+      "status": "active",
+      "marketGroupOrder": 245315,
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "BPWM,Double Chance,v2",
+      "code": "10",
+      "extra": {
+       "tags": "BPWM,Double Chance,v2"
+      },
+      "name": "1X",
+      "marketName": "Podwójna szansa",
+      "info": "Manchester City wygra lub zremisuje mecz"
+     },
+     {
+      "uuid": "880eb4e2-6035-5635-ae2e-a784d17f0f61",
+      "marketUuid": "1ae3148e-19c0-589f-93bf-6fbb9282a5b7",
+      "marketId": 531,
+      "outcomeId": 1365,
+      "price": 2.57,
+      "status": "active",
+      "marketGroupOrder": 245315,
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "BPWM,Double Chance,v2",
+      "code": "02",
+      "extra": {
+       "tags": "BPWM,Double Chance,v2"
+      },
+      "name": "X2",
+      "marketName": "Podwójna szansa",
+      "info": "Fulham wygra lub zremisuje mecz"
+     },
+     {
+      "uuid": "512af5e2-cce0-56fa-b376-86ab9c765397",
+      "marketUuid": "1ae3148e-19c0-589f-93bf-6fbb9282a5b7",
+      "marketId": 531,
+      "outcomeId": 1364,
+      "price": 1.13,
+      "status": "active",
+      "marketGroupOrder": 245315,
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "BPWM,Double Chance,v2",
+      "code": "12",
+      "extra": {
+       "tags": "BPWM,Double Chance,v2"
+      },
+      "name": "12",
+      "marketName": "Podwójna szansa",
+      "info": "Manchester City lub Fulham wygra mecz"
+     },
+     {
+      "uuid": "1ad66f3d-7568-53a7-b6b1-2cd94fb59668",
+      "marketUuid": "1af549ac-0f06-51f2-ac50-48eb0e02921d",
+      "marketId": 231194,
+      "outcomeId": 4204966,
+      "price": 1.25,
+      "specialBetValue": "201f8501-e7a5-3489-90e7-f6ee108641d7",
+      "status": "active",
+      "specifiers": {
+       "id": "201f8501-e7a5-3489-90e7-f6ee108641d7"
+      },
+      "marketGroupOrder": 624796507,
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "sortPriceAscending,v2",
+      "extra": {
+       "filterTags": "[\"1st Half\",\"2nd Half\",\"Home\"]",
+       "includedPlayers": "[]",
+       "superbets": "67230baf-d5e2-3341-842a-59d6c73167ad",
+       "tag": "superbets",
+       "tags": "sortPriceAscending,v2"
+      },
+      "name": "Manchester City wygra lub zremisuje 1.połowę; Manchester City wygra lub zremisuje 2.połowę",
+      "marketName": "Manchester City wygra lub zremisuje 1.połowę; Manchester City wygra lub zremisuje 2.połowę",
+      "info": "",
+      "oddComponents": [
+       {
+        "UUID": "2a9b1c3b-a6c4-53b3-be2b-87e1979c25a6",
+        "oddID": "53f34322-16f0-533d-9f55-087824314554",
+        "universalOutcomeID": 1491,
+        "marketLineID": "2ba96f43-fc90-56d2-b08b-09d6ef8d9a71",
+        "marketLineUUID": "667f5feb-162f-5d63-8c97-41263a3a1a60",
+        "universalMarketID": 554,
+        "oddName": "1X",
+        "marketLineName": "1.połowa - podwójna szansa"
+       },
+       {
+        "UUID": "51393340-fd70-52aa-a3b2-2b1718e8f454",
+        "oddID": "06fb663b-3de7-56c9-a356-7dee39964911",
+        "universalOutcomeID": 1569,
+        "marketLineID": "ea878c00-0a53-519a-a2d3-866ab6c6e881",
+        "marketLineUUID": "c4aa31ae-6954-5030-9993-ce5dd9d9f5dd",
+        "universalMarketID": 573,
+        "oddName": "1X",
+        "marketLineName": "2.połowa - podwójna szansa"
+       }
+      ]
+     },
+     {
+      "uuid": "08f5a641-5261-5fec-8a9c-813fb10ff36a",
+      "marketUuid": "05a7c679-9c8b-5544-bb5a-feea2f5a6c7b",
+      "marketId": 231194,
+      "outcomeId": 4204966,
+      "price": 1.25,
+      "specialBetValue": "2.5-c6bade20-1197-3b48-beb9-af671316bbf1-5.5",
+      "status": "active",
+      "specifiers": {
+       "fh_ltg": "2.5",
+       "id": "c6bade20-1197-3b48-beb9-af671316bbf1",
+       "ltg": "5.5"
+      },
+      "marketGroupOrder": 624796507,
+      "offerStateId": 1,
+      "showSpecialBetValue": "0",
+      "tags": "sortPriceAscending,v2",
+      "extra": {
+       "filterTags": "[\"1st Half\",\"Goals\",\"Over\",\"Under\"]",
+       "includedPlayers": "[]",
+       "superbets": "34e3f74a-27c4-3b20-88d9-3014b1240485",
+       "tag": "superbets",
+       "tags": "sortPriceAscending,v2"
+      },
+      "name": "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie",
+      "marketName": "Poniżej 5.5 gola w meczu; Powyżej 0.5 gola w meczu; Poniżej 2.5 gola w 1.połowie",
+      "info": "",
+      "oddComponents": [
+       {
+        "UUID": "8d11d799-5413-56f5-b267-0c321de1915b",
+        "oddID": "7b8a1bf6-d4e2-5620-8b1b-e82d49cf74fb",
+        "universalOutcomeID": 151888,
+        "specifiers": {
+         "total": "5.5"
+        },
+        "marketLineID": "1d789b83-856e-5214-9db5-97cacfdc0181",
+        "marketLineUUID": "ec14ead3-e351-59bb-a094-d0b04fedcc60",
+        "universalMarketID": 200734,
+        "oddName": "poniżej 5.5",
+        "marketLineName": "Liczba goli"
+       },
+       {
+        "UUID": "86a54ba3-8b6c-528e-b129-1d4e83264b86",
+        "oddID": "fce55120-ac18-5c5a-b565-04925e647db3",
+        "universalOutcomeID": 151889,
+        "specifiers": {
+         "total": "0.5"
+        },
+        "marketLineID": "25b266ce-d825-5d01-8596-f522410af8b3",
+        "marketLineUUID": "4ef1ed17-2fa4-55c9-aa48-f57741da2e68",
+        "universalMarketID": 200734,
+        "oddName": "powyżej 0.5",
+        "marketLineName": "Liczba goli"
+       },
+       {
+        "UUID": "c62ecabb-73a0-5ed4-8ec4-db463cda1e2f",
+        "oddID": "5b7e801b-3a1c-5d21-beb9-14832f0fb6c7",
+        "universalOutcomeID": 151890,
+        "specifiers": {
+         "total": "2.5"
+        },
+        "marketLineID": "dd07a0fb-35b6-5f52-873c-1bc63d862f0b",
+        "marketLineUUID": "6c53b4e2-74b7-5c50-9670-f8f33497824a",
+        "universalMarketID": 200735,
+        "oddName": "poniżej 2.5",
+        "marketLineName": "1.połowa - liczba goli"
+       }
+      ]
+     }
+    ],
+    "oddsResults": null,
+    "matchResults": null,
+    "resolvingRules": null,
+    "utcDate": "2026-11-21T12:30:00Z",
+    "unixDateMillis": 1795264200000,
+    "streams": [
+     "PREMATCH"
+    ],
+    "superAdvantage": "SA_PREMATCH"
+   }
+  ]
+ }
+}

@@ -56,15 +56,19 @@ export class ScraperCache<T> {
   }
 
   set(key: string, value: T): void {
-    if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
+    const now = Date.now();
+    // The map is kept in write order (a rewrite moves the key to the end), so
+    // expired entries sit at the head: drop them until the first fresh one.
+    this.cache.delete(key);
+    for (const [oldKey, entry] of this.cache) {
+      if (now - entry.timestamp <= this.ttl) break;
+      this.cache.delete(oldKey);
+    }
+    if (this.cache.size >= this.maxSize) {
       this.evictOldest();
     }
 
-    this.cache.set(key, {
-      key,
-      value,
-      timestamp: Date.now(),
-    });
+    this.cache.set(key, { key, value, timestamp: now });
     this.stats.size = this.cache.size;
   }
 
@@ -148,17 +152,9 @@ export class ScraperCache<T> {
   }
 
   private evictOldest(): void {
-    let oldestKey: string | null = null;
-    let oldestTime = Infinity;
-    
-    for (const [key, entry] of this.cache.entries()) {
-      if (entry.timestamp < oldestTime) {
-        oldestTime = entry.timestamp;
-        oldestKey = key;
-      }
-    }
-    
-    if (oldestKey) {
+    // Map iteration order is write order, so the first key is the oldest write.
+    const oldestKey = this.cache.keys().next().value;
+    if (oldestKey !== undefined) {
       this.cache.delete(oldestKey);
       this.stats.evictions++;
     }

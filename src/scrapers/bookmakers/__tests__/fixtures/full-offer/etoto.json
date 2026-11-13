@@ -1,0 +1,199 @@
+{
+ "listing": [
+  {
+   "eventId": 6224070,
+   "remoteId": 72221384,
+   "eventName": "Leeds - Tottenham",
+   "eventStart": 1794054600000,
+   "eventType": 1,
+   "category3Id": 206,
+   "category2Id": 205,
+   "category1Id": 1,
+   "category3Name": "Premier League",
+   "category2Name": "Anglia",
+   "category1Name": "Piłka nożna",
+   "eventCodeId": 0,
+   "gamesCount": 478,
+   "eventGames": [],
+   "treatAsSport": 1,
+   "category3AggregatedId": 0,
+   "eventExtendedData": {
+    "feedProviderId": "1",
+    "remoteCategoryId": "sr:tournament:17"
+   },
+   "participants": [
+    {
+     "localId": 41748,
+     "remoteId": 34,
+     "rawRemoteId": "sr:competitor:34",
+     "name": "Leeds",
+     "number": 1
+    },
+    {
+     "localId": 42178,
+     "remoteId": 33,
+     "rawRemoteId": "sr:competitor:33",
+     "name": "Tottenham",
+     "number": 2
+    }
+   ],
+   "isCustomBetAvailable": true,
+   "customBetAvailable": true
+  }
+ ],
+ "detail": {
+  "code": 200,
+  "description": "OK.",
+  "data": {
+   "eventId": 6224070,
+   "remoteId": 72221384,
+   "eventName": "Leeds - Tottenham",
+   "eventStart": 1794054600000,
+   "eventType": 1,
+   "category3Id": 206,
+   "category2Id": 205,
+   "category1Id": 1,
+   "category3Name": "Premier League",
+   "category2Name": "Anglia",
+   "category1Name": "Piłka nożna",
+   "eventCodeId": 0,
+   "gamesCount": 478,
+   "eventGames": [
+    {
+     "gameId": 503339372,
+     "gameName": "1X2",
+     "gameType": 1,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 1,
+     "eventLayout": 1,
+     "outcomes": [
+      {
+       "outcomeId": 1344712838,
+       "outcomeName": "Leeds",
+       "outcomeOdds": 2.8,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 1344712839,
+       "outcomeName": "X",
+       "outcomeOdds": 3.3,
+       "outcomePosition": 1,
+       "status": 100
+      },
+      {
+       "outcomeId": 1344712840,
+       "outcomeName": "Tottenham",
+       "outcomeOdds": 2.5,
+       "outcomePosition": 2,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    },
+    {
+     "gameId": 503339370,
+     "gameName": "Podwójna szansa",
+     "gameType": 4,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 3,
+     "eventLayout": 14,
+     "outcomes": [
+      {
+       "outcomeId": 1344712833,
+       "outcomeName": "1X",
+       "outcomeOdds": 1.5,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 1344712834,
+       "outcomeName": "12",
+       "outcomeOdds": 1.33,
+       "outcomePosition": 1,
+       "status": 100
+      },
+      {
+       "outcomeId": 1344712835,
+       "outcomeName": "X2",
+       "outcomeOdds": 1.43,
+       "outcomePosition": 2,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    },
+    {
+     "gameId": 503339371,
+     "gameName": "Remis = zwrot",
+     "gameType": 93,
+     "gameCode": 0,
+     "argument": null,
+     "combinationType": 1,
+     "marketTypes": [
+      1
+     ],
+     "gameLayout": 2,
+     "eventLayout": 7,
+     "outcomes": [
+      {
+       "outcomeId": 1344712836,
+       "outcomeName": "Leeds",
+       "outcomeOdds": 1.98,
+       "outcomePosition": 0,
+       "status": 100
+      },
+      {
+       "outcomeId": 1344712837,
+       "outcomeName": "Tottenham",
+       "outcomeOdds": 1.8,
+       "outcomePosition": 1,
+       "status": 100
+      }
+     ],
+     "combinationTypes": [
+      1
+     ]
+    }
+   ],
+   "treatAsSport": 1,
+   "category3AggregatedId": 0,
+   "eventExtendedData": {
+    "feedProviderId": "1",
+    "remoteCategoryId": "sr:tournament:17"
+   },
+   "participants": [
+    {
+     "localId": 41748,
+     "remoteId": 34,
+     "rawRemoteId": "sr:competitor:34",
+     "name": "Leeds",
+     "number": 1
+    },
+    {
+     "localId": 42178,
+     "remoteId": 33,
+     "rawRemoteId": "sr:competitor:33",
+     "name": "Tottenham",
+     "number": 2
+    }
+   ],
+   "isCustomBetAvailable": true,
+   "customBetAvailable": true
+  }
+ }
+}

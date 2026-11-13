@@ -1,0 +1,247 @@
+{
+ "listing": {
+  "matches": [
+   {
+    "match_id": "bc:31340648",
+    "teams_reversed": false,
+    "date": "2026-11-08T14:00:00+00:00",
+    "info": "",
+    "event_restriction": "not_with_same_event",
+    "integrations": {
+     "abios_enabled": false,
+     "betbuilder_id": "sc:547901",
+     "bg_betbuilder": true,
+     "score_tracker": true,
+     "scoreframe_id": 6558946,
+     "livescorepro_id": 6558946,
+     "smart_stream_id": null
+    },
+    "streams": [],
+    "sports_groups_ids": [
+     1,
+     35148,
+     37685
+    ],
+    "state": {
+     "is_pre": true,
+     "status": "open",
+     "is_live": false,
+     "markets_count": 546
+    },
+    "home": [
+     "Ipswich Town"
+    ],
+    "away": [
+     "Bournemouth"
+    ],
+    "home_labels": [
+     "Ipswich Town"
+    ],
+    "away_labels": [
+     "Bournemouth"
+    ],
+    "pinned": null
+   }
+  ]
+ },
+ "markets": [
+  {
+   "market_id": "bc:2511337724",
+   "match_id": "bc:31340648",
+   "line": 0.0,
+   "selections_reversible": false,
+   "sort_selections_by_odds_asc": false,
+   "is_primary": false,
+   "position": 15,
+   "markets_class_id": 2274,
+   "name": "Ipswich Town margines zwycięstwa",
+   "label": "Ipswich Town winning margin",
+   "primary_column": null,
+   "state": {
+    "status": "open"
+   },
+   "markets_group": {
+    "name": "Drużyna 1",
+    "position": 12,
+    "sports_group_id": 1,
+    "markets_group_id": 298
+   },
+   "selections": [
+    {
+     "name": "1",
+     "label": "1",
+     "rate": {
+      "decimal": 4.7,
+      "american": 370,
+      "fractional": "37/10"
+     },
+     "order": 0,
+     "status": "open",
+     "market_id": "bc:2511337724",
+     "selection_id": "bc:7392793746"
+    },
+    {
+     "name": "2",
+     "label": "2",
+     "rate": {
+      "decimal": 8.75,
+      "american": 775,
+      "fractional": "31/4"
+     },
+     "order": 1,
+     "status": "open",
+     "market_id": "bc:2511337724",
+     "selection_id": "bc:7392793747"
+    },
+    {
+     "name": "3",
+     "label": "3",
+     "rate": {
+      "decimal": 19.0,
+      "american": 1800,
+      "fractional": "18"
+     },
+     "order": 2,
+     "status": "open",
+     "market_id": "bc:2511337724",
+     "selection_id": "bc:7392793748"
+    },
+    {
+     "name": "4+",
+     "label": "4+",
+     "rate": {
+      "decimal": 51.0,
+      "american": 5000,
+      "fractional": "50"
+     },
+     "order": 3,
+     "status": "open",
+     "market_id": "bc:2511337724",
+     "selection_id": "bc:7392793749"
+    }
+   ],
+   "expanded": null,
+   "group_key": null,
+   "description": null
+  },
+  {
+   "market_id": "bc:2511338235",
+   "match_id": "bc:31340648",
+   "line": 0.0,
+   "selections_reversible": false,
+   "sort_selections_by_odds_asc": false,
+   "is_primary": false,
+   "position": 28,
+   "markets_class_id": 2063,
+   "name": "1. Połowa - Bournemouth dokładna liczba goli",
+   "label": "1st half Bournemouth total goals exact",
+   "primary_column": null,
+   "state": {
+    "status": "open"
+   },
+   "markets_group": {
+    "name": "1. Połowa",
+    "position": 4,
+    "sports_group_id": 1,
+    "markets_group_id": 282
+   },
+   "selections": [
+    {
+     "name": "0",
+     "label": "0",
+     "rate": {
+      "decimal": 1.98,
+      "american": -102,
+      "fractional": "49/50"
+     },
+     "order": 0,
+     "status": "open",
+     "market_id": "bc:2511338235",
+     "selection_id": "bc:7392795849"
+    },
+    {
+     "name": "1",
+     "label": "1",
+     "rate": {
+      "decimal": 2.55,
+      "american": 155,
+      "fractional": "14/9"
+     },
+     "order": 1,
+     "status": "open",
+     "market_id": "bc:2511338235",
+     "selection_id": "bc:7392795850"
+    },
+    {
+     "name": "2+",
+     "label": "2+",
+     "rate": {
+      "decimal": 4.75,
+      "american": 375,
+      "fractional": "15/4"
+     },
+     "order": 2,
+     "status": "open",
+     "market_id": "bc:2511338235",
+     "selection_id": "bc:7392795852"
+    }
+   ],
+   "expanded": null,
+   "group_key": null,
+   "description": null
+  },
+  {
+   "market_id": "bc:2511337858",
+   "match_id": "bc:31340648",
+   "line": 0.0,
+   "selections_reversible": false,
+   "sort_selections_by_odds_asc": false,
+   "is_primary": false,
+   "position": 4,
+   "markets_class_id": 9727,
+   "name": "Zakład bez Ipswich Town",
+   "label": "Ipswich Town no bet",
+   "primary_column": null,
+   "state": {
+    "status": "open"
+   },
+   "markets_group": {
+    "name": "Drużyna 1",
+    "position": 12,
+    "sports_group_id": 1,
+    "markets_group_id": 298
+   },
+   "selections": [
+    {
+     "name": "Remis",
+     "label": "draw",
+     "rate": {
+      "decimal": 2.7,
+      "american": 170,
+      "fractional": "17/10"
+     },
+     "order": 0,
+     "status": "open",
+     "market_id": "bc:2511337858",
+     "selection_id": "bc:7392794278"
+    },
+    {
+     "name": "Bournemouth",
+     "label": "Bournemouth",
+     "rate": {
+      "decimal": 1.45,
+      "american": -222,
+      "fractional": "4/9"
+     },
+     "order": 1,
+     "status": "open",
+     "market_id": "bc:2511337858",
+     "selection_id": "bc:7392794279"
+    }
+   ],
+   "expanded": null,
+   "group_key": null,
+   "description": null
+  }
+ ]
+}

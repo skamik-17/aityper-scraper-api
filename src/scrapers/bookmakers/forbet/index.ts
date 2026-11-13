@@ -28,7 +28,6 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
-import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 // Import modular components
 import { CATEGORY_IDS } from "./constants.js";
@@ -53,11 +52,6 @@ import {
 import type { ForbetEvent } from "./types.js";
 
 // Cache for events data using centralized cache manager
-const eventsCache = new ScraperCache<ForbetEvent>({
-  name: "forbet-events",
-  ttl: CACHE_TTLS.EVENTS,
-  maxSize: 500,
-});
 
 /**
  * forBET Playwright Scraper Implementation
@@ -73,14 +67,6 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-  }
-
-  private updateCache(events: ForbetEvent[]): void {
-    eventsCache.setMany(events.map((e) => ({ key: String(e.eventId), value: e })));
-  }
-
-  private getCachedEvent(eventId: string): ForbetEvent | undefined {
-    return eventsCache.get(eventId);
   }
 
   async scrapeLeague(league: string): Promise<ScraperResult> {
@@ -108,8 +94,6 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
             Date.now() - startTime
           );
         }
-
-        this.updateCache(events);
 
         const matches: RawScrapedOdds[] = events
           .filter(isValidEvent)
@@ -189,11 +173,6 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
       return this.createMatchDetailNotFoundResult("Invalid forBET event URL", Date.now() - startTime);
     }
 
-    const cachedEvent = this.getCachedEvent(eventId);
-    if (cachedEvent) {
-      return this.buildMatchDetailResult(cachedEvent, eventUrl, startTime);
-    }
-
     return this.executeWithBrowser(
       async (page) => {
         const navSuccess = await navigateToBaseSite(page);
@@ -207,8 +186,6 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
         await this.delay(500);
         const allEvents = await fetchAllLeagueEvents(page);
         const event = allEvents.get(eventId);
-
-        this.updateCache(Array.from(allEvents.values()));
 
         if (!event) {
           return this.createMatchDetailNotFoundResult("Event not found in forBET API", Date.now() - startTime);
@@ -295,10 +272,6 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
           try {
             const detailData = await fetchEventDetails(page, String(event.eventId));
             const fullEvent = detailData?.data || event;
-
-            if (detailData?.data) {
-              this.updateCache([detailData.data]);
-            }
 
             const teams = parseTeamNames(fullEvent.eventName);
             const markets = parseAllMarkets(fullEvent, teams);

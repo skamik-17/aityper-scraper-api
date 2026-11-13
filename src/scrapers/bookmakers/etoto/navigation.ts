@@ -18,13 +18,10 @@ import {
   BASE_URL,
   CATEGORY_IDS,
   REQUEST_TIMEOUT,
-  CACHE_TTL,
 } from "./constants.js";
 import type { EtotoEvent, EtotoEventsResponse } from "./types.js";
 
 // In-memory cache for events data
-const cachedEvents: Map<string, EtotoEvent> = new Map();
-let cacheTimestamp: number = 0;
 
 /**
  * Navigate to the eToto base site to establish session cookies
@@ -87,12 +84,6 @@ export async function fetchLeagueEvents(
     if (response && response.data) {
       const events = response.data as EtotoEvent[];
 
-      // Update cache
-      cacheTimestamp = Date.now();
-      for (const event of events) {
-        cachedEvents.set(String(event.eventId), event);
-      }
-
       console.log(`[eToto/Navigation] Fetched ${events.length} events`);
       return events;
     }
@@ -123,21 +114,6 @@ export async function fetchAllLeagueEvents(page: Page): Promise<EtotoEvent[]> {
 }
 
 /**
- * Get cached event by ID
- * Returns null if not in cache or cache is expired
- *
- * @param eventId - eToto event ID
- * @returns Cached event or null
- */
-export function getCachedEvent(eventId: string): EtotoEvent | null {
-  const isCacheValid = Date.now() - cacheTimestamp < CACHE_TTL;
-  if (!isCacheValid) {
-    return null;
-  }
-  return cachedEvents.get(eventId) || null;
-}
-
-/**
  * Extract event ID from an eToto event URL
  *
  * @param eventUrl - Full URL to the event page
@@ -155,15 +131,6 @@ export function extractEventIdFromUrl(eventUrl: string): string | null {
  */
 export function buildEventUrl(eventId: number | string): string {
   return `${BASE_URL}/zaklady-bukmacherskie/wydarzenie/${eventId}`;
-}
-
-/**
- * Clear the events cache
- * Useful for testing or forced refresh
- */
-export function clearCache(): void {
-  cachedEvents.clear();
-  cacheTimestamp = 0;
 }
 
 /**
@@ -207,12 +174,6 @@ export async function fetchEventDetails(
     if (response?.error) {
       console.error(`[eToto/Navigation] API error for event ${eventId}: ${response.error}`);
       return null;
-    }
-
-    // Cache the detailed event data
-    if (response?.data) {
-      cacheTimestamp = Date.now();
-      cachedEvents.set(eventId, response.data);
     }
 
     return response as EtotoEventDetailResponse;

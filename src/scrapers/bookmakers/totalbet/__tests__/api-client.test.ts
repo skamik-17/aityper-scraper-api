@@ -5,11 +5,13 @@ import {
   buildListUrl,
   extractEventUuidFromUrl,
   fetchEventDetail,
+  createHttpFetchJson,
   fetchLeagueEvents,
-  nodeFetchJson,
   type FetchJson,
 } from "../api-client.js";
 import { MAX_LIST_PAGES } from "../constants.js";
+import { createHttpClient } from "../../../shared/http/http-client.js";
+import { timeoutError } from "../../../shared/http/http-error.js";
 
 const load = (n: string) => JSON.parse(readFileSync(new URL(`./fixtures/${n}`, import.meta.url), "utf8"));
 const PL = "8793bb6a-4684-44ba-b92e-4d896e6cbfbf";
@@ -112,7 +114,7 @@ describe("totalbet api-client fetchLeagueEvents", () => {
 
   it("reports HTTP errors with status and URL", async () => {
     const f = fake({ [LIST_P1]: { status: 404, contentType: "text/html; charset=utf-8", body: "<html>404</html>" } });
-    expect(await fetchLeagueEvents(PL, f)).toEqual({ events: [], error: `HTTP 404 from ${LIST_P1}` });
+    expect(await fetchLeagueEvents(PL, f)).toEqual({ events: [], error: `fetch HTTP 404 ${LIST_P1}` });
   });
 
   it("checks the status before the content type and fails the whole list on a later page error", async () => {
@@ -120,20 +122,29 @@ describe("totalbet api-client fetchLeagueEvents", () => {
     const page2 = buildListUrl(PL, 2);
     // page 2 is not routed, so it answers with the 404 JSON envelope
     const f = fake({ [LIST_P1]: ok(listPage(all.slice(0, 10), { total_pages: 2, current_page: 1, items_count: 20, per_page: 100 })) });
-    expect(await fetchLeagueEvents(PL, f)).toEqual({ events: [], error: `HTTP 404 (not_found) from ${page2}` });
+    expect(await fetchLeagueEvents(PL, f)).toEqual({ events: [], error: `fetch HTTP 404 ${page2} reason=not_found` });
     expect(f.calls).toEqual([LIST_P1, page2]);
   });
 
   it("reports non-JSON bodies", async () => {
     const f = fake({ [LIST_P1]: { status: 200, contentType: "text/html; charset=utf-8", body: "<html>challenge</html>" } });
-    expect((await fetchLeagueEvents(PL, f)).error).toBe(`Non-JSON response (HTTP 200, text/html; charset=utf-8) from ${LIST_P1}`);
+    expect((await fetchLeagueEvents(PL, f)).error).toBe(`fetch non-JSON text/html; charset=utf-8 ${LIST_P1}`);
   });
 
-  it("reports network failures", async () => {
-    const f: FetchJson = async () => {
-      throw new Error("fetch failed");
+  it("reports a 2xx answer without a content type as non-JSON", async () => {
+    const f = fake({ [LIST_P1]: { status: 200, contentType: "", body: "x" } });
+    expect((await fetchLeagueEvents(PL, f)).error).toBe(`fetch non-JSON none ${LIST_P1}`);
+  });
+
+  it("reports transport failures: an HttpError verbatim, any other throw as fetch failed", async () => {
+    const typed: FetchJson = async (url) => {
+      throw timeoutError(url, 10_000);
     };
-    expect((await fetchLeagueEvents(PL, f)).error).toBe(`Request failed: fetch failed (${LIST_P1})`);
+    expect((await fetchLeagueEvents(PL, typed)).error).toBe(`fetch timeout 10000ms ${LIST_P1}`);
+    const untyped: FetchJson = async () => {
+      throw new Error("socket hang up");
+    };
+    expect((await fetchLeagueEvents(PL, untyped)).error).toBe(`fetch failed socket hang up ${LIST_P1}`);
   });
 
   it("reports malformed list payloads", async () => {
@@ -171,7 +182,7 @@ describe("totalbet api-client fetchLeagueEvents", () => {
 describe("totalbet api-client fetchEventDetail", () => {
   it("fetchEventDetail maps the 404 envelope to an error", async () => {
     const r = await fetchEventDetail("00000000-0000-0000-0000-000000000000", fake({}));
-    expect(r).toEqual({ event: null, error: "HTTP 404 (not_found) from https://totalbet.pl/dealer/bdata/v1/bet/events/00000000-0000-0000-0000-000000000000" });
+    expect(r).toEqual({ event: null, error: "fetch HTTP 404 https://totalbet.pl/dealer/bdata/v1/bet/events/00000000-0000-0000-0000-000000000000 reason=not_found" });
   });
 
   it("fetchEventDetail returns data.event on success", async () => {
@@ -262,28 +273,34 @@ describe("totalbet api-client URL helpers", () => {
   });
 });
 
-describe("totalbet api-client nodeFetchJson", () => {
-  it("nodeFetchJson parses JSON by content-type and passes a timeout signal", async () => {
-    const spy = vi.fn(async (_url: string, _init?: RequestInit) => new Response('{"ok":1}', { status: 200, headers: { "content-type": "application/json" } }));
-    vi.stubGlobal("fetch", spy);
-    expect(await nodeFetchJson("https://x.test/")).toEqual({ status: 200, contentType: "application/json", body: { ok: 1 } });
+describe("totalbet api-client createHttpFetchJson", () => {
+  const jsonResponse = (body: string, status = 200) => new Response(body, { status, headers: { "content-type": "application/json" } });
+
+  it("createHttpFetchJson parses JSON by content type and asks for JSON", async () => {
+    const spy = vi.fn(async (_url: string, _init?: RequestInit) => jsonResponse('{"ok":1}'));
+    const f = createHttpFetchJson(createHttpClient({ fetchImpl: spy as unknown as typeof fetch }), { timeoutMs: 1000 });
+    expect(await f("https://x.test/")).toEqual({ status: 200, contentType: "application/json", body: { ok: 1 } });
     const init = spy.mock.calls[0][1]!;
     expect(init.signal).toBeInstanceOf(AbortSignal);
-    expect(init.headers).toEqual({ Accept: "application/json" });
+    expect((init.headers as Record<string, string>).accept).toBe("application/json");
   });
 
-  it("nodeFetchJson returns non-JSON bodies as text", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("<html>challenge</html>", { status: 403, headers: { "content-type": "text/html; charset=utf-8" } })));
-    expect(await nodeFetchJson("https://x.test/")).toEqual({ status: 403, contentType: "text/html; charset=utf-8", body: "<html>challenge</html>" });
+  it("createHttpFetchJson forwards init.signal: an abort mid-request rejects with fetch aborted", async () => {
+    const ctl = new AbortController();
+    const spy = vi.fn((_url: string, init?: RequestInit) => new Promise<Response>((_resolve, reject) => {
+      init!.signal!.addEventListener("abort", () => reject(new Error("aborted")), { once: true });
+      ctl.abort();
+    }));
+    const f = createHttpFetchJson(createHttpClient({ fetchImpl: spy as unknown as typeof fetch }), { timeoutMs: 1000 });
+    await expect(f("https://x.test/", { signal: ctl.signal })).rejects.toThrow("fetch aborted https://x.test/");
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
-  it("fetchLeagueEvents defaults to nodeFetchJson and reports an unparsable JSON body as a request failure", async () => {
-    const spy = vi.fn(async (_url: string, _init?: RequestInit) => new Response("{not json", { status: 200, headers: { "content-type": "application/json" } }));
+  it("fetchLeagueEvents defaults to the HttpClient transport and reports an unparsable JSON body as non-JSON", async () => {
+    const spy = vi.fn(async (_url: string, _init?: RequestInit) => jsonResponse("{not json"));
     vi.stubGlobal("fetch", spy);
     const r = await fetchLeagueEvents(PL);
     expect(spy.mock.calls.map((c) => c[0])).toEqual([LIST_P1]);
-    expect(r.events).toEqual([]);
-    expect(r.error).toMatch(/^Request failed: .+ \(https:\/\/totalbet\.pl\/dealer\/bdata\/v1\/bet\/events\?page=1&/);
-    expect(r.error!.endsWith(`(${LIST_P1})`)).toBe(true);
+    expect(r).toEqual({ events: [], error: `fetch non-JSON application/json ${LIST_P1}` });
   });
 });

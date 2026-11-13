@@ -1,48 +1,72 @@
 /**
  * Totalbet dealer API client
  *
- * Plain HTTP client for Totalbet's UUID platform. No browser is needed: Node's
- * global fetch reads the league list and one detail per event. Every failure is
- * returned as an explicit error string naming the URL, so the scraper can forward
- * it into result.error unchanged.
+ * Plain HTTP client for Totalbet's UUID platform. No browser is needed: the
+ * shared HttpClient reads the league list and one detail per event, with
+ * per-attempt timeouts and one retry. Every failure is returned as an explicit
+ * error string naming the URL (README §3 wording), so the scraper can forward it
+ * into result.error unchanged.
  */
 
+import { createHttpClient, type HttpClient } from "../../shared/http/http-client.js";
+import { HttpError } from "../../shared/http/http-error.js";
 import {
   BASE_URL,
   DEALER_API_BASE_URL,
   LIST_PAGE_SIZE,
   MAX_LIST_PAGES,
-  REQUEST_TIMEOUT,
+  TOTALBET_DETAIL_CONCURRENCY,
+  TOTALBET_REQUEST_TIMEOUT_MS,
 } from "./constants.js";
 import type { TotalbetDetailEvent, TotalbetListEvent } from "./api-types.js";
 
 /**
  * HTTP seam used by every request. Injectable so tests (or a browser-backed
- * fallback, should bot protection appear) can replace the transport.
+ * fallback, should bot protection appear) can replace the transport. `init` is
+ * optional: a fake that ignores it still fits.
  */
-export type FetchJson = (url: string) => Promise<{ status: number; contentType: string; body: unknown }>;
+export type FetchJson = (
+  url: string,
+  init?: { signal?: AbortSignal }
+) => Promise<{ status: number; contentType: string; body: unknown }>;
 
 /**
- * Default FetchJson on Node's global fetch. The body is parsed JSON when the
- * content type mentions JSON and raw text otherwise. Throws on network errors,
- * timeouts and unparsable JSON bodies.
+ * FetchJson on the shared HttpClient (timeouts, one retry on network/timeout/
+ * 429/5xx, never on 404). A 2xx JSON answer resolves with its parsed body. A
+ * non-2xx answer resolves as a value too, so the caller still reads the dealer
+ * envelope's `_meta.reason`; the exception is a Cloudflare-mitigated answer,
+ * thrown so its `cf-mitigated=` marker reaches the error. Every other transport
+ * failure (timeout, network, abort, a 2xx that is not JSON) is thrown as the
+ * client's HttpError.
  */
-export const nodeFetchJson: FetchJson = async (url) => {
-  const response = await fetch(url, {
-    headers: { Accept: "application/json" },
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT),
+export function createHttpFetchJson(http: HttpClient, opts: { timeoutMs: number; retries?: number }): FetchJson {
+  return async (url, init) => {
+    try {
+      const body = await http.getJson<unknown>(url, {
+        headers: { accept: "application/json" },
+        timeoutMs: opts.timeoutMs,
+        retries: opts.retries ?? 1,
+        signal: init?.signal,
+      });
+      return { status: 200, contentType: "application/json", body };
+    } catch (err) {
+      if (err instanceof HttpError && err.kind === "http" && err.status !== null && !err.cfMitigated) {
+        return { status: err.status, contentType: err.contentType ?? "", body: tryJson(err.bodySnippet) ?? err.bodySnippet };
+      }
+      throw err;
+    }
+  };
+}
+
+let defaultFetchJson: FetchJson | undefined;
+
+/** Module-level FetchJson for callers that inject none; built on first use. */
+function sharedFetchJson(): FetchJson {
+  defaultFetchJson ??= createHttpFetchJson(createHttpClient({ perHostConcurrency: TOTALBET_DETAIL_CONCURRENCY }), {
+    timeoutMs: TOTALBET_REQUEST_TIMEOUT_MS,
   });
-  const contentType = response.headers.get("content-type") ?? "";
-  const text = await response.text();
-  if (!isJsonContentType(contentType)) {
-    return { status: response.status, contentType, body: text };
-  }
-  try {
-    return { status: response.status, contentType, body: JSON.parse(text) as unknown };
-  } catch (err) {
-    throw new Error(`Invalid JSON body (HTTP ${response.status}): ${errorMessage(err)}`);
-  }
-};
+  return defaultFetchJson;
+}
 
 /** League list URL for one page of a category (tournament) UUID. */
 export function buildListUrl(categoryUuid: string, page: number): string {
@@ -83,7 +107,8 @@ export interface ListEventsResult {
  */
 export async function fetchLeagueEvents(
   categoryUuid: string,
-  fetchJson: FetchJson = nodeFetchJson
+  fetchJson: FetchJson = sharedFetchJson(),
+  signal?: AbortSignal
 ): Promise<ListEventsResult> {
   const events: TotalbetListEvent[] = [];
   const seen = new Set<string>();
@@ -93,7 +118,7 @@ export async function fetchLeagueEvents(
 
   for (let page = 1; page <= lastPage; page++) {
     const url = buildListUrl(categoryUuid, page);
-    const response = await requestJson(url, fetchJson);
+    const response = await requestJson(url, fetchJson, signal);
     if (!response.ok) return { events: [], error: response.error };
 
     const payload = readListPayload(response.body);
@@ -145,10 +170,11 @@ export interface EventDetailResult {
  */
 export async function fetchEventDetail(
   eventUuid: string,
-  fetchJson: FetchJson = nodeFetchJson
+  fetchJson: FetchJson = sharedFetchJson(),
+  signal?: AbortSignal
 ): Promise<EventDetailResult> {
   const url = `${DEALER_API_BASE_URL}/events/${eventUuid}`;
-  const response = await requestJson(url, fetchJson);
+  const response = await requestJson(url, fetchJson, signal);
   if (!response.ok) return { event: null, error: response.error };
 
   const event = isRecord(response.body) && response.body.state === "success" && isRecord(response.body.data)
@@ -171,25 +197,26 @@ export async function fetchEventDetail(
 type RequestOutcome = { ok: true; body: unknown } | { ok: false; error: string };
 
 /**
- * One request with the error precedence both endpoints share: transport failure,
- * then a non-2xx status (whatever the content type, e.g. the site's 404 HTML page),
- * then a 2xx body that is not JSON (e.g. a bot challenge page).
+ * One request with the error precedence both endpoints share: transport failure
+ * (an HttpError's own message, verbatim), then a non-2xx status (whatever the
+ * content type, e.g. the site's 404 HTML page), then a 2xx body that is not JSON
+ * (e.g. a bot challenge page).
  */
-async function requestJson(url: string, fetchJson: FetchJson): Promise<RequestOutcome> {
+async function requestJson(url: string, fetchJson: FetchJson, signal?: AbortSignal): Promise<RequestOutcome> {
   let response: Awaited<ReturnType<FetchJson>>;
   try {
-    response = await fetchJson(url);
+    response = await fetchJson(url, signal ? { signal } : undefined);
   } catch (err) {
-    return { ok: false, error: `Request failed: ${errorMessage(err)} (${url})` };
+    return { ok: false, error: err instanceof HttpError ? err.message : `fetch failed ${errorMessage(err)} ${url}` };
   }
 
   const { status, contentType, body } = response;
   if (status < 200 || status > 299) {
     const reason = envelopeReason(body);
-    return { ok: false, error: `HTTP ${status}${reason ? ` (${reason})` : ""} from ${url}` };
+    return { ok: false, error: `fetch HTTP ${status} ${url}${reason ? ` reason=${reason}` : ""}` };
   }
   if (!isJsonContentType(contentType)) {
-    return { ok: false, error: `Non-JSON response (HTTP ${status}, ${contentType}) from ${url}` };
+    return { ok: false, error: `fetch non-JSON ${contentType || "none"} ${url}` };
   }
   return { ok: true, body };
 }
@@ -239,6 +266,14 @@ function envelopeReason(body: unknown): string | undefined {
   if (!isRecord(body) || !isRecord(body._meta)) return undefined;
   const reason = body._meta.reason;
   return typeof reason === "string" && reason !== "" ? reason : undefined;
+}
+
+function tryJson(text: string): unknown {
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    return undefined;
+  }
 }
 
 function isJsonContentType(contentType: string): boolean {

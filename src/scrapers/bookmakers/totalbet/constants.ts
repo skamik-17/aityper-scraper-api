@@ -1,7 +1,7 @@
 /**
  * Totalbet Constants
  *
- * URLs, request pacing and the phase-1 market keys of the UUID "dealer" API.
+ * URLs, transport limits and the phase-1 market keys of the UUID "dealer" API.
  * League category UUIDs live in src/config/leagues.ts (the single source).
  */
 
@@ -26,14 +26,19 @@ export const LIST_PAGE_SIZE = 100;
 export const MAX_LIST_PAGES = 10;
 
 /**
- * Pause between two event-detail requests, in milliseconds
+ * Per-attempt request timeout in milliseconds, body read included
  */
-export const DETAIL_DELAY_MS = 250;
+export const TOTALBET_REQUEST_TIMEOUT_MS = 10_000;
 
 /**
- * Request timeout in milliseconds
+ * Event-detail requests in flight at once (also the client's per-host limit)
  */
-export const REQUEST_TIMEOUT = 30000;
+export const TOTALBET_DETAIL_CONCURRENCY = 4;
+
+/**
+ * Default time budget of one league scrape, in milliseconds
+ */
+export const TOTALBET_BUDGET_MS = 90_000;
 
 /**
  * The 38 raw keys (`mid:<UOF market_id>` of column headers, `slug:<component slug>`)

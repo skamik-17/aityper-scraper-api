@@ -2,7 +2,8 @@
  * Totalbet scraper (UUID "dealer" API)
  *
  * Plain HTTP, no browser: one league list request, then one event-detail request
- * per listed event, in sequence and DETAIL_DELAY_MS apart. The class still extends
+ * per listed event, at most TOTALBET_DETAIL_CONCURRENCY at once, all under one
+ * scrape budget (TOTALBET_BUDGET_MS unless the caller passes one). The class still extends
  * PlaywrightScraper only for the shared scraper interface (aggregator, audit tools);
  * it never opens a browser.
  *
@@ -26,25 +27,38 @@ import type {
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
+import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
+import { mapLimit } from "../../shared/concurrency.js";
+import { createHttpClient, type HttpClient } from "../../shared/http/http-client.js";
+import type { TransportStats } from "../../shared/scraper-contract.js";
 
 import {
   buildEventUrl,
+  createHttpFetchJson,
   extractEventUuidFromUrl,
   fetchEventDetail,
   fetchLeagueEvents,
-  nodeFetchJson,
+  type EventDetailResult,
   type FetchJson,
 } from "./api-client.js";
 import type { TotalbetDetailEvent } from "./api-types.js";
-import { DETAIL_DELAY_MS, PHASE1_CHECK_MIN_MARKETS, PHASE1_MARKET_KEYS } from "./constants.js";
+import {
+  PHASE1_CHECK_MIN_MARKETS,
+  PHASE1_MARKET_KEYS,
+  TOTALBET_BUDGET_MS,
+  TOTALBET_DETAIL_CONCURRENCY,
+  TOTALBET_REQUEST_TIMEOUT_MS,
+} from "./constants.js";
 import { listEventToMatchWinnerMarket, parseEventDetail, parseParticipants } from "./grid-parser.js";
 
-/** Injectable transport and pacing (tests pass a fake FetchJson and no delay). */
+/** Injectable transport (tests pass a fake FetchJson or a replay HttpClient). */
 export interface TotalbetDeps {
-  /** HTTP transport; defaults to Node's global fetch (nodeFetchJson). */
+  /** Raw transport; wins over `http`. Its requests are not counted in transportStats(). */
   fetchJson?: FetchJson;
-  /** Pause after each event-detail request; defaults to DETAIL_DELAY_MS. */
-  detailDelayMs?: number;
+  /** HTTP client behind the default FetchJson; defaults to a fresh shared-HttpClient instance. */
+  http?: HttpClient;
+  /** Event-detail requests in flight at once; defaults to TOTALBET_DETAIL_CONCURRENCY. */
+  detailConcurrency?: number;
 }
 
 type Teams = { homeTeam: string; awayTeam: string };
@@ -56,9 +70,11 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 /** Name kept for compatibility with existing imports; this scraper never opens a browser. */
 export class TotalbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "totalbet";
+  readonly transport = "http" as const;
   config: ScraperConfig;
+  private readonly http: HttpClient;
   private readonly fetchJson: FetchJson;
-  private readonly detailDelayMs: number;
+  private readonly detailConcurrency: number;
 
   constructor(config?: Partial<ScraperConfig>, deps: TotalbetDeps = {}) {
     super();
@@ -67,8 +83,15 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
-    this.fetchJson = deps.fetchJson ?? nodeFetchJson;
-    this.detailDelayMs = deps.detailDelayMs ?? DETAIL_DELAY_MS;
+    this.http = deps.http ?? createHttpClient({ perHostConcurrency: TOTALBET_DETAIL_CONCURRENCY });
+    this.fetchJson = deps.fetchJson ?? createHttpFetchJson(this.http, { timeoutMs: TOTALBET_REQUEST_TIMEOUT_MS });
+    this.detailConcurrency = deps.detailConcurrency ?? TOTALBET_DETAIL_CONCURRENCY;
+  }
+
+  /** Counters of this instance's HttpClient, cumulative since construction (copies). */
+  transportStats(): TransportStats {
+    const stats = this.http.stats;
+    return { http: { ...stats, byStatus: { ...stats.byStatus } } };
   }
 
   /** League list only: one RawScrapedOdds per event with an oriented, fully active list 1X2. */
@@ -201,7 +224,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     }
   }
 
-  async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+  async scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
     const categoryUuid = leagueCategoryUuid(league);
     if (!categoryUuid) {
@@ -209,7 +232,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     }
 
     try {
-      return await this.scrapeLeagueOffer(league, categoryUuid, startTime);
+      return await this.scrapeLeagueOffer(league, categoryUuid, startTime, budget ?? createScrapeBudget(TOTALBET_BUDGET_MS));
     } catch (error) {
       return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
     }
@@ -219,16 +242,32 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     return [];
   }
 
-  private async scrapeLeagueOffer(league: string, categoryUuid: string, startTime: number): Promise<FullOfferScraperResult> {
+  private async scrapeLeagueOffer(
+    league: string,
+    categoryUuid: string,
+    startTime: number,
+    budget: ScrapeBudget
+  ): Promise<FullOfferScraperResult> {
     // The aggregator logs only success=false for a failed run, so the reason is logged here.
     const failure = (error: string): FullOfferScraperResult => {
       console.warn(`${LOG} ${league} failed: ${error}`);
       return { success: false, bookmaker: this.bookmaker, league, matches: [], error, duration: Date.now() - startTime };
     };
 
-    const list = await fetchLeagueEvents(categoryUuid, this.fetchJson);
-    if (list.error) return failure(list.error);
+    const list = await fetchLeagueEvents(categoryUuid, this.fetchJson, budget.signal);
+    if (list.error) return failure(budgetFailure(budget) ?? list.error);
     console.log(`${LOG} Found ${list.events.length} prematch events for ${league}`);
+
+    // Details run concurrently; the results are read below in list order, so the
+    // output is the same as a sequential run over the same responses.
+    const settled = await mapLimit(list.events, this.detailConcurrency, (listEvent) => {
+      budget.checkpoint();
+      return fetchEventDetail(listEvent.uuid, this.fetchJson, budget.signal);
+    });
+    // A budget abort fails the whole scrape: no partial offer and no list-1X2
+    // fallbacks, so a hard deadline never produces 1X2-only rows.
+    const aborted = budgetAbort(settled, budget);
+    if (aborted) return failure(aborted);
 
     const matches: FullMatchOffer[] = [];
     const driftErrors: string[] = [];
@@ -241,7 +280,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     let detailsFailed = 0;
     let firstDetailError: string | undefined;
 
-    for (const listEvent of list.events) {
+    for (const [index, listEvent] of list.events.entries()) {
       // Match identity always comes from the list event, so it never depends on detail success.
       const teams = parseParticipants(listEvent);
       if (!teams) {
@@ -251,8 +290,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       const homeTeam = getCanonicalTeamName(teams.homeTeam, league);
       const awayTeam = getCanonicalTeamName(teams.awayTeam, league);
 
-      const detail = await fetchEventDetail(listEvent.uuid, this.fetchJson);
-      await this.delay(this.detailDelayMs);
+      const detail = settledDetail(settled[index]);
 
       if (detail.notPrematch) {
         // Kicked off (or was suspended) after the list call: no prematch price may be
@@ -324,6 +362,38 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       duration: Date.now() - startTime,
     };
   }
+}
+
+/** The budget's own message when it has aborted, else null. */
+function budgetFailure(budget: ScrapeBudget): string | null {
+  try {
+    budget.checkpoint();
+    return null;
+  } catch (err) {
+    if (err instanceof BudgetExceededError) return err.message;
+    throw err;
+  }
+}
+
+/**
+ * The budget message when the detail phase was cut short by the budget: a detail
+ * refused at its checkpoint, or one aborted in flight ("fetch aborted …") after
+ * the budget signal fired. Null otherwise, even if the budget expired after every
+ * detail had already answered.
+ */
+function budgetAbort(settled: PromiseSettledResult<EventDetailResult>[], budget: ScrapeBudget): string | null {
+  const cut = settled.some((r) =>
+    r.status === "rejected"
+      ? r.reason instanceof BudgetExceededError
+      : budget.signal.aborted && r.value.error?.startsWith("fetch aborted ") === true
+  );
+  return cut ? budgetFailure(budget) : null;
+}
+
+/** The detail result of a settled fetch; fetchEventDetail never rejects, so a rejection is a bug and rethrown. */
+function settledDetail(result: PromiseSettledResult<EventDetailResult>): EventDetailResult {
+  if (result.status === "rejected") throw result.reason;
+  return result.value;
 }
 
 /** The league's Totalbet category (tournament) UUID from src/config/leagues.ts, or null. */

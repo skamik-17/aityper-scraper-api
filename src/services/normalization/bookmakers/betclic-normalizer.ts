@@ -679,28 +679,39 @@ function resolveTeamShotsMarket(
   return null;
 }
 
+/**
+ * Side named by the team part of a per-team OPTA line (tackles, offsides,
+ * fouls), or null to keep the line OTHER. It returns null when:
+ * - the part carries a qualifier, such as "arsenal - 1. polowa",
+ *   "arsenal- 1. polowa" or "arsenal (1. polowa)". That is a period-scoped
+ *   line, and publishing it under the full-match code would pool it with other
+ *   bookmakers' full-match lines. Parentheses, a hyphen with a space on either
+ *   side, and a half marker identify such a qualifier; a bare hyphen stays
+ *   allowed for names such as Saint-Etienne;
+ * - the part matches both sides. Derbies such as Newcastle United v Manchester
+ *   United share a word, and a guessed side could be the wrong one.
+ */
+function resolveFragmentSide(teamPart: string, ctx: NormalizationContext): "HOME" | "AWAY" | null {
+  if (/[()]|\s-|-\s|\bpolow/.test(teamPart)) return null;
+
+  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
+  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
+  if (isHome && isAway) return null;
+  if (isHome) return "HOME";
+  if (isAway) return "AWAY";
+  return null;
+}
+
 function resolveTeamTacklesMarket(
   normalizedName: string,
   ctx: NormalizationContext
 ): TeamTacklesResult | null {
-  const home = normalizeName(ctx.homeTeam);
-  const away = normalizeName(ctx.awayTeam);
-
   const match = normalizedName.match(/^liczba odbiorow\s*\(opta\)(?:\s*\(z dogrywka\))?\s*-\s*(.+)$/i);
   if (!match) return null;
 
-  const teamPart = match[1].trim();
-
-  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
-  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
-
-  // Derbies such as Newcastle United vs Manchester United match both sides on
-  // a shared word; an unresolved side stays OTHER rather than being guessed.
-  if (isHome && isAway) return null;
-
-  if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
-  if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
-
+  const side = resolveFragmentSide(match[1].trim(), ctx);
+  if (side === "HOME") return { teamSide: "HOME", teamName: ctx.homeTeam };
+  if (side === "AWAY") return { teamSide: "AWAY", teamName: ctx.awayTeam };
   return null;
 }
 
@@ -713,25 +724,13 @@ function resolveTeamOffsidesMarket(
   normalizedName: string,
   ctx: NormalizationContext
 ): TeamOffsidesResult | null {
-  const home = normalizeName(ctx.homeTeam);
-  const away = normalizeName(ctx.awayTeam);
-
   // Pattern: "(suma|liczba) spalonych w meczu - {teamName} (opta)"
   const match = normalizedName.match(/^(?:suma|liczba) spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
   if (!match) return null;
 
-  const teamPart = match[1].trim();
-
-  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
-  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
-
-  // Derbies such as Newcastle United vs Manchester United match both sides on
-  // a shared word; an unresolved side stays OTHER rather than being guessed.
-  if (isHome && isAway) return null;
-
-  if (isHome) return { code: "HOME_TEAM_TOTAL_OFFSIDES", teamSide: "HOME" };
-  if (isAway) return { code: "AWAY_TEAM_TOTAL_OFFSIDES", teamSide: "AWAY" };
-
+  const side = resolveFragmentSide(match[1].trim(), ctx);
+  if (side === "HOME") return { code: "HOME_TEAM_TOTAL_OFFSIDES", teamSide: "HOME" };
+  if (side === "AWAY") return { code: "AWAY_TEAM_TOTAL_OFFSIDES", teamSide: "AWAY" };
   return null;
 }
 
@@ -744,22 +743,16 @@ function resolveTeamFoulsMarket(
   normalizedName: string,
   ctx: NormalizationContext
 ): TeamFoulsResult | null {
-  // Pattern: "liczba fauli (opta) - {teamName} (z dogrywka)"
+  // Pattern: "liczba fauli (opta) - {teamName} (z dogrywka)". The lazy
+  // capture stops before the optional extra-time suffix; any other trailing
+  // qualifier stays in the capture and resolveFragmentSide rejects it
+  // (ruling 8: "- 1. polowa" must not map to the full-match code).
   const match = normalizedName.match(/^liczba fauli\s*\(opta\)\s*-\s*(.+?)(?:\s*\(z dogrywka\))?$/i);
   if (!match) return null;
 
-  const teamPart = match[1].trim();
-
-  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
-  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
-
-  // Derbies such as Newcastle United vs Manchester United match both sides on
-  // a shared word; an unresolved side stays OTHER rather than being guessed.
-  if (isHome && isAway) return null;
-
-  if (isHome) return { code: "HOME_TEAM_TOTAL_FOULS", teamSide: "HOME" };
-  if (isAway) return { code: "AWAY_TEAM_TOTAL_FOULS", teamSide: "AWAY" };
-
+  const side = resolveFragmentSide(match[1].trim(), ctx);
+  if (side === "HOME") return { code: "HOME_TEAM_TOTAL_FOULS", teamSide: "HOME" };
+  if (side === "AWAY") return { code: "AWAY_TEAM_TOTAL_FOULS", teamSide: "AWAY" };
   return null;
 }
 
@@ -1591,33 +1584,6 @@ function normalizeTeamShotsSelection(
   const normalizedMarketName = normalizeName(marketName);
 
   const marketMatch = normalizedMarketName.match(/^suma strzalow w meczu\s*\(opta\)\s*-\s*(.+)$/i);
-  if (!marketMatch) return null;
-
-  const teamPart = marketMatch[1].trim();
-  const isHome = home && teamPart.includes(home);
-  const isAway = away && teamPart.includes(away);
-
-  const normalizedSel = normalizeName(selectionName);
-  if (normalizedSel.includes("powyzej")) {
-    return isHome ? "HOME_OVER" : isAway ? "AWAY_OVER" : null;
-  }
-  if (normalizedSel.includes("ponizej")) {
-    return isHome ? "HOME_UNDER" : isAway ? "AWAY_UNDER" : null;
-  }
-
-  return null;
-}
-
-function normalizeTeamTacklesSelection(
-  selectionName: string,
-  marketName: string,
-  ctx: NormalizationContext
-): NormalizedSelection | null {
-  const home = normalizeName(ctx.homeTeam);
-  const away = normalizeName(ctx.awayTeam);
-  const normalizedMarketName = normalizeName(marketName);
-
-  const marketMatch = normalizedMarketName.match(/^liczba odbiorow\s*\(opta\)(?:\s*\(z dogrywka\))?\s*-\s*(.+)$/i);
   if (!marketMatch) return null;
 
   const teamPart = marketMatch[1].trim();
@@ -2515,6 +2481,50 @@ function isDistinctHomeDrawAway(selections: { code: NormalizedSelection }[]): bo
   return selections.length === 3 && codes.size === 3 && codes.has("HOME") && codes.has("DRAW") && codes.has("AWAY");
 }
 
+/**
+ * Markets whose team legs each carry one side code. Their legs resolve through
+ * normalizeBetclic1x2Selection, normalizePenaltyGoalSelection or
+ * normalizeFirstCardSelection; the first two test the home side first through
+ * a matcher that accepts one shared word, so in derbies such as Newcastle
+ * United v Manchester United both team legs come out HOME (or TEAM_HOME) in
+ * either leg order. WIN_TO_NIL and CLEAN_SHEET have other leg shapes and are
+ * not listed.
+ */
+const SIDE_LEG_MARKETS = new Set<NormalizedMarketType>([
+  "MATCH_WINNER",
+  "HALF_TIME_RESULT",
+  "SECOND_HALF_RESULT",
+  "DRAW_NO_BET",
+  "WIN_OR_WIN_BY_2",
+  "FIRST_TEAM_TO_SCORE",
+  "FOUL_RACE",
+  "OFFSIDES_1X2",
+  "CORNERS_RACE",
+  "HALF_TIME_CORNERS_RACE",
+  "CARDS_RACE",
+  "HALF_TIME_CARDS_RACE",
+  "MOST_SHOTS",
+  "MOST_SHOTS_ON_TARGET",
+  "FIRST_OFFSIDE",
+  "PENALTY_GOAL",
+  "HALF_TIME_PENALTY_GOAL",
+  "SECOND_HALF_PENALTY_GOAL",
+]);
+
+const SIDE_CODES = new Set<string>(["HOME", "AWAY", "TEAM_HOME", "TEAM_AWAY"]);
+
+/**
+ * True when a side code occurs on more than one leg. Such a set cannot be
+ * priced per side: the grouper keeps the first quote for a repeated code, so
+ * the away price could be shown on the HOME side, and the stored row would
+ * carry a second HOME leg holding the away price. Same rule as totalbet's
+ * hasDuplicateCode.
+ */
+function hasRepeatedSide(selections: { code: NormalizedSelection }[]): boolean {
+  const sides = selections.map((s) => s.code as string).filter((code) => SIDE_CODES.has(code));
+  return new Set(sides).size !== sides.length;
+}
+
 export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
@@ -2600,11 +2610,15 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       odds: sel.odds,
     }));
 
-    // Odds integrity: an offsides 1X2 offer whose legs do not resolve to one
-    // HOME, one DRAW and one AWAY (derby names sharing a word) falls back to
-    // OTHER. Publishing it would show the away price on the HOME side, or
-    // store a second HOME row carrying the away price.
-    if (marketCode === "OFFSIDES_1X2" && !isDistinctHomeDrawAway(selections)) {
+    // Odds integrity: a side-coded offer whose legs repeat a side (derby names
+    // sharing a word), or an offsides 1X2 offer whose legs do not resolve to
+    // one HOME, one DRAW and one AWAY, falls back to OTHER. Publishing it
+    // would show the away price on the HOME side, or store a second HOME row
+    // carrying the away price.
+    if (
+      (SIDE_LEG_MARKETS.has(marketCode) && hasRepeatedSide(selections)) ||
+      (marketCode === "OFFSIDES_1X2" && !isDistinctHomeDrawAway(selections))
+    ) {
       return {
         marketCode: "OTHER",
         paramValue: undefined,

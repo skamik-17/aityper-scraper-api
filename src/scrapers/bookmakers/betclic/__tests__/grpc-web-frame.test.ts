@@ -55,19 +55,24 @@ describe("readGrpcWebTextStream", () => {
     s.write(HANDICAP.slice(0, 8002)); // chunk boundary inside a base64 quadruplet
     s.write(HANDICAP.slice(8002)); // no end(): Betclic never ends the stream
     expect((await p).length).toBe(11926);
+    // Settling must close the socket: Betclic never ends the stream itself
+    expect(s.destroyed).toBe(true);
   });
   it("readGrpcWebTextStream rejects when the stream ends mid-frame", async () => {
-    const s = new PassThrough();
+    // autoDestroy off: only the reader may destroy the stream after 'end'
+    const s = new PassThrough({ autoDestroy: false });
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.write(HANDICAP.slice(0, 8000));
     s.end();
     await expect(p).rejects.toThrow(/Incomplete gRPC-web frame: 5995\/11926 bytes/);
+    expect(s.destroyed).toBe(true);
   });
   it("readGrpcWebTextStream rejects when the stream ends with no data", async () => {
-    const s = new PassThrough();
+    const s = new PassThrough({ autoDestroy: false });
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.end();
     await expect(p).rejects.toThrow(/Incomplete gRPC-web frame: 0\/null bytes/);
+    expect(s.destroyed).toBe(true);
   });
   it("readGrpcWebTextStream rejects at the deadline while bytes still trickle", async () => {
     const s = new PassThrough();
@@ -83,6 +88,7 @@ describe("readGrpcWebTextStream", () => {
     }, 5);
     try {
       await expect(p).rejects.toThrow(/gRPC-web frame deadline \(50 ms\): \d+\/11926 bytes/);
+      expect(s.destroyed).toBe(true);
     } finally {
       clearInterval(trickle);
     }
@@ -97,6 +103,7 @@ describe("readGrpcWebTextStream", () => {
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.write(f.toString("base64"));
     await expect(p).rejects.toThrow(/gRPC-web trailer frame instead of data: grpc-status:5/);
+    expect(s.destroyed).toBe(true);
   });
   it("readGrpcWebTextStream rejects an empty first data frame instead of resolving 0 bytes", async () => {
     const s = new PassThrough();
@@ -104,11 +111,13 @@ describe("readGrpcWebTextStream", () => {
     // The real frame follows on the same open stream; it must not be skipped silently
     s.write(grpcWebTextFrame(0, Buffer.alloc(0)) + HANDICAP);
     await expect(p).rejects.toThrow(/gRPC-web empty data frame/);
+    expect(s.destroyed).toBe(true);
   });
   it("readGrpcWebTextStream rejects a compressed frame instead of resolving compressed bytes", async () => {
     const s = new PassThrough();
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.write(grpcWebTextFrame(0x01, gzipSync(decodeGrpcWebTextFrame(HANDICAP).message)));
     await expect(p).rejects.toThrow(/gRPC-web compressed frame not supported/);
+    expect(s.destroyed).toBe(true);
   });
 });

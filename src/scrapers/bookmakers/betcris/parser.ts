@@ -24,6 +24,9 @@ import {
   MARKET_TYPE_MAPPING,
   SELECTION_CODES,
   WS_CONFIG,
+  TEAM_TIER_LADDER_TYPES,
+  PLAYER_TIER_LADDER_TYPES,
+  PLAYER_TIER_LIST_TYPES,
 } from "./constants.js";
 import { getCanonicalTeamName } from "../../../utils/team-matcher.js";
 
@@ -287,6 +290,98 @@ const BULK_PLAYER_LIST_MARKET_SELECTION: Record<string, string> = {
 };
 
 /**
+ * Read an "N+" tier label: "22+" (team ladder rung, no subject) or
+ * "<player> N+" (player ladder rung). Inner whitespace in the subject is
+ * collapsed. Anything else ("Tak", "Powyżej 2.5", ...) returns null.
+ */
+export function parseTierLabel(name: string): { subject: string | null; tier: number } | null {
+  const match = name.trim().match(/^(?:(.*\S)\s+)?(\d+)\+$/);
+  if (!match) return null;
+  return {
+    subject: match[1] !== undefined ? match[1].replace(/\s+/g, " ") : null,
+    tier: Number(match[2]),
+  };
+}
+
+type TierLadderKind = "team" | "player" | "list";
+
+function getTierLadderKind(marketType: string): TierLadderKind | null {
+  if (TEAM_TIER_LADDER_TYPES.has(marketType)) return "team";
+  if (PLAYER_TIER_LADDER_TYPES.has(marketType)) return "player";
+  if (PLAYER_TIER_LIST_TYPES.has(marketType)) return "list";
+  return null;
+}
+
+/**
+ * Split one renamed Swarm "N+" ladder market (see the *_TIER_* sets in
+ * constants.ts) into entries the normalizer can key by line or by player:
+ * - team ladder: one entry per rung, sorted by tier, `paramValue` = N - 0.5
+ *   and a single "Powyżej" selection ("22+" is the same bet as Over 21.5);
+ * - player ladder: one entry per player (first-seen order), `paramValue` =
+ *   player, selections "<tier>+" sorted by tier;
+ * - player list: one entry whose selections are player names, built only
+ *   from "1+" events.
+ * Every event that does not fit its ladder's shape (a non-tier label, a
+ * subject where none belongs or a missing one, a list tier other than 1+)
+ * goes, with its original label, into one trailing residual entry without
+ * `paramValue`. No tier is ever invented or collapsed.
+ */
+function splitTierLadder(
+  kind: TierLadderKind,
+  base: Omit<ScrapedMarket, "selections" | "paramValue">,
+  selections: MarketSelection[]
+): ScrapedMarket[] {
+  const entries: ScrapedMarket[] = [];
+  const rungs: Array<{ tier: number; selection: MarketSelection }> = [];
+  const players = new Map<string, Array<{ tier: number; selection: MarketSelection }>>();
+  const listSelections: MarketSelection[] = [];
+  const residual: MarketSelection[] = [];
+
+  for (const selection of selections) {
+    const label = parseTierLabel(selection.name);
+    if (kind === "team" && label && label.subject === null) {
+      rungs.push({ tier: label.tier, selection });
+    } else if (kind === "player" && label && label.subject !== null) {
+      const tiers = players.get(label.subject) ?? [];
+      tiers.push({ tier: label.tier, selection });
+      players.set(label.subject, tiers);
+    } else if (kind === "list" && label && label.subject !== null && label.tier === 1) {
+      listSelections.push({ ...selection, name: label.subject });
+    } else {
+      residual.push(selection);
+    }
+  }
+
+  for (const { tier, selection } of rungs.sort((a, b) => a.tier - b.tier)) {
+    entries.push({
+      ...base,
+      paramValue: String(tier - 0.5),
+      selections: [{ ...selection, name: "Powyżej" }],
+    });
+  }
+
+  for (const [player, tiers] of players) {
+    entries.push({
+      ...base,
+      paramValue: player,
+      selections: tiers
+        .sort((a, b) => a.tier - b.tier)
+        .map(({ tier, selection }) => ({ ...selection, name: `${tier}+` })),
+    });
+  }
+
+  if (listSelections.length > 0) {
+    entries.push({ ...base, selections: listSelections });
+  }
+
+  if (residual.length > 0) {
+    entries.push({ ...base, selections: residual });
+  }
+
+  return entries;
+}
+
+/**
  * Parse ALL markets from a game into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -345,6 +440,22 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
       /(?:wy[śs]cig\s+do|powy[żz]ej|poni[żz]ej)\s*$/i.test(marketName)
     ) {
       resolvedName = `${marketName.trimEnd()} ${lineBase}`;
+    }
+
+    // Renamed Swarm stats markets quote a whole "N+" ladder in one market
+    // object. Split it per rung (team) or per player so every line/player
+    // gets its own entry. The line comes from the tier, never from base, so
+    // the name is the raw market name (resolvedName may append a base line).
+    const ladderKind = getTierLadderKind(market.type);
+    if (ladderKind && selections.length > 0) {
+      markets.push(
+        ...splitTierLadder(
+          ladderKind,
+          { name: marketName, bookmakerMarketId: market.type, groupName, type: marketType },
+          selections
+        )
+      );
+      continue;
     }
 
     // Split bulk multi-player markets into one synthetic entry per player so

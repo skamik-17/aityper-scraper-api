@@ -17,11 +17,14 @@ import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import {
   COMPETITION_IDS,
+  LEAGUE_URLS,
+  WS_CONFIG,
 } from "./constants.js";
 import {
-  navigateToLeaguePage,
-  navigateToMatchPage,
-  captureSwarmData,
+  captureSwarm,
+  formatCaptureFailure,
+  formatCaptureSuccess,
+  isSiteLevelCaptureFailure,
   extractGameIdFromUrl,
   buildEventUrl,
 } from "./navigation.js";
@@ -75,31 +78,23 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       async (page, leagueSlug) => {
         const startTime = Date.now();
         const competitionId = COMPETITION_IDS[leagueSlug];
-
-        const wsDataPromise = captureSwarmData(page, { competitionId });
-
-        const navSuccess = await navigateToLeaguePage(page, leagueSlug);
-        if (!navSuccess) {
+        const url = LEAGUE_URLS[leagueSlug];
+        if (!url) {
           return this.createErrorResult(
-            new Error("Failed to navigate to league page"),
+            new Error(`No Betcris listing URL for league: ${leagueSlug}`),
             Date.now() - startTime
           );
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          this.delay(15000).then(() => null),
-        ]);
-
-        if (!wsData) {
-          console.log("[Betcris] No WebSocket data captured");
-          return this.createNotFoundResult(
-            "No WebSocket data captured",
-            Date.now() - startTime
-          );
+        const outcome = await captureSwarm(page, url, { competitionId });
+        if (!outcome.data) {
+          const reason = formatCaptureFailure(outcome);
+          console.warn(`[Betcris] ${reason}`);
+          return this.createNotFoundResult(reason, Date.now() - startTime);
         }
+        console.log(`[Betcris] ${formatCaptureSuccess(outcome)}`);
 
-        const matches = parseSwarmDataForLeague(wsData, leagueSlug, competitionId);
+        const matches = parseSwarmDataForLeague(outcome.data, leagueSlug, competitionId);
 
         if (matches.length === 0) {
           console.log("[Betcris] No matches parsed from WebSocket");
@@ -200,43 +195,29 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
 
     return this.executeWithBrowser(
       async (page) => {
-        const wsDataPromise = captureSwarmData(page, {
+        const outcome = await captureSwarm(page, eventUrl, {
           singleEventMode: true,
           targetGameNumber: gameId,
         });
-
-        const navSuccess = await navigateToMatchPage(page, eventUrl);
-        if (!navSuccess) {
-          return this.createMatchDetailErrorResult(
-            new Error("Failed to navigate to match page"),
-            Date.now() - startTime
-          );
+        if (!outcome.data) {
+          const reason = formatCaptureFailure(outcome);
+          console.warn(`[Betcris] ${reason}`);
+          return this.createMatchDetailNotFoundResult(reason, Date.now() - startTime);
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          // Allow the full-offer accumulation window (MAX_WAIT_TIME_SINGLE_EVENT)
-          // to complete before the race cuts it off.
-          this.delay(20000).then(() => null),
-        ]);
-
-        if (wsData) {
-          const matchData = parseSwarmDataForMatchDetails(wsData, eventUrl, gameId);
-          if (matchData) {
-            return {
-              status: "success",
-              bookmaker: this.bookmaker,
-              data: matchData,
-              duration: Date.now() - startTime,
-              timestamp: new Date(),
-            };
-          }
-          console.log(
-            `[Betcris] WebSocket data received but game ${gameId} not found or has insufficient markets`
-          );
-        } else {
-          console.log(`[Betcris] No WebSocket data received for game ${gameId}`);
+        const matchData = parseSwarmDataForMatchDetails(outcome.data, eventUrl, gameId);
+        if (matchData) {
+          return {
+            status: "success",
+            bookmaker: this.bookmaker,
+            data: matchData,
+            duration: Date.now() - startTime,
+            timestamp: new Date(),
+          };
         }
+        console.log(
+          `[Betcris] WebSocket data received but game ${gameId} not found or has insufficient markets`
+        );
 
         return this.createMatchDetailNotFoundResult(
           `Game ${gameId} details not found`,
@@ -254,58 +235,65 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
       async (page, leagueSlug) => {
         const startTime = Date.now();
         const competitionId = COMPETITION_IDS[leagueSlug];
-
-        const wsDataPromise = captureSwarmData(page, { competitionId });
-
-        const navSuccess = await navigateToLeaguePage(page, leagueSlug);
-        if (!navSuccess) {
+        const url = LEAGUE_URLS[leagueSlug];
+        if (!url) {
           return this.createFullOfferErrorResult(
             leagueSlug,
-            new Error("Failed to navigate to league page"),
+            new Error(`No Betcris listing URL for league: ${leagueSlug}`),
             Date.now() - startTime
           );
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          this.delay(15000).then(() => null),
-        ]);
-
-        if (!wsData) {
+        const listing = await captureSwarm(page, url, { competitionId });
+        if (!listing.data) {
+          const reason = formatCaptureFailure(listing);
+          console.warn(`[Betcris] ${reason}`);
           return {
             success: false,
             bookmaker: this.bookmaker,
             league: leagueSlug,
             matches: [],
-            error: "No WebSocket data captured",
+            error: reason,
             duration: Date.now() - startTime,
           };
         }
+        console.log(`[Betcris] ${formatCaptureSuccess(listing)}`);
 
-        const gamesInfo = parseSwarmDataForFullOffer(wsData, leagueSlug, competitionId);
+        const gamesInfo = parseSwarmDataForFullOffer(listing.data, leagueSlug, competitionId);
         console.log(`[Betcris/FullOffer] Found ${gamesInfo.length} games for ${leagueSlug}`);
 
         const matches: FullMatchOffer[] = [];
+        // Consecutive site-level capture failures (page or socket delivered no
+        // sport data). Game-level misses neither count nor reset; a success resets.
+        let consecutiveFailures = 0;
+        let aborted = false;
 
         for (const { game, teams, regionAlias, competitionId: compId } of gamesInfo) {
           try {
             const eventUrl = buildEventUrl(regionAlias, compId, game.id);
 
-            const matchWsPromise = captureSwarmData(page, {
+            const capture = await captureSwarm(page, eventUrl, {
               singleEventMode: true,
               targetGameNumber: game.id,
             });
+            const matchWsData = capture.data;
 
-            await navigateToMatchPage(page, eventUrl);
-
-            const matchWsData = await Promise.race([
-              matchWsPromise,
-              // Allow the full-offer accumulation window to complete; the
-              // single-event capture unions markets across several frames.
-              this.delay(20000).then(() => null),
-            ]);
-
-            if (matchWsData) {
+            if (!matchWsData) {
+              console.warn(
+                `[Betcris/FullOffer] Skipped game ${game.id} (${teams.homeTeam} vs ${teams.awayTeam}): ${formatCaptureFailure(capture)}`
+              );
+              if (isSiteLevelCaptureFailure(capture.failure)) {
+                consecutiveFailures++;
+                if (consecutiveFailures >= WS_CONFIG.MAX_CONSECUTIVE_MATCH_FAILURES) {
+                  console.warn(
+                    `[Betcris/FullOffer] Aborting per-match loop: ${consecutiveFailures} consecutive capture failures`
+                  );
+                  aborted = true;
+                  break;
+                }
+              }
+            } else {
+              consecutiveFailures = 0;
               let fullGame = game;
               for (const sport of Object.values(matchWsData.sport || {})) {
                 for (const region of Object.values(sport.region || {})) {
@@ -360,6 +348,18 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         console.log(
           `[Betcris/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
         );
+
+        if (aborted) {
+          // Keep what was captured before the site went away; nothing captured is a failure.
+          return {
+            success: matches.length > 0,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches,
+            error: `aborted after ${WS_CONFIG.MAX_CONSECUTIVE_MATCH_FAILURES} consecutive per-match capture failures`,
+            duration: Date.now() - startTime,
+          };
+        }
 
         return {
           success: true,

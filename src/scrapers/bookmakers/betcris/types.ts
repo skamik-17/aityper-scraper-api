@@ -147,11 +147,86 @@ export interface CaptureConfig {
 }
 
 /**
- * Result from WebSocket capture operation
+ * Why a Swarm capture attempt failed.
+ *
+ * Site-level (the page or its socket never delivered sport data):
+ * `navigation_failed`, `no_swarm_socket`, `no_sport_frames`.
+ * Content-level (the site answered, the target is not there):
+ * `competition_missing`, `no_games_with_markets`, `target_game_missing`.
  */
-export interface CaptureResult {
-  /** Captured Swarm data or null if timeout */
+export type SwarmCaptureFailure =
+  | "navigation_failed"
+  | "no_swarm_socket"
+  | "no_sport_frames"
+  | "competition_missing"
+  | "no_games_with_markets"
+  | "target_game_missing";
+
+/**
+ * Diagnostics of one capture attempt. All `*Ms` timings are ms since the
+ * attempt started (just before `page.goto`).
+ */
+export interface SwarmCaptureAttempt {
+  /** 1-based attempt number */
+  attempt: number;
+  /** When page.goto settled (resolved or rejected); null while still pending */
+  navMs: number | null;
+  /** page.goto rejection message, if it rejected */
+  navError: string | null;
+  /** Every Swarm socket URL seen during the attempt */
+  wsUrls: string[];
+  /** When the first Swarm socket opened */
+  wsOpenMs: number | null;
+  framesReceived: number;
+  nonJsonFrames: number;
+  /** Frames with code 0 and data.data.sport */
+  sportFrames: number;
+  /** League: target competition has a game with markets. Single-event: target game seen */
+  firstUsefulFrameMs: number | null;
+  failure: SwarmCaptureFailure | null;
+  /** page.title(), read only on failure */
+  pageTitle: string | null;
+  /** page.url() at attempt end (www.betsport.pl after the client redirect); null on throw */
+  finalUrl: string | null;
+  /**
+   * Longest Node main-thread stall during the attempt, rounded ms. It is the
+   * max of perf_hooks.monitorEventLoopDelay (resolution 20 ms) and an own
+   * 20 ms gap sampler. The sampler also covers the two stalls the histogram
+   * misses: one that begins before its first tick (~20 ms after the attempt
+   * started), and one since its last tick when the attempt ended (finish() runs
+   * straight from a frame or the plateau poll). The value is the longest gap between two
+   * 20 ms ticks, so ~20 means an idle loop, and N means a callback (or GC)
+   * blocked the thread for roughly N-20 to N ms. Browser-side slowness does not
+   * show here.
+   */
+  eventLoopDelayMaxMs: number | null;
+  /**
+   * The largest lateness, in ms, of a deadline (ws-open, first-useful-frame or
+   * single-event max-wait) that fired more than 100 ms late because the event
+   * loop stalled. Such a deadline waits a 1000 ms grace before it decides.
+   * null (or absent) when every deadline fired on time.
+   */
+  deadlineLateMs?: number | null;
+}
+
+/**
+ * Result of `captureSwarm`: the merged data of the successful attempt, or the
+ * failure of the last attempt, plus the diagnostics of every attempt.
+ */
+export interface SwarmCaptureOutcome {
   data: SwarmData | null;
-  /** Total markets found in the data */
-  marketCount: number;
+  failure: SwarmCaptureFailure | null;
+  attempts: SwarmCaptureAttempt[];
+}
+
+/**
+ * Capture deadlines and retry budget (defaults come from WS_CONFIG).
+ */
+export interface SwarmCaptureTiming {
+  /** No Swarm socket this long after page.goto settles -> failure */
+  wsOpenTimeoutMs: number;
+  /** No useful frame this long after the first Swarm socket opened -> failure */
+  firstUsefulFrameTimeoutMs: number;
+  maxAttempts: number;
+  retryBackoffMs: number;
 }

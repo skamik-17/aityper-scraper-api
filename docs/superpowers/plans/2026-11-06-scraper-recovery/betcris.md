@@ -110,7 +110,7 @@ Renamed stats-family ids. The full table with samples is in `swarm-type-renames.
 |---|---|---|---|
 | `FoulsTotal`, `FoulsTeam1Total`, `FoulsTeam2Total` | `FoulsOver/Under`, `HomeTeamFoulsOver/Under`, `AwayTeamFoulsOver/Under` | FOULS_TOTAL, HOME_TEAM_TOTAL_FOULS, AWAY_TEAM_TOTAL_FOULS | team ladder |
 | `OffsidesTotal`, `OffsidesTeam1Total`, `OffsidesTeam2Total` | `OffsidesOver/Under`, (`HomeTeamOffsidesOver/Under`), — | OFFSIDES_TOTAL, HOME_TEAM_TOTAL_OFFSIDES, AWAY_TEAM_TOTAL_OFFSIDES | team ladder |
-| `ShotsTeam1Total` | `Shots:Team1Total` | TEAM_TOTAL_SHOTS (param `HOME:<line>`) | team ladder |
+| `ShotsTeam1Total`, `ShotsTeam2Total` | `Shots:Team1Total`, `Shots:Team2Total` | TEAM_TOTAL_SHOTS (param `HOME:`/`AWAY:<line>`) | team ladder. `ShotsTeam2Total` ("Strzały. Team 2. Suma.", events `12+`..`18+`) first showed up on 31333513's match-day offer (2026-11-07). It was added in the Task 4 review fix, to the parser set and the normalizer map together, so the ladder set is 15 + 10 + 1 = 26 ids |
 | `ShotsonTargetTotal`, `ShotsonTargetTeam1Total`, `ShotsonTargetTeam2Total` | `ShotsOnGoalOver/Under`, `ShotsongoalTeam1`, `ShotsongoalTeam2` | TOTAL_SHOTS_ON_TARGET, TEAM_TOTAL_SHOTS_ON_TARGET (`HOME:`/`AWAY:`) | team ladder |
 | `ShotsonTarget1stHalfTotal` | — | HALF_TIME_TOTAL_SHOTS_ON_TARGET | team ladder |
 | `ThrowInsTotal`, `ThrowInsTeam1Total`, `ThrowInsTeam2Total` | `MatchThrowInCommonTotalOverUnder2Way`, `…Team1TotalOverUnder2Way`, `…Team2TotalOverUnder2Way1` | THROW_INS_TOTAL, HOME_/AWAY_TEAM_TOTAL_THROW_INS | team ladder |
@@ -189,12 +189,15 @@ Live pass criteria:
 
 | # | Check | Pass |
 |---|---|---|
-| A1 | Smoke | `success:true`, `matches ≥ 18` (listing has 20), `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21` (baseline 0.257; game 31321159 alone is projected at 166/1027 = 0.162), **and** `otherEntries ≤ B − 10 × R`. B is the `otherEntries` of the Task 2 smoke, which runs before the parser/normalizer change. R is the number of `[Betcris/FullOffer] <home> vs <away>: N markets` lines with N ≥ 500 in the same smoke output (command below the table). Today R is 10, the nearer matchweek. Those games carry ≥ 10 newly mapped ladder types each (31321159: 25, 31333513: 11), and each type used to be one OTHER entry. The following matchweek's games carry about 350 markets and no ladder types (31419243: 0 of 355). This absolute check rules out a share that falls only because the denominator grew. Also `durationMs ≤ 240000` |
-| A2 | Robustness under real contention | Count only **full 14-bookmaker** runs: startup, scheduled, or an admin scrape **without** a `bookmakers` filter (`curl -s -X POST -H "Authorization: Bearer dev-api-key" -H "Content-Type: application/json" -d '{"league":"premier-league"}' http://localhost:3001/api/admin/scrape`, owner-approved, writes the DB). A betcris-only scrape removes the 13-browser start burst and proves nothing. Pass: 3 consecutive such runs each persist N ≥ 18 betcris matches and log one `[Betcris] capture ok: …` line for the listing. Record each run's `firstUsefulFrameMs`, `attempts` and `loopLagMaxMs` from that line, and note any run whose `firstUsefulFrameMs` exceeds 12000 (it would have failed before). Any failure line must have the classified form `[Betcris] No WebSocket data captured: <failure> (attempts=…, …, title="…", finalUrl=…, loopLagMaxMs=…)`. Repeat A2 once more after the betters/lebull/pzbuk/totalbet fixes land, because they add contention |
-| A3 | Stats family after a persisted run | Pick a PL game that is on match day (team ladders appear only then; Leeds–Tottenham had none the day before). Dump it with `GID=<id> node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ <prefix>` and save `curl -s "http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league" > nm.json`. Then `python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/ladder_coverage.py <prefix>-game.json nm.json` must print `LADDER_COVERAGE fails=0` and exit 0. Per ladder type present in the raw game: team ladders need every rung as a betcris param (`HOME:`/`AWAY:` prefix where scoped); player ladders need betcris params for ≥ 95% of the players with at least one catalog-declared tier; the woodwork list needs ≥ 95% of its players as selections. Types the raw game lacks print `absent` and are skipped. Today (proof of the command shape on Leeds–Tottenham): 14 `absent`, 11 `FAIL`, `LADDER_COVERAGE fails=11` |
+| A1 | Smoke | `success:true`, `matches ≥ 18` (listing has 20), `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21` (baseline 0.257; game 31321159 alone is projected at 166/1027 = 0.162), **and** an absolute check that uses only the smoke being judged: (a) the sum of `ladderTypes` over its `LADDER` lines is ≥ 10 × R, and (b) its full log (`smoke-full.txt`) has no `[betcris] Unknown market: … (type: <id>, …)` line for any ladder id (the 26 ids of `TEAM_TIER_LADDER_TYPES`, `PLAYER_TIER_LADDER_TYPES` and `PLAYER_TIER_LIST_TYPES`). Both helpers are below the table. R is the number of `[Betcris/FullOffer] <home> vs <away>: N markets` lines with N ≥ 500 in the same smoke output. Today R is 10, the nearer matchweek. Those games carry ≥ 10 ladder types each (31321159: 25; 31333513: 11 the day before and 26 on match day). The pre-Task-3 code turned each ladder id present in a game into exactly one OTHER entry: in the Task 2 smoke each of the 11 player ladder ids logged 9 `Unknown market` lines, one per rich game. So B′ = `otherEntries` + Σ `ladderTypes` is the pre-change OTHER count of the same offer, and (a) is the old `otherEntries ≤ B′ − 10 × R` check, provided no ladder id still lands in OTHER. (b) rules out an unmapped id, and the `LADDER` gate `residual = 0` rules out a residual. A player whose every tier is above the catalog maximum is dropped to OTHER on purpose; none was in the Task 4 smoke. The following matchweek's games carry about 350 markets and no ladder types (31419243: 0 of 355). This absolute check rules out a share that falls only because the denominator grew. It replaces `otherEntries ≤ B − 10 × R` with B from the Task 2 smoke. That B came from a different live offer, which changes between smokes and rolls with every matchweek (see the deviation note in Task 4 Step 5). Also `durationMs ≤ 240000` |
+| A2 | Robustness under real contention | Count only **full 14-bookmaker** runs: startup, scheduled, or an admin scrape **without** a `bookmakers` filter (`curl -s -X POST -H "Authorization: Bearer dev-api-key" -H "Content-Type: application/json" -d '{"league":"premier-league"}' http://localhost:3001/api/admin/scrape`, owner-approved, writes the DB). A betcris-only scrape removes the 13-browser start burst and proves nothing. Pass: 3 consecutive such runs each persist N ≥ 18 betcris matches and log one `[Betcris] capture ok: …` line for the listing. Record each run's `firstUsefulFrameMs`, `attempts` and `loopLagMaxMs` from that line, and note any run whose `firstUsefulFrameMs` exceeds 12000 (it would have failed before). `loopLagMaxMs` is the longest Node main-thread stall in that attempt: ~20 means idle (Task 7 Step 2 says how to read it). Any failure line must have the classified form `[Betcris] No WebSocket data captured: <failure> (attempts=…, …, title="…", finalUrl=…, loopLagMaxMs=…)`. Repeat A2 once more after the betters/lebull/pzbuk/totalbet fixes land, because they add contention |
+| A3 | Stats family after a persisted run | Pick a PL game that is on match day (team ladders appear only then; Leeds–Tottenham had none the day before). Dump it with `GID=<id> node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ <prefix>` and save `curl -s "http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league" > nm.json`. Then `python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/ladder_coverage.py <prefix>-game.json nm.json` must print `LADDER_COVERAGE fails=0` and exit 0. Per ladder type present in the raw game: team ladders need every rung as a betcris param (`HOME:`/`AWAY:` prefix where scoped); player ladders need betcris params for ≥ 95% of the players with at least one catalog-declared tier; the woodwork list needs ≥ 95% of its players as selections. Types the raw game lacks print `absent` and are skipped. Today (proof of the command shape on Leeds–Tottenham): 14 `absent`, 11 `FAIL`, `LADDER_COVERAGE fails=11`. Since the Task 4 review fix, the woodwork row counts betcris's per-player params, because the grouper splits the name list (`splitBundledPlayerSelections`); before that, correct code failed it. An offline proxy at that fix (parser → normalizer → `buildCategoriesWithMarketTypes`) gives `fails=0` on 31321159 (1 `absent`) and on the 31333513 match-day dump (26 `PASS`) |
 | A4 | Integrity | `python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/health.py nm.json rows.json`: each 1X2 selection within **15%** of the peer median (today's legitimate maximum is +10.0%). Ladder sanity check (snippet in Task 7 Step 3): for each betcris team-ladder code with lines that ≥ 2 peers also quote, the median of the per-line deviations of betcris OVER from the peer median is within ±15%, and no single line is beyond ±25% (today: FOULS_TOTAL −9.4%, TOTAL_SHOTS_ON_TARGET −11.0%, worst line −16.0%). Phantom check: `GID=<id> node …/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ raw`, then `python3 -I …/tools/phantom_strict.py rows.json raw-game.json` → no `PLAYER ABSENT in same raw market` key. OTHER is not checked here: `/normalized-markets` never contains it (A1 covers it) |
 
-A1 helper: save the smoke output to `smoke.txt`, then R is `grep -cE '\[Betcris/FullOffer\] .*: ([5-9][0-9]{2}|[0-9]{4,}) markets' smoke.txt`.
+A1 helper: save the smoke output to `smoke.txt` and its full log to `smoke-full.txt` (the Task 4 Step 5 command writes both). Then:
+- R is `grep -cE '\[Betcris/FullOffer\] .*: ([5-9][0-9]{2}|[0-9]{4,}) markets' smoke.txt`.
+- (a) Σ `ladderTypes` is `grep -oE '"ladderTypes":[0-9]+' smoke.txt | awk -F: '{s += $2} END {print s + 0}'`. It must be ≥ 10 × R.
+- (b) must print `0`: `grep -cE '\[betcris\] Unknown market: .*\(type: (FoulsTotal|FoulsTeam1Total|FoulsTeam2Total|OffsidesTotal|OffsidesTeam1Total|OffsidesTeam2Total|ShotsTeam1Total|ShotsTeam2Total|ShotsonTargetTotal|ShotsonTargetTeam1Total|ShotsonTargetTeam2Total|ShotsonTarget1stHalfTotal|ThrowInsTotal|ThrowInsTeam1Total|ThrowInsTeam2Total|PlayerShots|PlayerShotsonTarget|PlayerFouls|PlayerFoulsWon|PlayerOffsides|PlayerSaves|PlayerAssists|PlayerTackles|PlayerShotsonTargetOutsidetheBox|PlayerHeadedShotsonTarget|PlayerShotsAgainstWoodwork), group:' smoke-full.txt`.
 
 ## Global Constraints
 
@@ -276,7 +279,9 @@ A1 helper: save the smoke output to `smoke.txt`, then R is `grep -cE '\[Betcris/
     failure: SwarmCaptureFailure | null;
     pageTitle: string | null;        // read only on failure
     finalUrl: string | null;         // page.url() at attempt end (www.betsport.pl after the client redirect); null on throw
-    eventLoopDelayMaxMs: number | null; // perf_hooks.monitorEventLoopDelay max over the attempt, rounded ms
+    eventLoopDelayMaxMs: number | null; // longest Node main-thread gap between 20 ms ticks over the attempt, rounded ms:
+                                        // max(monitorEventLoopDelay max, own 20 ms gap sampler incl. the attempt's start and tail); ~20 = idle
+    deadlineLateMs?: number | null;     // largest lateness of a deadline that fired > 100 ms late (loop stalled); null when none did
   }
   export interface SwarmCaptureOutcome { data: SwarmData | null; failure: SwarmCaptureFailure | null; attempts: SwarmCaptureAttempt[]; }
   export interface SwarmCaptureTiming { wsOpenTimeoutMs: number; firstUsefulFrameTimeoutMs: number; maxAttempts: number; retryBackoffMs: number; }
@@ -318,14 +323,17 @@ deadlines are setTimeout timers armed at milestones (exact, not poll-rounded):
       sportFrames == 0 -> no_sport_frames
       league: competition absent -> competition_missing; present without games -> no_games_with_markets
       single-event: target never seen -> target_game_missing
-when a deadline fires: await one setImmediate turn and re-check completion before classifying
-  (after a long synchronous stretch Node runs expired timers before queued socket I/O)
+when a deadline (or the single-event max wait) fires: on time (<= 100 ms late) await one setImmediate turn and
+  re-check completion before classifying; more than 100 ms late (the loop stalled) wait 1000 ms once, then the same
+  turn and re-check, and record deadlineLateMs (after a stall Node runs expired timers before queued socket I/O, and a
+  frame already in Node's CDP pipe needs two more setImmediate hops in Playwright 1.57: pipe transport, in-process connection)
 on success or failure: page.off + ws.off all listeners; swallow a later goto rejection;
-  finalUrl = page.url() (null on throw); eventLoopDelayMaxMs = round(histogram.max / 1e6); disable histogram
+  finalUrl = page.url() (null on throw); eventLoopDelayMaxMs = round(max(histogram.max / 1e6, own gap max after one
+  final tail sample)); disable histogram and the sampler (the histogram alone misses its first ~20 ms and the tail)
 on failure: pageTitle = await page.title() (null on throw)
 ```
 
-The setImmediate yield has no dedicated unit test. Under fake timers it cannot reorder real socket I/O. A2's recorded `loopLagMaxMs` checks it live.
+The on-time setImmediate yield has no dedicated unit test: under fake timers it cannot reorder real socket I/O. The stall grace has one (fix round 1: a `vi.setSystemTime` jump makes every pending timer fire late), and so do the two blind spots of `eventLoopDelayMaxMs` (a real `Atomics.wait` stall right after the attempt starts and right before it ends). These two tests bring Task 1 to 16 tests, so the Step 4/5 counts and every later expected test total in this plan are 2 higher (Step 5: 66 files / 1198 tests). Neither the Task 2 smoke nor A2 can show whether the yield or the grace worked: `loopLagMaxMs` only shows how long Node's main thread stalled. A late deadline logs `[Betcris/Navigation] <ws-open|first-useful-frame|max-wait> deadline fired N ms late (event loop stalled); deciding in 1000 ms` and sets `deadlineLateMs`.
 
 - [ ] **Step 1: Write the test infrastructure and the failing tests.** First copy the two recordings into `__tests__/fixtures/` (`cp docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/{league-538-frames,match-31321159-frames}.json src/scrapers/bookmakers/betcris/__tests__/fixtures/`). Then implement `helpers/fake-swarm-page.ts` completely, with the semantics listed after the tests. It is test infrastructure and imports nothing from `navigation.ts`, so Step 2 fails for the intended reason. Then write `capture.test.ts`. Start each test with `vi.useFakeTimers()` and `vi.spyOn(console, "log").mockImplementation(() => {})`, and use `afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); })`. Fixtures: `league = loadRecording("league-538-frames.json")`, `match = loadRecording("match-31321159-frames.json")`, `LEAGUE = "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538"`, `BETSPORT = LEAGUE.replace("betcris.pl", "betsport.pl")`.
 
@@ -792,8 +800,69 @@ Expected: FAIL. `norm(...)` returns `null` for `FoulsTotal`, `PlayerShots`, etc.
 Run: `npx vitest run src/scrapers/bookmakers/betcris src/services/normalization/__tests__/golden.test.ts -t betcris && npx tsx scripts/rebless-golden.ts --bookmaker betcris --dry && npx tsc --noEmit && npx tsc -p /tmp/tsconfig.betcris-tests.json`
 Expected: all pass (stat-ladders: 8 parser + 6 normalizer tests); rebless prints `{"changedTotal":0,"dry":true}`. Any non-zero count means existing entries changed: inspect them and stop before going further.
 
-- [ ] **Step 5: Live check** (one smoke; save the output as `smoke-task4.txt`).
-Expected: A1 holds. `otherShare ≤ 0.21`. `otherEntries ≤ B − 10 × R`, with B from `smoke-task2.txt` and R from this output via the A1 helper grep (today R = 10). `scrapedMarkets` is well above the Task 2 smoke's, because the ladders are now split (+340 entries per rich game such as 31321159).
+- [ ] **Step 5: Live check** (one read-only smoke, 21 page loads; save the output as `smoke-task4.txt`). Run it **before 2026-11-07T12:30Z**, the Leeds–Tottenham kick-off, so that 31333513 is still in the prematch listing. Its 11 player ladder types (and any team ladders it gains on match day) have never been parsed by the new code. The only offline ladder evidence is game 31321159, because `league-538-frames.json` holds no ladder market. The command is the Acceptance smoke (lines 168-181) without its `cd` into the main checkout. It runs from the betcris worktree through `heavy --live`, and it adds one `LADDER` line per game and one closing `LADDER_SUM` line. Copy this exact command, and its `SMOKE`, `LADDER` and `LADDER_SUM` output, into the Task 4 report:
+```bash
+cd /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/betcris && date -u +%FT%TZ > .scratch/smoke-task4-started.txt && /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live timeout 600 npx tsx -e "
+import { BetcrisPlaywrightScraper } from './src/scrapers/bookmakers/index.ts';
+import { browserPool } from './src/scrapers/base/browser-pool.ts';
+import { normalizeMarketsForBookmaker } from './src/services/normalization/index.ts';
+import { TEAM_TIER_LADDER_TYPES, PLAYER_TIER_LADDER_TYPES, PLAYER_TIER_LIST_TYPES } from './src/scrapers/bookmakers/betcris/constants.ts';
+import { parseTierLabel } from './src/scrapers/bookmakers/betcris/parser.ts';
+(async () => {
+  const t0 = Date.now();
+  const r = await new BetcrisPlaywrightScraper().scrapeFullOffer('premier-league');
+  const isLadder = (t) => TEAM_TIER_LADDER_TYPES.has(t) || PLAYER_TIER_LADDER_TYPES.has(t) || PLAYER_TIER_LIST_TYPES.has(t);
+  const sum = { games: 0, gamesWithLadders: 0, residual: 0, dupRungs: 0, zeroTier: 0, normCollisions: 0 };
+  let total = 0, other = 0, min = Infinity;
+  for (const m of r.matches) {
+    const n = normalizeMarketsForBookmaker(m.markets, 'betcris', m.homeTeam, m.awayTeam, 'premier-league');
+    total += n.length; other += n.filter((x) => x.normalizedType === 'OTHER').length; min = Math.min(min, m.markets.length);
+    const lad = m.markets.filter((x) => isLadder(x.bookmakerMarketId));
+    const types = new Set(lad.map((x) => x.bookmakerMarketId));
+    const bare = lad.filter((x) => x.paramValue === undefined);
+    const listAt = bare.findIndex((x) => PLAYER_TIER_LIST_TYPES.has(x.bookmakerMarketId) && x.selections.every((s) => parseTierLabel(s.name) === null));
+    const residual = bare.filter((x, i) => i !== listAt);
+    const hits = residual.map((x) => 'residual ' + x.bookmakerMarketId + ' ' + JSON.stringify(x.selections.map((s) => s.name + '@' + s.odds)));
+    const rungs = new Map();
+    for (const x of lad) for (const s of x.selections) { const k = x.bookmakerMarketId + '|' + x.paramValue + '|' + s.name; rungs.set(k, (rungs.get(k) ?? []).concat(s.odds)); }
+    let dupRungs = 0;
+    for (const [k, o] of rungs) if (o.length > 1) { dupRungs += o.length - 1; hits.push('dup ' + k + ' ' + JSON.stringify(o)); }
+    const zero = lad.filter((x) => x.paramValue === '-0.5' || x.selections.some((s) => parseTierLabel(s.name)?.tier === 0));
+    for (const x of zero) hits.push('zero ' + x.bookmakerMarketId + '|' + x.paramValue + ' ' + JSON.stringify(x.selections.map((s) => s.name)));
+    const keys = new Map();
+    for (const x of n) {
+      if (x.normalizedType === 'OTHER' || x.marketKey == null) continue;
+      for (const s of x.selections) {
+        const k = x.marketKey + '|' + (s.normalizedName && s.normalizedName !== 'UNKNOWN' ? s.normalizedName : s.name);
+        keys.set(k, (keys.get(k) ?? []).concat([[x.bookmakerMarketId, s.odds]]));
+      }
+    }
+    let normCollisions = 0;
+    for (const [k, g] of keys) if (g.length > 1 && g.some(([id]) => isLadder(id))) { normCollisions += g.length - 1; hits.push('collision ' + k + ' ' + JSON.stringify(g)); }
+    sum.games += 1; sum.gamesWithLadders += types.size > 0 ? 1 : 0;
+    sum.residual += residual.length; sum.dupRungs += dupRungs; sum.zeroTier += zero.length; sum.normCollisions += normCollisions;
+    console.log('LADDER ' + JSON.stringify({ gid: m.matchId, teams: m.homeTeam + ' - ' + m.awayTeam, ladderTypes: types.size, teamLadderTypes: [...types].filter((t) => TEAM_TIER_LADDER_TYPES.has(t)).length, ladderEntries: lad.length, residual: residual.length, dupRungs, zeroTier: zero.length, normCollisions, hits: hits.slice(0, 20) }));
+  }
+  console.log('SMOKE ' + JSON.stringify({ success: r.success, error: r.error ?? null, matches: r.matches.length, scrapedMarkets: total, minMarketsPerMatch: r.matches.length ? min : 0, otherEntries: other, otherShare: total ? +(other / total).toFixed(3) : null, durationMs: Date.now() - t0 }));
+  console.log('LADDER_SUM ' + JSON.stringify(sum));
+  await browserPool.closeAll();
+})();
+" 2>&1 | tee .scratch/smoke-task4-full.txt | grep -E '^(SMOKE|LADDER)|\[Betcris' > .scratch/smoke-task4.txt
+```
+The `SMOKE` line is the Acceptance one, byte for byte. The `LADDER` fields are computed per game on the parser output `m.markets`. A ladder id is any id in `TEAM_TIER_LADDER_TYPES`, `PLAYER_TIER_LADDER_TYPES` or `PLAYER_TIER_LIST_TYPES` (constants.ts:93, :116, :133).
+- `ladderTypes` / `teamLadderTypes`: the distinct ladder ids and team-ladder ids present. `ladderEntries` is the number of entries they produced.
+- `residual`: ladder entries without `paramValue`, minus the one woodwork list. The list is the `PLAYER_TIER_LIST_TYPES` entry whose selection names carry no `N+` tier.
+- `dupRungs`: extra occurrences of one `bookmakerMarketId|paramValue|selection.name`.
+- `zeroTier`: ladder entries with `paramValue` `-0.5`, or with a selection whose label has tier 0 (`0+`, `<player> 0+`).
+- `normCollisions`: extra occurrences of one `marketKey|code` among the normalized non-OTHER entries, counted only when one of them comes from a ladder id. `code` follows the repository's `selectionCollisionKey` (full-offer-repository.ts:190). `mergeMarketRecord` keeps the first-seen odds of such a pair and logs a misroute (full-offer-repository.ts:243-247). This also catches a ladder rung that meets an August-style market on the same line, or two raw players that canonicalize to one name.
+- `hits`: up to 20 strings that name each hit with its labels and prices.
+
+Expected:
+- A1 holds. `otherShare ≤ 0.21`. `otherEntries ≤ B − 10 × R`, with B from `smoke-task2.txt` and R from this output via the A1 helper grep (today R = 10). `scrapedMarkets` is well above the Task 2 smoke's, because the ladders are now split (+340 entries per rich game such as 31321159).
+  - **Deviation (Task 4 run, 2026-11-07).** The literal B check missed: 2290 > 2377 − 10 × 9 = 2287. B was measured on a different live offer. The Task 2 smoke ran at 00:12Z and this one at 01:07Z, and in between 31333513 gained 14 team ladders and 12 OTHER-only markets. A1 now uses the offer-matched check in the Acceptance table, which needs only the smoke being judged. On it the Task 4 smoke passes: Σ `ladderTypes` = 113 ≥ 10 × 9 = 90 (B′ − 10 × R = 2403 − 90 = 2313 ≥ 2290). No `Unknown market` line names one of the 25 planned ids. The one `ShotsTeam2Total` line was the then-unmapped 26th id, mapped in the Task 4 review fix.
+- There is one `LADDER` line per scraped match, and `LADDER_SUM.games` equals the `SMOKE` `matches`.
+- `residual`, `dupRungs`, `zeroTier` and `normCollisions` are 0 in every game. Any non-zero value blocks merging Tasks 3+4 until the Task 4 report quotes each of its `hits` and justifies it. A duplicate at the same price is harmless. A duplicate at a different price means first-seen odds would be served: that is an integrity defect, not a note.
+- `31333513` has a `LADDER` line with `ladderTypes ≥ 11`. If the smoke could only run after kick-off, the report says so. The gate then rests on the remaining games with `ladderTypes > 0`, and `LADDER_SUM.gamesWithLadders ≥ 1` is required.
 
 - [ ] **Step 6: Commit** after `npx tsc --noEmit && npx vitest run` → `Test Files 68 passed (68) / Tests 1216 passed (1216)`.
 ```bash
@@ -955,13 +1024,15 @@ git commit -m "feat(normalization): log one unmapped-market summary per bookmake
 **Interfaces:**
 - Consumes: everything above, merged into the main checkout with the owner's go-ahead. The merge restarts the dev server, and its startup run (a full 14-bookmaker run) persists to the DB and counts toward A2.
 
-- [ ] **Step 1: A1.** Run the smoke command once and save the output as `smoke.txt`. Compute R with the A1 helper grep.
-Expected: `success:true`, `matches ≥ 18`, `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21`, `otherEntries ≤ B − 10 × R` (B from Task 2 Step 5), `durationMs ≤ 240000`.
+- [ ] **Step 1: A1.** Run the smoke command once and save the output as `smoke.txt`. Compute R with the A1 helper grep. Use the exact Task 4 Step 5 command, writing to `.scratch/smoke.txt` (and `.scratch/smoke-full.txt` for the `tee`) in place of the `smoke-task4` names. The Acceptance block's `cd` points at the main checkout, so copying it verbatim would test `master`.
+Expected: `success:true`, `matches ≥ 18`, `minMarketsPerMatch ≥ 300`, `otherShare ≤ 0.21`, `durationMs ≤ 240000`. The absolute check uses only this smoke, with no B from another smoke (helpers below the Acceptance table): Σ `ladderTypes` over the `LADDER` lines ≥ 10 × R, and no `[betcris] Unknown market` line for a ladder id in `.scratch/smoke-full.txt`. The Task 4 Step 5 `LADDER` expectations hold again.
 
 - [ ] **Step 2: A2.** Watch 3 consecutive **full** runs: startup, scheduled, or a full admin scrape without a `bookmakers` filter (command in A2; owner-approved because it writes the DB). Never use a betcris-only scrape here.
 Run per run (works with today's aggregator line and with observability's `${bm} ${status}:` line):
-`sed 's/\x1b\[[0-9;]*m//g' <server log> | grep -E '\[Aggregator/FullOffer\] betcris [a-z_]+:|\[Betcris\] (No WebSocket|capture ok)|\[ScrapeHelpers\] betcris:'`
-Expected per run: one `[Betcris] capture ok: navMs=…, wsOpenMs=…, firstUsefulFrameMs=…, attempts=…, loopLagMaxMs=…, finalUrl=…` line; an aggregator line with N ≥ 18 matches (`betcris completed: N matches, M markets saved` today, `betcris success: N matches, …` after observability Task 3); and one `[ScrapeHelpers] betcris: … unmapped market ids` line. Record `firstUsefulFrameMs`, `attempts` and `loopLagMaxMs` for each run, and flag any run with `firstUsefulFrameMs > 12000`. Repeat after the betters/lebull/pzbuk/totalbet fixes land.
+`sed 's/\x1b\[[0-9;]*m//g' <server log> | grep -E '\[Aggregator/FullOffer\] betcris [a-z_]+:|\[Betcris\] (No WebSocket|capture ok)|\[ScrapeHelpers\] betcris:|\[Betcris/FullOffer\] (Found [0-9]+ games|Skipped game|Aborting per-match loop)|\[Betcris/Navigation\] (Capture attempt|[a-z-]+ deadline fired)'`
+Then count, over the same run's log, the per-match skip, breaker, retry and late-deadline lines (the `\[Betcris\] (No WebSocket|capture ok)` alternative never matches them, because their prefix is `[Betcris/FullOffer]` or `[Betcris/Navigation]`):
+`sed 's/\x1b\[[0-9;]*m//g' <server log> | grep -oE '\[Betcris/FullOffer\] (Skipped game|Aborting per-match loop)|\[Betcris/Navigation\] (Capture attempt|[a-z-]+ deadline fired)' | sort | uniq -c`
+Expected per run: one `[Betcris] capture ok: navMs=…, wsOpenMs=…, firstUsefulFrameMs=…, attempts=…, loopLagMaxMs=…, finalUrl=…` line; an aggregator line with N ≥ 18 matches (`betcris completed: N matches, M markets saved` today, `betcris success: N matches, …` after observability Task 3); and one `[ScrapeHelpers] betcris: … unmapped market ids` line. Record `firstUsefulFrameMs`, `attempts` and `loopLagMaxMs` for each run, and flag any run with `firstUsefulFrameMs > 12000`. Also record these counts for each run (one per line kind, with late deadlines split by deadline name). Expect few or no `[Betcris/FullOffer] Skipped game <id> (<home> vs <away>): No WebSocket data captured: <failure> (…)` lines; each names its classified reason, and only `target_game_missing` is game-level. Flag any run with an `[Betcris/FullOffer] Aborting per-match loop: …` line: it means 3 consecutive site-level per-match failures, so that run has N ≤ G − 3, with G from its `[Betcris/FullOffer] Found G games` line. `[Betcris/Navigation] Capture attempt n/2 failed: …` lines are retries, of the listing or of one game. Read `loopLagMaxMs` as the longest Node main-thread stall in that attempt: ~20 means idle, N means one callback (or GC) blocked the thread for roughly N-20 to N ms. It does not show browser-side slowness, and it does not show whether a deadline waited for queued frames; the `[Betcris/Navigation] <ws-open|first-useful-frame|max-wait> deadline fired N ms late` lines show that. Repeat after the betters/lebull/pzbuk/totalbet fixes land.
 
 - [ ] **Step 3: A3 and A4.** Choose a PL game on match day (team ladders only appear then). List the games with `GID=0 node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ /tmp/bcl && python3 -I -c "import json,datetime as d;m=json.load(open('/tmp/bcl-list.json'));[print(g['id'],d.datetime.fromtimestamp(g['start_ts'],d.timezone.utc).isoformat(),g['team1_name'].strip(),'-',g['team2_name'].strip(),'mc=',g['markets_count']) for s in m['data']['data']['sport'].values() for r in s['region'].values() for c in r['competition'].values() for g in sorted(c['game'].values(),key=lambda g:g['start_ts'])]"`. Expected lines look like `31333513 2026-11-07T12:30:00+00:00 Leeds - Tottenham mc= 582`. Take a game with `mc=` ≥ 500 that kicks off today and has not started. Then dump it and its normalized view:
 ```bash

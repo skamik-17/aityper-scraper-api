@@ -1,0 +1,346 @@
+{
+  "plan": "docs/superpowers/plans/2026-11-06-scraper-recovery/betcris.md",
+  "task": "Task 7: Live acceptance (no code)",
+  "date": "2026-11-07",
+  "code": {
+    "branch": "recovery/betcris",
+    "sha": "2ea100a533216f4f5075cbee79b1bbecc8a0319f",
+    "worktree": "/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/betcris",
+    "note": "Not merged into the main checkout. No server, scheduler or DB write was involved; the worktree .env points Supabase at a dead port."
+  },
+  "A1": {
+    "status": "PASS",
+    "startedAt": "2026-11-07T02:13:44Z",
+    "endedAt": "2026-11-07T02:15:27Z",
+    "command": "Task 4 Step 5 command (betcris.md, the block after '- [ ] **Step 5: Live check**'), verbatim except the three output names: .scratch/smoke-task4-started.txt -> .scratch/smoke-started.txt, .scratch/smoke-task4-full.txt -> .scratch/smoke-full.txt, .scratch/smoke-task4.txt -> .scratch/smoke.txt. Run from the betcris worktree through bin/heavy --live, exit 0.",
+    "listingFoundGames": 19,
+    "captureOk": "navMs=713, wsOpenMs=818, firstUsefulFrameMs=1742, attempts=1, loopLagMaxMs=23, finalUrl=https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+    "smoke": {
+      "success": true,
+      "error": null,
+      "matches": 19,
+      "scrapedMarkets": 12128,
+      "minMarketsPerMatch": 344,
+      "otherEntries": 2289,
+      "otherShare": 0.189,
+      "durationMs": 100841
+    },
+    "ladderSum": {
+      "games": 19,
+      "gamesWithLadders": 9,
+      "residual": 0,
+      "dupRungs": 0,
+      "zeroTier": 0,
+      "normCollisions": 0
+    },
+    "helpers": {
+      "R": 9,
+      "sumLadderTypes": 114,
+      "tenTimesR": 90,
+      "unknownMarketLinesForLadderIds": 0,
+      "unknownMarketLinesAll": 1989,
+      "otherLinesFromLadderMarketNames": 0,
+      "bPrime": 2403,
+      "bPrimeMinusTenR": 2313
+    },
+    "logScan": {
+      "skippedGame": 0,
+      "abortingPerMatchLoop": 0,
+      "captureAttemptFailed": 0,
+      "deadlineFiredLate": 0,
+      "noWebSocketData": 0
+    },
+    "checks": [
+      {
+        "check": "success",
+        "value": true,
+        "rule": "true",
+        "pass": true
+      },
+      {
+        "check": "matches",
+        "value": 19,
+        "rule": ">= 18 (ledger T7 ruling: >= listing - 2 = 17)",
+        "pass": true
+      },
+      {
+        "check": "minMarketsPerMatch",
+        "value": 344,
+        "rule": ">= 300",
+        "pass": true
+      },
+      {
+        "check": "otherShare",
+        "value": 0.189,
+        "rule": "<= 0.21",
+        "pass": true
+      },
+      {
+        "check": "durationMs",
+        "value": 100841,
+        "rule": "<= 240000",
+        "pass": true
+      },
+      {
+        "check": "(a) sum ladderTypes",
+        "value": 114,
+        "rule": ">= 10 x R = 90 (R = 9)",
+        "pass": true
+      },
+      {
+        "check": "(b) Unknown market lines for a ladder id",
+        "value": 0,
+        "rule": "== 0",
+        "pass": true
+      },
+      {
+        "check": "one LADDER line per match",
+        "value": 19,
+        "rule": "== matches",
+        "pass": true
+      },
+      {
+        "check": "LADDER_SUM.games",
+        "value": 19,
+        "rule": "== matches",
+        "pass": true
+      },
+      {
+        "check": "residual/dupRungs/zeroTier/normCollisions",
+        "value": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "rule": "all 0 in every game",
+        "pass": true
+      },
+      {
+        "check": "31333513 ladderTypes",
+        "value": 26,
+        "rule": ">= 11",
+        "pass": true
+      },
+      {
+        "check": "LADDER_SUM.gamesWithLadders",
+        "value": 9,
+        "rule": ">= 1",
+        "pass": true
+      }
+    ],
+    "perGame": [
+      {
+        "gid": "31333512",
+        "teams": "Nottingham Forest - Manchester City",
+        "rawMarkets": 922,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 297
+      },
+      {
+        "gid": "31333513",
+        "teams": "Leeds United - Tottenham Hotspur",
+        "rawMarkets": 1045,
+        "ladderTypes": 26,
+        "teamLadderTypes": 15,
+        "ladderEntries": 399
+      },
+      {
+        "gid": "31333514",
+        "teams": "Fulham - Newcastle United",
+        "rawMarkets": 916,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 287
+      },
+      {
+        "gid": "31333515",
+        "teams": "Arsenal - Hull City",
+        "rawMarkets": 967,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 335
+      },
+      {
+        "gid": "31340647",
+        "teams": "Brighton and Hove Albion - Brentford",
+        "rawMarkets": 984,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 337
+      },
+      {
+        "gid": "31340648",
+        "teams": "Ipswich Town - AFC Bournemouth",
+        "rawMarkets": 964,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 338
+      },
+      {
+        "gid": "31340664",
+        "teams": "Sunderland - Chelsea",
+        "rawMarkets": 927,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 306
+      },
+      {
+        "gid": "31340665",
+        "teams": "Manchester United - Aston Villa",
+        "rawMarkets": 963,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 306
+      },
+      {
+        "gid": "31340666",
+        "teams": "Crystal Palace - Liverpool",
+        "rawMarkets": 955,
+        "ladderTypes": 11,
+        "teamLadderTypes": 0,
+        "ladderEntries": 307
+      },
+      {
+        "gid": "31419243",
+        "teams": "Manchester City - Fulham",
+        "rawMarkets": 355,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419244",
+        "teams": "Brentford - Everton",
+        "rawMarkets": 346,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419245",
+        "teams": "Chelsea - Leeds United",
+        "rawMarkets": 346,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419246",
+        "teams": "Aston Villa - Sunderland",
+        "rawMarkets": 344,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419296",
+        "teams": "AFC Bournemouth - Nottingham Forest",
+        "rawMarkets": 345,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419297",
+        "teams": "Hull City - Brighton and Hove Albion",
+        "rawMarkets": 345,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419298",
+        "teams": "Tottenham Hotspur - Ipswich Town",
+        "rawMarkets": 348,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419299",
+        "teams": "Liverpool - Manchester United",
+        "rawMarkets": 359,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419300",
+        "teams": "Coventry City - Crystal Palace",
+        "rawMarkets": 350,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      },
+      {
+        "gid": "31419348",
+        "teams": "Newcastle United - Arsenal",
+        "rawMarkets": 347,
+        "ladderTypes": 0,
+        "teamLadderTypes": 0,
+        "ladderEntries": 0
+      }
+    ],
+    "earlierSmokesSameDay": {
+      "task2 (pre-Task-3 code, 2026-11-07T00:12:32Z)": {
+        "matches": 19,
+        "scrapedMarkets": 9296,
+        "otherEntries": 2377,
+        "otherShare": 0.256,
+        "durationMs": 147787
+      },
+      "task4 (Task 4 commit, 2026-11-07T01:07:25Z)": {
+        "matches": 19,
+        "scrapedMarkets": 12123,
+        "otherEntries": 2290,
+        "otherShare": 0.189,
+        "durationMs": 103180,
+        "sumLadderTypes": 113,
+        "R": 9
+      }
+    }
+  },
+  "A2": {
+    "status": "DEFERRED",
+    "reason": "Needs 3 consecutive full 14-bookmaker runs (startup, scheduled, or a full admin scrape) of the merged code; each persists to the DB. EXECUTION rules 3-4.",
+    "precondition": "The owner merges recovery/betcris into the main checkout (via recovery/integration). The dev server restarts and its startup run is the first full run.",
+    "optionalFullScrape": "curl -s -X POST -H \"Authorization: Bearer dev-api-key\" -H \"Content-Type: application/json\" -d '{\"league\":\"premier-league\"}' http://localhost:3001/api/admin/scrape",
+    "perRunCommands": [
+      "sed 's/\\x1b\\[[0-9;]*m//g' <server log> | grep -E '\\[Aggregator/FullOffer\\] betcris [a-z_]+:|\\[Betcris\\] (No WebSocket|capture ok)|\\[ScrapeHelpers\\] betcris:|\\[Betcris/FullOffer\\] (Found [0-9]+ games|Skipped game|Aborting per-match loop)|\\[Betcris/Navigation\\] (Capture attempt|[a-z-]+ deadline fired)'",
+      "sed 's/\\x1b\\[[0-9;]*m//g' <server log> | grep -oE '\\[Betcris/FullOffer\\] (Skipped game|Aborting per-match loop)|\\[Betcris/Navigation\\] (Capture attempt|[a-z-]+ deadline fired)' | sort | uniq -c"
+    ],
+    "unmappedSummaryGrep": "grep -E '^\\[ScrapeHelpers\\] [a-z]+: [0-9]+ unmapped market ids, [0-9]+ OTHER markets this run \\(top: ' <server log>",
+    "expectedPerRun": [
+      "exactly one '[Betcris] capture ok: navMs=..., wsOpenMs=..., firstUsefulFrameMs=..., attempts=..., loopLagMaxMs=..., finalUrl=...' line for the listing; record firstUsefulFrameMs, attempts, loopLagMaxMs; flag firstUsefulFrameMs > 12000",
+      "aggregator line with N >= 18 betcris matches ('betcris completed: N matches, M markets saved', or 'betcris success: N matches, ...' after observability Task 3); per the ledger T7 ruling judge N >= G - 2 with G from '[Betcris/FullOffer] Found G games'",
+      "exactly one '[ScrapeHelpers] betcris: ... unmapped market ids, ... OTHER markets this run (top: ...)' line; none of the 26 ladder ids in its top list",
+      "few or no '[Betcris/FullOffer] Skipped game <id> (<home> vs <away>): No WebSocket data captured: <failure> (...)' lines, each with a classified reason",
+      "no '[Betcris/FullOffer] Aborting per-match loop: ...' line (if present, N <= G - 3: flag the run)",
+      "any failure line has the classified form '[Betcris] No WebSocket data captured: <failure> (attempts=..., ..., title=\"...\", finalUrl=..., loopLagMaxMs=...)'",
+      "record the uniq -c counts of Skipped game / Aborting / Capture attempt / <name> deadline fired lines",
+      "3 consecutive runs pass; repeat once more after the betters/lebull/pzbuk/totalbet fixes land"
+    ],
+    "standaloneReference": {
+      "captureOk": "navMs=713, wsOpenMs=818, firstUsefulFrameMs=1742, attempts=1, loopLagMaxMs=23, finalUrl=https://www.betsport.pl/zaklady-bukmacherskie/match/Soccer/England/538",
+      "note": "A1 smoke, no contention: the same line format the A2 grep matches (checked: .scratch/t7-a2-grep-on-smoke.txt)."
+    }
+  },
+  "A3_A4": {
+    "status": "DEFERRED",
+    "reason": "Needs /api/matches/.../normalized-markets served by the merged code after a persisted run; today's localhost:3001 serves master's betcris rows.",
+    "when": "A PL match day, on a game with mc >= 500 that has not kicked off (team ladders appear only on match day).",
+    "runFrom": "/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/betcris",
+    "listGames": "GID=0 /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bcl && python3 -I -c \"import json,datetime as d;m=json.load(open('.scratch/bcl-list.json'));[print(g['id'],d.datetime.fromtimestamp(g['start_ts'],d.timezone.utc).isoformat(),g['team1_name'].strip(),'-',g['team2_name'].strip(),'mc=',g['markets_count']) for s in m['data']['data']['sport'].values() for r in s['region'].values() for c in r['competition'].values() for g in sorted(c['game'].values(),key=lambda g:g['start_ts'])]\"",
+    "commands": "GID=<id> /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/bc\ncurl -s \"http://localhost:3001/api/matches/<Home>/<Away>/normalized-markets?league=premier-league\" > .scratch/nm.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/ladder_coverage.py .scratch/bc-game.json .scratch/nm.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/health.py .scratch/nm.json .scratch/rows.json\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I - .scratch/nm.json <<'EOF'\nimport json, sys, statistics\nTEAM = [\"FOULS_TOTAL\", \"TOTAL_SHOTS_ON_TARGET\", \"THROW_INS_TOTAL\", \"OFFSIDES_TOTAL\", \"HALF_TIME_TOTAL_SHOTS_ON_TARGET\"]\nd = json.load(open(sys.argv[1]))[\"data\"]; worst = 0; bad = []\nfor cat in d[\"categories\"]:\n    for m in cat[\"markets\"]:\n        if m[\"marketKey\"] not in TEAM: continue\n        devs = []\n        for p in m[\"parameters\"]:\n            bc = [s[\"odds\"] for b in p[\"bookmakers\"] if b[\"bookmaker\"] == \"betcris\" for s in b[\"selections\"] if s[\"type\"] == \"OVER\"]\n            peers = [s[\"odds\"] for b in p[\"bookmakers\"] if b[\"bookmaker\"] != \"betcris\" for s in b[\"selections\"] if s[\"type\"] == \"OVER\"]\n            if bc and len(peers) >= 2: devs.append(100 * (bc[0] / statistics.median(peers) - 1))\n        if devs:\n            med = statistics.median(devs); worst = max([worst] + [abs(x) for x in devs])\n            print(m[\"marketKey\"], \"lines\", len(devs), \"median dev %.1f%%\" % med, \"worst %.1f%%\" % max(devs, key=abs))\n            if abs(med) > 15 or max(abs(x) for x in devs) > 25: bad.append(m[\"marketKey\"])\nprint(\"LADDER_PEER_CHECK\", \"FAIL\" if bad else \"PASS\", bad)\nEOF\nGID=<id> /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy --live node docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/direct-swarm.mjs wss://eu-swarm-springre.trexname.com/ .scratch/raw\n/home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/bin/heavy python3 -I docs/superpowers/plans/2026-11-06-scraper-recovery/evidence/betcris/tools/phantom_strict.py .scratch/rows.json .scratch/raw-game.json",
+    "expected": [
+      "LADDER_COVERAGE fails=0 (exit 0)",
+      "health.py: every '1X2 ... dev' within +-15%",
+      "LADDER_PEER_CHECK PASS (a game without team ladders prints no market lines and 'PASS []')",
+      "phantom_strict.py: no 'PLAYER ABSENT in same raw market' key",
+      "health.py 'UNKNOWN/OTHER rows' is not a criterion"
+    ],
+    "preMergeProxy": "Task 4 review fix (offline: raw dump -> parseAllMarkets -> normalizeMarketsForBookmaker -> buildCategoriesWithMarketTypes -> ladder_coverage.py) gave LADDER_COVERAGE fails=0 on 31321159 and on the 31333513 match-day dump of 2026-11-07T01:31Z (26 PASS). Parser and normalizer are unchanged since then (Tasks 5-6 touch only the audit archive and scrape-helpers)."
+  }
+}

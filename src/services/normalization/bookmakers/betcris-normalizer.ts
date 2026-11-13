@@ -26,6 +26,50 @@ import {
 } from "../helpers/index.js";
 import { isValidMarketCode, getMarketByCode } from "../../../data/market-catalog.js";
 
+// Renamed Swarm stats-family ids (seen from 2026-11) that quote a whole "N+"
+// ladder in one market. The betcris parser splits each team ladder into one
+// rung per line ("22+" -> paramValue "21.5" + one "Powyżej" selection, the
+// same shape as the August "FoulsOver/Under" ids) and each player ladder into
+// one entry per player (paramValue = player, "N+" selections). Anything that
+// does not fit is left in a residual entry without paramValue, which must
+// never publish as a lineless or playerless row (see normalizeMarket).
+const BETCRIS_TEAM_TIER_LADDER_ID_TO_CODE: Record<string, NormalizedMarketType> = {
+  "FoulsTotal": "FOULS_TOTAL",
+  "FoulsTeam1Total": "HOME_TEAM_TOTAL_FOULS",
+  "FoulsTeam2Total": "AWAY_TEAM_TOTAL_FOULS",
+  "OffsidesTotal": "OFFSIDES_TOTAL",
+  "OffsidesTeam1Total": "HOME_TEAM_TOTAL_OFFSIDES",
+  "OffsidesTeam2Total": "AWAY_TEAM_TOTAL_OFFSIDES",
+  // Side comes from the id ("Team1"/"Team2") as a HOME:/AWAY: param scope.
+  "ShotsTeam1Total": "TEAM_TOTAL_SHOTS",
+  // Successor of the August "Shots:Team2Total"; the parser splits it too
+  // (TEAM_TIER_LADDER_TYPES), so add or remove the two entries together.
+  "ShotsTeam2Total": "TEAM_TOTAL_SHOTS",
+  "ShotsonTargetTotal": "TOTAL_SHOTS_ON_TARGET",
+  "ShotsonTargetTeam1Total": "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "ShotsonTargetTeam2Total": "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "ShotsonTarget1stHalfTotal": "HALF_TIME_TOTAL_SHOTS_ON_TARGET",
+  "ThrowInsTotal": "THROW_INS_TOTAL",
+  "ThrowInsTeam1Total": "HOME_TEAM_TOTAL_THROW_INS",
+  "ThrowInsTeam2Total": "AWAY_TEAM_TOTAL_THROW_INS",
+};
+
+const BETCRIS_PLAYER_TIER_LADDER_ID_TO_CODE: Record<string, NormalizedMarketType> = {
+  "PlayerShots": "PLAYER_SHOTS",
+  "PlayerShotsonTarget": "PLAYER_SHOTS_ON_TARGET",
+  "PlayerFouls": "PLAYER_FOULS",
+  "PlayerFoulsWon": "PLAYER_FOULS_WON",
+  "PlayerOffsides": "PLAYER_OFFSIDES",
+  "PlayerSaves": "PLAYER_SAVES",
+  "PlayerAssists": "PLAYER_ASSISTS",
+  "PlayerTackles": "PLAYER_TACKLES",
+  "PlayerShotsonTargetOutsidetheBox": "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  "PlayerHeadedShotsonTarget": "PLAYER_HEADER_SHOTS_ON_TARGET",
+};
+
+const BETCRIS_TEAM_TIER_LADDER_IDS = new Set(Object.keys(BETCRIS_TEAM_TIER_LADDER_ID_TO_CODE));
+const BETCRIS_PLAYER_TIER_LADDER_IDS = new Set(Object.keys(BETCRIS_PLAYER_TIER_LADDER_ID_TO_CODE));
+
 const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "P1XP2": "MATCH_WINNER",
   "1X12X2": "DOUBLE_CHANCE",
@@ -309,6 +353,12 @@ const BETCRIS_MARKET_TYPE_TO_CODE: Record<string, NormalizedMarketType> = {
   "PlayerToScoreWithLeftFoot": "PLAYER_LEFT_FOOT_GOAL",
   "PlayertoBeinOffsideOver": "PLAYER_OFFSIDES",
   "GoalFromOutsidetheBox": "GOAL_OUTSIDE_BOX",
+  // Renamed Swarm stats-family ids (2026-11), see the ladder maps above.
+  ...BETCRIS_TEAM_TIER_LADDER_ID_TO_CODE,
+  ...BETCRIS_PLAYER_TIER_LADDER_ID_TO_CODE,
+  // Successor of "PlayerShottoHittheWoodwork": the parser keeps only its "1+"
+  // events, renamed to bare player names (the August list shape).
+  "PlayerShotsAgainstWoodwork": "PLAYER_HIT_WOODWORK",
 };
 
 // Known Swarm market ids with no catalog counterpart. The "exactly N goals"
@@ -946,6 +996,9 @@ function normalizeSelectionForMarket(
     case "PLAYER_RIGHT_FOOT_GOAL":
     case "PLAYER_LEFT_FOOT_GOAL":
     case "PLAYER_OFFSIDES":
+    case "PLAYER_TACKLES":
+    case "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX":
+    case "PLAYER_HEADER_SHOTS_ON_TARGET":
     case "PENALTY_SCORER":
     case "FIRST_PLAYER_CARDED":
       // Player-prop markets: keep the (cleaned) player name as the selection
@@ -1125,6 +1178,7 @@ const STAT_OVER_UNDER_PARAM_MARKETS: NormalizedMarketType[] = [
   "AWAY_TEAM_TOTAL_OFFSIDES",
   "TOTAL_SHOTS",
   "TOTAL_SHOTS_ON_TARGET",
+  "HALF_TIME_TOTAL_SHOTS_ON_TARGET",
   "THROW_INS_TOTAL",
   "HOME_TEAM_TOTAL_THROW_INS",
   "AWAY_TEAM_TOTAL_THROW_INS",
@@ -1173,6 +1227,34 @@ const PLAYER_OU_PARAM_MARKETS: NormalizedMarketType[] = [
   "PLAYER_OFFSIDES",
   "PLAYER_SAVES",
 ];
+
+// Per-player "N+" tier ladders: the parser splits each renamed Swarm ladder
+// ("PlayerShots", "PlayerFouls", ...) into one entry per player, with the raw
+// player name in paramValue and "<tier>+" selections.
+const PLAYER_TIER_LADDER_CODES: NormalizedMarketType[] = [
+  "PLAYER_SHOTS",
+  "PLAYER_SHOTS_ON_TARGET",
+  "PLAYER_FOULS",
+  "PLAYER_FOULS_WON",
+  "PLAYER_OFFSIDES",
+  "PLAYER_SAVES",
+  "PLAYER_ASSISTS",
+  "PLAYER_TACKLES",
+  "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
+  "PLAYER_HEADER_SHOTS_ON_TARGET",
+];
+
+const NUMERIC_PARAM = /^[+-]?\d+([.,]\d+)?$/;
+const TIER_CODE = /^\d+\+$/;
+// A label that still ends in an "N+" tier: "Thierno Barry 2+", "2+".
+const TRAILING_TIER_LABEL = /(?:^|\s)\d+\+$/;
+
+// Outcome codes normalizeSelectionForMarket can return for a player-prop
+// label that is not a player ("Tak" -> YES, "Nikt" -> NONE, "Powyżej" -> OVER).
+const NON_PLAYER_SELECTION_CODES = new Set<string>([
+  ...Object.values(BETCRIS_SELECTION_CODES),
+  "NONE",
+]);
 
 function extractParamValue(
   marketCode: NormalizedMarketType,
@@ -1308,6 +1390,16 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
     if (marketType && BETCRIS_EXCLUDED_MARKET_IDS.has(marketType)) {
       // Known Swarm ids without a catalog counterpart — exclude to OTHER
       // instead of poisoning a wrong market.
+      return null;
+    }
+    if (
+      marketType &&
+      BETCRIS_TEAM_TIER_LADDER_IDS.has(marketType) &&
+      !(raw.paramValue && NUMERIC_PARAM.test(raw.paramValue))
+    ) {
+      // A team-ladder rung always carries its numeric line (tier - 0.5). An
+      // entry without one is a parser residual (a non-tier event such as
+      // "Tak"): exclude it to OTHER instead of publishing a lineless row.
       return null;
     }
     if (marketType) {
@@ -1633,6 +1725,45 @@ export const betcrisNormalizer: BookmakerMarketNormalizer = {
           paramValue = canonicalizeBetcrisPlayerName(playerName);
         }
       }
+    }
+
+    // Per-player "N+" tier ladders (renamed Swarm stats ids, split per player
+    // by the parser; also the August "ToAssistaGoal" bulk split, whose "1+"
+    // entries carry the player the same way). Key by the canonical player
+    // and keep only the tiers the catalog declares: an undeclared tier
+    // (PLAYER_FOULS "5+", PLAYER_HEADER_SHOTS_ON_TARGET "4+", PLAYER_ASSISTS
+    // "3+") is dropped, never clamped into a neighbour (same rule as the
+    // OVER->tier blocks below).
+    if (
+      PLAYER_TIER_LADDER_CODES.includes(marketCode) &&
+      raw.paramValue &&
+      !NUMERIC_PARAM.test(raw.paramValue) &&
+      selections.length > 0 &&
+      selections.every((sel) => TIER_CODE.test(sel.code))
+    ) {
+      paramValue = canonicalizeBetcrisPlayerName(raw.paramValue);
+      const catalogSelections = getMarketByCode(marketCode)?.selections ?? [];
+      selections = selections.filter((sel) => catalogSelections.includes(sel.code));
+      if (selections.length === 0) return null;
+    } else if (marketType && BETCRIS_PLAYER_TIER_LADDER_IDS.has(marketType)) {
+      // Anything else under a renamed player-ladder id (a parser residual
+      // without a player, a bare "2+", a numeric param) has no player to key
+      // by: exclude it to OTHER instead of publishing a playerless row.
+      return null;
+    }
+
+    // PLAYER_HIT_WOODWORK is a list of player names. For the renamed
+    // "PlayerShotsAgainstWoodwork" ladder the parser keeps only "1+" events
+    // (stripped to the bare name) and leaves every other event in a residual
+    // entry without paramValue. A label that still ends in an "N+" tier
+    // ("Thierno Barry 2+") or that resolves to an outcome code instead of a
+    // player ("Tak" -> YES) is not a player name: drop it, never publish it
+    // as 1+. The August "PlayerShottoHittheWoodwork" labels are bare names.
+    if (marketCode === "PLAYER_HIT_WOODWORK") {
+      selections = selections.filter(
+        (sel) => !TRAILING_TIER_LABEL.test(sel.label.trim()) && !NON_PLAYER_SELECTION_CODES.has(sel.code)
+      );
+      if (selections.length === 0) return null;
     }
 
     // PLAYER_FOULS/PLAYER_FOULS_WON have no catalog "OVER" code (only

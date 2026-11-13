@@ -16,7 +16,6 @@ import { API_BASE_URL, BASE_URL, TOURNAMENT_IDS, REQUEST_TIMEOUT } from "./const
 import type {
   LVBetCompetitionResponse,
   LVBetMarketsResponse,
-  LVBetMatchInfoResponse,
   LVBetMatch,
 } from "./types.js";
 
@@ -119,52 +118,6 @@ export async function fetchMarketsForMatch(
 }
 
 /**
- * Fetch match info (team names) from single match endpoint
- *
- * @param page - Playwright page with established session
- * @param matchId - Match ID
- * @returns Match info response or null on error
- */
-export async function fetchMatchInfo(
-  page: Page,
-  matchId: string
-): Promise<LVBetMatchInfoResponse | null> {
-  try {
-    const apiUrl = `${API_BASE_URL}/matches/${matchId}/?lang=pl`;
-    console.log(`[LVBet/Navigation] Fetching match info for: ${matchId}`);
-
-    const response = await page.request.fetch(apiUrl);
-    const data = await response.json();
-
-    return data as LVBetMatchInfoResponse;
-  } catch (error) {
-    console.error(`[LVBet/Navigation] Failed to fetch match info:`, error);
-    return null;
-  }
-}
-
-/**
- * Extract match ID from an LVBet event URL
- * URL format: https://lvbet.pl/pl/zaklady-bukmacherskie/pilka-nozna/.../match_id/
- *
- * @param eventUrl - Full URL to the event page
- * @returns Match ID string or null if not found
- */
-export function extractMatchIdFromUrl(eventUrl: string): string | null {
-  // Remove trailing slash and split by /
-  const urlPath = eventUrl.replace(/\/$/, "");
-  const segments = urlPath.split("/");
-  const matchId = segments[segments.length - 1];
-
-  // Match ID can be numeric or prefixed with "bc:"
-  if (!matchId || !/^(bc:)?\d+$/.test(matchId)) {
-    return null;
-  }
-
-  return matchId;
-}
-
-/**
  * Build the canonical event URL from match data
  *
  * @param match - LVBet match object
@@ -181,14 +134,6 @@ export function buildEventUrl(match: LVBetMatch, league: string): string {
   const groupPath = (match.sports_groups_ids || []).join("/");
 
   return `${BASE_URL}/pl/zaklady-bukmacherskie/pilka-nozna/${league}/${hSlug}vs${aSlug}/--/${groupPath}/${match.match_id}/`;
-}
-
-/**
- * Build a simplified event URL from match ID
- * Used when full match data is not available
- */
-export function buildSimpleEventUrl(matchId: string): string {
-  return `${BASE_URL}/pl/zaklady-bukmacherskie/pilka-nozna/--/${matchId}/`;
 }
 
 /** A competition's match listing; template literal only, so nothing is percent-encoded. */

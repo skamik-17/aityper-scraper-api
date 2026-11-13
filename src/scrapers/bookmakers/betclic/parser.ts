@@ -14,7 +14,7 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { BetclicListingMatch, ParsedTeams } from "./types.js";
+import type { BetclicListingMatch } from "./types.js";
 import {
   PROTO_FIELDS,
   TEAM_SEPARATOR,
@@ -917,42 +917,6 @@ export function parseMatchHeader(raw: Buffer): { categories: string[] } {
   return { categories };
 }
 
-// ============================================================================
-// LISTING RESPONSE PARSER
-// ============================================================================
-
-/**
- * Helper to get BigInt varint from raw buffer
- */
-function getVarintBigInt(buf: Buffer, targetField: number): bigint | null {
-  let offset = 0;
-
-  while (offset < buf.length) {
-    const tagResult = readVarintBigInt(buf, offset);
-    offset += tagResult.bytesRead;
-    const tag = Number(tagResult.value);
-    const fieldNum = tag >> 3;
-    const wireType = tag & 0x07;
-
-    if (wireType === 0) {
-      const v = readVarintBigInt(buf, offset);
-      if (fieldNum === targetField) return v.value;
-      offset += v.bytesRead;
-    } else if (wireType === 2) {
-      const len = readVarint(buf, offset);
-      offset += len.bytesRead + len.value;
-    } else if (wireType === 1) {
-      offset += 8;
-    } else if (wireType === 5) {
-      offset += 4;
-    } else {
-      break;
-    }
-  }
-
-  return null;
-}
-
 /**
  * Parse listing response for matches with 1X2 odds
  */
@@ -1033,141 +997,4 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
   }
 
   return matches;
-}
-
-// ============================================================================
-// UTILITY FUNCTIONS
-// ============================================================================
-
-/**
- * Parse team names from Betclic matchName format
- * Format: "HomeTeam - AwayTeam"
- */
-export function parseTeamNames(matchName: string): ParsedTeams {
-  const parts = matchName.split(TEAM_SEPARATOR);
-  return {
-    homeTeam: (parts[0] || "").trim(),
-    awayTeam: (parts[1] || "").trim(),
-  };
-}
-
-/**
- * Validate that an event has minimum required data
- */
-export function isValidMatch(match: BetclicListingMatch): boolean {
-  return (
-    !!match.homeTeam &&
-    !!match.awayTeam &&
-    match.homeOdds > 0 &&
-    match.drawOdds > 0 &&
-    match.awayOdds > 0
-  );
-}
-
-// ============================================================================
-// MATCH DETAILS HELPERS (for scrapeMatchDetails compatibility)
-// ============================================================================
-
-/**
- * Extract 1X2 odds from parsed markets
- */
-export function extract1X2FromMarkets(
-  markets: ScrapedMarket[],
-  homeTeam: string,
-  awayTeam: string
-): { home: number; draw: number; away: number } | null {
-  const market = markets.find(
-    (m) => m.type === MARKET_TYPES.MATCH_1X2 || m.name.toLowerCase().includes("wynik meczu")
-  );
-
-  if (!market || market.selections.length < 3) return null;
-
-  const homeOdds = market.selections.find(
-    (s) => s.name === homeTeam || s.name === "1" || s.name.toLowerCase().includes("gospodarz")
-  )?.odds;
-
-  const drawOdds = market.selections.find(
-    (s) => s.name === "Remis" || s.name === "Remis " || s.name === "X" || s.name.toLowerCase() === "remis"
-  )?.odds;
-
-  const awayOdds = market.selections.find(
-    (s) => s.name === awayTeam || s.name === "2" || s.name.toLowerCase().includes("gość")
-  )?.odds;
-
-  if (!homeOdds || !drawOdds || !awayOdds) return null;
-
-  return { home: homeOdds, draw: drawOdds, away: awayOdds };
-}
-
-/**
- * Extract Double Chance odds from parsed markets
- */
-export function extractDoubleChanceFromMarkets(
-  markets: ScrapedMarket[]
-): { homeOrDraw: number; drawOrAway: number; homeOrAway: number } | null {
-  const market = markets.find(
-    (m) => m.type === MARKET_TYPES.DOUBLE_CHANCE || m.name.toLowerCase().includes("podwójna szansa")
-  );
-
-  if (!market || market.selections.length < 3) return null;
-
-  const homeOrDraw = market.selections.find((s) => s.name.includes("1X") || s.name.includes("lub Remis"))?.odds;
-  const drawOrAway = market.selections.find((s) => s.name.includes("X2") || s.name.includes("Remis lub"))?.odds;
-  const homeOrAway = market.selections.find((s) => s.name.includes("12") || (s.name.includes("lub") && !s.name.includes("Remis")))?.odds;
-
-  if (!homeOrDraw || !drawOrAway || !homeOrAway) return null;
-
-  return { homeOrDraw, drawOrAway, homeOrAway };
-}
-
-/**
- * Extract BTTS odds from parsed markets
- */
-export function extractBTTSFromMarkets(
-  markets: ScrapedMarket[]
-): { yes: number; no: number } | null {
-  const market = markets.find(
-    (m) => m.type === MARKET_TYPES.BTTS || m.name.toLowerCase().includes("obie drużyny")
-  );
-
-  if (!market || market.selections.length < 2) return null;
-
-  const yes = market.selections.find((s) => s.name === "Tak" || s.name.toLowerCase() === "yes")?.odds;
-  const no = market.selections.find((s) => s.name === "Nie" || s.name.toLowerCase() === "no")?.odds;
-
-  if (!yes || !no) return null;
-
-  return { yes, no };
-}
-
-/**
- * Extract Over/Under odds from parsed markets
- */
-export function extractOverUnderFromMarkets(
-  markets: ScrapedMarket[]
-): Record<string, { over: number; under: number }> | null {
-  const ouMarkets = markets.filter(
-    (m) => m.type === MARKET_TYPES.OVER_UNDER || m.name.toLowerCase().includes("powyżej")
-  );
-
-  if (ouMarkets.length === 0) return null;
-
-  const result: Record<string, { over: number; under: number }> = {};
-
-  for (const market of ouMarkets) {
-    // Extract line from market name (e.g., "Gole Powyżej/Poniżej 2,5")
-    const lineMatch = market.name.match(/(\d+[,\.]\d+)/);
-    if (!lineMatch) continue;
-
-    const line = lineMatch[1].replace(",", ".");
-
-    const over = market.selections.find((s) => s.name.toLowerCase().includes("powyżej"))?.odds;
-    const under = market.selections.find((s) => s.name.toLowerCase().includes("poniżej"))?.odds;
-
-    if (over && under) {
-      result[line] = { over, under };
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
 }

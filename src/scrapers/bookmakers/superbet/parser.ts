@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   MARKET_IDS,
   MARKET_GROUPS,
@@ -155,133 +154,6 @@ function getSelectionName(
     default:
       return originalName || code;
   }
-}
-
-/**
- * Parse 1X2 market odds from event data
- * Used for backward compatibility with scrapeLeague
- */
-export function parse1X2Odds(event: SuperbetEvent): {
-  home: number;
-  draw: number;
-  away: number;
-} {
-  const result = { home: 0, draw: 0, away: 0 };
-  const odds = event.odds || [];
-
-  const mainOdds = odds.filter((o) => o.marketId === MARKET_IDS.MATCH_RESULT_1X2);
-
-  for (const selection of mainOdds) {
-    if (selection.code === SELECTION_CODES.HOME) {
-      result.home = selection.price || 0;
-    } else if (selection.code === SELECTION_CODES.DRAW) {
-      result.draw = selection.price || 0;
-    } else if (selection.code === SELECTION_CODES.AWAY) {
-      result.away = selection.price || 0;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Parse Double Chance market from event odds
- */
-export function parseDoubleChance(odds: SuperbetOddsSelection[]): {
-  homeOrDraw: number;
-  drawOrAway: number;
-  homeOrAway: number;
-} | null {
-  const result = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-  let found = false;
-
-  const dcOdds = odds.filter(
-    (o) =>
-      o.marketId === MARKET_IDS.DOUBLE_CHANCE ||
-      o.marketId === MARKET_IDS.DOUBLE_CHANCE_ALT
-  );
-
-  for (const selection of dcOdds) {
-    const code = selection.code;
-    if (code === "10" || code === "1X") {
-      result.homeOrDraw = selection.price || 0;
-      found = true;
-    } else if (code === "02" || code === "X2") {
-      result.drawOrAway = selection.price || 0;
-      found = true;
-    } else if (code === "12") {
-      result.homeOrAway = selection.price || 0;
-      found = true;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse BTTS market from event odds
- */
-export function parseBTTS(odds: SuperbetOddsSelection[]): {
-  yes: number;
-  no: number;
-} | null {
-  const result = { yes: 0, no: 0 };
-  let found = false;
-
-  const bttsOdds = odds.filter(
-    (o) => o.marketId === MARKET_IDS.BTTS || o.marketId === MARKET_IDS.BTTS_ALT
-  );
-
-  for (const selection of bttsOdds) {
-    const code = selection.code;
-    const name = selection.name?.toLowerCase() || "";
-
-    if (code === "1" || code === "GG" || name.includes("tak")) {
-      result.yes = selection.price || 0;
-      found = true;
-    } else if (code === "2" || code === "NG" || name.includes("nie")) {
-      result.no = selection.price || 0;
-      found = true;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse Over/Under markets from event odds
- * Returns a record keyed by line (e.g., "2.5")
- */
-export function parseOverUnder(
-  odds: SuperbetOddsSelection[]
-): Record<string, MarketOverUnderOdds> | null {
-  const result: Record<string, MarketOverUnderOdds> = {};
-
-  const ouOdds = odds.filter(
-    (o) =>
-      o.marketId === MARKET_IDS.TOTAL_GOALS ||
-      o.marketId === MARKET_IDS.TOTAL_GOALS_ALT ||
-      o.marketId === MARKET_IDS.TOTAL_GOALS_ALT2
-  );
-
-  for (const selection of ouOdds) {
-    const line = selection.specialBetValue;
-    if (!line || !line.includes(".")) continue;
-
-    const lineStr = parseFloat(line).toFixed(1);
-    if (!result[lineStr]) {
-      result[lineStr] = { over: 0, under: 0 };
-    }
-
-    const name = selection.name?.toLowerCase() || "";
-    if (selection.code === "O" || name.includes("powyżej") || name.includes("powyzej")) {
-      result[lineStr].over = selection.price || 0;
-    } else if (selection.code === "U" || name.includes("poniżej") || name.includes("ponizej")) {
-      result[lineStr].under = selection.price || 0;
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
 }
 
 /**
@@ -569,12 +441,4 @@ export function isUpcomingOfferedEvent(
   }
 
   return true;
-}
-
-/**
- * Check if event has valid 1X2 odds
- */
-export function hasValid1X2Odds(event: SuperbetEvent): boolean {
-  const odds1x2 = parse1X2Odds(event);
-  return odds1x2.home > 0 && odds1x2.draw > 0 && odds1x2.away > 0;
 }

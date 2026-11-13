@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, it, expect } from "vitest";
-import { parseAllMarkets, parseExtendedMarkets } from "../parser.js";
+import { parseAllMarkets } from "../parser.js";
 import type { LVBetMarket } from "../types.js";
 
 /**
@@ -48,11 +48,6 @@ describe("LVBet parser - v5 payload shape", () => {
         expect(s.externalId).toMatch(/^bc:\d+$/);
       }
     }
-  });
-
-  it("parseExtendedMarkets accepts a numeric line", () => {
-    const ext = parseExtendedMarkets(evidence);
-    expect(ext.marketOverUnder?.["2.5"]).toMatchObject({ over: 1.55, under: 2.5 });
   });
 });
 

@@ -12,13 +12,9 @@ const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 
 // Every legacyDirOf(...) the scan reports at this commit (`npx tsx scripts/legacy-lines.ts`)
 const ALLOWED = new Set([
-  "bookmakers/betclic",
   "bookmakers/betcris",
-  "bookmakers/fortuna",
-  "bookmakers/lvbet",
   "bookmakers/pzbuk",
   "bookmakers/sts",
-  "bookmakers/superbet",
   "bookmakers/totalbet",
   "shared/betby",
 ]);

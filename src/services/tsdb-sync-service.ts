@@ -10,12 +10,12 @@ import {
   type TsdbFixtureRow,
 } from "../repositories/tsdb-fixtures-repository.js";
 import { CONFIG } from "../config/index.js";
+import { parseDbTimestamp } from "../utils/db-timestamp.js";
 
 function parseKickoffTime(event: TsdbEvent): string | null {
   if (event.strTimestamp) {
-    const ts = event.strTimestamp;
-    const hasTimezone = ts.endsWith("Z") || /[+-]\d{2}:\d{2}$/.test(ts);
-    return new Date(hasTimezone ? ts : ts + "+00:00").toISOString();
+    // TSDB timestamps are UTC, with or without an explicit offset
+    return parseDbTimestamp(event.strTimestamp).toISOString();
   }
   if (event.dateEvent && event.strTime) {
     return new Date(`${event.dateEvent}T${event.strTime}+00:00`).toISOString();

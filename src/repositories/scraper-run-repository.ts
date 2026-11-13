@@ -5,12 +5,52 @@
 
 import { getSupabase } from "../config/database.js";
 import type { PolishBookmaker } from "../config/index.js";
-import type { ScraperResult } from "../types/scraper.js";
 import type { Database } from "../types/database.js";
+import { formatDbError, OK_RUN_STATUSES, type BookmakerRunOutcome } from "../services/run-outcome.js";
+import { parseDbTimestamp } from "../utils/db-timestamp.js";
 
 // Row types for scraper_runs table
-type ScraperRunRow = Database["public"]["Tables"]["scraper_runs"]["Row"];
-type ScraperRunInsert = Database["public"]["Tables"]["scraper_runs"]["Insert"];
+export type ScraperRunRow = Database["public"]["Tables"]["scraper_runs"]["Row"];
+export type ScraperRunInsert = Database["public"]["Tables"]["scraper_runs"]["Insert"];
+
+/**
+ * A scraper_runs insert row with every outcome field present. Required<> drops
+ * the `?` of the Insert type, so the row is also usable wherever a read row
+ * (RunRowLike) is expected, e.g. when merging in-memory history with DB rows.
+ */
+export type ScraperRunOutcomeRow = Required<
+  Pick<
+    ScraperRunInsert,
+    | "run_id"
+    | "bookmaker"
+    | "league_slug"
+    | "status"
+    | "matches_found"
+    | "markets_found"
+    | "markets_saved"
+    | "error_message"
+    | "started_at"
+    | "finished_at"
+    | "duration_ms"
+  >
+>;
+
+const MAX_ERROR_MESSAGE_LENGTH = 2000;
+const MIGRATION_11 = "supabase/migrations/11_scraper_runs_observability.sql";
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Bounded copy of an error text that never ends on half of a surrogate pair. */
+function truncateErrorMessage(error: string): string {
+  const cut = error.slice(0, MAX_ERROR_MESSAGE_LENGTH);
+  return /[\uD800-\uDBFF]$/.test(cut) ? cut.slice(0, -1) : cut;
+}
+
+/** Valid Date for a DB timestamp, or null. */
+function parseOptionalTimestamp(ts: string | null | undefined): Date | null {
+  if (!ts) return null;
+  const date = parseDbTimestamp(ts);
+  return isNaN(date.getTime()) ? null : date;
+}
 
 export interface ScraperRunRecord {
   leagueSlug: string;
@@ -91,35 +131,81 @@ export async function updateScraperRun(
 }
 
 /**
- * Insert multiple scraper run records from aggregated result
+ * One scraper_runs row per bookmaker run outcome
  */
-export async function insertScraperRuns(
-  leagueSlug: string,
-  results: Map<PolishBookmaker, ScraperResult>
-): Promise<void> {
-  const supabase = getSupabase();
+export function toScraperRunInsert(o: BookmakerRunOutcome): ScraperRunOutcomeRow {
+  return {
+    run_id: o.runId,
+    bookmaker: o.bookmaker,
+    league_slug: o.league,
+    status: o.status,
+    matches_found: o.matchesFound,
+    markets_found: o.marketsFound,
+    markets_saved: o.marketsSaved,
+    error_message: o.error === null ? null : truncateErrorMessage(o.error),
+    started_at: o.startedAt.toISOString(),
+    finished_at: o.finishedAt.toISOString(),
+    duration_ms: o.durationMs,
+  };
+}
 
-  const records: ScraperRunInsert[] = [];
-  for (const [bookmaker, result] of results) {
-    records.push({
-      league_slug: leagueSlug,
-      bookmaker,
-      status: result.status,
-      matches_found: result.data?.length || 0,
-      markets_saved: 0, // Updated after saving
-      error_message: result.error || null,
-      started_at: result.timestamp.toISOString(),
-      finished_at: new Date().toISOString(),
-      duration_ms: result.duration,
-    });
+/**
+ * Insert the outcomes of one run in a single call.
+ * Throws an Error whose message carries the formatted DB cause; a missing
+ * column (PGRST204) means migration 11 is not applied, so the message names it.
+ */
+export async function insertBookmakerRunOutcomes(outcomes: BookmakerRunOutcome[]): Promise<void> {
+  if (outcomes.length === 0) return;
+
+  let error: unknown;
+  try {
+    ({ error } = await getSupabase().from("scraper_runs").insert(outcomes.map(toScraperRunInsert)));
+  } catch (thrown) {
+    error = thrown;
   }
+  if (!error) return;
 
-  const { error } = await supabase.from("scraper_runs").insert(records);
+  const code = typeof error === "object" ? (error as { code?: unknown }).code : undefined;
+  const hint = code === "PGRST204" ? ` (apply ${MIGRATION_11})` : "";
+  throw new Error(`scraper_runs insert failed: ${formatDbError(error)}${hint}`);
+}
+
+/**
+ * Newest scraper_runs rows of one league (started_at desc).
+ * Throws an Error with the formatted DB cause, so callers can fall back.
+ */
+export async function getRecentRunRows(leagueSlug: string, limit: number): Promise<ScraperRunRow[]> {
+  const { data, error } = await getSupabase()
+    .from("scraper_runs")
+    .select("*")
+    .eq("league_slug", leagueSlug)
+    .order("started_at", { ascending: false })
+    .limit(limit);
 
   if (error) {
-    console.error("[ScraperRunRepository] Insert runs error:", error);
-    throw error;
+    throw new Error(`scraper_runs read failed: ${formatDbError(error)}`);
   }
+
+  return data ?? [];
+}
+
+/**
+ * Delete scraper_runs rows that started more than `days` days before `now`
+ * (owner decision B11: keep 30 days). Returns the number of deleted rows.
+ */
+export async function deleteScraperRunsOlderThan(days: number = 30, now: Date = new Date()): Promise<number> {
+  const cutoff = new Date(now.getTime() - days * DAY_MS).toISOString();
+
+  const { error, count } = await getSupabase()
+    .from("scraper_runs")
+    .delete({ count: "exact" })
+    .lt("started_at", cutoff);
+
+  if (error) {
+    throw new Error(`scraper_runs prune failed: ${formatDbError(error)}`);
+  }
+
+  return count ?? 0;
 }
 
 /**
@@ -153,14 +239,17 @@ export async function getRecentRuns(
 }
 
 /**
- * Get runs grouped by time window (for summary view)
+ * Get runs grouped by run (for summary view)
  */
 export async function getRunsSummary(limit: number = 20, offset: number = 0) {
   const supabase = getSupabase();
 
+  // `*`, not a column list: naming run_id makes PostgREST reject the whole
+  // query (42703) on a DB without migration 11, while `*` just returns rows
+  // without the key, which the minute-bucket fallback below groups.
   const { data, error } = await supabase
     .from("scraper_runs")
-    .select("id, league_slug, bookmaker, status, matches_found, markets_saved, error_message, started_at, finished_at, duration_ms")
+    .select("*")
     .order("started_at", { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -169,7 +258,8 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
     throw error;
   }
 
-  // Group by time window (within 1 minute = same batch)
+  // Group by run_id; rows written before migration 11 have none and fall back
+  // to a time window (within 1 minute = same batch)
   const runsMap = new Map<
     string,
     {
@@ -189,38 +279,36 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
     }
   >();
 
-  // Helper to parse UTC timestamp from Supabase
-  const parseUtcTimestamp = (ts: string | null) => {
-    if (!ts) return null;
-    const utcTs = ts.endsWith("Z") ? ts : `${ts}Z`;
-    return new Date(utcTs);
-  };
-
   // Generate batch ID from start time (minute-based grouping)
-  const getBatchId = (startedAt: string, leagueSlug: string) => {
-    const date = parseUtcTimestamp(startedAt);
+  const getMinuteBatchId = (startedAt: string, leagueSlug: string) => {
+    const date = parseOptionalTimestamp(startedAt);
     if (!date) return `unknown-${leagueSlug}`;
     // Round to minute
-    date.setSeconds(0, 0);
+    date.setUTCSeconds(0, 0);
     return `${date.toISOString()}-${leagueSlug}`;
   };
 
   for (const row of data || []) {
-    const batchId = getBatchId(row.started_at, row.league_slug);
-    
+    const batchId = row.run_id ?? getMinuteBatchId(row.started_at, row.league_slug);
+
     if (!runsMap.has(batchId)) {
-      const startedAt = parseUtcTimestamp(row.started_at);
       runsMap.set(batchId, {
         batchId,
         league: row.league_slug,
-        startedAt: startedAt || new Date(),
-        finishedAt: parseUtcTimestamp(row.finished_at),
+        startedAt: parseOptionalTimestamp(row.started_at) || new Date(),
+        finishedAt: null,
         totalDurationMs: 0,
         results: [],
       });
     }
 
     const run = runsMap.get(batchId)!;
+
+    // The DB returns started_at desc, so the earliest start is usually the last row seen
+    const startedAt = parseOptionalTimestamp(row.started_at);
+    if (startedAt && startedAt < run.startedAt) {
+      run.startedAt = startedAt;
+    }
     run.results.push({
       bookmaker: row.bookmaker as PolishBookmaker,
       status: row.status,
@@ -231,7 +319,7 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
     });
 
     // Update max finished_at
-    const finishedAt = parseUtcTimestamp(row.finished_at);
+    const finishedAt = parseOptionalTimestamp(row.finished_at);
     if (finishedAt && (!run.finishedAt || finishedAt > run.finishedAt)) {
       run.finishedAt = finishedAt;
     }
@@ -248,33 +336,34 @@ export async function getRunsSummary(limit: number = 20, offset: number = 0) {
 }
 
 /**
- * Get last successful scrape time
+ * Get the finish time of the newest OK run (success or partial), for one
+ * league or, without a league, across all leagues. Null on a DB error.
  */
-export async function getLastSuccessfulScrapeTime(): Promise<Date | null> {
+export async function getLastSuccessfulScrapeTime(leagueSlug?: string): Promise<Date | null> {
   const supabase = getSupabase();
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("scraper_runs")
     .select("finished_at")
-    .eq("status", "success")
-    .not("finished_at", "is", null)
-    .order("finished_at", { ascending: false })
-    .limit(1);
+    .in("status", OK_RUN_STATUSES)
+    .not("finished_at", "is", null);
+
+  if (leagueSlug) {
+    query = query.eq("league_slug", leagueSlug);
+  }
+
+  const { data, error } = await query.order("finished_at", { ascending: false }).limit(1);
 
   if (error || !data || data.length === 0) {
     return null;
   }
 
-  const timestamp = data[0].finished_at;
-  if (!timestamp) return null;
-  
-  // Supabase returns UTC timestamp without 'Z' suffix, so we need to append it
-  const utcTimestamp = timestamp.endsWith("Z") ? timestamp : `${timestamp}Z`;
-  return new Date(utcTimestamp);
+  // PostgREST returns timestamptz with an offset (+00:00)
+  return parseOptionalTimestamp(data[0].finished_at);
 }
 
 /**
- * Get average scrape duration per bookmaker
+ * Get average scrape duration per bookmaker (OK runs only)
  */
 export async function getAverageScrapeDurations(): Promise<
   Map<PolishBookmaker, number>
@@ -284,7 +373,7 @@ export async function getAverageScrapeDurations(): Promise<
   const { data, error } = await supabase
     .from("scraper_runs")
     .select("bookmaker, duration_ms")
-    .eq("status", "success")
+    .in("status", OK_RUN_STATUSES)
     .not("duration_ms", "is", null)
     .order("started_at", { ascending: false })
     .limit(100);

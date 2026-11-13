@@ -10,7 +10,8 @@ import type { ScraperResult, RawScrapedOdds } from "../types/scraper.js";
 import type { FullOfferScraperResult, FullMatchOffer } from "../types/full-offer.js";
 import { PlaywrightScraper } from "./base/playwright-base.js";
 import { browserPool } from "./base/browser-pool.js";
-import { normalizeAndSaveMatches } from "../services/scrape-helpers.js";
+import { normalizeAndSaveMatches, type NormalizeAndSaveResult } from "../services/scrape-helpers.js";
+import { classifyBookmakerRun, isOkRunStatus, type BookmakerRunOutcome } from "../services/run-outcome.js";
 import {
   stsScraper,
   fortunaScraper,
@@ -210,14 +211,125 @@ export interface FullOfferAggregatedResult {
   startedAt: Date;
   completedAt: Date;
   totalDuration: number;
+  /**
+   * Scraper results, kept for back-compat (a save that threw reads as success:false, as before).
+   * Use `outcomes` for run status: a result can say success while nothing was saved.
+   */
   results: Map<PolishBookmaker, FullOfferScraperResult>;
   allMatches: FullMatchOffer[];
+  /** One classified outcome per bookmaker, in targetBookmakers order. */
+  outcomes: BookmakerRunOutcome[];
   summary: {
+    /** Bookmakers with an OK outcome (success or partial: something was saved). */
     successCount: number;
+    /** outcomes.length - successCount */
     errorCount: number;
     totalMatchesFound: number;
+    /** Post-normalization market count of successful scrapes (meaning unchanged). */
     totalMarketsFound: number;
+    /** Markets saved by bookmakers with an OK outcome. */
+    totalMarketsSaved: number;
   };
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : "Unknown error";
+}
+
+function countMarkets(matches: FullMatchOffer[]): number {
+  return matches.reduce((sum, m) => sum + m.markets.length, 0);
+}
+
+function formatOutcomeLine(o: BookmakerRunOutcome): string {
+  const line = `[Aggregator/FullOffer] ${o.bookmaker} ${o.status}: ${o.matchesFound} matches, ${o.marketsFound} markets found, ${o.marketsSaved} saved`;
+  return o.error ? `${line} - ${o.error}` : line;
+}
+
+function logOutcome(o: BookmakerRunOutcome): void {
+  const line = formatOutcomeLine(o);
+  if (!isOkRunStatus(o.status)) console.error(line);
+  else if (o.status === "partial") console.warn(line);
+  else console.log(line);
+}
+
+/**
+ * Scrape, normalize and save one bookmaker, then classify the pair.
+ * A thrown scraper becomes scrape_failed, a thrown save persist_failed.
+ * The returned `result` is the back-compat view kept in `results`: a thrown
+ * save reads as a failed result there, as it did before outcomes existed.
+ */
+async function runFullOfferForBookmaker(
+  runId: string,
+  bookmaker: PolishBookmaker,
+  league: string
+): Promise<{ result: FullOfferScraperResult; outcome: BookmakerRunOutcome }> {
+  const startedAt = new Date();
+  const scraper = SCRAPERS[bookmaker];
+  let result: FullOfferScraperResult;
+  let save: NormalizeAndSaveResult | null = null;
+  let saveThrew: string | null = null;
+  let marketsFound = 0;
+
+  if (!scraper) {
+    console.warn(`[Aggregator/FullOffer] No scraper found for ${bookmaker}`);
+    result = { success: false, bookmaker, league, matches: [], error: `No scraper configured for ${bookmaker}` };
+  } else {
+    console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
+    try {
+      result = await scraper.scrapeFullOffer(league);
+    } catch (error) {
+      console.error(`[Aggregator/FullOffer] ${bookmaker} scraper threw:`, error);
+      result = { success: false, bookmaker, league, matches: [], error: errorMessage(error) };
+    }
+
+    // Raw count, taken before normalizeAndSaveMatches replaces each match.markets.
+    marketsFound = countMarkets(result.matches);
+
+    if (result.success && result.matches.length > 0) {
+      try {
+        save = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
+      } catch (error) {
+        console.error(`[Aggregator/FullOffer] ${bookmaker} save threw:`, error);
+        saveThrew = `Save failed: ${errorMessage(error)}`;
+        save = { matchesProcessed: 0, marketsNormalized: 0, marketsSaved: 0, errors: [saveThrew] };
+      }
+    }
+  }
+  const finishedAt = new Date();
+
+  if (scraper) {
+    try {
+      await scraper.cleanup();
+    } catch (error) {
+      // The scrape and save already happened: keep this outcome instead of failing the whole run.
+      console.error(`[Aggregator/FullOffer] ${bookmaker} cleanup failed:`, error);
+    }
+  }
+
+  const { status, error } = classifyBookmakerRun(result, save);
+  const outcome: BookmakerRunOutcome = {
+    runId,
+    bookmaker,
+    league,
+    status,
+    matchesFound: result.matches.length,
+    marketsFound,
+    marketsSaved: save?.marketsSaved ?? 0,
+    error,
+    startedAt,
+    finishedAt,
+    durationMs: result.duration ?? finishedAt.getTime() - startedAt.getTime(),
+  };
+  logOutcome(outcome);
+
+  // Back-compat for `results` and the scrape totals: before outcomes existed, a thrown save
+  // turned into a failed result, so its matches stayed out of allMatches/totalMarketsFound.
+  // Keep that: the throw can stop normalizeAndSaveMatches half way through replacing
+  // match.markets, so those matches would mix raw and normalized market counts.
+  if (saveThrew !== null) {
+    return { result: { ...result, success: false, matches: [], error: saveThrew }, outcome };
+  }
+  return { result, outcome };
 }
 
 /**
@@ -236,84 +348,40 @@ export async function runAllFullOfferScrapers(
     `[Aggregator/FullOffer] Starting run ${runId} for ${league} with ${targetBookmakers.length} bookmakers`
   );
 
-  // Run all scrapers in parallel
-  const scraperPromises = targetBookmakers.map(async (bookmaker) => {
-    const scraper = SCRAPERS[bookmaker];
-    if (!scraper) {
-      console.warn(`[Aggregator/FullOffer] No scraper found for ${bookmaker}`);
-      return {
-        bookmaker,
-        result: {
-          success: false,
-          bookmaker,
-          league,
-          matches: [],
-          error: `No scraper configured for ${bookmaker}`,
-        } as FullOfferScraperResult,
-      };
-    }
-
-    try {
-      console.log(`[Aggregator/FullOffer] Starting ${bookmaker} scraper for ${league}`);
-      const result = await scraper.scrapeFullOffer(league);
-
-      if (result.success && result.matches.length > 0) {
-        const saveResult = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
-        console.log(
-          `[Aggregator/FullOffer] ${bookmaker} completed: ${result.matches.length} matches, ${saveResult.marketsSaved} markets saved`
-        );
-        if (saveResult.errors.length > 0) {
-          console.warn(`[Aggregator/FullOffer] ${bookmaker} had ${saveResult.errors.length} errors`);
-        }
-      } else {
-        console.log(
-          `[Aggregator/FullOffer] ${bookmaker} completed: success=${result.success}, ${result.matches.length} matches`
-        );
-      }
-      return { bookmaker, result };
-    } catch (error) {
-      console.error(`[Aggregator/FullOffer] ${bookmaker} failed:`, error);
-      return {
-        bookmaker,
-        result: {
-          success: false,
-          bookmaker,
-          league,
-          matches: [],
-          error: error instanceof Error ? error.message : "Unknown error",
-        } as FullOfferScraperResult,
-      };
-    } finally {
-      await scraper.cleanup();
-    }
-  });
-
-  const scraperResults = await Promise.all(scraperPromises);
+  // Run all scrapers in parallel; Promise.all keeps targetBookmakers order.
+  const runs = await Promise.all(
+    targetBookmakers.map((bookmaker) => runFullOfferForBookmaker(runId, bookmaker, league))
+  );
 
   const completedAt = new Date();
   const totalDuration = completedAt.getTime() - startedAt.getTime();
 
-  // Build results map and collect all matches
   const results = new Map<PolishBookmaker, FullOfferScraperResult>();
   const allMatches: FullMatchOffer[] = [];
-  let successCount = 0;
-  let errorCount = 0;
+  const outcomes: BookmakerRunOutcome[] = [];
+  // Scrape-based, post-normalization totals, as before outcomes existed.
   let totalMarketsFound = 0;
 
-  for (const { bookmaker, result } of scraperResults) {
-    results.set(bookmaker, result);
+  for (const { result, outcome } of runs) {
+    results.set(outcome.bookmaker, result);
+    outcomes.push(outcome);
 
     if (result.success && result.matches.length > 0) {
-      successCount++;
       allMatches.push(...result.matches);
-      totalMarketsFound += result.matches.reduce((sum, m) => sum + m.markets.length, 0);
-    } else {
-      errorCount++;
+      totalMarketsFound += countMarkets(result.matches);
     }
   }
 
+  const okOutcomes = outcomes.filter((o) => isOkRunStatus(o.status));
+  const successCount = okOutcomes.length;
+  const errorCount = outcomes.length - successCount;
+  const totalMarketsSaved = okOutcomes.reduce((sum, o) => sum + o.marketsSaved, 0);
+  // Raw outcome totals, so they add up with the per-bookmaker lines.
+  const outcomeMatches = outcomes.reduce((sum, o) => sum + o.matchesFound, 0);
+  const outcomeMarketsFound = outcomes.reduce((sum, o) => sum + o.marketsFound, 0);
+
   console.log(
-    `[Aggregator/FullOffer] Run ${runId} completed in ${totalDuration}ms: ${successCount} success, ${errorCount} errors, ${allMatches.length} total matches, ${totalMarketsFound} total markets`
+    `[Aggregator/FullOffer] Run ${runId} completed in ${totalDuration}ms: ${successCount} ok, ${errorCount} failed, ${outcomeMatches} matches, ${outcomeMarketsFound} markets found, ${totalMarketsSaved} saved`
   );
 
   return {
@@ -324,43 +392,13 @@ export async function runAllFullOfferScrapers(
     totalDuration,
     results,
     allMatches,
+    outcomes,
     summary: {
       successCount,
       errorCount,
       totalMatchesFound: allMatches.length,
       totalMarketsFound,
+      totalMarketsSaved,
     },
   };
-}
-
-/**
- * Run full offer scraper for a single bookmaker
- */
-export async function runSingleFullOfferScraper(
-  bookmaker: PolishBookmaker,
-  league: string = "ekstraklasa"
-): Promise<FullOfferScraperResult> {
-  const scraper = SCRAPERS[bookmaker];
-  if (!scraper) {
-    return {
-      success: false,
-      bookmaker,
-      league,
-      matches: [],
-      error: `No scraper configured for ${bookmaker}`,
-    };
-  }
-
-  try {
-    const result = await scraper.scrapeFullOffer(league);
-
-    if (result.success && result.matches.length > 0) {
-      const saveResult = await normalizeAndSaveMatches(result.matches, bookmaker, league, { useBatchInsert: true });
-      console.log(`[SingleFullOffer] ${bookmaker}: ${result.matches.length} matches, ${saveResult.marketsSaved} markets saved`);
-    }
-
-    return result;
-  } finally {
-    await scraper.cleanup();
-  }
 }

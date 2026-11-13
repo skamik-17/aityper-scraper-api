@@ -43,6 +43,11 @@ export const CONFIG = {
   SCRAPE_CRON: `*/${process.env.SCRAPE_INTERVAL_MINUTES || "30"} * * * *`,
   SCRAPER_TIMEOUT_MS: parseInt(process.env.SCRAPER_TIMEOUT_MS || "30000"),
 
+  // Alerts: a bookmaker alert fires once its failure streak reaches this many runs.
+  // The webhook (Slack-compatible {"text": ...}) is off unless a URL is set.
+  ALERT_CONSECUTIVE_FAILURES: parseInt(process.env.ALERT_CONSECUTIVE_FAILURES || "3"),
+  ALERT_WEBHOOK_URL: process.env.ALERT_WEBHOOK_URL || null,
+
   // Supported leagues
   ENABLED_LEAGUES: [
     "premier-league",

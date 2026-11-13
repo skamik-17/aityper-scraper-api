@@ -13,11 +13,13 @@ import type {
 import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { CONFIG } from "../config/index.js";
+import type { BookmakerStatus } from "../types/database.js";
 import {
   getAllLatestOdds,
   getOddsForMatch,
   getNextUpdateTime,
 } from "../services/odds-service.js";
+import { worstBookmakerStatus, type BookmakerHealthMeta } from "../services/bookmaker-status.js";
 import {
   getFullOfferByMatch,
   getMarketCounts,
@@ -46,6 +48,15 @@ const router = Router();
  */
 const MATCH_LIST_MARKET_KEYS = ["MATCH_WINNER"];
 
+/** One league's share of a POST /api/odds/batch answer. */
+interface LeagueOdds {
+  league: string;
+  matches: OddsResponseData["matches"];
+  lastUpdated: string | null;
+  bookmakerStatus: Partial<Record<string, BookmakerStatus>>;
+  bookmakerHealth: Partial<Record<string, BookmakerHealthMeta>>;
+}
+
 /**
  * GET /api/odds
  * Get all latest odds for all matches
@@ -54,7 +65,7 @@ router.get("/", asyncHandler(async (req, res) => {
   const league = (req.query.league as string) || "ekstraklasa";
   const full = req.query.full === "true";
 
-  const { matches, lastUpdated, bookmakerStatus } = await getAllLatestOdds(
+  const { matches, lastUpdated, bookmakerStatus, bookmakerHealth } = await getAllLatestOdds(
     league,
     full ? {} : { onlyMarketKeys: MATCH_LIST_MARKET_KEYS }
   );
@@ -67,6 +78,7 @@ router.get("/", asyncHandler(async (req, res) => {
     nextUpdate: getNextUpdateTime(),
     scrapeIntervalMinutes: CONFIG.SCRAPE_INTERVAL_MINUTES,
     bookmakerStatus,
+    bookmakerHealth,
   };
 
   const response: ApiSuccessResponse<OddsResponseData, OddsResponseMeta> = {
@@ -205,13 +217,14 @@ router.post("/batch", asyncHandler(async (req, res) => {
 
   const oddsOptions = full ? {} : { onlyMarketKeys: MATCH_LIST_MARKET_KEYS };
 
-  // Fetch all leagues in parallel
+  // Fetch all leagues in parallel. A league whose fetch threw contributes no
+  // matches and no status.
   const results = await Promise.all(
-    leagues.map(async (league) => {
+    leagues.map(async (league): Promise<LeagueOdds> => {
       try {
         return { league, ...(await getAllLatestOdds(league, oddsOptions)) };
       } catch (error) {
-        return { league, matches: [], lastUpdated: null, bookmakerStatus: {}, error: true };
+        return { league, matches: [], lastUpdated: null, bookmakerStatus: {}, bookmakerHealth: {} };
       }
     })
   );
@@ -219,14 +232,25 @@ router.post("/batch", asyncHandler(async (req, res) => {
   // Merge matches
   const allMatches = results.flatMap(r => r.matches);
 
-  // Merge bookmaker status (worst status wins)
-  const mergedBookmakerStatus: Record<string, { status: string; lastScrape: string | null; error?: string }> = {};
+  // Merge bookmaker status over the scraped leagues (worst status wins, values
+  // stay plain strings). A league nothing scrapes would otherwise turn every
+  // bookmaker stale; with no scraped league requested, all of them count.
+  const enabled = leagues.filter((l) => (CONFIG.ENABLED_LEAGUES as readonly string[]).includes(l));
+  const mergeLeagues = new Set(enabled.length > 0 ? enabled : leagues);
+  const mergedBookmakerStatus: Record<string, BookmakerStatus> = {};
+  const mergedBookmakerHealth: Record<string, BookmakerHealthMeta> = {};
   for (const result of results) {
-    for (const [bookmaker, status] of Object.entries(result.bookmakerStatus || {})) {
-      const statusObj = status as { status: string; lastScrape: string | null; error?: string };
+    if (!mergeLeagues.has(result.league)) continue;
+    for (const [bookmaker, status] of Object.entries(result.bookmakerStatus)) {
+      if (status === undefined) continue;
       const existing = mergedBookmakerStatus[bookmaker];
-      if (!existing || getStatusPriority(statusObj.status) > getStatusPriority(existing.status)) {
-        mergedBookmakerStatus[bookmaker] = statusObj;
+      const worst = worstBookmakerStatus(existing, status);
+      if (existing === undefined || worst !== existing) {
+        // The health entry follows the league whose status won (a tie keeps the first).
+        mergedBookmakerStatus[bookmaker] = worst;
+        const health = result.bookmakerHealth[bookmaker];
+        if (health) mergedBookmakerHealth[bookmaker] = health;
+        else delete mergedBookmakerHealth[bookmaker];
       }
     }
   }
@@ -246,6 +270,7 @@ router.post("/batch", asyncHandler(async (req, res) => {
     nextUpdate: getNextUpdateTime(),
     scrapeIntervalMinutes: CONFIG.SCRAPE_INTERVAL_MINUTES,
     bookmakerStatus: mergedBookmakerStatus,
+    bookmakerHealth: mergedBookmakerHealth,
   };
 
   const response: ApiSuccessResponse<OddsResponseData, typeof meta> = {
@@ -350,14 +375,5 @@ router.get("/market-types", asyncHandler(async (_req, res) => {
 
   res.json(response);
 }));
-
-function getStatusPriority(status: string): number {
-  switch (status) {
-    case 'error': return 3;
-    case 'stale': return 2;
-    case 'available': return 1;
-    default: return 0;
-  }
-}
 
 export default router;

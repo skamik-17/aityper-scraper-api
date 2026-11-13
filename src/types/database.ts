@@ -23,7 +23,8 @@ export interface MarketSelectionJson {
 // SERVICE LAYER TYPES (Not directly in DB schema but used in repositories/services)
 // ============================================================================
 
-export type BookmakerStatus = "stale" | "available";
+// "error": the bookmaker's latest run failed. Same union as the frontend's BookmakerStatus.
+export type BookmakerStatus = "available" | "stale" | "error";
 
 export interface MatchOdds {
   matchId: string;
@@ -140,24 +141,29 @@ export interface Database {
       scraper_runs: {
         Row: {
           id: number;
+          // Migration 11: null on rows written before it
+          run_id: string | null;
           bookmaker: string;
           league_slug: string;
           started_at: string;
           finished_at: string | null;
           status: string;
           matches_found: number;
+          markets_found: number | null;
           markets_saved: number;
           error_message: string | null;
           duration_ms: number | null;
         };
         Insert: {
           id?: number;
+          run_id?: string | null;
           bookmaker: string;
           league_slug: string;
           started_at?: string;
           finished_at?: string | null;
           status?: string;
           matches_found?: number;
+          markets_found?: number | null;
           markets_saved?: number;
           error_message?: string | null;
           duration_ms?: number | null;

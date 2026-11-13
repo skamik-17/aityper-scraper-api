@@ -1,0 +1,27 @@
+{
+  "_source": "backend-log-excerpts.txt section B/E (run 1, Supabase coming up mid-run). Objects are the supabase-js PostgrestError values logged by full-offer-repository.ts:669; stack frames after the second line of details trimmed.",
+  "econnrefused": {
+    "message": "TypeError: fetch failed",
+    "details": "TypeError: fetch failed\n\nCaused by: Error: connect ECONNREFUSED 127.0.0.1:54321 (ECONNREFUSED)\nError: connect ECONNREFUSED 127.0.0.1:54321\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16)",
+    "hint": "",
+    "code": ""
+  },
+  "socketClosed": {
+    "message": "TypeError: fetch failed",
+    "details": "TypeError: fetch failed\n\nCaused by: SocketError: other side closed (UND_ERR_SOCKET)\nSocketError: other side closed\n    at Socket.<anonymous> (node:internal/deps/undici/undici:6294:28)",
+    "hint": "",
+    "code": ""
+  },
+  "epipe": {
+    "message": "TypeError: fetch failed",
+    "details": "TypeError: fetch failed\n\nCaused by: Error: write EPIPE (EPIPE)\nError: write EPIPE\n    at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:95:16)",
+    "hint": "",
+    "code": ""
+  },
+  "schemaCacheNotReady": {
+    "code": "PGRST002",
+    "details": null,
+    "hint": null,
+    "message": "Could not query the database for the schema cache. Retrying."
+  }
+}

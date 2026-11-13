@@ -1,9 +1,18 @@
 #!/bin/bash
 
 # Apply Supabase migrations to local database
-# Usage: ./scripts/apply-migrations.sh [migration_file]
+# Usage: ./scripts/apply-migrations.sh <migration_file> | --all
+#   <migration_file>  apply ONE migration (a path, or a file name in supabase/migrations)
+#   --all             re-run every migration 01..N in order. Opt-in only: it re-creates
+#                     tables, re-seeds and rewrites data, so never use it against a live DB.
+# With no argument it prints the usage line and exits 2 before touching Docker.
 
 set -e
+
+if [ -z "${1:-}" ]; then
+    echo "usage: apply-migrations.sh <migration_file> | --all" >&2
+    exit 2
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BACKEND_DIR="$(dirname "$SCRIPT_DIR")"
@@ -59,8 +68,8 @@ apply_migration() {
     fi
 }
 
-# If specific migration file provided
-if [ -n "$1" ]; then
+# A single migration file (the no-argument form was refused above)
+if [ "$1" != "--all" ]; then
     if [ -f "$1" ]; then
         apply_migration "$1"
     elif [ -f "$MIGRATIONS_DIR/$1" ]; then
@@ -70,7 +79,7 @@ if [ -n "$1" ]; then
         exit 1
     fi
 else
-    # Apply all migrations in order
+    # --all: apply every migration in order
     echo -e "${YELLOW}Applying all migrations from: ${MIGRATIONS_DIR}${NC}\n"
 
     if [ ! -d "$MIGRATIONS_DIR" ]; then

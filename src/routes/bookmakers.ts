@@ -11,8 +11,8 @@ import type {
 } from "../types/api.js";
 import { asyncHandler } from "../middleware/error-handler.js";
 import { CONFIG, type PolishBookmaker } from "../config/index.js";
-import { getBookmakerStatus } from "../repositories/odds-repository.js";
 import { getAverageScrapeDurations } from "../repositories/scraper-run-repository.js";
+import { getBookmakerStatusSnapshot } from "../services/bookmaker-status.js";
 
 const router = Router();
 
@@ -56,31 +56,24 @@ const HAS_NO_TAX_PROMO: Record<PolishBookmaker, boolean> = {
  * GET /api/bookmakers
  * Get status of all bookmakers
  */
-router.get("/", asyncHandler(async (_req, res) => {
-  const statusMap = await getBookmakerStatus();
+router.get("/", asyncHandler(async (req, res) => {
+  // Default: the scraped league, not the old `ekstraklasa` default that nothing scrapes.
+  const league =
+    typeof req.query.league === "string" && req.query.league ? req.query.league : CONFIG.ENABLED_LEAGUES[0];
+  const snap = await getBookmakerStatusSnapshot(league);
   const avgDurations = await getAverageScrapeDurations();
-
-  const now = new Date();
-  const staleThreshold = 60 * 60 * 1000; // 1 hour
 
   const bookmakers: BookmakerInfo[] = [];
   let availableCount = 0;
   let errorCount = 0;
 
   for (const bookmaker of CONFIG.BOOKMAKERS) {
-    const bmStatus = statusMap.get(bookmaker);
     const avgDuration = avgDurations.get(bookmaker);
 
-    let status: "available" | "error" | "stale" = "stale";
-    let lastSuccessfulScrape: string | null = null;
-    let matchesFound = 0;
-
-    if (bmStatus) {
-      const age = now.getTime() - bmStatus.lastScrape.getTime();
-      status = age > staleThreshold ? "stale" : "available";
-      lastSuccessfulScrape = bmStatus.lastScrape.toISOString();
-      matchesFound = bmStatus.matchCount;
-    }
+    const status = snap.status[bookmaker];
+    const summary = snap.summaries.get(bookmaker);
+    const lastSuccessfulScrape =
+      summary?.lastSuccessAt ?? snap.lastOddsAt.get(bookmaker)?.toISOString() ?? null;
 
     if (status === "available") {
       availableCount++;
@@ -94,7 +87,8 @@ router.get("/", asyncHandler(async (_req, res) => {
       name: BOOKMAKER_NAMES[bookmaker],
       status,
       lastSuccessfulScrape,
-      matchesFound,
+      lastError: summary?.lastError ?? undefined,
+      matchesFound: summary?.lastMatchesFound ?? 0,
       avgScrapeDurationMs: avgDuration || null,
       hasNoTaxPromo: HAS_NO_TAX_PROMO[bookmaker],
     });

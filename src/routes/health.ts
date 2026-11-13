@@ -3,11 +3,17 @@
  */
 
 import { Router } from "express";
-import type { ApiSuccessResponse, ScrapeStats } from "../types/api.js";
+import type { ApiSuccessResponse, ScrapeStats, ScraperHealthReport } from "../types/api.js";
 import type { HealthCheckData } from "../types/api.js";
-import { asyncHandler } from "../middleware/error-handler.js";
+import { ERROR_CODES } from "../types/api.js";
+import { ApiError, asyncHandler } from "../middleware/error-handler.js";
+import { CONFIG } from "../config/index.js";
 import { testConnection } from "../config/database.js";
 import { getSchedulerStatus } from "../services/scheduler-service.js";
+import { toScrapeStats } from "../services/scraper-service.js";
+import { scraperHealth } from "../services/scraper-health.js";
+import { getBookmakerStatusSnapshot } from "../services/bookmaker-status.js";
+import { buildScraperHealthReport } from "../services/scraper-status-report.js";
 
 const router = Router();
 const startTime = Date.now();
@@ -31,15 +37,7 @@ router.get("/", asyncHandler(async (_req, res) => {
         latestComplete = result.completedAt;
       }
 
-      lastScrapeStats[league] = {
-        startedAt: result.startedAt.toISOString(),
-        completedAt: result.completedAt.toISOString(),
-        duration: Math.round(result.duration / 1000),
-        successCount: result.successCount,
-        errorCount: result.errorCount,
-        uniqueMatches: result.uniqueMatches,
-        marketsScraped: result.marketsScraped,
-      };
+      lastScrapeStats[league] = toScrapeStats(result);
     }
   }
 
@@ -67,6 +65,36 @@ router.get("/", asyncHandler(async (_req, res) => {
     data,
   };
 
+  res.json(response);
+}));
+
+const LEAGUE_SLUG = /^[a-z0-9-]+$/;
+
+/**
+ * GET /api/health/scrapers?league=<slug>
+ * Per-bookmaker run health of one league. Public (no auth), like /api/health.
+ */
+router.get("/scrapers", asyncHandler(async (req, res) => {
+  const raw = req.query.league;
+  const league = raw === undefined ? CONFIG.ENABLED_LEAGUES[0] : raw;
+  if (typeof league !== "string" || !LEAGUE_SLUG.test(league)) {
+    throw new ApiError(400, ERROR_CODES.INVALID_PARAMS, "Invalid league slug");
+  }
+
+  const snap = await getBookmakerStatusSnapshot(league);
+  const lastResult = getSchedulerStatus().lastResults[league];
+  const abort = scraperHealth.getLastAbort();
+
+  const data = buildScraperHealthReport(
+    league,
+    snap,
+    lastResult ? toScrapeStats(lastResult) : null,
+    // The abort record is process-wide; a per-league report shows only its own league's.
+    abort && abort.league === league ? abort : null,
+    new Date(),
+  );
+
+  const response: ApiSuccessResponse<ScraperHealthReport> = { success: true, data };
   res.json(response);
 }));
 

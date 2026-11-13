@@ -6,7 +6,10 @@ import {
   type FakeSwarmPage,
   type RecordedSwarmEvent,
 } from "./helpers/fake-swarm-page.js";
-import { retarget } from "./helpers/swarm-fixtures.js";
+import { browserOfferPage, recordedGame, recordedListing, retarget, RECORDED_GAME_IDS } from "./helpers/swarm-fixtures.js";
+import { buildBetcrisMatchOffer } from "../swarm-offer.js";
+import { parseSwarmDataForFullOffer } from "../parser.js";
+import type { FullMatchOffer } from "../../../../types/full-offer.js";
 
 const league = loadRecording("league-538-frames.json");
 const match = loadRecording("match-31321159-frames.json");
@@ -213,6 +216,16 @@ describe("betcris scraper flow", () => {
     const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league", await createScrapeBudget(3000)));
     expect(r).toMatchObject({ success: false, matches: [], error: "scrape budget of 3000ms exceeded" });
     expect(fake.gotoAt).toHaveLength(1 + 1);
+  });
+
+  it("betcris scrapeFullOffer: every offer equals buildBetcrisMatchOffer on the same recorded payloads", async () => {
+    useFakeBrowser(browserOfferPage());
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    const strip = ({ scrapedAt: _s, ...m }: FullMatchOffer) => m;
+    const expected = parseSwarmDataForFullOffer(recordedListing(), "premier-league", 538)
+      .map((e) => strip(buildBetcrisMatchOffer(e, recordedGame(e.game.id), "premier-league", new Date())!));
+    expect(r.matches.map((m) => m.matchId)).toEqual(RECORDED_GAME_IDS.map(String));
+    expect(r.matches.map(strip)).toEqual(expected);
   });
 
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {

@@ -12,7 +12,7 @@ import type {
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { findMatchingEvent } from "../../../utils/team-matcher.js";
 import { budgetAbortReason, type ScrapeBudget } from "../../shared/budget.js";
 import { currentScrapeJob } from "../../shared/job-context.js";
 
@@ -33,8 +33,8 @@ import {
   parseSwarmDataForLeague,
   parseSwarmDataForMatchDetails,
   parseSwarmDataForFullOffer,
-  parseAllMarkets,
 } from "./parser.js";
+import { buildBetcrisMatchOffer } from "./swarm-offer.js";
 
 const BUDGET_CUT = Symbol("betcris-budget-cut");
 
@@ -270,35 +270,16 @@ export class BetcrisBrowserScraper extends PlaywrightScraper {
               }
             } else {
               consecutiveFailures = 0;
-              let fullGame = game;
-              for (const sport of Object.values(matchWsData.sport || {})) {
-                for (const region of Object.values(sport.region || {})) {
-                  for (const competition of Object.values(region.competition || {})) {
-                    for (const g of Object.values(competition.game || {})) {
-                      if (g.id === game.id && Object.keys(g.market || {}).length > Object.keys(fullGame.market || {}).length) {
-                        fullGame = g;
-                      }
-                    }
-                  }
-                }
-              }
-
-              const allMarkets = parseAllMarkets(fullGame, teams);
-
-              if (allMarkets.length > 0) {
-                matches.push({
-                  matchId: String(game.id),
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl,
-                  markets: allMarkets,
-                  startTime: fullGame.start_ts ? new Date(fullGame.start_ts * 1000).toISOString() : undefined,
-                  scrapedAt: new Date(),
-                });
-
+              const offer = buildBetcrisMatchOffer(
+                { game, teams, regionAlias, competitionId: compId },
+                matchWsData,
+                leagueSlug,
+                new Date()
+              );
+              if (offer) {
+                matches.push(offer);
                 console.log(
-                  `[Betcris/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${allMarkets.length} markets`
+                  `[Betcris/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${offer.markets.length} markets`
                 );
               }
             }

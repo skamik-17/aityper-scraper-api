@@ -132,6 +132,19 @@ describe("totalbet scraper (plan contract)", () => {
       error: "fetch HTTP 404 https://totalbet.pl/dealer/bdata/v1/bet/events?page=1&per_page=100&category_uuid=8793bb6a-4684-44ba-b92e-4d896e6cbfbf&category_type=sport&type=standard" });
   });
 
+  // Controller ruling 22 / README §3: a valid listing with 0 prematch events is
+  // `success: true, matches: []`, so the run classifies as `empty` (not
+  // `scrape_failed`) and the league-collapse alert can count it.
+  it("totalbet reports an empty listing as success with no matches and no detail request", async () => {
+    const emptyList = { data: { events: [] }, state: "success",
+      _meta: { pagination: { total_pages: 1, current_page: 1, items_count: 0, per_page: 100 }, event_types: [] } };
+    const fake = fakeWith({}, emptyList);
+    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fake }).scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: true, matches: [],
+      error: `No prematch events for category ${PL} (items_count=0, event_types=[])` });
+    expect(fake.calls).toEqual([LIST_P1]);
+  });
+
   it("totalbet rejects leagues without a UUID", async () =>
     expect(await scraper.scrapeFullOffer("bundesliga")).toMatchObject({ success: false, error: "Unknown league: bundesliga" }));
 

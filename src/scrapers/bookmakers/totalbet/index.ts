@@ -258,6 +258,12 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
 
     const list = await fetchLeagueEvents(categoryUuid, this.fetchJson, budget.signal);
     if (list.error) return failure(budgetFailure(budget) ?? list.error);
+    if (list.events.length === 0) {
+      // README §3 empty-listing rule: success with no matches (observability: `empty`)
+      const reason = list.empty ?? `No prematch events for ${league}`;
+      console.warn(`${LOG} ${reason}`);
+      return { success: true, bookmaker: this.bookmaker, league, matches: [], error: reason, duration: Date.now() - startTime };
+    }
     console.log(`${LOG} Found ${list.events.length} prematch events for ${league}`);
 
     // Details run concurrently; the results are read below in list order, so the

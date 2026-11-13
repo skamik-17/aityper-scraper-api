@@ -169,9 +169,11 @@ export class BetbyScraper extends PlaywrightScraper {
       const snapshot = await this.client.fetchSnapshot(runBudget.signal);
       const refs = selectLeagueEvents(snapshot, tournamentId, this.now());
       if (refs.length === 0) {
-        throw new Error(
-          `Betby ${this.tag}: 0 upcoming matches for tournament ${tournamentId} in snapshot ${snapshot.manifestVersion} (${Object.keys(snapshot.events).length} events)`,
-        );
+        // README §3 empty-listing rule: success with no matches (observability: `empty`)
+        const reason = `Betby ${this.tag}: 0 upcoming matches for tournament ${tournamentId} in snapshot ${snapshot.manifestVersion} (${Object.keys(snapshot.events).length} events)`;
+        console.warn(`[${this.tag}/FullOffer] ${reason}`);
+        this.lastRunStats = { full: [], listingOnly: [], failed: [] };
+        return { success: true, bookmaker: this.bookmaker, league, matches: [], error: reason, duration: Date.now() - startedAt };
       }
 
       const descriptions = await this.client.fetchDescriptions(runBudget.signal);

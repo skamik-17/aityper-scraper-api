@@ -94,7 +94,13 @@ export function extractEventUuidFromUrl(url: string): string | null {
 
 export interface ListEventsResult {
   events: TotalbetListEvent[];
+  /** A transport or payload failure: the listing could not be read. */
   error?: string;
+  /**
+   * Set when the listing was read but holds no prematch event of the category
+   * (README §3 empty-listing rule: not an error). Explains why, for the run record.
+   */
+  empty?: string;
 }
 
 /**
@@ -141,7 +147,7 @@ export async function fetchLeagueEvents(
     const eventTypes = firstPageMeta?.event_types;
     return {
       events: [],
-      error: `No prematch events for category ${categoryUuid} (items_count=${itemsCount}, event_types=${JSON.stringify(eventTypes ?? [])})`,
+      empty: `No prematch events for category ${categoryUuid} (items_count=${itemsCount}, event_types=${JSON.stringify(eventTypes ?? [])})`,
     };
   }
 

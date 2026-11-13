@@ -1,7 +1,4 @@
 import { describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import {
   isSnapshotFrame,
   recordStsFrame,
@@ -9,7 +6,7 @@ import {
   captureMatchWithRetry,
 } from "../navigation.js";
 import { parseWebSocketJson, parseFixtures, parseAllMarkets } from "../parser.js";
-import type { WSCaptureResult } from "../types.js";
+import { readStsFixture as fx, emptyCapture as empty } from "./helpers/sts-frames.js";
 
 /**
  * Frame capture regression coverage for the 2026-11 partial-match race:
@@ -17,9 +14,7 @@ import type { WSCaptureResult } from "../types.js";
  * snapshot, and the match wait ended as soon as i_pl landed. The frames are
  * real captures (Leeds vs Tottenham, live order: i_pl, snapshot, delta).
  */
-const fx = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.url)), "fixtures", f), "utf8");
 const SNAP = "f_f2921896_pl.leeds-tottenham.snapshot.txt", DELTA = "f_f2921896_pl.leeds-tottenham.delta.txt";
-const empty = (): WSCaptureResult => ({ initialData: "", fixtureData: new Map() });
 
 describe("STS WebSocket frame capture", () => {
   it("isSnapshotFrame: true for the f:1 snapshot header, false for a delta", () => {

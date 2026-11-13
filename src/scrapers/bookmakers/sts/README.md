@@ -6,8 +6,8 @@ The STS scraper is a specialized module designed to extract real-time sports bet
 ## Architecture
 The module follows a highly decoupled design to handle the complexity of WebSocket-based data capture:
 
-### Core Scraper (`index.ts`)
-The `STSPlaywrightScraper` class inherits from `PlaywrightScraper`. It manages the high-level workflow, browser context, and data persistence. It utilizes a `ScraperCache` (specifically `eventsCache`) with a TTL optimized for event data to minimize redundant network requests during intensive scraping sessions.
+### Core Scrapers (`ws-scraper.ts`, `index.ts`, `offer-mapping.ts`)
+`StsWsScraper` (`ws-scraper.ts`) is the default full-offer scraper: a direct Node WebSocket client, no browser (see **Transport** below). `StsBrowserScraper` (`index.ts`, still exported as `STSPlaywrightScraper` / `STSScraper`) inherits from `PlaywrightScraper` and captures the same frames from real sts.pl pages; it is the fallback behind `SCRAPER_TRANSPORT_STS=browser` and still serves the legacy 1X2 methods. Its module-level `eventsCache` is written only by the browser class. Both transports turn a listing fixture plus its frames into a `FullMatchOffer` through the one `mapStsFixtureToOffer` in `offer-mapping.ts`, which also owns the `[STS/FullOffer]` log lines `sts-run-check.py` parses. `createStsScraper()` in `index.ts` makes the pick once at module load; `bookmakers/index.ts` only re-exports `stsScraper`.
 
 ### Browser Navigation (`navigation.ts`)
 This module is the "eyes" of the scraper. It handles:
@@ -25,6 +25,31 @@ The parsing layer is strictly separated from the browser layer. `parser.ts` take
 5.  **Market Level**: Maps odds using the `P` object and `assocKey`.
 
 `outcome-map.ts` acts as a dictionary for the thousands of possible outcome IDs used by STS. Since the WebSocket stream often omits selection names (e.g., sending only ID 1 instead of "Home"), this map is critical for data normalization.
+
+## Transport
+**Default: one WebSocket session per league scrape** (`ws-scraper.ts`, protocol helpers in `ws-protocol.ts`). The client connects to `wss://www.sts.pl/sbk/api/sbk` with three headers (`origin`, a desktop Chrome `user-agent`, `accept-language`) and no cookies, then:
+1. sends `{"t":1,"u":[{"s":"i_pl","n":0}]}` and `{"t":4}`, and waits up to 10 s for the `i_pl` snapshot (a header with `"f":1`; deltas never end the wait);
+2. parses `i_pl` once, derives the fixtures with the same strict league filter as the browser path and logs `[STS/FullOffer] Found N fixtures for <league>`;
+3. sends one `{"t":1,...}` that lists `i_pl` (kept) and every `f_<id>_pl` with `n:0`, and waits up to 5 s until every fixture has a snapshot;
+4. re-sends once, with `n:0` only for the ids still missing (the others listed without `n`), and waits another 5 s;
+5. skips any fixture still without a snapshot (the `No fixture snapshot ... skipping (previous snapshot kept)` line; no offer, so nothing written or pruned for it). 3 or more missing, or more than half, fail the run (`success: false`, no matches); fewer keep `success: true` with `error: "<missing> of <requested> details failed | ws timeout <ms>ms <url>"`;
+6. logs `[STS/WS] Done in <ms>ms: <frames> frames, <bytes> bytes, <n> re-sent` and closes the session.
+
+`{"t":5}` from the server is not an end-of-snapshots marker. Every wait is capped by the job budget, and an aborted budget opens no socket. The client never sends the browser's account subscriptions or requests.
+
+**Fallback: the browser path.** Set `SCRAPER_TRANSPORT_STS=browser` in `.env` and restart the service (the pick is read once at module load). The browser path opens the league page and each match page in Chromium and records the same frames. Its circuit breaker stops the per-fixture loop after 3 consecutive fixtures without a snapshot (`Aborting per-fixture loop: 3 consecutive fixtures without a snapshot`) and fails the run with `<n> of <m> details failed | no fixture snapshot <url>`, so nothing is written or pruned.
+
+**Operator signals.** A failed run logs `[sts] Full offer scraper error: <error>`; a blocking or protocol failure adds `[STS/WS] <kind> - set SCRAPER_TRANSPORT_STS=browser to use the browser path`.
+
+| Log after `[sts] Full offer scraper error:` | `[STS/WS]` kind | Meaning | Operator action |
+|---|---|---|---|
+| `ws handshake HTTP 403 …` / `503 …` | blocked | Cloudflare challenges or blocks non-browser clients (browsers carry `cf_clearance`) | `SCRAPER_TRANSPORT_STS=browser` in `.env`, restart |
+| `ws handshake HTTP 429 …` | blocked | edge rate limit | same, if the next run repeats it |
+| `ws closed 1008 …` | blocked | policy close after the upgrade | flip |
+| `no i_pl snapshot \| ws timeout …`, `<n> of <m> details failed \| ws timeout …` | protocol | upgrade accepted, subscriptions unanswered: the framing changed | flip; recapture with `evidence/sts-superbet/sts-probe.mjs` and diff against plan 05a Observations |
+| `ws timeout <ms>ms …` (connect), `ws failed <code> …`, `ws closed 1006 …`, `ws handshake HTTP 502/504/52x …`, `scrape budget …` | transient | network or edge hiccup, or the run deadline | none; flip after 3 failed runs in a row (observability alert) |
+| `No fixtures found for league`, preceded by `[STS] Strict id filter for premier-league (C1/T17) matched 0 fixtures; name-filter candidates: …` | (none; classified transient) | STS renumbered the league's category/tournament ids (the warning names the candidates), or the calendar is empty when it names none. Not a transport fault: the browser path uses the same filter | do **not** flip; move `LEAGUE_CONFIG["premier-league"]` to the named ids with a failing `parse-fixtures-tournament.test.ts` case first (sts.md OQ4). `sts-run-check.py` reports it as `strictIdMiss` |
+| `<n> of <m> details failed \| no fixture snapshot <url>` (browser path) | (none) | 3 consecutive match pages without a fixture snapshot | none on the first run; investigate (site change) if it repeats |
 
 ## Key Features
 *   **WebSocket Interception**: Captures high-frequency data frames (frames containing "s":"i_pl" and "s":"f_{id}_pl") for superior performance and reliability.
@@ -98,7 +123,10 @@ The data extraction pipeline is designed to be resilient and efficient:
 ## File Descriptions
 | File | Responsibility |
 | :--- | :--- |
-| `index.ts` | Extends `PlaywrightScraper`. Orchestrates the high-level scraping flow for leagues and individual matches. Implements caching via `ScraperCache`. |
+| `index.ts` | `StsBrowserScraper` (extends `PlaywrightScraper`): the browser fallback and the legacy league/match flows, with caching via `ScraperCache`. Also `createStsScraper()` / `stsScraper`, the transport pick. |
+| `ws-scraper.ts` | `StsWsScraper`: the default browserless full-offer scraper over one WebSocket session per league call. |
+| `ws-protocol.ts` | Endpoint, headers, timeouts, subscription framing, the frame reducer, the snapshot breaker and the failure classification of the WebSocket path. |
+| `offer-mapping.ts` | `mapStsFixtureToOffer` and the `[STS/FullOffer]` log lines, shared by both transports. |
 | `navigation.ts` | Manages page interactions. Sets up `Page` event listeners for WebSocket frames and handles the cookie consent overlay. |
 | `parser.ts` | Contains the complex tree-traversal logic for the STS data structure. Extracts fixtures, basic odds, and extended markets. |
 | `constants.ts` | Central repository for all static configuration: URLs, WS patterns, market IDs, league-specific filters, and timeouts. |
@@ -107,11 +135,12 @@ The data extraction pipeline is designed to be resilient and efficient:
 
 ## Usage Examples
 
-### Scraping a Full League
+### Scraping a Full League (legacy 1X2, browser class)
 ```typescript
-import { stsScraper } from "./scrapers/bookmakers/sts/index.js";
+import { StsBrowserScraper } from "./scrapers/bookmakers/sts/index.js";
 
-const result = await stsScraper.scrapeLeague("ekstraklasa");
+const browserScraper = new StsBrowserScraper();
+const result = await browserScraper.scrapeLeague("ekstraklasa");
 if (result.status === "success") {
   console.log(`Scraped ${result.data.length} matches from Ekstraklasa`);
 }
@@ -120,7 +149,7 @@ if (result.status === "success") {
 ### Scraping Specific Match Details
 ```typescript
 const url = "https://www.sts.pl/kursy/lech-poznan-legia-warszawa/f1234567";
-const details = await stsScraper.scrapeMatchDetails(url);
+const details = await browserScraper.scrapeMatchDetails(url);
 if (details.status === "success") {
   const odds = details.data;
   console.log(`1X2: ${odds.market1X2.home} - ${odds.market1X2.draw} - ${odds.market1X2.away}`);
@@ -129,6 +158,9 @@ if (details.status === "success") {
 
 ### Full Market Offer Extraction
 ```typescript
+import { stsScraper } from "./scrapers/bookmakers/sts/index.js";
+
+// The picked transport: StsWsScraper unless SCRAPER_TRANSPORT_STS=browser
 const fullOffer = await stsScraper.scrapeFullOffer("premier-league");
 // Useful for deep analytics or building comprehensive market comparisons
 ```

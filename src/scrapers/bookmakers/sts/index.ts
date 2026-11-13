@@ -1,6 +1,7 @@
 import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
+import { getTransportOverride } from "../../../config/transport.js";
 import type {
   ScraperConfig,
   ScraperResult,
@@ -13,7 +14,8 @@ import type {
 import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName, matchToCanonical } from "../../../utils/team-matcher.js";
+import type { FullOfferScraper } from "../../shared/scraper-contract.js";
+import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
 import {
@@ -27,11 +29,12 @@ import {
   parseWebSocketJson,
   parseFixtures,
   extractOdds,
-  parseAllMarkets,
   oddsToMarketOverUnder,
 } from "./parser.js";
 import type { STSFixture } from "./types.js";
 import { MAX_CONSECUTIVE_MATCH_FAILURES } from "./constants.js";
+import { mapStsFixtureToOffer, stsLog } from "./offer-mapping.js";
+import { StsWsScraper } from "./ws-scraper.js";
 
 const eventsCache = new ScraperCache<STSFixture>({
   name: "sts-events",
@@ -39,7 +42,7 @@ const eventsCache = new ScraperCache<STSFixture>({
   maxSize: 500,
 });
 
-export class STSPlaywrightScraper extends PlaywrightScraper {
+export class StsBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "sts";
   config: ScraperConfig;
 
@@ -303,7 +306,7 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
           };
         }
 
-        console.log(`[STS/FullOffer] Found ${fixtures.length} fixtures for ${leagueSlug}`);
+        console.log(stsLog.found(fixtures.length, leagueSlug));
         this.updateCache(fixtures);
 
         const matches: FullMatchOffer[] = [];
@@ -323,9 +326,7 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
             );
 
             if (!matchCaptureResult) {
-              console.warn(
-                `[STS/FullOffer] No fixture snapshot for ${fixture.home} vs ${fixture.away} after 2 attempts - skipping (previous snapshot kept)`
-              );
+              console.warn(stsLog.noSnapshot(fixture));
               misses++;
               firstMissed ??= fixture;
               if (++consecutiveMisses >= MAX_CONSECUTIVE_MATCH_FAILURES) {
@@ -348,73 +349,19 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
             }
             consecutiveMisses = 0;
 
-            const fixtureJson = matchCaptureResult.fixtureData.get(fixture.id) || null;
-            const matchInitialJson = parseWebSocketJson(matchCaptureResult.initialData);
-            const markets = parseAllMarkets(fixture, fixtureJson, matchInitialJson);
-
-            if (markets.length > 0) {
-              const homeTeamLower = fixture.home.toLowerCase();
-              const awayTeamLower = fixture.away.toLowerCase();
-              if (
-                homeTeamLower.includes("u21") ||
-                homeTeamLower.includes("u23") ||
-                awayTeamLower.includes("u21") ||
-                awayTeamLower.includes("u23") ||
-                homeTeamLower.includes("under 21") ||
-                homeTeamLower.includes("under 23") ||
-                awayTeamLower.includes("under 21") ||
-                awayTeamLower.includes("under 23")
-              ) {
-                console.warn(
-                  `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Youth team match`
-                );
-                continue;
-              }
-
-              const homeMatch = matchToCanonical(fixture.home, leagueSlug);
-              const awayMatch = matchToCanonical(fixture.away, leagueSlug);
-
-              if (!homeMatch || !awayMatch) {
-                console.warn(
-                  `[STS/FullOffer] Skipping ${fixture.home} vs ${fixture.away}: Teams not in ${leagueSlug} whitelist`
-                );
-                continue;
-              }
-
-              // Two genuinely different raw names can still canonicalize to
-              // the SAME club - observed live: "Stockton Town" and
-              // "Alfreton Town" (a non-league fixture that slipped past the
-              // tournament filter) both fuzzy-matched onto the Premier
-              // League's "Luton Town" whitelist entry, producing a "Luton
-              // Town vs Luton Town" row. This is the exact call site where
-              // two distinct inputs became one output, so it is the one
-              // place that can name both raw inputs in the warning - which
-              // is the diagnostic this bug otherwise leaves no trace of.
-              if (homeMatch.id === awayMatch.id) {
-                console.warn(
-                  `[STS/FullOffer] Dropping "${fixture.home}" vs "${fixture.away}": ` +
-                    `both canonicalize to ${homeMatch.name}`
-                );
-                continue;
-              }
-
-              const homeCanonical = homeMatch.name;
-              const awayCanonical = awayMatch.name;
-
-              matches.push({
-                matchId: fixture.id,
-                bookmaker: this.bookmaker,
-                homeTeam: homeCanonical,
-                awayTeam: awayCanonical,
-                eventUrl: fixture.eventUrl,
-                markets,
-                startTime: fixture.startTime,
-                scrapedAt: new Date(),
-              });
-
-              console.log(
-                `[STS/FullOffer] ${fixture.home} vs ${fixture.away}: ${markets.length} markets`
-              );
+            const result = mapStsFixtureToOffer(
+              fixture,
+              matchCaptureResult.fixtureData.get(fixture.id) ?? null,
+              parseWebSocketJson(matchCaptureResult.initialData),
+              leagueSlug
+            );
+            if (result.kind === "skip" && result.warning !== null) {
+              console.warn(result.warning);
+              continue;
+            }
+            if (result.kind === "offer") {
+              matches.push(result.offer);
+              console.log(stsLog.matchMarkets(fixture, result.offer.markets.length));
             }
 
             await this.delay(200);
@@ -427,9 +374,7 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
         }
 
         const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
-        console.log(
-          `[STS/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
-        );
+        console.log(stsLog.completed(matches.length, totalMarkets));
 
         return {
           success: true,
@@ -450,6 +395,16 @@ export class STSPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const stsScraper = new STSPlaywrightScraper();
+/**
+ * The single transport pick for STS (README §3): the direct WebSocket client by
+ * default, the browser class when SCRAPER_TRANSPORT_STS=browser. Read once at
+ * module load, so a change needs a restart.
+ */
+export function createStsScraper(env: NodeJS.ProcessEnv = process.env): FullOfferScraper {
+  return getTransportOverride("sts", env) === "browser" ? new StsBrowserScraper() : new StsWsScraper();
+}
 
-export { STSPlaywrightScraper as STSScraper };
+export const stsScraper: FullOfferScraper = createStsScraper();
+
+export { StsWsScraper };
+export { StsBrowserScraper as STSPlaywrightScraper, StsBrowserScraper as STSScraper };

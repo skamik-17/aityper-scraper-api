@@ -29,11 +29,14 @@ export interface RestMarketBrand<E> {
 
 /** A listing game's outcomes as fingerprint parts; an outcome without an id is keyed by its position. */
 export function outcomePriceParts(
-  games: ReadonlyArray<{ outcomes?: ReadonlyArray<{ outcomeId?: number; outcomeOdds: number }> }> | undefined,
+  games: ReadonlyArray<{ outcomes?: ReadonlyArray<{ outcomeId?: number; outcomeOdds: number } | null> } | null> | undefined,
 ): Array<[string, number]> {
   const parts: Array<[string, number]> = [];
+  // A null game or outcome entry is skipped: the listing must never fail on one
   (games ?? []).forEach((g, gi) =>
-    (g.outcomes ?? []).forEach((o, oi) => parts.push([o.outcomeId === undefined ? `g${gi}:${oi}` : `o:${o.outcomeId}`, o.outcomeOdds])),
+    (g?.outcomes ?? []).forEach((o, oi) => {
+      if (o) parts.push([o.outcomeId === undefined ? `g${gi}:${oi}` : `o:${o.outcomeId}`, o.outcomeOdds]);
+    }),
   );
   return parts;
 }

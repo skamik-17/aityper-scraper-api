@@ -28,7 +28,13 @@ function getJsonFor(http: HttpClient, brand: RestMarketBrand<unknown>) {
 
 /** The listing's prices plus its market count; null without parts or with a duplicate key. */
 function fingerprintOf<E>(brand: RestMarketBrand<E>, event: E): string | null {
-  const parts: Array<[string, number]> = brand.listingPrices(event);
+  let parts: Array<[string, number]>;
+  try {
+    parts = brand.listingPrices(event);
+  } catch {
+    // An unreadable listing entry only loses its fingerprint (the event is then always due)
+    return null;
+  }
   const gamesCount = (event as { gamesCount?: unknown }).gamesCount;
   if (typeof gamesCount === "number") parts.push(["gamesCount", gamesCount]);
   return listingFingerprintOrNull(parts, `${brand.logTag} ${brand.eventId(event)}`);

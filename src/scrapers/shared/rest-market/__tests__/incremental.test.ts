@@ -117,4 +117,15 @@ describe("rest-market brands as IncrementalScraper", () => {
     await s.listEvents(LEAGUE, budget());
     expect(transportTotals(s.transportStats()).requests).toBe(1);
   });
+
+  it("a null game entry in the listing never fails the listing; that event just has no fingerprint", async () => {
+    const list = JSON.parse(listJson("forbet"));
+    list.data[0].eventGames = [null, ...(list.data[0].eventGames ?? [])];
+    const routes = loadFixtureRoutes("forbet", URLS.forbet);
+    routes[URLS.forbet.list] = { body: JSON.stringify(list) };
+    const refs = await scraperFor("forbet", routes).listEvents(LEAGUE, budget());
+    expect(refs.length).toBeGreaterThan(1);
+    expect(refs[0].eventId).toBe(String(list.data[0].eventId));
+    expect(refs[1].fingerprint).not.toBeNull();
+  });
 });

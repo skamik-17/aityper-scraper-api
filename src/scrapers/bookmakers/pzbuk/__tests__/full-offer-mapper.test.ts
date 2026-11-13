@@ -1,6 +1,6 @@
 import { EventEmitter } from "node:events";
 import type { BrowserSession } from "../../../base/playwright-base.js";
-import { PzbukPlaywrightScraper } from "../index.js";
+import { PzbukBrowserScraper } from "../browser-scraper.js";
 import { emptyDiagnostics } from "../ws-protocol.js";
 import { listingMessage, listingEvents, offerState } from "./helpers/direct-fixture.js";
 import { mapEventOffer, buildPzbukMatchOffer } from "../full-offer-mapper.js";
@@ -21,7 +21,7 @@ vi.mock("../navigation.js", async (orig) => ({
 }));
 
 // EventEmitter + mainFrame/url/title, so observability's navigation recorder can attach
-class OfflineBrowserScraper extends PzbukPlaywrightScraper {
+class OfflineBrowserScraper extends PzbukBrowserScraper {
   protected override async initBrowser(): Promise<BrowserSession> {
     const page = Object.assign(new EventEmitter(), { mainFrame: () => null, url: () => "about:blank", title: async () => "" });
     return { page, browser: {}, context: {}, cleanup: async () => {} } as unknown as BrowserSession;

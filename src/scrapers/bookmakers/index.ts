@@ -20,6 +20,7 @@ import { BetfanHttpScraper } from "../shared/rest-market/brands/betfan.js";
 import { FortunaBrowserScraper, FortunaHttpScraper } from "./fortuna/index.js";
 import { SuperbetBrowserScraper, SuperbetHttpScraper } from "./superbet/index.js";
 import { LVBetBrowserScraper, LVBetHttpScraper } from "./lvbet/index.js";
+import { createPzbukScraper } from "./pzbuk/index.js";
 
 // Modular scrapers (refactored)
 export { SuperbetBrowserScraper, SuperbetHttpScraper } from "./superbet/index.js";
@@ -37,7 +38,7 @@ export { totalbetScraper, TotalbetPlaywrightScraper } from "./totalbet/index.js"
 export { stsScraper, STSScraper } from "./sts/index.js";
 export { betcrisScraper, BetcrisPlaywrightScraper } from "./betcris/index.js";
 export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
-export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk/index.js";
+export { PzbukBrowserScraper, PzbukWsScraper } from "./pzbuk/index.js";
 export { LVBetBrowserScraper, LVBetHttpScraper } from "./lvbet/index.js";
 export { FortunaBrowserScraper, FortunaHttpScraper } from "./fortuna/index.js";
 
@@ -61,3 +62,6 @@ export const superbetScraper: FullOfferScraper =
 
 export const lvbetScraper: FullOfferScraper =
   getTransportOverride("lvbet") === "browser" ? new LVBetBrowserScraper() : new LVBetHttpScraper();
+
+/** WebSocket by default; SCRAPER_TRANSPORT_PZBUK=browser picks the Playwright class. */
+export const pzbukScraper: FullOfferScraper = createPzbukScraper();

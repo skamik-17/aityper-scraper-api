@@ -11,7 +11,7 @@
  *   npx tsx scripts/pzbuk-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/pzbuk-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { pzbukScraper } from "../src/scrapers/bookmakers/pzbuk/index.js";
+import { pzbukScraper } from "../src/scrapers/bookmakers/index.js";
 import { pzbukNormalizer } from "../src/services/normalization/bookmakers/pzbuk-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

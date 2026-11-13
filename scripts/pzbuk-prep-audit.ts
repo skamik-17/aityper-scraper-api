@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/pzbuk-prep-audit.ts --url "<pzbuk event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { pzbukScraper } from "../src/scrapers/bookmakers/pzbuk/index.js";
+import { pzbukScraper } from "../src/scrapers/bookmakers/index.js";
 import { pzbukNormalizer } from "../src/services/normalization/bookmakers/pzbuk-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

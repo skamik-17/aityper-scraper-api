@@ -9,7 +9,9 @@ vi.mock("../navigation.js", async (importOriginal) => ({
   navigateToEventPage: vi.fn(async () => true),
 }));
 
-const { pzbukScraper } = await import("../index.js");
+const { PzbukBrowserScraper } = await import("../browser-scraper.js");
+// The legacy method lives only on the browser class.
+const pzbukScraper = new PzbukBrowserScraper();
 const { buildEventUrl } = await import("../navigation.js");
 
 describe("pzbuk scrapeMatchDetails (legacy path)", () => {

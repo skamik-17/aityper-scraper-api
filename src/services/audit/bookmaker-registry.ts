@@ -11,7 +11,7 @@ import { bettersScraper } from "../../scrapers/bookmakers/betters/index.js";
 import { etotoScraper } from "../../scrapers/bookmakers/index.js";
 import { forbetScraper } from "../../scrapers/bookmakers/index.js";
 import { lebullScraper } from "../../scrapers/bookmakers/lebull/index.js";
-import { pzbukScraper } from "../../scrapers/bookmakers/pzbuk/index.js";
+import { pzbukScraper } from "../../scrapers/bookmakers/index.js";
 import { totalbetScraper } from "../../scrapers/bookmakers/totalbet/index.js";
 
 import { fortunaNormalizer } from "../normalization/bookmakers/fortuna-normalizer.js";

@@ -448,6 +448,11 @@ const PZBUK_MARKET_ID_TO_CODE: Record<string, NormalizedMarketType> = {
   // 3.55-4.0) while being far off full-match "0 goals" consensus (~8-12) —
   // id 511 is the 2nd-half goal-range market, not the full-match one.
   "511": "SECOND_HALF_GOAL_RANGE",
+  // "Liczba goli gracza (z dogrywką)" (player goals incl. extra time, "<player> 1+"
+  // selections), premier-league_everton_coventry_city.json #45. Without this entry
+  // /liczba goli/ in matchMarketByName routes it to TOTAL_GOALS, where a player
+  // label starting with "pon" (e.g. "Ponce, …") reads as UNDER.
+  "725": "OTHER",
   // Audit /audit-match (Arsenal vs Coventry City): id 2099 is the "Early
   // Payout" promo variant of 1X2 (own settlement rules, AWAY 12.52 vs the
   // plain market's 14.48) and it was overwriting the genuine 1X2 (id 1).

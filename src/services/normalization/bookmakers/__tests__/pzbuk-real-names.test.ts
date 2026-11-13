@@ -46,6 +46,10 @@ const rows: Row[] = [
   ["499", "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą", "0", DC_BTTS, "OTHER"],
   ["500", "1. Połowa - Podwójna szansa & oba zespoły strzelą", "0", DC_BTTS, "OTHER"],
   ["2395", "Zawodnik z kartką (lub zmiennik)", "0", [["Maitland-Niles, Ainsley", 5.68], ["Branthwaite, Jarrad", 5.38]], "OTHER"],
+  // Player goals incl. extra time (PL #45). By name it reached TOTAL_GOALS, where a player label starting
+  // with "pon" reads as UNDER (normalizeOverUnderSelection); the "Ponce" label is synthetic.
+  ["725", "Liczba goli gracza (z dogrywką)", "0", [["Ponce, Ezequiel 1+", 4.1]], "OTHER"],
+  ["725", "Liczba goli gracza (z dogrywką)", "0", [["Mykołenko, Witalij 1+", 11.57], ["Alcaraz, Carlos 1+", 4.08]], "OTHER"],
   // ordinal templates ({SpecialIntValue1}): the "2." names are synthetic (live-only), odds illustrative
   ["36", "2. strzelec gola", "0", SCORERS, "OTHER"],
   ["8", "2. gol", "0", [["Everton FC", 2.1], ["żaden", 5.0], ["Coventry City", 3.2]], "OTHER"],

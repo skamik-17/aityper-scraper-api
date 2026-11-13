@@ -87,8 +87,8 @@ curl -s --compressed https://api.etoto.pl/rest/market/events/<eventId> | python3
 Proven on 2026-11-06 17:03Z: event 6224065 → `[-30728, -30727, -30591, 162, 163, 168, 169]`; 6224070 and 6224078 → `[]`. The next window is Sat 2026-11-07, Leeds v Tottenham (event 6224070, KO 12:30Z). Poll from about 09:00Z; the exact onset is unknown. If no event prints a non-empty list, the team-stat and penalty criteria are **not yet verifiable**, and the capture-based unit tests in Tasks 1–3 decide. An empty list is not a pass.
 
 **Which backend runs the fix.** `acceptance_check.py` reads `BASE = http://localhost:3001`, which is the main checkout's `tsx watch` on `master`. Tasks 1–3 live on `recovery/etoto` only; `master` stays untouched until the owner asks for a merge (EXECUTION.md Group A1), and merging into `recovery/integration` does not change what :3001 runs. A scrape on that backend runs the unfixed normalizer and prints `penalty_awarded_etoto 0 []` and `unmapped 1` even when the pre-check lists -30591: that is a false fail, not a verdict on Task 3. So run the API, log and collision checks only when both hold:
-1. `master` contains the fix: in the main checkout `grep -c PENALTY_KICK_WORDING src/services/normalization/bookmakers/etoto-normalizer.ts` prints ≥ 1. That symbol comes from the last Task 3 review fix, so it also proves Tasks 1–3 are in. The grep also works after a squash merge, where `git merge-base --is-ancestor` would say no.
-2. The live backend has logged a completed `[Aggregator/FullOffer] etoto completed: …` run whose `[eToto/FullOffer] Found` line comes after the merge.
+1. `master` contains the fix: in the main checkout `grep -c PENALTY_TOTAL_ZERO_FIVE_NAME src/services/normalization/bookmakers/etoto-normalizer.ts` prints ≥ 1. That symbol comes from the final-review fix wave (it replaced the Task 3 `PENALTY_KICK_WORDING`), so it also proves Tasks 1–3 and the final-review fixes are in. The grep also works after a squash merge, where `git merge-base --is-ancestor` would say no.
+2. The live backend has logged a `[Aggregator/FullOffer] etoto success:` (or `partial:`) run whose `[eToto/FullOffer] Found` line comes after the merge.
 
 Then re-run the pre-check for the next matchday event. After Leeds v Tottenham that is Sat 2026-11-07 15:00Z (6224074 Fulham v Newcastle, 6224078 Arsenal v Hull City) or 17:30Z (6224083 Nottingham v Manchester City), or Sun 2026-11-08 14:00Z (6224081, 6224084, 6224085, 6224086) or 16:30Z (6224088), kick-offs per `$E/etoto-league-206-events.json`.
 
@@ -112,7 +112,7 @@ curl -s --compressed https://api.etoto.pl/rest/market/categories/multi/206/event
 ```
 Proven 2026-11-06: `listing 22 valid 20`.
 
-Raw volume and OTHER share from the backend log of the last **completed** run, i.e. one that already shows `[Aggregator/FullOffer] etoto completed: …`. The share counts unmapped OTHER plus the deliberate -30005/-30006 skips and must be ≤ 2% of raw. Every fixture that kicks off within 3 days must have ≥ 450 raw markets in the `[eToto/FullOffer] <match>: <n> markets` lines. First strip ANSI from the live log with `sed 's/\x1b\[[0-9;]*m//g' <backend.log> > <clean log>`:
+Raw volume and OTHER share from the backend log of the last **completed** run, i.e. one that already shows `[Aggregator/FullOffer] etoto success:` (or `partial:`). The share counts unmapped OTHER plus the deliberate -30005/-30006 skips and must be ≤ 2% of raw. Every fixture that kicks off within 3 days must have ≥ 450 raw markets in the `[eToto/FullOffer] <match>: <n> markets` lines. First strip ANSI from the live log with `sed 's/\x1b\[[0-9;]*m//g' <backend.log> > <clean log>`:
 ```bash
 L=<clean log>; S=$(grep -n '\[eToto/FullOffer\] Found' $L | tail -1 | cut -d: -f1); tail -n +$S $L | python3 -I -c "
 import sys,re

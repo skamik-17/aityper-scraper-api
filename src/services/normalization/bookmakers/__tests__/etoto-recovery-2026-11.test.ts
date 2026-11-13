@@ -10,12 +10,24 @@ import { fileURLToPath } from "node:url";
 import { parseAllMarkets, parseTeamNames } from "../../../../scrapers/bookmakers/etoto/parser.js";
 import type { EtotoEvent } from "../../../../scrapers/bookmakers/etoto/types.js";
 import { etotoNormalizer } from "../etoto-normalizer.js";
+import { normalizer } from "../../factory.js";
+import { groupMarketsByTypeWithParameters } from "../../../market-type-grouper.js";
 import type { NormalizationContext, NormalizedMarketOutput } from "../../types.js";
 
 const FIXTURE_PATH = join(
   dirname(fileURLToPath(import.meta.url)),
   "fixtures",
   "etoto-event-6224065-everton-coventry.trimmed.json"
+);
+
+// Frozen France v Morocco raw (the golden input).
+const GOLDEN_RAW_PATH = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "..",
+  "__fixtures__",
+  "etoto",
+  "world-cup-2026_france_morocco.json"
 );
 
 const ctxEC: NormalizationContext = {
@@ -36,7 +48,10 @@ const ctxFM: NormalizationContext = {
 /**
  * Parse the Everton v Coventry capture with the real etoto parser, then run
  * every parsed market through the etoto normalizer, dropping the markets the
- * normalizer deliberately skips (null).
+ * normalizer deliberately skips (null). The raw market carries exactly the
+ * fields production passes (src/services/normalization/factory.ts builds
+ * RawBookmakerMarket from name, selections, paramValue and the id; no
+ * groupName), so the tests exercise the input shape production produces.
  */
 function normalizeCapture(ctx: NormalizationContext): NormalizedMarketOutput[] {
   const event = JSON.parse(readFileSync(FIXTURE_PATH, "utf8")) as EtotoEvent;
@@ -46,7 +61,6 @@ function normalizeCapture(ctx: NormalizationContext): NormalizedMarketOutput[] {
         {
           bookmakerMarketId: m.bookmakerMarketId,
           name: m.name,
-          groupName: m.groupName,
           paramValue: m.paramValue,
           selections: m.selections,
         },
@@ -149,5 +163,99 @@ describe("etoto recovery 2026-11", () => {
     const id30591 = normalizeCapture(ctxEC).find((o) => o.debug?.rawName === "Suma 0.5 rzutów karnych")!;
     expect(id30591.marketKey).toBe(id15.marketKey);
     expect(id30591.selections.map((s) => s.code).sort()).toEqual(id15.selections.map((s) => s.code).sort());
+  });
+});
+
+describe("etoto final review fixes 2026-11", () => {
+  const codesOf = (o: NormalizedMarketOutput | null) => o?.selections.map((s) => [s.code, s.odds]);
+
+  // -30591 shapes that are not the full-match 0.5 penalty total. Each must stay
+  // OTHER (the Unmapped warn keeps firing) and must never carry a YES price.
+  it.each([
+    ["1. połowa - suma 0.5 rzutów karnych", "Poniżej 0.5", "Powyżej 0.5"],
+    ["Suma 0.5 rzutów karnych - 2. połowa", "Poniżej 0.5", "Powyżej 0.5"],
+    ["Everton suma 0.5 rzutów karnych", "Poniżej 0.5", "Powyżej 0.5"],
+    ["Suma rzutów karnych", "Poniżej", "Powyżej"],
+    ["Suma rzutów karnych", "Poniżej 0.5", "Powyżej 0.5"],
+    ["Suma 1 rzutów karnych", "Poniżej 1", "Powyżej 1"],
+    ["Suma 0.5 rzutów karnych", "Poniżej 1.5", "Powyżej 1.5"],
+  ])("etoto -30591 %j with labels %j / %j stays OTHER with no YES selection", (name, under, over) => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30591", name,
+      selections: [{ name: under, odds: 1.25 }, { name: over, odds: 3.55 }] }, ctxEC);
+    expect(out?.marketCode).toBe("OTHER");
+    expect(out?.selections.some((s) => s.code === "YES")).toBe(false);
+  });
+
+  it("etoto -30591 'Suma 0,5 rzutów karnych' (comma decimal) is still PENALTY_AWARDED", () => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30591", name: "Suma 0,5 rzutów karnych",
+      selections: [{ name: "Poniżej 0,5", odds: 1.25 }, { name: "Powyżej 0,5", odds: 3.55 }] }, ctxEC);
+    expect(out?.marketCode).toBe("PENALTY_AWARDED");
+    expect(codesOf(out)).toEqual([["NO", 1.25], ["YES", 3.55]]);
+  });
+
+  // "<X> lub obie strzelą" is a complementary Tak/Nie book: France v Morocco
+  // -8041 Tak 1.15 / Nie 4.7 implies 0.870 + 0.213 = 1.08. So "Nie" is
+  // NOT(<X> or BTTS), i.e. neither happens. The catalog <SIDE>_OR_BTTS_NO is
+  // "<X> or BTTS-No", a different and much shorter-priced bet, so only the tak
+  // leg is published (the forbet RESULT_OR_BTTS rule).
+  it("etoto 'X lub obie strzelą' publishes only the tak leg (golden France v Morocco raw)", () => {
+    const tn = (tak: number, nie: number) => [{ name: "Tak", odds: tak }, { name: "Nie", odds: nie }];
+    const home = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8041", name: "Francja wygra lub obie strzelą",
+      selections: tn(1.15, 4.7) }, ctxFM);
+    const draw = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8042", name: "Remis lub obie strzelą",
+      selections: tn(1.73, 2) }, ctxFM);
+    const away = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8043", name: "Maroko wygra lub obie strzelą",
+      selections: tn(1.7, 2.03) }, ctxFM);
+    expect([home?.marketKey, draw?.marketKey, away?.marketKey]).toEqual(["RESULT_OR_BTTS", "RESULT_OR_BTTS", "RESULT_OR_BTTS"]);
+    expect(codesOf(home)).toEqual([["HOME_OR_BTTS_YES", 1.15]]);
+    expect(codesOf(draw)).toEqual([["DRAW_OR_BTTS_YES", 1.73]]);
+    expect(codesOf(away)).toEqual([["AWAY_OR_BTTS_YES", 1.7]]);
+  });
+
+  it("etoto RESULT_OR_BTTS with no single resolvable tak leg is dropped", () => {
+    const run = (selections: Array<{ name: string; odds: number }>) =>
+      etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-8041", name: "Francja wygra lub obie strzelą", selections }, ctxFM);
+    expect(run([{ name: "Nie", odds: 4.7 }])).toBeNull();
+    expect(run([{ name: "Tak", odds: 1.15 }, { name: "Tak", odds: 1.2 }])).toBeNull();
+    expect(run([{ name: "Tak", odds: 1.15 }, { name: "Może", odds: 4.7 }])).toBeNull();
+  });
+
+  it("etoto bundled player fouls keep each player's own tier in the selection code", () => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30376", name: "Faule popełnione przez zawodnika (opta)",
+      selections: [{ name: "Hakimi, Achraf 2+", odds: 2.95 }, { name: "Dembele, Ousmane 1+", odds: 1.6 }] }, ctxFM)!;
+    expect(out.marketKey).toBe("PLAYER_FOULS");
+    expect(out.paramValue).toBeUndefined();
+    expect(codesOf(out)).toEqual([["Achraf Hakimi 2+", 2.95], ["Ousmane Dembele 1+", 1.6]]);
+  });
+
+  it("etoto player fouls drop a tier outside the catalog vocabulary or a selection with no tier", () => {
+    const out = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30377", name: "Faule popełnione na zawodniku (opta)",
+      selections: [{ name: "Hakimi, Achraf 2+", odds: 1.55 }, { name: "Digne, Lucas 5+", odds: 9 },
+        { name: "Saliba, William", odds: 2.1 }, { name: "Dembele, Ousmane 1+", odds: 1.5 }] }, ctxFM)!;
+    expect(codesOf(out)).toEqual([["Achraf Hakimi 2+", 1.55], ["Ousmane Dembele 1+", 1.5]]);
+    const none = etotoNormalizer.normalizeMarket({ bookmakerMarketId: "-30376", name: "Faule popełnione przez zawodnika (opta)",
+      selections: [{ name: "Digne, Lucas 5+", odds: 9 }] }, ctxFM);
+    expect(none).toBeNull();
+  });
+
+  it("grouper splits etoto's bundled fouls per player at the raw tier, never as 1+ (golden France v Morocco raw)", () => {
+    const fixture = JSON.parse(readFileSync(GOLDEN_RAW_PATH, "utf8")) as {
+      entries: { index: number; raw: { bookmakerMarketId: string | number; name: string; selections: { name: string; odds: number }[] } }[];
+    };
+    // Through the production facade, exactly as scrape-helpers feeds it.
+    const markets = fixture.entries
+      .filter((e) => e.index === 127 || e.index === 128)
+      .map((e) => normalizer.normalize({ name: e.raw.name, bookmakerMarketId: String(e.raw.bookmakerMarketId),
+        selections: e.raw.selections }, "etoto", "France", "Morocco", "world-cup-2026"));
+    const grouped = groupMarketsByTypeWithParameters(markets.map((market) => ({ market, bookmaker: "etoto" })));
+    const row = (type: string, player: string) => grouped
+      .find((g) => g.type === type)?.parameters.find((p) => p.value === player)?.bookmakers
+      .flatMap((b) => b.selections.map((s) => [s.type, s.odds]));
+    expect(row("PLAYER_FOULS", "Achraf Hakimi")).toEqual([["2+", 2.95]]);
+    expect(row("PLAYER_FOULS", "Brahim Diaz")).toEqual([["2+", 3]]);
+    expect(row("PLAYER_FOULS", "Marcus Thuram")).toEqual([["3+", 1.9]]);
+    expect(row("PLAYER_FOULS", "Ousmane Dembele")).toEqual([["1+", 1.6]]);
+    expect(row("PLAYER_FOULS_WON", "Adrien Rabiot")).toEqual([["2+", 2.5]]);
+    expect(row("PLAYER_FOULS_WON", "Ousmane Dembele")).toEqual([["1+", 1.5]]);
   });
 });

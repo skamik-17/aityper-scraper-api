@@ -49,6 +49,8 @@ class ScraperHealthService {
   private outcomes: Map<string, Map<PolishBookmaker, BookmakerRunOutcome[]>> = new Map();
   /** The last refused run per league. */
   private readonly abortsByLeague = new Map<string, RunAbort>();
+  /** Failure streaks whose alert has fired, as "<league>|<bookmaker>" (see buildRunAlerts). */
+  private alertedStreaks = new Set<string>();
 
   /**
    * Record one bookmaker's classified run outcome
@@ -132,6 +134,13 @@ class ScraperHealthService {
     const byBookmaker = this.outcomes.get(league);
     if (!byBookmaker) return [];
     return [...byBookmaker.values()].flat().sort((a, b) => b.startedAt.getTime() - a.startedAt.getTime());
+  }
+
+  /**
+   * The streak-alert state buildRunAlerts reads and updates, kept between runs
+   */
+  getAlertedStreaks(): Set<string> {
+    return this.alertedStreaks;
   }
 
   /**
@@ -228,12 +237,13 @@ class ScraperHealthService {
   }
 
   /**
-   * Reset all stats, the outcome history and the last abort
+   * Reset all stats, the outcome history, the last abort and the streak-alert state
    */
   reset(): void {
     this.stats.clear();
     this.outcomes.clear();
     this.abortsByLeague.clear();
+    this.alertedStreaks.clear();
   }
 
   /**

@@ -4,6 +4,7 @@ import {
   decodeFrame,
   initialStatesOf,
   subscribedGroupIds,
+  parseSubscription,
   FrameAssembler,
   SingleEventAccumulator,
   describeCaptureFailure,
@@ -55,6 +56,20 @@ describe("pzbuk ws transport", () => {
     expect(sent.find((ids) => ids.length > 0)).toEqual([1]); // stream 5, sent at page load (default-open "Popularne")
     expect(sent.flat().sort((a, b) => a - b)).toEqual([1, 2, 7, 8, 12, 13, 15, 17, 19, 28]);
     expect(subscribedGroupIds('{"type":"CLOSE","streamId":5,"reason":"NORMAL","message":null}')).toEqual([]);
+  });
+  it("reads the stream id and market-group ids of each sent SUBSCRIBE frame", () => {
+    const subs = event.frames.filter((f: any) => f.dir === "sent").map((f: any) => parseSubscription(f.text));
+    // streams 1/3 (event, selection pack) and 7/9 (sidebar listings) carry no group filter
+    expect(subs.filter((s: any) => s !== null && s.marketGroupIds.length > 0)).toEqual([
+      { streamId: 5, marketGroupIds: [1] }, { streamId: 11, marketGroupIds: [28] }, { streamId: 13, marketGroupIds: [7] },
+      { streamId: 15, marketGroupIds: [2] }, { streamId: 17, marketGroupIds: [13] }, { streamId: 19, marketGroupIds: [17] },
+      { streamId: 21, marketGroupIds: [12] }, { streamId: 23, marketGroupIds: [8] }, { streamId: 25, marketGroupIds: [19] },
+      { streamId: 27, marketGroupIds: [15] },
+    ]);
+    expect(subs.find((s: any) => s?.streamId === 1)).toEqual({ streamId: 1, marketGroupIds: [] });
+    expect(parseSubscription('{"type":"CLOSE","streamId":5,"reason":"NORMAL","message":null}')).toBeNull();
+    expect(parseSubscription('{"type":"SUBSCRIBE","payload":{"filters":{"marketGroupIds":[1]}}}')).toBeNull(); // no stream id
+    expect(parseSubscription("garbage")).toBeNull();
   });
   it("still decodes a legacy RSocket frame (binary header + bare array)", () => {
     const legacy = "\u0000\u0000\u0000\u0001\u0010" + JSON.stringify([{ type: "INITIAL_STATE", payload: { events: [], markets: [], selections: [] } }]);
@@ -110,12 +125,26 @@ const states = (frames: any[], skipStream?: number) => frames.filter((f) => f.di
   const d = decodeFrame(f.text);
   return d.kind === "data" && d.streamId !== skipStream ? initialStatesOf(d) : [];
 });
+/** Each INITIAL_STATE with the market-group ids its stream subscribed to (from the sent SUBSCRIBE frames). */
+const streamStates = (frames: any[], skipStream?: number) => {
+  const groups = new Map<number, number[]>();
+  return frames.flatMap((f): [PZBukInitialState, number[]][] => {
+    if (f.dir === "sent") {
+      const sub = parseSubscription(f.text);
+      if (sub) groups.set(sub.streamId, sub.marketGroupIds);
+      return [];
+    }
+    const d = decodeFrame(f.text);
+    if (d.kind !== "data" || d.streamId === skipStream) return [];
+    return initialStatesOf(d).map((s) => [s, d.streamId === null ? [] : groups.get(d.streamId) ?? []]);
+  });
+};
 const GROUPS = [1, 2, 7, 8, 12, 13, 15, 17, 19, 28];
 
 describe("pzbuk SingleEventAccumulator", () => {
   it("unions markets and selections across all market-group messages", () => {
     const acc = new SingleEventAccumulator();
-    states(event.frames).forEach((s) => acc.add(s));
+    streamStates(event.frames).forEach(([s, groups]) => acc.add(s, groups));
     const snap = acc.snapshot()!;
     expect(snap.events[0].id).toBe(4408475);
     expect(acc.stats()).toEqual({ selections: 656, markets: 157, marketGroupsDeclared: GROUPS, marketGroupsSeen: GROUPS });
@@ -128,9 +157,45 @@ describe("pzbuk SingleEventAccumulator", () => {
   });
   it("reports a market group that never answered", () => {
     const acc = new SingleEventAccumulator();
-    states(event.frames, 11).forEach((s) => acc.add(s)); // stream 11 = group 28 "Zawodnicy"
+    streamStates(event.frames, 11).forEach(([s, groups]) => acc.add(s, groups)); // stream 11 = group 28 "Zawodnicy"
     expect(acc.stats().marketGroupsSeen).toEqual([1, 2, 7, 8, 12, 13, 15, 17, 19]);
     expect(acc.snapshot()).not.toBeNull();
+  });
+  it("reports a silent Popularne stream even when another group's markets also list group 1", () => {
+    // Stream 11 (group 28) trimmed to its anytime-scorer market 2179, which lists [28, 1]: the
+    // markets' common group ids are [1, 28], but only the group-28 stream answered.
+    const all = streamStates(event.frames, 5); // stream 5 = group 1 "Popularne" never answers
+    const acc = new SingleEventAccumulator();
+    for (const [s, groups] of all) {
+      if (!groups.includes(28)) { acc.add(s, groups); continue; }
+      const markets = s.markets.filter((m) => m.marketType?.marketGroupIds?.join() === "28,1");
+      expect(markets.length).toBeGreaterThan(0);
+      const ids = new Set(markets.map((m) => m.id));
+      acc.add({ ...s, markets, selections: s.selections.filter((x) => ids.has(x.marketId)) }, groups);
+    }
+    expect(acc.stats().marketGroupsSeen).toEqual([2, 7, 8, 12, 13, 15, 17, 19, 28]);
+  });
+  it("marks no group seen for a payload whose stream subscribed to no market group", () => {
+    const acc = new SingleEventAccumulator();
+    const [[popular]] = streamStates(event.frames).filter(([, groups]) => groups.join() === "1");
+    expect(acc.add(popular)).toBe(true); // merged, but no stream attribution
+    expect(acc.stats()).toMatchObject({ markets: 28, marketGroupsSeen: [] });
+  });
+  it("locks to the first event when no event id is expected", () => {
+    const [first] = states(event.frames).filter((s) => s.events.length === 1 && s.markets.length > 0);
+    const other = { ...first, events: [{ ...first.events[0], id: 4408509 }] };
+    const acc = new SingleEventAccumulator();
+    expect(acc.add(first, [1])).toBe(true);
+    expect(acc.add(other, [2])).toBe(false);
+    expect(acc.snapshot()!.events[0].id).toBe(4408475);
+    expect(acc.stats().marketGroupsSeen).toEqual([1]);
+  });
+  it("matches a string expected event id against the numeric wire id", () => {
+    const acc = new SingleEventAccumulator("4408475");
+    streamStates(event.frames).forEach(([s, groups]) => acc.add(s, groups));
+    expect(acc.snapshot()!.events[0].id).toBe(4408475);
+    expect(acc.stats()).toMatchObject({ selections: 656, markets: 157, marketGroupsSeen: GROUPS });
+    expect(new SingleEventAccumulator("4408509").add(states(event.frames).find((s) => s.events.length === 1)!)).toBe(false);
   });
   it("rejects single-event payloads for another event", () => {
     const acc = new SingleEventAccumulator(4408509);

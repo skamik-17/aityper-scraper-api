@@ -152,6 +152,29 @@ describe("betcris scraper flow", () => {
     expect(warns.some((m) => m.includes("Aborting per-match loop"))).toBe(false);
   });
 
+  it("betcris scrapeFullOffer: a game-level miss between site-level failures leaves the count unchanged", async () => {
+    // Per-game pattern F F G F: the miss neither counts nor resets, so the 4th game trips the breaker.
+    const gameOrder: number[] = [];
+    const fake = createFakeSwarmPage((url) => {
+      if (url.endsWith("/538")) return { events: league };
+      const id = Number(url.split("/").pop());
+      if (!gameOrder.includes(id)) gameOrder.push(id);
+      const n = gameOrder.indexOf(id) + 1;
+      // target_game_missing: drop every frame that mentions the id (see the game-level test above)
+      if (n === 3) return { events: retarget(match, 99999999).filter((e) => !e.payload?.includes(String(id))) };
+      return n <= 4 ? { events: EMPTY } : { events: retarget(match, id) };
+    });
+    useFakeBrowser(fake);
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
+    expect(r.success).toBe(false);
+    expect(r.matches).toHaveLength(0);
+    expect(r.error).toBe("aborted after 3 consecutive per-match capture failures");
+    expect(fake.gotoAt).toHaveLength(1 + 2 * 2 + 1 + 2); // the miss is not retried
+    const skipped = vi.mocked(console.warn).mock.calls.map(([m]) => String(m)).filter((m) => m.startsWith("[Betcris/FullOffer] Skipped game"));
+    expect(skipped.map((m) => m.match(/captured: (\w+)/)?.[1])).toEqual(["no_swarm_socket", "no_swarm_socket", "target_game_missing", "no_swarm_socket"]);
+    expect(console.warn).toHaveBeenCalledWith("[Betcris/FullOffer] Aborting per-match loop: 3 consecutive capture failures");
+  });
+
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {
     const fake = createFakeSwarmPage((url) => (url.endsWith("/538") ? { events: league } : { events: EMPTY }));
     useFakeBrowser(fake);

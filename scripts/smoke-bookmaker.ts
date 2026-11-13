@@ -14,7 +14,7 @@
  * Prints one `SMOKE_RESULT {json}` line. Exit codes:
  *   0  OK (dry: scraped; --persist: success or partial)
  *   1  the bookmaker failed (dry: scrape_failed or empty; --persist: any other outcome)
- *   2  usage error or unknown bookmaker
+ *   2  usage error, unknown bookmaker or unknown league
  *   3  --persist run refused: database unreachable
  *   4  --persist refused: a scrape run is in progress or due within 5 min
  *
@@ -22,6 +22,7 @@
  * outcome, this script fails loudly.
  */
 import { ALL_POLISH_BOOKMAKERS, CONFIG, type PolishBookmaker } from "../src/config/index.js";
+import { getAllLeagueSlugs, getLeagueConfig } from "../src/config/leagues.js";
 import { closeAllBrowsers, getScraper } from "../src/scrapers/aggregator.js";
 import { normalizeMarketsForBookmaker } from "../src/services/normalization/index.js";
 import { runScrapeAndPersist } from "../src/services/scraper-service.js";
@@ -32,6 +33,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const USAGE = "Usage: smoke-bookmaker.ts --bookmaker <bm> [--league <slug>] [--persist]";
+const LEAGUE_SLUG = /^[a-z0-9-]+$/;
 
 interface Args {
   bookmaker: string;
@@ -191,6 +193,13 @@ async function main(): Promise<number> {
   if (!isBookmaker(args.bookmaker) || !getScraper(args.bookmaker)) {
     console.error(`Unknown bookmaker: ${args.bookmaker}`);
     console.error(`Known: ${ALL_POLISH_BOOKMAKERS.join(", ")}`);
+    return 2;
+  }
+  // A mistyped league would scrape nothing and, with --persist, write a scraper_runs row under a bogus slug.
+  if (!LEAGUE_SLUG.test(args.league) || !getLeagueConfig(args.league)) {
+    console.error(`Unknown league: ${args.league}`);
+    console.error(`Known: ${getAllLeagueSlugs().join(", ")}`);
+    console.error(USAGE);
     return 2;
   }
 

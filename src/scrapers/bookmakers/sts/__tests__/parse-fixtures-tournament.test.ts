@@ -16,6 +16,8 @@ const fx = (f: string) => readFileSync(join(dirname(fileURLToPath(import.meta.ur
 const ipl = () => parseWebSocketJson(fx("i_pl.trimmed.txt"))!;
 
 describe("STS parseFixtures strict category + tournament filter", () => {
+  afterEach(() => vi.restoreAllMocks());
+
   it("premier-league keeps only tournament 17 in category 1 (drops Northern Premier League and Premier League 2)", () => {
     const fixtures = parseFixtures(ipl(), "premier-league");
     expect(fixtures).toHaveLength(20); // 36 today
@@ -24,11 +26,25 @@ describe("STS parseFixtures strict category + tournament filter", () => {
     expect(fixtures.map((f) => f.id)).toEqual(expect.arrayContaining(["f2921896", "f2921898"]));
   });
   it("premier-league rejects tournament 17 under a non-1 category", () => {
+    // The strict-id miss warning is asserted in the diagnostic suite below;
+    // here it is only silenced and counted.
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const data = ipl();
     const C = data.B!.S!["1"].C!;
     C["249"].T!["17"] = C["1"].T!["17"];
     delete C["1"].T!["17"];
     expect(parseFixtures(data, "premier-league")).toHaveLength(0); // 36 today (substring filter), 20 with a tournament-only check
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+  it("premier-league rejects another category-1 tournament that is also named Premier League", () => {
+    const t17Ids = parseFixtures(ipl(), "premier-league").map((f) => f.id).sort();
+    const data = ipl();
+    const T = data.B!.S!["1"].C!["1"].T!;
+    expect(Object.keys(T["18"].FX!).length).toBeGreaterThan(0); // Championship today
+    T["18"].n = "Premier League"; // passes the name filters; only the tournament key keeps it out
+    const fixtures = parseFixtures(data, "premier-league");
+    expect(fixtures).toHaveLength(20);
+    expect(fixtures.map((f) => f.id).sort()).toEqual(t17Ids);
   });
   it("only premier-league opts into strict category + tournament ids", () => {
     expect(LEAGUE_CONFIG["premier-league"]).toMatchObject({ strictTournamentId: true, categoryId: 1, tournamentId: 17 });

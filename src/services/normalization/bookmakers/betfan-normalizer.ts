@@ -60,7 +60,9 @@ const BETFAN_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   "-200017": "COMEBACK",
   "-200069": "MOST_SHOTS_ON_TARGET",
   "-30242": "TOTAL_SHOTS_ON_TARGET",
-  "168": "TOTAL_SHOTS_ON_TARGET",
+  // 168/169 are the home/away team shots-on-target lines (the same platform
+  // ids etoto maps by side); see BETFAN_TEAM_STAT_ID_SIDES for the side guard.
+  "168": "TEAM_TOTAL_SHOTS_ON_TARGET",
   "169": "TEAM_TOTAL_SHOTS_ON_TARGET",
   "-200194": "TOTAL_SHOTS",
   "-200054": "TEAM_TOTAL_SHOTS",
@@ -531,8 +533,9 @@ const TEAM_SCOPED_CODE_MAP: Partial<
   // Team-scoped OPTA fouls ("<team> - liczba fauli (OPTA)", ids 162/163 and
   // the FOULS_TOTAL + team-name refine): the side lives in the market code
   // (decision D1, the same key as forbet/fortuna/superbet), so these codes
-  // stay out of TEAM_LINE_PARAM_MARKETS. An unresolvable team name keeps
-  // the side-less TEAM_TOTAL_FOULS rather than guessing HOME.
+  // stay out of TEAM_LINE_PARAM_MARKETS. An unresolvable team name never
+  // guesses HOME: ids 162/163 then drop to OTHER (BETFAN_TEAM_STAT_ID_SIDES),
+  // and the FOULS_TOTAL refine only fires once the team resolves.
   TEAM_TOTAL_FOULS: { home: "HOME_TEAM_TOTAL_FOULS", away: "AWAY_TEAM_TOTAL_FOULS" },
   // Per-team 1st-half exact corners arrive under home/away ids whose side is
   // only reliable from the team name in the market title.
@@ -548,6 +551,38 @@ const TEAM_SCOPED_CODE_MAP: Partial<
 
 const FIRST_HALF_PREFIX = /^1\.?\s*polow/;
 const SECOND_HALF_PREFIX = /^2\.?\s*polow/;
+
+/**
+ * Full-match shots / shots-on-target / fouls codes (whole-match and per-team)
+ * that have no half-scoped catalog counterpart in HALF_SCOPED_CODE_MAP.
+ */
+const HALF_UNSCOPED_STAT_CODES = new Set<NormalizedMarketType>([
+  "TOTAL_SHOTS",
+  "TOTAL_SHOTS_ON_TARGET",
+  "FOULS_TOTAL",
+  "TEAM_TOTAL_SHOTS",
+  "TEAM_TOTAL_SHOTS_ON_TARGET",
+  "TEAM_TOTAL_FOULS",
+]);
+
+/**
+ * Betfan's OPTA team-stat game types and the side each one carries. In the
+ * golden France v Morocco fixture and the Everton v Coventry capture, 162
+ * (fouls), 168 (shots on target) and -200054 (shots) are always the home
+ * team's lines and 163/169/-200055 the away team's (etoto maps the shared
+ * platform ids 168/169 by id the same way). A row under one of these ids is
+ * a single team's line: when the team named in the title does not resolve,
+ * or names the other side, it must not be published side-less or on the
+ * whole-match code, so normalizeMarket drops it to OTHER.
+ */
+const BETFAN_TEAM_STAT_ID_SIDES: Record<string, "HOME" | "AWAY"> = {
+  "162": "HOME",
+  "168": "HOME",
+  "-200054": "HOME",
+  "163": "AWAY",
+  "169": "AWAY",
+  "-200055": "AWAY",
+};
 
 /**
  * Refines a resolved market code using the raw market name and match context.
@@ -707,6 +742,16 @@ function refineMarketCode(
         code = "OTHER";
       }
     }
+  }
+
+  // Shots / shots-on-target / fouls lines have no half-scoped catalog code.
+  // A half-scoped line ("1. polowa - Everton - liczba fauli", or the suffix
+  // form "... liczba fauli w 1. polowie") must not pool with the full-match
+  // peers under the same key, so it drops to OTHER. Betfan reuses game-type
+  // ids across unrelated markets, so this is checked on the name, not the id.
+  if (HALF_UNSCOPED_STAT_CODES.has(code) && /polow/.test(name)) {
+    console.warn(`[betfan] Half-scoped stat line "${raw.name}" (code ${code}) has no catalog code, published as OTHER`);
+    code = "OTHER";
   }
 
   // Team-prefixed stat totals ("Szwajcaria - liczba strzalow (OPTA)",
@@ -1428,6 +1473,27 @@ export const betfanNormalizer: BookmakerMarketNormalizer = {
     if (!isValidMarketCode(resolvedCode)) {
       console.error(`[betfan] Market code "${resolvedCode}" not in catalog`);
       return null;
+    }
+
+    // A team-stat id whose title names no match team, or the other team,
+    // cannot be keyed safely: a single team's line would otherwise land
+    // side-less (TEAM_TOTAL_*:<line>) or on the whole-match code and pool
+    // with a different bet. Publish it as OTHER with UNKNOWN selections.
+    const idSide = rawId !== undefined ? BETFAN_TEAM_STAT_ID_SIDES[String(rawId)] : undefined;
+    if (idSide && resolvedCode !== "OTHER") {
+      const nameSide = detectTeamSide(raw.name, ctx);
+      if (nameSide !== idSide) {
+        console.warn(
+          `[betfan] Team-stat market "${raw.name}" (id: ${rawId}): team side ${nameSide ?? "unresolved"}, id implies ${idSide}; published as OTHER`
+        );
+        return {
+          marketCode: "OTHER",
+          paramValue: undefined,
+          marketKey: buildMarketKey("OTHER", undefined),
+          selections: raw.selections.map((sel) => ({ code: "UNKNOWN", label: sel.name, odds: sel.odds })),
+          debug: { rawName: raw.name, rawId, matchedBy },
+        };
+      }
     }
 
     // PLAYER_OFFSIDES now carries 1+/2+/3+ catalog lines (audit-match:

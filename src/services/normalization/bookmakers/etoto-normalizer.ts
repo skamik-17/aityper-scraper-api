@@ -157,8 +157,8 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   [-338]: "WINNING_MARGIN", // "Margines zwycięstwa"
   [15]: "PENALTY_AWARDED", // "Rzut karny"
   // "Suma 0.5 rzutów karnych" (Poniżej/Powyżej 0.5): over 0.5 penalties is
-  // "a penalty is awarded". Only the 0.5 line of a name that says penalty
-  // kicks qualifies; normalizeMarket keeps anything else as OTHER (see
+  // "a penalty is awarded". Only that exact full-match name with 0.5 label
+  // lines qualifies; normalizeMarket keeps anything else as OTHER (see
   // isPenaltyTotalZeroFiveLine).
   [-30591]: "PENALTY_AWARDED",
 
@@ -196,9 +196,9 @@ const ETOTO_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // Routed to the single combined RESULT_OR_BTTS code (matching lebull's
   // own quote of the same bet) instead of the retired team-parameterized
   // WIN_OR_BTTS / standalone DRAW_OR_BTTS codes — side is resolved via
-  // ETOTO_MARKET_ID_TEAM_SIDE below and folded into the selection code
-  // (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/NO, AWAY_OR_BTTS_YES/NO) in
-  // normalizeSelectionForMarket.
+  // ETOTO_MARKET_ID_TEAM_SIDE below (-8042 is the draw leg) and folded into
+  // the selection code. Only the tak leg is published, as <SIDE>_OR_BTTS_YES;
+  // see the RESULT_OR_BTTS branch in normalizeMarket for why "nie" is dropped.
   [-8041]: "RESULT_OR_BTTS", // "<home> wygra lub obie strzelą"
   [-8042]: "RESULT_OR_BTTS", // "Remis lub obie strzelą"
   [-8043]: "RESULT_OR_BTTS", // "<away> wygra lub obie strzelą"
@@ -766,18 +766,8 @@ function normalizeSelectionForMarket(
       return `${teamSide}_${overUnder}` as NormalizedSelection;
     }
 
-    // Cluster #12: etoto quotes "<team> wins or BTTS" and "draw or BTTS" as
-    // three separate Tak/Nie raw markets (ids -8041/-8042/-8043). They all
-    // resolve to the single combined RESULT_OR_BTTS code, so the side (from
-    // teamSide, resolved via ETOTO_MARKET_ID_TEAM_SIDE) has to be folded into
-    // the selection code itself — the draw leg (-8042) has no team side, so
-    // it falls back to "DRAW".
-    case "RESULT_OR_BTTS": {
-      const yesNoBtts = normalizeYesNoSelection(trimmed);
-      if (yesNoBtts === "UNKNOWN") return "UNKNOWN";
-      const side = teamSide ?? "DRAW";
-      return `${side}_OR_BTTS_${yesNoBtts}` as NormalizedSelection;
-    }
+    // RESULT_OR_BTTS (ids -8041/-8042/-8043) never reaches this switch: the
+    // RESULT_OR_BTTS branch in normalizeMarket builds its single tak selection.
 
     // Id -30591 quotes the penalty market as a 0.5 total ("Poniżej/Powyżej
     // 0.5"); normalizeMarket lets only that line through, where over = at
@@ -1116,25 +1106,25 @@ function normalizeSelectionForMarket(
     }
 
     // eToto bundles every player into one combined raw market for these two
-    // stats ("Lastname, Firstname N+" per selection, thresholds mixed across
-    // players), unlike the one-market-per-player shape used for
-    // PLAYER_GOALS/PLAYER_CARDS etc. paramValue is left unset here (see
-    // extractParamValue's default branch) so market-type-grouper's
-    // splitBundledPlayerSelections() recovery can still split this into one
-    // synthetic market per player downstream — that recovery only fires when
-    // every selection's code passes looksLikePlayerName(), which requires a
-    // bare name. Strip the trailing "N+" threshold token so the code carries
-    // only the canonicalized player name (matching the bare-name format used
-    // for cross-bookmaker player matching), instead of embedding the
-    // threshold in the code and defeating that recovery.
+    // stats ("Lastname, Firstname N+" per selection), and N differs per
+    // player ("Hakimi, Achraf 2+" next to "Dembele, Ousmane 1+"). paramValue
+    // is left unset (see extractParamValue's default branch) so
+    // market-type-grouper's splitBundledPlayerSelections() splits this into
+    // one synthetic market per player downstream. The code keeps the tier as
+    // "<canonical name> <N>+": the grouper's stripDeclaredSuffix turns that
+    // into (player, "N+"). A bare name would get the catalog fallback tier
+    // "1+", which published etoto's 2+/3+ prices as 1+ (cross-bookmaker final
+    // review F1: Hakimi 2+@2.95 shown against peers' 1+@1.19). A tier outside
+    // the catalog vocabulary, or no tier at all, cannot be placed on a
+    // declared tier, so it becomes UNKNOWN and normalizeMarket drops it (one
+    // unparsable selection would make the grouper skip the whole split).
     case "PLAYER_FOULS":
     case "PLAYER_FOULS_WON": {
       const cleaned = trimmed.replace(/^\d+\.\s*/, "").trim();
-      const withLine = cleaned.match(/^(.+?)\s+\d+\+$/);
-      if (withLine) {
-        return canonicalizePlayerName(withLine[1]) as NormalizedSelection;
-      }
-      return canonicalizePlayerName(cleaned) as NormalizedSelection;
+      const withLine = cleaned.match(/^(.+?)\s+(\d+\+)$/);
+      const tiers = getMarketMetadata(marketCode)?.selections ?? [];
+      if (!withLine || !tiers.includes(withLine[2])) return "UNKNOWN";
+      return `${canonicalizePlayerName(withLine[1])} ${withLine[2]}` as NormalizedSelection;
     }
 
     default:
@@ -1165,27 +1155,31 @@ function parseSumIntegerLine(text: string): string | undefined {
 }
 
 /**
- * Penalty-kick wording ("rzut karny", "rzuty karne", "rzutów karnych").
- * Uses \p{L}, not \w: JS \w is ASCII-only, so "rzut\w*" stops before the "ó"
- * of "rzutów" and would never match the real "Suma 0.5 rzutów karnych".
+ * The whole full-match 0.5 penalty-total name, exactly as etoto sends it:
+ * "Suma 0.5 rzutów karnych". Anchored at both ends, so a period-scoped ("1.
+ * połowa - suma 0.5 rzutów karnych", "... - 2. połowa") or team-scoped
+ * ("Everton suma 0.5 rzutów karnych") total never matches. Uses \p{L}, not
+ * \w: JS \w is ASCII-only, so "rzut\w*" stops before the "ó" of "rzutów".
  */
-const PENALTY_KICK_WORDING = /rzut\p{L}*\s+karn/iu;
+const PENALTY_TOTAL_ZERO_FIVE_NAME = /^suma\s+0[.,]5\s+rzut\p{L}*\s+karn\p{L}*\s*$/iu;
 
 /**
- * Id -30591 is a penalty total ("Suma X rzutów karnych"). Only its 0.5 line
- * ("Powyżej 0.5" = at least one penalty) is the PENALTY_AWARDED proposition.
- * The name must also say penalty kicks: negative gameType ids do not keep one
- * meaning on this platform (fuksiarz, on the same API, sends -30591 as
- * "Zmiana w 1. połowie"), so an id plus a 0.5 line alone could publish another
- * market's Over price as "penalty awarded".
- * Fails closed: a missing or unparseable line does not count as 0.5.
+ * Id -30591 is a penalty total ("Suma X rzutów karnych"). Only its full-match
+ * 0.5 line ("Powyżej 0.5" = at least one penalty) is the PENALTY_AWARDED
+ * proposition. The whole name must be that market: negative gameType ids do
+ * not keep one meaning on this platform (fuksiarz, on the same API, sends
+ * -30591 as "Zmiana w 1. połowie"), so an id plus a 0.5 line alone could
+ * publish another market's Over price, or a half or team penalty total, as
+ * full-match "penalty awarded". Every selection label that carries its own
+ * line must carry 0.5 as well.
+ * Fails closed: any other name, line or label line keeps the market OTHER.
  */
 function isPenaltyTotalZeroFiveLine(raw: RawBookmakerMarket): boolean {
-  if (!PENALTY_KICK_WORDING.test(raw.name)) return false;
-  const line =
-    parseDecimalLine(raw.name) ??
-    parseOverUnderLine(raw.selections.map((s: { name: string }) => s.name));
-  return line !== undefined && Number(line) === 0.5;
+  if (!PENALTY_TOTAL_ZERO_FIVE_NAME.test(raw.name.trim())) return false;
+  return raw.selections.every((s: { name: string }) => {
+    const labelLine = parseOverUnderLine([s.name]);
+    return labelLine === undefined || Number(labelLine) === 0.5;
+  });
 }
 
 /**
@@ -1264,9 +1258,10 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
     }
 
     // A -30591 penalty total at any line other than 0.5 is not "a penalty is
-    // awarded" (over 1.5 means two or more), and neither is a -30591 whose
-    // name lacks the penalty wording. Keep both OTHER, not null, so the
-    // "Unmapped market" warn below still flags them.
+    // awarded" (over 1.5 means two or more), and neither is a half- or
+    // team-scoped penalty total or a -30591 that is not a penalty total at all.
+    // Keep them OTHER, not null, so the "Unmapped market" warn below still
+    // flags them.
     if (marketId === -30591 && !isPenaltyTotalZeroFiveLine(raw)) {
       marketCode = "OTHER";
     }
@@ -1315,6 +1310,14 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
       // otherwise they collide on a single side-less key such as
       // "CORNERS_TEAM:5.5", mix the two teams' prices into one row and never
       // merge with peers (see betclic-normalizer.ts for the same pattern).
+      // Fails closed: today only ids with a side entry route to these codes,
+      // so a code here without a side means a newly mapped id is missing from
+      // ETOTO_MARKET_ID_TEAM_SIDE. Drop it rather than publish a side-less row
+      // (fuksiarz does the same).
+      if (ETOTO_TEAM_LINE_PARAM_MARKETS.has(marketCode) && !teamSide) {
+        console.warn(`[etoto] Team-line market without a side "${raw.name}" (id: ${marketId ?? "none"}) dropped`);
+        return null;
+      }
       if (ETOTO_TEAM_LINE_PARAM_MARKETS.has(marketCode) && teamSide) {
         paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;
       }
@@ -1363,12 +1366,48 @@ export const etotoNormalizer: BookmakerMarketNormalizer = {
         return null;
       }
       selections = [{ code: combo, label: yesSelection.name, odds: yesSelection.odds }];
+    } else if (marketCode === "RESULT_OR_BTTS") {
+      // Cluster #12 / controller ruling 4: etoto quotes each "<team> wygra
+      // lub obie strzelą" / "Remis lub obie strzelą" leg (-8041/-8042/-8043)
+      // as its own complementary Tak/Nie market (France v Morocco -8041: Tak
+      // 1.15 / Nie 4.7, implied 0.870 + 0.213 = 1.08). Only "tak" ("<X> or
+      // BTTS") is published, as <SIDE>_OR_BTTS_YES. etoto's "nie" is NOT(<X>
+      // or BTTS), i.e. neither happens, but the catalog <SIDE>_OR_BTTS_NO means
+      // "<X> or BTTS-No", a different and much shorter-priced bet, so "nie" is
+      // dropped (the forbet rule). The side comes from the id; an id with no
+      // side entry other than the draw leg (-8042), an unrecognised label or a
+      // missing/duplicated tak leg drops the whole market rather than guess.
+      const side = teamSide ?? (marketId === -8042 ? "DRAW" : undefined);
+      const legs = raw.selections.map((sel: { name: string }) => normalizeYesNoSelection(sel.name));
+      const yesSelections = raw.selections.filter((_: unknown, i: number) => legs[i] === "YES");
+      if (!side || legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+        console.warn(`[etoto] RESULT_OR_BTTS: could not resolve the side or tak leg for "${raw.name}"`);
+        return null;
+      }
+      selections = [{
+        code: `${side}_OR_BTTS_YES` as NormalizedSelection,
+        label: yesSelections[0].name,
+        odds: yesSelections[0].odds,
+      }];
     } else {
       selections = raw.selections.map((sel: { name: string; odds: number }) => ({
         code: normalizeSelectionForMarket(sel.name, marketCode!, ctx, teamSide),
         label: sel.name,
         odds: sel.odds,
       }));
+      // Bundled player fouls: a selection whose tier is missing or outside the
+      // catalog vocabulary (UNKNOWN, see normalizeSelectionForMarket) is
+      // dropped, never published under another tier.
+      if (marketCode === "PLAYER_FOULS" || marketCode === "PLAYER_FOULS_WON") {
+        const dropped = selections.filter((sel) => sel.code === "UNKNOWN").map((sel) => sel.label);
+        if (dropped.length > 0) {
+          console.warn(
+            `[etoto] ${marketCode}: dropped selections with no catalog tier ${JSON.stringify(dropped)} in "${raw.name}"`
+          );
+          selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+        }
+        if (selections.length === 0) return null;
+      }
     }
 
     // Clean-sheet-derived TO_SCORE entries need YES/NO inverted after the

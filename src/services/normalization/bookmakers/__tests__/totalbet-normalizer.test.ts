@@ -278,14 +278,95 @@ describe("totalbet normalizer (integrity guards)", () => {
   });
 
   it("totalbet validates the line format per family", () => {
+    // The selection carries the market's own line, as Totalbet prints it, so only the line format is under test.
     const at = (bookmakerMarketId: string, paramValue: string) =>
       totalbetNormalizer.normalizeMarket(
-        { bookmakerMarketId, name: "x", paramValue, selections: [{ name: "Leeds (1:0)", odds: 1.5 }] },
+        { bookmakerMarketId, name: "x", paramValue, selections: [{ name: `Leeds (${paramValue})`, odds: 1.5 }] },
         ctx,
       )?.marketKey ?? null;
     expect([at("slug:suma", "2.5"), at("slug:suma", "2"), at("slug:suma", "2,5")]).toEqual(["TOTAL_GOALS:2.5", null, null]);
     expect([at("slug:handicap", "-1.5"), at("slug:handicap", "1.5"), at("slug:handicap", "0")]).toEqual(["ASIAN_HANDICAP:-1.5", null, null]);
     expect([at("slug:handicap_hcp", "0:0"), at("slug:handicap_hcp", "-1")]).toEqual(["EUROPEAN_HANDICAP:0", null]);
+  });
+
+  it("totalbet drops an Asian handicap whose selections carry another line than the market", () => {
+    const ah = (bookmakerMarketId: string, paramValue: string, names: string[]) =>
+      totalbetNormalizer.normalizeMarket(
+        { bookmakerMarketId, name: "Handicap", paramValue, selections: names.map((name) => ({ name, odds: 1.13 })) },
+        ctx,
+      );
+    // A padded row [L(-1.5), E, L(+1.5), O(away), E, E, E, E] read by grid position gives the away
+    // line as the home line: "Tottenham (+1.5)" would be AWAY of ASIAN_HANDICAP:+1.5, i.e. away -1.5.
+    expect(ah("slug:handicap", "+1.5", ["Tottenham (+1.5)"])).toBeNull();
+    // swapped or duplicated parentheticals
+    expect(ah("slug:handicap", "-1.5", ["Leeds (+1.5)", "Tottenham (-1.5)"])).toBeNull();
+    expect(ah("slug:handicap", "-1.5", ["Leeds (-1.5)", "Tottenham (-1.5)"])).toBeNull();
+    expect(ah("slug:1_poaowa_handicap", "+0.5", ["Leeds (-0.5)", "Tottenham (+0.5)"])).toBeNull();
+    // a sided selection without its own line cannot be checked
+    expect(ah("slug:handicap", "-1.5", ["Leeds", "Tottenham (+1.5)"])).toBeNull();
+    // lines compare as numbers
+    expect(ah("slug:handicap", "-1.5", ["Leeds (-1.50)", "Tottenham (1.5)"])).toMatchObject({ marketKey: "ASIAN_HANDICAP:-1.5" });
+    expect(ah("slug:2_poaowa_handicap", "+0.5", ["Tottenham (-0.5)"])).toMatchObject({
+      marketKey: "SECOND_HALF_ASIAN_HANDICAP:+0.5",
+      selections: [{ code: "AWAY", label: "Tottenham (-0.5)", odds: 1.13 }],
+    });
+  });
+
+  it("totalbet drops a European handicap whose selections carry another start score than the row", () => {
+    const eh = (paramValue: string, names: string[]) =>
+      totalbetNormalizer.normalizeMarket(
+        { bookmakerMarketId: "slug:handicap_hcp", name: "Handicap", paramValue, selections: names.map((name) => ({ name, odds: 4.3 })) },
+        ctx,
+      );
+    expect(eh("1:0", ["Leeds (0:1)", "remis (0:1)", "Tottenham (0:1)"])).toBeNull();
+    expect(eh("1:0", ["Leeds (1:0)", "remis (0:1)", "Tottenham (1:0)"])).toBeNull();
+    expect(eh("1:0", ["Leeds (1:0)", "remis", "Tottenham (1:0)"])).toBeNull();
+    expect(eh("1:0", ["Leeds (1:0)", "remis (1:0)", "Tottenham (1:0)"])).toMatchObject({ marketKey: "EUROPEAN_HANDICAP:+1" });
+  });
+
+  it("totalbet maps the name 'Wynik meczu' only for id-less, line-less markets", () => {
+    const named = (raw: { bookmakerMarketId?: string; paramValue?: string }, names: string[]) =>
+      totalbetNormalizer.normalizeMarket({ ...raw, name: "Wynik meczu", selections: names.map((name) => ({ name, odds: 2.5 })) }, ctx);
+    const scored = ["Leeds (1:0)", "remis (1:0)", "Tottenham (1:0)"];
+    // A line component renamed "Wynik meczu": every row would share the MATCH_WINNER key and lose its line.
+    expect(named({ bookmakerMarketId: "slug:new_handicap", paramValue: "1:0" }, scored)).toMatchObject({ marketCode: "OTHER", paramValue: "1:0" });
+    expect(named({ bookmakerMarketId: "mid:999" }, ["Leeds", "remis", "Tottenham"])!.marketCode).toBe("OTHER");
+    expect(named({ paramValue: "1:0" }, scored)!.marketCode).toBe("OTHER");
+    expect(named({}, ["Leeds", "remis", "Tottenham"])).toMatchObject({ marketKey: "MATCH_WINNER", debug: { matchedBy: "name" } });
+    expect(named({ bookmakerMarketId: "" }, ["Leeds", "remis", "Tottenham"])).toMatchObject({ marketKey: "MATCH_WINNER" });
+  });
+
+  it("totalbet drops a team total whose name names the other team", () => {
+    // The side of the six team-total components would otherwise come only from the CMS slug.
+    const tt = (bookmakerMarketId: string, name: string) =>
+      totalbetNormalizer.normalizeMarket(
+        {
+          bookmakerMarketId,
+          name,
+          paramValue: "0.5",
+          selections: [
+            { name: "poniżej 0.5", odds: 3.15 },
+            { name: "powyżej 0.5", odds: 1.31 },
+          ],
+        },
+        ctx,
+      );
+    expect(tt("slug:competitor1_total_suma", "Tottenham - Total (suma)")).toBeNull();
+    expect(tt("slug:competitor2_total_suma", "Leeds - Total (suma)")).toBeNull();
+    expect(tt("slug:1_poaowa_competitor_1_suma_goli", "1. połowa - Tottenham - Total (suma)")).toBeNull();
+    expect(tt("slug:1_poaowa_competitor_2_suma_goli", "1. połowa - Leeds - Total (suma)")).toBeNull();
+    expect(tt("slug:2_poaowa_competitor1_suma_goli_", "2. połowa - Tottenham - Total (suma)")).toBeNull();
+    expect(tt("slug:2_poaowa_competitor2_suma_goli_", "2. połowa - Leeds - Total (suma)")).toBeNull();
+    // no team in the name, or a name that names both teams
+    expect(tt("slug:competitor1_total_suma", "Total (suma)")).toBeNull();
+    expect(tt("slug:competitor1_total_suma", "Leeds lub Tottenham - Total (suma)")).toBeNull();
+    expect(tt("slug:competitor1_total_suma", "Leeds - Total (suma)")).toMatchObject({ marketKey: "HOME_TEAM_TOTAL_GOALS:0.5" });
+    expect(tt("slug:1_poaowa_competitor_2_suma_goli", "1. połowa - Tottenham - Total (suma)")).toMatchObject({
+      marketKey: "HALF_TIME_AWAY_TEAM_TOTAL_GOALS:0.5",
+    });
+    expect(tt("slug:2_poaowa_competitor2_suma_goli_", "2. Połowa - Tottenham - Total (suma)")).toMatchObject({
+      marketKey: "SECOND_HALF_AWAY_TEAM_TOTAL_GOALS:0.5",
+    });
   });
 
   it("totalbet looks up only own keys of its tables", () => {

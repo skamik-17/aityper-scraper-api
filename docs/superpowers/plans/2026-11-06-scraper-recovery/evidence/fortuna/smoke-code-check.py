@@ -17,10 +17,15 @@ so every threshold here comes from the capture itself:
   P(code)  matches that carry at least one raw market which the planned id map
            (fortuna.md Tasks 1-5 plus the preflight rulings) turns into <code>
 
+The held-back ids are not in that map: 00-bt (RED_CARD_AND_PENALTY, c0a971d) and
+00-07/00-08 (RED_CARD_TEAM, 55adb13) stay unmapped until the owner confirms their
+settlement, so both codes are expected at 0, like SECOND_HALF_CORNERS_RACE.
+
 Gates:
   exact   requiredCodeMatchCounts[code] == P(code), for each of the 25 acceptance codes
-  floor   the 10 all-match codes == M; the 13 full-offer codes >= F - 1;
-          FIRST_CORNER >= P(FIRST_CORNER) - 1; SECOND_HALF_CORNERS_RACE == 0
+  floor   the 10 all-match codes == M; the 11 full-offer codes >= F - 1;
+          FIRST_CORNER >= P(FIRST_CORNER) - 1; the 3 expect-zero codes
+          (RED_CARD_AND_PENALTY, RED_CARD_TEAM, SECOND_HALF_CORNERS_RACE) == 0
           (a negative floor is clamped to 0)
   share   otherMarketShare <= 0.305 (unscaled, as in criterion 1)
   warn    warnPatternCount == 0
@@ -33,8 +38,10 @@ Verdict (printed as SMOKE_CHECK, also the exit code):
                floor or carries none of a code's ids. The code matches the offer; the run
                is not evidence for the codes listed under "shift". Record them.
 
-P(code) follows the normalizer's id map plus the Task 1 corners guard, the half-scope
-reroute and the preflight WINNING_MARGIN ruling, not its name routers. A count above or below
+P(code) follows the normalizer's id map plus the Task 1 corners guard (only "więcej
+rzutów rożnych" wording is a race), the half-scope reroute (a bare "1.połowa" counts),
+the scope check of the Tasks 3-5 ids and the preflight WINNING_MARGIN ruling (any
+"o <n>" leg with n >= 4, whatever follows the number), not its name routers. A count above or below
 P(code) therefore means either a normalizer bug or an offer shape this script does not
 model (for example a 1X2 label naming the wrong team, which the normalizer flips).
 Either way: inspect it with a --from run on the same capture.
@@ -52,26 +59,28 @@ ALL_MATCH = [
     "AWAY_SCORE_BOTH_HALVES", "HOME_WIN_AT_LEAST_ONE_HALF", "AWAY_WIN_AT_LEAST_ONE_HALF",
 ]
 FULL_OFFER = [
-    "HALF_TIME_CORNERS_RACE", "PENALTY_AWARDED", "RED_CARD_AND_PENALTY", "OWN_GOAL",
+    "HALF_TIME_CORNERS_RACE", "PENALTY_AWARDED", "OWN_GOAL",
     "HEADER_GOAL", "ASSISTS_TOTAL", "HOME_EXACT_GOALS", "AWAY_EXACT_GOALS",
-    "RED_CARD_TEAM", "HALF_TIME_RED_CARD_TEAM", "HALF_TIME_RED_CARD",
+    "HALF_TIME_RED_CARD_TEAM", "HALF_TIME_RED_CARD",
     "SECOND_HALF_EXACT_GOALS", "ODD_EVEN_GOALS",
 ]
 FIRST_CORNER = "FIRST_CORNER"
 SECOND_HALF_RACE = "SECOND_HALF_CORNERS_RACE"
-CODES = ALL_MATCH + FULL_OFFER + [FIRST_CORNER, SECOND_HALF_RACE]
+# Never offered (the 2nd-half race) or held back by the normalizer (00-bt, 00-07, 00-08).
+EXPECT_ZERO = ["RED_CARD_AND_PENALTY", "RED_CARD_TEAM", SECOND_HALF_RACE]
+CODES = ALL_MATCH + FULL_OFFER + [FIRST_CORNER] + EXPECT_ZERO
 
 # Plain id -> code entries the plan adds (Task 3 fortuna.md:524, Task 4 :582, Task 5 :643)
-# plus the existing ones for the same codes (fortuna-normalizer.ts id map, constants.ts).
+# plus the existing ones for the same codes (fortuna-normalizer.ts id map, constants.ts),
+# without the held-back 00-bt, 00-07 and 00-08.
 ID_TO_CODE = {
-    "00-9a": "PENALTY_AWARDED", "00-bt": "RED_CARD_AND_PENALTY", "00-bv": "OWN_GOAL",
+    "00-9a": "PENALTY_AWARDED", "00-bv": "OWN_GOAL",
     "00-k7": "HEADER_GOAL", "00-k6": "ASSISTS_TOTAL",
     "00-2n": "HALF_TIME_BTTS", "00-1d": "HALF_TIME_BTTS",
     "00-1h": "HOME_WIN_TO_NIL", "00-1i": "AWAY_WIN_TO_NIL",
     "00-1o": "HOME_WIN_BOTH_HALVES", "00-1p": "AWAY_WIN_BOTH_HALVES",
     "00-2b": "HOME_SCORE_BOTH_HALVES", "00-2c": "AWAY_SCORE_BOTH_HALVES",
     "00-1r": "HOME_WIN_AT_LEAST_ONE_HALF", "00-1s": "AWAY_WIN_AT_LEAST_ONE_HALF",
-    "00-07": "RED_CARD_TEAM", "00-08": "RED_CARD_TEAM",
     "00-0c": "HALF_TIME_RED_CARD_TEAM", "00-0d": "HALF_TIME_RED_CARD_TEAM",
     "00-0a": "HALF_TIME_RED_CARD", "00-0f": "FIRST_CORNER", "00-19": "ODD_EVEN_GOALS",
     "00-09": "WINNING_MARGIN",
@@ -87,12 +96,23 @@ RACE_GUARD_ID_SCOPE = {
 }
 HALF_TIME_RESULT_IDS = {"00-02", "00-2d"}
 MATCH_WINNER_IDS = {"00-00", "00-60", "00-2x"}
+# The scope each Tasks 3-5 id must name (fortuna-normalizer.ts FORTUNA_ID_EXPECTED_SCOPE);
+# a name whose prefix disagrees is dropped. FT = "Mecz:" or no prefix.
+ID_EXPECTED_SCOPE = {
+    **{i: "FT" for i in ("00-9a", "00-bv", "00-k7", "00-k6", "00-1h", "00-1i", "00-1o", "00-1p",
+                         "00-2b", "00-2c", "00-1r", "00-1s", "00-16", "00-17", "00-0f", "00-19", "00-09")},
+    **{i: "H1" for i in ("00-2n", "00-0c", "00-0d", "00-0a")},
+    "00-3e": "H2",
+}
 
 CORNERS_RE = re.compile(r"rzut(?:[oó]w)?\s+ro[żz]nych", re.I)
-SCOPE_RE = re.compile(r"^\s*(?:(mecz)|([12])\s*\.?\s*po[lł]owa)\s*:\s*", re.I)
+RACE_WORDING_RE = re.compile(r"wi[eę]cej\s+rzut", re.I)
+# "Mecz:", "1.połowa:", or a name that is exactly "1.połowa"/"2.połowa" (no colon)
+SCOPE_RE = re.compile(r"^\s*(?:(mecz)\s*:|([12])\s*\.?\s*po[lł]owa\s*(?::|$))\s*", re.I)
 HANDICAP_RE = re.compile(r"handicap|\d+\s*:\s*\d+", re.I)
 FIRST_GOAL_RE = re.compile(r"^1\s*\.\s*gol\b", re.I)
-MARGIN_LEG_RE = re.compile(r"^(.+?)\s*/\s*o\s+(\d+)\s+gol", re.I)
+MARGIN_N_RE = re.compile(r"/\s*o\s+(\d+)", re.I)
+PLACEHOLDER_RE = re.compile(r"^rynek\s|ufo:mtyp", re.I)
 
 
 def plain_id(market):
@@ -110,10 +130,10 @@ def market_code(market):
         scope = "FT" if scope_match.group(1) else ("H1" if scope_match.group(2) == "1" else "H2")
     unscoped = name[scope_match.end():] if scope_match else name
     if mid in RACE_GUARD_ID_SCOPE and CORNERS_RE.search(name):
-        # Task 1: a corners name under a 1X2-family or race id is a corners race; a
-        # handicap-style one is dropped; an explicit prefix sets the scope, otherwise
-        # the race keeps the scope of its id's code.
-        if HANDICAP_RE.search(unscoped):
+        # Task 1: a corners name under a 1X2-family or race id is a corners race only
+        # with race wording; a handicap-style or any other corners name is dropped; an
+        # explicit prefix sets the scope, otherwise the race keeps the scope of its id's code.
+        if HANDICAP_RE.search(unscoped) or not RACE_WORDING_RE.search(unscoped):
             return None
         return {"H1": "HALF_TIME_CORNERS_RACE", "H2": SECOND_HALF_RACE}.get(scope or RACE_GUARD_ID_SCOPE[mid])
     if mid in HALF_TIME_RESULT_IDS or mid in MATCH_WINNER_IDS:
@@ -125,12 +145,16 @@ def market_code(market):
         # the half reroute: a "1.połowa:" 1X2 name under a MATCH_WINNER id
         return "HALF_TIME_RESULT" if scope == "H1" and not HANDICAP_RE.search(unscoped) else None
     code = ID_TO_CODE.get(mid)
+    expected_scope = ID_EXPECTED_SCOPE.get(mid)
+    if code and expected_scope and not PLACEHOLDER_RE.search(name) and (scope or "FT") != expected_scope:
+        # Final review F3: a Tasks 3-5 id whose name names another scope is dropped.
+        return None
     if code == "WINNING_MARGIN":
-        # Preflight ruling T4: a book that lists "o 4 gole" or more is dropped,
-        # because "o 3 gole" would no longer mean "3 or more".
+        # Preflight ruling T4: a book that lists a margin of 4 or more ("o 4 gole",
+        # "o 4+ gole", ...) is dropped, because "o 3 gole" would no longer mean "3 or more".
         for sel in market.get("selections") or []:
-            leg = MARGIN_LEG_RE.match(str(sel.get("name") or "").strip())
-            if leg and int(leg.group(2)) >= 4:
+            leg = MARGIN_N_RE.search(str(sel.get("name") or ""))
+            if leg and int(leg.group(1)) >= 4:
                 return None
     return code
 
@@ -200,7 +224,7 @@ def main():
             group, floor = "first-corner", f">={first_corner_floor}"
             floor_ok = (counts.get(c) or 0) >= first_corner_floor
         else:
-            group, floor = "not-offered", "==0"
+            group, floor = "expect-zero", "==0"
             floor_ok = counts.get(c) == 0
         exact = counts.get(c) == presence[c]
         rows[c] = {"group": group, "count": counts.get(c), "presence": presence[c], "floor": floor,
@@ -209,7 +233,7 @@ def main():
             problems.append(f"exact: {c} count {counts.get(c)} != presence {presence[c]}")
         elif not floor_ok:
             shift.append(f"{c}: floor {floor} not met, offer presence {presence[c]}")
-        elif presence[c] == 0 and c != SECOND_HALF_RACE:
+        elif presence[c] == 0 and c not in EXPECT_ZERO:
             shift.append(f"{c}: not exercised, no match carries its ids")
 
     verdict = "FAIL" if problems else ("OFFER_SHIFT" if shift else "PASS")
@@ -227,7 +251,7 @@ def main():
         "verdict": verdict, "matches": total, "fullOffer": full, "firstCornerPresence": presence[FIRST_CORNER],
         "otherMarketShare": share, "warnPatternCount": smoke.get("warnPatternCount"),
         "thresholds": {"allMatch": f"=={total}", "fullOffer": f">={full_floor}",
-                       "FIRST_CORNER": f">={first_corner_floor}", "SECOND_HALF_CORNERS_RACE": "==0",
+                       "FIRST_CORNER": f">={first_corner_floor}", **{c: "==0" for c in EXPECT_ZERO},
                        "otherMarketShare": f"<={MAX_OTHER_SHARE}"},
         "presence": presence, "counts": counts, "problems": problems, "shift": shift,
     }, ensure_ascii=False))

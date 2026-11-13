@@ -109,10 +109,38 @@ if [ "$code" != "200" ]; then
       fi
     else
       echo "No local Supabase containers found: running supabase start"
-      if ! npx --yes supabase@2.70.5 start; then
-        echo "supabase start failed." >&2
-        echo "npx cache may be corrupt: find ~/.npm/_npx -maxdepth 3 -path '*node_modules/supabase' -prune and remove that _npx/<hash> dir, then retry" >&2
-        exit 1
+      # Prefer a Supabase CLI 2.70.5 that is already in the npx cache: it works offline.
+      # npx names its cache dir after a hash of the raw argument, so `npx supabase@2.70.5`
+      # does not reuse the copy a bare `npx supabase` cached. Its first run fetches the
+      # package from the registry and its postinstall downloads the binary from GitHub.
+      cli_version="2.70.5"
+      cached_cli=""
+      for cli_pkg in "${HOME:-}"/.npm/_npx/*/node_modules/supabase; do
+        [ -f "$cli_pkg/package.json" ] && [ -x "$cli_pkg/bin/supabase" ] || continue
+        # The first "version" in package.json is the top-level one.
+        cli_pkg_version=$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "$cli_pkg/package.json" | head -n 1 | sed -E 's/.*"([^"]*)"$/\1/')
+        if [ "$cli_pkg_version" = "$cli_version" ]; then
+          cached_cli="$cli_pkg/bin/supabase"
+          break
+        fi
+      done
+      if [ -n "$cached_cli" ]; then
+        echo "Using the cached Supabase CLI $cli_version: $cached_cli"
+        if ! "$cached_cli" start; then
+          echo "supabase start failed (cached CLI $cached_cli)." >&2
+          echo "Check the output above and that Docker is healthy, then retry. Nothing was deleted." >&2
+          exit 1
+        fi
+      else
+        echo "No cached Supabase CLI $cli_version under ~/.npm/_npx: running npx --yes supabase@$cli_version start"
+        if ! npx --yes "supabase@$cli_version" start; then
+          cat >&2 <<EOF
+supabase start failed.
+The first npx --yes supabase@$cli_version needs network access: npm fetches the package from the registry and its postinstall downloads the CLI binary (about 56 MB) from github.com. If you are offline, connect and retry.
+If it also fails online, the npx cache may be corrupt: grep -l '"version": "$cli_version"' ~/.npm/_npx/*/node_modules/supabase/package.json lists the cached $cli_version copies. None of them has an executable bin/supabase (this script would have used it), so remove that _npx/<hash> dir, then retry. Nothing was deleted.
+EOF
+          exit 1
+        fi
       fi
     fi
   else

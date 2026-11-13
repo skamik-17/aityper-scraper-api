@@ -105,6 +105,38 @@ describe("betclic OPTA offsides/fouls and penalty ANY", () => {
     expect(out?.selections.map((s) => [s.label, s.code, s.odds])).toEqual(legs.map(([name, odds, code]) => [name, code, odds]));
   });
 
+  // Ruling 8: a team part carrying a period qualifier ("- 1. połowa",
+  // "(1. połowa)", Betclic's own "- 1. połowa" suffix style) is a
+  // period-scoped line. It stays OTHER instead of pooling with other
+  // bookmakers' full-match HOME_/AWAY_ lines. No such name exists today.
+  const PERIOD_TAIL_NAMES = [
+    "Liczba fauli (OPTA) - Arsenal - 1. połowa",
+    "Liczba fauli (OPTA) - Arsenal (1. połowa)",
+    "Liczba fauli (OPTA) - Arsenal - 1. połowa (z dogrywką)",
+    "Liczba fauli (OPTA) - Hull- 2. połowa",
+    "Liczba fauli (OPTA) - Hull 2. połowa",
+    "Liczba spalonych w meczu - Arsenal - 1. połowa (OPTA)",
+    "Liczba spalonych w meczu - Arsenal (1. połowa) (OPTA)",
+    "Liczba spalonych w meczu - Hull- 2. połowa (OPTA)",
+  ];
+  it.each(PERIOD_TAIL_NAMES)("keeps a period-scoped team OPTA line OTHER: %s", (name) => {
+    const out = betclicNormalizer.normalizeMarket({ name, selections: [{ name: "Powyżej 4,5", odds: 1.8 }, { name: "Poniżej 4,5", odds: 1.9 }] }, ctx);
+    expect(out?.marketCode).toBe("OTHER");
+    expect(out?.marketKey).toBe("OTHER");
+  });
+
+  // A bare hyphen inside a team name is not a qualifier separator.
+  it("still resolves a hyphenated team name (Saint-Étienne) on the team OPTA lines", () => {
+    const ligue1 = { homeTeam: "Lyon", awayTeam: "Saint-Etienne", league: "ligue-1" };
+    const ou = [{ name: "Powyżej 10,5", odds: 1.8 }, { name: "Poniżej 10,5", odds: 1.9 }];
+    const fouls = betclicNormalizer.normalizeMarket({ name: "Liczba fauli (OPTA) - Saint-Étienne (z dogrywką)", selections: ou }, ligue1);
+    expect(fouls?.marketKey).toBe("AWAY_TEAM_TOTAL_FOULS:10.5");
+    const offsides = betclicNormalizer.normalizeMarket({ name: "Liczba spalonych w meczu - Saint-Étienne (OPTA)", selections: ou }, ligue1);
+    expect(offsides?.marketKey).toBe("AWAY_TEAM_TOTAL_OFFSIDES:10.5");
+    const homeFouls = betclicNormalizer.normalizeMarket({ name: "Liczba fauli (OPTA) - Lyon (z dogrywką)", selections: ou }, ligue1);
+    expect(homeFouls?.marketKey).toBe("HOME_TEAM_TOTAL_FOULS:10.5");
+  });
+
   // Leg order is not fixed on Betclic (the evidence lists "Odbiory 1X2" away
   // first), so an unambiguous away-first offer must still publish.
   it("still codes an away-first Spalone 1X2 offer when the sides are distinct", () => {

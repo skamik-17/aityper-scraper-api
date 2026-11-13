@@ -9,9 +9,11 @@
  *
  * Grid shapes by component type (header row first where there is one):
  * - single_market       no header; [L, O] rows
- * - markets_in_columns  [E, L(market_id)...] / [L, O...]; one market per column
+ * - markets_in_columns  [E, L(market_id)...] / [L, O...]; one market per column,
+ *                       and a cell under a non-label header is skipped
  * - total               ['', Poniżej, Powyżej] / [L(line), O, O]; one market per row
- * - handicap_2col       [L(home), L(away)] / [L(homeLine), O(home), L(awayLine), O(away)]
+ * - handicap_2col       [L(home), L(away)] / [L(homeLine), O(home), L(awayLine), O(away)];
+ *                       a row of any other shape gets no line
  * - handicap_3col       [E, L(home), L(remis), L(away)] / [L("1:0"), O, O, O]
  * - exact_result        alternating label and outcome rows; one market per component
  *
@@ -133,9 +135,12 @@ function placeComponent(
   // Malformed rows become empty rows, so the header stays at grid[0].
   const grid = component.grid.map((row) => (Array.isArray(row) ? row : []));
   const slugId = typeof component.slug === "string" && component.slug !== "" ? `slug:${component.slug}` : undefined;
-  const eachOutcome = (row: TotalbetCell[], place: (col: number) => Placement) =>
+  // A cell whose placement is undefined belongs to no known market and is skipped.
+  const eachOutcome = (row: TotalbetCell[], place: (col: number) => Placement | undefined) =>
     row.forEach((cell, col) => {
-      if (isOutcomeCell(cell)) visit(cell, place(col));
+      if (!isOutcomeCell(cell)) return;
+      const placement = place(col);
+      if (placement) visit(cell, placement);
     });
 
   switch (component.type) {
@@ -145,7 +150,9 @@ function placeComponent(
       for (const row of body) {
         eachOutcome(row, (col) => {
           const head = header[col];
-          if (!isLabelCell(head)) return { name: groupName };
+          // Without its header label a column has no name or id of its own; under the bare
+          // group name it could pass for another market (a half column as the full-time 1X2).
+          if (!isLabelCell(head)) return undefined;
           return {
             name: `${groupName} - ${cleanName(head.text)}`,
             bookmakerMarketId: head.market_id ? `mid:${head.market_id}` : undefined,
@@ -179,16 +186,15 @@ function placeComponent(
 }
 
 /**
- * Home line of a 2-col handicap row: the label right before the row's first
- * outcome. That outcome must sit in the row's home half; when the home outcome is
- * missing, the label before the first (away) outcome is the away line, so the row
- * gets no line instead of a sign-flipped one.
+ * Home line of a 2-col handicap row [L(homeLine), O(home), L(awayLine), O(away)]:
+ * row[0], read only when the row's first outcome is row[1]. When the home outcome
+ * is missing or the row is padded, the first outcome is the away one and the label
+ * before it is the away line, so the row gets no line instead of a sign-flipped
+ * one. The normalizer also checks the line against each selection's own "(±x)".
  */
 function handicapHomeLine(row: TotalbetCell[]): string | undefined {
-  const first = row.findIndex(isOutcomeCell);
-  if (first < 1 || first >= row.length / 2) return undefined;
-  const label = row[first - 1];
-  return isLabelCell(label) ? label.text : undefined;
+  const label = row[0];
+  return isLabelCell(label) && row.findIndex(isOutcomeCell) === 1 ? label.text : undefined;
 }
 
 function newMarket(place: Placement, groupName: string): ScrapedMarket {

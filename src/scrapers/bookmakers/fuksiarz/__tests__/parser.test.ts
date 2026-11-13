@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, type MockInstance } from "vitest";
 import { parseAllMarkets } from "../parser.js";
 import { GAME_TYPES } from "../constants.js";
 import type { FuksiarzEvent } from "../types.js";
@@ -66,12 +66,17 @@ describe("parseAllMarkets - rich market data for audit", () => {
   });
 });
 
-describe("parseAllMarkets - HALF_WITH_MORE_GOALS label repair", () => {
-  // audit-match (Arsenal vs Coventry City), round 8 fuk-hwmg-3: Fuksiarz's
-  // feed for game type 38 applies outcome labels in template order
-  // (1st half / equal / 2nd half) while the prices arrive in provider order
-  // (1st half / 2nd half / equal), so "rowno" carries the 2nd-half price and
-  // "2. polowa" carries the draw price. Live payload from event 20831778.
+describe("parseAllMarkets - HALF_WITH_MORE_GOALS template-order guard", () => {
+  // Fuksiarz's feed for game type 38 sends the outcome labels in template
+  // order (1st half / equal / 2nd half). Two feed generations are covered:
+  // - 2026-08 feed (audit-match Arsenal vs Coventry City, round 8
+  //   fuk-hwmg-3, event 20831778): the prices arrived in provider order
+  //   (1st half / 2nd half / equal), so "równo" carried the 2nd-half price
+  //   and "2. połowa" carried the draw price.
+  // - 2026-11 feed: the prices sit on the right labels, still in template
+  //   order (live 20/20 PL matches, 2026-11-06).
+  // With template order, "równo" priced shorter than "2. połowa" is either the
+  // 2026-08 inversion or a genuine low-total match, so the market is dropped.
   const buildEvent = (
     outcomes: { outcomeId: number; outcomeName: string; outcomeOdds: number; outcomePosition: number }[]
   ): FuksiarzEvent => ({
@@ -87,57 +92,92 @@ describe("parseAllMarkets - HALF_WITH_MORE_GOALS label repair", () => {
       },
     ],
   });
+  const findHwmg = (event: FuksiarzEvent) =>
+    parseAllMarkets(event).find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
 
-  it("swaps the mislabeled 'równo'/'2. połowa' prices back onto their correct labels", () => {
+  let warn: MockInstance<typeof console.warn>;
+  beforeEach(() => {
+    warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  });
+  afterEach(() => {
+    warn.mockRestore();
+  });
+
+  it("drops the 2026-08 inverted market ('równo' shorter than '2. połowa') and warns once", () => {
     const event = buildEvent([
       { outcomeId: 390826001, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
       { outcomeId: 390826002, outcomeName: "równo", outcomeOdds: 2.09, outcomePosition: 1 },
       { outcomeId: 390826003, outcomeName: "2. połowa", outcomeOdds: 3.6, outcomePosition: 2 },
     ]);
 
-    const markets = parseAllMarkets(event);
-    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
-    expect(market).toBeDefined();
-
-    const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
-    expect(bySelectionName.get("1. połowa")).toBe(2.9);
-    expect(bySelectionName.get("2. połowa")).toBe(2.09);
-    expect(bySelectionName.get("równo")).toBe(3.6);
+    expect(findHwmg(event)).toBeUndefined();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain("HALF_WITH_MORE_GOALS dropped");
+    expect(String(warn.mock.calls[0][0])).toContain("20831778");
   });
 
-  it("is a no-op once Fuksiarz sends the labels in the correct order", () => {
+  it("drops a genuine low-total market too, because it cannot be told apart from the inversion", () => {
+    // Low expected total: an equal split (mostly 0-0) is the most likely outcome.
+    // A swap would publish 2.5 as the 2nd-half price, a fake best price.
+    const event = buildEvent([
+      { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 3.4, outcomePosition: 0 },
+      { outcomeId: 2, outcomeName: "równo", outcomeOdds: 2.4, outcomePosition: 1 },
+      { outcomeId: 3, outcomeName: "2. połowa", outcomeOdds: 2.5, outcomePosition: 2 },
+    ]);
+
+    expect(findHwmg(event)).toBeUndefined();
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes the labels through unchanged when they are not in template order", () => {
     const event = buildEvent([
       { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
       { outcomeId: 2, outcomeName: "2. połowa", outcomeOdds: 2.09, outcomePosition: 1 },
       { outcomeId: 3, outcomeName: "równo", outcomeOdds: 3.6, outcomePosition: 2 },
     ]);
 
-    const markets = parseAllMarkets(event);
-    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
+    const market = findHwmg(event);
     expect(market).toBeDefined();
-
     const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
     expect(bySelectionName.get("1. połowa")).toBe(2.9);
     expect(bySelectionName.get("2. połowa")).toBe(2.09);
     expect(bySelectionName.get("równo")).toBe(3.6);
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("keeps correctly priced template-order labels untouched", () => {
-    // 2026-11: Fuksiarz fixed the prices but kept the template label order,
-    // so a label-only guard would invert correct data (live 20/20 PL matches).
+    // 2026-11 feed: Fuksiarz fixed the prices but kept the template label
+    // order, so a label-only guard would invert correct data (live 20/20 PL matches).
     const event = buildEvent([
       { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
       { outcomeId: 2, outcomeName: "równo", outcomeOdds: 3.65, outcomePosition: 1 },
       { outcomeId: 3, outcomeName: "2. połowa", outcomeOdds: 2.1, outcomePosition: 2 },
     ]);
 
-    const markets = parseAllMarkets(event);
-    const market = markets.find((m) => m.bookmakerMarketId === String(GAME_TYPES.HALF_WITH_MORE_GOALS));
+    const market = findHwmg(event);
     expect(market).toBeDefined();
 
     const bySelectionName = new Map(market!.selections.map((s) => [s.name, s.odds]));
     expect(bySelectionName.get("równo")).toBe(3.65);
     expect(bySelectionName.get("2. połowa")).toBe(2.1);
     expect(bySelectionName.get("1. połowa")).toBe(2.9);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("passes a zero 'równo' price through without a swap or a drop", () => {
+    // The price guard cannot run on a missing price; hasValidOdds removes the zero selection.
+    const event = buildEvent([
+      { outcomeId: 1, outcomeName: "1. połowa", outcomeOdds: 2.9, outcomePosition: 0 },
+      { outcomeId: 2, outcomeName: "równo", outcomeOdds: 0, outcomePosition: 1 },
+      { outcomeId: 3, outcomeName: "2. połowa", outcomeOdds: 2.1, outcomePosition: 2 },
+    ]);
+
+    const market = findHwmg(event);
+    expect(market).toBeDefined();
+    expect(market!.selections.map((s) => [s.name, s.odds])).toEqual([
+      ["1. połowa", 2.9],
+      ["2. połowa", 2.1],
+    ]);
+    expect(warn).not.toHaveBeenCalled();
   });
 });

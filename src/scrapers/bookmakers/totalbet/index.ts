@@ -278,6 +278,9 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     // are "no offer": skipped too, but not counted.
     let detailsFailed = 0;
     let firstDetailError: string | undefined;
+    // Events skipped because their detail is no longer an active prematch event.
+    let skippedNotPrematch = 0;
+    let firstNotPrematchError: string | undefined;
 
     for (const [index, listEvent] of list.events.entries()) {
       // Match identity always comes from the list event, so it never depends on detail success.
@@ -294,6 +297,8 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       if (detail.notPrematch) {
         // Kicked off (or was suspended) after the list call: no prematch price may be
         // stored for it, so there is no list-1X2 fallback either.
+        skippedNotPrematch++;
+        firstNotPrematchError ??= detail.error;
         console.log(`${LOG} skipped ${homeTeam} vs ${awayTeam}: detail is ${detail.notPrematch.type}/${detail.notPrematch.status}`);
         continue;
       }
@@ -335,10 +340,17 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
     const errorParts: string[] = [];
     // m: matches written plus failed details; "no offer" events count in neither.
     const attempted = matches.length + detailsFailed;
+    // Too many skipped matches fail the run below, with nothing written.
+    const tooManySkipped = attempted > 0 && detailsFailed / attempted > MAX_SKIPPED_DETAIL_RATIO;
     if (detailsFailed > 0) {
       const text = `${detailsFailed} of ${attempted} details failed | ${firstDetailError}`;
       console.warn(`${LOG} ${text}`);
       errorParts.push(text);
+    }
+    // Kick-off skips are routine on a healthy run, so they are reported only when the run
+    // fails: then they can be the reason (e.g. every detail went live at a shared kick-off).
+    if (skippedNotPrematch > 0 && (matches.length === 0 || tooManySkipped)) {
+      errorParts.push(`Skipped ${skippedNotPrematch} not-prematch events (first: ${firstNotPrematchError})`);
     }
     errorParts.push(...driftErrors);
 
@@ -346,7 +358,7 @@ export class TotalbetPlaywrightScraper extends PlaywrightScraper {
       // The fixed text comes first; the detail and drift parts keep the HTTP reason (plan risk 8).
       return failure([`No parsable Totalbet events for ${league}`, ...errorParts].join(" | "));
     }
-    if (detailsFailed / attempted > MAX_SKIPPED_DETAIL_RATIO) {
+    if (tooManySkipped) {
       // Too many skipped matches: fail without writing, so the previous rows stay.
       return failure(errorParts.join(" | "));
     }

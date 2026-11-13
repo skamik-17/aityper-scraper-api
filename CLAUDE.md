@@ -60,9 +60,13 @@ The API reads and writes the local Supabase stack (`SUPABASE_URL`, PostgREST on
   It loads `.env` (variables already in the environment win) and probes `market_types`
   through PostgREST; only HTTP 200 counts as up. It exits 1 if the API already answers on
   `:${PORT:-3001}`. When a local stack is down, it `docker start`s the stopped
-  `com.supabase.cli.project=backend` containers (except `edge_runtime`), or runs
-  `npx --yes supabase@2.70.5 start` when no such container exists. It then waits up to 90 s
-  for HTTP 200 and execs `npm run dev`. `--no-scrapers` sets `SCRAPERS_ON=false`.
+  `com.supabase.cli.project=backend` containers (except `edge_runtime`). When no such
+  container exists (e.g. after `supabase stop`), it runs `supabase start` with CLI 2.70.5:
+  the copy already under `~/.npm/_npx/*/node_modules/supabase` when there is one (works
+  offline), otherwise `npx --yes supabase@2.70.5 start`. npx keys its cache on the raw
+  argument, so that pinned spec does not reuse a bare `npx supabase` cache: its first run
+  needs network access (npm registry plus a ~56 MB CLI download from GitHub). It then waits
+  up to 90 s for HTTP 200 and execs `npm run dev`. `--no-scrapers` sets `SCRAPERS_ON=false`.
 - **Check only:** `npm run dev:stack -- --check` prints
   `Supabase reachable at <url> (market_types HTTP 200)` and exits 0, or
   `Supabase NOT reachable at <url> (HTTP <code>)` and exits 1. It starts nothing.

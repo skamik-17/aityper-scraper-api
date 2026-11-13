@@ -44,4 +44,25 @@ describe("betclic TEAM_TOTAL_TACKLES carries the team side", () => {
     expect(home?.marketKey).toBe("TEAM_TOTAL_TACKLES:HOME:16.5");
     expect(home?.selections.map((s) => [s.code, s.odds])).toEqual([["OVER", 1.8], ["UNDER", 1.9]]);
   });
+
+  // A team part carrying a period qualifier is a period-scoped line and stays
+  // OTHER instead of pooling with full-match HOME:/AWAY: tackles lines.
+  it.each([
+    "Liczba odbiorów (OPTA) (z dogrywką) - Arsenal - 1. połowa",
+    "Liczba odbiorów (OPTA) (z dogrywką) - Arsenal (1. połowa)",
+    "Liczba odbiorów (OPTA) - Hull- 2. połowa",
+  ])("betclic team tackles: keeps a period-scoped line OTHER: %s", (name) => {
+    const out = betclicNormalizer.normalizeMarket({ name, selections: [{ name: "Powyżej 7,5", odds: 1.8 }, { name: "Poniżej 7,5", odds: 1.9 }] }, ctx);
+    expect(out?.marketCode).toBe("OTHER");
+    expect(out?.marketKey).toBe("OTHER");
+  });
+
+  it("betclic team tackles: a hyphenated team name (Saint-Étienne) still resolves its side", () => {
+    const out = betclicNormalizer.normalizeMarket(
+      { name: "Liczba odbiorów (OPTA) (z dogrywką) - Saint-Étienne", selections: [{ name: "Powyżej 15,5", odds: 1.8 }, { name: "Poniżej 15,5", odds: 1.9 }] },
+      { homeTeam: "Lyon", awayTeam: "Saint-Etienne", league: "ligue-1" },
+    );
+    expect(out?.marketCode).toBe("TEAM_TOTAL_TACKLES");
+    expect(out?.marketKey).toBe("TEAM_TOTAL_TACKLES:AWAY:15.5");
+  });
 });

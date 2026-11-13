@@ -293,7 +293,7 @@ backend/src/scrapers/bookmakers/betclic/
 | HTTP 403 | Missing Origin/Referer | Check headers |
 | Parse returns 0 markets | Schema change | Use `--proto` to inspect |
 | Missing markets | Filter needed | Implement multi-tab |
-| Timeout errors | Stream not closing | Check timeout in navigation.ts |
+| Timeout / Incomplete gRPC-web frame | Slow or throttled stream | Check retry warnings; raise `GRPC_FRAME_DEADLINE` (constants.ts) |
 | BigInt errors | Match ID overflow | Use `encodeBigVarint()` |
 | No deduplication | Type mismatch | Check `inferMarketType()` |
 

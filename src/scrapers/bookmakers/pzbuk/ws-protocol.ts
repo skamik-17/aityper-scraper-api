@@ -14,7 +14,8 @@
  * socket serves it again.
  *
  * An event page subscribes one stream per market group; `SingleEventAccumulator`
- * merges their INITIAL_STATE payloads into one snapshot. `CaptureDiagnostics`
+ * merges their INITIAL_STATE payloads into one snapshot and marks a group seen
+ * when its own stream (`parseSubscription`) answered. `CaptureDiagnostics`
  * records what a capture saw, and `describeCaptureFailure` names why it
  * produced nothing.
  */
@@ -138,20 +139,43 @@ export function initialStatesOf(frame: DecodedFrame): PZBukInitialState[] {
     .filter(isInitialState);
 }
 
+/** A sent SUBSCRIBE frame's stream and the market groups it requested. */
+export interface Subscription {
+  streamId: number;
+  /** `payload.filters.marketGroupIds`; `[]` for an event, selection-pack or listing stream. */
+  marketGroupIds: number[];
+}
+
+function parseSubscribe(sentText: string): { streamId: unknown; marketGroupIds: number[] } | null {
+  try {
+    const parsed: unknown = JSON.parse(sentText);
+    if (!isRecord(parsed) || parsed.type !== "SUBSCRIBE") return null;
+    const filters = isRecord(parsed.payload) ? parsed.payload.filters : undefined;
+    const ids = isRecord(filters) ? filters.marketGroupIds : undefined;
+    const marketGroupIds = Array.isArray(ids) ? ids.filter((id): id is number => typeof id === "number") : [];
+    return { streamId: parsed.streamId, marketGroupIds };
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Market-group ids requested by a sent SUBSCRIBE frame
  * (`payload.filters.marketGroupIds`); `[]` for any other or unparsable frame.
  */
 export function subscribedGroupIds(sentText: string): number[] {
-  try {
-    const parsed: unknown = JSON.parse(sentText);
-    if (!isRecord(parsed) || parsed.type !== "SUBSCRIBE") return [];
-    const filters = isRecord(parsed.payload) ? parsed.payload.filters : undefined;
-    const ids = isRecord(filters) ? filters.marketGroupIds : undefined;
-    return Array.isArray(ids) ? ids.filter((id): id is number => typeof id === "number") : [];
-  } catch {
-    return [];
-  }
+  return parseSubscribe(sentText)?.marketGroupIds ?? [];
+}
+
+/**
+ * The stream id and market-group ids of a sent SUBSCRIBE frame; null for any
+ * other or unparsable frame, and for a SUBSCRIBE without a numeric stream id
+ * (its answers could not be attributed).
+ */
+export function parseSubscription(sentText: string): Subscription | null {
+  const sub = parseSubscribe(sentText);
+  if (sub === null || typeof sub.streamId !== "number") return null;
+  return { streamId: sub.streamId, marketGroupIds: sub.marketGroupIds };
 }
 
 /**
@@ -190,15 +214,6 @@ export interface AccumulatorStats {
 
 const ascending = (a: number, b: number) => a - b;
 
-/** Group ids every market of a payload is listed under (the payload's subscribed group). */
-function commonGroupIds(markets: PZBukMarket[]): number[] {
-  const lists = markets.map((m) => {
-    const ids = m.marketType?.marketGroupIds;
-    return Array.isArray(ids) ? ids : [];
-  });
-  return lists.reduce((common, ids) => common.filter((id) => ids.includes(id)));
-}
-
 /**
  * Merges the single-event INITIAL_STATE payloads of one event page into one
  * snapshot. The page opens one stream per market group, and each stream
@@ -211,18 +226,28 @@ export class SingleEventAccumulator {
   private readonly selections = new Map<string, PZBukSelection>();
   private readonly seenGroups = new Set<number>();
 
-  /** When set, single-event payloads for any other event are rejected. */
+  /**
+   * When set, single-event payloads for any other event are rejected. When
+   * omitted, the accumulator locks to the event of the first merged payload.
+   */
   constructor(private readonly expectedEventId?: number | string) {}
 
   /**
    * Returns true only for a merged single-event payload. A payload with a
    * non-object entry is rejected whole, never merged partially, so its group
    * stays unseen and shows up as "never answered".
+   *
+   * `streamGroupIds` are the market groups the delivering stream subscribed to
+   * (its SUBSCRIBE frame). Only they are marked seen, and only when the
+   * payload carries markets: the group ids listed on the markets themselves
+   * are not used, because a market can be listed under several groups (e.g.
+   * 2179 under [28, 1]) and would mark a silent group 1 "Popularne" as seen.
    */
-  add(state: PZBukInitialState): boolean {
+  add(state: PZBukInitialState, streamGroupIds: readonly number[] = []): boolean {
     if (state.events.length !== 1 || firstNonObjectEntry(state) !== null) return false;
     const [event] = state.events;
-    if (this.expectedEventId !== undefined && String(event.id) !== String(this.expectedEventId)) return false;
+    const expected = this.expectedEventId ?? this.event?.id;
+    if (expected !== undefined && String(event.id) !== String(expected)) return false;
     this.event ??= event;
     for (const market of state.markets) this.markets.set(market.id, market);
     for (const selection of state.selections) {
@@ -232,7 +257,7 @@ export class SingleEventAccumulator {
       else this.selections.delete(selection.id);
     }
     if (state.markets.length > 0) {
-      for (const id of commonGroupIds(state.markets)) this.seenGroups.add(id);
+      for (const id of streamGroupIds) this.seenGroups.add(id);
     }
     return true;
   }

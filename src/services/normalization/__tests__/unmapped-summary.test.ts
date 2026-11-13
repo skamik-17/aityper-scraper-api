@@ -8,7 +8,7 @@ import type { FullMatchOffer, ScrapedMarket } from "../../../types/full-offer.js
 // wiring test never touches Supabase.
 vi.mock("../../../repositories/full-offer-repository.js", () => ({
   saveFullOfferMarkets: vi.fn(async () => ({ inserted: 0 })),
-  saveBatchFullOfferMarkets: vi.fn(async () => ({ inserted: 0, errors: 0 })),
+  saveBatchFullOfferMarkets: vi.fn(async () => ({ inserted: 0, failedBatches: 0, totalBatches: 1, firstError: null })),
 }));
 
 const mk = (id: string | undefined, type: string, name = "x") => ({ name, bookmakerMarketId: id, normalizedType: type, selections: [] }) as any;

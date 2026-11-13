@@ -254,14 +254,21 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
   "SECOND_HALF_GOAL_RANGE",
   "HOME_GOAL_RANGE",
   "AWAY_GOAL_RANGE",
+  // OVER-only codes: a "poniżej X" row has no catalog selection (see
+  // normalizeSelectionForMarket), so it is dropped instead of published.
+  "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER",
+  "BOTH_TEAMS_FOULS_OVER",
+  "EACH_TEAM_OFFSIDES",
+  "EACH_TEAM_TOTAL_CORNERS_OVER",
 ]);
 
 /**
- * Multi-player line markets: one raw market ("Odda co najmniej N celnych
- * strzałów") lists every player as a selection while the threshold N lives in
- * the raw market name. The catalog convention (see etoto) keys these by
- * "{Player} {N}+" selection codes in the base parameter bucket — a numeric
- * pseudo-parameter ("1"/"2") must never be emitted.
+ * Multi-player line markets: Fuksiarz's raw game ("Odda co najmniej N celnych
+ * strzałów") lists every player as an outcome while the threshold N lives in
+ * the raw market name. The parser splits it into one raw market per player,
+ * and the normalizer emits a player param plus an "N+" selection parsed from
+ * the raw name (see extractParamValue / normalizeSelectionForMarket). A
+ * numeric pseudo-parameter ("1"/"2") must never be emitted.
  */
 const PLAYER_LINE_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_SHOTS",
@@ -1391,18 +1398,24 @@ function normalizeSelectionForMarket(
     case "TEAM_TOTAL_SHOTS":
     case "TOTAL_SHOTS_ON_TARGET":
     case "TEAM_TOTAL_SHOTS_ON_TARGET":
-    case "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER":
     case "TEAM_TOTAL_FOULS":
-    case "BOTH_TEAMS_FOULS_OVER":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
-    case "EACH_TEAM_OFFSIDES":
-    case "EACH_TEAM_TOTAL_CORNERS_OVER":
     case "HOME_POSSESSION":
     case "AWAY_POSSESSION": {
       const ou = normalizeOverUnderSelection(trimmed);
       return ou === "UNKNOWN" ? normalizeRangeSelection(trimmed) : ou;
     }
+
+    // OVER-only catalog codes ("each team over X"). "Each team under X" is
+    // not the complement of "each team over X", so any other selection
+    // becomes UNKNOWN and is filtered out (UNKNOWN_FILTERED_MARKETS) rather
+    // than published as UNDER under an OVER-only code.
+    case "EACH_TEAM_TOTAL_SHOTS_ON_TARGET_OVER":
+    case "BOTH_TEAMS_FOULS_OVER":
+    case "EACH_TEAM_OFFSIDES":
+    case "EACH_TEAM_TOTAL_CORNERS_OVER":
+      return normalizeOverUnderSelection(trimmed) === "OVER" ? "OVER" : "UNKNOWN";
 
     // Side-prefixed team stat markets (catalog codes HOME_OVER/AWAY_UNDER...):
     // emit the bare OVER/UNDER here — the team-side prefix is applied in

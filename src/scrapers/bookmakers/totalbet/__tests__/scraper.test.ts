@@ -145,7 +145,8 @@ describe("totalbet scraper (plan contract)", () => {
   it("totalbet scrapeMatchDetails reads 1X2 from the detail", async () => {
     const r = await scraper.scrapeMatchDetails("https://totalbet.pl/event-details/0e45932b-1433-4cf5-b658-5c308b7c2b60");
     expect(r.data!.market1X2).toEqual({ home: 2.8, draw: 3.35, away: 2.47 });
-    expect((await scraper.scrapeMatchDetails("https://totalbet.pl/sports/event/1")).status).not.toBe("success");
+    // A URL without an event UUID is refused before any request, not fetched and failed.
+    expect(await scraper.scrapeMatchDetails("https://totalbet.pl/sports/event/1")).toMatchObject({ status: "not_found", error: "Invalid Totalbet event URL" });
   });
 
   it("totalbet league config carries the category UUIDs", () => {
@@ -248,6 +249,26 @@ describe("totalbet scraper (wiring and integrity guards)", () => {
     // no detail answered and nothing falls back to the list: an outage that writes nothing
     expect(r).toMatchObject({ success: false, matches: [] });
     expect(r.error).toMatch(/^No parsable Totalbet events for premier-league \| 19 of 19 details failed \| fetch HTTP 404 /);
+    // a failed run also says which events were skipped as no longer prematch
+    expect(r.error).toContain(
+      `Skipped 1 not-prematch events (first: Event ${LEEDS} is not an active prematch event (type=live, status=active) from ${DETAIL_PREFIX}${LEEDS})`,
+    );
+  });
+
+  it("totalbet names the not-prematch skips when no event is left", async () => {
+    // Every reachable detail turned live (a run that starts at a shared kick-off, or detail state drift):
+    // the error must say why instead of a bare "No parsable Totalbet events".
+    const list = load("pl-events-list.json");
+    list.data.events = list.data.events.filter((e: { uuid: string }) => e.uuid === LEEDS || e.uuid === CP);
+    const live = (name: string) => detailWith(name, (e) => Object.assign(e, { type: "live" }));
+    const fake = fakeWith({ [LEEDS]: live("event-detail-leeds-tottenham.trimmed.json"), [CP]: live("event-detail-crystal-palace-liverpool.core.json") }, list);
+    const r = await new TotalbetPlaywrightScraper(undefined, { fetchJson: fake }).scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: false, matches: [] });
+    expect(r.error).toBe(
+      "No parsable Totalbet events for premier-league | " +
+        `Skipped 2 not-prematch events (first: Event ${LEEDS} is not an active prematch event (type=live, status=active) from ${DETAIL_PREFIX}${LEEDS})`,
+    );
+    expect(console.warn).toHaveBeenCalledWith(`[Totalbet/FullOffer] premier-league failed: ${r.error}`);
   });
 
   it("totalbet skips an event whose detail has no active market, without the list fallback", async () => {

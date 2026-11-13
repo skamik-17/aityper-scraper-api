@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { betfanNormalizer } from "../betfan-normalizer.js";
 import { parseAllMarkets } from "../../../../scrapers/bookmakers/betfan/parser.js";
 import type { BetfanEvent } from "../../../../scrapers/bookmakers/betfan/types.js";
@@ -49,9 +49,33 @@ const keyedBy = (outs: NormalizedMarketOutput[], codes: string[]) =>
       .map((o) => [o.marketKey, o.selections.map((s) => [s.code, s.odds])])
   );
 
+/** A two-way O/U raw market at one line, shaped like the golden/capture rows. */
+const ouRaw = (bookmakerMarketId: string, name: string, line: string): RawBookmakerMarket => ({
+  bookmakerMarketId,
+  name,
+  selections: [
+    { name: `Poniżej ${line}`, odds: 2 },
+    { name: `Powyżej ${line}`, odds: 1.7 },
+  ],
+});
+
+/** Projection that pins the code, the key and the selection codes of one output. */
+const projection = (o: NormalizedMarketOutput | null) =>
+  o && { marketCode: o.marketCode, marketKey: o.marketKey, selections: o.selections.map((s) => s.code) };
+
+const DROPPED_TO_OTHER = { marketCode: "OTHER", marketKey: "OTHER", selections: ["UNKNOWN", "UNKNOWN"] };
+
 describe("betfan recovery 2026-11", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("betfan team shot lines carry the team side (Everton v Coventry capture)", () => {
-    expect(keyedBy(normalizeCapture(ctxEC), ["TEAM_TOTAL_SHOTS", "TEAM_TOTAL_SHOTS_ON_TARGET"])).toEqual({
+    const shotCodes = ["TEAM_TOTAL_SHOTS", "TEAM_TOTAL_SHOTS_ON_TARGET"];
+    const outs = normalizeCapture(ctxEC);
+    // The row count catches a key collision that the keyed map would hide.
+    expect(outs.filter((o) => shotCodes.includes(o.marketCode))).toHaveLength(6);
+    expect(keyedBy(outs, shotCodes)).toEqual({
       "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:4.5": [["UNDER", 2.4], ["OVER", 1.5]],
       "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:5.5": [["UNDER", 1.72], ["OVER", 2]],
       "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:2.5": [["UNDER", 2.55], ["OVER", 1.45]],
@@ -123,26 +147,70 @@ describe("betfan recovery 2026-11", () => {
   });
 
   it("betfan team fouls use side-specific codes, away line no longer OTHER (Everton v Coventry capture)", () => {
+    const foulCodes = ["HOME_TEAM_TOTAL_FOULS", "AWAY_TEAM_TOTAL_FOULS", "TEAM_TOTAL_FOULS"];
     const outs = normalizeCapture(ctxEC);
-    expect(keyedBy(outs, ["HOME_TEAM_TOTAL_FOULS", "AWAY_TEAM_TOTAL_FOULS", "TEAM_TOTAL_FOULS"])).toEqual({
+    // The row count catches a key collision that the keyed map would hide.
+    expect(outs.filter((o) => foulCodes.includes(o.marketCode))).toHaveLength(2);
+    expect(keyedBy(outs, foulCodes)).toEqual({
       "HOME_TEAM_TOTAL_FOULS:10.5": [["UNDER", 2], ["OVER", 1.7]],
       "AWAY_TEAM_TOTAL_FOULS:12.5": [["UNDER", 1.83], ["OVER", 1.83]],
     });
     expect(outs.filter((o) => o.marketCode === "OTHER" && /liczba fauli/.test(o.debug?.rawName ?? ""))).toHaveLength(0);
   });
 
-  it("betfan team fouls with an unresolvable team stay side-less TEAM_TOTAL_FOULS", () => {
-    const out = betfanNormalizer.normalizeMarket(
-      {
-        bookmakerMarketId: "162",
-        name: "Arsenal - liczba fauli (OPTA)",
-        selections: [
-          { name: "Poniżej 10.5", odds: 2 },
-          { name: "Powyżej 10.5", odds: 1.7 },
-        ],
-      },
-      ctxEC
-    )!;
-    expect(out.marketCode).toBe("TEAM_TOTAL_FOULS");
+  // Final review F1: a betfan OPTA team-stat id always carries one team's
+  // line (home: 162/168/-200054, away: 163/169/-200055). When the team in the
+  // title does not resolve, or names the other side, the row must not be
+  // published side-less (TEAM_TOTAL_*:<line>) or on the whole-match code
+  // (id 168 -> TOTAL_SHOTS_ON_TARGET:<line>, a fake +EV against the peers'
+  // match-total line).
+  it.each([
+    ["162", "Arsenal - liczba fauli (OPTA)", "10.5"],
+    ["168", "Arsenal - liczba celnych strzałów na bramkę (OPTA)", "4.5"],
+    ["-200054", "Arsenal - liczba strzałów (OPTA)", "16.5"],
+    ["169", "Everton - liczba celnych strzałów na bramkę (OPTA)", "4.5"],
+  ])("betfan team-stat id %s with an unresolved or mismatched team (%s) drops to OTHER", (id, name, line) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(projection(betfanNormalizer.normalizeMarket(ouRaw(id, name, line), ctxEC))).toEqual(DROPPED_TO_OTHER);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain(name);
+  });
+
+  it("betfan team-stat ids with the id's own team keep the side-specific keys", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const keys = [
+      ouRaw("162", "Everton - liczba fauli (OPTA)", "10.5"),
+      ouRaw("163", "Coventry City - liczba fauli (OPTA)", "12.5"),
+      ouRaw("168", "Everton - liczba celnych strzałów na bramkę (OPTA)", "4.5"),
+      ouRaw("169", "Coventry City - liczba celnych strzałów na bramkę (OPTA)", "2.5"),
+      ouRaw("-200054", "Everton - liczba strzałów (OPTA)", "16.5"),
+      ouRaw("-200055", "Coventry City - liczba strzałów (OPTA)", "11.5"),
+    ].map((raw) => betfanNormalizer.normalizeMarket(raw, ctxEC)?.marketKey);
+    expect(keys).toEqual([
+      "HOME_TEAM_TOTAL_FOULS:10.5",
+      "AWAY_TEAM_TOTAL_FOULS:12.5",
+      "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:4.5",
+      "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:2.5",
+      "TEAM_TOTAL_SHOTS:HOME:16.5",
+      "TEAM_TOTAL_SHOTS:AWAY:11.5",
+    ]);
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  // Final review F2: half-scoped shots/fouls lines (prefix "1. połowa - X -"
+  // or suffix "... w 1. połowie") must not pool with the full-match peers.
+  it.each([
+    ["162", "1. połowa - Everton - liczba fauli (OPTA)", "5.5"],
+    ["162", "Everton - liczba fauli w 1. połowie (OPTA)", "5.5"],
+    ["163", "1. połowa: Coventry City - liczba fauli (OPTA)", "5.5"],
+    ["-200054", "1. połowa - Everton - liczba strzałów (OPTA)", "7.5"],
+    ["168", "1. połowa - Everton - liczba celnych strzałów na bramkę (OPTA)", "2.5"],
+    ["-30243", "1. połowa - liczba fauli (OPTA)", "10.5"],
+    ["-200194", "2. połowa - liczba strzałów (OPTA)", "12.5"],
+  ])("betfan half-scoped shots/fouls line id %s (%s) drops to OTHER", (id, name, line) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(projection(betfanNormalizer.normalizeMarket(ouRaw(id, name, line), ctxEC))).toEqual(DROPPED_TO_OTHER);
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain(name);
   });
 });

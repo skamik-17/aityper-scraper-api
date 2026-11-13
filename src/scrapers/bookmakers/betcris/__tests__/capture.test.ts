@@ -177,6 +177,52 @@ describe("betcris captureSwarm", () => {
     expect(fake.gotoAt).toHaveLength(1);
   });
 
+  it("betcris capture: a match page waits 45 s for its first useful frame, the listing 30 s", async () => {
+    // Nothing useful ever arrives: the socket opens at 750 (match) / 766 (league),
+    // and the attempt fails when its first-useful-frame window runs out.
+    let t0 = Date.now();
+    const single = await settle(captureSwarm(createFakeSwarmPage(() => ({ events: match })).page, `${LEAGUE}/99999999`,
+      { singleEventMode: true, targetGameNumber: 99999999 }));
+    const singleMs = Date.now() - t0;
+    expect(single.failure).toBe("target_game_missing");
+    expect(singleMs).toBeGreaterThanOrEqual(750 + 45000);
+    expect(singleMs).toBeLessThanOrEqual(750 + 45000 + 200); // settle() steps of 100 ms
+
+    t0 = Date.now();
+    const listing = await settle(captureSwarm(createFakeSwarmPage(() => ({ events: league.filter((e) => e.t < 1908) })).page, LEAGUE,
+      { competitionId: 538 }, { maxAttempts: 1 }));
+    const listingMs = Date.now() - t0;
+    expect(listing.failure).toBe("no_games_with_markets");
+    expect(listingMs).toBeGreaterThanOrEqual(766 + 30000);
+    expect(listingMs).toBeLessThanOrEqual(766 + 30000 + 200);
+  });
+
+  it("betcris capture: a cleanup step that throws still resolves the attempt, classified", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const empty: RecordedSwarmEvent[] = [{ t: 0, kind: "goto" }, { t: 700, kind: "domcontentloaded" }];
+    const failing = createFakeSwarmPage(() => ({ events: empty }));
+    const ok = createFakeSwarmPage(() => ({ events: league }));
+    for (const fake of [failing, ok]) {
+      // e.g. a page wrapper whose listener bookkeeping throws on detach
+      (fake.page as unknown as { off: () => never }).off = () => {
+        throw new Error("page wrapper detached");
+      };
+    }
+
+    const a = await settle(captureSwarm(failing.page, LEAGUE, { competitionId: 538 }, { maxAttempts: 1 }), 100, 60_000);
+    expect(a.failure).toBe("no_swarm_socket");
+    expect(a.attempts).toHaveLength(1);
+    expect(a.attempts[0]).toMatchObject({ failure: "no_swarm_socket", navMs: 700, wsOpenMs: null });
+
+    const b = await settle(captureSwarm(ok.page, LEAGUE, { competitionId: 538 }), 100, 60_000);
+    expect(b.failure).toBeNull();
+    expect(countGames(b.data!, 538)).toBe(20);
+    expect(typeof b.attempts[0].eventLoopDelayMaxMs).toBe("number");
+
+    expect(warn).toHaveBeenCalledTimes(2);
+    expect(warn).toHaveBeenCalledWith("[Betcris/Navigation] capture cleanup failed: page wrapper detached");
+  });
+
   it("betcris capture: a deadline that fires late after a loop stall waits for frames queued meanwhile", async () => {
     // The GameList frames land 500 ms after the first-useful deadline is due
     // (socket at 766, deadline at 30766). Fake timers cannot queue socket I/O

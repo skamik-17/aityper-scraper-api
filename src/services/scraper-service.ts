@@ -12,8 +12,14 @@ import type { ScrapeStats } from "../types/api.js";
 import { scraperHealth } from "./scraper-health.js";
 import { isOkRunStatus, type BookmakerRunOutcome } from "./run-outcome.js";
 import { ensureMarketTypesSynced } from "./market-types-sync.js";
-import { mergeRunRows, STATUS_WINDOW_RUNS, summarizeBookmakerRuns } from "./bookmaker-status.js";
-import { buildRunAlerts, emitAlerts, formatAbortAlert, formatRunSummaryLine } from "./run-alerts.js";
+import { mergeRunRows, STATUS_WINDOW_RUNS, summarizeBookmakerRuns, type BookmakerRunSummary } from "./bookmaker-status.js";
+import {
+  buildRunAlerts,
+  emitAlerts,
+  formatAbortAlert,
+  formatRunFailedAlert,
+  formatRunSummaryLine,
+} from "./run-alerts.js";
 import { runRetentionCleanup } from "./retention-service.js";
 
 export interface ScrapeResult {
@@ -203,6 +209,8 @@ async function persistLeagueRun(
   } else {
     errors.push(`Full offer: ${cycleError ?? "Unknown error"}`);
     errorCount = 1;
+    // No outcome exists, so neither the summary line nor buildRunAlerts would show the failure.
+    await emitAlerts([formatRunFailedAlert(league, cycleError ?? "Unknown error")], CONFIG.ALERT_WEBHOOK_URL, signal);
   }
 
   // 6. Persist one scraper_runs row per outcome. Never fatal: the run already happened.
@@ -222,13 +230,27 @@ async function persistLeagueRun(
   } catch (error) {
     console.warn(`[ScraperService] scraper_runs history unavailable, alerts use this process's runs only: ${errorMessage(error)}`);
   }
-  const rows = mergeRunRows(scraperHealth.getRecentOutcomes(league).map(toScraperRunInsert), dbRows);
-  const summaries = summarizeBookmakerRuns(rows, bookmakers ? [...bookmakers] : CONFIG.BOOKMAKERS);
+  // A row the summary cannot read (e.g. an unparseable timestamp) must not skip
+  // the summary line, the alerts and the browser cleanup below.
+  let summaries = new Map<PolishBookmaker, BookmakerRunSummary>();
+  try {
+    const rows = mergeRunRows(scraperHealth.getRecentOutcomes(league).map(toScraperRunInsert), dbRows);
+    summaries = summarizeBookmakerRuns(rows, bookmakers ?? CONFIG.BOOKMAKERS);
+  } catch (error) {
+    console.warn(`[ScraperService] run history unusable, streak alerts skipped for this run: ${errorMessage(error)}`);
+  }
 
   // 8. One summary line per run, then the alerts.
   console.log(formatRunSummaryLine({ league, runId, finishedAt, outcomes }));
   await emitAlerts(
-    buildRunAlerts({ league, outcomes, summaries, threshold: CONFIG.ALERT_CONSECUTIVE_FAILURES }),
+    buildRunAlerts({
+      league,
+      outcomes,
+      summaries,
+      threshold: CONFIG.ALERT_CONSECUTIVE_FAILURES,
+      bookmakerCount: CONFIG.BOOKMAKERS.length,
+      alertedStreaks: scraperHealth.getAlertedStreaks(),
+    }),
     CONFIG.ALERT_WEBHOOK_URL,
     signal
   );

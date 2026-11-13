@@ -215,6 +215,9 @@ function isPlaceholderMarketName(name: string | undefined): boolean {
  *   1  the first name is initial  ("O. Zambrano", "M Grimes")
  *   2  a later token is initial   (STS's "Zambrano O.", "Borges Rodrigues R.")
  *
+ * A middle initial ("Jan P. van Hecke") also ranks 2, so it loses the label
+ * to a leading-initial spelling of the same player; labels only, no price.
+ *
  * A token counts as an initial only when it is a single UPPERCASE letter with
  * an optional dot. Lowercase letters never count: Fortuna's red-card params
  * are sentences ("Mohamed Bachir Belloumi wyrzucony z boiska") whose Polish
@@ -237,7 +240,10 @@ export function isAbbreviatedPlayerName(name: string): boolean {
 /**
  * A player param that names no single person: a multi-player combo (LVBet's
  * "Dominic Solanke or Dominic Calvert-Lewin", "A i B", "A & B") or a count.
- * Such params are never aliased and never bridge a cluster. Long or
+ * Such params are never aliased and never bridge a cluster. Any digit counts,
+ * so two shapes are excluded on purpose as well: a birthdate tag
+ * ("Ben Davies (24/04/93)") marks two players with the same name, and a line
+ * suffix ("Kai Havertz 1+") is a different bet; both stay unaliased. Long or
  * "wyrzucony z boiska" params are deliberately NOT matched: Fortuna's
  * red-card sentences must keep folding into the player they name.
  */
@@ -261,15 +267,7 @@ function spellingKey(name: string): string {
   return spellingWords(name).sort().join(" ");
 }
 
-/**
- * Two spellings describe the same player when the surname matches, the first
- * names match (or one is the other's initial) and every remaining token of
- * the shorter spelling also appears, in order, in the longer one. That single
- * rule covers all the shapes the audit found: "M Grimes" / "Matt Grimes",
- * "Victor Torp" / "Victor Torp Overgaard", "Caleb Yirenkyi" /
- * "Caleb Marfo Yirenkyi" and the combination "C Marfo Yirenkyi" /
- * "Caleb Yirenkyi".
- */
+/** Equal first-name tokens, or one is the other's initial ("m" / "m." fits "matt"). */
 const sameFirstName = (a: string, b: string): boolean => {
   if (a === b) return true;
   const aInitial = a.replace(".", "");
@@ -283,6 +281,15 @@ const isSubsequence = (shorter: string[], longer: string[]): boolean => {
   for (const token of longer) if (i < shorter.length && token === shorter[i]) i++;
   return i === shorter.length;
 };
+/**
+ * Two spellings describe the same player when the surname matches, the first
+ * names match (or one is the other's initial) and every remaining token of
+ * the shorter spelling also appears, in order, in the longer one. That single
+ * rule covers all the shapes the audit found: "M Grimes" / "Matt Grimes",
+ * "Victor Torp" / "Victor Torp Overgaard", "Caleb Yirenkyi" /
+ * "Caleb Marfo Yirenkyi" and the combination "C Marfo Yirenkyi" /
+ * "Caleb Yirenkyi".
+ */
 const describeSamePlayer = (a: string[], b: string[]): boolean => {
   if (a.length < 2 || b.length < 2) return false;
   if (!sameFirstName(a[0], b[0])) return false;
@@ -896,9 +903,10 @@ export function groupMarketsByTypeWithParameters(
     // merged here in audit-loop cluster #19 — its own normalizer now sets
     // paramValue directly, this recovery remains only as a safety net)
     // (betcris/lvbet's former EXACT_GOALS_YN
-    // "Dokładnie 1 gol..." card was retired in round 9 — it now merges
-    // straight into EXACT_GOALS' own "1" selection instead of needing a
-    // recovered param here), lebull's TIME_BAND_TOTAL_GOALS/
+    // "Dokładnie 1 gol..." card was retired in round 9 — betcris now merges
+    // it straight into EXACT_GOALS' own "1" selection instead of needing a
+    // recovered param here; lvbet routes it to OTHER since the 2026-11
+    // recovery, because its full ladder maps to EXACT_GOALS), lebull's TIME_BAND_TOTAL_GOALS/
     // WINNING_MARGIN_ANY_EXACT/SCORE_REACHED/SCORE_OCCURS_DURING_MATCH all
     // spelled the parameter out in rawMarketName only). Recovering it here
     // also closes the silent-merge risk the audit flagged: a second line

@@ -1,0 +1,317 @@
+# Observability acceptance evidence (observability.md Task 11), 2026-11-13
+#
+# Tree under test: recovery/observability @ 3a8f7bd (Tasks 1-10 plus their review fixes),
+# worktree /home/skamik/Documents/repositories/personal/aityper-scraper-api-worktrees/observability.
+# Scope (ledger ruling R6, EXECUTION.md rules 3 and 4):
+#   RUN here:      Merge state, A1, A2 (forbet dry, betters dry), A7 exit-2 path, A8 dead-port path, A9.
+#   DEFERRED:      A3, A4, A5, A5b, A6, A10, A7 live (15 lines), A8 live (54321), migration 11.
+#                  They need the dev server running Tasks 1-10, migration 11 applied and a scrape
+#                  persisted to the DB. Exact commands and expected results are in section 9.
+# Every heavy command ran through .../aityper-scraper-api-worktrees/bin/heavy (bookmaker traffic with
+# --live, one probe at a time). The worktree .env points Supabase at the dead port 127.0.0.1:9 on purpose.
+# Nothing wrote to the DB, no server or scheduler was started, no migration was applied.
+# Times are UTC.
+
+====================================================================================================
+1. Merge state first
+====================================================================================================
+
+$ for b in recovery/totalbet recovery/betby recovery/pzbuk; do git merge-base --is-ancestor "$b" HEAD && echo "$b: ancestor of HEAD" || echo "$b: not an ancestor"; done
+recovery/totalbet: not an ancestor
+recovery/betby: not an ancestor
+recovery/pzbuk: not an ancestor
+$ grep -L executeFullOfferScrape src/scrapers/bookmakers/{betters,lebull,totalbet,pzbuk}/index.ts
+(no output: all four still pass the recorder)
+$ grep -l describeCaptureFailure src/scrapers/bookmakers/pzbuk/index.ts
+(no output: pzbuk.md Task 5 is not wired)
+
+Verdict for this tree: no bookmaker fix is in. Every A2/A4 recorder row applies here
+(betters, lebull, totalbet, pzbuk), exactly as on 2026-11-07.
+
+Context, read-only: the tree the live acceptance will actually run on is different.
+recovery/integration @ 196e758 (git show, no checkout):
+  recovery/totalbet: ancestor of integration
+  recovery/betby: ancestor of integration
+  recovery/pzbuk: ancestor of integration
+  recovery/observability: NOT an ancestor of integration (not merged yet)
+  grep -L executeFullOfferScrape on integration: betters, lebull, totalbet listed (no longer pass the recorder)
+  grep -l describeCaptureFailure on integration: pzbuk listed (pzbuk.md Task 5 is wired)
+Main checkout (live backend on :3001): master @ 377b47e. Neither recovery/observability nor
+recovery/integration is in it.
+
+So once observability is merged into integration (and that tree serves :3001), the A2/A4 rows change:
+  - betters, lebull (Betby, betby-betters-lebull.md Task 6): browserless, outside the recorder. Expect
+    status "available", consecutiveFailures 0. If one fails anyway, expect Betby's own text, e.g.
+    "Betby <Tag>: 0 upcoming matches for tournament <id> in snapshot <v> (<n> events)" or a
+    BetbyHttpError "HTTP <code> from <host>…", NOT "document HTTP 404 …boxwebcdn.work…".
+  - totalbet (totalbet.md Tasks 1 and 4): browserless dealer API. Expect "available", 0 failures. On a
+    failure expect its own strings ("HTTP 404 from https://totalbet.pl/dealer/bdata/v1/bet/events?…",
+    "Detail fetch failed for k/n events (first: …)", "phase-1 keys missing for …",
+    "No parsable Totalbet events for <league>"), NOT "fetch HTTP 404 …/rest/market/categories/multi/7124/events".
+  - pzbuk (pzbuk.md Task 5): still passes the recorder. Expect "available", 0 failures. On a failure expect
+    "No WebSocket data captured: <describeCaptureFailure>" or "No markets captured for any of <n> listed
+    events (first failure: …)", optionally followed by " | " and recorder lines.
+  - The live evidence for the recorder's 404 path is then the betters/lebull dry smokes of section 3b
+    and of Task 9 (2026-11-07), both run from this worktree.
+
+====================================================================================================
+2. A1, DB-down drill (no DB writes, no bookmaker traffic)
+====================================================================================================
+
+started 2026-11-13T16:27:47Z
+$ heavy --live env SUPABASE_URL=http://127.0.0.1:59999 SUPABASE_SERVICE_KEY=dummy npx tsx scripts/smoke-bookmaker.ts --bookmaker forbet --persist
+--- stdout
+[ScraperService] Starting scrape for premier-league
+SMOKE_RESULT {"bookmaker":"forbet","league":"premier-league","status":null,"matches":0,"marketsFound":0,"marketsSaved":0,"marketsNormalized":null,"minMarketsPerMatch":null,"otherMarketShare":null,"unknownSelectionShare":null,"error":"[ALERT] scrape run ABORTED for premier-league: database unreachable - TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:59999)","aborted":"db_unreachable","durationMs":38}
+[BrowserPool] Closing all 0 browsers
+[BrowserPool] All browsers closed
+--- stderr
+[heavy] waiting for the live lock
+[ALERT] scrape run ABORTED for premier-league: database unreachable - TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:59999)
+--- exit=3
+$ grep -c '\[Aggregator/FullOffer\] Starting' (stdout + stderr)
+0
+
+A1: PASS. Exit 3; the exact ABORTED line is present; no "[Aggregator/FullOffer] Starting"; 0 browsers
+launched. (Pre-fix equivalent, repro-db-down-forbet.txt: "1 success, 0 errors", 12/12 batches failed.)
+
+====================================================================================================
+3. A2, single-bookmaker live smoke (dry, no DB)
+====================================================================================================
+
+3a. forbet, started 2026-11-13T16:27:53Z
+$ heavy --live npx tsx scripts/smoke-bookmaker.ts --bookmaker forbet --league premier-league
+[forBET/Navigation] Fetched 20 events for premier-league
+[forBET/FullOffer] Manchester City vs Fulham FC: 149 markets
+[forBET/FullOffer] Bournemouth vs Nottingham: 149 markets
+[forBET/FullOffer] Tottenham vs Ipswich: 150 markets
+[forBET/FullOffer] Coventry vs Crystal Palace: 150 markets
+[forBET/FullOffer] Chelsea vs Leeds United: 150 markets
+[forBET/FullOffer] Aston Villa vs Sunderland: 150 markets
+[forBET/FullOffer] Newcastle vs Arsenal FC: 149 markets
+[forBET/FullOffer] Hull City vs Brighton: 149 markets
+[forBET/FullOffer] Liverpool vs Manchester United: 150 markets
+[forBET/FullOffer] Brentford vs Everton: 149 markets
+[forBET/FullOffer] Nottingham vs Chelsea: 149 markets
+[forBET/FullOffer] Manchester United vs Brentford: 149 markets
+[forBET/FullOffer] Leeds United vs Coventry: 148 markets
+[forBET/FullOffer] Ipswich vs Aston Villa: 150 markets
+[forBET/FullOffer] Everton vs Liverpool: 150 markets
+[forBET/FullOffer] Fulham FC vs Bournemouth: 149 markets
+[forBET/FullOffer] Crystal Palace vs Hull City: 149 markets
+[forBET/FullOffer] Brighton vs Newcastle: 149 markets
+[forBET/FullOffer] Sunderland vs Tottenham: 148 markets
+[forBET/FullOffer] Arsenal FC vs Manchester City: 149 markets
+[forBET/FullOffer] Completed: 20 matches, 2985 total markets
+SMOKE_RESULT {"bookmaker":"forbet","league":"premier-league","status":"scraped","matches":20,"marketsFound":2985,"marketsNormalized":2985,"minMarketsPerMatch":148,"otherMarketShare":0.0402,"unknownSelectionShare":0,"error":null,"durationMs":5345}
+--- exit=0
+
+A2 forbet: PASS. matches 20 >= 18, minMarketsPerMatch 148 >= 100, unknownSelectionShare 0 <= 0.06.
+(2026-11-06: 20 / 148 / 0.0376. 2026-11-07, Task 9: 19 / 148 / 0.0522.)
+Note for A10: the listed 20 events are two rounds that are both further out (149 markets each). On
+2026-11-07 the nearest round still had 419-506 markets per match (Task 9: 5648 markets for 19 matches).
+Today's forbet total (2985) is under its A10 floor (4402) with no code change. See section 10, item 3.
+
+3b. betters, started 2026-11-13T16:28:13Z (the Betby fix is not in this tree, section 1)
+$ heavy --live npx tsx scripts/smoke-bookmaker.ts --bookmaker betters --league premier-league
+[Betters/FullOffer] Capturing data for league: premier-league
+[Betters/Navigation] Navigating to: https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485 (extended markets)
+[Betters/Navigation] Capture timeout after 8000ms
+SMOKE_RESULT {"bookmaker":"betters","league":"premier-league","status":"scrape_failed","matches":0,"marketsFound":0,"marketsNormalized":0,"minMarketsPerMatch":0,"otherMarketShare":null,"unknownSelectionShare":null,"error":"No events found from API | document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485","durationMs":8154}
+--- exit=1
+
+A2 betters: PASS. Exit 1; error contains "document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485".
+
+3c. Cited, not re-run today: the Task 9 dry smokes from this worktree (2026-11-07 ~01:38Z, same code
+path; .scratch/smoke-<bm>-out.txt). They are the offline proxies for the A4 recorder substrings:
+  lebull:   exit 1, error "No events found from API | document HTTP 404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485"
+  totalbet: exit 1, error "No events found from API | fetch HTTP 404 https://totalbet.pl/rest/market/categories/multi/7124/events"
+  pzbuk:    exit 1, error "No WebSocket data captured | websockets opened: wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl"
+  betters:  exit 1, error "No events found from API | document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485"
+
+====================================================================================================
+4. A7, CLI, exit-2 path (the live 15-line row is DEFERRED, section 9)
+====================================================================================================
+
+$ heavy env SUPABASE_URL=http://127.0.0.1:59999 npx tsx scripts/scraper-status.ts --league premier-league
+--- stdout: 0 lines
+--- stderr
+Database unreachable at http://127.0.0.1:59999: TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:59999)
+--- exit=2
+
+$ heavy env SUPABASE_URL=http://127.0.0.1:59999 npx tsx scripts/scraper-status.ts --league premier-league --json
+--- stdout: 0 lines
+--- stderr
+Database unreachable at http://127.0.0.1:59999: TypeError: fetch failed (connect ECONNREFUSED 127.0.0.1:59999)
+--- exit=2
+
+$ heavy npx tsx scripts/scraper-status.ts --league premier-league     (worktree .env, dead port 9)
+--- stdout: 0 lines
+--- stderr
+Database unreachable at http://127.0.0.1:9: TypeError: fetch failed (bad port)
+--- exit=2
+
+A7 exit-2 path: PASS.
+
+====================================================================================================
+5. A8, stack script, dead-port path (the live 54321 row is DEFERRED, section 9)
+====================================================================================================
+
+$ SUPABASE_URL=http://127.0.0.1:59999 bash scripts/dev-stack.sh --check
+Supabase NOT reachable at http://127.0.0.1:59999 (HTTP 000)
+exit=1
+$ bash scripts/dev-stack.sh --check   (worktree .env, dead port 9)
+Supabase NOT reachable at http://127.0.0.1:9 (HTTP 000)
+exit=1
+
+A8 dead-port path: PASS. (Task 10 also proved the reachable branch against a throwaway stub on a free
+port: "Supabase reachable at <stub> (market_types HTTP 200)", exit 0.)
+
+====================================================================================================
+6. A9, tests and type checks
+====================================================================================================
+
+$ heavy npx vitest run
+ ✓ src/services/normalization/__tests__/golden.test.ts (25 tests)
+ Test Files  87 passed (87)
+      Tests  1404 passed (1404)
+--- exit=0
+$ heavy npx tsc --noEmit
+exit=0
+$ heavy npx tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --lib ES2022,DOM,DOM.Iterable --strict --skipLibCheck --esModuleInterop --resolveJsonModule scripts/scraper-status.ts scripts/smoke-bookmaker.ts
+exit=0
+$ git diff 377b47e --stat -- src/services/normalization src/data/market-catalog.ts
+(no output: no parser, normalizer or catalog change on this branch)
+
+A9: PASS. 1404 >= 1182 + new tests (baseline 65 files / 1182 tests), golden.test.ts unchanged at 25,
+tsc clean, scripts type-check clean.
+
+====================================================================================================
+7. Pre-merge baseline of the live backend (read-only GETs on :3001, master @ 377b47e)
+====================================================================================================
+These are NOT acceptance results. They show what the owner's UI sees today, before this plan is merged,
+using the same filters as A4-A6. Taken 2026-11-13T16:29Z.
+
+$ curl -s -o /dev/null -w '%{http_code}' http://localhost:3001/api/health
+200
+$ curl -s -w '\nHTTP %{http_code}\n' 'http://localhost:3001/api/health/scrapers?league=premier-league'
+{"success":false,"error":{"code":"NOT_FOUND","message":"Endpoint not found"}}
+HTTP 404                                   (the endpoint is Task 8 code, not on master)
+$ curl -s http://localhost:3001/api/bookmakers | python3 -I -c "import json,sys;print(json.load(sys.stdin)['meta'])"
+{'totalBookmakers': 14, 'availableCount': 0, 'errorCount': 14}
+$ A5 filter on GET /api/odds?league=premier-league
+Counter({'stale': 13, 'available': 1}) None 0
+  (available: betcris only; totalMatches 20; lastUpdated null; no bookmakerHealth)
+$ A5b filter on POST /api/odds/batch {"leagues":["premier-league"]}
+Counter({'stale': 13, 'available': 1}) True None 0
+
+Same picture as the plan's "Status today" (2026-11-06): 1/14 available, lastUpdated null,
+/api/bookmakers 0/14.
+
+====================================================================================================
+8. Known limitations to keep in mind while running section 9
+====================================================================================================
+- R26: getBookmakerStatusSnapshot reads scraper_runs only. Until migration 11 is applied and one run has
+  persisted, bookmakers without run rows fall back to odds freshness (stale/available by time only), and
+  /api/health/scrapers shows null run fields for them. Every run also logs a non-fatal
+  "[ScraperService] scraper_runs not persisted: … [PGRST204] (apply supabase/migrations/11_scraper_runs_observability.sql)".
+- The A2/A4 recorder substrings for betters, lebull and totalbet stop applying once the Betby and totalbet
+  branches are in the tree under test (they are already in recovery/integration, section 1).
+- Each GET /api/odds, and each league of POST /api/odds/batch, runs one status snapshot: 16 PostgREST
+  calls, no cache, and the per-bookmaker freshness query has no (league_slug, bookmaker, scraped_at)
+  index (Task 8/9 concern). Measure the poll latency during A5/A5b.
+
+====================================================================================================
+9. DEFERRED live checks (exact commands, expected results)
+====================================================================================================
+Run with the operator, from the main checkout /home/skamik/Documents/repositories/personal/aityper-scraper-api
+after it serves the merged tree (Tasks 1-10 of this plan; per section 1 also the Betby, totalbet and pzbuk
+fixes if the merge goes through recovery/integration). Re-run section 1's commands in that tree first and
+pick the A4 rows accordingly.
+
+P1. Apply migration 11 (DB-mutating, owner approval, single file only):
+    ./scripts/apply-migrations.sh 11_scraper_runs_observability.sql
+    Expected: "✓ Migration applied successfully".
+    Verify: set -a; . ./.env; set +a; curl -s "$SUPABASE_URL/rest/v1/scraper_runs?select=run_id,markets_found&limit=1" -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY"
+    Expected: [] or rows with "run_id":null; no 42703 or PGRST204 error JSON.
+
+P2. Start the stack and keep its log:
+    bash scripts/dev-stack.sh --check
+    Expected (A8 live): "Supabase reachable at http://127.0.0.1:54321 (market_types HTTP 200)", exit 0.
+    npm run dev:stack 2>&1 | tee <log>            (or the operator's usual npm run dev, with its output kept)
+
+P3. Wait for the next scheduled run (top of the hour), or trigger one:
+    curl -s -X POST -H 'Authorization: Bearer dev-api-key' -H 'Content-Type: application/json' -d '{"league":"premier-league"}' http://localhost:3001/api/admin/scrape
+
+A3, per-run line:
+    sed 's/\x1b\[[0-9;]*m//g' <log> > <clean>
+    RUN=$(grep -o 'Starting run [0-9a-f-]\{36\} for premier-league' <clean> | tail -1 | cut -d' ' -f3)
+    grep '^\[ScrapeRun\] premier-league' <clean> | tail -1
+    set -a; . ./.env; set +a
+    curl -s "$SUPABASE_URL/rest/v1/scraper_runs?run_id=eq.$RUN&select=bookmaker,status,markets_saved" -H "apikey: $SUPABASE_SERVICE_KEY" -H "Authorization: Bearer $SUPABASE_SERVICE_KEY"
+    Expected:
+    - The [ScrapeRun] line has the shape
+      "[ScrapeRun] premier-league run=<RUN:0:8> finished=<iso> ok=N/14 matches=M saved=S failed=<bm:status,…|none>"
+      and contains run=${RUN:0:8}. grep -c '^\[ScrapeRun\] premier-league' rises by exactly 1 per
+      non-aborted run. An aborted run adds no [ScrapeRun] line and exactly one
+      "[ALERT] scrape run ABORTED for premier-league: database unreachable - …" line.
+    - The curl returns 14 rows. N = rows with status in (success, partial). S = Σ markets_saved of those rows.
+
+A10, no regression in the 9 savers (same curl as A3):
+    Expected markets_saved >= 0.75 × run-2: fortuna >= 9673, superbet >= 10015, lvbet >= 7071,
+    fuksiarz >= 4667, betfan >= 4200, forbet >= 4402, etoto >= 4915, sts >= 3848, betclic >= 2363.
+    Run it when the nearest Premier League round is 1-3 days away, as it was for run 2 (2026-11-06).
+    Otherwise compare against a dry smoke of the same hour: see section 10, item 3.
+
+A4, summary endpoint (no Authorization header):
+    curl -s -w '\nHTTP %{http_code}\n' 'http://localhost:3001/api/health/scrapers?league=premier-league'
+    curl -s 'http://localhost:3001/api/health/scrapers?league=premier-league' | python3 -I -m json.tool
+    Expected: HTTP 200, 14 entries in "bookmakers". Every bookmaker that saved rows in the run:
+    status "available", consecutiveFailures 0. lastError substrings (substring checks, never exact):
+    - Only for the fixes NOT in the tree under test (section 1):
+        betters:  "document HTTP 404 https://betterspl-ssr.boxwebcdn.work/pl/league/1/4485"
+        lebull:   "document HTTP 404 https://lebullpl-ssr.boxwebcdn.work/pl/league/1/4485"
+        totalbet: "fetch HTTP 404 https://totalbet.pl/rest/market/categories/multi/7124/events"
+        pzbuk:    "websockets opened: wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl"
+    - For the fixes that ARE in the tree: "available" with consecutiveFailures 0, or that plan's own error
+      text (section 1). For a pzbuk or totalbet mismatch, compare with the cases in the Task 9 note before
+      calling it a recorder defect.
+
+A5, /api/odds:
+    curl -s 'http://localhost:3001/api/odds?league=premier-league' | python3 -I -c "import json,sys,collections;m=json.load(sys.stdin)['meta'];print(collections.Counter(m['bookmakerStatus'].values()), m['lastUpdated'], len(m['bookmakerHealth']))"
+    Expected: available >= 9 (baseline today: 1), a non-null lastUpdated at most 2 × interval old
+    (baseline: None), 14 (baseline: 0). Every bookmaker whose latest run failed is "error", not "stale".
+
+A5b, /api/odds/batch (the frontend's path):
+    curl -s -X POST -H 'Content-Type: application/json' -d '{"leagues":["premier-league"]}' http://localhost:3001/api/odds/batch | python3 -I -c "import json,sys,collections;m=json.load(sys.stdin)['meta'];s=m['bookmakerStatus'];print(collections.Counter(s.values()), all(isinstance(v,str) for v in s.values()), m['lastUpdated'], len(m['bookmakerHealth']))"
+    Expected: available >= 9, True, a non-null lastUpdated, 14.
+
+A6, /api/bookmakers:
+    curl -s http://localhost:3001/api/bookmakers | python3 -I -c "import json,sys;print(json.load(sys.stdin)['meta'])"
+    Expected: availableCount >= 9 (baseline today: 0).
+
+A7 live:
+    npx tsx scripts/scraper-status.ts --league premier-league | wc -l
+    Expected: 15 (header + 14 rows), "source=scraper_runs" on stderr. Exit 1 while any bookmaker has
+    consecutiveFailures >= 3 (failing ones listed on stderr), otherwise 0. Exit 2 with
+    "run history unavailable (source=odds_only)" if the scraper_runs read fails.
+    npx tsx scripts/scraper-status.ts --league premier-league --json | python3 -I -m json.tool > /dev/null; echo "${PIPESTATUS[1]}"
+    Expected: 0, and a ScraperHealthReport with 14 bookmakers and "source": "scraper_runs".
+
+A8 live: see P2.
+
+====================================================================================================
+10. Observations from this run
+====================================================================================================
+1. The navigation recorder still reports the same causes 6 days later: betters' league page is still a
+   document 404 on betterspl-ssr.boxwebcdn.work (section 3b).
+2. forbet's unknownSelectionShare is 0 today (0.0522 on 2026-11-07). The Task 9 headroom concern came from
+   the deeper markets of the then-nearest round, which are not listed today.
+3. A10 depends on the fixture calendar. Run 2 (2026-11-06) scraped two days before a round, when forbet
+   listed 419-506 markets for the nearest round. Today forbet lists only rounds further out, at 148-150
+   markets per match (2985 in total), under the 4402 floor with no code change. A10 misses on a day like
+   this say nothing about Task 1/2. Run A10 1-3 days before a round. On another day, cross-check a
+   miss with a dry smoke of the same hour (npx tsx scripts/smoke-bookmaker.ts --bookmaker <bm>):
+   its marketsNormalized is an upper bound of markets_saved (saveBatchFullOfferMarkets drops
+   non-canonical markets and merges records by market_key). A dry smoke whose marketsNormalized is
+   itself under the floor shows an offer-side shortfall, not a regression.

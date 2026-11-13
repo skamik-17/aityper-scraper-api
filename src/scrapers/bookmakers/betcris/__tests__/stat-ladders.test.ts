@@ -73,11 +73,16 @@ describe("betcris parser: tier ladders", () => {
       .toEqual([[undefined, ["Thierno Barry"]], [undefined, ["Thierno Barry 2+"]]]);
   });
 
-  it("betcris parser: keeps non-tier events of a ladder market in one residual entry", () => {
-    const g = { ...game, market: { m: { id: 1, type: "FoulsTotal", name: "Faule. Suma", order: 1, col_count: 1,
-      event: { a: { id: 11, name: "22+", price: 1.46, order: 1, type_1: "22+" }, b: { id: 12, name: "Tak", price: 1.9, order: 2, type_1: "Tak" } } } } };
+  it("betcris parser: keeps non-tier events and a 0+ rung of a ladder market in one residual entry without a line", () => {
+    // base 21.5 on the market: the residual must still carry no paramValue, or a
+    // "Tak" residual would publish as a non-OVER selection under FOULS_TOTAL:21.5.
+    // "0+" would be Over -0.5, a line no peer quotes: never a rung.
+    const g = { ...game, market: { m: { id: 1, type: "FoulsTotal", name: "Faule. Suma", order: 1, col_count: 1, base: 21.5,
+      event: { a: { id: 11, name: "22+", price: 1.46, order: 1, type_1: "22+" }, b: { id: 12, name: "Tak", price: 1.9, order: 2, type_1: "Tak" },
+        c: { id: 13, name: "0+", price: 1.02, order: 3, type_1: "0+" } } } } };
     const res = parseAllMarkets(g as any);
-    expect(res.map((m) => [m.paramValue, m.selections.map((s) => s.name)])).toEqual([["21.5", ["Powyżej"]], [undefined, ["Tak"]]]);
+    expect(res.map((m) => [m.paramValue, m.selections.map((s) => s.name)])).toEqual([["21.5", ["Powyżej"]], [undefined, ["Tak", "0+"]]]);
+    expect(norm(res[1])).toBeNull();
   });
 
   it("betcris parser: total entry count on the 32-market ladder fixture", () => {
@@ -112,6 +117,60 @@ describe("betcris normalizer: tier ladders", () => {
     expect(view(norm(pick("ThrowInsTotal", "39.5")))).toEqual({ key: "THROW_INS_TOTAL:39.5", sel: [["OVER", 1.76]] });
     // A residual (non-tier event, no line) must not publish as a lineless FOULS_TOTAL row.
     expect(norm(residualOf("FoulsTotal", "21.5", [{ name: "Tak", odds: 1.9 }]))).toBeNull();
+    // A rung line is tier - 0.5 with tier >= 1: a line of 0 or below ("0+" -> -0.5) never publishes.
+    expect(norm({ ...pick("FoulsTotal", "21.5"), paramValue: "-0.5" })).toBeNull();
+    expect(norm({ ...pick("ShotsTeam1Total", "14.5"), paramValue: "0" })).toBeNull();
+    expect(view(norm({ ...pick("FoulsTotal", "21.5"), paramValue: "0.5" }))!.key).toBe("FOULS_TOTAL:0.5");
+  });
+
+  it("betcris normalizer: every ladder id lands on its own code and side (raw names from the fixtures)", () => {
+    // [Swarm id, raw market name from match-31321159 / match-31333513, marketKey]. Team rows carry line 1.5.
+    const team: Array<[string, string, string]> = [
+      ["FoulsTotal", "Faule. Suma", "FOULS_TOTAL:1.5"],
+      ["FoulsTeam1Total", "Faule. Team 1. Suma", "HOME_TEAM_TOTAL_FOULS:1.5"],
+      ["FoulsTeam2Total", "Faule. Team 2. Suma", "AWAY_TEAM_TOTAL_FOULS:1.5"],
+      ["OffsidesTotal", "Spalone. Suma", "OFFSIDES_TOTAL:1.5"],
+      ["OffsidesTeam1Total", "Spalone. Gospodarze. Suma", "HOME_TEAM_TOTAL_OFFSIDES:1.5"],
+      ["OffsidesTeam2Total", "Spalone. Goście. Suma", "AWAY_TEAM_TOTAL_OFFSIDES:1.5"],
+      ["ShotsTeam1Total", "Strzały. Team 1. Suma", "TEAM_TOTAL_SHOTS:HOME:1.5"],
+      ["ShotsTeam2Total", "Strzały. Team 2. Suma.", "TEAM_TOTAL_SHOTS:AWAY:1.5"],
+      ["ShotsonTargetTotal", "Strzały celne. Suma", "TOTAL_SHOTS_ON_TARGET:1.5"],
+      ["ShotsonTargetTeam1Total", "Strzały celne. Team 1. Suma", "TEAM_TOTAL_SHOTS_ON_TARGET:HOME:1.5"],
+      ["ShotsonTargetTeam2Total", "Strzały celne. Team 2. Suma", "TEAM_TOTAL_SHOTS_ON_TARGET:AWAY:1.5"],
+      ["ShotsonTarget1stHalfTotal", "1. połowa. Strzały celne. Suma", "HALF_TIME_TOTAL_SHOTS_ON_TARGET:1.5"],
+      ["ThrowInsTotal", "Wrzuty z autu. Suma", "THROW_INS_TOTAL:1.5"],
+      ["ThrowInsTeam1Total", "Wrzuty z autu. Team 1. Suma", "HOME_TEAM_TOTAL_THROW_INS:1.5"],
+      ["ThrowInsTeam2Total", "Wrzuty z autu. Team 2. Suma", "AWAY_TEAM_TOTAL_THROW_INS:1.5"],
+    ];
+    const player: Array<[string, string, string]> = [
+      ["PlayerShots", "Zawodnik - strzały", "PLAYER_SHOTS:Jan Kowalski"],
+      ["PlayerShotsonTarget", "Zawodnik - strzały celne", "PLAYER_SHOTS_ON_TARGET:Jan Kowalski"],
+      ["PlayerFouls", "Zawodnik - popełnione faule", "PLAYER_FOULS:Jan Kowalski"],
+      ["PlayerFoulsWon", "Zawodnik - faule na zawodniku", "PLAYER_FOULS_WON:Jan Kowalski"],
+      ["PlayerOffsides", "Zawodnik - spalone", "PLAYER_OFFSIDES:Jan Kowalski"],
+      ["PlayerSaves", "Bramkarz - interwencje (obronione strzały)", "PLAYER_SAVES:Jan Kowalski"],
+      ["PlayerAssists", "Zawodnik - asysty", "PLAYER_ASSISTS:Jan Kowalski"],
+      ["PlayerTackles", "Zawodnik - odbiory", "PLAYER_TACKLES:Jan Kowalski"],
+      ["PlayerShotsonTargetOutsidetheBox", "Zawodnik - strzały celne spoza pola karnego", "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX:Jan Kowalski"],
+      ["PlayerHeadedShotsonTarget", "Zawodnik - strzały celne głową", "PLAYER_HEADER_SHOTS_ON_TARGET:Jan Kowalski"],
+    ];
+    const list: Array<[string, string, string]> = [
+      ["PlayerShotsAgainstWoodwork", "Zawodnik - strzały w obramowanie bramki", "PLAYER_HIT_WOODWORK"],
+    ];
+    // A new ladder id in the parser sets forces a new row here.
+    expect([...team, ...player, ...list].map(([id]) => id).sort())
+      .toEqual([...TEAM_TIER_LADDER_TYPES, ...PLAYER_TIER_LADDER_TYPES, ...PLAYER_TIER_LIST_TYPES].sort());
+
+    const got = [
+      ...team.map(([id, name]) => [id, view(norm({ bookmakerMarketId: id, name, paramValue: "1.5", selections: [{ name: "Powyżej", odds: 2 }] }))]),
+      ...player.map(([id, name]) => [id, view(norm({ bookmakerMarketId: id, name, paramValue: "Jan Kowalski", selections: [{ name: "1+", odds: 2 }] }))]),
+      ...list.map(([id, name]) => [id, view(norm({ bookmakerMarketId: id, name, selections: [{ name: "Jan Kowalski", odds: 2 }] }))]),
+    ];
+    expect(got).toEqual([
+      ...team.map(([id, , key]) => [id, { key, sel: [["OVER", 2]] }]),
+      ...player.map(([id, , key]) => [id, { key, sel: [["1+", 2]] }]),
+      ...list.map(([id, , key]) => [id, { key, sel: [["Jan Kowalski", 2]] }]),
+    ]);
   });
 
   it("betcris normalizer: new FoulsTotal rung equals the August FoulsOver/Under shape", () => {

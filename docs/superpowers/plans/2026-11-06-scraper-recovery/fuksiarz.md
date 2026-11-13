@@ -69,10 +69,10 @@ Sources: `evidence/fuksiarz/run2-log-lines.txt`, `db-stats-2026-11-06.txt`, `off
 |---|---|---|
 | current | 1300 / 101 / 57 / 2 | 1376 / 86 / 89 / 17 |
 | Task 1 | 1300 / 0 / 57 / 2 | 1376 / 0 / 89 / 17 |
-| Tasks 1+2 | 1291 / 0 / 60 / 2 | 1343 / 0 / 73 / 1 |
+| Tasks 1+2 | 1291 / 0 / 60 / 2 (_superseded by G1 re-baseline after ef98d8e: Ars–Hul 1288/0/57/2, Lee–Tot 1343/0/73/1 (verified on d2fdfd1)_) | 1343 / 0 / 73 / 1 |
 | Tasks 1+2+3 | 1288 / 0 / 10 / 2 | 1343 / 0 / 39 / 1 |
 
-- `params` counts the player-parameter rows only. The drops come from hyphen and case spellings that now merge, for example "Jens Hjerto Dahl" [fortuna] with "Jens Hjerto-Dahl" [betfan, sts], and "Micky Van de Ven" with "Micky van de Ven". The +3 fuksiarzOnly in Ars–Hul after Task 2 are rows that were previously merged with an LVBet combo.
+- `params` counts the player-parameter rows only. The drops come from hyphen and case spellings that now merge, for example "Jens Hjerto Dahl" [fortuna] with "Jens Hjerto-Dahl" [betfan, sts], and "Micky Van de Ven" with "Micky van de Ven". The +3 fuksiarzOnly in the 1291 / 0 / 60 / 2 row came from a hyphen split, not from LVBet combos: step 1 folded "Jens Hjerto-Dahl" into the spaced "Jens Hjerto Dahl", and "J. Hjerto-Dahl" [fuksiarz] fitted only the hyphenated spelling, so it stayed stranded in PLAYER_ASSISTS, PLAYER_GOAL_OUTSIDE_BOX and PLAYER_SHOTS_ON_TARGET. ef98d8e compares names through their same-order step-1 spellings and folds those rows (superseded by G1 re-baseline after ef98d8e: Ars–Hul 1288/0/57/2, Lee–Tot 1343/0/73/1 (verified on d2fdfd1)).
 - Every fold of a non-abbreviated name that Tasks 1+2 add was checked by hand. All are the same player: hyphen and case spellings, a dropped middle name ("James Michael Justin" / "James Justin"), and Fortuna's "X wyrzucony z boiska" folding into "X" as it does today.
 - The residual stranded rows are left alone on purpose:
   - "T. Iroegbunam" (Tim / Timothy): resolving it needs a nickname table. Folding it by "same initial and surname" would also fold "J Silva" into "Joao Silva" or "Jorge Silva" and break the guard at `player-name-reconcile.test.ts:102`.
@@ -115,7 +115,7 @@ No param-extraction change is needed. The generic fallback at `fuksiarz-normaliz
 - `-4895/-4896` are offer-dependent. Arsenal–Hull and far-dated fixtures do not carry them today.
 
 ### Open questions for the owner
-1. Should Task 3 (match-wide spelling-out of abbreviated names in Fuksiarz-only rows) ship? It is cosmetic: fuksiarzOnly goes 60 → 10 (Ars–Hul) and 73 → 39 (Lee–Tot) after Tasks 1+2. Tasks 1 and 2 are not optional, because Task 2 fixes stranded odds.
+1. Should Task 3 (match-wide spelling-out of abbreviated names in Fuksiarz-only rows) ship? It is cosmetic: fuksiarzOnly goes 60 → 10 (Ars–Hul) and 73 → 39 (Lee–Tot) after Tasks 1+2 (the Ars–Hul 60 is superseded by the G1 re-baseline after ef98d8e: 57). Tasks 1 and 2 are not optional, because Task 2 fixes stranded odds.
 2. Map `-30640` even though no peer currently quotes EACH_TEAM_TOTAL_CORNERS_OVER for PL? (STS maps the same code from id 2097 when it offers it.)
 3. Route "strip ' wyrzucony z boiska' from Fortuna's PLAYER_RED_CARD param" to the Fortuna plan? It would clear the "M. Bachir Belloumi" residual (Ars–Hul) and fix the "Declan Rice wyrzucony z boiska" label.
 
@@ -128,7 +128,7 @@ No param-extraction change is needed. The generic fallback at `fuksiarz-normaliz
    |---|---|---|
    | current (proven) | `"params":1300,"withPeers":101,"fuksiarzOnly":57,"stranded":2` | `"params":1376,"withPeers":86,"fuksiarzOnly":89,"stranded":17` |
    | Task 1 | `1300 / 0 / 57 / 2` | `1376 / 0 / 89 / 17` |
-   | Task 2 | `1291 / 0 / 60 / 2` (T. Iroegbunam, M. Bachir Belloumi) | `1343 / 0 / 73 / 1` (A. Robertson) |
+   | Task 2 | `1291 / 0 / 60 / 2` (T. Iroegbunam, M. Bachir Belloumi; _superseded by G1 re-baseline after ef98d8e: Ars–Hul 1288/0/57/2, Lee–Tot 1343/0/73/1 (verified on d2fdfd1)_) | `1343 / 0 / 73 / 1` (A. Robertson) |
    | Task 3 | `1288 / 0 / 10 / 2` | `1343 / 0 / 39 / 1` |
 2. Normalizer: Task 4's unit tests pass on the trimmed fixture, and the golden diff contains exactly the entries listed in Task 4 Step 6.
 3. Header-shot plausibility, baseline. Run `python3 -I $PLAN/evidence/fuksiarz/tools/header_shots_vs_peers.py $PLAN/evidence/fuksiarz/nm-leeds-tottenham-header-shots-2026-11-06.json --fuksiarz-event $PLAN/evidence/fuksiarz/event-leeds-tottenham-2026-11-06.json`. Both inputs are frozen: the API snapshot was trimmed to PLAYER_HEADER_SHOTS_ON_TARGET, and the Fuksiarz odds come from the raw event. It gives `"fuksiarzPlayers": 15, "sharedWithPeer": 15, "medianAbsDevPct": 25.2, "maxRatio": 2.3`. 5 of 15 players are more than 50 % off the peer median (D. James 20 vs 8.8; J. Justin 9.4 vs 6; N. Okafor 5.0 vs 11.5; A. Tanaka 6.2 vs 14; N. Elvedi 9.9 vs 6.4). This is a sparse long-shot market, so the live criterion B5 is distributional, not per player.
@@ -411,7 +411,7 @@ Expected: 5 FAIL and 3 PASS (the hyphen guard, the Fortuna guard and the Tim/Tim
 
 Run: `cd "$WT" && npx vitest run src/services/__tests__/player-name-reconcile.test.ts src/services/__tests__/market-type-grouper-audit-fixes.test.ts src/services/__tests__/market-type-grouper-quarantine.test.ts src/services/__tests__/triple-buttons-fix.test.ts`
 Expected: all PASS. On a scratch copy with Tasks 1+2, these four files plus the 14 new Task 1–2 tests gave 62/62.
-Offline gate A1 must give exactly: `"params":1291,"withPeers":0,"fuksiarzOnly":60,"stranded":2` (Ars–Hul) and `"params":1343,"withPeers":0,"fuksiarzOnly":73,"stranded":1` (Lee–Tot). Any other `params` value means an unintended fold or split. List the folds and compare them with Observations > "Simulated effect".
+Offline gate A1 must give exactly: `"params":1291,"withPeers":0,"fuksiarzOnly":60,"stranded":2` (Ars–Hul) and `"params":1343,"withPeers":0,"fuksiarzOnly":73,"stranded":1` (Lee–Tot). (**Note:** superseded by G1 re-baseline after ef98d8e: Ars–Hul 1288/0/57/2, Lee–Tot 1343/0/73/1 (verified on d2fdfd1). Re-run A1 against those numbers, not 1291/60.) Any other `params` value means an unintended fold or split. List the folds and compare them with Observations > "Simulated effect".
 
 - [ ] **Step 5: Full gate and commit**
 

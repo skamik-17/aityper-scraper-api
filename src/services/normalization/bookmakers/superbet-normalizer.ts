@@ -76,10 +76,10 @@ const SUPERBET_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   // BTTS" / "draw or BTTS") that used to be split across a dropped-to-OTHER
   // home/away pair (side would have been lost) plus a standalone
   // DRAW_OR_BTTS card. Routed into the single combined RESULT_OR_BTTS code
-  // instead (matching lebull's own quote of the same bet) - side is
-  // resolved via SUPERBET_SIDE_BY_MARKET_ID below and folded into the
-  // selection code in normalizeMarket (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/
-  // NO, AWAY_OR_BTTS_YES/NO), so nothing is lost any more.
+  // instead - side is resolved via SUPERBET_SIDE_BY_MARKET_ID below and
+  // folded into the selection code in normalizeMarket (HOME_OR_BTTS_YES,
+  // DRAW_OR_BTTS_YES, AWAY_OR_BTTS_YES). Only the tak leg is published: the
+  // raw "nie" is "neither happens", not the catalog's "<X> or BTTS-No".
   231006: "RESULT_OR_BTTS", // "{home} wygra lub obie strzelą"
   231007: "RESULT_OR_BTTS", // "Remis lub obie drużyny strzelą gola"
   231008: "RESULT_OR_BTTS", // "{away} wygra lub obie strzelą"
@@ -1478,6 +1478,17 @@ function normalizeSelectionForMarket(
       return "YES" as NormalizedSelection;
     }
 
+    // Every in-vocabulary band was already returned by the literal catalog-
+    // code passthrough at the top. Anything else must not reach the 1X2
+    // mapper below, where a bare "3" (outside HALF_TIME_EXACT_GOALS's
+    // 0/1/2/2+/3+) would become DRAW.
+    case "EXACT_GOALS":
+    case "HOME_EXACT_GOALS":
+    case "AWAY_EXACT_GOALS":
+    case "HALF_TIME_EXACT_GOALS":
+    case "HALF_TIME_AWAY_EXACT_GOALS":
+      return "UNKNOWN";
+
     case "OTHER":
       return "UNKNOWN";
 
@@ -1702,6 +1713,47 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
 
     const side = rawId !== undefined ? SUPERBET_SIDE_BY_MARKET_ID[rawId] : undefined;
 
+    // Cluster #12: RESULT_OR_BTTS pools "<team> wins or BTTS" / "draw or
+    // BTTS" from 3 separate ids (231006 home / 231007 draw / 231008 away)
+    // into one combined card, so the side is folded into the selection code
+    // itself (231007, the draw, has no side at all). Each id is its own
+    // Tak/Nie market. Only "Tak" ("<X> or BTTS") is published, as
+    // <SIDE>_OR_BTTS_YES. Superbet's "Nie" is NOT(<X> or BTTS), i.e. neither
+    // happens (WC fixture: "Francja wygra lub obie drużyny strzelą gola" Tak
+    // 1.15 / Nie 4.8), but the catalog <SIDE>_OR_BTTS_NO means "<X> or
+    // BTTS-No", a different and much shorter-priced bet, so the nie leg is
+    // dropped (same as forbet). An unrecognised label or a missing or
+    // duplicated tak leg drops the whole market rather than guess.
+    if (marketCode === "RESULT_OR_BTTS") {
+      const legs = raw.selections.map((sel) => normalizeYesNoSelection(sel.name));
+      const yesSelections = raw.selections.filter((_, i) => legs[i] === "YES");
+      if (legs.includes("UNKNOWN") || yesSelections.length !== 1) {
+        console.warn(
+          `[superbet] RESULT_OR_BTTS: could not resolve the tak leg for "${raw.name}" (id: ${rawId ?? "none"})`
+        );
+        return null;
+      }
+      const yesSelection = yesSelections[0];
+      return {
+        marketCode,
+        paramValue: undefined,
+        marketKey: buildMarketKey(marketCode),
+        marketName: getMarketMetadata(marketCode)?.labels.pl ?? raw.name,
+        selections: [
+          {
+            code: `${side ?? "DRAW"}_OR_BTTS_YES` as NormalizedSelection,
+            label: yesSelection.name,
+            odds: yesSelection.odds,
+          },
+        ],
+        debug: {
+          rawName: raw.name,
+          rawId: rawId ?? undefined,
+          matchedBy,
+        },
+      } as NormalizedMarketOutput;
+    }
+
     let paramValue = extractParamValue(marketCode, raw, ctx);
     if (side && SIDED_PARAM_MARKETS.has(marketCode) && paramValue) {
       paramValue = `${side}:${paramValue}`;
@@ -1709,16 +1761,7 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
 
     let selections = raw.selections.map((sel) => {
       let code = normalizeSelectionForMarket(sel.name, marketCode, ctx);
-      // Cluster #12: RESULT_OR_BTTS pools "<team> wins or BTTS" / "draw or
-      // BTTS" from 3 separate ids (231006 home / 231007 draw / 231008 away)
-      // into one combined card - the side has to be folded into the
-      // selection code itself (HOME_OR_BTTS_YES/NO, DRAW_OR_BTTS_YES/NO,
-      // AWAY_OR_BTTS_YES/NO), not just prefixed the way SIDED_SELECTION_
-      // MARKETS below does, since 231007 (draw) has no side at all.
-      if (marketCode === "RESULT_OR_BTTS") {
-        const yesNo = normalizeYesNoSelection(sel.name);
-        code = yesNo === "UNKNOWN" ? "UNKNOWN" : (`${side ?? "DRAW"}_OR_BTTS_${yesNo}` as NormalizedSelection);
-      } else if (side && SIDED_SELECTION_MARKETS.has(marketCode) && code !== "UNKNOWN") {
+      if (side && SIDED_SELECTION_MARKETS.has(marketCode) && code !== "UNKNOWN") {
         // Side-specific market ids feed catalog codes with side-prefixed
         // selections (HOME_OVER, AWAY_1-2, ...).
         code = `${side}_${code}` as NormalizedSelection;

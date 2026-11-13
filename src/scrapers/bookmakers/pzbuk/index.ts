@@ -236,9 +236,14 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
       }
     }
 
+    // The cache lookup above keeps its legacy "/event/<id>" pattern on purpose
+    // (a hit would serve the thin league snapshot). The capture filter must
+    // match the real "/events/<id>-<slug>" URL, or any event's payload is merged.
+    const captureEventId = eventUrl.match(/\/events\/(\d+)/)?.[1];
+
     return this.executeWithBrowser(
       async (page) => {
-        const capture = captureWebSocketData(page, true, eventId);
+        const capture = captureWebSocketData(page, true, captureEventId);
         const navSuccess = await navigateToEventPage(page, eventUrl);
 
         if (!navSuccess) {

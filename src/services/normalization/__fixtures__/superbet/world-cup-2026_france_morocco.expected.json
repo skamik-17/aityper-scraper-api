@@ -63158,11 +63158,6 @@
             "code": "DRAW_OR_BTTS_YES",
             "label": "Tak",
             "odds": 1.72
-          },
-          {
-            "code": "DRAW_OR_BTTS_NO",
-            "label": "Nie",
-            "odds": 2
           }
         ]
       },

@@ -51,3 +51,34 @@ describe("fuksiarz 2026-11 gameTypes (Leeds v Tottenham fixture)", () => {
     expect(out === null || out.marketCode === "OTHER").toBe(true);
   });
 });
+
+describe("fuksiarz each-team OVER-only codes never publish UNDER", () => {
+  // The catalog codes are OVER-only SINGLE_SELECTION / STAT_RANGE markets.
+  // "Each team under X" is not the complement of "each team over X", so a
+  // future "poniżej X" row must be dropped, not published as UNDER.
+  // Synthetic rows: no "poniżej" row has been observed on these ids.
+  const raw = (id: string, name: string, selections: [string, number][]): RawBookmakerMarket => ({
+    bookmakerMarketId: id,
+    name,
+    selections: selections.map(([selName, odds]) => ({ name: selName, odds })),
+  }) as RawBookmakerMarket;
+
+  it.each([
+    ["-30640", "Każda drużyna poniżej 2.5 rzutu rożnego"],
+    ["-30607", "Każda drużyna poniżej 2.5 celnego strzału"],
+    ["-30609", "Każda drużyna poniżej 1.5 spalonego"],
+    ["-30608", "Każda drużyna poniżej 9.5 faulu"],
+  ])("drops a 'poniżej' row on %s", (id, name) => {
+    const line = name.match(/\d+\.\d/)![0];
+    expect(fuksiarzNormalizer.normalizeMarket(raw(id, name, [[`poniżej ${line}`, 1.6]]), ctx)).toBeNull();
+  });
+
+  it("keeps only the OVER selection when a row mixes 'powyżej' and 'poniżej'", () => {
+    const out = fuksiarzNormalizer.normalizeMarket(
+      raw("-30640", "Każda drużyna powyżej 2.5 rzutu rożnego", [["powyżej 2.5", 1.4], ["poniżej 2.5", 2.7]]),
+      ctx,
+    )!;
+    expect(out.marketKey).toBe("EACH_TEAM_TOTAL_CORNERS_OVER:2.5");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["OVER", 1.4]]);
+  });
+});

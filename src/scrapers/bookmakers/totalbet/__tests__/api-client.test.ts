@@ -136,15 +136,25 @@ describe("totalbet api-client fetchLeagueEvents", () => {
     expect((await fetchLeagueEvents(PL, f)).error).toBe(`fetch non-JSON none ${LIST_P1}`);
   });
 
-  it("reports transport failures: an HttpError verbatim, any other throw as fetch failed", async () => {
+  it("reports transport failures: an HttpError verbatim, any other throw as Request failed with undici's cause", async () => {
     const typed: FetchJson = async (url) => {
       throw timeoutError(url, 10_000);
     };
     expect((await fetchLeagueEvents(PL, typed)).error).toBe(`fetch timeout 10000ms ${LIST_P1}`);
-    const untyped: FetchJson = async () => {
-      throw new Error("socket hang up");
+    const throwing = (err: unknown): FetchJson => async () => {
+      throw err;
     };
-    expect((await fetchLeagueEvents(PL, untyped)).error).toBe(`fetch failed socket hang up ${LIST_P1}`);
+    expect((await fetchLeagueEvents(PL, throwing(new Error("socket hang up")))).error).toBe(`Request failed: socket hang up (${LIST_P1})`);
+    // undici says "fetch failed" for every transport error; the reason is only in err.cause
+    const reset = Object.assign(new Error("read ECONNRESET"), { code: "ECONNRESET" });
+    expect((await fetchLeagueEvents(PL, throwing(new TypeError("fetch failed", { cause: reset })))).error).toBe(
+      `Request failed: fetch failed [ECONNRESET] (${LIST_P1})`,
+    );
+    // a cause without a code contributes its message
+    const tls = new Error("unable to verify the first certificate");
+    expect((await fetchLeagueEvents(PL, throwing(new TypeError("fetch failed", { cause: tls })))).error).toBe(
+      `Request failed: fetch failed [unable to verify the first certificate] (${LIST_P1})`,
+    );
   });
 
   it("reports malformed list payloads", async () => {
@@ -294,6 +304,15 @@ describe("totalbet api-client createHttpFetchJson", () => {
     const f = createHttpFetchJson(createHttpClient({ fetchImpl: spy as unknown as typeof fetch }), { timeoutMs: 1000 });
     await expect(f("https://x.test/", { signal: ctl.signal })).rejects.toThrow("fetch aborted https://x.test/");
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it("fetchEventDetail keeps the transport cause on the default HttpClient path", async () => {
+    const cause = Object.assign(new Error("getaddrinfo ENOTFOUND totalbet.pl"), { code: "ENOTFOUND" });
+    vi.stubGlobal("fetch", vi.fn(async () => {
+      throw new TypeError("fetch failed", { cause });
+    }));
+    const uuid = "0e45932b-1433-4cf5-b658-5c308b7c2b60";
+    expect(await fetchEventDetail(uuid)).toEqual({ event: null, error: `fetch failed ENOTFOUND ${DETAIL_URL(uuid)}` });
   });
 
   it("fetchLeagueEvents defaults to the HttpClient transport and reports an unparsable JSON body as non-JSON", async () => {

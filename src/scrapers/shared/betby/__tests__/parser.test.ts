@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildScrapedMarkets, extractBetbyEventId, renderTemplate, selectLeagueEvents } from "../parser.js";
-import type { BetbyEvent, BetbyMarketDescriptions } from "../types.js";
+import type { BetbyEvent, BetbyMarketDescriptions, BetbySnapshot } from "../types.js";
 import { loadJson, snapshotFrom } from "./fixtures.js";
 
 const D = loadJson<{ markets: BetbyMarketDescriptions }>("betters", "descriptions-markets.trimmed.json").markets;
@@ -33,6 +33,16 @@ describe("betby parser", () => {
     const refs = selectLeagueEvents(snapshotFrom("betters"), PL, Date.parse("2026-11-06T16:00:00Z"));
     for (const r of refs) { expect(typeof r.eventId).toBe("string"); expect(r.eventId).toMatch(/^\d{19}$/); }
     expect(refs.map((r) => r.eventId)).toContain("2725816334213586962"); // Number() would give 2725816334213587000
+  });
+
+  it("selectLeagueEvents skips an event without a desc instead of failing the league", () => {
+    // One malformed event of any sport sits in the same snapshot as every league of the brand.
+    const s = snapshotFrom("betters");
+    const broken = { "2799999999999999901": { markets: {} }, "2799999999999999902": null, "2799999999999999903": { desc: "x", markets: {} } };
+    const withBroken = { ...s, events: { ...broken, ...s.events } as unknown as BetbySnapshot["events"] };
+    const refs = selectLeagueEvents(withBroken, PL, Date.parse("2026-11-06T16:00:00Z"));
+    expect(refs).toHaveLength(11);
+    expect(refs.find((r) => r.eventId === "2725816334213586962")).toMatchObject({ homeTeam: "Leeds United", awayTeam: "Tottenham Hotspur" });
   });
 
   it("selectLeagueEvents leaves the shared snapshot untouched", () => {

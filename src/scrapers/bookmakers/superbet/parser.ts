@@ -381,8 +381,10 @@ const PLAYER_STAT_LINE_MARKET_IDS = new Set<number>([
 
 /**
  * Player identity portion of a stat-line selection name, e.g.
- * "Sbai, Amine - powyżej 2.5" -> "sbai, amine". Falls back to the full
- * (lowercased) name for bare player rows with no threshold suffix.
+ * "John Egan - powyżej 0.5" -> "john egan" (today's First-Last format) or
+ * "Sbai, Amine - powyżej 2.5" -> "sbai, amine" (the 2026-08 Last, First
+ * format). Falls back to the full (lowercased) name for bare player rows
+ * with no threshold suffix.
  */
 function extractPlayerStatGroupKey(name: string | undefined): string {
   const trimmed = (name ?? "").trim();
@@ -438,8 +440,9 @@ export function parseAllMarkets(
     // For line markets (O/U, handicap), include the line in the key. Skip
     // this for player-list markets, whose specialBetValue is not a real
     // line - see PLAYER_LIST_MARKET_IDS. Per-player stat-line markets need
-    // the opposite treatment: group by player identity, not the shared
-    // threshold - see PLAYER_STAT_LINE_MARKET_IDS.
+    // the opposite treatment: group by player identity, not specialBetValue
+    // (a shared threshold in the 2026-08 format, one value per player-line
+    // row today) - see PLAYER_STAT_LINE_MARKET_IDS.
     let key = String(selection.marketId);
     if (PLAYER_STAT_LINE_MARKET_IDS.has(selection.marketId)) {
       key += `_${extractPlayerStatGroupKey(selection.name)}`;

@@ -33,12 +33,12 @@ import {
   stsScraper,
   betcrisScraper,
 } from "../scrapers/bookmakers/index.js";
-import { PlaywrightScraper } from "../scrapers/base/playwright-base.js";
+import type { FullOfferScraper } from "../scrapers/shared/scraper-contract.js";
 import * as fs from "fs";
 import * as path from "path";
 
 // All scrapers
-const SCRAPERS: Record<PolishBookmaker, PlaywrightScraper> = {
+const SCRAPERS: Record<PolishBookmaker, FullOfferScraper> = {
   superbet: superbetScraper,
   etoto: etotoScraper,
   forbet: forbetScraper,

@@ -14,6 +14,8 @@ import type {
 } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
 import { browserPool } from "./browser-pool.js";
+import type { FullOfferScraper } from "../shared/scraper-contract.js";
+import type { ScrapeBudget } from "../shared/budget.js";
 import {
   attachNavigationRecorder,
   enrichFullOfferFailure,
@@ -36,7 +38,7 @@ export interface BrowserSession {
   cleanup: () => Promise<void>;
 }
 
-export abstract class PlaywrightScraper {
+export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
 
@@ -81,7 +83,7 @@ export abstract class PlaywrightScraper {
    * Default implementation returns "not implemented" - subclasses should override
    * @param league - League slug (e.g., "ekstraklasa", "premier-league")
    */
-  scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+  scrapeFullOffer(league: string, _budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
     return Promise.resolve(this.createFullOfferNotImplementedResult(league));
   }
 

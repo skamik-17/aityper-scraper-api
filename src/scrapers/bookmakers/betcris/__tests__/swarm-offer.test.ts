@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildBetcrisMatchOffer, buildEventUrl, findGameInSwarmData } from "../swarm-offer.js";
+import { buildBetcrisMatchOffer, buildEventUrl, findGameInSwarmData, thinDetailReason } from "../swarm-offer.js";
 import { parseAllMarkets, parseSwarmDataForFullOffer } from "../parser.js";
 import type { SwarmData, SwarmGame } from "../types.js";
 import { recordedGame, recordedListing } from "./helpers/swarm-fixtures.js";
@@ -17,8 +17,40 @@ describe("betcris swarm-offer", () => {
     expect(offer.markets.find((m) => m.bookmakerMarketId === "P1XP2")!.selections.map((s) => [s.name, s.odds])).toEqual([["  W1", 1.67], ["Remis", 4.1], ["W2", 5.5]]);
   });
 
-  it("buildBetcrisMatchOffer: keeps the listing game when the detail has no richer copy", () => {
-    expect(buildBetcrisMatchOffer(entries[0], {}, "premier-league", at)!.markets.map((m) => m.bookmakerMarketId)).toEqual(["P1XP2"]);
+  /** The recorded detail of game 31321159 with its game passed through `edit` */
+  const editedDetail = (edit: (g: SwarmGame) => void): SwarmData => {
+    const data = recordedGame(31321159);
+    edit(findGameInSwarmData(data, 31321159)!);
+    return data;
+  };
+  const only1x2 = (g: SwarmGame) => {
+    g.market = Object.fromEntries(Object.entries(g.market!).filter(([, m]) => m.type === "P1XP2"));
+  };
+
+  it("buildBetcrisMatchOffer: never writes the listing copy when the detail has no richer copy", () => {
+    expect(buildBetcrisMatchOffer(entries[0], {}, "premier-league", at)).toBeNull();
+    expect(buildBetcrisMatchOffer(entries[0], editedDetail((g) => (g.market = {})), "premier-league", at)).toBeNull();
+    expect(buildBetcrisMatchOffer(entries[0], editedDetail(only1x2), "premier-league", at)).toBeNull();
+  });
+
+  it("buildBetcrisMatchOffer: writes the detail of a game that reports no more markets than its 1X2", () => {
+    const entry = { ...entries[0], game: { ...entries[0].game, markets_count: 1 } };
+    const detail = editedDetail((g) => {
+      only1x2(g);
+      g.markets_count = 1;
+    });
+    expect(buildBetcrisMatchOffer(entry, detail, "premier-league", at)!.markets.map((m) => m.bookmakerMarketId)).toEqual(["P1XP2"]);
+  });
+
+  it("thinDetailReason: names the market counts of a thin detail copy, null for a full one", () => {
+    const listing = entries[0].game;
+    expect(thinDetailReason(listing, findGameInSwarmData(recordedGame(31321159), 31321159)!)).toBeNull();
+    expect(thinDetailReason(listing, findGameInSwarmData(editedDetail((g) => (g.market = {})), 31321159)!)).toBe(
+      "game 31321159 detail has 0 markets, no more than its listing copy (1); 636 reported"
+    );
+    expect(thinDetailReason({ ...listing, markets_count: 0 }, { ...listing, markets_count: 0 })).toBe(
+      "game 31321159 detail has 1 markets, no more than its listing copy (1); 0 reported"
+    );
   });
 
   it("buildBetcrisMatchOffer: returns null when the chosen game has no markets", () => {

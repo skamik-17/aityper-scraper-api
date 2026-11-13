@@ -41,9 +41,34 @@ export function findGameInSwarmData(data: SwarmData, gameId: number): SwarmGame 
 }
 
 /**
- * Map one listing game and its detail payload to a FullMatchOffer. The detail
- * copy is used when it has strictly more markets than the listing copy; a game
- * without markets gives null.
+ * Why the detail copy of a listing game must not be written, or null when it
+ * can be. The listing asks for the 1X2 only, so a usable detail copy has more
+ * markets than the listing copy, or every market the game reports
+ * (`markets_count`, the larger of both copies) when it really offers no more.
+ * A thinner copy (`market: {}`, the 1X2 only) is never written, nor is the
+ * listing copy in its place: either offer would prune the match's other
+ * markets until the next run.
+ */
+export function thinDetailReason(listingGame: SwarmGame, detailGame: SwarmGame): string | null {
+  const n = marketCount(detailGame);
+  const listed = marketCount(listingGame);
+  if (n > listed) return null;
+  const reported = Math.max(listingGame.markets_count || 0, detailGame.markets_count || 0);
+  if (n > 0 && reported > 0 && n >= reported) return null;
+  return `game ${listingGame.id} detail has ${n} markets, no more than its listing copy (${listed}); ${reported} reported`;
+}
+
+/** Why `detail` cannot give the offer of `entry` (missing or thin copy), or null when it can */
+export function detailSkipReason(entry: BetcrisListingEntry, detail: SwarmData): string | null {
+  const detailGame = findGameInSwarmData(detail, entry.game.id);
+  if (!detailGame) return `game ${entry.game.id} missing from reply`;
+  return thinDetailReason(entry.game, detailGame);
+}
+
+/**
+ * Map one listing game and its detail payload to a FullMatchOffer, from the
+ * detail copy only. A missing or thin detail copy (see thinDetailReason) or a
+ * game without markets gives null.
  */
 export function buildBetcrisMatchOffer(
   entry: BetcrisListingEntry,
@@ -51,9 +76,8 @@ export function buildBetcrisMatchOffer(
   league: string,
   scrapedAt: Date
 ): FullMatchOffer | null {
-  const detailGame = findGameInSwarmData(detail, entry.game.id);
-  const game =
-    detailGame && marketCount(detailGame) > marketCount(entry.game) ? detailGame : entry.game;
+  const game = findGameInSwarmData(detail, entry.game.id);
+  if (!game || thinDetailReason(entry.game, game) !== null) return null;
 
   const markets = parseAllMarkets(game, entry.teams);
   if (markets.length === 0) return null;

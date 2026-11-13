@@ -383,6 +383,19 @@ function splitTierLadder(
   return entries;
 }
 
+function displayOrder(node: { order?: number }): number {
+  return typeof node.order === "number" && Number.isFinite(node.order) ? node.order : Number.MAX_SAFE_INTEGER;
+}
+
+/**
+ * The values of a Swarm map sorted by (order, id). Event ids (~7.4e9) and, soon,
+ * market ids (~2.54e9) are not array-index keys, so `Object.values` would follow
+ * the server's key order, which changes between replies with identical odds.
+ */
+function inDisplayOrder<T extends { id: number; order?: number }>(map: Record<string, T> | undefined): T[] {
+  return Object.values(map || {}).sort((a, b) => displayOrder(a) - displayOrder(b) || a.id - b.id);
+}
+
 /**
  * Parse ALL markets from a game into unified ScrapedMarket format
  * This is the main function for full offer scraping
@@ -391,8 +404,8 @@ export function parseAllMarkets(game: SwarmGame, teams?: ParsedTeams): ScrapedMa
   const markets: ScrapedMarket[] = [];
   const parsedTeams = teams || parseTeamNames(game);
 
-  for (const market of Object.values(game.market || {})) {
-    const events = Object.values(market.event || {});
+  for (const market of inDisplayOrder(game.market)) {
+    const events = inDisplayOrder(market.event);
     if (events.length === 0) continue;
 
     // Get market metadata

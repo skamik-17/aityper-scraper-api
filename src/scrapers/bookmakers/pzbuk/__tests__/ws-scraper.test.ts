@@ -6,6 +6,7 @@ import { hasTransportStats } from "../../../shared/scraper-contract.js";
 import { browserPool } from "../../../base/browser-pool.js";
 import { scriptedSession } from "./helpers/scripted-ws-session.js";
 import { wire, chunk, listingMessage, listingEvents, offerMessage, offerState, SETUP_32K } from "./helpers/direct-fixture.js";
+import type { PZBukEvent, PZBukInitialState } from "../types.js";
 
 const SUB1 = /^\{"type":"SUBSCRIBE","streamId":1,/, SUB3 = /^\{"type":"SUBSCRIBE","streamId":3,/;
 const ERROR_3 = Buffer.from('{"type":"ERROR","streamId":3,"message":"Unknown route"}');
@@ -59,6 +60,34 @@ describe("PzbukWsScraper", () => {
     expect([r.success, r.matches.length, r.error]).toEqual([true, 1,
       "1 of 2 details failed | 4408509 Leeds United vs Tottenham Hotspur: not in offer (groups 0/10, markets counted 0/235)"]);
     expect(warn.mock.calls.flat().join("\n")).toContain("[PZBuk/FullOffer] skipped 4408509 Leeds United vs Tottenham Hotspur: not in offer (groups 0/10, markets counted 0/235)");
+  });
+  /** `happy([4408475, 4408509])` with listed event 4408509 (never in the offer) passed through `edit` */
+  const withSecondEvent = (edit: (e: PZBukEvent) => void) => {
+    const listing = listingMessage([4408475, 4408509]);
+    edit((listing.payload[0].payload as PZBukInitialState).events.find((e) => String(e.id) === "4408509")!);
+    return scriptedSession([{ after: "open", frames: [SETUP_32K] },
+      { after: SUB1, frames: chunk(wire(listing), 32768) }, { after: SUB3, frames: chunk(wire(offerMessage()), 32768) }]);
+  };
+  const participant = (e: PZBukEvent, role: "Home" | "Away") => Object.values(e.primaryParticipants).find((p) => p.venueRole === role)!;
+  it.each([
+    ["empty participant and event names", (e: PZBukEvent) => { for (const p of Object.values(e.primaryParticipants)) p.name = ""; e.eventName = ""; }],
+    ["a null away name and only the home team in the event name", (e: PZBukEvent) => {
+      (participant(e, "Away") as { name: unknown }).name = null; e.eventName = "Leeds United"; }],
+    ["no away participant and only the home team in the event name", (e: PZBukEvent) => {
+      delete e.primaryParticipants[String(participant(e, "Away").id)]; e.eventName = "Leeds United"; }],
+    ["no participants and no event name", (e: PZBukEvent) => { e.primaryParticipants = {}; delete (e as { eventName?: string }).eventName; }],
+  ])("skips an event with a missing team name before counting failures: %s", async (_label, edit) => {
+    const r = await make(withSecondEvent(edit)).scraper.scrapeFullOffer("premier-league");
+    expect(r).toMatchObject({ success: true });
+    expect(r.matches.map((m) => String(m.matchId))).toEqual(["4408475"]);
+    expect(r.error).toBeUndefined();
+  });
+  it.each([
+    ["no away participant", (e: PZBukEvent) => { delete e.primaryParticipants[String(participant(e, "Away").id)]; }],
+    ["a null away name", (e: PZBukEvent) => { (participant(e, "Away") as { name: unknown }).name = null; }],
+  ])("still counts an event whose away name comes from the event name: %s", async (_label, edit) => {
+    const r = await make(withSecondEvent(edit)).scraper.scrapeFullOffer("premier-league");
+    expect(r.error).toBe("1 of 2 details failed | 4408509 Leeds United vs Tottenham Hotspur: not in offer (groups 0/10, markets counted 0/235)");
   });
   it("returns success with no matches for an empty listing", async () => {
     const session = happy([]);

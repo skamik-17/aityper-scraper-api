@@ -281,4 +281,6 @@ export const SWARM_TRANSPORT = {
   GAME_CONCURRENCY: 4,
   OPEN_ATTEMPTS: 2,
   OPEN_RETRY_DELAY_MS: 1_000,
+  /** A dropped session is reopened once only with this much budget left: a connect, request_session and one game */
+  REOPEN_MIN_BUDGET_MS: 20_000,
 } as const;

@@ -64,6 +64,8 @@ export interface SwarmClient {
   readonly url: string;
   /** The two WsSession counters plus frames that were not JSON */
   readonly stats: { framesReceived: number; bytesReceived: number; nonJsonFrames: number };
+  /** What ended the session before close() (a drop, its timeout or a budget abort); null while open or after our own close */
+  readonly dropped: Error | null;
   request(command: string, params: Record<string, unknown>, timeoutMs: number): Promise<SwarmReply>;
   /** Idempotent; never rejects (a server may report 1006 for our own close) */
   close(): Promise<void>;
@@ -100,6 +102,7 @@ export async function openSwarmClient(
   let closing: Promise<void> | null = null;
   // Once set, every pending and later request fails with it.
   let sticky: Error | null = null;
+  let dropped: Error | null = null;
 
   const failAll = (error: Error) => {
     sticky ??= error;
@@ -146,12 +149,14 @@ export async function openSwarmClient(
     )
     .then(
       ({ timedOut }) => {
-        if (closed) return;
-        if (timedOut) failAll(new Error(`ws timeout ${dispatcherTimeoutMs}ms ${url}`));
+        if (closed || !timedOut) return;
+        dropped = new Error(`ws timeout ${dispatcherTimeoutMs}ms ${url}`);
+        failAll(dropped);
       },
       (error) => {
         if (closed) return;
-        failAll(asError(error));
+        dropped = asError(error);
+        failAll(dropped);
       }
     );
 
@@ -163,6 +168,9 @@ export async function openSwarmClient(
         bytesReceived: session.stats.bytesReceived,
         nonJsonFrames,
       };
+    },
+    get dropped() {
+      return dropped;
     },
     request(command, params, timeoutMs) {
       return new Promise<SwarmReply>((resolve, reject) => {

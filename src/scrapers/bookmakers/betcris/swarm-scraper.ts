@@ -1,15 +1,16 @@
 /**
  * Betcris full offer over one direct WebSocket session to its BetConstruct
  * Swarm backend: request_session, one competition listing, then one request
- * per game (GAME_CONCURRENCY in flight). A failed or slow game is skipped,
- * never downgraded to its listing copy. Every reply goes through the same
+ * per game (GAME_CONCURRENCY in flight). A failed, slow or thin game is
+ * skipped, never downgraded to its listing copy. A session that drops while
+ * the games stream is reopened once, for the games that failed only. Every reply goes through the same
  * pure mapping as the browser path (swarm-offer.ts).
  */
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
 import type { FullMatchOffer, FullOfferScraperResult } from "../../../types/full-offer.js";
-import { createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
-import { fetchDetailsSkippingFailures, MAX_SKIPPED_DETAIL_RATIO } from "../../shared/detail-fetch.js";
+import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
+import { fetchDetailsSkippingFailures, MAX_SKIPPED_DETAIL_RATIO, type DetailFetchOutcome } from "../../shared/detail-fetch.js";
 import { createHttpClient, type HttpClient } from "../../shared/http/http-client.js";
 import {
   DEFAULT_MAX_DURATION_MS,
@@ -22,7 +23,7 @@ import { COMPETITION_IDS, SWARM_TRANSPORT } from "./constants.js";
 import { parseSwarmDataForFullOffer } from "./parser.js";
 import { openSwarmClient, swarmGameParams, swarmListingParams, type SwarmClient } from "./swarm-client.js";
 import { createSwarmPartnerConfigCache, type ResolvedSwarmConfig, type SwarmPartnerConfigCache } from "./swarm-config.js";
-import { buildBetcrisMatchOffer, findGameInSwarmData, type BetcrisListingEntry } from "./swarm-offer.js";
+import { buildBetcrisMatchOffer, detailSkipReason, type BetcrisListingEntry } from "./swarm-offer.js";
 
 export interface BetcrisSwarmDeps {
   http?: HttpClient;
@@ -32,6 +33,18 @@ export interface BetcrisSwarmDeps {
 function errorText(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
+
+/** A non-zero Swarm code on the listing (see swarm-client.ts onFrame) */
+function isSwarmCodeError(error: unknown): boolean {
+  return /^swarm get code /.test(errorText(error));
+}
+
+/** A dropped or timed-out socket; never a budget or run abort */
+function isReopenable(error: Error | null): error is Error {
+  return error !== null && !(error instanceof BudgetExceededError) && /^ws (failed|closed|timeout) /.test(error.message);
+}
+
+type GameOutcome = DetailFetchOutcome<BetcrisListingEntry, FullMatchOffer | null>;
 
 export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSource {
   readonly bookmaker: PolishBookmaker = "betcris";
@@ -82,9 +95,19 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
         connectMs = Date.now() - start;
 
         const listingStarted = Date.now();
-        const listing = await client.request("get", swarmListingParams(competitionId), SWARM_TRANSPORT.LISTING_TIMEOUT_MS);
+        // 0 games or a Swarm error code may mean a stale partner config (site id or
+        // socket): re-read it and retry once instead of keeping it for up to 6 h.
+        let suspect: string | null;
+        ({ entries, suspect } = await this.listGamesOrSuspect(client, competitionId, league));
+        if (suspect !== null) {
+          console.warn(`[Betcris/Swarm] listing gave ${suspect}; re-reading partnerConfigs and retrying once`);
+          this.configCache.invalidate();
+          void client.close();
+          client = null;
+          ({ client, config } = await this.connect(b, trackedOpen));
+          entries = await this.listGames(client, competitionId, league);
+        }
         listingMs = Date.now() - listingStarted;
-        entries = parseSwarmDataForFullOffer(listing.data?.data ?? {}, league, competitionId);
       } catch (e) {
         const error = errorText(e);
         console.error(`[${this.bookmaker}] Full offer scraper error: ${error}`);
@@ -92,19 +115,26 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
       }
       console.log(`[Betcris/FullOffer] Found ${entries.length} games for ${league}`);
 
-      const swarm = client;
-      const outcome = await fetchDetailsSkippingFailures(
-        entries,
-        (e) => String(e.game.id),
-        async (e) => {
-          const reply = await swarm.request("get", swarmGameParams(e.game.id), SWARM_TRANSPORT.GAME_TIMEOUT_MS);
-          const data = reply.data?.data ?? {};
-          if (!findGameInSwarmData(data, e.game.id)) throw new Error(`swarm game ${e.game.id} missing from reply`);
-          // Mapped here, so no raw payload outlives its game
-          return buildBetcrisMatchOffer(e, data, league, new Date());
-        },
-        { concurrency: SWARM_TRANSPORT.GAME_CONCURRENCY, budget: b }
-      );
+      let outcome = await this.fetchGames(client, entries, league, b);
+      const dropped = client.dropped;
+      if (outcome.skipped.length > 0 && isReopenable(dropped) && b.remainingMs() >= SWARM_TRANSPORT.REOPEN_MIN_BUDGET_MS) {
+        console.warn(`[Betcris/Swarm] session dropped (${dropped.message}); reopening once for ${outcome.skipped.length} failed games`);
+        void client.close();
+        client = null;
+        try {
+          ({ client } = await this.connect(b, trackedOpen));
+          const failed = new Set(outcome.skipped.map((s) => s.id));
+          const again = await this.fetchGames(client, entries.filter((e) => failed.has(String(e.game.id))), league, b);
+          const order = new Map(entries.map((e, i) => [e, i]));
+          outcome = {
+            fetched: [...outcome.fetched, ...again.fetched].sort((x, y) => order.get(x.event)! - order.get(y.event)!),
+            skipped: again.skipped,
+          };
+        } catch (e) {
+          // The reopen itself failed: the first session's skipped games stand
+          console.warn(`[Betcris/Swarm] reopen failed: ${errorText(e)}`);
+        }
+      }
 
       const matches: FullMatchOffer[] = [];
       for (const { event, detail } of outcome.fetched) {
@@ -144,6 +174,50 @@ export class BetcrisSwarmScraper implements FullOfferScraper, TransportStatsSour
       // add the session's terminate delay to the result.
       void client?.close();
     }
+  }
+
+  /** The prematch games of the competition (P1XP2 only) */
+  private async listGames(swarm: SwarmClient, competitionId: number, league: string): Promise<BetcrisListingEntry[]> {
+    const listing = await swarm.request("get", swarmListingParams(competitionId), SWARM_TRANSPORT.LISTING_TIMEOUT_MS);
+    return parseSwarmDataForFullOffer(listing.data?.data ?? {}, league, competitionId);
+  }
+
+  /** The listing, or why it makes the partner config suspect: 0 games or a Swarm error code */
+  private async listGamesOrSuspect(
+    swarm: SwarmClient,
+    competitionId: number,
+    league: string
+  ): Promise<{ entries: BetcrisListingEntry[]; suspect: string | null }> {
+    try {
+      const entries = await this.listGames(swarm, competitionId, league);
+      return { entries, suspect: entries.length === 0 ? "0 games" : null };
+    } catch (e) {
+      if (!isSwarmCodeError(e)) throw e;
+      return { entries: [], suspect: errorText(e) };
+    }
+  }
+
+  /** One request per game (GAME_CONCURRENCY in flight), each mapped as soon as it arrives */
+  private fetchGames(
+    swarm: SwarmClient,
+    entries: readonly BetcrisListingEntry[],
+    league: string,
+    budget: ScrapeBudget
+  ): Promise<GameOutcome> {
+    return fetchDetailsSkippingFailures(
+      entries,
+      (e) => String(e.game.id),
+      async (e) => {
+        const reply = await swarm.request("get", swarmGameParams(e.game.id), SWARM_TRANSPORT.GAME_TIMEOUT_MS);
+        const data = reply.data?.data ?? {};
+        // A missing or thin copy (`market: {}`, the 1X2 only) is a failed game, never its listing copy
+        const skip = detailSkipReason(e, data);
+        if (skip) throw new Error(`swarm ${skip}`);
+        // Mapped here, so no raw payload outlives its game
+        return buildBetcrisMatchOffer(e, data, league, new Date());
+      },
+      { concurrency: SWARM_TRANSPORT.GAME_CONCURRENCY, budget }
+    );
   }
 
   /** Up to OPEN_ATTEMPTS: config (cached), socket and Swarm session; a failed open re-reads the config */

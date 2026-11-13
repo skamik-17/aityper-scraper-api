@@ -42,7 +42,8 @@ const fixturesCache = new ScraperCache<FortunaFixture>({
   maxSize: 500,
 });
 
-export class FortunaPlaywrightScraper extends PlaywrightScraper {
+/** fortuna's browser path, kept as the SCRAPER_TRANSPORT_FORTUNA=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class FortunaBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "fortuna";
   config: ScraperConfig;
 
@@ -333,4 +334,4 @@ export class FortunaPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const fortunaScraper = new FortunaPlaywrightScraper();
+export { FortunaHttpScraper } from "./http-scraper.js";

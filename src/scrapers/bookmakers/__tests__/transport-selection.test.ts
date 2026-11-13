@@ -13,6 +13,7 @@ describe("per-brand transport selection", () => {
     ["forbet", "SCRAPER_TRANSPORT_FORBET", "forbetScraper", "ForbetHttpScraper", "ForbetBrowserScraper"],
     ["fuksiarz", "SCRAPER_TRANSPORT_FUKSIARZ", "fuksiarzScraper", "FuksiarzHttpScraper", "FuksiarzBrowserScraper"],
     ["betfan", "SCRAPER_TRANSPORT_BETFAN", "betfanScraper", "BetfanHttpScraper", "BetfanBrowserScraper"],
+    ["fortuna", "SCRAPER_TRANSPORT_FORTUNA", "fortunaScraper", "FortunaHttpScraper", "FortunaBrowserScraper"],
   ])(
     "%s: HTTP by default, browser class when %s=browser",
     async (_bm, env, inst, httpCls, browserCls) => {
@@ -26,4 +27,10 @@ describe("per-brand transport selection", () => {
       expect(m[inst]).toBeInstanceOf(m[browserCls]);
     },
   );
+
+  it("the audit registry audits the selected fortuna instance", async () => {
+    const m = await import("../index.js");
+    const reg = await import("../../../services/audit/bookmaker-registry.js");
+    expect(reg.getBookmakerAuditTargets("fortuna")!.scraper).toBe(m.fortunaScraper);
+  });
 });

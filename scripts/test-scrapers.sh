@@ -27,7 +27,7 @@ declare -A SCRAPERS=(
     ["betters"]="BettersPlaywrightScraper"
     ["etoto"]="EtotoBrowserScraper"
     ["forbet"]="ForbetBrowserScraper"
-    ["fortuna"]="FortunaPlaywrightScraper"
+    ["fortuna"]="FortunaBrowserScraper"
     ["fuksiarz"]="FuksiarzBrowserScraper"
     ["lebull"]="LebullPlaywrightScraper"
     ["lvbet"]="LVBetPlaywrightScraper"
@@ -330,7 +330,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
     const SCRAPERS = {
         betclic: scrapers.BetclicPlaywrightScraper,
         betcris: scrapers.BetcrisPlaywrightScraper,
-        fortuna: scrapers.FortunaPlaywrightScraper,
+        fortuna: scrapers.FortunaBrowserScraper,
         lvbet: scrapers.LVBetPlaywrightScraper,
         sts: scrapers.STSScraper,
         superbet: scrapers.SuperbetPlaywrightScraper,
@@ -385,7 +385,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
     const SCRAPERS = {
         betclic: scrapers.BetclicPlaywrightScraper,
         betcris: scrapers.BetcrisPlaywrightScraper,
-        fortuna: scrapers.FortunaPlaywrightScraper,
+        fortuna: scrapers.FortunaBrowserScraper,
         lvbet: scrapers.LVBetPlaywrightScraper,
         sts: scrapers.STSScraper,
         superbet: scrapers.SuperbetPlaywrightScraper,

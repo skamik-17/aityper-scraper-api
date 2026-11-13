@@ -11,7 +11,7 @@
  *   npx tsx scripts/fortuna-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/fortuna-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { fortunaScraper } from "../src/scrapers/bookmakers/fortuna/index.js";
+import { fortunaScraper } from "../src/scrapers/bookmakers/index.js";
 import { fortunaNormalizer } from "../src/services/normalization/bookmakers/fortuna-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

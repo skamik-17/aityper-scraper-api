@@ -14,7 +14,7 @@
  * Usage:
  *   npx tsx scripts/fortuna-prep-audit.ts --url "<fortuna event url>" --league <slug> [--home "<team>"] [--away "<team>"] [--out <path>]
  */
-import { fortunaScraper } from "../src/scrapers/bookmakers/fortuna/index.js";
+import { fortunaScraper } from "../src/scrapers/bookmakers/index.js";
 import { fortunaNormalizer } from "../src/services/normalization/bookmakers/fortuna-normalizer.js";
 import { runScraperPrepAudit } from "../src/services/audit/scraper-audit-core.js";
 import { defaultPrepAuditOutPath } from "../src/services/audit/prep-output-path.js";

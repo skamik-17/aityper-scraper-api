@@ -1,7 +1,7 @@
 import type { FullOfferCapableScraper } from "./scraper-audit-core.js";
 import type { BookmakerMarketNormalizer } from "../normalization/types.js";
 
-import { fortunaScraper } from "../../scrapers/bookmakers/fortuna/index.js";
+import { fortunaScraper } from "../../scrapers/bookmakers/index.js";
 import { superbetScraper } from "../../scrapers/bookmakers/superbet/index.js";
 import { lvbetScraper } from "../../scrapers/bookmakers/lvbet/index.js";
 import { fuksiarzScraper } from "../../scrapers/bookmakers/index.js";

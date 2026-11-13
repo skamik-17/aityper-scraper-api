@@ -6,7 +6,7 @@ import { browserPool } from "../../../base/browser-pool.js";
 import { FortunaHttpScraper } from "../http-scraper.js";
 import { fortunaFixtureMarketsUrl, fortunaFixturesUrl } from "../navigation.js";
 import { mapFortunaFixtureOffer, selectFortunaFixtures } from "../full-offer-mapping.js";
-import { FortunaPlaywrightScraper } from "../index.js";
+import { FortunaBrowserScraper } from "../index.js";
 import { parseAllMarkets } from "../parser.js";
 import type { FortunaFixturesResponse, FortunaMarket } from "../types.js";
 
@@ -39,7 +39,7 @@ afterEach(() => vi.restoreAllMocks());
 
 describe("fortuna browser path (characterization, recorded 2026-11-07)", () => {
   it("returns Arsenal–Hull only: Leeds has no markets, Fulham's markets call fails", async () => {
-    const { result, requests } = await runBrowserPathOffline(new FortunaPlaywrightScraper(), "premier-league", ROUTES);
+    const { result, requests } = await runBrowserPathOffline(new FortunaBrowserScraper(), "premier-league", ROUTES);
     expect(result.success).toBe(true);
     expect(result.matches.map(envelope)).toEqual([ARSENAL_ENVELOPE]);
     expect(result.matches[0].markets).toEqual(parsedArsenal());
@@ -84,7 +84,7 @@ describe("FortunaHttpScraper", () => {
   it("declares transport http", () => expect(new FortunaHttpScraper().transport).toBe("http"));
 
   it("contract: deep-equals the browser path; the failed fixture is reported, not dropped silently", async () => {
-    const old = await runBrowserPathOffline(new FortunaPlaywrightScraper(), "premier-league", ROUTES);
+    const old = await runBrowserPathOffline(new FortunaBrowserScraper(), "premier-league", ROUTES);
     const client = createReplayHttpClient(ROUTES);
     const { value: neu, logs } = await captureLogs(() => new FortunaHttpScraper(client).scrapeFullOffer("premier-league"));
     expect(neu).toMatchObject({ success: true, error: `1 of 2 details failed | fetch HTTP 500 ${MARKETS_URL("ufo:mtch:1xi-0a0")}` });

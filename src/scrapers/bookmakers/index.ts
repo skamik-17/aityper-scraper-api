@@ -17,6 +17,7 @@ import { FuksiarzBrowserScraper } from "./fuksiarz/index.js";
 import { FuksiarzHttpScraper } from "../shared/rest-market/brands/fuksiarz.js";
 import { BetfanBrowserScraper } from "./betfan/index.js";
 import { BetfanHttpScraper } from "../shared/rest-market/brands/betfan.js";
+import { FortunaBrowserScraper, FortunaHttpScraper } from "./fortuna/index.js";
 
 // Modular scrapers (refactored)
 export { superbetScraper, SuperbetPlaywrightScraper } from "./superbet/index.js";
@@ -36,7 +37,7 @@ export { betcrisScraper, BetcrisPlaywrightScraper } from "./betcris/index.js";
 export { bettersScraper, BettersPlaywrightScraper } from "./betters/index.js";
 export { pzbukScraper, PzbukPlaywrightScraper } from "./pzbuk/index.js";
 export { lvbetScraper, LVBetPlaywrightScraper } from "./lvbet/index.js";
-export { fortunaScraper, FortunaPlaywrightScraper } from "./fortuna/index.js";
+export { FortunaBrowserScraper, FortunaHttpScraper } from "./fortuna/index.js";
 
 export const etotoScraper: FullOfferScraper =
   getTransportOverride("etoto") === "browser" ? new EtotoBrowserScraper() : new EtotoHttpScraper();
@@ -49,3 +50,6 @@ export const fuksiarzScraper: FullOfferScraper =
 
 export const betfanScraper: FullOfferScraper =
   getTransportOverride("betfan") === "browser" ? new BetfanBrowserScraper() : new BetfanHttpScraper();
+
+export const fortunaScraper: FullOfferScraper =
+  getTransportOverride("fortuna") === "browser" ? new FortunaBrowserScraper() : new FortunaHttpScraper();

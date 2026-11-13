@@ -6,7 +6,7 @@
  * Cloudflare: efortuna.pl is served through Cloudflare. A challenge shows up as
  * `fetch HTTP 403|503 … | possible Cloudflare challenge, fallback SCRAPER_TRANSPORT_FORTUNA=browser`
  * (or `fetch non-JSON text/html …`); SCRAPER_TRANSPORT_FORTUNA=browser (read at startup)
- * switches back to FortunaPlaywrightScraper.
+ * switches back to FortunaBrowserScraper.
  */
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";

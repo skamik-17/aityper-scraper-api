@@ -13,6 +13,8 @@ import type { FullOfferScraperResult, FullMatchOffer } from "../../../types/full
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
+import { budgetAbortReason, type ScrapeBudget } from "../../shared/budget.js";
+import { currentScrapeJob } from "../../shared/job-context.js";
 
 import {
   COMPETITION_IDS,
@@ -33,6 +35,27 @@ import {
   parseSwarmDataForFullOffer,
   parseAllMarkets,
 } from "./parser.js";
+
+const BUDGET_CUT = Symbol("betcris-budget-cut");
+
+/**
+ * Resolves BUDGET_CUT once `signal` aborts, so the per-match loop can stop at
+ * once instead of waiting for an in-flight capture on a closed context.
+ */
+function watchBudgetCut(signal: AbortSignal | undefined): {
+  cut: Promise<typeof BUDGET_CUT> | null;
+  release: () => void;
+} {
+  if (!signal) return { cut: null, release: () => {} };
+  let release = () => {};
+  const cut = new Promise<typeof BUDGET_CUT>((resolve) => {
+    if (signal.aborted) return resolve(BUDGET_CUT);
+    const onAbort = () => resolve(BUDGET_CUT);
+    signal.addEventListener("abort", onAbort, { once: true });
+    release = () => signal.removeEventListener("abort", onAbort);
+  });
+  return { cut, release };
+}
 
 export class BetcrisPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betcris";
@@ -167,7 +190,8 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
     );
   }
 
-  async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+  async scrapeFullOffer(league: string, budget?: ScrapeBudget): Promise<FullOfferScraperResult> {
+    const cutSignal = (budget ?? currentScrapeJob()?.budget)?.signal;
     return this.executeFullOfferScrape(
       league,
       (l) => isLeagueSupported(l, this.bookmaker),
@@ -206,15 +230,28 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
         // sport data). Game-level misses neither count nor reset; a success resets.
         let consecutiveFailures = 0;
         let aborted = false;
+        // A budget cut (job deadline or run abort) stops the loop at once and keeps
+        // the games captured so far; the in-flight capture is abandoned.
+        let budgetCut: string | null = null;
+        const watcher = watchBudgetCut(cutSignal);
 
         for (const { game, teams, regionAlias, competitionId: compId } of gamesInfo) {
+          if (cutSignal?.aborted) {
+            budgetCut = budgetAbortReason(cutSignal).message;
+            break;
+          }
           try {
             const eventUrl = buildEventUrl(regionAlias, compId, game.id);
 
-            const capture = await captureSwarm(page, eventUrl, {
+            const pending = captureSwarm(page, eventUrl, {
               singleEventMode: true,
               targetGameNumber: game.id,
             });
+            const capture = watcher.cut ? await Promise.race([pending, watcher.cut]) : await pending;
+            if (capture === BUDGET_CUT) {
+              budgetCut = budgetAbortReason(cutSignal!).message;
+              break;
+            }
             const matchWsData = capture.data;
 
             if (!matchWsData) {
@@ -274,11 +311,26 @@ export class BetcrisPlaywrightScraper extends PlaywrightScraper {
             );
           }
         }
+        // Every iteration catches its own errors, so the loop always gets here
+        watcher.release();
 
         const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
         console.log(
           `[Betcris/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
         );
+
+        if (budgetCut !== null) {
+          console.warn(`[Betcris/FullOffer] Stopping per-match loop: ${budgetCut}`);
+          // Keep the games captured before the cut (status partial); none is a failure.
+          return {
+            success: matches.length > 0,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches,
+            error: budgetCut,
+            duration: Date.now() - startTime,
+          };
+        }
 
         if (aborted) {
           // Keep what was captured before the site went away; nothing captured is a failure.

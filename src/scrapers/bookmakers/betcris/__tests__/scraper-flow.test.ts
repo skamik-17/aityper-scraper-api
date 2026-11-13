@@ -195,6 +195,32 @@ describe("betcris scraper flow", () => {
     expect(fake.gotoAt).toHaveLength(1 + 20 + 1); // before: served from the cache, no navigation
   });
 
+  // The budget module the scraper sees (fresh per test after vi.resetModules), so its
+  // BudgetExceededError is recognised by the scraper's budgetAbortReason.
+  const createScrapeBudget = async (maxMs: number) => (await import("../../../shared/budget.js")).createScrapeBudget(maxMs);
+
+  // README §8 Q13: listing at 1908 ms, then each game ends on its SGV reply 2654 ms
+  // after goto plus the 100 ms pause, so game 2 is done at 7416 ms and game 3 in flight.
+  it("betcris scrapeFullOffer: a budget cut returns the games captured so far with the cause", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const maxMs = 1908 + 2 * 2754 + 1000;
+    const t0 = Date.now();
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league", await createScrapeBudget(maxMs)));
+    expect(r.success).toBe(true);
+    expect(r.matches.map((m) => m.matchId)).toEqual(["31321159", "31333512"]);
+    expect(r.error).toBe(`scrape budget of ${maxMs}ms exceeded`);
+    expect(Date.now() - t0).toBeLessThanOrEqual(maxMs + 100); // settle() steps of 100 ms
+    expect(fake.gotoAt).toHaveLength(1 + 3); // no game starts after the cut
+    expect(console.warn).toHaveBeenCalledWith(`[Betcris/FullOffer] Stopping per-match loop: scrape budget of ${maxMs}ms exceeded`);
+  });
+
+  it("betcris scrapeFullOffer: a budget cut before any game is captured is a failure with the cause", async () => {
+    const fake = offerPage(); useFakeBrowser(fake);
+    const r = await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league", await createScrapeBudget(3000)));
+    expect(r).toMatchObject({ success: false, matches: [], error: "scrape budget of 3000ms exceeded" });
+    expect(fake.gotoAt).toHaveLength(1 + 1);
+  });
+
   it("betcris scrapeFullOffer: a breaker abort with nothing captured is a failure", async () => {
     const fake = createFakeSwarmPage((url) => (url.endsWith("/538") ? { events: league } : { events: EMPTY }));
     useFakeBrowser(fake);

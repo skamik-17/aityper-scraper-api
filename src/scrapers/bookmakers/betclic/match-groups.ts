@@ -17,8 +17,14 @@ export interface BetclicGroupResult {
 /** Responses smaller than this carry no markets (today's filter). */
 export const MIN_GROUP_BYTES = 100;
 
+/** A completed payload left out because it is byte-equal to an earlier group's. */
+export interface BetclicDuplicateGroup {
+  group: BetclicGroupName;
+  sameAs: BetclicGroupName;
+}
+
 export type MatchGroupAssessment =
-  | { ok: true; responses: Buffer[]; emptyGroups: BetclicGroupName[] }
+  | { ok: true; responses: Buffer[]; emptyGroups: BetclicGroupName[]; duplicates: BetclicDuplicateGroup[] }
   | { ok: false; reason: string };
 
 const GROUP_ORDER = Object.keys(MARKET_GROUP_FILTERS) as BetclicGroupName[];
@@ -43,12 +49,25 @@ export function assessMatchGroups(results: readonly BetclicGroupResult[]): Match
     return { ok: false, reason: `${valid}/${GROUP_ORDER.length} required groups valid; failed: ${failed.join("; ")}` };
   }
 
+  // Far matches echo TOP's payload for several groups. A byte-equal payload adds no
+  // market (the parser keeps the first of equal-size markets), so it is not parsed again.
   const responses: Buffer[] = [];
+  const kept: BetclicGroupName[] = [];
   const emptyGroups: BetclicGroupName[] = [];
+  const duplicates: BetclicDuplicateGroup[] = [];
   for (const group of GROUP_ORDER) {
     const response = byGroup.get(group)!.response!;
-    if (response.length >= MIN_GROUP_BYTES) responses.push(response);
-    else emptyGroups.push(group);
+    if (response.length < MIN_GROUP_BYTES) {
+      emptyGroups.push(group);
+      continue;
+    }
+    const same = responses.findIndex((earlier) => earlier.length === response.length && earlier.equals(response));
+    if (same >= 0) {
+      duplicates.push({ group, sameAs: kept[same] });
+      continue;
+    }
+    responses.push(response);
+    kept.push(group);
   }
-  return { ok: true, responses, emptyGroups };
+  return { ok: true, responses, emptyGroups, duplicates };
 }

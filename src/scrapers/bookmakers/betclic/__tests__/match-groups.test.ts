@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { assessMatchGroups, MIN_GROUP_BYTES, type BetclicGroupName, type BetclicGroupResult } from "../match-groups.js";
+import { parseAllMarketsFromMultipleResponses } from "../parser.js";
+import { groupResults } from "./betclic-fixtures.js";
 
 const ORDER: BetclicGroupName[] = ["TOP", "WYNIK", "STRZELCY", "GOLE", "METODA_GOLA", "HANDICAP", "STATYSTYKI"];
 
@@ -46,5 +48,29 @@ describe("assessMatchGroups", () => {
     const a = assessMatchGroups(distinct({ HANDICAP: Buffer.alloc(40) }));
     expect(a).toMatchObject({ ok: true, emptyGroups: ["HANDICAP"] });
     expect(a.ok && a.responses).toHaveLength(6);
+  });
+
+  it("drops a payload byte-identical to an earlier group, keeps a one-byte difference", () => {
+    const top = Buffer.alloc(300, 7);
+    const a = assessMatchGroups(distinct({ TOP: top, METODA_GOLA: Buffer.from(top) }));
+    expect(a).toMatchObject({ ok: true, duplicates: [{ group: "METODA_GOLA", sameAs: "TOP" }] });
+    expect(a.ok && a.responses).toHaveLength(6);
+    const changed = Buffer.from(top);
+    changed[299] = 8;
+    expect(assessMatchGroups(distinct({ TOP: top, METODA_GOLA: changed }))).toMatchObject({ ok: true, duplicates: [] });
+  });
+
+  it("far-match echo: 3 duplicates of TOP are not parsed", () => {
+    const top = Buffer.alloc(300, 7);
+    const a = assessMatchGroups(distinct({ TOP: top, STRZELCY: Buffer.from(top), METODA_GOLA: Buffer.from(top), STATYSTYKI: Buffer.from(top) }));
+    expect(a.ok && a.duplicates.map((d) => `${d.group}=${d.sameAs}`)).toEqual(["STRZELCY=TOP", "METODA_GOLA=TOP", "STATYSTYKI=TOP"]);
+    expect(a.ok && a.responses).toHaveLength(4);
+  });
+
+  it("parse output with duplicates skipped deep-equals the parse of all 7 (recorded payloads)", () => {
+    const all = groupResults();
+    const a = assessMatchGroups(all);
+    expect(a.ok && a.responses).toHaveLength(2);
+    expect(parseAllMarketsFromMultipleResponses(a.ok ? a.responses : [])).toEqual(parseAllMarketsFromMultipleResponses(all.map((r) => r.response!)));
   });
 });

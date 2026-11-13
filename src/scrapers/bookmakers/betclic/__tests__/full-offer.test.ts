@@ -65,6 +65,7 @@ describe("BetclicPlaywrightScraper.scrapeFullOffer", () => {
     expect(r.matches.map((m) => m.markets.length)).toEqual([32, 32]);
     expect(initBrowser).not.toHaveBeenCalled();
     expect(logLines()).toContain("[Betclic/FullOffer] Arsenal vs Hull: 32 markets total");
+    expect(logLines()).toContain("[Betclic/FullOffer] Arsenal vs Hull: received 2 response(s) from 7 market groups, 5 duplicate(s) not parsed");
   });
 
   it("skips a match whose TOP failed, says why, and keeps the cause on success", async () => {

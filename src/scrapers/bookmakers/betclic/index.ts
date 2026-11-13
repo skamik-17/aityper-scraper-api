@@ -365,7 +365,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper implements Trans
       if (!assessment.ok) return { kind: "skipped", reason: assessment.reason };
 
       console.log(
-        `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: received ${assessment.responses.length} response(s) from 7 market groups`
+        `[Betclic/FullOffer] ${homeTeam} vs ${awayTeam}: received ${assessment.responses.length} response(s) from 7 market groups, ${assessment.duplicates.length} duplicate(s) not parsed`
       );
 
       const markets = parseAllMarketsFromMultipleResponses(assessment.responses);

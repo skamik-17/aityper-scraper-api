@@ -9,6 +9,7 @@ import bookmakersRouter from "./bookmakers.js";
 import adminRouter from "./admin.js";
 import normalizedMarketsRouter from "./normalized-markets.js";
 import fixturesRouter from "./fixtures.js";
+import promotionsRouter from "./promotions.js";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use("/admin", adminRouter);
 router.use("/matches", normalizedMarketsRouter);
 router.use("/match", oddsRouter);
 router.use("/fixtures", fixturesRouter);
+router.use("/promotions", promotionsRouter);
 
 export default router;

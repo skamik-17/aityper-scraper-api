@@ -30,11 +30,10 @@ import {
   parseDoubleChance,
   parseBTTS,
   parseOverUnder,
-  parseAllMarkets,
   isValidEvent,
 } from "./parser.js";
 import type { BetfanEvent } from "./types.js";
-import { toIsoStartTime } from "../../shared/start-time.js";
+import { toBetfanOffer } from "./offer-mapping.js";
 
 export class BetfanPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betfan";
@@ -240,41 +239,12 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
         for (const event of events) {
           if (!isValidEvent(event)) continue;
 
-          const teams = parseTeamNames(event);
-
           try {
             const detailEvent = await fetchEventDetails(page, String(event.eventId));
-
-            if (detailEvent?.games && detailEvent.games.length > 0) {
-              const markets = parseAllMarkets(detailEvent);
-              if (markets.length > 0) {
-                matches.push({
-                  matchId: String(event.eventId),
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl: buildEventUrl(event.eventId),
-                  markets,
-                  startTime: toIsoStartTime(detailEvent.eventStart ?? event.eventStart),
-                  scrapedAt: new Date(),
-                });
-                console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`);
-              }
-            } else {
-              const markets = parseAllMarkets(event);
-              if (markets.length > 0) {
-                matches.push({
-                  matchId: String(event.eventId),
-                  bookmaker: this.bookmaker,
-                  homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-                  awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-                  eventUrl: buildEventUrl(event.eventId),
-                  markets,
-                  startTime: toIsoStartTime(event.eventStart),
-                  scrapedAt: new Date(),
-                });
-                console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets (fallback)`);
-              }
+            const offer = toBetfanOffer(event, detailEvent?.games?.length ? detailEvent : event, leagueSlug);
+            if (offer) {
+              matches.push(offer);
+              console.log(`[Betfan/FullOffer] ${offer.homeTeam} vs ${offer.awayTeam}: ${offer.markets.length} markets`);
             }
 
             await this.delay(100);
